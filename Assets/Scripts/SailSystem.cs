@@ -1,0 +1,44 @@
+using UnityEngine;
+
+public class SailSystem : MonoBehaviour
+{
+    [Header("Deploy Settings")]
+    [Range(0f, 1f)]
+    [SerializeField] private float deployPercentage = 0f;
+    [SerializeField] private float deploySpeed = 0.35f;
+
+    [Header("Optional Visuals")]
+    [SerializeField] private Transform[] sailMeshes;
+
+    public float DeployPercentage => deployPercentage;
+
+    private void Update()
+    {
+        float input = 0f;
+        if (Input.GetKey(KeyCode.W)) input += 1f;
+        if (Input.GetKey(KeyCode.S)) input -= 1f;
+
+        if (input != 0f)
+        {
+            AdjustSail(input * deploySpeed * Time.deltaTime);
+        }
+    }
+
+    public void AdjustSail(float delta)
+    {
+        deployPercentage = Mathf.Clamp01(deployPercentage + delta);
+        UpdateVisuals();
+    }
+
+    private void UpdateVisuals()
+    {
+        if (sailMeshes == null) return;
+        foreach (var sail in sailMeshes)
+        {
+            if (sail != null)
+            {
+                sail.localScale = new Vector3(sail.localScale.x, Mathf.Lerp(0.1f, 1f, deployPercentage), sail.localScale.z);
+            }
+        }
+    }
+}
