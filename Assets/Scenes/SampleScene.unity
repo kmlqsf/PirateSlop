@@ -232,6 +232,53 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &213673063
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 213673064}
+  - component: {fileID: 213673065}
+  m_Layer: 0
+  m_Name: Helm
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &213673064
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 213673063}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.2, z: -3.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1842566546}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &213673065
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 213673063}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9b2633d2cc28384296882a3bcaca399, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HelmInteraction
+  interactionRadius: 5
+  maxAngle: 35
+  turnSpeed: 40
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -383,6 +430,7 @@ GameObject:
   - component: {fileID: 336972261}
   - component: {fileID: 336972260}
   - component: {fileID: 336972259}
+  - component: {fileID: 1842566544}
   - component: {fileID: 336972265}
   m_Layer: 0
   m_Name: PlayerCharacter
@@ -867,7 +915,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfcbe36cf9936144eacfe8955d938c5c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SailSystem
-  deployPercentage: 0
+  deployPercentage: 1
   deploySpeed: 0.35
   sailMeshes: []
 --- !u!114 &1842566543
@@ -883,15 +931,30 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShipController
   sailSystem: {fileID: 0}
-  wheel: {fileID: 0}
+  helm: {fileID: 0}
   maxThrustForce: 25000
   turnTorque: 15000
   maxSpeed: 15
-  lateralDrag: 3
-  angularDrag: 2
   waterLevel: 0
   waterSpringStrength: 15000
   waterSpringDamping: 4000
+--- !u!114 &1842566544
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 336972258}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &1842566546 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6265553338235036548, guid: 536fad593b81e1248a467f1078001b3a, type: 3}
+  m_PrefabInstance: {fileID: 8741760062055599780}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8741760062055599780
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -903,6 +966,10 @@ PrefabInstance:
     - target: {fileID: 4635455791906578854, guid: 536fad593b81e1248a467f1078001b3a, type: 3}
       propertyPath: m_Name
       value: SM_PirateSloop
+      objectReference: {fileID: 0}
+    - target: {fileID: 4635455791906578854, guid: 536fad593b81e1248a467f1078001b3a, type: 3}
+      propertyPath: m_TagString
+      value: Ship
       objectReference: {fileID: 0}
     - target: {fileID: 6265553338235036548, guid: 536fad593b81e1248a467f1078001b3a, type: 3}
       propertyPath: m_LocalPosition.x
@@ -944,9 +1011,24 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8459832188629647574, guid: 536fad593b81e1248a467f1078001b3a, type: 3}
+      propertyPath: m_UseGravity
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8459832188629647574, guid: 536fad593b81e1248a467f1078001b3a, type: 3}
+      propertyPath: m_Constraints
+      value: 80
+      objectReference: {fileID: 0}
+    - target: {fileID: 8459832188629647574, guid: 536fad593b81e1248a467f1078001b3a, type: 3}
+      propertyPath: m_IsKinematic
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 6265553338235036548, guid: 536fad593b81e1248a467f1078001b3a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 213673064}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 4635455791906578854, guid: 536fad593b81e1248a467f1078001b3a, type: 3}
       insertIndex: -1

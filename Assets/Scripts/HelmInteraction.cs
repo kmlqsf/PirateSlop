@@ -3,27 +3,16 @@ using UnityEngine;
 public class HelmInteraction : MonoBehaviour
 {
     [Header("Helm Settings")]
-    [SerializeField] private float interactionRadius = 4f;
-    [SerializeField] private float maxAngle = 35f;
-    [SerializeField] private float turnSpeed = 40f;
+    [SerializeField] private float interactionRadius = 6f;
+    [SerializeField] private float maxAngle = 40f;
+    [SerializeField] private float turnSpeed = 60f;
 
     private bool isControlling = false;
     private float currentAngle = 0f;
-    private ShipController shipController;
     private Transform playerTransform;
-    private GameObject promptUI;
 
     public float CurrentRudderNormalized => currentAngle / maxAngle;
     public bool IsControlling => isControlling;
-
-    private void Start()
-    {
-        shipController = GetComponentInParent<ShipController>();
-        if (shipController == null)
-        {
-            shipController = Object.FindAnyObjectByType<ShipController>();
-        }
-    }
 
     private void Update()
     {
@@ -40,51 +29,48 @@ public class HelmInteraction : MonoBehaviour
         {
             float dist = Vector3.Distance(transform.position, playerTransform.position);
             
+            // Нажатие E переключает управление штурвалом
             if (dist <= interactionRadius)
             {
-                // Нажатие E переключает управление штурвалом
                 if (keyboard.eKey.wasPressedThisFrame)
                 {
                     isControlling = !isControlling;
-                    Debug.Log($"<color=cyan>Helm interaction toggled: {isControlling}</color>");
+                    Debug.Log($"<color=cyan>HELM INTERACTION: Active = {isControlling}</color>");
+
+                    // Отключаем/включаем движение игрока при входе/выходе из штурвала
+                    var playerMover = playerTransform.GetComponent<AdvancedPlayerController>();
+                    if (playerMover != null)
+                    {
+                        playerMover.enabled = !isControlling;
+                    }
                 }
-            }
-            else if (isControlling && dist > interactionRadius + 2f)
-            {
-                // Если отошли слишком далеко — отпускаем штурвал
-                isControlling = false;
             }
         }
 
-        // Если игрок у штурвала, блокируем его передвижение и крутим руль
+        // Если игрок у штурвала
         if (isControlling)
         {
-            float input = 0f;
-            if (keyboard.dKey.isPressed || keyboard.rightArrowKey.isPressed) input += 1f;
-            if (keyboard.aKey.isPressed || keyboard.leftArrowKey.isPressed) input -= 1f;
+            float steerInput = 0f;
+            if (keyboard.dKey.isPressed || keyboard.rightArrowKey.isPressed) steerInput += 1f;
+            if (keyboard.aKey.isPressed || keyboard.leftArrowKey.isPressed) steerInput -= 1f;
 
-            currentAngle += input * turnSpeed * Time.deltaTime;
+            currentAngle += steerInput * turnSpeed * Time.deltaTime;
             currentAngle = Mathf.Clamp(currentAngle, -maxAngle, maxAngle);
 
+            // Визуальный поворот меша штурвала
             transform.localRotation = Quaternion.Euler(0f, 0f, -currentAngle * 3f);
-
-            // Передаем значение в ShipController если он есть
-            if (shipController != null)
-            {
-                // Если в ShipController используется WheelInteraction, подмешиваем наш угол
-                // (При необходимости ShipController может считывать HelmInteraction напрямую)
-            }
         }
         else
         {
+            // Плавный возврат руля в центр при отпускании
             currentAngle = Mathf.MoveTowards(currentAngle, 0f, turnSpeed * Time.deltaTime);
             transform.localRotation = Quaternion.Euler(0f, 0f, -currentAngle * 3f);
         }
     }
 
-    private void OnDrawGizmosSelected()
+    private void OnDrawGizmos()
     {
-        Gizmos.color = Color.yellow;
+        Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(transform.position, interactionRadius);
     }
 }
