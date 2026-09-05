@@ -77,7 +77,12 @@ namespace PirateSlop.Networking
             if (!SceneManager.GetSceneByName(Config.GameScene).isLoaded) yield return SceneManager.LoadSceneAsync(Config.GameScene, LoadSceneMode.Additive);
             if (!connecting) { starting = false; yield break; }
             SceneManager.SetActiveScene(SceneManager.GetSceneByName(Config.GameScene));
-            transport.SetPort(port); transport.SetClientAddress(ip); transport.SetServerBindAddress("0.0.0.0", IPAddressType.IPv4);
+            transport.SetPort(port);
+            // 0.0.0.0 is a server bind address, not a routable client endpoint.
+            // The host's local client must connect through loopback; remote clients
+            // continue to use the address entered in the menu.
+            transport.SetClientAddress(host ? "127.0.0.1" : ip);
+            transport.SetServerBindAddress("0.0.0.0", IPAddressType.IPv4);
             // Reserve a few transport slots so the application can return a meaningful full-session rejection.
             transport.SetMaximumClients(MaxPlayers + 8);
             starting = false;
