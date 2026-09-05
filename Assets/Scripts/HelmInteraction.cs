@@ -1,76 +1,62 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
+[DefaultExecutionOrder(-100)]
 public class HelmInteraction : MonoBehaviour
 {
-    [Header("Helm Settings")]
-    [SerializeField] private float interactionRadius = 6f;
-    [SerializeField] private float maxAngle = 40f;
-    [SerializeField] private float turnSpeed = 60f;
-
-    private bool isControlling = false;
-    private float currentAngle = 0f;
-    private Transform playerTransform;
-
-    public float CurrentRudderNormalized => currentAngle / maxAngle;
-    public bool IsControlling => isControlling;
-
-    private void Update()
+    [SerializeField] float interactionRadius = 2.2f, turnSpeed = 2f;
+    [SerializeField] Transform wheelMesh;
+    AdvancedPlayerController player;
+    SailSystem sail;
+    Quaternion wheelRest;
+    float rudder;
+    public float CurrentRudderNormalized => rudder;
+    public bool IsControlling { get; private set; }
+    public void Configure(Transform wheel) { wheelMesh = wheel; }
+    void Awake()
     {
-        var keyboard = UnityEngine.InputSystem.Keyboard.current;
-        if (keyboard == null) return;
-
-        if (playerTransform == null)
-        {
-            GameObject p = GameObject.FindWithTag("Player");
-            if (p != null) playerTransform = p.transform;
-        }
-
-        if (playerTransform != null)
-        {
-            float dist = Vector3.Distance(transform.position, playerTransform.position);
-            
-            // Нажатие E переключает управление штурвалом
-            if (dist <= interactionRadius)
-            {
-                if (keyboard.eKey.wasPressedThisFrame)
-                {
-                    isControlling = !isControlling;
-                    Debug.Log($"<color=cyan>HELM INTERACTION: Active = {isControlling}</color>");
-
-                    // Отключаем/включаем движение игрока при входе/выходе из штурвала
-                    var playerMover = playerTransform.GetComponent<AdvancedPlayerController>();
-                    if (playerMover != null)
-                    {
-                        playerMover.enabled = !isControlling;
-                    }
-                }
-            }
-        }
-
-        // Если игрок у штурвала
-        if (isControlling)
-        {
-            float steerInput = 0f;
-            if (keyboard.dKey.isPressed || keyboard.rightArrowKey.isPressed) steerInput += 1f;
-            if (keyboard.aKey.isPressed || keyboard.leftArrowKey.isPressed) steerInput -= 1f;
-
-            currentAngle += steerInput * turnSpeed * Time.deltaTime;
-            currentAngle = Mathf.Clamp(currentAngle, -maxAngle, maxAngle);
-
-            // Визуальный поворот меша штурвала
-            transform.localRotation = Quaternion.Euler(0f, 0f, -currentAngle * 3f);
-        }
-        else
-        {
-            // Плавный возврат руля в центр при отпускании
-            currentAngle = Mathf.MoveTowards(currentAngle, 0f, turnSpeed * Time.deltaTime);
-            transform.localRotation = Quaternion.Euler(0f, 0f, -currentAngle * 3f);
-        }
+        sail = GetComponentInParent<SailSystem>();
+        if (wheelMesh != null) wheelRest = wheelMesh.localRotation;
     }
-
-    private void OnDrawGizmos()
+    bool InRange() => player != null && Vector3.Distance(transform.position, player.transform.position + Vector3.up) <= interactionRadius;
+    public bool TryTakeControl(AdvancedPlayerController candidate)
     {
-        Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(transform.position, interactionRadius);
+        if (IsControlling || candidate == null || candidate.LocomotionLocked) return false;
+        player = candidate;
+        if (!InRange()) return false;
+        IsControlling = true;
+        player.SetLocomotionLocked(true);
+        var passenger = player.GetComponent<ShipDeckPassenger>();
+        if (passenger != null) passenger.Attach(GetComponentInParent<Rigidbody>());
+        return true;
+    }
+    public void ReleaseControl()
+    {
+        IsControlling = false;
+        if (player != null) player.SetLocomotionLocked(false);
+    }
+    void OnDisable() { ReleaseControl(); }
+    void Update()
+    {
+        if (player == null) player = Object.FindAnyObjectByType<AdvancedPlayerController>();
+        var kb = Keyboard.current;
+        if (kb == null) return;
+        if (IsControlling && (kb.eKey.wasPressedThisFrame || kb.qKey.wasPressedThisFrame || kb.escapeKey.wasPressedThisFrame)) ReleaseControl();
+        else if (!IsControlling && kb.eKey.wasPressedThisFrame && Cursor.lockState == CursorLockMode.Locked) TryTakeControl(player);
+        float steer = 0f;
+        if (IsControlling && Cursor.lockState == CursorLockMode.Locked)
+        {
+            steer = (kb.dKey.isPressed ? 1f : 0f) - (kb.aKey.isPressed ? 1f : 0f);
+            float throttle = (kb.wKey.isPressed ? 1f : 0f) - (kb.sKey.isPressed ? 1f : 0f);
+            if (sail != null) sail.AdjustSail(throttle * 0.5f * Time.deltaTime);
+        }
+        rudder = Mathf.MoveTowards(rudder, steer, turnSpeed * Time.deltaTime);
+        if (wheelMesh != null) wheelMesh.localRotation = wheelRest * Quaternion.Euler(0f, 0f, -rudder * 120f);
+    }
+    void OnGUI()
+    {
+        if (!IsControlling && !InRange()) return;
+        GUI.Box(new Rect(Screen.width / 2f - 240f, Screen.height - 85f, 480f, 55f),
+            IsControlling ? "W/S — ход / торможение   A/D — поворот\nE / Q — отпустить штурвал" : "E — взяться за штурвал");
     }
 }

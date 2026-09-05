@@ -12,18 +12,6 @@ public class SailSystem : MonoBehaviour
 
     public float DeployPercentage => deployPercentage;
 
-    private void Update()
-    {
-        float input = 0f;
-        if (Input.GetKey(KeyCode.W)) input += 1f;
-        if (Input.GetKey(KeyCode.S)) input -= 1f;
-
-        if (input != 0f)
-        {
-            AdjustSail(input * deploySpeed * Time.deltaTime);
-        }
-    }
-
     public void AdjustSail(float delta)
     {
         deployPercentage = Mathf.Clamp01(deployPercentage + delta);

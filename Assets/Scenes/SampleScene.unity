@@ -204,7 +204,7 @@ MeshCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
@@ -258,7 +258,7 @@ Transform:
   m_GameObject: {fileID: 213673063}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.2, z: -3.5}
+  m_LocalPosition: {x: -0.00000033657773, y: 3.1200008, z: -3.8500009}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -276,9 +276,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c9b2633d2cc28384296882a3bcaca399, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HelmInteraction
-  interactionRadius: 5
-  maxAngle: 35
-  turnSpeed: 40
+  interactionRadius: 2.2
+  turnSpeed: 2
+  wheelMesh: {fileID: 8741760062055599781}
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -337,9 +337,9 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
+  near clip plane: 0.05
   far clip plane: 1000
-  field of view: 60
+  field of view: 80
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -366,7 +366,7 @@ Transform:
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.7, z: 0}
+  m_LocalPosition: {x: 0, y: 1.65, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -430,7 +430,6 @@ GameObject:
   - component: {fileID: 336972261}
   - component: {fileID: 336972260}
   - component: {fileID: 336972259}
-  - component: {fileID: 1842566544}
   - component: {fileID: 336972265}
   m_Layer: 0
   m_Name: PlayerCharacter
@@ -451,10 +450,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5be0d378e32e73640952fdd0af70152d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShipDeckPassenger
-  shipLayer:
-    serializedVersion: 2
-    m_Bits: 0
-  rayLength: 1.5
 --- !u!143 &336972260
 CharacterController:
   m_ObjectHideFlags: 0
@@ -476,9 +471,9 @@ CharacterController:
   m_Height: 1.8
   m_Radius: 0.3
   m_SlopeLimit: 45
-  m_StepOffset: 0.3
-  m_SkinWidth: 0.08
-  m_MinMoveDistance: 0.001
+  m_StepOffset: 0.35
+  m_SkinWidth: 0.03
+  m_MinMoveDistance: 0
   m_Center: {x: 0, y: 0.9, z: 0}
 --- !u!23 &336972261
 MeshRenderer:
@@ -487,7 +482,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 336972258}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -546,7 +541,7 @@ CapsuleCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Radius: 0.5
   m_Height: 2
@@ -570,7 +565,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 3, z: 0}
-  m_LocalScale: {x: 0.6, y: 0.9, z: 0.6}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 330585546}
@@ -589,6 +584,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AdvancedPlayerController
   walkSpeed: 5
+  sprintSpeed: 8
   crouchSpeed: 2.5
   slideSpeed: 9
   jumpHeight: 1.2
@@ -597,7 +593,7 @@ MonoBehaviour:
   crouchHeight: 0.9
   slideDuration: 0.6
   slideCooldown: 1
-  mouseSensitivity: 2
+  mouseSensitivity: 0.12
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -915,7 +911,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfcbe36cf9936144eacfe8955d938c5c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SailSystem
-  deployPercentage: 1
+  deployPercentage: 0
   deploySpeed: 0.35
   sailMeshes: []
 --- !u!114 &1842566543
@@ -930,26 +926,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 007471035b2d35d48b1ca94c470ca985, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShipController
-  sailSystem: {fileID: 0}
-  helm: {fileID: 0}
-  maxThrustForce: 25000
-  turnTorque: 15000
-  maxSpeed: 15
-  waterLevel: 0
-  waterSpringStrength: 15000
-  waterSpringDamping: 4000
---- !u!114 &1842566544
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 336972258}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  sailSystem: {fileID: 1842566542}
+  helm: {fileID: 213673065}
+  maxSpeed: 10
+  acceleration: 2
+  deceleration: 3
+  turnSpeed: 22
+  maxBankAngle: 5
+  bankResponse: 2
 --- !u!4 &1842566546 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6265553338235036548, guid: 536fad593b81e1248a467f1078001b3a, type: 3}
@@ -1013,15 +997,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8459832188629647574, guid: 536fad593b81e1248a467f1078001b3a, type: 3}
       propertyPath: m_UseGravity
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8459832188629647574, guid: 536fad593b81e1248a467f1078001b3a, type: 3}
       propertyPath: m_Constraints
-      value: 80
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8459832188629647574, guid: 536fad593b81e1248a467f1078001b3a, type: 3}
       propertyPath: m_IsKinematic
-      value: 0
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8459832188629647574, guid: 536fad593b81e1248a467f1078001b3a, type: 3}
+      propertyPath: m_CollisionDetection
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1037,6 +1025,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1842566542}
   m_SourcePrefab: {fileID: 100100000, guid: 536fad593b81e1248a467f1078001b3a, type: 3}
+--- !u!4 &8741760062055599781 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8131871862848679598, guid: 536fad593b81e1248a467f1078001b3a, type: 3}
+  m_PrefabInstance: {fileID: 8741760062055599780}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

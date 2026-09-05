@@ -1,170 +1,117 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(CharacterController))]
 public class AdvancedPlayerController : MonoBehaviour
 {
-    [Header("Movement")]
-    [SerializeField] private float walkSpeed = 5f;
-    [SerializeField] private float crouchSpeed = 2.5f;
-    [SerializeField] private float slideSpeed = 9f;
-    [SerializeField] private float jumpHeight = 1.2f;
-    [SerializeField] private float gravity = -25f;
+    [SerializeField] float walkSpeed = 5f, sprintSpeed = 8f, crouchSpeed = 2.5f, slideSpeed = 10f;
+    [SerializeField] float jumpHeight = 1.2f, gravity = -25f;
+    [SerializeField] float standingHeight = 1.8f, crouchHeight = 0.9f;
+    [SerializeField] float slideDuration = 0.65f, slideCooldown = 1f;
+    [SerializeField] float mouseSensitivity = 0.12f;
+    CharacterController controller;
+    Camera playerCamera;
+    float pitch, verticalVelocity, slideTimer, cooldown;
+    Vector3 slideDirection;
+    bool crouched;
+    public bool LocomotionLocked { get; private set; }
+    public bool IsSliding => slideTimer > 0f;
+    public float PlanarSpeed { get; private set; }
 
-    [Header("Crouch & Slide")]
-    [SerializeField] private float standingHeight = 1.8f;
-    [SerializeField] private float crouchHeight = 0.9f;
-    [SerializeField] private float slideDuration = 0.6f;
-    [SerializeField] private float slideCooldown = 1f;
-
-    [Header("Camera")]
-    [SerializeField] private float mouseSensitivity = 2f;
-
-    private CharacterController controller;
-    private Camera playerCamera;
-    
-    private float currentSpeed;
-    private float verticalRotation = 0f;
-    private float verticalVelocity = 0f;
-    
-    private bool isCrouching = false;
-    private bool isSliding = false;
-    private Vector3 slideDirection;
-    private float slideTimer = 0f;
-    private float slideCooldownTimer = 0f;
-
-    private void Start()
+    void Awake()
     {
         controller = GetComponent<CharacterController>();
-        playerCamera = Camera.main;
-
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-        currentSpeed = walkSpeed;
+        playerCamera = GetComponentInChildren<Camera>();
+        SetHeight(false);
     }
-
-    private void Update()
+    void Start() { SetCursor(true); }
+    void OnDisable() { SetCursor(false); }
+    static void SetCursor(bool locked)
     {
-        var keyboard = UnityEngine.InputSystem.Keyboard.current;
-        var mouse = UnityEngine.InputSystem.Mouse.current;
-        if (keyboard == null) return;
-
-        // 1. Мышь (Взгляд от 1-го лица)
-        if (mouse != null)
-        {
-            Vector2 mouseDelta = mouse.delta.ReadValue() * mouseSensitivity * 0.15f;
-            transform.Rotate(Vector3.up * mouseDelta.x);
-
-            verticalRotation -= mouseDelta.y;
-            verticalRotation = Mathf.Clamp(verticalRotation, -85f, 85f);
-            
-            if (playerCamera != null)
-            {
-                playerCamera.transform.localEulerAngles = new Vector3(verticalRotation, 0f, 0f);
-            }
-        }
-
-        // Кулдауны таймеров
-        if (slideCooldownTimer > 0f) slideCooldownTimer -= Time.deltaTime;
-
-        // 2. Обработка подката (Slide) и приседания (Crouch)
-        bool crouchPressed = keyboard.leftCtrlKey.isPressed || keyboard.cKey.isPressed;
-
-        if (isSliding)
-        {
-            slideTimer -= Time.deltaTime;
-            currentSpeed = Mathf.Lerp(slideSpeed, crouchSpeed, 1f - (slideTimer / slideDuration));
-
-            if (slideTimer <= 0f || !controller.isGrounded)
-            {
-                isSliding = false;
-            }
-        }
-        else if (crouchPressed)
-        {
-            // Если бежали/шли и нажали присев в воздухе или на бегу — делаем подкат
-            if (!isCrouching && controller.isGrounded && slideCooldownTimer <= 0f)
-            {
-                float moveX = 0f; float moveZ = 0f;
-                if (keyboard.wKey.isPressed) moveZ += 1f;
-                if (keyboard.sKey.isPressed) moveZ -= 1f;
-                if (keyboard.dKey.isPressed) moveX += 1f;
-                if (keyboard.aKey.isPressed) moveX -= 1f;
-
-                Vector3 inputDir = (transform.right * moveX + transform.forward * moveZ).normalized;
-                if (inputDir.sqrMagnitude > 0.1f)
-                {
-                    isSliding = true;
-                    slideTimer = slideDuration;
-                    slideCooldownTimer = slideCooldown;
-                    slideDirection = inputDir;
-                }
-            }
-
-            SetCrouching(true);
-        }
-        else
-        {
-            SetCrouching(false);
-        }
-
-        // 3. Ввод перемещения WASD
-        float finalMoveX = 0f;
-        float finalMoveZ = 0f;
-
-        if (isSliding)
-        {
-            // Во время подката направление зафиксировано
-            finalMoveX = slideDirection.x * slideSpeed;
-            finalMoveZ = slideDirection.z * slideSpeed;
-        }
-        else
-        {
-            if (keyboard.wKey.isPressed || keyboard.upArrowKey.isPressed) finalMoveZ += 1f;
-            if (keyboard.sKey.isPressed || keyboard.downArrowKey.isPressed) finalMoveZ -= 1f;
-            if (keyboard.dKey.isPressed || keyboard.rightArrowKey.isPressed) finalMoveX += 1f;
-            if (keyboard.aKey.isPressed || keyboard.leftArrowKey.isPressed) finalMoveX -= 1f;
-        }
-
-        Vector3 move = isSliding ? slideDirection * currentSpeed : (transform.right * finalMoveX + transform.forward * finalMoveZ).normalized * currentSpeed;
-
-        // 4. Гравитация и прыжок (во время подката прыгать нельзя)
-        if (controller.isGrounded)
-        {
-            verticalVelocity = -2f;
-            if (keyboard.spaceKey.wasPressedThisFrame && !isCrouching && !isSliding)
-            {
-                verticalVelocity = Mathf.Sqrt(jumpHeight * -2f * gravity);
-            }
-        }
-        else
-        {
-            verticalVelocity += gravity * Time.deltaTime;
-        }
-
-        Vector3 motion = move;
-        motion.y = verticalVelocity;
-
-        controller.Move(motion * Time.deltaTime);
+        Cursor.lockState = locked ? CursorLockMode.Locked : CursorLockMode.None;
+        Cursor.visible = !locked;
     }
-
-    private void SetCrouching(bool crouch)
+    public void SetLocomotionLocked(bool value)
     {
-        isCrouching = crouch;
-        if (isCrouching)
+        LocomotionLocked = value;
+        verticalVelocity = 0f;
+        slideTimer = 0f;
+        PlanarSpeed = 0f;
+    }
+    void Update()
+    {
+        var kb = Keyboard.current;
+        var mouse = Mouse.current;
+        if (kb == null) return;
+        if (kb.escapeKey.wasPressedThisFrame) SetCursor(false);
+        if (mouse != null && mouse.leftButton.wasPressedThisFrame) SetCursor(true);
+        bool inputActive = Cursor.lockState == CursorLockMode.Locked;
+        if (mouse != null && inputActive)
         {
-            controller.height = crouchHeight;
-            controller.center = new Vector3(0, crouchHeight / 2f, 0);
-            currentSpeed = crouchSpeed;
-            if (playerCamera != null)
-                playerCamera.transform.localPosition = Vector3.Lerp(playerCamera.transform.localPosition, new Vector3(0, 0.45f, 0), 0.2f);
+            var delta = mouse.delta.ReadValue() * mouseSensitivity;
+            transform.rotation = Quaternion.Euler(0f, transform.eulerAngles.y + delta.x, 0f);
+            pitch = Mathf.Clamp(pitch - delta.y, -85f, 85f);
+            if (playerCamera != null) playerCamera.transform.localRotation = Quaternion.Euler(pitch, 0f, 0f);
         }
-        else
+        float dt = Time.deltaTime;
+        cooldown = Mathf.Max(0f, cooldown - dt);
+        if (LocomotionLocked) { UpdateCamera(dt); return; }
+        Vector2 axes = new Vector2(
+            (kb.dKey.isPressed || kb.rightArrowKey.isPressed ? 1 : 0) - (kb.aKey.isPressed || kb.leftArrowKey.isPressed ? 1 : 0),
+            (kb.wKey.isPressed || kb.upArrowKey.isPressed ? 1 : 0) - (kb.sKey.isPressed || kb.downArrowKey.isPressed ? 1 : 0));
+        axes = Vector2.ClampMagnitude(axes, 1f);
+        if (!inputActive) axes = Vector2.zero;
+        Vector3 direction = transform.right * axes.x + transform.forward * axes.y;
+        bool sprint = kb.leftShiftKey.isPressed || kb.rightShiftKey.isPressed;
+        bool crouchHeld = kb.cKey.isPressed || kb.leftCtrlKey.isPressed;
+        bool grounded = controller.isGrounded || Physics.SphereCast(transform.position + Vector3.up * 0.35f, 0.25f, Vector3.down, out _, 0.16f, ~0, QueryTriggerInteraction.Ignore);
+        if (inputActive && kb.cKey.wasPressedThisFrame && sprint && direction.sqrMagnitude > 0.1f && grounded && !crouched && cooldown <= 0f)
         {
-            controller.height = standingHeight;
-            controller.center = new Vector3(0, standingHeight / 2f, 0);
-            if (!isSliding) currentSpeed = walkSpeed;
-            if (playerCamera != null)
-                playerCamera.transform.localPosition = Vector3.Lerp(playerCamera.transform.localPosition, new Vector3(0, 0.7f, 0), 0.2f);
+            slideTimer = slideDuration;
+            cooldown = slideDuration + slideCooldown;
+            slideDirection = direction.normalized;
         }
+        if (IsSliding)
+        {
+            slideTimer = Mathf.Max(0f, slideTimer - dt);
+            if (!grounded) slideTimer = 0f;
+        }
+        bool wantCrouch = crouchHeld || IsSliding;
+        if (!wantCrouch && crouched && !CanStand()) wantCrouch = true;
+        SetHeight(wantCrouch);
+        Vector3 planar = IsSliding
+            ? slideDirection * Mathf.Lerp(crouchSpeed, slideSpeed, slideTimer / Mathf.Max(0.01f, slideDuration))
+            : direction * (crouched ? crouchSpeed : sprint ? sprintSpeed : walkSpeed);
+        PlanarSpeed = planar.magnitude;
+        if (grounded && verticalVelocity < 0f) verticalVelocity = -2f;
+        if (inputActive && kb.spaceKey.wasPressedThisFrame && grounded && !crouched)
+            verticalVelocity = Mathf.Sqrt(jumpHeight * -2f * gravity);
+        verticalVelocity += gravity * dt;
+        controller.Move((planar + Vector3.up * verticalVelocity) * dt);
+        UpdateCamera(dt);
+    }
+    bool CanStand()
+    {
+        float r = controller.radius * 0.95f;
+        foreach (var hit in Physics.OverlapCapsule(transform.position + Vector3.up * (crouchHeight + r),
+                     transform.position + Vector3.up * (standingHeight - r), r, ~0, QueryTriggerInteraction.Ignore))
+            if (!hit.transform.IsChildOf(transform)) return false;
+        return true;
+    }
+    void SetHeight(bool value)
+    {
+        crouched = value;
+        float height = value ? crouchHeight : standingHeight;
+        if (!Mathf.Approximately(controller.height, height) || controller.center != Vector3.up * height * 0.5f)
+        {
+            controller.height = height;
+            controller.center = Vector3.up * height * 0.5f;
+        }
+    }
+    void UpdateCamera(float dt)
+    {
+        if (playerCamera != null)
+            playerCamera.transform.localPosition = Vector3.Lerp(playerCamera.transform.localPosition,
+                Vector3.up * (crouched ? crouchHeight - 0.15f : standingHeight - 0.15f), 1f - Mathf.Exp(-16f * dt));
     }
 }

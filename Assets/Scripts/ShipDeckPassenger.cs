@@ -1,51 +1,38 @@
 using UnityEngine;
 
+[DefaultExecutionOrder(-50)]
 [RequireComponent(typeof(CharacterController))]
 public class ShipDeckPassenger : MonoBehaviour
 {
-    [SerializeField] private LayerMask shipLayer;
-    [SerializeField] private float rayLength = 1.5f;
-
-    private CharacterController characterController;
-    private Rigidbody currentShipRb;
-    private Vector3 lastShipPos;
-    private Quaternion lastShipRot;
-
-    private void Awake()
+    CharacterController controller;
+    AdvancedPlayerController player;
+    Rigidbody ship;
+    Vector3 lastPosition;
+    Quaternion lastRotation;
+    void Awake() { controller = GetComponent<CharacterController>(); player = GetComponent<AdvancedPlayerController>(); }
+    public void Attach(Rigidbody body)
     {
-        characterController = GetComponent<CharacterController>();
+        ship = body;
+        if (ship != null) { lastPosition = ship.transform.position; lastRotation = ship.transform.rotation; }
     }
-
-    private void Update()
+    void Update()
     {
-        if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, rayLength, shipLayer))
+        if (ship != null)
         {
-            Rigidbody shipRb = hit.collider.attachedRigidbody;
-            if (shipRb != null && shipRb.CompareTag("Ship"))
-            {
-                if (currentShipRb != shipRb)
-                {
-                    currentShipRb = shipRb;
-                    lastShipPos = shipRb.position;
-                    lastShipRot = shipRb.rotation;
-                }
-
-                Vector3 deltaPosition = shipRb.position - lastShipPos;
-                Quaternion deltaRotation = shipRb.rotation * Quaternion.Inverse(lastShipRot);
-
-                Vector3 offsetFromShip = transform.position - shipRb.position;
-                Vector3 rotatedOffset = deltaRotation * offsetFromShip;
-                Vector3 rotationMovement = rotatedOffset - offsetFromShip;
-
-                characterController.Move(deltaPosition + rotationMovement);
-                transform.rotation = deltaRotation * transform.rotation;
-
-                lastShipPos = shipRb.position;
-                lastShipRot = shipRb.rotation;
-                return;
-            }
+            var delta = ship.transform.rotation * Quaternion.Inverse(lastRotation);
+            Vector3 next = ship.transform.position + delta * (transform.position - lastPosition);
+            controller.enabled = false;
+            transform.position = next;
+            transform.rotation = Quaternion.Euler(0f, transform.eulerAngles.y + Mathf.DeltaAngle(lastRotation.eulerAngles.y, ship.transform.eulerAngles.y), 0f);
+            controller.enabled = true;
+            lastPosition = ship.transform.position;
+            lastRotation = ship.transform.rotation;
         }
-
-        currentShipRb = null;
+        if (player != null && player.LocomotionLocked) return;
+        Rigidbody nextShip = null;
+        if (Physics.SphereCast(transform.position + Vector3.up * 0.4f, 0.2f, Vector3.down, out var hit, 0.35f, ~0, QueryTriggerInteraction.Ignore)
+            && hit.rigidbody != null && hit.rigidbody.GetComponent<ShipController>() != null)
+            nextShip = hit.rigidbody;
+        if (nextShip != ship) Attach(nextShip);
     }
 }
