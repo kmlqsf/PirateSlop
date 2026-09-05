@@ -37,6 +37,7 @@ namespace PirateSlop.Networking
             manager = GetComponent<NetworkManager>(); transport = GetComponent<Tugboat>();
             MaxPlayers = Config.MaxPlayers; ProtocolVersion = Config.ProtocolVersion; SessionId = Guid.NewGuid().ToString("N");
             manager.TimeManager.SetTickRate(Config.TickRate);
+            manager.TimeManager.OnPostTick += ResolveShipCollisions;
             manager.SceneManager.OnClientLoadedStartScenes += Loaded;
             manager.ServerManager.OnRemoteConnectionState += RemoteState;
             manager.ServerManager.OnServerConnectionState += ServerState;
@@ -169,6 +170,29 @@ namespace PirateSlop.Networking
         {
             if (quitAt > 0 && Time.realtimeSinceStartup >= quitAt) { Disconnect(); Application.Quit(); }
             if (connecting && Time.realtimeSinceStartup - startedAt >= Config.ConnectTimeout) { var reason = error == "" ? "Тайм-аут подключения (15 с): проверьте IP, UDP-порт и Firewall" : error; Disconnect(); SetError(reason); }
+        }
+        void OnDestroy()
+        {
+            if (manager != null) manager.TimeManager.OnPostTick -= ResolveShipCollisions;
+        }
+        void ResolveShipCollisions()
+        {
+            if (manager == null || !manager.IsServerStarted) return;
+            var ships = new List<NetworkShip>();
+            foreach (var player in players.Values)
+                if (player != null && player.Ship != null && !ships.Contains(player.Ship)) ships.Add(player.Ship);
+            for (int i = 0; i < ships.Count; i++)
+            for (int j = i + 1; j < ships.Count; j++)
+            {
+                var a = ships[i]; var b = ships[j];
+                var offset = b.Body.position - a.Body.position; offset.y = 0;
+                float minimum = a.CollisionRadius + b.CollisionRadius;
+                float distance = offset.magnitude;
+                if (distance >= minimum) continue;
+                var direction = distance > .001f ? offset / distance : Vector3.right;
+                var correction = direction * ((minimum - distance) * .5f + .01f);
+                a.Motor.ResolveCollision(-correction); b.Motor.ResolveCollision(correction);
+            }
         }
         void OnGUI()
         {

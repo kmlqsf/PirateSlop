@@ -13,6 +13,7 @@ public class HelmInteraction : MonoBehaviour
     public bool Networked { get; set; }
     public float CurrentRudderNormalized => rudder;
     public bool IsControlling { get; private set; }
+    public bool IsControlledBy(AdvancedPlayerController candidate) => IsControlling && player == candidate;
     public void Configure(Transform wheel) { wheelMesh = wheel; }
     public void Bind(AdvancedPlayerController value) { player = value; }
     void Awake() { sail = GetComponentInParent<SailSystem>(); if (wheelMesh != null) wheelRest = wheelMesh.localRotation; }

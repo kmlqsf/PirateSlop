@@ -17,6 +17,7 @@ namespace PirateSlop.Networking
     {
         public ShipState Ship;
         public PlayerState Player;
+        public NetworkObject ActiveShip;
         public NetworkObject Platform;
         public Vector3 RelativePosition;
         uint tick;
@@ -31,10 +32,21 @@ namespace PirateSlop.Networking
         AdvancedPlayerController motor;
         ShipDeckPassenger passenger;
         bool bound;
+        CaptainState observerState;
+        bool hasObserverState;
         int autoTicks;
         public AdvancedPlayerController Motor => motor;
         public ShipDeckPassenger Passenger => passenger;
         public NetworkShip Ship => ShipObject.Value == null ? null : ShipObject.Value.GetComponent<NetworkShip>();
+        NetworkShip ActiveShip
+        {
+            get
+            {
+                foreach (var candidate in FindObjectsByType<NetworkShip>(FindObjectsSortMode.None))
+                    if (candidate.Helm.IsControlledBy(motor)) return candidate;
+                return Ship;
+            }
+        }
         void Awake()
         {
             motor = GetComponent<AdvancedPlayerController>(); motor.ConfigureNetwork(false);
@@ -65,6 +77,9 @@ namespace PirateSlop.Networking
         }
         void Tick()
         {
+            // State-forwarding may invoke prediction on observers.  Only the owner
+            // and the server are allowed to simulate this player.
+            if (!IsOwner && !IsServerInitialized) return;
             if (!TryBind()) return;
             var input = default(CaptainInput);
             if (IsOwner)
@@ -83,18 +98,31 @@ namespace PirateSlop.Networking
             if (autoTicks > 30) result.Move = new Vector2(Mathf.Sin(autoTicks / 180f) * .35f, autoTicks < 150 ? 1 : 0);
             return result;
         }
-        void PostTick() { if (bound) CreateReconcile(); }
+        void PostTick()
+        {
+            if (!bound) return;
+            if (IsOwner || IsServerInitialized) CreateReconcile();
+            if (IsServerInitialized) SendObserverState(BuildState());
+        }
         [Replicate]
         void Move(CaptainInput input, ReplicateState state = ReplicateState.Invalid, Channel channel = Channel.Unreliable)
         {
+            if (!IsOwner && !IsServerInitialized) return;
             if (!TryBind()) return;
+            var activeShip = ActiveShip;
+            if (activeShip == null) return;
+            // While walking, only a nearby helm accepts E. Once it is taken, the
+            // same player keeps driving that ship until E/Q releases it.
+            if (!activeShip.Helm.IsControlledBy(motor))
+                foreach (var candidate in FindObjectsByType<NetworkShip>(FindObjectsSortMode.None))
+                    if (candidate.Helm.InRange(motor)) { activeShip = candidate; break; }
             var command = input.Command;
             if (!command.IsValid) command = default;
             // Missing input cannot repeat a one-shot action or leave throttle held indefinitely.
             if (!state.ContainsCreated()) command = new PlayerCommand { Yaw = motor.transform.eulerAngles.y };
             float dt = (float)TimeManager.TickDelta;
-            Ship.Helm.Simulate(command, motor, dt);
-            Ship.Motor.Simulate(dt);
+            activeShip.Helm.Simulate(command, motor, dt);
+            activeShip.Motor.Simulate(dt);
             Physics.SyncTransforms();
             passenger.Carry();
             motor.Simulate(command, dt);
@@ -104,19 +132,49 @@ namespace PirateSlop.Networking
         public override void CreateReconcile()
         {
             if (Ship == null) return;
-            var state = new CaptainState { Ship = Ship.Motor.Capture(), Player = motor.Capture() };
+            Reconcile(BuildState());
+        }
+        CaptainState BuildState()
+        {
+            var activeShip = ActiveShip ?? Ship;
+            var state = new CaptainState { Ship = activeShip.Motor.Capture(), Player = motor.Capture(), ActiveShip = activeShip.NetworkObject };
             if (passenger.Ship != null)
             {
                 state.Platform = passenger.Ship.GetComponent<NetworkObject>();
                 state.RelativePosition = passenger.Ship.transform.InverseTransformPoint(motor.transform.position);
             }
-            Reconcile(state);
+            return state;
+        }
+        [ObserversRpc(BufferLast = true, ExcludeOwner = true, RunLocally = true)]
+        void SendObserverState(CaptainState state)
+        {
+            // The server already owns the authoritative transforms; the owning
+            // client receives prediction reconciliation instead.
+            if (IsOwner || IsServerInitialized || Ship == null) return;
+            observerState = state;
+            hasObserverState = true;
+        }
+        void Update()
+        {
+            if (!hasObserverState || IsOwner || IsServerInitialized || Ship == null) return;
+            float blend = 1f - Mathf.Exp(-16f * Time.deltaTime);
+            var activeShip = observerState.ActiveShip == null ? Ship : observerState.ActiveShip.GetComponent<NetworkShip>();
+            if (activeShip != null) activeShip.Motor.ApplyRemoteState(observerState.Ship, blend);
+            var position = observerState.Player.Position;
+            if (observerState.Platform != null)
+            {
+                var platform = observerState.Platform.GetComponent<Rigidbody>();
+                if (platform != null) position = platform.transform.TransformPoint(observerState.RelativePosition);
+                passenger.Attach(platform);
+            }
+            motor.ApplyRemoteState(position, observerState.Player.Yaw, blend);
         }
         [Reconcile]
         void Reconcile(CaptainState state, Channel channel = Channel.Unreliable)
         {
             if (!TryBind()) return;
-            Ship.Motor.Restore(state.Ship, motor);
+            var activeShip = state.ActiveShip == null ? Ship : state.ActiveShip.GetComponent<NetworkShip>();
+            if (activeShip != null) activeShip.Motor.Restore(state.Ship, motor);
             var platform = state.Platform == null ? null : state.Platform.GetComponent<Rigidbody>();
             if (platform != null) state.Player.Position = platform.transform.TransformPoint(state.RelativePosition);
             motor.Restore(state.Player);
@@ -126,7 +184,7 @@ namespace PirateSlop.Networking
         public void ReturnHome()
         {
             if (Ship == null) return;
-            Ship.Helm.ReleaseControl();
+            ActiveShip?.Helm.ReleaseControl();
             var state = new PlayerState { Position = Ship.transform.TransformPoint(SessionController.Instance.Config.PlayerLocalSpawn), Yaw = Ship.transform.eulerAngles.y };
             motor.Restore(state); passenger.Attach(Ship.Body);
         }

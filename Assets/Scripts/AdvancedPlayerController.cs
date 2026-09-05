@@ -94,6 +94,12 @@ public class AdvancedPlayerController : MonoBehaviour
         controller.enabled = false; transform.SetPositionAndRotation(s.Position, Quaternion.Euler(0, s.Yaw, 0)); controller.enabled = true;
         verticalVelocity = s.VerticalVelocity; slideTimer = s.SlideTimer; cooldown = s.Cooldown; slideDirection = s.SlideDirection; LocomotionLocked = s.Locked; SetHeight(s.Crouched);
     }
+    public void ApplyRemoteState(Vector3 position, float yawValue, float blend)
+    {
+        controller.enabled = false;
+        transform.SetPositionAndRotation(Vector3.Lerp(transform.position, position, blend), Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, yawValue, 0), blend));
+        controller.enabled = true;
+    }
     bool CanStand()
     {
         float r = controller.radius * .95f;
