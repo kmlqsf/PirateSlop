@@ -18,6 +18,7 @@ public class SailSystem : MonoBehaviour
         UpdateVisuals();
     }
 
+    public void SetDeploy(float value) { deployPercentage = Mathf.Clamp01(value); UpdateVisuals(); }
     private void UpdateVisuals()
     {
         if (sailMeshes == null) return;
@@ -30,3 +31,4 @@ public class SailSystem : MonoBehaviour
         }
     }
 }
+

@@ -1,0 +1,19 @@
+using FishNet.Object;
+using FishNet.Object.Synchronizing;
+using UnityEngine;
+namespace PirateSlop.Networking
+{
+    public sealed class NetworkShip : NetworkBehaviour
+    {
+        public readonly SyncVar<int> ParticipantId = new();
+        public ShipController Motor { get; private set; }
+        public HelmInteraction Helm { get; private set; }
+        public Rigidbody Body { get; private set; }
+        void Awake()
+        {
+            Motor = GetComponent<ShipController>(); Motor.Networked = true;
+            Helm = GetComponentInChildren<HelmInteraction>(); Helm.Networked = true;
+            Body = GetComponent<Rigidbody>(); Body.interpolation = RigidbodyInterpolation.None;
+        }
+    }
+}

@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-
+using PirateSlop;
 [DefaultExecutionOrder(-100)]
 public class HelmInteraction : MonoBehaviour
 {
@@ -10,53 +10,42 @@ public class HelmInteraction : MonoBehaviour
     SailSystem sail;
     Quaternion wheelRest;
     float rudder;
+    public bool Networked { get; set; }
     public float CurrentRudderNormalized => rudder;
     public bool IsControlling { get; private set; }
     public void Configure(Transform wheel) { wheelMesh = wheel; }
-    void Awake()
-    {
-        sail = GetComponentInParent<SailSystem>();
-        if (wheelMesh != null) wheelRest = wheelMesh.localRotation;
-    }
-    bool InRange() => player != null && Vector3.Distance(transform.position, player.transform.position + Vector3.up) <= interactionRadius;
+    public void Bind(AdvancedPlayerController value) { player = value; }
+    void Awake() { sail = GetComponentInParent<SailSystem>(); if (wheelMesh != null) wheelRest = wheelMesh.localRotation; }
+    void Start() { if (!Networked) { var go = GameObject.Find("PlayerCharacter"); if (go != null) player = go.GetComponent<AdvancedPlayerController>(); } }
+    public bool InRange(AdvancedPlayerController candidate) => candidate != null && Vector3.Distance(transform.position, candidate.transform.position + Vector3.up) <= interactionRadius;
     public bool TryTakeControl(AdvancedPlayerController candidate)
     {
-        if (IsControlling || candidate == null || candidate.LocomotionLocked) return false;
-        player = candidate;
-        if (!InRange()) return false;
-        IsControlling = true;
-        player.SetLocomotionLocked(true);
-        var passenger = player.GetComponent<ShipDeckPassenger>();
-        if (passenger != null) passenger.Attach(GetComponentInParent<Rigidbody>());
-        return true;
+        if (IsControlling || candidate == null || candidate.LocomotionLocked || !InRange(candidate)) return false;
+        player = candidate; IsControlling = true; player.SetLocomotionLocked(true);
+        player.GetComponent<ShipDeckPassenger>()?.Attach(GetComponentInParent<Rigidbody>()); return true;
     }
-    public void ReleaseControl()
-    {
-        IsControlling = false;
-        if (player != null) player.SetLocomotionLocked(false);
-    }
+    public void ReleaseControl() { IsControlling = false; if (player != null) player.SetLocomotionLocked(false); }
+    public void Restore(float value, bool controlling, AdvancedPlayerController driver) { rudder = value; player = driver; IsControlling = controlling; if (player != null) player.SetLocomotionLocked(controlling); UpdateWheel(); }
     void OnDisable() { ReleaseControl(); }
+    public void Simulate(PlayerCommand command, AdvancedPlayerController candidate, float dt)
+    {
+        if (command.Release) ReleaseControl();
+        else if (command.Use) { if (IsControlling) ReleaseControl(); else TryTakeControl(candidate); }
+        float steer = IsControlling ? command.Move.x : 0;
+        if (IsControlling) sail.AdjustSail(command.Move.y * .5f * dt);
+        rudder = Mathf.MoveTowards(rudder, steer, turnSpeed * dt); UpdateWheel();
+    }
+    void UpdateWheel() { if (wheelMesh != null) wheelMesh.localRotation = wheelRest * Quaternion.Euler(0, 0, -rudder * 120); }
     void Update()
     {
-        if (player == null) player = Object.FindAnyObjectByType<AdvancedPlayerController>();
-        var kb = Keyboard.current;
-        if (kb == null) return;
-        if (IsControlling && (kb.eKey.wasPressedThisFrame || kb.qKey.wasPressedThisFrame || kb.escapeKey.wasPressedThisFrame)) ReleaseControl();
-        else if (!IsControlling && kb.eKey.wasPressedThisFrame && Cursor.lockState == CursorLockMode.Locked) TryTakeControl(player);
-        float steer = 0f;
-        if (IsControlling && Cursor.lockState == CursorLockMode.Locked)
-        {
-            steer = (kb.dKey.isPressed ? 1f : 0f) - (kb.aKey.isPressed ? 1f : 0f);
-            float throttle = (kb.wKey.isPressed ? 1f : 0f) - (kb.sKey.isPressed ? 1f : 0f);
-            if (sail != null) sail.AdjustSail(throttle * 0.5f * Time.deltaTime);
-        }
-        rudder = Mathf.MoveTowards(rudder, steer, turnSpeed * Time.deltaTime);
-        if (wheelMesh != null) wheelMesh.localRotation = wheelRest * Quaternion.Euler(0f, 0f, -rudder * 120f);
+        if (Networked) return;
+        var kb = Keyboard.current; if (kb == null) return;
+        bool active = Cursor.lockState == CursorLockMode.Locked;
+        Simulate(new PlayerCommand { Move = active ? new Vector2((kb.dKey.isPressed ? 1:0)-(kb.aKey.isPressed ? 1:0), (kb.wKey.isPressed ? 1:0)-(kb.sKey.isPressed ? 1:0)) : Vector2.zero, Use = active && kb.eKey.wasPressedThisFrame, Release = kb.qKey.wasPressedThisFrame || kb.escapeKey.wasPressedThisFrame }, player, Time.deltaTime);
     }
     void OnGUI()
     {
-        if (!IsControlling && !InRange()) return;
-        GUI.Box(new Rect(Screen.width / 2f - 240f, Screen.height - 85f, 480f, 55f),
-            IsControlling ? "W/S — ход / торможение   A/D — поворот\nE / Q — отпустить штурвал" : "E — взяться за штурвал");
+        if (player == null || !player.InputActive || (!IsControlling && !InRange(player))) return;
+        GUI.Box(new Rect(Screen.width / 2f - 240, Screen.height - 85, 480, 55), IsControlling ? "W/S — ход / торможение   A/D — поворот\nE / Q — отпустить штурвал" : "E — взяться за штурвал");
     }
 }
