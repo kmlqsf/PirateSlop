@@ -50,7 +50,8 @@ namespace PirateSlop.EditorTools
                 var visual = player.transform.Find("PirateVisual"); if (visual != null) visual.SetParent(graphics, true);
                 var pred = new SerializedObject(pn); pred.FindProperty("_enablePrediction").boolValue = true;
                 pred.FindProperty("_graphicalObject").objectReferenceValue = graphics;
-                pred.FindProperty("_enableStateForwarding").boolValue = true;
+                // Observers use NetworkPlayer snapshots, including visual smoothing.
+                pred.FindProperty("_enableStateForwarding").boolValue = false;
                 pred.ApplyModifiedPropertiesWithoutUndo();
                 var playerPrefab = PrefabUtility.SaveAsPrefabAsset(player, "Assets/Prefabs/Networking/NetworkPlayer.prefab"); UnityEngine.Object.DestroyImmediate(player);
                 EditorUtility.SetDirty(config);
