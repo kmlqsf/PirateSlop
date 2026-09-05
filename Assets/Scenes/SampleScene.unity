@@ -569,6 +569,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 330585546}
+  - {fileID: 1392508225}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &336972265
@@ -894,6 +895,93 @@ Material:
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
+--- !u!1001 &1392508224
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 336972264}
+    m_Modifications:
+    - target: {fileID: 2631287540933960445, guid: 1fb777a9d7a78c54b8973c7ec37c1dc8, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2631287540933960445, guid: 1fb777a9d7a78c54b8973c7ec37c1dc8, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2631287540933960445, guid: 1fb777a9d7a78c54b8973c7ec37c1dc8, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2631287540933960445, guid: 1fb777a9d7a78c54b8973c7ec37c1dc8, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: -0.00000004371139
+      objectReference: {fileID: 0}
+    - target: {fileID: 2631287540933960445, guid: 1fb777a9d7a78c54b8973c7ec37c1dc8, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2631287540933960445, guid: 1fb777a9d7a78c54b8973c7ec37c1dc8, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2631287540933960445, guid: 1fb777a9d7a78c54b8973c7ec37c1dc8, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2631287540933960445, guid: 1fb777a9d7a78c54b8973c7ec37c1dc8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2631287540933960445, guid: 1fb777a9d7a78c54b8973c7ec37c1dc8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2631287540933960445, guid: 1fb777a9d7a78c54b8973c7ec37c1dc8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3445225949350066247, guid: 1fb777a9d7a78c54b8973c7ec37c1dc8, type: 3}
+      propertyPath: m_Name
+      value: PirateVisual
+      objectReference: {fileID: 0}
+    - target: {fileID: 8242742661308119175, guid: 1fb777a9d7a78c54b8973c7ec37c1dc8, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3445225949350066247, guid: 1fb777a9d7a78c54b8973c7ec37c1dc8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1392508227}
+  m_SourcePrefab: {fileID: 100100000, guid: 1fb777a9d7a78c54b8973c7ec37c1dc8, type: 3}
+--- !u!4 &1392508225 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2631287540933960445, guid: 1fb777a9d7a78c54b8973c7ec37c1dc8, type: 3}
+  m_PrefabInstance: {fileID: 1392508224}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1392508226 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3445225949350066247, guid: 1fb777a9d7a78c54b8973c7ec37c1dc8, type: 3}
+  m_PrefabInstance: {fileID: 1392508224}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1392508227
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1392508226}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5566425369f660c409d01309f55c549b, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.FirstPersonModelVisibility
+  ownerCamera: {fileID: 330585545}
 --- !u!1 &1842566539 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4635455791906578854, guid: 536fad593b81e1248a467f1078001b3a, type: 3}
