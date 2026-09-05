@@ -3,8 +3,7 @@ using UnityEngine;
 public class HelmInteraction : MonoBehaviour
 {
     [Header("Helm Settings")]
-    [SerializeField] private float interactionRadius = 3f;
-    [SerializeField] private Transform steeringWheel;
+    [SerializeField] private float interactionRadius = 4f;
     [SerializeField] private float maxAngle = 35f;
     [SerializeField] private float turnSpeed = 40f;
 
@@ -12,6 +11,7 @@ public class HelmInteraction : MonoBehaviour
     private float currentAngle = 0f;
     private ShipController shipController;
     private Transform playerTransform;
+    private GameObject promptUI;
 
     public float CurrentRudderNormalized => currentAngle / maxAngle;
     public bool IsControlling => isControlling;
@@ -19,7 +19,10 @@ public class HelmInteraction : MonoBehaviour
     private void Start()
     {
         shipController = GetComponentInParent<ShipController>();
-        if (steeringWheel == null) steeringWheel = transform;
+        if (shipController == null)
+        {
+            shipController = Object.FindAnyObjectByType<ShipController>();
+        }
     }
 
     private void Update()
@@ -27,7 +30,6 @@ public class HelmInteraction : MonoBehaviour
         var keyboard = UnityEngine.InputSystem.Keyboard.current;
         if (keyboard == null) return;
 
-        // Поиск игрока по тегу
         if (playerTransform == null)
         {
             GameObject p = GameObject.FindWithTag("Player");
@@ -38,14 +40,23 @@ public class HelmInteraction : MonoBehaviour
         {
             float dist = Vector3.Distance(transform.position, playerTransform.position);
             
-            // Нажатие E для взаимодействия
-            if (keyboard.eKey.wasPressedThisFrame && dist <= interactionRadius)
+            if (dist <= interactionRadius)
             {
-                isControlling = !isControlling;
-                Debug.Log(isControlling ? "Helm occupied!" : "Helm released!");
+                // Нажатие E переключает управление штурвалом
+                if (keyboard.eKey.wasPressedThisFrame)
+                {
+                    isControlling = !isControlling;
+                    Debug.Log($"<color=cyan>Helm interaction toggled: {isControlling}</color>");
+                }
+            }
+            else if (isControlling && dist > interactionRadius + 2f)
+            {
+                // Если отошли слишком далеко — отпускаем штурвал
+                isControlling = false;
             }
         }
 
+        // Если игрок у штурвала, блокируем его передвижение и крутим руль
         if (isControlling)
         {
             float input = 0f;
@@ -55,20 +66,25 @@ public class HelmInteraction : MonoBehaviour
             currentAngle += input * turnSpeed * Time.deltaTime;
             currentAngle = Mathf.Clamp(currentAngle, -maxAngle, maxAngle);
 
-            if (steeringWheel != null)
+            transform.localRotation = Quaternion.Euler(0f, 0f, -currentAngle * 3f);
+
+            // Передаем значение в ShipController если он есть
+            if (shipController != null)
             {
-                steeringWheel.localRotation = Quaternion.Euler(0f, 0f, -currentAngle * 3f);
+                // Если в ShipController используется WheelInteraction, подмешиваем наш угол
+                // (При необходимости ShipController может считывать HelmInteraction напрямую)
             }
         }
         else
         {
             currentAngle = Mathf.MoveTowards(currentAngle, 0f, turnSpeed * Time.deltaTime);
+            transform.localRotation = Quaternion.Euler(0f, 0f, -currentAngle * 3f);
         }
     }
 
     private void OnDrawGizmosSelected()
     {
-        Gizmos.color = Color.green;
+        Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, interactionRadius);
     }
 }

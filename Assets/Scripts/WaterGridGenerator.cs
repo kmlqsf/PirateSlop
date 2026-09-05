@@ -2,40 +2,31 @@ using UnityEngine;
 
 public class WaterGridGenerator : MonoBehaviour
 {
-    private void Start()
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+    private static void Init()
     {
-        CreateGrid();
-    }
+        // Создаем буи-ориентиры на воде при старте игры
+        if (GameObject.Find("WaterBuoy_0_0") != null) return;
 
-    private void CreateGrid()
-    {
-        // Создаем процедурную сетку на воде для визуального отслеживания движения
-        GameObject gridObj = new GameObject("WaterGridLines");
-        gridObj.transform.position = new Vector3(0, 0.05f, 0);
-        
-        LineRenderer lr = gridObj.AddComponent<LineRenderer>();
-        lr.material = new Material(Shader.Find("Sprites/Default"));
-        lr.startColor = new Color(1f, 1f, 1f, 0.3f);
-        lr.endColor = new Color(1f, 1f, 1f, 0.3f);
-        lr.startWidth = 0.5f;
-        lr.endWidth = 0.5f;
-
-        int size = 100;
-        int spacing = 10;
-        int pointsCount = (size * 2 + 1) * 2 * 2;
-        
-        // Простой маркер сетки из квадратов
-        // Вместо сложного кодинга процедурных мешей сделаем несколько ориентиров-буев
-        for (int x = -50; x <= 50; x += 20)
+        for (int x = -60; x <= 60; x += 15)
         {
-            for (int z = -50; z <= 50; z += 20)
+            for (int z = -60; z <= 60; z += 15)
             {
-                GameObject buoys = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
-                buoys.name = "WaterBuoy";
-                buoys.transform.position = new Vector3(x, 0.5f, z);
-                buoys.transform.localScale = new Vector3(1f, 1f, 1f);
-                buoys.GetComponent<Renderer>().material.color = Color.yellow;
-                Object.Destroy(buoys.GetComponent<Collider>()); // Без физики
+                GameObject buoy = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                buoy.name = $"WaterBuoy_{x}_{z}";
+                buoy.transform.position = new Vector3(x, 0.5f, z);
+                buoy.transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
+                
+                // Красим в яркий красный/желтый цвет
+                var renderer = buoy.GetComponent<Renderer>();
+                if (renderer != null)
+                {
+                    renderer.material.color = new Color(1f, 0.5f, 0f);
+                }
+                
+                // Убираем коллайдер, чтобы корабль не цеплялся за них
+                Collider col = buoy.GetComponent<Collider>();
+                if (col != null) Object.Destroy(col);
             }
         }
     }
