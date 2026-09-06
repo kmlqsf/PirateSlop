@@ -21,14 +21,17 @@ public class AdvancedPlayerController : MonoBehaviour
     Vector3 slideDirection;
     bool crouched, networked, local = true;
     PlayerCommand pending;
+    CombatHealth health;
+    public bool IsDead => health != null && health.IsDead;
     public bool LocomotionLocked { get; private set; }
     public bool IsSliding => slideTimer > 0f;
     public bool IsCrouched => crouched;
     public float PlanarSpeed { get; private set; }
-    public bool InputActive => local && Cursor.lockState == CursorLockMode.Locked;
+    public bool InputActive => local && !IsDead && Cursor.lockState == CursorLockMode.Locked;
     public Camera PlayerCamera => playerCamera;
     void Awake()
     {
+        health = GetComponent<CombatHealth>();
         controller = GetComponent<CharacterController>(); playerCamera = GetComponentInChildren<Camera>(true);
         modelVisibility = GetComponentsInChildren<FirstPersonModelVisibility>(true);
         lookYaw = transform.eulerAngles.y; SetHeight(false);
@@ -96,6 +99,7 @@ public class AdvancedPlayerController : MonoBehaviour
     public void AddPlatformYaw(float delta) { if (local) lookYaw = Mathf.Repeat(lookYaw + delta, 360); }
     public void Simulate(PlayerCommand command, float dt)
     {
+        if (IsDead) return;
         if (!command.IsValid) command = default;
         transform.rotation = Quaternion.Euler(0, command.Yaw, 0);
         cooldown = Mathf.Max(0, cooldown - dt);
@@ -119,7 +123,7 @@ public class AdvancedPlayerController : MonoBehaviour
     public PlayerState Capture() => new PlayerState { Position = transform.position, Yaw = transform.eulerAngles.y, VerticalVelocity = verticalVelocity, SlideDirection = slideDirection, SlideTimer = slideTimer, Cooldown = cooldown, Crouched = crouched, Locked = LocomotionLocked, PlanarSpeed = PlanarSpeed, Grounded = IsGrounded };
     public void Restore(PlayerState s)
     {
-        controller.enabled = false; transform.SetPositionAndRotation(s.Position, Quaternion.Euler(0, s.Yaw, 0)); controller.enabled = true;
+        controller.enabled = false; transform.SetPositionAndRotation(s.Position, Quaternion.Euler(0, s.Yaw, 0)); controller.enabled = !IsDead;
         verticalVelocity = s.VerticalVelocity; slideTimer = s.SlideTimer; cooldown = s.Cooldown; slideDirection = s.SlideDirection; ApplyAnimationState(s);
     }
     public void ApplyAnimationState(PlayerState s)

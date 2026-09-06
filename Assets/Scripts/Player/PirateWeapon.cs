@@ -71,7 +71,7 @@ namespace PirateSlop
         }
         public bool Act(byte action, Vector3 direction, Vector3 eyeOffset)
         {
-            if (motor.LocomotionLocked || (hands != null && hands.HasHeldBall) || !float.IsFinite(direction.sqrMagnitude) || direction.sqrMagnitude < .5f) return false;
+            if (motor.IsDead || motor.LocomotionLocked || (hands != null && hands.HasHeldBall) || !float.IsFinite(direction.sqrMagnitude) || direction.sqrMagnitude < .5f) return false;
             if (action == 1)
             {
                 if (loaded || reloading || Time.time < nextAttack) return false;

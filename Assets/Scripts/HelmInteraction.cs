@@ -22,7 +22,7 @@ public class HelmInteraction : MonoBehaviour
     public bool InRange(AdvancedPlayerController candidate) => candidate != null && Vector3.Distance(transform.position, candidate.transform.position + Vector3.up) <= interactionRadius;
     public bool TryTakeControl(AdvancedPlayerController candidate)
     {
-        if (IsControlling || candidate == null || candidate.LocomotionLocked || !InRange(candidate)) return false;
+        if (IsControlling || candidate == null || candidate.IsDead || candidate.LocomotionLocked || !InRange(candidate)) return false;
         player = candidate; IsControlling = true; player.SetLocomotionLocked(true);
         player.GetComponent<ShipDeckPassenger>()?.Attach(GetComponentInParent<Rigidbody>()); return true;
     }

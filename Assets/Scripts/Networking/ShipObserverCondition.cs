@@ -17,7 +17,11 @@ namespace PirateSlop.Networking
             if (viewer == null) return NetworkObject.Owner == connection;
             var targetPlayer = NetworkObject.GetComponent<NetworkPlayer>();
             var target = targetPlayer != null ? targetPlayer.Ship : NetworkObject.GetComponent<NetworkShip>();
-            if (target == null) return false;
+            if (target == null)
+            {
+                float playerRadius = session.Config.ObserverRadius * (currentlyAdded ? 1 + session.Config.ObserverHysteresis : 1);
+                return targetPlayer != null && (NetworkObject.Owner == connection || (viewer.transform.position - targetPlayer.transform.position).sqrMagnitude <= playerRadius * playerRadius);
+            }
             if (target.Owner == connection || viewer.Passenger.Ship == target.Body) return true;
             float radius = session.Config.ObserverRadius * (currentlyAdded ? 1 + session.Config.ObserverHysteresis : 1);
             return (viewer.transform.position - target.transform.position).sqrMagnitude <= radius * radius;

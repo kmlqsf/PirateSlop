@@ -32,5 +32,5 @@ public class ShipDeckPassenger : MonoBehaviour
         if (Physics.SphereCast(transform.position + Vector3.up * .4f, .2f, Vector3.down, out var hit, .35f, ~0, QueryTriggerInteraction.Ignore) && hit.rigidbody != null && hit.rigidbody.GetComponent<ShipController>() != null) nextShip = hit.rigidbody;
         if (nextShip != ship) Attach(nextShip);
     }
-    void Update() { if (!Networked) { Carry(true); Detect(); } }
+    void Update() { if (!Networked && (player == null || !player.IsDead)) { Carry(true); Detect(); } }
 }
