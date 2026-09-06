@@ -23,6 +23,7 @@ public class HelmInteraction : MonoBehaviour
     public bool TryTakeControl(AdvancedPlayerController candidate)
     {
         if (IsControlling || candidate == null || candidate.IsDead || candidate.LocomotionLocked || !InRange(candidate)) return false;
+        if (candidate.GetComponent<PlayerInventory>()?.AimingAtPickup() == true) return false;
         player = candidate; IsControlling = true; player.SetLocomotionLocked(true);
         player.GetComponent<ShipDeckPassenger>()?.Attach(GetComponentInParent<Rigidbody>()); return true;
     }

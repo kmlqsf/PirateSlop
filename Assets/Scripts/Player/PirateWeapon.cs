@@ -15,6 +15,8 @@ namespace PirateSlop
         AdvancedPlayerController motor;
         CannonHands hands;
         NetworkWeapon network;
+        PlayerInventory inventory;
+        bool Equipped => inventory == null || inventory.PistolSelected;
         bool loaded = true, reloading;
         float reloadUntil, nextAttack, recoil, stab, lift;
         Quaternion worldRest, viewRest;
@@ -27,6 +29,7 @@ namespace PirateSlop
         void Awake()
         {
             motor = GetComponent<AdvancedPlayerController>(); hands = GetComponent<CannonHands>(); network = GetComponent<NetworkWeapon>();
+            inventory = GetComponent<PlayerInventory>();
             worldRest = WorldPivot.localRotation; viewRest = ViewPivot.localRotation;
             worldPosition = WorldPivot.localPosition; viewPosition = ViewPivot.localPosition;
             viewRenderers = ViewPivot.GetComponentsInChildren<Renderer>(true);
@@ -37,20 +40,20 @@ namespace PirateSlop
         void BeforeCamera(ScriptableRenderContext context, Camera camera)
         {
             if (viewRenderers == null) return;
-            bool show = camera == motor.PlayerCamera && motor.InputActive && !motor.IsThirdPerson && !motor.LocomotionLocked && (hands == null || !hands.HasHeldBall);
+            bool show = Equipped && camera == motor.PlayerCamera && motor.InputActive && !motor.IsThirdPerson && !motor.LocomotionLocked && (hands == null || !hands.HasHeldBall);
             foreach(var r in viewRenderers) if(r != null) r.forceRenderingOff = !show;
-            bool hideWorld = camera == motor.PlayerCamera && !motor.IsThirdPerson;
+            bool hideWorld = !Equipped || (camera == motor.PlayerCamera && !motor.IsThirdPerson);
             foreach(var r in worldRenderers) if(r != null) r.forceRenderingOff = hideWorld;
         }
         void AfterCamera(ScriptableRenderContext context, Camera camera)
         {
             if(viewRenderers != null) foreach(var r in viewRenderers) if(r != null) r.forceRenderingOff = true;
-            if(worldRenderers != null) foreach(var r in worldRenderers) if(r != null) r.forceRenderingOff = false;
+            if(worldRenderers != null) foreach(var r in worldRenderers) if(r != null) r.forceRenderingOff = !Equipped;
         }
         void Update()
         {
             if (!Networked) TickAuthority();
-            if (!motor.InputActive || motor.LocomotionLocked || (hands != null && hands.HasHeldBall)) return;
+            if (!Equipped || !motor.InputActive || motor.LocomotionLocked || (hands != null && hands.HasHeldBall)) return;
             var mouse = Mouse.current; var keyboard = Keyboard.current;
             if (keyboard != null && keyboard.rKey.wasPressedThisFrame) Request(1);
             if (mouse == null) return;
@@ -71,7 +74,7 @@ namespace PirateSlop
         }
         public bool Act(byte action, Vector3 direction, Vector3 eyeOffset)
         {
-            if (motor.IsDead || motor.LocomotionLocked || (hands != null && hands.HasHeldBall) || !float.IsFinite(direction.sqrMagnitude) || direction.sqrMagnitude < .5f) return false;
+            if (!Equipped || motor.IsDead || motor.LocomotionLocked || (hands != null && hands.HasHeldBall) || !float.IsFinite(direction.sqrMagnitude) || direction.sqrMagnitude < .5f) return false;
             if (action == 1)
             {
                 if (loaded || reloading || Time.time < nextAttack) return false;
@@ -145,7 +148,7 @@ namespace PirateSlop
         }
         void OnGUI()
         {
-            if (!motor.InputActive || motor.LocomotionLocked || (hands != null && hands.HasHeldBall)) return;
+            if (!Equipped || !motor.InputActive || motor.LocomotionLocked || (hands != null && hands.HasHeldBall)) return;
             GUI.Label(new Rect(Screen.width-290,Screen.height-65,280,55),reloading ? "Перезарядка…" : (loaded ? "Пистолет: 1 / ∞" : "Пистолет: 0 / ∞ — R") + "\nЛКМ — выстрел · ПКМ — нож");
         }
     }

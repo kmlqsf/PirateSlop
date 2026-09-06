@@ -22,6 +22,7 @@ public class AdvancedPlayerController : MonoBehaviour
     bool crouched, networked, local = true;
     PlayerCommand pending;
     CombatHealth health;
+    PlayerInventory inventory;
     public bool IsDead => health != null && health.IsDead;
     public bool LocomotionLocked { get; private set; }
     public bool IsSliding => slideTimer > 0f;
@@ -32,6 +33,7 @@ public class AdvancedPlayerController : MonoBehaviour
     void Awake()
     {
         health = GetComponent<CombatHealth>();
+        inventory = GetComponent<PlayerInventory>();
         controller = GetComponent<CharacterController>(); playerCamera = GetComponentInChildren<Camera>(true);
         modelVisibility = GetComponentsInChildren<FirstPersonModelVisibility>(true);
         lookYaw = transform.eulerAngles.y; SetHeight(false);
@@ -66,7 +68,7 @@ public class AdvancedPlayerController : MonoBehaviour
         pending.Crouch = InputActive && (kb.cKey.isPressed || kb.leftCtrlKey.isPressed);
         pending.Slide |= InputActive && kb.cKey.wasPressedThisFrame;
         pending.Jump |= InputActive && kb.spaceKey.wasPressedThisFrame;
-        pending.Use |= InputActive && kb.eKey.wasPressedThisFrame;
+        pending.Use |= InputActive && kb.eKey.wasPressedThisFrame && (LocomotionLocked || inventory == null || !inventory.AimingAtPickup());
         pending.Release |= kb.qKey.wasPressedThisFrame || !InputActive;
         if (!networked) Simulate(ConsumeCommand(), Time.deltaTime);
     }

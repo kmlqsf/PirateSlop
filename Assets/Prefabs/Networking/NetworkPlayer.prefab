@@ -1115,6 +1115,7 @@ GameObject:
   - component: {fileID: 215226514602522168}
   - component: {fileID: 4694566103855019808}
   - component: {fileID: 2669655026264017984}
+  - component: {fileID: 7508799110096596672}
   m_Layer: 0
   m_Name: NetworkPlayer
   m_TagString: Player
@@ -1438,6 +1439,7 @@ MonoBehaviour:
   IsShip: 0
   MaxHealth: 100
   BarHeight: 2.2
+  RespawnDelay: 5
 --- !u!114 &2669655026264017984
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1453,6 +1455,20 @@ MonoBehaviour:
   _componentIndexCache: 255
   _addedNetworkObject: {fileID: 8718541801069254893}
   _networkObjectCache: {fileID: 0}
+--- !u!114 &7508799110096596672
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4193507432475942729}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 104b928d47569ec4f86aafcecc0c0cd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.PlayerInventory
+  CannonPrefab: {fileID: 6766262252996742549, guid: a259d1526047caa44936b87a9a2dd31b, type: 3}
+  PreviewMaterial: {fileID: 2100000, guid: 73d063623bebc964cb4a2985c85b685f, type: 2}
 --- !u!1 &4195186048672230144
 GameObject:
   m_ObjectHideFlags: 0

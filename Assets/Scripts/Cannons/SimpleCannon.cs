@@ -7,6 +7,8 @@ namespace PirateSlop
         public Transform Muzzle;
         public float LaunchSpeed = 30f;
         public NetworkCannon Network { get; set; }
+        public CannonballCrate Crate { get; set; }
+        public int Index { get; set; }
         Cannonball loaded;
         Cannonball supply;
         Rigidbody supplyPlatform;
@@ -23,12 +25,14 @@ namespace PirateSlop
         {
             if (supply != null || ball == null) return;
             supply = ball; supplyPlatform = GetComponentInParent<Rigidbody>();
-            supplyPosition = supplyPlatform.transform.InverseTransformPoint(ball.transform.position);
-            supplyRotation = Quaternion.Inverse(supplyPlatform.rotation) * ball.transform.rotation;
+            var anchor = Crate != null ? Crate.SpawnPoint : ball.transform;
+            supplyPosition = supplyPlatform.transform.InverseTransformPoint(anchor.position);
+            supplyRotation = Quaternion.Inverse(supplyPlatform.rotation) * anchor.rotation;
         }
         public void ResetSupply()
         {
             loaded = null;
+            if (Crate != null) { Crate.ResetSupply(); return; }
             if (supply == null) return;
             supply.Loaded = supply.Held = false;
             supply.Body.isKinematic = true;
@@ -70,7 +74,7 @@ namespace PirateSlop
         }
         public void Fire()
         {
-            if (Network != null && Network.IsClientInitialized && !Network.IsServerInitialized) { Network.RequestFire(); return; }
+            if (Network != null && Network.IsClientInitialized && !Network.IsServerInitialized) { Network.RequestFire(Index); return; }
             if (!IsLoaded || Time.time < nextFireTime) return;
             nextFireTime = Time.time + 6f;
             InitializeSupply(loaded);
@@ -80,7 +84,7 @@ namespace PirateSlop
             Vector3 velocity = Muzzle.forward * LaunchSpeed + inherited;
             SpawnShot(position, velocity, true);
             ResetSupply();
-            if (Network != null && Network.IsServerInitialized) Network.NotifyFired(position, velocity);
+            if (Network != null && Network.IsServerInitialized) Network.NotifyFired(Index, position, velocity);
         }
     }
 }
