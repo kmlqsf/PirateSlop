@@ -29,7 +29,7 @@ namespace PirateSlop.EditorTools
             visual.localRotation = Quaternion.Euler(0f, 180f, 0f);
             visual.localScale = Vector3.one;
             var animator = visual.GetComponent<Animator>();
-            if (animator != null) { animator.enabled = false; animator.applyRootMotion = false; }
+            if (animator != null) { animator.enabled = true; animator.applyRootMotion = false; }
             var visibility = visual.GetComponent<FirstPersonModelVisibility>();
             if (visibility == null) visibility = visual.gameObject.AddComponent<FirstPersonModelVisibility>();
             visibility.Configure(camera);
@@ -42,7 +42,7 @@ namespace PirateSlop.EditorTools
             EditorSceneManager.SaveScene(player.scene);
             AssetDatabase.SaveAssets();
             Selection.activeGameObject = player;
-            Debug.Log("Pirate attached to PlayerCharacter; FPS controls retained, animation disabled.");
+            Debug.Log("Pirate attached to PlayerCharacter; FPS controls and animation retained.");
         }
     }
 }

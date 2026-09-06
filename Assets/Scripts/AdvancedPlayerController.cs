@@ -9,21 +9,29 @@ public class AdvancedPlayerController : MonoBehaviour
     [SerializeField] float jumpHeight = 1.2f, gravity = -25f;
     [SerializeField] float standingHeight = 1.8f, crouchHeight = 0.9f;
     [SerializeField] float slideDuration = 0.65f, slideCooldown = 1f, mouseSensitivity = 0.12f;
+    [SerializeField] float thirdPersonDistance = 3f;
+    FirstPersonModelVisibility[] modelVisibility;
+    public bool IsThirdPerson { get; private set; }
+    public bool IsGrounded { get; private set; }
     CharacterController controller;
     Camera playerCamera;
     float pitch, verticalVelocity, slideTimer, cooldown, lookYaw;
+    float cameraHeight;
     Vector3 slideDirection;
     bool crouched, networked, local = true;
     PlayerCommand pending;
     public bool LocomotionLocked { get; private set; }
     public bool IsSliding => slideTimer > 0f;
+    public bool IsCrouched => crouched;
     public float PlanarSpeed { get; private set; }
     public bool InputActive => local && Cursor.lockState == CursorLockMode.Locked;
     public Camera PlayerCamera => playerCamera;
     void Awake()
     {
         controller = GetComponent<CharacterController>(); playerCamera = GetComponentInChildren<Camera>(true);
+        modelVisibility = GetComponentsInChildren<FirstPersonModelVisibility>(true);
         lookYaw = transform.eulerAngles.y; SetHeight(false);
+        cameraHeight = standingHeight - .15f;
     }
     void Start() { if (local) SetCursor(true); }
     void OnDisable() { if (local) SetCursor(false); }
@@ -44,6 +52,7 @@ public class AdvancedPlayerController : MonoBehaviour
         if (!local) return;
         var kb = Keyboard.current; var mouse = Mouse.current;
         if (kb == null) return;
+        if (kb.f1Key.wasPressedThisFrame) SetThirdPerson(!IsThirdPerson);
         if (kb.escapeKey.wasPressedThisFrame) { pending.Release = true; SetCursor(false); }
         if (mouse != null && mouse.leftButton.wasPressedThisFrame && !PirateSlop.Networking.SessionController.MenuOpen) SetCursor(true);
         if (InputActive && mouse != null) { var d = mouse.delta.ReadValue() * mouseSensitivity; lookYaw = Mathf.Repeat(lookYaw + d.x, 360f); pitch = Mathf.Clamp(pitch - d.y, -85f, 85f); }
@@ -61,7 +70,23 @@ public class AdvancedPlayerController : MonoBehaviour
     {
         if (!local || playerCamera == null) return;
         playerCamera.transform.rotation = Quaternion.Euler(pitch, lookYaw, 0);
-        playerCamera.transform.localPosition = Vector3.Lerp(playerCamera.transform.localPosition, Vector3.up * (crouched ? crouchHeight - .15f : standingHeight - .15f), 1f - Mathf.Exp(-16f * Time.deltaTime));
+        cameraHeight = Mathf.Lerp(cameraHeight, (crouched ? crouchHeight : standingHeight) - .15f, 1f - Mathf.Exp(-16f * Time.deltaTime));
+        var pivot = playerCamera.transform.parent.TransformPoint(Vector3.up * cameraHeight);
+        if (IsThirdPerson)
+        {
+            var direction = -playerCamera.transform.forward;
+            float distance = thirdPersonDistance;
+            foreach (var hit in Physics.SphereCastAll(pivot, .15f, direction, distance, ~0, QueryTriggerInteraction.Ignore))
+                if (!hit.transform.IsChildOf(transform)) distance = Mathf.Min(distance, Mathf.Max(0, hit.distance - .05f));
+            playerCamera.transform.position = pivot + direction * distance;
+        }
+        else playerCamera.transform.position = pivot;
+    }
+    public void SetThirdPerson(bool value)
+    {
+        if (!local) return;
+        IsThirdPerson = value;
+        foreach (var visibility in modelVisibility) visibility.SetFirstPerson(!value);
     }
     public PlayerCommand ConsumeCommand()
     {
@@ -87,12 +112,18 @@ public class AdvancedPlayerController : MonoBehaviour
         if (command.Jump && grounded && !crouched) verticalVelocity = Mathf.Sqrt(jumpHeight * -2 * gravity);
         verticalVelocity += gravity * dt;
         controller.Move((planar + Vector3.up * verticalVelocity) * dt);
+        IsGrounded = controller.isGrounded && verticalVelocity <= 0;
     }
-    public PlayerState Capture() => new PlayerState { Position = transform.position, Yaw = transform.eulerAngles.y, VerticalVelocity = verticalVelocity, SlideDirection = slideDirection, SlideTimer = slideTimer, Cooldown = cooldown, Crouched = crouched, Locked = LocomotionLocked };
+    public PlayerState Capture() => new PlayerState { Position = transform.position, Yaw = transform.eulerAngles.y, VerticalVelocity = verticalVelocity, SlideDirection = slideDirection, SlideTimer = slideTimer, Cooldown = cooldown, Crouched = crouched, Locked = LocomotionLocked, PlanarSpeed = PlanarSpeed, Grounded = IsGrounded };
     public void Restore(PlayerState s)
     {
         controller.enabled = false; transform.SetPositionAndRotation(s.Position, Quaternion.Euler(0, s.Yaw, 0)); controller.enabled = true;
-        verticalVelocity = s.VerticalVelocity; slideTimer = s.SlideTimer; cooldown = s.Cooldown; slideDirection = s.SlideDirection; LocomotionLocked = s.Locked; SetHeight(s.Crouched);
+        verticalVelocity = s.VerticalVelocity; slideTimer = s.SlideTimer; cooldown = s.Cooldown; slideDirection = s.SlideDirection; ApplyAnimationState(s);
+    }
+    public void ApplyAnimationState(PlayerState s)
+    {
+        PlanarSpeed = s.PlanarSpeed; IsGrounded = s.Grounded;
+        slideTimer = s.SlideTimer; LocomotionLocked = s.Locked; SetHeight(s.Crouched);
     }
     public void ApplyRemoteState(Vector3 position, float yawValue, float blend)
     {

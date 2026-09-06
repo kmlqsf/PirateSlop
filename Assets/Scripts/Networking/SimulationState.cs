@@ -15,7 +15,8 @@ namespace PirateSlop
     {
         public Vector3 Position, SlideDirection;
         public float Yaw, VerticalVelocity, SlideTimer, Cooldown;
-        public bool Crouched, Locked;
+        public bool Crouched, Locked, Grounded;
+        public float PlanarSpeed;
     }
     [System.Serializable]
     public struct ShipState

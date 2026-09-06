@@ -10,6 +10,8 @@ namespace PirateSlop
         Renderer[] renderers;
         ShadowCastingMode[] savedModes;
         bool hidden;
+        bool firstPerson = true;
+        public void SetFirstPerson(bool value) { Restore(); firstPerson = value; }
         public void Configure(Camera camera) => ownerCamera = camera;
         void OnEnable()
         {
@@ -21,7 +23,7 @@ namespace PirateSlop
         void BeforeCamera(ScriptableRenderContext context, Camera camera)
         {
             Restore();
-            if (camera != ownerCamera) return;
+            if (camera != ownerCamera || !firstPerson) return;
             for (int i = 0; i < renderers.Length; i++)
             {
                 if (renderers[i] == null) continue;

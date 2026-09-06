@@ -52,6 +52,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: PirateCharacter
       objectReference: {fileID: 0}
+    - target: {fileID: 5866666021909216657, guid: 7d0652c5839bfe741b5b7e206ea271c2, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 20707128132613447ac10ba75d34132d, type: 2}
+    - target: {fileID: 5866666021909216657, guid: 7d0652c5839bfe741b5b7e206ea271c2, type: 3}
+      propertyPath: m_CullingMode
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

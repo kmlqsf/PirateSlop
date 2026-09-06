@@ -758,10 +758,10 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2855898113952264713}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 7d0652c5839bfe741b5b7e206ea271c2, type: 3}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 1
+  m_Controller: {fileID: 9100000, guid: 20707128132613447ac10ba75d34132d, type: 2}
+  m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
@@ -1109,6 +1109,8 @@ GameObject:
   - component: {fileID: 8718541801069254893}
   - component: {fileID: 3240335010585323169}
   - component: {fileID: 2313410635838124457}
+  - component: {fileID: 8184579369420673032}
+  - component: {fileID: 3938974910654873555}
   m_Layer: 0
   m_Name: NetworkPlayer
   m_TagString: Player
@@ -1272,6 +1274,7 @@ MonoBehaviour:
   slideDuration: 0.6
   slideCooldown: 1
   mouseSensitivity: 0.12
+  thirdPersonDistance: 3
 --- !u!114 &8718541801069254893
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1360,6 +1363,30 @@ MonoBehaviour:
   _updateHostVisibility: 1
   _observerConditions:
   - {fileID: 11400000, guid: a6c0b8393c3085d4d9b4c104578830d8, type: 2}
+--- !u!114 &8184579369420673032
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4193507432475942729}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b262a4dc4b935a4197c0527bd4f788c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.PlayerAnimatorDriver
+--- !u!114 &3938974910654873555
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4193507432475942729}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 995290a6427940b4aae0973ff1c0390d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.CannonHands
 --- !u!1 &4195186048672230144
 GameObject:
   m_ObjectHideFlags: 0

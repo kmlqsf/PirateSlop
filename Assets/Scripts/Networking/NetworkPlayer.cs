@@ -198,6 +198,7 @@ namespace PirateSlop.Networking
                 Debug.Log($"NET_STATE participant={ParticipantId.Value} owner={IsOwner} server={IsServerInitialized} bound={bound} received={receivedSnapshots} player={transform.position:F3} ship={(Ship == null ? Vector3.zero : Ship.transform.position):F3} targetPlayer={observerState.Player.Position:F3} targetShip={observerState.Ship.Position:F3}");
             }
             if (!hasObserverState || IsOwner || IsServerInitialized || Ship == null) return;
+            motor.ApplyAnimationState(observerState.Player);
             float blend = 1f - Mathf.Exp(-16f * Time.deltaTime);
             var activeShip = observerState.ActiveShip == null ? Ship : observerState.ActiveShip.GetComponent<NetworkShip>();
             // NetworkShip is the only writer of ship state on every client.
