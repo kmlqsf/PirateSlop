@@ -11,6 +11,7 @@ public class ShipController : MonoBehaviour
     float speed, yaw, bank, waterHeight;
     public bool Networked { get; set; }
     public float Speed => speed;
+    public float MaxSpeed => maxSpeed;
     public float Bank => bank;
     public void Configure(HelmInteraction value) { helm = value; sailSystem = GetComponent<SailSystem>(); }
     void Awake()

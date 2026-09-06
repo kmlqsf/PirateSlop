@@ -8,7 +8,8 @@ namespace PirateSlop.Networking
     public struct CannonPlacement
     {
         public Vector3 Position;
-        public float Yaw;
+        public Quaternion Rotation;
+        public float Elevation;
     }
 
     public sealed class NetworkCannon : NetworkBehaviour
@@ -35,10 +36,10 @@ namespace PirateSlop.Networking
             if (!IsServerInitialized || Crate == null || kitTaken.Value || !Crate.KitAvailable) return false;
             kitTaken.Value = true; Crate.Kit.SetActive(false); return true;
         }
-        public void Place(Vector3 position, float yaw)
+        public void Place(Vector3 position, Quaternion rotation)
         {
             if (!IsServerInitialized) return;
-            placements.Add(new CannonPlacement { Position = position, Yaw = yaw });
+            placements.Add(new CannonPlacement { Position = position, Rotation = rotation.normalized, Elevation = 3f });
             ApplyState();
         }
         void ApplyState()
@@ -48,8 +49,9 @@ namespace PirateSlop.Networking
             while (Crate.Cannons.Count < placements.Count)
             {
                 var placement = placements[Crate.Cannons.Count];
-                Crate.AddCannon(placement.Position, placement.Yaw);
+                Crate.AddCannon(placement.Position, placement.Rotation);
             }
+            for (int i = 0; i < placements.Count; i++) Crate.Cannons[i].SetElevation(placements[i].Elevation);
             if (IsServerInitialized || appliedLoaded == loadedIndex.Value) return;
             if (appliedLoaded >= 0 && appliedLoaded < Crate.Cannons.Count) Crate.Cannons[appliedLoaded].ResetSupply();
             appliedLoaded = loadedIndex.Value;
@@ -99,6 +101,15 @@ namespace PirateSlop.Networking
         void RejectHoldTargetRpc(NetworkConnection connection)
         { if (ball != null) { ball.Held = false; ball.GetComponent<Collider>().enabled = !ball.Loaded; } }
         public void RequestFire(int index) => FireServerRpc(index);
+        public void DragBreech(int index, float degrees, bool holding) => DragBreechServerRpc(index, degrees, holding);
+        [ServerRpc(RequireOwnership = false)]
+        void DragBreechServerRpc(int index, float degrees, bool holding, NetworkConnection sender = null)
+        {
+            var cannon = Cannon(index);
+            var player = sender != null ? SessionController.Instance.GetPlayer(sender.ClientId) : null;
+            if (cannon == null || player == null || !cannon.DragBreech(player.Motor, degrees, holding)) return;
+            var placement = placements[index]; placement.Elevation = cannon.Elevation; placements[index] = placement;
+        }
         [ServerRpc(RequireOwnership = false)]
         void FireServerRpc(int index, NetworkConnection sender = null)
         {

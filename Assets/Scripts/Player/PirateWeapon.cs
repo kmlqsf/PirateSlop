@@ -16,7 +16,8 @@ namespace PirateSlop
         CannonHands hands;
         NetworkWeapon network;
         PlayerInventory inventory;
-        bool Equipped => inventory == null || inventory.PistolSelected;
+        DirectShipControls controls;
+        bool Equipped => (inventory == null || inventory.PistolSelected) && (controls == null || !controls.IsDragging);
         bool loaded = true, reloading;
         float reloadUntil, nextAttack, recoil, stab, lift;
         Quaternion worldRest, viewRest;
@@ -30,6 +31,7 @@ namespace PirateSlop
         {
             motor = GetComponent<AdvancedPlayerController>(); hands = GetComponent<CannonHands>(); network = GetComponent<NetworkWeapon>();
             inventory = GetComponent<PlayerInventory>();
+            controls = GetComponent<DirectShipControls>();
             worldRest = WorldPivot.localRotation; viewRest = ViewPivot.localRotation;
             worldPosition = WorldPivot.localPosition; viewPosition = ViewPivot.localPosition;
             viewRenderers = ViewPivot.GetComponentsInChildren<Renderer>(true);
@@ -53,6 +55,7 @@ namespace PirateSlop
         void Update()
         {
             if (!Networked) TickAuthority();
+            if (controls != null && controls.BlocksPrimary) return;
             if (!Equipped || !motor.InputActive || motor.LocomotionLocked || (hands != null && hands.HasHeldBall)) return;
             var mouse = Mouse.current; var keyboard = Keyboard.current;
             if (keyboard != null && keyboard.rKey.wasPressedThisFrame) Request(1);

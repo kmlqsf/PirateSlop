@@ -31,11 +31,11 @@ namespace PirateSlop
             Supply.gameObject.SetActive(true);
         }
 
-        public SimpleCannon AddCannon(Vector3 localPosition, float yaw)
+        public SimpleCannon AddCannon(Vector3 localPosition, Quaternion localRotation)
         {
             var cannon = Instantiate(CannonPrefab, Ship.transform);
             cannon.transform.localPosition = localPosition;
-            cannon.transform.localRotation = Quaternion.Euler(0, yaw, 0);
+            cannon.transform.localRotation = localRotation;
             cannon.Crate = this;
             cannon.Network = Network;
             cannon.Index = Cannons.Count;

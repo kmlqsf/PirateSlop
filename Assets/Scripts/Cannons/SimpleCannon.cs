@@ -6,6 +6,12 @@ namespace PirateSlop
     {
         public Transform Muzzle;
         public float LaunchSpeed = 30f;
+        public Transform BarrelPivot, Breech;
+        public float MinElevation = -10f, MaxElevation = 25f;
+        public float Elevation { get; private set; } = 3f;
+        Quaternion barrelRest;
+        AdvancedPlayerController grip;
+        float lastGrip;
         public NetworkCannon Network { get; set; }
         public CannonballCrate Crate { get; set; }
         public int Index { get; set; }
@@ -15,6 +21,21 @@ namespace PirateSlop
         Vector3 supplyPosition;
         Quaternion supplyRotation;
         float nextFireTime;
+        void Awake() { if (BarrelPivot != null) barrelRest = BarrelPivot.localRotation; }
+        public bool InBreechRange(AdvancedPlayerController player) => player != null && !player.IsDead && BarrelPivot != null && Vector3.Distance(player.transform.position + Vector3.up, BarrelPivot.position) <= 4f;
+        public void SetElevation(float value)
+        {
+            Elevation = Mathf.Clamp(value, MinElevation, MaxElevation);
+            if (BarrelPivot != null) BarrelPivot.localRotation = Quaternion.AngleAxis(3f - Elevation, BarrelPivot.parent.InverseTransformDirection(transform.right)) * barrelRest;
+        }
+        public bool DragBreech(AdvancedPlayerController player, float degrees, bool holding)
+        {
+            if (grip != null && (!InBreechRange(grip) || Time.time - lastGrip > .75f)) grip = null;
+            if (!holding) { if (grip == player) grip = null; return false; }
+            if (!float.IsFinite(degrees) || !InBreechRange(player) || (grip != null && grip != player)) return false;
+            grip = player; lastGrip = Time.time;
+            SetElevation(Elevation + Mathf.Clamp(degrees, -15f, 15f)); return true;
+        }
         void Start()
         {
             if (supply != null) return;

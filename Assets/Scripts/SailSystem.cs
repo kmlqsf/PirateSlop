@@ -11,6 +11,15 @@ public class SailSystem : MonoBehaviour
     [SerializeField] private Transform[] sailMeshes;
 
     public float DeployPercentage => deployPercentage;
+    public Collider[] MastControls;
+    public bool InRange(AdvancedPlayerController player)
+    {
+        if (player == null || player.IsDead || MastControls == null) return false;
+        Vector3 point = player.transform.position + Vector3.up;
+        foreach (var mast in MastControls)
+            if (mast != null && mast.enabled && Vector3.Distance(point, mast.ClosestPoint(point)) <= 2.5f) return true;
+        return false;
+    }
 
     public void AdjustSail(float delta)
     {

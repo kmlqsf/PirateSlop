@@ -3805,7 +3805,13 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8973779756059050530, guid: 33538a606b13cb34cbdcee93eefb2f30, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 913439849}
+    - targetCorrespondingSourceObject: {fileID: 8973779756059050530, guid: 33538a606b13cb34cbdcee93eefb2f30, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 913439848}
   m_SourcePrefab: {fileID: 100100000, guid: 33538a606b13cb34cbdcee93eefb2f30, type: 3}
 --- !u!4 &162453884 stripped
 Transform:
@@ -3970,7 +3976,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HelmInteraction
   interactionRadius: 2.2
-  turnSpeed: 2
   wheelMesh: {fileID: 162453884}
 --- !u!1 &252981385
 GameObject:
@@ -4290,6 +4295,7 @@ GameObject:
   - component: {fileID: 336972268}
   - component: {fileID: 336972269}
   - component: {fileID: 336972270}
+  - component: {fileID: 336972271}
   m_Layer: 0
   m_Name: PlayerCharacter
   m_TagString: Player
@@ -4526,6 +4532,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.PlayerInventory
   CannonPrefab: {fileID: 6766262252996742549, guid: a259d1526047caa44936b87a9a2dd31b, type: 3}
   PreviewMaterial: {fileID: 2100000, guid: 73d063623bebc964cb4a2985c85b685f, type: 2}
+--- !u!114 &336972271
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 336972258}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a365c768a261e9043a6346b41867e2fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.DirectShipControls
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -4679,7 +4697,7 @@ Transform:
   m_GameObject: {fileID: 426301650}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 5, z: -3.9}
+  m_LocalPosition: {x: -0.0000003427267, y: 10.859998, z: -3.8999975}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4704,7 +4722,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.5, y: 3.4, z: 0.5}
+  m_Size: {x: 0.5, y: 15.079996, z: 0.50000334}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &461058201
 GameObject:
@@ -5657,6 +5675,46 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: 986c97c53ed5aee458270993a3472947, type: 2}
+--- !u!1 &913439845 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8973779756059050530, guid: 33538a606b13cb34cbdcee93eefb2f30, type: 3}
+  m_PrefabInstance: {fileID: 162453883}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &913439848
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 913439845}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.02, y: 0.019999996, z: 0.002600002}
+  m_Center: {x: 0, y: -0.0000000013969839, z: -0.00010000233}
+--- !u!114 &913439849
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 913439845}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e15076c2455a3645b1c4322e5344811, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.ShipControlHandle
+  Helm: {fileID: 213673065}
+  Cannon: {fileID: 0}
 --- !u!1 &935508526
 GameObject:
   m_ObjectHideFlags: 0
@@ -7279,7 +7337,7 @@ Transform:
   m_GameObject: {fileID: 1727180918}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 5, z: 4.6}
+  m_LocalPosition: {x: 0.00000040233135, y: 9.909999, z: 4.6000013}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -7304,7 +7362,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.5, y: 3.4, z: 0.5}
+  m_Size: {x: 0.5, y: 13.179999, z: 0.5000038}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1744489036
 GameObject:
@@ -7485,6 +7543,9 @@ MonoBehaviour:
   deployPercentage: 0
   deploySpeed: 0.35
   sailMeshes: []
+  MastControls:
+  - {fileID: 426301652}
+  - {fileID: 1727180920}
 --- !u!114 &1842566543
 MonoBehaviour:
   m_ObjectHideFlags: 0

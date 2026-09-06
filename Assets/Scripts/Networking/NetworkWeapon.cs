@@ -33,14 +33,14 @@ namespace PirateSlop.Networking
             cannonSlots.Value |= 1 << slot;
             inventory.SetContents(cannonSlots.Value);
         }
-        public void PlaceCannon(NetworkObject ship, int slot, Vector3 localPosition, float yaw) => PlaceCannonServerRpc(ship, slot, localPosition, yaw);
+        public void PlaceCannon(NetworkObject ship, int slot, Vector3 localPosition, Quaternion rotation) => PlaceCannonServerRpc(ship, slot, localPosition, rotation);
         [ServerRpc]
-        void PlaceCannonServerRpc(NetworkObject ship, int slot, Vector3 localPosition, float yaw)
+        void PlaceCannonServerRpc(NetworkObject ship, int slot, Vector3 localPosition, Quaternion rotation)
         {
             if (inventory == null || ship == null || selectedSlot.Value != slot || !inventory.HasCannon(slot)) return;
             var cannon = ship.GetComponent<NetworkCannon>();
-            if (cannon == null || !PlayerInventory.CanPlace(cannon.Crate, localPosition, yaw, GetComponent<AdvancedPlayerController>())) return;
-            cannon.Place(localPosition, yaw);
+            if (cannon == null || !PlayerInventory.CanPlace(cannon.Crate, localPosition, rotation, GetComponent<AdvancedPlayerController>())) return;
+            cannon.Place(localPosition, rotation);
             cannonSlots.Value &= ~(1 << slot);
             inventory.SetContents(cannonSlots.Value);
         }

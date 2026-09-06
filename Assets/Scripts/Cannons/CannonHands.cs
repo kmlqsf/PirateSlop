@@ -8,6 +8,7 @@ namespace PirateSlop
     {
         AdvancedPlayerController player;
         PlayerInventory inventory;
+        DirectShipControls controls;
         Cannonball held;
         SimpleCannon aimed;
         float distance;
@@ -23,7 +24,7 @@ namespace PirateSlop
             var ball = nearest.collider != null ? nearest.collider.GetComponent<Cannonball>() : null;
             return ball != null && !ball.Loaded;
         }
-        void Awake() { player = GetComponent<AdvancedPlayerController>(); inventory = GetComponent<PlayerInventory>(); }
+        void Awake() { player = GetComponent<AdvancedPlayerController>(); inventory = GetComponent<PlayerInventory>(); controls = GetComponent<DirectShipControls>(); }
         void OnDisable() => Drop();
         void Drop()
         {
@@ -48,7 +49,7 @@ namespace PirateSlop
             aimed = null;
             if (held != null && !held.Held) held = null;
             var mouse = Mouse.current;
-            if (!player.InputActive || player.LocomotionLocked || mouse == null || (inventory != null && (inventory.Placing || inventory.InteractionUsed))) { Drop(); return; }
+            if (!player.InputActive || player.LocomotionLocked || mouse == null || (controls != null && controls.IsDragging) || (inventory != null && (inventory.Placing || inventory.InteractionUsed))) { Drop(); return; }
             var camera = player.PlayerCamera;
             var ray = new Ray(camera.transform.position, camera.transform.forward);
             // Ignore the local player's body, including when using F1.
@@ -101,7 +102,7 @@ namespace PirateSlop
         }
         void OnGUI()
         {
-            if (player == null || !player.InputActive || player.LocomotionLocked || (inventory != null && inventory.Placing)) return;
+            if (player == null || !player.InputActive || player.LocomotionLocked || (controls != null && controls.IsDragging) || (inventory != null && inventory.Placing)) return;
             GUI.Label(new Rect(Screen.width / 2f - 4, Screen.height / 2f - 10, 20, 20), "+");
             string text = held != null ? "Поднеси ядро к дулу • Колесо — ближе/дальше • Отпусти ЛКМ — бросить" : aimed != null ? (aimed.IsLoaded ? "E — выстрелить" : "Поднеси ядро к дулу, удерживая ЛКМ") : "";
             if (text.Length > 0) GUI.Box(new Rect(Screen.width / 2f - 310, Screen.height - 125, 620, 28), text);

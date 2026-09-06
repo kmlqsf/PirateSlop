@@ -20,7 +20,7 @@ namespace PirateSlop
         GameObject preview;
         Material previewMaterial;
         CannonPickup pickup;
-        float rotation;
+        float rotation, tilt, roll;
         bool cancelled;
         bool valid;
         bool Networked => network != null && (network.IsClientInitialized || network.IsServerInitialized);
@@ -57,7 +57,7 @@ namespace PirateSlop
             for (int i = 0; i < 6; i++)
                 if (keyboard[(Key)((int)Key.Digit1 + i)].wasPressedThisFrame)
                 {
-                    SetSelection(i); rotation = 0;
+                    SetSelection(i); rotation = tilt = roll = 0;
                     if (Networked) network.SelectSlot(i);
                 }
             if (hands != null && hands.HasHeldBall) return;
@@ -83,20 +83,24 @@ namespace PirateSlop
             if (cancelled) return;
             rotation += mouse.scroll.ReadValue().y * .125f;
             if (keyboard.rKey.wasPressedThisFrame) rotation += 15f;
+            float lean = ((keyboard.eKey.isPressed ? 1f : 0f) - (keyboard.qKey.isPressed ? 1f : 0f)) * 60f * Time.deltaTime;
+            if (keyboard.leftShiftKey.isPressed || keyboard.rightShiftKey.isPressed) roll += lean;
+            else tilt += lean;
             var ship = nearest.collider != null ? nearest.collider.GetComponentInParent<ShipController>() : null;
             var crate = ship != null ? ship.GetComponentInChildren<CannonballCrate>() : null;
-            Quaternion orientation = ship != null ? ship.transform.rotation * Quaternion.Euler(0, rotation, 0) : Quaternion.Euler(0, camera.transform.eulerAngles.y + rotation, 0);
-            Vector3 position = nearest.collider != null ? nearest.point : camera.transform.position + camera.transform.forward * 4f;
+            Quaternion orientation = ship != null ? Quaternion.FromToRotation(ship.transform.up, nearest.normal) * ship.transform.rotation * Quaternion.Euler(tilt, rotation, roll) : Quaternion.Euler(tilt, camera.transform.eulerAngles.y + rotation, roll);
+            Vector3 position = nearest.collider != null ? nearest.point + nearest.normal * .03f : camera.transform.position + camera.transform.forward * 4f;
+            Quaternion localRotation = ship != null ? Quaternion.Inverse(ship.transform.rotation) * orientation : orientation;
             if (crate != null)
-                valid = CanPlace(crate, ship.transform.InverseTransformPoint(position), rotation, motor);
+                valid = CanPlace(crate, ship.transform.InverseTransformPoint(position), localRotation, motor);
             if (preview == null) CreatePreview();
             preview.SetActive(true);
             preview.transform.SetPositionAndRotation(position, orientation);
             previewMaterial.SetColor("_BaseColor", valid ? new Color(.15f, .9f, .45f, .55f) : new Color(1f, .2f, .15f, .55f));
             if (!valid || !mouse.leftButton.wasPressedThisFrame) return;
             Vector3 localPosition = ship.transform.InverseTransformPoint(position);
-            if (Networked) network.PlaceCannon(crate.Network.NetworkObject, SelectedSlot, localPosition, rotation);
-            else { crate.AddCannon(localPosition, rotation); CannonSlots &= ~(1 << SelectedSlot); }
+            if (Networked) network.PlaceCannon(crate.Network.NetworkObject, SelectedSlot, localPosition, localRotation);
+            else { crate.AddCannon(localPosition, localRotation); CannonSlots &= ~(1 << SelectedSlot); }
         }
 
         void CreatePreview()
@@ -115,30 +119,17 @@ namespace PirateSlop
             }
         }
 
-        public static bool CanPlace(CannonballCrate crate, Vector3 localPosition, float yaw, AdvancedPlayerController player)
+        public static bool CanPlace(CannonballCrate crate, Vector3 localPosition, Quaternion rotation, AdvancedPlayerController player)
         {
-            if (crate == null || player == null || player.IsDead || player.LocomotionLocked || !float.IsFinite(localPosition.sqrMagnitude) || !float.IsFinite(yaw)) return false;
+            float length = Quaternion.Dot(rotation, rotation);
+            if (crate == null || player == null || player.IsDead || player.LocomotionLocked || !float.IsFinite(localPosition.sqrMagnitude) || !float.IsFinite(length) || length < .5f || length > 1.5f) return false;
             var ship = crate.Ship;
             Vector3 position = ship.transform.TransformPoint(localPosition);
             if (Vector3.Distance(player.transform.position, position) > 6f) return false;
-            Quaternion orientation = ship.transform.rotation * Quaternion.Euler(0, yaw, 0);
-            Vector3 up = ship.transform.up;
             var body = ship.GetComponent<Rigidbody>();
-            foreach (var offset in new[] { Vector3.zero, new Vector3(-.65f, 0, -.7f), new Vector3(.65f, 0, -.7f), new Vector3(-.65f, 0, .7f), new Vector3(.65f, 0, .7f) })
-            {
-                Vector3 point = position + orientation * offset;
-                if (!Physics.Raycast(point + up * .15f, -up, out var hit, .3f, ~0, QueryTriggerInteraction.Ignore) || hit.rigidbody != body || Vector3.Dot(hit.normal, up) < .95f || Mathf.Abs(Vector3.Dot(hit.point - point, up)) > .08f) return false;
-                if (hit.collider.GetComponentInParent<SimpleCannon>() != null || hit.collider.GetComponentInParent<CannonballCrate>() != null || hit.collider.GetComponentInParent<CannonPickup>() != null) return false;
-            }
-            foreach (var box in crate.CannonPrefab.GetComponents<BoxCollider>())
-            {
-                Vector3 size = box.size;
-                Vector3 center = box.center;
-                float bottom = center.y - size.y * .5f;
-                if (bottom < .1f) { size.y -= .1f - bottom; center.y += (.1f - bottom) * .5f; }
-                if (Physics.OverlapBox(position + orientation * center, size * .48f, orientation, ~0, QueryTriggerInteraction.Ignore).Length > 0) return false;
-            }
-            return true;
+            foreach (var collider in Physics.OverlapSphere(position, .12f, ~0, QueryTriggerInteraction.Ignore))
+                if (collider.attachedRigidbody == body) return true;
+            return false;
         }
 
         void OnDisable() { if (preview != null) preview.SetActive(false); }
@@ -154,8 +145,8 @@ namespace PirateSlop
                 GUI.Box(new Rect(Screen.width * .5f - width * 3 + width * i, Screen.height - 76, width - 4, 62), (i + 1) + "\n" + (i == 0 ? "Пистолет" : HasCannon(i) ? "Пушка" : ""));
             }
             GUI.color = old;
-            string hint = pickup != null ? (EmptySlot() >= 0 ? "E — взять разобранную пушку" : "Инвентарь заполнен") : Placing && !cancelled ? "ЛКМ — установить · R / колесо — повернуть · ПКМ — отменить" : "";
-            if (hint.Length > 0) GUI.Box(new Rect(Screen.width * .5f - 290, Screen.height - 165, 580, 28), hint);
+            string hint = pickup != null ? (EmptySlot() >= 0 ? "E — взять разобранную пушку" : "Инвентарь заполнен") : Placing && !cancelled ? "ЛКМ — поставить · R/колесо — поворот · Q/E — наклон\nShift+Q/E — крен · ПКМ — отменить" : "";
+            if (hint.Length > 0) GUI.Box(new Rect(Screen.width * .5f - 290, Screen.height - 165, 580, 44), hint);
         }
     }
 }

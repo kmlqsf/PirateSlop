@@ -45,7 +45,7 @@ namespace PirateSlop.Networking
         void Tick()
         {
             if (!IsServerInitialized) return;
-            if (!Helm.IsControlling) Helm.Simulate(default, null, (float)TimeManager.TickDelta);
+            Helm.Simulate(default, null, (float)TimeManager.TickDelta);
             Motor.Simulate((float)TimeManager.TickDelta);
             Physics.SyncTransforms();
         }
@@ -59,6 +59,21 @@ namespace PirateSlop.Networking
                 if (player != null) driver = player.ParticipantId.Value;
             }
             ReceiveState(Motor.Capture(), driver);
+        }
+        public void DragWheel(float degrees, bool holding) => DragWheelServerRpc(degrees, holding);
+        [ServerRpc(RequireOwnership = false)]
+        void DragWheelServerRpc(float degrees, bool holding, FishNet.Connection.NetworkConnection sender = null)
+        {
+            var player = sender != null ? SessionController.Instance.GetPlayer(sender.ClientId) : null;
+            if (player != null) Helm.Drag(player.Motor, degrees, holding);
+        }
+        public void AdjustSails(float amount) => AdjustSailsServerRpc(amount);
+        [ServerRpc(RequireOwnership = false)]
+        void AdjustSailsServerRpc(float amount, FishNet.Connection.NetworkConnection sender = null)
+        {
+            var player = sender != null ? SessionController.Instance.GetPlayer(sender.ClientId) : null;
+            var sails = GetComponent<SailSystem>();
+            if (player != null && sails.InRange(player.Motor) && float.IsFinite(amount)) sails.AdjustSail(Mathf.Clamp(amount, -.2f, .2f));
         }
         [ObserversRpc(BufferLast = true)]
         void ReceiveState(ShipState state, int driver)

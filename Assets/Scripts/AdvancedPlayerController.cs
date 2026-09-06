@@ -23,6 +23,7 @@ public class AdvancedPlayerController : MonoBehaviour
     PlayerCommand pending;
     CombatHealth health;
     PlayerInventory inventory;
+    DirectShipControls shipControls;
     public bool IsDead => health != null && health.IsDead;
     public bool LocomotionLocked { get; private set; }
     public bool IsSliding => slideTimer > 0f;
@@ -34,6 +35,7 @@ public class AdvancedPlayerController : MonoBehaviour
     {
         health = GetComponent<CombatHealth>();
         inventory = GetComponent<PlayerInventory>();
+        shipControls = GetComponent<DirectShipControls>();
         controller = GetComponent<CharacterController>(); playerCamera = GetComponentInChildren<Camera>(true);
         modelVisibility = GetComponentsInChildren<FirstPersonModelVisibility>(true);
         lookYaw = transform.eulerAngles.y; SetHeight(false);
@@ -61,7 +63,7 @@ public class AdvancedPlayerController : MonoBehaviour
         if (kb.f1Key.wasPressedThisFrame) SetThirdPerson(!IsThirdPerson);
         if (kb.escapeKey.wasPressedThisFrame) { pending.Release = true; SetCursor(false); }
         if (mouse != null && mouse.leftButton.wasPressedThisFrame && !PirateSlop.Networking.SessionController.MenuOpen) SetCursor(true);
-        if (InputActive && mouse != null) { var d = mouse.delta.ReadValue() * mouseSensitivity; lookYaw = Mathf.Repeat(lookYaw + d.x, 360f); pitch = Mathf.Clamp(pitch - d.y, -85f, 85f); }
+        if (InputActive && mouse != null && (shipControls == null || !shipControls.IsDragging)) { var d = mouse.delta.ReadValue() * mouseSensitivity; lookYaw = Mathf.Repeat(lookYaw + d.x, 360f); pitch = Mathf.Clamp(pitch - d.y, -85f, 85f); }
         pending.Move = InputActive ? Vector2.ClampMagnitude(new Vector2((kb.dKey.isPressed || kb.rightArrowKey.isPressed ? 1 : 0) - (kb.aKey.isPressed || kb.leftArrowKey.isPressed ? 1 : 0), (kb.wKey.isPressed || kb.upArrowKey.isPressed ? 1 : 0) - (kb.sKey.isPressed || kb.downArrowKey.isPressed ? 1 : 0)), 1) : Vector2.zero;
         pending.Yaw = lookYaw;
         pending.Sprint = InputActive && (kb.leftShiftKey.isPressed || kb.rightShiftKey.isPressed);

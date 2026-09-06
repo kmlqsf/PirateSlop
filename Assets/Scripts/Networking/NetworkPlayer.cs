@@ -147,13 +147,7 @@ namespace PirateSlop.Networking
         {
             if (!IsOwner && !IsServerInitialized) return;
             if (!TryBind()) return;
-            var activeShip = ActiveShip;
             if (motor.IsDead) return;
-            // While walking, only a nearby helm accepts E. Once it is taken, the
-            // same player keeps driving that ship until E/Q releases it.
-            if (activeShip == null || !activeShip.Helm.IsControlledBy(motor))
-                foreach (var candidate in FindObjectsByType<NetworkShip>(FindObjectsSortMode.None))
-                    if (candidate.Helm.InRange(motor)) { activeShip = candidate; break; }
             var command = input.Command;
             if (!command.IsValid) command = default;
             // Only extrapolate live server input for a bounded interval. Prediction replay
@@ -172,7 +166,6 @@ namespace PirateSlop.Networking
                 command.Jump = command.Slide = command.Use = command.Release = false;
             }
             float dt = (float)TimeManager.TickDelta;
-            if (IsServerInitialized && activeShip != null) activeShip.Helm.Simulate(command, motor, dt);
             Physics.SyncTransforms();
             passenger.Carry();
             motor.Simulate(command, dt);
