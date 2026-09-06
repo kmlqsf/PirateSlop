@@ -8,7 +8,15 @@ namespace PirateSlop.Networking
         SimpleCannon cannon;
         Cannonball ball;
         Rigidbody shipBody;
-        void Awake() { cannon = GetComponentInChildren<SimpleCannon>(true); ball = GetComponentInChildren<Cannonball>(true); shipBody = GetComponentInParent<Rigidbody>(); if (cannon != null) cannon.Network = this; if (ball != null) ball.Network = this; }
+        void Awake() { cannon = GetComponentInChildren<SimpleCannon>(true); ball = GetComponentInChildren<Cannonball>(true); shipBody = GetComponentInParent<Rigidbody>(); if (cannon != null) { cannon.Network = this; cannon.InitializeSupply(ball); } if (ball != null) ball.Network = this; }
+        public void NotifyFired(Vector3 position, Vector3 velocity)
+        {
+            holder = -1;
+            SyncLoadedObserversRpc(false, shipBody.transform.InverseTransformPoint(ball.transform.position));
+            ShotObserversRpc(position, velocity);
+        }
+        [ObserversRpc] void ShotObserversRpc(Vector3 position, Vector3 velocity)
+        { if (!IsServerInitialized && cannon != null) cannon.SpawnShot(position, velocity, false); }
         int holder = -1;
         public void RequestBall(bool holding, Vector3 position) => BallServerRpc(holding, transform.InverseTransformPoint(position));
         [ServerRpc(RequireOwnership = false)]
@@ -40,11 +48,13 @@ namespace PirateSlop.Networking
             holder = -1; ball.Held = false; ball.GetComponent<Collider>().enabled = true;
             ball.transform.position = shipBody.transform.TransformPoint(localPosition);
             cannon.TryLoad(ball);
-            SyncLoadedObserversRpc(localPosition);
+            if (cannon.IsLoaded) SyncLoadedObserversRpc(true, localPosition);
         }
-        [ObserversRpc(BufferLast = true)] void SyncLoadedObserversRpc(Vector3 localPosition)
+        [ObserversRpc(BufferLast = true)] void SyncLoadedObserversRpc(bool isLoaded, Vector3 localPosition)
         {
-            if (IsServerInitialized || ball == null || cannon == null || cannon.IsLoaded) return;
+            if (IsServerInitialized || ball == null || cannon == null) return;
+            if (!isLoaded) { cannon.ResetSupply(); return; }
+            if (cannon.IsLoaded) return;
             ball.transform.position = shipBody.transform.TransformPoint(localPosition);
             cannon.TryLoad(ball);
         }

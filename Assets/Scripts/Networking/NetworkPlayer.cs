@@ -151,8 +151,12 @@ namespace PirateSlop.Networking
                     if (candidate.Helm.InRange(motor)) { activeShip = candidate; break; }
             var command = input.Command;
             if (!command.IsValid) command = default;
-            // Missing input cannot repeat a one-shot action or leave throttle held indefinitely.
-            if (!state.ContainsCreated()) command = new PlayerCommand { Yaw = motor.transform.eulerAngles.y };
+            // FishNet's predicted/replayed input retains movement. Clear only one-shot actions:
+            // replacing the entire command with zero caused stop/start motion between received ticks.
+            if (!state.ContainsCreated())
+            {
+                command.Jump = command.Slide = command.Use = command.Release = false;
+            }
             float dt = (float)TimeManager.TickDelta;
             if (IsServerInitialized) activeShip.Helm.Simulate(command, motor, dt);
             Physics.SyncTransforms();

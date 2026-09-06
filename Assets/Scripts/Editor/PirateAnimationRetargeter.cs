@@ -25,6 +25,7 @@ namespace PirateSlop.EditorTools
             {
                 var sourceBones = sourceObject.GetComponentsInChildren<Transform>().ToDictionary(t => t.name);
                 var targetBones = targetObject.GetComponentsInChildren<Transform>().Where(t => targetBind.ContainsKey(t.name)).ToArray();
+                var restPositions = targetBones.ToDictionary(t => t, t => t.localPosition);
                 var animated = new[] { targetObject.transform.Find("PirateRig") }.Concat(targetBones).ToArray();
                 int frames = Mathf.CeilToInt(source.length * source.frameRate);
                 var values = new float[animated.Length, 7, frames + 1];
@@ -40,7 +41,14 @@ namespace PirateSlop.EditorTools
                         var sample = sourceBones[bone.name];
                         var rotation = alignment * sample.rotation * Quaternion.Inverse(sourceBind[bone.name].rotation) *
                             Quaternion.Inverse(alignment) * targetBind[bone.name].rotation;
-                        bone.SetPositionAndRotation(alignment * sample.position * scale - displacement, rotation);
+                        if (removeJumpHeight)
+                        {
+                            // Jump height belongs to the character motor. Keep the pirate's bone lengths,
+                            // rather than copying animated translations from a differently proportioned rig.
+                            bone.localPosition = restPositions[bone];
+                            bone.rotation = rotation;
+                        }
+                        else bone.SetPositionAndRotation(alignment * sample.position * scale - displacement, rotation);
                     }
                     for (int i = 0; i < animated.Length; i++)
                     {
