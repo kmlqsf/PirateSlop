@@ -38,7 +38,7 @@ public class HelmInteraction : MonoBehaviour
         if (IsControlling) sail.AdjustSail(command.Move.y * .5f * dt);
         rudder = Mathf.MoveTowards(rudder, steer, turnSpeed * dt); UpdateWheel();
     }
-    void UpdateWheel() { if (wheelMesh != null) wheelMesh.localRotation = wheelRest * Quaternion.Euler(0, 0, -rudder * 120); }
+    void UpdateWheel() { if (wheelMesh != null) wheelMesh.localRotation = wheelRest * Quaternion.Euler(0, 0, rudder * 120); }
     void Update()
     {
         if (Networked) return;

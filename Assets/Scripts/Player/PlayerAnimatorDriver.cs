@@ -12,6 +12,7 @@ namespace PirateSlop
 
         AdvancedPlayerController motor;
         Animator animator;
+        float airborneTime;
 
         void Awake()
         {
@@ -25,7 +26,8 @@ namespace PirateSlop
             animator.SetFloat(Speed, motor.PlanarSpeed, 0.08f, Time.deltaTime);
             animator.SetBool(Crouched, motor.IsCrouched);
             animator.SetBool(Sliding, motor.IsSliding);
-            animator.SetBool(Grounded, motor.IsGrounded || motor.LocomotionLocked);
+            airborneTime = motor.IsGrounded || motor.LocomotionLocked ? 0 : airborneTime + Time.deltaTime;
+            animator.SetBool(Grounded, motor.IsGrounded || motor.LocomotionLocked || (motor.VerticalSpeed <= 0 && airborneTime < .08f));
         }
     }
 }

@@ -35,6 +35,9 @@ namespace PirateSlop.EditorTools
             controller.AddParameter("Crouched", AnimatorControllerParameterType.Bool);
             controller.AddParameter("Sliding", AnimatorControllerParameterType.Bool);
             controller.AddParameter("Grounded", AnimatorControllerParameterType.Bool);
+            var parameters = controller.parameters;
+            for (int i = 0; i < parameters.Length; i++) if (parameters[i].name == "Grounded") parameters[i].defaultBool = true;
+            controller.parameters = parameters;
             var locomotion = sm.AddState("Locomotion");
             locomotion.motion = Blend(controller, "Locomotion", new[] { clips[0], clips[1], clips[2] }, new[] { 0f, 5f, 8f });
             var crouch = sm.AddState("Crouch");
@@ -50,7 +53,7 @@ namespace PirateSlop.EditorTools
                 {
                     if (from == to) continue;
                     var transition = from.AddTransition(to);
-                    transition.hasExitTime = false; transition.hasFixedDuration = true; transition.duration = .08f;
+                    transition.hasExitTime = false; transition.hasFixedDuration = true; transition.duration = to == jump ? .03f : .08f;
                     Condition(transition, "Grounded", to != jump);
                     if (to != jump) Condition(transition, "Sliding", to == slide);
                     if (to == locomotion || to == crouch) Condition(transition, "Crouched", to == crouch);

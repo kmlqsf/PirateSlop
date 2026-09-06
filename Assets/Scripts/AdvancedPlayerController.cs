@@ -5,14 +5,15 @@ using PirateSlop;
 [RequireComponent(typeof(CharacterController))]
 public class AdvancedPlayerController : MonoBehaviour
 {
-    [SerializeField] float walkSpeed = 5f, sprintSpeed = 8f, crouchSpeed = 2.5f, slideSpeed = 10f;
+    [SerializeField] float walkSpeed = 5f, sprintSpeed = 8f, crouchSpeed = 2.5f, slideSpeed = 6f;
     [SerializeField] float jumpHeight = 1.2f, gravity = -25f;
     [SerializeField] float standingHeight = 1.8f, crouchHeight = 0.9f;
-    [SerializeField] float slideDuration = 0.65f, slideCooldown = 1f, mouseSensitivity = 0.12f;
+    [SerializeField] float slideDuration = 1.2f, slideCooldown = 1f, mouseSensitivity = 0.12f;
     [SerializeField] float thirdPersonDistance = 3f;
     FirstPersonModelVisibility[] modelVisibility;
     public bool IsThirdPerson { get; private set; }
     public bool IsGrounded { get; private set; }
+    public float VerticalSpeed => verticalVelocity;
     CharacterController controller;
     Camera playerCamera;
     float pitch, verticalVelocity, slideTimer, cooldown, lookYaw;
@@ -100,19 +101,20 @@ public class AdvancedPlayerController : MonoBehaviour
         cooldown = Mathf.Max(0, cooldown - dt);
         if (LocomotionLocked) return;
         var direction = transform.right * command.Move.x + transform.forward * command.Move.y;
-        bool grounded = controller.isGrounded || Physics.SphereCast(transform.position + Vector3.up * .35f, .25f, Vector3.down, out _, .16f, ~0, QueryTriggerInteraction.Ignore);
+        bool grounded = verticalVelocity <= 0 && HasGround();
         if (command.Slide && command.Sprint && direction.sqrMagnitude > .1f && grounded && !crouched && cooldown <= 0) { slideTimer = slideDuration; cooldown = slideDuration + slideCooldown; slideDirection = direction.normalized; }
         if (IsSliding) { slideTimer = Mathf.Max(0, slideTimer - dt); if (!grounded) slideTimer = 0; }
         bool wantCrouch = command.Crouch || IsSliding;
         if (!wantCrouch && crouched && !CanStand()) wantCrouch = true;
         SetHeight(wantCrouch);
-        var planar = IsSliding ? slideDirection * Mathf.Lerp(crouchSpeed, slideSpeed, slideTimer / Mathf.Max(.01f, slideDuration)) : direction * (crouched ? crouchSpeed : command.Sprint ? sprintSpeed : walkSpeed);
+        float slideProgress = 1f - slideTimer / Mathf.Max(.01f, slideDuration);
+        var planar = IsSliding ? slideDirection * Mathf.Lerp(slideSpeed, crouchSpeed, slideProgress * slideProgress) : direction * (crouched ? crouchSpeed : command.Sprint ? sprintSpeed : walkSpeed);
         PlanarSpeed = planar.magnitude;
         if (grounded && verticalVelocity < 0) verticalVelocity = -2;
         if (command.Jump && grounded && !crouched) verticalVelocity = Mathf.Sqrt(jumpHeight * -2 * gravity);
         verticalVelocity += gravity * dt;
         controller.Move((planar + Vector3.up * verticalVelocity) * dt);
-        IsGrounded = controller.isGrounded && verticalVelocity <= 0;
+        IsGrounded = verticalVelocity <= 0 && HasGround();
     }
     public PlayerState Capture() => new PlayerState { Position = transform.position, Yaw = transform.eulerAngles.y, VerticalVelocity = verticalVelocity, SlideDirection = slideDirection, SlideTimer = slideTimer, Cooldown = cooldown, Crouched = crouched, Locked = LocomotionLocked, PlanarSpeed = PlanarSpeed, Grounded = IsGrounded };
     public void Restore(PlayerState s)
@@ -122,7 +124,7 @@ public class AdvancedPlayerController : MonoBehaviour
     }
     public void ApplyAnimationState(PlayerState s)
     {
-        PlanarSpeed = s.PlanarSpeed; IsGrounded = s.Grounded;
+        PlanarSpeed = s.PlanarSpeed; IsGrounded = s.Grounded; verticalVelocity = s.VerticalVelocity;
         slideTimer = s.SlideTimer; LocomotionLocked = s.Locked; SetHeight(s.Crouched);
     }
     public void ApplyRemoteState(Vector3 position, float yawValue, float blend)
@@ -137,5 +139,19 @@ public class AdvancedPlayerController : MonoBehaviour
         foreach (var hit in Physics.OverlapCapsule(transform.position + Vector3.up * (crouchHeight + r), transform.position + Vector3.up * (standingHeight - r), r, ~0, QueryTriggerInteraction.Ignore)) if (!hit.transform.IsChildOf(transform)) return false;
         return true;
     }
-    void SetHeight(bool value) { crouched = value; controller.height = value ? crouchHeight : standingHeight; controller.center = Vector3.up * controller.height * .5f; }
+    bool HasGround()
+    {
+        if (controller.isGrounded) return true;
+        foreach (var hit in Physics.SphereCastAll(transform.position + Vector3.up * .35f, .25f, Vector3.down, .16f, ~0, QueryTriggerInteraction.Ignore))
+            if (!hit.transform.IsChildOf(transform) && hit.normal.y >= Mathf.Cos(controller.slopeLimit * Mathf.Deg2Rad)) return true;
+        return false;
+    }
+    void SetHeight(bool value)
+    {
+        crouched = value;
+        float height = value ? crouchHeight : standingHeight;
+        if (Mathf.Abs(controller.height - height) > .001f) controller.height = height;
+        var center = Vector3.up * height * .5f;
+        if ((controller.center - center).sqrMagnitude > .000001f) controller.center = center;
+    }
 }

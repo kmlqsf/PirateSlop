@@ -5,25 +5,25 @@ namespace PirateSlop
     public sealed class Cannonball : MonoBehaviour
     {
         public bool Loaded { get; set; }
+        public bool Held { get; set; }
+        public PirateSlop.Networking.NetworkCannon Network { get; set; }
         public Rigidbody Body => GetComponent<Rigidbody>();
         public Rigidbody PlatformBody { get; set; }
         Vector3 lastPlatformPosition;
         Quaternion lastPlatformRotation;
         Vector3 deckLocalPosition;
+        Quaternion deckLocalRotation;
         public void AttachToPlatform(Rigidbody platform)
         {
             PlatformBody = platform;
-            if (platform != null) { lastPlatformPosition = platform.position; lastPlatformRotation = platform.rotation; deckLocalPosition = platform.transform.InverseTransformPoint(Body.position); }
+            if (platform != null && platform != Body) { deckLocalPosition = platform.transform.InverseTransformPoint(transform.position); deckLocalRotation = Quaternion.Inverse(platform.rotation) * transform.rotation; }
+            else PlatformBody = null;
         }
         void FixedUpdate()
         {
-            if (Loaded || PlatformBody == null || !Body.isKinematic) return;
-            var local = deckLocalPosition;
-            local.x = Mathf.Clamp(local.x, -3.25f, 3.25f);
-            local.z = Mathf.Clamp(local.z, -13f, 13f);
-            local.y = Mathf.Max(local.y, 5.45f);
-            Body.position = PlatformBody.transform.TransformPoint(local);
-            Body.rotation = PlatformBody.rotation * Quaternion.Euler(0f, transform.eulerAngles.y, 0f);
+            if (Held || Loaded || PlatformBody == null || !Body.isKinematic) return;
+            Body.position = PlatformBody.transform.TransformPoint(deckLocalPosition);
+            Body.rotation = PlatformBody.rotation * deckLocalRotation;
             lastPlatformPosition = PlatformBody.position; lastPlatformRotation = PlatformBody.rotation;
         }
         public void Release()

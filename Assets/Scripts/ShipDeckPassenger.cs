@@ -19,13 +19,15 @@ public class ShipDeckPassenger : MonoBehaviour
         var delta = ship.transform.rotation * Quaternion.Inverse(lastRotation);
         var next = ship.transform.position + delta * (transform.position - lastPosition);
         float yawDelta = Mathf.DeltaAngle(lastRotation.eulerAngles.y, ship.transform.eulerAngles.y);
-        controller.enabled = false; transform.position = next; transform.rotation = Quaternion.Euler(0, transform.eulerAngles.y + yawDelta, 0); controller.enabled = true;
+        transform.SetPositionAndRotation(next, Quaternion.Euler(0, transform.eulerAngles.y + yawDelta, 0));
+        Physics.SyncTransforms();
         if (updateLook) player.AddPlatformYaw(yawDelta);
         ResetAnchor();
     }
     public void Detect()
     {
         if (player != null && player.LocomotionLocked) return;
+        if (player != null && player.VerticalSpeed > 0) { if (ship != null) Attach(null); return; }
         Rigidbody nextShip = null;
         if (Physics.SphereCast(transform.position + Vector3.up * .4f, .2f, Vector3.down, out var hit, .35f, ~0, QueryTriggerInteraction.Ignore) && hit.rigidbody != null && hit.rigidbody.GetComponent<ShipController>() != null) nextShip = hit.rigidbody;
         if (nextShip != ship) Attach(nextShip);

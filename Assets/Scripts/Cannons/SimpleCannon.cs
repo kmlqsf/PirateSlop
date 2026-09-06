@@ -12,7 +12,7 @@ namespace PirateSlop
         public bool TryLoad(Cannonball ball)
         {
             if (IsLoaded || ball == null || ball.Loaded || Vector3.Distance(ball.transform.position, Muzzle.position) > .4f) return false;
-            loaded = ball; ball.Loaded = true;
+            loaded = ball; ball.Loaded = true; ball.Held = false; ball.GetComponent<Collider>().enabled = true;
             ball.Body.isKinematic = true;
             ball.AttachToPlatform(GetComponentInParent<Rigidbody>());
             ball.transform.SetParent(Muzzle, true);
@@ -22,7 +22,7 @@ namespace PirateSlop
         }
         public void Fire()
         {
-            if (Network != null && !Network.IsServerInitialized) { Network.RequestFire(); return; }
+            if (Network != null && Network.IsClientInitialized && !Network.IsServerInitialized) { Network.RequestFire(); return; }
             if (!IsLoaded) return;
             var ball = loaded; loaded = null;
             var ship = GetComponentInParent<Rigidbody>();
