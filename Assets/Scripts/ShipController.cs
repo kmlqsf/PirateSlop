@@ -32,7 +32,7 @@ public class ShipController : MonoBehaviour
         bank = Mathf.Lerp(bank, -rudder * maxBankAngle * factor, 1 - Mathf.Exp(-bankResponse * dt));
         var rotation = Quaternion.Euler(0, yaw, bank);
         var next = rb.position + Quaternion.Euler(0, yaw, 0) * Vector3.forward * speed * dt; next.y = waterHeight;
-        if (Networked) { rb.position = next; rb.rotation = rotation; }
+        if (Networked) { rb.position = next; rb.rotation = rotation; transform.SetPositionAndRotation(next, rotation); }
         else { rb.MoveRotation(rotation); rb.MovePosition(next); }
     }
     public ShipState Capture() => new ShipState { Position = rb.position, Yaw = yaw, Speed = speed, Bank = bank, Sail = sailSystem.DeployPercentage, Rudder = helm.CurrentRudderNormalized, Controlling = helm.IsControlling };
@@ -42,19 +42,21 @@ public class ShipController : MonoBehaviour
         rb.position = s.Position; rb.rotation = Quaternion.Euler(0, yaw, bank); transform.SetPositionAndRotation(rb.position, rb.rotation);
         sailSystem.SetDeploy(s.Sail); helm.Restore(s.Rudder, s.Controlling, driver);
     }
-    public void ApplyRemoteState(ShipState s, float blend)
+    public void ApplyRemoteState(ShipState s, float blend, AdvancedPlayerController driver = null)
     {
         speed = Mathf.Lerp(speed, s.Speed, blend); yaw = Mathf.LerpAngle(yaw, s.Yaw, blend); bank = Mathf.Lerp(bank, s.Bank, blend);
         waterHeight = s.Position.y;
         var position = Vector3.Lerp(rb.position, s.Position, blend);
         var rotation = Quaternion.Slerp(rb.rotation, Quaternion.Euler(0, s.Yaw, s.Bank), blend);
         rb.position = position; rb.rotation = rotation;
-        sailSystem.SetDeploy(s.Sail); helm.Restore(s.Rudder, s.Controlling, null);
+        transform.SetPositionAndRotation(position, rotation);
+        sailSystem.SetDeploy(s.Sail); helm.Restore(s.Rudder, s.Controlling, driver);
     }
     public void ResolveCollision(Vector3 displacement)
     {
         var position = rb.position + displacement; position.y = waterHeight;
         rb.position = position;
+        transform.position = position;
         speed *= .35f;
     }
 }

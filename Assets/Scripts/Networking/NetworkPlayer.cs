@@ -25,6 +25,7 @@ namespace PirateSlop.Networking
         public void SetTick(uint value) => tick = value;
         public void Dispose() { }
     }
+    [DefaultExecutionOrder(-10)]
     public sealed class NetworkPlayer : NetworkBehaviour
     {
         public readonly SyncVar<NetworkObject> ShipObject = new();
@@ -34,6 +35,11 @@ namespace PirateSlop.Networking
         bool bound;
         CaptainState observerState;
         bool hasObserverState;
+        Vector3 visualLocalPosition;
+        Rigidbody visualPlatform;
+        Transform graphicsRoot;
+        Vector3 observerLocalPosition;
+        NetworkObject observerPlatform;
         int autoTicks;
         int receivedSnapshots;
         float nextDiagnostic;
@@ -69,6 +75,7 @@ namespace PirateSlop.Networking
         {
             motor = GetComponent<AdvancedPlayerController>(); motor.ConfigureNetwork(false);
             passenger = GetComponent<ShipDeckPassenger>(); passenger.Networked = true;
+            graphicsRoot = transform.Find("PlayerGraphics");
         }
         public override void OnStartNetwork()
         {
@@ -85,13 +92,14 @@ namespace PirateSlop.Networking
         public override void OnStopNetwork()
         {
             TimeManager.OnTick -= Tick; TimeManager.OnPostTick -= PostTick;
-            if (Ship != null) Ship.Helm.ReleaseControl();
+            var active = ActiveShip;
+            if (active != null && active.Helm.IsControlledBy(motor)) active.Helm.ReleaseControl();
         }
         bool TryBind()
         {
             if (bound) return true;
             if (Ship == null) return false;
-            Ship.Helm.Bind(motor); passenger.Attach(Ship.Body); bound = true; return true;
+            passenger.Attach(Ship.Body); bound = true; return true;
         }
         void Tick()
         {
@@ -141,12 +149,12 @@ namespace PirateSlop.Networking
             // Missing input cannot repeat a one-shot action or leave throttle held indefinitely.
             if (!state.ContainsCreated()) command = new PlayerCommand { Yaw = motor.transform.eulerAngles.y };
             float dt = (float)TimeManager.TickDelta;
-            activeShip.Helm.Simulate(command, motor, dt);
-            activeShip.Motor.Simulate(dt);
+            if (IsServerInitialized) activeShip.Helm.Simulate(command, motor, dt);
             Physics.SyncTransforms();
             passenger.Carry();
             motor.Simulate(command, dt);
             passenger.Detect();
+            CaptureVisualAnchor();
             if (motor.transform.position.y < Ship.transform.position.y - 30) ReturnHome();
         }
         public override void CreateReconcile()
@@ -187,15 +195,41 @@ namespace PirateSlop.Networking
             if (!hasObserverState || IsOwner || IsServerInitialized || Ship == null) return;
             float blend = 1f - Mathf.Exp(-16f * Time.deltaTime);
             var activeShip = observerState.ActiveShip == null ? Ship : observerState.ActiveShip.GetComponent<NetworkShip>();
-            if (activeShip != null) activeShip.Motor.ApplyRemoteState(observerState.Ship, blend);
+            // NetworkShip is the only writer of ship state on every client.
             var position = observerState.Player.Position;
             if (observerState.Platform != null)
             {
                 var platform = observerState.Platform.GetComponent<Rigidbody>();
-                if (platform != null) position = platform.transform.TransformPoint(observerState.RelativePosition);
+                if (observerPlatform != observerState.Platform)
+                {
+                    observerPlatform = observerState.Platform;
+                    observerLocalPosition = observerState.RelativePosition;
+                }
+                observerLocalPosition = Vector3.Lerp(observerLocalPosition, observerState.RelativePosition, blend);
+                if (platform != null) position = platform.transform.TransformPoint(observerLocalPosition);
                 passenger.Attach(platform);
+                motor.ApplyRemoteState(position, observerState.Player.Yaw, 1f);
             }
-            motor.ApplyRemoteState(position, observerState.Player.Yaw, blend);
+            else
+            {
+                observerPlatform = null;
+                passenger.Attach(null);
+                motor.ApplyRemoteState(position, observerState.Player.Yaw, blend);
+            }
+            CaptureVisualAnchor();
+        }
+        void CaptureVisualAnchor()
+        {
+            visualPlatform = passenger.Ship;
+            if (visualPlatform != null) visualLocalPosition = visualPlatform.transform.InverseTransformPoint(motor.transform.position);
+        }
+        void LateUpdate()
+        {
+            // FishNet's world-space graphical delay trails a moving deck. Anchor
+            // camera/body to the same rendered platform pose instead.
+            if (graphicsRoot == null || visualPlatform == null) return;
+            graphicsRoot.position = visualPlatform.transform.TransformPoint(visualLocalPosition);
+            graphicsRoot.rotation = motor.transform.rotation;
         }
         [Reconcile]
         void Reconcile(CaptainState state, Channel channel = Channel.Unreliable)
@@ -204,17 +238,19 @@ namespace PirateSlop.Networking
             if (!IsOwner && !IsServerInitialized) return;
             if (!TryBind()) return;
             var activeShip = state.ActiveShip == null ? Ship : state.ActiveShip.GetComponent<NetworkShip>();
-            if (activeShip != null) activeShip.Motor.Restore(state.Ship, motor);
+            // Player reconciliation must never rewind a shared ship.
             var platform = state.Platform == null ? null : state.Platform.GetComponent<Rigidbody>();
             if (platform != null) state.Player.Position = platform.transform.TransformPoint(state.RelativePosition);
             motor.Restore(state.Player);
             passenger.Attach(platform);
+            CaptureVisualAnchor();
             Physics.SyncTransforms();
         }
         public void ReturnHome()
         {
             if (Ship == null) return;
-            ActiveShip?.Helm.ReleaseControl();
+            var active = ActiveShip;
+            if (active != null && active.Helm.IsControlledBy(motor)) active.Helm.ReleaseControl();
             var state = new PlayerState { Position = Ship.transform.TransformPoint(SessionController.Instance.Config.PlayerLocalSpawn), Yaw = Ship.transform.eulerAngles.y };
             motor.Restore(state); passenger.Attach(Ship.Body);
         }

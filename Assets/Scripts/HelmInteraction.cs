@@ -13,6 +13,7 @@ public class HelmInteraction : MonoBehaviour
     public bool Networked { get; set; }
     public float CurrentRudderNormalized => rudder;
     public bool IsControlling { get; private set; }
+    public AdvancedPlayerController Driver => IsControlling ? player : null;
     public bool IsControlledBy(AdvancedPlayerController candidate) => IsControlling && player == candidate;
     public void Configure(Transform wheel) { wheelMesh = wheel; }
     public void Bind(AdvancedPlayerController value) { player = value; }
@@ -30,6 +31,7 @@ public class HelmInteraction : MonoBehaviour
     void OnDisable() { ReleaseControl(); }
     public void Simulate(PlayerCommand command, AdvancedPlayerController candidate, float dt)
     {
+        if (IsControlling && player != candidate) return;
         if (command.Release) ReleaseControl();
         else if (command.Use) { if (IsControlling) ReleaseControl(); else TryTakeControl(candidate); }
         float steer = IsControlling ? command.Move.x : 0;
