@@ -12,6 +12,7 @@ namespace PirateSlop
         Rigidbody supplyPlatform;
         Vector3 supplyPosition;
         Quaternion supplyRotation;
+        float nextFireTime;
         void Start()
         {
             if (supply != null) return;
@@ -44,6 +45,15 @@ namespace PirateSlop
             shot.gameObject.SetActive(true); shot.Release();
             shot.GetComponent<Collider>().enabled = authoritative;
             shot.Body.linearVelocity = velocity;
+            if (authoritative)
+            {
+                shot.Body.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
+                shot.gameObject.AddComponent<CannonShotDamage>();
+                var owner = GetComponentInParent<ShipController>();
+                if (owner != null)
+                    foreach (var collider in owner.GetComponentsInChildren<Collider>())
+                        Physics.IgnoreCollision(shot.GetComponent<Collider>(), collider);
+            }
             Destroy(shot.gameObject, 20f);
         }
         public bool IsLoaded => loaded != null;
@@ -61,7 +71,8 @@ namespace PirateSlop
         public void Fire()
         {
             if (Network != null && Network.IsClientInitialized && !Network.IsServerInitialized) { Network.RequestFire(); return; }
-            if (!IsLoaded) return;
+            if (!IsLoaded || Time.time < nextFireTime) return;
+            nextFireTime = Time.time + 6f;
             InitializeSupply(loaded);
             var ship = GetComponentInParent<Rigidbody>();
             Vector3 inherited = ship != null ? ship.GetPointVelocity(Muzzle.position) : Vector3.zero;

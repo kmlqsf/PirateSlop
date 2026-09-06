@@ -4288,6 +4288,7 @@ GameObject:
   - component: {fileID: 336972266}
   - component: {fileID: 336972267}
   - component: {fileID: 336972268}
+  - component: {fileID: 336972269}
   m_Layer: 0
   m_Name: PlayerCharacter
   m_TagString: Player
@@ -4494,6 +4495,21 @@ MonoBehaviour:
   WorldMuzzle: {fileID: 1913236740}
   ViewMuzzle: {fileID: 1533899276}
   EffectMaterial: {fileID: 2100000, guid: 0bea672cf650851498d842c1ffeedec3, type: 2}
+--- !u!114 &336972269
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 336972258}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21584729ba8936d4184e2cdde4a2a44c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.CombatHealth
+  IsShip: 0
+  MaxHealth: 100
+  BarHeight: 2.2
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -7363,6 +7379,21 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6265553338235036548, guid: 536fad593b81e1248a467f1078001b3a, type: 3}
   m_PrefabInstance: {fileID: 8741760062055599780}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1842566548
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1842566539}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21584729ba8936d4184e2cdde4a2a44c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.CombatHealth
+  IsShip: 1
+  MaxHealth: 1200
+  BarHeight: 8
 --- !u!1001 &1913236739
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8009,6 +8040,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4635455791906578854, guid: 536fad593b81e1248a467f1078001b3a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1842566542}
+    - targetCorrespondingSourceObject: {fileID: 4635455791906578854, guid: 536fad593b81e1248a467f1078001b3a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1842566548}
   m_SourcePrefab: {fileID: 100100000, guid: 536fad593b81e1248a467f1078001b3a, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

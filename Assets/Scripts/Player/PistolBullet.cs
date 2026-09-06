@@ -21,7 +21,10 @@ namespace PirateSlop
                     if((shooter==null || !hit.transform.IsChildOf(shooter.transform)) && hit.distance<=closest) { nearest=hit; closest=hit.distance; }
                 if(nearest.collider!=null)
                 {
-                    if(authoritative && shooter!=null)
+                    var health = nearest.collider.GetComponentInParent<CombatHealth>();
+                    if(authoritative && shooter!=null && health!=null)
+                        health.ReceivePistolHit(distance+closest,nearest.point,shooter);
+                    else if(authoritative && shooter!=null)
                         foreach(var component in nearest.collider.GetComponentsInParent<MonoBehaviour>())
                             if(component is IWeaponTarget target) { target.ReceiveWeaponHit(Mathf.Lerp(45,25,Mathf.InverseLerp(15,35,distance+closest)),shooter); break; }
                     Destroy(gameObject); return;

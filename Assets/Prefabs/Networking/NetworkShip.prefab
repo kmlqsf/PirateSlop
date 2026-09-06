@@ -626,6 +626,8 @@ GameObject:
   - component: {fileID: 37050319885465183}
   - component: {fileID: 3124443628067747900}
   - component: {fileID: 1121161916591391745}
+  - component: {fileID: 1874291677189386073}
+  - component: {fileID: 805247103570420939}
   m_Layer: 0
   m_Name: NetworkShip
   m_TagString: Ship
@@ -816,6 +818,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70386c8e7dc2fa349b5fbedced097ba8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.Networking.NetworkCannon
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 8899225424909593775}
+  _networkObjectCache: {fileID: 0}
+--- !u!114 &1874291677189386073
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 898423509851137951}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21584729ba8936d4184e2cdde4a2a44c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.CombatHealth
+  IsShip: 1
+  MaxHealth: 1200
+  BarHeight: 8
+--- !u!114 &805247103570420939
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 898423509851137951}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53b0a67e17fb01f4e90316e55402c562, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.Networking.NetworkHealth
   _componentIndexCache: 255
   _addedNetworkObject: {fileID: 8899225424909593775}
   _networkObjectCache: {fileID: 0}
