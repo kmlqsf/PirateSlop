@@ -22,6 +22,7 @@ namespace PirateSlop
                 if(nearest.collider!=null)
                 {
                     GameAudio.Play(SoundCue.Impact, nearest.point, .5f);
+                    CombatVfx.Impact(nearest.point, nearest.normal, false);
                     var health = nearest.collider.GetComponentInParent<CombatHealth>();
                     if(authoritative && shooter!=null && health!=null)
                         health.ReceivePistolHit(distance+closest,nearest.point,shooter);
@@ -31,6 +32,8 @@ namespace PirateSlop
                     Destroy(gameObject); return;
                 }
                 position+=step; velocity+=Vector3.down*(6f*dt); distance+=length; age+=dt;
+                if (OceanSurface.Instance != null && position.y < OceanSurface.Instance.Height(position))
+                { CombatVfx.Splash(position, .25f); Destroy(gameObject); return; }
             }
             transform.position=position+visualOffset*Mathf.Max(0,1-age/.08f);
             if(age>=3f || distance>=100f)Destroy(gameObject);

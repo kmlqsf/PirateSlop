@@ -141,6 +141,7 @@ namespace PirateSlop
             var renderer = go.GetComponent<Renderer>(); renderer.sharedMaterial = EffectMaterial;
             var color = new MaterialPropertyBlock(); color.SetColor("_BaseColor",new Color(.16f,.14f,.11f)); renderer.SetPropertyBlock(color);
             Vector3 visibleStart = motor.InputActive && !motor.IsThirdPerson ? ViewMuzzle.position : WorldMuzzle.position;
+            CombatVfx.Fire(visibleStart, velocity.normalized, false);
             go.AddComponent<PistolBullet>().Initialize(gameObject,origin,velocity,visibleStart-origin,authoritative);
         }
         void LateUpdate()

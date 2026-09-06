@@ -66,6 +66,7 @@ namespace PirateSlop
         {
             if (supply == null) return;
             GameAudio.Play(SoundCue.Cannon, position);
+            CombatVfx.Fire(Muzzle.position, velocity.normalized, true);
             var shot = Instantiate(supply, position, Quaternion.identity);
             shot.name = "FiredCannonball"; shot.Network = null; shot.Loaded = shot.Held = false;
             shot.gameObject.SetActive(true); shot.Release();
