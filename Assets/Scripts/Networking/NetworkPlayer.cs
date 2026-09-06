@@ -119,10 +119,15 @@ namespace PirateSlop.Networking
         {
             autoTicks++;
             var result = new PlayerCommand { Yaw = motor.transform.eulerAngles.y };
-            if (autoTicks < 20) result.Move = Vector2.down;
-            // Walk from the authored spawn toward the helm before pressing E.
-            // The normal range/occupancy checks still apply.
-            result.Use = autoTicks == 30;
+            // Approach only when necessary; authored ship spawns may be on either side of the helm.
+            if (autoTicks < 30 && Ship != null && !Ship.Helm.InRange(motor))
+            {
+                Vector3 toward = Ship.Helm.transform.position - motor.transform.position;
+                toward.y = 0;
+                Vector3 local = motor.transform.InverseTransformDirection(toward.normalized);
+                result.Move = new Vector2(local.x, local.z);
+            }
+            result.Use = autoTicks >= 30 && autoTicks % 30 == 0 && !motor.LocomotionLocked;
             if (autoTicks > 30) result.Move = new Vector2(Mathf.Sin(autoTicks / 180f) * .35f, autoTicks < 150 ? 1 : 0);
             return result;
         }

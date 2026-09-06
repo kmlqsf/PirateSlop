@@ -11,6 +11,7 @@ namespace PirateSlop.Networking
         public HelmInteraction Helm { get; private set; }
         public Rigidbody Body { get; private set; }
         public float CollisionRadius { get; private set; }
+        [SerializeField, Min(0f)] float collisionRadiusOverride;
         ShipState remoteState;
         bool hasRemoteState;
         int remoteDriver;
@@ -26,7 +27,7 @@ namespace PirateSlop.Networking
                 var extent = collider.bounds.extents;
                 radius = Mathf.Max(radius, Mathf.Max(extent.x, extent.z) * .85f);
             }
-            CollisionRadius = radius;
+            CollisionRadius = collisionRadiusOverride > 0f ? collisionRadiusOverride : radius;
         }
         public override void OnStartNetwork()
         {
