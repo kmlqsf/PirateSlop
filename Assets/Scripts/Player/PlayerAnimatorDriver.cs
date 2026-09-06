@@ -13,6 +13,8 @@ namespace PirateSlop
         AdvancedPlayerController motor;
         Animator animator;
         float airborneTime;
+        bool wasSwimming;
+        string swimState;
 
         void Awake()
         {
@@ -23,6 +25,14 @@ namespace PirateSlop
         void LateUpdate()
         {
             if (animator == null || !animator.enabled || animator.runtimeAnimatorController == null) return;
+            if (motor.IsSwimming)
+            {
+                var state = motor.PlanarSpeed > .3f ? "Swim" : "TreadWater";
+                if (!wasSwimming || state != swimState) animator.CrossFadeInFixedTime(state, .2f);
+                swimState = state; wasSwimming = true;
+                return;
+            }
+            if (wasSwimming) { animator.CrossFadeInFixedTime("Locomotion", .15f); wasSwimming = false; }
             animator.SetFloat(Speed, motor.PlanarSpeed, 0.08f, Time.deltaTime);
             animator.SetBool(Crouched, motor.IsCrouched);
             animator.SetBool(Sliding, motor.IsSliding);

@@ -4518,6 +4518,7 @@ GameObject:
   - component: {fileID: 2296627091476267118}
   - component: {fileID: 6766262252996742549}
   - component: {fileID: 1885484615778979167}
+  - component: {fileID: 5855173008977240545}
   m_Layer: 0
   m_Name: DeployableCannon
   m_TagString: Untagged
@@ -4580,6 +4581,18 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.5, y: 0.7, z: 1.8}
   m_Center: {x: 0, y: 0.35, z: 0}
+--- !u!114 &5855173008977240545
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7077935832243745798}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eace4f934b3077e4db8b16e3ba302e13, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.GameplayAudio
 --- !u!1 &7108862190997860170
 GameObject:
   m_ObjectHideFlags: 0

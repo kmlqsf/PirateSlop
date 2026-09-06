@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8303648516390969382}
   - component: {fileID: 7759662108013246242}
   - component: {fileID: 3890601059950381125}
+  - component: {fileID: 2826681792481057897}
   m_Layer: 0
   m_Name: CannonStation
   m_TagString: Untagged
@@ -74,6 +75,18 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.5, y: 0.7, z: 1.8}
   m_Center: {x: 0, y: 0.35, z: 0}
+--- !u!114 &2826681792481057897
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1249944237518258276}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eace4f934b3077e4db8b16e3ba302e13, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.GameplayAudio
 --- !u!1 &3060417221886258676
 GameObject:
   m_ObjectHideFlags: 0

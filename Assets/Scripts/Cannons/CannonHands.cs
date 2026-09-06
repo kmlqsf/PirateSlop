@@ -49,7 +49,7 @@ namespace PirateSlop
             aimed = null;
             if (held != null && !held.Held) held = null;
             var mouse = Mouse.current;
-            if (!player.InputActive || player.LocomotionLocked || mouse == null || (controls != null && controls.IsDragging) || (inventory != null && (inventory.Placing || inventory.InteractionUsed))) { Drop(); return; }
+            if (!player.InputActive || player.IsSwimming || player.LocomotionLocked || mouse == null || (controls != null && controls.IsDragging) || (inventory != null && (inventory.Placing || inventory.InteractionUsed))) { Drop(); return; }
             var camera = player.PlayerCamera;
             var ray = new Ray(camera.transform.position, camera.transform.forward);
             // Ignore the local player's body, including when using F1.

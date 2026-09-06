@@ -12,9 +12,15 @@ namespace PirateSlop.Networking
         public override void OnStartClient()
         {
             base.OnStartClient();
-            if (!IsServerInitialized && health.Value >= 0) target.ApplySnapshot(health.Value);
+            if (!IsServerInitialized && health.Value >= 0) target.ApplySnapshot(health.Value, false);
         }
         public void Publish(float value) { if (IsServerInitialized) health.Value = value; }
+        public void ShipDamageAudio(bool dead)
+        {
+            if (IsServerInitialized) ShipDamageAudioObserversRpc(dead);
+        }
+        [ObserversRpc(RunLocally = true)]
+        void ShipDamageAudioObserversRpc(bool dead) => GameAudio.Play(dead ? SoundCue.ShipDeath : SoundCue.ShipHit, transform.position);
         public void Respawn(Vector3 position, float yaw)
         {
             if (!IsServerInitialized) return;
@@ -25,7 +31,7 @@ namespace PirateSlop.Networking
         void RespawnObserversRpc(Vector3 position, float yaw) => target.Respawn(position, yaw);
         void HealthChanged(float previous, float next, bool asServer)
         {
-            if (!asServer && !IsServerInitialized && next >= 0) target.ApplySnapshot(next);
+            if (!asServer && !IsServerInitialized && next >= 0) target.ApplySnapshot(next, previous >= 0);
         }
     }
 }

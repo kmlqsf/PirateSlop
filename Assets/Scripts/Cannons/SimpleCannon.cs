@@ -65,11 +65,14 @@ namespace PirateSlop
         public void SpawnShot(Vector3 position, Vector3 velocity, bool authoritative)
         {
             if (supply == null) return;
+            GameAudio.Play(SoundCue.Cannon, position);
             var shot = Instantiate(supply, position, Quaternion.identity);
             shot.name = "FiredCannonball"; shot.Network = null; shot.Loaded = shot.Held = false;
             shot.gameObject.SetActive(true); shot.Release();
             shot.GetComponent<Collider>().enabled = authoritative;
             shot.Body.linearVelocity = velocity;
+            var splash = shot.gameObject.AddComponent<CannonSplashAudio>();
+            splash.WaterHeight = GetComponentInParent<ShipController>().transform.position.y;
             if (authoritative)
             {
                 shot.Body.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;

@@ -1,0 +1,169 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 637770b285c679549a7bbef60820fc72, type: 3}
+  m_Name: GameAudioBank
+  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.GameAudioBank
+  Entries:
+  - Cue: 0
+    Clips:
+    - {fileID: 8300000, guid: 5e9f6bd1eef02fa4ea96b3eb1f9e44cd, type: 3}
+    Volume: 0.8
+    Distance: 90
+  - Cue: 1
+    Clips:
+    - {fileID: 8300000, guid: 41df552906221e64c9c789eafac6bd98, type: 3}
+    Volume: 1
+    Distance: 230
+  - Cue: 2
+    Clips:
+    - {fileID: 8300000, guid: fde6b904b2e9b084e99baaa39601d867, type: 3}
+    - {fileID: 8300000, guid: 04965ed2fecb4bd4fb3da2f7bd12c7a1, type: 3}
+    Volume: 0.55
+    Distance: 16
+  - Cue: 3
+    Clips:
+    - {fileID: 8300000, guid: af64931c7b0cce44eb002beaa82df811, type: 3}
+    Volume: 0.4
+    Distance: 12
+  - Cue: 4
+    Clips:
+    - {fileID: 8300000, guid: 6ba5ddc02da48f24396db58b1a27e7f7, type: 3}
+    Volume: 0.4
+    Distance: 12
+  - Cue: 5
+    Clips:
+    - {fileID: 8300000, guid: 6ba5ddc02da48f24396db58b1a27e7f7, type: 3}
+    Volume: 0.4
+    Distance: 8
+  - Cue: 6
+    Clips:
+    - {fileID: 8300000, guid: a75eda8c16f922d4aac6cc65f4c07d4b, type: 3}
+    - {fileID: 8300000, guid: a856dbecbde6e044581c8b2043fb8b94, type: 3}
+    - {fileID: 8300000, guid: ddb2c60ef979678479e4341cabec4760, type: 3}
+    - {fileID: 8300000, guid: eee6941a055f25c4582f7f1362d84dd1, type: 3}
+    - {fileID: 8300000, guid: fd208422ea015684287869ed17782f9e, type: 3}
+    - {fileID: 8300000, guid: cf51d19e1ba1bb541a2ac5564716efe3, type: 3}
+    Volume: 0.35
+    Distance: 20
+  - Cue: 7
+    Clips:
+    - {fileID: 8300000, guid: d38aac898b9584b46b4cb293f9469cb3, type: 3}
+    - {fileID: 8300000, guid: e8009dfca01d9c840892cbc70a135eb5, type: 3}
+    Volume: 0.35
+    Distance: 15
+  - Cue: 8
+    Clips:
+    - {fileID: 8300000, guid: 94b6d8de922cfb849882a23733022ecb, type: 3}
+    - {fileID: 8300000, guid: a585ea9129fd0aa4299ba3d6331e1552, type: 3}
+    Volume: 0.6
+    Distance: 22
+  - Cue: 9
+    Clips:
+    - {fileID: 8300000, guid: 0996c434e6aa80f49b267246fdf45f5c, type: 3}
+    - {fileID: 8300000, guid: 75cd6d611dff98c448fc632a0ca566ed, type: 3}
+    Volume: 0.4
+    Distance: 20
+  - Cue: 10
+    Clips:
+    - {fileID: 8300000, guid: 7c42631729ae7bd40aaee447336657bc, type: 3}
+    Volume: 0.6
+    Distance: 25
+  - Cue: 11
+    Clips:
+    - {fileID: 8300000, guid: cb7a9d04b04b5f443a23d1182d624186, type: 3}
+    Volume: 0.6
+    Distance: 30
+  - Cue: 12
+    Clips:
+    - {fileID: 8300000, guid: 9bcb88c4193f91b4d9c807dc928a5b28, type: 3}
+    Volume: 0.45
+    Distance: 15
+  - Cue: 13
+    Clips:
+    - {fileID: 8300000, guid: c9f38f9b052d43c8a7c4b8073bdaae84, type: 3}
+    Volume: 0.32
+    Distance: 18
+  - Cue: 14
+    Clips:
+    - {fileID: 8300000, guid: 0996c434e6aa80f49b267246fdf45f5c, type: 3}
+    - {fileID: 8300000, guid: 75cd6d611dff98c448fc632a0ca566ed, type: 3}
+    Volume: 0.5
+    Distance: 30
+  - Cue: 15
+    Clips:
+    - {fileID: 8300000, guid: 0978c69aea6b3b14e8e2b4d6965486a1, type: 3}
+    - {fileID: 8300000, guid: af64931c7b0cce44eb002beaa82df811, type: 3}
+    Volume: 0.3
+    Distance: 18
+  - Cue: 16
+    Clips:
+    - {fileID: 8300000, guid: 6b128f94b18d1354192b2a630aebdba1, type: 3}
+    - {fileID: 8300000, guid: 9432d013e71fa2247a519ea1655cca72, type: 3}
+    - {fileID: 8300000, guid: 1bc79418f5f5e4649819c88414415b57, type: 3}
+    Volume: 0.4
+    Distance: 20
+  - Cue: 17
+    Clips:
+    - {fileID: 8300000, guid: 5e84535a3cda9e844a82c08fbc222796, type: 3}
+    - {fileID: 8300000, guid: d00983396284dad4e8d533cbc02698a0, type: 3}
+    Volume: 0.4
+    Distance: 10
+  - Cue: 18
+    Clips:
+    - {fileID: 8300000, guid: 9edc03fb916b1e741aa3a51b04934222, type: 3}
+    - {fileID: 8300000, guid: f950fa16a2f2d0d40a9c18fd13c04429, type: 3}
+    Volume: 0.5
+    Distance: 25
+  - Cue: 19
+    Clips:
+    - {fileID: 8300000, guid: 90445c17f08b90b47bbffc9b3073b13f, type: 3}
+    - {fileID: 8300000, guid: f06c957c74821324ba4dde76b49a99cf, type: 3}
+    Volume: 0.35
+    Distance: 5
+  - Cue: 20
+    Clips:
+    - {fileID: 8300000, guid: 7c42631729ae7bd40aaee447336657bc, type: 3}
+    Volume: 0.35
+    Distance: 25
+  - Cue: 21
+    Clips:
+    - {fileID: 8300000, guid: 772f026ee154e394cb90f1d419d961cd, type: 3}
+    Volume: 0.75
+    Distance: 130
+  - Cue: 22
+    Clips:
+    - {fileID: 8300000, guid: bf36bf2f16a0fee4cb298fd341908ddb, type: 3}
+    Volume: 0.85
+    Distance: 200
+  - Cue: 23
+    Clips:
+    - {fileID: 8300000, guid: f615f281cb06f0b4eb543bec62d61367, type: 3}
+    Volume: 0.65
+    Distance: 100
+  - Cue: 24
+    Clips:
+    - {fileID: 8300000, guid: 806fd3873b84a494daa1cf3e926e8318, type: 3}
+    Volume: 0.6
+    Distance: 100
+  - Cue: 25
+    Clips:
+    - {fileID: 8300000, guid: 736df4269b690db44bc181e4f6d7eb1d, type: 3}
+    - {fileID: 8300000, guid: f12214b5dc33b654aa28a3285f021c74, type: 3}
+    - {fileID: 8300000, guid: 0978c69aea6b3b14e8e2b4d6965486a1, type: 3}
+    Volume: 0.3
+    Distance: 35
+  Ocean: {fileID: 8300000, guid: 9de2f318560bc8c4ab5e9ec56e309527, type: 3}
+  Wind: {fileID: 8300000, guid: bbfaea3b5e9fb3a438dc9716b12d1004, type: 3}
+  Master: 0.8
+  Effects: 0.8
+  Ambience: 0.25
+  Interface: 0.45

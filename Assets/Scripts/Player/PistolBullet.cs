@@ -21,6 +21,7 @@ namespace PirateSlop
                     if((shooter==null || !hit.transform.IsChildOf(shooter.transform)) && hit.distance<=closest) { nearest=hit; closest=hit.distance; }
                 if(nearest.collider!=null)
                 {
+                    GameAudio.Play(SoundCue.Impact, nearest.point, .5f);
                     var health = nearest.collider.GetComponentInParent<CombatHealth>();
                     if(authoritative && shooter!=null && health!=null)
                         health.ReceivePistolHit(distance+closest,nearest.point,shooter);

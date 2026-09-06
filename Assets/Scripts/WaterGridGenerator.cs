@@ -5,6 +5,7 @@ public class WaterGridGenerator : MonoBehaviour
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     private static void Init()
     {
+        if (PirateSlop.OceanSurface.Instance != null) return;
         // Создаем буи-ориентиры на воде при старте игры
         if (GameObject.Find("WaterBuoy_0_0") != null) return;
 

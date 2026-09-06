@@ -5,10 +5,10 @@ namespace PirateSlop
     public struct PlayerCommand
     {
         public Vector2 Move;
-        public float Yaw;
-        public bool Sprint, Crouch, Slide, Jump, Use, Release;
+        public float Yaw, Pitch;
+        public bool Sprint, Crouch, Slide, Jump, Use, Release, Rise;
         public bool IsValid => float.IsFinite(Move.x) && float.IsFinite(Move.y) && float.IsFinite(Yaw)
-            && Move.sqrMagnitude <= 1.01f && Mathf.Abs(Yaw) <= 36000f;
+            && Move.sqrMagnitude <= 1.01f && Mathf.Abs(Yaw) <= 36000f && float.IsFinite(Pitch) && Mathf.Abs(Pitch) <= 85f;
     }
     [System.Serializable]
     public struct PlayerState
@@ -17,12 +17,15 @@ namespace PirateSlop
         public float Yaw, VerticalVelocity, SlideTimer, Cooldown;
         public bool Crouched, Locked, Grounded;
         public float PlanarSpeed;
+        public bool Swimming;
+        public Vector3 SwimVelocity;
+        public float Breath;
     }
     [System.Serializable]
     public struct ShipState
     {
         public Vector3 Position;
-        public float Yaw, Speed, Bank, Sail, Rudder;
+        public float Yaw, Speed, Bank, Sail, Rudder, Pitch, WaveRoll, WaveTime;
         public bool Controlling;
     }
 }

@@ -1117,6 +1117,7 @@ GameObject:
   - component: {fileID: 2669655026264017984}
   - component: {fileID: 7508799110096596672}
   - component: {fileID: 3778352587046063499}
+  - component: {fileID: 9056768830930944975}
   m_Layer: 0
   m_Name: NetworkPlayer
   m_TagString: Player
@@ -1482,6 +1483,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a365c768a261e9043a6346b41867e2fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.DirectShipControls
+--- !u!114 &9056768830930944975
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4193507432475942729}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eace4f934b3077e4db8b16e3ba302e13, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.GameplayAudio
 --- !u!1 &4195186048672230144
 GameObject:
   m_ObjectHideFlags: 0

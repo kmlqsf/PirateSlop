@@ -50,7 +50,7 @@ namespace PirateSlop
         {
             InteractionUsed = false; pickup = null; valid = false;
             if (preview != null) preview.SetActive(false);
-            if (!motor.InputActive || motor.LocomotionLocked) return;
+            if (!motor.InputActive || motor.LocomotionLocked || motor.IsSwimming) return;
             var keyboard = Keyboard.current;
             var mouse = Mouse.current;
             if (keyboard == null || mouse == null) return;

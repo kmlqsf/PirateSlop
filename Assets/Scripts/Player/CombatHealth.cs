@@ -34,10 +34,12 @@ namespace PirateSlop
         }
         public Vector3 SpawnPosition => spawnPlatform != null && spawnPlatform.gameObject.activeInHierarchy ? spawnPlatform.TransformPoint(localSpawnPosition) : spawnPosition;
         public float SpawnYaw => spawnPlatform != null && spawnPlatform.gameObject.activeInHierarchy ? spawnPlatform.eulerAngles.y + localSpawnYaw : spawnYaw;
-        public void ApplySnapshot(float value)
+        public void ApplySnapshot(float value, bool playAudio = true)
         {
             bool wasDead = IsDead;
+            float previous = Current;
             Current = Mathf.Clamp(value, 0, MaxHealth);
+            if (playAudio && !IsShip && Current < previous) GameAudio.Play(IsDead ? SoundCue.Death : SoundCue.Hurt, transform.position);
             if (wasDead == IsDead || IsShip) return;
             if (IsDead)
             {
@@ -78,12 +80,18 @@ namespace PirateSlop
                 GetComponent<AdvancedPlayerController>()?.Restore(state);
                 GetComponent<ShipDeckPassenger>()?.Attach(null);
             }
+            GameAudio.Play(SoundCue.Respawn, position);
         }
         public void Damage(float amount)
         {
             if (network != null && !network.IsServerInitialized) return;
             if (IsDead || amount <= 0 || float.IsNaN(amount) || float.IsInfinity(amount)) return;
             ApplySnapshot(Current - amount);
+            if (IsShip)
+            {
+                if (network != null) network.ShipDamageAudio(IsDead);
+                else GameAudio.Play(IsDead ? SoundCue.ShipDeath : SoundCue.ShipHit, transform.position);
+            }
             if (network != null) network.Publish(Current);
             if (IsShip && IsDead)
             {

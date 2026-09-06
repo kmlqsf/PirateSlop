@@ -17,7 +17,7 @@ namespace PirateSlop
         NetworkWeapon network;
         PlayerInventory inventory;
         DirectShipControls controls;
-        bool Equipped => (inventory == null || inventory.PistolSelected) && (controls == null || !controls.IsDragging);
+        bool Equipped => (motor == null || !motor.IsSwimming) && (inventory == null || inventory.PistolSelected) && (controls == null || !controls.IsDragging);
         bool loaded = true, reloading;
         float reloadUntil, nextAttack, recoil, stab, lift;
         Quaternion worldRest, viewRest;
@@ -65,6 +65,7 @@ namespace PirateSlop
         }
         void Request(byte action)
         {
+            if (action == 0 && !loaded && !reloading) GameAudio.Play(SoundCue.DryFire, transform.position);
             Vector3 direction = motor.PlayerCamera.transform.forward;
             Vector3 eyeOffset = motor.PlayerCamera.transform.position - transform.position;
             if (Networked) { if (network.IsOwner) network.Request(action, direction, eyeOffset); }
@@ -127,10 +128,12 @@ namespace PirateSlop
         public void SetState(bool hasRound, bool isReloading) { loaded = hasRound; reloading = isReloading; }
         public void ShowAttack(byte action, Vector3 end)
         {
+            if (action == 2) GameAudio.Play(SoundCue.Knife, transform.position);
             if(action == 2) stab = 1;
         }
         public void SpawnBullet(Vector3 origin, Vector3 velocity, bool authoritative)
         {
+            GameAudio.Play(SoundCue.Pistol, origin);
             recoil = 1;
             var go = GameObject.CreatePrimitive(PrimitiveType.Sphere); go.name = "PistolBullet";
             go.GetComponent<Collider>().enabled = false; Destroy(go.GetComponent<Collider>());

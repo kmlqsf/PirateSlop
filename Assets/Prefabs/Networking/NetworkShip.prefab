@@ -628,6 +628,7 @@ GameObject:
   - component: {fileID: 1121161916591391745}
   - component: {fileID: 1874291677189386073}
   - component: {fileID: 805247103570420939}
+  - component: {fileID: 1564273186473263874}
   m_Layer: 0
   m_Name: NetworkShip
   m_TagString: Ship
@@ -856,6 +857,18 @@ MonoBehaviour:
   _componentIndexCache: 255
   _addedNetworkObject: {fileID: 8899225424909593775}
   _networkObjectCache: {fileID: 0}
+--- !u!114 &1564273186473263874
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 898423509851137951}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eace4f934b3077e4db8b16e3ba302e13, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.GameplayAudio
 --- !u!1 &938147400859638710
 GameObject:
   m_ObjectHideFlags: 0
@@ -2352,6 +2365,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HelmInteraction
   interactionRadius: 2.2
+  wheelTurnsToFullSteer: 2
+  centeringSpeed: 0.35
   wheelMesh: {fileID: 4201944117449682102}
 --- !u!1 &1803735621098697283
 GameObject:

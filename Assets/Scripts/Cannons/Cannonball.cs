@@ -13,6 +13,13 @@ namespace PirateSlop
         Quaternion lastPlatformRotation;
         Vector3 deckLocalPosition;
         Quaternion deckLocalRotation;
+        float nextImpactAudio;
+        void OnCollisionEnter(Collision collision)
+        {
+            if (Held || Loaded || GetComponent<CannonShotDamage>() != null || collision.relativeVelocity.sqrMagnitude < .5f || Time.time < nextImpactAudio) return;
+            GameAudio.Play(SoundCue.Load, transform.position, .5f);
+            nextImpactAudio = Time.time + .25f;
+        }
         public void AttachToPlatform(Rigidbody platform)
         {
             PlatformBody = platform;

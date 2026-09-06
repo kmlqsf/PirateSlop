@@ -61,6 +61,9 @@ namespace PirateSlop.Networking
             ReceiveState(Motor.Capture(), driver);
         }
         public void DragWheel(float degrees, bool holding) => DragWheelServerRpc(degrees, holding);
+        public void CollisionAudio() { if (IsServerInitialized) CollisionAudioObserversRpc(); }
+        [ObserversRpc(RunLocally = true)]
+        void CollisionAudioObserversRpc() => GameAudio.Play(SoundCue.ShipCollision, transform.position);
         [ServerRpc(RequireOwnership = false)]
         void DragWheelServerRpc(float degrees, bool holding, FishNet.Connection.NetworkConnection sender = null)
         {
@@ -79,6 +82,7 @@ namespace PirateSlop.Networking
         void ReceiveState(ShipState state, int driver)
         {
             if (IsServerInitialized) return;
+            if (OceanSurface.Instance != null) OceanSurface.Instance.Synchronize(state.WaveTime);
             remoteState = state; remoteDriver = driver; hasRemoteState = true;
         }
         void Update()

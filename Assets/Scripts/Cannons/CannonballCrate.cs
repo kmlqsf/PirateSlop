@@ -41,6 +41,7 @@ namespace PirateSlop
             cannon.Index = Cannons.Count;
             cannon.InitializeSupply(Supply);
             Cannons.Add(cannon);
+            GameAudio.Play(SoundCue.Place, cannon.transform.position);
             return cannon;
         }
 

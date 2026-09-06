@@ -172,7 +172,7 @@ namespace PirateSlop.Networking
             passenger.Detect();
             CaptureVisualAnchor();
             float homeHeight = Ship != null ? Ship.transform.position.y : GetComponent<CombatHealth>().SpawnPosition.y;
-            if (motor.transform.position.y < homeHeight - 30) ReturnHome();
+            if (!motor.IsSwimming && motor.transform.position.y < homeHeight - 30) ReturnHome();
         }
         public override void CreateReconcile()
         {
