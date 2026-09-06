@@ -38,6 +38,11 @@ namespace PirateSlop.Networking
         Vector3 visualLocalPosition;
         Rigidbody visualPlatform;
         Transform graphicsRoot;
+        Vector3 renderedPosition;
+        Rigidbody renderedPlatform;
+        bool renderInitialized;
+        PlayerCommand lastServerCommand;
+        int missingServerInputs;
         Vector3 observerLocalPosition;
         NetworkObject observerPlatform;
         int autoTicks;
@@ -151,8 +156,17 @@ namespace PirateSlop.Networking
                     if (candidate.Helm.InRange(motor)) { activeShip = candidate; break; }
             var command = input.Command;
             if (!command.IsValid) command = default;
-            // FishNet's predicted/replayed input retains movement. Clear only one-shot actions:
-            // replacing the entire command with zero caused stop/start motion between received ticks.
+            // Only extrapolate live server input for a bounded interval. Prediction replay
+            // must use its own historical command, not a cache from a later tick.
+            if (IsServerInitialized && !state.ContainsReplayed())
+            {
+                if (state.ContainsCreated()) { lastServerCommand = command; missingServerInputs = 0; }
+                else
+                {
+                    missingServerInputs++;
+                    command = missingServerInputs <= 3 ? lastServerCommand : new PlayerCommand { Yaw = motor.transform.eulerAngles.y };
+                }
+            }
             if (!state.ContainsCreated())
             {
                 command.Jump = command.Slide = command.Use = command.Release = false;
@@ -235,10 +249,24 @@ namespace PirateSlop.Networking
         }
         void LateUpdate()
         {
-            // FishNet's world-space graphical delay trails a moving deck. Anchor
-            // camera/body to the same rendered platform pose instead.
-            if (graphicsRoot == null || visualPlatform == null) return;
-            graphicsRoot.position = visualPlatform.transform.TransformPoint(visualLocalPosition);
+            // Keep a render position independent of the controller and FishNet's graphical
+            // transform writes. Tick/reconcile/replay may move the controller several times
+            // in one frame; only the final target is consumed here.
+            if (graphicsRoot == null) return;
+            Vector3 target = visualPlatform != null ? visualLocalPosition : motor.transform.position;
+            if (!renderInitialized)
+            {
+                renderedPosition = target; renderedPlatform = visualPlatform; renderInitialized = true;
+            }
+            else if (renderedPlatform != visualPlatform)
+            {
+                Vector3 world = renderedPlatform != null ? renderedPlatform.transform.TransformPoint(renderedPosition) : renderedPosition;
+                renderedPosition = visualPlatform != null ? visualPlatform.transform.InverseTransformPoint(world) : world;
+                renderedPlatform = visualPlatform;
+            }
+            if ((renderedPosition - target).sqrMagnitude > 16f) renderedPosition = target;
+            else renderedPosition = Vector3.Lerp(renderedPosition, target, 1f - Mathf.Exp(-22f * Time.deltaTime));
+            graphicsRoot.position = visualPlatform != null ? visualPlatform.transform.TransformPoint(renderedPosition) : renderedPosition;
             graphicsRoot.rotation = motor.transform.rotation;
         }
         [Reconcile]
@@ -259,6 +287,7 @@ namespace PirateSlop.Networking
         public void ReturnHome()
         {
             if (Ship == null) return;
+            renderInitialized = false;
             var active = ActiveShip;
             if (active != null && active.Helm.IsControlledBy(motor)) active.Helm.ReleaseControl();
             var state = new PlayerState { Position = Ship.transform.TransformPoint(SessionController.Instance.Config.PlayerLocalSpawn), Yaw = Ship.transform.eulerAngles.y };

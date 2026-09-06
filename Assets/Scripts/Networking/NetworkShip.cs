@@ -4,6 +4,7 @@ using UnityEngine;
 using PirateSlop;
 namespace PirateSlop.Networking
 {
+    [DefaultExecutionOrder(-20)]
     public sealed class NetworkShip : NetworkBehaviour
     {
         public readonly SyncVar<int> ParticipantId = new();
