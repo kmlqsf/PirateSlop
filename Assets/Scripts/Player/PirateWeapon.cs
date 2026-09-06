@@ -60,15 +60,16 @@ namespace PirateSlop
         void Request(byte action)
         {
             Vector3 direction = motor.PlayerCamera.transform.forward;
-            if (Networked) { if (network.IsOwner) network.Request(action, direction); }
-            else Act(action, direction);
+            Vector3 eyeOffset = motor.PlayerCamera.transform.position - transform.position;
+            if (Networked) { if (network.IsOwner) network.Request(action, direction, eyeOffset); }
+            else Act(action, direction, eyeOffset);
         }
         public void TickAuthority()
         {
             if (reloading && (motor.LocomotionLocked || (hands != null && hands.HasHeldBall))) reloading = false;
             if (reloading && Time.time >= reloadUntil) { reloading = false; loaded = true; }
         }
-        public bool Act(byte action, Vector3 direction)
+        public bool Act(byte action, Vector3 direction, Vector3 eyeOffset)
         {
             if (motor.LocomotionLocked || (hands != null && hands.HasHeldBall) || !float.IsFinite(direction.sqrMagnitude) || direction.sqrMagnitude < .5f) return false;
             if (action == 1)
@@ -81,6 +82,8 @@ namespace PirateSlop
             else { reloading = false; nextAttack = Time.time + .65f; }
             direction.Normalize();
             Vector3 origin = transform.position + Vector3.up * (motor.IsCrouched ? .75f : 1.65f);
+            if (float.IsFinite(eyeOffset.sqrMagnitude) && eyeOffset.sqrMagnitude <= 16f)
+                origin = transform.position + eyeOffset;
             if (action == 0)
             {
                 // Use the first-person muzzle offset with the server-accepted aim, not
@@ -89,7 +92,14 @@ namespace PirateSlop
                 Vector3 start = origin + Quaternion.LookRotation(direction) * muzzleOffset;
                 foreach(var hit in Physics.RaycastAll(origin,(start-origin).normalized,(start-origin).magnitude,~0,QueryTriggerInteraction.Ignore))
                     if(!hit.transform.IsChildOf(transform) && (hit.point-origin).sqrMagnitude < (start-origin).sqrMagnitude) start = hit.point;
-                Vector3 velocity = direction * 45f + Vector3.up * 1.5f;
+                float aimDistance = 100f;
+                foreach(var hit in Physics.RaycastAll(origin,direction,aimDistance,~0,QueryTriggerInteraction.Ignore))
+                    if(!hit.transform.IsChildOf(transform)) aimDistance = Mathf.Min(aimDistance,hit.distance);
+                // With no target, zero at normal pistol range instead of lobbing toward the sky.
+                if (aimDistance >= 100f) aimDistance = 20f;
+                Vector3 target = origin + direction * aimDistance;
+                float flightTime = Mathf.Max(.01f,Vector3.Distance(start,target) / 45f);
+                Vector3 velocity = (target-start) / flightTime + Vector3.up * (3f * flightTime);
                 SpawnBullet(start,velocity,true);
                 if (Networked && network.IsServerInitialized) network.PublishShot(start,velocity);
                 return true;

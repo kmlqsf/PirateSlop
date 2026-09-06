@@ -10,9 +10,9 @@ namespace PirateSlop.Networking
         readonly SyncVar<bool> reloading = new(false);
         PirateWeapon weapon;
         void Awake() => weapon = GetComponent<PirateWeapon>();
-        public void Request(byte action, Vector3 direction) => ActionServerRpc(action,direction);
-        [ServerRpc] void ActionServerRpc(byte action, Vector3 direction)
-        { weapon.TickAuthority(); weapon.Act(action,direction); loaded.Value = weapon.Loaded; reloading.Value = weapon.Reloading; }
+        public void Request(byte action, Vector3 direction, Vector3 eyeOffset) => ActionServerRpc(action,direction,eyeOffset);
+        [ServerRpc] void ActionServerRpc(byte action, Vector3 direction, Vector3 eyeOffset)
+        { weapon.TickAuthority(); weapon.Act(action,direction,eyeOffset); loaded.Value = weapon.Loaded; reloading.Value = weapon.Reloading; }
         void Update()
         {
             if (IsServerInitialized) { weapon.TickAuthority(); loaded.Value = weapon.Loaded; reloading.Value = weapon.Reloading; }

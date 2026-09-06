@@ -17,7 +17,7 @@ namespace PirateSlop
                 float dt=Mathf.Min(remaining,1f/120); remaining-=dt;
                 Vector3 step=velocity*dt+Vector3.down*(3f*dt*dt);
                 float length=step.magnitude; RaycastHit nearest=default; float closest=length;
-                foreach(var hit in Physics.RaycastAll(position,step.normalized,length,~0,QueryTriggerInteraction.Ignore))
+                foreach(var hit in Physics.SphereCastAll(position,.08f,step.normalized,length,~0,QueryTriggerInteraction.Ignore))
                     if((shooter==null || !hit.transform.IsChildOf(shooter.transform)) && hit.distance<=closest) { nearest=hit; closest=hit.distance; }
                 if(nearest.collider!=null)
                 {

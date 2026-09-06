@@ -185,13 +185,21 @@ namespace PirateSlop.Networking
             for (int j = i + 1; j < ships.Count; j++)
             {
                 var a = ships[i]; var b = ships[j];
-                var offset = b.Body.position - a.Body.position; offset.y = 0;
-                float minimum = a.CollisionRadius + b.CollisionRadius;
-                float distance = offset.magnitude;
-                if (distance >= minimum) continue;
-                var direction = distance > .001f ? offset / distance : Vector3.right;
-                var correction = direction * ((minimum - distance) * .5f + .01f);
-                a.Motor.ResolveCollision(-correction); b.Motor.ResolveCollision(correction);
+                Vector3 correction = Vector3.zero;
+                foreach (var ca in a.GetComponentsInChildren<Collider>())
+                foreach (var cb in b.GetComponentsInChildren<Collider>())
+                {
+                    if (!ca.enabled || !cb.enabled || ca.isTrigger || cb.isTrigger || ca.attachedRigidbody != a.Body || cb.attachedRigidbody != b.Body) continue;
+                    if (!ca.bounds.Intersects(cb.bounds)) continue;
+                    if (!Physics.ComputePenetration(ca,ca.transform.position,ca.transform.rotation,cb,cb.transform.position,cb.transform.rotation,out var normal,out var depth)) continue;
+                    normal.y = 0;
+                    float horizontal = normal.magnitude;
+                    if (horizontal < .1f) continue;
+                    Vector3 candidate = normal / horizontal * (depth / horizontal + .002f);
+                    if (candidate.sqrMagnitude > correction.sqrMagnitude) correction = candidate;
+                }
+                if (correction.sqrMagnitude > 0)
+                { a.Motor.ResolveCollision(correction * .5f); b.Motor.ResolveCollision(-correction * .5f); }
             }
         }
         void OnGUI()
