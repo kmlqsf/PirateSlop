@@ -11,6 +11,17 @@ namespace PirateSlop
         SimpleCannon aimed;
         float distance;
         float nextHeldSync;
+        public bool HasHeldBall => held != null;
+        public bool CanPickUpBall()
+        {
+            if (player == null || player.PlayerCamera == null) return false;
+            RaycastHit nearest = default; float distance = 4f;
+            var camera = player.PlayerCamera;
+            foreach(var hit in Physics.RaycastAll(camera.transform.position,camera.transform.forward,4f,~0,QueryTriggerInteraction.Ignore))
+                if(!hit.transform.IsChildOf(transform) && hit.distance < distance) { nearest = hit; distance = hit.distance; }
+            var ball = nearest.collider != null ? nearest.collider.GetComponent<Cannonball>() : null;
+            return ball != null && !ball.Loaded;
+        }
         void Awake() => player = GetComponent<AdvancedPlayerController>();
         void OnDisable() => Drop();
         void Drop()
