@@ -53,7 +53,7 @@ namespace PirateSlop
             if (motor.IsSwimming)
             {
                 GUI.color = Color.white;
-                GUI.Box(new Rect(Screen.width / 2f - 230, Screen.height - 145, 460, 32), "WASD swim | Shift faster | Space up | Ctrl/C down | E board");
+                GUI.Box(new Rect(Screen.width / 2f - 230, Screen.height - 145, 460, 32), "WASD swim | Shift faster | Space up | Ctrl/C down | Swim into ladder to climb");
                 if (motor.BreathFraction < .99f)
                 {
                     var rect = new Rect(Screen.width / 2f - 100, Screen.height - 180, 200, 18);

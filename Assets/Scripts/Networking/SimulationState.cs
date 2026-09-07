@@ -20,6 +20,8 @@ namespace PirateSlop
         public bool Swimming;
         public Vector3 SwimVelocity;
         public float Breath;
+        public bool Climbing;
+        public float LadderCooldown;
     }
     [System.Serializable]
     public struct ShipState

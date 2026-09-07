@@ -17,7 +17,7 @@ namespace PirateSlop
         NetworkWeapon network;
         PlayerInventory inventory;
         DirectShipControls controls;
-        bool Equipped => (motor == null || !motor.IsSwimming) && (inventory == null || inventory.PistolSelected) && (controls == null || !controls.IsDragging);
+        bool Equipped => (motor == null || !(motor.IsSwimming || motor.IsClimbing)) && (inventory == null || inventory.PistolSelected) && (controls == null || !controls.IsDragging);
         bool loaded = true, reloading;
         float reloadUntil, nextAttack, recoil, stab, lift;
         Quaternion worldRest, viewRest;

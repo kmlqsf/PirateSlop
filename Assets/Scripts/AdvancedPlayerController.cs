@@ -12,6 +12,8 @@ public class AdvancedPlayerController : MonoBehaviour
     [SerializeField] float thirdPersonDistance = 3f;
     [SerializeField] float swimSpeed = 3f, fastSwimSpeed = 4.5f, swimAcceleration = 6f, breathSeconds = 25f;
     Vector3 swimVelocity;
+    float ladderCooldown;
+    public bool IsClimbing { get; private set; }
     public bool IsSwimming { get; private set; }
     public float Breath { get; private set; } = 25f;
     public float BreathFraction => Mathf.Clamp01(Breath / breathSeconds);
@@ -117,6 +119,8 @@ public class AdvancedPlayerController : MonoBehaviour
         transform.rotation = Quaternion.Euler(0, command.Yaw, 0);
         cooldown = Mathf.Max(0, cooldown - dt);
         if (LocomotionLocked) return;
+        ladderCooldown = Mathf.Max(0, ladderCooldown - dt);
+        if (SimulateLadder(command, dt)) return;
         var ocean = OceanSurface.Instance;
         float water = ocean != null ? ocean.Height(transform.position) : float.NegativeInfinity;
         bool wasSwimming = IsSwimming;
@@ -150,7 +154,6 @@ public class AdvancedPlayerController : MonoBehaviour
         slideTimer = 0; IsGrounded = false;
         SetHeight(!CanStand());
         if (!wasSwimming) swimVelocity = Vector3.up * Mathf.Max(verticalVelocity * .25f, -4f);
-        if (command.Use && TryBoard()) return;
         float depth = water - (transform.position.y + standingHeight - .15f);
         bool submerged = depth > .1f;
         Breath = Mathf.Clamp(Breath + dt * (submerged ? -1 : 8), 0, breathSeconds);
@@ -173,29 +176,53 @@ public class AdvancedPlayerController : MonoBehaviour
         verticalVelocity = swimVelocity.y;
         PlanarSpeed = new Vector2(swimVelocity.x, swimVelocity.z).magnitude;
     }
-    bool TryBoard()
+    bool SimulateLadder(PlayerCommand command, float dt)
     {
-        if (!Physics.Raycast(transform.position + Vector3.up, transform.forward, out var wall, 2.5f, ~0, QueryTriggerInteraction.Ignore)) return false;
-        var body = wall.rigidbody;
-        if (body == null || body.GetComponent<ShipController>() == null) return false;
-        Vector3 origin = wall.point + transform.forward * 1.1f;
-        origin.y = transform.position.y + 6f;
-        foreach (var top in Physics.RaycastAll(origin, Vector3.down, 6f, ~0, QueryTriggerInteraction.Ignore))
+        ShipLadder ladder = null;
+        float best = float.PositiveInfinity;
+        if (ladderCooldown <= 0) foreach (var candidate in ShipLadder.Active)
         {
-            if (top.rigidbody != body || top.normal.y < .75f || top.point.y < transform.position.y + .5f) continue;
-            Vector3 destination = top.point + Vector3.up * .1f;
-            bool blocked = false;
-            foreach (var hit in Physics.OverlapCapsule(destination + Vector3.up * controller.radius, destination + Vector3.up * (standingHeight - controller.radius), controller.radius * .95f, ~0, QueryTriggerInteraction.Ignore))
-                if (!hit.transform.IsChildOf(transform)) { blocked = true; break; }
-            if (blocked) continue;
-            controller.enabled = false; transform.position = destination; controller.enabled = true;
-            SetHeight(false); IsSwimming = false; verticalVelocity = -2f; swimVelocity = Vector3.zero; IsGrounded = true;
-            GetComponent<ShipDeckPassenger>()?.Attach(body);
-            return true;
+            if (!candidate.Contains(transform.position, IsClimbing)) continue;
+            var p = candidate.transform.InverseTransformPoint(transform.position);
+            float distance = p.x * p.x + p.z * p.z;
+            if (distance < best) { best = distance; ladder = candidate; }
         }
-        return false;
+        if (ladder == null) { IsClimbing = false; return false; }
+        var localPosition = ladder.transform.InverseTransformPoint(transform.position);
+        var move = transform.right * command.Move.x + transform.forward * command.Move.y;
+        float approach = Vector3.Dot(move, -ladder.transform.forward);
+        bool fromTop = localPosition.z < .5f && localPosition.y > ladder.Height - 1.5f && approach < -.1f;
+        if (!IsClimbing && (fromTop ? approach > -.1f : approach < .1f)) return false;
+        var passenger = GetComponent<ShipDeckPassenger>();
+        if (command.Jump)
+        {
+            IsClimbing = false; ladderCooldown = .65f; verticalVelocity = 4;
+            passenger?.Attach(null);
+            controller.Move((ladder.transform.forward * 4 + Vector3.up * 4) * dt);
+            return false;
+        }
+        IsClimbing = true; IsSwimming = false; IsGrounded = false; slideTimer = 0; swimVelocity = Vector3.zero;
+        SetHeight(false); Breath = Mathf.MoveTowards(Breath, breathSeconds, dt * 8);
+        passenger?.Attach(ladder.Body);
+        float vertical = command.Move.y * (Vector3.Dot(transform.forward, -ladder.transform.forward) >= 0 ? 1 : -1);
+        if (command.Crouch || command.Pitch > 55) vertical = -Mathf.Abs(command.Move.y);
+        Vector3 velocity = ladder.transform.up * vertical * ladder.Speed + transform.right * command.Move.x * walkSpeed;
+        if (fromTop)
+        {
+            velocity = ladder.transform.forward * Mathf.Abs(command.Move.y) * ladder.Speed;
+            if (localPosition.y < ladder.Height + .05f) velocity += ladder.transform.up * ladder.Speed;
+        }
+        else if (localPosition.y >= ladder.Height && vertical > 0)
+        {
+            velocity = -ladder.transform.forward * ladder.Speed + ladder.transform.up * .3f;
+        }
+        else velocity += ladder.transform.forward * Mathf.Clamp((.65f - localPosition.z) * 5, -2, 2);
+        controller.Move(velocity * dt); verticalVelocity = velocity.y; PlanarSpeed = Mathf.Abs(vertical) * ladder.Speed;
+        if (localPosition.y >= ladder.Height && localPosition.z < .2f && !fromTop || localPosition.y <= 0 && vertical < 0 || Mathf.Abs(command.Move.x) > .6f)
+        { IsClimbing = false; ladderCooldown = .3f; passenger?.Attach(null); }
+        return true;
     }
-    public PlayerState Capture() => new PlayerState { Position = transform.position, Yaw = transform.eulerAngles.y, VerticalVelocity = verticalVelocity, SlideDirection = slideDirection, SlideTimer = slideTimer, Cooldown = cooldown, Crouched = crouched, Locked = LocomotionLocked, PlanarSpeed = PlanarSpeed, Grounded = IsGrounded, Swimming = IsSwimming, SwimVelocity = swimVelocity, Breath = Breath };
+    public PlayerState Capture() => new PlayerState { Position = transform.position, Yaw = transform.eulerAngles.y, VerticalVelocity = verticalVelocity, SlideDirection = slideDirection, SlideTimer = slideTimer, Cooldown = cooldown, Crouched = crouched, Locked = LocomotionLocked, PlanarSpeed = PlanarSpeed, Grounded = IsGrounded, Swimming = IsSwimming, SwimVelocity = swimVelocity, Breath = Breath, Climbing = IsClimbing, LadderCooldown = ladderCooldown };
     public void Restore(PlayerState s)
     {
         controller.enabled = false; transform.SetPositionAndRotation(s.Position, Quaternion.Euler(0, s.Yaw, 0)); controller.enabled = !IsDead;
@@ -205,6 +232,7 @@ public class AdvancedPlayerController : MonoBehaviour
     {
         PlanarSpeed = s.PlanarSpeed; IsGrounded = s.Grounded; verticalVelocity = s.VerticalVelocity;
         IsSwimming = s.Swimming; swimVelocity = s.SwimVelocity; Breath = s.Swimming ? s.Breath : breathSeconds;
+        IsClimbing = s.Climbing; ladderCooldown = s.LadderCooldown;
         slideTimer = s.SlideTimer; LocomotionLocked = s.Locked; SetHeight(s.Crouched);
     }
     public void ApplyRemoteState(Vector3 position, float yawValue, float blend)
