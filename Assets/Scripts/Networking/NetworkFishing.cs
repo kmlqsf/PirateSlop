@@ -168,6 +168,8 @@ namespace PirateSlop.Networking
         {
             if (!Available || IsEating || stage.Value != 0 || target == null || Vector3.Distance(transform.position + Vector3.up, target.transform.position) > 3.5f) return;
             var item = target.GetComponent<NetworkFish>();
+            var loose = target.GetComponent<NetworkLooseCannonball>();
+            if (loose != null && loose.IsHeld) return;
             Vector3 origin = transform.position + Vector3.up * 1.5f;
             Vector3 delta = target.transform.position - origin;
             foreach (var hit in Physics.RaycastAll(origin, delta.normalized, delta.magnitude, ~0, QueryTriggerInteraction.Ignore))

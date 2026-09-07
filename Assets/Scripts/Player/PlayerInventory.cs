@@ -7,6 +7,31 @@ namespace PirateSlop
     [DefaultExecutionOrder(10)]
     public sealed class PlayerInventory : MonoBehaviour
     {
+        public InventoryIcons Icons;
+        static PlayerInventory lootOwner;
+        public static bool LootWindowOpen => lootOwner != null && lootOwner.lootWindow;
+        bool lootWindow;
+        NetworkLootChest openChest;
+        Cannonball aimedBall;
+        SimpleCannon aimedCannon;
+        readonly int[] ballCounts = new int[6];
+        public int BallCount(int slot) => slot >= 0 && slot < 6 ? ballCounts[slot] : 0;
+        public void SetBallCount(int slot, int count) => ballCounts[slot] = count;
+        public bool BallSelected => BallCount(SelectedSlot) > 0;
+        public InventoryItem ItemAt(int slot) => slot == 0 && HasPistol ? InventoryItem.Pistol : slot == 1 && HasRod ? InventoryItem.Rod : HasCannon(slot) ? InventoryItem.Cannon : FishCount(slot) > 0 ? InventoryItem.Fish : BallCount(slot) > 0 ? InventoryItem.Cannonball : InventoryItem.None;
+        public void OpenLoot(NetworkLootChest target)
+        {
+            if (target == null || !network.IsOwner || motor.IsDead || Vector3.Distance(transform.position, target.transform.position) > 5f) return;
+            openChest = target; lootWindow = true; lootOwner = this;
+            AdvancedPlayerController.SetCursor(false);
+        }
+        void CloseLoot(bool restoreCursor)
+        {
+            if (!lootWindow) return;
+            lootWindow = false; openChest = null;
+            if (lootOwner == this) lootOwner = null;
+            if (restoreCursor) AdvancedPlayerController.SetCursor(true);
+        }
         public SimpleCannon CannonPrefab;
         public Material PreviewMaterial;
         public int SelectedSlot { get; private set; }
@@ -29,12 +54,13 @@ namespace PirateSlop
         GameObject preview;
         Material previewMaterial;
         CannonPickup pickup;
+        NetworkLootChest chest;
         float rotation, tilt, roll;
         bool cancelled;
         bool valid;
         bool Networked => network != null && (network.IsClientInitialized || network.IsServerInitialized);
         public bool HasCannon(int slot) => slot > 1 && slot < 6 && (CannonSlots & (1 << slot)) != 0;
-        public int EmptySlot() { for (int i = 2; i < 6; i++) if (!HasCannon(i) && FishCount(i) == 0) return i; return -1; }
+        public int EmptySlot() { for (int i = 2; i < 6; i++) if (!HasCannon(i) && FishCount(i) == 0 && BallCount(i) == 0) return i; return -1; }
         public void SetContents(int mask) => CannonSlots = mask;
         public void SetSelection(int slot) { SelectedSlot = Mathf.Clamp(slot, 0, 5); cancelled = false; }
         public bool AimingAtPickup()
@@ -58,8 +84,16 @@ namespace PirateSlop
 
         void Update()
         {
-            InteractionUsed = false; pickup = null; valid = false;
+            InteractionUsed = false; pickup = null; chest = null; aimedBall = null; aimedCannon = null; valid = false;
             if (preview != null) preview.SetActive(false);
+            if (lootWindow)
+            {
+                InteractionUsed = true;
+                if (openChest == null || !openChest.IsSpawned || motor.IsDead || !Networked || Vector3.Distance(transform.position, openChest.transform.position) > 5f)
+                    CloseLoot(Networked && network.IsOwner && !motor.IsDead);
+                else if (Keyboard.current != null && (Keyboard.current.escapeKey.wasPressedThisFrame || Keyboard.current.eKey.wasPressedThisFrame)) CloseLoot(true);
+                return;
+            }
             if (!motor.InputActive || motor.LocomotionLocked || (motor.IsSwimming || motor.IsClimbing)) return;
             var keyboard = Keyboard.current;
             var mouse = Mouse.current;
@@ -72,13 +106,43 @@ namespace PirateSlop
                 }
             if (keyboard.gKey.wasPressedThisFrame && Networked && (Fishing == null || !Fishing.CarryingCatch))
             { network.DropSelected(); InteractionUsed = true; return; }
-            if (HandsOccupied || (hands != null && hands.HasHeldBall)) return;
+            if (hands != null && hands.HasHeldBall)
+            {
+                var loose = hands.HeldBall.GetComponent<NetworkLooseCannonball>();
+                if (keyboard.eKey.wasPressedThisFrame && Networked && loose != null) loose.Store();
+                else if (keyboard.eKey.wasPressedThisFrame && Networked && hands.HeldBall.Network != null)
+                    network.StoreBall(hands.HeldBall.Network.NetworkObject);
+                return;
+            }
+            if (HandsOccupied) return;
             var camera = motor.PlayerCamera;
             RaycastHit nearest = default;
             float distance = 5f;
             foreach (var hit in Physics.RaycastAll(camera.transform.position, camera.transform.forward, distance, ~0, QueryTriggerInteraction.Ignore))
                 if (!hit.transform.IsChildOf(transform) && hit.distance < distance) { nearest = hit; distance = hit.distance; }
-            if (nearest.collider != null) pickup = nearest.collider.GetComponentInParent<CannonPickup>();
+            if (nearest.collider != null)
+            {
+                aimedBall = nearest.collider.GetComponent<Cannonball>();
+                aimedCannon = nearest.collider.GetComponentInParent<SimpleCannon>();
+                pickup = nearest.collider.GetComponentInParent<CannonPickup>();
+            }
+            if (Networked && keyboard.eKey.wasPressedThisFrame)
+            {
+                if (aimedBall != null && !aimedBall.Loaded && aimedBall.Network != null)
+                { InteractionUsed = true; network.StoreBall(aimedBall.Network.NetworkObject); return; }
+                if (BallSelected && aimedCannon != null && !aimedCannon.IsLoaded && aimedCannon.Network != null)
+                { InteractionUsed = true; network.LoadBall(aimedCannon.Network.NetworkObject, aimedCannon.Index); return; }
+            }
+            if (nearest.collider != null) chest = nearest.collider.GetComponentInParent<NetworkLootChest>();
+            if (chest != null && Networked && (Fishing == null || (!Fishing.IsFishing && !Fishing.IsEating)))
+            {
+                if (keyboard.eKey.wasPressedThisFrame)
+                {
+                    InteractionUsed = true;
+                    network.UseChest(chest.NetworkObject);
+                }
+                return;
+            }
             if (pickup != null && pickup.Crate.KitAvailable && keyboard.eKey.wasPressedThisFrame)
             {
                 InteractionUsed = true;
@@ -144,7 +208,7 @@ namespace PirateSlop
             return false;
         }
 
-        void OnDisable() { if (preview != null) preview.SetActive(false); }
+        void OnDisable() { CloseLoot(false); if (preview != null) preview.SetActive(false); }
         void OnDestroy() { if (preview != null) Destroy(preview); if (previewMaterial != null) Destroy(previewMaterial); }
         void OnGUI()
         {
@@ -154,11 +218,32 @@ namespace PirateSlop
             for (int i = 0; i < 6; i++)
             {
                 GUI.color = i == SelectedSlot ? new Color(1f, .8f, .35f) : Color.white;
-                GUI.Box(new Rect(Screen.width * .5f - width * 3 + width * i, Screen.height - 76, width - 4, 62), (i + 1) + "\n" + (i == 0 && HasPistol ? "Пистолет" : i == 1 && HasRod ? "Удочка" : HasCannon(i) ? "Пушка" : FishCount(i) > 0 ? "Рыба ×" + FishCount(i) : ""));
+                var rect = new Rect(Screen.width * .5f - width * 3 + width * i, Screen.height - 86, width - 4, 72);
+                if (Icons != null) Icons.DrawSlot(rect, ItemAt(i), Mathf.Max(FishCount(i), BallCount(i)), (i + 1).ToString(), false);
+                else GUI.Box(rect, (i + 1) + "\n" + InventoryIcons.ItemName(ItemAt(i)));
             }
             GUI.color = old;
-            GUI.Label(new Rect(Screen.width * .5f - 130, Screen.height - 98, 300, 22), "G — выбросить предмет из выбранного слота");
-            string hint = pickup != null ? (EmptySlot() >= 0 ? "E — взять разобранную пушку" : "Инвентарь заполнен") : Placing && !cancelled ? "ЛКМ — поставить · R/колесо — поворот · Q/E — наклон\nShift+Q/E — крен · ПКМ — отменить" : "";
+            if (lootWindow && openChest != null)
+            {
+                int slots = Mathf.Max(6, openChest.SlotCount), rows = Mathf.CeilToInt(slots / 6f);
+                float panelWidth = width * 6 + 24, panelHeight = 75 + rows * 78;
+                var panel = new Rect((Screen.width - panelWidth) * .5f, (Screen.height - panelHeight) * .5f, panelWidth, panelHeight);
+                GUI.Box(panel, "Сундук · нажмите на предмет, чтобы забрать");
+                for (int i = 0; i < slots; i++)
+                {
+                    var item = openChest.ItemAt(i);
+                    var rect = new Rect(panel.x + 12 + i % 6 * width, panel.y + 30 + i / 6 * 78, width - 4, 72);
+                    GUI.enabled = item != InventoryItem.None;
+                    bool take = Icons != null ? Icons.DrawSlot(rect, item, 1, "", true) : GUI.Button(rect, InventoryIcons.ItemName(item));
+                    if (take) network.UseChest(openChest.NetworkObject, i);
+                }
+                GUI.enabled = true;
+                GUI.Label(new Rect(panel.x + 12, panel.yMax - 32, panelWidth - 110, 24), EmptySlot() < 0 ? "Инвентарь заполнен" : "Ваш инвентарь — внизу экрана");
+                if (GUI.Button(new Rect(panel.xMax - 92, panel.yMax - 32, 80, 24), "Закрыть")) CloseLoot(true);
+                return;
+            }
+            GUI.Label(new Rect(Screen.width * .5f - 130, Screen.height - 108, 300, 22), "G — выбросить предмет из выбранного слота");
+            string hint = aimedBall != null && aimedBall.Network != null ? "E — положить ядро в инвентарь" : BallSelected && aimedCannon != null && !aimedCannon.IsLoaded ? "E — зарядить ядро из инвентаря" : chest != null ? chest.Hint(this) : pickup != null ? (EmptySlot() >= 0 ? "E — взять разобранную пушку" : "Инвентарь заполнен") : Placing && !cancelled ? "ЛКМ — поставить · R/колесо — поворот · Q/E — наклон\nShift+Q/E — крен · ПКМ — отменить" : "";
             if (hint.Length > 0) GUI.Box(new Rect(Screen.width * .5f - 290, Screen.height - 165, 580, 44), hint);
         }
     }

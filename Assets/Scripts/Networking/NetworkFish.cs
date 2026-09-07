@@ -4,11 +4,11 @@ using UnityEngine;
 
 namespace PirateSlop.Networking
 {
-    public enum InventoryItem { Fish, Pistol, Rod, Cannon }
+    public enum InventoryItem { None = -1, Fish = 0, Pistol = 1, Rod = 2, Cannon = 3, Cannonball = 4 }
     public sealed class NetworkFish : NetworkBehaviour
     {
         public InventoryItem Item;
-        public string ItemName => Item == InventoryItem.Fish ? "рыбу" : Item == InventoryItem.Pistol ? "пистолет" : Item == InventoryItem.Rod ? "удочку" : "разобранную пушку";
+        public string ItemName => Item == InventoryItem.Fish ? "рыбу" : Item == InventoryItem.Pistol ? "пистолет" : Item == InventoryItem.Rod ? "удочку" : Item == InventoryItem.Cannonball ? "ядро" : "разобранную пушку";
         readonly SyncVar<NetworkObject> platform = new();
         readonly SyncVar<int> platformId = new();
         readonly SyncVar<Vector3> worldPosition = new();
@@ -43,7 +43,7 @@ namespace PirateSlop.Networking
         }
         void LateUpdate()
         {
-            if (!IsSpawned) return;
+            if (!IsSpawned || (Item == InventoryItem.Cannonball && GetComponent<NetworkLooseCannonball>() != null)) return;
             if (platformId.Value == 0) resolvedPlatform = null;
             if (platform.Value != null) resolvedPlatform = platform.Value.GetComponent<NetworkShip>();
             if (resolvedPlatform == null && platformId.Value > 0)

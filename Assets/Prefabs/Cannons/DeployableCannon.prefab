@@ -4519,6 +4519,7 @@ GameObject:
   - component: {fileID: 6766262252996742549}
   - component: {fileID: 1885484615778979167}
   - component: {fileID: 5855173008977240545}
+  - component: {fileID: 1116834033716185598}
   m_Layer: 0
   m_Name: DeployableCannon
   m_TagString: Untagged
@@ -4555,7 +4556,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.SimpleCannon
   Muzzle: {fileID: 8982002635803476142}
-  LaunchSpeed: 30
+  LaunchSpeed: 45
   BarrelPivot: {fileID: 7171116490545454119}
   Breech: {fileID: 4396704258799164232}
   MinElevation: -10
@@ -4593,6 +4594,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eace4f934b3077e4db8b16e3ba302e13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.GameplayAudio
+--- !u!114 &1116834033716185598
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7077935832243745798}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd9e5c9804729a545ba80375f104c32f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.CannonCarriage
+  ForwardPush: 1.1
+  SidePush: 0.12
+  RollDrag: 2.6
+  RecoilSpeed: 2.8
 --- !u!1 &7108862190997860170
 GameObject:
   m_ObjectHideFlags: 0

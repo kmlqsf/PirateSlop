@@ -70,19 +70,12 @@ namespace PirateSlop
             var shot = Instantiate(supply, position, Quaternion.identity);
             shot.name = "FiredCannonball"; shot.Network = null; shot.Loaded = shot.Held = false;
             shot.gameObject.SetActive(true); shot.Release();
-            shot.GetComponent<Collider>().enabled = authoritative;
-            shot.Body.linearVelocity = velocity;
-            var splash = shot.gameObject.AddComponent<CannonSplashAudio>();
-            splash.WaterHeight = GetComponentInParent<ShipController>().transform.position.y;
-            if (authoritative)
-            {
-                shot.Body.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
-                shot.gameObject.AddComponent<CannonShotDamage>();
-                var owner = GetComponentInParent<ShipController>();
-                if (owner != null)
-                    foreach (var collider in owner.GetComponentsInChildren<Collider>())
-                        Physics.IgnoreCollision(shot.GetComponent<Collider>(), collider);
-            }
+            shot.GetComponent<Collider>().enabled = false;
+            shot.Body.isKinematic = true; shot.Body.useGravity = false;
+            var projectile=shot.gameObject.AddComponent<CannonShotDamage>();
+            projectile.Authoritative=authoritative;projectile.Source=GetComponentInParent<ShipController>().transform;
+            projectile.Velocity=velocity;
+            projectile.Radius=shot.GetComponent<SphereCollider>().radius*Mathf.Max(shot.transform.lossyScale.x,shot.transform.lossyScale.y,shot.transform.lossyScale.z);
             Destroy(shot.gameObject, 20f);
         }
         public bool IsLoaded => loaded != null;
@@ -104,10 +97,13 @@ namespace PirateSlop
             nextFireTime = Time.time + 6f;
             InitializeSupply(loaded);
             var ship = GetComponentInParent<Rigidbody>();
-            Vector3 inherited = ship != null ? ship.GetPointVelocity(Muzzle.position) : Vector3.zero;
+            Vector3 inherited = GetComponentInParent<ShipController>().CannonPointVelocity(Muzzle.position);
             Vector3 position = Muzzle.position + Muzzle.forward * .35f;
             Vector3 velocity = Muzzle.forward * LaunchSpeed + inherited;
             SpawnShot(position, velocity, true);
+            var motor=GetComponentInParent<ShipController>();
+            motor.ApplyCannonImpulse(Muzzle.position,-Muzzle.forward,1f);
+            GetComponent<CannonCarriage>()?.Recoil();
             ResetSupply();
             if (Network != null && Network.IsServerInitialized) Network.NotifyFired(Index, position, velocity);
         }

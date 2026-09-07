@@ -12,6 +12,7 @@ namespace PirateSlop.Networking
         readonly SyncVar<int> selectedSlot = new(0);
         readonly SyncVar<bool> hasPistol = new(true), hasRod = new(true);
         readonly SyncList<int> fishCounts = new();
+        readonly SyncList<int> ballCounts = new();
         public NetworkFish[] DropPrefabs;
         PlayerInventory inventory;
         PirateWeapon weapon;
@@ -20,20 +21,24 @@ namespace PirateSlop.Networking
         {
             base.OnStartServer();
             if (fishCounts.Count == 0) for (int i = 0; i < 6; i++) fishCounts.Add(0);
+            if (ballCounts.Count == 0) for (int i = 0; i < 6; i++) ballCounts.Add(0);
             ApplyInventory();
         }
         void ApplyInventory()
         {
             inventory.SetContents(cannonSlots.Value); inventory.HasPistol = hasPistol.Value; inventory.HasRod = hasRod.Value;
             for (int i = 0; i < 6; i++) inventory.SetFishCount(i, i < fishCounts.Count ? fishCounts[i] : 0);
+            for (int i = 0; i < 6; i++) inventory.SetBallCount(i, i < ballCounts.Count ? ballCounts[i] : 0);
         }
         public bool CanAddItem(InventoryItem item)
         {
-            if (!IsServerInitialized) return false;
+            if (!IsServerInitialized || item < InventoryItem.Fish || item > InventoryItem.Cannonball) return false;
             if (item == InventoryItem.Pistol) return !hasPistol.Value;
             if (item == InventoryItem.Rod) return !hasRod.Value;
             if (item == InventoryItem.Fish)
                 for (int i = 2; i < fishCounts.Count; i++) if (fishCounts[i] > 0 && fishCounts[i] < 20) return true;
+            if (item == InventoryItem.Cannonball)
+                for (int i = 2; i < ballCounts.Count; i++) if (ballCounts[i] > 0 && ballCounts[i] < 20) return true;
             return inventory.EmptySlot() >= 0;
         }
         public bool AddItem(InventoryItem item)
@@ -48,6 +53,11 @@ namespace PirateSlop.Networking
                 {
                     for (int i = 2; i < fishCounts.Count; i++) if (fishCounts[i] > 0 && fishCounts[i] < 20) { slot = i; break; }
                     fishCounts[slot]++;
+                }
+                else if (item == InventoryItem.Cannonball)
+                {
+                    for (int i = 2; i < ballCounts.Count; i++) if (ballCounts[i] > 0 && ballCounts[i] < 20) { slot = i; break; }
+                    ballCounts[slot]++;
                 }
                 else cannonSlots.Value |= 1 << slot;
             }
@@ -72,6 +82,7 @@ namespace PirateSlop.Networking
             if (slot == 0 && hasPistol.Value) item = InventoryItem.Pistol;
             else if (slot == 1 && hasRod.Value) item = InventoryItem.Rod;
             else if (inventory.HasCannon(slot)) item = InventoryItem.Cannon;
+            else if (inventory.BallCount(slot) > 0) item = InventoryItem.Cannonball;
             else if (slot < fishCounts.Count && fishCounts[slot] > 0) item = InventoryItem.Fish;
             else return;
             if (DropPrefabs == null || (int)item >= DropPrefabs.Length || DropPrefabs[(int)item] == null) return;
@@ -83,16 +94,18 @@ namespace PirateSlop.Networking
             var prefab = DropPrefabs[(int)item];
             var orientation = Quaternion.FromToRotation(Vector3.up, floor.normal) * Quaternion.Euler(0, transform.eulerAngles.y, item == InventoryItem.Fish ? 90 : 0);
             var shape = prefab.GetComponent<BoxCollider>();
-            float height = item == InventoryItem.Fish ? .12f : shape.size.y * .5f - shape.center.y + .02f;
+            float height = item == InventoryItem.Cannonball ? prefab.GetComponent<SphereCollider>().radius + .02f : item == InventoryItem.Fish ? .12f : shape.size.y * .5f - shape.center.y + .02f;
             Vector3 point = floor.point + floor.normal * height;
             var dropped = Instantiate(prefab, point, orientation);
             UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene(dropped.gameObject, gameObject.scene);
             var support = floor.collider.GetComponentInParent<NetworkShip>();
             dropped.Place(support != null ? support.NetworkObject : null, point, orientation);
             ServerManager.Spawn(dropped.NetworkObject);
+            if (item == InventoryItem.Cannonball && support != null) dropped.GetComponent<Rigidbody>().linearVelocity = support.GetComponent<Rigidbody>().GetPointVelocity(point);
             if (item == InventoryItem.Pistol) hasPistol.Value = false;
             else if (item == InventoryItem.Rod) hasRod.Value = false;
             else if (item == InventoryItem.Cannon) cannonSlots.Value &= ~(1 << slot);
+            else if (item == InventoryItem.Cannonball) ballCounts[slot]--;
             else fishCounts[slot]--;
             ApplyInventory(); DropSoundObserversRpc(point);
         }
@@ -103,6 +116,61 @@ namespace PirateSlop.Networking
         {
             if (inventory == null || slot < 0 || slot >= 6) return;
             selectedSlot.Value = slot; inventory.SetSelection(slot);
+        }
+        public void UseChest(NetworkObject target, int slot = -1) => UseChestServerRpc(target, slot);
+        [ServerRpc]
+        void UseChestServerRpc(NetworkObject target, int slot)
+        {
+            var motor = GetComponent<AdvancedPlayerController>();
+            var fishing = inventory.Fishing;
+            if (target == null || motor.IsDead || motor.IsSwimming || motor.IsClimbing || motor.LocomotionLocked || GetComponent<CannonHands>().HasHeldBall) return;
+            if (fishing != null && (fishing.CarryingCatch || fishing.IsFishing || fishing.IsEating)) return;
+            var chest = target.GetComponent<NetworkLootChest>();
+            if (chest == null || !chest.IsSpawned || Vector3.Distance(transform.position, target.transform.position) > 5f) return;
+            Vector3 origin = transform.position + Vector3.up * 1.5f;
+            Vector3 delta = target.transform.position + Vector3.up * .4f - origin;
+            foreach (var hit in Physics.RaycastAll(origin, delta.normalized, delta.magnitude, ~0, QueryTriggerInteraction.Ignore))
+                if (!hit.transform.IsChildOf(transform) && !hit.transform.IsChildOf(target.transform)) return;
+            if (slot < 0) { chest.Open(); OpenChestTargetRpc(Owner, target); }
+            else chest.Take(this, slot);
+        }
+        [TargetRpc]
+        void OpenChestTargetRpc(FishNet.Connection.NetworkConnection connection, NetworkObject target)
+        {
+            if (target != null) inventory.OpenLoot(target.GetComponent<NetworkLootChest>());
+        }
+        public void StoreBall(NetworkObject ship) => StoreBallServerRpc(ship);
+        [ServerRpc]
+        void StoreBallServerRpc(NetworkObject ship)
+        {
+            if (ship == null || !CanHandleBall()) return;
+            var cannon = ship.GetComponent<NetworkCannon>();
+            if (cannon != null) cannon.StoreBall(this);
+        }
+        public void LoadBall(NetworkObject ship, int index) => LoadBallServerRpc(ship, index);
+        [ServerRpc]
+        void LoadBallServerRpc(NetworkObject ship, int index)
+        {
+            int slot = selectedSlot.Value;
+            if (ship == null || !CanHandleBall() || GetComponent<CannonHands>().HasHeldBall || inventory.BallCount(slot) <= 0) return;
+            var cannon = ship.GetComponent<NetworkCannon>();
+            if (cannon != null && cannon.LoadInventoryBall(this, index))
+            { ballCounts[slot]--; ApplyInventory(); }
+        }
+        bool CanHandleBall()
+        {
+            var motor = GetComponent<AdvancedPlayerController>();
+            var fishing = inventory.Fishing;
+            return !motor.IsDead && !motor.IsSwimming && !motor.IsClimbing && !motor.LocomotionLocked &&
+                (fishing == null || (!fishing.CarryingCatch && !fishing.IsFishing && !fishing.IsEating));
+        }
+        public bool CanReach(Vector3 point, Transform target)
+        {
+            if (Vector3.Distance(transform.position, point) > 5f) return false;
+            Vector3 origin = transform.position + Vector3.up * 1.5f, delta = point - origin;
+            foreach (var hit in Physics.RaycastAll(origin, delta.normalized, delta.magnitude, ~0, QueryTriggerInteraction.Ignore))
+                if (!hit.transform.IsChildOf(transform) && !hit.transform.IsChildOf(target)) return false;
+            return true;
         }
         public void TakeCannon(NetworkObject ship) => TakeCannonServerRpc(ship);
         [ServerRpc]

@@ -197,9 +197,9 @@ namespace PirateSlop.World
             if (!Ready) return true;
             if (new Vector2(position.x, position.z).magnitude > Layout.Radius - 25) return false;
             var rotation = Quaternion.Euler(0, yaw, 0);
-            if (Physics.CheckBox(new Vector3(position.x, Layout.SeaLevel + 1, position.z), new Vector3(3.5f, 3.5f, 9), rotation, LayerMask.GetMask("WorldStatic"), QueryTriggerInteraction.Ignore)) return false;
+            if (Physics.CheckBox(new Vector3(position.x, Layout.SeaLevel + 1, position.z), new Vector3(6.6f, 3.5f, 23.5f), rotation, LayerMask.GetMask("WorldStatic"), QueryTriggerInteraction.Ignore)) return false;
             for (int z = -1; z <= 1; z++) for (int x = -1; x <= 1; x++)
-                if (GroundHeight(position + rotation * new Vector3(x * 3.5f, 0, z * 9)) > Layout.SeaLevel - 2.5f) return false;
+                if (GroundHeight(position + rotation * new Vector3(x * 6.5f, 0, z * 23f)) > Layout.SeaLevel - 3f) return false;
             return true;
         }
         public void Clear()

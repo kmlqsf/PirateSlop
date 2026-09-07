@@ -21,6 +21,16 @@ public class AdvancedPlayerController : MonoBehaviour
     public bool IsThirdPerson { get; private set; }
     public bool IsGrounded { get; private set; }
     public float VerticalSpeed => verticalVelocity;
+    Vector3 cannonPushDirection;
+    float cannonPushDelta;
+    readonly System.Collections.Generic.HashSet<CannonCarriage> pushedCannons = new();
+    void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        if (cannonPushDelta <= 0 || Mathf.Abs(hit.normal.y) > .5f) return;
+        var carriage=hit.collider.GetComponentInParent<CannonCarriage>();
+        if(carriage!=null && pushedCannons.Add(carriage) && Vector3.Dot(cannonPushDirection,hit.normal)<-.1f)
+            carriage.Push(this,cannonPushDirection,cannonPushDelta);
+    }
     CharacterController controller;
     Camera playerCamera;
     float pitch, verticalVelocity, slideTimer, cooldown, lookYaw;
@@ -71,7 +81,7 @@ public class AdvancedPlayerController : MonoBehaviour
         if (kb == null) return;
         if (kb.f1Key.wasPressedThisFrame) SetThirdPerson(!IsThirdPerson);
         if (kb.escapeKey.wasPressedThisFrame) { pending.Release = true; SetCursor(false); }
-        if (mouse != null && mouse.leftButton.wasPressedThisFrame && !PirateSlop.Networking.SessionController.MenuOpen) SetCursor(true);
+        if (mouse != null && mouse.leftButton.wasPressedThisFrame && !PlayerInventory.LootWindowOpen && !PirateSlop.Networking.SessionController.MenuOpen) SetCursor(true);
         if (InputActive && mouse != null && (shipControls == null || !shipControls.IsDragging)) { var d = mouse.delta.ReadValue() * mouseSensitivity; lookYaw = Mathf.Repeat(lookYaw + d.x, 360f); pitch = Mathf.Clamp(pitch - d.y, -85f, 85f); }
         pending.Move = InputActive ? Vector2.ClampMagnitude(new Vector2((kb.dKey.isPressed || kb.rightArrowKey.isPressed ? 1 : 0) - (kb.aKey.isPressed || kb.leftArrowKey.isPressed ? 1 : 0), (kb.wKey.isPressed || kb.upArrowKey.isPressed ? 1 : 0) - (kb.sKey.isPressed || kb.downArrowKey.isPressed ? 1 : 0)), 1) : Vector2.zero;
         pending.Yaw = lookYaw;
@@ -145,7 +155,9 @@ public class AdvancedPlayerController : MonoBehaviour
         if (grounded && verticalVelocity < 0) verticalVelocity = -2;
         if (command.Jump && grounded && !crouched) verticalVelocity = Mathf.Sqrt(jumpHeight * -2 * gravity);
         verticalVelocity += gravity * dt;
+        cannonPushDirection=planar; cannonPushDelta=grounded ? dt : 0; pushedCannons.Clear();
         controller.Move((planar + Vector3.up * verticalVelocity) * dt);
+        cannonPushDelta=0;
         IsGrounded = verticalVelocity <= 0 && HasGround();
     }
     void SimulateSwimming(PlayerCommand command, float dt, float water, bool wasSwimming)

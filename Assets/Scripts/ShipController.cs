@@ -12,6 +12,31 @@ public class ShipController : MonoBehaviour
     float nextCollisionAudio;
     [SerializeField] float buoyancyResponse = 2.5f, floatLength = 8f, floatWidth = 3f;
     float pitch, waveRoll;
+    [SerializeField] float cannonRockStrength=20f, cannonRockSpring=9f, cannonRockDamping=3.5f;
+    Vector2 cannonTilt, cannonTiltVelocity;
+    Vector3 cannonShove, motionVelocity, motionAngularVelocity;
+    public Vector3 CannonPointVelocity(Vector3 point) => motionVelocity+Vector3.Cross(motionAngularVelocity,point-transform.position);
+    public void ApplyCannonImpulse(Vector3 point,Vector3 impulse,float strength)
+    {
+        if(!float.IsFinite(impulse.sqrMagnitude) || !float.IsFinite(point.sqrMagnitude)) return;
+        var local=Quaternion.Inverse(Quaternion.Euler(0,yaw,0))*Vector3.ClampMagnitude(impulse,1.5f);
+        var offset=transform.InverseTransformPoint(point);
+        float leverage=Mathf.Clamp(Mathf.Abs(offset.y)/5f,.65f,1.3f);
+        cannonTiltVelocity += new Vector2(local.z,-local.x)*cannonRockStrength*strength*leverage;
+        cannonTiltVelocity += new Vector2(offset.z/23f,-offset.x/6.5f)*(-local.y)*cannonRockStrength*.25f*strength;
+        cannonTiltVelocity=Vector2.ClampMagnitude(cannonTiltVelocity,55f);
+        cannonShove=Vector3.ClampMagnitude(cannonShove+Vector3.ProjectOnPlane(impulse,Vector3.up)*(.3f*strength),1.2f);
+    }
+    void SimulateCannonRock(float dt)
+    {
+        int steps=Mathf.Max(1,Mathf.CeilToInt(dt/.02f));float step=dt/steps;
+        for(int i=0;i<steps;i++)
+        {
+            cannonTiltVelocity+=(-cannonTilt*cannonRockSpring-cannonTiltVelocity*cannonRockDamping)*step;
+            cannonTilt=Vector2.ClampMagnitude(cannonTilt+cannonTiltVelocity*step,8f);
+        }
+        cannonShove*=Mathf.Exp(-2f*dt);
+    }
     public bool Networked { get; set; }
     public float Speed => speed;
     public float MaxSpeed => maxSpeed;
@@ -28,13 +53,14 @@ public class ShipController : MonoBehaviour
     void FixedUpdate() { if (!Networked) Simulate(Time.fixedDeltaTime); }
     public void Simulate(float dt)
     {
+        SimulateCannonRock(dt);
         float target = (sailSystem != null ? sailSystem.DeployPercentage : 0) * maxSpeed;
         speed = Mathf.MoveTowards(speed, target, (target > speed ? acceleration : deceleration) * dt);
         float rudder = helm != null ? helm.CurrentRudderNormalized : 0;
         float factor = Mathf.Clamp01(speed / Mathf.Max(.1f, maxSpeed));
         yaw += rudder * turnSpeed * Mathf.Lerp(.15f, 1, factor) * dt;
         bank = Mathf.Lerp(bank, -rudder * maxBankAngle * factor, 1 - Mathf.Exp(-bankResponse * dt));
-        var next = rb.position + Quaternion.Euler(0, yaw, 0) * Vector3.forward * speed * dt; next.y = waterHeight;
+        var next = rb.position + Quaternion.Euler(0, yaw, 0) * Vector3.forward * speed * dt + cannonShove * dt; next.y = waterHeight;
         var ocean = OceanSurface.Instance;
         if (ocean != null)
         {
@@ -47,22 +73,28 @@ public class ShipController : MonoBehaviour
             pitch = Mathf.Lerp(pitch, Mathf.Clamp(-Mathf.Atan2(bow - stern, floatLength * 2) * Mathf.Rad2Deg, -12, 12), blend);
             waveRoll = Mathf.Lerp(waveRoll, Mathf.Clamp(Mathf.Atan2(starboard - port, floatWidth * 2) * Mathf.Rad2Deg, -15, 15), blend);
         }
-        var rotation = Quaternion.Euler(pitch, yaw, bank + waveRoll);
+        var rotation = Quaternion.Euler(pitch + cannonTilt.x, yaw, bank + waveRoll + cannonTilt.y);
         var world = PirateSlop.World.ProceduralWorld.Instance;
         if (world != null && world.Ready && !world.CanSail(next, yaw))
         {
             float previousYaw = rb.rotation.eulerAngles.y;
-            if (!world.CanSail(rb.position, yaw)) { yaw = previousYaw; rotation = Quaternion.Euler(pitch, yaw, bank + waveRoll); }
+            if (!world.CanSail(rb.position, yaw)) { yaw = previousYaw; rotation = Quaternion.Euler(pitch + cannonTilt.x, yaw, bank + waveRoll + cannonTilt.y); }
             next.x = rb.position.x; next.z = rb.position.z; speed = 0;
         }
+        motionVelocity=(next-rb.position)/Mathf.Max(.001f,dt);
+        var rotationDelta=rotation*Quaternion.Inverse(rb.rotation);
+        rotationDelta.ToAngleAxis(out float angle,out Vector3 axis);
+        if(angle>180f) angle-=360f;
+        motionAngularVelocity=float.IsFinite(axis.sqrMagnitude) ? axis*(angle*Mathf.Deg2Rad/Mathf.Max(.001f,dt)) : Vector3.zero;
         if (Networked) { rb.position = next; rb.rotation = rotation; transform.SetPositionAndRotation(next, rotation); }
         else { rb.MoveRotation(rotation); rb.MovePosition(next); }
     }
-    public ShipState Capture() => new ShipState { Position = rb.position, Yaw = yaw, Speed = speed, Bank = bank, Pitch = pitch, WaveRoll = waveRoll, WaveTime = OceanSurface.Instance != null ? OceanSurface.Instance.WaveTime : Time.time, Sail = sailSystem.DeployPercentage, Rudder = helm.CurrentRudderNormalized, Controlling = helm.IsControlling };
+    public ShipState Capture() => new ShipState { Position = rb.position, Yaw = yaw, Speed = speed, Bank = bank, Pitch = pitch + cannonTilt.x, WaveRoll = waveRoll + cannonTilt.y, WaveTime = OceanSurface.Instance != null ? OceanSurface.Instance.WaveTime : Time.time, Sail = sailSystem.DeployPercentage, Rudder = helm.CurrentRudderNormalized, Controlling = helm.IsControlling };
     public void Restore(ShipState s, AdvancedPlayerController driver)
     {
+        cannonTilt=Vector2.zero; cannonTiltVelocity=Vector2.zero;
         speed = s.Speed; yaw = s.Yaw; bank = s.Bank; pitch = s.Pitch; waveRoll = s.WaveRoll;
-        rb.position = s.Position; rb.rotation = Quaternion.Euler(pitch, yaw, bank + waveRoll); transform.SetPositionAndRotation(rb.position, rb.rotation);
+        rb.position = s.Position; rb.rotation = Quaternion.Euler(pitch + cannonTilt.x, yaw, bank + waveRoll + cannonTilt.y); transform.SetPositionAndRotation(rb.position, rb.rotation);
         sailSystem.SetDeploy(s.Sail); helm.Restore(s.Rudder, s.Controlling, driver);
     }
     public void ApplyRemoteState(ShipState s, float blend, AdvancedPlayerController driver = null)

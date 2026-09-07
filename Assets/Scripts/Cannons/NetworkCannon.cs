@@ -42,6 +42,31 @@ namespace PirateSlop.Networking
             placements.Add(new CannonPlacement { Position = position, Rotation = rotation.normalized, Elevation = 3f });
             ApplyState();
         }
+        public bool StoreBall(NetworkWeapon player)
+        {
+            if (!IsServerInitialized || ball == null || ball.Loaded || (holder != -1 && holder != player.Owner.ClientId) || !player.CanReach(ball.transform.position, ball.transform)) return false;
+            if (!player.AddItem(InventoryItem.Cannonball)) return false;
+            holder = -1; Crate.ResetSupply(); ResetStoredBallObserversRpc();
+            return true;
+        }
+        [ObserversRpc]
+        void ResetStoredBallObserversRpc()
+        {
+            if (!IsServerInitialized && Crate != null) Crate.ResetSupply();
+        }
+        public bool LoadInventoryBall(NetworkWeapon player, int index)
+        {
+            var cannon = Cannon(index);
+            if (!IsServerInitialized || ball == null || ball.Loaded || holder != -1 || cannon == null || cannon.IsLoaded || !player.CanReach(cannon.Muzzle.position, cannon.transform)) return false;
+            ball.transform.position = cannon.Muzzle.position;
+            if (!cannon.TryLoad(ball)) return false;
+            loadedIndex.Value = index; return true;
+        }
+        public void MoveCarriage(int index,Vector3 position,Quaternion rotation)
+        {
+            if(!IsServerInitialized || index<0 || index>=placements.Count)return;
+            var placement=placements[index];placement.Position=position;placement.Rotation=rotation;placements[index]=placement;
+        }
         void ApplyState()
         {
             if (Crate == null) return;
@@ -51,7 +76,16 @@ namespace PirateSlop.Networking
                 var placement = placements[Crate.Cannons.Count];
                 Crate.AddCannon(placement.Position, placement.Rotation);
             }
-            for (int i = 0; i < placements.Count; i++) Crate.Cannons[i].SetElevation(placements[i].Elevation);
+            for (int i = 0; i < placements.Count; i++)
+            {
+                var cannon=Crate.Cannons[i];cannon.SetElevation(placements[i].Elevation);
+                if(!IsServerInitialized)
+                {
+                    float blend=1f-Mathf.Exp(-20f*Time.deltaTime);
+                    cannon.transform.localPosition=Vector3.Lerp(cannon.transform.localPosition,placements[i].Position,blend);
+                    cannon.transform.localRotation=Quaternion.Slerp(cannon.transform.localRotation,placements[i].Rotation,blend);
+                }
+            }
             if (IsServerInitialized || appliedLoaded == loadedIndex.Value) return;
             if (appliedLoaded >= 0 && appliedLoaded < Crate.Cannons.Count) Crate.Cannons[appliedLoaded].ResetSupply();
             appliedLoaded = loadedIndex.Value;

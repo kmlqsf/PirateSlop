@@ -16,7 +16,7 @@ namespace PirateSlop.Networking
     public sealed class SessionController : MonoBehaviour
     {
         public static SessionController Instance { get; private set; }
-        public static bool MenuOpen => Instance != null && (!Instance.playing || Cursor.lockState != CursorLockMode.Locked);
+        public static bool MenuOpen => Instance != null && (!Instance.playing || (Cursor.lockState != CursorLockMode.Locked && !PlayerInventory.LootWindowOpen));
         public SessionConfig Config;
         public NetworkObject ShipPrefab, PlayerPrefab;
         public Camera MenuCamera;
@@ -124,6 +124,7 @@ namespace PirateSlop.Networking
             if (args.ConnectionState == LocalConnectionState.Started)
             {
                 Debug.Log($"SESSION_READY id={SessionId} port={transport.GetPort()} capacity={MaxPlayers}");
+                IslandLootSpawner.Spawn(ProceduralWorld.Instance, manager, Config.Loot);
                 if (dedicated) { connecting = false; status = "Сервер запущен"; }
                 else if (hostRequested) manager.ClientManager.StartConnection();
             }

@@ -14,6 +14,7 @@ namespace PirateSlop
         float distance;
         float nextHeldSync;
         public bool HasHeldBall => held != null;
+        public Cannonball HeldBall => held;
         public bool CanPickUpBall()
         {
             if (player == null || player.PlayerCamera == null) return false;
@@ -32,7 +33,9 @@ namespace PirateSlop
             {
                 held.Held = false;
                 held.GetComponent<Collider>().enabled = true;
-                if (held.Network != null && held.Network.IsClientInitialized)
+                var loose = held.GetComponent<PirateSlop.Networking.NetworkLooseCannonball>();
+                if (loose != null) loose.RequestHold(false, held.transform.position);
+                else if (held.Network != null && held.Network.IsClientInitialized)
                     held.Network.RequestBall(false, held.transform.position);
                 else
                 {
@@ -75,7 +78,9 @@ namespace PirateSlop
                     ball.Held = true; ball.AttachToPlatform(null);
                     ball.GetComponent<Collider>().enabled = false;
                     ball.transform.SetParent(null, true);
-                    if (ball.Network != null && ball.Network.IsClientInitialized) ball.Network.RequestBall(true, ball.transform.position);
+                    var loose = ball.GetComponent<PirateSlop.Networking.NetworkLooseCannonball>();
+                    if (loose != null) loose.RequestHold(true, ball.transform.position);
+                    else if (ball.Network != null && ball.Network.IsClientInitialized) ball.Network.RequestBall(true, ball.transform.position);
                 }
             }
             if (held != null)
@@ -85,12 +90,16 @@ namespace PirateSlop
                 held.transform.position = ray.GetPoint(Mathf.Min(distance, Mathf.Max(.2f, best - .13f)));
                 if (held.Network != null && held.Network.IsClientInitialized && Time.unscaledTime >= nextHeldSync)
                 { nextHeldSync = Time.unscaledTime + .05f; held.Network.RequestBall(true, held.transform.position); }
+                var loose = held.GetComponent<PirateSlop.Networking.NetworkLooseCannonball>();
+                if (loose != null && Time.unscaledTime >= nextHeldSync)
+                { nextHeldSync = Time.unscaledTime + .05f; loose.RequestHold(true, held.transform.position); }
                 foreach (var cannon in FindObjectsByType<SimpleCannon>(FindObjectsSortMode.None))
                     if (!cannon.IsLoaded && Vector3.Distance(held.transform.position, cannon.Muzzle.position) <= .4f)
                     {
                         var network = cannon.GetComponentInParent<PirateSlop.Networking.NetworkCannon>();
                         if (network != null && network.IsClientInitialized)
                         {
+                            if (loose != null) { loose.Load(network.NetworkObject, cannon.Index); break; }
                             if (held.Network != network) continue;
                             held.Held = false; held.GetComponent<Collider>().enabled = true;
                             network.RequestLoad(cannon.Index, network.transform.InverseTransformPoint(held.transform.position));
@@ -105,7 +114,7 @@ namespace PirateSlop
         {
             if (player == null || !player.InputActive || player.LocomotionLocked || (controls != null && controls.IsDragging) || (inventory != null && inventory.Placing)) return;
             GUI.Label(new Rect(Screen.width / 2f - 4, Screen.height / 2f - 10, 20, 20), "+");
-            string text = held != null ? "Поднеси ядро к дулу • Колесо — ближе/дальше • Отпусти ЛКМ — бросить" : aimed != null ? (aimed.IsLoaded ? "E — выстрелить" : "Поднеси ядро к дулу, удерживая ЛКМ") : "";
+            string text = held != null ? "E — в инвентарь • Поднеси ядро к дулу • Колесо — ближе/дальше • Отпусти ЛКМ — бросить" : aimed != null ? (aimed.IsLoaded ? "E — выстрелить" : "Поднеси ядро к дулу, удерживая ЛКМ") : "";
             if (text.Length > 0) GUI.Box(new Rect(Screen.width / 2f - 310, Screen.height - 125, 620, 28), text);
         }
     }

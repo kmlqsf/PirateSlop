@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3cee5862523ceaf4f8c6d7a4796f7e00, type: 3}
+  m_Name: DefaultLoot
+  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.LootCatalog
+  ChestPrefab: {fileID: 7727236928847363322, guid: 3f95139e8b7f02f4d9a675ab970e0198, type: 3}
+  ChestsPerIsland: {x: 1, y: 3}
+  ItemsPerChest: {x: 1, y: 2}
+  Items:
+  - Item: 3
+    Name: "\u041A\u043E\u0440\u0430\u0431\u0435\u043B\u044C\u043D\u0430\u044F \u043F\u0443\u0448\u043A\u0430"
+    Weight: 1

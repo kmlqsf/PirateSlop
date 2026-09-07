@@ -4,6 +4,7 @@ namespace PirateSlop.Networking
     [CreateAssetMenu(menuName = "PirateSlop/Session Config")]
     public sealed class SessionConfig : ScriptableObject
     {
+        public LootCatalog Loot;
         public ushort Port = 7777;
         [Range(1, 128)] public int MaxPlayers = 32;
         public ushort TickRate = 30;
