@@ -1,0 +1,57 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17341392a75c7e64fa4d3a25b08e5b38, type: 3}
+  m_Name: reef_passage_a
+  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.LocationDefinition
+  Settings:
+    Id: reef_passage_a
+    Shape: 9
+    PierCount: 1
+    LayoutVariant: 0
+    Weight: 0.4
+    Radius: {x: 100, y: 100}
+    Height: {x: 18, y: 18}
+    Roughness: 0.15
+    Sand: {r: 0.68, g: 0.59, b: 0.38, a: 1}
+    Ground: {r: 0.23, g: 0.34, b: 0.13, a: 1}
+    Rock: {r: 0.3, g: 0.31, b: 0.3, a: 1}
+  Points:
+  - Tag: landmark
+    Count: 1
+    Height: {x: 2, y: 20}
+    MaxSlope: 25
+    Spacing: 8
+    StaticPrefab: {fileID: 8464265966409437014, guid: 4a7954b92797a8648be81c36ab2f7f29, type: 3}
+    AtLocationOrigin: 1
+    AtSeaLevel: 1
+    LocalOffset: {x: 0, y: -0.15, z: 0}
+    PrefabVersion: 1
+  - Tag: sea_route
+    Count: 1
+    Height: {x: 2, y: 20}
+    MaxSlope: 25
+    Spacing: 8
+    StaticPrefab: {fileID: 0}
+    AtLocationOrigin: 1
+    AtSeaLevel: 1
+    LocalOffset: {x: 0, y: -0.15, z: -85}
+    PrefabVersion: 1
+  - Tag: sea_route
+    Count: 1
+    Height: {x: 2, y: 20}
+    MaxSlope: 25
+    Spacing: 8
+    StaticPrefab: {fileID: 0}
+    AtLocationOrigin: 1
+    AtSeaLevel: 1
+    LocalOffset: {x: 0, y: -0.15, z: 85}
+    PrefabVersion: 1

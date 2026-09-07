@@ -1,0 +1,107 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17341392a75c7e64fa4d3a25b08e5b38, type: 3}
+  m_Name: ruined_outpost_a
+  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.LocationDefinition
+  Settings:
+    Id: ruined_outpost_a
+    Shape: 6
+    PierCount: 2
+    LayoutVariant: 0
+    Weight: 0.35
+    Radius: {x: 90, y: 90}
+    Height: {x: 6, y: 6}
+    Roughness: 0.16
+    Sand: {r: 0.68, g: 0.59, b: 0.38, a: 1}
+    Ground: {r: 0.23, g: 0.34, b: 0.13, a: 1}
+    Rock: {r: 0.3, g: 0.31, b: 0.3, a: 1}
+  Points:
+  - Tag: landmark
+    Count: 1
+    Height: {x: 2, y: 20}
+    MaxSlope: 25
+    Spacing: 8
+    StaticPrefab: {fileID: 3108938467300323265, guid: 76c6f470e603f154792863fbfb5a0c5b, type: 3}
+    AtLocationOrigin: 1
+    AtSeaLevel: 0
+    LocalOffset: {x: 0, y: 0, z: 0}
+    PrefabVersion: 1
+  - Tag: land_spawn
+    Count: 1
+    Height: {x: 2, y: 20}
+    MaxSlope: 25
+    Spacing: 8
+    StaticPrefab: {fileID: 0}
+    AtLocationOrigin: 1
+    AtSeaLevel: 0
+    LocalOffset: {x: 0, y: 0.4, z: -10}
+    PrefabVersion: 1
+  - Tag: landing
+    Count: 1
+    Height: {x: 2, y: 20}
+    MaxSlope: 25
+    Spacing: 8
+    StaticPrefab: {fileID: 0}
+    AtLocationOrigin: 1
+    AtSeaLevel: 0
+    LocalOffset: {x: 0, y: -3.9, z: -97}
+    PrefabVersion: 1
+  - Tag: loot
+    Count: 1
+    Height: {x: 2, y: 20}
+    MaxSlope: 25
+    Spacing: 8
+    StaticPrefab: {fileID: 0}
+    AtLocationOrigin: 1
+    AtSeaLevel: 0
+    LocalOffset: {x: 20, y: 1.8119997, z: -0.9999991}
+    PrefabVersion: 1
+  - Tag: landing
+    Count: 1
+    Height: {x: 2, y: 20}
+    MaxSlope: 25
+    Spacing: 8
+    StaticPrefab: {fileID: 0}
+    AtLocationOrigin: 1
+    AtSeaLevel: 0
+    LocalOffset: {x: -0.0000084800095, y: -3.9, z: 97}
+    PrefabVersion: 1
+  - Tag: loot
+    Count: 1
+    Height: {x: 2, y: 20}
+    MaxSlope: 25
+    Spacing: 8
+    StaticPrefab: {fileID: 0}
+    AtLocationOrigin: 1
+    AtSeaLevel: 0
+    LocalOffset: {x: -20, y: 0.387, z: -1.0000002}
+    PrefabVersion: 1
+  - Tag: loot
+    Count: 1
+    Height: {x: 2, y: 20}
+    MaxSlope: 25
+    Spacing: 8
+    StaticPrefab: {fileID: 0}
+    AtLocationOrigin: 1
+    AtSeaLevel: 0
+    LocalOffset: {x: 0, y: 0.36, z: 2}
+    PrefabVersion: 1
+  - Tag: loot
+    Count: 1
+    Height: {x: 2, y: 20}
+    MaxSlope: 25
+    Spacing: 8
+    StaticPrefab: {fileID: 0}
+    AtLocationOrigin: 1
+    AtSeaLevel: 0
+    LocalOffset: {x: 4, y: 0.36, z: -3}
+    PrefabVersion: 1

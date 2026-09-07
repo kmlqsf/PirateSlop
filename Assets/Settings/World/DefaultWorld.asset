@@ -10,19 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0b073f04b45b71b40821ff9522e20da6, type: 3}
-  m_Name: DefaultWorld
+  m_Name: DefaultWorld(Clone)
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.WorldProfile
   Seed: 17421
   RandomSeed: 1
   FixedLayout: {fileID: 0}
   Radius: 1500
-  LocationCount: 24
+  LocationCount: 28
   Resolution: 96
   SeaDepth: 45
   ShippingGap: 90
   SpawnClearance: 65
   SpawnSpacing: 140
-  CatalogRevision: 2
+  CatalogRevision: 6
   Locations:
   - {fileID: 11400000, guid: 81ac3da8fcae7094d9d7cd54d833f04c, type: 2}
   - {fileID: 11400000, guid: 6e03ab60162425e47a74d3999fc98f02, type: 2}
@@ -31,4 +31,37 @@ MonoBehaviour:
   - {fileID: 11400000, guid: ff4f216bd56cffb46b3a68c4abd2491a, type: 2}
   - {fileID: 11400000, guid: 5b0c7f5f4b94e32449c2a98968c92447, type: 2}
   - {fileID: 11400000, guid: 891d9389fe8424f4bbd0bd7140c96229, type: 2}
+  - {fileID: 11400000, guid: 6f262d6b41a6df44eb8d14694255fdd2, type: 2}
+  - {fileID: 11400000, guid: 0b34b589ca1ad6143a5fa7f8e7a23c26, type: 2}
+  - {fileID: 11400000, guid: aad0479ea8361eb4fb70b9a4bcdc6052, type: 2}
+  - {fileID: 11400000, guid: c1b7e86f7803ff146bc3939cd5612ddd, type: 2}
+  - {fileID: 11400000, guid: e16a3d0da41c9de4ca76b28c36f1f4d8, type: 2}
+  - {fileID: 11400000, guid: 518d2a0c56063204cadc6acb4b0f1bd5, type: 2}
+  - {fileID: 11400000, guid: a2e7ed8bdeae79240944ee031f583ac3, type: 2}
+  - {fileID: 11400000, guid: d127f0f606b9def4bae51f9172e6ac29, type: 2}
+  - {fileID: 11400000, guid: 5727e4f17882b7e41a8b1950bfcd2742, type: 2}
+  - {fileID: 11400000, guid: 2a3773fdf21391d48b3ce0c31634fac3, type: 2}
+  - {fileID: 11400000, guid: 65fe61ae470dea14e9bdad9654366d01, type: 2}
+  - {fileID: 11400000, guid: f4d4380f5264e9d4caa2171aac4b5da9, type: 2}
   TerrainMaterial: {fileID: 2100000, guid: 5e0a2b6c30bd3c1418e6ba0729b2a5e5, type: 2}
+  BalancedLayout: 1
+  StartingSectors: 16
+  ContestedLocations: 4
+  HazardLocations: 8
+  StartingSupplies:
+  - {fileID: 11400000, guid: 6f262d6b41a6df44eb8d14694255fdd2, type: 2}
+  ContestedSites:
+  - {fileID: 11400000, guid: aad0479ea8361eb4fb70b9a4bcdc6052, type: 2}
+  - {fileID: 11400000, guid: c1b7e86f7803ff146bc3939cd5612ddd, type: 2}
+  - {fileID: 11400000, guid: e16a3d0da41c9de4ca76b28c36f1f4d8, type: 2}
+  - {fileID: 11400000, guid: d127f0f606b9def4bae51f9172e6ac29, type: 2}
+  - {fileID: 11400000, guid: 5727e4f17882b7e41a8b1950bfcd2742, type: 2}
+  - {fileID: 11400000, guid: 2a3773fdf21391d48b3ce0c31634fac3, type: 2}
+  Hazards:
+  - {fileID: 11400000, guid: 518d2a0c56063204cadc6acb4b0f1bd5, type: 2}
+  - {fileID: 11400000, guid: a2e7ed8bdeae79240944ee031f583ac3, type: 2}
+  - {fileID: 11400000, guid: 65fe61ae470dea14e9bdad9654366d01, type: 2}
+  - {fileID: 11400000, guid: f4d4380f5264e9d4caa2171aac4b5da9, type: 2}
+  RouteClearance: 30
+  RouteGridSize: 40
+  TerrainLOD: 1

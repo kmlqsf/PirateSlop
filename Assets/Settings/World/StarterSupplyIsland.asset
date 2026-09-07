@@ -15,9 +15,11 @@ MonoBehaviour:
   Settings:
     Id: supply_island
     Shape: 6
-    Weight: 0.25
-    Radius: {x: 60, y: 60}
-    Height: {x: 4, y: 4}
+    PierCount: 1
+    LayoutVariant: 0
+    Weight: 0.4
+    Radius: {x: 90, y: 90}
+    Height: {x: 6, y: 6}
     Roughness: 0.16
     Sand: {r: 0.68, g: 0.59, b: 0.38, a: 1}
     Ground: {r: 0.23, g: 0.34, b: 0.13, a: 1}
@@ -28,10 +30,11 @@ MonoBehaviour:
     Height: {x: 2, y: 20}
     MaxSlope: 25
     Spacing: 8
-    StaticPrefab: {fileID: 5347512120612736135, guid: 6498946423d89ec4fbeed4247ef2075c, type: 3}
+    StaticPrefab: {fileID: 4811357813863313060, guid: 95f19aa0685f37144aa355532dd20437, type: 3}
     AtLocationOrigin: 1
+    AtSeaLevel: 0
     LocalOffset: {x: 0, y: 0, z: 0}
-    PrefabVersion: 1
+    PrefabVersion: 3
   - Tag: loot
     Count: 1
     Height: {x: 2, y: 20}
@@ -39,6 +42,7 @@ MonoBehaviour:
     Spacing: 8
     StaticPrefab: {fileID: 0}
     AtLocationOrigin: 1
+    AtSeaLevel: 0
     LocalOffset: {x: 2, y: 0.36, z: 2}
     PrefabVersion: 1
   - Tag: loot
@@ -48,16 +52,8 @@ MonoBehaviour:
     Spacing: 8
     StaticPrefab: {fileID: 0}
     AtLocationOrigin: 1
+    AtSeaLevel: 0
     LocalOffset: {x: -2, y: 0.36, z: -1}
-    PrefabVersion: 1
-  - Tag: loot
-    Count: 1
-    Height: {x: 2, y: 20}
-    MaxSlope: 25
-    Spacing: 8
-    StaticPrefab: {fileID: 0}
-    AtLocationOrigin: 1
-    LocalOffset: {x: 6, y: 0, z: -12}
     PrefabVersion: 1
   - Tag: land_spawn
     Count: 1
@@ -66,6 +62,7 @@ MonoBehaviour:
     Spacing: 8
     StaticPrefab: {fileID: 0}
     AtLocationOrigin: 1
+    AtSeaLevel: 0
     LocalOffset: {x: 0, y: 0.4, z: -10}
     PrefabVersion: 1
   - Tag: landing
@@ -75,5 +72,16 @@ MonoBehaviour:
     Spacing: 8
     StaticPrefab: {fileID: 0}
     AtLocationOrigin: 1
-    LocalOffset: {x: 6, y: -2, z: -42}
+    AtSeaLevel: 0
+    LocalOffset: {x: 0, y: -3.9, z: -97}
+    PrefabVersion: 1
+  - Tag: loot
+    Count: 1
+    Height: {x: 2, y: 20}
+    MaxSlope: 25
+    Spacing: 8
+    StaticPrefab: {fileID: 0}
+    AtLocationOrigin: 1
+    AtSeaLevel: 0
+    LocalOffset: {x: -0.0000017484556, y: 0.3660001, z: 19}
     PrefabVersion: 1

@@ -1,0 +1,137 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17341392a75c7e64fa4d3a25b08e5b38, type: 3}
+  m_Name: wreck_island_b
+  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.LocationDefinition
+  Settings:
+    Id: wreck_island_b
+    Shape: 6
+    PierCount: 3
+    LayoutVariant: 1
+    Weight: 0.35
+    Radius: {x: 90, y: 90}
+    Height: {x: 6, y: 6}
+    Roughness: 0.16
+    Sand: {r: 0.68, g: 0.59, b: 0.38, a: 1}
+    Ground: {r: 0.23, g: 0.34, b: 0.13, a: 1}
+    Rock: {r: 0.3, g: 0.31, b: 0.3, a: 1}
+  Points:
+  - Tag: landmark
+    Count: 1
+    Height: {x: 2, y: 20}
+    MaxSlope: 25
+    Spacing: 8
+    StaticPrefab: {fileID: 3086889606429451608, guid: 6f22e6471610baf48890d209bf8d720f, type: 3}
+    AtLocationOrigin: 1
+    AtSeaLevel: 0
+    LocalOffset: {x: 0, y: 0, z: 0}
+    PrefabVersion: 1
+  - Tag: land_spawn
+    Count: 1
+    Height: {x: 2, y: 20}
+    MaxSlope: 25
+    Spacing: 8
+    StaticPrefab: {fileID: 0}
+    AtLocationOrigin: 1
+    AtSeaLevel: 0
+    LocalOffset: {x: 0, y: 0.4, z: -10}
+    PrefabVersion: 1
+  - Tag: landing
+    Count: 1
+    Height: {x: 2, y: 20}
+    MaxSlope: 25
+    Spacing: 8
+    StaticPrefab: {fileID: 0}
+    AtLocationOrigin: 1
+    AtSeaLevel: 0
+    LocalOffset: {x: 0, y: -3.9, z: -97}
+    PrefabVersion: 1
+  - Tag: loot
+    Count: 1
+    Height: {x: 2, y: 20}
+    MaxSlope: 25
+    Spacing: 8
+    StaticPrefab: {fileID: 0}
+    AtLocationOrigin: 1
+    AtSeaLevel: 0
+    LocalOffset: {x: 17.320509, y: 0.49299994, z: -10.999999}
+    PrefabVersion: 1
+  - Tag: landing
+    Count: 1
+    Height: {x: 2, y: 20}
+    MaxSlope: 25
+    Spacing: 8
+    StaticPrefab: {fileID: 0}
+    AtLocationOrigin: 1
+    AtSeaLevel: 0
+    LocalOffset: {x: 84.00446, y: -3.9, z: 48.50001}
+    PrefabVersion: 1
+  - Tag: loot
+    Count: 1
+    Height: {x: 2, y: 20}
+    MaxSlope: 25
+    Spacing: 8
+    StaticPrefab: {fileID: 0}
+    AtLocationOrigin: 1
+    AtSeaLevel: 0
+    LocalOffset: {x: -0.0000017484556, y: 0.3660001, z: 19}
+    PrefabVersion: 1
+  - Tag: landing
+    Count: 1
+    Height: {x: 2, y: 20}
+    MaxSlope: 25
+    Spacing: 8
+    StaticPrefab: {fileID: 0}
+    AtLocationOrigin: 1
+    AtSeaLevel: 0
+    LocalOffset: {x: -84.00447, y: -3.9, z: 48.5}
+    PrefabVersion: 1
+  - Tag: loot
+    Count: 1
+    Height: {x: 2, y: 20}
+    MaxSlope: 25
+    Spacing: 8
+    StaticPrefab: {fileID: 0}
+    AtLocationOrigin: 1
+    AtSeaLevel: 0
+    LocalOffset: {x: -17.320509, y: 0.2210001, z: -10.999998}
+    PrefabVersion: 1
+  - Tag: loot
+    Count: 1
+    Height: {x: 2, y: 20}
+    MaxSlope: 25
+    Spacing: 8
+    StaticPrefab: {fileID: 0}
+    AtLocationOrigin: 1
+    AtSeaLevel: 0
+    LocalOffset: {x: -1.5, y: 1.33, z: 1.4000003}
+    PrefabVersion: 1
+  - Tag: loot
+    Count: 1
+    Height: {x: 2, y: 20}
+    MaxSlope: 25
+    Spacing: 8
+    StaticPrefab: {fileID: 0}
+    AtLocationOrigin: 1
+    AtSeaLevel: 0
+    LocalOffset: {x: 0.09999987, y: 1.33, z: -1.2000002}
+    PrefabVersion: 1
+  - Tag: loot
+    Count: 1
+    Height: {x: 2, y: 20}
+    MaxSlope: 25
+    Spacing: 8
+    StaticPrefab: {fileID: 0}
+    AtLocationOrigin: 1
+    AtSeaLevel: 0
+    LocalOffset: {x: -4.000001, y: 0.15, z: -6}
+    PrefabVersion: 1

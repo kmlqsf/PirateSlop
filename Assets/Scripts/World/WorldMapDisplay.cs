@@ -19,7 +19,7 @@ namespace PirateSlop.World
             {
                 float radius = Mathf.Max(3, location.Radius / (map.Radius * 2) * size);
                 float px = x + (.5f + location.Position.x / (map.Radius * 2)) * size, py = y + (.5f - location.Position.z / (map.Radius * 2)) * size;
-                GUI.color = location.Type.Shape == Landform.Reef ? Color.cyan : location.Type.Ground;
+                GUI.color = location.Type.Shape == Landform.Reef || location.Type.Shape == Landform.ReefPassage ? Color.cyan : location.Type.Ground;
                 GUI.DrawTexture(new Rect(px - radius, py - radius, radius * 2, radius * 2), Texture2D.whiteTexture);
                 GUI.color = Color.white; GUI.Label(new Rect(px - 40, py, 110, 20), location.Type.Id);
             }

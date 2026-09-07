@@ -45,13 +45,23 @@ namespace PirateSlop.World
                 var pointPosition = point.Position;
                 var pointDefinition = Profile.Locations.FirstOrDefault(d => d.Settings.Id == point.TypeId);
                 bool atOrigin = pointDefinition != null && point.Rule >= 0 && point.Rule < pointDefinition.Points.Length && pointDefinition.Points[point.Rule].AtLocationOrigin;
-                if (point.Tag != "ship_spawn" && !atOrigin) pointPosition.y = GroundHeight(pointPosition) + .15f;
+                if (point.Tag != "ship_spawn" && point.Tag != "ship_approach" && point.Tag != "sea_route" && !atOrigin) pointPosition.y = GroundHeight(pointPosition) + .15f;
                 go.transform.SetPositionAndRotation(pointPosition, Quaternion.Euler(0, point.Yaw, 0));
                 var marker = go.AddComponent<WorldSpawnPoint>(); marker.Id = point.Id; marker.Tag = point.Tag;
                 var definition = Profile.Locations.FirstOrDefault(d => d.Settings.Id == point.TypeId);
                 if (definition == null || point.Rule < 0 || point.Rule >= definition.Points.Length) continue;
                 var prefab = definition.Points[point.Rule].StaticPrefab;
-                if (prefab != null) Instantiate(prefab, go.transform);
+                if (prefab != null)
+                {
+                    var instance = Instantiate(prefab, go.transform);
+                    var composition = instance.GetComponent<SupplyIslandComposition>();
+                    if (composition != null)
+                    {
+                        var location = layout.Locations.First(l => point.Id.StartsWith(l.Id + "/", StringComparison.Ordinal));
+                        composition.Build(location, this, writer);
+                        yield return null;
+                    }
+                }
             }
             var floor = new GameObject("Seabed"); floor.transform.SetParent(content.transform, false);
             floor.transform.position = new Vector3(0, layout.SeaLevel - layout.Depth - 1, 0);
@@ -67,6 +77,20 @@ namespace PirateSlop.World
             Physics.SyncTransforms(); Ready = true;
             foreach (var point in Points("ship_spawn"))
                 if (!CanSail(point.Position, point.Yaw)) { Ready = false; throw new InvalidOperationException("Unsafe ship spawn: " + point.Id); }
+            foreach (var route in layout.Routes)
+            {
+                for (int i = 1; i < route.Waypoints.Count; i++)
+                {
+                    var a = route.Waypoints[i - 1]; var b = route.Waypoints[i];
+                    var direction = b - a;
+                    float yaw = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
+                    int steps = Mathf.Max(1, Mathf.CeilToInt(direction.magnitude / 5));
+                    for (int sample = 0; sample <= steps; sample++)
+                        if (!CanSail(Vector3.Lerp(a, b, sample / (float)steps), yaw))
+                        { Ready = false; throw new InvalidOperationException("Blocked sailing route: " + route.Id); }
+                }
+                yield return null;
+            }
             Progress = 1; Generated?.Invoke(layout);
         }
         void BuildLocation(LocationRecord location, BinaryWriter writer)
@@ -89,6 +113,12 @@ namespace PirateSlop.World
                 float slope = Mathf.Sqrt(dx * dx + dz * dz);
                 Color color = Color.Lerp(location.Type.Sand, location.Type.Ground, Mathf.SmoothStep(0, 1, Mathf.InverseLerp(1.5f, 5, h)));
                 color = Color.Lerp(color, location.Type.Rock, Mathf.SmoothStep(0, 1, Mathf.InverseLerp(.5f, 1.2f, slope)));
+                if ((location.Type.Shape == Landform.SupplyIsland || location.Type.Shape == Landform.SmugglerCove) && h > 0)
+                {
+                    var local = Quaternion.Euler(0, -location.Yaw, 0) * p;
+                    float path = 1 - Mathf.SmoothStep(0, 1, Mathf.InverseLerp(2.5f, 4.5f, WorldGenerator.ApproachDistance(new Vector2(local.x, local.z), location.Type.PierCount)));
+                    color = Color.Lerp(color, location.Type.Sand * .85f, path * .8f);
+                }
                 if (location.Type.Shape == Landform.SeaStack || location.Type.Shape == Landform.Reef) color = Color.Lerp(location.Type.Sand, location.Type.Rock, .8f);
                 float shade = .9f + .1f * Mathf.Sin(p.x * .17f + Mathf.Sin(p.z * .13f)); colors[index] = color * shade;
             }
@@ -105,6 +135,42 @@ namespace PirateSlop.World
             go.AddComponent<MeshFilter>().sharedMesh = mesh;
             var renderer = go.AddComponent<MeshRenderer>(); renderer.sharedMaterial = Profile.TerrainMaterial;
             go.AddComponent<MeshCollider>().sharedMesh = mesh;
+            if (Profile.TerrainLOD) AddTerrainLOD(go, mesh, n, renderer);
+        }
+        void AddTerrainLOD(GameObject terrain, Mesh source, int resolution, Renderer full)
+        {
+            var vertices = source.vertices; var colors = source.colors; var uv = source.uv;
+            var levels = new List<LOD> { new LOD(.22f, new[] { full }) };
+            for (int level = 1; level <= 2; level++)
+            {
+                int step = 1 << level;
+                int n = Mathf.CeilToInt(resolution / (float)step);
+                var reducedVertices = new Vector3[(n + 1) * (n + 1)];
+                var reducedColors = new Color[reducedVertices.Length];
+                var reducedUV = new Vector2[reducedVertices.Length];
+                for (int z = 0; z <= n; z++) for (int x = 0; x <= n; x++)
+                {
+                    int original = Mathf.Min(z * step, resolution) * (resolution + 1) + Mathf.Min(x * step, resolution);
+                    int index = z * (n + 1) + x;
+                    reducedVertices[index] = vertices[original]; reducedColors[index] = colors[original]; reducedUV[index] = uv[original];
+                }
+                var triangles = new int[n * n * 6];
+                int t = 0;
+                for (int z = 0; z < n; z++) for (int x = 0; x < n; x++)
+                {
+                    int a = z * (n + 1) + x, b = a + n + 1;
+                    triangles[t++] = a; triangles[t++] = b; triangles[t++] = a + 1;
+                    triangles[t++] = a + 1; triangles[t++] = b; triangles[t++] = b + 1;
+                }
+                var mesh = new Mesh { name = source.name + "_LOD" + level };
+                mesh.vertices = reducedVertices; mesh.colors = reducedColors; mesh.uv = reducedUV; mesh.triangles = triangles;
+                mesh.RecalculateNormals(); mesh.RecalculateBounds(); meshes.Add(mesh);
+                var child = new GameObject("TerrainLOD" + level); child.transform.SetParent(terrain.transform, false);
+                child.AddComponent<MeshFilter>().sharedMesh = mesh;
+                var renderer = child.AddComponent<MeshRenderer>(); renderer.sharedMaterial = Profile.TerrainMaterial;
+                levels.Add(new LOD(level == 1 ? .09f : 0, new Renderer[] { renderer }));
+            }
+            var group = terrain.AddComponent<LODGroup>(); group.SetLODs(levels.ToArray()); group.RecalculateBounds();
         }
         public float GroundHeight(Vector3 world)
         {

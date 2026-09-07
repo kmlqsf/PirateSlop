@@ -24,14 +24,28 @@ namespace PirateSlop.World
         public uint Seed;
     }
     [Serializable]
+    public sealed class WorldRoute
+    {
+        public string Id, FromId, ToId;
+        public List<Vector3> Waypoints = new List<Vector3>();
+    }
+    [Serializable]
+    public sealed class StartingAccess
+    {
+        public string SpawnId, LocationId, ApproachId;
+        public float SailingDistance;
+    }
+    [Serializable]
     public sealed class WorldLayout
     {
-        public const int CurrentVersion = 2;
+        public const int CurrentVersion = 5;
         public int Version = CurrentVersion, Seed, Resolution;
         public float Radius, Depth, SeaLevel;
         public string CatalogHash;
         public List<LocationRecord> Locations = new List<LocationRecord>();
         public List<WorldPoint> Points = new List<WorldPoint>();
+        public List<WorldRoute> Routes = new List<WorldRoute>();
+        public List<StartingAccess> StartingAccess = new List<StartingAccess>();
         public string ToJson() => JsonUtility.ToJson(this);
         public static string Hash(string text)
         {
@@ -48,6 +62,12 @@ namespace PirateSlop.World
             var ids = new HashSet<string>();
             foreach (var point in map.Points)
                 if (point == null || string.IsNullOrEmpty(point.Id) || !ids.Add(point.Id) || !float.IsFinite(point.Position.sqrMagnitude) || !float.IsFinite(point.Yaw)) throw new InvalidOperationException("Invalid map point.");
+            if (map.Routes == null || map.Routes.Count > 160 || map.StartingAccess == null || map.StartingAccess.Count > 128) throw new InvalidOperationException("Invalid navigation data.");
+            var routeIds = new HashSet<string>();
+            foreach (var route in map.Routes)
+                if (route == null || string.IsNullOrEmpty(route.Id) || !routeIds.Add(route.Id) || !ids.Contains(route.FromId ?? "") || !ids.Contains(route.ToId ?? "") || route.Waypoints == null || route.Waypoints.Count < 2 || route.Waypoints.Count > 1000 || route.Waypoints.Exists(p => !float.IsFinite(p.sqrMagnitude) || new Vector2(p.x, p.z).magnitude > map.Radius)) throw new InvalidOperationException("Invalid sailing route.");
+            foreach (var access in map.StartingAccess)
+                if (access == null || !ids.Contains(access.SpawnId ?? "") || !ids.Contains(access.ApproachId ?? "") || !map.Locations.Exists(l => l.Id == access.LocationId) || !float.IsFinite(access.SailingDistance) || access.SailingDistance < 0) throw new InvalidOperationException("Invalid starting supply access.");
             return map;
         }
     }

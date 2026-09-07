@@ -8,15 +8,19 @@ namespace PirateSlop.World
     {
         public static string CatalogHash(WorldProfile profile)
         {
-            return WorldLayout.Hash(profile.CatalogRevision + "|" + string.Join("|", profile.Locations.Select(d => JsonUtility.ToJson(d.Settings) + string.Join(";", d.Points.Select(p => JsonUtility.ToJson(new LocationPointRule { Tag = p.Tag, Count = p.Count, Height = p.Height, MaxSlope = p.MaxSlope, Spacing = p.Spacing, AtLocationOrigin = p.AtLocationOrigin, LocalOffset = p.LocalOffset, PrefabVersion = p.PrefabVersion }) + ":" + (p.StaticPrefab != null ? p.StaticPrefab.name : ""))))));
+            return WorldLayout.Hash(profile.CatalogRevision + "|" + string.Join("|", profile.Locations.Select(d => JsonUtility.ToJson(d.Settings) + string.Join(";", d.Points.Select(p => JsonUtility.ToJson(new LocationPointRule { Tag = p.Tag, Count = p.Count, Height = p.Height, MaxSlope = p.MaxSlope, Spacing = p.Spacing, AtLocationOrigin = p.AtLocationOrigin, AtSeaLevel = p.AtSeaLevel, LocalOffset = p.LocalOffset, PrefabVersion = p.PrefabVersion }) + ":" + (p.StaticPrefab != null ? p.StaticPrefab.name : ""))))));
         }
-        public static WorldLayout Generate(WorldProfile profile, int seed, int players, float seaLevel)
+        public static WorldLayout Generate(WorldProfile profile, int seed, int shipCount, float seaLevel)
         {
+            int players = shipCount;
             if (profile == null || profile.Locations == null || profile.Locations.Length == 0 || profile.Locations.Any(d => d == null)) throw new InvalidOperationException("Assign location types to the map profile.");
             if (players < 1 || players > 128 || profile.LocationCount < 1 || profile.LocationCount > 80 || profile.Radius < 600 || profile.Radius > 10000 || profile.Resolution < 32 || profile.Resolution > 160) throw new InvalidOperationException("Map limits: 1-128 ships, 1-80 locations, radius 600-10000, resolution 32-160.");
             foreach (var d in profile.Locations)
             {
                 var s = d.Settings;
+                if ((s.Shape == Landform.SupplyIsland || s.Shape == Landform.SmugglerCove) && (s.PierCount < 1 || s.PierCount > 3)) throw new InvalidOperationException("Supply islands require 1-3 piers.");
+                if (s.LayoutVariant < 0 || s.LayoutVariant > 1) throw new InvalidOperationException("Unknown location layout variant.");
+                if (d.Points != null && d.Points.Any(p => p.AtSeaLevel && !p.AtLocationOrigin)) throw new InvalidOperationException("Sea-level anchors require origin placement.");
                 if (string.IsNullOrWhiteSpace(s.Id) || s.Radius.x < 5 || s.Radius.y > 400 || s.Radius.y < s.Radius.x || s.Height.x < 0 || s.Height.y > 200 || s.Height.y < s.Height.x || d.Points == null) throw new InvalidOperationException("Invalid location settings: " + d.name);
                 foreach (var rule in d.Points)
                     if (rule.Count < 0 || rule.Count > 100 || rule.Height.y < rule.Height.x || string.IsNullOrWhiteSpace(rule.Tag) || rule.Tag == "ship_spawn" || !float.IsFinite(rule.LocalOffset.sqrMagnitude) || rule.LocalOffset.magnitude > 400 || (rule.AtLocationOrigin && rule.Count != 1)) throw new InvalidOperationException("Invalid point rule in " + d.name);
@@ -28,6 +32,7 @@ namespace PirateSlop.World
                 if (fixedMap.Points.Count(p => p.Tag == "ship_spawn") < players) throw new InvalidOperationException("Saved map does not contain enough ship spawn points.");
                 return fixedMap;
             }
+            if (profile.BalancedLayout) return BalancedWorldGenerator.Generate(profile, seed, shipCount, seaLevel);
             var map = new WorldLayout { Seed = seed, Radius = profile.Radius, Depth = profile.SeaDepth, SeaLevel = seaLevel, Resolution = profile.Resolution, CatalogHash = CatalogHash(profile) };
             var rng = new MapRandom(unchecked((uint)seed));
             float spawnRing = Mathf.Max(220, players * profile.SpawnSpacing / (2 * Mathf.PI));
@@ -65,14 +70,14 @@ namespace PirateSlop.World
             }
             return WorldLayout.FromJson(map.ToJson());
         }
-        static void AddPoints(WorldLayout map, LocationRecord location, LocationDefinition definition, ref MapRandom rng)
+        internal static void AddPoints(WorldLayout map, LocationRecord location, LocationDefinition definition, ref MapRandom rng)
         {
             for (int ruleIndex = 0; ruleIndex < definition.Points.Length; ruleIndex++)
             {
                 var rule = definition.Points[ruleIndex];
                 if (rule.AtLocationOrigin)
                 {
-                    var origin = location.Position + Vector3.up * (Height(location, location.Position, map.Depth) + .15f);
+                    var origin = location.Position + Vector3.up * ((rule.AtSeaLevel ? 0 : Height(location, location.Position, map.Depth)) + .15f);
                     map.Points.Add(new WorldPoint { Id = location.Id + "/" + rule.Tag + "/" + ruleIndex + "/0", Tag = rule.Tag, TypeId = location.Type.Id, Rule = ruleIndex, Position = origin + Quaternion.Euler(0, location.Yaw, 0) * rule.LocalOffset, Yaw = location.Yaw });
                     continue;
                 }
@@ -116,8 +121,29 @@ namespace PirateSlop.World
             switch (location.Type.Shape)
             {
                 case Landform.SupplyIsland:
-                    float coast = Mathf.Abs(p.x) < .15f && p.z < 0 ? r : r + n * location.Type.Roughness * .12f * Mathf.InverseLerp(.3f, .7f, r);
-                    height = location.Height * (1 - Mathf.InverseLerp(.4f, .9f, coast));
+                case Landform.SmugglerCove:
+                    float hills = 10 * Mathf.Exp(-24 * (new Vector2(p.x - .33f, p.z - .18f)).sqrMagnitude)
+                        + 8 * Mathf.Exp(-32 * (new Vector2(p.x + .38f, p.z - .22f)).sqrMagnitude)
+                        + 6 * Mathf.Exp(-35 * (new Vector2(p.x + .05f, p.z + .38f)).sqrMagnitude);
+                    float inland = location.Height + hills * Mathf.SmoothStep(0, 1, Mathf.InverseLerp(.14f, .29f, r));
+                    float cliff = Mathf.Lerp(inland, -4, Mathf.SmoothStep(0, 1, Mathf.InverseLerp(.80f, .89f, r)));
+                    float approach = 1 - Mathf.SmoothStep(0, 1, Mathf.InverseLerp(.065f, .11f, ApproachDistance(new Vector2(p.x, p.z), location.Type.PierCount)));
+                    float trail = location.Height * (1 - Mathf.InverseLerp(.4f, .93f, r));
+                    height = Mathf.Lerp(cliff, trail, approach);
+                    if (location.Type.Shape == Landform.SmugglerCove)
+                    {
+                        float inlet = Mathf.SmoothStep(0, 1, Mathf.InverseLerp(.67f, .84f, -p.z))
+                            * (1 - Mathf.SmoothStep(0, 1, Mathf.InverseLerp(.18f, .32f, Mathf.Abs(p.x))));
+                        height = Mathf.Lerp(height, Mathf.Min(height, -6), inlet);
+                    }
+                    break;
+                case Landform.RockPassage:
+                case Landform.ReefPassage:
+                    float bend = location.Type.LayoutVariant == 0 ? 0 : .10f * Mathf.Sin(p.z * 4);
+                    float bank = Mathf.Abs(Mathf.Abs(p.x - bend) - (location.Type.Shape == Landform.RockPassage ? .45f : .40f));
+                    float width = location.Type.Shape == Landform.RockPassage ? .14f : .23f;
+                    float peak = location.Type.Shape == Landform.RockPassage ? 18 : -1.1f;
+                    height = -depth + (depth + peak) * Mathf.Exp(-Mathf.Pow(bank / width, 4) - Mathf.Pow(p.z / .72f, 6));
                     break;
                 case Landform.Mountain: height = -3 + location.Height * Mathf.Pow(mound, .8f) + n * mound * 5; break;
                 case Landform.Atoll: height = -5 + location.Height * Mathf.Exp(-Mathf.Pow((d - .62f) * 6, 2)); break;
@@ -129,6 +155,19 @@ namespace PirateSlop.World
             }
             float edge = Mathf.SmoothStep(0, 1, Mathf.InverseLerp(.88f, 1.4f, r));
             return Mathf.Round(Mathf.Lerp(height, -depth, edge) * 1000) / 1000;
+        }
+
+        public static float ApproachDistance(Vector2 point, int pierCount)
+        {
+            float distance = point.magnitude;
+            for (int i = 0; i < Mathf.Clamp(pierCount, 1, 3); i++)
+            {
+                float angle = i * Mathf.PI * 2 / Mathf.Clamp(pierCount, 1, 3);
+                var direction = new Vector2(Mathf.Sin(angle), -Mathf.Cos(angle));
+                if (Vector2.Dot(point, direction) >= 0)
+                    distance = Mathf.Min(distance, Mathf.Abs(point.x * direction.y - point.y * direction.x));
+            }
+            return distance;
         }
     }
 }

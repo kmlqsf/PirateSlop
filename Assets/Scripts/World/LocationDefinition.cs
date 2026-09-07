@@ -2,13 +2,15 @@ using UnityEngine;
 
 namespace PirateSlop.World
 {
-    public enum Landform { Island, Mountain, Crescent, Atoll, Reef, SeaStack, SupplyIsland }
+    public enum Landform { Island, Mountain, Crescent, Atoll, Reef, SeaStack, SupplyIsland, SmugglerCove, RockPassage, ReefPassage }
 
     [System.Serializable]
     public sealed class LocationSettings
     {
         public string Id = "island";
         public Landform Shape;
+        [Range(1, 3)] public int PierCount = 1;
+        [Range(0, 1)] public int LayoutVariant;
         public float Weight = 1;
         public Vector2 Radius = new Vector2(45, 85);
         public Vector2 Height = new Vector2(8, 18);
@@ -28,6 +30,7 @@ namespace PirateSlop.World
         [Min(1)] public float Spacing = 8;
         public GameObject StaticPrefab;
         public bool AtLocationOrigin;
+        public bool AtSeaLevel;
         public Vector3 LocalOffset;
         [Min(1)] public int PrefabVersion = 1;
     }
