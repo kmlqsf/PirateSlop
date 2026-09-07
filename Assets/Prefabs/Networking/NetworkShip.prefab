@@ -13169,7 +13169,7 @@ GameObject:
   - component: {fileID: 1985935488811146502}
   - component: {fileID: 84949896675857086}
   m_Layer: 0
-  m_Name: LookoutRailFront
+  m_Name: LookoutRailBack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -13184,7 +13184,7 @@ Transform:
   m_GameObject: {fileID: 7724084391449973204}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 14.65, z: -2.65}
+  m_LocalPosition: {x: 0, y: 14.65, z: -5.15}
   m_LocalScale: {x: 2.6, y: 0.14, z: 0.12}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -14147,8 +14147,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8369910670031890055}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 1, z: 0, w: -0.00000004371139}
-  m_LocalPosition: {x: 0, y: 3.35, z: -5.35}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 3.35, z: -2.45}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -14205,7 +14205,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.ShipLadder
   Height: 11.1
   Speed: 2.8
-  ExitDepth: 1.2
+  ExitDepth: 0.65
 --- !u!1 &8490690110043885002
 GameObject:
   m_ObjectHideFlags: 0

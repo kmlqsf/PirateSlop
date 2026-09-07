@@ -95,7 +95,9 @@ namespace PirateSlop
             foreach (var sails in FindObjectsByType<SailSystem>(FindObjectsSortMode.None))
                 if (sails.InRange(motor)) { nearbySails = sails; break; }
             if (nearbySails == null) return;
-            float amount = Mathf.Clamp(mouse.scroll.ReadValue().y / 2400f, -.2f, .2f);
+            float scroll = mouse.scroll.ReadValue().y;
+            float steps = Mathf.Abs(scroll) >= 120f ? scroll / 120f : scroll;
+            float amount = Mathf.Clamp(steps * .075f, -.2f, .2f);
             if (Mathf.Abs(amount) < .0001f) return;
             var network = nearbySails.GetComponent<NetworkShip>();
             if (network != null) network.AdjustSails(amount);

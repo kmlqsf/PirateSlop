@@ -14,8 +14,9 @@ namespace PirateSlop
         public bool Contains(Vector3 feet, bool climbing)
         {
             var p = transform.InverseTransformPoint(feet);
-            if (Mathf.Abs(p.x) > .7f || p.y < -.35f || p.y > Height + .45f) return false;
-            return p.z < 1.25f && p.z > (p.y > Height - 1.5f ? -ExitDepth - .2f : .15f);
+            float margin = climbing ? .35f : 0f;
+            if (Mathf.Abs(p.x) > .7f + margin || p.y < -.35f - margin || p.y > Height + .45f + margin) return false;
+            return p.z < 1.25f + margin && p.z > (p.y > Height - 1.5f ? -ExitDepth - .2f : .15f - margin);
         }
     }
 }

@@ -206,7 +206,7 @@ public class AdvancedPlayerController : MonoBehaviour
         passenger?.Attach(ladder.Body);
         float vertical = command.Move.y * (Vector3.Dot(transform.forward, -ladder.transform.forward) >= 0 ? 1 : -1);
         if (command.Crouch || command.Pitch > 55) vertical = -Mathf.Abs(command.Move.y);
-        Vector3 velocity = ladder.transform.up * vertical * ladder.Speed + transform.right * command.Move.x * walkSpeed;
+        Vector3 velocity = ladder.transform.up * vertical * ladder.Speed + ladder.transform.right * command.Move.x * walkSpeed;
         if (fromTop)
         {
             velocity = ladder.transform.forward * Mathf.Abs(command.Move.y) * ladder.Speed;
@@ -217,9 +217,10 @@ public class AdvancedPlayerController : MonoBehaviour
             velocity = -ladder.transform.forward * ladder.Speed + ladder.transform.up * .3f;
         }
         else velocity += ladder.transform.forward * Mathf.Clamp((.65f - localPosition.z) * 5, -2, 2);
-        controller.Move(velocity * dt); verticalVelocity = velocity.y; PlanarSpeed = Mathf.Abs(vertical) * ladder.Speed;
-        if (localPosition.y >= ladder.Height && localPosition.z < .2f && !fromTop || localPosition.y <= 0 && vertical < 0 || Mathf.Abs(command.Move.x) > .6f)
-        { IsClimbing = false; ladderCooldown = .3f; passenger?.Attach(null); }
+        controller.Move(velocity * dt); verticalVelocity = 0; PlanarSpeed = Mathf.Abs(vertical) * ladder.Speed;
+        localPosition = ladder.transform.InverseTransformPoint(transform.position);
+        if (localPosition.y >= ladder.Height && localPosition.z < -ladder.ExitDepth && !fromTop || localPosition.y <= 0 && vertical < 0 || Mathf.Abs(localPosition.x) > .9f)
+        { IsClimbing = false; ladderCooldown = .3f; }
         return true;
     }
     public PlayerState Capture() => new PlayerState { Position = transform.position, Yaw = transform.eulerAngles.y, VerticalVelocity = verticalVelocity, SlideDirection = slideDirection, SlideTimer = slideTimer, Cooldown = cooldown, Crouched = crouched, Locked = LocomotionLocked, PlanarSpeed = PlanarSpeed, Grounded = IsGrounded, Swimming = IsSwimming, SwimVelocity = swimVelocity, Breath = Breath, Climbing = IsClimbing, LadderCooldown = ladderCooldown };

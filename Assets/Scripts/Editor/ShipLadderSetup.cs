@@ -22,11 +22,11 @@ namespace PirateSlop.EditorTools
                 var old = root.transform.Find("ShipLadders"); if (old != null) Object.DestroyImmediate(old.gameObject);
                 var group = new GameObject("ShipLadders").transform; group.SetParent(root.transform, false);
                 Ladder(group, "BoardingLadder", new Vector3(4.1f, -2, 0), 90, 6.55f, material);
-                Ladder(group, "MastLadder", new Vector3(0, 3.35f, -5.35f), 180, 11.1f, material);
+                Ladder(group, "MastLadder", new Vector3(0, 3.35f, -2.45f), 0, 11.1f, material);
                 Box(group, "LookoutFloor", new Vector3(0, 13.9f, -3.9f), new Vector3(2.6f, .2f, 2.6f), material, true);
                 Box(group, "LookoutRailLeft", new Vector3(-1.23f, 14.65f, -3.9f), new Vector3(.12f, .14f, 2.6f), material, true);
                 Box(group, "LookoutRailRight", new Vector3(1.23f, 14.65f, -3.9f), new Vector3(.12f, .14f, 2.6f), material, true);
-                Box(group, "LookoutRailFront", new Vector3(0, 14.65f, -2.65f), new Vector3(2.6f, .14f, .12f), material, true);
+                Box(group, "LookoutRailBack", new Vector3(0, 14.65f, -5.15f), new Vector3(2.6f, .14f, .12f), material, true);
                 foreach (float x in new[] { -1.23f, 1.23f }) foreach (float z in new[] { -5.13f, -2.67f })
                     Box(group, "LookoutPost", new Vector3(x, 14.35f, z), new Vector3(.12f, .85f, .12f), material, true);
                 PrefabUtility.SaveAsPrefabAsset(root, path);
@@ -38,7 +38,8 @@ namespace PirateSlop.EditorTools
         static void Ladder(Transform parent, string name, Vector3 position, float yaw, float height, Material material)
         {
             var go = new GameObject(name); go.transform.SetParent(parent, false); go.transform.localPosition = position; go.transform.localRotation = Quaternion.Euler(0, yaw, 0);
-            go.AddComponent<ShipLadder>().Height = height;
+            var ladder = go.AddComponent<ShipLadder>(); ladder.Height = height;
+            if (name == "MastLadder") ladder.ExitDepth = .65f;
             foreach (float x in new[] { -.45f, .45f }) Box(go.transform, "Rail", new Vector3(x, height / 2, 0), new Vector3(.12f, height + .6f, .14f), material, false);
             for (float y = .15f; y < height; y += .32f) Box(go.transform, "Rung", new Vector3(0, y, .03f), new Vector3(.9f, .08f, .13f), material, false);
         }

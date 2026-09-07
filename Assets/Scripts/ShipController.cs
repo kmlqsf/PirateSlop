@@ -20,7 +20,7 @@ public class ShipController : MonoBehaviour
     void Awake()
     {
         rb = GetComponent<Rigidbody>(); rb.isKinematic = true; rb.useGravity = false; rb.constraints = RigidbodyConstraints.None;
-        rb.interpolation = RigidbodyInterpolation.Interpolate; rb.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
+        rb.interpolation = Networked ? RigidbodyInterpolation.None : RigidbodyInterpolation.Interpolate; rb.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
         yaw = transform.eulerAngles.y; waterHeight = transform.position.y;
         if (sailSystem == null) sailSystem = GetComponent<SailSystem>();
         if (helm == null) helm = GetComponentInChildren<HelmInteraction>();
