@@ -1118,6 +1118,7 @@ GameObject:
   - component: {fileID: 7508799110096596672}
   - component: {fileID: 3778352587046063499}
   - component: {fileID: 9056768830930944975}
+  - component: {fileID: 5414072499666844625}
   m_Layer: 0
   m_Name: NetworkPlayer
   m_TagString: Player
@@ -1282,6 +1283,10 @@ MonoBehaviour:
   slideCooldown: 1
   mouseSensitivity: 0.12
   thirdPersonDistance: 3
+  swimSpeed: 3
+  fastSwimSpeed: 4.5
+  swimAcceleration: 6
+  breathSeconds: 25
 --- !u!114 &8718541801069254893
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1426,6 +1431,11 @@ MonoBehaviour:
   _componentIndexCache: 255
   _addedNetworkObject: {fileID: 8718541801069254893}
   _networkObjectCache: {fileID: 0}
+  DropPrefabs:
+  - {fileID: 7154578386564942902, guid: 72facc83af7c1c04dba3889d3f5718af, type: 3}
+  - {fileID: 6902406561786354954, guid: 633e4f05c2568b146a18aef78adb5bf2, type: 3}
+  - {fileID: 6345272068693110658, guid: 424b25692b293d54fa5de388367dbf84, type: 3}
+  - {fileID: 9156071479961501061, guid: 3e845ed0bf86f89429379b1ab6520e5b, type: 3}
 --- !u!114 &4694566103855019808
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1495,6 +1505,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eace4f934b3077e4db8b16e3ba302e13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.GameplayAudio
+--- !u!114 &5414072499666844625
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4193507432475942729}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1fcf2ff6ee7c3a04c8a844c13185107a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.Networking.NetworkFishing
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 8718541801069254893}
+  _networkObjectCache: {fileID: 0}
+  RodModel: {fileID: 6914134225266954562, guid: 73e934b4a8059e44196ead905af92ca1, type: 3}
+  FishModel: {fileID: 4191528624897285126, guid: bf28e351ec591714db79d91ee7f08446, type: 3}
+  FloatModel: {fileID: 2726251997487994342, guid: 3deac3ad037964c4da461db07172330a, type: 3}
+  FishPrefab: {fileID: 7154578386564942902, guid: 72facc83af7c1c04dba3889d3f5718af, type: 3}
+  LineMaterial: {fileID: 2100000, guid: b7a643f6994868540ba93159415ef1b7, type: 2}
+  BiteDelay: {x: 4, y: 12}
+  BiteWindow: 3
+  ReelDuration: 2.5
+  HealAmount: 25
 --- !u!1 &4195186048672230144
 GameObject:
   m_ObjectHideFlags: 0

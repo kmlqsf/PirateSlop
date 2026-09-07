@@ -47,6 +47,7 @@ namespace PirateSlop
         void LateUpdate()
         {
             aimed = null;
+            if (inventory != null && (inventory.RodSelected || inventory.HandsOccupied)) { Drop(); return; }
             if (held != null && !held.Held) held = null;
             var mouse = Mouse.current;
             if (!player.InputActive || (player.IsSwimming || player.IsClimbing) || player.LocomotionLocked || mouse == null || (controls != null && controls.IsDragging) || (inventory != null && (inventory.Placing || inventory.InteractionUsed))) { Drop(); return; }

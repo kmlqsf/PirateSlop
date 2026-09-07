@@ -39,6 +39,7 @@ namespace PirateSlop
         void Update()
         {
             nearbySails = null;
+            if (inventory != null && (inventory.HandsOccupied || (inventory.Fishing != null && inventory.Fishing.IsFishing))) { Release(); Hover(null); return; }
             var mouse = Mouse.current;
             if (!motor.InputActive || (motor.IsSwimming || motor.IsClimbing) || mouse == null || (inventory != null && inventory.Placing) || (hands != null && hands.HasHeldBall))
             { Release(); Hover(null); return; }

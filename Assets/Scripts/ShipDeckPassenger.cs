@@ -29,7 +29,11 @@ public class ShipDeckPassenger : MonoBehaviour
         if (player != null && player.IsClimbing) return;
         if (player != null && player.IsSwimming) { if (ship != null) Attach(null); return; }
         if (player != null && player.LocomotionLocked) return;
-        if (player != null && player.VerticalSpeed > 0) { if (ship != null) Attach(null); return; }
+        if (ship != null && player != null && !player.IsGrounded)
+        {
+            foreach (var support in Physics.SphereCastAll(transform.position + Vector3.up * .3f, .2f, Vector3.down, 3.5f, ~0, QueryTriggerInteraction.Ignore))
+                if (support.rigidbody == ship && support.normal.y > .5f) return;
+        }
         Rigidbody nextShip = null;
         if (Physics.SphereCast(transform.position + Vector3.up * .4f, .2f, Vector3.down, out var hit, .35f, ~0, QueryTriggerInteraction.Ignore) && hit.rigidbody != null && hit.rigidbody.GetComponent<ShipController>() != null) nextShip = hit.rigidbody;
         if (nextShip != ship) Attach(nextShip);

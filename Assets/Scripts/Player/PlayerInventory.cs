@@ -11,7 +11,16 @@ namespace PirateSlop
         public Material PreviewMaterial;
         public int SelectedSlot { get; private set; }
         public int CannonSlots { get; private set; }
-        public bool PistolSelected => SelectedSlot == 0;
+        public NetworkFishing Fishing { get; private set; }
+        public bool HandsOccupied => Fishing != null && Fishing.HasFish;
+        public bool HasPistol { get; set; } = true;
+        public bool HasRod { get; set; } = true;
+        readonly int[] fishCounts = new int[6];
+        public int FishCount(int slot) => slot >= 0 && slot < 6 ? fishCounts[slot] : 0;
+        public void SetFishCount(int slot, int count) => fishCounts[slot] = count;
+        public bool FishSelected => FishCount(SelectedSlot) > 0;
+        public bool RodSelected => SelectedSlot == 1 && HasRod;
+        public bool PistolSelected => SelectedSlot == 0 && HasPistol && !HandsOccupied;
         public bool Placing => HasCannon(SelectedSlot);
         public bool InteractionUsed { get; private set; }
         AdvancedPlayerController motor;
@@ -24,8 +33,8 @@ namespace PirateSlop
         bool cancelled;
         bool valid;
         bool Networked => network != null && (network.IsClientInitialized || network.IsServerInitialized);
-        public bool HasCannon(int slot) => slot > 0 && slot < 6 && (CannonSlots & (1 << slot)) != 0;
-        public int EmptySlot() { for (int i = 1; i < 6; i++) if (!HasCannon(i)) return i; return -1; }
+        public bool HasCannon(int slot) => slot > 1 && slot < 6 && (CannonSlots & (1 << slot)) != 0;
+        public int EmptySlot() { for (int i = 2; i < 6; i++) if (!HasCannon(i) && FishCount(i) == 0) return i; return -1; }
         public void SetContents(int mask) => CannonSlots = mask;
         public void SetSelection(int slot) { SelectedSlot = Mathf.Clamp(slot, 0, 5); cancelled = false; }
         public bool AimingAtPickup()
@@ -44,6 +53,7 @@ namespace PirateSlop
             motor = GetComponent<AdvancedPlayerController>();
             network = GetComponent<NetworkWeapon>();
             hands = GetComponent<CannonHands>();
+            Fishing = GetComponent<NetworkFishing>();
         }
 
         void Update()
@@ -60,7 +70,9 @@ namespace PirateSlop
                     SetSelection(i); rotation = tilt = roll = 0;
                     if (Networked) network.SelectSlot(i);
                 }
-            if (hands != null && hands.HasHeldBall) return;
+            if (keyboard.gKey.wasPressedThisFrame && Networked && (Fishing == null || !Fishing.CarryingCatch))
+            { network.DropSelected(); InteractionUsed = true; return; }
+            if (HandsOccupied || (hands != null && hands.HasHeldBall)) return;
             var camera = motor.PlayerCamera;
             RaycastHit nearest = default;
             float distance = 5f;
@@ -142,9 +154,10 @@ namespace PirateSlop
             for (int i = 0; i < 6; i++)
             {
                 GUI.color = i == SelectedSlot ? new Color(1f, .8f, .35f) : Color.white;
-                GUI.Box(new Rect(Screen.width * .5f - width * 3 + width * i, Screen.height - 76, width - 4, 62), (i + 1) + "\n" + (i == 0 ? "Пистолет" : HasCannon(i) ? "Пушка" : ""));
+                GUI.Box(new Rect(Screen.width * .5f - width * 3 + width * i, Screen.height - 76, width - 4, 62), (i + 1) + "\n" + (i == 0 && HasPistol ? "Пистолет" : i == 1 && HasRod ? "Удочка" : HasCannon(i) ? "Пушка" : FishCount(i) > 0 ? "Рыба ×" + FishCount(i) : ""));
             }
             GUI.color = old;
+            GUI.Label(new Rect(Screen.width * .5f - 130, Screen.height - 98, 300, 22), "G — выбросить предмет из выбранного слота");
             string hint = pickup != null ? (EmptySlot() >= 0 ? "E — взять разобранную пушку" : "Инвентарь заполнен") : Placing && !cancelled ? "ЛКМ — поставить · R/колесо — поворот · Q/E — наклон\nShift+Q/E — крен · ПКМ — отменить" : "";
             if (hint.Length > 0) GUI.Box(new Rect(Screen.width * .5f - 290, Screen.height - 165, 580, 44), hint);
         }

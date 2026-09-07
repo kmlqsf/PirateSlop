@@ -82,6 +82,13 @@ namespace PirateSlop
             }
             GameAudio.Play(SoundCue.Respawn, position);
         }
+        public void Heal(float amount)
+        {
+            if (network != null && !network.IsServerInitialized) return;
+            if (IsDead || !float.IsFinite(amount) || amount <= 0) return;
+            ApplySnapshot(Current + amount, false);
+            if (network != null) network.Publish(Current);
+        }
         public void Damage(float amount)
         {
             if (network != null && !network.IsServerInitialized) return;
