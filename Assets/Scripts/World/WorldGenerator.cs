@@ -8,7 +8,7 @@ namespace PirateSlop.World
     {
         public static string CatalogHash(WorldProfile profile)
         {
-            return WorldLayout.Hash(profile.CatalogRevision + "|" + string.Join("|", profile.Locations.Select(d => JsonUtility.ToJson(d.Settings) + string.Join(";", d.Points.Select(p => JsonUtility.ToJson(new LocationPointRule { Tag = p.Tag, Count = p.Count, Height = p.Height, MaxSlope = p.MaxSlope, Spacing = p.Spacing, PrefabVersion = p.PrefabVersion }) + ":" + (p.StaticPrefab != null ? p.StaticPrefab.name : ""))))));
+            return WorldLayout.Hash(profile.CatalogRevision + "|" + string.Join("|", profile.Locations.Select(d => JsonUtility.ToJson(d.Settings) + string.Join(";", d.Points.Select(p => JsonUtility.ToJson(new LocationPointRule { Tag = p.Tag, Count = p.Count, Height = p.Height, MaxSlope = p.MaxSlope, Spacing = p.Spacing, AtLocationOrigin = p.AtLocationOrigin, LocalOffset = p.LocalOffset, PrefabVersion = p.PrefabVersion }) + ":" + (p.StaticPrefab != null ? p.StaticPrefab.name : ""))))));
         }
         public static WorldLayout Generate(WorldProfile profile, int seed, int players, float seaLevel)
         {
@@ -19,7 +19,7 @@ namespace PirateSlop.World
                 var s = d.Settings;
                 if (string.IsNullOrWhiteSpace(s.Id) || s.Radius.x < 5 || s.Radius.y > 400 || s.Radius.y < s.Radius.x || s.Height.x < 0 || s.Height.y > 200 || s.Height.y < s.Height.x || d.Points == null) throw new InvalidOperationException("Invalid location settings: " + d.name);
                 foreach (var rule in d.Points)
-                    if (rule.Count < 0 || rule.Count > 100 || rule.Height.y < rule.Height.x || string.IsNullOrWhiteSpace(rule.Tag) || rule.Tag == "ship_spawn") throw new InvalidOperationException("Invalid point rule in " + d.name);
+                    if (rule.Count < 0 || rule.Count > 100 || rule.Height.y < rule.Height.x || string.IsNullOrWhiteSpace(rule.Tag) || rule.Tag == "ship_spawn" || !float.IsFinite(rule.LocalOffset.sqrMagnitude) || rule.LocalOffset.magnitude > 400 || (rule.AtLocationOrigin && rule.Count != 1)) throw new InvalidOperationException("Invalid point rule in " + d.name);
             }
             if (profile.Locations.Select(d => d.Settings.Id).Distinct().Count() != profile.Locations.Length) throw new InvalidOperationException("Location IDs must be unique.");
             if (profile.FixedLayout != null)
@@ -70,6 +70,12 @@ namespace PirateSlop.World
             for (int ruleIndex = 0; ruleIndex < definition.Points.Length; ruleIndex++)
             {
                 var rule = definition.Points[ruleIndex];
+                if (rule.AtLocationOrigin)
+                {
+                    var origin = location.Position + Vector3.up * (Height(location, location.Position, map.Depth) + .15f);
+                    map.Points.Add(new WorldPoint { Id = location.Id + "/" + rule.Tag + "/" + ruleIndex + "/0", Tag = rule.Tag, TypeId = location.Type.Id, Rule = ruleIndex, Position = origin + Quaternion.Euler(0, location.Yaw, 0) * rule.LocalOffset, Yaw = location.Yaw });
+                    continue;
+                }
                 int placed = 0;
                 for (int attempt = 0; attempt < rule.Count * 200 && placed < rule.Count; attempt++)
                 {
@@ -109,6 +115,10 @@ namespace PirateSlop.World
             float height = -3 + location.Height * Mathf.Pow(mound, 1.25f) + fine * location.Type.Roughness * mound * 3;
             switch (location.Type.Shape)
             {
+                case Landform.SupplyIsland:
+                    float coast = Mathf.Abs(p.x) < .15f && p.z < 0 ? r : r + n * location.Type.Roughness * .12f * Mathf.InverseLerp(.3f, .7f, r);
+                    height = location.Height * (1 - Mathf.InverseLerp(.4f, .9f, coast));
+                    break;
                 case Landform.Mountain: height = -3 + location.Height * Mathf.Pow(mound, .8f) + n * mound * 5; break;
                 case Landform.Atoll: height = -5 + location.Height * Mathf.Exp(-Mathf.Pow((d - .62f) * 6, 2)); break;
                 case Landform.Crescent:

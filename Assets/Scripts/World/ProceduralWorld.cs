@@ -43,7 +43,9 @@ namespace PirateSlop.World
             {
                 var go = new GameObject(point.Id); go.transform.SetParent(content.transform, false);
                 var pointPosition = point.Position;
-                if (point.Tag != "ship_spawn") pointPosition.y = GroundHeight(pointPosition) + .15f;
+                var pointDefinition = Profile.Locations.FirstOrDefault(d => d.Settings.Id == point.TypeId);
+                bool atOrigin = pointDefinition != null && point.Rule >= 0 && point.Rule < pointDefinition.Points.Length && pointDefinition.Points[point.Rule].AtLocationOrigin;
+                if (point.Tag != "ship_spawn" && !atOrigin) pointPosition.y = GroundHeight(pointPosition) + .15f;
                 go.transform.SetPositionAndRotation(pointPosition, Quaternion.Euler(0, point.Yaw, 0));
                 var marker = go.AddComponent<WorldSpawnPoint>(); marker.Id = point.Id; marker.Tag = point.Tag;
                 var definition = Profile.Locations.FirstOrDefault(d => d.Settings.Id == point.TypeId);
@@ -129,6 +131,7 @@ namespace PirateSlop.World
             if (!Ready) return true;
             if (new Vector2(position.x, position.z).magnitude > Layout.Radius - 25) return false;
             var rotation = Quaternion.Euler(0, yaw, 0);
+            if (Physics.CheckBox(new Vector3(position.x, Layout.SeaLevel + 1, position.z), new Vector3(3.5f, 3.5f, 9), rotation, LayerMask.GetMask("WorldStatic"), QueryTriggerInteraction.Ignore)) return false;
             for (int z = -1; z <= 1; z++) for (int x = -1; x <= 1; x++)
                 if (GroundHeight(position + rotation * new Vector3(x * 3.5f, 0, z * 9)) > Layout.SeaLevel - 2.5f) return false;
             return true;

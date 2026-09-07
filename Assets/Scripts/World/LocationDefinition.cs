@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace PirateSlop.World
 {
-    public enum Landform { Island, Mountain, Crescent, Atoll, Reef, SeaStack }
+    public enum Landform { Island, Mountain, Crescent, Atoll, Reef, SeaStack, SupplyIsland }
 
     [System.Serializable]
     public sealed class LocationSettings
@@ -27,6 +27,8 @@ namespace PirateSlop.World
         [Range(0, 60)] public float MaxSlope = 25;
         [Min(1)] public float Spacing = 8;
         public GameObject StaticPrefab;
+        public bool AtLocationOrigin;
+        public Vector3 LocalOffset;
         [Min(1)] public int PrefabVersion = 1;
     }
 
