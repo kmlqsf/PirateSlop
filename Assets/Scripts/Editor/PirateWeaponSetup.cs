@@ -15,15 +15,12 @@ namespace PirateSlop.EditorTools
         public static void Install()
         {
             if(EditorApplication.isPlaying) throw new InvalidOperationException("Exit Play Mode first.");
-            var player = GameObject.Find("PlayerCharacter");
-            if(player == null) throw new InvalidOperationException("Open SampleScene first.");
             Directory.CreateDirectory("Assets/Materials/PiratePistol"); AssetDatabase.Refresh();
-            Apply(player,false);
             const string path = "Assets/Prefabs/Networking/NetworkPlayer.prefab";
             var prefab = PrefabUtility.LoadPrefabContents(path);
             try { Apply(prefab,true); PrefabUtility.SaveAsPrefabAsset(prefab,path); }
             finally { PrefabUtility.UnloadPrefabContents(prefab); }
-            EditorSceneManager.MarkSceneDirty(player.scene); EditorSceneManager.SaveScene(player.scene); AssetDatabase.SaveAssets();
+            AssetDatabase.SaveAssets();
         }
         static Transform AddModel(Transform pivot)
         {

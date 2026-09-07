@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17341392a75c7e64fa4d3a25b08e5b38, type: 3}
+  m_Name: Atoll
+  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.LocationDefinition
+  Settings:
+    Id: Atoll
+    Shape: 3
+    Weight: 1
+    Radius: {x: 50, y: 95}
+    Height: {x: 10, y: 14}
+    Roughness: 0.3
+    Sand: {r: 0.68, g: 0.59, b: 0.38, a: 1}
+    Ground: {r: 0.23, g: 0.34, b: 0.13, a: 1}
+    Rock: {r: 0.3, g: 0.31, b: 0.3, a: 1}
+  Points:
+  - Tag: land_spawn
+    Count: 3
+    Height: {x: 2, y: 12}
+    MaxSlope: 20
+    Spacing: 15
+    StaticPrefab: {fileID: 0}
+    PrefabVersion: 1
+  - Tag: loot
+    Count: 5
+    Height: {x: 1.5, y: 35}
+    MaxSlope: 30
+    Spacing: 8
+    StaticPrefab: {fileID: 0}
+    PrefabVersion: 1
+  - Tag: landmark
+    Count: 1
+    Height: {x: 5, y: 60}
+    MaxSlope: 30
+    Spacing: 8
+    StaticPrefab: {fileID: 0}
+    PrefabVersion: 1

@@ -22,8 +22,6 @@ namespace PirateSlop.EditorTools
         public static void Configure()
         {
             if (EditorApplication.isPlaying) throw new InvalidOperationException("Exit Play Mode first.");
-            var scene = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
-            if (scene.path != "Assets/Scenes/SampleScene.unity") throw new InvalidOperationException("Open SampleScene first.");
             if (!AssetDatabase.IsValidFolder("Assets/Resources")) AssetDatabase.CreateFolder("Assets", "Resources");
             var bank = AssetDatabase.LoadAssetAtPath<GameAudioBank>("Assets/Resources/GameAudioBank.asset");
             if (bank == null) { bank = ScriptableObject.CreateInstance<GameAudioBank>(); AssetDatabase.CreateAsset(bank, "Assets/Resources/GameAudioBank.asset"); }
@@ -68,11 +66,6 @@ namespace PirateSlop.EditorTools
                 importer.defaultSampleSettings = settings;
                 importer.SaveAndReimport();
             }
-            foreach (var root in scene.GetRootGameObjects())
-            {
-                foreach (var player in root.GetComponentsInChildren<AdvancedPlayerController>(true)) Attach(player.gameObject);
-                foreach (var ship in root.GetComponentsInChildren<ShipController>(true)) Attach(ship.gameObject);
-            }
             foreach (var path in new[] { "Assets/Prefabs/Networking/NetworkPlayer.prefab", "Assets/Prefabs/Networking/NetworkShip.prefab", "Assets/Prefabs/Cannons/CannonStation.prefab", "Assets/Prefabs/Cannons/DeployableCannon.prefab" })
             {
                 var root = PrefabUtility.LoadPrefabContents(path);
@@ -81,7 +74,7 @@ namespace PirateSlop.EditorTools
             }
             var config = AssetDatabase.LoadAssetAtPath<PirateSlop.Networking.SessionConfig>("Assets/Settings/Networking/SessionConfig.asset");
             config.ProtocolVersion = Mathf.Max(config.ProtocolVersion, 5); EditorUtility.SetDirty(config);
-            EditorSceneManager.MarkSceneDirty(scene); EditorSceneManager.SaveScene(scene); AssetDatabase.SaveAssets();
+            AssetDatabase.SaveAssets();
         }
         static void Attach(GameObject root)
         {

@@ -48,6 +48,13 @@ public class ShipController : MonoBehaviour
             waveRoll = Mathf.Lerp(waveRoll, Mathf.Clamp(Mathf.Atan2(starboard - port, floatWidth * 2) * Mathf.Rad2Deg, -15, 15), blend);
         }
         var rotation = Quaternion.Euler(pitch, yaw, bank + waveRoll);
+        var world = PirateSlop.World.ProceduralWorld.Instance;
+        if (world != null && world.Ready && !world.CanSail(next, yaw))
+        {
+            float previousYaw = rb.rotation.eulerAngles.y;
+            if (!world.CanSail(rb.position, yaw)) { yaw = previousYaw; rotation = Quaternion.Euler(pitch, yaw, bank + waveRoll); }
+            next.x = rb.position.x; next.z = rb.position.z; speed = 0;
+        }
         if (Networked) { rb.position = next; rb.rotation = rotation; transform.SetPositionAndRotation(next, rotation); }
         else { rb.MoveRotation(rotation); rb.MovePosition(next); }
     }

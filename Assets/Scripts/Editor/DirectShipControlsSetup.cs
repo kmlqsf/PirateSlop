@@ -13,15 +13,6 @@ namespace PirateSlop.EditorTools
         public static void Configure()
         {
             if (EditorApplication.isPlaying) throw new InvalidOperationException("Exit Play Mode first.");
-            var scene = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
-            if (scene.path != "Assets/Scenes/SampleScene.unity") throw new InvalidOperationException("Open SampleScene first.");
-            var ship = GameObject.Find("SM_PirateSloop");
-            var player = GameObject.Find("PlayerCharacter");
-            Undo.RegisterFullObjectHierarchyUndo(ship, "Direct ship controls");
-            Undo.RegisterFullObjectHierarchyUndo(player, "Direct ship controls");
-            ConfigureShip(ship);
-            ConfigurePlayer(player);
-            foreach (var cannon in ship.GetComponentsInChildren<SimpleCannon>(true)) ConfigureCannon(cannon.gameObject);
             foreach (string path in new[] { "Assets/Prefabs/Cannons/CannonStation.prefab", "Assets/Prefabs/Cannons/DeployableCannon.prefab", "Assets/Prefabs/Networking/NetworkShip.prefab", "Assets/Prefabs/Networking/NetworkPlayer.prefab" })
             {
                 var root = PrefabUtility.LoadPrefabContents(path);
@@ -37,8 +28,6 @@ namespace PirateSlop.EditorTools
             var config = AssetDatabase.LoadAssetAtPath<SessionConfig>("Assets/Settings/Networking/SessionConfig.asset");
             config.ProtocolVersion = Mathf.Max(config.ProtocolVersion, 4);
             EditorUtility.SetDirty(config);
-            EditorSceneManager.MarkSceneDirty(scene);
-            EditorSceneManager.SaveScene(scene);
             AssetDatabase.SaveAssets();
         }
 

@@ -18,8 +18,6 @@ namespace PirateSlop.EditorTools
         public static void Configure()
         {
             if (EditorApplication.isPlaying) throw new InvalidOperationException("Exit Play Mode first.");
-            var scene = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
-            if (scene.path != "Assets/Scenes/SampleScene.unity") throw new InvalidOperationException("Open SampleScene first.");
             CreateCannon();
             CreateModel(CratePath, "Assets/Models/CannonballCrate/SM_CannonballCrate.fbx", true);
             CreateModel(KitPath, "Assets/Models/DisassembledCannon/SM_DisassembledCannon.fbx", false);
@@ -37,12 +35,6 @@ namespace PirateSlop.EditorTools
                 material.renderQueue = 3000;
                 AssetDatabase.CreateAsset(material, PreviewPath);
             }
-            var ship = GameObject.Find("SM_PirateSloop");
-            var player = GameObject.Find("PlayerCharacter");
-            Undo.RegisterFullObjectHierarchyUndo(ship, "Configure cannon inventory");
-            Undo.RegisterFullObjectHierarchyUndo(player, "Configure cannon inventory");
-            ConfigureShip(ship);
-            ConfigurePlayer(player, material);
             foreach (var path in new[] { "Assets/Prefabs/Networking/NetworkShip.prefab", "Assets/Prefabs/Networking/NetworkPlayer.prefab" })
             {
                 var root = PrefabUtility.LoadPrefabContents(path);
@@ -57,8 +49,6 @@ namespace PirateSlop.EditorTools
             var config = AssetDatabase.LoadAssetAtPath<SessionConfig>("Assets/Settings/Networking/SessionConfig.asset");
             config.ProtocolVersion = Mathf.Max(config.ProtocolVersion, 3);
             EditorUtility.SetDirty(config);
-            EditorSceneManager.MarkSceneDirty(scene);
-            EditorSceneManager.SaveScene(scene);
             AssetDatabase.SaveAssets();
         }
 

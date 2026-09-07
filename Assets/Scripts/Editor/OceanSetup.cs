@@ -12,7 +12,7 @@ namespace PirateSlop.EditorTools
         {
             if (EditorApplication.isPlaying) throw new System.InvalidOperationException("Exit Play Mode first.");
             var active = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
-            foreach (var path in new[] { "Assets/Scenes/SampleScene.unity", "Assets/Scenes/NetworkOcean.unity" })
+            foreach (var path in new[] { "Assets/Scenes/NetworkOcean.unity" })
             {
                 var scene = UnityEngine.SceneManagement.SceneManager.GetSceneByPath(path);
                 bool opened = !scene.isLoaded;

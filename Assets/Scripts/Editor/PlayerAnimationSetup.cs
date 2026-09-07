@@ -18,8 +18,8 @@ namespace PirateSlop.EditorTools
         public static void Configure()
         {
             if (Application.isPlaying) throw new InvalidOperationException("Stop Play Mode first.");
-            var player = GameObject.Find("PlayerCharacter");
-            if (player == null) throw new InvalidOperationException("Open SampleScene first.");
+            var player = AssetDatabase.LoadAssetAtPath<GameObject>(NetworkPath);
+            if (player == null) throw new InvalidOperationException("NetworkPlayer prefab missing.");
             var avatar = AssetDatabase.LoadAllAssetsAtPath("Assets/Models/Characters/Pirate/PirateCharacter.fbx").OfType<Avatar>().FirstOrDefault();
             if (avatar == null || !avatar.isValid) throw new InvalidOperationException("Valid pirate Avatar required.");
             string[] names = { "Idle", "Running", "FastRun", "CrouchIdle", "CrouchedWalking", "Jumping", "RunningSlide" };
@@ -60,13 +60,10 @@ namespace PirateSlop.EditorTools
                 }
             ConfigurePrefab(CharacterPath, avatar, controller, false);
             ConfigurePrefab(NetworkPath, avatar, controller, true);
-            Undo.RegisterFullObjectHierarchyUndo(player, "Configure player animations");
-            ConfigurePlayer(player, avatar, controller);
             EditorUtility.SetDirty(controller);
-            EditorSceneManager.MarkSceneDirty(player.scene);
-            EditorSceneManager.SaveScene(player.scene);
             AssetDatabase.SaveAssets();
-            Debug.Log("PLAYER_ANIMATIONS_CONFIGURED: SampleScene and NetworkPlayer, seven clips.");
+            SwimmingSetup.Configure();
+            Debug.Log("PLAYER_ANIMATIONS_CONFIGURED: multiplayer prefabs.");
         }
         static AnimationClip PrepareClip(string name, bool loop)
         {

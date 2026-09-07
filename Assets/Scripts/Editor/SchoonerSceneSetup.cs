@@ -21,22 +21,11 @@ namespace PirateSlop.EditorTools
         public static void Install()
         {
             if (EditorApplication.isPlaying) throw new InvalidOperationException("Exit Play Mode first.");
-            var scene = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
-            if (scene.path != "Assets/Scenes/SampleScene.unity") throw new InvalidOperationException("Open SampleScene first.");
-            if (scene.isDirty) EditorSceneManager.SaveScene(scene);
             Directory.CreateDirectory(Generated);
             Directory.CreateDirectory("Assets/Materials/PirateSchooner");
             AssetDatabase.Refresh();
             var importer = (ModelImporter)AssetImporter.GetAtPath(Model);
             importer.isReadable = true; importer.addCollider = false; importer.SaveAndReimport();
-            var original = GameObject.Find("SM_PirateSloop");
-            if (original == null) throw new InvalidOperationException("Ship root missing.");
-            Undo.RegisterFullObjectHierarchyUndo(original,"Install schooner");
-            Apply(original);
-            var player = GameObject.Find("PlayerCharacter");
-            Undo.RecordObject(player.transform,"Move spawn to quarterdeck");
-            player.transform.position = original.transform.TransformPoint(Spawn);
-            player.transform.rotation = original.transform.rotation;
             var network = PrefabUtility.LoadPrefabContents(Ship);
             try { Apply(network); PrefabUtility.SaveAsPrefabAsset(network,Ship); }
             finally { PrefabUtility.UnloadPrefabContents(network); }
@@ -44,7 +33,6 @@ namespace PirateSlop.EditorTools
             config.PlayerLocalSpawn = Spawn;
             config.SpawnSpacing = Mathf.Max(config.SpawnSpacing,52);
             EditorUtility.SetDirty(config);
-            EditorSceneManager.MarkSceneDirty(scene); EditorSceneManager.SaveScene(scene);
             AssetDatabase.SaveAssets();
             Debug.Log("SCHOONER_INSTALLED: existing network prefab/root components preserved.");
         }

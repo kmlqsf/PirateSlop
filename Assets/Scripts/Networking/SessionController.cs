@@ -9,6 +9,8 @@ using FishNet.Transporting;
 using FishNet.Transporting.Tugboat;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using PirateSlop.World;
+using System.Linq;
 namespace PirateSlop.Networking
 {
     public sealed class SessionController : MonoBehaviour
@@ -30,6 +32,10 @@ namespace PirateSlop.Networking
         string address = "127.0.0.1:7777", status = "Создайте сессию или введите IPv4:порт", error = "";
         bool connecting, playing, dedicated, starting, hostRequested;
         float startedAt, quitAt;
+        readonly Dictionary<int, float> awaitingWorld = new();
+        string worldJson, worldChecksum;
+        Coroutine worldLoading;
+        string seedInput = "";
         public NetworkPlayer GetPlayer(int connectionId) => players.TryGetValue(connectionId, out var p) ? p : null;
         void Awake() { Instance = this; Application.runInBackground = true; }
         void Start()
@@ -43,6 +49,8 @@ namespace PirateSlop.Networking
             manager.ServerManager.OnServerConnectionState += ServerState;
             manager.ClientManager.OnClientConnectionState += ClientState;
             manager.ClientManager.RegisterBroadcast<PopulationMessage>(Population);
+            manager.ClientManager.RegisterBroadcast<WorldManifestMessage>(WorldManifest);
+            manager.ServerManager.RegisterBroadcast<WorldReadyMessage>(WorldReady);
             var args = Environment.GetCommandLineArgs();
             dedicated = Has(args, "-server"); Automated = Has(args, "-autoclient");
             if (int.TryParse(Value(args, "-maxPlayers"), out var max)) MaxPlayers = Mathf.Clamp(max, 1, 128);
@@ -50,6 +58,7 @@ namespace PirateSlop.Networking
             if (!string.IsNullOrEmpty(Value(args, "-sessionId"))) SessionId = Value(args, "-sessionId");
             if (float.TryParse(Value(args, "-duration"), out var duration)) quitAt = Time.realtimeSinceStartup + duration;
             string port = Value(args, "-port") ?? Config.Port.ToString();
+            seedInput = Value(args, "-seed") ?? "";
             if (dedicated || Has(args, "-host")) Begin(true, "127.0.0.1:" + port);
             else if (Has(args, "-connect")) Begin(false, Value(args, "-connect"));
             else AdvancedPlayerController.SetCursor(false);
@@ -68,6 +77,7 @@ namespace PirateSlop.Networking
         public void Begin(bool host, string endpoint)
         {
             if (starting || connecting || playing || manager.ServerManager.Started) return;
+            if (host && !string.IsNullOrWhiteSpace(seedInput) && !int.TryParse(seedInput, out _)) { SetError("Seed должен быть целым числом."); return; }
             if (!ParseEndpoint(endpoint, out var ip, out var port)) { SetError("Введите IPv4:порт, например 192.168.1.10:7777"); return; }
             error = ""; address = endpoint; startedAt = Time.realtimeSinceStartup; connecting = true; starting = true; hostRequested = host;
             status = host ? "Создание сессии…" : "Подключение…";
@@ -78,6 +88,25 @@ namespace PirateSlop.Networking
             if (!SceneManager.GetSceneByName(Config.GameScene).isLoaded) yield return SceneManager.LoadSceneAsync(Config.GameScene, LoadSceneMode.Additive);
             if (!connecting) { starting = false; yield break; }
             SceneManager.SetActiveScene(SceneManager.GetSceneByName(Config.GameScene));
+            var world = ProceduralWorld.Instance;
+            if (world == null) { starting = false; connecting = false; SetError("В NetworkOcean отсутствует ProceduralWorld."); yield break; }
+            if (host)
+            {
+                WorldLayout layout = null;
+                try
+                {
+                    int seed = int.TryParse(seedInput, out var requestedSeed) ? requestedSeed : world.Profile.RandomSeed ? BitConverter.ToInt32(Guid.NewGuid().ToByteArray(), 0) : world.Profile.Seed;
+                    layout = WorldGenerator.Generate(world.Profile, seed, MaxPlayers, OceanSurface.Instance != null ? OceanSurface.Instance.SeaLevel : 0);
+                }
+                catch (Exception ex) { SetError("Генерация карты: " + ex.Message); }
+                if (layout == null) { starting = connecting = false; yield break; }
+                yield return GenerateWorld(world, layout);
+                if (!world.Ready || !connecting) { starting = connecting = false; yield break; }
+                worldJson = layout.ToJson(); worldChecksum = world.Checksum;
+            }
+            else world.Clear();
+            if (!connecting) { starting = false; yield break; }
+            startedAt = Time.realtimeSinceStartup;
             transport.SetPort(port);
             // 0.0.0.0 is a server bind address, not a routable client endpoint.
             // The host's local client must connect through loopback; remote clients
@@ -101,7 +130,7 @@ namespace PirateSlop.Networking
             else if (args.ConnectionState == LocalConnectionState.Stopped)
             {
                 if (connecting && error == "") SetError("Сервер не запущен: порт занят или недоступен");
-                players.Clear(); slots.Clear(); population = 0;
+                players.Clear(); slots.Clear(); awaitingWorld.Clear(); population = 0;
             }
         }
         void ClientState(ClientConnectionStateArgs args)
@@ -117,11 +146,60 @@ namespace PirateSlop.Networking
         void Loaded(NetworkConnection conn, bool asServer)
         {
             if (!asServer || !conn.IsAuthenticated || players.ContainsKey(conn.ClientId)) return;
-            int slot = 0; while (slots.ContainsValue(slot)) slot++;
+            if (string.IsNullOrEmpty(worldJson) || ProceduralWorld.Instance == null || !ProceduralWorld.Instance.Ready) { conn.Disconnect(true); return; }
+            awaitingWorld[conn.ClientId] = Time.realtimeSinceStartup;
+            manager.ServerManager.Broadcast(conn, new WorldManifestMessage { Json = worldJson, Checksum = worldChecksum });
+        }
+        IEnumerator GenerateWorld(ProceduralWorld world, WorldLayout layout)
+        {
+            status = "Генерация карты…";
+            var builder = world.Build(layout);
+            while (connecting || manager.ServerManager.Started)
+            {
+                bool more;
+                try { more = builder.MoveNext(); }
+                catch (Exception ex) { world.Clear(); SetError("Карта: " + ex.Message); break; }
+                if (!more) break;
+                startedAt = Time.realtimeSinceStartup;
+                yield return builder.Current;
+            }
+            (builder as IDisposable)?.Dispose();
+        }
+        void WorldManifest(WorldManifestMessage message, Channel channel)
+        {
+            if (worldLoading != null || playing) return;
+            WorldLayout layout;
+            try { layout = WorldLayout.FromJson(message.Json); }
+            catch (Exception ex) { Disconnect(); SetError("Карта: " + ex.Message); return; }
+            worldLoading = StartCoroutine(ReceiveWorld(layout, message.Checksum));
+        }
+        IEnumerator ReceiveWorld(WorldLayout layout, string checksum)
+        {
+            yield return null;
+            var world = ProceduralWorld.Instance;
+            if (!manager.ServerManager.Started) yield return GenerateWorld(world, layout);
+            if (world == null || !world.Ready || world.Checksum != checksum)
+            {
+                worldLoading = null; Disconnect(); SetError("Карта не совпадает с сервером. Обновите обе игры."); yield break;
+            }
+            manager.ClientManager.Broadcast(new WorldReadyMessage { Checksum = checksum });
+            startedAt = Time.realtimeSinceStartup; worldLoading = null;
+        }
+        void WorldReady(NetworkConnection conn, WorldReadyMessage message, Channel channel)
+        {
+            if (!conn.IsAuthenticated || !awaitingWorld.Remove(conn.ClientId) || players.ContainsKey(conn.ClientId)) return;
+            if (message.Checksum != worldChecksum) { conn.Disconnect(true); return; }
+            SpawnPlayer(conn);
+        }
+        void SpawnPlayer(NetworkConnection conn)
+        {
+            var spawns = ProceduralWorld.Instance.Points("ship_spawn").ToArray();
+            int slot = Array.FindIndex(spawns, candidate => !slots.ContainsValue(Array.IndexOf(spawns, candidate)) && ProceduralWorld.Instance.CanSail(candidate.Position, candidate.Yaw) && !players.Values.Any(p => p != null && p.Ship != null && Vector3.Distance(p.Ship.transform.position, candidate.Position) < 40));
+            if (slot < 0) { conn.Disconnect(true); return; }
             slots[conn.ClientId] = slot;
-            int side = Mathf.CeilToInt(Mathf.Sqrt(MaxPlayers));
-            Vector3 position = Config.ShipOrigin + new Vector3(slot % side * Config.SpawnSpacing, 0, slot / side * Config.SpawnSpacing);
-            var ship = Instantiate(ShipPrefab, position, Quaternion.identity).GetComponent<NetworkShip>();
+            var spawn = spawns[slot];
+            Vector3 position = spawn.Position;
+            var ship = Instantiate(ShipPrefab, position, Quaternion.Euler(0, spawn.Yaw, 0)).GetComponent<NetworkShip>();
             int id = nextParticipant++; ship.ParticipantId.Value = id;
             manager.ServerManager.Spawn(ship.NetworkObject, conn);
             manager.SceneManager.AddOwnerToDefaultScene(ship.NetworkObject);
@@ -136,6 +214,7 @@ namespace PirateSlop.Networking
         void RemoteState(NetworkConnection conn, RemoteConnectionStateArgs args)
         {
             if (args.ConnectionState != RemoteConnectionState.Stopped) return;
+            awaitingWorld.Remove(conn.ClientId);
             if (players.TryGetValue(conn.ClientId, out var leaving))
             {
                 var ship = leaving == null ? null : leaving.Ship;
@@ -162,12 +241,16 @@ namespace PirateSlop.Networking
         public void Disconnect()
         {
             playing = connecting = false; hostRequested = false;
+            if (worldLoading != null) { StopCoroutine(worldLoading); worldLoading = null; }
             manager.ClientManager.StopConnection(); if (manager.ServerManager.Started) manager.ServerManager.StopConnection(true);
             AdvancedPlayerController.SetCursor(false); status = "Отключено";
             if (MenuCamera != null && !Automated && !dedicated) MenuCamera.gameObject.SetActive(true);
         }
         void Update()
         {
+            if (manager != null && manager.ServerManager.Started)
+                foreach (var id in awaitingWorld.Where(p => Time.realtimeSinceStartup - p.Value > 120).Select(p => p.Key).ToArray())
+                { awaitingWorld.Remove(id); if (manager.ServerManager.Clients.TryGetValue(id, out var conn)) conn.Disconnect(true); }
             if (quitAt > 0 && Time.realtimeSinceStartup >= quitAt) { Disconnect(); Application.Quit(); }
             if (connecting && Time.realtimeSinceStartup - startedAt >= Config.ConnectTimeout) { var reason = error == "" ? "Тайм-аут подключения (15 с): проверьте IP, UDP-порт и Firewall" : error; Disconnect(); SetError(reason); }
         }
@@ -206,8 +289,10 @@ namespace PirateSlop.Networking
         {
             if (dedicated || Automated || !MenuOpen) return;
             GUI.skin.label.wordWrap = true;
-            GUILayout.BeginArea(new Rect((Screen.width-440)/2, (Screen.height-340)/2, 440, 340), "PirateSlop — онлайн", GUI.skin.window);
+            GUILayout.BeginArea(new Rect((Screen.width-440)/2, (Screen.height-410)/2, 440, 410), "PirateSlop — онлайн", GUI.skin.window);
             GUILayout.Space(12); GUILayout.Label(status); GUILayout.Label($"Игроки: {population}/{MaxPlayers}");
+            if (!playing && !connecting) { GUILayout.Label("Seed карты (пусто — случайный, только для хоста)"); seedInput = GUILayout.TextField(seedInput, 12); }
+            if (ProceduralWorld.Instance != null && ProceduralWorld.Instance.Layout != null) GUILayout.Label("Карта: " + ProceduralWorld.Instance.Layout.Seed + " · " + Mathf.RoundToInt(ProceduralWorld.Instance.Progress * 100) + "%");
             if (!playing && !connecting) { GUILayout.Label("IPv4:порт (UDP)"); address = GUILayout.TextField(address, 64); if (GUILayout.Button("Создать сессию", GUILayout.Height(35))) Begin(true, address); if (GUILayout.Button("Подключиться", GUILayout.Height(35))) Begin(false, address); }
             else { if (GUILayout.Button(connecting ? "Отменить" : "Отключиться", GUILayout.Height(35))) Disconnect(); if (playing && GUILayout.Button("Вернуться в игру", GUILayout.Height(35))) AdvancedPlayerController.SetCursor(true); }
             GUILayout.Label("Хост: публичный IPv4 и открытый UDP-порт.\nEscape — меню. E — штурвал своего корабля.");
