@@ -95,21 +95,13 @@ namespace PirateSlop
             if (IsDead || amount <= 0 || float.IsNaN(amount) || float.IsInfinity(amount)) return;
             float dealt = Mathf.Min(Current, amount);
             ApplySnapshot(Current - amount, false);
-            if (!IsShip)
+            if (network != null) network.DamageFeedback(dealt, IsDead);
+            else GetComponent<DamageFeedback>()?.ReceiveDamage(dealt, IsDead);
+            if (attacker != null && attacker != gameObject)
             {
-                if (network != null) network.DamageFeedback(dealt, IsDead);
-                else GetComponent<DamageFeedback>()?.ReceiveDamage(dealt, IsDead);
-                if (attacker != null && attacker != gameObject)
-                {
-                    var source = attacker.GetComponent<NetworkHealth>();
-                    if (source != null) source.ConfirmHit();
-                    else attacker.GetComponent<DamageFeedback>()?.ConfirmHit();
-                }
-            }
-            if (IsShip)
-            {
-                if (network != null) network.ShipDamageAudio(IsDead);
-                else GameAudio.Play(IsDead ? SoundCue.ShipDeath : SoundCue.ShipHit, transform.position);
+                var source = attacker.GetComponent<NetworkHealth>();
+                if (source != null) source.ConfirmHit();
+                else attacker.GetComponent<DamageFeedback>()?.ConfirmHit();
             }
             if (network != null) network.Publish(Current);
         }
