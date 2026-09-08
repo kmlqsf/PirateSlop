@@ -4,11 +4,11 @@ using UnityEngine;
 
 namespace PirateSlop.Networking
 {
-    public enum InventoryItem { None = -1, Fish = 0, Pistol = 1, Rod = 2, Cannon = 3, Cannonball = 4 }
+    public enum InventoryItem { None = -1, Fish = 0, Pistol = 1, Rod = 2, Cannon = 3, Cannonball = 4, Mallet = 5, Plank = 6 }
     public sealed class NetworkFish : NetworkBehaviour
     {
         public InventoryItem Item;
-        public string ItemName => Item == InventoryItem.Fish ? "рыбу" : Item == InventoryItem.Pistol ? "пистолет" : Item == InventoryItem.Rod ? "удочку" : Item == InventoryItem.Cannonball ? "ядро" : "разобранную пушку";
+        public string ItemName => Item == InventoryItem.Fish ? "рыбу" : Item == InventoryItem.Pistol ? "пистолет" : Item == InventoryItem.Rod ? "удочку" : Item == InventoryItem.Cannonball ? "ядро" : Item == InventoryItem.Mallet ? "киянку" : Item == InventoryItem.Plank ? "доску" : "разобранную пушку";
         readonly SyncVar<NetworkObject> platform = new();
         readonly SyncVar<int> platformId = new();
         readonly SyncVar<Vector3> worldPosition = new();

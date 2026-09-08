@@ -197,10 +197,12 @@ namespace PirateSlop.Networking
             var spawns = ProceduralWorld.Instance.Points("ship_spawn").ToArray();
             int slot = Array.FindIndex(spawns, candidate => !slots.ContainsValue(Array.IndexOf(spawns, candidate)) && ProceduralWorld.Instance.CanSail(candidate.Position, candidate.Yaw) && !players.Values.Any(p => p != null && p.Ship != null && Vector3.Distance(p.Ship.transform.position, candidate.Position) < 40));
             if (slot < 0) { conn.Disconnect(true); return; }
-            slots[conn.ClientId] = slot;
             var spawn = spawns[slot];
             Vector3 position = spawn.Position;
-            var ship = Instantiate(ShipPrefab, position, Quaternion.Euler(0, spawn.Yaw, 0)).GetComponent<NetworkShip>();
+            float yaw = spawn.Yaw;
+            if (Config.ClusteredTestSpawns && !FindNearbySpawn(ref position, ref yaw)) { conn.Disconnect(true); return; }
+            slots[conn.ClientId] = slot;
+            var ship = Instantiate(ShipPrefab, position, Quaternion.Euler(0, yaw, 0)).GetComponent<NetworkShip>();
             int id = nextParticipant++; ship.ParticipantId.Value = id;
             manager.ServerManager.Spawn(ship.NetworkObject, conn);
             manager.SceneManager.AddOwnerToDefaultScene(ship.NetworkObject);
@@ -211,6 +213,23 @@ namespace PirateSlop.Networking
             manager.SceneManager.AddOwnerToDefaultScene(player.NetworkObject);
             BroadcastPopulation();
             Debug.Log($"PLAYER_SPAWN participant={id} connection={conn.ClientId} slot={slot} position={player.transform.position}");
+        }
+        bool FindNearbySpawn(ref Vector3 position, ref float yaw)
+        {
+            var anchor = players.Values.FirstOrDefault(p => p != null && p.Ship != null);
+            if (anchor == null) return true;
+            yaw = anchor.Ship.transform.eulerAngles.y;
+            float spacing = Mathf.Max(52f, Config.SpawnSpacing);
+            for (int ring = 1; ring <= 8; ring++)
+                for (int i = 0; i < ring * 8; i++)
+                {
+                    float angle = i * Mathf.PI * 2f / (ring * 8);
+                    Vector3 candidate = anchor.Ship.transform.position + Quaternion.Euler(0, yaw, 0) * new Vector3(Mathf.Cos(angle), 0, Mathf.Sin(angle)) * (spacing * ring);
+                    if (!ProceduralWorld.Instance.CanSail(candidate, yaw)) continue;
+                    if (players.Values.Any(p => p != null && p.Ship != null && Vector3.Distance(p.Ship.transform.position, candidate) < spacing - .1f)) continue;
+                    position = candidate; return true;
+                }
+            return false;
         }
         void RemoteState(NetworkConnection conn, RemoteConnectionStateArgs args)
         {

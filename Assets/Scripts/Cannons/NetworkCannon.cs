@@ -17,6 +17,8 @@ namespace PirateSlop.Networking
         readonly SyncVar<bool> kitTaken = new(false);
         readonly SyncList<CannonPlacement> placements = new();
         readonly SyncVar<int> loadedIndex = new(-1);
+        readonly SyncVar<int> fuseIndex = new(-1);
+        readonly SyncVar<float> fuseProgress = new();
         public CannonballCrate Crate { get; private set; }
         Cannonball ball;
         Rigidbody shipBody;
@@ -79,6 +81,7 @@ namespace PirateSlop.Networking
             for (int i = 0; i < placements.Count; i++)
             {
                 var cannon=Crate.Cannons[i];cannon.SetElevation(placements[i].Elevation);
+                if (!IsServerInitialized) cannon.ShowFuse(fuseIndex.Value == i ? fuseProgress.Value : -1f);
                 if(!IsServerInitialized)
                 {
                     float blend=1f-Mathf.Exp(-20f*Time.deltaTime);
@@ -96,7 +99,16 @@ namespace PirateSlop.Networking
                 cannon.TryLoad(ball);
             }
         }
-        void Update() { if (IsClientInitialized || IsServerInitialized) ApplyState(); }
+        void Update()
+        {
+            if (IsServerInitialized && fuseIndex.Value >= 0)
+            {
+                var cannon = Cannon(fuseIndex.Value);
+                fuseProgress.Value = cannon != null ? cannon.FuseProgress : 0f;
+            }
+            if (IsClientInitialized || IsServerInitialized) ApplyState();
+        }
+        public void NotifyIgnited(int index) { fuseIndex.Value = index; fuseProgress.Value = 0f; }
         SimpleCannon Cannon(int index) => Crate != null && index >= 0 && index < Crate.Cannons.Count ? Crate.Cannons[index] : null;
         bool CanUse(NetworkConnection sender, Vector3 point)
         {
@@ -105,7 +117,7 @@ namespace PirateSlop.Networking
         }
         public void NotifyFired(int index, Vector3 position, Vector3 velocity)
         {
-            holder = -1; loadedIndex.Value = -1;
+            holder = -1; loadedIndex.Value = -1; fuseIndex.Value = -1;
             ShotObserversRpc(index, position, velocity);
         }
         [ObserversRpc]
@@ -129,7 +141,7 @@ namespace PirateSlop.Networking
             ball.Held = holding; ball.AttachToPlatform(null); ball.transform.SetParent(null, true);
             ball.Body.isKinematic = true; ball.Body.position = world;
             ball.GetComponent<Collider>().enabled = !holding;
-            if (!holding) { ball.Release(); ball.Body.linearVelocity = shipBody.GetPointVelocity(world); ball.Body.angularVelocity = Vector3.zero; }
+            if (!holding) { ball.Release(); }
         }
         [TargetRpc]
         void RejectHoldTargetRpc(NetworkConnection connection)
@@ -168,14 +180,15 @@ namespace PirateSlop.Networking
             if (holder >= 0 && (player == null || player.Motor.IsDead))
             { holder = -1; ball.Held = false; ball.GetComponent<Collider>().enabled = true; ball.Release(); }
             nextSync = Time.time + .05f;
-            SyncBallObserversRpc(shipBody.transform.InverseTransformPoint(ball.transform.position));
+            SyncBallObserversRpc(shipBody.transform.InverseTransformPoint(ball.transform.position), Quaternion.Inverse(shipBody.rotation) * ball.transform.rotation);
         }
         [ObserversRpc]
-        void SyncBallObserversRpc(Vector3 localPosition)
+        void SyncBallObserversRpc(Vector3 localPosition, Quaternion localRotation)
         {
             if (IsServerInitialized || ball == null || ball.Loaded || ball.Held) return;
             ball.transform.SetParent(shipBody.transform, false);
             ball.transform.localPosition = localPosition;
+            ball.transform.localRotation = localRotation;
             ball.Body.isKinematic = true;
             ball.AttachToPlatform(shipBody);
         }

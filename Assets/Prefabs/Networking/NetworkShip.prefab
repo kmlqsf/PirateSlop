@@ -2524,6 +2524,7 @@ GameObject:
   - component: {fileID: 1874291677189386073}
   - component: {fileID: 805247103570420939}
   - component: {fileID: 1564273186473263874}
+  - component: {fileID: 5627872021775527720}
   m_Layer: 0
   m_Name: NetworkShip
   m_TagString: Ship
@@ -2603,6 +2604,9 @@ MonoBehaviour:
   buoyancyResponse: 2.5
   floatLength: 18
   floatWidth: 5.5
+  cannonRockStrength: 20
+  cannonRockSpring: 9
+  cannonRockDamping: 3.5
 --- !u!114 &745107634210240991
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2775,6 +2779,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eace4f934b3077e4db8b16e3ba302e13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.GameplayAudio
+--- !u!114 &5627872021775527720
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 898423509851137951}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82976468030e82d4e8f1f166f814b8a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.Networking.ShipRepair
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 8899225424909593775}
+  _networkObjectCache: {fileID: 0}
+  BreachPrefab: {fileID: 49724837188576929, guid: b27fb6b1f5557a74ebf2c754fc2fc4f7, type: 3}
+  PatchPrefabs:
+  - {fileID: 2941739829668237266, guid: 3b0a39a13213d60469bcdb1ac246ef2b, type: 3}
+  - {fileID: 8264572730519786828, guid: 418b96033c340d94ab71300acbc182ea, type: 3}
+  - {fileID: 2843974469429422898, guid: 2f08ca909ee6f7948a900da39cea5bdf, type: 3}
+  StartingPlank: {fileID: 1133702697705914243, guid: 6523b631db6bda249af42eff0ded20e9, type: 3}
+  StartingMallet: {fileID: 6005540628913924026, guid: a3511198a7e2a034f9407d5ba0bea977, type: 3}
 --- !u!1 &921106084030955267
 GameObject:
   m_ObjectHideFlags: 0

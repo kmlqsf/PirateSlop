@@ -16,10 +16,11 @@ MonoBehaviour:
   Port: 7777
   MaxPlayers: 32
   TickRate: 30
-  ProtocolVersion: 24
+  ProtocolVersion: 26
   ConnectTimeout: 15
   ObserverRadius: 1000
   ObserverHysteresis: 0.2
+  ClusteredTestSpawns: 1
   SpawnSpacing: 52
   ShipOrigin: {x: 0, y: 0, z: 0}
   PlayerLocalSpawn: {x: 0, y: 7.2, z: -19.2}

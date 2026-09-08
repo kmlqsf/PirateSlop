@@ -13,6 +13,8 @@ namespace PirateSlop.Networking
         readonly SyncVar<bool> hasPistol = new(true), hasRod = new(true);
         readonly SyncList<int> fishCounts = new();
         readonly SyncList<int> ballCounts = new();
+        readonly SyncVar<int> malletSlots = new(0);
+        readonly SyncList<int> plankCounts = new();
         public NetworkFish[] DropPrefabs;
         PlayerInventory inventory;
         PirateWeapon weapon;
@@ -22,23 +24,27 @@ namespace PirateSlop.Networking
             base.OnStartServer();
             if (fishCounts.Count == 0) for (int i = 0; i < 6; i++) fishCounts.Add(0);
             if (ballCounts.Count == 0) for (int i = 0; i < 6; i++) ballCounts.Add(0);
+            if (plankCounts.Count == 0) for (int i = 0; i < 6; i++) plankCounts.Add(0);
             ApplyInventory();
         }
         void ApplyInventory()
         {
+            for (int i = 0; i < 6; i++) inventory.SetRepairItems(malletSlots.Value, i, i < plankCounts.Count ? plankCounts[i] : 0);
             inventory.SetContents(cannonSlots.Value); inventory.HasPistol = hasPistol.Value; inventory.HasRod = hasRod.Value;
             for (int i = 0; i < 6; i++) inventory.SetFishCount(i, i < fishCounts.Count ? fishCounts[i] : 0);
             for (int i = 0; i < 6; i++) inventory.SetBallCount(i, i < ballCounts.Count ? ballCounts[i] : 0);
         }
         public bool CanAddItem(InventoryItem item)
         {
-            if (!IsServerInitialized || item < InventoryItem.Fish || item > InventoryItem.Cannonball) return false;
+            if (!IsServerInitialized || item < InventoryItem.Fish || item > InventoryItem.Plank) return false;
             if (item == InventoryItem.Pistol) return !hasPistol.Value;
             if (item == InventoryItem.Rod) return !hasRod.Value;
             if (item == InventoryItem.Fish)
                 for (int i = 2; i < fishCounts.Count; i++) if (fishCounts[i] > 0 && fishCounts[i] < 20) return true;
             if (item == InventoryItem.Cannonball)
                 for (int i = 2; i < ballCounts.Count; i++) if (ballCounts[i] > 0 && ballCounts[i] < 20) return true;
+            if (item == InventoryItem.Plank)
+                for (int i = 2; i < plankCounts.Count; i++) if (plankCounts[i] > 0 && plankCounts[i] < 20) return true;
             return inventory.EmptySlot() >= 0;
         }
         public bool AddItem(InventoryItem item)
@@ -59,9 +65,23 @@ namespace PirateSlop.Networking
                     for (int i = 2; i < ballCounts.Count; i++) if (ballCounts[i] > 0 && ballCounts[i] < 20) { slot = i; break; }
                     ballCounts[slot]++;
                 }
+                else if (item == InventoryItem.Plank)
+                {
+                    for (int i = 2; i < plankCounts.Count; i++) if (plankCounts[i] > 0 && plankCounts[i] < 20) { slot = i; break; }
+                    plankCounts[slot]++;
+                }
+                else if (item == InventoryItem.Mallet) malletSlots.Value |= 1 << slot;
                 else cannonSlots.Value |= 1 << slot;
             }
             ApplyInventory(); return true;
+        }
+        public bool CanRepair => IsServerInitialized && inventory.HasMallet(selectedSlot.Value) && CanHandleBall() && !GetComponent<CannonHands>().HasHeldBall;
+        public bool ConsumeRepairPlank()
+        {
+            if (!CanRepair) return false;
+            for (int i = 2; i < plankCounts.Count; i++)
+                if (plankCounts[i] > 0) { plankCounts[i]--; ApplyInventory(); return true; }
+            return false;
         }
         public bool EatSelectedFish(float healing)
         {
@@ -82,6 +102,8 @@ namespace PirateSlop.Networking
             if (slot == 0 && hasPistol.Value) item = InventoryItem.Pistol;
             else if (slot == 1 && hasRod.Value) item = InventoryItem.Rod;
             else if (inventory.HasCannon(slot)) item = InventoryItem.Cannon;
+            else if (inventory.HasMallet(slot)) item = InventoryItem.Mallet;
+            else if (inventory.PlankCount(slot) > 0) item = InventoryItem.Plank;
             else if (inventory.BallCount(slot) > 0) item = InventoryItem.Cannonball;
             else if (slot < fishCounts.Count && fishCounts[slot] > 0) item = InventoryItem.Fish;
             else return;
@@ -101,11 +123,13 @@ namespace PirateSlop.Networking
             var support = floor.collider.GetComponentInParent<NetworkShip>();
             dropped.Place(support != null ? support.NetworkObject : null, point, orientation);
             ServerManager.Spawn(dropped.NetworkObject);
-            if (item == InventoryItem.Cannonball && support != null) dropped.GetComponent<Rigidbody>().linearVelocity = support.GetComponent<Rigidbody>().GetPointVelocity(point);
+            if (item == InventoryItem.Cannonball && support != null) dropped.GetComponent<Cannonball>().RollOnPlatform(support.GetComponent<Rigidbody>());
             if (item == InventoryItem.Pistol) hasPistol.Value = false;
             else if (item == InventoryItem.Rod) hasRod.Value = false;
             else if (item == InventoryItem.Cannon) cannonSlots.Value &= ~(1 << slot);
             else if (item == InventoryItem.Cannonball) ballCounts[slot]--;
+            else if (item == InventoryItem.Mallet) malletSlots.Value &= ~(1 << slot);
+            else if (item == InventoryItem.Plank) plankCounts[slot]--;
             else fishCounts[slot]--;
             ApplyInventory(); DropSoundObserversRpc(point);
         }

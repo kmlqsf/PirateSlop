@@ -112,7 +112,7 @@ namespace PirateSlop.EditorTools
             foreach (var renderer in renderers) bounds.Encapsulate(renderer.bounds);
             return bounds;
         }
-        static void RenderIcon(GameObject source, string path)
+        public static void RenderIcon(GameObject source, string path)
         {
             var preview = new PreviewRenderUtility();
             try

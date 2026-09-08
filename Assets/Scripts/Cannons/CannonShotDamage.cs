@@ -49,7 +49,11 @@ namespace PirateSlop
                 var network=collider.GetComponentInParent<PirateSlop.Networking.NetworkShip>();
                 if(network!=null) network.ImpactVfx(point,normal);else CombatVfx.Impact(point,normal,true);
                 var health=collider.GetComponentInParent<CombatHealth>();
-                if(health!=null && health.IsShip) health.Damage(120f);
+                if(health!=null && health.IsShip)
+                {
+                    health.GetComponent<PirateSlop.Networking.ShipRepair>()?.AddImpact(collider,point,normal,120f);
+                    health.Damage(120f);
+                }
             }
             Destroy(gameObject);
         }

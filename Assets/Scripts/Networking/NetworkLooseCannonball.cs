@@ -10,6 +10,7 @@ namespace PirateSlop.Networking
     {
         readonly SyncVar<Vector3> position = new();
         readonly SyncVar<Quaternion> rotation = new(Quaternion.identity);
+        readonly SyncVar<NetworkObject> platform = new();
         readonly SyncVar<int> holder = new(-1);
         Cannonball ball;
         bool localHolding;
@@ -20,7 +21,8 @@ namespace PirateSlop.Networking
         {
             base.OnStartServer();
             position.Value = transform.position; rotation.Value = transform.rotation;
-            ball.Body.isKinematic = false; ball.Body.useGravity = true;
+            ball.Release();
+            PublishPose();
         }
         public override void OnStartClient()
         {
@@ -56,7 +58,7 @@ namespace PirateSlop.Networking
             { RejectTargetRpc(sender); return; }
             if (!ball.Body.isKinematic) { ball.Body.linearVelocity = Vector3.zero; ball.Body.angularVelocity = Vector3.zero; }
             holder.Value = sender.ClientId; lastHold = Time.time;
-            ball.Held = true; ball.Body.isKinematic = true;
+            ball.Held = true; ball.AttachToPlatform(null); platform.Value = null; ball.Body.isKinematic = true;
             ball.GetComponent<Collider>().enabled = false;
             ball.Body.position = point; position.Value = point;
         }
@@ -96,12 +98,24 @@ namespace PirateSlop.Networking
             }
             if (Time.time < nextSync) return;
             nextSync = Time.time + .05f;
-            position.Value = ball.Body.position; rotation.Value = ball.Body.rotation;
+            PublishPose();
+        }
+        void PublishPose()
+        {
+            var support = ball.PlatformBody;
+            platform.Value = support != null ? support.GetComponent<NetworkObject>() : null;
+            position.Value = platform.Value != null ? support.transform.InverseTransformPoint(ball.Body.position) : ball.Body.position;
+            rotation.Value = platform.Value != null ? Quaternion.Inverse(support.rotation) * ball.Body.rotation : ball.Body.rotation;
         }
         void LateUpdate()
         {
             if (!IsSpawned || IsServerInitialized || localHolding) return;
             ball.Held = IsHeld; ball.GetComponent<Collider>().enabled = !IsHeld;
+            if (platform.Value != null && !IsHeld)
+            {
+                transform.SetPositionAndRotation(platform.Value.transform.TransformPoint(position.Value), platform.Value.transform.rotation * rotation.Value);
+                return;
+            }
             transform.SetPositionAndRotation(Vector3.Lerp(transform.position, position.Value, 1f - Mathf.Exp(-25f * Time.deltaTime)),
                 Quaternion.Slerp(transform.rotation, rotation.Value, 1f - Mathf.Exp(-25f * Time.deltaTime)));
         }

@@ -40,9 +40,7 @@ namespace PirateSlop
                 else
                 {
                     held.Release();
-                    var platform = GetComponent<ShipDeckPassenger>().Ship;
-                    held.Body.linearVelocity = platform != null ? platform.GetPointVelocity(held.transform.position) : Vector3.zero;
-                    held.Body.angularVelocity = Vector3.zero;
+
                 }
             }
             held = null;
@@ -114,7 +112,7 @@ namespace PirateSlop
         {
             if (player == null || !player.InputActive || player.LocomotionLocked || (controls != null && controls.IsDragging) || (inventory != null && inventory.Placing)) return;
             GUI.Label(new Rect(Screen.width / 2f - 4, Screen.height / 2f - 10, 20, 20), "+");
-            string text = held != null ? "E — в инвентарь • Поднеси ядро к дулу • Колесо — ближе/дальше • Отпусти ЛКМ — бросить" : aimed != null ? (aimed.IsLoaded ? "E — выстрелить" : "Поднеси ядро к дулу, удерживая ЛКМ") : "";
+            string text = held != null ? "E — в инвентарь • Поднеси ядро к дулу • Колесо — ближе/дальше • Отпусти ЛКМ — бросить" : aimed != null ? (aimed.IsIgnited ? "Фитиль горит…" : aimed.IsLoaded ? "E — поджечь фитиль" : "Поднеси ядро к дулу, удерживая ЛКМ") : "";
             if (text.Length > 0) GUI.Box(new Rect(Screen.width / 2f - 310, Screen.height - 125, 620, 28), text);
         }
     }
