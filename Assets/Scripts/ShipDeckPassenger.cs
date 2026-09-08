@@ -26,6 +26,7 @@ public class ShipDeckPassenger : MonoBehaviour
     }
     public void Detect()
     {
+        if (player != null && player.IsKnockedBack) { if (ship != null) Attach(null); return; }
         if (player != null && player.IsClimbing) return;
         if (player != null && player.IsSwimming) { if (ship != null) Attach(null); return; }
         if (player != null && player.LocomotionLocked) return;

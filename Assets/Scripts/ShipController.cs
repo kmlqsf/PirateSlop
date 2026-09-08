@@ -10,6 +10,27 @@ public class ShipController : MonoBehaviour
     Rigidbody rb;
     float speed, yaw, bank, waterHeight;
     float nextCollisionAudio;
+    [SerializeField] float pushImpulse = 450000f, pushLinearDrag = .55f, pushAngularDrag = .7f;
+    [SerializeField] float impulseMass = 15000f, hullLength = 46f, hullWidth = 13f;
+    Vector3 pushVelocity;
+    float pushYawVelocity, freezeRemaining;
+    public bool IsFrozen => freezeRemaining > 0f;
+    public void Freeze(float duration)
+    {
+        freezeRemaining = Mathf.Max(freezeRemaining, duration);
+        speed = 0f; pushVelocity = cannonShove = motionVelocity = motionAngularVelocity = Vector3.zero;
+        pushYawVelocity = 0f; cannonTiltVelocity = Vector2.zero;
+    }
+    public void ApplyPushImpulse(Vector3 point, Vector3 direction)
+    {
+        if (IsFrozen || !float.IsFinite(point.sqrMagnitude) || !float.IsFinite(direction.sqrMagnitude)) return;
+        Vector3 impulse = Vector3.ProjectOnPlane(direction, Vector3.up).normalized * pushImpulse;
+        float mass = Mathf.Max(1f, impulseMass);
+        pushVelocity += impulse / mass;
+        Vector3 offset = point - rb.worldCenterOfMass;
+        float inertia = mass * (hullLength * hullLength + hullWidth * hullWidth) / 12f;
+        pushYawVelocity += Vector3.Cross(offset, impulse).y / Mathf.Max(1f, inertia) * Mathf.Rad2Deg;
+    }
     [SerializeField] float buoyancyResponse = 2.5f, floatLength = 8f, floatWidth = 3f;
     float pitch, waveRoll;
     [SerializeField] float cannonRockStrength=20f, cannonRockSpring=9f, cannonRockDamping=3.5f;
@@ -18,7 +39,7 @@ public class ShipController : MonoBehaviour
     public Vector3 CannonPointVelocity(Vector3 point) => motionVelocity+Vector3.Cross(motionAngularVelocity,point-transform.position);
     public void ApplyCannonImpulse(Vector3 point,Vector3 impulse,float strength)
     {
-        if(!float.IsFinite(impulse.sqrMagnitude) || !float.IsFinite(point.sqrMagnitude)) return;
+        if(IsFrozen || !float.IsFinite(impulse.sqrMagnitude) || !float.IsFinite(point.sqrMagnitude)) return;
         var local=Quaternion.Inverse(Quaternion.Euler(0,yaw,0))*Vector3.ClampMagnitude(impulse,1.5f);
         var offset=transform.InverseTransformPoint(point);
         float leverage=Mathf.Clamp(Mathf.Abs(offset.y)/5f,.65f,1.3f);
@@ -53,14 +74,23 @@ public class ShipController : MonoBehaviour
     void FixedUpdate() { if (!Networked) Simulate(Time.fixedDeltaTime); }
     public void Simulate(float dt)
     {
+        if (IsFrozen)
+        {
+            freezeRemaining = Mathf.Max(0f, freezeRemaining - dt);
+            speed = 0f; motionVelocity = motionAngularVelocity = Vector3.zero;
+            return;
+        }
         SimulateCannonRock(dt);
+        pushVelocity *= Mathf.Exp(-pushLinearDrag * dt);
+        pushYawVelocity *= Mathf.Exp(-pushAngularDrag * dt);
+        yaw += pushYawVelocity * dt;
         float target = (sailSystem != null ? sailSystem.DeployPercentage : 0) * maxSpeed;
         speed = Mathf.MoveTowards(speed, target, (target > speed ? acceleration : deceleration) * dt);
         float rudder = helm != null ? helm.CurrentRudderNormalized : 0;
         float factor = Mathf.Clamp01(speed / Mathf.Max(.1f, maxSpeed));
         yaw += rudder * turnSpeed * Mathf.Lerp(.15f, 1, factor) * dt;
         bank = Mathf.Lerp(bank, -rudder * maxBankAngle * factor, 1 - Mathf.Exp(-bankResponse * dt));
-        var next = rb.position + Quaternion.Euler(0, yaw, 0) * Vector3.forward * speed * dt + cannonShove * dt; next.y = waterHeight;
+        var next = rb.position + Quaternion.Euler(0, yaw, 0) * Vector3.forward * speed * dt + (cannonShove + pushVelocity) * dt; next.y = waterHeight;
         var ocean = OceanSurface.Instance;
         if (ocean != null)
         {
@@ -80,6 +110,7 @@ public class ShipController : MonoBehaviour
             float previousYaw = rb.rotation.eulerAngles.y;
             if (!world.CanSail(rb.position, yaw)) { yaw = previousYaw; rotation = Quaternion.Euler(pitch + cannonTilt.x, yaw, bank + waveRoll + cannonTilt.y); }
             next.x = rb.position.x; next.z = rb.position.z; speed = 0;
+            pushVelocity = Vector3.zero; pushYawVelocity = 0f;
         }
         motionVelocity=(next-rb.position)/Mathf.Max(.001f,dt);
         var rotationDelta=rotation*Quaternion.Inverse(rb.rotation);
@@ -109,6 +140,13 @@ public class ShipController : MonoBehaviour
     }
     public void ResolveCollision(Vector3 displacement)
     {
+        if (IsFrozen) return;
+        if (displacement.sqrMagnitude > .00001f)
+        {
+            Vector3 normal = displacement.normalized;
+            float inward = Vector3.Dot(pushVelocity, normal);
+            if (inward < 0f) pushVelocity -= normal * inward;
+        }
         if (Time.time >= nextCollisionAudio && displacement.sqrMagnitude > .00001f)
         {
             var network = GetComponent<PirateSlop.Networking.NetworkShip>();

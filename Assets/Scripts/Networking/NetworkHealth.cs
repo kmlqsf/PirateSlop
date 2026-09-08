@@ -15,12 +15,20 @@ namespace PirateSlop.Networking
             if (!IsServerInitialized && health.Value >= 0) target.ApplySnapshot(health.Value, false);
         }
         public void Publish(float value) { if (IsServerInitialized) health.Value = value; }
-        public void ShipDamageAudio(bool dead)
+        public void DamageFeedback(float amount, bool dead)
         {
-            if (IsServerInitialized) ShipDamageAudioObserversRpc(dead);
+            if (IsServerInitialized && Owner != null && Owner.IsActive) DamageFeedbackTargetRpc(Owner, amount, dead);
         }
-        [ObserversRpc(RunLocally = true)]
-        void ShipDamageAudioObserversRpc(bool dead) => GameAudio.Play(dead ? SoundCue.ShipDeath : SoundCue.ShipHit, transform.position);
+        public void ConfirmHit()
+        {
+            if (IsServerInitialized && Owner != null && Owner.IsActive) HitFeedbackTargetRpc(Owner);
+        }
+        [TargetRpc]
+        void DamageFeedbackTargetRpc(FishNet.Connection.NetworkConnection connection, float amount, bool dead)
+            => GetComponent<PirateSlop.DamageFeedback>()?.ReceiveDamage(amount, dead);
+        [TargetRpc]
+        void HitFeedbackTargetRpc(FishNet.Connection.NetworkConnection connection)
+            => GetComponent<PirateSlop.DamageFeedback>()?.ConfirmHit();
         public void Respawn(Vector3 position, float yaw)
         {
             if (!IsServerInitialized) return;
@@ -31,7 +39,7 @@ namespace PirateSlop.Networking
         void RespawnObserversRpc(Vector3 position, float yaw) => target.Respawn(position, yaw);
         void HealthChanged(float previous, float next, bool asServer)
         {
-            if (!asServer && !IsServerInitialized && next >= 0) target.ApplySnapshot(next, previous >= 0);
+            if (!asServer && !IsServerInitialized && next >= 0) target.ApplySnapshot(next, false);
         }
     }
 }

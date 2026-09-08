@@ -5,7 +5,7 @@ using PirateSlop;
 namespace PirateSlop.Networking
 {
     [DefaultExecutionOrder(-20)]
-    public sealed class NetworkShip : NetworkBehaviour
+    public sealed partial class NetworkShip : NetworkBehaviour
     {
         public readonly SyncVar<int> ParticipantId = new();
         public ShipController Motor { get; private set; }
@@ -38,6 +38,7 @@ namespace PirateSlop.Networking
         }
         public override void OnStopNetwork()
         {
+            ClearAmmo();
             TimeManager.OnTick -= Tick;
             TimeManager.OnPostTick -= Publish;
             Helm.ReleaseControl();
@@ -90,6 +91,7 @@ namespace PirateSlop.Networking
         }
         void Update()
         {
+            UpdateAmmo();
             if (IsServerInitialized || !hasRemoteState) return;
             AdvancedPlayerController driver = null;
             if (remoteDriver > 0)

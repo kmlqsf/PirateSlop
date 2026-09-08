@@ -89,7 +89,7 @@ namespace PirateSlop
             {
                 if (collider.transform.IsChildOf(transform)) continue;
                 var health = collider.GetComponentInParent<CombatHealth>();
-                if (health == null || health.IsShip || struck.Contains(health)) continue;
+                if (health == null || struck.Contains(health)) continue;
                 Vector3 point = collider.ClosestPoint(origin + attackDirection), delta = point - origin;
                 if (Vector3.Angle(attackDirection, delta) > 55f) continue;
                 bool blocked = false;

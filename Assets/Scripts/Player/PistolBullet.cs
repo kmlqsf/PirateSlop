@@ -1,42 +1,58 @@
 using UnityEngine;
+
 namespace PirateSlop
 {
     public sealed class PistolBullet : MonoBehaviour
     {
-        GameObject shooter;
-        Vector3 position, velocity, visualOffset;
-        bool authoritative;
-        float age, distance;
-        public void Initialize(GameObject owner, Vector3 start, Vector3 speed, Vector3 offset, bool authority)
-        { shooter=owner; position=start; velocity=speed; visualOffset=offset; authoritative=authority; transform.position=start+offset; }
+        FirearmShot shot;
+        Vector3 start;
+        LineRenderer tracer;
+        Material material;
+        float age, duration;
+        bool impacted;
+
+        public void Initialize(Vector3 visibleStart, FirearmShot result, Material template)
+        {
+            start = visibleStart; shot = result;
+            duration = Mathf.Clamp(Vector3.Distance(start, shot.End) / 400f, .04f, .18f);
+            material = template != null ? new Material(template) : new Material(Shader.Find("Universal Render Pipeline/Unlit"));
+            material.color = new Color(1f, .85f, .45f);
+            tracer = gameObject.AddComponent<LineRenderer>();
+            tracer.sharedMaterial = material;
+            tracer.useWorldSpace = true; tracer.positionCount = 2;
+            tracer.startWidth = .025f; tracer.endWidth = .045f;
+            tracer.numCapVertices = 2;
+            tracer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            tracer.receiveShadows = false;
+            Draw(.01f);
+            Destroy(gameObject, duration + .1f);
+        }
+
+        void Draw(float time)
+        {
+            float length = Vector3.Distance(start, shot.End);
+            float head = Mathf.Clamp01(time / duration);
+            float tail = Mathf.Max(0f, head - 3f / Mathf.Max(.01f, length));
+            tracer.SetPosition(0, Vector3.Lerp(start, shot.End, tail));
+            tracer.SetPosition(1, Vector3.Lerp(start, shot.End, head));
+            tracer.widthMultiplier = Mathf.Clamp01(1f - Mathf.Max(0f, time - duration) / .06f);
+        }
+
         void Update()
         {
-            float remaining = Mathf.Min(Time.deltaTime,.2f);
-            while(remaining > 0)
+            if (tracer == null) return;
+            age += Time.deltaTime;
+            Draw(age);
+            if (impacted || age < duration) return;
+            impacted = true;
+            if (shot.Water) CombatVfx.Splash(shot.End, .25f);
+            else if (shot.Hit)
             {
-                float dt=Mathf.Min(remaining,1f/120); remaining-=dt;
-                Vector3 step=velocity*dt+Vector3.down*(3f*dt*dt);
-                float length=step.magnitude; RaycastHit nearest=default; float closest=length;
-                foreach(var hit in Physics.SphereCastAll(position,.08f,step.normalized,length,~0,QueryTriggerInteraction.Ignore))
-                    if((shooter==null || !hit.transform.IsChildOf(shooter.transform)) && hit.distance<=closest) { nearest=hit; closest=hit.distance; }
-                if(nearest.collider!=null)
-                {
-                    GameAudio.Play(SoundCue.Impact, nearest.point, .5f);
-                    CombatVfx.Impact(nearest.point, nearest.normal, false);
-                    var health = nearest.collider.GetComponentInParent<CombatHealth>();
-                    if(authoritative && shooter!=null && health!=null)
-                        health.ReceivePistolHit(distance+closest,nearest.point,shooter);
-                    else if(authoritative && shooter!=null)
-                        foreach(var component in nearest.collider.GetComponentsInParent<MonoBehaviour>())
-                            if(component is IWeaponTarget target) { target.ReceiveWeaponHit(Mathf.Lerp(45,25,Mathf.InverseLerp(15,35,distance+closest)),shooter); break; }
-                    Destroy(gameObject); return;
-                }
-                position+=step; velocity+=Vector3.down*(6f*dt); distance+=length; age+=dt;
-                if (OceanSurface.Instance != null && position.y < OceanSurface.Instance.Height(position))
-                { CombatVfx.Splash(position, .25f); Destroy(gameObject); return; }
+                CombatVfx.Impact(shot.End, shot.Normal, false);
+                GameAudio.Play(SoundCue.Impact, shot.End, .5f);
             }
-            transform.position=position+visualOffset*Mathf.Max(0,1-age/.08f);
-            if(age>=3f || distance>=100f)Destroy(gameObject);
         }
+
+        void OnDestroy() { if (material != null) Destroy(material); }
     }
 }

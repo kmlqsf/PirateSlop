@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace PirateSlop
 {
-    public enum SoundCue { Pistol, Cannon, Knife, Reload, ReloadReady, DryFire, Footstep, Jump, Land, Slide, Hurt, Death, Respawn, Wheel, Sail, Barrel, Load, Pickup, Place, Select, Impact, ShipHit, ShipDeath, ShipCollision, Splash, Creak, FishingCast, FishingBite, FishingReel, FishingCatch, FishDrop, FishEat, FishingEscape }
+    public enum SoundCue { Pistol, Cannon, Knife, Reload, ReloadReady, DryFire, Footstep, Jump, Land, Slide, Hurt, Death, Respawn, Wheel, Sail, Barrel, Load, Pickup, Place, Select, Impact, ShipHit, ShipDeath, ShipCollision, Splash, Creak, FishingCast, FishingBite, FishingReel, FishingCatch, FishDrop, FishEat, FishingEscape, HitConfirm }
 
     [CreateAssetMenu(menuName = "PirateSlop/Audio Bank")]
     public sealed class GameAudioBank : ScriptableObject

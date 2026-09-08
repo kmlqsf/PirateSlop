@@ -4,7 +4,7 @@ namespace PirateSlop
 {
     public sealed class CombatHealth : MonoBehaviour, IWeaponTarget
     {
-        public bool IsShip;
+
         public float MaxHealth = 100f;
         public float BarHeight = 2.2f;
         [Min(0f)] public float RespawnDelay = 5f;
@@ -20,7 +20,7 @@ namespace PirateSlop
         float localSpawnYaw;
         Transform spawnPlatform;
         float respawnAt;
-        void Awake() { Current = MaxHealth; network = GetComponent<NetworkHealth>(); controller = GetComponent<CharacterController>(); }
+        void Awake() { Current = MaxHealth; network = GetComponent<NetworkHealth>(); controller = GetComponent<CharacterController>(); if (controller != null && GetComponent<DamageFeedback>() == null) gameObject.AddComponent<DamageFeedback>(); }
         void Start()
         {
             spawnPosition = transform.position; spawnYaw = transform.eulerAngles.y;
@@ -39,8 +39,8 @@ namespace PirateSlop
             bool wasDead = IsDead;
             float previous = Current;
             Current = Mathf.Clamp(value, 0, MaxHealth);
-            if (playAudio && !IsShip && Current < previous) GameAudio.Play(IsDead ? SoundCue.Death : SoundCue.Hurt, transform.position);
-            if (wasDead == IsDead || IsShip) return;
+            if (playAudio && Current < previous) GameAudio.Play(IsDead ? SoundCue.Death : SoundCue.Hurt, transform.position);
+            if (wasDead == IsDead) return;
             if (IsDead)
             {
                 respawnAt = Time.time + RespawnDelay;
@@ -61,7 +61,7 @@ namespace PirateSlop
         }
         void Update()
         {
-            if (IsShip || !IsDead || Time.time < respawnAt || (network != null && !network.IsServerInitialized)) return;
+            if (!IsDead || Time.time < respawnAt || (network != null && !network.IsServerInitialized)) return;
             var player = GetComponent<NetworkPlayer>();
             var ship = player != null ? player.Ship : null;
             Vector3 position = ship != null ? ship.transform.TransformPoint(SessionController.Instance.Config.PlayerLocalSpawn) : SpawnPosition;
@@ -89,29 +89,38 @@ namespace PirateSlop
             ApplySnapshot(Current + amount, false);
             if (network != null) network.Publish(Current);
         }
-        public void Damage(float amount)
+        public void Damage(float amount, GameObject attacker = null)
         {
             if (network != null && !network.IsServerInitialized) return;
             if (IsDead || amount <= 0 || float.IsNaN(amount) || float.IsInfinity(amount)) return;
-            ApplySnapshot(Current - amount);
+            float dealt = Mathf.Min(Current, amount);
+            ApplySnapshot(Current - amount, false);
+            if (!IsShip)
+            {
+                if (network != null) network.DamageFeedback(dealt, IsDead);
+                else GetComponent<DamageFeedback>()?.ReceiveDamage(dealt, IsDead);
+                if (attacker != null && attacker != gameObject)
+                {
+                    var source = attacker.GetComponent<NetworkHealth>();
+                    if (source != null) source.ConfirmHit();
+                    else attacker.GetComponent<DamageFeedback>()?.ConfirmHit();
+                }
+            }
             if (IsShip)
             {
                 if (network != null) network.ShipDamageAudio(IsDead);
                 else GameAudio.Play(IsDead ? SoundCue.ShipDeath : SoundCue.ShipHit, transform.position);
             }
             if (network != null) network.Publish(Current);
-            if (IsShip && IsDead)
-            {
-                if (network != null) network.Despawn();
-                else gameObject.SetActive(false);
-            }
         }
-        public void ReceiveWeaponHit(float damage, GameObject attacker) { if (!IsShip) Damage(damage); }
-        public void ReceivePistolHit(float distance, Vector3 point, GameObject attacker)
+        public void ReceiveWeaponHit(float damage, GameObject attacker) { Damage(damage, attacker); }
+        public void ReceiveFirearmHit(float distance, Vector3 point, GameObject attacker, FirearmSettings settings)
         {
-            if (IsShip) return;
+
             bool head = controller != null && transform.InverseTransformPoint(point).y >= controller.center.y + controller.height * .5f - .3f;
-            Damage(Mathf.Lerp(head ? 70f : 45f, head ? 40f : 25f, Mathf.InverseLerp(15f, 35f, distance)));
+            Damage(Mathf.Lerp(head ? settings.NearHeadDamage : settings.NearDamage,
+                head ? settings.FarHeadDamage : settings.FarDamage,
+                Mathf.InverseLerp(settings.FalloffStart, settings.FalloffEnd, distance)), attacker);
         }
         void OnGUI()
         {
@@ -120,7 +129,7 @@ namespace PirateSlop
             if (camera == null || !camera.isActiveAndEnabled) return;
             Vector3 screen = camera.WorldToScreenPoint(transform.position + Vector3.up * (controller != null ? controller.center.y + controller.height * .5f + .3f : BarHeight));
             if (screen.z <= 0) return;
-            float width = IsShip ? 120f : 80f;
+            float width = 80f;
             Rect bar = new Rect(screen.x - width / 2, Screen.height - screen.y, width, 10);
             Color old = GUI.color;
             GUI.color = Color.black; GUI.DrawTexture(bar, Texture2D.whiteTexture);

@@ -15,7 +15,20 @@ namespace PirateSlop
         public NetworkCannon Network { get; set; }
         public CannonballCrate Crate { get; set; }
         public int Index { get; set; }
+        public const float LoadRadius = 1.15f;
         Cannonball loaded;
+        float loadStarted = -1f;
+        Vector3 loadStart;
+        public bool IsLoading => loadStarted >= 0f;
+        public bool CanLoadFrom(Vector3 point)
+        {
+            if (Muzzle == null || Vector3.Distance(point, Muzzle.position) > LoadRadius) return false;
+            Vector3 delta = Muzzle.position - point;
+            foreach (var hit in Physics.RaycastAll(point, delta.normalized, delta.magnitude, ~0, QueryTriggerInteraction.Ignore))
+                if (!hit.transform.IsChildOf(transform) && hit.collider.GetComponentInParent<Cannonball>() == null) return false;
+            return true;
+        }
+        GameObject firingPlayer;
         Cannonball supply;
         Rigidbody supplyPlatform;
         Vector3 supplyPosition;
@@ -63,7 +76,7 @@ namespace PirateSlop
         }
         public void ResetSupply()
         {
-            loaded = null; ignitionTime = -1f; ShowFuse(-1f);
+            loaded = null; loadStarted = -1f; firingPlayer = null; ignitionTime = -1f; ShowFuse(-1f);
             if (Crate != null) { Crate.ResetSupply(); return; }
             if (supply == null) return;
             supply.Loaded = supply.Held = false;
@@ -73,44 +86,75 @@ namespace PirateSlop
             supply.GetComponent<Collider>().enabled = true;
             supply.AttachToPlatform(supplyPlatform); supply.gameObject.SetActive(true);
         }
-        public void SpawnShot(Vector3 position, Vector3 velocity, bool authoritative)
+        public void SpawnShot(Vector3 position, Vector3 velocity, bool authoritative, InventoryItem ammo = InventoryItem.Cannonball)
         {
             if (supply == null) return;
             GameAudio.Play(SoundCue.Cannon, position);
             CombatVfx.Fire(Muzzle.position, velocity.normalized, true);
             var shot = Instantiate(supply, position, Quaternion.identity);
+            shot.Ammo = ammo;
             shot.name = "FiredCannonball"; shot.Network = null; shot.Loaded = shot.Held = false;
-            shot.gameObject.SetActive(true); shot.Release(); shot.AttachToPlatform(null);
+            shot.gameObject.SetActive(true);
+            shot.RefreshVisual();
+            shot.transform.SetParent(null, true);
+            shot.AttachToPlatform(null);
             shot.GetComponent<Collider>().enabled = false;
             shot.Body.isKinematic = true; shot.Body.useGravity = false;
             var projectile=shot.gameObject.AddComponent<CannonShotDamage>();
             projectile.Authoritative=authoritative;projectile.Source=GetComponentInParent<ShipController>().transform;
-            projectile.Velocity=velocity;
+            projectile.Velocity=velocity; projectile.Ammo=ammo;
+            projectile.Attacker = authoritative ? firingPlayer : null;
             projectile.Radius=shot.GetComponent<SphereCollider>().radius*Mathf.Max(shot.transform.lossyScale.x,shot.transform.lossyScale.y,shot.transform.lossyScale.z);
+            if (shot.FlightTrailMaterial != null)
+            {
+                var trail = shot.gameObject.AddComponent<TrailRenderer>();
+                trail.sharedMaterial = shot.FlightTrailMaterial;
+                trail.time = .22f; trail.minVertexDistance = .08f;
+                trail.startWidth = .18f; trail.endWidth = .015f;
+                trail.startColor = CannonAmmo.Color(ammo); trail.endColor = new Color(.5f, .5f, .5f, 0f);
+                trail.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+                trail.receiveShadows = false;
+            }
             Destroy(shot.gameObject, 20f);
         }
         public bool IsLoaded => loaded != null;
         public bool TryLoad(Cannonball ball)
         {
-            if (IsLoaded || ball == null || ball.Loaded || Vector3.Distance(ball.transform.position, Muzzle.position) > .4f) return false;
-            loaded = ball; ball.Loaded = true; ball.Held = false; ball.GetComponent<Collider>().enabled = true;
+            if (IsLoaded || ball == null || ball.Loaded || !CanLoadFrom(ball.transform.position)) return false;
+            loaded = ball; ball.Loaded = true; ball.Held = false; ball.GetComponent<Collider>().enabled = false;
             ball.Body.isKinematic = true;
             ball.AttachToPlatform(GetComponentInParent<Rigidbody>());
             ball.transform.SetParent(Muzzle, true);
-            ball.transform.localPosition = Vector3.back * .18f;
-            ball.gameObject.SetActive(false);
+            loadStart = ball.transform.localPosition;
+            if (loadStart.magnitude < .35f) loadStart = Vector3.forward * .6f;
+            ball.transform.localPosition = loadStart;
+            loadStarted = Time.time;
+            ball.RefreshVisual();
+            ball.gameObject.SetActive(true);
             return true;
         }
-        public void Fire()
+        public void Fire(GameObject attacker = null)
         {
             if (Network != null && Network.IsClientInitialized && !Network.IsServerInitialized) { Network.RequestFire(Index); return; }
-            if (!IsLoaded || IsIgnited || Time.time < nextFireTime) return;
+            if (!IsLoaded || IsLoading || IsIgnited || Time.time < nextFireTime) return;
+            firingPlayer = attacker;
             ignitionTime = Time.time;
             ShowFuse(0f);
             if (Network != null && Network.IsServerInitialized) Network.NotifyIgnited(Index);
         }
         void Update()
         {
+            if (IsLoading && loaded != null)
+            {
+                float t = Mathf.Clamp01((Time.time - loadStarted) / .45f);
+                loaded.transform.localPosition = Vector3.Lerp(loadStart, Vector3.back * .5f, Mathf.SmoothStep(0f, 1f, t));
+                if (t >= 1f)
+                {
+                    loaded.gameObject.SetActive(false);
+                    loadStarted = -1f;
+                    GameAudio.Play(SoundCue.Load, Muzzle.position);
+                }
+            }
             if (ignitionTime >= 0f && (Network == null || Network.IsServerInitialized))
             {
                 ShowFuse(FuseProgress);
@@ -127,12 +171,13 @@ namespace PirateSlop
             Vector3 inherited = GetComponentInParent<ShipController>().CannonPointVelocity(Muzzle.position);
             Vector3 position = Muzzle.position + Muzzle.forward * .35f;
             Vector3 velocity = Muzzle.forward * LaunchSpeed + inherited;
-            SpawnShot(position, velocity, true);
+            var ammo = loaded.Ammo;
+            SpawnShot(position, velocity, true, ammo);
             var motor=GetComponentInParent<ShipController>();
             motor.ApplyCannonImpulse(Muzzle.position,-Muzzle.forward,4.95f);
             GetComponent<CannonCarriage>()?.Recoil();
             ResetSupply();
-            if (Network != null && Network.IsServerInitialized) Network.NotifyFired(Index, position, velocity);
+            if (Network != null && Network.IsServerInitialized) Network.NotifyFired(Index, position, velocity, ammo);
         }
         void CreateFuse()
         {

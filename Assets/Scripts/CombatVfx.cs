@@ -45,7 +45,6 @@ namespace PirateSlop
         {
             float scale = cannon ? 3 : 1;
             Burst(position, normal, new Color(.43f, .32f, .2f, .6f), cannon ? 24 : 8, .3f * scale, 2 * scale, 1);
-            Burst(position, normal, new Color(.35f, .22f, .1f), cannon ? 18 : 5, .04f * scale, 4 * scale, .6f, 1);
         }
         public static void Splash(Vector3 position, float scale = 1)
         {

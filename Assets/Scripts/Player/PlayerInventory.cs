@@ -18,8 +18,10 @@ namespace PirateSlop
         Cannonball aimedBall;
         SimpleCannon aimedCannon;
         readonly int[] ballCounts = new int[6];
+        readonly InventoryItem[] ballItems = new InventoryItem[6];
+        public InventoryItem BallItem(int slot) => BallCount(slot) > 0 ? ballItems[slot] : InventoryItem.Cannonball;
         public int BallCount(int slot) => slot >= 0 && slot < 6 ? ballCounts[slot] : 0;
-        public void SetBallCount(int slot, int count) => ballCounts[slot] = count;
+        public void SetBallCount(int slot, int count, InventoryItem item = InventoryItem.Cannonball) { ballCounts[slot] = count; ballItems[slot] = item; }
         public bool BallSelected => BallCount(SelectedSlot) > 0;
         readonly int[] plankCounts = new int[6];
         int malletSlots;
@@ -28,7 +30,7 @@ namespace PirateSlop
         public bool MalletSelected => HasMallet(SelectedSlot);
         public int TotalPlanks { get { int total = 0; foreach (int count in plankCounts) total += count; return total; } }
         public void SetRepairItems(int mallets, int slot, int count) { malletSlots = mallets; plankCounts[slot] = count; }
-        public InventoryItem ItemAt(int slot) => HasSabre(slot) ? InventoryItem.Sabre : slot == 0 && HasPistol ? InventoryItem.Pistol : slot == 1 && HasRod ? InventoryItem.Rod : HasCannon(slot) ? InventoryItem.Cannon : FishCount(slot) > 0 ? InventoryItem.Fish : BallCount(slot) > 0 ? InventoryItem.Cannonball : HasMallet(slot) ? InventoryItem.Mallet : PlankCount(slot) > 0 ? InventoryItem.Plank : InventoryItem.None;
+        public InventoryItem ItemAt(int slot) => HasSabre(slot) ? InventoryItem.Sabre : slot == 0 && HasPistol ? InventoryItem.Pistol : slot == 1 && HasRod ? InventoryItem.Rod : HasCannon(slot) ? InventoryItem.Cannon : FishCount(slot) > 0 ? InventoryItem.Fish : BallCount(slot) > 0 ? BallItem(slot) : HasMallet(slot) ? InventoryItem.Mallet : PlankCount(slot) > 0 ? InventoryItem.Plank : InventoryItem.None;
         public void OpenLoot(NetworkLootChest target)
         {
             if (target == null || !network.IsOwner || motor.IsDead || Vector3.Distance(transform.position, target.transform.position) > 5f) return;

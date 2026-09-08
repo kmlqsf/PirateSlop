@@ -10,12 +10,14 @@ namespace PirateSlop.Networking
         public Vector3 Position;
         public Quaternion Rotation;
         public float Elevation;
+        public bool Removed;
     }
 
     public sealed class NetworkCannon : NetworkBehaviour
     {
         readonly SyncVar<bool> kitTaken = new(false);
         readonly SyncList<CannonPlacement> placements = new();
+        readonly SyncVar<InventoryItem> loadedAmmo = new(InventoryItem.Cannonball);
         readonly SyncVar<int> loadedIndex = new(-1);
         readonly SyncVar<int> fuseIndex = new(-1);
         readonly SyncVar<float> fuseProgress = new();
@@ -32,6 +34,7 @@ namespace PirateSlop.Networking
             if (Crate != null) { ball = Crate.Supply; ball.Network = this; }
         }
         public override void OnStartServer() { base.OnStartServer(); if (Crate != null) Crate.ResetSupply(); }
+        public override void OnStopServer() { if (Crate != null) Crate.ClearSpecialSupply(); base.OnStopServer(); }
         public override void OnStartClient() { base.OnStartClient(); ApplyState(); }
         public bool TakeKit()
         {
@@ -43,6 +46,26 @@ namespace PirateSlop.Networking
             if (!IsServerInitialized) return;
             placements.Add(new CannonPlacement { Position = position, Rotation = rotation.normalized, Elevation = 3f });
             ApplyState();
+        }
+        public bool RemoveCannon(NetworkWeapon player, int index)
+        {
+            var cannon = Cannon(index);
+            if (!IsServerInitialized || cannon == null || cannon.IsIgnited || cannon.IsLoading || !player.CanAddItem(InventoryItem.Cannon)) return false;
+            if (cannon.IsLoaded)
+            {
+                if (Crate.SpecialSupplyPrefab == null) return false;
+                var dropped = Instantiate(Crate.SpecialSupplyPrefab, cannon.Muzzle.position + cannon.Muzzle.forward * .6f, Quaternion.identity);
+                UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene(dropped.gameObject, gameObject.scene);
+                dropped.SetAmmoItem(ball.Ammo);
+                dropped.Place(NetworkObject, dropped.transform.position, dropped.transform.rotation);
+                ServerManager.Spawn(dropped.NetworkObject);
+                cannon.ResetSupply();
+                loadedIndex.Value = -1;
+            }
+            if (!player.AddItem(InventoryItem.Cannon)) return false;
+            var placement = placements[index]; placement.Removed = true; placements[index] = placement;
+            cannon.gameObject.SetActive(false);
+            return true;
         }
         public bool StoreBall(NetworkWeapon player)
         {
@@ -56,13 +79,14 @@ namespace PirateSlop.Networking
         {
             if (!IsServerInitialized && Crate != null) Crate.ResetSupply();
         }
-        public bool LoadInventoryBall(NetworkWeapon player, int index)
+        public bool LoadInventoryBall(NetworkWeapon player, int index, InventoryItem ammo = InventoryItem.Cannonball)
         {
             var cannon = Cannon(index);
             if (!IsServerInitialized || ball == null || ball.Loaded || holder != -1 || cannon == null || cannon.IsLoaded || !player.CanReach(cannon.Muzzle.position, cannon.transform)) return false;
             ball.transform.position = cannon.Muzzle.position;
+            ball.Ammo = CannonAmmo.IsBall(ammo) ? ammo : InventoryItem.Cannonball;
             if (!cannon.TryLoad(ball)) return false;
-            loadedIndex.Value = index; return true;
+            loadedAmmo.Value = ball.Ammo; loadedIndex.Value = index; return true;
         }
         public void MoveCarriage(int index,Vector3 position,Quaternion rotation)
         {
@@ -80,7 +104,10 @@ namespace PirateSlop.Networking
             }
             for (int i = 0; i < placements.Count; i++)
             {
-                var cannon=Crate.Cannons[i];cannon.SetElevation(placements[i].Elevation);
+                var cannon=Crate.Cannons[i];
+                cannon.gameObject.SetActive(!placements[i].Removed);
+                if (placements[i].Removed) continue;
+                cannon.SetElevation(placements[i].Elevation);
                 if (!IsServerInitialized) cannon.ShowFuse(fuseIndex.Value == i ? fuseProgress.Value : -1f);
                 if(!IsServerInitialized)
                 {
@@ -96,6 +123,7 @@ namespace PirateSlop.Networking
             {
                 var cannon = Crate.Cannons[appliedLoaded];
                 ball.transform.position = cannon.Muzzle.position;
+                ball.Ammo = loadedAmmo.Value;
                 cannon.TryLoad(ball);
             }
         }
@@ -109,24 +137,24 @@ namespace PirateSlop.Networking
             if (IsClientInitialized || IsServerInitialized) ApplyState();
         }
         public void NotifyIgnited(int index) { fuseIndex.Value = index; fuseProgress.Value = 0f; }
-        SimpleCannon Cannon(int index) => Crate != null && index >= 0 && index < Crate.Cannons.Count ? Crate.Cannons[index] : null;
+        SimpleCannon Cannon(int index) => Crate != null && index >= 0 && index < Crate.Cannons.Count && index < placements.Count && !placements[index].Removed ? Crate.Cannons[index] : null;
         bool CanUse(NetworkConnection sender, Vector3 point)
         {
             var player = sender != null ? SessionController.Instance.GetPlayer(sender.ClientId) : null;
             return player != null && !player.Motor.IsDead && !player.Motor.LocomotionLocked && float.IsFinite(point.sqrMagnitude) && Vector3.Distance(player.transform.position, point) <= 6f;
         }
-        public void NotifyFired(int index, Vector3 position, Vector3 velocity)
+        public void NotifyFired(int index, Vector3 position, Vector3 velocity, InventoryItem ammo)
         {
             holder = -1; loadedIndex.Value = -1; fuseIndex.Value = -1;
-            ShotObserversRpc(index, position, velocity);
+            ShotObserversRpc(index, position, velocity, ammo);
         }
         [ObserversRpc]
-        void ShotObserversRpc(int index, Vector3 position, Vector3 velocity)
+        void ShotObserversRpc(int index, Vector3 position, Vector3 velocity, InventoryItem ammo)
         {
             if (IsServerInitialized) return;
             ApplyState();
             var cannon = Cannon(index);
-            if (cannon != null) { cannon.SpawnShot(position, velocity, false); cannon.ResetSupply(); appliedLoaded = -1; }
+            if (cannon != null) { cannon.SpawnShot(position, velocity, false, ammo); cannon.ResetSupply(); appliedLoaded = -1; }
         }
         public void RequestBall(bool holding, Vector3 position) => BallServerRpc(holding, transform.InverseTransformPoint(position));
         [ServerRpc(RequireOwnership = false)]
@@ -160,7 +188,8 @@ namespace PirateSlop.Networking
         void FireServerRpc(int index, NetworkConnection sender = null)
         {
             var cannon = Cannon(index);
-            if (cannon != null && CanUse(sender, cannon.transform.position)) cannon.Fire();
+            if (cannon != null && CanUse(sender, cannon.transform.position))
+                cannon.Fire(SessionController.Instance.GetPlayer(sender.ClientId).gameObject);
         }
         public void RequestLoad(int index, Vector3 localPosition) => LoadServerRpc(index, localPosition);
         [ServerRpc(RequireOwnership = false)]
@@ -169,9 +198,9 @@ namespace PirateSlop.Networking
             var cannon = Cannon(index);
             if (ball == null || cannon == null || cannon.IsLoaded || ball.Loaded || sender == null || holder != sender.ClientId || !CanUse(sender, cannon.Muzzle.position)) return;
             Vector3 position = transform.TransformPoint(localPosition);
-            if (!float.IsFinite(position.sqrMagnitude) || Vector3.Distance(position, cannon.Muzzle.position) > .4f) return;
+            if (!float.IsFinite(position.sqrMagnitude) || !cannon.CanLoadFrom(position)) return;
             ball.transform.position = position;
-            if (cannon.TryLoad(ball)) { holder = -1; loadedIndex.Value = index; }
+            if (cannon.TryLoad(ball)) { holder = -1; loadedAmmo.Value = ball.Ammo; loadedIndex.Value = index; }
         }
         void FixedUpdate()
         {

@@ -75,7 +75,7 @@ namespace PirateSlop.Networking
         {
             var player = Player(sender);
             if (player == null || (IsHeld && holder.Value != sender.ClientId) || !player.CanReach(transform.position, transform)) return;
-            if (player.AddItem(InventoryItem.Cannonball)) GetComponent<NetworkFish>().Take();
+            if (player.AddItem(GetComponent<NetworkFish>().CurrentItem)) GetComponent<NetworkFish>().Take();
         }
         public void Load(NetworkObject ship, int index) => LoadServerRpc(ship, index);
         [ServerRpc(RequireOwnership = false)]
@@ -85,8 +85,8 @@ namespace PirateSlop.Networking
             if (player == null || holder.Value != sender.ClientId || ship == null) return;
             var cannon = ship.GetComponent<NetworkCannon>();
             if (cannon == null || cannon.Crate == null || index < 0 || index >= cannon.Crate.Cannons.Count) return;
-            if (Vector3.Distance(transform.position, cannon.Crate.Cannons[index].Muzzle.position) > .5f) return;
-            if (cannon.LoadInventoryBall(player, index)) GetComponent<NetworkFish>().Take();
+            if (!cannon.Crate.Cannons[index].CanLoadFrom(transform.position)) return;
+            if (cannon.LoadInventoryBall(player, index, GetComponent<NetworkFish>().CurrentItem)) GetComponent<NetworkFish>().Take();
         }
         void FixedUpdate()
         {

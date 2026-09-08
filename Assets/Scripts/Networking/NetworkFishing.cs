@@ -175,9 +175,9 @@ namespace PirateSlop.Networking
             foreach (var hit in Physics.RaycastAll(origin, delta.normalized, delta.magnitude, ~0, QueryTriggerInteraction.Ignore))
                 if (!hit.transform.IsChildOf(transform) && !hit.transform.IsChildOf(target.transform)) return;
             var equipment = GetComponent<NetworkWeapon>();
-            if (item != null && equipment.CanAddItem(item.Item))
+            if (item != null && equipment.CanAddItem(item.CurrentItem))
             {
-                var kind = item.Item;
+                var kind = item.CurrentItem;
                 if (item.Take()) { equipment.AddItem(kind); SoundObserversRpc(SoundCue.Pickup, transform.position); }
             }
         }

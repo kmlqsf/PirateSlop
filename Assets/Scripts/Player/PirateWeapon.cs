@@ -12,6 +12,10 @@ namespace PirateSlop
     {
         public Transform WorldPivot, ViewPivot, WorldMuzzle, ViewMuzzle;
         public Material EffectMaterial;
+        public FirearmSettings Firearm = new();
+        Vector3 firearmMuzzleOffset;
+        bool predictedShot;
+        float nextLocalShot;
         AdvancedPlayerController motor;
         CannonHands hands;
         NetworkWeapon network;
@@ -37,6 +41,7 @@ namespace PirateSlop
             viewRenderers = ViewPivot.GetComponentsInChildren<Renderer>(true);
             worldRenderers = WorldPivot.GetComponentsInChildren<Renderer>(true);
             SetupSeparateWeapons();
+            firearmMuzzleOffset = GetComponentInChildren<Camera>(true).transform.InverseTransformPoint(ViewMuzzle.position);
         }
         void OnEnable() { RenderPipelineManager.beginCameraRendering += BeforeCamera; RenderPipelineManager.endCameraRendering += AfterCamera; }
         void OnDisable() { RenderPipelineManager.beginCameraRendering -= BeforeCamera; RenderPipelineManager.endCameraRendering -= AfterCamera; }
@@ -70,7 +75,18 @@ namespace PirateSlop
             if (action == 0 && !loaded && !reloading) GameAudio.Play(SoundCue.DryFire, transform.position);
             Vector3 direction = motor.PlayerCamera.transform.forward;
             Vector3 eyeOffset = motor.PlayerCamera.transform.position - transform.position;
-            if (Networked) { if (network.IsOwner) network.Request(action, direction, eyeOffset); }
+            if (Networked)
+            {
+                if (!network.IsOwner) return;
+                if (action == 0 && !network.IsServerInitialized)
+                {
+                    if (!loaded || reloading || predictedShot || Time.time < nextLocalShot) return;
+                    predictedShot = true;
+                    nextLocalShot = Time.time + Firearm.ShotInterval;
+                    ShowMuzzle(direction);
+                }
+                network.Request(action, direction, eyeOffset);
+            }
             else Act(action, direction, eyeOffset);
         }
         public void TickAuthority()
@@ -86,10 +102,10 @@ namespace PirateSlop
             if (action == 1)
             {
                 if (loaded || reloading || Time.time < nextAttack) return false;
-                reloading = true; reloadUntil = Time.time + 3f; return true;
+                reloading = true; reloadUntil = Time.time + Firearm.ReloadDuration; return true;
             }
             if (action > 2 || Time.time < nextAttack || (action == 0 && (!loaded || reloading))) return false;
-            if (action == 0) { loaded = false; nextAttack = Time.time + .25f; }
+            if (action == 0) { loaded = false; nextAttack = Time.time + Firearm.ShotInterval; }
             else { reloading = false; nextAttack = Time.time + .65f; }
             direction.Normalize();
             if (action == 2)
@@ -99,41 +115,30 @@ namespace PirateSlop
                 else ShowAttack(action, transform.position);
                 return true;
             }
-            Vector3 origin = transform.position + Vector3.up * (motor.IsCrouched ? .75f : 1.65f);
+            Vector3 bodyEye = transform.position + Vector3.up * (motor.IsCrouched ? .75f : 1.65f);
+            Vector3 eye = bodyEye;
             if (float.IsFinite(eyeOffset.sqrMagnitude) && eyeOffset.sqrMagnitude <= 16f)
-                origin = transform.position + eyeOffset;
-            if (action == 0)
+                eye = transform.position + eyeOffset;
+            if (FirearmTrace.Cast(gameObject, bodyEye, eye, out var eyeBlock))
+                eye = eyeBlock.point + (bodyEye - eye).normalized * .02f;
+            Vector3 muzzle = bodyEye + Quaternion.LookRotation(direction) * firearmMuzzleOffset;
+            var shot = FirearmTrace.Resolve(gameObject, eye, muzzle, direction, Firearm.Range, out var hit);
+            if (hit.collider != null)
             {
-                // Use the first-person muzzle offset with the server-accepted aim, not
-                // the remote camera's unsynchronised world orientation.
-                Vector3 muzzleOffset = motor.PlayerCamera.transform.InverseTransformPoint(ViewMuzzle.position);
-                Vector3 start = origin + Quaternion.LookRotation(direction) * muzzleOffset;
-                foreach(var hit in Physics.RaycastAll(origin,(start-origin).normalized,(start-origin).magnitude,~0,QueryTriggerInteraction.Ignore))
-                    if(!hit.transform.IsChildOf(transform) && (hit.point-origin).sqrMagnitude < (start-origin).sqrMagnitude) start = hit.point;
-                float aimDistance = 100f;
-                foreach(var hit in Physics.RaycastAll(origin,direction,aimDistance,~0,QueryTriggerInteraction.Ignore))
-                    if(!hit.transform.IsChildOf(transform)) aimDistance = Mathf.Min(aimDistance,hit.distance);
-                // With no target, zero at normal pistol range instead of lobbing toward the sky.
-                if (aimDistance >= 100f) aimDistance = 20f;
-                Vector3 target = origin + direction * aimDistance;
-                float flightTime = Mathf.Max(.01f,Vector3.Distance(start,target) / 45f);
-                Vector3 velocity = (target-start) / flightTime + Vector3.up * (3f * flightTime);
-                SpawnBullet(start,velocity,true);
-                if (Networked && network.IsServerInitialized) network.PublishShot(start,velocity);
-                return true;
+                float distance = Vector3.Distance(eye, shot.End);
+                var health = hit.collider.GetComponentInParent<CombatHealth>();
+                if (health != null) health.ReceiveFirearmHit(distance, hit.point, gameObject, Firearm);
+                else
+                    foreach (var component in hit.collider.GetComponentsInParent<MonoBehaviour>())
+                        if (component is IWeaponTarget target)
+                        {
+                            target.ReceiveWeaponHit(Mathf.Lerp(Firearm.NearDamage, Firearm.FarDamage,
+                                Mathf.InverseLerp(Firearm.FalloffStart, Firearm.FalloffEnd, distance)), gameObject);
+                            break;
+                        }
             }
-            float range = action == 0 ? 100f : 1.7f;
-            Vector3 end = origin + direction * range; RaycastHit nearest = default; float closest = range;
-            foreach(var hit in Physics.RaycastAll(origin, direction, range, ~0, QueryTriggerInteraction.Ignore))
-                if (!hit.transform.IsChildOf(transform) && hit.distance < closest) { nearest = hit; closest = hit.distance; end = hit.point; }
-            if (nearest.collider != null)
-            {
-                float damage = action == 2 ? 25f : Mathf.Lerp(45f,25f,Mathf.InverseLerp(15f,35f,closest));
-                foreach(var component in nearest.collider.GetComponentsInParent<MonoBehaviour>())
-                    if(component is IWeaponTarget target) { target.ReceiveWeaponHit(damage,gameObject); break; }
-            }
-            if (Networked && network.IsServerInitialized) network.PublishAttack(action,end);
-            else ShowAttack(action,end);
+            ShowShot(shot);
+            if (Networked && network.IsServerInitialized) network.PublishShot(shot);
             return true;
         }
         public void SetState(bool hasRound, bool isReloading) { loaded = hasRound; reloading = isReloading; }
@@ -143,18 +148,20 @@ namespace PirateSlop
             if (action == 2) GameAudio.Play(SoundCue.Knife, transform.position);
             if(action == 2) stab = 1;
         }
-        public void SpawnBullet(Vector3 origin, Vector3 velocity, bool authoritative)
+        Vector3 VisibleMuzzle => motor.PlayerCamera.enabled && !motor.IsThirdPerson ? ViewMuzzle.position : WorldMuzzle.position;
+        void ShowMuzzle(Vector3 direction)
         {
-            GameAudio.Play(SoundCue.Pistol, origin);
-            recoil = 1; fireStarted = Time.time;
-            var go = GameObject.CreatePrimitive(PrimitiveType.Sphere); go.name = "PistolBullet";
-            go.GetComponent<Collider>().enabled = false; Destroy(go.GetComponent<Collider>());
-            go.transform.localScale = Vector3.one * .035f; go.transform.position = origin;
-            var renderer = go.GetComponent<Renderer>(); renderer.sharedMaterial = EffectMaterial;
-            var color = new MaterialPropertyBlock(); color.SetColor("_BaseColor",new Color(.16f,.14f,.11f)); renderer.SetPropertyBlock(color);
-            Vector3 visibleStart = motor.InputActive && !motor.IsThirdPerson ? ViewMuzzle.position : WorldMuzzle.position;
-            CombatVfx.Fire(visibleStart, velocity.normalized, false);
-            go.AddComponent<PistolBullet>().Initialize(gameObject,origin,velocity,visibleStart-origin,authoritative);
+            recoil = 1f; fireStarted = Time.time;
+            GameAudio.Play(SoundCue.Pistol, VisibleMuzzle);
+            CombatVfx.Fire(VisibleMuzzle, direction, false);
+        }
+        public void RejectPredictedShot() { predictedShot = false; }
+        public void ShowShot(FirearmShot shot)
+        {
+            if (!predictedShot) ShowMuzzle((shot.End - shot.Start).normalized);
+            predictedShot = false;
+            var go = new GameObject("FirearmTracer");
+            go.AddComponent<PistolBullet>().Initialize(VisibleMuzzle, shot, EffectMaterial);
         }
         void LateUpdate()
         {

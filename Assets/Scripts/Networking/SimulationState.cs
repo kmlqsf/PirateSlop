@@ -13,7 +13,7 @@ namespace PirateSlop
     [System.Serializable]
     public struct PlayerState
     {
-        public Vector3 Position, SlideDirection;
+        public Vector3 Position, SlideDirection, KnockbackVelocity;
         public float Yaw, VerticalVelocity, SlideTimer, Cooldown;
         public bool Crouched, Locked, Grounded;
         public float PlanarSpeed;
@@ -21,7 +21,7 @@ namespace PirateSlop
         public Vector3 SwimVelocity;
         public float Breath;
         public bool Climbing;
-        public float LadderCooldown;
+        public float LadderCooldown, KnockbackTime;
     }
     [System.Serializable]
     public struct ShipState

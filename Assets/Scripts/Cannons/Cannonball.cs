@@ -4,6 +4,35 @@ namespace PirateSlop
     [RequireComponent(typeof(Rigidbody), typeof(SphereCollider))]
     public sealed class Cannonball : MonoBehaviour
     {
+        public PirateSlop.Networking.InventoryItem Ammo = PirateSlop.Networking.InventoryItem.Cannonball;
+        public GameObject[] AmmoModels;
+        public Material FlightTrailMaterial;
+        GameObject ammoVisual;
+        PirateSlop.Networking.InventoryItem visibleAmmo = PirateSlop.Networking.InventoryItem.None;
+        void Update() => RefreshVisual();
+        public void RefreshVisual()
+        {
+            var item = GetComponent<PirateSlop.Networking.NetworkFish>();
+            var ammo = item != null ? item.CurrentItem : Ammo;
+            if (visibleAmmo == ammo && ammoVisual != null) return;
+            int index = ammo == PirateSlop.Networking.InventoryItem.Cannonball ? 0 : (int)ammo - 7;
+            if (AmmoModels == null || index < 0 || index >= AmmoModels.Length || AmmoModels[index] == null) return;
+            for (int i = transform.childCount - 1; i >= 0; i--)
+            {
+                var child = transform.GetChild(i);
+                if (child.name != "AmmoVisual") continue;
+                child.gameObject.SetActive(false);
+                if (Application.isPlaying) Destroy(child.gameObject); else DestroyImmediate(child.gameObject);
+            }
+            foreach (var renderer in GetComponentsInChildren<Renderer>(true)) renderer.enabled = false;
+            ammoVisual = Instantiate(AmmoModels[index], transform);
+            ammoVisual.name = "AmmoVisual";
+            ammoVisual.transform.localPosition = Vector3.zero;
+            ammoVisual.transform.localRotation = Quaternion.identity;
+            ammoVisual.transform.localScale = AmmoModels[index].transform.localScale * (GetComponent<SphereCollider>().radius / .12f);
+            foreach (var renderer in ammoVisual.GetComponentsInChildren<Renderer>(true)) renderer.enabled = true;
+            visibleAmmo = ammo;
+        }
         public bool Loaded { get; set; }
         public bool Held { get; set; }
         public PirateSlop.Networking.NetworkCannon Network { get; set; }

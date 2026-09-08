@@ -2521,10 +2521,7 @@ GameObject:
   - component: {fileID: 37050319885465183}
   - component: {fileID: 3124443628067747900}
   - component: {fileID: 1121161916591391745}
-  - component: {fileID: 1874291677189386073}
-  - component: {fileID: 805247103570420939}
   - component: {fileID: 1564273186473263874}
-  - component: {fileID: 5627872021775527720}
   m_Layer: 0
   m_Name: NetworkShip
   m_TagString: Ship
@@ -2552,6 +2549,7 @@ Transform:
   - {fileID: 1046047140993925682}
   - {fileID: 2045568158603662907}
   - {fileID: 1949364560282075661}
+  - {fileID: 4803441477677377152}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &5818161410274910957
@@ -2601,6 +2599,12 @@ MonoBehaviour:
   turnSpeed: 22
   maxBankAngle: 5
   bankResponse: 2
+  pushImpulse: 450000
+  pushLinearDrag: 0.55
+  pushAngularDrag: 0.7
+  impulseMass: 15000
+  hullLength: 46
+  hullWidth: 13
   buoyancyResponse: 2.5
   floatLength: 18
   floatWidth: 5.5
@@ -2736,37 +2740,6 @@ MonoBehaviour:
   _componentIndexCache: 255
   _addedNetworkObject: {fileID: 8899225424909593775}
   _networkObjectCache: {fileID: 0}
---- !u!114 &1874291677189386073
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 898423509851137951}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 21584729ba8936d4184e2cdde4a2a44c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.CombatHealth
-  IsShip: 1
-  MaxHealth: 1200
-  BarHeight: 8
-  RespawnDelay: 5
---- !u!114 &805247103570420939
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 898423509851137951}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 53b0a67e17fb01f4e90316e55402c562, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.Networking.NetworkHealth
-  _componentIndexCache: 255
-  _addedNetworkObject: {fileID: 8899225424909593775}
-  _networkObjectCache: {fileID: 0}
 --- !u!114 &1564273186473263874
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2779,28 +2752,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eace4f934b3077e4db8b16e3ba302e13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.GameplayAudio
---- !u!114 &5627872021775527720
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 898423509851137951}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 82976468030e82d4e8f1f166f814b8a6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.Networking.ShipRepair
-  _componentIndexCache: 255
-  _addedNetworkObject: {fileID: 8899225424909593775}
-  _networkObjectCache: {fileID: 0}
-  BreachPrefab: {fileID: 49724837188576929, guid: b27fb6b1f5557a74ebf2c754fc2fc4f7, type: 3}
-  PatchPrefabs:
-  - {fileID: 2941739829668237266, guid: 3b0a39a13213d60469bcdb1ac246ef2b, type: 3}
-  - {fileID: 8264572730519786828, guid: 418b96033c340d94ab71300acbc182ea, type: 3}
-  - {fileID: 2843974469429422898, guid: 2f08ca909ee6f7948a900da39cea5bdf, type: 3}
-  StartingPlank: {fileID: 1133702697705914243, guid: 6523b631db6bda249af42eff0ded20e9, type: 3}
-  StartingMallet: {fileID: 6005540628913924026, guid: a3511198a7e2a034f9407d5ba0bea977, type: 3}
 --- !u!1 &921106084030955267
 GameObject:
   m_ObjectHideFlags: 0
@@ -18121,6 +18072,97 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.22, y: 0.4, z: 2.2825425}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &5883528786359879873
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6688886241060101145}
+  - component: {fileID: 3987018939199531186}
+  - component: {fileID: 2213526567151977269}
+  m_Layer: 0
+  m_Name: AmmoVisual
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6688886241060101145
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5883528786359879873}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 833.3334, y: 833.3334, z: 833.3334}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1040991979679084679}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!33 &3987018939199531186
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5883528786359879873}
+  m_Mesh: {fileID: 2847073847056312789, guid: 44f8100667febbd4a92fc60af0b301ea, type: 3}
+--- !u!23 &2213526567151977269
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5883528786359879873}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 3fa25febe1a659a4b85655289ba9beab, type: 2}
+  - {fileID: 2100000, guid: 8791b8e30fb334d4d962346d6c5b36d8, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_MaskInteraction: 0
+  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &5910835747930559857
 GameObject:
   m_ObjectHideFlags: 0
@@ -21320,6 +21362,37 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.12, y: 0.18, z: 7.5}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &7068490425095270765
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4803441477677377152}
+  m_Layer: 0
+  m_Name: DeckAmmoSupply
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4803441477677377152
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7068490425095270765}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -2.2, y: 7.4, z: -19.8}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 398825345446323577}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7100757926469054771
 GameObject:
   m_ObjectHideFlags: 0
@@ -21353,7 +21426,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.24, y: 0.24, z: 0.24}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 6688886241060101145}
   m_Father: {fileID: 7345172825833399922}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &8826323177875867217
@@ -21383,7 +21457,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.5
+  m_Radius: 1
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &1446328898917939467
 MeshRenderer:
@@ -21392,7 +21466,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7100757926469054771}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -21473,6 +21547,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e12531207c2a4ed47a1277a1d385866c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.Cannonball
+  Ammo: 4
+  AmmoModels:
+  - {fileID: 919132149155446097, guid: 44f8100667febbd4a92fc60af0b301ea, type: 3}
+  - {fileID: 919132149155446097, guid: c0f299176ed1b3144b9cd873b7f6f92f, type: 3}
+  - {fileID: 919132149155446097, guid: d0b7ca02e9da59949bb27fdfbf472a50, type: 3}
+  - {fileID: 919132149155446097, guid: ffa60f8c5fdbf504e8436160d2561a49, type: 3}
+  - {fileID: 919132149155446097, guid: f2bb359e221b9994cbed577952161a66, type: 3}
+  FlightTrailMaterial: {fileID: 2100000, guid: 9edf76896be791745a50276eeb0562f2, type: 2}
 --- !u!1 &7128976844878491466
 GameObject:
   m_ObjectHideFlags: 0
@@ -27954,11 +28036,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3151654479902299143, guid: efe21fdfec453d441b0ea9dc89274f1f, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 7.13
+      value: 1.03
       objectReference: {fileID: 0}
     - target: {fileID: 3151654479902299143, guid: efe21fdfec453d441b0ea9dc89274f1f, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -19.8
+      value: -13
       objectReference: {fileID: 0}
     - target: {fileID: 3151654479902299143, guid: efe21fdfec453d441b0ea9dc89274f1f, type: 3}
       propertyPath: m_LocalRotation.w
@@ -27987,6 +28069,10 @@ PrefabInstance:
     - target: {fileID: 3151654479902299143, guid: efe21fdfec453d441b0ea9dc89274f1f, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4324727194847729944, guid: efe21fdfec453d441b0ea9dc89274f1f, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.8499999
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -28017,7 +28103,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.CannonballCrate
   SpawnPoint: {fileID: 7345172825833399922}
+  DeckSupplyPoint: {fileID: 4803441477677377152}
   Supply: {fileID: 2992665864722300618}
+  SpecialSupplyPrefab: {fileID: 8305825958753804226, guid: 388ab0b1f4a258e45979920d8cc03b16, type: 3}
+  SpecialSupplySpacing: 0.75
   Kit: {fileID: 2801052612202003218}
   CannonPrefab: {fileID: 6766262252996742549, guid: a259d1526047caa44936b87a9a2dd31b, type: 3}
 --- !u!4 &7345172825833399922 stripped

@@ -12,6 +12,25 @@ public class AdvancedPlayerController : MonoBehaviour
     [SerializeField] float thirdPersonDistance = 3f;
     [SerializeField] float swimSpeed = 3f, fastSwimSpeed = 4.5f, swimAcceleration = 6f, breathSeconds = 25f;
     Vector3 swimVelocity;
+    Vector3 knockbackVelocity;
+    float knockbackTime;
+    public bool IsKnockedBack => knockbackTime > 0f;
+    public void ApplyKnockback(Vector3 velocity)
+    {
+        if (IsDead || !float.IsFinite(velocity.sqrMagnitude)) return;
+        foreach (var helm in FindObjectsByType<HelmInteraction>(FindObjectsSortMode.None))
+            if (helm.IsControlledBy(this)) helm.ReleaseControl();
+        SetLocomotionLocked(false);
+        var passenger = GetComponent<ShipDeckPassenger>();
+        var ship = passenger != null && passenger.Ship != null ? passenger.Ship.GetComponent<ShipController>() : null;
+        Vector3 inherited = ship != null ? ship.CannonPointVelocity(transform.position) : Vector3.zero;
+        passenger?.Attach(null);
+        knockbackVelocity = Vector3.ProjectOnPlane(velocity + inherited, Vector3.up);
+        verticalVelocity = Mathf.Max(0f, velocity.y + inherited.y);
+        knockbackTime = 1.25f;
+        ladderCooldown = 1.25f;
+        IsClimbing = false; IsGrounded = false; slideTimer = 0f;
+    }
     float ladderCooldown;
     public bool IsClimbing { get; private set; }
     public bool IsSwimming { get; private set; }
@@ -130,7 +149,9 @@ public class AdvancedPlayerController : MonoBehaviour
         cooldown = Mathf.Max(0, cooldown - dt);
         if (LocomotionLocked) return;
         ladderCooldown = Mathf.Max(0, ladderCooldown - dt);
-        if (SimulateLadder(command, dt)) return;
+        knockbackTime = Mathf.Max(0f, knockbackTime - dt);
+        knockbackVelocity *= Mathf.Exp(-(IsSwimming ? 3f : .65f) * dt);
+        if (!IsKnockedBack && SimulateLadder(command, dt)) return;
         var ocean = OceanSurface.Instance;
         float water = ocean != null ? ocean.Height(transform.position) : float.NegativeInfinity;
         bool wasSwimming = IsSwimming;
@@ -156,7 +177,8 @@ public class AdvancedPlayerController : MonoBehaviour
         if (command.Jump && grounded && !crouched) verticalVelocity = Mathf.Sqrt(jumpHeight * -2 * gravity);
         verticalVelocity += gravity * dt;
         cannonPushDirection=planar; cannonPushDelta=grounded ? dt : 0; pushedCannons.Clear();
-        controller.Move((planar + Vector3.up * verticalVelocity) * dt);
+        var flags = controller.Move((planar + knockbackVelocity + Vector3.up * verticalVelocity) * dt);
+        if ((flags & CollisionFlags.Above) != 0 && verticalVelocity > 0f) verticalVelocity = 0f;
         cannonPushDelta=0;
         IsGrounded = verticalVelocity <= 0 && HasGround();
     }
@@ -183,7 +205,7 @@ public class AdvancedPlayerController : MonoBehaviour
         else if (command.Rise && transform.position.y > water - 1.2f) target.y = 0;
         else if (submerged && Mathf.Abs(vertical) < .05f) target.y = .35f;
         swimVelocity = Vector3.MoveTowards(swimVelocity, target, swimAcceleration * dt);
-        var flags = controller.Move(swimVelocity * dt);
+        var flags = controller.Move((swimVelocity + knockbackVelocity) * dt);
         if ((flags & (CollisionFlags.Above | CollisionFlags.Below)) != 0) swimVelocity.y = 0;
         verticalVelocity = swimVelocity.y;
         PlanarSpeed = new Vector2(swimVelocity.x, swimVelocity.z).magnitude;
@@ -235,7 +257,7 @@ public class AdvancedPlayerController : MonoBehaviour
         { IsClimbing = false; ladderCooldown = .3f; }
         return true;
     }
-    public PlayerState Capture() => new PlayerState { Position = transform.position, Yaw = transform.eulerAngles.y, VerticalVelocity = verticalVelocity, SlideDirection = slideDirection, SlideTimer = slideTimer, Cooldown = cooldown, Crouched = crouched, Locked = LocomotionLocked, PlanarSpeed = PlanarSpeed, Grounded = IsGrounded, Swimming = IsSwimming, SwimVelocity = swimVelocity, Breath = Breath, Climbing = IsClimbing, LadderCooldown = ladderCooldown };
+    public PlayerState Capture() => new PlayerState { Position = transform.position, Yaw = transform.eulerAngles.y, VerticalVelocity = verticalVelocity, SlideDirection = slideDirection, SlideTimer = slideTimer, Cooldown = cooldown, Crouched = crouched, Locked = LocomotionLocked, PlanarSpeed = PlanarSpeed, Grounded = IsGrounded, Swimming = IsSwimming, SwimVelocity = swimVelocity, Breath = Breath, Climbing = IsClimbing, LadderCooldown = ladderCooldown, KnockbackVelocity = knockbackVelocity, KnockbackTime = knockbackTime };
     public void Restore(PlayerState s)
     {
         controller.enabled = false; transform.SetPositionAndRotation(s.Position, Quaternion.Euler(0, s.Yaw, 0)); controller.enabled = !IsDead;
@@ -246,6 +268,7 @@ public class AdvancedPlayerController : MonoBehaviour
         PlanarSpeed = s.PlanarSpeed; IsGrounded = s.Grounded; verticalVelocity = s.VerticalVelocity;
         IsSwimming = s.Swimming; swimVelocity = s.SwimVelocity; Breath = s.Swimming ? s.Breath : breathSeconds;
         IsClimbing = s.Climbing; ladderCooldown = s.LadderCooldown;
+        knockbackVelocity = s.KnockbackVelocity; knockbackTime = s.KnockbackTime;
         slideTimer = s.SlideTimer; LocomotionLocked = s.Locked; SetHeight(s.Crouched);
     }
     public void ApplyRemoteState(Vector3 position, float yawValue, float blend)

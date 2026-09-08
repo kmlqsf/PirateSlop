@@ -12,7 +12,7 @@ namespace PirateSlop
         Cannonball held;
         SimpleCannon aimed;
         float distance;
-        float nextHeldSync;
+        float nextHeldSync, nextLoadRequest;
         public bool HasHeldBall => held != null;
         public Cannonball HeldBall => held;
         public bool CanPickUpBall()
@@ -25,7 +25,7 @@ namespace PirateSlop
             var ball = nearest.collider != null ? nearest.collider.GetComponent<Cannonball>() : null;
             return ball != null && !ball.Loaded;
         }
-        void Awake() { player = GetComponent<AdvancedPlayerController>(); inventory = GetComponent<PlayerInventory>(); controls = GetComponent<DirectShipControls>(); }
+        void Awake() { if (GetComponent<CannonDismantle>() == null) gameObject.AddComponent<CannonDismantle>(); player = GetComponent<AdvancedPlayerController>(); inventory = GetComponent<PlayerInventory>(); controls = GetComponent<DirectShipControls>(); }
         void OnDisable() => Drop();
         void Drop()
         {
@@ -58,7 +58,7 @@ namespace PirateSlop
             RaycastHit nearest = default;
             float best = 4f;
             foreach (var hit in Physics.RaycastAll(ray, 4f, ~0, QueryTriggerInteraction.Ignore))
-                if (!hit.transform.IsChildOf(transform) && (held == null || hit.collider.gameObject != held.gameObject) && hit.distance < best)
+                if (!hit.transform.IsChildOf(transform) && (held == null || !hit.transform.IsChildOf(held.transform)) && hit.distance < best)
                 { nearest = hit; best = hit.distance; }
             if (nearest.collider != null) aimed = nearest.collider.GetComponentInParent<SimpleCannon>();
             if (held == null && mouse.leftButton.wasPressedThisFrame && nearest.collider != null)
@@ -84,35 +84,37 @@ namespace PirateSlop
             if (held != null)
             {
                 if (!mouse.leftButton.isPressed) { Drop(); return; }
-                distance = Mathf.Clamp(distance + mouse.scroll.ReadValue().y * .002f, .6f, 3f);
-                held.transform.position = ray.GetPoint(Mathf.Min(distance, Mathf.Max(.2f, best - .13f)));
+                float scroll = mouse.scroll.ReadValue().y;
+                if (Mathf.Abs(scroll) > .001f) distance = Mathf.Clamp(distance + Mathf.Sign(scroll) * .3f, .7f, 4f);
+                held.transform.position = ray.GetPoint(Mathf.Min(distance, Mathf.Max(.2f, best - .26f)));
                 if (held.Network != null && held.Network.IsClientInitialized && Time.unscaledTime >= nextHeldSync)
                 { nextHeldSync = Time.unscaledTime + .05f; held.Network.RequestBall(true, held.transform.position); }
                 var loose = held.GetComponent<PirateSlop.Networking.NetworkLooseCannonball>();
                 if (loose != null && Time.unscaledTime >= nextHeldSync)
                 { nextHeldSync = Time.unscaledTime + .05f; loose.RequestHold(true, held.transform.position); }
                 foreach (var cannon in FindObjectsByType<SimpleCannon>(FindObjectsSortMode.None))
-                    if (!cannon.IsLoaded && Vector3.Distance(held.transform.position, cannon.Muzzle.position) <= .4f)
+                    if (Time.unscaledTime >= nextLoadRequest && cannon.CanLoadFrom(held.transform.position) && !cannon.IsLoaded)
                     {
                         var network = cannon.GetComponentInParent<PirateSlop.Networking.NetworkCannon>();
                         if (network != null && network.IsClientInitialized)
                         {
-                            if (loose != null) { loose.Load(network.NetworkObject, cannon.Index); break; }
+                            if (loose != null) { nextLoadRequest = Time.unscaledTime + .25f; loose.Load(network.NetworkObject, cannon.Index); break; }
                             if (held.Network != network) continue;
-                            held.Held = false; held.GetComponent<Collider>().enabled = true;
+                            nextLoadRequest = Time.unscaledTime + .25f;
                             network.RequestLoad(cannon.Index, network.transform.InverseTransformPoint(held.transform.position));
+                            break;
                         }
                         else if (!cannon.TryLoad(held)) continue;
                         held = null; break;
                     }
             }
-            else if (aimed != null && Keyboard.current != null && Keyboard.current.eKey.wasPressedThisFrame) aimed.Fire();
+            
         }
         void OnGUI()
         {
             if (player == null || !player.InputActive || player.LocomotionLocked || (controls != null && controls.IsDragging) || (inventory != null && inventory.Placing)) return;
             GUI.Label(new Rect(Screen.width / 2f - 4, Screen.height / 2f - 10, 20, 20), "+");
-            string text = held != null ? "E — в инвентарь • Поднеси ядро к дулу • Колесо — ближе/дальше • Отпусти ЛКМ — бросить" : aimed != null ? (aimed.IsIgnited ? "Фитиль горит…" : aimed.IsLoaded ? "E — поджечь фитиль" : "Поднеси ядро к дулу, удерживая ЛКМ") : "";
+            string text = held != null ? "E — в инвентарь • Поднеси ядро к дулу • Колесо — ближе/дальше • Отпусти ЛКМ — бросить" : aimed != null ? (aimed.IsIgnited ? "Фитиль горит…" : aimed.IsLoaded ? "E — выстрел · удерживать E 7 с — снять" : "Поднеси ядро к дулу · удерживать E 7 с — снять") : "";
             if (text.Length > 0) GUI.Box(new Rect(Screen.width / 2f - 310, Screen.height - 125, 620, 28), text);
         }
     }
