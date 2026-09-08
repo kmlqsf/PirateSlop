@@ -31,7 +31,7 @@ public class HelmInteraction : MonoBehaviour
     {
         if (!holding) { if (IsControlledBy(candidate)) ReleaseControl(); return; }
         if (!float.IsFinite(degrees) || !TryTakeControl(candidate)) return;
-        rudder = Mathf.Clamp(rudder + Mathf.Clamp(degrees, -180f, 180f) / (360f * wheelTurnsToFullSteer), -1f, 1f);
+        rudder = Mathf.Clamp(rudder - Mathf.Clamp(degrees, -180f, 180f) / (360f * wheelTurnsToFullSteer), -1f, 1f);
         UpdateWheel();
     }
     public void ReleaseControl() { IsControlling = false; player = null; }
@@ -49,6 +49,6 @@ public class HelmInteraction : MonoBehaviour
         ValidateGrip();
         if (!IsControlling) { rudder = Mathf.MoveTowards(rudder, 0f, centeringSpeed * dt); UpdateWheel(); }
     }
-    void UpdateWheel() { if (wheelMesh != null) wheelMesh.localRotation = wheelRest * Quaternion.Euler(0, 0, rudder * 360f * wheelTurnsToFullSteer); }
+    void UpdateWheel() { if (wheelMesh != null) wheelMesh.localRotation = wheelRest * Quaternion.Euler(0, 0, -rudder * 360f * wheelTurnsToFullSteer); }
     void Update() { if (!Networked) Simulate(default, null, Time.deltaTime); }
 }

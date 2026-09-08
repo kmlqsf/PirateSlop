@@ -91,8 +91,9 @@ namespace PirateSlop.EditorTools
                 sailSystem.MastControls=collision.GetComponentsInChildren<BoxCollider>().Where(c=>c.name.EndsWith("Mast")).Cast<Collider>().ToArray();
                 var so=new SerializedObject(sailSystem); var array=so.FindProperty("sailMeshes"); array.arraySize=sails.Count;
                 for(int i=0;i<sails.Count;i++) array.GetArrayElementAtIndex(i).objectReferenceValue=sails[i]; so.ApplyModifiedPropertiesWithoutUndo();
-                var crate=root.GetComponentInChildren<CannonballCrate>(true); crate.transform.localPosition=new Vector3(-2.2f,7.13f,-19.8f);
-                crate.Kit.transform.localPosition=new Vector3(2.2f,7.13f,-19.8f);
+                var crate=root.GetComponentInChildren<CannonballCrate>(true); crate.transform.localPosition=new Vector3(-2.2f,1.03f,-13f);
+                crate.Kit.transform.localPosition=new Vector3(2.2f,1.03f,-13f);
+                if (crate.DeckSupplyPoint != null) crate.DeckSupplyPoint.localPosition=new Vector3(-2.2f,1.3f,-11f);
                 var ladderGroup=new GameObject("FrigateLadders").transform; ladderGroup.SetParent(root.transform,false);
                 AddLadder(ladderGroup,"MastLadder",new Vector3(0,4.3f,-3.85f),180,28.9f,.8f);
                 var boarding=AddLadder(ladderGroup,"BoardingLadder",new Vector3(6.7f,-2,0),90,6.5f,1.2f);

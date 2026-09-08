@@ -65,7 +65,13 @@ namespace PirateSlop
                 if (t.name == "BladeCollar") collar = t;
             Vector3 axis = pivot.InverseTransformVector((collar != null ? collar.position : tip.position) - grip.position);
             if (axis.sqrMagnitude < .0001f) return;
-            model.localRotation = Quaternion.FromToRotation(axis.normalized, Vector3.forward) * model.localRotation;
+            Transform guard = null;
+            foreach (var t in pivot.GetComponentsInChildren<Transform>(true))
+                if (t.name == "KnuckleGuard") guard = t;
+            var renderer = guard != null ? guard.GetComponent<Renderer>() : null;
+            Vector3 edge = renderer != null ? Vector3.ProjectOnPlane(pivot.InverseTransformVector(renderer.bounds.center - grip.position), axis).normalized : Vector3.forward;
+            if (edge.sqrMagnitude < .001f) return;
+            model.localRotation = Quaternion.Inverse(Quaternion.LookRotation(edge, axis.normalized)) * model.localRotation;
             model.position += pivot.position - grip.position;
         }
         void HideSeparateView()

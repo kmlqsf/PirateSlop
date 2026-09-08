@@ -32,6 +32,11 @@ namespace PirateSlop.EditorTools
                 if (bone.name.StartsWith("Index") || bone.name.StartsWith("Middle") || bone.name.StartsWith("Ring") || bone.name.StartsWith("Little"))
                     bone.localRotation *= Quaternion.Euler(60, 0, 0);
             foreach (var bone in arms.GetComponentsInChildren<Transform>(true))
+            {
+                if (bone.name == "Thumb1.R") bone.localRotation *= Quaternion.Euler(35, 0, -25);
+                if (bone.name == "Thumb2.R") bone.localRotation *= Quaternion.Euler(65, 0, 0);
+            }
+            foreach (var bone in arms.GetComponentsInChildren<Transform>(true))
                 if (bone != arms.transform) bone.name = "View_" + bone.name;
             var rig = player.GetComponent<WeaponArmRig>() ?? player.AddComponent<WeaponArmRig>();
             rig.BodyRig = body; rig.ViewArms = arms.transform;

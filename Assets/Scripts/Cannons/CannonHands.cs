@@ -13,6 +13,8 @@ namespace PirateSlop
         SimpleCannon aimed;
         float distance;
         float nextHeldSync, nextLoadRequest;
+        GameObject selectedVisual;
+        PirateSlop.Networking.InventoryItem visibleItem = PirateSlop.Networking.InventoryItem.None;
         public bool HasHeldBall => held != null;
         public Cannonball HeldBall => held;
         public bool CanPickUpBall()
@@ -26,7 +28,35 @@ namespace PirateSlop
             return ball != null && !ball.Loaded;
         }
         void Awake() { if (GetComponent<CannonDismantle>() == null) gameObject.AddComponent<CannonDismantle>(); player = GetComponent<AdvancedPlayerController>(); inventory = GetComponent<PlayerInventory>(); controls = GetComponent<DirectShipControls>(); }
-        void OnDisable() => Drop();
+        void OnDisable() { Drop(); if (selectedVisual != null) selectedVisual.SetActive(false); }
+        void OnDestroy() { if (selectedVisual != null) Destroy(selectedVisual); }
+        void UpdateSelectedVisual()
+        {
+            bool show = inventory != null && inventory.BallSelected && !inventory.HandsOccupied && held == null &&
+                !player.IsDead && !player.IsSwimming && !player.IsClimbing && !player.LocomotionLocked && (controls == null || !controls.IsDragging);
+            if (!show) { if (selectedVisual != null) selectedVisual.SetActive(false); return; }
+            var item = inventory.BallItem(inventory.SelectedSlot);
+            if (selectedVisual == null || visibleItem != item)
+            {
+                if (selectedVisual != null) Destroy(selectedVisual);
+                var network = GetComponent<PirateSlop.Networking.NetworkWeapon>();
+                int prefabIndex = (int)PirateSlop.Networking.InventoryItem.Cannonball;
+                if (network == null || network.DropPrefabs == null || network.DropPrefabs.Length <= prefabIndex || network.DropPrefabs[prefabIndex] == null) return;
+                var template = network.DropPrefabs[prefabIndex].GetComponent<Cannonball>();
+                int index = item == PirateSlop.Networking.InventoryItem.Cannonball ? 0 : (int)item - 7;
+                if (template == null || template.AmmoModels == null || index >= template.AmmoModels.Length || template.AmmoModels[index] == null) return;
+                selectedVisual = Instantiate(template.AmmoModels[index]);
+                selectedVisual.name = "SelectedCannonball";
+                foreach (var collider in selectedVisual.GetComponentsInChildren<Collider>(true)) collider.enabled = false;
+                visibleItem = item;
+            }
+            selectedVisual.SetActive(true);
+            var camera = player.PlayerCamera;
+            if (player.InputActive && !player.IsThirdPerson && camera != null)
+                selectedVisual.transform.SetPositionAndRotation(camera.transform.TransformPoint(new Vector3(.22f, -.24f, .65f)), camera.transform.rotation);
+            else
+                selectedVisual.transform.SetPositionAndRotation(transform.TransformPoint(new Vector3(.22f, 1.05f, .45f)), transform.rotation);
+        }
         void Drop()
         {
             if (held != null)
@@ -47,6 +77,7 @@ namespace PirateSlop
         }
         void LateUpdate()
         {
+            UpdateSelectedVisual();
             aimed = null;
             if (inventory != null && (inventory.RodSelected || inventory.HandsOccupied)) { Drop(); return; }
             if (held != null && !held.Held) held = null;
@@ -61,11 +92,23 @@ namespace PirateSlop
                 if (!hit.transform.IsChildOf(transform) && (held == null || !hit.transform.IsChildOf(held.transform)) && hit.distance < best)
                 { nearest = hit; best = hit.distance; }
             if (nearest.collider != null) aimed = nearest.collider.GetComponentInParent<SimpleCannon>();
+            if (held == null && inventory != null && inventory.BallSelected && selectedVisual != null && aimed != null &&
+                !aimed.IsLoaded && aimed.Network != null && aimed.Network.IsClientInitialized &&
+                Time.unscaledTime >= nextLoadRequest && aimed.CanLoadFrom(selectedVisual.transform.position))
+            {
+                nextLoadRequest = Time.unscaledTime + .25f;
+                GetComponent<PirateSlop.Networking.NetworkWeapon>().LoadBall(aimed.Network.NetworkObject, aimed.Index);
+            }
             if (held == null && mouse.leftButton.wasPressedThisFrame && nearest.collider != null)
             {
                 var ball = nearest.collider.GetComponent<Cannonball>();
                 if (ball != null && !ball.Loaded)
                 {
+                    if (ball.Network != null && ball.Network.IsClientInitialized && ball.Network.Crate != null && ball.Network.Crate.Supply == ball)
+                    {
+                        GetComponent<PirateSlop.Networking.NetworkWeapon>().StoreBall(ball.Network.NetworkObject);
+                        return;
+                    }
                     held = ball; distance = Mathf.Clamp(best, .6f, 3f);
                     if (!ball.Body.isKinematic)
                     {

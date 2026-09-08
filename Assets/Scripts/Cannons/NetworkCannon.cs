@@ -11,20 +11,19 @@ namespace PirateSlop.Networking
         public Quaternion Rotation;
         public float Elevation;
         public bool Removed;
+        public bool Loaded;
+        public InventoryItem Ammo;
+        public float Fuse;
     }
 
     public sealed class NetworkCannon : NetworkBehaviour
     {
         readonly SyncVar<bool> kitTaken = new(false);
         readonly SyncList<CannonPlacement> placements = new();
-        readonly SyncVar<InventoryItem> loadedAmmo = new(InventoryItem.Cannonball);
-        readonly SyncVar<int> loadedIndex = new(-1);
-        readonly SyncVar<int> fuseIndex = new(-1);
-        readonly SyncVar<float> fuseProgress = new();
         public CannonballCrate Crate { get; private set; }
         Cannonball ball;
         Rigidbody shipBody;
-        int holder = -1, appliedLoaded = -1;
+        int holder = -1;
         float nextSync;
 
         void Awake()
@@ -44,7 +43,7 @@ namespace PirateSlop.Networking
         public void Place(Vector3 position, Quaternion rotation)
         {
             if (!IsServerInitialized) return;
-            placements.Add(new CannonPlacement { Position = position, Rotation = rotation.normalized, Elevation = 3f });
+            placements.Add(new CannonPlacement { Position = position, Rotation = rotation.normalized, Elevation = 3f, Fuse = -1f });
             ApplyState();
         }
         public bool RemoveCannon(NetworkWeapon player, int index)
@@ -56,11 +55,10 @@ namespace PirateSlop.Networking
                 if (Crate.SpecialSupplyPrefab == null) return false;
                 var dropped = Instantiate(Crate.SpecialSupplyPrefab, cannon.Muzzle.position + cannon.Muzzle.forward * .6f, Quaternion.identity);
                 UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene(dropped.gameObject, gameObject.scene);
-                dropped.SetAmmoItem(ball.Ammo);
+                dropped.SetAmmoItem(cannon.LoadedAmmo);
                 dropped.Place(NetworkObject, dropped.transform.position, dropped.transform.rotation);
                 ServerManager.Spawn(dropped.NetworkObject);
                 cannon.ResetSupply();
-                loadedIndex.Value = -1;
             }
             if (!player.AddItem(InventoryItem.Cannon)) return false;
             var placement = placements[index]; placement.Removed = true; placements[index] = placement;
@@ -70,7 +68,7 @@ namespace PirateSlop.Networking
         public bool StoreBall(NetworkWeapon player)
         {
             if (!IsServerInitialized || ball == null || ball.Loaded || (holder != -1 && holder != player.Owner.ClientId) || !player.CanReach(ball.transform.position, ball.transform)) return false;
-            if (!player.AddItem(InventoryItem.Cannonball)) return false;
+            if (!player.AddSupplyBalls(InventoryItem.Cannonball, 3)) return false;
             holder = -1; Crate.ResetSupply(); ResetStoredBallObserversRpc();
             return true;
         }
@@ -82,11 +80,10 @@ namespace PirateSlop.Networking
         public bool LoadInventoryBall(NetworkWeapon player, int index, InventoryItem ammo = InventoryItem.Cannonball)
         {
             var cannon = Cannon(index);
-            if (!IsServerInitialized || ball == null || ball.Loaded || holder != -1 || cannon == null || cannon.IsLoaded || !player.CanReach(cannon.Muzzle.position, cannon.transform)) return false;
-            ball.transform.position = cannon.Muzzle.position;
-            ball.Ammo = CannonAmmo.IsBall(ammo) ? ammo : InventoryItem.Cannonball;
-            if (!cannon.TryLoad(ball)) return false;
-            loadedAmmo.Value = ball.Ammo; loadedIndex.Value = index; return true;
+            if (!IsServerInitialized || cannon == null || cannon.IsLoaded || !CannonAmmo.IsBall(ammo) || !player.CanReach(cannon.Muzzle.position, cannon.transform)) return false;
+            if (!cannon.LoadAmmo(ammo)) return false;
+            var placement = placements[index]; placement.Loaded = true; placement.Ammo = ammo; placement.Fuse = -1f; placements[index] = placement;
+            return true;
         }
         public void MoveCarriage(int index,Vector3 position,Quaternion rotation)
         {
@@ -108,7 +105,12 @@ namespace PirateSlop.Networking
                 cannon.gameObject.SetActive(!placements[i].Removed);
                 if (placements[i].Removed) continue;
                 cannon.SetElevation(placements[i].Elevation);
-                if (!IsServerInitialized) cannon.ShowFuse(fuseIndex.Value == i ? fuseProgress.Value : -1f);
+                if (!IsServerInitialized)
+                {
+                    if (placements[i].Loaded && !cannon.IsLoaded) cannon.LoadAmmo(placements[i].Ammo);
+                    else if (!placements[i].Loaded && cannon.IsLoaded) cannon.ResetSupply();
+                    cannon.ShowFuse(placements[i].Fuse);
+                }
                 if(!IsServerInitialized)
                 {
                     float blend=1f-Mathf.Exp(-20f*Time.deltaTime);
@@ -116,27 +118,21 @@ namespace PirateSlop.Networking
                     cannon.transform.localRotation=Quaternion.Slerp(cannon.transform.localRotation,placements[i].Rotation,blend);
                 }
             }
-            if (IsServerInitialized || appliedLoaded == loadedIndex.Value) return;
-            if (appliedLoaded >= 0 && appliedLoaded < Crate.Cannons.Count) Crate.Cannons[appliedLoaded].ResetSupply();
-            appliedLoaded = loadedIndex.Value;
-            if (appliedLoaded >= 0 && appliedLoaded < Crate.Cannons.Count)
-            {
-                var cannon = Crate.Cannons[appliedLoaded];
-                ball.transform.position = cannon.Muzzle.position;
-                ball.Ammo = loadedAmmo.Value;
-                cannon.TryLoad(ball);
-            }
         }
         void Update()
         {
-            if (IsServerInitialized && fuseIndex.Value >= 0)
+            if (IsServerInitialized)
             {
-                var cannon = Cannon(fuseIndex.Value);
-                fuseProgress.Value = cannon != null ? cannon.FuseProgress : 0f;
+                for (int i = 0; i < placements.Count; i++)
+                {
+                    var cannon = Cannon(i);
+                    if (cannon == null || !cannon.IsIgnited) continue;
+                    var placement = placements[i]; placement.Fuse = cannon.FuseProgress; placements[i] = placement;
+                }
             }
             if (IsClientInitialized || IsServerInitialized) ApplyState();
         }
-        public void NotifyIgnited(int index) { fuseIndex.Value = index; fuseProgress.Value = 0f; }
+        public void NotifyIgnited(int index) { var placement = placements[index]; placement.Fuse = 0f; placements[index] = placement; }
         SimpleCannon Cannon(int index) => Crate != null && index >= 0 && index < Crate.Cannons.Count && index < placements.Count && !placements[index].Removed ? Crate.Cannons[index] : null;
         bool CanUse(NetworkConnection sender, Vector3 point)
         {
@@ -145,7 +141,7 @@ namespace PirateSlop.Networking
         }
         public void NotifyFired(int index, Vector3 position, Vector3 velocity, InventoryItem ammo)
         {
-            holder = -1; loadedIndex.Value = -1; fuseIndex.Value = -1;
+            var placement = placements[index]; placement.Loaded = false; placement.Fuse = -1f; placements[index] = placement;
             ShotObserversRpc(index, position, velocity, ammo);
         }
         [ObserversRpc]
@@ -154,7 +150,7 @@ namespace PirateSlop.Networking
             if (IsServerInitialized) return;
             ApplyState();
             var cannon = Cannon(index);
-            if (cannon != null) { cannon.SpawnShot(position, velocity, false, ammo); cannon.ResetSupply(); appliedLoaded = -1; }
+            if (cannon != null) { cannon.SpawnShot(position, velocity, false, ammo); cannon.ResetSupply(); }
         }
         public void RequestBall(bool holding, Vector3 position) => BallServerRpc(holding, transform.InverseTransformPoint(position));
         [ServerRpc(RequireOwnership = false)]
@@ -200,7 +196,9 @@ namespace PirateSlop.Networking
             Vector3 position = transform.TransformPoint(localPosition);
             if (!float.IsFinite(position.sqrMagnitude) || !cannon.CanLoadFrom(position)) return;
             ball.transform.position = position;
-            if (cannon.TryLoad(ball)) { holder = -1; loadedAmmo.Value = ball.Ammo; loadedIndex.Value = index; }
+            var player = SessionController.Instance.GetPlayer(sender.ClientId);
+            if (player != null && LoadInventoryBall(player.GetComponent<NetworkWeapon>(), index, ball.Ammo))
+            { holder = -1; Crate.ResetSupply(); ResetStoredBallObserversRpc(); }
         }
         void FixedUpdate()
         {

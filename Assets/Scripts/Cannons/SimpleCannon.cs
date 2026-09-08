@@ -76,8 +76,9 @@ namespace PirateSlop
         }
         public void ResetSupply()
         {
+            if (loaded != null && loaded != supply) Destroy(loaded.gameObject);
             loaded = null; loadStarted = -1f; firingPlayer = null; ignitionTime = -1f; ShowFuse(-1f);
-            if (Crate != null) { Crate.ResetSupply(); return; }
+            if (Crate != null) return;
             if (supply == null) return;
             supply.Loaded = supply.Held = false;
             supply.Body.isKinematic = true;
@@ -118,6 +119,16 @@ namespace PirateSlop
             Destroy(shot.gameObject, 20f);
         }
         public bool IsLoaded => loaded != null;
+        public InventoryItem LoadedAmmo => loaded != null ? loaded.Ammo : InventoryItem.Cannonball;
+        public bool LoadAmmo(InventoryItem ammo)
+        {
+            if (IsLoaded || supply == null) return false;
+            var round = Instantiate(supply, Muzzle.position, Muzzle.rotation);
+            round.Network = null; round.Loaded = round.Held = false; round.Ammo = ammo;
+            if (TryLoad(round)) return true;
+            Destroy(round.gameObject);
+            return false;
+        }
         public bool TryLoad(Cannonball ball)
         {
             if (IsLoaded || ball == null || ball.Loaded || !CanLoadFrom(ball.transform.position)) return false;

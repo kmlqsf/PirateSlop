@@ -138,10 +138,11 @@ namespace PirateSlop
                 aimedCannon = nearest.collider.GetComponentInParent<SimpleCannon>();
                 pickup = nearest.collider.GetComponentInParent<CannonPickup>();
             }
+            if (Networked && aimedBall != null && !aimedBall.Loaded && aimedBall.Network != null &&
+                (keyboard.eKey.wasPressedThisFrame || mouse.leftButton.wasPressedThisFrame))
+            { InteractionUsed = true; network.StoreBall(aimedBall.Network.NetworkObject); return; }
             if (Networked && keyboard.eKey.wasPressedThisFrame)
             {
-                if (aimedBall != null && !aimedBall.Loaded && aimedBall.Network != null)
-                { InteractionUsed = true; network.StoreBall(aimedBall.Network.NetworkObject); return; }
                 if (BallSelected && aimedCannon != null && !aimedCannon.IsLoaded && aimedCannon.Network != null)
                 { InteractionUsed = true; network.LoadBall(aimedCannon.Network.NetworkObject, aimedCannon.Index); return; }
             }
@@ -255,7 +256,7 @@ namespace PirateSlop
                 return;
             }
             GUI.Label(new Rect(Screen.width * .5f - 130, Screen.height - 108, 300, 22), "G — выбросить предмет из выбранного слота");
-            string hint = aimedBall != null && aimedBall.Network != null ? "E — положить ядро в инвентарь" : BallSelected && aimedCannon != null && !aimedCannon.IsLoaded ? "E — зарядить ядро из инвентаря" : chest != null ? chest.Hint(this) : pickup != null ? (EmptySlot() >= 0 ? "E — взять разобранную пушку" : "Инвентарь заполнен") : Placing && !cancelled ? "ЛКМ — поставить · R/колесо — поворот · Q/E — наклон\nShift+Q/E — крен · ПКМ — отменить" : "";
+            string hint = aimedBall != null && aimedBall.Network != null ? "ЛКМ / E — взять 3 ядра" : BallSelected && aimedCannon != null && !aimedCannon.IsLoaded ? "E — зарядить ядро из рук" : chest != null ? chest.Hint(this) : pickup != null ? (EmptySlot() >= 0 ? "E — взять разобранную пушку" : "Инвентарь заполнен") : Placing && !cancelled ? "ЛКМ — поставить · R/колесо — поворот · Q/E — наклон\nShift+Q/E — крен · ПКМ — отменить" : "";
             if (hint.Length > 0) GUI.Box(new Rect(Screen.width * .5f - 290, Screen.height - 165, 580, 44), hint);
         }
     }

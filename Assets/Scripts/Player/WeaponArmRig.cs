@@ -14,6 +14,9 @@ namespace PirateSlop
         Arm right, left, viewRight, viewLeft;
         Quaternion gripRotation;
         float weight;
+        Transform[] triggerFingers;
+        Quaternion[] triggerRest;
+        PlayerInventory inventory;
         sealed class Arm
         {
             public Transform Upper, Fore, Hand;
@@ -51,6 +54,9 @@ namespace PirateSlop
             viewRight = new Arm(ViewArms, "R"); viewLeft = new Arm(ViewArms, "L");
             gripRotation = Quaternion.Euler(90, 0, 0);
             renderers = ViewArms.GetComponentsInChildren<Renderer>(true);
+            inventory = GetComponent<PlayerInventory>();
+            triggerFingers = ViewArms.GetComponentsInChildren<Transform>(true).Where(t => t.name == "View_Index1.R" || t.name == "View_Index2.R" || t.name == "View_Index3.R").OrderBy(t => t.name).ToArray();
+            triggerRest = triggerFingers.Select(t => t.localRotation).ToArray();
         }
         void OnEnable() { RenderPipelineManager.beginCameraRendering += Before; RenderPipelineManager.endCameraRendering += After; }
         void OnDisable() { RenderPipelineManager.beginCameraRendering -= Before; RenderPipelineManager.endCameraRendering -= After; }
@@ -65,17 +71,20 @@ namespace PirateSlop
         {
             weight = Mathf.MoveTowards(weight, weapon.AnimationEquipped ? 1 : 0, Time.deltaTime * 8);
             if (weight <= 0) return;
+            for (int i = 0; i < triggerFingers.Length; i++)
+                triggerFingers[i].localRotation = triggerRest[i] * Quaternion.Euler(inventory.PistolSelected ? (i == 0 ? 30 : i == 1 ? 20 : -10) : 0, 0, 0);
             var view = weapon.ActiveView;
             var world = weapon.ActiveWorld;
             Quaternion viewHand = view.rotation * gripRotation;
             viewRight.Solve(view.position - viewHand * Vector3.up * .075f, viewHand, motor.PlayerCamera.transform.TransformPoint(new Vector3(.55f, -.5f, .15f)), 1);
+            view.position = viewRight.Hand.TransformPoint(new Vector3(0, .065f, .025f));
             Vector3 viewLeftTarget = weapon.Reloading ? weapon.ReloadHandPoint : motor.PlayerCamera.transform.TransformPoint(new Vector3(-.25f, -.4f, .32f));
             viewLeft.Solve(viewLeftTarget, motor.PlayerCamera.transform.rotation * gripRotation, motor.PlayerCamera.transform.TransformPoint(new Vector3(-.6f, -.5f, .15f)), 1);
             Vector3 position = transform.TransformPoint(weapon.BodyWeaponPosition);
             Quaternion rotation = transform.rotation * weapon.BodyWeaponRotation;
             Quaternion handRotation = rotation * gripRotation;
             right.Solve(position - handRotation * Vector3.up * .075f, handRotation, transform.TransformPoint(new Vector3(.6f, 1.0f, .1f)), weight);
-            world.SetPositionAndRotation(position, rotation);
+            world.SetPositionAndRotation(right.Hand.TransformPoint(new Vector3(0, .065f, .025f)), rotation);
             if (weapon.Reloading)
             {
                 Vector3 point = position + rotation * weapon.ReloadHandOffset;

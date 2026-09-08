@@ -89,6 +89,20 @@ namespace PirateSlop.Networking
             if (slot >= fishCounts.Count || fishCounts[slot] <= 0 || health.IsDead) return false;
             fishCounts[slot]--; ApplyInventory(); health.Heal(healing); return true;
         }
+        public bool AddSupplyBalls(InventoryItem item, int count)
+        {
+            if (!IsServerInitialized || !CannonAmmo.IsBall(item) || count < 1 || count > 20) return false;
+            int slot = inventory.EmptySlot();
+            for (int i = 2; i < ballCounts.Count; i++)
+                if (ballCounts[i] > 0 && ballCounts[i] <= 20 - count && ballItems[i] == item) { slot = i; break; }
+            if (slot < 0) return false;
+            ballItems[slot] = item; ballCounts[slot] += count;
+            selectedSlot.Value = slot; inventory.SetSelection(slot);
+            ApplyInventory(); SelectSupplyTargetRpc(Owner, slot);
+            return true;
+        }
+        [TargetRpc]
+        void SelectSupplyTargetRpc(FishNet.Connection.NetworkConnection connection, int slot) => inventory.SetSelection(slot);
         public void DropSelected() => DropSelectedServerRpc();
         [ServerRpc]
         void DropSelectedServerRpc()
@@ -117,7 +131,7 @@ namespace PirateSlop.Networking
             var orientation = Quaternion.FromToRotation(Vector3.up, floor.normal) * Quaternion.Euler(0, transform.eulerAngles.y, item == InventoryItem.Fish ? 90 : 0);
             var shape = prefab.GetComponent<BoxCollider>();
             float height = CannonAmmo.IsBall(item) ? prefab.GetComponent<SphereCollider>().radius + .02f : item == InventoryItem.Fish ? .12f : shape.size.y * .5f - shape.center.y + .02f;
-            Vector3 point = floor.point + floor.normal * height;
+            Vector3 point = CannonAmmo.IsBall(item) ? origin : floor.point + floor.normal * height;
             var dropped = Instantiate(prefab, point, orientation);
             if (CannonAmmo.IsBall(item)) dropped.SetAmmoItem(item);
             UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene(dropped.gameObject, gameObject.scene);
