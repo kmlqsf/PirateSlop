@@ -65,7 +65,7 @@ public class AdvancedPlayerController : MonoBehaviour
     public bool IsSliding => slideTimer > 0f;
     public bool IsCrouched => crouched;
     public float PlanarSpeed { get; private set; }
-    public bool InputActive => !DeveloperMenu.IsOpen && local && !IsDead && Cursor.lockState == CursorLockMode.Locked;
+    public bool InputActive => !DeveloperMenu.IsOpen && !ShipSpyglassView.IsViewing && local && !IsDead && Cursor.lockState == CursorLockMode.Locked;
     public Camera PlayerCamera => playerCamera;
     void Awake()
     {

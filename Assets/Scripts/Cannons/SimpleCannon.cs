@@ -16,6 +16,8 @@ namespace PirateSlop
         public CannonballCrate Crate { get; set; }
         public int Index { get; set; }
         public const float LoadRadius = 3f;
+        public Vector3 ShotPosition => Muzzle.position + Muzzle.forward * .35f;
+        public Vector3 ShotVelocity => Muzzle.forward * (LaunchSpeed * 1.15f) + GetComponentInParent<ShipController>().CannonPointVelocity(Muzzle.position);
         Cannonball loaded;
         float loadStarted = -1f;
         Vector3 loadStart;
@@ -179,9 +181,8 @@ namespace PirateSlop
             if (!IsLoaded) return;
             nextFireTime = Time.time + 6f;
             InitializeSupply(loaded);
-            Vector3 inherited = GetComponentInParent<ShipController>().CannonPointVelocity(Muzzle.position);
-            Vector3 position = Muzzle.position + Muzzle.forward * .35f;
-            Vector3 velocity = Muzzle.forward * (LaunchSpeed * 1.15f) + inherited;
+            Vector3 position = ShotPosition;
+            Vector3 velocity = ShotVelocity;
             var ammo = loaded.Ammo;
             SpawnShot(position, velocity, true, ammo);
             var motor=GetComponentInParent<ShipController>();

@@ -18,6 +18,10 @@ namespace PirateSlop
             if (instance != null) return instance;
             var bank = Resources.Load<GameAudioBank>("GameAudioBank");
             if (bank == null) return null;
+            bank.Master = PlayerPrefs.GetFloat("AudioMaster",bank.Master);
+            bank.Effects = PlayerPrefs.GetFloat("AudioEffects",bank.Effects);
+            bank.Ambience = PlayerPrefs.GetFloat("AudioAmbience",bank.Ambience);
+            bank.Interface = PlayerPrefs.GetFloat("AudioInterface",bank.Interface);
             instance = new GameObject("GameAudio").AddComponent<GameAudio>();
             DontDestroyOnLoad(instance.gameObject);
             instance.bank = bank;

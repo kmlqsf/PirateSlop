@@ -13,7 +13,7 @@ using PirateSlop.World;
 using System.Linq;
 namespace PirateSlop.Networking
 {
-    public sealed class SessionController : MonoBehaviour
+    public sealed partial class SessionController : MonoBehaviour
     {
         public static SessionController Instance { get; private set; }
         public static bool MenuOpen => Instance != null && (!Instance.playing || (Cursor.lockState != CursorLockMode.Locked && !PlayerInventory.LootWindowOpen));
@@ -322,20 +322,7 @@ namespace PirateSlop.Networking
                 { a.Motor.ResolveCollision(correction * .5f); b.Motor.ResolveCollision(-correction * .5f); }
             }
         }
-        void OnGUI()
-        {
-            if (DeveloperMenu.IsOpen) return;
-            if (dedicated || Automated || !MenuOpen) return;
-            GUI.skin.label.wordWrap = true;
-            GUILayout.BeginArea(new Rect((Screen.width-440)/2, (Screen.height-410)/2, 440, 410), "PirateSlop — онлайн", GUI.skin.window);
-            GUILayout.Space(12); GUILayout.Label(status); GUILayout.Label($"Игроки: {population}/{MaxPlayers}");
-            if (!playing && !connecting) { GUILayout.Label("Seed карты (пусто — случайный, только для хоста)"); seedInput = GUILayout.TextField(seedInput, 12); }
-            if (ProceduralWorld.Instance != null && ProceduralWorld.Instance.Layout != null) GUILayout.Label("Карта: " + ProceduralWorld.Instance.Layout.Seed + " · " + Mathf.RoundToInt(ProceduralWorld.Instance.Progress * 100) + "%");
-            if (!playing && !connecting) { GUILayout.Label("IPv4:порт (UDP)"); address = GUILayout.TextField(address, 64); if (GUILayout.Button("Создать сессию", GUILayout.Height(35))) Begin(true, address); if (GUILayout.Button("Подключиться", GUILayout.Height(35))) Begin(false, address); }
-            else { if (GUILayout.Button(connecting ? "Отменить" : "Отключиться", GUILayout.Height(35))) Disconnect(); if (playing && GUILayout.Button("Вернуться в игру", GUILayout.Height(35))) AdvancedPlayerController.SetCursor(true); }
-            GUILayout.Label("Хост: публичный IPv4 и открытый UDP-порт.\nEscape — меню. E — штурвал своего корабля.");
-            GUILayout.EndArea();
-        }
+        void OnGUI() => DrawSessionMenu();
     }
 }
 

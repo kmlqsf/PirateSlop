@@ -12,6 +12,7 @@ namespace PirateSlop
         public Vector3 Velocity;
         public InventoryItem Ammo = InventoryItem.Cannonball;
         public float Radius = .12f, Drag = .015f;
+        public static Vector3 StepVelocity(Vector3 velocity, float dt, float drag = .015f) => (velocity + Physics.gravity * dt) * Mathf.Exp(-drag * dt);
         public float PlayerDamage = 45f, PlayerPushSpeed = 22f;
         public float BoomerangDuration = 6f, BoomerangWidth = 16f, BoomerangHeight = 8f;
         bool spent, returning;
@@ -55,7 +56,7 @@ namespace PirateSlop
             if (spent) return;
             float dt = Time.fixedDeltaTime;
             bool boomerang = Ammo == InventoryItem.BoomerangCannonball;
-            Vector3 nextVelocity = (Velocity + Physics.gravity * dt) * Mathf.Exp(-Drag * dt);
+            Vector3 nextVelocity = StepVelocity(Velocity, dt, Drag);
             Vector3 delta = boomerang ? BoomerangStep(dt) - transform.position : (Velocity + nextVelocity) * (.5f * dt);
             if (boomerang)
             {

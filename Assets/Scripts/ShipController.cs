@@ -15,6 +15,31 @@ public class ShipController : MonoBehaviour
     Vector3 pushVelocity;
     float pushYawVelocity, freezeRemaining;
     public bool IsFrozen => freezeRemaining > 0f;
+    public bool TryManualPush(Vector3 direction)
+    {
+        if(IsFrozen || !float.IsFinite(direction.sqrMagnitude)) return false;
+        direction=Vector3.ProjectOnPlane(direction,Vector3.up).normalized;
+        var world=PirateSlop.World.ProceduralWorld.Instance;
+        Vector3 next=rb.position;
+        float score=world!=null ? world.SailingObstruction(next,yaw) : 0f;
+        for(int i=0;i<4;i++)
+        {
+            Vector3 candidate=next+direction*.2f;
+            if(world!=null && world.Ready && !world.CanSail(candidate,yaw))
+            {
+                float obstruction=world.SailingObstruction(candidate,yaw);
+                if(score<=0f || !float.IsFinite(obstruction) || obstruction>score+.001f) break;
+                score=obstruction;
+            }
+            foreach(var other in FindObjectsByType<ShipController>(FindObjectsSortMode.None))
+                if(other!=this && (candidate-other.transform.position).sqrMagnitude<100f) return false;
+            next=candidate;
+        }
+        if((next-rb.position).sqrMagnitude<.001f) return false;
+        rb.position=next; transform.position=next; speed=0f;
+        pushVelocity=Vector3.zero;
+        return true;
+    }
     public void Freeze(float duration)
     {
         freezeRemaining = Mathf.Max(freezeRemaining, duration);

@@ -3689,6 +3689,8 @@ GameObject:
   - component: {fileID: 5414072499666844625}
   - component: {fileID: 3853980720917506862}
   - component: {fileID: 7206795312844989294}
+  - component: {fileID: 2528557621731152364}
+  - component: {fileID: 1783425920093483733}
   m_Layer: 0
   m_Name: NetworkPlayer
   m_TagString: Player
@@ -4142,6 +4144,34 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.WeaponArmRig
   ViewArms: {fileID: 7176932462901371184}
   BodyRig: {fileID: 2322923384942846278}
+--- !u!114 &2528557621731152364
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4193507432475942729}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17a487d5e9c09eb439384ceb30628e37, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.ShipSpyglassView
+  TrajectoryMaterial: {fileID: 2100000, guid: 9edf76896be791745a50276eeb0562f2, type: 2}
+--- !u!114 &1783425920093483733
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4193507432475942729}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e764bc32dc86069448e2fa2485347daf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.Networking.NetworkShipPush
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 8718541801069254893}
+  _networkObjectCache: {fileID: 0}
 --- !u!1 &4195186048672230144
 GameObject:
   m_ObjectHideFlags: 0
@@ -6921,7 +6951,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 3221225471
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -6965,7 +6995,7 @@ MonoBehaviour:
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
   m_RenderPostProcessing: 1
-  m_Antialiasing: 0
+  m_Antialiasing: 2
   m_AntialiasingQuality: 2
   m_StopNaN: 0
   m_Dithering: 0
