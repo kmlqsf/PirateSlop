@@ -217,11 +217,14 @@ public class AdvancedPlayerController : MonoBehaviour
         if (ladderCooldown <= 0) foreach (var candidate in ShipLadder.Active)
         {
             if (!candidate.Contains(transform.position, IsClimbing)) continue;
+            if (candidate.RopeClimb && !IsClimbing && (!command.Use || !candidate.CanGrab(transform.position, command.Yaw, command.Pitch))) continue;
             var p = candidate.transform.InverseTransformPoint(transform.position);
-            float distance = p.x * p.x + p.z * p.z;
+            float depth = p.z - (candidate.RopeClimb ? candidate.RopeDepth(p.y) : 0f);
+            float distance = p.x * p.x + depth * depth;
             if (distance < best) { best = distance; ladder = candidate; }
         }
         if (ladder == null) { IsClimbing = false; return false; }
+        if (ladder.RopeClimb) return SimulateRigging(ladder, command, dt);
         var localPosition = ladder.transform.InverseTransformPoint(transform.position);
         var move = transform.right * command.Move.x + transform.forward * command.Move.y;
         float approach = Vector3.Dot(move, -ladder.transform.forward);
@@ -255,6 +258,54 @@ public class AdvancedPlayerController : MonoBehaviour
         localPosition = ladder.transform.InverseTransformPoint(transform.position);
         if (localPosition.y >= ladder.Height && localPosition.z < -ladder.ExitDepth && !fromTop || localPosition.y <= 0 && vertical < 0 || Mathf.Abs(localPosition.x) > .9f)
         { IsClimbing = false; ladderCooldown = .3f; }
+        return true;
+    }
+    void OnGUI()
+    {
+        if (!InputActive) return;
+        if (IsClimbing)
+        {
+            GUI.Box(new Rect(Screen.width * .5f - 260, Screen.height - 260, 520, 28), "W/S — вверх/вниз · A/D — в сторону · Space — отпустить");
+            return;
+        }
+        foreach (var ladder in ShipLadder.Active)
+            if (ladder.CanGrab(transform.position, lookYaw, pitch))
+            {
+                GUI.Box(new Rect(Screen.width * .5f - 180, Screen.height - 260, 360, 28), "E — схватиться за ванты");
+                break;
+            }
+    }
+    bool SimulateRigging(ShipLadder ladder, PlayerCommand command, float dt)
+    {
+        var passenger = GetComponent<ShipDeckPassenger>();
+        if (command.Jump || command.Release || (IsClimbing && command.Use))
+        {
+            IsClimbing = false; ladderCooldown = .75f;
+            verticalVelocity = command.Jump ? 4f : 0f;
+            passenger?.Attach(null);
+            controller.Move(ladder.transform.forward * 2f * dt);
+            return false;
+        }
+        IsClimbing = true; IsSwimming = false; IsGrounded = false; slideTimer = 0; swimVelocity = Vector3.zero;
+        SetHeight(false); passenger?.Attach(ladder.Body);
+        var p = ladder.transform.InverseTransformPoint(transform.position);
+        float rise = command.Crouch ? -Mathf.Abs(command.Move.y) : command.Move.y;
+        Vector3 target;
+        if (p.y >= ladder.Height - .05f && rise > 0)
+        {
+            target = ladder.transform.TransformPoint(ladder.ExitPoint);
+            controller.Move(Vector3.ClampMagnitude(target - transform.position, ladder.Speed * dt));
+            if (Vector3.Distance(transform.position, target) < .2f) { IsClimbing = false; ladderCooldown = .5f; }
+        }
+        else
+        {
+            float height = Mathf.Clamp(p.y + rise * ladder.Speed * dt, 0, ladder.Height);
+            float sideways = Mathf.Clamp(p.x + command.Move.x * ladder.Speed * .45f * dt, -.6f, .6f);
+            target = ladder.transform.TransformPoint(new Vector3(sideways, height, ladder.RopeDepth(height) + .5f));
+            controller.Move(Vector3.ClampMagnitude(target - transform.position, ladder.Speed * 1.5f * dt));
+            if (height <= 0 && rise < 0) { IsClimbing = false; ladderCooldown = .5f; }
+        }
+        verticalVelocity = 0; PlanarSpeed = Mathf.Abs(rise) * ladder.Speed;
         return true;
     }
     public PlayerState Capture() => new PlayerState { Position = transform.position, Yaw = transform.eulerAngles.y, VerticalVelocity = verticalVelocity, SlideDirection = slideDirection, SlideTimer = slideTimer, Cooldown = cooldown, Crouched = crouched, Locked = LocomotionLocked, PlanarSpeed = PlanarSpeed, Grounded = IsGrounded, Swimming = IsSwimming, SwimVelocity = swimVelocity, Breath = Breath, Climbing = IsClimbing, LadderCooldown = ladderCooldown, KnockbackVelocity = knockbackVelocity, KnockbackTime = knockbackTime };

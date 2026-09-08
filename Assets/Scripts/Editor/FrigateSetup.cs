@@ -106,6 +106,7 @@ namespace PirateSlop.EditorTools
             var config=AssetDatabase.LoadAssetAtPath<SessionConfig>("Assets/Settings/Networking/SessionConfig.asset");
             config.PlayerLocalSpawn=new Vector3(0,7.2f,-19.2f); config.ProtocolVersion=Mathf.Max(config.ProtocolVersion,23); EditorUtility.SetDirty(config);
             AssetDatabase.SaveAssets();
+            RiggingSetup.Configure();
         }
         static Transform AddLadder(Transform parent,string name,Vector3 position,float yaw,float height,float depth)
         {
