@@ -10,7 +10,7 @@ namespace PirateSlop.EditorTools
 {
     public static class PirateWeaponSetup
     {
-        const string ModelPath = "Assets/Models/PiratePistol/SM_PiratePistol.fbx";
+        const string ModelPath = "Assets/Models/PirateWeapons/SM_FlintlockPistol.fbx";
         [MenuItem("PirateSlop/Equip Pirate Pistol")]
         public static void Install()
         {
@@ -38,7 +38,7 @@ namespace PirateSlop.EditorTools
                 }).ToArray();
             return model.GetComponentsInChildren<Transform>().Single(t=>t.name=="Muzzle");
         }
-        static void Apply(GameObject player,bool networked)
+        public static void Apply(GameObject player,bool networked)
         {
             var motor = player.GetComponent<AdvancedPlayerController>();
             var hand = player.GetComponentsInChildren<Transform>(true).Single(t=>t.name=="Hand.R");

@@ -46,7 +46,7 @@ public class AdvancedPlayerController : MonoBehaviour
     public bool IsSliding => slideTimer > 0f;
     public bool IsCrouched => crouched;
     public float PlanarSpeed { get; private set; }
-    public bool InputActive => local && !IsDead && Cursor.lockState == CursorLockMode.Locked;
+    public bool InputActive => !DeveloperMenu.IsOpen && local && !IsDead && Cursor.lockState == CursorLockMode.Locked;
     public Camera PlayerCamera => playerCamera;
     void Awake()
     {
@@ -276,3 +276,4 @@ public class AdvancedPlayerController : MonoBehaviour
         if ((controller.center - center).sqrMagnitude > .000001f) controller.center = center;
     }
 }
+

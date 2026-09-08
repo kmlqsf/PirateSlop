@@ -8,7 +8,7 @@ namespace PirateSlop
     public interface IWeaponTarget { void ReceiveWeaponHit(float damage, GameObject attacker); }
 
     [DefaultExecutionOrder(30)]
-    public sealed class PirateWeapon : MonoBehaviour
+    public sealed partial class PirateWeapon : MonoBehaviour
     {
         public Transform WorldPivot, ViewPivot, WorldMuzzle, ViewMuzzle;
         public Material EffectMaterial;
@@ -17,7 +17,7 @@ namespace PirateSlop
         NetworkWeapon network;
         PlayerInventory inventory;
         DirectShipControls controls;
-        bool Equipped => (motor == null || !(motor.IsSwimming || motor.IsClimbing)) && (inventory == null || inventory.PistolSelected) && (controls == null || !controls.IsDragging);
+        bool Equipped => (motor == null || !(motor.IsSwimming || motor.IsClimbing || motor.IsDead)) && (inventory == null || inventory.PistolSelected || inventory.SabreSelected) && (controls == null || !controls.IsDragging);
         bool loaded = true, reloading;
         float reloadUntil, nextAttack, recoil, stab, lift;
         Quaternion worldRest, viewRest;
@@ -36,6 +36,7 @@ namespace PirateSlop
             worldPosition = WorldPivot.localPosition; viewPosition = ViewPivot.localPosition;
             viewRenderers = ViewPivot.GetComponentsInChildren<Renderer>(true);
             worldRenderers = WorldPivot.GetComponentsInChildren<Renderer>(true);
+            SetupSeparateWeapons();
         }
         void OnEnable() { RenderPipelineManager.beginCameraRendering += BeforeCamera; RenderPipelineManager.endCameraRendering += AfterCamera; }
         void OnDisable() { RenderPipelineManager.beginCameraRendering -= BeforeCamera; RenderPipelineManager.endCameraRendering -= AfterCamera; }
@@ -46,11 +47,13 @@ namespace PirateSlop
             foreach(var r in viewRenderers) if(r != null) r.forceRenderingOff = !show;
             bool hideWorld = !Equipped || (camera == motor.PlayerCamera && !motor.IsThirdPerson);
             foreach(var r in worldRenderers) if(r != null) r.forceRenderingOff = hideWorld;
+            ShowSeparateWeapons(camera, show, hideWorld);
         }
         void AfterCamera(ScriptableRenderContext context, Camera camera)
         {
             if(viewRenderers != null) foreach(var r in viewRenderers) if(r != null) r.forceRenderingOff = true;
             if(worldRenderers != null) foreach(var r in worldRenderers) if(r != null) r.forceRenderingOff = !Equipped;
+            HideSeparateView();
         }
         void Update()
         {
@@ -60,8 +63,7 @@ namespace PirateSlop
             var mouse = Mouse.current; var keyboard = Keyboard.current;
             if (keyboard != null && keyboard.rKey.wasPressedThisFrame) Request(1);
             if (mouse == null) return;
-            if (mouse.rightButton.wasPressedThisFrame) Request(2);
-            else if (mouse.leftButton.wasPressedThisFrame && (hands == null || !hands.CanPickUpBall())) Request(0);
+            if (mouse.leftButton.wasPressedThisFrame && (hands == null || !hands.CanPickUpBall())) Request(SabreEquipped ? (byte)2 : (byte)0);
         }
         void Request(byte action)
         {
@@ -73,12 +75,14 @@ namespace PirateSlop
         }
         public void TickAuthority()
         {
-            if (reloading && (motor.LocomotionLocked || (hands != null && hands.HasHeldBall))) reloading = false;
+            TickSabre();
+            if (reloading && (!Equipped || SabreEquipped || motor.LocomotionLocked || (hands != null && hands.HasHeldBall))) reloading = false;
             if (reloading && Time.time >= reloadUntil) { reloading = false; loaded = true; }
         }
         public bool Act(byte action, Vector3 direction, Vector3 eyeOffset)
         {
             if (!Equipped || motor.IsDead || motor.LocomotionLocked || (hands != null && hands.HasHeldBall) || !float.IsFinite(direction.sqrMagnitude) || direction.sqrMagnitude < .5f) return false;
+            if ((action == 2) != SabreEquipped) return false;
             if (action == 1)
             {
                 if (loaded || reloading || Time.time < nextAttack) return false;
@@ -88,6 +92,13 @@ namespace PirateSlop
             if (action == 0) { loaded = false; nextAttack = Time.time + .25f; }
             else { reloading = false; nextAttack = Time.time + .65f; }
             direction.Normalize();
+            if (action == 2)
+            {
+                BeginSabre(direction);
+                if (Networked && network.IsServerInitialized) network.PublishAttack(action, transform.position);
+                else ShowAttack(action, transform.position);
+                return true;
+            }
             Vector3 origin = transform.position + Vector3.up * (motor.IsCrouched ? .75f : 1.65f);
             if (float.IsFinite(eyeOffset.sqrMagnitude) && eyeOffset.sqrMagnitude <= 16f)
                 origin = transform.position + eyeOffset;
@@ -128,13 +139,14 @@ namespace PirateSlop
         public void SetState(bool hasRound, bool isReloading) { loaded = hasRound; reloading = isReloading; }
         public void ShowAttack(byte action, Vector3 end)
         {
+            if (action == 2) visualAttackStarted = Time.time;
             if (action == 2) GameAudio.Play(SoundCue.Knife, transform.position);
             if(action == 2) stab = 1;
         }
         public void SpawnBullet(Vector3 origin, Vector3 velocity, bool authoritative)
         {
             GameAudio.Play(SoundCue.Pistol, origin);
-            recoil = 1;
+            recoil = 1; fireStarted = Time.time;
             var go = GameObject.CreatePrimitive(PrimitiveType.Sphere); go.name = "PistolBullet";
             go.GetComponent<Collider>().enabled = false; Destroy(go.GetComponent<Collider>());
             go.transform.localScale = Vector3.one * .035f; go.transform.position = origin;
@@ -146,17 +158,14 @@ namespace PirateSlop
         }
         void LateUpdate()
         {
-            lift = Mathf.MoveTowards(lift,reloading ? 1 : 0,Time.deltaTime * 5);
-            recoil = Mathf.MoveTowards(recoil,0,Time.deltaTime * 7); stab = Mathf.MoveTowards(stab,0,Time.deltaTime * 4);
-            var tilt = Quaternion.Euler(-65 * lift - 12 * recoil,0,0);
-            WorldPivot.localRotation = worldRest * tilt; ViewPivot.localRotation = viewRest * tilt;
-            WorldPivot.localPosition = worldPosition + worldRest * Vector3.forward * (.13f * Mathf.Sin(stab * Mathf.PI));
-            ViewPivot.localPosition = viewPosition + Vector3.forward * (.16f * Mathf.Sin(stab * Mathf.PI) - .035f * recoil);
+            AnimateSeparateWeapons();
         }
         void OnGUI()
         {
             if (!Equipped || !motor.InputActive || motor.LocomotionLocked || (hands != null && hands.HasHeldBall)) return;
-            GUI.Label(new Rect(Screen.width-290,Screen.height-65,280,55),reloading ? "Перезарядка…" : (loaded ? "Пистолет: 1 / ∞" : "Пистолет: 0 / ∞ — R") + "\nЛКМ — выстрел · ПКМ — нож");
+            GUI.Label(new Rect(Screen.width-290,Screen.height-65,280,55),SabreEquipped ? "Сабля · ЛКМ — удар" : reloading ? "Перезарядка…" : (loaded ? "Пистолет: 1 / ∞" : "Пистолет: 0 / ∞ — R") + "\nЛКМ — выстрел · R — перезарядка");
         }
     }
 }
+
+

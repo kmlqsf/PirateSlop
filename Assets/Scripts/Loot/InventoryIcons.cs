@@ -16,6 +16,7 @@ namespace PirateSlop
             InventoryItem.Cannonball => "Ядро",
             InventoryItem.Mallet => "Киянка",
             InventoryItem.Plank => "Доска",
+            InventoryItem.Sabre => "Сабля",
             _ => ""
         };
         public bool DrawSlot(Rect rect, InventoryItem item, int count, string key, bool button)

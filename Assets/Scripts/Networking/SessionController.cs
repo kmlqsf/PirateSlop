@@ -278,12 +278,29 @@ namespace PirateSlop.Networking
         {
             if (manager != null) manager.TimeManager.OnPostTick -= ResolveShipCollisions;
         }
+        public NetworkObject SpawnDeveloperShip(Vector3 origin, float yaw)
+        {
+            if (!DeveloperMenu.Available || manager == null || !manager.IsServerStarted) return null;
+            var ships = FindObjectsByType<NetworkShip>(FindObjectsSortMode.None);
+            for (int i = 0; i < 24; i++)
+            {
+                Vector3 point = origin + Quaternion.Euler(0, i * 45, 0) * Vector3.forward * (38 + i / 8 * 15);
+                point.y = OceanSurface.Instance != null ? OceanSurface.Instance.SeaLevel : 0;
+                if (ships.Any(s => Vector3.Distance(s.transform.position, point) < 35)) continue;
+                if (ProceduralWorld.Instance != null && !ProceduralWorld.Instance.CanSail(point, yaw)) continue;
+                var ship = Instantiate(ShipPrefab, point, Quaternion.Euler(0, yaw, 0));
+                ship.GetComponent<NetworkShip>().ParticipantId.Value = nextParticipant++;
+                SceneManager.MoveGameObjectToScene(ship.gameObject, SceneManager.GetSceneByName(Config.GameScene));
+                manager.ServerManager.Spawn(ship);
+                return ship;
+            }
+            return null;
+        }
         void ResolveShipCollisions()
         {
             if (manager == null || !manager.IsServerStarted) return;
             var ships = new List<NetworkShip>();
-            foreach (var player in players.Values)
-                if (player != null && player.Ship != null && !ships.Contains(player.Ship)) ships.Add(player.Ship);
+            foreach (var ship in FindObjectsByType<NetworkShip>(FindObjectsSortMode.None)) if (ship.IsSpawned) ships.Add(ship);
             for (int i = 0; i < ships.Count; i++)
             for (int j = i + 1; j < ships.Count; j++)
             {
@@ -307,6 +324,7 @@ namespace PirateSlop.Networking
         }
         void OnGUI()
         {
+            if (DeveloperMenu.IsOpen) return;
             if (dedicated || Automated || !MenuOpen) return;
             GUI.skin.label.wordWrap = true;
             GUILayout.BeginArea(new Rect((Screen.width-440)/2, (Screen.height-410)/2, 440, 410), "PirateSlop — онлайн", GUI.skin.window);
@@ -320,3 +338,4 @@ namespace PirateSlop.Networking
         }
     }
 }
+

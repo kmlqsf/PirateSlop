@@ -4,11 +4,12 @@ using UnityEngine;
 
 namespace PirateSlop.Networking
 {
-    public sealed class NetworkWeapon : NetworkBehaviour
+    public sealed partial class NetworkWeapon : NetworkBehaviour
     {
         readonly SyncVar<bool> loaded = new(true);
         readonly SyncVar<bool> reloading = new(false);
         readonly SyncVar<int> cannonSlots = new(0);
+        readonly SyncVar<int> sabreSlots = new(1 << 2);
         readonly SyncVar<int> selectedSlot = new(0);
         readonly SyncVar<bool> hasPistol = new(true), hasRod = new(true);
         readonly SyncList<int> fishCounts = new();
@@ -29,6 +30,7 @@ namespace PirateSlop.Networking
         }
         void ApplyInventory()
         {
+            inventory.SabreSlots = sabreSlots.Value;
             for (int i = 0; i < 6; i++) inventory.SetRepairItems(malletSlots.Value, i, i < plankCounts.Count ? plankCounts[i] : 0);
             inventory.SetContents(cannonSlots.Value); inventory.HasPistol = hasPistol.Value; inventory.HasRod = hasRod.Value;
             for (int i = 0; i < 6; i++) inventory.SetFishCount(i, i < fishCounts.Count ? fishCounts[i] : 0);
@@ -36,7 +38,7 @@ namespace PirateSlop.Networking
         }
         public bool CanAddItem(InventoryItem item)
         {
-            if (!IsServerInitialized || item < InventoryItem.Fish || item > InventoryItem.Plank) return false;
+            if (!IsServerInitialized || item < InventoryItem.Fish || item > InventoryItem.Sabre) return false;
             if (item == InventoryItem.Pistol) return !hasPistol.Value;
             if (item == InventoryItem.Rod) return !hasRod.Value;
             if (item == InventoryItem.Fish)
@@ -71,6 +73,7 @@ namespace PirateSlop.Networking
                     plankCounts[slot]++;
                 }
                 else if (item == InventoryItem.Mallet) malletSlots.Value |= 1 << slot;
+                else if (item == InventoryItem.Sabre) sabreSlots.Value |= 1 << slot;
                 else cannonSlots.Value |= 1 << slot;
             }
             ApplyInventory(); return true;
@@ -103,6 +106,7 @@ namespace PirateSlop.Networking
             else if (slot == 1 && hasRod.Value) item = InventoryItem.Rod;
             else if (inventory.HasCannon(slot)) item = InventoryItem.Cannon;
             else if (inventory.HasMallet(slot)) item = InventoryItem.Mallet;
+            else if (inventory.HasSabre(slot)) item = InventoryItem.Sabre;
             else if (inventory.PlankCount(slot) > 0) item = InventoryItem.Plank;
             else if (inventory.BallCount(slot) > 0) item = InventoryItem.Cannonball;
             else if (slot < fishCounts.Count && fishCounts[slot] > 0) item = InventoryItem.Fish;
@@ -129,6 +133,7 @@ namespace PirateSlop.Networking
             else if (item == InventoryItem.Cannon) cannonSlots.Value &= ~(1 << slot);
             else if (item == InventoryItem.Cannonball) ballCounts[slot]--;
             else if (item == InventoryItem.Mallet) malletSlots.Value &= ~(1 << slot);
+            else if (item == InventoryItem.Sabre) sabreSlots.Value &= ~(1 << slot);
             else if (item == InventoryItem.Plank) plankCounts[slot]--;
             else fishCounts[slot]--;
             ApplyInventory(); DropSoundObserversRpc(point);
