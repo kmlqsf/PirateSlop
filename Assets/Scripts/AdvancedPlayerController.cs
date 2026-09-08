@@ -265,13 +265,13 @@ public class AdvancedPlayerController : MonoBehaviour
         if (!InputActive) return;
         if (IsClimbing)
         {
-            GUI.Box(new Rect(Screen.width * .5f - 260, Screen.height - 260, 520, 28), "W/S — вверх/вниз · A/D — в сторону · Space — отпустить");
+            PirateSlop.PirateHudStyle.Panel(new Rect(Screen.width * .5f - 260, Screen.height - 260, 520, 28), "W/S — вверх/вниз · A/D — в сторону · Space — отпустить");
             return;
         }
         foreach (var ladder in ShipLadder.Active)
             if (ladder.CanGrab(transform.position, lookYaw, pitch))
             {
-                GUI.Box(new Rect(Screen.width * .5f - 180, Screen.height - 260, 360, 28), "E — схватиться за ванты");
+                PirateSlop.PirateHudStyle.Panel(new Rect(Screen.width * .5f - 180, Screen.height - 260, 360, 28), "E — схватиться за ванты");
                 break;
             }
     }

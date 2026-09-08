@@ -55,6 +55,7 @@ namespace PirateSlop.Networking
                 MenuText(new Rect(x,y+115,panelWidth,30),"Подготовка моря и островов…",true);
                 if(MenuAction(x,y+180,panelWidth,"Отменить подключение")) Disconnect();
             }
+            else if(menuPage==5) { DrawSteamParty(x,y,panelWidth); }
             else if(menuPage==1 || menuPage==2)
             {
                 MenuText(new Rect(x,y,panelWidth,35),menuPage==1?"СОЗДАТЬ ЭКСПЕДИЦИЮ":"ПРИСОЕДИНИТЬСЯ");
@@ -97,6 +98,7 @@ namespace PirateSlop.Networking
                 }
                 else
                 {
+                    if(MenuAction(x,y-68,panelWidth,"Играть с друзьями • Steam",true)) menuPage=5;
                     if(MenuAction(x,y,panelWidth,"Создать сессию",true)) menuPage=1;
                     if(MenuAction(x,y+68,panelWidth,"Присоединиться")) menuPage=2;
                 }

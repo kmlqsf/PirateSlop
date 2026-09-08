@@ -14,6 +14,7 @@ namespace PirateSlop
         static PlayerInventory lootOwner;
         public static bool LootWindowOpen => lootOwner != null && lootOwner.lootWindow;
         bool lootWindow;
+        float selectionShownAt;
         NetworkLootChest openChest;
         Cannonball aimedBall;
         SimpleCannon aimedCannon;
@@ -78,7 +79,7 @@ namespace PirateSlop
         public bool HasCannon(int slot) => slot >= 0 && slot < 6 && (CannonSlots & (1 << slot)) != 0;
         public int EmptySlot() { for (int i = 0; i < 6; i++) if (ItemAt(i) == InventoryItem.None) return i; return -1; }
         public void SetContents(int mask) => CannonSlots = mask;
-        public void SetSelection(int slot) { SelectedSlot = Mathf.Clamp(slot, 0, 5); cancelled = false; }
+        public void SetSelection(int slot) { SelectedSlot = Mathf.Clamp(slot, 0, 5); cancelled = false; selectionShownAt = Time.unscaledTime; }
         public bool AimingAtPickup()
         {
             if (motor == null || motor.PlayerCamera == null) return false;
@@ -96,6 +97,7 @@ namespace PirateSlop
             network = GetComponent<NetworkWeapon>();
             hands = GetComponent<CannonHands>();
             Fishing = GetComponent<NetworkFishing>();
+            if (GetComponent<PlayerHud>() == null) gameObject.AddComponent<PlayerHud>();
         }
 
         void Update()
@@ -230,14 +232,16 @@ namespace PirateSlop
         void OnGUI()
         {
             if (motor == null || motor.PlayerCamera == null || !motor.PlayerCamera.enabled || SessionController.MenuOpen) return;
+            if (motor.IsDead || ShipSpyglassView.IsViewing) return;
             Color old = GUI.color;
-            float width = Mathf.Min(66f, (Screen.width - 20f) / 6f);
+            float width = Mathf.Min(76f, (Screen.width - 32f) / 6f);
             for (int i = 0; i < 6; i++)
             {
+                if (!lootWindow && ItemAt(i) == InventoryItem.None && Time.unscaledTime - selectionShownAt > 3) continue;
                 GUI.color = i == SelectedSlot ? new Color(1f, .8f, .35f) : Color.white;
-                var rect = new Rect(Screen.width * .5f - width * 3 + width * i, Screen.height - 86, width - 4, 72);
+                var rect = new Rect(Screen.width * .5f - width * 3 + width * i, Screen.height - 94, width - 4, 66);
                 if (Icons != null) Icons.DrawSlot(rect, ItemAt(i), Mathf.Max(FishCount(i), Mathf.Max(BallCount(i), PlankCount(i))), (i + 1).ToString(), false);
-                else GUI.Box(rect, (i + 1) + "\n" + InventoryIcons.ItemName(ItemAt(i)));
+                else PirateHudStyle.Panel(rect, (i + 1) + "\n" + InventoryIcons.ItemName(ItemAt(i)));
             }
             GUI.color = old;
             if (lootWindow && openChest != null)
@@ -245,7 +249,8 @@ namespace PirateSlop
                 int slots = Mathf.Max(6, openChest.SlotCount), rows = Mathf.CeilToInt(slots / 6f);
                 float panelWidth = width * 6 + 24, panelHeight = 75 + rows * 78;
                 var panel = new Rect((Screen.width - panelWidth) * .5f, (Screen.height - panelHeight) * .5f, panelWidth, panelHeight);
-                GUI.Box(panel, "Сундук · нажмите на предмет, чтобы забрать");
+                PirateHudStyle.Panel(panel);
+                PirateHudStyle.Label(new Rect(panel.x + 12, panel.y + 4, panel.width - 24, 25), "СУНДУК  ·  Заберите припасы", PirateHudStyle.Gold);
                 for (int i = 0; i < slots; i++)
                 {
                     var item = openChest.ItemAt(i);
@@ -255,13 +260,14 @@ namespace PirateSlop
                     if (take) network.UseChest(openChest.NetworkObject, i);
                 }
                 GUI.enabled = true;
-                GUI.Label(new Rect(panel.x + 12, panel.yMax - 32, panelWidth - 110, 24), EmptySlot() < 0 ? "Инвентарь заполнен" : "Ваш инвентарь — внизу экрана");
-                if (GUI.Button(new Rect(panel.xMax - 92, panel.yMax - 32, 80, 24), "Закрыть")) CloseLoot(true);
+                PirateHudStyle.Label(new Rect(panel.x + 12, panel.yMax - 32, panelWidth - 110, 24), EmptySlot() < 0 ? "Инвентарь заполнен" : "Нажмите на предмет, чтобы забрать", PirateHudStyle.Muted);
+                if (PirateHudStyle.Button(new Rect(panel.xMax - 92, panel.yMax - 32, 80, 24), "Закрыть")) CloseLoot(true);
                 return;
             }
-            GUI.Label(new Rect(Screen.width * .5f - 130, Screen.height - 108, 300, 22), "G — выбросить предмет из выбранного слота");
+            if (Time.unscaledTime - selectionShownAt < 2.5f)
+                PirateHudStyle.Label(new Rect(Screen.width * .5f - 180, Screen.height - 138, 360, 26), InventoryIcons.ItemName(ItemAt(SelectedSlot)), PirateHudStyle.Paper);
             string hint = aimedBall != null && aimedBall.Network != null ? "ЛКМ / E — взять 3 ядра" : BallSelected && aimedCannon != null && !aimedCannon.IsLoaded ? "E — зарядить ядро из рук" : chest != null ? chest.Hint(this) : pickup != null ? (EmptySlot() >= 0 ? "E — взять разобранную пушку" : "Инвентарь заполнен") : Placing && !cancelled ? "ЛКМ — поставить · R/колесо — поворот · Q/E — наклон\nShift+Q/E — крен · ПКМ — отменить" : "";
-            if (hint.Length > 0) GUI.Box(new Rect(Screen.width * .5f - 290, Screen.height - 165, 580, 44), hint);
+            if (hint.Length > 0) PirateHudStyle.Panel(new Rect(Screen.width * .5f - 290, Screen.height - 165, 580, 44), hint);
         }
     }
 }

@@ -3691,6 +3691,7 @@ GameObject:
   - component: {fileID: 7206795312844989294}
   - component: {fileID: 2528557621731152364}
   - component: {fileID: 1783425920093483733}
+  - component: {fileID: 8285007558616661583}
   m_Layer: 0
   m_Name: NetworkPlayer
   m_TagString: Player
@@ -4172,6 +4173,19 @@ MonoBehaviour:
   _componentIndexCache: 255
   _addedNetworkObject: {fileID: 8718541801069254893}
   _networkObjectCache: {fileID: 0}
+--- !u!114 &8285007558616661583
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4193507432475942729}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4d4c9c36c970f9469ef117cb42721b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.SabreAnimation
+  BodyAnimator: {fileID: 7593853047363271491}
 --- !u!1 &4195186048672230144
 GameObject:
   m_ObjectHideFlags: 0

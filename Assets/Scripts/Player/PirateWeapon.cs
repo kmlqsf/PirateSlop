@@ -106,7 +106,7 @@ namespace PirateSlop
             }
             if (action > 2 || Time.time < nextAttack || (action == 0 && (!loaded || reloading))) return false;
             if (action == 0) { loaded = false; nextAttack = Time.time + Firearm.ShotInterval; }
-            else { reloading = false; nextAttack = Time.time + .65f; }
+            else { reloading = false; nextAttack = Time.time + .9f; }
             direction.Normalize();
             if (action == 2)
             {
@@ -144,7 +144,7 @@ namespace PirateSlop
         public void SetState(bool hasRound, bool isReloading) { loaded = hasRound; reloading = isReloading; }
         public void ShowAttack(byte action, Vector3 end)
         {
-            if (action == 2) visualAttackStarted = Time.time;
+            if (action == 2) { visualAttackStarted = Time.time; GetComponent<SabreAnimation>()?.PlaySlash(); }
             if (action == 2) GameAudio.Play(SoundCue.Knife, transform.position);
             if(action == 2) stab = 1;
         }
@@ -169,6 +169,7 @@ namespace PirateSlop
         }
         void OnGUI()
         {
+            if (GetComponent<PlayerHud>() != null) return;
             if (!Equipped || !motor.InputActive || motor.LocomotionLocked || (hands != null && hands.HasHeldBall)) return;
             GUI.Label(new Rect(Screen.width-290,Screen.height-65,280,55),SabreEquipped ? "Сабля · ЛКМ — удар" : reloading ? "Перезарядка…" : (loaded ? "Пистолет: 1 / ∞" : "Пистолет: 0 / ∞ — R") + "\nЛКМ — выстрел · R — перезарядка");
         }

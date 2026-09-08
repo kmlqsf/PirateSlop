@@ -7,6 +7,7 @@ namespace PirateSlop
     public sealed class InventoryIcons : ScriptableObject
     {
         public Texture2D[] Icons;
+        Material hudMaterial;
         public static string ItemName(InventoryItem item) => item switch
         {
             InventoryItem.Fish => "Рыба",
@@ -25,19 +26,48 @@ namespace PirateSlop
         };
         public bool DrawSlot(Rect rect, InventoryItem item, int count, string key, bool button)
         {
-            bool clicked = button && GUI.Button(rect, GUIContent.none);
-            if (!button) GUI.Box(rect, GUIContent.none);
-            int index = CannonAmmo.IsBall(item) ? (int)InventoryItem.Cannonball : (int)item;
+            bool selected = GUI.color != Color.white;
             Color oldColor = GUI.color;
-            GUI.color *= CannonAmmo.Color(item);
+            GUI.color = Color.white;
+            bool hover = button && rect.Contains(Event.current.mousePosition);
+            bool clicked = button && GUI.Button(rect, GUIContent.none, GUIStyle.none);
+            if (selected || hover) PirateHudStyle.Brush(new Rect(rect.x - 8, rect.y - 10, rect.width + 16, rect.height + 10), new Color(.06f,.13f,.13f,.8f));
+            int index = CannonAmmo.IsBall(item) ? (int)InventoryItem.Cannonball : (int)item;
+            GUI.color = CannonAmmo.IsBall(item) ? CannonAmmo.Color(item) : PirateHudStyle.Paper;
             if (index >= 0 && Icons != null && index < Icons.Length && Icons[index] != null)
-                GUI.DrawTexture(new Rect(rect.x + 8, rect.y + 5, rect.width - 16, rect.height - 24), Icons[index], ScaleMode.ScaleToFit, true);
+            {
+                float inset = selected || hover ? 0 : 5;
+                var target = new Rect(rect.x + inset, rect.y - 9 + inset, rect.width - inset * 2, rect.height - 17 - inset * 2);
+                var icon = Icons[index];
+                float scale = Mathf.Min(target.width / icon.width, target.height / icon.height);
+                target = new Rect(target.center.x - icon.width * scale / 2, target.center.y - icon.height * scale / 2, icon.width * scale, icon.height * scale);
+                if (hudMaterial == null)
+                {
+                    var shader = Resources.Load<Shader>("HudIcon");
+                    if (shader != null) hudMaterial = new Material(shader) { hideFlags = HideFlags.HideAndDontSave };
+                }
+                if (Event.current.type == EventType.Repaint && hudMaterial != null)
+                    Graphics.DrawTexture(target, icon, new Rect(0, 0, 1, 1), 0, 0, 0, 0, GUI.color, hudMaterial);
+                else if (hudMaterial == null) GUI.DrawTexture(target, icon, ScaleMode.ScaleToFit, true);
+            }
+            else if (item == InventoryItem.Sabre)
+            {
+                var matrix = GUI.matrix;
+                var center = new Vector2(rect.center.x, rect.y + 23);
+                GUIUtility.RotateAroundPivot(35, center);
+                PirateHudStyle.Brush(new Rect(center.x - 5, center.y - 29, 10, 48), PirateHudStyle.Paper, true);
+                PirateHudStyle.Brush(new Rect(center.x - 16, center.y + 12, 32, 7), PirateHudStyle.Gold, true);
+                PirateHudStyle.Brush(new Rect(center.x - 4, center.y + 16, 8, 15), PirateHudStyle.Gold, true);
+                GUI.matrix = matrix;
+            }
+            GUI.color = Color.white;
+            if (selected) PirateHudStyle.Brush(new Rect(rect.x + 13, rect.yMax - 15, rect.width - 26, 7), PirateHudStyle.Gold, true);
+            PirateHudStyle.Label(new Rect(rect.center.x - 10, rect.yMax - 9, 20, 20), key, selected ? PirateHudStyle.Paper : PirateHudStyle.Muted);
+            if (count > 1) PirateHudStyle.Label(new Rect(rect.xMax - 25, rect.y + 28, 27, 22), count.ToString(), PirateHudStyle.Paper);
+            if (button) PirateHudStyle.Label(new Rect(rect.x - 4, rect.yMax - 19, rect.width + 8, 24), ItemName(item), PirateHudStyle.Paper);
             GUI.color = oldColor;
-            GUI.Label(new Rect(rect.x + 4, rect.y + 1, 20, 20), key);
-            if (count > 1) GUI.Label(new Rect(rect.xMax - 27, rect.y + 2, 27, 20), count.ToString());
-            var style = new GUIStyle(GUI.skin.label) { alignment = TextAnchor.LowerCenter, fontSize = 10 };
-            GUI.Label(new Rect(rect.x + 2, rect.yMax - 21, rect.width - 4, 20), ItemName(item), style);
             return clicked;
         }
+        void OnDisable() { if (hudMaterial != null) DestroyImmediate(hudMaterial); }
     }
 }

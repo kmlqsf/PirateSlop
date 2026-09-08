@@ -275,8 +275,10 @@ namespace PirateSlop.Networking
             if (!IsOwner || !motor.InputActive || !Available) return;
             string hint = aimed != null && !IsFishing && !CarryingCatch ? "E — подобрать " + aimed.ItemName : HasFish ? (CarryingCatch ? "Инвентарь заполнен! " : "") + "G — выбросить рыбу · ПКМ — съесть (+25 HP)" : !inventory.RodSelected ? "" :
                 stage.Value == 0 ? "ЛКМ — забросить в море" : stage.Value == 1 ? "Заброс…" : stage.Value == 2 ? "Ждите поклёвку… · ПКМ — убрать удочку" : stage.Value == 3 ? "КЛЮЁТ! Зажмите ЛКМ!" : "Держите ЛКМ — вытянуть рыбу: " + Mathf.RoundToInt(progress.Value * 100) + "%";
-            if (hint.Length > 0) GUI.Box(new Rect(Screen.width * .5f - 300, Screen.height - 155, 600, 32), hint);
-            if (IsEating) GUI.Box(new Rect(Screen.width * .5f - 300, Screen.height - 155, 600, 32), "Едим рыбу… " + Mathf.CeilToInt((1f - eatProgress.Value) * 3f) + " с");
+            if (!IsEating && hint.Length > 0) PirateHudStyle.Panel(new Rect(Screen.width * .5f - 300, Screen.height - 155, 600, 32), hint);
+            if (IsEating) PirateHudStyle.Panel(new Rect(Screen.width * .5f - 300, Screen.height - 155, 600, 32), "Едим рыбу… " + Mathf.CeilToInt((1f - eatProgress.Value) * 3f) + " с");
+            if (IsEating || stage.Value == 4)
+                PirateHudStyle.Bar(new Rect(Screen.width * .5f - 290, Screen.height - 126, 580, 6), IsEating ? eatProgress.Value : progress.Value, PirateHudStyle.Gold);
         }
     }
 }

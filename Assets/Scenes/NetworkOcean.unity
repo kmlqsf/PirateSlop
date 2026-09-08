@@ -15,18 +15,18 @@ RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 10
   m_Fog: 1
-  m_FogColor: {r: 0.48, g: 0.59, b: 0.61, a: 1}
+  m_FogColor: {r: 0.73, g: 0.81, b: 0.86, a: 1}
   m_FogMode: 3
-  m_FogDensity: 0.0045
+  m_FogDensity: 0.0016
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
-  m_AmbientSkyColor: {r: 0.28, g: 0.37, b: 0.43, a: 1}
-  m_AmbientEquatorColor: {r: 0.16, g: 0.23, b: 0.25, a: 1}
-  m_AmbientGroundColor: {r: 0.08, g: 0.12, b: 0.14, a: 1}
-  m_AmbientIntensity: 1
+  m_AmbientSkyColor: {r: 0.78, g: 0.84, b: 0.9, a: 1}
+  m_AmbientEquatorColor: {r: 0.65, g: 0.73, b: 0.79, a: 1}
+  m_AmbientGroundColor: {r: 0.4, g: 0.47, b: 0.52, a: 1}
+  m_AmbientIntensity: 1.15
   m_AmbientMode: 1
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 2100000, guid: 8a638778dff551446948d2eadc97ace0, type: 2}
+  m_SkyboxMaterial: {fileID: 2100000, guid: b09fc253e00ba79409aed387f6999cf5, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -222,7 +222,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c51e714af19aed4fad219572759a94a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.OceanSurface
-  WaveScale: 1
+  WaveScale: 0.06
   SeaLevel: 0
   WaterMaterial: {fileID: 2100000, guid: c8e676f2fa3e9d34c81f843598fefee7, type: 2}
 --- !u!1 &57996940
@@ -255,10 +255,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.RenderPipelines.Core.Runtime::UnityEngine.Rendering.Volume
   m_IsGlobal: 1
-  priority: 1
+  priority: 20
   blendDistance: 0
   weight: 1
-  sharedProfile: {fileID: 11400000, guid: 57f78f68499f81e43885c8f727c76984, type: 2}
+  sharedProfile: {fileID: 11400000, guid: 333c31f2e17768b4a86ac8dbc2f9c413, type: 2}
 --- !u!4 &57996942
 Transform:
   m_ObjectHideFlags: 0
@@ -302,8 +302,8 @@ Light:
   m_Enabled: 1
   serializedVersion: 13
   m_Type: 1
-  m_Color: {r: 1, g: 0.84, b: 0.64, a: 1}
-  m_Intensity: 1.65
+  m_Color: {r: 0.94, g: 0.97, b: 1, a: 1}
+  m_Intensity: 1.35
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -312,7 +312,7 @@ Light:
     m_Type: 2
     m_Resolution: -1
     m_CustomResolution: -1
-    m_Strength: 0.85
+    m_Strength: 0.55
     m_Bias: 0.03
     m_NormalBias: 0.4
     m_NearPlane: 0.2
@@ -365,7 +365,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 410087039}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.18197778, y: -0.29518098, z: 0.057377376, w: 0.9361945}
+  m_LocalRotation: {x: 0.44037747, y: -0.26672933, z: 0.13885048, w: 0.8459573}
   m_LocalPosition: {x: 0, y: 3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0

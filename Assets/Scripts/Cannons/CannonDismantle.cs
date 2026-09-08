@@ -63,7 +63,7 @@ namespace PirateSlop
         {
             if (target == null || !motor.InputActive || Time.unscaledTime - started < .3f) return;
             var rect = new Rect(Screen.width * .5f - 160f, Screen.height * .5f + 65f, 320f, 44f);
-            GUI.Box(rect, message ?? "Снятие пушки · удерживайте E 7 секунд");
+            PirateHudStyle.Panel(rect, message ?? "Снятие пушки · удерживайте E 7 секунд");
             Color previous = GUI.color;
             GUI.color = new Color(.95f, .7f, .2f);
             GUI.DrawTexture(new Rect(rect.x + 5f, rect.yMax - 12f, (rect.width - 10f) * Mathf.Clamp01(progress), 7f), Texture2D.whiteTexture);

@@ -156,9 +156,9 @@ namespace PirateSlop
         void OnGUI()
         {
             if (player == null || !player.InputActive || player.LocomotionLocked || (controls != null && controls.IsDragging) || (inventory != null && inventory.Placing)) return;
-            GUI.Label(new Rect(Screen.width / 2f - 4, Screen.height / 2f - 10, 20, 20), "+");
+
             string text = held != null ? "E — в инвентарь • Поднеси ядро к дулу • Колесо — ближе/дальше • Отпусти ЛКМ — бросить" : aimed != null ? (aimed.IsIgnited ? "Фитиль горит…" : aimed.IsLoaded ? "E — выстрел · удерживать E 7 с — снять" : "Поднеси ядро к дулу · удерживать E 7 с — снять") : "";
-            if (text.Length > 0) GUI.Box(new Rect(Screen.width / 2f - 310, Screen.height - 125, 620, 28), text);
+            if (text.Length > 0) PirateHudStyle.Panel(new Rect(Screen.width / 2f - 310, Screen.height - 125, 620, 28), text);
         }
     }
 }

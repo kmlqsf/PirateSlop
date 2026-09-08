@@ -139,13 +139,13 @@ namespace PirateSlop
             var handle = grabbed != null ? grabbed : hovered;
             string hint = handle != null ? (handle.Helm != null ? "ЛКМ + движение мышью по кругу — повернуть штурвал" : "ЛКМ + мышь вверх/вниз — наклонить ствол") : "";
             if (handle != null && handle.Cannon != null) hint += "   " + handle.Cannon.Elevation.ToString("F0") + "°";
-            if (hint.Length > 0) GUI.Box(new Rect(Screen.width * .5f - 290, Screen.height - 205, 580, 28), hint);
-            if (grabbed != null && grabbed.Helm != null) GUI.Box(new Rect(pointer.x - 4, Screen.height - pointer.y - 4, 8, 8), "");
+            if (hint.Length > 0) PirateHudStyle.Panel(new Rect(Screen.width * .5f - 290, Screen.height - 270, 580, 32), hint);
+            if (grabbed != null && grabbed.Helm != null) PirateHudStyle.Panel(new Rect(pointer.x - 4, Screen.height - pointer.y - 4, 8, 8), "");
             if (nearbySails == null) return;
             var ship = nearbySails.GetComponent<ShipController>();
             float deploy = nearbySails.DeployPercentage;
             Rect panel = new Rect(Screen.width * .5f - 235, Screen.height - 230, 470, 66);
-            GUI.Box(panel, "Колесо мыши — паруса: " + Mathf.RoundToInt(deploy * 100f) + "%\nСкорость: " + ship.Speed.ToString("F1") + " / " + (ship.MaxSpeed * deploy).ToString("F1") + " м/с");
+            PirateHudStyle.Panel(panel, "Колесо мыши — паруса: " + Mathf.RoundToInt(deploy * 100f) + "%\nСкорость: " + ship.Speed.ToString("F1") + " / " + (ship.MaxSpeed * deploy).ToString("F1") + " м/с");
             Color old = GUI.color;
             GUI.color = new Color(.9f, .72f, .28f);
             GUI.DrawTexture(new Rect(panel.x + 12, panel.yMax - 12, (panel.width - 24) * deploy, 5), Texture2D.whiteTexture);

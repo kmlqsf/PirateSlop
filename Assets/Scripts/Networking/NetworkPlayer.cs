@@ -30,6 +30,7 @@ namespace PirateSlop.Networking
     {
         public readonly SyncVar<NetworkObject> ShipObject = new();
         public readonly SyncVar<int> ParticipantId = new();
+        public readonly SyncVar<int> TeamId = new();
         AdvancedPlayerController motor;
         ShipDeckPassenger passenger;
         bool bound;

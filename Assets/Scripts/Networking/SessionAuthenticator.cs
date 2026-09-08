@@ -31,6 +31,7 @@ namespace PirateSlop.Networking
             int admitted = 0;
             foreach (var other in NetworkManager.ServerManager.Clients.Values) if (other.IsAuthenticated) admitted++;
             string error = message.Version != session.Config.ProtocolVersion ? "Несовместимая версия игры" : admitted >= session.MaxPlayers ? "Сессия заполнена" : "";
+            if (!session.AcceptSteamConnection(conn)) error = "Вы не состоите в лобби этой сессии";
             NetworkManager.ServerManager.Broadcast(conn, new AdmissionMessage { Error = error }, false);
             UnityEngine.Debug.Log($"ADMISSION connection={conn.ClientId} result={(error == "" ? "accepted" : error)}");
             OnAuthenticationResult?.Invoke(conn, error == "");

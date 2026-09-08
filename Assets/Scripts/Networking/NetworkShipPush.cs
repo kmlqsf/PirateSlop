@@ -50,7 +50,7 @@ namespace PirateSlop.Networking
         void OnGUI()
         {
             if(IsOwner && aimed!=null && player.Motor.InputActive)
-                GUI.Box(new Rect(Screen.width/2f-150,Screen.height-180,300,30),"E — оттолкнуть корабль");
+                PirateHudStyle.Panel(new Rect(Screen.width/2f-150,Screen.height-180,300,30),"E — оттолкнуть корабль");
         }
     }
 }

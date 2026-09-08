@@ -17,6 +17,7 @@ namespace PirateSlop
         Transform[] triggerFingers;
         Quaternion[] triggerRest;
         PlayerInventory inventory;
+        SabreAnimation sabreAnimation;
         sealed class Arm
         {
             public Transform Upper, Fore, Hand;
@@ -55,6 +56,7 @@ namespace PirateSlop
             gripRotation = Quaternion.Euler(90, 0, 0);
             renderers = ViewArms.GetComponentsInChildren<Renderer>(true);
             inventory = GetComponent<PlayerInventory>();
+            sabreAnimation = GetComponent<SabreAnimation>();
             triggerFingers = ViewArms.GetComponentsInChildren<Transform>(true).Where(t => t.name == "View_Index1.R" || t.name == "View_Index2.R" || t.name == "View_Index3.R").OrderBy(t => t.name).ToArray();
             triggerRest = triggerFingers.Select(t => t.localRotation).ToArray();
         }
@@ -69,6 +71,7 @@ namespace PirateSlop
         void After(ScriptableRenderContext context, Camera camera) { if (renderers != null) foreach (var r in renderers) r.forceRenderingOff = true; }
         void LateUpdate()
         {
+            if (sabreAnimation != null && sabreAnimation.Active) return;
             weight = Mathf.MoveTowards(weight, weapon.AnimationEquipped ? 1 : 0, Time.deltaTime * 8);
             if (weight <= 0) return;
             for (int i = 0; i < triggerFingers.Length; i++)

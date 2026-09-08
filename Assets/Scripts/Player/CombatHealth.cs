@@ -20,6 +20,7 @@ namespace PirateSlop
         float localSpawnYaw;
         Transform spawnPlatform;
         float respawnAt;
+        public float RespawnRemaining => Mathf.Max(0, respawnAt - Time.time);
         void Awake() { Current = MaxHealth; network = GetComponent<NetworkHealth>(); controller = GetComponent<CharacterController>(); if (controller != null && GetComponent<DamageFeedback>() == null) gameObject.AddComponent<DamageFeedback>(); }
         void Start()
         {
@@ -91,6 +92,12 @@ namespace PirateSlop
         }
         public void Damage(float amount, GameObject attacker = null)
         {
+            if (attacker != null && attacker != gameObject)
+            {
+                var source = attacker.GetComponent<NetworkPlayer>();
+                var target = GetComponent<NetworkPlayer>();
+                if (source != null && target != null && source.TeamId.Value > 0 && source.TeamId.Value == target.TeamId.Value) return;
+            }
             if (network != null && !network.IsServerInitialized) return;
             if (IsDead || amount <= 0 || float.IsNaN(amount) || float.IsInfinity(amount)) return;
             float dealt = Mathf.Min(Current, amount);
@@ -116,6 +123,8 @@ namespace PirateSlop
         }
         void OnGUI()
         {
+            var owner = GetComponent<NetworkPlayer>();
+            if (owner != null && owner.IsOwner) return;
             if (IsDead) return;
             var camera = Camera.main;
             if (camera == null || !camera.isActiveAndEnabled) return;

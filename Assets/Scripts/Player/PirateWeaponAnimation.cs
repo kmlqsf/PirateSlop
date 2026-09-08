@@ -89,7 +89,7 @@ namespace PirateSlop
         {
             float elapsed = Time.time - attackStarted;
             if (!Equipped || !SabreEquipped || motor.IsDead || motor.LocomotionLocked || (hands != null && hands.HasHeldBall)) { attackStarted = -10; return; }
-            if (elapsed < .12f || elapsed > .4f) return;
+            if (elapsed < .30f || elapsed > .48f) return;
             Vector3 origin = transform.position + Vector3.up * (motor.IsCrouched ? .7f : 1.4f);
             foreach (var collider in Physics.OverlapSphere(origin, 2.4f, ~0, QueryTriggerInteraction.Ignore))
             {
@@ -153,7 +153,7 @@ namespace PirateSlop
             ReloadHandOffset = Pose(reloadTime, reloadTimes, reloadHands);
             BodyWeaponPosition = new Vector3(.22f, 1.38f, .38f) + position;
             BodyWeaponRotation = Quaternion.Euler(angles);
-            if (SabreViewPivot == null) return;
+            if (SabreViewPivot == null || GetComponent<SabreAnimation>() != null) return;
             float slash = Time.time - visualAttackStarted;
             Vector3 slashAngle = SabreEquipped ? Pose(slash, slashTimes, slashAngles) : Vector3.zero;
             Vector3 slashPosition = SabreEquipped ? Pose(slash, slashTimes, slashPositions) : Vector3.zero;

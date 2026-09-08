@@ -53,8 +53,8 @@ namespace PirateSlop
             if (motor.IsSwimming)
             {
                 GUI.color = Color.white;
-                GUI.Box(new Rect(Screen.width / 2f - 230, Screen.height - 145, 460, 32), "WASD swim | Shift faster | Space up | Ctrl/C down | Swim into ladder to climb");
-                if (motor.BreathFraction < .99f)
+                PirateHudStyle.Panel(new Rect(Screen.width / 2f - 260, Screen.height - 155, 520, 36), "WASD — плыть · Shift — быстрее · Space — вверх · Ctrl — вниз");
+                if (motor.BreathFraction < .99f && GetComponent<PlayerHud>() == null)
                 {
                     var rect = new Rect(Screen.width / 2f - 100, Screen.height - 180, 200, 18);
                     GUI.color = new Color(0, 0, 0, .7f); GUI.DrawTexture(rect, Texture2D.whiteTexture);
