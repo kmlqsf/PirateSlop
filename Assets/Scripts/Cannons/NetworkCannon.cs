@@ -80,7 +80,7 @@ namespace PirateSlop.Networking
         public bool LoadInventoryBall(NetworkWeapon player, int index, InventoryItem ammo = InventoryItem.Cannonball)
         {
             var cannon = Cannon(index);
-            if (!IsServerInitialized || cannon == null || cannon.IsLoaded || !CannonAmmo.IsBall(ammo) || !player.CanReach(cannon.Muzzle.position, cannon.transform)) return false;
+            if (!IsServerInitialized || cannon == null || cannon.IsLoaded || !CannonAmmo.IsBall(ammo) || !player.CanReachCannon(cannon)) return false;
             if (!cannon.LoadAmmo(ammo)) return false;
             var placement = placements[index]; placement.Loaded = true; placement.Ammo = ammo; placement.Fuse = -1f; placements[index] = placement;
             return true;

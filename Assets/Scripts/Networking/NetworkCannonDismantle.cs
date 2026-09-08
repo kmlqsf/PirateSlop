@@ -16,7 +16,7 @@ namespace PirateSlop.Networking
             var cannon = cannonNetwork != null && cannonNetwork.Crate != null && index >= 0 && index < cannonNetwork.Crate.Cannons.Count
                 ? cannonNetwork.Crate.Cannons[index] : null;
             bool valid = holding && cannon != null && cannon.gameObject.activeSelf && !cannon.IsIgnited && !cannon.IsLoading &&
-                CanHandleBall() && !GetComponent<CannonHands>().HasHeldBall && CanReach(cannon.Muzzle.position, cannon.transform);
+                CanHandleBall() && !GetComponent<CannonHands>().HasHeldBall && CanReachCannon(cannon);
             if (!valid || !CanAddItem(InventoryItem.Cannon))
             {
                 dismantleShip = null; dismantleIndex = -1;

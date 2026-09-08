@@ -10,47 +10,52 @@ namespace PirateSlop.Networking
         public NetworkObject DeveloperTargetPrefab;
         readonly List<NetworkObject> developerObjects = new();
         float nextDeveloperCommand;
-        public void DeveloperCommand(byte command) => DeveloperCommandServerRpc(command);
+        public void DeveloperCommand(byte command, int count = 1) => DeveloperCommandServerRpc(command, count);
         [ServerRpc]
-        void DeveloperCommandServerRpc(byte command)
+        void DeveloperCommandServerRpc(byte command, int count)
         {
-            if (!DeveloperMenu.Available || (!IsOwner && !DeveloperMenu.AllowRemote)) { DeveloperResultTargetRpc(Owner, "Host permission required."); return; }
+            if (!DeveloperMenu.Available || (!IsOwner && !DeveloperMenu.AllowRemote)) { DeveloperResultTargetRpc(Owner, "Нужно разрешение хоста."); return; }
             if (Time.time < nextDeveloperCommand) return;
             nextDeveloperCommand = Time.time + .3f;
             var session = SessionController.Instance;
             var health = GetComponent<CombatHealth>();
-            if (command == 6) { health.Heal(health.MaxHealth); DeveloperResultTargetRpc(Owner, "Player healed."); return; }
-            if (command == 7)
+            if (command == 6) { health.Heal(health.MaxHealth); DeveloperResultTargetRpc(Owner, "Здоровье восстановлено."); return; }
+            if (command == 12) { health.Damage(10f); DeveloperResultTargetRpc(Owner, "Нанесено 10 урона."); return; }
+            if (command >= 32 && command < 64)
             {
-                var ship = GetComponent<ShipDeckPassenger>().Ship;
-                if (ship != null) ship.GetComponent<CombatHealth>().Heal(1200);
-                DeveloperResultTargetRpc(Owner, ship != null ? "Ship healed." : "Stand on a ship."); return;
+                var item = (InventoryItem)(command - 32);
+                int added = 0, requested = Mathf.Clamp(count, 1, 20);
+                while (added < requested && AddItem(item)) added++;
+                DeveloperResultTargetRpc(Owner, "Добавлено: " + added + " / " + requested + (added < requested ? " · Инвентарь заполнен или предмет недоступен." : "")); return;
             }
-            if (command == 8) { DeveloperResultTargetRpc(Owner, AddItem(InventoryItem.Cannon) ? "Kit added." : "Inventory full."); return; }
+            if (command == 8) { DeveloperResultTargetRpc(Owner, AddItem(InventoryItem.Cannon) ? "Пушка добавлена." : "Инвентарь заполнен."); return; }
             if (command == 9)
             {
                 foreach (var item in developerObjects) if (item != null && item.IsSpawned) ServerManager.Despawn(item);
-                developerObjects.Clear(); DeveloperResultTargetRpc(Owner, "Test objects removed."); return;
+                developerObjects.Clear(); DeveloperResultTargetRpc(Owner, "Тестовые объекты удалены."); return;
             }
             developerObjects.RemoveAll(o => o == null || !o.IsSpawned);
-            if (developerObjects.Count >= 20) { DeveloperResultTargetRpc(Owner, "Remove test objects first (limit 20)."); return; }
+            if (developerObjects.Count >= 20) { DeveloperResultTargetRpc(Owner, "Удалите тестовые объекты: достигнут лимит 20."); return; }
             if (command == 0)
             {
                 if (session == null) return;
                 var spawned = session.SpawnDeveloperShip(transform.position, transform.eulerAngles.y);
                 if (spawned != null) developerObjects.Add(spawned);
-                DeveloperResultTargetRpc(Owner, spawned != null ? "Ship spawned nearby." : "No clear water nearby."); return;
+                DeveloperResultTargetRpc(Owner, spawned != null ? "Корабль создан рядом." : "Рядом нет свободного места на воде."); return;
             }
-            var itemType = command == 2 ? InventoryItem.Cannon : command == 3 ? InventoryItem.Pistol : command == 4 ? InventoryItem.Sabre : command == 10 ? InventoryItem.Mallet : command == 11 ? InventoryItem.Plank : InventoryItem.Cannonball;
-            if (command > 5 && command != 10 && command != 11) return;
-            if (command != 1 && (DropPrefabs == null || (int)itemType >= DropPrefabs.Length || DropPrefabs[(int)itemType] == null))
-            { DeveloperResultTargetRpc(Owner, "Spawn prefab is not configured."); return; }
-            var prefab = command == 1 ? DeveloperTargetPrefab : DropPrefabs[(int)itemType].NetworkObject;
+            var itemType = command >= 64 ? (InventoryItem)(command - 64) : command == 2 ? InventoryItem.Cannon : command == 3 ? InventoryItem.Pistol : command == 4 ? InventoryItem.Sabre : InventoryItem.Cannonball;
+            if (command > 5 && command < 64) return;
+            if (itemType < InventoryItem.Fish || itemType > InventoryItem.BoomerangCannonball || itemType == InventoryItem.Mallet || itemType == InventoryItem.Plank) return;
+            int prefabIndex = CannonAmmo.IsBall(itemType) ? (int)InventoryItem.Cannonball : (int)itemType;
+            if (command != 1 && (DropPrefabs == null || prefabIndex >= DropPrefabs.Length || DropPrefabs[prefabIndex] == null))
+            { DeveloperResultTargetRpc(Owner, "Префаб предмета не назначен."); return; }
+            var prefab = command == 1 ? DeveloperTargetPrefab : DropPrefabs[prefabIndex].NetworkObject;
+            if (prefab == null) { DeveloperResultTargetRpc(Owner, "Префаб не назначен."); return; }
             Vector3 origin = transform.position + transform.forward * 3 + Vector3.up * 3;
             RaycastHit floor = default; float distance = 10;
             foreach (var hit in Physics.RaycastAll(origin, Vector3.down, distance, ~0, QueryTriggerInteraction.Ignore))
                 if (!hit.transform.IsChildOf(transform) && hit.normal.y > .5f && hit.distance < distance) { floor = hit; distance = hit.distance; }
-            if (floor.collider == null) { DeveloperResultTargetRpc(Owner, "Face a clear deck or ground."); return; }
+            if (floor.collider == null) { DeveloperResultTargetRpc(Owner, "Направьте взгляд на свободную палубу или землю."); return; }
             var bounds = prefab.GetComponent<Collider>().bounds;
             var box = prefab.GetComponent<BoxCollider>();
             float height = command == 1 ? 1f : box != null ? box.size.y * .5f - box.center.y : .18f;
@@ -59,11 +64,12 @@ namespace PirateSlop.Networking
             UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene(obj.gameObject, gameObject.scene);
             var support = floor.collider.GetComponentInParent<NetworkShip>();
             var drop = obj.GetComponent<NetworkFish>();
+            if (drop != null && CannonAmmo.IsBall(itemType)) drop.SetAmmoItem(itemType);
             if (drop != null) drop.Place(support != null ? support.NetworkObject : null, position, Quaternion.identity);
             var target = obj.GetComponent<DeveloperTarget>();
             if (target != null) target.Place(support, position);
             ServerManager.Spawn(obj); developerObjects.Add(obj);
-            DeveloperResultTargetRpc(Owner, "Spawned.");
+            DeveloperResultTargetRpc(Owner, "Объект создан.");
         }
         [TargetRpc] void DeveloperResultTargetRpc(NetworkConnection connection, string message) => GetComponent<DeveloperMenu>().Report(message);
     }

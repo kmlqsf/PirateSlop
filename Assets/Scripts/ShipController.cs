@@ -9,7 +9,7 @@ public class ShipController : MonoBehaviour
     [SerializeField] float turnSpeed = 22f, maxBankAngle = 5f, bankResponse = 2f;
     Rigidbody rb;
     float speed, yaw, bank, waterHeight;
-    float nextCollisionAudio;
+    float nextCollisionAudio, lastCollisionContact = -10f;
     [SerializeField] float pushImpulse = 450000f, pushLinearDrag = .55f, pushAngularDrag = .7f;
     [SerializeField] float impulseMass = 15000f, hullLength = 46f, hullWidth = 13f;
     Vector3 pushVelocity;
@@ -147,13 +147,14 @@ public class ShipController : MonoBehaviour
             float inward = Vector3.Dot(pushVelocity, normal);
             if (inward < 0f) pushVelocity -= normal * inward;
         }
-        if (Time.time >= nextCollisionAudio && displacement.sqrMagnitude > .00001f)
+        if (Time.time >= nextCollisionAudio && Time.time - lastCollisionContact > .75f && displacement.sqrMagnitude > .00001f)
         {
             var network = GetComponent<PirateSlop.Networking.NetworkShip>();
             if (network != null) network.CollisionAudio();
             else GameAudio.Play(SoundCue.ShipCollision, transform.position);
             nextCollisionAudio = Time.time + 2f;
         }
+        if (displacement.sqrMagnitude > .00001f) lastCollisionContact = Time.time;
         var position = rb.position + displacement; position.y = rb.position.y;
         rb.position = position;
         transform.position = position;

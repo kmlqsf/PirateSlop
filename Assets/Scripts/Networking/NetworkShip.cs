@@ -65,7 +65,11 @@ namespace PirateSlop.Networking
         public void CollisionAudio() { if (IsServerInitialized) CollisionAudioObserversRpc(); }
         public void ImpactVfx(Vector3 point, Vector3 normal) { if (IsServerInitialized) ImpactVfxObserversRpc(point, normal); }
         [ObserversRpc(RunLocally = true)]
-        void ImpactVfxObserversRpc(Vector3 point, Vector3 normal) => CombatVfx.Impact(point, normal, true);
+        void ImpactVfxObserversRpc(Vector3 point, Vector3 normal)
+        {
+            CombatVfx.Impact(point, normal, true);
+            GameAudio.Play(SoundCue.ShipHit, point);
+        }
         [ObserversRpc(RunLocally = true)]
         void CollisionAudioObserversRpc() => GameAudio.Play(SoundCue.ShipCollision, transform.position);
         [ServerRpc(RequireOwnership = false)]

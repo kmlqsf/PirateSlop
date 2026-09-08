@@ -15,7 +15,7 @@ namespace PirateSlop
         public NetworkCannon Network { get; set; }
         public CannonballCrate Crate { get; set; }
         public int Index { get; set; }
-        public const float LoadRadius = 1.15f;
+        public const float LoadRadius = 3f;
         Cannonball loaded;
         float loadStarted = -1f;
         Vector3 loadStart;
@@ -25,7 +25,7 @@ namespace PirateSlop
             if (Muzzle == null || Vector3.Distance(point, Muzzle.position) > LoadRadius) return false;
             Vector3 delta = Muzzle.position - point;
             foreach (var hit in Physics.RaycastAll(point, delta.normalized, delta.magnitude, ~0, QueryTriggerInteraction.Ignore))
-                if (!hit.transform.IsChildOf(transform) && hit.collider.GetComponentInParent<Cannonball>() == null) return false;
+                if (!hit.transform.IsChildOf(transform) && hit.collider.GetComponentInParent<Cannonball>() == null && hit.collider.GetComponentInParent<AdvancedPlayerController>() == null) return false;
             return true;
         }
         GameObject firingPlayer;
@@ -181,7 +181,7 @@ namespace PirateSlop
             InitializeSupply(loaded);
             Vector3 inherited = GetComponentInParent<ShipController>().CannonPointVelocity(Muzzle.position);
             Vector3 position = Muzzle.position + Muzzle.forward * .35f;
-            Vector3 velocity = Muzzle.forward * LaunchSpeed + inherited;
+            Vector3 velocity = Muzzle.forward * (LaunchSpeed * 1.15f) + inherited;
             var ammo = loaded.Ammo;
             SpawnShot(position, velocity, true, ammo);
             var motor=GetComponentInParent<ShipController>();

@@ -9,7 +9,7 @@ namespace PirateSlop
     {
         public InventoryIcons Icons;
         public int SabreSlots { get; set; } = 1 << 2;
-        public bool HasSabre(int slot) => slot >= 2 && slot < 6 && (SabreSlots & (1 << slot)) != 0;
+        public bool HasSabre(int slot) => slot >= 0 && slot < 6 && (SabreSlots & (1 << slot)) != 0;
         public bool SabreSelected => HasSabre(SelectedSlot) && !HandsOccupied;
         static PlayerInventory lootOwner;
         public static bool LootWindowOpen => lootOwner != null && lootOwner.lootWindow;
@@ -30,7 +30,7 @@ namespace PirateSlop
         public bool MalletSelected => HasMallet(SelectedSlot);
         public int TotalPlanks { get { int total = 0; foreach (int count in plankCounts) total += count; return total; } }
         public void SetRepairItems(int mallets, int slot, int count) { malletSlots = mallets; plankCounts[slot] = count; }
-        public InventoryItem ItemAt(int slot) => HasSabre(slot) ? InventoryItem.Sabre : slot == 0 && HasPistol ? InventoryItem.Pistol : slot == 1 && HasRod ? InventoryItem.Rod : HasCannon(slot) ? InventoryItem.Cannon : FishCount(slot) > 0 ? InventoryItem.Fish : BallCount(slot) > 0 ? BallItem(slot) : HasMallet(slot) ? InventoryItem.Mallet : PlankCount(slot) > 0 ? InventoryItem.Plank : InventoryItem.None;
+        public InventoryItem ItemAt(int slot) => HasSabre(slot) ? InventoryItem.Sabre : PistolAt(slot) ? InventoryItem.Pistol : RodAt(slot) ? InventoryItem.Rod : HasCannon(slot) ? InventoryItem.Cannon : FishCount(slot) > 0 ? InventoryItem.Fish : BallCount(slot) > 0 ? BallItem(slot) : HasMallet(slot) ? InventoryItem.Mallet : PlankCount(slot) > 0 ? InventoryItem.Plank : InventoryItem.None;
         public void OpenLoot(NetworkLootChest target)
         {
             if (target == null || !network.IsOwner || motor.IsDead || Vector3.Distance(transform.position, target.transform.position) > 5f) return;
@@ -50,14 +50,18 @@ namespace PirateSlop
         public int CannonSlots { get; private set; }
         public NetworkFishing Fishing { get; private set; }
         public bool HandsOccupied => Fishing != null && Fishing.HasFish;
-        public bool HasPistol { get; set; } = true;
-        public bool HasRod { get; set; } = true;
+        public int PistolSlots { get; set; } = 1;
+        public int RodSlots { get; set; } = 2;
+        public bool HasPistol => PistolSlots != 0;
+        public bool HasRod => RodSlots != 0;
+        public bool PistolAt(int slot) => slot >= 0 && slot < 6 && (PistolSlots & (1 << slot)) != 0;
+        public bool RodAt(int slot) => slot >= 0 && slot < 6 && (RodSlots & (1 << slot)) != 0;
         readonly int[] fishCounts = new int[6];
         public int FishCount(int slot) => slot >= 0 && slot < 6 ? fishCounts[slot] : 0;
         public void SetFishCount(int slot, int count) => fishCounts[slot] = count;
         public bool FishSelected => FishCount(SelectedSlot) > 0;
-        public bool RodSelected => SelectedSlot == 1 && HasRod;
-        public bool PistolSelected => SelectedSlot == 0 && HasPistol && !HandsOccupied;
+        public bool RodSelected => RodAt(SelectedSlot);
+        public bool PistolSelected => PistolAt(SelectedSlot) && !HandsOccupied;
         public bool Placing => HasCannon(SelectedSlot);
         public bool InteractionUsed { get; private set; }
         AdvancedPlayerController motor;
@@ -71,8 +75,8 @@ namespace PirateSlop
         bool cancelled;
         bool valid;
         bool Networked => network != null && (network.IsClientInitialized || network.IsServerInitialized);
-        public bool HasCannon(int slot) => slot > 1 && slot < 6 && (CannonSlots & (1 << slot)) != 0;
-        public int EmptySlot() { for (int i = 2; i < 6; i++) if (!HasSabre(i) && !HasCannon(i) && FishCount(i) == 0 && BallCount(i) == 0 && !HasMallet(i) && PlankCount(i) == 0) return i; return -1; }
+        public bool HasCannon(int slot) => slot >= 0 && slot < 6 && (CannonSlots & (1 << slot)) != 0;
+        public int EmptySlot() { for (int i = 0; i < 6; i++) if (ItemAt(i) == InventoryItem.None) return i; return -1; }
         public void SetContents(int mask) => CannonSlots = mask;
         public void SetSelection(int slot) { SelectedSlot = Mathf.Clamp(slot, 0, 5); cancelled = false; }
         public bool AimingAtPickup()
@@ -167,7 +171,7 @@ namespace PirateSlop
                 }
                 return;
             }
-            if (!Placing) return;
+            if (!Placing || aimedCannon != null) return;
             if (mouse.rightButton.wasPressedThisFrame) cancelled = true;
             if (cancelled) return;
             rotation += mouse.scroll.ReadValue().y * .125f;

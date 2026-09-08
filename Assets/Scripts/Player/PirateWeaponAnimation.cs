@@ -89,15 +89,15 @@ namespace PirateSlop
         {
             float elapsed = Time.time - attackStarted;
             if (!Equipped || !SabreEquipped || motor.IsDead || motor.LocomotionLocked || (hands != null && hands.HasHeldBall)) { attackStarted = -10; return; }
-            if (elapsed < .17f || elapsed > .31f) return;
+            if (elapsed < .12f || elapsed > .4f) return;
             Vector3 origin = transform.position + Vector3.up * (motor.IsCrouched ? .7f : 1.4f);
-            foreach (var collider in Physics.OverlapSphere(origin, 1.7f, ~0, QueryTriggerInteraction.Ignore))
+            foreach (var collider in Physics.OverlapSphere(origin, 2.4f, ~0, QueryTriggerInteraction.Ignore))
             {
                 if (collider.transform.IsChildOf(transform)) continue;
                 var health = collider.GetComponentInParent<CombatHealth>();
                 if (health == null || struck.Contains(health)) continue;
                 Vector3 point = collider.ClosestPoint(origin + attackDirection), delta = point - origin;
-                if (Vector3.Angle(attackDirection, delta) > 55f) continue;
+                if (Vector3.Angle(attackDirection, delta) > 75f) continue;
                 bool blocked = false;
                 foreach (var hit in Physics.RaycastAll(origin, delta.normalized, delta.magnitude, ~0, QueryTriggerInteraction.Ignore))
                     if (!hit.transform.IsChildOf(transform) && hit.collider.GetComponentInParent<CombatHealth>() != health) { blocked = true; break; }

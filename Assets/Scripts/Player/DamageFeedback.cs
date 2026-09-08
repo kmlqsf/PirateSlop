@@ -5,11 +5,12 @@ namespace PirateSlop
     public sealed class DamageFeedback : MonoBehaviour
     {
         AdvancedPlayerController motor;
+        PirateSlop.Networking.NetworkPlayer player;
         Texture2D vignette;
         float flash, nextHurtSound, nextHitSound;
-        bool Local => motor != null && motor.PlayerCamera != null && motor.PlayerCamera.enabled;
+        bool Local => player != null ? player.IsOwner : motor != null && motor.InputActive;
 
-        void Awake() { motor = GetComponent<AdvancedPlayerController>(); }
+        void Awake() { motor = GetComponent<AdvancedPlayerController>(); player = GetComponent<PirateSlop.Networking.NetworkPlayer>(); }
 
         public void ReceiveDamage(float amount, bool dead)
         {

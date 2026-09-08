@@ -15,6 +15,17 @@ namespace PirateSlop.Networking
         public float BiteWindow = 3f, ReelDuration = 2.5f, HealAmount = 25f;
         readonly SyncVar<byte> stage = new();
         readonly SyncVar<Vector3> castPoint = new();
+        readonly SyncVar<NetworkObject> castShip = new();
+        readonly SyncVar<Vector3> castLocalPoint = new();
+        Vector3 CastPosition
+        {
+            get
+            {
+                Vector3 point = castShip.Value != null ? castShip.Value.transform.TransformPoint(castLocalPoint.Value) : castPoint.Value;
+                if (OceanSurface.Instance != null) point.y = OceanSurface.Instance.Height(point);
+                return point;
+            }
+        }
         readonly SyncVar<float> progress = new();
         readonly SyncVar<bool> eating = new();
         readonly SyncVar<float> eatProgress = new();
@@ -101,6 +112,9 @@ namespace PirateSlop.Networking
                     if (!hit.transform.IsChildOf(transform)) return;
                 previous = point;
             }
+            var support = GetComponent<ShipDeckPassenger>().Ship;
+            castShip.Value = support != null ? support.GetComponent<NetworkObject>() : null;
+            castLocalPoint.Value = support != null ? support.transform.InverseTransformPoint(end) : end;
             castPoint.Value = end; stage.Value = 1; progress.Value = 0;
             deadline = Time.time + .65f; nextCast = Time.time + 1f;
             SoundObserversRpc(SoundCue.FishingCast, start);
@@ -109,16 +123,16 @@ namespace PirateSlop.Networking
         {
             if (motor.IsDead) { stage.Value = 0; return; }
             if (!IsFishing) return;
-            if (!Available || !inventory.RodSelected || Vector3.Distance(transform.position, castPoint.Value) > 30f) { ResetFishing(); return; }
+            if (!Available || !inventory.RodSelected || Vector3.Distance(transform.position, CastPosition) > 30f) { ResetFishing(); return; }
             if (stage.Value == 1 && Time.time >= deadline)
             {
                 stage.Value = 2; deadline = Time.time + Random.Range(BiteDelay.x, BiteDelay.y);
-                SoundObserversRpc(SoundCue.Splash, castPoint.Value);
+                SoundObserversRpc(SoundCue.Splash, CastPosition);
             }
             else if (stage.Value == 2 && Time.time >= deadline)
             {
                 stage.Value = 3; deadline = Time.time + BiteWindow;
-                SoundObserversRpc(SoundCue.FishingBite, castPoint.Value);
+                SoundObserversRpc(SoundCue.FishingBite, CastPosition);
             }
             else if (stage.Value == 3 && Time.time >= deadline) ResetFishing();
             else if (stage.Value == 4)
@@ -239,7 +253,7 @@ namespace PirateSlop.Networking
             line.enabled = IsFishing; bobber.SetActive(IsFishing);
             if (!IsFishing) return;
             Vector3 tip = rod.transform.TransformPoint(new Vector3(0, .15f, 1.7f));
-            Vector3 end = castPoint.Value;
+            Vector3 end = CastPosition;
             if (OceanSurface.Instance != null) end.y = OceanSurface.Instance.Height(end) + .04f;
             if (stage.Value == 3) end.y -= .12f + Mathf.Sin(Time.time * 24f) * .09f;
             if (stage.Value == 4) end = Vector3.Lerp(end, hand, progress.Value);

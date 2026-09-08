@@ -13,6 +13,10 @@ namespace PirateSlop
         NetworkWeapon network;
         string message = "";
         Vector2 scroll;
+        int quantity;
+        static readonly int[] quantities = { 1, 5, 20 };
+        static readonly InventoryItem[] items = { InventoryItem.Cannon, InventoryItem.Pistol, InventoryItem.Sabre, InventoryItem.Rod, InventoryItem.Fish, InventoryItem.Cannonball, InventoryItem.FireCannonball, InventoryItem.IceCannonball, InventoryItem.PushCannonball, InventoryItem.BoomerangCannonball };
+        static readonly string[] names = { "Пушка", "Пистолет", "Сабля", "Удочка", "Рыба", "Обычное ядро", "Огненное ядро", "Ледяное ядро", "Отталкивающее ядро", "Бумеранг" };
         void Awake() => network = GetComponent<NetworkWeapon>();
         void Update()
         {
@@ -24,25 +28,30 @@ namespace PirateSlop
         void OnGUI()
         {
             if (!Available || !IsOpen || network == null || !network.IsOwner) return;
-            GUILayout.BeginArea(new Rect(20, 30, 300, Mathf.Min(620, Screen.height - 60)), "Developer tools · F8", GUI.skin.window);
+            GUILayout.BeginArea(new Rect(20, 30, Mathf.Min(480, Screen.width - 40), Mathf.Min(760, Screen.height - 60)), "Инструменты разработчика · F8", GUI.skin.window);
             GUILayout.Space(25);
             scroll = GUILayout.BeginScrollView(scroll);
-            if (network.IsServerInitialized) AllowRemote = GUILayout.Toggle(AllowRemote, "Allow client developer commands");
-            GUILayout.Label("Spawning is performed by the server.");
-            Button("Spawn ship nearby", 0);
-            Button("Spawn target dummy", 1);
-            Button("Spawn disassembled cannon", 2);
-            Button("Spawn pistol", 3);
-            Button("Spawn sabre", 4);
-            Button("Spawn cannonball", 5);
-            Button("Spawn mallet", 10);
-            Button("Spawn plank", 11);
-            Button("Heal player", 6);
-            Button("Heal current ship", 7);
-            Button("Give cannon kit", 8);
-            Button("Remove spawned test objects", 9);
+            if (network.IsServerInitialized) AllowRemote = GUILayout.Toggle(AllowRemote, "Разрешить команды другим игрокам");
+            GUILayout.Label("Персонаж и испытания");
+            Button("Восстановить здоровье", 6);
+            Button("Нанести себе 10 урона", 12);
+            Button("Создать корабль рядом", 0);
+            Button("Создать тренировочную мишень", 1);
+            GUILayout.Space(8);
+            GUILayout.Label("Количество при выдаче в инвентарь");
+            quantity = GUILayout.Toolbar(quantity, new[] { "1", "5", "20" });
+            for (int i = 0; i < items.Length; i++)
+            {
+                GUILayout.BeginHorizontal();
+                GUILayout.Label(names[i], GUILayout.Width(175));
+                if (GUILayout.Button("Выдать", GUILayout.Height(27))) network.DeveloperCommand((byte)(32 + (int)items[i]), quantities[quantity]);
+                if (GUILayout.Button("На землю", GUILayout.Height(27))) network.DeveloperCommand((byte)(64 + (int)items[i]));
+                GUILayout.EndHorizontal();
+            }
+            GUILayout.Space(8);
+            Button("Удалить созданные тестовые объекты", 9);
             GUILayout.Label(message);
-            if (GUILayout.Button("Close")) { IsOpen = false; AdvancedPlayerController.SetCursor(true); }
+            if (GUILayout.Button("Закрыть")) { IsOpen = false; AdvancedPlayerController.SetCursor(true); }
             GUILayout.EndScrollView();
             GUILayout.EndArea();
         }

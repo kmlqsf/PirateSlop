@@ -33,7 +33,7 @@ namespace PirateSlop
         {
             var key = Keyboard.current;
             if (key == null || network == null || !network.IsOwner || !motor.InputActive || motor.IsSwimming ||
-                motor.IsClimbing || motor.LocomotionLocked || hands.HasHeldBall || inventory.HandsOccupied || inventory.InteractionUsed || inventory.Placing)
+                motor.IsClimbing || motor.LocomotionLocked || hands.HasHeldBall || inventory.HandsOccupied || inventory.InteractionUsed)
             { Cancel(); return; }
             var camera = motor.PlayerCamera;
             RaycastHit nearest = default;
