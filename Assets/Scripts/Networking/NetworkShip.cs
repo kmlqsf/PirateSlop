@@ -7,6 +7,9 @@ namespace PirateSlop.Networking
     [DefaultExecutionOrder(-20)]
     public sealed partial class NetworkShip : NetworkBehaviour
     {
+        public static readonly System.Collections.Generic.List<NetworkShip> ActiveShips = new();
+        [SerializeField] Vector2 hullHalfExtents = new(6.5f, 23f);
+        public Vector2 HullHalfExtents => hullHalfExtents;
         public readonly SyncVar<int> ParticipantId = new();
         public ShipController Motor { get; private set; }
         public HelmInteraction Helm { get; private set; }
@@ -32,12 +35,14 @@ namespace PirateSlop.Networking
         }
         public override void OnStartNetwork()
         {
+            if (!ActiveShips.Contains(this)) ActiveShips.Add(this);
             Body.interpolation = RigidbodyInterpolation.None;
             TimeManager.OnTick += Tick;
             TimeManager.OnPostTick += Publish;
         }
         public override void OnStopNetwork()
         {
+            ActiveShips.Remove(this);
             ClearAmmo();
             TimeManager.OnTick -= Tick;
             TimeManager.OnPostTick -= Publish;
@@ -48,7 +53,6 @@ namespace PirateSlop.Networking
             if (!IsServerInitialized) return;
             Helm.Simulate(default, null, (float)TimeManager.TickDelta);
             Motor.Simulate((float)TimeManager.TickDelta);
-            Physics.SyncTransforms();
         }
         void Publish()
         {

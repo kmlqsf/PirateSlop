@@ -299,28 +299,39 @@ namespace PirateSlop.Networking
         void ResolveShipCollisions()
         {
             if (manager == null || !manager.IsServerStarted) return;
-            var ships = new List<NetworkShip>();
-            foreach (var ship in FindObjectsByType<NetworkShip>(FindObjectsSortMode.None)) if (ship.IsSpawned) ships.Add(ship);
+            var ships = NetworkShip.ActiveShips;
             for (int i = 0; i < ships.Count; i++)
             for (int j = i + 1; j < ships.Count; j++)
             {
                 var a = ships[i]; var b = ships[j];
-                Vector3 correction = Vector3.zero;
-                foreach (var ca in a.GetComponentsInChildren<Collider>())
-                foreach (var cb in b.GetComponentsInChildren<Collider>())
-                {
-                    if (!ca.enabled || !cb.enabled || ca.isTrigger || cb.isTrigger || ca.attachedRigidbody != a.Body || cb.attachedRigidbody != b.Body) continue;
-                    if (!ca.bounds.Intersects(cb.bounds)) continue;
-                    if (!Physics.ComputePenetration(ca,ca.transform.position,ca.transform.rotation,cb,cb.transform.position,cb.transform.rotation,out var normal,out var depth)) continue;
-                    normal.y = 0;
-                    float horizontal = normal.magnitude;
-                    if (horizontal < .1f) continue;
-                    Vector3 candidate = normal / horizontal * (depth / horizontal + .002f);
-                    if (candidate.sqrMagnitude > correction.sqrMagnitude) correction = candidate;
-                }
-                if (correction.sqrMagnitude > 0)
-                { a.Motor.ResolveCollision(correction * .5f); b.Motor.ResolveCollision(-correction * .5f); }
+                if (a == null || b == null || !a.IsServerInitialized || !b.IsServerInitialized) continue;
+                Vector2 delta = new(b.transform.position.x-a.transform.position.x,b.transform.position.z-a.transform.position.z);
+                float radius = a.HullHalfExtents.magnitude+b.HullHalfExtents.magnitude;
+                if (delta.sqrMagnitude >= radius*radius) continue;
+                float ay = a.transform.eulerAngles.y*Mathf.Deg2Rad, by = b.transform.eulerAngles.y*Mathf.Deg2Rad;
+                Vector2 ar = new(Mathf.Cos(ay),-Mathf.Sin(ay)), af = new(Mathf.Sin(ay),Mathf.Cos(ay));
+                Vector2 br = new(Mathf.Cos(by),-Mathf.Sin(by)), bf = new(Mathf.Sin(by),Mathf.Cos(by));
+                float depth = float.PositiveInfinity;
+                Vector2 normal = Vector2.zero;
+                if (!HullAxis(ar,delta,ar,af,a.HullHalfExtents,br,bf,b.HullHalfExtents,ref depth,ref normal) ||
+                    !HullAxis(af,delta,ar,af,a.HullHalfExtents,br,bf,b.HullHalfExtents,ref depth,ref normal) ||
+                    !HullAxis(br,delta,ar,af,a.HullHalfExtents,br,bf,b.HullHalfExtents,ref depth,ref normal) ||
+                    !HullAxis(bf,delta,ar,af,a.HullHalfExtents,br,bf,b.HullHalfExtents,ref depth,ref normal)) continue;
+                Vector3 correction = new Vector3(normal.x,0,normal.y)*(depth+.002f);
+                if (a.Motor.IsFrozen && b.Motor.IsFrozen) continue;
+                if (a.Motor.IsFrozen) b.Motor.ResolveCollision(correction);
+                else if (b.Motor.IsFrozen) a.Motor.ResolveCollision(-correction);
+                else { a.Motor.ResolveCollision(-correction*.5f); b.Motor.ResolveCollision(correction*.5f); }
             }
+        }
+        static bool HullAxis(Vector2 axis,Vector2 delta,Vector2 ar,Vector2 af,Vector2 ah,Vector2 br,Vector2 bf,Vector2 bh,ref float depth,ref Vector2 normal)
+        {
+            float distance = Vector2.Dot(delta,axis);
+            float overlap = Mathf.Abs(Vector2.Dot(ar,axis))*ah.x+Mathf.Abs(Vector2.Dot(af,axis))*ah.y+
+                Mathf.Abs(Vector2.Dot(br,axis))*bh.x+Mathf.Abs(Vector2.Dot(bf,axis))*bh.y-Mathf.Abs(distance);
+            if (overlap <= 0f) return false;
+            if (overlap < depth) { depth=overlap; normal=distance<0f ? -axis : axis; }
+            return true;
         }
         void OnGUI() => DrawSessionMenu();
     }

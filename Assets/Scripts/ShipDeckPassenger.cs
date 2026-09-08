@@ -20,7 +20,7 @@ public class ShipDeckPassenger : MonoBehaviour
         var next = ship.transform.position + delta * (transform.position - lastPosition);
         float yawDelta = Mathf.DeltaAngle(lastRotation.eulerAngles.y, ship.transform.eulerAngles.y);
         transform.SetPositionAndRotation(next, Quaternion.Euler(0, transform.eulerAngles.y + yawDelta, 0));
-        Physics.SyncTransforms();
+        if (!Networked) Physics.SyncTransforms();
         if (updateLook) player.AddPlatformYaw(yawDelta);
         ResetAnchor();
     }

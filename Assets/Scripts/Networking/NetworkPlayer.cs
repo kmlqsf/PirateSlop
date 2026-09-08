@@ -166,8 +166,8 @@ namespace PirateSlop.Networking
                 command.Jump = command.Slide = command.Use = command.Release = false;
             }
             float dt = (float)TimeManager.TickDelta;
-            Physics.SyncTransforms();
             passenger.Carry();
+            Physics.SyncTransforms();
             motor.Simulate(command, dt);
             passenger.Detect();
             CaptureVisualAnchor();
