@@ -42,7 +42,8 @@ namespace PirateSlop.Networking
             if(!reachable) return;
             nextPush=Time.time+1.2f;
             Vector3 direction=Vector3.ProjectOnPlane(ship.transform.position-transform.position,Vector3.up).normalized;
-            if(ship.Motor.TryManualPush(direction)) PushAudioObserversRpc(transform.position);
+            ship.Motor.ApplyManualPush(direction);
+            PushAudioObserversRpc(transform.position);
         }
         [ObserversRpc(RunLocally=true)]
         void PushAudioObserversRpc(Vector3 point) => GameAudio.Play(SoundCue.Creak,point,.8f);

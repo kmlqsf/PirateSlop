@@ -14,7 +14,7 @@ namespace PirateSlop
         ShipSpyglass station, aimed;
         Camera cameraView;
         bool engaged;
-        float originalFov, zoom = 25f, nextPreview;
+        float originalFov, zoom = 48f, nextPreview;
         Vector2 angles;
         readonly List<LineRenderer> lines = new();
         Texture2D mask;
@@ -32,10 +32,11 @@ namespace PirateSlop
                 { Exit(); return; }
                 if (Mouse.current != null)
                 {
-                    var delta = Mouse.current.delta.ReadValue() * (.055f * zoom / 25f);
+                    var delta = Mouse.current.delta.ReadValue() * (.055f * zoom / 48f);
                     angles.x = Mathf.Clamp(angles.x - delta.y, -70f, 70f);
                     angles.y += delta.x;
-                    zoom = Mathf.Clamp(zoom - Mathf.Sign(Mouse.current.scroll.ReadValue().y) * 3f, 8f, 45f);
+                    float wheel = Mouse.current.scroll.ReadValue().y;
+                    if (Mathf.Abs(wheel) > .01f) zoom = Mathf.Clamp(zoom - Mathf.Sign(wheel) * 3f, 32f, 62f);
                 }
                 return;
             }
@@ -45,7 +46,7 @@ namespace PirateSlop
             if (Physics.Raycast(cameraView.transform.position, cameraView.transform.forward, out var hit, 3f, ~0, QueryTriggerInteraction.Ignore))
                 aimed = hit.collider.GetComponentInParent<ShipSpyglass>();
             if (aimed == null || aimed.GetComponentInParent<NetworkShip>() != player.Ship || !keys.eKey.wasPressedThisFrame) return;
-            station = aimed; originalFov = cameraView.fieldOfView; angles = Vector2.zero; zoom = 25f;
+            station = aimed; originalFov = cameraView.fieldOfView; angles = Vector2.zero; zoom = 48f;
             engaged = IsViewing = true; nextPreview = 0f;
         }
         void LateUpdate()

@@ -13,32 +13,15 @@ public class ShipController : MonoBehaviour
     [SerializeField] float pushImpulse = 450000f, pushLinearDrag = .55f, pushAngularDrag = .7f;
     [SerializeField] float impulseMass = 15000f, hullLength = 46f, hullWidth = 13f;
     Vector3 pushVelocity;
-    float pushYawVelocity, freezeRemaining;
+    float pushYawVelocity, freezeRemaining, manualPushUntil;
     public bool IsFrozen => freezeRemaining > 0f;
-    public bool TryManualPush(Vector3 direction)
+    public void ApplyManualPush(Vector3 direction)
     {
-        if(IsFrozen || !float.IsFinite(direction.sqrMagnitude)) return false;
+        if(IsFrozen || !float.IsFinite(direction.sqrMagnitude)) return;
         direction=Vector3.ProjectOnPlane(direction,Vector3.up).normalized;
-        var world=PirateSlop.World.ProceduralWorld.Instance;
-        Vector3 next=rb.position;
-        float score=world!=null ? world.SailingObstruction(next,yaw) : 0f;
-        for(int i=0;i<4;i++)
-        {
-            Vector3 candidate=next+direction*.2f;
-            if(world!=null && world.Ready && !world.CanSail(candidate,yaw))
-            {
-                float obstruction=world.SailingObstruction(candidate,yaw);
-                if(score<=0f || !float.IsFinite(obstruction) || obstruction>score+.001f) break;
-                score=obstruction;
-            }
-            foreach(var other in FindObjectsByType<ShipController>(FindObjectsSortMode.None))
-                if(other!=this && (candidate-other.transform.position).sqrMagnitude<100f) return false;
-            next=candidate;
-        }
-        if((next-rb.position).sqrMagnitude<.001f) return false;
-        rb.position=next; transform.position=next; speed=0f;
-        pushVelocity=Vector3.zero;
-        return true;
+        pushVelocity=Vector3.ClampMagnitude(pushVelocity+direction*.65f,1.8f);
+        manualPushUntil=Time.time+1.1f;
+        speed=Mathf.Min(speed,.35f);
     }
     public void Freeze(float duration)
     {
@@ -132,6 +115,13 @@ public class ShipController : MonoBehaviour
         var world = PirateSlop.World.ProceduralWorld.Instance;
         if (world != null && world.Ready && !world.CanSail(next, yaw))
         {
+            bool canEscape=Time.time<manualPushUntil && world.SailingObstruction(next,yaw)<world.SailingObstruction(rb.position,yaw)-.001f;
+            if(canEscape)
+            {
+                motionVelocity=(next-rb.position)/Mathf.Max(.001f,dt);
+                rb.position=next; rb.rotation=rotation; transform.SetPositionAndRotation(next,rotation);
+                return;
+            }
             float previousYaw = rb.rotation.eulerAngles.y;
             if (!world.CanSail(rb.position, yaw)) { yaw = previousYaw; rotation = Quaternion.Euler(pitch + cannonTilt.x, yaw, bank + waveRoll + cannonTilt.y); }
             next.x = rb.position.x; next.z = rb.position.z; speed = 0;
