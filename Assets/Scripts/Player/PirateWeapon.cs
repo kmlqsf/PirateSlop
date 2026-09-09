@@ -13,13 +13,15 @@ namespace PirateSlop
         public Transform WorldPivot, ViewPivot, WorldMuzzle, ViewMuzzle;
         public Material EffectMaterial;
         public FirearmSettings Firearm = new();
-        Vector3 firearmMuzzleOffset;
         bool predictedShot;
         float nextLocalShot;
         AdvancedPlayerController motor;
         CannonHands hands;
         NetworkWeapon network;
         PlayerInventory inventory;
+        FirearmHandling handling;
+        int shotSequence;
+        readonly FirearmPrediction prediction=new();
         DirectShipControls controls;
         bool Equipped => (motor == null || !(motor.IsSwimming || motor.IsClimbing || motor.IsDead)) && (inventory == null || inventory.PistolSelected || inventory.SabreSelected) && (controls == null || !controls.IsDragging);
         bool loaded = true, reloading;
@@ -28,20 +30,21 @@ namespace PirateSlop
         Vector3 worldPosition, viewPosition;
         Renderer[] viewRenderers;
         Renderer[] worldRenderers;
-        public bool Loaded => loaded;
+        public bool Loaded => loaded && !predictedShot;
         public bool Reloading => reloading;
         bool Networked => network != null && (network.IsClientInitialized || network.IsServerInitialized);
         void Awake()
         {
             motor = GetComponent<AdvancedPlayerController>(); hands = GetComponent<CannonHands>(); network = GetComponent<NetworkWeapon>();
             inventory = GetComponent<PlayerInventory>();
+            handling=GetComponent<FirearmHandling>();
+            if(handling!=null && handling.Pistol!=null) Firearm=handling.Pistol.Ballistics;
             controls = GetComponent<DirectShipControls>();
             worldRest = WorldPivot.localRotation; viewRest = ViewPivot.localRotation;
             worldPosition = WorldPivot.localPosition; viewPosition = ViewPivot.localPosition;
             viewRenderers = ViewPivot.GetComponentsInChildren<Renderer>(true);
             worldRenderers = WorldPivot.GetComponentsInChildren<Renderer>(true);
             SetupSeparateWeapons();
-            firearmMuzzleOffset = GetComponentInChildren<Camera>(true).transform.InverseTransformPoint(ViewMuzzle.position);
         }
         void OnEnable() { RenderPipelineManager.beginCameraRendering += BeforeCamera; RenderPipelineManager.endCameraRendering += AfterCamera; }
         void OnDisable() { RenderPipelineManager.beginCameraRendering -= BeforeCamera; RenderPipelineManager.endCameraRendering -= AfterCamera; }
@@ -68,12 +71,12 @@ namespace PirateSlop
             var mouse = Mouse.current; var keyboard = Keyboard.current;
             if (keyboard != null && keyboard.rKey.wasPressedThisFrame) Request(1);
             if (mouse == null) return;
-            if (mouse.leftButton.wasPressedThisFrame && (hands == null || !hands.CanPickUpBall())) Request(SabreEquipped ? (byte)2 : (byte)0);
+            if (mouse.leftButton.wasPressedThisFrame && !inventory.InteractionUsed && (hands == null || !hands.CanPickUpBall()) && (SabreEquipped || handling==null || handling.Ready)) Request(SabreEquipped ? (byte)2 : (byte)0);
         }
         void Request(byte action)
         {
-            if (action == 0 && !loaded && !reloading) GameAudio.Play(SoundCue.DryFire, transform.position);
-            Vector3 direction = motor.PlayerCamera.transform.forward;
+            if (action == 0 && !loaded && !reloading) { GameAudio.Play(SoundCue.DryFire, transform.position);return; }
+            Vector3 direction = motor.AimDirection;
             Vector3 eyeOffset = motor.PlayerCamera.transform.position - transform.position;
             if (Networked)
             {
@@ -84,10 +87,11 @@ namespace PirateSlop
                     predictedShot = true;
                     nextLocalShot = Time.time + Firearm.ShotInterval;
                     ShowMuzzle(direction);
+                    prediction.Fire(gameObject,handling.Pistol,motor.PlayerCamera.transform.position,VisibleMuzzle,direction,handling.Aiming,shotSequence+1,EffectMaterial);
                 }
-                network.Request(action, direction, eyeOffset);
+                network.Request(action, direction, eyeOffset,handling!=null && handling.Aiming,action==0?++shotSequence:shotSequence);
             }
-            else Act(action, direction, eyeOffset);
+            else Act(action, direction, eyeOffset,handling!=null && handling.Aiming);
         }
         public void TickAuthority()
         {
@@ -95,7 +99,7 @@ namespace PirateSlop
             if (reloading && (!Equipped || SabreEquipped || motor.LocomotionLocked || (hands != null && hands.HasHeldBall))) reloading = false;
             if (reloading && Time.time >= reloadUntil) { reloading = false; loaded = true; }
         }
-        public bool Act(byte action, Vector3 direction, Vector3 eyeOffset)
+        public bool Act(byte action, Vector3 direction, Vector3 eyeOffset,bool aimed=false,int seed=-1)
         {
             if (!Equipped || motor.IsDead || motor.LocomotionLocked || (hands != null && hands.HasHeldBall) || !float.IsFinite(direction.sqrMagnitude) || direction.sqrMagnitude < .5f) return false;
             if ((action == 2) != SabreEquipped) return false;
@@ -121,22 +125,9 @@ namespace PirateSlop
                 eye = transform.position + eyeOffset;
             if (FirearmTrace.Cast(gameObject, bodyEye, eye, out var eyeBlock))
                 eye = eyeBlock.point + (bodyEye - eye).normalized * .02f;
-            Vector3 muzzle = bodyEye + Quaternion.LookRotation(direction) * firearmMuzzleOffset;
-            var shot = FirearmTrace.Resolve(gameObject, eye, muzzle, direction, Firearm.Range, out var hit);
-            if (hit.collider != null)
-            {
-                float distance = Vector3.Distance(eye, shot.End);
-                var health = hit.collider.GetComponentInParent<CombatHealth>();
-                if (health != null) health.ReceiveFirearmHit(distance, hit.point, gameObject, Firearm);
-                else
-                    foreach (var component in hit.collider.GetComponentsInParent<MonoBehaviour>())
-                        if (component is IWeaponTarget target)
-                        {
-                            target.ReceiveWeaponHit(Mathf.Lerp(Firearm.NearDamage, Firearm.FarDamage,
-                                Mathf.InverseLerp(Firearm.FalloffStart, Firearm.FalloffEnd, distance)), gameObject);
-                            break;
-                        }
-            }
+            var definition=handling.Pistol;
+            Vector3 muzzle = definition.MuzzlePoint(eye,direction,aimed);
+            var shot=FirearmCombat.Resolve(gameObject,definition,eye,muzzle,direction,aimed,seed<0?++shotSequence:seed,true)[0];
             ShowShot(shot);
             if (Networked && network.IsServerInitialized) network.PublishShot(shot);
             return true;
@@ -152,16 +143,17 @@ namespace PirateSlop
         void ShowMuzzle(Vector3 direction)
         {
             recoil = 1f; fireStarted = Time.time;
-            GameAudio.Play(SoundCue.Pistol, VisibleMuzzle);
-            FirearmVfx.Fire(VisibleMuzzle, direction);
+            if(handling!=null) handling.Fire(motor.PlayerCamera.enabled && !motor.IsThirdPerson?ViewMuzzle:WorldMuzzle,direction);
         }
         public void RejectPredictedShot() { predictedShot = false; }
         public void ShowShot(FirearmShot shot)
         {
-            if (!predictedShot) ShowMuzzle((shot.End - shot.Start).normalized);
-            predictedShot = false;
-            var go = new GameObject("FirearmTracer");
-            go.AddComponent<PistolBullet>().Initialize(VisibleMuzzle, shot, EffectMaterial);
+            if(predictedShot) { predictedShot=false;prediction.Confirm(new[]{shot});return; }
+            ShowMuzzle((shot.End - shot.Start).normalized);
+            var definition=handling.Pistol;
+            Vector3 origin=VisibleMuzzle;
+            if(FirearmTrace.Cast(gameObject,shot.Start,origin,out var obstruction)) origin=shot.Start;
+            PistolBullet.Spawn(origin, shot, EffectMaterial,definition.TracerWidth,true,definition.TracerSpeed);
         }
         void LateUpdate()
         {

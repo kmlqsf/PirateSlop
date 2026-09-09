@@ -134,13 +134,19 @@ namespace PirateSlop
             lastSabre = SabreEquipped;
             wasReloading = reloading;
             drawBlend = Mathf.MoveTowards(drawBlend, AnimationEquipped ? 1 : 0, Time.deltaTime * 5);
-            float reloadTime = reloading ? Mathf.Clamp(Time.time - reloadVisualStarted, 0, 3) : 3;
+            float reloadTime = reloading ? Mathf.Clamp((Time.time - reloadVisualStarted)*3/Firearm.ReloadDuration, 0, 3) : 3;
             float shot = Time.time - fireStarted;
             float kick = shot < .025f ? Mathf.SmoothStep(0, 1, shot / .025f) : 1 - Mathf.SmoothStep(0, 1, (shot - .025f) / .20f);
             Vector3 angles = Pose(reloadTime, reloadTimes, reloadAngles) + new Vector3(-15, 1.5f, -3) * kick;
             Vector3 position = Pose(reloadTime, reloadTimes, reloadPositions) + new Vector3(0,.02f,-.085f) * kick;
             Vector3 draw = new Vector3(.03f, -.2f, -.08f) * (1 - Mathf.SmoothStep(0, 1, drawBlend));
             Vector3 idle = AnimationEquipped && !reloading ? new Vector3(Mathf.Sin(Time.time * 1.8f) * .0015f, Mathf.Sin(Time.time * 2.2f) * .002f, 0) : Vector3.zero;
+            if(!SabreEquipped && handling!=null && handling.Local)
+            {
+                angles=Pose(reloadTime,reloadTimes,reloadAngles)+handling.PoseRotation;
+                position=Pose(reloadTime,reloadTimes,reloadPositions)+handling.PosePosition;
+                if(!reloading) position+=Vector3.Lerp(handling.Pistol.HipPosition-viewPosition,handling.Pistol.AimPosition-viewPosition,handling.AimBlend);
+            }
             ViewPivot.localRotation = viewRest * Quaternion.Euler(angles);
             ViewPivot.localPosition = viewPosition + position + draw + idle;
             WorldPivot.localRotation = worldRest;

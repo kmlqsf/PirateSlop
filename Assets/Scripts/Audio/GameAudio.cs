@@ -9,6 +9,8 @@ namespace PirateSlop
         AudioSource[] voices;
         AudioSource[] feedbackVoices;
         AudioSource[] shotVoices;
+        AudioLowPassFilter[] shotFilters;
+        AudioListener listener;
         int nextShot;
         int nextFeedback;
         AudioSource ocean, wind;
@@ -31,7 +33,12 @@ namespace PirateSlop
             for (int i = 0; i < instance.voices.Length; i++) instance.voices[i] = instance.Source("Effect " + i, false);
             instance.feedbackVoices = new AudioSource[4];
             instance.shotVoices = new AudioSource[12];
-            for (int i = 0; i < instance.shotVoices.Length; i++) instance.shotVoices[i] = instance.Source("Gunshot " + i, false);
+            instance.shotFilters = new AudioLowPassFilter[12];
+            for (int i = 0; i < instance.shotVoices.Length; i++)
+            {
+                instance.shotVoices[i] = instance.Source("Gunshot " + i, false);
+                instance.shotFilters[i] = instance.shotVoices[i].gameObject.AddComponent<AudioLowPassFilter>();
+            }
             for (int i = 0; i < instance.feedbackVoices.Length; i++) instance.feedbackVoices[i] = instance.Source("Damage feedback " + i, false);
             instance.ocean = instance.Source("Ocean", true); instance.ocean.clip = bank.Ocean;
             instance.wind = instance.Source("Wind", true); instance.wind.clip = bank.Wind;
@@ -45,14 +52,33 @@ namespace PirateSlop
             source.rolloffMode = AudioRolloffMode.Linear;
             return source;
         }
-        public static void Play(SoundCue cue, Vector3 position, float scale = 1f, bool ui = false)
+        public static void Firearm(FirearmDefinition definition,Vector3 position)
+        {
+            Play(definition.Sound,position,1,false,definition);
+        }
+        public static void Play(SoundCue cue, Vector3 position, float scale = 1f, bool ui = false,FirearmDefinition firearm=null)
         {
             var audio = Get(); if (audio == null) return;
             var entry = System.Array.Find(audio.bank.Entries, e => e.Cue == cue);
+            if(firearm!=null && firearm.ShotClips!=null && firearm.ShotClips.Length>0)
+                entry=new GameAudioBank.Entry { Cue=cue,Clips=firearm.ShotClips,Volume=firearm.ShotVolume,Distance=firearm.AudibleDistance };
             if (entry == null || entry.Clips == null || entry.Clips.Length == 0) return;
             bool feedback = cue == SoundCue.Hurt || cue == SoundCue.Death || cue == SoundCue.HitConfirm;
-            bool gunshot = cue == SoundCue.Pistol || cue == SoundCue.Musket || cue == SoundCue.DoubleBarrel;
+            bool gunshot = firearm!=null || cue == SoundCue.Pistol || cue == SoundCue.Musket || cue == SoundCue.DoubleBarrel;
             var source = gunshot ? audio.shotVoices[audio.nextShot] : feedback ? audio.feedbackVoices[audio.nextFeedback] : audio.voices[audio.nextVoice];
+            bool blocked=false;
+            if(gunshot)
+            {
+                if(audio.listener==null || !audio.listener.isActiveAndEnabled)
+                    foreach(var candidate in FindObjectsByType<AudioListener>(FindObjectsSortMode.None))
+                        if(candidate.isActiveAndEnabled) { audio.listener=candidate;break; }
+                if(audio.listener!=null)
+                {
+                    Vector3 delta=audio.listener.transform.position-position;
+                    blocked=delta.sqrMagnitude>36 && Physics.Raycast(position+delta.normalized*.5f,delta.normalized,delta.magnitude-.8f,~0,QueryTriggerInteraction.Ignore);
+                }
+                audio.shotFilters[audio.nextShot].cutoffFrequency=blocked?3200:22000;
+            }
             if (gunshot) audio.nextShot = (audio.nextShot + 1) % audio.shotVoices.Length;
             else if (feedback) audio.nextFeedback = (audio.nextFeedback + 1) % audio.feedbackVoices.Length;
             else audio.nextVoice = (audio.nextVoice + 1) % audio.voices.Length;
@@ -61,6 +87,7 @@ namespace PirateSlop
             source.minDistance = cue == SoundCue.Cannon ? 8f : gunshot ? 5f : 2f; source.maxDistance = entry.Distance;
             source.priority = gunshot ? 40 : feedback ? 32 : 128;
             source.volume = Mathf.Clamp01(entry.Volume * scale * audio.bank.Master * (ui && !feedback ? audio.bank.Interface : audio.bank.Effects));
+            if(blocked) source.volume*=.65f;
             source.pitch = ui ? 1f : gunshot ? Random.Range(.975f,1.025f) : Random.Range(.94f, 1.06f);
             source.clip = entry.Clips[Random.Range(0, entry.Clips.Length)]; source.Play();
         }

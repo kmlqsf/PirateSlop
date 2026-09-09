@@ -264,11 +264,11 @@ namespace PirateSlop.Networking
             cannonSlots.Value &= ~(1 << slot);
             inventory.SetContents(cannonSlots.Value);
         }
-        public void Request(byte action, Vector3 direction, Vector3 eyeOffset) => ActionServerRpc(action,direction,eyeOffset);
-        [ServerRpc] void ActionServerRpc(byte action, Vector3 direction, Vector3 eyeOffset)
+        public void Request(byte action, Vector3 direction, Vector3 eyeOffset,bool aimed=false,int seed=0) => ActionServerRpc(action,direction,eyeOffset,aimed,seed);
+        [ServerRpc] void ActionServerRpc(byte action, Vector3 direction, Vector3 eyeOffset,bool aimed,int seed)
         {
             weapon.TickAuthority();
-            bool accepted = weapon.Act(action, direction, eyeOffset);
+            bool accepted = weapon.Act(action, direction, eyeOffset,aimed,seed);
             if (action == 0 && !accepted) RejectShotTargetRpc(Owner);
             loaded.Value = weapon.Loaded; reloading.Value = weapon.Reloading;
         }

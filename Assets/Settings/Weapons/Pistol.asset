@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c27581dd8e186ef4bb4fa8bf491439df, type: 3}
+  m_Name: Pistol
+  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.FirearmDefinition
+  Ballistics:
+    Range: 100
+    NearDamage: 45
+    FarDamage: 25
+    NearHeadDamage: 70
+    FarHeadDamage: 40
+    FalloffStart: 15
+    FalloffEnd: 35
+    ShotInterval: 0.25
+    ReloadDuration: 3
+  Sound: 0
+  ShotClips: []
+  ShotVolume: 0.9
+  AudibleDistance: 120
+  Pellets: 1
+  Capacity: 1
+  DamageCap: 70
+  HipSpread: 1.2
+  AimSpread: 0.08
+  MovingSpread: 0.5
+  AimSeconds: 0.18
+  AimFov: 56
+  CameraKick: 1.7
+  CameraYaw: 0.25
+  KickDegrees: 12
+  KickDistance: 0.075
+  KickRecovery: 0.28
+  FlashPower: 1
+  TracerWidth: 0.022
+  TracerSpeed: 450
+  HipPosition: {x: 0.22, y: -0.17, z: 0.36}
+  AimPosition: {x: 0, y: -0.1, z: 0.35}
+  MuzzleOffset: {x: 0, y: 0.11, z: 0.41}
+  ShooterKnockback: 0
+  Scope: 0

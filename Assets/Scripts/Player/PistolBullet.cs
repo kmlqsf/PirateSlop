@@ -4,6 +4,26 @@ namespace PirateSlop
 {
     public sealed class PistolBullet : MonoBehaviour
     {
+        static readonly PistolBullet[] pool=new PistolBullet[96];
+        static int next;
+        public int Generation { get; private set; }
+        bool authoritative;
+        public static PistolBullet Spawn(Vector3 start,FirearmShot shot,Material material,float width,bool detailed,float speed,bool confirmed=true)
+        {
+            if(!Application.isPlaying || Application.isBatchMode) return null;
+            int index=next++%pool.Length;
+            if(pool[index]==null) pool[index]=new GameObject("FirearmTracerPool").AddComponent<PistolBullet>();
+            var bullet=pool[index];
+            if(bullet.gameObject.activeSelf && bullet.tracer!=null && !bullet.impacted && bullet.authoritative) FirearmImpact.Present(bullet.shot,false);
+            bullet.Initialize(start,shot,material,width,detailed,speed);
+            bullet.authoritative=confirmed;
+            return bullet;
+        }
+        public void Confirm(FirearmShot result)
+        {
+            shot=result;authoritative=true;
+            if(age>=duration) { FirearmImpact.Present(shot,impactEffects);impacted=true; }
+        }
         FirearmShot shot;
         Vector3 start;
         LineRenderer tracer;
@@ -14,34 +34,34 @@ namespace PirateSlop
         bool impactEffects;
         float width;
 
-        public void Initialize(Vector3 visibleStart, FirearmShot result, Material template, float thickness=.045f, bool showImpact=true)
+        public void Initialize(Vector3 visibleStart, FirearmShot result, Material template, float thickness=.022f, bool showImpact=true, float speed=450)
         {
+            age=0;impacted=false;authoritative=true;Generation++;gameObject.SetActive(true);
             start = visibleStart; shot = result;
-            duration = Mathf.Clamp(Vector3.Distance(start, shot.End) / 320f, .055f, .35f);
+            duration = Mathf.Clamp(Vector3.Distance(start, shot.End) / Mathf.Max(50,speed), .025f, .45f);
             impactEffects=showImpact; width=thickness;
             material = Resources.Load<Material>("FirearmGlow");
             if(material==null) material=template;
-            tracer = gameObject.AddComponent<LineRenderer>();
+            if(tracer==null) tracer = gameObject.AddComponent<LineRenderer>();
             tracer.sharedMaterial = material;
             tracer.useWorldSpace = true; tracer.positionCount = 2;
             tracer.startWidth = width*.2f; tracer.endWidth = width;
-            tracer.startColor=new Color(1,.4f,.08f,0);tracer.endColor=new Color(3,2.4f,1.4f,1);
+            tracer.startColor=new Color(.7f,.5f,.2f,0);tracer.endColor=new Color(1.6f,1.35f,.8f,.85f);
             tracer.numCapVertices = 2;
             tracer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
             tracer.receiveShadows = false;
-            var halo=new GameObject("TracerGlow");halo.transform.SetParent(transform,false);glow=halo.AddComponent<LineRenderer>();
+            if(glow==null) { var halo=new GameObject("TracerGlow");halo.transform.SetParent(transform,false);glow=halo.AddComponent<LineRenderer>(); }
             glow.sharedMaterial=material;glow.useWorldSpace=true;glow.positionCount=2;glow.startWidth=width;glow.endWidth=width*3;
-            glow.startColor=new Color(1,.35f,.05f,0);glow.endColor=new Color(1,.6f,.18f,.22f);
+            glow.startColor=new Color(1,.35f,.05f,0);glow.endColor=new Color(1,.6f,.18f,.08f);
             glow.shadowCastingMode=UnityEngine.Rendering.ShadowCastingMode.Off;glow.receiveShadows=false;
             Draw(.01f);
-            Destroy(gameObject, duration + .1f);
         }
 
         void Draw(float time)
         {
-            float length = Vector3.Distance(start, shot.End);
+            FirearmImpact.ResolvePoint(ref shot);
             float head = Mathf.Clamp01(time / duration);
-            float tail = Mathf.Clamp01((time-Mathf.Min(.024f,duration*.6f))/duration);
+            float tail = Mathf.Clamp01((time-Mathf.Min(.009f,duration*.45f))/duration);
             tracer.SetPosition(0, Vector3.Lerp(start, shot.End, tail));
             tracer.SetPosition(1, Vector3.Lerp(start, shot.End, head));
             tracer.widthMultiplier = Mathf.Clamp01(1f - Mathf.Max(0f, time - duration) / .06f);
@@ -53,15 +73,10 @@ namespace PirateSlop
             if (tracer == null) return;
             age += Time.deltaTime;
             Draw(age);
+            if(age>duration+.1f) gameObject.SetActive(false);
             if (impacted || age < duration) return;
             impacted = true;
-            if(!impactEffects) return;
-            if (shot.Water) CombatVfx.Splash(shot.End, .25f);
-            else if (shot.Hit)
-            {
-                CombatVfx.Impact(shot.End, shot.Normal, false);
-                GameAudio.Play(SoundCue.Impact, shot.End, .5f);
-            }
+            if(authoritative) FirearmImpact.Present(shot,impactEffects);
         }
 
     }
