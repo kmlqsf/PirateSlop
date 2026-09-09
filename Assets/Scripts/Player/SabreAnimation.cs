@@ -7,6 +7,8 @@ namespace PirateSlop
     public sealed class SabreAnimation : MonoBehaviour
     {
         public Animator BodyAnimator;
+        public Vector3 GripPosition = new Vector3(0, .055f, .02f);
+        public Quaternion GripRotation = Quaternion.FromToRotation(Vector3.up, Vector3.left);
         PirateWeapon weapon;
         PlayerInventory inventory;
         Transform[] bodyBones, viewBones;
@@ -33,12 +35,12 @@ namespace PirateSlop
             Mount(weapon.SabreViewPivot, rig.ViewArms, "View_Hand.R");
         }
 
-        static void Mount(Transform pivot, Transform rig, string handName)
+        void Mount(Transform pivot, Transform rig, string handName)
         {
             var hand = rig.GetComponentsInChildren<Transform>(true).First(t => t.name == handName);
             pivot.SetParent(hand, false);
-            pivot.localPosition = new Vector3(0, .055f, .02f);
-            pivot.localRotation = Quaternion.FromToRotation(Vector3.up, Vector3.left);
+            pivot.localPosition = GripPosition;
+            pivot.localRotation = GripRotation;
         }
 
         void Update()

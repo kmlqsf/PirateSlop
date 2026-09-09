@@ -9,11 +9,13 @@ namespace PirateSlop
         static readonly int Crouched = Animator.StringToHash("Crouched");
         static readonly int Sliding = Animator.StringToHash("Sliding");
         static readonly int Grounded = Animator.StringToHash("Grounded");
+        static readonly int ClimbSpeed = Animator.StringToHash("ClimbSpeed");
 
         AdvancedPlayerController motor;
         Animator animator;
         float airborneTime;
         bool wasSwimming;
+        bool wasClimbing;
         string swimState;
 
         void Awake()
@@ -25,6 +27,20 @@ namespace PirateSlop
         void LateUpdate()
         {
             if (animator == null || !animator.enabled || animator.runtimeAnimatorController == null) return;
+            if (motor.IsClimbing)
+            {
+                if (!wasClimbing) animator.CrossFadeInFixedTime("LadderClimb", .15f);
+                animator.SetFloat(ClimbSpeed, Mathf.Min(2.5f, motor.PlanarSpeed / .48f));
+                wasClimbing = true;
+                wasSwimming = false;
+                airborneTime = 0;
+                return;
+            }
+            if (wasClimbing)
+            {
+                animator.CrossFadeInFixedTime(motor.IsSwimming ? "TreadWater" : "Locomotion", .15f);
+                wasClimbing = false;
+            }
             if (motor.IsSwimming)
             {
                 var state = motor.PlanarSpeed > .3f ? "Swim" : "TreadWater";

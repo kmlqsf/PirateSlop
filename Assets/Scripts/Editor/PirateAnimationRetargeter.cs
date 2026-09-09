@@ -92,9 +92,15 @@ namespace PirateSlop.EditorTools
         }
         static Dictionary<string, Matrix4x4> BindPose(GameObject model)
         {
-            var renderer = model.GetComponentInChildren<SkinnedMeshRenderer>();
             var result = new Dictionary<string, Matrix4x4>();
-            for (int i = 0; i < renderer.bones.Length; i++) result.Add(renderer.bones[i].name, renderer.transform.localToWorldMatrix * renderer.sharedMesh.bindposes[i].inverse);
+            foreach (var renderer in model.GetComponentsInChildren<SkinnedMeshRenderer>())
+                for (int i = 0; i < renderer.bones.Length; i++)
+                {
+                    var bone = renderer.bones[i];
+                    result[bone.name] = renderer.transform.localToWorldMatrix * renderer.sharedMesh.bindposes[i].inverse;
+                    for (var parent = bone.parent; parent != null && parent != model.transform && parent.name != "PirateRig"; parent = parent.parent)
+                        if (!result.ContainsKey(parent.name)) result[parent.name] = parent.localToWorldMatrix;
+                }
             return result;
         }
         static Quaternion Basis(Dictionary<string, Matrix4x4> bind)

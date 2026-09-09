@@ -63,6 +63,7 @@ namespace PirateSlop.EditorTools
             EditorUtility.SetDirty(controller);
             AssetDatabase.SaveAssets();
             SwimmingSetup.Configure();
+            ClimbingAnimationSetup.Configure();
             Debug.Log("PLAYER_ANIMATIONS_CONFIGURED: multiplayer prefabs.");
         }
         static AnimationClip PrepareClip(string name, bool loop)

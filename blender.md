@@ -1,5 +1,7 @@
 # Правила работы с Blender
 
+Анимации персонажа и предметов: повторяемый MCP-процесс описан в `Art/Blender/Characters/ANIMATION_PIPELINE.md`; помощники `pose_studio.py`, пример `sabre_attack.py`, Unity-импорт `CharacterActionImport`.
+
 Сначала прочитать `project.md`; для импорта и интеграции — также `unity.md`.
 
 ## Среда и управление

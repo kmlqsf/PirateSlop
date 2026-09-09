@@ -305,7 +305,7 @@ public class AdvancedPlayerController : MonoBehaviour
             velocity = -ladder.transform.forward * ladder.Speed + ladder.transform.up * .3f;
         }
         else velocity += ladder.transform.forward * Mathf.Clamp((.65f - localPosition.z) * 5, -2, 2);
-        controller.Move(velocity * dt); verticalVelocity = 0; PlanarSpeed = Mathf.Abs(vertical) * ladder.Speed;
+        controller.Move(velocity * dt); verticalVelocity = 0; PlanarSpeed = new Vector2(vertical * ladder.Speed, command.Move.x * walkSpeed).magnitude;
         localPosition = ladder.transform.InverseTransformPoint(transform.position);
         if (localPosition.y >= ladder.Height && localPosition.z < -ladder.ExitDepth && !fromTop || localPosition.y <= 0 && vertical < 0 || Mathf.Abs(localPosition.x) > ladder.HalfWidth + .2f)
         { IsClimbing = false; ladderCooldown = .3f; }
@@ -357,7 +357,7 @@ public class AdvancedPlayerController : MonoBehaviour
             controller.Move(Vector3.ClampMagnitude(target - transform.position, ladder.Speed * 1.5f * dt));
             if (height <= 0 && rise < 0) { IsClimbing = false; ladderCooldown = .5f; }
         }
-        verticalVelocity = 0; PlanarSpeed = Mathf.Abs(rise) * ladder.Speed;
+        verticalVelocity = 0; PlanarSpeed = new Vector2(rise, command.Move.x * .45f).magnitude * ladder.Speed;
         return true;
     }
     public PlayerState Capture() => new PlayerState { Position = transform.position, Yaw = transform.eulerAngles.y, VerticalVelocity = verticalVelocity, SlideDirection = slideDirection, SlideTimer = slideTimer, Cooldown = cooldown, Crouched = crouched, Locked = LocomotionLocked, PlanarSpeed = PlanarSpeed, Grounded = IsGrounded, Swimming = IsSwimming, SwimVelocity = swimVelocity, Breath = Breath, Climbing = IsClimbing, LadderCooldown = ladderCooldown, KnockbackVelocity = knockbackVelocity, KnockbackTime = knockbackTime };
