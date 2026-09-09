@@ -10,12 +10,15 @@ namespace PirateSlop
         PlayerInventory inventory;
         PirateWeapon weapon;
         NetworkPlayer network;
+        FirearmHandling handling;
+        NetworkEquipment equipment;
         float trailingHealth;
         void Awake()
         {
             motor = GetComponent<AdvancedPlayerController>(); health = GetComponent<CombatHealth>();
             inventory = GetComponent<PlayerInventory>(); weapon = GetComponent<PirateWeapon>();
             network = GetComponent<NetworkPlayer>(); trailingHealth = health.MaxHealth;
+            handling=GetComponent<FirearmHandling>();equipment=GetComponent<NetworkEquipment>();
         }
         void Update() => trailingHealth = Mathf.MoveTowards(trailingHealth, health.Current, Time.deltaTime * 22);
         void OnGUI()
@@ -49,24 +52,29 @@ namespace PirateSlop
             }
             if (network != null && network.Ship != null)
                 PirateHudStyle.Label(new Rect(24, sideY - 65, 280, 24), $"Ром корабля: {network.Ship.RumCount} возрождений", network.Ship.RumCount > 0 ? PirateHudStyle.Paper : PirateHudStyle.Gold);
-            if (inventory.PistolSelected)
+            if (inventory.PistolSelected || (equipment!=null && equipment.Active && equipment.Firearm))
             {
+                int count=inventory.PistolSelected ? (weapon.Loaded?1:0) : equipment.LoadedRounds;
+                bool reload=inventory.PistolSelected ? weapon.Reloading : equipment.IsReloading;
                 var ammo = new Rect(Screen.width - 168, sideY - 4, 125, 48);
                 PirateHudStyle.Brush(new Rect(ammo.x - 25, ammo.y - 15, 175, 85), new Color(.015f,.035f,.04f,.5f));
-                PirateHudStyle.Diamond(new Vector2(ammo.x + 20, ammo.y + 21), 9, weapon.Loaded ? PirateHudStyle.Paper : PirateHudStyle.Muted);
-                PirateHudStyle.Label(new Rect(ammo.x + 37, ammo.y, 80, 42), weapon.Loaded ? "1 / ∞" : "0 / ∞", PirateHudStyle.Paper, true);
-                if (!weapon.Loaded || weapon.Reloading)
-                    PirateHudStyle.Label(new Rect(ammo.x - 30, ammo.y - 28, 175, 26), weapon.Reloading ? "Перезарядка…" : "[R]  Зарядить", PirateHudStyle.Paper);
+                PirateHudStyle.Diamond(new Vector2(ammo.x + 20, ammo.y + 21), 9, count>0 ? PirateHudStyle.Paper : PirateHudStyle.Muted);
+                PirateHudStyle.Label(new Rect(ammo.x + 37, ammo.y, 80, 42), count+" / ∞", PirateHudStyle.Paper, true);
+                if (count==0 || reload)
+                    PirateHudStyle.Label(new Rect(ammo.x - 30, ammo.y - 28, 175, 26), reload ? "Перезарядка…" : "[R]  Зарядить", PirateHudStyle.Paper);
             }
             if (motor.InputActive && !ShipSpyglassView.IsViewing)
             {
+                if(equipment!=null && equipment.Scoped) return;
                 float x = Screen.width / 2f, y = Screen.height / 2f;
                 PirateHudStyle.Fill(new Rect(x - 1, y - 1, 2, 2), PirateHudStyle.Paper);
-                if (inventory.PistolSelected)
+                if (handling!=null && handling.Available && !handling.Aiming)
                 {
-                    PirateHudStyle.Fill(new Rect(x - 10, y, 5, 1), PirateHudStyle.Paper);
-                    PirateHudStyle.Fill(new Rect(x + 5, y, 5, 1), PirateHudStyle.Paper);
-                    PirateHudStyle.Fill(new Rect(x, y - 10, 1, 5), PirateHudStyle.Paper);
+                    float radius=handling.ReticleRadius;
+                    PirateHudStyle.Fill(new Rect(x-radius-5,y,5,1),PirateHudStyle.Paper);
+                    PirateHudStyle.Fill(new Rect(x+radius,y,5,1),PirateHudStyle.Paper);
+                    PirateHudStyle.Fill(new Rect(x,y-radius-5,1,5),PirateHudStyle.Paper);
+                    PirateHudStyle.Fill(new Rect(x,y+radius,1,5),PirateHudStyle.Paper);
                 }
             }
         }

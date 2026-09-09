@@ -88,7 +88,7 @@ namespace PirateSlop
             var world = weapon.ActiveWorld;
             Quaternion viewHand = view.rotation * gripRotation;
             viewRight.Solve(view.position - viewHand * Vector3.up * .075f, viewHand, motor.PlayerCamera.transform.TransformPoint(new Vector3(.55f, -.5f, .15f)), 1);
-            view.position = viewRight.Hand.TransformPoint(new Vector3(0, .065f, .025f));
+            if (!inventory.PistolSelected) view.position = viewRight.Hand.TransformPoint(new Vector3(0, .065f, .025f));
             Vector3 viewLeftTarget = weapon.Reloading ? weapon.ReloadHandPoint : motor.PlayerCamera.transform.TransformPoint(new Vector3(-.25f, -.4f, .32f));
             viewLeft.Solve(viewLeftTarget, motor.PlayerCamera.transform.rotation * gripRotation, motor.PlayerCamera.transform.TransformPoint(new Vector3(-.6f, -.5f, .15f)), 1);
             Vector3 position = transform.TransformPoint(weapon.BodyWeaponPosition);

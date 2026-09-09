@@ -104,6 +104,7 @@ namespace PirateSlop.EditorTools
             var config = AssetDatabase.LoadAssetAtPath<SessionConfig>("Assets/Settings/Networking/SessionConfig.asset");
             config.ProtocolVersion = Mathf.Max(config.ProtocolVersion, 47); EditorUtility.SetDirty(config);
             AssetDatabase.SaveAssets();
+            PirateSlop.EditorTools.FirearmSetup.Configure();
         }
         static NetworkParrotDrone CreateDrone(SinglePrefabObjects registry)
         {

@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c27581dd8e186ef4bb4fa8bf491439df, type: 3}
+  m_Name: Musket
+  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.FirearmDefinition
+  Ballistics:
+    Range: 240
+    NearDamage: 70
+    FarDamage: 45
+    NearHeadDamage: 100
+    FarHeadDamage: 70
+    FalloffStart: 90
+    FalloffEnd: 240
+    ShotInterval: 0.65
+    ReloadDuration: 3.2
+  Sound: 34
+  ShotClips: []
+  ShotVolume: 0.9
+  AudibleDistance: 180
+  Pellets: 1
+  Capacity: 1
+  DamageCap: 100
+  HipSpread: 2
+  AimSpread: 0
+  MovingSpread: 0.2
+  AimSeconds: 0.24
+  AimFov: 55
+  CameraKick: 3
+  CameraYaw: 0.35
+  KickDegrees: 17
+  KickDistance: 0.1
+  KickRecovery: 0.38
+  FlashPower: 1.2
+  TracerWidth: 0.022
+  TracerSpeed: 600
+  HipPosition: {x: 0.22, y: -0.25, z: 0.45}
+  AimPosition: {x: 0, y: -0.075, z: 0.3}
+  MuzzleOffset: {x: 0, y: 0.075, z: 1.15}
+  ShooterKnockback: 0
+  Scope: 1

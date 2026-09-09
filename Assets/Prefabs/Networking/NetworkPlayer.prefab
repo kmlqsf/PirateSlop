@@ -3693,6 +3693,7 @@ GameObject:
   - component: {fileID: 1783425920093483733}
   - component: {fileID: 8285007558616661583}
   - component: {fileID: 6873954375603879613}
+  - component: {fileID: 8730755079242221971}
   m_Layer: 0
   m_Name: NetworkPlayer
   m_TagString: Player
@@ -4220,6 +4221,21 @@ MonoBehaviour:
   - {fileID: 7701596119750937010, guid: 065649e6f66839044b780f671914b201, type: 3}
   - {fileID: 4613177525628647349, guid: 2d3964881a2a80945b8ad3ae50773001, type: 3}
   ParrotPrefab: {fileID: 3399042490705193612, guid: 879b536b5b1c40a408199fc90cbf65be, type: 3}
+--- !u!114 &8730755079242221971
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4193507432475942729}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b9f3a9ef676a5442a43454afd3fb52a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.FirearmHandling
+  Pistol: {fileID: 11400000, guid: 799d835643959534eb71e906facf3c24, type: 2}
+  Musket: {fileID: 11400000, guid: 46291275002610b4ea3323a726f3893b, type: 2}
+  Shotgun: {fileID: 11400000, guid: d34248909c48f244ebccd5e7cfd8f004, type: 2}
 --- !u!1 &4195186048672230144
 GameObject:
   m_ObjectHideFlags: 0

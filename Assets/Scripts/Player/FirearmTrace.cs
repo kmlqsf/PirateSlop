@@ -15,6 +15,11 @@ namespace PirateSlop
     {
         public Vector3 Start, End, Normal;
         public bool Hit, Water;
+        public BulletSurfaceKind Surface;
+        public bool LeaveMark;
+        public FishNet.Object.NetworkObject Anchor;
+        public int ShipId;
+        public Vector3 LocalEnd, LocalNormal;
     }
 
     public static class FirearmTrace
@@ -81,6 +86,7 @@ namespace PirateSlop
                     previous = t;
                 }
             }
+            if(hit.collider!=null && !shot.Water) BulletSurface.Describe(hit,ref shot);
             return shot;
         }
     }

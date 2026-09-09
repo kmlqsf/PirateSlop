@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c27581dd8e186ef4bb4fa8bf491439df, type: 3}
+  m_Name: DoubleBarrel
+  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.FirearmDefinition
+  Ballistics:
+    Range: 65
+    NearDamage: 5
+    FarDamage: 1.5
+    NearHeadDamage: 5
+    FarHeadDamage: 1.5
+    FalloffStart: 12
+    FalloffEnd: 55
+    ShotInterval: 0.55
+    ReloadDuration: 3.6
+  Sound: 35
+  ShotClips: []
+  ShotVolume: 0.9
+  AudibleDistance: 180
+  Pellets: 14
+  Capacity: 2
+  DamageCap: 70
+  HipSpread: 5
+  AimSpread: 2.5
+  MovingSpread: 0.7
+  AimSeconds: 0.18
+  AimFov: 58
+  CameraKick: 5
+  CameraYaw: 0.65
+  KickDegrees: 24
+  KickDistance: 0.16
+  KickRecovery: 0.48
+  FlashPower: 1.4
+  TracerWidth: 0.016
+  TracerSpeed: 450
+  HipPosition: {x: 0.22, y: -0.25, z: 0.45}
+  AimPosition: {x: 0, y: -0.079, z: 0.3}
+  MuzzleOffset: {x: 0, y: 0.079, z: 0.74}
+  ShooterKnockback: 1.5
+  Scope: 0

@@ -53,6 +53,11 @@ public class AdvancedPlayerController : MonoBehaviour
     CharacterController controller;
     Camera playerCamera;
     float pitch, verticalVelocity, slideTimer, cooldown, lookYaw;
+    Vector2 aimRecoil;
+    public float AimSensitivityScale { get; set; } = 1;
+    public Vector3 AimEuler => new Vector3(Mathf.Clamp(pitch-aimRecoil.x,-85,85),lookYaw+aimRecoil.y,0);
+    public Vector3 AimDirection => Quaternion.Euler(AimEuler)*Vector3.forward;
+    public void AddAimRecoil(float vertical,float horizontal) { if(local) aimRecoil+=new Vector2(vertical,horizontal); }
     float cameraHeight;
     Vector3 slideDirection;
     bool crouched, networked, local = true;
@@ -98,12 +103,13 @@ public class AdvancedPlayerController : MonoBehaviour
     void Update()
     {
         if (!local) return;
+        aimRecoil=Vector2.Lerp(aimRecoil,Vector2.zero,1-Mathf.Exp(-7*Time.deltaTime));
         var kb = Keyboard.current; var mouse = Mouse.current;
         if (kb == null) return;
         if (kb.f1Key.wasPressedThisFrame) SetThirdPerson(!IsThirdPerson);
         if (kb.escapeKey.wasPressedThisFrame) { pending.Release = true; SetCursor(false); }
         if (mouse != null && mouse.leftButton.wasPressedThisFrame && !PlayerInventory.LootWindowOpen && !PirateSlop.Networking.SessionController.MenuOpen) SetCursor(true);
-        if (InputActive && mouse != null && (shipControls == null || !shipControls.IsDragging)) { var d = mouse.delta.ReadValue() * mouseSensitivity; lookYaw = Mathf.Repeat(lookYaw + d.x, 360f); pitch = Mathf.Clamp(pitch - d.y, -85f, 85f); }
+        if (InputActive && mouse != null && (shipControls == null || !shipControls.IsDragging)) { var d = mouse.delta.ReadValue() * mouseSensitivity * AimSensitivityScale; lookYaw = Mathf.Repeat(lookYaw + d.x, 360f); pitch = Mathf.Clamp(pitch - d.y, -85f, 85f); }
         pending.Move = InputActive ? Vector2.ClampMagnitude(new Vector2((kb.dKey.isPressed || kb.rightArrowKey.isPressed ? 1 : 0) - (kb.aKey.isPressed || kb.leftArrowKey.isPressed ? 1 : 0), (kb.wKey.isPressed || kb.upArrowKey.isPressed ? 1 : 0) - (kb.sKey.isPressed || kb.downArrowKey.isPressed ? 1 : 0)), 1) : Vector2.zero;
         pending.Yaw = lookYaw;
         pending.Pitch = pitch;
@@ -119,7 +125,7 @@ public class AdvancedPlayerController : MonoBehaviour
     void LateUpdate()
     {
         if (!local || playerCamera == null) return;
-        playerCamera.transform.rotation = Quaternion.Euler(pitch, lookYaw, 0);
+        playerCamera.transform.rotation = Quaternion.Euler(AimEuler);
         cameraHeight = Mathf.Lerp(cameraHeight, (crouched ? crouchHeight : standingHeight) - .15f, 1f - Mathf.Exp(-16f * Time.deltaTime));
         var pivot = playerCamera.transform.parent.TransformPoint(Vector3.up * cameraHeight);
         if (IsThirdPerson)

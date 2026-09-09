@@ -8,6 +8,7 @@ namespace PirateSlop
         PirateSlop.Networking.NetworkPlayer player;
         Texture2D vignette;
         float flash, nextHurtSound, nextHitSound;
+        float confirmedUntil;
         bool Local => player != null ? player.IsOwner : motor != null && motor.InputActive;
 
         void Awake() { motor = GetComponent<AdvancedPlayerController>(); player = GetComponent<PirateSlop.Networking.NetworkPlayer>(); }
@@ -25,6 +26,7 @@ namespace PirateSlop
 
         public void ConfirmHit()
         {
+            if(Local) confirmedUntil=Time.unscaledTime+.16f;
             if (!Local || Time.unscaledTime < nextHitSound) return;
             nextHitSound = Time.unscaledTime + .06f;
             GameAudio.Play(SoundCue.HitConfirm, transform.position, 1f, true);
@@ -34,6 +36,18 @@ namespace PirateSlop
 
         void OnGUI()
         {
+            if(Local && Time.unscaledTime<confirmedUntil)
+            {
+                var matrix=GUI.matrix;var color=GUI.color;int oldDepth=GUI.depth;GUI.depth=-75;
+                var center=new Vector2(Screen.width*.5f,Screen.height*.5f);
+                GUI.color=new Color(1,.86f,.55f,Mathf.Clamp01((confirmedUntil-Time.unscaledTime)/.08f));
+                GUIUtility.RotateAroundPivot(45,center);
+                GUI.DrawTexture(new Rect(center.x-13,center.y-1,8,2),Texture2D.whiteTexture);
+                GUI.DrawTexture(new Rect(center.x+5,center.y-1,8,2),Texture2D.whiteTexture);
+                GUI.DrawTexture(new Rect(center.x-1,center.y-13,2,8),Texture2D.whiteTexture);
+                GUI.DrawTexture(new Rect(center.x-1,center.y+5,2,8),Texture2D.whiteTexture);
+                GUI.matrix=matrix;GUI.color=color;GUI.depth=oldDepth;
+            }
             if (!Local || flash <= 0f || Event.current.type != EventType.Repaint) return;
             if (vignette == null)
             {
