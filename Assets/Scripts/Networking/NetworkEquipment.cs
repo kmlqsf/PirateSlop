@@ -111,6 +111,7 @@ namespace PirateSlop.Networking
         void UseServerRpc(byte request, Vector3 forward, Vector3 eyeOffset)
         {
             if (!CanUse || action.Value != 0 || Time.time < nextShot || !float.IsFinite(forward.sqrMagnitude) || forward.sqrMagnitude < .5f) return;
+            if (Item == InventoryItem.GrapplingHook) { if (request == 0) network.ThrowGrapple(forward); nextShot = Time.time + .6f; return; }
             int slot = inventory.SelectedSlot;
             direction.Value = forward.normalized;
             if (Item == InventoryItem.Wine) { BeginAction(2, 2.2f, slot); return; }
@@ -263,7 +264,7 @@ namespace PirateSlop.Networking
             if(IsOwner && WaterRunning) PirateHudStyle.Label(new Rect(28,140,270,30),"Хождение по воде: "+waterRunRemaining.Value+" с",PirateHudStyle.Paper);
             if (!IsOwner || !Active || !motor.InputActive) return;
             if(Scoped) DrawScope();
-            string hint = action.Value == 1 ? "Перезарядка…" : action.Value == 2 ? "Пьём…" : Firearm ? rounds.Value+" / ∞   ЛКМ — огонь • ПКМ — прицел • R — зарядить" : Item == InventoryItem.Wine ? "Удерживать ЛКМ — бег по воде на 60 с" : "ЛКМ — выпустить попугая • цель до 100 м • 50 урона";
+            string hint = action.Value == 1 ? "Перезарядка…" : action.Value == 2 ? "Пьём…" : Firearm ? rounds.Value+" / ∞   ЛКМ — огонь • ПКМ — прицел • R — зарядить" : Item == InventoryItem.GrapplingHook ? "ЛКМ — забросить крюк (35 м) · W/S — подъём / спуск" : Item == InventoryItem.Wine ? "Удерживать ЛКМ — бег по воде на 60 с" : "ЛКМ — выпустить попугая • цель до 100 м • 50 урона";
             PirateHudStyle.Label(new Rect(Screen.width/2f-300,Screen.height-175,600,32),hint,PirateHudStyle.Paper);
         }
         void DrawScope()

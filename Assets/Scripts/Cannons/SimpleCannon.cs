@@ -106,6 +106,7 @@ namespace PirateSlop
             var projectile=shot.gameObject.AddComponent<CannonShotDamage>();
             projectile.Authoritative=authoritative;projectile.Source=GetComponentInParent<ShipController>().transform;
             projectile.Velocity=velocity; projectile.Ammo=ammo;
+            projectile.SourceCannonIndex=Index;
             projectile.Attacker = authoritative ? firingPlayer : null;
             projectile.Radius=shot.GetComponent<SphereCollider>().radius*Mathf.Max(shot.transform.lossyScale.x,shot.transform.lossyScale.y,shot.transform.lossyScale.z);
             if (shot.FlightTrailMaterial != null)
@@ -148,6 +149,7 @@ namespace PirateSlop
         }
         public void Fire(GameObject attacker = null)
         {
+            if (Network != null && Network.HasBoarding(Index)) return;
             if (Network != null && Network.IsClientInitialized && !Network.IsServerInitialized) { Network.RequestFire(Index); return; }
             if (!IsLoaded || IsLoading || IsIgnited || Time.time < nextFireTime) return;
             firingPlayer = attacker;

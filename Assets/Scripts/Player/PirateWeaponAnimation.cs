@@ -94,6 +94,17 @@ namespace PirateSlop
             foreach (var collider in Physics.OverlapSphere(origin, 2.4f, ~0, QueryTriggerInteraction.Ignore))
             {
                 if (collider.transform.IsChildOf(transform)) continue;
+                var hook = collider.GetComponentInParent<BoardingHookTarget>();
+                if (hook != null)
+                {
+                    Vector3 hookDelta = collider.ClosestPoint(origin + attackDirection) - origin;
+                    if (Vector3.Angle(attackDirection, hookDelta) > 75f) continue;
+                    bool hidden = false;
+                    foreach (var hit in Physics.RaycastAll(origin, hookDelta.normalized, hookDelta.magnitude, ~0, QueryTriggerInteraction.Ignore))
+                        if (!hit.transform.IsChildOf(transform) && hit.collider.GetComponentInParent<BoardingHookTarget>() != hook) { hidden = true; break; }
+                    if (!hidden) hook.Strike(gameObject);
+                    continue;
+                }
                 var health = collider.GetComponentInParent<CombatHealth>();
                 if (health == null || struck.Contains(health)) continue;
                 Vector3 point = collider.ClosestPoint(origin + attackDirection), delta = point - origin;

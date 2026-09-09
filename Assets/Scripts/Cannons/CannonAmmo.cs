@@ -5,7 +5,7 @@ namespace PirateSlop
 {
     public static class CannonAmmo
     {
-        public static bool IsBall(InventoryItem item) => item == InventoryItem.Cannonball ||
+        public static bool IsBall(InventoryItem item) => item == InventoryItem.Cannonball || item == InventoryItem.BoardingHook ||
             item >= InventoryItem.FireCannonball && item <= InventoryItem.BoomerangCannonball;
 
         public static Color Color(InventoryItem item) => item switch

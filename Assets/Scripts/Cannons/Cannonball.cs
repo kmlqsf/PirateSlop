@@ -15,7 +15,7 @@ namespace PirateSlop
             var item = GetComponent<PirateSlop.Networking.NetworkFish>();
             var ammo = item != null ? item.CurrentItem : Ammo;
             if (visibleAmmo == ammo && ammoVisual != null) return;
-            int index = ammo == PirateSlop.Networking.InventoryItem.Cannonball ? 0 : (int)ammo - 7;
+            int index = ammo == PirateSlop.Networking.InventoryItem.Cannonball ? 0 : ammo == PirateSlop.Networking.InventoryItem.BoardingHook ? 5 : (int)ammo - 7;
             if (AmmoModels == null || index < 0 || index >= AmmoModels.Length || AmmoModels[index] == null) return;
             for (int i = transform.childCount - 1; i >= 0; i--)
             {

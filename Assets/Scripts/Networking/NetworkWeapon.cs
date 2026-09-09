@@ -46,7 +46,7 @@ namespace PirateSlop.Networking
         }
         public bool CanAddItem(InventoryItem item)
         {
-            if (!IsServerInitialized || item < InventoryItem.Fish || item > InventoryItem.BombParrot) return false;
+            if (!IsServerInitialized || item < InventoryItem.Fish || item > InventoryItem.BoardingHook) return false;
             if (item == InventoryItem.Mallet || item == InventoryItem.Plank) return false;
             if (item == InventoryItem.Rum)
                 for (int i = 0; i < rumCounts.Count; i++) if (rumCounts[i] > 0 && rumCounts[i] < 6) return true;
@@ -63,7 +63,7 @@ namespace PirateSlop.Networking
             if (!CanAddItem(item)) return false;
             {
                 int slot = inventory.EmptySlot();
-                if (item >= InventoryItem.Wine) { equipmentItems[slot] = item; GetComponent<NetworkEquipment>()?.ResetSlot(slot, item); }
+                if (item >= InventoryItem.Wine && !CannonAmmo.IsBall(item)) { equipmentItems[slot] = item; GetComponent<NetworkEquipment>()?.ResetSlot(slot, item); }
                 else if (item == InventoryItem.Pistol) pistolSlots.Value |= 1 << slot;
                 else if (item == InventoryItem.Rum)
                 {
@@ -152,7 +152,7 @@ namespace PirateSlop.Networking
             dropped.Place(support != null ? support.NetworkObject : null, point, orientation);
             ServerManager.Spawn(dropped.NetworkObject);
             if (CannonAmmo.IsBall(item) && support != null) dropped.GetComponent<Cannonball>().RollOnPlatform(support.GetComponent<Rigidbody>());
-            if (item >= InventoryItem.Wine) equipmentItems[slot] = InventoryItem.None;
+            if (item >= InventoryItem.Wine && !CannonAmmo.IsBall(item)) equipmentItems[slot] = InventoryItem.None;
             else if (item == InventoryItem.Pistol) pistolSlots.Value &= ~(1 << slot);
             else if (item == InventoryItem.Rod) rodSlots.Value &= ~(1 << slot);
             else if (item == InventoryItem.Cannon) cannonSlots.Value &= ~(1 << slot);
@@ -276,6 +276,7 @@ namespace PirateSlop.Networking
         void RejectShotTargetRpc(FishNet.Connection.NetworkConnection connection) => weapon.RejectPredictedShot();
         void Update()
         {
+            UpdateGrapple();
             if (inventory != null && IsClientInitialized && !IsServerInitialized)
             {
                 ApplyInventory();

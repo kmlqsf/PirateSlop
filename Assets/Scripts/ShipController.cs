@@ -112,6 +112,7 @@ public class ShipController : MonoBehaviour
             waveRoll = Mathf.Lerp(waveRoll, Mathf.Clamp(Mathf.Atan2(starboard - port, floatWidth * 2) * Mathf.Rad2Deg, -15, 15), blend);
         }
         var rotation = Quaternion.Euler(pitch + cannonTilt.x, yaw, bank + waveRoll + cannonTilt.y);
+        PirateSlop.Networking.NetworkCannon.ConstrainBoarding(this, ref next, rotation);
         var world = PirateSlop.World.ProceduralWorld.Instance;
         if (world != null && world.Ready && !world.CanSail(next, yaw))
         {

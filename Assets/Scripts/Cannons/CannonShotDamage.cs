@@ -8,6 +8,7 @@ namespace PirateSlop
     {
         public bool Authoritative;
         public Transform Source;
+        public int SourceCannonIndex = -1;
         public GameObject Attacker;
         public Vector3 Velocity;
         public InventoryItem Ammo = InventoryItem.Cannonball;
@@ -118,6 +119,12 @@ namespace PirateSlop
 
         void Impact(Collider collider, Vector3 point, Vector3 normal)
         {
+            if (Ammo == InventoryItem.BoardingHook)
+            {
+                if (Authoritative && Source != null)
+                    Source.GetComponent<NetworkCannon>()?.AttachBoarding(SourceCannonIndex, collider.GetComponentInParent<NetworkShip>(), point, normal);
+                spent=true; Destroy(gameObject); return;
+            }
             var health = collider.GetComponentInParent<CombatHealth>();
             hitTargets.Add(health != null ? health.transform : collider.transform);
             if (Authoritative)

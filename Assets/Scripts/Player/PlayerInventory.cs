@@ -153,6 +153,12 @@ namespace PirateSlop
                 pickup = nearest.collider.GetComponentInParent<CannonPickup>();
                 aimedRumShelf = nearest.collider.GetComponentInParent<RumShelf>();
             }
+            if (Networked && aimedCannon != null && aimedCannon.Network != null && aimedCannon.Network.HasBoarding(aimedCannon.Index) && mouse.scroll.ReadValue().y != 0)
+            {
+                InteractionUsed = true;
+                aimedCannon.Network.Winch(aimedCannon.Index, Mathf.Sign(mouse.scroll.ReadValue().y));
+                return;
+            }
             if (aimedRumShelf != null && Networked)
             {
                 if (keyboard.eKey.wasPressedThisFrame)
@@ -284,7 +290,7 @@ namespace PirateSlop
             }
             if (Time.unscaledTime - selectionShownAt < 2.5f)
                 PirateHudStyle.Label(new Rect(Screen.width * .5f - 180, Screen.height - 138, 360, 26), InventoryIcons.ItemName(ItemAt(SelectedSlot)), PirateHudStyle.Paper);
-            string hint = aimedBall != null && aimedBall.Network != null ? "ЛКМ / E — взять 3 ядра" : BallSelected && aimedCannon != null && !aimedCannon.IsLoaded ? "E — зарядить ядро из рук" : chest != null ? chest.Hint(this) : pickup != null ? (EmptySlot() >= 0 ? "E — взять разобранную пушку" : "Инвентарь заполнен") : Placing && !cancelled ? "ЛКМ — поставить · R/колесо — поворот · Q/E — наклон\nShift+Q/E — крен · ПКМ — отменить" : "";
+            string hint = aimedCannon != null && aimedCannon.Network != null && aimedCannon.Network.HasBoarding(aimedCannon.Index) ? "Колесо вверх — натянуть · вниз — ослабить канат" : aimedBall != null && aimedBall.Network != null ? "ЛКМ / E — взять 3 ядра" : BallSelected && aimedCannon != null && !aimedCannon.IsLoaded ? "E — зарядить ядро из рук" : chest != null ? chest.Hint(this) : pickup != null ? (EmptySlot() >= 0 ? "E — взять разобранную пушку" : "Инвентарь заполнен") : Placing && !cancelled ? "ЛКМ — поставить · R/колесо — поворот · Q/E — наклон\nShift+Q/E — крен · ПКМ — отменить" : "";
             if (hint.Length > 0) PirateHudStyle.Panel(new Rect(Screen.width * .5f - 290, Screen.height - 165, 580, 44), hint);
             if (aimedRumShelf != null) PirateHudStyle.Panel(new Rect(Screen.width * .5f - 290, Screen.height - 165, 580, 44), aimedRumShelf.Hint);
         }

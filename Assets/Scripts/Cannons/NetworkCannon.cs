@@ -16,7 +16,7 @@ namespace PirateSlop.Networking
         public float Fuse;
     }
 
-    public sealed class NetworkCannon : NetworkBehaviour
+    public sealed partial class NetworkCannon : NetworkBehaviour
     {
         readonly SyncVar<bool> kitTaken = new(false);
         readonly SyncList<CannonPlacement> placements = new();
@@ -49,7 +49,7 @@ namespace PirateSlop.Networking
         public bool RemoveCannon(NetworkWeapon player, int index)
         {
             var cannon = Cannon(index);
-            if (!IsServerInitialized || cannon == null || cannon.IsIgnited || cannon.IsLoading || !player.CanAddItem(InventoryItem.Cannon)) return false;
+            if (!IsServerInitialized || cannon == null || HasBoarding(index) || cannon.IsIgnited || cannon.IsLoading || !player.CanAddItem(InventoryItem.Cannon)) return false;
             if (cannon.IsLoaded)
             {
                 if (Crate.SpecialSupplyPrefab == null) return false;
@@ -80,7 +80,7 @@ namespace PirateSlop.Networking
         public bool LoadInventoryBall(NetworkWeapon player, int index, InventoryItem ammo = InventoryItem.Cannonball)
         {
             var cannon = Cannon(index);
-            if (!IsServerInitialized || cannon == null || cannon.IsLoaded || !CannonAmmo.IsBall(ammo) || !player.CanReachCannon(cannon)) return false;
+            if (!IsServerInitialized || cannon == null || HasBoarding(index) || cannon.IsLoaded || !CannonAmmo.IsBall(ammo) || !player.CanReachCannon(cannon)) return false;
             if (!cannon.LoadAmmo(ammo)) return false;
             var placement = placements[index]; placement.Loaded = true; placement.Ammo = ammo; placement.Fuse = -1f; placements[index] = placement;
             return true;
@@ -121,6 +121,7 @@ namespace PirateSlop.Networking
         }
         void Update()
         {
+            UpdateBoarding();
             if (IsServerInitialized)
             {
                 for (int i = 0; i < placements.Count; i++)

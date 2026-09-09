@@ -15,6 +15,8 @@ namespace PirateSlop
             InventoryItem.Musket => "Мушкет",
             InventoryItem.DoubleBarrel => "Двустволка",
             InventoryItem.BombParrot => "Попугай",
+            InventoryItem.GrapplingHook => "Крюк-кошка",
+            InventoryItem.BoardingHook => "Абордажный крюк",
             InventoryItem.Pistol => "Пистолет",
             InventoryItem.Rod => "Удочка",
             InventoryItem.Cannon => "Пушка",
@@ -37,7 +39,7 @@ namespace PirateSlop
             bool hover = button && rect.Contains(Event.current.mousePosition);
             bool clicked = button && GUI.Button(rect, GUIContent.none, GUIStyle.none);
             if (selected || hover) PirateHudStyle.Brush(new Rect(rect.x - 8, rect.y - 10, rect.width + 16, rect.height + 10), new Color(.06f,.13f,.13f,.8f));
-            int index = CannonAmmo.IsBall(item) ? (int)InventoryItem.Cannonball : (int)item;
+            int index = CannonAmmo.IsBall(item) && item != InventoryItem.BoardingHook ? (int)InventoryItem.Cannonball : (int)item;
             GUI.color = CannonAmmo.IsBall(item) ? CannonAmmo.Color(item) : PirateHudStyle.Paper;
             if (index >= 0 && Icons != null && index < Icons.Length && Icons[index] != null)
             {
@@ -54,6 +56,20 @@ namespace PirateSlop
                 if (Event.current.type == EventType.Repaint && hudMaterial != null)
                     Graphics.DrawTexture(target, icon, new Rect(0, 0, 1, 1), 0, 0, 0, 0, GUI.color, hudMaterial);
                 else if (hudMaterial == null) GUI.DrawTexture(target, icon, ScaleMode.ScaleToFit, true);
+            }
+            else if (item == InventoryItem.GrapplingHook || item == InventoryItem.BoardingHook)
+            {
+                Color tint = item == InventoryItem.BoardingHook ? PirateHudStyle.Gold : PirateHudStyle.Paper;
+                Vector2 center = new Vector2(rect.center.x, rect.y + 19);
+                PirateHudStyle.Brush(new Rect(center.x - 3, center.y - 21, 6, 37), tint, true);
+                PirateHudStyle.Brush(new Rect(center.x - 11, center.y - 16, 22, 5), tint, true);
+                var matrix = GUI.matrix;
+                GUIUtility.RotateAroundPivot(40, center + Vector2.up * 14);
+                PirateHudStyle.Brush(new Rect(center.x - 22, center.y + 11, 25, 6), tint, true);
+                GUI.matrix = matrix;
+                GUIUtility.RotateAroundPivot(-40, center + Vector2.up * 14);
+                PirateHudStyle.Brush(new Rect(center.x - 3, center.y + 11, 25, 6), tint, true);
+                GUI.matrix = matrix;
             }
             else if (item == InventoryItem.Rum)
             {

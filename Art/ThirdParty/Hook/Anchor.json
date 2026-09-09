@@ -1,0 +1,209 @@
+{
+"asset": {
+"generator": "FBX2glTF v0.9.7",
+"version": "2.0"
+},
+"scene": 0,
+"buffers": [
+{
+"byteLength": 40264
+}
+],
+"bufferViews": [
+{
+"buffer": 0,
+"byteLength": 9014,
+"byteOffset": 0
+},
+{
+"buffer": 0,
+"byteLength": 3264,
+"byteOffset": 9016,
+"target": 34963
+},
+{
+"buffer": 0,
+"byteLength": 6996,
+"byteOffset": 12280,
+"target": 34962
+},
+{
+"buffer": 0,
+"byteLength": 6996,
+"byteOffset": 19276,
+"target": 34962
+},
+{
+"buffer": 0,
+"byteLength": 9328,
+"byteOffset": 26272,
+"target": 34962
+},
+{
+"buffer": 0,
+"byteLength": 4664,
+"byteOffset": 35600,
+"target": 34962
+}
+],
+"scenes": [
+{
+"name": "Root Scene",
+"nodes": [
+0
+]
+}
+],
+"accessors": [
+{
+"componentType": 5123,
+"type": "SCALAR",
+"count": 1632,
+"bufferView": 1,
+"byteOffset": 0
+},
+{
+"componentType": 5126,
+"type": "VEC3",
+"count": 583,
+"bufferView": 2,
+"byteOffset": 0,
+"min": [
+-0.00390683067962527,
+7.57612451707246e-06,
+-0.0044674277305603
+],
+"max": [
+0.00390000222250819,
+0.000939293648116291,
+0.00503991218283772
+]
+},
+{
+"componentType": 5126,
+"type": "VEC3",
+"count": 583,
+"bufferView": 3,
+"byteOffset": 0
+},
+{
+"componentType": 5126,
+"type": "VEC4",
+"count": 583,
+"bufferView": 4,
+"byteOffset": 0
+},
+{
+"componentType": 5126,
+"type": "VEC2",
+"count": 583,
+"bufferView": 5,
+"byteOffset": 0
+}
+],
+"images": [
+{
+"name": "Atlas_Pirate.png",
+"bufferView": 0,
+"mimeType": "image/png"
+}
+],
+"samplers": [
+{}
+],
+"textures": [
+{
+"name": "base_color_texture",
+"sampler": 0,
+"source": 0
+}
+],
+"materials": [
+{
+"name": "Atlas",
+"alphaMode": "OPAQUE",
+"extras": {
+"fromFBX": {
+"shadingModel": "Phong",
+"isTruePBR": false
+}
+},
+"pbrMetallicRoughness": {
+"baseColorTexture": {
+"index": 0,
+"texCoord": 0
+},
+"baseColorFactor": [
+1.0,
+1.0,
+1.0,
+1.0
+],
+"metallicFactor": 0.400000005960464,
+"roughnessFactor": 1.0
+}
+}
+],
+"meshes": [
+{
+"name": "Prop_Anchor",
+"primitives": [
+{
+"material": 0,
+"mode": 4,
+"attributes": {
+"COLOR_0": 3,
+"NORMAL": 2,
+"POSITION": 1,
+"TEXCOORD_0": 4
+},
+"indices": 0
+}
+]
+}
+],
+"nodes": [
+{
+"name": "RootNode",
+"translation": [
+0.0,
+0.0,
+0.0
+],
+"rotation": [
+0.0,
+0.0,
+0.0,
+1.0
+],
+"scale": [
+1.0,
+1.0,
+1.0
+],
+"children": [
+1
+]
+},
+{
+"name": "Prop_Anchor",
+"translation": [
+0.0,
+0.0,
+0.0
+],
+"rotation": [
+2.1855694143369e-08,
+0.0,
+0.0,
+1.0
+],
+"scale": [
+100.0,
+100.0,
+100.0
+],
+"mesh": 0
+}
+]
+}   

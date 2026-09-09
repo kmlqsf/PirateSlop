@@ -11,10 +11,10 @@ namespace PirateSlop
         public Cannonball Supply;
         public NetworkFish SpecialSupplyPrefab;
         public float SpecialSupplySpacing = .65f;
-        readonly NetworkFish[] specialSupplies = new NetworkFish[5];
+        readonly NetworkFish[] specialSupplies = new NetworkFish[6];
         static readonly InventoryItem[] specialAmmo = {
             InventoryItem.Cannonball, InventoryItem.FireCannonball, InventoryItem.IceCannonball,
-            InventoryItem.PushCannonball, InventoryItem.BoomerangCannonball
+            InventoryItem.PushCannonball, InventoryItem.BoomerangCannonball, InventoryItem.BoardingHook
         };
         public GameObject Kit;
         public SimpleCannon CannonPrefab;
