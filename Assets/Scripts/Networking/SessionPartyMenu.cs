@@ -7,6 +7,7 @@ namespace PirateSlop.Networking
     {
         Vector2 partyScroll;
         string lobbyInput = "";
+        string matchInput = "";
         void DrawSteamParty(float x, float y, float width)
         {
             if (party == null) { MenuText(new Rect(x,y,width,50), "Steam не настроен"); return; }
@@ -19,7 +20,7 @@ namespace PirateSlop.Networking
                 lobbyInput=GUI.TextField(new Rect(x,y+165,width,45),lobbyInput,20,menuInput);
                 if(MenuAction(x,y+225,width,"Войти по ID") && ulong.TryParse(lobbyInput,out var id)) party.Join(new CSteamID(id));
                 GUI.enabled=true;
-                if(MenuAction(x,y+300,width,"Назад")) menuPage=0;
+                if(menuPage==5 && MenuAction(x,y+300,width,"Назад")) menuPage=0;
                 return;
             }
             MenuText(new Rect(x,y+42,width,30),"КОМАНДА • "+party.Count+" / "+MaxPlayers,true);
@@ -27,18 +28,23 @@ namespace PirateSlop.Networking
             for(int i=0;i<party.Count;i++)
             {
                 var member=party.Member(i);
-                MenuText(new Rect(0,i*30,width-24,30),$"{party.Name(member)}  ·  Экипаж {party.Team(member)}  ·  {(party.IsReady(member)?"Готов":"Ждём")}",true);
+                MenuText(new Rect(0,i*30,width-24,30),$"{party.Name(member)}  ·  {(party.IsReady(member)?"Готов":"Ждём")}",true);
             }
             GUI.EndScrollView();
-            GUI.enabled=party.Waiting && !SessionBusy;
-            int team=party.Team(SteamUser.GetSteamID());
-            if(MenuAction(x,y+245,width/2-5,"Экипаж: "+team)) party.SetTeam(team%4+1);
-            if(MenuAction(x+width/2+5,y+245,width/2-5,party.IsReady(SteamUser.GetSteamID())?"Не готов":"Готов",true)) party.Ready(!party.IsReady(SteamUser.GetSteamID()));
-            if(MenuAction(x,y+310,width/2-5,"Пригласить")) party.Invite();
-            if(MenuAction(x+width/2+5,y+310,width/2-5,"Копировать ID")) GUIUtility.systemCopyBuffer=party.Lobby.ToString();
-            if(party.IsLeader && MenuAction(x,y+375,width,"Выйти в море",true)) party.Launch();
+            GUI.enabled=party.Waiting && !party.Busy && !SessionBusy;
+            if(MenuAction(x,y+235,width/2-5,"Пригласить")) party.Invite();
+            if(MenuAction(x+width/2+5,y+235,width/2-5,party.IsReady(SteamUser.GetSteamID())?"Не готов":"Готов",true)) party.Ready(!party.IsReady(SteamUser.GetSteamID()));
+            if(party.IsLeader)
+            {
+                if(MenuAction(x,y+300,width,"Создать сессию всей командой",true)) party.Launch();
+                MenuText(new Rect(x,y+360,width,25),"Или ID сессии другого капитана:",true);
+                matchInput=GUI.TextField(new Rect(x,y+390,width-135,45),matchInput,20,menuInput);
+                if(MenuAction(x+width-125,y+390,125,"Войти") && ulong.TryParse(matchInput,out var match)) party.JoinSession(match);
+            }
+            else MenuText(new Rect(x,y+310,width,60),"Капитан выберет сессию. Вся команда отправится на одном корабле.",true);
             GUI.enabled=true;
-            if(GUI.Button(new Rect(x,y+440,width,30),"Покинуть лобби")) { party.Leave(); menuPage=0; }
+            if(party.MatchLobby.m_SteamID != 0 && GUI.Button(new Rect(x,y+450,width,30),"Копировать ID сессии: "+party.MatchLobby)) GUIUtility.systemCopyBuffer=party.MatchLobby.ToString();
+            if(!SessionBusy && GUI.Button(new Rect(x,y+490,width,30),"Покинуть команду")) { party.Leave(); menuPage=0; }
         }
     }
 }

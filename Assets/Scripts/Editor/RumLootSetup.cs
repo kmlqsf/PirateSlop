@@ -93,18 +93,12 @@ namespace PirateSlop.EditorTools
             }
             finally { PrefabUtility.UnloadPrefabContents(root); }
             var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(path).GetComponent<NetworkFish>();
-            var registry = AssetDatabase.LoadAssetAtPath<DefaultPrefabObjects>("Assets/DefaultPrefabObjects.asset");
+            var registry = AssetDatabase.LoadAssetAtPath<SinglePrefabObjects>("Assets/Settings/Networking/NetworkPrefabs.asset");
             var networkObject = prefab.GetComponent<NetworkObject>();
             string hashSource = (path + prefab.gameObject.name).Trim().ToLowerInvariant();
             hashSource = new string(hashSource.Where(c => (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9')).ToArray());
             networkObject.SetAssetPathHash(hashSource.GetStableHashU64());
             EditorUtility.SetDirty(networkObject);
-            if (registry.Prefabs.Any(p => p == null))
-            {
-                var valid = registry.Prefabs.Where(p => p != null).ToList();
-                registry.Clear();
-                registry.AddObjects(valid, true, true);
-            }
             registry.AddObject(networkObject, true, true);
             EditorUtility.SetDirty(registry);
             return prefab;

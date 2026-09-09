@@ -29,7 +29,7 @@ namespace PirateSlop.Networking
         SteamParty party;
         bool steamSession;
         ulong steamHost;
-        public void ShowSteamParty() { menuPage = 5; AdvancedPlayerController.SetCursor(false); }
+        public void ShowSteamParty() { menuPage = 0; AdvancedPlayerController.SetCursor(false); }
         public bool SessionBusy => connecting || playing || starting || (manager != null && manager.ServerManager.Started);
         public int SteamTeam(NetworkConnection conn) => !steamSession ? 0 : party.AdmittedTeam(manager.TransportManager.Transport.GetConnectionAddress(conn.ClientId));
         public bool AcceptSteamConnection(NetworkConnection conn) => !steamSession || SteamTeam(conn) > 0;
@@ -165,7 +165,7 @@ namespace PirateSlop.Networking
             if (args.ConnectionState != LocalConnectionState.Stopped) return;
             bool unexpected = playing || connecting;
             playing = connecting = false;
-            if (steamSession && unexpected) { party?.Leave(); steamSession = false; }
+            if (steamSession && unexpected) { party?.LeaveSession(); steamSession = false; }
             if (unexpected && error == "") SetError("Соединение закрыто: хост вышел или адрес недоступен");
             AdvancedPlayerController.SetCursor(false);
             if (MenuCamera != null && !Automated && !dedicated) MenuCamera.gameObject.SetActive(true);
@@ -221,21 +221,37 @@ namespace PirateSlop.Networking
         }
         void SpawnPlayer(NetworkConnection conn)
         {
+            int team = SteamTeam(conn);
+            if (steamSession && team <= 0) { conn.Disconnect(true); return; }
+            var crewmate = team > 0 ? players.Values.FirstOrDefault(p => p != null && p.TeamId.Value == team && p.Ship != null) : null;
+            NetworkShip ship;
+            int slot;
+            if (crewmate != null)
+            {
+                ship = crewmate.Ship;
+                slot = slots[crewmate.Owner.ClientId];
+            }
+            else
+            {
             var spawns = ProceduralWorld.Instance.Points("ship_spawn").ToArray();
-            int slot = Array.FindIndex(spawns, candidate => !slots.ContainsValue(Array.IndexOf(spawns, candidate)) && ProceduralWorld.Instance.CanSail(candidate.Position, candidate.Yaw) && !players.Values.Any(p => p != null && p.Ship != null && Vector3.Distance(p.Ship.transform.position, candidate.Position) < 40));
+            slot = Array.FindIndex(spawns, candidate => !slots.ContainsValue(Array.IndexOf(spawns, candidate)) && ProceduralWorld.Instance.CanSail(candidate.Position, candidate.Yaw) && !players.Values.Any(p => p != null && p.Ship != null && Vector3.Distance(p.Ship.transform.position, candidate.Position) < 40));
             if (slot < 0) { conn.Disconnect(true); return; }
             var spawn = spawns[slot];
             Vector3 position = spawn.Position;
             float yaw = spawn.Yaw;
             if (Config.ClusteredTestSpawns && !FindNearbySpawn(ref position, ref yaw)) { conn.Disconnect(true); return; }
+            ship = Instantiate(ShipPrefab, position, Quaternion.Euler(0, yaw, 0)).GetComponent<NetworkShip>();
+            ship.ParticipantId.Value = nextParticipant++;
+            manager.ServerManager.Spawn(ship.NetworkObject);
+            }
             slots[conn.ClientId] = slot;
-            var ship = Instantiate(ShipPrefab, position, Quaternion.Euler(0, yaw, 0)).GetComponent<NetworkShip>();
-            int id = nextParticipant++; ship.ParticipantId.Value = id;
-            manager.ServerManager.Spawn(ship.NetworkObject, conn);
-            manager.SceneManager.AddOwnerToDefaultScene(ship.NetworkObject);
-            var player = Instantiate(PlayerPrefab, ship.transform.TransformPoint(Config.PlayerLocalSpawn), Quaternion.identity).GetComponent<NetworkPlayer>();
+            int id = nextParticipant++;
+            int aboard = players.Values.Count(p => p != null && p.Ship == ship);
+            Vector3 spawnOffset = new Vector3((aboard % 3 - 1) * 1.2f, 0, aboard / 3 * 1.2f);
+            var player = Instantiate(PlayerPrefab, ship.transform.TransformPoint(Config.PlayerLocalSpawn + spawnOffset), Quaternion.identity).GetComponent<NetworkPlayer>();
             player.ParticipantId.Value = id; player.ShipObject.Value = ship.NetworkObject;
-            player.TeamId.Value = SteamTeam(conn);
+            player.HomeShipId.Value = ship.ParticipantId.Value;
+            player.TeamId.Value = team;
             players.Add(conn.ClientId, player);
             manager.ServerManager.Spawn(player.NetworkObject, conn);
             manager.SceneManager.AddOwnerToDefaultScene(player.NetworkObject);
@@ -268,7 +284,7 @@ namespace PirateSlop.Networking
             if (players.TryGetValue(conn.ClientId, out var leaving))
             {
                 var ship = leaving == null ? null : leaving.Ship;
-                if (ship != null)
+                if (ship != null && !players.Values.Any(p => p != null && p != leaving && p.Ship == ship))
                 {
                     ship.Helm.ReleaseControl();
                     foreach (var other in players.Values) if (other != null && other != leaving && other.Passenger.Ship == ship.Body) other.ReturnHome();
@@ -293,14 +309,14 @@ namespace PirateSlop.Networking
             playing = connecting = false; hostRequested = false;
             if (worldLoading != null) { StopCoroutine(worldLoading); worldLoading = null; }
             manager.ClientManager.StopConnection(); if (manager.ServerManager.Started) manager.ServerManager.StopConnection(true);
-            if (steamSession) party?.Leave();
+            if (steamSession) party?.LeaveSession();
             steamSession = false;
             AdvancedPlayerController.SetCursor(false); status = "Отключено";
             if (MenuCamera != null && !Automated && !dedicated) MenuCamera.gameObject.SetActive(true);
         }
         void Update()
         {
-            if (steamSession && !SessionBusy && !string.IsNullOrEmpty(error)) { party?.Leave(); steamSession = false; }
+            if (steamSession && !SessionBusy && !string.IsNullOrEmpty(error)) { party?.LeaveSession(); steamSession = false; }
             TickStorm();
             if (manager != null && manager.ServerManager.Started)
                 foreach (var id in awaitingWorld.Where(p => Time.realtimeSinceStartup - p.Value > 120).Select(p => p.Key).ToArray())

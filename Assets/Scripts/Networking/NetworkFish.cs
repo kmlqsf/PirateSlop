@@ -4,14 +4,14 @@ using UnityEngine;
 
 namespace PirateSlop.Networking
 {
-    public enum InventoryItem { None = -1, Fish = 0, Pistol = 1, Rod = 2, Cannon = 3, Cannonball = 4, Mallet = 5, Plank = 6, Sabre = 7, FireCannonball = 8, IceCannonball = 9, PushCannonball = 10, BoomerangCannonball = 11, Rum = 12 }
+    public enum InventoryItem { None = -1, Fish = 0, Pistol = 1, Rod = 2, Cannon = 3, Cannonball = 4, Mallet = 5, Plank = 6, Sabre = 7, FireCannonball = 8, IceCannonball = 9, PushCannonball = 10, BoomerangCannonball = 11, Rum = 12, Wine = 13, Musket = 14, DoubleBarrel = 15, BombParrot = 16 }
     public sealed class NetworkFish : NetworkBehaviour
     {
         public InventoryItem Item;
         readonly SyncVar<InventoryItem> ammoItem = new(InventoryItem.None);
         public InventoryItem CurrentItem => ammoItem.Value != InventoryItem.None ? ammoItem.Value : Item;
         public void SetAmmoItem(InventoryItem value) { if (CannonAmmo.IsBall(value)) ammoItem.Value = value; }
-        public string ItemName => Item == InventoryItem.Rum ? "ром — запас возрождений" : CannonAmmo.IsBall(CurrentItem) ? InventoryIcons.ItemName(CurrentItem) : Item == InventoryItem.Sabre ? "саблю" : Item == InventoryItem.Fish ? "рыбу" : Item == InventoryItem.Pistol ? "пистолет" : Item == InventoryItem.Rod ? "удочку" : Item == InventoryItem.Cannonball ? "ядро" : Item == InventoryItem.Mallet ? "киянку" : Item == InventoryItem.Plank ? "доску" : "разобранную пушку";
+        public string ItemName => Item >= InventoryItem.Wine ? InventoryIcons.ItemName(Item) : Item == InventoryItem.Rum ? "ром — запас возрождений" : CannonAmmo.IsBall(CurrentItem) ? InventoryIcons.ItemName(CurrentItem) : Item == InventoryItem.Sabre ? "саблю" : Item == InventoryItem.Fish ? "рыбу" : Item == InventoryItem.Pistol ? "пистолет" : Item == InventoryItem.Rod ? "удочку" : Item == InventoryItem.Cannonball ? "ядро" : Item == InventoryItem.Mallet ? "киянку" : Item == InventoryItem.Plank ? "доску" : "разобранную пушку";
         readonly SyncVar<NetworkObject> platform = new();
         readonly SyncVar<int> platformId = new();
         readonly SyncVar<Vector3> worldPosition = new();

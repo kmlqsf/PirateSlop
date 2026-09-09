@@ -59,6 +59,7 @@ public class AdvancedPlayerController : MonoBehaviour
     PlayerCommand pending;
     CombatHealth health;
     PlayerInventory inventory;
+    PirateSlop.Networking.NetworkEquipment equipment;
     DirectShipControls shipControls;
     public bool IsDead => health != null && health.IsDead;
     public bool LocomotionLocked { get; private set; }
@@ -71,6 +72,7 @@ public class AdvancedPlayerController : MonoBehaviour
     {
         health = GetComponent<CombatHealth>();
         inventory = GetComponent<PlayerInventory>();
+        equipment = GetComponent<PirateSlop.Networking.NetworkEquipment>();
         shipControls = GetComponent<DirectShipControls>();
         controller = GetComponent<CharacterController>(); playerCamera = GetComponentInChildren<Camera>(true);
         modelVisibility = GetComponentsInChildren<FirstPersonModelVisibility>(true);
@@ -154,8 +156,9 @@ public class AdvancedPlayerController : MonoBehaviour
         if (!IsKnockedBack && SimulateLadder(command, dt)) return;
         var ocean = OceanSurface.Instance;
         float water = ocean != null ? ocean.Height(transform.position) : float.NegativeInfinity;
+        bool waterSupport = ocean != null && equipment != null && equipment.WaterRunning && transform.position.y >= water-1.2f;
         bool wasSwimming = IsSwimming;
-        IsSwimming = ocean != null && water - transform.position.y > (IsSwimming ? .65f : 1.1f);
+        IsSwimming = !waterSupport && ocean != null && water - transform.position.y > (IsSwimming ? .65f : 1.1f);
         if (IsSwimming)
         {
             SimulateSwimming(command, dt, water, wasSwimming);
@@ -164,7 +167,7 @@ public class AdvancedPlayerController : MonoBehaviour
         swimVelocity = Vector3.zero;
         Breath = Mathf.MoveTowards(Breath, breathSeconds, dt * 8f);
         var direction = transform.right * command.Move.x + transform.forward * command.Move.y;
-        bool grounded = verticalVelocity <= 0 && HasGround();
+        bool grounded = verticalVelocity <= 0 && (HasGround() || (waterSupport && transform.position.y <= water+.15f));
         if (command.Slide && command.Sprint && direction.sqrMagnitude > .1f && grounded && !crouched && cooldown <= 0) { slideTimer = slideDuration; cooldown = slideDuration + slideCooldown; slideDirection = direction.normalized; }
         if (IsSliding) { slideTimer = Mathf.Max(0, slideTimer - dt); if (!grounded) slideTimer = 0; }
         bool wantCrouch = command.Crouch || IsSliding;
@@ -178,9 +181,15 @@ public class AdvancedPlayerController : MonoBehaviour
         verticalVelocity += gravity * dt;
         cannonPushDirection=planar; cannonPushDelta=grounded ? dt : 0; pushedCannons.Clear();
         var flags = controller.Move((planar + knockbackVelocity + Vector3.up * verticalVelocity) * dt);
+        if(waterSupport)
+        {
+            float surface=ocean.Height(transform.position)+.035f;
+            if(transform.position.y<surface)
+            { controller.Move(Vector3.up*(surface-transform.position.y)); if(verticalVelocity<0) verticalVelocity=0; }
+        }
         if ((flags & CollisionFlags.Above) != 0 && verticalVelocity > 0f) verticalVelocity = 0f;
         cannonPushDelta=0;
-        IsGrounded = verticalVelocity <= 0 && HasGround();
+        IsGrounded = verticalVelocity <= 0 && (HasGround() || (waterSupport && transform.position.y <= ocean.Height(transform.position)+.15f));
     }
     void SimulateSwimming(PlayerCommand command, float dt, float water, bool wasSwimming)
     {
@@ -243,7 +252,8 @@ public class AdvancedPlayerController : MonoBehaviour
         passenger?.Attach(ladder.Body);
         float vertical = command.Move.y * (Vector3.Dot(transform.forward, -ladder.transform.forward) >= 0 ? 1 : -1);
         if (command.Crouch || command.Pitch > 55) vertical = -Mathf.Abs(command.Move.y);
-        Vector3 velocity = ladder.transform.up * vertical * ladder.Speed + ladder.transform.right * command.Move.x * walkSpeed;
+        float sideSign = Vector3.Dot(transform.right, ladder.transform.right) >= 0 ? 1f : -1f;
+        Vector3 velocity = ladder.transform.up * vertical * ladder.Speed + ladder.transform.right * command.Move.x * sideSign * walkSpeed;
         if (fromTop)
         {
             velocity = ladder.transform.forward * Mathf.Abs(command.Move.y) * ladder.Speed;
@@ -256,7 +266,7 @@ public class AdvancedPlayerController : MonoBehaviour
         else velocity += ladder.transform.forward * Mathf.Clamp((.65f - localPosition.z) * 5, -2, 2);
         controller.Move(velocity * dt); verticalVelocity = 0; PlanarSpeed = Mathf.Abs(vertical) * ladder.Speed;
         localPosition = ladder.transform.InverseTransformPoint(transform.position);
-        if (localPosition.y >= ladder.Height && localPosition.z < -ladder.ExitDepth && !fromTop || localPosition.y <= 0 && vertical < 0 || Mathf.Abs(localPosition.x) > .9f)
+        if (localPosition.y >= ladder.Height && localPosition.z < -ladder.ExitDepth && !fromTop || localPosition.y <= 0 && vertical < 0 || Mathf.Abs(localPosition.x) > ladder.HalfWidth + .2f)
         { IsClimbing = false; ladderCooldown = .3f; }
         return true;
     }
@@ -300,7 +310,8 @@ public class AdvancedPlayerController : MonoBehaviour
         else
         {
             float height = Mathf.Clamp(p.y + rise * ladder.Speed * dt, 0, ladder.Height);
-            float sideways = Mathf.Clamp(p.x + command.Move.x * ladder.Speed * .45f * dt, -.6f, .6f);
+            float sideSign = Vector3.Dot(transform.right, ladder.transform.right) >= 0 ? 1f : -1f;
+            float sideways = Mathf.Clamp(p.x + command.Move.x * sideSign * ladder.Speed * .45f * dt, -.6f, .6f);
             target = ladder.transform.TransformPoint(new Vector3(sideways, height, ladder.RopeDepth(height) + .5f));
             controller.Move(Vector3.ClampMagnitude(target - transform.position, ladder.Speed * 1.5f * dt));
             if (height <= 0 && rise < 0) { IsClimbing = false; ladderCooldown = .5f; }

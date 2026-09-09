@@ -8,6 +8,8 @@ namespace PirateSlop
         GameAudioBank bank;
         AudioSource[] voices;
         AudioSource[] feedbackVoices;
+        AudioSource[] shotVoices;
+        int nextShot;
         int nextFeedback;
         AudioSource ocean, wind;
         int nextVoice;
@@ -28,6 +30,8 @@ namespace PirateSlop
             instance.voices = new AudioSource[32];
             for (int i = 0; i < instance.voices.Length; i++) instance.voices[i] = instance.Source("Effect " + i, false);
             instance.feedbackVoices = new AudioSource[4];
+            instance.shotVoices = new AudioSource[12];
+            for (int i = 0; i < instance.shotVoices.Length; i++) instance.shotVoices[i] = instance.Source("Gunshot " + i, false);
             for (int i = 0; i < instance.feedbackVoices.Length; i++) instance.feedbackVoices[i] = instance.Source("Damage feedback " + i, false);
             instance.ocean = instance.Source("Ocean", true); instance.ocean.clip = bank.Ocean;
             instance.wind = instance.Source("Wind", true); instance.wind.clip = bank.Wind;
@@ -47,14 +51,17 @@ namespace PirateSlop
             var entry = System.Array.Find(audio.bank.Entries, e => e.Cue == cue);
             if (entry == null || entry.Clips == null || entry.Clips.Length == 0) return;
             bool feedback = cue == SoundCue.Hurt || cue == SoundCue.Death || cue == SoundCue.HitConfirm;
-            var source = feedback ? audio.feedbackVoices[audio.nextFeedback] : audio.voices[audio.nextVoice];
-            if (feedback) audio.nextFeedback = (audio.nextFeedback + 1) % audio.feedbackVoices.Length;
+            bool gunshot = cue == SoundCue.Pistol || cue == SoundCue.Musket || cue == SoundCue.DoubleBarrel;
+            var source = gunshot ? audio.shotVoices[audio.nextShot] : feedback ? audio.feedbackVoices[audio.nextFeedback] : audio.voices[audio.nextVoice];
+            if (gunshot) audio.nextShot = (audio.nextShot + 1) % audio.shotVoices.Length;
+            else if (feedback) audio.nextFeedback = (audio.nextFeedback + 1) % audio.feedbackVoices.Length;
             else audio.nextVoice = (audio.nextVoice + 1) % audio.voices.Length;
             source.Stop(); source.transform.position = position;
             source.spatialBlend = ui ? 0f : 1f;
-            source.minDistance = cue == SoundCue.Cannon ? 8f : 2f; source.maxDistance = entry.Distance;
+            source.minDistance = cue == SoundCue.Cannon ? 8f : gunshot ? 5f : 2f; source.maxDistance = entry.Distance;
+            source.priority = gunshot ? 40 : feedback ? 32 : 128;
             source.volume = Mathf.Clamp01(entry.Volume * scale * audio.bank.Master * (ui && !feedback ? audio.bank.Interface : audio.bank.Effects));
-            source.pitch = ui ? 1f : Random.Range(.94f, 1.06f);
+            source.pitch = ui ? 1f : gunshot ? Random.Range(.975f,1.025f) : Random.Range(.94f, 1.06f);
             source.clip = entry.Clips[Random.Range(0, entry.Clips.Length)]; source.Play();
         }
         public static void Ambience(float speed)

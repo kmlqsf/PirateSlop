@@ -30,6 +30,7 @@ namespace PirateSlop.Networking
     {
         public readonly SyncVar<NetworkObject> ShipObject = new();
         public readonly SyncVar<int> ParticipantId = new();
+        public readonly SyncVar<int> HomeShipId = new();
         public readonly SyncVar<int> TeamId = new();
         AdvancedPlayerController motor;
         ShipDeckPassenger passenger;
@@ -64,7 +65,7 @@ namespace PirateSlop.Networking
                 // not resend an unchanged SyncVar after the ship becomes visible.
                 if (ParticipantId.Value <= 0) return null;
                 foreach (var candidate in FindObjectsByType<NetworkShip>(FindObjectsSortMode.None))
-                    if (candidate.ParticipantId.Value == ParticipantId.Value) return resolvedShip = candidate;
+                    if (candidate.ParticipantId.Value == HomeShipId.Value) return resolvedShip = candidate;
                 return null;
             }
         }

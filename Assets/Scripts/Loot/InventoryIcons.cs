@@ -11,6 +11,10 @@ namespace PirateSlop
         public static string ItemName(InventoryItem item) => item switch
         {
             InventoryItem.Fish => "Рыба",
+            InventoryItem.Wine => "Jesus Whine",
+            InventoryItem.Musket => "Мушкет",
+            InventoryItem.DoubleBarrel => "Двустволка",
+            InventoryItem.BombParrot => "Попугай",
             InventoryItem.Pistol => "Пистолет",
             InventoryItem.Rod => "Удочка",
             InventoryItem.Cannon => "Пушка",

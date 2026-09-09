@@ -95,12 +95,14 @@ namespace PirateSlop.Networking
                 {
                     if(MenuAction(x,y,panelWidth,"Вернуться на палубу",true)) AdvancedPlayerController.SetCursor(true);
                     if(MenuAction(x,y+68,panelWidth,"Покинуть сессию")) Disconnect();
+                    if(steamSession && party.MatchLobby.m_SteamID != 0 && GUI.Button(new Rect(x,y-50,panelWidth,32),"Копировать ID Steam-сессии: "+party.MatchLobby)) GUIUtility.systemCopyBuffer=party.MatchLobby.ToString();
                 }
                 else
                 {
-                    if(MenuAction(x,y-68,panelWidth,"Играть с друзьями • Steam",true)) menuPage=5;
-                    if(MenuAction(x,y,panelWidth,"Создать сессию",true)) menuPage=1;
-                    if(MenuAction(x,y+68,panelWidth,"Присоединиться")) menuPage=2;
+                    if(width >= 1120) DrawSteamParty(width-544,245,480);
+                    else if(MenuAction(x,y-68,panelWidth,"Команда • Steam",true)) menuPage=5;
+                    if(MenuAction(x,y,panelWidth,"Создать сессию",true)) { if(party != null && party.InLobby) party.Launch(); else menuPage=1; }
+                    if(MenuAction(x,y+68,panelWidth,"Присоединиться")) menuPage=party != null && party.InLobby ? 5 : 2;
                 }
                 if(MenuAction(x,y+136,panelWidth,"Настройки звука")) menuPage=3;
                 if(MenuAction(x,y+204,panelWidth,"Управление")) menuPage=4;

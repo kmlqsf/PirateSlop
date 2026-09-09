@@ -7,6 +7,7 @@ namespace PirateSlop
     {
         public static readonly List<ShipLadder> Active = new List<ShipLadder>();
         public float Height = 5, Speed = 2.8f, ExitDepth = 1.2f;
+        public float HalfWidth = .7f;
         public bool RopeClimb;
         public float TopLean;
         public Vector3 ExitPoint;
@@ -38,7 +39,7 @@ namespace PirateSlop
                 if (p.y > Height - .7f && (p - ExitPoint).sqrMagnitude < 3f) return true;
                 return Mathf.Abs(p.x) < .9f + margin && Mathf.Abs(p.z - RopeDepth(p.y) - .45f) < .85f + margin;
             }
-            if (Mathf.Abs(p.x) > .7f + margin || p.y < -.35f - margin || p.y > Height + .45f + margin) return false;
+            if (Mathf.Abs(p.x) > HalfWidth + margin || p.y < -.35f - margin || p.y > Height + .45f + margin) return false;
             return p.z < 1.25f + margin && p.z > (p.y > Height - 1.5f ? -ExitDepth - .2f : .15f - margin);
         }
     }

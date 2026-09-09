@@ -153,7 +153,7 @@ namespace PirateSlop
         {
             recoil = 1f; fireStarted = Time.time;
             GameAudio.Play(SoundCue.Pistol, VisibleMuzzle);
-            CombatVfx.Fire(VisibleMuzzle, direction, false);
+            FirearmVfx.Fire(VisibleMuzzle, direction);
         }
         public void RejectPredictedShot() { predictedShot = false; }
         public void ShowShot(FirearmShot shot)

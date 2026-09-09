@@ -18,6 +18,7 @@ namespace PirateSlop
         Quaternion[] triggerRest;
         PlayerInventory inventory;
         SabreAnimation sabreAnimation;
+        PirateSlop.Networking.NetworkEquipment equipment;
         sealed class Arm
         {
             public Transform Upper, Fore, Hand;
@@ -57,6 +58,7 @@ namespace PirateSlop
             renderers = ViewArms.GetComponentsInChildren<Renderer>(true);
             inventory = GetComponent<PlayerInventory>();
             sabreAnimation = GetComponent<SabreAnimation>();
+            equipment = GetComponent<PirateSlop.Networking.NetworkEquipment>();
             triggerFingers = ViewArms.GetComponentsInChildren<Transform>(true).Where(t => t.name == "View_Index1.R" || t.name == "View_Index2.R" || t.name == "View_Index3.R").OrderBy(t => t.name).ToArray();
             triggerRest = triggerFingers.Select(t => t.localRotation).ToArray();
         }
@@ -65,12 +67,18 @@ namespace PirateSlop
         void Before(ScriptableRenderContext context, Camera camera)
         {
             if (renderers == null) return;
-            bool visible = weapon.AnimationEquipped && camera == motor.PlayerCamera && camera.enabled && !motor.IsThirdPerson;
+            bool visible = (weapon.AnimationEquipped || (equipment != null && equipment.Active && !equipment.Scoped)) && camera == motor.PlayerCamera && camera.enabled && !motor.IsThirdPerson;
             foreach (var r in renderers) r.forceRenderingOff = !visible;
         }
         void After(ScriptableRenderContext context, Camera camera) { if (renderers != null) foreach (var r in renderers) r.forceRenderingOff = true; }
         void LateUpdate()
         {
+            if (equipment != null && equipment.Active && equipment.View != null && equipment.World != null)
+            {
+                SolveEquipment(equipment.View, viewRight, viewLeft, motor.PlayerCamera.transform);
+                SolveEquipment(equipment.World, right, left, transform);
+                return;
+            }
             if (sabreAnimation != null && sabreAnimation.Active) return;
             weight = Mathf.MoveTowards(weight, weapon.AnimationEquipped ? 1 : 0, Time.deltaTime * 8);
             if (weight <= 0) return;
@@ -93,6 +101,13 @@ namespace PirateSlop
                 Vector3 point = position + rotation * weapon.ReloadHandOffset;
                 left.Solve(point, transform.rotation * gripRotation, transform.TransformPoint(new Vector3(-.65f, 1.05f, .1f)), weight);
             }
+        }
+        void SolveEquipment(Transform item, Arm main, Arm support, Transform basis)
+        {
+            Vector3 pole = main.Upper.position + basis.right * .5f - basis.up * .4f;
+            main.Solve(item.TransformPoint(equipment.GripOffset), item.rotation, pole, 1);
+            Vector3 otherPole = support.Upper.position - basis.right * .5f - basis.up * .4f;
+            support.Solve(item.TransformPoint(equipment.SupportOffset), item.rotation, otherPole, 1);
         }
     }
 }

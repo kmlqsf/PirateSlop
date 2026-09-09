@@ -26,6 +26,9 @@ namespace PirateSlop
         public bool BallSelected => BallCount(SelectedSlot) > 0;
         readonly int[] plankCounts = new int[6];
         readonly int[] rumCounts = new int[6];
+        readonly InventoryItem[] equipment = { InventoryItem.None, InventoryItem.None, InventoryItem.None, InventoryItem.None, InventoryItem.None, InventoryItem.None };
+        public InventoryItem EquipmentAt(int slot) => slot >= 0 && slot < 6 ? equipment[slot] : InventoryItem.None;
+        public void SetEquipment(int slot, InventoryItem item) => equipment[slot] = item;
         RumShelf aimedRumShelf;
         public int RumCount(int slot) => slot >= 0 && slot < 6 ? rumCounts[slot] : 0;
         public void SetRumCount(int slot, int count) => rumCounts[slot] = count;
@@ -35,7 +38,7 @@ namespace PirateSlop
         public bool MalletSelected => HasMallet(SelectedSlot);
         public int TotalPlanks { get { int total = 0; foreach (int count in plankCounts) total += count; return total; } }
         public void SetRepairItems(int mallets, int slot, int count) { malletSlots = mallets; plankCounts[slot] = count; }
-        public InventoryItem ItemAt(int slot) => HasSabre(slot) ? InventoryItem.Sabre : PistolAt(slot) ? InventoryItem.Pistol : RodAt(slot) ? InventoryItem.Rod : HasCannon(slot) ? InventoryItem.Cannon : FishCount(slot) > 0 ? InventoryItem.Fish : BallCount(slot) > 0 ? BallItem(slot) : HasMallet(slot) ? InventoryItem.Mallet : PlankCount(slot) > 0 ? InventoryItem.Plank : RumCount(slot) > 0 ? InventoryItem.Rum : InventoryItem.None;
+        public InventoryItem ItemAt(int slot) => EquipmentAt(slot) != InventoryItem.None ? EquipmentAt(slot) : HasSabre(slot) ? InventoryItem.Sabre : PistolAt(slot) ? InventoryItem.Pistol : RodAt(slot) ? InventoryItem.Rod : HasCannon(slot) ? InventoryItem.Cannon : FishCount(slot) > 0 ? InventoryItem.Fish : BallCount(slot) > 0 ? BallItem(slot) : HasMallet(slot) ? InventoryItem.Mallet : PlankCount(slot) > 0 ? InventoryItem.Plank : RumCount(slot) > 0 ? InventoryItem.Rum : InventoryItem.None;
         public void OpenLoot(NetworkLootChest target)
         {
             if (target == null || !network.IsOwner || motor.IsDead || Vector3.Distance(transform.position, target.transform.position) > 5f) return;

@@ -3692,6 +3692,7 @@ GameObject:
   - component: {fileID: 2528557621731152364}
   - component: {fileID: 1783425920093483733}
   - component: {fileID: 8285007558616661583}
+  - component: {fileID: 6873954375603879613}
   m_Layer: 0
   m_Name: NetworkPlayer
   m_TagString: Player
@@ -4031,6 +4032,10 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 5384133908361632009, guid: 7bfa5b3e839a9fc4997c03456210a5fc, type: 3}
+  - {fileID: 9151745374303548764, guid: 8c2b62242da5c724194f4819e075686f, type: 3}
+  - {fileID: 3543308608482819283, guid: 5f4486f3a36c66040b51bc9942a1a465, type: 3}
+  - {fileID: 3324085719176140404, guid: f55646c79a0e7c6409da7f30b6312a3d, type: 3}
+  - {fileID: 2332522239747272967, guid: 1df512fb641c70f4e835bf9e934b4420, type: 3}
 --- !u!114 &4694566103855019808
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4191,6 +4196,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.SabreAnimation
   BodyAnimator: {fileID: 7593853047363271491}
+--- !u!114 &6873954375603879613
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4193507432475942729}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: abd564b69dc7cfe4b941beda2b2e3f2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.Networking.NetworkEquipment
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 8718541801069254893}
+  _networkObjectCache: {fileID: 0}
+  Models:
+  - {fileID: 6315706825796137226, guid: 57ff4511143359247b680f53fe7a1742, type: 3}
+  - {fileID: 3314355987895643441, guid: 95c714f68c7a65b46934fca6c9c387ca, type: 3}
+  - {fileID: 2748318598950026353, guid: 64852ef19aa280742b20ebc1342d50fb, type: 3}
+  - {fileID: 7701596119750937010, guid: 065649e6f66839044b780f671914b201, type: 3}
+  ParrotPrefab: {fileID: 3399042490705193612, guid: 879b536b5b1c40a408199fc90cbf65be, type: 3}
 --- !u!1 &4195186048672230144
 GameObject:
   m_ObjectHideFlags: 0
