@@ -18,6 +18,10 @@ namespace PirateSlop.Networking
         SessionController session;
         CSteamID leader;
         Callback<GameLobbyJoinRequested_t> invitation;
+        Callback<GameRichPresenceJoinRequested_t> presenceInvitation;
+        bool inviteVisible;
+        Vector2 friendScroll;
+        readonly System.Collections.Generic.Dictionary<ulong, float> invitedAt = new();
         Callback<LobbyDataUpdate_t> data;
         Callback<LobbyChatUpdate_t> members;
         CallResult<LobbyCreated_t> created;
@@ -37,6 +41,7 @@ namespace PirateSlop.Networking
                 if (SteamUtils.GetAppID().m_AppId != 480) { SteamAPI.Shutdown(); Available = false; Status = "Нужен тестовый AppID 480"; return; }
                 SteamNetworkingUtils.InitRelayNetworkAccess();
                 invitation = Callback<GameLobbyJoinRequested_t>.Create(m => Join(m.m_steamIDLobby));
+                presenceInvitation = Callback<GameRichPresenceJoinRequested_t>.Create(m => JoinConnection(m.m_rgchConnect));
                 data = Callback<LobbyDataUpdate_t>.Create(m => { if (m.m_ulSteamIDLobby == Lobby.m_SteamID) CheckMatch(); });
                 members = Callback<LobbyChatUpdate_t>.Create(m => { if (m.m_ulSteamIDLobby == Lobby.m_SteamID) CheckMatch(); });
                 created = CallResult<LobbyCreated_t>.Create(Created);
@@ -69,11 +74,13 @@ namespace PirateSlop.Networking
             SteamMatchmaking.SetLobbyData(Lobby, "protocol", session.ProtocolVersion.ToString());
             SteamMatchmaking.SetLobbyData(Lobby, "state", "waiting");
             SteamMatchmaking.SetLobbyData(Lobby, "leader", leader.ToString());
-            SetTeam(1); Ready(false); Status = "Команда собирается";
+            SteamMatchmaking.SetLobbyJoinable(Lobby, true);
+            SetTeam(1); Ready(false); PublishPresence(); Status = "Команда собирается";
         }
         public void Join(CSteamID id)
         {
             if (!Available || Busy || session.SessionBusy) { Status = "Сначала покиньте текущую сессию"; return; }
+            if (id == Lobby) return;
             Leave(); Busy = true; pendingAt = Time.unscaledTime;
             entered.Set(SteamMatchmaking.JoinLobby(id));
         }
@@ -95,7 +102,66 @@ namespace PirateSlop.Networking
         public bool IsReady(CSteamID id) => SteamMatchmaking.GetLobbyMemberData(Lobby, id, "ready") == "1";
         public void SetTeam(int value) { if (Waiting) { SteamMatchmaking.SetLobbyMemberData(Lobby, "team", Mathf.Clamp(value, 1, 4).ToString()); Ready(false); } }
         public void Ready(bool value) { if (Waiting) SteamMatchmaking.SetLobbyMemberData(Lobby, "ready", value ? "1" : "0"); }
-        public void Invite() { if (InLobby) SteamFriends.ActivateGameOverlayInviteDialog(Lobby); }
+        void JoinConnection(string connection)
+        {
+            var args = (connection ?? "").Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            if (args.Length == 2 && args[0] == "+connect_lobby" && ulong.TryParse(args[1], out var id)) Join(new CSteamID(id));
+        }
+        void PublishPresence()
+        {
+            SteamFriends.SetRichPresence("connect", Waiting ? "+connect_lobby " + Lobby.m_SteamID : null);
+            SteamFriends.SetRichPresence("steam_player_group", InLobby ? Lobby.m_SteamID.ToString() : null);
+            SteamFriends.SetRichPresence("steam_player_group_size", InLobby ? Count.ToString() : null);
+        }
+        public void Invite()
+        {
+            if (!Available || !Waiting) return;
+            inviteVisible = true;
+            AdvancedPlayerController.SetCursor(false);
+        }
+        void OnGUI()
+        {
+            if (!inviteVisible || !Available || !Waiting) return;
+            int oldDepth = GUI.depth;
+            GUI.depth = -100;
+            float width = Mathf.Min(440, Screen.width - 24), height = Mathf.Min(460, Screen.height - 24);
+            GUI.ModalWindow(734921, new Rect((Screen.width - width) * .5f, (Screen.height - height) * .5f, width, height), DrawInvites, "Пригласить друзей");
+            GUI.depth = oldDepth;
+        }
+        void DrawInvites(int id)
+        {
+            GUILayout.Space(8);
+            if (SteamUtils.IsOverlayEnabled())
+            {
+                if (GUILayout.Button("Открыть приглашения Steam", GUILayout.Height(30))) SteamFriends.ActivateGameOverlayInviteDialog(Lobby);
+            }
+            else GUILayout.Label("Оверлей недоступен — пригласите друга из списка.");
+            friendScroll = GUILayout.BeginScrollView(friendScroll);
+            int count = SteamFriends.GetFriendCount(EFriendFlags.k_EFriendFlagImmediate);
+            if (count == 0) GUILayout.Label("В списке Steam пока нет друзей.");
+            for (int i = 0; i < count; i++)
+            {
+                var friend = SteamFriends.GetFriendByIndex(i, EFriendFlags.k_EFriendFlagImmediate);
+                bool present = false;
+                for (int j = 0; j < Count; j++) if (Member(j) == friend) { present = true; break; }
+                bool sent = invitedAt.TryGetValue(friend.m_SteamID, out var at) && Time.unscaledTime - at < 10;
+                GUILayout.BeginHorizontal();
+                GUILayout.Label(Name(friend), GUILayout.MinWidth(140));
+                bool enabled = GUI.enabled;
+                GUI.enabled = enabled && !present && !sent && Count < session.MaxPlayers;
+                if (GUILayout.Button(present ? "В лобби" : sent ? "Отправлено" : "Пригласить", GUILayout.Width(115)))
+                {
+                    bool success = SteamMatchmaking.InviteUserToLobby(Lobby, friend);
+                    if (success) invitedAt[friend.m_SteamID] = Time.unscaledTime;
+                    Status = success ? "Приглашение отправлено: " + Name(friend) : "Не удалось отправить приглашение";
+                }
+                GUI.enabled = enabled;
+                GUILayout.EndHorizontal();
+            }
+            GUILayout.EndScrollView();
+            GUILayout.Label(Status);
+            if (GUILayout.Button("Закрыть", GUILayout.Height(30))) inviteVisible = false;
+        }
         public void Launch()
         {
             if (!IsLeader || !Waiting || session.SessionBusy) return;
@@ -104,6 +170,7 @@ namespace PirateSlop.Networking
             matchTeams.Clear();
             for (int i = 0; i < Count; i++) matchTeams[Member(i).m_SteamID] = Team(Member(i));
             SteamMatchmaking.SetLobbyData(Lobby, "state", "loading");
+            inviteVisible = false; PublishPresence();
             session.BeginSteam(true, leader.m_SteamID);
         }
         public void ServerReady()
@@ -115,6 +182,7 @@ namespace PirateSlop.Networking
         void CheckMatch()
         {
             if (!InLobby) return;
+            PublishPresence();
             if (SteamMatchmaking.GetLobbyOwner(Lobby) != leader) { session.Disconnect(); Leave(); Status = "Капитан вышел. Создайте новое лобби."; return; }
             if (!IsLeader && MatchStarted && !joiningMatch && !session.SessionBusy && ulong.TryParse(SteamMatchmaking.GetLobbyData(Lobby, "host"), out var host) && host == leader.m_SteamID)
             { joiningMatch = true; session.BeginSteam(false, host); }
@@ -130,10 +198,12 @@ namespace PirateSlop.Networking
             created?.Cancel(); entered?.Cancel(); Busy = false;
             if (Available && InLobby) SteamMatchmaking.LeaveLobby(Lobby);
             Lobby = default; joiningMatch = false; matchTeams.Clear();
+            inviteVisible = false; invitedAt.Clear();
+            if (Available) PublishPresence();
         }
         void OnDestroy()
         {
-            Leave(); invitation?.Dispose(); data?.Dispose(); members?.Dispose(); created?.Dispose(); entered?.Dispose();
+            Leave(); invitation?.Dispose(); presenceInvitation?.Dispose(); data?.Dispose(); members?.Dispose(); created?.Dispose(); entered?.Dispose();
             if (Available) SteamAPI.Shutdown();
         }
     }

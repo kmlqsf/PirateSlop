@@ -22,7 +22,7 @@ Shader "PirateSlop/StormWall"
             float _Layer;
             CBUFFER_END
             struct Attributes { float4 positionOS : POSITION; float2 uv : TEXCOORD0; };
-            struct Varyings { float4 positionCS : SV_POSITION; float2 uv : TEXCOORD0; float3 cloud : TEXCOORD1; };
+            struct Varyings { float4 positionCS : SV_POSITION; float2 uv : TEXCOORD0; float3 cloud : TEXCOORD1; float height : TEXCOORD2; };
             Varyings Vert(Attributes input)
             {
                 Varyings output;
@@ -31,12 +31,13 @@ Shader "PirateSlop/StormWall"
                 float height = input.uv.y;
                 float billow = sin(angle * 19 + height * 13 + _Time.y * .45 + _Layer) * 9
                     + sin(angle * 37 - height * 21 - _Time.y * .3) * 5;
-                float envelope = sin(height * 3.14159265);
-                float3 radial = normalize(TransformObjectToWorldDir(input.positionOS.xyz));
+                float envelope = sin(height * 3.14159265) * smoothstep(.08,.2,height);
+                float3 radial = normalize(float3(world.x, 0, world.z));
                 world += radial * billow * envelope;
                 output.positionCS = TransformWorldToHClip(world);
                 output.uv = input.uv;
                 output.cloud = input.positionOS.xyz;
+                output.height = length(TransformObjectToWorldDir(float3(0, 1, 0), false)) * height;
                 return output;
             }
             float Hash(float2 p) { return frac(sin(dot(p,float2(127.1,311.7)))*43758.5453); }
@@ -48,20 +49,26 @@ Shader "PirateSlop/StormWall"
             half4 Frag(Varyings input) : SV_Target
             {
                 float h=input.cloud.y;
-                float2 flow=float2(h*6-_Time.y*.12, h*11+_Time.y*.18);
-                float2 p=input.cloud.xz*22+flow+_Layer*13.7;
-                float warp=Noise(p*.37)*3;
-                float n=Noise(p+warp)*.55+Noise(p*2.03-warp)*.3+Noise(p*4.07)*.15;
-                float lower=Noise(p+float2(0,-.4));
-                float shade=saturate(.5+(n-lower)*2);
-                float density=lerp(smoothstep(.23,.68,n),.5+n*.45,smoothstep(.3,.85,h));
-                float flash=pow(saturate(sin(_Time.y*1.7+floor(input.uv.x*18)*23.1)),110);
-                flash*=smoothstep(.5,.8,n)*(1-h)*.65;
-                float spray=(1-smoothstep(.03,.18,h))*smoothstep(.52,.85,Noise(p*5+_Time.y*.8));
-                float3 dark=_Color.rgb*.65;
-                float3 light=lerp(float3(.64,.71,.76),float3(.8,.85,.88),h);
-                float3 color=lerp(dark,light,shade*.65+h*.22)+flash*float3(.65,.8,1)+spray*.24;
-                return half4(color,saturate(density*(.63-_Layer*.06)+spray*.25));
+                float2 p=input.cloud.xz*18 + float2(h*5-_Time.y*.045,h*9+_Time.y*.065)+_Layer*17.3;
+                float2 warp=float2(Noise(p*.43),Noise(p*.43+31.7))*2.8;
+                float n=Noise(p+warp)*.57+Noise(p*2.07+warp)*.28+Noise(p*4.13)*.15;
+                float lightNoise=Noise(p+warp+float2(-.28,.4));
+                float shade=saturate(.4+(lightNoise-n)*1.8);
+                float top=1-smoothstep(.65,.98,h+(n-.5)*.16);
+                float density=smoothstep(.18,.78,n)*top;
+                float mist=exp(-h*10)*(.36+.25*n);
+                float rain=pow(saturate(Noise(input.cloud.xz*190+float2(h*2-_Time.y*.5,h*45+_Time.y*6))),9)*(1-smoothstep(.2,.7,h));
+                float eventId=floor(_Time.y/6);
+                float pulse=exp(-pow((frac(_Time.y/6)-.15)*100,2))+.35*exp(-pow((frac(_Time.y/6)-.19)*160,2));
+                float angle=eventId*2.39996+_Layer;
+                float flash=pulse*pow(saturate(dot(normalize(input.cloud.xz),float2(cos(angle),sin(angle)))),48)*smoothstep(.08,.35,h)*top;
+                float boundary=exp(-pow((input.height-13.5)/2.8,2))*(1-saturate(_Layer));
+                float halo=exp(-pow((input.height-15)/12,2))*(1-saturate(_Layer));
+                float3 color=lerp(_Color.rgb*.38,float3(.48,.59,.65),shade+n*.18);
+                color+=rain*.22+flash*float3(.48,.68,.9);
+                color=lerp(color,float3(.3,.95,.87),saturate(boundary*.9+halo*.2));
+                float alpha=saturate(density*(.78-_Layer*.12)+mist+rain*.3+boundary*.9+halo*.2)*top;
+                return half4(color,alpha);
             }
             ENDHLSL
         }
