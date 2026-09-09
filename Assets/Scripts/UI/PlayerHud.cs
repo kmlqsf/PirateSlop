@@ -43,9 +43,12 @@ namespace PirateSlop
             {
                 PirateHudStyle.Panel(new Rect(Screen.width / 2f - 200, Screen.height / 2f - 55, 400, 100));
                 PirateHudStyle.Label(new Rect(Screen.width / 2f - 180, Screen.height / 2f - 43, 360, 35), "ВЫ ПАЛИ В БОЮ", PirateHudStyle.Gold, true);
-                PirateHudStyle.Label(new Rect(Screen.width / 2f - 180, Screen.height / 2f, 360, 25), $"Возвращение через {health.RespawnRemaining:0} с", PirateHudStyle.Paper);
+                bool hasRum = network == null || (network.Ship != null && network.Ship.RumCount > 0);
+                PirateHudStyle.Label(new Rect(Screen.width / 2f - 180, Screen.height / 2f, 360, 25), hasRum ? $"Возвращение через {health.RespawnRemaining:0} с • −1 ром" : "Нет рома — экипаж должен пополнить полку", PirateHudStyle.Paper);
                 return;
             }
+            if (network != null && network.Ship != null)
+                PirateHudStyle.Label(new Rect(24, sideY - 65, 280, 24), $"Ром корабля: {network.Ship.RumCount} возрождений", network.Ship.RumCount > 0 ? PirateHudStyle.Paper : PirateHudStyle.Gold);
             if (inventory.PistolSelected)
             {
                 var ammo = new Rect(Screen.width - 168, sideY - 4, 125, 48);

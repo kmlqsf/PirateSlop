@@ -12,6 +12,7 @@ namespace PirateSlop.World
         AudioSource wind;
         GameAudioBank bank;
         float proximity;
+        StormWeather weather;
         public static StormZone Instance { get; private set; }
         Networking.NetworkPlayer localPlayer;
         public Networking.NetworkShip LocalShip => localPlayer != null ? localPlayer.Ship : null;
@@ -30,6 +31,7 @@ namespace PirateSlop.World
 
         void Start()
         {
+            weather = gameObject.AddComponent<StormWeather>();
             const int segments = 256, rows = 32;
             var vertices = new Vector3[(segments + 1) * (rows + 1)];
             var uv = new Vector2[vertices.Length];
@@ -87,7 +89,7 @@ namespace PirateSlop.World
                 float radius = Radius + i * 26;
                 walls[i].localScale = new Vector3(radius, 420 + i * 60, radius);
                 walls[i].position = new Vector3(0, (OceanSurface.Instance != null ? OceanSurface.Instance.SeaLevel : 0) - 12, 0);
-                walls[i].localRotation = Quaternion.Euler(0, (elapsed + Time.time - receivedAt) * (1.3f + i * .55f) + i * 47, 0);
+                walls[i].localRotation = Quaternion.Euler(0, i * 47, 0);
             }
             var camera = Camera.main;
             if (camera == null) return;
@@ -95,8 +97,11 @@ namespace PirateSlop.World
             camera.farClipPlane = Mathf.Max(camera.farClipPlane, startRadius * 2.2f + 1000);
             Vector3 point = camera.transform.position;
             proximity = Mathf.Clamp01(1 - (Radius - new Vector2(point.x, point.z).magnitude) / 140);
-            if (bank != null) wind.volume = Mathf.Lerp(wind.volume, bank.Master * bank.Ambience * Mathf.Lerp(.08f, 1f, proximity), Time.deltaTime * 2);
-            wind.pitch = Mathf.Lerp(.65f, .95f, proximity);
+            float volume = bank != null ? bank.Master * bank.Ambience : .5f;
+            weather.SetWeather(camera, DistanceInside(point), volume);
+            float gust = .8f + Mathf.PerlinNoise(Time.time * .16f, 4.7f) * .2f;
+            wind.volume = Mathf.Lerp(wind.volume, volume * Mathf.Lerp(.035f, gust, weather.Intensity), Time.deltaTime * 2);
+            wind.pitch = Mathf.Lerp(.62f, .9f + gust * .12f, weather.Intensity);
         }
 
         void OnGUI()
@@ -104,11 +109,6 @@ namespace PirateSlop.World
             var camera = Camera.main;
             if (camera == null || !camera.enabled || Networking.SessionController.MenuOpen) return;
             Color old = GUI.color;
-            if (proximity > .7f)
-            {
-                GUI.color = new Color(.22f, .32f, .4f, (proximity - .7f) * .65f);
-                GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), Texture2D.whiteTexture);
-            }
             GUI.color = Color.white;
             int remaining = Mathf.CeilToInt(duration * (1 - Progress));
             float distance = DistanceInside(localPlayer != null ? localPlayer.transform.position : camera.transform.position);

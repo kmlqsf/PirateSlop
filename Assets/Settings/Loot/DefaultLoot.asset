@@ -13,24 +13,51 @@ MonoBehaviour:
   m_Name: DefaultLoot
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.LootCatalog
   ChestPrefab: {fileID: 7727236928847363322, guid: 3f95139e8b7f02f4d9a675ab970e0198, type: 3}
+  LoosePrefabs:
+  - {fileID: 7154578386564942902, guid: 72facc83af7c1c04dba3889d3f5718af, type: 3}
+  - {fileID: 6902406561786354954, guid: 633e4f05c2568b146a18aef78adb5bf2, type: 3}
+  - {fileID: 6345272068693110658, guid: 424b25692b293d54fa5de388367dbf84, type: 3}
+  - {fileID: 9156071479961501061, guid: 3e845ed0bf86f89429379b1ab6520e5b, type: 3}
+  - {fileID: 8871844481241674616, guid: 74cdcd8807967214698f340b469357b7, type: 3}
+  - {fileID: 6005540628913924026, guid: a3511198a7e2a034f9407d5ba0bea977, type: 3}
+  - {fileID: 1133702697705914243, guid: 6523b631db6bda249af42eff0ded20e9, type: 3}
+  - {fileID: 5782888057306492124, guid: 407633172f5bb2c4c9e0f8d6bf56a314, type: 3}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 5384133908361632009, guid: 7bfa5b3e839a9fc4997c03456210a5fc, type: 3}
+  LooseItemsPerIsland: {x: 2, y: 4}
   ChestsPerIsland: {x: 1, y: 3}
   ItemsPerChest: {x: 1, y: 2}
   Items:
-  - Item: 3
-    Name: "\u041A\u043E\u0440\u0430\u0431\u0435\u043B\u044C\u043D\u0430\u044F \u043F\u0443\u0448\u043A\u0430"
-    Weight: 1
+  - Item: 0
+    Name: "\u0420\u044B\u0431\u0430"
+    Weight: 44
   - Item: 4
     Name: "\u042F\u0434\u0440\u043E"
-    Weight: 3
+    Weight: 28
+  - Item: 12
+    Name: "\u0420\u043E\u043C"
+    Weight: 12
   - Item: 8
-    Name: "\u041F\u043E\u0434\u0436\u0438\u0433\u0430\u044E\u0449\u0435\u0435 \u044F\u0434\u0440\u043E"
-    Weight: 1
+    Name: "\u041E\u0433\u043D\u0435\u043D\u043D\u043E\u0435"
+    Weight: 4
   - Item: 9
-    Name: "\u0417\u0430\u043C\u043E\u0440\u0430\u0436\u0438\u0432\u0430\u044E\u0449\u0435\u0435 \u044F\u0434\u0440\u043E"
-    Weight: 1
+    Name: "\u041B\u0435\u0434\u044F\u043D\u043E\u0435"
+    Weight: 3
   - Item: 10
-    Name: "\u041E\u0442\u0442\u0430\u043B\u043A\u0438\u0432\u0430\u044E\u0449\u0435\u0435 \u044F\u0434\u0440\u043E"
-    Weight: 1
+    Name: "\u0422\u043E\u043B\u0447\u043A\u043E\u0432\u043E\u0435"
+    Weight: 3
   - Item: 11
-    Name: "\u042F\u0434\u0440\u043E-\u0431\u0443\u043C\u0435\u0440\u0430\u043D\u0433"
+    Name: "\u0411\u0443\u043C\u0435\u0440\u0430\u043D\u0433"
+    Weight: 2
+  - Item: 7
+    Name: "\u0421\u0430\u0431\u043B\u044F"
+    Weight: 2
+  - Item: 1
+    Name: "\u041F\u0438\u0441\u0442\u043E\u043B\u0435\u0442"
+    Weight: 1
+  - Item: 3
+    Name: "\u041F\u0443\u0448\u043A\u0430"
     Weight: 1

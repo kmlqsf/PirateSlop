@@ -25,13 +25,17 @@ namespace PirateSlop
         public void SetBallCount(int slot, int count, InventoryItem item = InventoryItem.Cannonball) { ballCounts[slot] = count; ballItems[slot] = item; }
         public bool BallSelected => BallCount(SelectedSlot) > 0;
         readonly int[] plankCounts = new int[6];
+        readonly int[] rumCounts = new int[6];
+        RumShelf aimedRumShelf;
+        public int RumCount(int slot) => slot >= 0 && slot < 6 ? rumCounts[slot] : 0;
+        public void SetRumCount(int slot, int count) => rumCounts[slot] = count;
         int malletSlots;
         public int PlankCount(int slot) => slot >= 0 && slot < 6 ? plankCounts[slot] : 0;
         public bool HasMallet(int slot) => slot >= 2 && slot < 6 && (malletSlots & (1 << slot)) != 0;
         public bool MalletSelected => HasMallet(SelectedSlot);
         public int TotalPlanks { get { int total = 0; foreach (int count in plankCounts) total += count; return total; } }
         public void SetRepairItems(int mallets, int slot, int count) { malletSlots = mallets; plankCounts[slot] = count; }
-        public InventoryItem ItemAt(int slot) => HasSabre(slot) ? InventoryItem.Sabre : PistolAt(slot) ? InventoryItem.Pistol : RodAt(slot) ? InventoryItem.Rod : HasCannon(slot) ? InventoryItem.Cannon : FishCount(slot) > 0 ? InventoryItem.Fish : BallCount(slot) > 0 ? BallItem(slot) : HasMallet(slot) ? InventoryItem.Mallet : PlankCount(slot) > 0 ? InventoryItem.Plank : InventoryItem.None;
+        public InventoryItem ItemAt(int slot) => HasSabre(slot) ? InventoryItem.Sabre : PistolAt(slot) ? InventoryItem.Pistol : RodAt(slot) ? InventoryItem.Rod : HasCannon(slot) ? InventoryItem.Cannon : FishCount(slot) > 0 ? InventoryItem.Fish : BallCount(slot) > 0 ? BallItem(slot) : HasMallet(slot) ? InventoryItem.Mallet : PlankCount(slot) > 0 ? InventoryItem.Plank : RumCount(slot) > 0 ? InventoryItem.Rum : InventoryItem.None;
         public void OpenLoot(NetworkLootChest target)
         {
             if (target == null || !network.IsOwner || motor.IsDead || Vector3.Distance(transform.position, target.transform.position) > 5f) return;
@@ -103,6 +107,7 @@ namespace PirateSlop
         void Update()
         {
             InteractionUsed = false; pickup = null; chest = null; aimedBall = null; aimedCannon = null; valid = false;
+            aimedRumShelf = null;
             if (preview != null) preview.SetActive(false);
             if (lootWindow)
             {
@@ -143,6 +148,16 @@ namespace PirateSlop
                 aimedBall = nearest.collider.GetComponent<Cannonball>();
                 aimedCannon = nearest.collider.GetComponentInParent<SimpleCannon>();
                 pickup = nearest.collider.GetComponentInParent<CannonPickup>();
+                aimedRumShelf = nearest.collider.GetComponentInParent<RumShelf>();
+            }
+            if (aimedRumShelf != null && Networked)
+            {
+                if (keyboard.eKey.wasPressedThisFrame)
+                {
+                    InteractionUsed = true;
+                    network.DepositRum(aimedRumShelf.GetComponentInParent<NetworkShip>().NetworkObject);
+                }
+                return;
             }
             if (Networked && aimedBall != null && !aimedBall.Loaded && aimedBall.Network != null &&
                 (keyboard.eKey.wasPressedThisFrame || mouse.leftButton.wasPressedThisFrame))
@@ -240,7 +255,7 @@ namespace PirateSlop
                 if (!lootWindow && ItemAt(i) == InventoryItem.None && Time.unscaledTime - selectionShownAt > 3) continue;
                 GUI.color = i == SelectedSlot ? new Color(1f, .8f, .35f) : Color.white;
                 var rect = new Rect(Screen.width * .5f - width * 3 + width * i, Screen.height - 94, width - 4, 66);
-                if (Icons != null) Icons.DrawSlot(rect, ItemAt(i), Mathf.Max(FishCount(i), Mathf.Max(BallCount(i), PlankCount(i))), (i + 1).ToString(), false);
+                if (Icons != null) Icons.DrawSlot(rect, ItemAt(i), Mathf.Max(RumCount(i), Mathf.Max(FishCount(i), Mathf.Max(BallCount(i), PlankCount(i)))), (i + 1).ToString(), false);
                 else PirateHudStyle.Panel(rect, (i + 1) + "\n" + InventoryIcons.ItemName(ItemAt(i)));
             }
             GUI.color = old;
@@ -268,6 +283,7 @@ namespace PirateSlop
                 PirateHudStyle.Label(new Rect(Screen.width * .5f - 180, Screen.height - 138, 360, 26), InventoryIcons.ItemName(ItemAt(SelectedSlot)), PirateHudStyle.Paper);
             string hint = aimedBall != null && aimedBall.Network != null ? "ЛКМ / E — взять 3 ядра" : BallSelected && aimedCannon != null && !aimedCannon.IsLoaded ? "E — зарядить ядро из рук" : chest != null ? chest.Hint(this) : pickup != null ? (EmptySlot() >= 0 ? "E — взять разобранную пушку" : "Инвентарь заполнен") : Placing && !cancelled ? "ЛКМ — поставить · R/колесо — поворот · Q/E — наклон\nShift+Q/E — крен · ПКМ — отменить" : "";
             if (hint.Length > 0) PirateHudStyle.Panel(new Rect(Screen.width * .5f - 290, Screen.height - 165, 580, 44), hint);
+            if (aimedRumShelf != null) PirateHudStyle.Panel(new Rect(Screen.width * .5f - 290, Screen.height - 165, 580, 44), aimedRumShelf.Hint);
         }
     }
 }

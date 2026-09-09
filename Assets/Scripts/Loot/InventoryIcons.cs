@@ -22,6 +22,7 @@ namespace PirateSlop
             InventoryItem.Mallet => "Киянка",
             InventoryItem.Plank => "Доска",
             InventoryItem.Sabre => "Сабля",
+            InventoryItem.Rum => "Ром",
             _ => ""
         };
         public bool DrawSlot(Rect rect, InventoryItem item, int count, string key, bool button)
@@ -49,6 +50,12 @@ namespace PirateSlop
                 if (Event.current.type == EventType.Repaint && hudMaterial != null)
                     Graphics.DrawTexture(target, icon, new Rect(0, 0, 1, 1), 0, 0, 0, 0, GUI.color, hudMaterial);
                 else if (hudMaterial == null) GUI.DrawTexture(target, icon, ScaleMode.ScaleToFit, true);
+            }
+            else if (item == InventoryItem.Rum)
+            {
+                PirateHudStyle.Brush(new Rect(rect.center.x - 13, rect.y + 6, 26, 32), new Color(.3f,.65f,.42f), true);
+                PirateHudStyle.Brush(new Rect(rect.center.x - 5, rect.y - 8, 10, 18), PirateHudStyle.Gold, true);
+                PirateHudStyle.Brush(new Rect(rect.center.x - 9, rect.y + 16, 18, 12), PirateHudStyle.Paper, true);
             }
             else if (item == InventoryItem.Sabre)
             {
