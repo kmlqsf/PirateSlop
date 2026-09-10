@@ -7,6 +7,7 @@ namespace PirateSlop
     public sealed class CannonShotDamage : MonoBehaviour
     {
         public bool Authoritative;
+        public bool MortarShot;
         public Transform Source;
         public int SourceCannonIndex = -1;
         public GameObject Attacker;
@@ -56,9 +57,20 @@ namespace PirateSlop
         {
             if (spent) return;
             float dt = Time.fixedDeltaTime;
-            bool boomerang = Ammo == InventoryItem.BoomerangCannonball;
+            bool boomerang = !MortarShot && Ammo == InventoryItem.BoomerangCannonball;
             Vector3 nextVelocity = StepVelocity(Velocity, dt, Drag);
             Vector3 delta = boomerang ? BoomerangStep(dt) - transform.position : (Velocity + nextVelocity) * (.5f * dt);
+            if (MortarShot || Ammo == InventoryItem.FireCannonball)
+            {
+                if (MortarTrajectory.Trace(transform.position, delta, Radius, Source, out var point, out var normal, out var collider))
+                {
+                    ExplodeArea(point, normal, collider);
+                    spent = true;
+                    Destroy(gameObject);
+                }
+                else { transform.position += delta; Velocity = nextVelocity; }
+                return;
+            }
             if (boomerang)
             {
                 nextVelocity = Velocity = delta / dt;
@@ -110,6 +122,38 @@ namespace PirateSlop
             }
         }
 
+        void ExplodeArea(Vector3 point, Vector3 normal, Collider surface)
+        {
+            CombatVfx.Impact(point, normal, true);
+            if (surface == null) { CombatVfx.Splash(point); GameAudio.Play(SoundCue.Splash, point); }
+            if (!Authoritative) return;
+            if (Ammo == InventoryItem.BoardingHook && surface != null && Source != null)
+                Source.GetComponent<NetworkCannon>()?.AttachBoarding(SourceCannonIndex, surface.GetComponentInParent<NetworkShip>(), point, normal);
+            var damaged = new HashSet<CombatHealth>();
+            var ships = new HashSet<NetworkShip>();
+            foreach (var hit in Physics.OverlapSphere(point, CannonAmmo.MortarBlastRadius(Ammo), ~0, QueryTriggerInteraction.Ignore))
+            {
+                if (Source != null && hit.transform.IsChildOf(Source)) continue;
+                var health = hit.GetComponentInParent<CombatHealth>();
+                if (health != null && damaged.Add(health))
+                {
+                    health.Damage(PlayerDamage, Attacker);
+                    if (Ammo == InventoryItem.Cannonball || Ammo == InventoryItem.PushCannonball)
+                    {
+                        Vector3 direction = Vector3.ProjectOnPlane(health.transform.position - point, Vector3.up).normalized;
+                        health.GetComponent<AdvancedPlayerController>()?.ApplyKnockback(direction * PlayerPushSpeed + Vector3.up * 8f);
+                    }
+                }
+                var ship = hit.GetComponentInParent<NetworkShip>();
+                if (ship != null && ships.Add(ship))
+                {
+                    if (Ammo == InventoryItem.FireCannonball) ship.Ignite(point, Attacker, CannonAmmo.MortarBlastRadius(Ammo));
+                    if (Ammo == InventoryItem.IceCannonball) ship.FreezeFromShot();
+                    if (Ammo == InventoryItem.PushCannonball) ship.GetComponent<ShipController>()?.ApplyPushImpulse(point, Velocity);
+                }
+            }
+        }
+
         void BeginReturn(Vector3 point, Vector3 normal)
         {
             returning = true; returnAge = 0f;
@@ -143,7 +187,6 @@ namespace PirateSlop
                     {
                         if (network != null) network.FreezeFromShot(); else ship.Freeze(5f);
                     }
-                    if (Ammo == InventoryItem.FireCannonball && ship.transform != Source) network?.Ignite(point + normal * .1f, Attacker);
                 }
                 if (network != null) network.ImpactVfx(point, normal); else CombatVfx.Impact(point, normal, true);
                 if (health != null)

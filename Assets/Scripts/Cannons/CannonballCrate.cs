@@ -18,6 +18,8 @@ namespace PirateSlop
         };
         public GameObject Kit;
         public SimpleCannon CannonPrefab;
+        public SimpleCannon MortarPrefab;
+        public Vector3 MortarPosition = new(0f, 4.3f, 18f);
         public readonly List<SimpleCannon> Cannons = new();
         public ShipController Ship => GetComponentInParent<ShipController>();
         public NetworkCannon Network => Ship != null ? Ship.GetComponent<NetworkCannon>() : null;
@@ -40,9 +42,9 @@ namespace PirateSlop
             Supply.gameObject.SetActive(true);
         }
 
-        public SimpleCannon AddCannon(Vector3 localPosition, Quaternion localRotation)
+        public SimpleCannon AddCannon(Vector3 localPosition, Quaternion localRotation, bool mortar = false)
         {
-            var cannon = Instantiate(CannonPrefab, Ship.transform);
+            var cannon = Instantiate(mortar ? MortarPrefab : CannonPrefab, Ship.transform);
             cannon.transform.localPosition = localPosition;
             cannon.transform.localRotation = localRotation;
             cannon.Crate = this;

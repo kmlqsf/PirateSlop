@@ -130,6 +130,11 @@ public class AdvancedPlayerController : MonoBehaviour
         if (ActiveCannon != null && ActiveCannon.Muzzle != null)
         {
             var cannon = ActiveCannon;
+            if (cannon.IsMortar)
+            {
+                cannon.GetComponent<MortarTrajectory>().PositionCamera(playerCamera);
+                return;
+            }
             Vector3 origin = cannon.Breech != null ? cannon.Breech.position : cannon.BarrelPivot.position;
             playerCamera.transform.SetPositionAndRotation(origin - cannon.Muzzle.forward * .35f + cannon.Muzzle.up * .42f, cannon.Muzzle.rotation);
             return;

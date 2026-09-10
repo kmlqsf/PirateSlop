@@ -55,7 +55,7 @@ namespace PirateSlop.Networking
             if (battery != null && battery.Crate != null)
                 foreach (var cannon in battery.Crate.Cannons)
                 {
-                    if (!cannon.gameObject.activeInHierarchy) continue;
+                    if (cannon.IsMortar || !cannon.gameObject.activeInHierarchy) continue;
                     Vector3 facing = ship.transform.InverseTransformDirection(cannon.transform.forward);
                     desired = bearing - Mathf.Atan2(facing.x, facing.z) * Mathf.Rad2Deg;
                     break;
@@ -87,12 +87,12 @@ namespace PirateSlop.Networking
             if (cannons == null || cannons.Crate == null) return WalkDeck(ship);
             if (TryStartTrip(ship)) { ReleaseCannon(); return SupplyTrip(ship); }
             if (workingCannon != null && (!workingCannon.gameObject.activeInHierarchy || (workingCannon.Operator != null && workingCannon.Operator != player.Motor))) ReleaseCannon();
-            if (workingCannon == null && Time.time >= nextWork && (inventory.CannonSlots == 0 || cannons.Crate.Cannons.FindAll(c => c.gameObject.activeInHierarchy).Count >= 2))
+            if (workingCannon == null && Time.time >= nextWork && (inventory.CannonSlots == 0 || cannons.Crate.Cannons.FindAll(c => !c.IsMortar && c.gameObject.activeInHierarchy).Count >= 2))
             {
                 nextWork = Time.time + 1f;
                 foreach (var cannon in cannons.Crate.Cannons)
                 {
-                    if (!cannon.gameObject.activeInHierarchy || cannon.Operator != null || cannon.Network.HasBoarding(cannon.Index)) continue;
+                    if (cannon.IsMortar || !cannon.gameObject.activeInHierarchy || cannon.Operator != null || cannon.Network.HasBoarding(cannon.Index)) continue;
                     if (blockedGuns.TryGetValue(cannon, out float until) && Time.time < until) continue;
                     if (gunWorkers.TryGetValue(cannon, out var worker) && worker != null && worker.IsSpawned && !worker.Motor.IsDead && worker != player) continue;
                     workingCannon = cannon; gunWorkers[cannon] = player; workStarted = Time.time; navigation.Clear(); break;
@@ -119,7 +119,7 @@ namespace PirateSlop.Networking
             {
                 if (gun.Operator == player.Motor) gun.ReleaseControl();
                 bool ammo = false;
-                for (int slot = 0; slot < 6; slot++) if (inventory.BallCount(slot) > 0 && inventory.BallItem(slot) != InventoryItem.BoardingHook && inventory.BallItem(slot) != InventoryItem.BoomerangCannonball) ammo = true;
+                for (int slot = 0; slot < 6; slot++) if (inventory.BallCount(slot) > 0 && gun.AcceptsAmmo(inventory.BallItem(slot)) && inventory.BallItem(slot) != InventoryItem.BoardingHook && inventory.BallItem(slot) != InventoryItem.BoomerangCannonball) ammo = true;
                 if (!ammo)
                 {
                     if (weapon.BotSupplyBalls(cannons)) { navigation.Clear(); workStarted = Time.time; return idle; }

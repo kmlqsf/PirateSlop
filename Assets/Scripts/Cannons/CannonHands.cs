@@ -161,7 +161,7 @@ namespace PirateSlop
                 { nearest = hit; best = hit.distance; }
             if (nearest.collider != null) aimed = nearest.collider.GetComponentInParent<SimpleCannon>();
             if (held == null && inventory != null && inventory.BallSelected && selectedVisual != null && aimed != null &&
-                !aimed.IsLoaded && aimed.Network != null && aimed.Network.IsClientInitialized &&
+                !aimed.IsLoaded && aimed.AcceptsAmmo(inventory.BallItem(inventory.SelectedSlot)) && aimed.Network != null && aimed.Network.IsClientInitialized &&
                 Time.unscaledTime >= nextLoadRequest && aimed.CanLoadFrom(selectedVisual.transform.position))
             {
                 nextLoadRequest = Time.unscaledTime + .25f;
@@ -204,7 +204,7 @@ namespace PirateSlop
                 if (loose != null && Time.unscaledTime >= nextHeldSync)
                 { nextHeldSync = Time.unscaledTime + .05f; loose.RequestHold(true, held.transform.position); }
                 foreach (var cannon in FindObjectsByType<SimpleCannon>(FindObjectsSortMode.None))
-                    if (Time.unscaledTime >= nextLoadRequest && cannon.CanLoadFrom(held.transform.position) && !cannon.IsLoaded)
+                    if (Time.unscaledTime >= nextLoadRequest && cannon.AcceptsAmmo(held.Ammo) && cannon.CanLoadFrom(held.transform.position) && !cannon.IsLoaded)
                     {
                         var network = cannon.GetComponentInParent<PirateSlop.Networking.NetworkCannon>();
                         if (network != null && network.IsClientInitialized)
@@ -225,12 +225,12 @@ namespace PirateSlop
         {
             if (controlled != null && player.InputActive)
             {
-                PirateHudStyle.Panel(new Rect(Screen.width / 2f - 310, Screen.height - 125, 620, 28), controlled.IsIgnited ? "Фитиль горит… · E — выйти" : controlled.IsFireQueued ? "Ожидание готовности к выстрелу… · E — отменить" : !controlled.IsLoaded ? "Пушка не заряжена · E — выйти" : "Мышь — прицел · ЛКМ — поджечь фитиль · E — выйти");
+                PirateHudStyle.Panel(new Rect(Screen.width / 2f - 310, Screen.height - 125, 620, 28), controlled.IsIgnited ? "Фитиль горит… · E — выйти" : controlled.IsLoading ? "Зарядка… · E — выйти" : controlled.IsFireQueued ? "Ожидание готовности к выстрелу… · E — отменить" : !controlled.IsLoaded ? (controlled.IsMortar ? "Мортира не заряжена · E — выйти" : "Пушка не заряжена · E — выйти") : "Мышь — прицел · ЛКМ — поджечь фитиль · E — выйти");
                 return;
             }
             if (player == null || !player.InputActive || player.LocomotionLocked || (controls != null && controls.IsDragging) || (inventory != null && inventory.Placing)) return;
 
-            string text = held != null ? "E — в инвентарь • Поднеси ядро к дулу • Колесо — ближе/дальше • Отпусти ЛКМ — бросить" : aimed != null ? "E — прицелиться · поднеси ядро к дулу · Shift+E 7 с — снять" : "";
+            string text = held != null ? "E — в инвентарь • Поднеси ядро к дулу • Колесо — ближе/дальше • Отпусти ЛКМ — бросить" : aimed != null && aimed.IsMortar ? "E — прицелиться · поднеси любое ядро к дулу" : aimed != null ? "E — прицелиться · поднеси ядро к дулу · Shift+E 7 с — снять" : "";
             if (text.Length > 0) PirateHudStyle.Panel(new Rect(Screen.width / 2f - 310, Screen.height - 125, 620, 28), text);
         }
     }

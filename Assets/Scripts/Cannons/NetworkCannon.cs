@@ -12,6 +12,7 @@ namespace PirateSlop.Networking
         public float Elevation;
         public float Traverse;
         public bool Removed;
+        public bool Mortar;
         public bool Loaded;
         public bool FireQueued;
         public InventoryItem Ammo;
@@ -34,7 +35,7 @@ namespace PirateSlop.Networking
             shipBody = GetComponent<Rigidbody>();
             if (Crate != null) { ball = Crate.Supply; ball.Network = this; }
         }
-        public override void OnStartServer() { base.OnStartServer(); if (Crate != null) Crate.ResetSupply(); }
+        public override void OnStartServer() { base.OnStartServer(); if (Crate != null) { Crate.ResetSupply(); if (Crate.MortarPrefab != null) { placements.Add(new CannonPlacement { Position = Crate.MortarPosition, Rotation = Quaternion.identity, Elevation = 60f, Fuse = -1f, Mortar = true }); ApplyState(); } } }
         public override void OnStopServer() { if (Crate != null) Crate.ClearSpecialSupply(); base.OnStopServer(); }
         public override void OnStartClient() { base.OnStartClient(); ApplyState(); }
         public bool TakeKit()
@@ -51,7 +52,7 @@ namespace PirateSlop.Networking
         public bool RemoveCannon(NetworkWeapon player, int index)
         {
             var cannon = Cannon(index);
-            if (!IsServerInitialized || cannon == null || cannon.Operator != null || HasBoarding(index) || cannon.IsIgnited || cannon.IsLoading || !player.CanAddItem(InventoryItem.Cannon)) return false;
+            if (!IsServerInitialized || cannon == null || cannon.IsMortar || cannon.Operator != null || HasBoarding(index) || cannon.IsIgnited || cannon.IsLoading || !player.CanAddItem(InventoryItem.Cannon)) return false;
             if (cannon.IsLoaded)
             {
                 if (Crate.SpecialSupplyPrefab == null) return false;
@@ -99,7 +100,7 @@ namespace PirateSlop.Networking
             while (Crate.Cannons.Count < placements.Count)
             {
                 var placement = placements[Crate.Cannons.Count];
-                Crate.AddCannon(placement.Position, placement.Rotation);
+                Crate.AddCannon(placement.Position, placement.Rotation, placement.Mortar);
             }
             for (int i = 0; i < placements.Count; i++)
             {

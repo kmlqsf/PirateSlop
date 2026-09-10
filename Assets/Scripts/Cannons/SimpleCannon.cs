@@ -5,7 +5,11 @@ namespace PirateSlop
     public sealed class SimpleCannon : MonoBehaviour
     {
         public Transform Muzzle;
+        public bool IsMortar;
+        public bool AcceptsAmmo(InventoryItem ammo) => CannonAmmo.IsBall(ammo);
         public float LaunchSpeed = 30f;
+        public float LoadSeconds => IsMortar ? 8f : .45f;
+        public float ReloadSeconds => IsMortar ? 24f : 6f;
         public Transform BarrelPivot, Breech;
         public float MinElevation = -10f, MaxElevation = 25f;
         public float Elevation { get; private set; } = 3f;
@@ -25,6 +29,7 @@ namespace PirateSlop
         Cannonball loaded;
         float loadStarted = -1f;
         Vector3 loadStart;
+        public float ProjectileRadius => supply != null ? supply.GetComponent<SphereCollider>().radius * Mathf.Max(supply.transform.lossyScale.x, supply.transform.lossyScale.y, supply.transform.lossyScale.z) : .12f;
         public bool IsLoading => loadStarted >= 0f;
         public bool CanLoadFrom(Vector3 point)
         {
@@ -148,7 +153,7 @@ namespace PirateSlop
             var projectile=shot.gameObject.AddComponent<CannonShotDamage>();
             projectile.Authoritative=authoritative;projectile.Source=GetComponentInParent<ShipController>().transform;
             projectile.Velocity=velocity; projectile.Ammo=ammo;
-            projectile.SourceCannonIndex=Index;
+            projectile.SourceCannonIndex=Index; projectile.MortarShot = IsMortar;
             projectile.Attacker = authoritative ? firingPlayer : null;
             projectile.Radius=shot.GetComponent<SphereCollider>().radius*Mathf.Max(shot.transform.lossyScale.x,shot.transform.lossyScale.y,shot.transform.lossyScale.z);
             if (shot.FlightTrailMaterial != null)
@@ -167,7 +172,7 @@ namespace PirateSlop
         public InventoryItem LoadedAmmo => loaded != null ? loaded.Ammo : InventoryItem.Cannonball;
         public bool LoadAmmo(InventoryItem ammo)
         {
-            if (IsLoaded || supply == null) return false;
+            if (IsLoaded || supply == null || !AcceptsAmmo(ammo)) return false;
             var round = Instantiate(supply, Muzzle.position, Muzzle.rotation);
             round.Network = null; round.Loaded = round.Held = false; round.Ammo = ammo;
             if (TryLoad(round)) return true;
@@ -176,7 +181,7 @@ namespace PirateSlop
         }
         public bool TryLoad(Cannonball ball)
         {
-            if (IsLoaded || ball == null || ball.Loaded || !CanLoadFrom(ball.transform.position)) return false;
+            if (IsLoaded || ball == null || ball.Loaded || !AcceptsAmmo(ball.Ammo) || !CanLoadFrom(ball.transform.position)) return false;
             loaded = ball; ball.Loaded = true; ball.Held = false; ball.GetComponent<Collider>().enabled = false;
             ball.Body.isKinematic = true;
             ball.AttachToPlatform(GetComponentInParent<Rigidbody>());
@@ -206,7 +211,7 @@ namespace PirateSlop
             if (Operator != null && (!gameObject.activeInHierarchy || !InBreechRange(Operator) || Operator.IsSwimming || Operator.IsClimbing || Operator.IsKnockedBack || Time.time - lastControl > 2f)) ReleaseControl();
             if (IsLoading && loaded != null)
             {
-                float t = Mathf.Clamp01((Time.time - loadStarted) / .45f);
+                float t = Mathf.Clamp01((Time.time - loadStarted) / LoadSeconds);
                 loaded.transform.localPosition = Vector3.Lerp(loadStart, Vector3.back * .5f, Mathf.SmoothStep(0f, 1f, t));
                 if (t >= 1f)
                 {
@@ -231,7 +236,7 @@ namespace PirateSlop
             ignitionTime = -1f;
             ShowFuse(-1f);
             if (!IsLoaded) return;
-            nextFireTime = Time.time + 6f;
+            nextFireTime = Time.time + ReloadSeconds;
             InitializeSupply(loaded);
             Vector3 position = ShotPosition;
             Vector3 velocity = ShotVelocity;
