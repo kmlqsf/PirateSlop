@@ -118,6 +118,10 @@ namespace PirateSlop.Networking
         [ServerRpc]
         void DropSelectedServerRpc()
         {
+            DropSelectedAuthority();
+        }
+        void DropSelectedAuthority()
+        {
             var motor = GetComponent<AdvancedPlayerController>();
             if (motor.IsDead || motor.IsSwimming || motor.IsClimbing || motor.LocomotionLocked || GetComponent<CannonHands>().HasHeldBall || inventory.Fishing.CarryingCatch || inventory.Fishing.IsEating) return;
             int slot = selectedSlot.Value;

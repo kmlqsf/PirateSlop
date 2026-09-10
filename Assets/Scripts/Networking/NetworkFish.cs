@@ -18,6 +18,7 @@ namespace PirateSlop.Networking
         readonly SyncVar<Vector3> position = new();
         readonly SyncVar<Quaternion> rotation = new(Quaternion.identity);
         bool taken;
+        public bool Available => IsSpawned && !taken;
         float expires;
         float nextFlop;
         bool airborne;

@@ -41,7 +41,7 @@ namespace PirateSlop
             nearbySails = null;
             if (inventory != null && (inventory.HandsOccupied || (inventory.Fishing != null && inventory.Fishing.IsFishing))) { Release(); Hover(null); return; }
             var mouse = Mouse.current;
-            if (!motor.InputActive || (motor.IsSwimming || motor.IsClimbing) || mouse == null || (inventory != null && inventory.Placing) || (hands != null && hands.HasHeldBall))
+            if (!motor.InputActive || motor.LocomotionLocked || (motor.IsSwimming || motor.IsClimbing) || mouse == null || (inventory != null && inventory.Placing) || (hands != null && hands.HasHeldBall))
             { Release(); Hover(null); return; }
             if (grabbed != null)
             {
@@ -86,7 +86,7 @@ namespace PirateSlop
                     handle = candidate; best = hit.distance;
                 }
             }
-            Hover(InRange(handle) ? handle : null);
+            Hover(handle != null && handle.Cannon == null && InRange(handle) ? handle : null);
             if (hovered != null && mouse.leftButton.wasPressedThisFrame)
             {
                 grabbed = hovered; pointer = new Vector2(Screen.width * .5f, Screen.height * .5f); pendingDrag = 0;

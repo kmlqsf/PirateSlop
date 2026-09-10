@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace PirateSlop.Networking
 {
-    public sealed class BotCaptain
+    public sealed partial class BotCaptain
     {
         readonly NetworkPlayer player;
         readonly System.Random random;
@@ -30,21 +30,25 @@ namespace PirateSlop.Networking
             var motor = player.Motor;
             var ship = player.Ship;
             var command = new PlayerCommand { Yaw = motor.transform.eulerAngles.y };
-            if (ship == null) return command;
+            if (ship == null || ship.IsSinking) { ReleaseWork(); return command; }
             var helm = ship.Helm;
-            if (motor.IsDead || motor.IsKnockedBack || motor.IsSwimming)
+            if (motor.IsDead || motor.IsKnockedBack)
             {
+                ReleaseWork();
                 if (helm.IsControlledBy(motor)) helm.ReleaseControl();
                 motor.SetLocomotionLocked(false);
                 if (!helm.IsControlling) sails?.SetDeploy(0f);
                 return command;
             }
+            if (OnSupplyTrip) return SupplyTrip(ship);
+            if (motor.IsSwimming) return ReturnAboard(ship);
             if (!SessionController.Instance.IsBotHelmsman(player))
             {
                 motor.SetLocomotionLocked(false);
                 strandedSince = 0f;
-                return WalkDeck(ship);
+                return Work(ship);
             }
+            ReleaseCannon();
             hasWalkTarget = false;
             if (Time.time >= nextDecision)
             {
@@ -65,15 +69,7 @@ namespace PirateSlop.Networking
                 if (helm.IsControlling) return command;
                 sails?.SetDeploy(0f);
                 Vector3 target = ship.transform.TransformPoint(SessionController.Instance.Config.PlayerLocalSpawn);
-                Vector3 direction = target - motor.transform.position;
-                direction.y = 0f;
-                if (direction.sqrMagnitude > .2f)
-                {
-                    command.Yaw = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
-                    command.Move = Vector2.up;
-                }
-                if (strandedSince <= 0f) strandedSince = Time.time;
-                if (Time.time - strandedSince > 20f) { player.ReturnHome(); strandedSince = Time.time; }
+                command = navigation.Move(player, target, ship.transform);
             }
             return command;
         }
@@ -142,6 +138,8 @@ namespace PirateSlop.Networking
             var world = ProceduralWorld.Instance;
             Vector3 position = ship.transform.position;
             float safe = Mathf.Max(35f, session.SafeRadius(45f) - 45f);
+            if (NavigateSupply(ship, safe)) return;
+            if (NavigateCombat(ship)) return;
             if (route != null && waypoint < route.Count && FlatDistance(position, route[waypoint]) < 28f) waypoint++;
             bool unsafeGoal = route != null && Horizontal(route[route.Count - 1]) > safe;
             if (Time.time >= nextRoute || route == null || waypoint >= route.Count || unsafeGoal)

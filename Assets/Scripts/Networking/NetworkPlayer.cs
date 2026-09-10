@@ -33,7 +33,9 @@ namespace PirateSlop.Networking
         public readonly SyncVar<int> HomeShipId = new();
         public readonly SyncVar<int> TeamId = new();
         public readonly SyncVar<bool> IsBot = new();
+        public readonly SyncVar<bool> Eliminated = new();
         BotCaptain bot;
+        public bool OnSupplyTrip => bot != null && bot.OnSupplyTrip;
         AdvancedPlayerController motor;
         ShipDeckPassenger passenger;
         bool bound;
@@ -104,6 +106,7 @@ namespace PirateSlop.Networking
         }
         public override void OnStopNetwork()
         {
+            bot?.Stop();
             TimeManager.OnTick -= Tick; TimeManager.OnPostTick -= PostTick;
             var active = ActiveShip;
             if (active != null && active.Helm.IsControlledBy(motor)) active.Helm.ReleaseControl();

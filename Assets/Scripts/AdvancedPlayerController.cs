@@ -67,7 +67,9 @@ public class AdvancedPlayerController : MonoBehaviour
     PirateSlop.Networking.NetworkEquipment equipment;
     DirectShipControls shipControls;
     public bool IsDead => health != null && health.IsDead;
-    public bool LocomotionLocked { get; private set; }
+    bool locomotionLocked;
+    public SimpleCannon ActiveCannon { get; set; }
+    public bool LocomotionLocked => locomotionLocked || ActiveCannon != null;
     public bool IsSliding => slideTimer > 0f;
     public bool IsCrouched => crouched;
     public float PlanarSpeed { get; private set; }
@@ -97,8 +99,8 @@ public class AdvancedPlayerController : MonoBehaviour
     }
     public void SetLocomotionLocked(bool value)
     {
-        if (LocomotionLocked == value) return;
-        LocomotionLocked = value; verticalVelocity = 0; slideTimer = 0; PlanarSpeed = 0;
+        if (locomotionLocked == value) return;
+        locomotionLocked = value; verticalVelocity = 0; slideTimer = 0; PlanarSpeed = 0;
     }
     void Update()
     {
@@ -106,10 +108,10 @@ public class AdvancedPlayerController : MonoBehaviour
         aimRecoil=Vector2.Lerp(aimRecoil,Vector2.zero,1-Mathf.Exp(-7*Time.deltaTime));
         var kb = Keyboard.current; var mouse = Mouse.current;
         if (kb == null) return;
-        if (kb.f1Key.wasPressedThisFrame) SetThirdPerson(!IsThirdPerson);
+        if (kb.f1Key.wasPressedThisFrame && ActiveCannon == null) SetThirdPerson(!IsThirdPerson);
         if (kb.escapeKey.wasPressedThisFrame) { pending.Release = true; SetCursor(false); }
         if (mouse != null && mouse.leftButton.wasPressedThisFrame && !PlayerInventory.LootWindowOpen && !PirateSlop.Networking.SessionController.MenuOpen) SetCursor(true);
-        if (InputActive && mouse != null && (shipControls == null || !shipControls.IsDragging)) { var d = mouse.delta.ReadValue() * mouseSensitivity * AimSensitivityScale; lookYaw = Mathf.Repeat(lookYaw + d.x, 360f); pitch = Mathf.Clamp(pitch - d.y, -85f, 85f); }
+        if (InputActive && ActiveCannon == null && mouse != null && (shipControls == null || !shipControls.IsDragging)) { var d = mouse.delta.ReadValue() * mouseSensitivity * AimSensitivityScale; lookYaw = Mathf.Repeat(lookYaw + d.x, 360f); pitch = Mathf.Clamp(pitch - d.y, -85f, 85f); }
         pending.Move = InputActive ? Vector2.ClampMagnitude(new Vector2((kb.dKey.isPressed || kb.rightArrowKey.isPressed ? 1 : 0) - (kb.aKey.isPressed || kb.leftArrowKey.isPressed ? 1 : 0), (kb.wKey.isPressed || kb.upArrowKey.isPressed ? 1 : 0) - (kb.sKey.isPressed || kb.downArrowKey.isPressed ? 1 : 0)), 1) : Vector2.zero;
         pending.Yaw = lookYaw;
         pending.Pitch = pitch;
@@ -125,6 +127,13 @@ public class AdvancedPlayerController : MonoBehaviour
     void LateUpdate()
     {
         if (!local || playerCamera == null) return;
+        if (ActiveCannon != null && ActiveCannon.Muzzle != null)
+        {
+            var cannon = ActiveCannon;
+            Vector3 origin = cannon.Breech != null ? cannon.Breech.position : cannon.BarrelPivot.position;
+            playerCamera.transform.SetPositionAndRotation(origin - cannon.Muzzle.forward * .35f + cannon.Muzzle.up * .42f, cannon.Muzzle.rotation);
+            return;
+        }
         playerCamera.transform.rotation = Quaternion.Euler(AimEuler);
         cameraHeight = Mathf.Lerp(cameraHeight, (crouched ? crouchHeight : standingHeight) - .15f, 1f - Mathf.Exp(-16f * Time.deltaTime));
         var pivot = playerCamera.transform.parent.TransformPoint(Vector3.up * cameraHeight);
@@ -155,7 +164,7 @@ public class AdvancedPlayerController : MonoBehaviour
         if (!command.IsValid) command = default;
         transform.rotation = Quaternion.Euler(0, command.Yaw, 0);
         cooldown = Mathf.Max(0, cooldown - dt);
-        if (LocomotionLocked) return;
+        if (LocomotionLocked) { PlanarSpeed = 0f; verticalVelocity = 0f; slideTimer = 0f; return; }
         ladderCooldown = Mathf.Max(0, ladderCooldown - dt);
         knockbackTime = Mathf.Max(0f, knockbackTime - dt);
         knockbackVelocity *= Mathf.Exp(-(IsSwimming ? 3f : .65f) * dt);
@@ -360,7 +369,7 @@ public class AdvancedPlayerController : MonoBehaviour
         verticalVelocity = 0; PlanarSpeed = new Vector2(rise, command.Move.x * .45f).magnitude * ladder.Speed;
         return true;
     }
-    public PlayerState Capture() => new PlayerState { Position = transform.position, Yaw = transform.eulerAngles.y, VerticalVelocity = verticalVelocity, SlideDirection = slideDirection, SlideTimer = slideTimer, Cooldown = cooldown, Crouched = crouched, Locked = LocomotionLocked, PlanarSpeed = PlanarSpeed, Grounded = IsGrounded, Swimming = IsSwimming, SwimVelocity = swimVelocity, Breath = Breath, Climbing = IsClimbing, LadderCooldown = ladderCooldown, KnockbackVelocity = knockbackVelocity, KnockbackTime = knockbackTime };
+    public PlayerState Capture() => new PlayerState { Position = transform.position, Yaw = transform.eulerAngles.y, VerticalVelocity = verticalVelocity, SlideDirection = slideDirection, SlideTimer = slideTimer, Cooldown = cooldown, Crouched = crouched, Locked = locomotionLocked, PlanarSpeed = PlanarSpeed, Grounded = IsGrounded, Swimming = IsSwimming, SwimVelocity = swimVelocity, Breath = Breath, Climbing = IsClimbing, LadderCooldown = ladderCooldown, KnockbackVelocity = knockbackVelocity, KnockbackTime = knockbackTime };
     public void Restore(PlayerState s)
     {
         controller.enabled = false; transform.SetPositionAndRotation(s.Position, Quaternion.Euler(0, s.Yaw, 0)); controller.enabled = !IsDead;
@@ -372,7 +381,7 @@ public class AdvancedPlayerController : MonoBehaviour
         IsSwimming = s.Swimming; swimVelocity = s.SwimVelocity; Breath = s.Swimming ? s.Breath : breathSeconds;
         IsClimbing = s.Climbing; ladderCooldown = s.LadderCooldown;
         knockbackVelocity = s.KnockbackVelocity; knockbackTime = s.KnockbackTime;
-        slideTimer = s.SlideTimer; LocomotionLocked = s.Locked; SetHeight(s.Crouched);
+        slideTimer = s.SlideTimer; locomotionLocked = s.Locked; SetHeight(s.Crouched);
     }
     public void ApplyRemoteState(Vector3 position, float yawValue, float blend)
     {

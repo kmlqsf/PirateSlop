@@ -171,10 +171,11 @@ namespace PirateSlop
             if (Networked && aimedBall != null && !aimedBall.Loaded && aimedBall.Network != null &&
                 (keyboard.eKey.wasPressedThisFrame || mouse.leftButton.wasPressedThisFrame))
             { InteractionUsed = true; network.StoreBall(aimedBall.Network.NetworkObject); return; }
-            if (Networked && keyboard.eKey.wasPressedThisFrame)
+            if (keyboard.eKey.wasPressedThisFrame && aimedCannon != null && !keyboard.leftShiftKey.isPressed && !keyboard.rightShiftKey.isPressed)
             {
-                if (BallSelected && aimedCannon != null && !aimedCannon.IsLoaded && aimedCannon.Network != null)
-                { InteractionUsed = true; network.LoadBall(aimedCannon.Network.NetworkObject, aimedCannon.Index); return; }
+                InteractionUsed = true;
+                hands.UseCannon(aimedCannon);
+                return;
             }
             if (nearest.collider != null) chest = nearest.collider.GetComponentInParent<NetworkLootChest>();
             if (chest != null && Networked && (Fishing == null || (!Fishing.IsFishing && !Fishing.IsEating)))
@@ -290,7 +291,7 @@ namespace PirateSlop
             }
             if (Time.unscaledTime - selectionShownAt < 2.5f)
                 PirateHudStyle.Label(new Rect(Screen.width * .5f - 180, Screen.height - 138, 360, 26), InventoryIcons.ItemName(ItemAt(SelectedSlot)), PirateHudStyle.Paper);
-            string hint = aimedCannon != null && aimedCannon.Network != null && aimedCannon.Network.HasBoarding(aimedCannon.Index) ? "Колесо вверх — натянуть · вниз — ослабить канат" : aimedBall != null && aimedBall.Network != null ? "ЛКМ / E — взять 3 ядра" : BallSelected && aimedCannon != null && !aimedCannon.IsLoaded ? "E — зарядить ядро из рук" : chest != null ? chest.Hint(this) : pickup != null ? (EmptySlot() >= 0 ? "E — взять разобранную пушку" : "Инвентарь заполнен") : Placing && !cancelled ? "ЛКМ — поставить · R/колесо — поворот · Q/E — наклон\nShift+Q/E — крен · ПКМ — отменить" : "";
+            string hint = aimedCannon != null && aimedCannon.Network != null && aimedCannon.Network.HasBoarding(aimedCannon.Index) ? "Колесо вверх — натянуть · вниз — ослабить канат" : aimedBall != null && aimedBall.Network != null ? "ЛКМ / E — взять 3 ядра" : BallSelected && aimedCannon != null && !aimedCannon.IsLoaded ? "Поднеси ядро к дулу · E — прицелиться" : chest != null ? chest.Hint(this) : pickup != null ? (EmptySlot() >= 0 ? "E — взять разобранную пушку" : "Инвентарь заполнен") : Placing && !cancelled ? "ЛКМ — поставить · R/колесо — поворот · Q/E — наклон\nShift+Q/E — крен · ПКМ — отменить" : "";
             if (hint.Length > 0) PirateHudStyle.Panel(new Rect(Screen.width * .5f - 290, Screen.height - 165, 580, 44), hint);
             if (aimedRumShelf != null) PirateHudStyle.Panel(new Rect(Screen.width * .5f - 290, Screen.height - 165, 580, 44), aimedRumShelf.Hint);
         }

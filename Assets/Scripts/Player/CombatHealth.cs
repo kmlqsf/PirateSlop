@@ -65,7 +65,7 @@ namespace PirateSlop
             if (!IsDead || Time.time < respawnAt || (network != null && !network.IsServerInitialized)) return;
             var player = GetComponent<NetworkPlayer>();
             var ship = player != null ? player.Ship : null;
-            if (player != null && (ship == null || !ship.ConsumeRespawnRum())) return;
+            if (player != null && (player.Eliminated.Value || ship == null || !ship.ConsumeRespawnRum())) return;
             Vector3 position = ship != null ? ship.transform.TransformPoint(SessionController.Instance.Config.PlayerLocalSpawn) : SpawnPosition;
             float yaw = ship != null ? ship.transform.eulerAngles.y : SpawnYaw;
             if (network != null) network.Respawn(position, yaw);

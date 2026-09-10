@@ -45,9 +45,10 @@ namespace PirateSlop
             if (health.IsDead)
             {
                 PirateHudStyle.Panel(new Rect(Screen.width / 2f - 200, Screen.height / 2f - 55, 400, 100));
-                PirateHudStyle.Label(new Rect(Screen.width / 2f - 180, Screen.height / 2f - 43, 360, 35), "ВЫ ПАЛИ В БОЮ", PirateHudStyle.Gold, true);
+                bool eliminated = network != null && network.Eliminated.Value;
+                PirateHudStyle.Label(new Rect(Screen.width / 2f - 180, Screen.height / 2f - 43, 360, 35), eliminated ? "ЭКИПАЖ ВЫБЫЛ" : "ВЫ ПАЛИ В БОЮ", PirateHudStyle.Gold, true);
                 bool hasRum = network == null || (network.Ship != null && network.Ship.RumCount > 0);
-                PirateHudStyle.Label(new Rect(Screen.width / 2f - 180, Screen.height / 2f, 360, 25), hasRum ? $"Возвращение через {health.RespawnRemaining:0} с • −1 ром" : "Нет рома — экипаж должен пополнить полку", PirateHudStyle.Paper);
+                PirateHudStyle.Label(new Rect(Screen.width / 2f - 180, Screen.height / 2f, 360, 25), eliminated ? "Корабль потерян. Возрождение недоступно." : hasRum ? $"Возвращение через {health.RespawnRemaining:0} с • −1 ром" : "Нет рома — экипаж должен пополнить полку", PirateHudStyle.Paper);
                 return;
             }
             if (network != null && network.Ship != null)

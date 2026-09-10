@@ -297,7 +297,7 @@ namespace PirateSlop.Networking
         {
             population = players.Count;
             botPopulation = players.Values.Count(p => p != null && p.IsBot.Value);
-            teamPopulation = players.Values.Where(p => p != null).Select(p => p.TeamId.Value).Distinct().Count();
+            teamPopulation = players.Values.Where(p => p != null && !TeamEliminated(p.TeamId.Value)).Select(p => p.TeamId.Value).Distinct().Count();
             manager.ServerManager.Broadcast(new PopulationMessage { Count = population, Bots = botPopulation, Teams = teamPopulation, SessionId = SessionId });
         }
         void Population(PopulationMessage message, Channel channel) { population = message.Count; botPopulation = message.Bots; teamPopulation = message.Teams; SessionId = message.SessionId; }
@@ -322,6 +322,7 @@ namespace PirateSlop.Networking
         {
             if (steamSession && !SessionBusy && !string.IsNullOrEmpty(error)) { party?.LeaveSession(); steamSession = false; }
             TickStorm();
+            TickCrewElimination();
             TickBots();
             if (manager != null && manager.ServerManager.Started)
                 foreach (var id in awaitingWorld.Where(p => Time.realtimeSinceStartup - p.Value > 120).Select(p => p.Key).ToArray())
@@ -359,7 +360,7 @@ namespace PirateSlop.Networking
             for (int j = i + 1; j < ships.Count; j++)
             {
                 var a = ships[i]; var b = ships[j];
-                if (a == null || b == null || !a.IsServerInitialized || !b.IsServerInitialized) continue;
+                if (a == null || b == null || a.IsSinking || b.IsSinking || !a.IsServerInitialized || !b.IsServerInitialized) continue;
                 Vector2 delta = new(b.transform.position.x-a.transform.position.x,b.transform.position.z-a.transform.position.z);
                 float radius = a.HullHalfExtents.magnitude+b.HullHalfExtents.magnitude;
                 if (delta.sqrMagnitude >= radius*radius) continue;

@@ -9,13 +9,13 @@ namespace PirateSlop.Networking
         public int RumCount => rum.Value;
         public bool ConsumeRespawnRum()
         {
-            if (!IsServerInitialized || !IsSpawned || rum.Value <= 0) return false;
+            if (!IsServerInitialized || !IsSpawned || IsSinking || rum.Value <= 0) return false;
             rum.Value--;
             return true;
         }
         public int StoreRum(int amount)
         {
-            if (!IsServerInitialized || !IsSpawned || amount <= 0) return 0;
+            if (!IsServerInitialized || !IsSpawned || IsSinking || amount <= 0) return 0;
             int added = UnityEngine.Mathf.Min(amount, RumCapacity - rum.Value);
             rum.Value += added;
             return added;

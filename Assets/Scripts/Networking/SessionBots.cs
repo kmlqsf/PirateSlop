@@ -11,6 +11,29 @@ namespace PirateSlop.Networking
         bool fillWithBots, sessionBots;
         int nextTeam = 1, nextBotKey = -1, botPopulation, teamPopulation;
         float nextBotFill;
+        float nextCrewCheck;
+        readonly HashSet<int> eliminatedTeams = new();
+        public bool TeamEliminated(int team) => eliminatedTeams.Contains(team);
+        void TickCrewElimination()
+        {
+            if (manager == null || !manager.ServerManager.Started || Time.time < nextCrewCheck) return;
+            nextCrewCheck = Time.time + .5f;
+            foreach (var ship in NetworkShip.ActiveShips.ToArray())
+            {
+                if (ship == null || !ship.IsSpawned || ship.IsSinking || ship.TeamId.Value <= 0 || ship.RumCount > 0) continue;
+                var crew = players.Values.Where(p => p != null && p.HomeShipId.Value == ship.ParticipantId.Value).ToArray();
+                if (crew.Length == 0 || crew.Any(p => !p.Motor.IsDead)) continue;
+                eliminatedTeams.Add(ship.TeamId.Value);
+                foreach (var member in crew) member.Eliminated.Value = true;
+                ship.BeginSinking();
+                foreach (var entry in players.Where(e => e.Value != null && e.Value.IsBot.Value && e.Value.TeamId.Value == ship.TeamId.Value).ToArray())
+                {
+                    manager.ServerManager.Despawn(entry.Value.NetworkObject);
+                    players.Remove(entry.Key); slots.Remove(entry.Key);
+                }
+                BroadcastPopulation();
+            }
+        }
         readonly Dictionary<int, int> crewTeams = new();
         WorldRoutePlanner botRoutes;
         public WorldRoutePlanner BotRoutes => botRoutes ??= new WorldRoutePlanner(ProceduralWorld.Instance.Layout,
@@ -20,11 +43,12 @@ namespace PirateSlop.Networking
         {
             if (crew > 0 && crewTeams.TryGetValue(crew, out int existing))
             {
+                if (TeamEliminated(existing)) return 0;
                 if (players.Values.Any(p => p != null && p.TeamId.Value == existing))
                     return players.Values.Count(p => p != null && !p.IsBot.Value && p.TeamId.Value == existing) < CrewSize ? existing : 0;
                 crewTeams.Remove(crew);
             }
-            var available = players.Values.Where(p => p != null && p.Ship != null)
+            var available = players.Values.Where(p => p != null && p.Ship != null && !TeamEliminated(p.TeamId.Value))
                 .GroupBy(p => p.TeamId.Value)
                 .Where(g => g.Count(p => !p.IsBot.Value) < CrewSize && (crew <= 0 || (g.All(p => p.IsBot.Value) && !crewTeams.ContainsValue(g.Key))))
                 .OrderByDescending(g => g.Count(p => !p.IsBot.Value)).FirstOrDefault();
@@ -32,7 +56,7 @@ namespace PirateSlop.Networking
             if (available != null) team = available.Key;
             else
             {
-                if (players.Values.Where(p => p != null).Select(p => p.TeamId.Value).Distinct().Count() >= MaxPlayers / CrewSize) return 0;
+                if (players.Values.Where(p => p != null && !TeamEliminated(p.TeamId.Value)).Select(p => p.TeamId.Value).Distinct().Count() + eliminatedTeams.Count >= MaxPlayers / CrewSize) return 0;
                 team = nextTeam++;
             }
             if (crew > 0) crewTeams[crew] = team;
@@ -42,10 +66,10 @@ namespace PirateSlop.Networking
         public bool IsBotHelmsman(NetworkPlayer bot)
         {
             var ship = bot.Ship;
-            if (ship == null) return false;
+            if (ship == null || ship.IsSinking || bot.OnSupplyTrip) return false;
             ship.Helm.ValidateGrip();
             if (ship.Helm.IsControlling) return ship.Helm.IsControlledBy(bot.Motor);
-            return players.Values.Where(p => p != null && p.IsBot.Value && p.Ship == ship && !p.Motor.IsDead && !p.Motor.IsSwimming && !p.Motor.IsKnockedBack)
+            return players.Values.Where(p => p != null && p.IsBot.Value && p.Ship == ship && !p.OnSupplyTrip && !p.Motor.IsDead && !p.Motor.IsSwimming && !p.Motor.IsKnockedBack)
                 .OrderBy(p => p.ParticipantId.Value).FirstOrDefault() == bot;
         }
 
@@ -66,6 +90,8 @@ namespace PirateSlop.Networking
         void ResetBots()
         {
             botRoutes = null;
+            eliminatedTeams.Clear(); nextCrewCheck = 0f;
+            BotCaptain.ResetWork();
             crewTeams.Clear();
             nextTeam = 1; nextBotKey = -1;
             botPopulation = teamPopulation = 0;
@@ -102,10 +128,11 @@ namespace PirateSlop.Networking
             if (!dedicated && !playing) return;
             nextBotFill = Time.time + .5f;
             int pending = manager.ServerManager.Clients.Values.Count(c => c.IsAuthenticated && !players.ContainsKey(c.ClientId));
-            int target = Mathf.Max(0, MaxPlayers - pending);
+            int retiredHumans = players.Values.Count(p => p != null && TeamEliminated(p.TeamId.Value));
+            int target = Mathf.Max(retiredHumans, MaxPlayers - pending - eliminatedTeams.Count * CrewSize + retiredHumans);
             while (players.Count > target && RemoveOneBot()) { }
             if (players.Count >= target) return;
-            var crew = players.Where(p => p.Value != null && p.Value.Ship != null).GroupBy(p => p.Value.TeamId.Value)
+            var crew = players.Where(p => p.Value != null && p.Value.Ship != null && !TeamEliminated(p.Value.TeamId.Value)).GroupBy(p => p.Value.TeamId.Value)
                 .Where(g => g.Count() < CrewSize).OrderByDescending(g => g.Any(p => !p.Value.IsBot.Value)).FirstOrDefault();
             NetworkShip ship;
             int slot, team;
@@ -116,7 +143,7 @@ namespace PirateSlop.Networking
             }
             else
             {
-                if (players.Values.Where(p => p != null).Select(p => p.TeamId.Value).Distinct().Count() >= MaxPlayers / CrewSize) return;
+                if (players.Values.Where(p => p != null && !TeamEliminated(p.TeamId.Value)).Select(p => p.TeamId.Value).Distinct().Count() + eliminatedTeams.Count >= MaxPlayers / CrewSize) return;
                 team = nextTeam++;
                 if (!TrySpawnShip(team, false, out ship, out slot)) return;
             }

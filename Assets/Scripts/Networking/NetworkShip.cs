@@ -19,6 +19,22 @@ namespace PirateSlop.Networking
         [SerializeField, Min(0f)] float collisionRadiusOverride;
         ShipState remoteState;
         bool hasRemoteState;
+        readonly SyncVar<bool> sinking = new();
+        float sinkingStarted;
+        Vector3 sinkingPosition;
+        float sinkingYaw;
+        public bool IsSinking => sinking.Value;
+        public void BeginSinking()
+        {
+            if (!IsServerInitialized || IsSinking) return;
+            sinking.Value = true;
+            sinkingStarted = Time.time;
+            sinkingPosition = transform.position;
+            sinkingYaw = transform.eulerAngles.y;
+            Helm.ReleaseControl();
+            foreach (var cannon in GetComponentsInChildren<SimpleCannon>()) cannon.ReleaseControl();
+            GetComponent<SailSystem>()?.SetDeploy(0f);
+        }
         int remoteDriver;
         void Awake()
         {
@@ -52,6 +68,17 @@ namespace PirateSlop.Networking
         void Tick()
         {
             if (!IsServerInitialized) return;
+            if (IsSinking)
+            {
+                float progress = Mathf.Clamp01((Time.time - sinkingStarted) / 12f);
+                var state = Motor.Capture();
+                state.Position = sinkingPosition + Vector3.down * (45f * progress * progress);
+                state.Yaw = sinkingYaw; state.Pitch = progress * 18f; state.Bank = progress * 12f;
+                state.WaveRoll = 0f; state.Speed = state.Sail = state.Rudder = 0f; state.Controlling = false;
+                Motor.Restore(state, null);
+                if (progress >= 1f) ServerManager.Despawn(NetworkObject);
+                return;
+            }
             Helm.Simulate(default, null, (float)TimeManager.TickDelta);
             Motor.Simulate((float)TimeManager.TickDelta);
         }
@@ -81,7 +108,7 @@ namespace PirateSlop.Networking
         void DragWheelServerRpc(float degrees, bool holding, FishNet.Connection.NetworkConnection sender = null)
         {
             var player = sender != null ? SessionController.Instance.GetPlayer(sender.ClientId) : null;
-            if (player != null) Helm.Drag(player.Motor, degrees, holding);
+            if (player != null && !IsSinking) Helm.Drag(player.Motor, degrees, holding);
         }
         public void AdjustSails(float amount) => AdjustSailsServerRpc(amount);
         [ServerRpc(RequireOwnership = false)]
@@ -89,7 +116,7 @@ namespace PirateSlop.Networking
         {
             var player = sender != null ? SessionController.Instance.GetPlayer(sender.ClientId) : null;
             var sails = GetComponent<SailSystem>();
-            if (player != null && sails.InRange(player.Motor) && float.IsFinite(amount)) sails.AdjustSail(Mathf.Clamp(amount, -.2f, .2f));
+            if (player != null && !IsSinking && sails.InRange(player.Motor) && float.IsFinite(amount)) sails.AdjustSail(Mathf.Clamp(amount, -.2f, .2f));
         }
         [ObserversRpc(BufferLast = true)]
         void ReceiveState(ShipState state, int driver)

@@ -10,6 +10,7 @@ namespace PirateSlop.Networking
         public Vector3 Position;
         public Quaternion Rotation;
         public float Elevation;
+        public float Traverse;
         public bool Removed;
         public bool Loaded;
         public InventoryItem Ammo;
@@ -49,7 +50,7 @@ namespace PirateSlop.Networking
         public bool RemoveCannon(NetworkWeapon player, int index)
         {
             var cannon = Cannon(index);
-            if (!IsServerInitialized || cannon == null || HasBoarding(index) || cannon.IsIgnited || cannon.IsLoading || !player.CanAddItem(InventoryItem.Cannon)) return false;
+            if (!IsServerInitialized || cannon == null || cannon.Operator != null || HasBoarding(index) || cannon.IsIgnited || cannon.IsLoading || !player.CanAddItem(InventoryItem.Cannon)) return false;
             if (cannon.IsLoaded)
             {
                 if (Crate.SpecialSupplyPrefab == null) return false;
@@ -104,7 +105,8 @@ namespace PirateSlop.Networking
                 var cannon=Crate.Cannons[i];
                 cannon.gameObject.SetActive(!placements[i].Removed);
                 if (placements[i].Removed) continue;
-                cannon.SetElevation(placements[i].Elevation);
+                if (cannon.Operator == null || IsServerInitialized)
+                    cannon.SetAim(placements[i].Elevation, placements[i].Traverse);
                 if (!IsServerInitialized)
                 {
                     if (placements[i].Loaded && !cannon.IsLoaded) cannon.LoadAmmo(placements[i].Ammo);
@@ -172,6 +174,49 @@ namespace PirateSlop.Networking
         void RejectHoldTargetRpc(NetworkConnection connection)
         { if (ball != null) { ball.Held = false; ball.GetComponent<Collider>().enabled = !ball.Loaded; } }
         public void RequestFire(int index) => FireServerRpc(index);
+        public void PublishBotAim(SimpleCannon cannon)
+        {
+            if (!IsServerInitialized || cannon == null || Cannon(cannon.Index) != cannon) return;
+            var placement = placements[cannon.Index];
+            placement.Elevation = cannon.Elevation; placement.Traverse = cannon.Traverse;
+            placements[cannon.Index] = placement;
+        }
+        public void RequestControl(int index, bool active) => ControlServerRpc(index, active);
+        public void RequestAim(int index, float elevation, float traverse) => AimServerRpc(index, elevation, traverse);
+        public void NotifyControlEnded(AdvancedPlayerController motor)
+        {
+            var player = motor.GetComponent<NetworkPlayer>();
+            if (player != null && player.Owner != null && player.Owner.IsActive) ControlTargetRpc(player.Owner, player.NetworkObject, -1);
+        }
+        [ServerRpc(RequireOwnership = false)]
+        void ControlServerRpc(int index, bool active, NetworkConnection sender = null)
+        {
+            var player = sender != null ? SessionController.Instance.GetPlayer(sender.ClientId) : null;
+            var cannon = Cannon(index);
+            if (player == null) return;
+            if (!active)
+            {
+                if (cannon != null && cannon.Operator == player.Motor) cannon.ReleaseControl();
+                return;
+            }
+            if (cannon == null || !CanUse(sender, cannon.transform.position) || !cannon.TakeControl(player.Motor)) return;
+            ControlTargetRpc(sender, player.NetworkObject, index);
+        }
+        [TargetRpc]
+        void ControlTargetRpc(NetworkConnection connection, NetworkObject player, int index)
+        {
+            if (player != null) player.GetComponent<CannonHands>().SetCannonView(Cannon(index));
+        }
+        [ServerRpc(RequireOwnership = false)]
+        void AimServerRpc(int index, float elevation, float traverse, NetworkConnection sender = null)
+        {
+            var cannon = Cannon(index);
+            var player = sender != null ? SessionController.Instance.GetPlayer(sender.ClientId) : null;
+            if (cannon == null || player == null || !cannon.Aim(player.Motor, elevation, traverse)) return;
+            var placement = placements[index];
+            placement.Elevation = cannon.Elevation; placement.Traverse = cannon.Traverse;
+            placements[index] = placement;
+        }
         public void DragBreech(int index, float degrees, bool holding) => DragBreechServerRpc(index, degrees, holding);
         [ServerRpc(RequireOwnership = false)]
         void DragBreechServerRpc(int index, float degrees, bool holding, NetworkConnection sender = null)
@@ -185,8 +230,9 @@ namespace PirateSlop.Networking
         void FireServerRpc(int index, NetworkConnection sender = null)
         {
             var cannon = Cannon(index);
-            if (cannon != null && CanUse(sender, cannon.transform.position))
-                cannon.Fire(SessionController.Instance.GetPlayer(sender.ClientId).gameObject);
+            var player = sender != null ? SessionController.Instance.GetPlayer(sender.ClientId) : null;
+            if (cannon != null && player != null && cannon.Operator == player.Motor && cannon.InBreechRange(player.Motor))
+                cannon.Fire(player.gameObject);
         }
         public void RequestLoad(int index, Vector3 localPosition) => LoadServerRpc(index, localPosition);
         [ServerRpc(RequireOwnership = false)]

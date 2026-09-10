@@ -11,6 +11,74 @@ namespace PirateSlop
         DirectShipControls controls;
         Cannonball held;
         SimpleCannon aimed;
+        SimpleCannon controlled;
+        bool previousThirdPerson;
+        bool viewing;
+        int enteredFrame;
+        float nextAimSend;
+        float elevation, traverse;
+        [SerializeField] float aimSensitivity = .12f;
+        public void UseCannon(SimpleCannon cannon)
+        {
+            if (cannon == null || !cannon.InBreechRange(player)) return;
+            if (cannon.Network != null && cannon.Network.IsClientInitialized) cannon.Network.RequestControl(cannon.Index, true);
+            else if (cannon.TakeControl(player)) SetCannonView(cannon);
+        }
+        public void SetCannonView(SimpleCannon cannon)
+        {
+            if (controlled == cannon && cannon != null) return;
+            if (viewing)
+            {
+                if (controlled != null && controlled.Operator == player && (controlled.Network == null || !controlled.Network.IsServerInitialized)) controlled.ReleaseControl();
+                player.SetThirdPerson(previousThirdPerson);
+            }
+            controlled = cannon;
+            viewing = cannon != null;
+            player.ActiveCannon = cannon;
+            if (cannon == null) return;
+            Drop();
+            previousThirdPerson = player.IsThirdPerson;
+            player.SetThirdPerson(false);
+            elevation = cannon.Elevation; traverse = cannon.Traverse;
+            if (cannon.Network == null || !cannon.Network.IsServerInitialized) cannon.TakeControl(player);
+            nextAimSend = 0f;
+            enteredFrame = Time.frameCount;
+        }
+        void LeaveCannon()
+        {
+            var cannon = controlled;
+            if (cannon != null && cannon.Network != null && cannon.Network.IsClientInitialized) cannon.Network.RequestControl(cannon.Index, false);
+            else if (cannon != null) cannon.ReleaseControl();
+            SetCannonView(null);
+        }
+        void Update()
+        {
+            if (controlled == null)
+            {
+                if (viewing) SetCannonView(null);
+                return;
+            }
+            if (Time.frameCount == enteredFrame) return;
+            var keyboard = Keyboard.current;
+            var mouse = Mouse.current;
+            if (!player.InputActive || !controlled.gameObject.activeInHierarchy || !controlled.InBreechRange(player) || player.IsKnockedBack ||
+                player.ActiveCannon != controlled || keyboard == null || mouse == null || keyboard.eKey.wasPressedThisFrame || keyboard.qKey.wasPressedThisFrame)
+            { LeaveCannon(); return; }
+            var delta = mouse.delta.ReadValue() * aimSensitivity;
+            elevation = Mathf.Clamp(elevation + delta.y, controlled.MinElevation, controlled.MaxElevation);
+            traverse = Mathf.Clamp(traverse + delta.x, -controlled.MaxTraverse, controlled.MaxTraverse);
+            controlled.Aim(player, elevation, traverse);
+            if (Time.unscaledTime >= nextAimSend || mouse.leftButton.wasPressedThisFrame)
+            {
+                nextAimSend = Time.unscaledTime + .05f;
+                if (controlled.Network != null && controlled.Network.IsClientInitialized) controlled.Network.RequestAim(controlled.Index, elevation, traverse);
+            }
+            if (mouse.leftButton.wasPressedThisFrame)
+            {
+                if (controlled.Network != null && controlled.Network.IsClientInitialized) controlled.Network.RequestFire(controlled.Index);
+                else controlled.Fire(gameObject);
+            }
+        }
         float distance;
         float nextHeldSync, nextLoadRequest;
         GameObject selectedVisual;
@@ -28,7 +96,7 @@ namespace PirateSlop
             return ball != null && !ball.Loaded;
         }
         void Awake() { if (GetComponent<CannonDismantle>() == null) gameObject.AddComponent<CannonDismantle>(); player = GetComponent<AdvancedPlayerController>(); inventory = GetComponent<PlayerInventory>(); controls = GetComponent<DirectShipControls>(); }
-        void OnDisable() { Drop(); if (selectedVisual != null) selectedVisual.SetActive(false); }
+        void OnDisable() { LeaveCannon(); Drop(); if (selectedVisual != null) selectedVisual.SetActive(false); }
         void OnDestroy() { if (selectedVisual != null) Destroy(selectedVisual); }
         void UpdateSelectedVisual()
         {
@@ -155,9 +223,14 @@ namespace PirateSlop
         }
         void OnGUI()
         {
+            if (controlled != null && player.InputActive)
+            {
+                PirateHudStyle.Panel(new Rect(Screen.width / 2f - 310, Screen.height - 125, 620, 28), controlled.IsIgnited ? "Фитиль горит… · E — выйти" : "Мышь — прицел · ЛКМ — поджечь фитиль · E — выйти");
+                return;
+            }
             if (player == null || !player.InputActive || player.LocomotionLocked || (controls != null && controls.IsDragging) || (inventory != null && inventory.Placing)) return;
 
-            string text = held != null ? "E — в инвентарь • Поднеси ядро к дулу • Колесо — ближе/дальше • Отпусти ЛКМ — бросить" : aimed != null ? (aimed.IsIgnited ? "Фитиль горит…" : aimed.IsLoaded ? "E — выстрел · удерживать E 7 с — снять" : "Поднеси ядро к дулу · удерживать E 7 с — снять") : "";
+            string text = held != null ? "E — в инвентарь • Поднеси ядро к дулу • Колесо — ближе/дальше • Отпусти ЛКМ — бросить" : aimed != null ? "E — прицелиться · поднеси ядро к дулу · Shift+E 7 с — снять" : "";
             if (text.Length > 0) PirateHudStyle.Panel(new Rect(Screen.width / 2f - 310, Screen.height - 125, 620, 28), text);
         }
     }

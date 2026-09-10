@@ -9,6 +9,10 @@ namespace PirateSlop
         public Transform BarrelPivot, Breech;
         public float MinElevation = -10f, MaxElevation = 25f;
         public float Elevation { get; private set; } = 3f;
+        public float MaxTraverse = 15f;
+        public float Traverse { get; private set; }
+        public AdvancedPlayerController Operator { get; private set; }
+        float lastControl;
         Quaternion barrelRest;
         AdvancedPlayerController grip;
         float lastGrip;
@@ -37,6 +41,7 @@ namespace PirateSlop
         Quaternion supplyRotation;
         float nextFireTime;
         [SerializeField] float fuseDuration = 1.4f;
+        public float FuseSeconds => fuseDuration;
         float ignitionTime = -1f;
         float visibleFuse = -1f;
         LineRenderer fuse;
@@ -52,10 +57,38 @@ namespace PirateSlop
         public void SetElevation(float value)
         {
             Elevation = Mathf.Clamp(value, MinElevation, MaxElevation);
-            if (BarrelPivot != null) BarrelPivot.localRotation = Quaternion.AngleAxis(3f - Elevation, BarrelPivot.parent.InverseTransformDirection(transform.right)) * barrelRest;
+            if (BarrelPivot != null) BarrelPivot.localRotation = Quaternion.AngleAxis(Traverse, BarrelPivot.parent.InverseTransformDirection(transform.up)) * Quaternion.AngleAxis(3f - Elevation, BarrelPivot.parent.InverseTransformDirection(transform.right)) * barrelRest;
+        }
+        public void SetAim(float elevation, float traverse)
+        {
+            Traverse = Mathf.Clamp(traverse, -MaxTraverse, MaxTraverse);
+            SetElevation(elevation);
+        }
+        public bool TakeControl(AdvancedPlayerController player)
+        {
+            if (!InBreechRange(player) || player.IsSwimming || player.IsClimbing || player.IsKnockedBack ||
+                (player.LocomotionLocked && player.ActiveCannon != this) || (Operator != null && Operator != player)) return false;
+            Operator = player;
+            player.ActiveCannon = this;
+            lastControl = Time.time;
+            return true;
+        }
+        public bool Aim(AdvancedPlayerController player, float elevation, float traverse)
+        {
+            if (Operator != player || !float.IsFinite(elevation) || !float.IsFinite(traverse) || !TakeControl(player)) return false;
+            SetAim(elevation, traverse);
+            return true;
+        }
+        public void ReleaseControl()
+        {
+            var previous = Operator;
+            Operator = null;
+            if (previous != null && previous.ActiveCannon == this) previous.ActiveCannon = null;
+            if (previous != null && Network != null && Network.IsServerInitialized) Network.NotifyControlEnded(previous);
         }
         public bool DragBreech(AdvancedPlayerController player, float degrees, bool holding)
         {
+            if (Operator != null) return false;
             if (grip != null && (!InBreechRange(grip) || Time.time - lastGrip > .75f)) grip = null;
             if (!holding) { if (grip == player) grip = null; return false; }
             if (!float.IsFinite(degrees) || !InBreechRange(player) || (grip != null && grip != player)) return false;
@@ -159,6 +192,7 @@ namespace PirateSlop
         }
         void Update()
         {
+            if (Operator != null && (!gameObject.activeInHierarchy || !InBreechRange(Operator) || Operator.IsSwimming || Operator.IsClimbing || Operator.IsKnockedBack || Time.time - lastControl > 2f)) ReleaseControl();
             if (IsLoading && loaded != null)
             {
                 float t = Mathf.Clamp01((Time.time - loadStarted) / .45f);
@@ -249,6 +283,7 @@ namespace PirateSlop
             fuseLight.intensity = 1.4f + Mathf.Sin(Time.time * 47f) * .4f;
             if (!sparks.isPlaying) sparks.Play();
         }
+        void OnDisable() { ReleaseControl(); }
         void OnDestroy()
         {
             if (ropeMaterial != null) Destroy(ropeMaterial);
