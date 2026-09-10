@@ -55,3 +55,13 @@ MonoBehaviour:
     AtSeaLevel: 1
     LocalOffset: {x: 0, y: -0.15, z: 85}
     PrefabVersion: 1
+  - Tag: passage_rock
+    Count: 4
+    Height: {x: 5, y: 30}
+    MaxSlope: 40
+    Spacing: 20
+    StaticPrefab: {fileID: 587994260509629053, guid: caad88c20ca898e41ab4d6dc4f697298, type: 3}
+    AtLocationOrigin: 0
+    AtSeaLevel: 0
+    LocalOffset: {x: 0, y: 0, z: 0}
+    PrefabVersion: 1

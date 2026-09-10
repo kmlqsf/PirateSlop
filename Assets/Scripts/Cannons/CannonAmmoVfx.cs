@@ -5,6 +5,8 @@ namespace PirateSlop
     public sealed class CannonAmmoVfx : MonoBehaviour
     {
         Material material;
+        bool burning;
+        float nextSmoke;
         public static CannonAmmoVfx Create(Transform parent, Vector3 position, bool frozen)
         {
             var root = new GameObject(frozen ? "FrozenShip" : "CannonFire");
@@ -17,6 +19,8 @@ namespace PirateSlop
 
         void Initialize(bool frozen)
         {
+            burning = !frozen;
+            nextSmoke = Time.time + Random.value * .9f;
             var shader = Shader.Find("Universal Render Pipeline/Particles/Unlit");
             if (shader == null) shader = Shader.Find("Sprites/Default");
             material = new Material(shader);
@@ -60,6 +64,14 @@ namespace PirateSlop
             particles.Play();
         }
 
+        void Update()
+        {
+            if (!burning || Time.time < nextSmoke) return;
+            nextSmoke = Time.time + .9f;
+            var camera = Camera.main;
+            if (camera == null || (camera.transform.position - transform.position).sqrMagnitude > 160f * 160f) return;
+            CombatVfx.FireSmoke(transform.position + Vector3.up * .8f);
+        }
         void OnDestroy() { if (material != null) Destroy(material); }
     }
 }

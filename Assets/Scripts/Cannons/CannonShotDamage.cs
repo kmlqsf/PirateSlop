@@ -188,7 +188,7 @@ namespace PirateSlop
                         if (network != null) network.FreezeFromShot(); else ship.Freeze(5f);
                     }
                 }
-                if (network != null) network.ImpactVfx(point, normal); else CombatVfx.Impact(point, normal, true);
+                if (network != null) network.ImpactVfx(point, normal); else CombatVfx.Impact(point, normal, true, true);
                 if (health != null)
                 {
                     if (Ammo == InventoryItem.Cannonball)

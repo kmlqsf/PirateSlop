@@ -45,6 +45,7 @@ namespace PirateSlop
         Vector3 supplyPosition;
         Quaternion supplyRotation;
         float nextFireTime;
+        public string Readiness => !IsLoaded ? "Empty" : IsLoading ? "Loading" : IsIgnited ? "Fuse burning" : Network != null && Network.HasBoarding(Index) ? "Boarding line attached" : Time.time < nextFireTime ? "Cooldown " + (nextFireTime - Time.time).ToString("F1") + "s" : "Ready";
         public bool IsFireQueued { get; private set; }
         public void ShowFireQueued(bool value) { IsFireQueued = value; }
         [SerializeField] float fuseDuration = 1.4f;

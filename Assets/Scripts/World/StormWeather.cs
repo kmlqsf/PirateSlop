@@ -16,6 +16,8 @@ namespace PirateSlop.World
         AudioSource rainfall;
         AudioClip rainClip;
         float intensity, wetness, exposure = 1, shelterAt;
+        float sprayAt;
+        int spraySample;
         readonly RaycastHit[] shelterHits = new RaycastHit[24];
         public float Intensity => intensity;
         void OnEnable() { RenderPipelineManager.beginCameraRendering += BeforeCamera; }
@@ -137,6 +139,15 @@ namespace PirateSlop.World
             velocity.x = 12 * gust; velocity.z = 5 + Mathf.Sin(Time.time * .17f) * 2;
             rainfall.volume = volume * rainAmount * Mathf.Lerp(.15f, .65f, exposure) * gust;
             rainfall.pitch = .92f + gust * .1f;
+            if (!underwater && exposure > .5f && intensity > .45f && camera.transform.position.y - sea < 22f && Time.time >= sprayAt)
+            {
+                sprayAt = Time.time + .4f;
+                float angle = ++spraySample * 2.399963f;
+                Vector3 point = camera.transform.position + new Vector3(Mathf.Cos(angle), 0f, Mathf.Sin(angle)) * 12f;
+                point.y = OceanSurface.Instance != null ? OceanSurface.Instance.Height(point) : sea;
+                if (!Physics.Raycast(point + Vector3.up * 20f, Vector3.down, 19.8f, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
+                    CombatVfx.Splash(point, .45f * intensity);
+            }
             screen.SetActive(!underwater && intensity > .005f && camera.enabled);
             atmosphere.SetFloat("_Intensity", intensity);
             atmosphere.SetFloat("_Wetness", underwater ? 0 : wetness);

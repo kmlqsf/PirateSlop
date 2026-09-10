@@ -120,6 +120,7 @@ namespace PirateSlop.Networking
                         }
                 }
             }
+            if (!IsClientInitialized || Application.isBatchMode) return;
             if (frozen.Value && iceVisual == null) iceVisual = CannonAmmoVfx.Create(transform, Vector3.up * 3f, true);
             if (!frozen.Value && iceVisual != null) { Destroy(iceVisual.gameObject); iceVisual = null; }
             foreach (var patch in firePatches)

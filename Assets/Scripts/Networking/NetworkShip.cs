@@ -38,6 +38,7 @@ namespace PirateSlop.Networking
         int remoteDriver;
         void Awake()
         {
+            if (GetComponent<ShipSinkingVfx>() == null) gameObject.AddComponent<ShipSinkingVfx>();
             Motor = GetComponent<ShipController>(); Motor.Networked = true;
             Helm = GetComponentInChildren<HelmInteraction>(); Helm.Networked = true;
             Body = GetComponent<Rigidbody>(); Body.interpolation = RigidbodyInterpolation.None;
@@ -99,7 +100,7 @@ namespace PirateSlop.Networking
         [ObserversRpc(RunLocally = true)]
         void ImpactVfxObserversRpc(Vector3 point, Vector3 normal)
         {
-            CombatVfx.Impact(point, normal, true);
+            CombatVfx.Impact(point, normal, true, true);
             GameAudio.Play(SoundCue.ShipHit, point);
         }
         [ObserversRpc(RunLocally = true)]

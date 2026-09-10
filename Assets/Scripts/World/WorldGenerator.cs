@@ -12,6 +12,22 @@ namespace PirateSlop.World
         }
         public static WorldLayout Generate(WorldProfile profile, int seed, int shipCount, float seaLevel)
         {
+            var map = GenerateLayout(profile, seed, shipCount, seaLevel);
+            if (profile.GenerateIslands) return map;
+            var removed = map.Locations.Where(l => l.Type.Shape != Landform.Reef && l.Type.Shape != Landform.SeaStack &&
+                l.Type.Shape != Landform.RockPassage && l.Type.Shape != Landform.ReefPassage).ToArray();
+            var typeIds = removed.Select(l => l.Type.Id).ToHashSet();
+            var locationIds = removed.Select(l => l.Id).ToHashSet();
+            var approaches = map.StartingAccess.Where(a => locationIds.Contains(a.LocationId)).Select(a => a.ApproachId).ToHashSet();
+            map.Locations.RemoveAll(l => locationIds.Contains(l.Id));
+            map.StartingAccess.RemoveAll(a => locationIds.Contains(a.LocationId));
+            map.Points.RemoveAll(p => typeIds.Contains(p.TypeId) || approaches.Contains(p.Id) || removed.Any(l => p.Id.StartsWith(l.Id + "/", StringComparison.Ordinal)));
+            var pointIds = map.Points.Select(p => p.Id).ToHashSet();
+            map.Routes.RemoveAll(r => !pointIds.Contains(r.FromId) || !pointIds.Contains(r.ToId));
+            return WorldLayout.FromJson(map.ToJson());
+        }
+        static WorldLayout GenerateLayout(WorldProfile profile, int seed, int shipCount, float seaLevel)
+        {
             int players = shipCount;
             if (profile == null || profile.Locations == null || profile.Locations.Length == 0 || profile.Locations.Any(d => d == null)) throw new InvalidOperationException("Assign location types to the map profile.");
             if (players < 1 || players > 128 || profile.LocationCount < 1 || profile.LocationCount > 80 || profile.Radius < 600 || profile.Radius > 10000 || profile.Resolution < 32 || profile.Resolution > 160) throw new InvalidOperationException("Map limits: 1-128 ships, 1-80 locations, radius 600-10000, resolution 32-160.");

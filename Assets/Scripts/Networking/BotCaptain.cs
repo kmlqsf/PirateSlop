@@ -8,6 +8,7 @@ namespace PirateSlop.Networking
     public sealed partial class BotCaptain
     {
         readonly NetworkPlayer player;
+        public string Status { get; private set; } = "Initializing";
         readonly System.Random random;
         readonly SailSystem sails;
         List<Vector3> route;
@@ -27,6 +28,7 @@ namespace PirateSlop.Networking
 
         public PlayerCommand Command()
         {
+            Status = "Unavailable: ship, death or knockback";
             var motor = player.Motor;
             var ship = player.Ship;
             var command = new PlayerCommand { Yaw = motor.transform.eulerAngles.y };
@@ -47,12 +49,13 @@ namespace PirateSlop.Networking
                 if (!humanCrew && !helm.IsControlling) sails?.SetDeploy(0f);
                 return command;
             }
-            if (OnSupplyTrip) return SupplyTrip(ship);
-            if (motor.IsSwimming) return ReturnAboard(ship);
+            if (OnSupplyTrip) { Status = "Supply trip: stage " + tripStage; return SupplyTrip(ship); }
+            if (motor.IsSwimming) { Status = "Returning to boarding ladder"; return ReturnAboard(ship); }
             if (!SessionController.Instance.IsBotHelmsman(player))
             {
                 motor.SetLocomotionLocked(false);
                 strandedSince = 0f;
+                Status = humanCrew ? "Walking: human crew has priority" : "Deck work";
                 return Work(ship);
             }
             ReleaseCannon();
@@ -67,6 +70,7 @@ namespace PirateSlop.Networking
             bool atHelm = helm.IsControlledBy(motor) || FlatDistance(motor.transform.position, helmTarget) < .65f;
             if (atHelm && helm.SteerBot(motor, rudder))
             {
+                Status = deployment > 0f ? "Sailing" : "Helm: holding or turning; target rudder " + rudder.ToString("F2");
                 strandedSince = 0f;
                 if (player.Passenger.Ship != ship.Body) player.Passenger.Attach(ship.Body);
                 motor.SetLocomotionLocked(true);
@@ -78,6 +82,7 @@ namespace PirateSlop.Networking
                 motor.SetLocomotionLocked(false);
                 if (helm.IsControlling) return command;
                 sails?.SetDeploy(0f);
+                Status = navigation.Failed ? "Helm approach blocked" : "Approaching helm";
                 command = navigation.Move(player, helmTarget, ship.transform);
             }
             return command;

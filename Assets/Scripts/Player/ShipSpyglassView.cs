@@ -53,7 +53,7 @@ namespace PirateSlop
         {
             if (!player.IsOwner || station == null) return;
             cameraView.transform.SetPositionAndRotation(station.Viewpoint.position, station.transform.rotation * Quaternion.Euler(angles.x, angles.y, 0f));
-            cameraView.fieldOfView = zoom;
+            cameraView.fieldOfView = Mathf.Lerp(cameraView.fieldOfView, zoom, 1f - Mathf.Exp(-12f * Time.unscaledDeltaTime));
             if (Time.unscaledTime >= nextPreview) { nextPreview = Time.unscaledTime + .2f; Preview(); }
         }
         void Preview()

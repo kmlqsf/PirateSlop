@@ -16,6 +16,7 @@ namespace PirateSlop
         public void ReceiveDamage(float amount, bool dead)
         {
             if (!Local) return;
+            FirstPersonFeedback.Kick(transform.position, -transform.forward, Mathf.Clamp(amount / 1500f, .008f, .04f));
             flash = Mathf.Clamp01(flash + Mathf.Lerp(.35f, 1f, Mathf.Clamp01(amount / 50f)));
             if (dead || Time.unscaledTime >= nextHurtSound)
             {

@@ -35,6 +35,7 @@ namespace PirateSlop.Networking
         public readonly SyncVar<bool> IsBot = new();
         public readonly SyncVar<bool> Eliminated = new();
         BotCaptain bot;
+        public string BotStatus => !IsBot.Value ? "Human controlled" : bot != null ? bot.Status : "Awaiting server brain";
         public bool OnSupplyTrip => bot != null && bot.OnSupplyTrip;
         AdvancedPlayerController motor;
         ShipDeckPassenger passenger;
@@ -87,6 +88,7 @@ namespace PirateSlop.Networking
             motor = GetComponent<AdvancedPlayerController>(); motor.ConfigureNetwork(false);
             passenger = GetComponent<ShipDeckPassenger>(); passenger.Networked = true;
             graphicsRoot = transform.Find("PlayerGraphics");
+            if (GetComponent<FirstPersonFeedback>() == null) gameObject.AddComponent<FirstPersonFeedback>();
         }
         public override void OnStartNetwork()
         {

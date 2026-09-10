@@ -7,6 +7,7 @@ namespace PirateSlop.World
     {
         public int Seed = 17421;
         public bool RandomSeed = true;
+        public bool GenerateIslands = true;
         public TextAsset FixedLayout;
         [Min(600)] public float Radius = 1500;
         [Range(1, 80)] public int LocationCount = 24;

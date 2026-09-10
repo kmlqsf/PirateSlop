@@ -5,6 +5,8 @@ namespace PirateSlop
     public static class CombatVfx
     {
         static Material material;
+        static Mesh chipMesh;
+        static Material chipMaterial;
         static bool Available => Application.isPlaying && !Application.isBatchMode;
         static void Burst(Vector3 position, Vector3 direction, Color color, int count, float size, float speed, float life, float gravity = 0)
         {
@@ -32,6 +34,7 @@ namespace PirateSlop
         }
         public static void Fire(Vector3 position, Vector3 direction, bool cannon)
         {
+            FirstPersonFeedback.Kick(position, -direction, cannon ? .055f : .012f);
             float scale = cannon ? 3f : 1f;
             Burst(position, direction, new Color(1, .58f, .12f, .9f), cannon ? 12 : 5, .3f * scale, 7 * scale, .09f);
             Burst(position, direction, new Color(.7f, .69f, .65f, .25f), cannon ? 28 : 12, .45f * scale, 1.4f * scale, cannon ? 4 : 2, -.025f);
@@ -41,15 +44,57 @@ namespace PirateSlop
             var light = go.AddComponent<Light>(); light.color = new Color(1, .55f, .18f); light.intensity = cannon ? 5 : 2; light.range = cannon ? 9 : 3;
             Object.Destroy(go, .065f);
         }
-        public static void Impact(Vector3 position, Vector3 normal, bool cannon)
+        public static void Impact(Vector3 position, Vector3 normal, bool cannon, bool wood = false)
         {
             float scale = cannon ? 3 : 1;
             Burst(position, normal, new Color(.43f, .32f, .2f, .6f), cannon ? 24 : 8, .3f * scale, 2 * scale, 1);
+            if (wood) Splinters(position, normal);
+        }
+        static void Splinters(Vector3 point, Vector3 normal)
+        {
+            if (!Available) return;
+            if (chipMesh == null) chipMesh = Resources.Load<Mesh>("CombatVfx/WoodChip");
+            if (chipMaterial == null) chipMaterial = Resources.Load<Material>("CombatVfx/WoodChip");
+            if (chipMesh == null || chipMaterial == null) return;
+            var root = new GameObject("HullSplinters");
+            root.transform.SetPositionAndRotation(point, Quaternion.LookRotation(normal.sqrMagnitude > .001f ? normal : Vector3.up));
+            var particles = root.AddComponent<ParticleSystem>();
+            particles.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+            var main = particles.main;
+            main.loop = false; main.duration = .1f; main.playOnAwake = false;
+            main.maxParticles = 14; main.startLifetime = new ParticleSystem.MinMaxCurve(.7f, 1.5f);
+            main.startSpeed = new ParticleSystem.MinMaxCurve(3f, 9f);
+            main.gravityModifier = 1f; main.simulationSpace = ParticleSystemSimulationSpace.World;
+            main.startSize3D = true;
+            main.startSizeX = new ParticleSystem.MinMaxCurve(.025f, .07f);
+            main.startSizeY = new ParticleSystem.MinMaxCurve(.15f, .45f);
+            main.startSizeZ = .035f;
+            main.startRotation3D = true;
+            main.startRotationX = new ParticleSystem.MinMaxCurve(-Mathf.PI, Mathf.PI);
+            main.startRotationZ = new ParticleSystem.MinMaxCurve(-Mathf.PI, Mathf.PI);
+            var emission = particles.emission;
+            emission.rateOverTime = 0f;
+            emission.SetBursts(new[] { new ParticleSystem.Burst(0f, 14) });
+            var shape = particles.shape;
+            shape.shapeType = ParticleSystemShapeType.Cone; shape.angle = 65f; shape.radius = .12f;
+            var rotation = particles.rotationOverLifetime;
+            rotation.enabled = true; rotation.z = new ParticleSystem.MinMaxCurve(-8f, 8f);
+            var renderer = particles.GetComponent<ParticleSystemRenderer>();
+            renderer.renderMode = ParticleSystemRenderMode.Mesh; renderer.mesh = chipMesh;
+            renderer.sharedMaterial = chipMaterial;
+            renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            particles.Play(); Object.Destroy(root, 1.7f);
         }
         public static void Splash(Vector3 position, float scale = 1)
         {
-            Burst(position, Vector3.up, new Color(.65f, .85f, .9f, .6f), 24, .18f * scale, 6 * scale, 1, 1);
+            if (!Available) return;
+            if (!GpuWaterSpray.Spawn(position, scale))
+                Burst(position, Vector3.up, new Color(.65f, .85f, .9f, .6f), 24, .18f * scale, 6 * scale, 1, 1);
             Burst(position, Vector3.up, new Color(.85f, .95f, 1, .3f), 10, .6f * scale, .8f, 1.5f);
+        }
+        public static void FireSmoke(Vector3 position)
+        {
+            Burst(position, Vector3.up, new Color(.19f, .18f, .17f, .32f), 3, 1.4f, 1.5f, 3.5f, -.04f);
         }
     }
 }
