@@ -15,6 +15,15 @@ namespace PirateSlop.Networking
             if (!IsServerInitialized && health.Value >= 0) target.ApplySnapshot(health.Value, false);
         }
         public void Publish(float value) { if (IsServerInitialized) health.Value = value; }
+        public void LaunchCorpse(Vector3 position, Vector3 velocity, Vector3 spin)
+        {
+            if (IsServerInitialized) CorpseObserversRpc(position, velocity, spin);
+        }
+        [ObserversRpc(RunLocally = true)]
+        void CorpseObserversRpc(Vector3 position, Vector3 velocity, Vector3 spin)
+        {
+            if (IsClientInitialized) DeathRagdoll.Spawn(transform, position, velocity, spin);
+        }
         public void DamageFeedback(float amount, bool dead)
         {
             if (IsServerInitialized && Owner != null && Owner.IsActive) DamageFeedbackTargetRpc(Owner, amount, dead);

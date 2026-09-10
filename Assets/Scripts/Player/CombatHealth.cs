@@ -102,6 +102,21 @@ namespace PirateSlop
             if (network != null && !network.IsServerInitialized) return;
             if (IsDead || amount <= 0 || float.IsNaN(amount) || float.IsInfinity(amount)) return;
             float dealt = Mathf.Min(Current, amount);
+            if (amount >= Current && controller != null)
+            {
+                Vector3 direction = attacker != null ? transform.position - attacker.transform.position : -transform.forward;
+                direction = Vector3.ProjectOnPlane(direction, Vector3.up);
+                if (direction.sqrMagnitude < .01f) direction = -transform.forward;
+                direction.Normalize();
+                float strength = Mathf.Lerp(5f, 11f, Mathf.Clamp01(amount / 100f));
+                var platform = GetComponent<ShipDeckPassenger>()?.Ship;
+                var ship = platform != null ? platform.GetComponent<ShipController>() : null;
+                Vector3 inherited = ship != null ? ship.CannonPointVelocity(transform.position) : Vector3.zero;
+                Vector3 velocity = Vector3.ClampMagnitude(inherited, 18f) + direction * strength + Vector3.up * (strength * .7f + 2f);
+                Vector3 spin = Vector3.Cross(Vector3.up, direction) * 5f + Vector3.up * 2f;
+                if (network != null) network.LaunchCorpse(transform.position, velocity, spin);
+                else DeathRagdoll.Spawn(transform, transform.position, velocity, spin);
+            }
             ApplySnapshot(Current - amount, false);
             if (network != null) network.DamageFeedback(dealt, IsDead);
             else GetComponent<DamageFeedback>()?.ReceiveDamage(dealt, IsDead);
