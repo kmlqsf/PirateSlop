@@ -90,7 +90,7 @@ namespace PirateSlop.EditorTools
                 UnityEngine.Object.DestroyImmediate(targetObject);
             }
         }
-        static Dictionary<string, Matrix4x4> BindPose(GameObject model)
+        internal static Dictionary<string, Matrix4x4> BindPose(GameObject model)
         {
             var result = new Dictionary<string, Matrix4x4>();
             foreach (var renderer in model.GetComponentsInChildren<SkinnedMeshRenderer>())
@@ -103,7 +103,7 @@ namespace PirateSlop.EditorTools
                 }
             return result;
         }
-        static Quaternion Basis(Dictionary<string, Matrix4x4> bind)
+        internal static Quaternion Basis(Dictionary<string, Matrix4x4> bind)
         {
             Vector3 right = bind["Thigh.L"].GetColumn(3) - bind["Thigh.R"].GetColumn(3);
             Vector3 up = bind["Head"].GetColumn(3) - bind["Hips"].GetColumn(3);

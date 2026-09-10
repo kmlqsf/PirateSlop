@@ -34,6 +34,9 @@ namespace PirateSlop.Networking
         public float ScopeFov => scopeFov;
         public int LoadedRounds => pendingShot?0:rounds.Value;
         public bool IsReloading => action.Value==1;
+        public float ShotAge => Time.time - recoilAt;
+        public bool AnimationAiming => IsOwner ? sentAim : aiming.Value;
+        public Vector3 AnimationDirection => direction.Value;
         float ReloadSeconds => Firearm && handling!=null && handling.Definition!=null ? handling.Definition.Ballistics.ReloadDuration : 3.2f;
         CannonHands hands;
         Transform view, world;

@@ -73,6 +73,7 @@ namespace PirateSlop
         void After(ScriptableRenderContext context, Camera camera) { if (renderers != null) foreach (var r in renderers) r.forceRenderingOff = true; }
         void LateUpdate()
         {
+            if (GetComponent<CharacterActions>() is { ControlsEquipment: true }) return;
             if (equipment != null && equipment.Active && equipment.View != null && equipment.World != null)
             {
                 SolveEquipment(equipment.View, viewRight, viewLeft, motor.PlayerCamera.transform);
