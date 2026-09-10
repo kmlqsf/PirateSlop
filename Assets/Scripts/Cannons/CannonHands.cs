@@ -225,7 +225,7 @@ namespace PirateSlop
         {
             if (controlled != null && player.InputActive)
             {
-                PirateHudStyle.Panel(new Rect(Screen.width / 2f - 310, Screen.height - 125, 620, 28), controlled.IsIgnited ? "Фитиль горит… · E — выйти" : "Мышь — прицел · ЛКМ — поджечь фитиль · E — выйти");
+                PirateHudStyle.Panel(new Rect(Screen.width / 2f - 310, Screen.height - 125, 620, 28), controlled.IsIgnited ? "Фитиль горит… · E — выйти" : controlled.IsFireQueued ? "Ожидание готовности к выстрелу… · E — отменить" : !controlled.IsLoaded ? "Пушка не заряжена · E — выйти" : "Мышь — прицел · ЛКМ — поджечь фитиль · E — выйти");
                 return;
             }
             if (player == null || !player.InputActive || player.LocomotionLocked || (controls != null && controls.IsDragging) || (inventory != null && inventory.Placing)) return;

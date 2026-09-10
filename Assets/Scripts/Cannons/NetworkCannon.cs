@@ -13,6 +13,7 @@ namespace PirateSlop.Networking
         public float Traverse;
         public bool Removed;
         public bool Loaded;
+        public bool FireQueued;
         public InventoryItem Ammo;
         public float Fuse;
     }
@@ -112,6 +113,7 @@ namespace PirateSlop.Networking
                     if (placements[i].Loaded && !cannon.IsLoaded) cannon.LoadAmmo(placements[i].Ammo);
                     else if (!placements[i].Loaded && cannon.IsLoaded) cannon.ResetSupply();
                     cannon.ShowFuse(placements[i].Fuse);
+                    cannon.ShowFireQueued(placements[i].FireQueued);
                 }
                 if(!IsServerInitialized)
                 {
@@ -129,8 +131,12 @@ namespace PirateSlop.Networking
                 for (int i = 0; i < placements.Count; i++)
                 {
                     var cannon = Cannon(i);
-                    if (cannon == null || !cannon.IsIgnited) continue;
-                    var placement = placements[i]; placement.Fuse = cannon.FuseProgress; placements[i] = placement;
+                    if (cannon == null) continue;
+                    var placement = placements[i];
+                    if (!cannon.IsIgnited && placement.FireQueued == cannon.IsFireQueued) continue;
+                    placement.FireQueued = cannon.IsFireQueued;
+                    placement.Fuse = cannon.IsIgnited ? cannon.FuseProgress : -1f;
+                    placements[i] = placement;
                 }
             }
             if (IsClientInitialized || IsServerInitialized) ApplyState();
@@ -144,7 +150,7 @@ namespace PirateSlop.Networking
         }
         public void NotifyFired(int index, Vector3 position, Vector3 velocity, InventoryItem ammo)
         {
-            var placement = placements[index]; placement.Loaded = false; placement.Fuse = -1f; placements[index] = placement;
+            var placement = placements[index]; placement.Loaded = false; placement.FireQueued = false; placement.Fuse = -1f; placements[index] = placement;
             ShotObserversRpc(index, position, velocity, ammo);
         }
         [ObserversRpc]

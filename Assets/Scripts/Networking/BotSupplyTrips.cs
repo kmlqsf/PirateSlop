@@ -14,6 +14,8 @@ namespace PirateSlop.Networking
             public NetworkPlayer Runner;
             public float NextVisit, Deadline;
             public bool Anchored, Returning;
+            public float LastProgress;
+            public Vector3 LastPosition;
         }
         static readonly Dictionary<NetworkShip, Expedition> expeditions = new();
         Expedition trip;
@@ -50,6 +52,17 @@ namespace PirateSlop.Networking
             }
             if (mission.Runner != null || mission.Anchored)
             {
+                if (mission.Runner != null && Vector3.Distance(mission.Runner.transform.position, mission.LastPosition) > 1f)
+                { mission.LastPosition = mission.Runner.transform.position; mission.LastProgress = Time.time; }
+                bool stalled = Time.time - mission.LastProgress > 30f;
+                if ((danger || stalled) && Time.time <= mission.Deadline + 90f)
+                {
+                    if (!mission.Returning) route = null;
+                    mission.Returning = true;
+                    mission.Anchored = false;
+                    if (mission.Runner == null) { mission.Island = null; mission.NextVisit = Time.time + 60f; }
+                    return false;
+                }
                 if (Time.time > mission.Deadline + 90f)
                 {
                     mission.Island = null; mission.Anchored = false; mission.Runner = null;
@@ -114,7 +127,7 @@ namespace PirateSlop.Networking
             if (remaining < 35f)
             {
                 deployment = 0f; rudder = 0f;
-                if (ship.Motor.Speed < .3f) { mission.Anchored = true; mission.Deadline = Time.time + 240f; }
+                if (ship.Motor.Speed < .3f) { mission.Anchored = true; mission.Deadline = Time.time + 120f; mission.LastProgress = Time.time; }
                 return true;
             }
             if (route != null && waypoint < route.Count && FlatDistance(ship.transform.position, route[waypoint]) < 20f) waypoint++;
@@ -125,7 +138,7 @@ namespace PirateSlop.Networking
             rudder = Mathf.Clamp(turn / 30f, -1f, 1f);
             deployment = remaining < 65f ? .2f : Mathf.Abs(turn) > 70f ? .08f : .65f;
             if (!ClearCourse(ship, ship.transform.position, ship.transform.forward, ship.transform.eulerAngles.y, 30f)) deployment = 0f;
-            return true;
+            return deployment > 0f;
         }
         bool TryStartTrip(NetworkShip ship)
         {
@@ -133,6 +146,7 @@ namespace PirateSlop.Networking
             boardingLadder = BoardingLadder(ship);
             if (boardingLadder == null || player.GetComponent<PlayerInventory>().EmptySlot() < 0) return false;
             trip = mission; trip.Runner = player; tripStage = lootTaken = 0;
+            trip.LastPosition = player.transform.position; trip.LastProgress = Time.time;
             skippedLoot.Clear(); nextLootSearch = 0f; navigation.Clear(); return true;
         }
         PlayerCommand Toward(Vector3 target, bool swim = false)
@@ -155,6 +169,7 @@ namespace PirateSlop.Networking
         {
             var motor = player.Motor;
             motor.SetLocomotionLocked(false);
+            if (navigation.Failed && tripStage < 3) trip.Returning = true;
             if (boardingLadder == null || trip.Island == null) { CancelTrip(); return ReturnAboard(ship); }
             if (trip.Returning && tripStage < 3)
             {

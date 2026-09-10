@@ -233,7 +233,8 @@ namespace PirateSlop.Networking
             if (Vector3.Distance(transform.position, point) > 5f) return false;
             Vector3 origin = transform.position + Vector3.up * 1.5f, delta = point - origin;
             foreach (var hit in Physics.RaycastAll(origin, delta.normalized, delta.magnitude, ~0, QueryTriggerInteraction.Ignore))
-                if (!hit.transform.IsChildOf(transform) && !hit.transform.IsChildOf(target)) return false;
+                if (!hit.transform.IsChildOf(transform) && !hit.transform.IsChildOf(target) &&
+                    hit.collider.GetComponentInParent<AdvancedPlayerController>() == null && hit.collider.GetComponentInParent<Cannonball>() == null) return false;
             return true;
         }
         public bool CanReachCannon(SimpleCannon cannon)

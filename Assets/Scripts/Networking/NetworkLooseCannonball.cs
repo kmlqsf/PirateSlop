@@ -39,6 +39,7 @@ namespace PirateSlop.Networking
         }
         public void RequestHold(bool holding, Vector3 point)
         {
+            if (!IsSpawned || !IsClientInitialized) { localHolding = false; if (ball != null) ball.Held = false; return; }
             localHolding = holding;
             HoldServerRpc(holding, point);
         }
@@ -69,7 +70,7 @@ namespace PirateSlop.Networking
             holder.Value = -1; localHolding = false; ball.Held = false;
             ball.GetComponent<Collider>().enabled = true; ball.Release();
         }
-        public void Store() => StoreServerRpc();
+        public void Store() { if (IsSpawned && IsClientInitialized) StoreServerRpc(); }
         [ServerRpc(RequireOwnership = false)]
         void StoreServerRpc(NetworkConnection sender = null)
         {
@@ -77,7 +78,17 @@ namespace PirateSlop.Networking
             if (player == null || (IsHeld && holder.Value != sender.ClientId) || !player.CanReach(transform.position, transform)) return;
             if (player.AddItem(GetComponent<NetworkFish>().CurrentItem)) GetComponent<NetworkFish>().Take();
         }
-        public void Load(NetworkObject ship, int index) => LoadServerRpc(ship, index, ship.transform.InverseTransformPoint(transform.position));
+        public void Load(NetworkObject ship, int index)
+        {
+            if (IsSpawned && IsClientInitialized && ship != null && ship.IsSpawned)
+                LoadServerRpc(ship, index, ship.transform.InverseTransformPoint(transform.position));
+        }
+        public override void OnStopClient()
+        {
+            localHolding = false;
+            if (ball != null) ball.Held = false;
+            base.OnStopClient();
+        }
         [ServerRpc(RequireOwnership = false)]
         void LoadServerRpc(NetworkObject ship, int index, Vector3 localPoint, NetworkConnection sender = null)
         {

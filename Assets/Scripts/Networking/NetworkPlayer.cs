@@ -125,7 +125,12 @@ namespace PirateSlop.Networking
             if (!TryBind()) return;
             if (IsBot.Value)
             {
-                if (IsServerInitialized && bot != null) SimulateCommand(bot.Command());
+                if (IsServerInitialized && bot != null)
+                {
+                    if (!motor.IsDead) passenger.Carry();
+                    Physics.SyncTransforms();
+                    SimulateCommand(bot.Command(), true);
+                }
                 return;
             }
             var input = default(CaptainInput);
@@ -183,11 +188,11 @@ namespace PirateSlop.Networking
             }
             SimulateCommand(command);
         }
-        void SimulateCommand(PlayerCommand command)
+        void SimulateCommand(PlayerCommand command, bool carried = false)
         {
             if (motor.IsDead) return;
             float dt = (float)TimeManager.TickDelta;
-            passenger.Carry();
+            if (!carried) passenger.Carry();
             Physics.SyncTransforms();
             motor.Simulate(command, dt);
             passenger.Detect();

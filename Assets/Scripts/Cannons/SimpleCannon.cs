@@ -40,6 +40,8 @@ namespace PirateSlop
         Vector3 supplyPosition;
         Quaternion supplyRotation;
         float nextFireTime;
+        public bool IsFireQueued { get; private set; }
+        public void ShowFireQueued(bool value) { IsFireQueued = value; }
         [SerializeField] float fuseDuration = 1.4f;
         public float FuseSeconds => fuseDuration;
         float ignitionTime = -1f;
@@ -66,6 +68,12 @@ namespace PirateSlop
         }
         public bool TakeControl(AdvancedPlayerController player)
         {
+            if (InBreechRange(player) && !player.IsSwimming && !player.IsClimbing && !player.IsKnockedBack && !player.LocomotionLocked && Operator != null && Operator != player)
+            {
+                var incoming = player.GetComponent<NetworkPlayer>();
+                var current = Operator.GetComponent<NetworkPlayer>();
+                if (incoming != null && incoming.IsServerInitialized && !incoming.IsBot.Value && current != null && current.IsBot.Value && incoming.TeamId.Value == current.TeamId.Value) ReleaseControl();
+            }
             if (!InBreechRange(player) || player.IsSwimming || player.IsClimbing || player.IsKnockedBack ||
                 (player.LocomotionLocked && player.ActiveCannon != this) || (Operator != null && Operator != player)) return false;
             Operator = player;
@@ -81,6 +89,7 @@ namespace PirateSlop
         }
         public void ReleaseControl()
         {
+            IsFireQueued = false;
             var previous = Operator;
             Operator = null;
             if (previous != null && previous.ActiveCannon == this) previous.ActiveCannon = null;
@@ -112,7 +121,7 @@ namespace PirateSlop
         public void ResetSupply()
         {
             if (loaded != null && loaded != supply) Destroy(loaded.gameObject);
-            loaded = null; loadStarted = -1f; firingPlayer = null; ignitionTime = -1f; ShowFuse(-1f);
+            loaded = null; loadStarted = -1f; firingPlayer = null; ignitionTime = -1f; IsFireQueued = false; ShowFuse(-1f);
             if (Crate != null) return;
             if (supply == null) return;
             supply.Loaded = supply.Held = false;
@@ -184,8 +193,10 @@ namespace PirateSlop
         {
             if (Network != null && Network.HasBoarding(Index)) return;
             if (Network != null && Network.IsClientInitialized && !Network.IsServerInitialized) { Network.RequestFire(Index); return; }
-            if (!IsLoaded || IsLoading || IsIgnited || Time.time < nextFireTime) return;
+            if (!IsLoaded || IsIgnited) return;
             firingPlayer = attacker;
+            if (IsLoading || Time.time < nextFireTime) { IsFireQueued = true; return; }
+            IsFireQueued = false;
             ignitionTime = Time.time;
             ShowFuse(0f);
             if (Network != null && Network.IsServerInitialized) Network.NotifyIgnited(Index);
@@ -203,6 +214,11 @@ namespace PirateSlop
                     loadStarted = -1f;
                     GameAudio.Play(SoundCue.Load, Muzzle.position);
                 }
+            }
+            if (IsFireQueued && (Network == null || Network.IsServerInitialized))
+            {
+                if (!IsLoaded || (Network != null && (Operator == null || firingPlayer != Operator.gameObject || !InBreechRange(Operator)))) IsFireQueued = false;
+                else if (!IsLoading && Time.time >= nextFireTime) Fire(firingPlayer);
             }
             if (ignitionTime >= 0f && (Network == null || Network.IsServerInitialized))
             {

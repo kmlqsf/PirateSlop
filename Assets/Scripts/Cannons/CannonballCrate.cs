@@ -20,7 +20,7 @@ namespace PirateSlop
         public SimpleCannon CannonPrefab;
         public readonly List<SimpleCannon> Cannons = new();
         public ShipController Ship => GetComponentInParent<ShipController>();
-        public NetworkCannon Network => Ship.GetComponent<NetworkCannon>();
+        public NetworkCannon Network => Ship != null ? Ship.GetComponent<NetworkCannon>() : null;
         public bool KitAvailable => Kit != null && Kit.activeSelf;
 
         void Start()

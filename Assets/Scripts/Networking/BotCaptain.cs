@@ -32,12 +32,19 @@ namespace PirateSlop.Networking
             var command = new PlayerCommand { Yaw = motor.transform.eulerAngles.y };
             if (ship == null || ship.IsSinking) { ReleaseWork(); return command; }
             var helm = ship.Helm;
+            bool humanCrew = SessionController.Instance.HasHumanCrew(ship);
+            if (humanCrew && OnSupplyTrip) ReleaseWork();
+            if (humanCrew && helm.IsControlledBy(motor))
+            {
+                helm.ReleaseControl();
+                motor.SetLocomotionLocked(false);
+            }
             if (motor.IsDead || motor.IsKnockedBack)
             {
                 ReleaseWork();
                 if (helm.IsControlledBy(motor)) helm.ReleaseControl();
                 motor.SetLocomotionLocked(false);
-                if (!helm.IsControlling) sails?.SetDeploy(0f);
+                if (!humanCrew && !helm.IsControlling) sails?.SetDeploy(0f);
                 return command;
             }
             if (OnSupplyTrip) return SupplyTrip(ship);
@@ -55,7 +62,10 @@ namespace PirateSlop.Networking
                 nextDecision = Time.time + .5f + (float)random.NextDouble() * .15f;
                 Navigate(ship);
             }
-            if (helm.SteerBot(motor, rudder))
+            Vector3 helmPosition = ship.transform.InverseTransformPoint(helm.transform.position);
+            Vector3 helmTarget = ship.transform.TransformPoint(new Vector3(helmPosition.x, SessionController.Instance.Config.PlayerLocalSpawn.y, helmPosition.z - 1.3f));
+            bool atHelm = helm.IsControlledBy(motor) || FlatDistance(motor.transform.position, helmTarget) < .65f;
+            if (atHelm && helm.SteerBot(motor, rudder))
             {
                 strandedSince = 0f;
                 if (player.Passenger.Ship != ship.Body) player.Passenger.Attach(ship.Body);
@@ -68,8 +78,7 @@ namespace PirateSlop.Networking
                 motor.SetLocomotionLocked(false);
                 if (helm.IsControlling) return command;
                 sails?.SetDeploy(0f);
-                Vector3 target = ship.transform.TransformPoint(SessionController.Instance.Config.PlayerLocalSpawn);
-                command = navigation.Move(player, target, ship.transform);
+                command = navigation.Move(player, helmTarget, ship.transform);
             }
             return command;
         }
@@ -138,8 +147,9 @@ namespace PirateSlop.Networking
             var world = ProceduralWorld.Instance;
             Vector3 position = ship.transform.position;
             float safe = Mathf.Max(35f, session.SafeRadius(45f) - 45f);
-            if (NavigateSupply(ship, safe)) return;
-            if (NavigateCombat(ship)) return;
+            bool needsSafety = Horizontal(position) > safe;
+            if (NavigateSupply(ship, safe) && !needsSafety) return;
+            if (!needsSafety && NavigateCombat(ship)) return;
             if (route != null && waypoint < route.Count && FlatDistance(position, route[waypoint]) < 28f) waypoint++;
             bool unsafeGoal = route != null && Horizontal(route[route.Count - 1]) > safe;
             if (Time.time >= nextRoute || route == null || waypoint >= route.Count || unsafeGoal)

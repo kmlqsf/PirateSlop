@@ -63,10 +63,12 @@ namespace PirateSlop.Networking
             return team;
         }
 
+        public bool HasHumanCrew(NetworkShip ship) => players.Values.Any(p => p != null && !p.IsBot.Value && p.Ship == ship);
+
         public bool IsBotHelmsman(NetworkPlayer bot)
         {
             var ship = bot.Ship;
-            if (ship == null || ship.IsSinking || bot.OnSupplyTrip) return false;
+            if (ship == null || ship.IsSinking || bot.OnSupplyTrip || HasHumanCrew(ship)) return false;
             ship.Helm.ValidateGrip();
             if (ship.Helm.IsControlling) return ship.Helm.IsControlledBy(bot.Motor);
             return players.Values.Where(p => p != null && p.IsBot.Value && p.Ship == ship && !p.OnSupplyTrip && !p.Motor.IsDead && !p.Motor.IsSwimming && !p.Motor.IsKnockedBack)

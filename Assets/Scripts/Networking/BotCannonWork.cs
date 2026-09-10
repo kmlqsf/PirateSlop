@@ -14,6 +14,7 @@ namespace PirateSlop.Networking
         bool hasPlacement;
         readonly Dictionary<SimpleCannon, float> blockedGuns = new();
         float workStarted;
+        float workRetry;
         public static void ResetWork() { gunWorkers.Clear(); expeditions.Clear(); }
         public void Stop() => ReleaseWork();
         void ReleaseCannon()
@@ -64,11 +65,22 @@ namespace PirateSlop.Networking
             rudder = Mathf.Clamp(turn / 30f, -1f, 1f);
             deployment = delta.magnitude < 85f ? .1f : .4f;
             if (!ClearCourse(ship, ship.transform.position, ship.transform.forward, yaw, 45f)) deployment = 0f;
-            return true;
+            return deployment > 0f;
         }
         PlayerCommand Work(NetworkShip ship)
         {
+            if (SessionController.Instance.HasHumanCrew(ship))
+            {
+                ReleaseWork();
+                return WalkDeck(ship);
+            }
             var idle = new PlayerCommand { Yaw = player.transform.eulerAngles.y };
+            if (navigation.Failed)
+            {
+                if (workingCannon != null) blockedGuns[workingCannon] = Time.time + 30f;
+                ReleaseCannon(); navigation.Clear(); hasPlacement = false; workRetry = Time.time + 5f;
+            }
+            if (Time.time < workRetry) return WalkDeck(ship);
             var weapon = player.GetComponent<NetworkWeapon>();
             var inventory = player.GetComponent<PlayerInventory>();
             var cannons = ship.GetComponent<NetworkCannon>();
@@ -101,7 +113,7 @@ namespace PirateSlop.Networking
             }
             var gun = workingCannon;
             if (!gun.IsLoaded && gun.Operator == player.Motor) gun.ReleaseControl();
-            if (Time.time - workStarted > 35f && !gun.InBreechRange(player.Motor))
+            if (Time.time - workStarted > 35f && (!gun.InBreechRange(player.Motor) || !gun.IsLoaded))
             { blockedGuns[gun] = Time.time + 30f; ReleaseCannon(); return idle; }
             if (!gun.IsLoaded)
             {
@@ -114,7 +126,7 @@ namespace PirateSlop.Networking
                     return navigation.Move(player, cannons.Crate.Supply.transform.position, ship.transform);
                 }
                 if (weapon.BotLoadCannon(gun)) { navigation.Clear(); return idle; }
-                return navigation.Move(player, gun.transform.position - gun.transform.forward * 1.4f, ship.transform);
+                return navigation.Move(player, gun.Muzzle.position - ship.transform.up * 1f - gun.transform.forward, ship.transform);
             }
             if (!gun.InBreechRange(player.Motor)) return navigation.Move(player, gun.transform.position - gun.transform.forward * 1.4f, ship.transform);
             if (!gun.TakeControl(player.Motor)) { ReleaseCannon(); return idle; }
@@ -192,7 +204,6 @@ namespace PirateSlop.Networking
                     if (hit.collider.GetComponentInParent<AdvancedPlayerController>() != null || hit.collider.GetComponentInParent<Cannonball>() != null || hit.transform.IsChildOf(gun.transform)) continue;
                     var ship = hit.collider.GetComponentInParent<NetworkShip>();
                     if (ship == target) return true;
-                    if (ship == own && t > .2f) continue;
                     return false;
                 }
                 position += delta; velocity = next;

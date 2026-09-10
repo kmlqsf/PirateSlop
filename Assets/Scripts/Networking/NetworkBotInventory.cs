@@ -45,6 +45,8 @@ namespace PirateSlop.Networking
         public bool BotTakeLoose(NetworkFish item)
         {
             if (!BotCanWork || item == null || !item.Available || !CanReach(item.transform.position, item.transform) || !CanAddItem(item.CurrentItem)) return false;
+            var loose = item.GetComponent<NetworkLooseCannonball>();
+            if (loose != null && loose.IsHeld) return false;
             if (!AddItem(item.CurrentItem)) return false;
             return item.Take();
         }
