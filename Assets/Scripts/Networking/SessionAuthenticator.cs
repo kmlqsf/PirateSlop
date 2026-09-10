@@ -8,7 +8,7 @@ namespace PirateSlop.Networking
 {
     public struct HelloMessage : IBroadcast { public int Version; }
     public struct AdmissionMessage : IBroadcast { public string Error; }
-    public struct PopulationMessage : IBroadcast { public int Count; public string SessionId; }
+    public struct PopulationMessage : IBroadcast { public int Count, Bots, Teams; public string SessionId; }
     public sealed class SessionAuthenticator : Authenticator
     {
         public override event Action<NetworkConnection, bool> OnAuthenticationResult;

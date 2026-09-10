@@ -11,6 +11,7 @@ namespace PirateSlop.Networking
         [SerializeField] Vector2 hullHalfExtents = new(6.5f, 23f);
         public Vector2 HullHalfExtents => hullHalfExtents;
         public readonly SyncVar<int> ParticipantId = new();
+        public readonly SyncVar<int> TeamId = new();
         public ShipController Motor { get; private set; }
         public HelmInteraction Helm { get; private set; }
         public Rigidbody Body { get; private set; }

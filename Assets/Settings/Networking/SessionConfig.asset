@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.Networking.SessionConfig
   Loot: {fileID: 11400000, guid: 042c2934844dcd546a82e80071b0a132, type: 2}
   Port: 7777
-  MaxPlayers: 32
+  MaxPlayers: 30
   TickRate: 30
-  ProtocolVersion: 49
+  ProtocolVersion: 51
   ConnectTimeout: 15
   ObserverRadius: 1000
   ObserverHysteresis: 0.2

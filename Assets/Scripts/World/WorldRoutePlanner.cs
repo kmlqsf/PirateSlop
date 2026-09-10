@@ -13,7 +13,7 @@ namespace PirateSlop.World
         readonly bool[] water;
         readonly int[] dx = { 1, 0, -1, 0 }, dz = { 0, 1, 0, -1 };
 
-        WorldRoutePlanner(WorldLayout layout, float cellSize, float margin)
+        public WorldRoutePlanner(WorldLayout layout, float cellSize, float margin)
         {
             map = layout; cell = cellSize; clearance = margin;
             size = Mathf.CeilToInt(map.Radius * 2 / cell) + 1;
@@ -43,6 +43,8 @@ namespace PirateSlop.World
                 planner.Add(from, to, planner.Path(from.Position, to.Position, true));
             }
         }
+
+        public List<Vector3> FindPath(Vector3 from, Vector3 to) => Path(from, to, false);
 
         void Add(WorldPoint from, WorldPoint to, List<Vector3> points)
         {

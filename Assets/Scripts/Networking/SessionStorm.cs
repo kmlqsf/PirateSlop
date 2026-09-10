@@ -15,6 +15,9 @@ namespace PirateSlop.Networking
         bool stormRunning;
         float stormStarted, stormTick, stormRadius;
         StormZone storm;
+        public float SafeRadius(float ahead = 0f) => stormRunning
+            ? Mathf.Lerp(stormRadius, StormZone.FinalRadius, Mathf.Clamp01((Time.time - stormStarted + ahead) / 600f))
+            : ProceduralWorld.Instance.Layout.Radius;
 
         void StartStorm()
         {

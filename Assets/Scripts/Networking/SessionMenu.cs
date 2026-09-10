@@ -65,10 +65,11 @@ namespace PirateSlop.Networking
                 {
                     MenuText(new Rect(x,y+145,panelWidth,25),"Номер карты · пусто — случайная",true);
                     seedInput=GUI.TextField(new Rect(x,y+175,panelWidth,52),seedInput,12,menuInput);
+                    DrawBotToggle(x,y+238,panelWidth);
                 }
                 else MenuText(new Rect(x,y+150,panelWidth,70),"Введите адрес, который сообщил капитан вашей сессии.",true);
-                if(MenuAction(x,y+252,panelWidth,menuPage==1?"Выйти в море":"Подключиться",true)) { PlayerPrefs.SetString("LastEndpoint",address); PlayerPrefs.Save(); Begin(menuPage==1,address); }
-                if(MenuAction(x,y+320,panelWidth,"Назад")) menuPage=0;
+                if(MenuAction(x,y+285,panelWidth,menuPage==1?"Выйти в море":"Подключиться",true)) { PlayerPrefs.SetString("LastEndpoint",address); PlayerPrefs.Save(); Begin(menuPage==1,address); }
+                if(MenuAction(x,y+350,panelWidth,"Назад")) menuPage=0;
             }
             else if(menuPage==3)
             {
@@ -109,9 +110,14 @@ namespace PirateSlop.Networking
                 if(MenuAction(x,y+272,panelWidth,"Выйти из игры")) Application.Quit();
             }
             if(!string.IsNullOrEmpty(error)) { GUI.color=new Color(1f,.58f,.4f); MenuText(new Rect(x,790,panelWidth,62),error,true); GUI.color=Color.white; }
-            MenuText(new Rect(x,856,700,25),playing ? "В МОРЕ  /  Игроки: "+population+" из "+MaxPlayers : "СОБЕРИ КОМАНДУ  /  ОТКРОЙ НЕИЗВЕСТНЫЕ БЕРЕГА",true);
+            MenuText(new Rect(x,856,900,25),playing ? "Игроки: "+(population-botPopulation)+" · Боты: "+botPopulation+" · Команды: "+teamPopulation+" · Мест: "+population+" / "+MaxPlayers : "СОБЕРИ КОМАНДУ  /  ОТКРОЙ НЕИЗВЕСТНЫЕ БЕРЕГА",true);
             MenuText(new Rect(width-200,856,180,25),"PIRATE SLOP  •  01",true);
             GUI.matrix=oldMatrix; GUI.color=oldColor;
+        }
+        void DrawBotToggle(float x, float y, float width)
+        {
+            fillWithBots = GUI.Toggle(new Rect(x,y,24,30),fillWithBots,GUIContent.none);
+            MenuText(new Rect(x+30,y,width-30,35),"Заполнить свободные места ботами",true);
         }
         float MenuVolume(float x,float y,float width,string label,float value,string key)
         {

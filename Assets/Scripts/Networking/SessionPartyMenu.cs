@@ -23,7 +23,7 @@ namespace PirateSlop.Networking
                 if(menuPage==5 && MenuAction(x,y+300,width,"Назад")) menuPage=0;
                 return;
             }
-            MenuText(new Rect(x,y+42,width,30),"КОМАНДА • "+party.Count+" / "+MaxPlayers,true);
+            MenuText(new Rect(x,y+42,width,30),"КОМАНДА • "+party.Count+" / "+CrewSize,true);
             partyScroll=GUI.BeginScrollView(new Rect(x,y+80,width,150),partyScroll,new Rect(0,0,width-24,party.Count*30));
             for(int i=0;i<party.Count;i++)
             {
@@ -36,15 +36,16 @@ namespace PirateSlop.Networking
             if(MenuAction(x+width/2+5,y+235,width/2-5,party.IsReady(SteamUser.GetSteamID())?"Не готов":"Готов",true)) party.Ready(!party.IsReady(SteamUser.GetSteamID()));
             if(party.IsLeader)
             {
-                if(MenuAction(x,y+300,width,"Создать сессию всей командой",true)) party.Launch();
-                MenuText(new Rect(x,y+360,width,25),"Или ID сессии другого капитана:",true);
-                matchInput=GUI.TextField(new Rect(x,y+390,width-135,45),matchInput,20,menuInput);
-                if(MenuAction(x+width-125,y+390,125,"Войти") && ulong.TryParse(matchInput,out var match)) party.JoinSession(match);
+                DrawBotToggle(x,y+297,width);
+                if(MenuAction(x,y+333,width,"Создать сессию всей командой",true)) party.Launch();
+                MenuText(new Rect(x,y+393,width,25),"Или ID сессии другого капитана:",true);
+                matchInput=GUI.TextField(new Rect(x,y+423,width-135,45),matchInput,20,menuInput);
+                if(MenuAction(x+width-125,y+423,125,"Войти") && ulong.TryParse(matchInput,out var match)) party.JoinSession(match);
             }
             else MenuText(new Rect(x,y+310,width,60),"Капитан выберет сессию. Вся команда отправится на одном корабле.",true);
             GUI.enabled=true;
-            if(party.MatchLobby.m_SteamID != 0 && GUI.Button(new Rect(x,y+450,width,30),"Копировать ID сессии: "+party.MatchLobby)) GUIUtility.systemCopyBuffer=party.MatchLobby.ToString();
-            if(!SessionBusy && GUI.Button(new Rect(x,y+490,width,30),"Покинуть команду")) { party.Leave(); menuPage=0; }
+            if(party.MatchLobby.m_SteamID != 0 && GUI.Button(new Rect(x,y+483,width,30),"Копировать ID сессии: "+party.MatchLobby)) GUIUtility.systemCopyBuffer=party.MatchLobby.ToString();
+            if(!SessionBusy && GUI.Button(new Rect(x,y+523,width,30),"Покинуть команду")) { party.Leave(); menuPage=0; }
         }
     }
 }

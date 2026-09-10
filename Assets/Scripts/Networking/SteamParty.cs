@@ -72,7 +72,7 @@ namespace PirateSlop.Networking
         {
             if (!Available || Busy || InLobby || session.SessionBusy) return;
             Busy = true; pendingAt = Time.unscaledTime;
-            created.Set(SteamMatchmaking.CreateLobby(ELobbyType.k_ELobbyTypeFriendsOnly, session.MaxPlayers));
+            created.Set(SteamMatchmaking.CreateLobby(ELobbyType.k_ELobbyTypeFriendsOnly, SessionController.CrewSize));
         }
         void Created(LobbyCreated_t result, bool failed)
         {
@@ -156,7 +156,7 @@ namespace PirateSlop.Networking
                 GUILayout.BeginHorizontal();
                 GUILayout.Label(Name(friend), GUILayout.MinWidth(140));
                 bool enabled = GUI.enabled;
-                GUI.enabled = enabled && !present && !sent && Count < session.MaxPlayers;
+                GUI.enabled = enabled && !present && !sent && Count < SessionController.CrewSize;
                 if (GUILayout.Button(present ? "В лобби" : sent ? "Отправлено" : "Пригласить", GUILayout.Width(115)))
                 {
                     bool success = SteamMatchmaking.InviteUserToLobby(Lobby, friend);
@@ -179,6 +179,7 @@ namespace PirateSlop.Networking
         bool CanLaunch()
         {
             if (!IsLeader || !Waiting || Busy || session.SessionBusy) return false;
+            if (Count > SessionController.CrewSize) { Status = "В команде может быть не больше трёх игроков"; return false; }
             for (int i = 0; i < Count; i++) if (!IsReady(Member(i))) { Status = "Дождитесь готовности всех участников"; return false; }
             return true;
         }

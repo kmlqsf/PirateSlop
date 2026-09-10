@@ -24,6 +24,16 @@ public class HelmInteraction : MonoBehaviour
     public bool TryTakeControl(AdvancedPlayerController candidate)
     {
         ValidateGrip();
+        if (candidate != null && !candidate.IsDead && InRange(candidate) && IsControlling && player != candidate)
+        {
+            var incoming = candidate.GetComponent<PirateSlop.Networking.NetworkPlayer>();
+            var current = player.GetComponent<PirateSlop.Networking.NetworkPlayer>();
+            if (incoming != null && incoming.IsServerInitialized && !incoming.IsBot.Value && current != null && current.IsBot.Value && incoming.TeamId.Value == current.TeamId.Value)
+            {
+                player.SetLocomotionLocked(false);
+                ReleaseControl();
+            }
+        }
         if (candidate == null || candidate.IsDead || !InRange(candidate) || (IsControlling && player != candidate)) return false;
         player = candidate; IsControlling = true; lastGrip = Time.time; return true;
     }
@@ -33,6 +43,14 @@ public class HelmInteraction : MonoBehaviour
         if (!float.IsFinite(degrees) || !TryTakeControl(candidate)) return;
         rudder = Mathf.Clamp(rudder - Mathf.Clamp(degrees, -180f, 180f) / (360f * wheelTurnsToFullSteer), -1f, 1f);
         UpdateWheel();
+    }
+    public bool SteerBot(AdvancedPlayerController candidate, float value)
+    {
+        var bot = candidate == null ? null : candidate.GetComponent<PirateSlop.Networking.NetworkPlayer>();
+        if (bot == null || !bot.IsServerInitialized || !bot.IsBot.Value || !float.IsFinite(value) || !TryTakeControl(candidate)) return false;
+        rudder = Mathf.Clamp(value, -1f, 1f);
+        UpdateWheel();
+        return true;
     }
     public void ReleaseControl() { IsControlling = false; player = null; }
     public void Restore(float value, bool controlling, AdvancedPlayerController driver)

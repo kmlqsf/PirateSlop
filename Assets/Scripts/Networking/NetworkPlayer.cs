@@ -32,6 +32,8 @@ namespace PirateSlop.Networking
         public readonly SyncVar<int> ParticipantId = new();
         public readonly SyncVar<int> HomeShipId = new();
         public readonly SyncVar<int> TeamId = new();
+        public readonly SyncVar<bool> IsBot = new();
+        BotCaptain bot;
         AdvancedPlayerController motor;
         ShipDeckPassenger passenger;
         bool bound;
@@ -96,6 +98,10 @@ namespace PirateSlop.Networking
             if (IsOwner) SessionController.Instance.PlayerReady(this);
             TryBind();
         }
+        public override void OnStartServer()
+        {
+            if (IsBot.Value) bot = new BotCaptain(this);
+        }
         public override void OnStopNetwork()
         {
             TimeManager.OnTick -= Tick; TimeManager.OnPostTick -= PostTick;
@@ -114,6 +120,11 @@ namespace PirateSlop.Networking
             // and the server are allowed to simulate this player.
             if (!IsOwner && !IsServerInitialized) return;
             if (!TryBind()) return;
+            if (IsBot.Value)
+            {
+                if (IsServerInitialized && bot != null) SimulateCommand(bot.Command());
+                return;
+            }
             var input = default(CaptainInput);
             if (IsOwner)
             {
@@ -141,7 +152,7 @@ namespace PirateSlop.Networking
         void PostTick()
         {
             if (!TryBind()) return;
-            if (IsOwner || IsServerInitialized) CreateReconcile();
+            if (!IsBot.Value && (IsOwner || IsServerInitialized)) CreateReconcile();
             if (IsServerInitialized) SendObserverState(BuildState());
         }
         [Replicate]
@@ -167,6 +178,11 @@ namespace PirateSlop.Networking
             {
                 command.Jump = command.Slide = command.Use = command.Release = false;
             }
+            SimulateCommand(command);
+        }
+        void SimulateCommand(PlayerCommand command)
+        {
+            if (motor.IsDead) return;
             float dt = (float)TimeManager.TickDelta;
             passenger.Carry();
             Physics.SyncTransforms();
