@@ -123,7 +123,11 @@ namespace PirateSlop
             if (player.InputActive && !player.IsThirdPerson && camera != null)
                 selectedVisual.transform.SetPositionAndRotation(camera.transform.TransformPoint(new Vector3(.22f, -.24f, .65f)), camera.transform.rotation);
             else
-                selectedVisual.transform.SetPositionAndRotation(transform.TransformPoint(new Vector3(.22f, 1.05f, .45f)), transform.rotation);
+            {
+                var graphics = transform.Find("PlayerGraphics");
+                var origin = graphics != null ? graphics : transform;
+                selectedVisual.transform.SetPositionAndRotation(origin.TransformPoint(new Vector3(.22f, 1.05f, .45f)), origin.rotation);
+            }
         }
         void Drop()
         {
@@ -143,7 +147,7 @@ namespace PirateSlop
             }
             held = null;
         }
-        void LateUpdate()
+        public void PresentHands()
         {
             UpdateSelectedVisual();
             aimed = null;

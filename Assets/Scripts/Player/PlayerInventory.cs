@@ -82,6 +82,7 @@ namespace PirateSlop
         float rotation, tilt, roll;
         bool cancelled;
         bool valid;
+        bool placementPending;
         bool Networked => network != null && (network.IsClientInitialized || network.IsServerInitialized);
         public bool HasCannon(int slot) => slot >= 0 && slot < 6 && (CannonSlots & (1 << slot)) != 0;
         public int EmptySlot() { for (int i = 0; i < 6; i++) if (ItemAt(i) == InventoryItem.None) return i; return -1; }
@@ -104,11 +105,13 @@ namespace PirateSlop
             network = GetComponent<NetworkWeapon>();
             hands = GetComponent<CannonHands>();
             Fishing = GetComponent<NetworkFishing>();
+            if (GetComponent<PlayerPresentation>() == null) gameObject.AddComponent<PlayerPresentation>();
             if (GetComponent<PlayerHud>() == null) gameObject.AddComponent<PlayerHud>();
         }
 
         void Update()
         {
+            placementPending = false;
             InteractionUsed = false; pickup = null; chest = null; aimedBall = null; aimedCannon = null; valid = false;
             aimedRumShelf = null;
             if (preview != null) preview.SetActive(false);
@@ -200,7 +203,21 @@ namespace PirateSlop
                 }
                 return;
             }
-            if (!Placing || aimedCannon != null) return;
+            placementPending = Placing && aimedCannon == null;
+        }
+
+        public void PresentPlacement()
+        {
+            if (!placementPending || !Placing || !motor.InputActive || motor.LocomotionLocked || motor.IsSwimming || motor.IsClimbing) return;
+            var keyboard = Keyboard.current;
+            var mouse = Mouse.current;
+            var camera = motor.PlayerCamera;
+            if (keyboard == null || mouse == null || camera == null) return;
+            RaycastHit nearest = default;
+            float distance = 5f;
+            foreach (var hit in Physics.RaycastAll(camera.transform.position, camera.transform.forward, distance, ~0, QueryTriggerInteraction.Ignore))
+                if (!hit.transform.IsChildOf(transform) && hit.distance < distance) { nearest = hit; distance = hit.distance; }
+            if (nearest.collider != null && nearest.collider.GetComponentInParent<SimpleCannon>() != null) return;
             if (mouse.rightButton.wasPressedThisFrame) cancelled = true;
             if (cancelled) return;
             rotation += mouse.scroll.ReadValue().y * .125f;

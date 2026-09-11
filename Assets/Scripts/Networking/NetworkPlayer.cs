@@ -272,6 +272,9 @@ namespace PirateSlop.Networking
         void CaptureVisualAnchor()
         {
             visualPlatform = passenger.Ship;
+            var grapple = GetComponent<NetworkWeapon>();
+            if (visualPlatform == null && grapple != null && grapple.GrappleActive)
+                visualPlatform = grapple.GrappleBody;
             if (visualPlatform != null) visualLocalPosition = visualPlatform.transform.InverseTransformPoint(motor.transform.position);
         }
         void LateUpdate()

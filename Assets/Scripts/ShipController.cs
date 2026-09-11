@@ -150,6 +150,12 @@ public class ShipController : MonoBehaviour
         pitch = Mathf.Lerp(pitch, s.Pitch, blend); waveRoll = Mathf.Lerp(waveRoll, s.WaveRoll, blend);
         var position = Vector3.Lerp(rb.position, s.Position, blend);
         var rotation = Quaternion.Slerp(rb.rotation, Quaternion.Euler(s.Pitch, s.Yaw, s.Bank + s.WaveRoll), blend);
+        float dt = Mathf.Max(.001f, Time.deltaTime);
+        motionVelocity = (position - rb.position) / dt;
+        var rotationDelta = rotation * Quaternion.Inverse(rb.rotation);
+        rotationDelta.ToAngleAxis(out float angle, out Vector3 axis);
+        if (angle > 180f) angle -= 360f;
+        motionAngularVelocity = float.IsFinite(axis.sqrMagnitude) ? axis * (angle * Mathf.Deg2Rad / dt) : Vector3.zero;
         rb.position = position; rb.rotation = rotation;
         transform.SetPositionAndRotation(position, rotation);
         sailSystem.SetDeploy(s.Sail); helm.Restore(s.Rudder, s.Controlling, driver);

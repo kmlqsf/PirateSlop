@@ -96,6 +96,7 @@ namespace PirateSlop.Networking
             }
             if (!IsOwner) return;
             var mouse = Mouse.current; var keyboard = Keyboard.current;
+            if (Item == InventoryItem.GrapplingHook && mouse != null && mouse.leftButton.wasReleasedThisFrame) network.ReleaseGrapple();
             bool can = CanUse && motor.InputActive && !PlayerInventory.LootWindowOpen;
             bool aim = can && Firearm && action.Value == 0 && handling!=null && handling.Aiming;
             if (aim && motor.IsThirdPerson) motor.SetThirdPerson(false);
@@ -113,6 +114,7 @@ namespace PirateSlop.Networking
             if (mouse.leftButton.wasPressedThisFrame && !pendingShot && !inventory.InteractionUsed && !hands.CanPickUpBall() && Time.time>=nextLocalFire && (!Firearm || handling.Ready))
             {
                 int sequence=++localSequence;
+                if (Item == InventoryItem.GrapplingHook) network.BeginLocalGrapple();
                 Vector3 forward=motor.AimDirection;
                 if(Firearm)
                 {
@@ -151,8 +153,9 @@ namespace PirateSlop.Networking
         void ShotAcknowledgedTargetRpc(FishNet.Connection.NetworkConnection connection) { pendingShot=false; }
         void UseAuthority(byte request, Vector3 forward, Vector3 eyeOffset,int sequence,bool aimed)
         {
-            if (!CanUse || action.Value != 0 || Time.time < nextShot || !float.IsFinite(forward.sqrMagnitude) || forward.sqrMagnitude < .5f) return;
-            if (Item == InventoryItem.GrapplingHook) { if (request == 0) network.ThrowGrapple(forward); nextShot = Time.time + .6f; return; }
+            if (!CanUse || action.Value != 0 || !float.IsFinite(forward.sqrMagnitude) || forward.sqrMagnitude < .5f) return;
+            if (Item == InventoryItem.GrapplingHook) { if (request == 0) network.ThrowGrapple(forward, eyeOffset); return; }
+            if (Time.time < nextShot) return;
             int slot = inventory.SelectedSlot;
             direction.Value = forward.normalized;
             if (Item == InventoryItem.Wine) { BeginAction(2, 2.2f, slot); return; }
@@ -297,7 +300,7 @@ namespace PirateSlop.Networking
             if (!IsOwner || !Active || !motor.InputActive) return;
             if(Scoped) DrawScope();
             if(Firearm) return;
-            string hint = action.Value == 2 ? "Пьём…" : Item == InventoryItem.GrapplingHook ? "ЛКМ — выстрел крюком (35 м) · Space/Q — отпустить" : Item == InventoryItem.Wine ? "Удерживать ЛКМ — бег по воде на 60 с" : "ЛКМ — выпустить попугая • цель до 100 м • 50 урона";
+            string hint = action.Value == 2 ? "Пьём…" : Item == InventoryItem.GrapplingHook ? "Удерживать ЛКМ — крюк (35 м) · Отпустить ЛКМ — разорвать зацеп" : Item == InventoryItem.Wine ? "Удерживать ЛКМ — бег по воде на 60 с" : "ЛКМ — выпустить попугая • цель до 100 м • 50 урона";
             PirateHudStyle.Label(new Rect(Screen.width/2f-300,Screen.height-175,600,32),hint,PirateHudStyle.Paper);
         }
         void DrawScope()
