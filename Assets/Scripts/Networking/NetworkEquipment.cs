@@ -255,7 +255,8 @@ namespace PirateSlop.Networking
                 byte previous = visualAction;
                 visualAction = action.Value; animationAt = Time.time;
                 if (visualAction == 1) GameAudio.Play(SoundCue.Reload, transform.position);
-                else if (visualAction == 2) GameAudio.Play(SoundCue.Place, transform.position,.5f);
+                else if (visualAction == 2) GameAudio.Play(SoundCue.BottleOpen, transform.position);
+                else if (previous == 2) GameAudio.Play(SoundCue.BottleClose, transform.position);
                 else if (previous == 1 && rounds.Value > 0) GameAudio.Play(SoundCue.ReloadReady, transform.position);
             }
             if (view == null || world == null) return;

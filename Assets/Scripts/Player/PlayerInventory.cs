@@ -42,12 +42,14 @@ namespace PirateSlop
         public void OpenLoot(NetworkLootChest target)
         {
             if (target == null || !network.IsOwner || motor.IsDead || Vector3.Distance(transform.position, target.transform.position) > 5f) return;
+            if (!lootWindow) GameAudio.Play(SoundCue.ChestOpen, target.transform.position);
             openChest = target; lootWindow = true; lootOwner = this;
             AdvancedPlayerController.SetCursor(false);
         }
         void CloseLoot(bool restoreCursor)
         {
             if (!lootWindow) return;
+            if (openChest != null) GameAudio.Play(SoundCue.ChestClose, openChest.transform.position);
             lootWindow = false; openChest = null;
             if (lootOwner == this) lootOwner = null;
             if (restoreCursor) AdvancedPlayerController.SetCursor(true);

@@ -13,7 +13,7 @@ namespace PirateSlop
         AudioListener listener;
         int nextShot;
         int nextFeedback;
-        AudioSource ocean, wind;
+        AudioSource ocean, wind, deck;
         int nextVoice;
 
         static GameAudio Get()
@@ -42,6 +42,7 @@ namespace PirateSlop
             for (int i = 0; i < instance.feedbackVoices.Length; i++) instance.feedbackVoices[i] = instance.Source("Damage feedback " + i, false);
             instance.ocean = instance.Source("Ocean", true); instance.ocean.clip = bank.Ocean;
             instance.wind = instance.Source("Wind", true); instance.wind.clip = bank.Wind;
+            instance.deck = instance.Source("Deck creaks", true); instance.deck.clip = bank.DeckCreaks;
             return instance;
         }
         AudioSource Source(string name, bool loop)
@@ -91,20 +92,41 @@ namespace PirateSlop
             source.pitch = ui ? 1f : gunshot ? Random.Range(.975f,1.025f) : Random.Range(.94f, 1.06f);
             source.clip = entry.Clips[Random.Range(0, entry.Clips.Length)]; source.Play();
         }
-        public static void Ambience(float speed)
+        public static void Attached(ref AudioSource source, SoundCue cue, Transform parent)
+        {
+            var audio = Get();
+            if (audio == null) return;
+            var entry = System.Array.Find(audio.bank.Entries, e => e.Cue == cue);
+            if (entry == null || entry.Clips == null || entry.Clips.Length == 0) return;
+            if (source == null)
+            {
+                var go = new GameObject("Attached audio");
+                go.transform.SetParent(parent, false);
+                source = go.AddComponent<AudioSource>();
+                source.playOnAwake = false; source.dopplerLevel = 0f;
+                source.spatialBlend = 1f; source.rolloffMode = AudioRolloffMode.Linear;
+            }
+            source.Stop(); source.minDistance = 2f; source.maxDistance = entry.Distance;
+            source.volume = entry.Volume * audio.bank.Master * audio.bank.Effects;
+            source.clip = entry.Clips[Random.Range(0, entry.Clips.Length)]; source.Play();
+        }
+        public static void Ambience(float speed, bool onShip = false)
         {
             var audio = Get(); if (audio == null) return;
             audio.ocean.volume = audio.bank.Master * audio.bank.Ambience * Mathf.Lerp(.45f, .75f, speed);
             audio.wind.volume = audio.bank.Master * audio.bank.Ambience * Mathf.Lerp(.15f, .4f, speed);
             if (!audio.ocean.isPlaying && audio.ocean.clip != null) audio.ocean.Play();
             if (!audio.wind.isPlaying && audio.wind.clip != null) audio.wind.Play();
+            audio.deck.volume = audio.bank.Master * audio.bank.Ambience * Mathf.Lerp(.2f, .4f, speed);
+            if (onShip && !audio.deck.isPlaying && audio.deck.clip != null) audio.deck.Play();
+            else if (!onShip) audio.deck.Stop();
             audio.lastAmbience = Time.unscaledTime;
         }
         float lastAmbience;
         void Update()
         {
             if (Time.unscaledTime - lastAmbience < .3f) return;
-            ocean.Stop(); wind.Stop();
+            ocean.Stop(); wind.Stop(); deck.Stop();
         }
         void OnDestroy() { if (instance == this) instance = null; }
     }

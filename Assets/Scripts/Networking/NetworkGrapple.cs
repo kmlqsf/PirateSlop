@@ -15,6 +15,8 @@ namespace PirateSlop.Networking
         readonly SyncVar<NetworkObject> hookCaptor = new();
         Vector3 flightDirection;
         float flightDistance, hookExpires, hookCooldown, blockedFor;
+        AudioSource hookTensionAudio;
+        bool hookTensionPlaying;
         LineRenderer grappleLine;
         Transform hookVisual;
         Vector3 visualPoint;
@@ -42,6 +44,7 @@ namespace PirateSlop.Networking
             flightDistance = 0f; blockedFor = 0f;
             hookCooldown = Time.time + .12f;
             hookExpires = Time.time + 6f; hookPhase.Value = 1;
+            HookSoundObserversRpc(SoundCue.HookThrow, origin);
         }
         public void ReleaseGrapple()
         {
@@ -50,8 +53,15 @@ namespace PirateSlop.Networking
             else if (IsOwner) ReleaseGrappleServerRpc();
         }
         [ServerRpc] void ReleaseGrappleServerRpc() => EndHook();
+        [ObserversRpc]
+        void HookSoundObserversRpc(SoundCue cue, Vector3 point)
+        {
+            if (cue == SoundCue.HookRelease && hookTensionAudio != null) hookTensionAudio.Stop();
+            GameAudio.Play(cue, point);
+        }
         void EndHook()
         {
+            if (hookPhase.Value == 2 && IsSpawned) HookSoundObserversRpc(SoundCue.HookRelease, transform.position + Vector3.up);
             if (hookVictim.Value != null)
             {
                 var victim = hookVictim.Value.GetComponent<NetworkWeapon>();
@@ -103,7 +113,8 @@ namespace PirateSlop.Networking
                         hookPoint.Value = ship != null ? ship.transform.InverseTransformPoint(closest.point) : closest.point;
                         hookNormal.Value = ship != null ? ship.transform.InverseTransformDirection(closest.normal) : closest.normal;
                     }
-                    hookPhase.Value = 2; return;
+                    hookPhase.Value = 2;
+                    return;
                 }
                 hookPoint.Value += hookAnchor.Value != null ? hookAnchor.Value.transform.InverseTransformVector(flightForward * step) : flightForward * step;
                 flightDistance += step;
@@ -133,6 +144,10 @@ namespace PirateSlop.Networking
         }
         public void PresentGrapple()
         {
+            bool tension = IsSpawned && IsClientInitialized && hookPhase.Value == 2 && (!IsOwner || !locallyReleased);
+            if (tension && !hookTensionPlaying) GameAudio.Attached(ref hookTensionAudio, SoundCue.HookTension, transform);
+            if (!tension && hookTensionAudio != null) hookTensionAudio.Stop();
+            hookTensionPlaying = tension;
             if (!IsSpawned || !IsClientInitialized) return;
             if (grappleLine == null && hookPhase.Value != 0)
             {
