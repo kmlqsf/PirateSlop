@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering;
 using PirateSlop.Networking;
 
 namespace PirateSlop
@@ -10,6 +11,7 @@ namespace PirateSlop
     {
         public static bool IsViewing { get; private set; }
         public Material TrajectoryMaterial;
+        [SerializeField] float viewpointLift = 1.25f;
         NetworkPlayer player;
         ShipSpyglass station, aimed;
         Camera cameraView;
@@ -18,6 +20,38 @@ namespace PirateSlop
         Vector2 angles;
         readonly List<LineRenderer> lines = new();
         Texture2D mask;
+        readonly List<Renderer> renderers = new();
+        readonly List<Renderer> stationRenderers = new();
+        readonly List<(Renderer renderer, bool hidden)> visibility = new();
+        void OnEnable()
+        {
+            RenderPipelineManager.beginCameraRendering += BeginCamera;
+            RenderPipelineManager.endCameraRendering += EndCamera;
+        }
+        void BeginCamera(ScriptableRenderContext context, Camera camera)
+        {
+            if (!engaged || station == null || camera != cameraView) return;
+            RestoreVisibility();
+            GetComponentsInChildren<Renderer>(true, renderers);
+            station.GetComponentsInChildren<Renderer>(true, stationRenderers);
+            renderers.AddRange(stationRenderers);
+            foreach (var renderer in renderers)
+            {
+                if (renderer == null) continue;
+                visibility.Add((renderer, renderer.forceRenderingOff));
+                renderer.forceRenderingOff = true;
+            }
+        }
+        void EndCamera(ScriptableRenderContext context, Camera camera)
+        {
+            if (camera == cameraView) RestoreVisibility();
+        }
+        void RestoreVisibility()
+        {
+            foreach (var state in visibility)
+                if (state.renderer != null) state.renderer.forceRenderingOff = state.hidden;
+            visibility.Clear();
+        }
         void Awake() { player = GetComponent<NetworkPlayer>(); }
         void Update()
         {
@@ -34,7 +68,7 @@ namespace PirateSlop
                 {
                     var delta = Mouse.current.delta.ReadValue() * (.055f * zoom / 48f);
                     angles.x = Mathf.Clamp(angles.x - delta.y, -70f, 70f);
-                    angles.y += delta.x;
+                    angles.y = Mathf.Repeat(angles.y + delta.x, 360f);
                     float wheel = Mouse.current.scroll.ReadValue().y;
                     if (Mathf.Abs(wheel) > .01f) zoom = Mathf.Clamp(zoom - Mathf.Sign(wheel) * 3f, 32f, 62f);
                 }
@@ -52,7 +86,7 @@ namespace PirateSlop
         void LateUpdate()
         {
             if (!player.IsOwner || station == null) return;
-            cameraView.transform.SetPositionAndRotation(station.Viewpoint.position, station.transform.rotation * Quaternion.Euler(angles.x, angles.y, 0f));
+            cameraView.transform.SetPositionAndRotation(station.Viewpoint.position + station.transform.up * viewpointLift, station.transform.rotation * Quaternion.Euler(angles.x, angles.y, 0f));
             cameraView.fieldOfView = Mathf.Lerp(cameraView.fieldOfView, zoom, 1f - Mathf.Exp(-12f * Time.unscaledDeltaTime));
             if (Time.unscaledTime >= nextPreview) { nextPreview = Time.unscaledTime + .2f; Preview(); }
         }
@@ -105,11 +139,18 @@ namespace PirateSlop
         }
         void Exit()
         {
+            RestoreVisibility();
             if (cameraView != null && engaged) cameraView.fieldOfView = originalFov;
             station = null; engaged = IsViewing = false;
             foreach (var line in lines) if (line != null) line.gameObject.SetActive(false);
         }
-        void OnDisable() { if (engaged) Exit(); }
+        void OnDisable()
+        {
+            RenderPipelineManager.beginCameraRendering -= BeginCamera;
+            RenderPipelineManager.endCameraRendering -= EndCamera;
+            RestoreVisibility();
+            if (engaged) Exit();
+        }
         void OnDestroy() { foreach (var line in lines) if (line != null) Destroy(line.gameObject); if (mask != null) Destroy(mask); }
         void OnGUI()
         {
@@ -129,6 +170,7 @@ namespace PirateSlop
             GUI.color=Color.white; GUI.DrawTexture(new Rect((Screen.width-size)/2f,0,size,size),mask);
             GUI.Label(new Rect(Screen.width/2f-5,Screen.height/2f-10,20,20),"+");
             PirateHudStyle.Panel(new Rect(Screen.width/2f-285,Screen.height-65,570,35),"Колесо — зум · E / Esc — выйти · Золото: заряжена · Голубой: пуста"); GUI.color=old;
+            PlayerHud.DrawCompass(cameraView);
         }
     }
 }
