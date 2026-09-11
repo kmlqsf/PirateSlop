@@ -16,7 +16,7 @@ MonoBehaviour:
   Port: 7777
   MaxPlayers: 30
   TickRate: 30
-  ProtocolVersion: 58
+  ProtocolVersion: 60
   ConnectTimeout: 15
   ObserverRadius: 1000
   ObserverHysteresis: 0.2
@@ -25,3 +25,4 @@ MonoBehaviour:
   ShipOrigin: {x: 0, y: 0, z: 0}
   PlayerLocalSpawn: {x: 0, y: 7.2, z: -19.2}
   GameScene: NetworkOcean
+

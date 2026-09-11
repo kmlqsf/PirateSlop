@@ -13,6 +13,7 @@ namespace PirateSlop
         int previewCount;
         public void PositionCamera(Camera camera)
         {
+            UpdatePreview();
             Vector3 forward = Vector3.ProjectOnPlane(cannon.Muzzle.forward, Vector3.up).normalized;
             var bounds = new Bounds(cannon.ShotPosition, Vector3.one * BlastRadius * 2f);
             for (int i = 0; i < previewCount; i++) bounds.Encapsulate(points[i]);
@@ -48,7 +49,8 @@ namespace PirateSlop
             line.enabled = false;
             return line;
         }
-        void LateUpdate()
+        void LateUpdate() => UpdatePreview();
+        void UpdatePreview()
         {
             bool visible = cannon.Operator != null && cannon.Operator.InputActive && cannon.Operator.ActiveCannon == cannon;
             arc.enabled = visible;

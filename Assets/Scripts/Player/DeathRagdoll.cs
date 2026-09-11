@@ -12,6 +12,9 @@ namespace PirateSlop
             if (Application.isBatchMode || !Application.isPlaying) return;
             var source = player.Find("PlayerGraphics");
             if (source == null) return;
+            var viewArms = player.GetComponent<WeaponArmRig>()?.ViewArms;
+            var bodyHips = source.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "Hips" && (viewArms == null || !t.IsChildOf(viewArms)));
+            if (bodyHips == null) return;
             var map = new Dictionary<Transform, Transform>();
             Transform Copy(Transform original, Transform parent)
             {
@@ -21,7 +24,8 @@ namespace PirateSlop
                 copy.localRotation = original.localRotation;
                 copy.localScale = original.localScale;
                 map.Add(original, copy);
-                foreach (Transform child in original) Copy(child, copy);
+                foreach (Transform child in original)
+                    if (child != viewArms) Copy(child, copy);
                 copy.gameObject.SetActive(original.gameObject.activeSelf);
                 return copy;
             }
@@ -32,10 +36,11 @@ namespace PirateSlop
             root.gameObject.SetActive(false);
             foreach (var original in source.GetComponentsInChildren<Renderer>(true))
             {
-                if (!original.gameObject.activeInHierarchy) continue;
+                if (!original.gameObject.activeInHierarchy || !map.ContainsKey(original.transform)) continue;
                 Renderer copy = null;
                 if (original is SkinnedMeshRenderer skin)
                 {
+                    if (!skin.bones.Any(b => b != null && b.IsChildOf(bodyHips)) || skin.bones.Any(b => b == null || !map.ContainsKey(b))) continue;
                     var mesh = map[skin.transform].gameObject.AddComponent<SkinnedMeshRenderer>();
                     mesh.sharedMesh = skin.sharedMesh;
                     mesh.bones = skin.bones.Select(b => b != null && map.TryGetValue(b, out var target) ? target : null).ToArray();
@@ -48,6 +53,7 @@ namespace PirateSlop
                 }
                 else if (original is MeshRenderer && original.TryGetComponent<MeshFilter>(out var filter))
                 {
+                    if (!original.transform.IsChildOf(bodyHips)) continue;
                     map[original.transform].gameObject.AddComponent<MeshFilter>().sharedMesh = filter.sharedMesh;
                     copy = map[original.transform].gameObject.AddComponent<MeshRenderer>();
                 }
@@ -110,7 +116,11 @@ namespace PirateSlop
             root.gameObject.SetActive(true);
             for (int i = 0; i < colliders.Count; i++)
                 for (int j = i + 1; j < colliders.Count; j++) Physics.IgnoreCollision(colliders[i], colliders[j]);
-            foreach (var body in bodies) { body.linearVelocity = velocity; body.angularVelocity = spin; }
+            for (int i = 0; i < bodies.Count; i++)
+            {
+                bodies[i].linearVelocity = velocity;
+                bodies[i].angularVelocity = spin * (i == 0 ? 1f : .35f + .55f * Mathf.Sin(i * 2.4f + spin.x));
+            }
             Object.Destroy(root.gameObject, 8f);
         }
     }

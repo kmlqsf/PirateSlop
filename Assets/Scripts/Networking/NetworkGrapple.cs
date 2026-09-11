@@ -7,112 +7,156 @@ namespace PirateSlop.Networking
 {
     public sealed partial class NetworkWeapon
     {
-        readonly SyncVar<NetworkObject> grapple = new();
-        readonly SyncVar<NetworkObject> grappleShip = new();
-        readonly SyncVar<Vector3> grappleNormal = new(Vector3.up);
-        readonly SyncVar<bool> grappleAttached = new();
+        readonly SyncVar<byte> hookPhase = new();
+        readonly SyncVar<Vector3> hookPoint = new();
+        readonly SyncVar<Vector3> hookNormal = new(Vector3.up);
+        readonly SyncVar<NetworkObject> hookAnchor = new();
+        readonly SyncVar<NetworkObject> hookVictim = new();
+        readonly SyncVar<NetworkObject> hookCaptor = new();
+        Vector3 flightDirection;
+        float flightDistance, hookExpires, hookCooldown, blockedFor;
         LineRenderer grappleLine;
-        NetworkObject shownGrapple;
-        float grappleShownAt;
-        Vector3 grappleStart;
-        bool releasedGrapple;
-        public bool GrappleActive => grapple.Value != null && grapple.Value.IsSpawned && grappleAttached.Value && !releasedGrapple && Time.time >= grappleShownAt + .6f;
-        public Vector3 GrapplePoint => grapple.Value.transform.position;
-        public Rigidbody GrappleBody => grappleShip.Value != null ? grappleShip.Value.GetComponent<Rigidbody>() : null;
-        public Vector3 GrappleNormal => grappleShip.Value != null ? grappleShip.Value.transform.TransformDirection(grappleNormal.Value) : grappleNormal.Value;
+        Transform hookVisual;
+        Vector3 visualPoint;
+        bool visualActive;
+        public bool GrappleActive => hookPhase.Value == 2 && hookVictim.Value == null;
+        public bool BeingHooked => hookCaptor.Value != null && hookCaptor.Value.IsSpawned && hookCaptor.Value.GetComponent<NetworkWeapon>().hookPhase.Value == 2;
+        public Vector3 GrapplePoint => hookAnchor.Value != null ? hookAnchor.Value.transform.TransformPoint(hookPoint.Value) : hookPoint.Value;
+        public Rigidbody GrappleBody => hookAnchor.Value != null ? hookAnchor.Value.GetComponent<Rigidbody>() : null;
+        public Vector3 GrappleNormal => hookAnchor.Value != null ? hookAnchor.Value.transform.TransformDirection(hookNormal.Value) : hookNormal.Value;
+        public Vector3 PullPoint => BeingHooked ? hookCaptor.Value.transform.position + Vector3.up : GrapplePoint + GrappleNormal * .55f;
         public void ThrowGrapple(Vector3 direction)
         {
-            if (!IsServerInitialized || !CanHandleBall() || inventory.EquipmentAt(inventory.SelectedSlot) != InventoryItem.GrapplingHook) return;
-            if (grapple.Value != null && grapple.Value.IsSpawned) return;
-            if (!float.IsFinite(direction.sqrMagnitude) || direction.sqrMagnitude < .5f || DropPrefabs.Length <= 17 || DropPrefabs[17] == null) return;
-            Vector3 origin = transform.position + Vector3.up * 1.55f;
-            RaycastHit nearest = default;
-            float distance = 35;
-            foreach (var hit in Physics.RaycastAll(origin,direction.normalized,distance,Physics.DefaultRaycastLayers,QueryTriggerInteraction.Ignore))
-            {
-                if (hit.transform.IsChildOf(transform)) continue;
-                if (hit.distance < distance) { nearest=hit; distance=hit.distance; }
-            }
-            if (nearest.collider == null) return;
-            if (nearest.collider.GetComponentInParent<NetworkFish>() != null || nearest.collider.GetComponentInParent<CombatHealth>() != null) return;
-            var support = nearest.collider.GetComponentInParent<NetworkShip>();
-            if (nearest.rigidbody != null && support == null) return;
-            if (!ConsumeEquipment(inventory.SelectedSlot,InventoryItem.GrapplingHook)) return;
-            Vector3 point=nearest.point+nearest.normal*.12f;
-            var hook=Instantiate(DropPrefabs[17],point,Quaternion.LookRotation(nearest.normal));
-            UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene(hook.gameObject,gameObject.scene);
-            hook.Place(support != null ? support.NetworkObject : null,point,hook.transform.rotation);
-            ServerManager.Spawn(hook.NetworkObject);
-            grapple.Value=hook.NetworkObject;
-            grappleShip.Value=support != null ? support.NetworkObject : null;
-            grappleNormal.Value=support != null ? support.transform.InverseTransformDirection(nearest.normal) : nearest.normal;
-            grappleAttached.Value=true;
-            releasedGrapple=false;
+            if (!IsServerInitialized || !CanHandleBall() || inventory.EquipmentAt(inventory.SelectedSlot) != InventoryItem.GrapplingHook || BeingHooked) return;
+            if (hookPhase.Value != 0 || Time.time < hookCooldown || !float.IsFinite(direction.sqrMagnitude) || direction.sqrMagnitude < .5f) return;
+            flightDirection = direction.normalized;
+            hookPoint.Value = transform.position + Vector3.up * 1.55f;
+            hookAnchor.Value = null; hookVictim.Value = null;
+            flightDistance = 0f; blockedFor = 0f;
+            hookExpires = Time.time + 6f; hookPhase.Value = 1;
         }
         public void ReleaseGrapple()
         {
-            if (IsServerInitialized) grappleAttached.Value=false;
-            if (IsOwner) releasedGrapple=true;
+            if (IsServerInitialized) EndHook();
+            else if (IsOwner) ReleaseGrappleServerRpc();
         }
-        [ServerRpc] void ReleaseGrappleServerRpc() => grappleAttached.Value=false;
-        [ServerRpc]
-        void RecoverGrappleServerRpc()
+        [ServerRpc] void ReleaseGrappleServerRpc() => EndHook();
+        void EndHook()
         {
-            if (grapple.Value == null || !grapple.Value.IsSpawned) return;
+            if (hookVictim.Value != null)
+            {
+                var victim = hookVictim.Value.GetComponent<NetworkWeapon>();
+                if (victim != null && victim.hookCaptor.Value == NetworkObject) victim.hookCaptor.Value = null;
+            }
+            hookVictim.Value = null; hookAnchor.Value = null; hookPhase.Value = 0;
+            hookCooldown = Time.time + .7f;
+        }
+        public override void OnStopServer()
+        {
+            EndHook();
+            if (hookCaptor.Value != null) hookCaptor.Value.GetComponent<NetworkWeapon>()?.EndHook();
+            base.OnStopServer();
+        }
+        void AdvanceHook()
+        {
+            if (hookPhase.Value == 0) return;
             var motor = GetComponent<AdvancedPlayerController>();
-            if (motor.IsDead || motor.LocomotionLocked || !CanAddItem(InventoryItem.GrapplingHook)) return;
-            Vector3 eye = transform.position + Vector3.up * 1.5f;
-            Vector3 delta = GrapplePoint - eye;
-            if (delta.magnitude > 3f) return;
-            foreach (var hit in Physics.RaycastAll(eye, delta.normalized, delta.magnitude, ~0, QueryTriggerInteraction.Ignore))
-                if (!hit.transform.IsChildOf(transform) && !hit.transform.IsChildOf(grapple.Value.transform)) return;
-            var pickup = grapple.Value.GetComponent<NetworkFish>();
-            if (pickup == null || !pickup.Take()) return;
-            AddItem(InventoryItem.GrapplingHook);
-            grappleAttached.Value = false;
-            grapple.Value = null;
+            if (motor.IsDead || Time.time >= hookExpires || inventory.EquipmentAt(inventory.SelectedSlot) != InventoryItem.GrapplingHook)
+            { EndHook(); return; }
+            if (hookPhase.Value == 1)
+            {
+                float step = Mathf.Min(55f * Time.deltaTime, 35f - flightDistance);
+                RaycastHit closest = default;
+                float distance = step + .001f;
+                foreach (var hit in Physics.SphereCastAll(hookPoint.Value, .12f, flightDirection, step, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
+                {
+                    if (hit.transform.IsChildOf(transform) || hit.distance >= distance) continue;
+                    closest = hit; distance = hit.distance;
+                }
+                if (closest.collider != null)
+                {
+                    var victim = closest.collider.GetComponentInParent<NetworkPlayer>();
+                    if (victim != null)
+                    {
+                        var target = victim.GetComponent<NetworkWeapon>();
+                        if (victim.Motor.IsDead || target == null || target.BeingHooked) { EndHook(); return; }
+                        target.EndHook(); target.hookCaptor.Value = NetworkObject;
+                        hookVictim.Value = victim.NetworkObject; hookAnchor.Value = victim.NetworkObject;
+                        hookPoint.Value = Vector3.up;
+                        victim.Motor.ApplyKnockback(Vector3.zero);
+                    }
+                    else
+                    {
+                        var ship = closest.collider.GetComponentInParent<NetworkShip>();
+                        if (closest.collider.GetComponentInParent<NetworkFish>() != null || (closest.rigidbody != null && ship == null)) { EndHook(); return; }
+                        hookAnchor.Value = ship != null ? ship.NetworkObject : null;
+                        hookPoint.Value = ship != null ? ship.transform.InverseTransformPoint(closest.point) : closest.point;
+                        hookNormal.Value = ship != null ? ship.transform.InverseTransformDirection(closest.normal) : closest.normal;
+                    }
+                    hookPhase.Value = 2; return;
+                }
+                hookPoint.Value += flightDirection * step; flightDistance += step;
+                if (flightDistance >= 35f) EndHook();
+                return;
+            }
+            if (hookVictim.Value != null && hookVictim.Value.GetComponent<CombatHealth>().IsDead) { EndHook(); return; }
+            Vector3 start = transform.position + Vector3.up, delta = GrapplePoint - start;
+            if (delta.magnitude < (hookVictim.Value != null ? 1.5f : 1.1f) || delta.magnitude > 40f) { EndHook(); return; }
+            bool blocked = false;
+            foreach (var hit in Physics.RaycastAll(start, delta.normalized, Mathf.Max(0f, delta.magnitude - .35f), Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
+            {
+                if (hit.transform.IsChildOf(transform) || (hookVictim.Value != null && hit.transform.IsChildOf(hookVictim.Value.transform))) continue;
+                blocked = true; break;
+            }
+            blockedFor = blocked ? blockedFor + Time.deltaTime : 0f;
+            if (blockedFor > .25f) EndHook();
         }
         void UpdateGrapple()
         {
             if (!IsSpawned) return;
-            bool exists=grapple.Value != null && grapple.Value.IsSpawned;
-            if (shownGrapple != grapple.Value)
+            if (IsServerInitialized) AdvanceHook();
+            if (!IsClientInitialized) return;
+            if (IsOwner && hookPhase.Value != 0 && GetComponent<AdvancedPlayerController>().InputActive && Keyboard.current != null &&
+                (Keyboard.current.spaceKey.wasPressedThisFrame || Keyboard.current.qKey.wasPressedThisFrame)) ReleaseGrapple();
+            if (grappleLine == null && hookPhase.Value != 0)
             {
-                shownGrapple=grapple.Value; grappleShownAt=Time.time; releasedGrapple=false;
-                grappleStart=transform.position+Vector3.up*1.5f;
+                var rope = new GameObject("GrappleRope"); rope.transform.SetParent(transform, false);
+                grappleLine = rope.AddComponent<LineRenderer>();
+                grappleLine.sharedMaterial = Resources.Load<Material>("HookRope");
+                grappleLine.positionCount = 24; grappleLine.widthMultiplier = .025f;
+                grappleLine.generateLightingData = true; grappleLine.numCapVertices = 3;
+                var model = Resources.Load<GameObject>("GrappleHookModel");
+                if (model != null)
+                {
+                    hookVisual = Instantiate(model, rope.transform).transform;
+                    foreach (var collider in hookVisual.GetComponentsInChildren<Collider>()) collider.enabled = false;
+                }
             }
-            if (IsServerInitialized && (!exists || GetComponent<AdvancedPlayerController>().IsDead)) grappleAttached.Value=false;
-            if (IsOwner && exists && GetComponent<AdvancedPlayerController>().InputActive && Keyboard.current != null && Keyboard.current.eKey.wasPressedThisFrame)
-                RecoverGrappleServerRpc();
-            if (IsOwner && GrappleActive && GetComponent<AdvancedPlayerController>().InputActive && Keyboard.current != null &&
-                (Keyboard.current.spaceKey.wasPressedThisFrame || Keyboard.current.qKey.wasPressedThisFrame))
-            { releasedGrapple=true; ReleaseGrappleServerRpc(); }
-            if (grappleLine == null)
+            if (grappleLine == null) return;
+            bool visible = hookPhase.Value != 0;
+            grappleLine.enabled = visible;
+            if (hookVisual != null) hookVisual.gameObject.SetActive(visible);
+            if (!visible) { visualActive = false; return; }
+            Vector3 start = transform.position + Vector3.up * 1.25f + transform.right * .2f, end = GrapplePoint;
+            if (!visualActive) { visualPoint = start; visualActive = true; }
+            visualPoint = hookPhase.Value == 1 ? Vector3.MoveTowards(visualPoint, end, 70f * Time.deltaTime) : end;
+            end = visualPoint;
+            if (hookVisual != null)
             {
-                var rope=new GameObject("GrappleRope"); rope.transform.SetParent(transform,false);
-                grappleLine=rope.AddComponent<LineRenderer>();
-                grappleLine.sharedMaterial=Resources.Load<Material>("HookRope");
-                grappleLine.positionCount=16; grappleLine.widthMultiplier=.025f;
-                grappleLine.generateLightingData=true; grappleLine.numCapVertices=3;
+                hookVisual.position = end;
+                if ((end - start).sqrMagnitude > .01f) hookVisual.rotation = Quaternion.LookRotation(end - start) * Quaternion.Euler(90f, 0f, 0f);
             }
-            grappleLine.enabled=exists && grappleAttached.Value && !releasedGrapple;
-            if (!grappleLine.enabled) return;
-            Vector3 start=transform.position+Vector3.up*1.15f, end=GrapplePoint;
-            float flight=Mathf.Clamp01((Time.time-grappleShownAt)/.6f);
-            end=Vector3.Lerp(grappleStart,end,flight)+Vector3.up*(Mathf.Sin(flight*Mathf.PI)*1.5f);
-            if (grapple.Value.transform.childCount > 0) grapple.Value.transform.GetChild(0).position=end;
-            for(int i=0;i<16;i++)
+            float sag = hookPhase.Value == 1 ? .35f : Mathf.Min(.65f, Vector3.Distance(start, end) * .025f);
+            for (int i = 0; i < 24; i++)
             {
-                float t=i/15f;
-                grappleLine.SetPosition(i,Vector3.Lerp(start,end,t)+Vector3.down*(Mathf.Sin(t*Mathf.PI)*.12f));
+                float t = i / 23f;
+                grappleLine.SetPosition(i, Vector3.Lerp(start, end, t) + Vector3.down * (Mathf.Sin(t * Mathf.PI) * sag));
             }
-            if (IsOwner && !SessionController.MenuOpen)
-                grappleLine.widthMultiplier=.025f;
         }
         void OnGUI()
         {
-            if (!IsOwner || !GrappleActive || !GetComponent<AdvancedPlayerController>().InputActive) return;
-            PirateHudStyle.Panel(new Rect(Screen.width*.5f-340,Screen.height-180,680,32), "W/S — вверх/вниз · A/D — вбок · Space/Q — отпустить · E рядом — забрать");
+            if (!IsOwner || hookPhase.Value == 0 || !GetComponent<AdvancedPlayerController>().InputActive) return;
+            PirateHudStyle.Panel(new Rect(Screen.width * .5f - 300, Screen.height - 180, 600, 32), "A/D — раскачиваться · Space/Q — отпустить канат");
         }
     }
 }

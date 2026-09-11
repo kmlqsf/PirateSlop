@@ -20,6 +20,7 @@ namespace PirateSlop
         float localSpawnYaw;
         Transform spawnPlatform;
         float respawnAt;
+        static readonly System.Random deathRandom = new();
         public float RespawnRemaining => Mathf.Max(0, respawnAt - Time.time);
         void Awake() { Current = MaxHealth; network = GetComponent<NetworkHealth>(); controller = GetComponent<CharacterController>(); if (controller != null && GetComponent<DamageFeedback>() == null) gameObject.AddComponent<DamageFeedback>(); }
         void Start()
@@ -108,12 +109,16 @@ namespace PirateSlop
                 direction = Vector3.ProjectOnPlane(direction, Vector3.up);
                 if (direction.sqrMagnitude < .01f) direction = -transform.forward;
                 direction.Normalize();
-                float strength = Mathf.Lerp(5f, 11f, Mathf.Clamp01(amount / 100f));
+                float Sample(float min, float max) => Mathf.Lerp(min, max, (float)deathRandom.NextDouble());
+                direction = Quaternion.AngleAxis(Sample(-65f, 65f), Vector3.up) * direction;
+                float impact = Mathf.InverseLerp(100f, 220f, amount);
+                float strength = Sample(.25f, 1.6f) + impact * Sample(1.5f, 3.5f);
                 var platform = GetComponent<ShipDeckPassenger>()?.Ship;
                 var ship = platform != null ? platform.GetComponent<ShipController>() : null;
                 Vector3 inherited = ship != null ? ship.CannonPointVelocity(transform.position) : Vector3.zero;
-                Vector3 velocity = Vector3.ClampMagnitude(inherited, 18f) + direction * strength + Vector3.up * (strength * .7f + 2f);
-                Vector3 spin = Vector3.Cross(Vector3.up, direction) * 5f + Vector3.up * 2f;
+                Vector3 velocity = Vector3.ClampMagnitude(inherited, 18f) + direction * strength + Vector3.up * Sample(-.5f, .2f + impact);
+                Vector3 spin = Vector3.Cross(Vector3.up, direction) * Sample(1.2f, 3.8f)
+                    + direction * Sample(-2.5f, 2.5f) + Vector3.up * Sample(-1.5f, 1.5f);
                 if (network != null) network.LaunchCorpse(transform.position, velocity, spin);
                 else DeathRagdoll.Spawn(transform, transform.position, velocity, spin);
             }
@@ -150,7 +155,9 @@ namespace PirateSlop
             Rect bar = new Rect(screen.x - width / 2, Screen.height - screen.y, width, 10);
             Color old = GUI.color;
             GUI.color = Color.black; GUI.DrawTexture(bar, Texture2D.whiteTexture);
-            GUI.color = Color.Lerp(Color.red, Color.green, Current / MaxHealth);
+            var viewer = camera.GetComponentInParent<NetworkPlayer>();
+            bool ally = viewer != null && owner != null && viewer.TeamId.Value > 0 && viewer.TeamId.Value == owner.TeamId.Value;
+            GUI.color = ally ? Color.green : Color.red;
             GUI.DrawTexture(new Rect(bar.x + 1, bar.y + 1, (width - 2) * Current / MaxHealth, 8), Texture2D.whiteTexture);
             GUI.color = Color.white;
             GUI.Label(new Rect(bar.x, bar.y - 21, width, 22), Mathf.CeilToInt(Current) + " / " + Mathf.CeilToInt(MaxHealth));

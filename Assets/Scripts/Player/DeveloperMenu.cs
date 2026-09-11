@@ -37,6 +37,7 @@ namespace PirateSlop
             Button("Нанести себе 10 урона", 12);
             Button("Создать корабль рядом", 0);
             Button("Создать тренировочную мишень", 1);
+            Button("Создать врага-манекена перед собой", 13);
             GUILayout.Space(8);
             GUILayout.Label("Количество при выдаче в инвентарь");
             quantity = GUILayout.Toolbar(quantity, new[] { "1", "5", "20" });

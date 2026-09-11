@@ -297,7 +297,7 @@ namespace PirateSlop.Networking
             if (!IsOwner || !Active || !motor.InputActive) return;
             if(Scoped) DrawScope();
             if(Firearm) return;
-            string hint = action.Value == 2 ? "Пьём…" : Item == InventoryItem.GrapplingHook ? "ЛКМ — забросить крюк (35 м) · W/S — подъём / спуск" : Item == InventoryItem.Wine ? "Удерживать ЛКМ — бег по воде на 60 с" : "ЛКМ — выпустить попугая • цель до 100 м • 50 урона";
+            string hint = action.Value == 2 ? "Пьём…" : Item == InventoryItem.GrapplingHook ? "ЛКМ — выстрел крюком (35 м) · Space/Q — отпустить" : Item == InventoryItem.Wine ? "Удерживать ЛКМ — бег по воде на 60 с" : "ЛКМ — выпустить попугая • цель до 100 м • 50 урона";
             PirateHudStyle.Label(new Rect(Screen.width/2f-300,Screen.height-175,600,32),hint,PirateHudStyle.Paper);
         }
         void DrawScope()
@@ -325,3 +325,4 @@ namespace PirateSlop.Networking
         void OnDestroy() { if(scopeMask!=null) Destroy(scopeMask); if(view!=null) Destroy(view.gameObject); if(world!=null) Destroy(world.gameObject); }
     }
 }
+

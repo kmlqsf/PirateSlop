@@ -169,11 +169,11 @@ public class AdvancedPlayerController : MonoBehaviour
         if (!command.IsValid) command = default;
         transform.rotation = Quaternion.Euler(0, command.Yaw, 0);
         cooldown = Mathf.Max(0, cooldown - dt);
-        if (LocomotionLocked) { PlanarSpeed = 0f; verticalVelocity = 0f; slideTimer = 0f; return; }
+        if (LocomotionLocked && !(GetComponent<PirateSlop.Networking.NetworkWeapon>()?.BeingHooked ?? false)) { PlanarSpeed = 0f; verticalVelocity = 0f; slideTimer = 0f; return; }
         ladderCooldown = Mathf.Max(0, ladderCooldown - dt);
         knockbackTime = Mathf.Max(0f, knockbackTime - dt);
         knockbackVelocity *= Mathf.Exp(-(IsSwimming ? 3f : .65f) * dt);
-        if (!IsKnockedBack && SimulateGrapple(command, dt)) return;
+        if (SimulateGrapple(command, dt)) return;
         if (!IsKnockedBack && SimulateLadder(command, dt)) return;
         var ocean = OceanSurface.Instance;
         float water = ocean != null ? ocean.Height(transform.position) : float.NegativeInfinity;
@@ -243,35 +243,42 @@ public class AdvancedPlayerController : MonoBehaviour
     bool SimulateGrapple(PlayerCommand command, float dt)
     {
         var hook = GetComponent<PirateSlop.Networking.NetworkWeapon>();
-        if (hook == null || !hook.GrappleActive) return false;
-        if (command.Jump || command.Release)
+        if (hook == null || (!hook.GrappleActive && !hook.BeingHooked)) return false;
+        bool captured = hook.BeingHooked;
+        if (!captured && (command.Jump || command.Release))
         {
-            hook.ReleaseGrapple(); IsClimbing=false; verticalVelocity=0;
-            GetComponent<ShipDeckPassenger>()?.Attach(null);
+            hook.ReleaseGrapple(); IsClimbing = false;
+            ApplyKnockback(swimVelocity);
             return false;
         }
-        IsClimbing=true; IsSwimming=false; IsGrounded=false;
-        slideTimer=0; swimVelocity=Vector3.zero; verticalVelocity=0;
-        SetHeight(false);
-        GetComponent<ShipDeckPassenger>()?.Attach(hook.GrappleBody);
-        Vector3 anchor=hook.GrapplePoint+hook.GrappleNormal*.55f;
-        Vector3 delta=anchor-(transform.position+Vector3.up);
-        float input=command.Crouch ? -1 : command.Move.y;
-        Vector3 movement=delta.normalized*input*4f*dt;
-        if (input < 0 && delta.y < 0) movement=delta.normalized*(-input)*3f*dt;
-          if (Vector3.Distance(transform.position,hook.GrapplePoint)>36 && input<0) movement=Vector3.zero;
-        if (delta.magnitude<1.2f && input>0)
+        if (!IsClimbing)
         {
-            movement=(Vector3.up-hook.GrappleNormal*.45f)*3f*dt;
-            if (HasGround() && transform.position.y>hook.GrapplePoint.y+.1f)
-            { hook.ReleaseGrapple(); IsClimbing=false; return false; }
+            var passenger = GetComponent<ShipDeckPassenger>();
+            var ship = passenger != null && passenger.Ship != null ? passenger.Ship.GetComponent<ShipController>() : null;
+            swimVelocity = knockbackVelocity + Vector3.up * Mathf.Clamp(verticalVelocity, -8f, 8f);
+            if (ship != null) swimVelocity += ship.CannonPointVelocity(transform.position);
         }
-          movement += transform.right * (command.Move.x * 2.5f * dt);
-          Vector3 offset = transform.position + movement + Vector3.up - hook.GrapplePoint;
-          if (offset.magnitude > 36) movement -= offset.normalized * (offset.magnitude - 36);
-          controller.Move(movement);
-        PlanarSpeed=movement.magnitude/Mathf.Max(.001f,dt);
-        Breath=Mathf.MoveTowards(Breath,breathSeconds,dt*8);
+        locomotionLocked = false;
+        GetComponent<ShipDeckPassenger>()?.Attach(null);
+        IsClimbing = true; IsSwimming = false; IsGrounded = false;
+        slideTimer = 0f; knockbackTime = 0f; ladderCooldown = .5f;
+        Vector3 delta = hook.PullPoint - (transform.position + Vector3.up);
+        float distance = delta.magnitude;
+        Vector3 radial = distance > .001f ? delta / distance : Vector3.up;
+        float desiredSpeed = Mathf.Min(14f, distance * 3f);
+        float tension = Mathf.Clamp((desiredSpeed - Vector3.Dot(swimVelocity, radial)) * 7f, -35f, 65f);
+        Vector3 steering = captured ? Vector3.zero : Vector3.ProjectOnPlane(transform.right * command.Move.x + transform.forward * command.Move.y, radial) * 8f;
+        swimVelocity += (radial * tension + Vector3.down * 10f + steering) * dt;
+        swimVelocity *= Mathf.Exp(-.3f * dt);
+        swimVelocity = Vector3.ClampMagnitude(swimVelocity, 20f);
+        var before = transform.position;
+        var flags = controller.Move(swimVelocity * dt);
+        Vector3 actual = (transform.position - before) / Mathf.Max(.001f, dt);
+        if (flags != CollisionFlags.None) swimVelocity = actual;
+        verticalVelocity = swimVelocity.y;
+        knockbackVelocity = Vector3.ProjectOnPlane(swimVelocity, Vector3.up);
+        PlanarSpeed = Vector3.ProjectOnPlane(actual, Vector3.up).magnitude;
+        Breath = Mathf.MoveTowards(Breath, breathSeconds, dt * 8f);
         return true;
     }
     bool SimulateLadder(PlayerCommand command, float dt)
@@ -416,4 +423,5 @@ public class AdvancedPlayerController : MonoBehaviour
         if ((controller.center - center).sqrMagnitude > .000001f) controller.center = center;
     }
 }
+
 

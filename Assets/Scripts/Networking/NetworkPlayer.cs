@@ -35,6 +35,7 @@ namespace PirateSlop.Networking
         public readonly SyncVar<bool> IsBot = new();
         public readonly SyncVar<bool> Eliminated = new();
         BotCaptain bot;
+        public bool IsTrainingDummy { get; set; }
         public string BotStatus => !IsBot.Value ? "Human controlled" : bot != null ? bot.Status : "Awaiting server brain";
         public bool OnSupplyTrip => bot != null && bot.OnSupplyTrip;
         AdvancedPlayerController motor;
@@ -125,6 +126,11 @@ namespace PirateSlop.Networking
             // and the server are allowed to simulate this player.
             if (!IsOwner && !IsServerInitialized) return;
             if (!TryBind()) return;
+            if (IsTrainingDummy && IsServerInitialized)
+            {
+                SimulateCommand(new PlayerCommand { Yaw = motor.transform.eulerAngles.y });
+                return;
+            }
             if (IsBot.Value)
             {
                 if (IsServerInitialized && bot != null)

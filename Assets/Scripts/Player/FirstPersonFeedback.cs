@@ -9,9 +9,10 @@ namespace PirateSlop
     {
         NetworkPlayer player;
         Camera view;
-        Vector3 lastPosition, offset;
+        Vector3 lastPosition, offset, lastPlayerPosition;
         Quaternion lastRotation, rotationOffset = Quaternion.identity;
         float blend;
+        float blendDuration = .22f;
         int mode = -1;
         bool initialized;
         static readonly CinemachineImpulseDefinition impulse = new()
@@ -33,18 +34,20 @@ namespace PirateSlop
             if (player == null || !player.IsOwner || player.Motor.IsThirdPerson) { initialized = false; return; }
             view = player.Motor.PlayerCamera;
             if (view == null || !view.isActiveAndEnabled) { initialized = false; return; }
-            int nextMode = ShipSpyglassView.IsViewing ? 2 : player.Motor.ActiveCannon != null ? 1 : 0;
+            int nextMode = ShipSpyglassView.IsViewing ? 2 : player.Motor.ActiveCannon != null ? (player.Motor.ActiveCannon.IsMortar ? 3 : 1) : 0;
             Vector3 targetPosition = view.transform.position;
             Quaternion targetRotation = view.transform.rotation;
-            if (!initialized || Vector3.Distance(targetPosition, lastPosition) > 12f)
+            if (!initialized || Vector3.Distance(player.transform.position, lastPlayerPosition) > 12f)
             { initialized = true; lastPosition = targetPosition; lastRotation = targetRotation; mode = nextMode; blend = 0f; }
+            lastPlayerPosition = player.transform.position;
             if (mode != nextMode)
             {
                 offset = lastPosition - targetPosition;
                 rotationOffset = Quaternion.Inverse(targetRotation) * lastRotation;
+                blendDuration = mode == 3 || nextMode == 3 ? .65f : .22f;
                 blend = 1f; mode = nextMode;
             }
-            blend = Mathf.MoveTowards(blend, 0f, Time.unscaledDeltaTime / .22f);
+            blend = Mathf.MoveTowards(blend, 0f, Time.unscaledDeltaTime / blendDuration);
             float weight = Mathf.SmoothStep(0f, 1f, blend);
             lastPosition = targetPosition + offset * weight;
             lastRotation = targetRotation * Quaternion.Slerp(Quaternion.identity, rotationOffset, weight);
