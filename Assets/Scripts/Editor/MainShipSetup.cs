@@ -58,16 +58,6 @@ namespace PirateSlop.EditorTools
                     mesh.name = name;
                     var matrix = correction * filter.transform.localToWorldMatrix;
                     var vertices = mesh.vertices.Select(matrix.MultiplyPoint3x4).ToArray();
-                    if (name == "F2_Wheel" || name == "F2_WheelStand")
-                    {
-                        var anchor = new Vector3(0, 7.024f, -10.42f);
-                        vertices = vertices.Select(v => anchor + (v - anchor) * .64f).ToArray();
-                    }
-                    if (name.StartsWith("F2_Fencing"))
-                    {
-                        float deck = name.EndsWith("Back") ? 7.024f : name.EndsWith("Front") ? 5.459f : 4.3f;
-                        vertices = vertices.Select(v => new Vector3(v.x, deck + (v.y - deck) * .8f, v.z)).ToArray();
-                    }
                     var bounds = new Bounds(vertices[0], Vector3.zero);
                     foreach (var v in vertices) bounds.Encapsulate(v);
                     var pivot = name == "F2_Wheel" ? bounds.center : name.StartsWith("F2_Sail") ? new Vector3(bounds.center.x, bounds.max.y, bounds.center.z) : Vector3.zero;
@@ -103,7 +93,7 @@ namespace PirateSlop.EditorTools
                     go.gameObject.AddComponent<MeshRenderer>().sharedMaterials = filter.GetComponent<Renderer>().sharedMaterials.Select(m => materials[m.name]).ToArray();
                     if (name == "F2_Wheel") wheel = go;
                     if (name.StartsWith("F2_Sail")) sails.Add(go);
-                    bool solid = name == "F2_Body" || name.StartsWith("F2_Floor") || name.StartsWith("F2_Closed") || name == "F2_SealedCentralHatch" || name.StartsWith("F2_Fencing") || name.StartsWith("F2_Mast") || name == "F2_Wall" || name == "F2_WheelStand" || name == "F2_Prow";
+                    bool solid = name == "F2_Body" || name.StartsWith("F2_Floor") || name.StartsWith("F2_Closed") || name == "F2_SealedCentralHatch" || name.StartsWith("F2_Fencing") || name.StartsWith("F2_Mast") || name == "F2_Wall" || name == "F2_WindowFrames" || name == "F2_WheelStand" || name == "F2_Prow";
                     if (solid) go.gameObject.AddComponent<MeshCollider>().sharedMesh = mesh;
                     if (name.StartsWith("F2_Mast"))
                     {
