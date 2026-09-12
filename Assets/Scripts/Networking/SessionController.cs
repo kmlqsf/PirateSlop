@@ -196,6 +196,7 @@ namespace PirateSlop.Networking
                 yield return builder.Current;
             }
             (builder as IDisposable)?.Dispose();
+            if (world.Ready) ShipComparison.Spawn(world, Config);
         }
         void WorldManifest(WorldManifestMessage message, Channel channel)
         {

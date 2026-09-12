@@ -8,6 +8,7 @@ namespace PirateSlop
     {
         public float ForwardPush = 1.1f, SidePush = .12f, RollDrag = 2.6f, RecoilSpeed = 2.8f;
         SimpleCannon cannon;
+        BoxCollider footprint;
         Transform ship;
         Vector3 velocity;
         float spin, nextPublish;
@@ -16,6 +17,7 @@ namespace PirateSlop
         void Start()
         {
             cannon = GetComponent<SimpleCannon>();
+            footprint = GetComponent<BoxCollider>();
             ship = cannon.Crate != null ? cannon.Crate.Ship.transform : null;
             movable = ship != null && Vector3.Dot(transform.up, ship.up) > .97f && Supported(transform.localPosition, transform.localRotation);
         }
@@ -54,8 +56,9 @@ namespace PirateSlop
         bool Free(Vector3 position, Quaternion rotation)
         {
             if (!Supported(position,rotation)) return false;
-            var center = ship.TransformPoint(position + rotation * new Vector3(0,.39f,0));
-            foreach(var hit in Physics.OverlapBox(center,new Vector3(.71f,.28f,.86f),ship.rotation*rotation,~0,QueryTriggerInteraction.Ignore))
+            var center = ship.TransformPoint(position + rotation * footprint.center);
+            var extents = footprint.size * .5f - new Vector3(.04f,.07f,.04f);
+            foreach(var hit in Physics.OverlapBox(center,extents,ship.rotation*rotation,~0,QueryTriggerInteraction.Ignore))
             {
                 if (hit.transform.IsChildOf(transform) || hit.GetComponentInParent<AdvancedPlayerController>() != null || hit.GetComponentInParent<Cannonball>() != null) continue;
                 return false;

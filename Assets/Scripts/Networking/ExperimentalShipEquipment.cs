@@ -22,7 +22,7 @@ namespace PirateSlop.Networking
             for(int i=0;i<Prefabs.Length;i++)
             {
                 if(Prefabs[i]==null || (spawned[i]!=null && spawned[i].IsSpawned)) continue;
-                Vector3 point=transform.TransformPoint(new Vector3(-2.8f+i*1.7f,4.6f,-6));
+                Vector3 point=transform.TransformPoint(new Vector3(-3.4f+i*1.7f,4.6f,0));
                 float nearest = 4f;
                 foreach(var hit in Physics.RaycastAll(point+transform.up*2,-transform.up,4,~0,QueryTriggerInteraction.Ignore))
                     if(hit.collider.GetComponentInParent<NetworkShip>() == GetComponent<NetworkShip>() && hit.distance < nearest && Vector3.Dot(hit.normal,transform.up)>.7f)

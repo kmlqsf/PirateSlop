@@ -281,6 +281,7 @@ namespace PirateSlop.Networking
         void RejectShotTargetRpc(FishNet.Connection.NetworkConnection connection) => weapon.RejectPredictedShot();
         void Update()
         {
+            UpdateShipComparison();
             UpdateGrapple();
             if (inventory != null && IsClientInitialized && !IsServerInitialized)
             {

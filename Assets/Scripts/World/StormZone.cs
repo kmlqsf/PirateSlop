@@ -18,11 +18,13 @@ namespace PirateSlop.World
         public Networking.NetworkShip LocalShip => localPlayer != null ? localPlayer.Ship : null;
         public float DistanceInside(Vector3 point) => Radius - new Vector2(point.x, point.z).magnitude;
         void Awake() { Instance = this; }
-        public float Progress => Mathf.Clamp01((elapsed + Time.time - receivedAt) / duration);
+        public bool Paused { get; private set; }
+        public float Progress => Mathf.Clamp01((elapsed + (Paused ? 0 : Time.time - receivedAt)) / duration);
         public float Radius => Mathf.Lerp(startRadius, FinalRadius, Progress);
 
-        public void Synchronize(float time, float length, float radius)
+        public void Synchronize(float time, float length, float radius, bool paused = false)
         {
+            Paused = paused;
             elapsed = time;
             receivedAt = Time.time;
             duration = Mathf.Max(1, length);
@@ -113,6 +115,7 @@ namespace PirateSlop.World
             int remaining = Mathf.CeilToInt(duration * (1 - Progress));
             float distance = DistanceInside(localPlayer != null ? localPlayer.transform.position : camera.transform.position);
             string shipStatus = LocalShip != null ? (DistanceInside(LocalShip.transform.position) > 0 ? "Корабль в зоне" : "КОРАБЛЬ В ШТОРМЕ") : "";
+            if (Paused) shipStatus = "ЗОНА НА ПАУЗЕ · урон отключён";
             GUI.color = distance <= 0 ? new Color(1, .55f, .4f) : new Color(.65f, 1, .94f);
             PirateHudStyle.Panel(new Rect(Screen.width - 404, 24, 380, 80), $"ШТОРМ  {remaining / 60:00}:{remaining % 60:00}   •   Радиус {Radius:0} м\n" + (distance <= 0 ? $"ВЫ В ШТОРМЕ • До зоны {Mathf.Abs(distance):0} м" : $"В безопасной зоне • До шторма {distance:0} м") + "\n" + shipStatus + " • Карта: M");
             GUI.color = old;

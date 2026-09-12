@@ -18,6 +18,12 @@ namespace PirateSlop.Networking
             if (Time.time < nextDeveloperCommand) return;
             nextDeveloperCommand = Time.time + .3f;
             var session = SessionController.Instance;
+            if (command == 14)
+            {
+                bool changed = session != null && session.ToggleStormPause();
+                DeveloperResultTargetRpc(Owner, !changed ? "Зона ещё не запущена." : session.StormPaused ? "Зона остановлена. Сужение и урон на паузе." : "Зона продолжает сужаться. Урон включён.");
+                return;
+            }
             var health = GetComponent<CombatHealth>();
             if (command == 6) { health.Heal(health.MaxHealth); DeveloperResultTargetRpc(Owner, "Здоровье восстановлено."); return; }
             if (command == 12) { health.Damage(10f); DeveloperResultTargetRpc(Owner, "Нанесено 10 урона."); return; }

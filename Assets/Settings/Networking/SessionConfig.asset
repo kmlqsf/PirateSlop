@@ -13,15 +13,17 @@ MonoBehaviour:
   m_Name: SessionConfig
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.Networking.SessionConfig
   Loot: {fileID: 11400000, guid: 042c2934844dcd546a82e80071b0a132, type: 2}
+  ShipComparisonEnabled: 0
+  ComparisonShips: []
   Port: 7777
   MaxPlayers: 30
   TickRate: 30
-  ProtocolVersion: 64
+  ProtocolVersion: 68
   ConnectTimeout: 15
   ObserverRadius: 1000
   ObserverHysteresis: 0.2
   ClusteredTestSpawns: 1
   SpawnSpacing: 52
   ShipOrigin: {x: 0, y: 0, z: 0}
-  PlayerLocalSpawn: {x: 0, y: 7.2, z: -19.2}
+  PlayerLocalSpawn: {x: -1.5, y: 7.15, z: -13}
   GameScene: NetworkOcean

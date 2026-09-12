@@ -33,6 +33,7 @@ namespace PirateSlop
             scroll = GUILayout.BeginScrollView(scroll);
             if (network.IsServerInitialized) AllowRemote = GUILayout.Toggle(AllowRemote, "Разрешить команды другим игрокам");
             GUILayout.Label("Персонаж и испытания");
+            Button(SessionController.Instance != null && SessionController.Instance.StormPaused ? "Продолжить зону" : "Остановить зону (сужение и урон)", 14);
             Button("Восстановить здоровье", 6);
             Button("Нанести себе 10 урона", 12);
             Button("Создать корабль рядом", 0);

@@ -5,6 +5,8 @@ namespace PirateSlop.Networking
     public sealed class SessionConfig : ScriptableObject
     {
         public LootCatalog Loot;
+        public bool ShipComparisonEnabled;
+        public PirateSlop.World.ShipComparison[] ComparisonShips;
         public ushort Port = 7777;
         [Range(3, 126)] public int MaxPlayers = 30;
         public ushort TickRate = 30;
