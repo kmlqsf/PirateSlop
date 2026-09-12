@@ -123,7 +123,7 @@ namespace PirateSlop.Networking
         void DropSelectedAuthority()
         {
             var motor = GetComponent<AdvancedPlayerController>();
-            if (motor.IsDead || motor.IsSwimming || motor.IsClimbing || motor.LocomotionLocked || GetComponent<CannonHands>().HasHeldBall || inventory.Fishing.CarryingCatch || inventory.Fishing.IsEating) return;
+            if (LootHandsBusy || motor.IsDead || motor.IsSwimming || motor.IsClimbing || motor.LocomotionLocked || GetComponent<CannonHands>().HasHeldBall || inventory.Fishing.CarryingCatch || inventory.Fishing.IsEating) return;
             int slot = selectedSlot.Value;
             InventoryItem item;
             if (inventory.EquipmentAt(slot) != InventoryItem.None) item = inventory.EquipmentAt(slot);
@@ -187,10 +187,10 @@ namespace PirateSlop.Networking
         {
             var motor = GetComponent<AdvancedPlayerController>();
             var fishing = inventory.Fishing;
-            if (target == null || motor.IsDead || motor.IsSwimming || motor.IsClimbing || motor.LocomotionLocked || GetComponent<CannonHands>().HasHeldBall) return;
+            if (target == null || LootHandsBusy || motor.IsDead || motor.IsClimbing || motor.LocomotionLocked || GetComponent<CannonHands>().HasHeldBall) return;
             if (fishing != null && (fishing.CarryingCatch || fishing.IsFishing || fishing.IsEating)) return;
             var chest = target.GetComponent<NetworkLootChest>();
-            if (chest == null || !chest.IsSpawned || Vector3.Distance(transform.position, target.transform.position) > 5f) return;
+            if (chest == null || !chest.IsSpawned || !chest.Available || Vector3.Distance(transform.position, target.transform.position) > 5f) return;
             Vector3 origin = transform.position + Vector3.up * 1.5f;
             Vector3 delta = target.transform.position + Vector3.up * .4f - origin;
             foreach (var hit in Physics.RaycastAll(origin, delta.normalized, delta.magnitude, ~0, QueryTriggerInteraction.Ignore))
@@ -225,7 +225,7 @@ namespace PirateSlop.Networking
         {
             var motor = GetComponent<AdvancedPlayerController>();
             var fishing = inventory.Fishing;
-            return !motor.IsDead && !motor.IsSwimming && !motor.IsClimbing && !motor.LocomotionLocked &&
+            return !LootHandsBusy && !motor.IsDead && !motor.IsSwimming && !motor.IsClimbing && !motor.LocomotionLocked &&
                 (fishing == null || (!fishing.CarryingCatch && !fishing.IsFishing && !fishing.IsEating));
         }
         public bool CanReach(Vector3 point, Transform target)

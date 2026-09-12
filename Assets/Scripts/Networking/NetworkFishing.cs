@@ -47,7 +47,7 @@ namespace PirateSlop.Networking
         public bool CarryingCatch => stage.Value == 5;
         public bool HasFish => CarryingCatch || (inventory != null && inventory.FishSelected);
         public bool IsFishing => stage.Value > 0 && stage.Value < 5;
-        bool Available => !motor.IsDead && !motor.IsSwimming && !motor.IsClimbing && !motor.LocomotionLocked && !hands.HasHeldBall;
+        bool Available => !motor.IsDead && !motor.IsSwimming && !motor.IsClimbing && !motor.LocomotionLocked && !hands.HasHeldBall && !(GetComponent<NetworkWeapon>()?.LootHandsBusy ?? false);
         void Awake()
         {
             motor = GetComponent<AdvancedPlayerController>(); inventory = GetComponent<PlayerInventory>();

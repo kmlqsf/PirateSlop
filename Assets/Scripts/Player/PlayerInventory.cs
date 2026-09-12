@@ -16,6 +16,8 @@ namespace PirateSlop
         bool lootWindow;
         float selectionShownAt;
         NetworkLootChest openChest;
+        float nextLootInput, lockPromptAt;
+        int shownLockRound = -1;
         Cannonball aimedBall;
         SimpleCannon aimedCannon;
         readonly int[] ballCounts = new int[6];
@@ -41,7 +43,7 @@ namespace PirateSlop
         public InventoryItem ItemAt(int slot) => EquipmentAt(slot) != InventoryItem.None ? EquipmentAt(slot) : HasSabre(slot) ? InventoryItem.Sabre : PistolAt(slot) ? InventoryItem.Pistol : RodAt(slot) ? InventoryItem.Rod : HasCannon(slot) ? InventoryItem.Cannon : FishCount(slot) > 0 ? InventoryItem.Fish : BallCount(slot) > 0 ? BallItem(slot) : HasMallet(slot) ? InventoryItem.Mallet : PlankCount(slot) > 0 ? InventoryItem.Plank : RumCount(slot) > 0 ? InventoryItem.Rum : InventoryItem.None;
         public void OpenLoot(NetworkLootChest target)
         {
-            if (target == null || !network.IsOwner || motor.IsDead || Vector3.Distance(transform.position, target.transform.position) > 5f) return;
+            if (target == null || !target.Available || !network.IsOwner || motor.IsDead || network.LootHandsBusy || Vector3.Distance(transform.position, target.transform.position) > 5f) return;
             if (!lootWindow) GameAudio.Play(SoundCue.ChestOpen, target.transform.position);
             openChest = target; lootWindow = true; lootOwner = this;
             AdvancedPlayerController.SetCursor(false);
@@ -59,7 +61,7 @@ namespace PirateSlop
         public int SelectedSlot { get; private set; }
         public int CannonSlots { get; private set; }
         public NetworkFishing Fishing { get; private set; }
-        public bool HandsOccupied => Fishing != null && Fishing.HasFish;
+        public bool HandsOccupied => (Fishing != null && Fishing.HasFish) || (network != null && network.LootHandsBusy);
         public int PistolSlots { get; set; } = 1;
         public int RodSlots { get; set; } = 2;
         public bool HasPistol => PistolSlots != 0;
@@ -120,11 +122,12 @@ namespace PirateSlop
             if (lootWindow)
             {
                 InteractionUsed = true;
-                if (openChest == null || !openChest.IsSpawned || motor.IsDead || !Networked || Vector3.Distance(transform.position, openChest.transform.position) > 5f)
+                if (openChest == null || !openChest.Available || motor.IsDead || !Networked || network.LootHandsBusy || Vector3.Distance(transform.position, openChest.transform.position) > 5f)
                     CloseLoot(Networked && network.IsOwner && !motor.IsDead);
                 else if (Keyboard.current != null && (Keyboard.current.escapeKey.wasPressedThisFrame || Keyboard.current.eKey.wasPressedThisFrame)) CloseLoot(true);
                 return;
             }
+            if (HandleSeaLoot()) return;
             if (!motor.InputActive || motor.LocomotionLocked || (motor.IsSwimming || motor.IsClimbing)) return;
             var keyboard = Keyboard.current;
             var mouse = Mouse.current;
@@ -244,6 +247,56 @@ namespace PirateSlop
             else { crate.AddCannon(localPosition, localRotation); CannonSlots &= ~(1 << SelectedSlot); }
         }
 
+        bool HandleSeaLoot()
+        {
+            if (!Networked || !network.IsOwner) return false;
+            var keyboard = Keyboard.current;
+            if (keyboard == null) return network.LootHandsBusy;
+            var working = network.WorkingLoot;
+            if (working != null)
+            {
+                InteractionUsed = true;
+                if (shownLockRound != working.LockRound) { shownLockRound = working.LockRound; lockPromptAt = Time.unscaledTime; }
+                bool active = motor.InputActive && !keyboard.qKey.wasPressedThisFrame && !keyboard.escapeKey.wasPressedThisFrame;
+                if (working.Kind == SeaLootKind.Sunken) active &= keyboard.eKey.isPressed;
+                else active &= !keyboard.eKey.wasPressedThisFrame;
+                int key = -1;
+                if (Time.unscaledTime - lockPromptAt >= .85f)
+                    for (int i = 0; i < 4; i++) if (keyboard[(Key)((int)Key.Digit1 + i)].wasPressedThisFrame) key = i;
+                if (!active || key >= 0 || Time.unscaledTime >= nextLootInput)
+                {
+                    network.LootInput(active, key, working.LockRound);
+                    nextLootInput = Time.unscaledTime + .2f;
+                }
+                return true;
+            }
+            shownLockRound = -1;
+            if (network.CarriedLoot != null)
+            {
+                InteractionUsed = true;
+                if (motor.InputActive && keyboard.gKey.wasPressedThisFrame) network.DropLoot();
+                return true;
+            }
+            if (!motor.InputActive || motor.LocomotionLocked || motor.IsClimbing || HandsOccupied || (hands != null && hands.HasHeldBall)) return false;
+            if (Fishing != null && (Fishing.IsFishing || Fishing.IsEating)) return false;
+            var camera = motor.PlayerCamera;
+            if (camera == null) return false;
+            RaycastHit nearest = default;
+            float distance = 5;
+            foreach (var hit in Physics.RaycastAll(camera.transform.position, camera.transform.forward, distance, ~0, QueryTriggerInteraction.Ignore))
+                if (!hit.transform.IsChildOf(transform) && hit.distance < distance) { nearest = hit; distance = hit.distance; }
+            chest = nearest.collider != null ? nearest.collider.GetComponentInParent<NetworkLootChest>() : null;
+            if (chest == null || chest.Kind == SeaLootKind.None) return false;
+            InteractionUsed = true;
+            if (keyboard.fKey.wasPressedThisFrame && chest.Available) network.CarryLoot(chest.NetworkObject);
+            else if (keyboard.eKey.wasPressedThisFrame)
+            {
+                if (chest.Available) network.UseChest(chest.NetworkObject);
+                else network.StartLootWork(chest.NetworkObject);
+            }
+            return true;
+        }
+
         void CreatePreview()
         {
             preview = Instantiate(CannonPrefab.gameObject);
@@ -279,6 +332,13 @@ namespace PirateSlop
         {
             if (motor == null || motor.PlayerCamera == null || !motor.PlayerCamera.enabled || SessionController.MenuOpen) return;
             if (motor.IsDead || ShipSpyglassView.IsViewing) return;
+            if (network != null && network.WorkingLoot != null)
+            {
+                string workHint = network.WorkingLoot.Kind == SeaLootKind.Raft && Time.unscaledTime - lockPromptAt < .85f ? "Подготовка отмычки…" : network.WorkingLoot.WorkHint;
+                PirateHudStyle.Panel(new Rect(Screen.width * .5f - 240, Screen.height * .5f + 70, 480, 58), workHint);
+            }
+            else if (network != null && network.CarriedLoot != null)
+                PirateHudStyle.Panel(new Rect(Screen.width * .5f - 200, Screen.height - 165, 400, 44), "Несёте ящик · G — положить");
             Color old = GUI.color;
             float width = Mathf.Min(76f, (Screen.width - 32f) / 6f);
             for (int i = 0; i < 6; i++)

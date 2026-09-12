@@ -20,6 +20,13 @@ namespace PirateSlop
         public Vector2Int LooseItemsPerIsland = new(2, 4);
         public Vector2Int ChestsPerIsland = new(1, 3);
         public Vector2Int ItemsPerChest = new(1, 2);
+        [Min(1)] public int SeaEventsPerType = 3;
+        [Min(10)] public float CaptureRadius = 65;
+        [Min(1)] public float CaptureSeconds = 45;
+        [Min(1)] public int LockpickSteps = 5;
+        [Min(1)] public float UntieSeconds = 4;
+        [Min(3)] public float SunkenDepth = 8;
+        [Min(.1f)] public float LootRiseSpeed = 1.5f;
         public Entry[] Items = { new Entry() };
         public bool Roll(ref MapRandom random, out InventoryItem item)
         {

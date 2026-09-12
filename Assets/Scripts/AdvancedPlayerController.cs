@@ -69,7 +69,8 @@ public class AdvancedPlayerController : MonoBehaviour
     public bool IsDead => health != null && health.IsDead;
     bool locomotionLocked;
     public SimpleCannon ActiveCannon { get; set; }
-    public bool LocomotionLocked => locomotionLocked || ActiveCannon != null;
+    public bool LocomotionLocked => locomotionLocked || ActiveCannon != null || (lootNetwork != null && lootNetwork.LootWorkLocked);
+    PirateSlop.Networking.NetworkWeapon lootNetwork;
     public bool IsSliding => slideTimer > 0f;
     public bool IsCrouched => crouched;
     public float PlanarSpeed { get; private set; }
@@ -78,6 +79,7 @@ public class AdvancedPlayerController : MonoBehaviour
     void Awake()
     {
         health = GetComponent<CombatHealth>();
+        lootNetwork = GetComponent<PirateSlop.Networking.NetworkWeapon>();
         inventory = GetComponent<PlayerInventory>();
         equipment = GetComponent<PirateSlop.Networking.NetworkEquipment>();
         shipControls = GetComponent<DirectShipControls>();

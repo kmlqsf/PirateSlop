@@ -152,7 +152,7 @@ namespace PirateSlop.Networking
             if (args.ConnectionState == LocalConnectionState.Started)
             {
                 Debug.Log($"SESSION_READY id={SessionId} port={transport.GetPort()} capacity={MaxPlayers}");
-                IslandLootSpawner.Spawn(ProceduralWorld.Instance, manager, Config.Loot);
+                SeaLootSpawner.Spawn(ProceduralWorld.Instance, manager, Config.Loot);
                 if (steamSession) party.ServerReady();
                 if (dedicated) { connecting = false; status = "Сервер запущен"; }
                 else if (hostRequested) manager.ClientManager.StartConnection();

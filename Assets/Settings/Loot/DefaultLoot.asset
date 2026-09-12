@@ -34,6 +34,13 @@ MonoBehaviour:
   LooseItemsPerIsland: {x: 2, y: 4}
   ChestsPerIsland: {x: 1, y: 3}
   ItemsPerChest: {x: 1, y: 2}
+  SeaEventsPerType: 3
+  CaptureRadius: 65
+  CaptureSeconds: 45
+  LockpickSteps: 5
+  UntieSeconds: 4
+  SunkenDepth: 8
+  LootRiseSpeed: 1.5
   Items:
   - Item: 0
     Name: "\u0420\u044B\u0431\u0430"

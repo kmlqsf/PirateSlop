@@ -103,6 +103,7 @@ namespace PirateSlop
             if (network != null && !network.IsServerInitialized) return;
             if (IsDead || amount <= 0 || float.IsNaN(amount) || float.IsInfinity(amount)) return;
             float dealt = Mathf.Min(Current, amount);
+            GetComponent<NetworkWeapon>()?.CancelLootWork();
             if (amount >= Current && controller != null)
             {
                 Vector3 direction = attacker != null ? transform.position - attacker.transform.position : -transform.forward;

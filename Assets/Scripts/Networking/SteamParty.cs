@@ -15,8 +15,10 @@ namespace PirateSlop.Networking
         public CSteamID MatchLobby { get; private set; }
         public bool MatchStarted => MatchLobby.m_SteamID != 0 && SteamMatchmaking.GetLobbyData(MatchLobby, "state") == "playing";
         public bool Waiting => InLobby && SteamMatchmaking.GetLobbyData(Lobby, "state") == "waiting";
+        public bool SeparateTeams => InLobby && SteamMatchmaking.GetLobbyData(Lobby, "team_mode") == "opponents";
+        string TeamMode => SeparateTeams ? "opponents" : "together";
         readonly System.Collections.Generic.Dictionary<ulong, int> matchTeams = new();
-        readonly System.Collections.Generic.Dictionary<ulong, int> crewTeams = new();
+        readonly System.Collections.Generic.Dictionary<string, int> crewTeams = new();
         CallResult<LobbyCreated_t> matchCreated;
         CallResult<LobbyEnter_t> matchEntered;
         float nextCheck;
@@ -83,6 +85,7 @@ namespace PirateSlop.Networking
             SteamMatchmaking.SetLobbyData(Lobby, "kind", "party");
             SteamMatchmaking.SetLobbyData(Lobby, "protocol", session.ProtocolVersion.ToString());
             SteamMatchmaking.SetLobbyData(Lobby, "state", "waiting");
+            SteamMatchmaking.SetLobbyData(Lobby, "team_mode", "together");
             SteamMatchmaking.SetLobbyData(Lobby, "leader", leader.ToString());
             SteamMatchmaking.SetLobbyJoinable(Lobby, true);
             Ready(false); PublishPresence(); Status = "Команда собирается";
@@ -108,8 +111,24 @@ namespace PirateSlop.Networking
         public int Count => InLobby ? SteamMatchmaking.GetNumLobbyMembers(Lobby) : 0;
         public CSteamID Member(int index) => SteamMatchmaking.GetLobbyMemberByIndex(Lobby, index);
         public string Name(CSteamID id) => SteamFriends.GetFriendPersonaName(id);
-        public bool IsReady(CSteamID id) => SteamMatchmaking.GetLobbyMemberData(Lobby, id, "ready") == "1";
-        public void Ready(bool value) { if (Waiting) SteamMatchmaking.SetLobbyMemberData(Lobby, "ready", value ? "1" : "0"); }
+        public bool IsReady(CSteamID id) => SteamMatchmaking.GetLobbyMemberData(Lobby, id, "ready") == "1" && SteamMatchmaking.GetLobbyMemberData(Lobby, id, "ready_mode") == TeamMode;
+        public void Ready(bool value)
+        {
+            if (!Waiting || (value && (Busy || session.SessionBusy))) return;
+            SteamMatchmaking.SetLobbyMemberData(Lobby, "ready_mode", TeamMode);
+            SteamMatchmaking.SetLobbyMemberData(Lobby, "ready", value ? "1" : "0");
+        }
+        public void SetSeparateTeams(bool value)
+        {
+            if (!IsLeader || !Waiting || Busy || session.SessionBusy || value == SeparateTeams) return;
+            SteamMatchmaking.SetLobbyData(Lobby, "team_mode", value ? "opponents" : "together");
+            Ready(false);
+        }
+        void PublishMembership()
+        {
+            SteamMatchmaking.SetLobbyMemberData(MatchLobby, "team_mode", TeamMode);
+            SteamMatchmaking.SetLobbyMemberData(MatchLobby, "party", Lobby.ToString());
+        }
         void JoinConnection(string connection)
         {
             var args = (connection ?? "").Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
@@ -180,6 +199,7 @@ namespace PirateSlop.Networking
         {
             if (!IsLeader || !Waiting || Busy || session.SessionBusy) return false;
             if (Count > SessionController.CrewSize) { Status = "В команде может быть не больше трёх игроков"; return false; }
+            if (SeparateTeams && Count > session.MaxPlayers / SessionController.CrewSize) { Status = "В сессии недостаточно кораблей для отдельных команд"; return false; }
             for (int i = 0; i < Count; i++) if (!IsReady(Member(i))) { Status = "Дождитесь готовности всех участников"; return false; }
             return true;
         }
@@ -193,7 +213,7 @@ namespace PirateSlop.Networking
             SteamMatchmaking.SetLobbyData(MatchLobby, "protocol", session.ProtocolVersion.ToString());
             SteamMatchmaking.SetLobbyData(MatchLobby, "host", SteamUser.GetSteamID().ToString());
             SteamMatchmaking.SetLobbyData(MatchLobby, "state", "loading");
-            SteamMatchmaking.SetLobbyMemberData(MatchLobby, "party", Lobby.ToString());
+            PublishMembership();
             PublishSession();
             joiningMatch = true;
             UpdateAdmissions();
@@ -221,7 +241,7 @@ namespace PirateSlop.Networking
             { LeaveSession(); Status = "Другая игра или версия сессии"; return; }
             if (IsLeader && SteamMatchmaking.GetNumLobbyMembers(MatchLobby) + Count - 1 > SteamMatchmaking.GetLobbyMemberLimit(MatchLobby))
             { LeaveSession(); Status = "В сессии недостаточно мест для всей команды"; return; }
-            SteamMatchmaking.SetLobbyMemberData(MatchLobby, "party", Lobby.ToString());
+            PublishMembership();
             if (IsLeader) PublishSession();
             Busy = true; pendingAt = Time.unscaledTime;
             CheckMatch();
@@ -262,8 +282,11 @@ namespace PirateSlop.Networking
             {
                 var member = SteamMatchmaking.GetLobbyMemberByIndex(MatchLobby, i);
                 if (!ulong.TryParse(SteamMatchmaking.GetLobbyMemberData(MatchLobby, member, "party"), out var crew) || crew == 0) continue;
+                string mode = SteamMatchmaking.GetLobbyMemberData(MatchLobby, member, "team_mode");
+                if (mode != "together" && mode != "opponents") continue;
                 if (matchTeams.ContainsKey(member.m_SteamID) && SteamMatchmaking.GetLobbyData(MatchLobby, "crew_" + member) == crew.ToString()) continue;
-                if (!crewTeams.TryGetValue(crew, out var team)) { team = crewTeams.Count + 1; crewTeams.Add(crew, team); }
+                string group = crew + ":" + (mode == "opponents" ? member.m_SteamID : 0UL);
+                if (!crewTeams.TryGetValue(group, out var team)) { team = crewTeams.Count + 1; crewTeams.Add(group, team); }
                 matchTeams[member.m_SteamID] = team;
                 SteamMatchmaking.SetLobbyData(MatchLobby, "team_" + member, team.ToString());
                 SteamMatchmaking.SetLobbyData(MatchLobby, "crew_" + member, crew.ToString());
