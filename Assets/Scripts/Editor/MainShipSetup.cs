@@ -61,7 +61,12 @@ namespace PirateSlop.EditorTools
                     if (name == "F2_Wheel" || name == "F2_WheelStand")
                     {
                         var anchor = new Vector3(0, 7.024f, -10.42f);
-                        vertices = vertices.Select(v => anchor + (v - anchor) * .8f).ToArray();
+                        vertices = vertices.Select(v => anchor + (v - anchor) * .64f).ToArray();
+                    }
+                    if (name.StartsWith("F2_Fencing"))
+                    {
+                        float deck = name.EndsWith("Back") ? 7.024f : name.EndsWith("Front") ? 5.459f : 4.3f;
+                        vertices = vertices.Select(v => new Vector3(v.x, deck + (v.y - deck) * .8f, v.z)).ToArray();
                     }
                     var bounds = new Bounds(vertices[0], Vector3.zero);
                     foreach (var v in vertices) bounds.Encapsulate(v);
@@ -177,7 +182,7 @@ namespace PirateSlop.EditorTools
             config.ShipComparisonEnabled = false;
             config.ComparisonShips = Array.Empty<PirateSlop.World.ShipComparison>();
             config.PlayerLocalSpawn = new Vector3(-1.5f, 7.15f, -13f);
-            config.ProtocolVersion = Math.Max(config.ProtocolVersion, 68);
+            config.ProtocolVersion = Math.Max(config.ProtocolVersion, 69);
             EditorUtility.SetDirty(config);
             AssetDatabase.SaveAssets();
         }
