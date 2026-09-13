@@ -60,8 +60,9 @@ namespace PirateSlop.EditorTools
                 var section = destruction.Sections.First(s => s.SectionId == sectionId);
                 var definition = destruction.Profile.Sections.First(s => s.SectionId == sectionId);
                 if (!section.SafeColliderReplacement) return "Protected support retained: " + sectionId;
-                string folder = "Assets/Models/Ships/MainShip/Destruction/WoodFragments/SD" + sectionId;
+                string folder = "Assets/Models/Ships/MainShip/Destruction/WoodFragments";
                 Directory.CreateDirectory(folder); AssetDatabase.Refresh();
+                string packedPath = folder + "/SD" + sectionId + ".asset";
                 var original = section.Intact.GetComponent<MeshFilter>();
                 compressed = UnityEngine.Object.Instantiate(original.sharedMesh);
                 var allTriangles = compressed.triangles;
@@ -92,16 +93,10 @@ namespace PirateSlop.EditorTools
                     mesh.vertices = mesh.vertices.Select(v=>new Vector3(v.x/scale.x,v.y/scale.y,v.z/scale.z)).ToArray();
                     var collisionMesh=UnityEngine.Object.Instantiate(mesh);
                     collisionMesh.RecalculateBounds();
-                    string collisionPath=folder+"/Collision"+i.ToString("00")+".asset";
-                    var storedCollision=AssetDatabase.LoadAssetAtPath<Mesh>(collisionPath);
-                    if(storedCollision==null){AssetDatabase.CreateAsset(collisionMesh,collisionPath);storedCollision=collisionMesh;}
-                    else{EditorUtility.CopySerialized(collisionMesh,storedCollision);UnityEngine.Object.DestroyImmediate(collisionMesh);}
+                    var storedCollision=ShipFragmentPacking.Store(collisionMesh,packedPath,"Collision"+i.ToString("00"));
 
                     mesh.RecalculateNormals();mesh.RecalculateTangents();mesh.RecalculateBounds();
-                    string path=folder+"/Fragment"+i.ToString("00")+".asset";
-                    var stored=AssetDatabase.LoadAssetAtPath<Mesh>(path);
-                    if(stored==null) { AssetDatabase.CreateAsset(mesh,path);stored=mesh; }
-                    else { EditorUtility.CopySerialized(mesh,stored);UnityEngine.Object.DestroyImmediate(mesh); }
+                    var stored=ShipFragmentPacking.Store(mesh,packedPath,"Fragment"+i.ToString("00"));
                     filter.sharedMesh=stored; filter.name="WoodFragment"+i.ToString("00");
                     filter.transform.SetParent(container.transform,false);filter.transform.localPosition=Vector3.zero;filter.transform.localRotation=Quaternion.identity;filter.transform.localScale=Vector3.one;
                     filter.gameObject.layer=section.gameObject.layer;

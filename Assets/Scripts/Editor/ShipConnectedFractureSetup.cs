@@ -95,9 +95,11 @@ namespace PirateSlop.EditorTools
                     bool bearing = !(source.name.Contains("Sail") || source.name.Contains("Flag") || source.name.Contains("Wire") || source.name.Contains("Ropes") || source.name.Contains("Anchor"));
                     var type = Type(source.name);
                     var surface = Read(source, root.transform);
-                    var pieces = animated ? new List<Surface> { surface } : Cut(surface, type);
+                    var prepared = Prepared(source.name, root.transform);
+                    var pieces = prepared ?? (animated ? new List<Surface> { surface } : Cut(surface, type));
+                    if (prepared != null) materials = new[]{materials[0], destruction.Profile.SplinterMaterial};
                     float area = Area(surface);
-                    if (Mathf.Abs(pieces.Sum(Area) - area) > Mathf.Max(.001f, area * .0001f)) throw new InvalidOperationException("Surface coverage changed: " + source.name);
+                    if (prepared == null && Mathf.Abs(pieces.Sum(Area) - area) > Mathf.Max(.001f, area * .0001f)) throw new InvalidOperationException("Surface coverage changed: " + source.name);
                     foreach (var collider in source.GetComponents<Collider>()) collider.enabled = false;
                     renderer.enabled = animated;
                     for (int offset = 0; offset < pieces.Count; offset += 64)
@@ -170,7 +172,7 @@ namespace PirateSlop.EditorTools
                 EditorUtility.SetDirty(destruction.Profile);
                 PrefabUtility.SaveAsPrefabAsset(root, ShipPath);
                 var config = AssetDatabase.LoadAssetAtPath<SessionConfig>("Assets/Settings/Networking/SessionConfig.asset");
-                config.ProtocolVersion = Mathf.Max(config.ProtocolVersion, 72); EditorUtility.SetDirty(config);
+                config.ProtocolVersion = Mathf.Max(config.ProtocolVersion, 73); EditorUtility.SetDirty(config);
                 AssetDatabase.SaveAssets();
                 return sections.Count + " sections, " + nodes.Count + " fragments. " + structure;
             }
@@ -187,6 +189,31 @@ namespace PirateSlop.EditorTools
             if (name.Contains("Rudder")) return ShipSectionType.Rudder;
             if (name.Contains("Prow")) return ShipSectionType.Bowsprit;
             return ShipSectionType.Fitting;
+        }
+        static List<Surface> Prepared(string source, Transform root)
+        {
+            var manifest = Newtonsoft.Json.Linq.JObject.Parse(File.ReadAllText("Assets/Models/Ships/MainShip/Destruction/sections.json"));
+            var records = manifest["sections"].Where(r => (string)r["source"] == source).ToArray();
+            if (source != "F2_Body" && !source.StartsWith("F2_Floor") && !source.StartsWith("F2_Fencing") && source != "F2_Prow" && source != "F2_Rudder" && source != "F2_MastFront" && source != "F2_MastBack") return null;
+            var result = new List<Surface>();
+            var staging = new GameObject("PreparedSurface");
+            staging.transform.SetParent(root, false);
+            var filter = staging.AddComponent<MeshFilter>();
+            try
+            {
+                foreach (var record in records)
+                {
+                    int id = (int)record["id"];
+                    string folder = source.StartsWith("F2_Floor") ? "DeckFragments" : "WoodFragments";
+                    var meshes = AssetDatabase.LoadAllAssetsAtPath("Assets/Models/Ships/MainShip/Destruction/" + folder + "/SD" + id + ".asset").OfType<Mesh>().Where(m => m.name.StartsWith("Fragment") || folder == "DeckFragments" && m.name == "SD" + id).OrderBy(m => m.name.StartsWith("SD") ? "Fragment00" : m.name, StringComparer.Ordinal).ToArray();
+                    if (meshes.Length == 0) throw new InvalidOperationException("Missing prepared fragments: " + id);
+                    var center = record["center"];
+                    staging.transform.localPosition = new Vector3((float)center[0], (float)center[1], (float)center[2]);
+                    foreach (var mesh in meshes) { filter.sharedMesh = mesh; result.Add(Read(filter, root)); }
+                }
+            }
+            finally { UnityEngine.Object.DestroyImmediate(staging); }
+            return result;
         }
         static GameObject SaveSections(Transform container)
         {
@@ -230,11 +257,7 @@ namespace PirateSlop.EditorTools
         }
         static Mesh Store(Mesh mesh, string name)
         {
-            mesh.name = name;
-            string path = Folder + "/" + name + ".asset";
-            var stored = AssetDatabase.LoadAssetAtPath<Mesh>(path);
-            if (stored == null) { AssetDatabase.CreateAsset(mesh, path); return mesh; }
-            EditorUtility.CopySerialized(mesh, stored); UnityEngine.Object.DestroyImmediate(mesh); return stored;
+            return ShipFragmentPacking.Store(mesh, Folder + "/SD" + name.Split('_')[0] + ".asset", name);
         }
         static Surface Read(MeshFilter filter, Transform root)
         {
