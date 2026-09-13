@@ -14,11 +14,7 @@ namespace PirateSlop.EditorTools
         [MenuItem("PirateSlop/Prepare Wood Destruction")]
         public static void PrepareAll()
         {
-            ConfigureEffects();
-            var asset = AssetDatabase.LoadAssetAtPath<GameObject>(ShipPath);
-            var ids = asset.GetComponent<ShipDestruction>().Sections.Where(s => s.SafeColliderReplacement).Select(s => s.SectionId).ToArray();
-            foreach (int id in ids) Prepare(id);
-            SaveSections();
+            ShipConnectedFractureSetup.Configure();
         }
         public static void SaveSections()
         {

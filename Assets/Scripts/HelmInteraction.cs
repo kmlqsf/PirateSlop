@@ -12,6 +12,7 @@ public class HelmInteraction : MonoBehaviour
     Quaternion wheelRest;
     float rudder, lastGrip;
     public bool Networked { get; set; }
+    public bool StructurallyAvailable { get; set; } = true;
     public float CurrentRudderNormalized => rudder;
     public bool IsControlling { get; private set; }
     public AdvancedPlayerController Driver => IsControlling ? player : null;
@@ -20,7 +21,7 @@ public class HelmInteraction : MonoBehaviour
     public void Configure(Transform wheel) { wheelMesh = wheel; }
     public void Bind(AdvancedPlayerController value) { player = value; }
     void Awake() { if (wheelMesh != null) wheelRest = wheelMesh.localRotation; }
-    public bool InRange(AdvancedPlayerController candidate) => candidate != null && Vector3.Distance(transform.position, candidate.transform.position + Vector3.up) <= interactionRadius;
+    public bool InRange(AdvancedPlayerController candidate) => StructurallyAvailable && candidate != null && Vector3.Distance(transform.position, candidate.transform.position + Vector3.up) <= interactionRadius;
     public bool TryTakeControl(AdvancedPlayerController candidate)
     {
         ValidateGrip();

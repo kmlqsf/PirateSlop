@@ -18,9 +18,11 @@ namespace PirateSlop
         public ulong RemovedFragments { get; private set; }
         public Renderer[] DependentRenderers = Array.Empty<Renderer>();
         public Collider[] DisabledControls = Array.Empty<Collider>();
+        public int[] ControlFragments = Array.Empty<int>();
         public ShipDestruction Owner { get; internal set; }
         public ShipSectionState State { get; internal set; }
         public float Health { get; internal set; }
+        public ulong AllFragments => Fragments.Length >= 64 ? ulong.MaxValue : (1UL << Fragments.Length) - 1UL;
         public Vector3 LocalCenter => Owner.transform.InverseTransformPoint(transform.position);
         public void Apply(ShipSectionState state, ulong removedFragments = 0)
         {
@@ -28,19 +30,20 @@ namespace PirateSlop
             RemovedFragments = removedFragments;
             if (Fragments.Length > 0)
             {
-                bool fractured = removedFragments != 0;
+                bool fractured = removedFragments != 0 || state == ShipSectionState.Destroyed;
                 foreach (var visual in new[] { Intact, Damaged, Critical, Destroyed, Repaired }) if (visual != null) visual.SetActive(!fractured && visual == Intact);
                 foreach (var collider in GameplayColliders) if (collider != null) collider.enabled = !fractured;
                 foreach (var collider in DamagedColliders) if (collider != null) collider.enabled = false;
                 foreach (var collider in CriticalColliders) if (collider != null) collider.enabled = false;
                 foreach (var collider in ReplacementColliders) if (collider != null) collider.enabled = false;
-                for (int i = 0; i < Fragments.Length; i++) Fragments[i].SetActive(fractured && (removedFragments & (1UL << i)) == 0);
-                foreach (var collider in DisabledControls) if (collider != null) collider.enabled = state != ShipSectionState.Destroyed;
+                for (int i = 0; i < Fragments.Length; i++) Fragments[i].SetActive(fractured && state != ShipSectionState.Destroyed && (removedFragments & (1UL << i)) == 0);
+                for (int i = 0; i < DisabledControls.Length; i++)
+                    if (DisabledControls[i] != null) DisabledControls[i].enabled = state != ShipSectionState.Destroyed && (i >= ControlFragments.Length || (removedFragments & (1UL << ControlFragments[i])) == 0);
                 foreach (var renderer in DependentRenderers) if (renderer != null) renderer.enabled = state != ShipSectionState.Destroyed;
                 return;
             }
             var visible = state == ShipSectionState.Intact ? Intact : state == ShipSectionState.Damaged ? Damaged : state == ShipSectionState.Critical ? Critical : state == ShipSectionState.Destroyed ? Destroyed : Repaired;
-            if (!SafeColliderReplacement) visible = Intact;
+            if (!SafeColliderReplacement && state != ShipSectionState.Destroyed) visible = Intact;
             if (visible == null && state != ShipSectionState.Destroyed) visible = Intact;
             foreach (var item in new[] { Intact, Damaged, Critical, Destroyed, Repaired }) if (item != null) item.SetActive(item == visible);
             foreach (var renderer in DependentRenderers) if (renderer != null) renderer.enabled = state != ShipSectionState.Destroyed;
@@ -56,9 +59,9 @@ namespace PirateSlop
         public ulong BreakNear(Vector3 point, float damage, bool supportLost)
         {
             if (Fragments.Length == 0 || damage <= 0f && !supportLost) return RemovedFragments;
-            if (supportLost) return Fragments.Length == 64 ? ulong.MaxValue : (1UL << Fragments.Length) - 1UL;
+            if (supportLost) return AllFragments;
             ulong mask = RemovedFragments;
-            int count = Mathf.Clamp(Mathf.CeilToInt(damage / 28f), 1, 5);
+            int count = Owner != null && (Owner.Definition(SectionId).Type == ShipSectionType.Mast || Owner.Definition(SectionId).Type == ShipSectionType.Yard) ? 1 : Mathf.Clamp(Mathf.CeilToInt(damage / 28f), 1, 5);
             for (int n = 0; n < count; n++)
             {
                 int nearest = -1; float distance = float.MaxValue;
@@ -72,6 +75,17 @@ namespace PirateSlop
                 }
                 if (nearest < 0) break;
                 mask |= 1UL << nearest;
+                if (Owner != null && Owner.Definition(SectionId).Type == ShipSectionType.Mast)
+                {
+                    var chosen = Fragments[nearest].GetComponent<MeshFilter>().sharedMesh.bounds;
+                    Vector3 localPoint = transform.InverseTransformPoint(point);
+                    for (int i = 0; i < Fragments.Length; i++)
+                    {
+                        var bounds = Fragments[i].GetComponent<MeshFilter>().sharedMesh.bounds;
+                        var closest = bounds.ClosestPoint(localPoint);
+                        if (Mathf.Abs(bounds.center.y - chosen.center.y) < .55f && new Vector2(closest.x - localPoint.x, closest.z - localPoint.z).sqrMagnitude < 1.44f) mask |= 1UL << i;
+                    }
+                }
             }
             return mask;
         }

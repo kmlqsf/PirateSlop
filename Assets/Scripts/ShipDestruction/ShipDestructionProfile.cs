@@ -5,7 +5,7 @@ using PirateSlop.Networking;
 namespace PirateSlop
 {
     public enum ShipSectionState : byte { Intact, Damaged, Critical, Destroyed, Repaired }
-    public enum ShipSectionType : byte { Hull, Deck, Mast, Yard, Bowsprit, Rudder, Railing }
+    public enum ShipSectionType : byte { Hull, Deck, Mast, Yard, Bowsprit, Rudder, Railing, Helm, Stairs, Fitting }
     public enum ShipDamageReason : byte { Hit, Fire, SupportLost, Flooding, Scripted }
 
     [Serializable]
@@ -20,6 +20,7 @@ namespace PirateSlop
     {
         public int SectionId;
         public string Name;
+        public string SourceGroup;
         public ShipSectionType Type;
         public float MaxHealth = 180f;
         [Range(0f, 1f)] public float DamagedThreshold = .75f, CriticalThreshold = .3f;
@@ -49,6 +50,7 @@ namespace PirateSlop
     public sealed class ShipDestructionProfile : ScriptableObject
     {
         public ShipSectionDefinition[] Sections = Array.Empty<ShipSectionDefinition>();
+        public ShipFragmentConnection[] Structure = Array.Empty<ShipFragmentConnection>();
         public GameObject SectionsPrefab;
         public bool EnableFlooding;
         public Mesh[] SplinterMeshes = Array.Empty<Mesh>();
@@ -63,5 +65,13 @@ namespace PirateSlop
         public float DebrisDistance = 180f, LinearDamping = .4f, AngularDamping = .5f;
         public string DebrisLayer = "ShipDebris";
         public SoundCue BreakSound = SoundCue.Creak, FallSound = SoundCue.ShipCollision;
+    }
+
+    [Serializable]
+    public sealed class ShipFragmentConnection
+    {
+        public int SectionId, Fragment;
+        public int[] Neighbours = Array.Empty<int>();
+        public bool Anchor, LoadBearing = true;
     }
 }

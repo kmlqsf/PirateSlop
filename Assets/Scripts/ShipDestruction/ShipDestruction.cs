@@ -129,14 +129,28 @@ namespace PirateSlop
                 Debug.LogWarning("Ship section fallback: " + (collider != null ? collider.name : "none"), this);
                 nextDiagnostic = Time.time + 10f;
             }
-            return sections[Profile.FallbackSectionId];
+            ShipDamageSection nearest = null;
+            float distance = float.MaxValue;
+            foreach (var section in sections.Values)
+            {
+                float candidate = section.Distance(point);
+                if (candidate < distance) { distance = candidate; nearest = section; }
+            }
+            return nearest ?? sections[Profile.FallbackSectionId];
         }
         public void Damage(Collider collider, Vector3 point, Vector3 normal, Vector3 velocity, InventoryItem ammo, GameObject attacker, float radius = 0f)
         {
             if (!ready || !IsServerInitialized || ship.IsSinking || !float.IsFinite(point.sqrMagnitude) || !float.IsFinite(velocity.sqrMagnitude)) return;
             var direct = Resolve(collider, point);
             var affected = new Dictionary<int, float>();
-            if (radius <= 0f) affected[direct.SectionId] = 1f;
+            if (radius <= 0f)
+            {
+                affected[direct.SectionId] = 1f;
+                var definition = definitions[direct.SectionId];
+                if (!string.IsNullOrEmpty(definition.SourceGroup))
+                    foreach (var section in sections.Values)
+                        if (definitions[section.SectionId].SourceGroup == definition.SourceGroup && section.Distance(point) < (definition.Type == ShipSectionType.Mast ? 1.2f : .25f)) affected[section.SectionId] = 1f;
+            }
             else
             {
                 foreach (var section in sections.Values)
@@ -148,6 +162,7 @@ namespace PirateSlop
             }
             foreach (var target in affected)
                 ApplyDamage(target.Key, Profile.CannonDamage * target.Value, point, normal, velocity, ammo, attacker, ShipDamageReason.Hit);
+            DetachUnsupported(point, normal, velocity, ammo, attacker);
             Publish();
         }
         public void Burn(Vector3 point, float seconds, GameObject attacker)
@@ -163,6 +178,7 @@ namespace PirateSlop
             if (nextBurn.TryGetValue(nearest.SectionId, out float next) && Time.time < next) return;
             nextBurn[nearest.SectionId] = Time.time + seconds * .9f;
             ApplyDamage(nearest.SectionId, Profile.FireDamagePerSecond * seconds, point, transform.up, Vector3.zero, InventoryItem.FireCannonball, attacker, ShipDamageReason.Fire);
+            DetachUnsupported(point, transform.up, Vector3.zero, InventoryItem.FireCannonball, attacker);
             Publish();
         }
         void ApplyDamage(int id, float amount, Vector3 point, Vector3 normal, Vector3 velocity, InventoryItem ammo, GameObject attacker, ShipDamageReason reason)
@@ -175,11 +191,14 @@ namespace PirateSlop
                 id = redirect;
             }
             var definition = definitions[id];
+            amount *= definition.DamageMultiplier(ammo);
+            if (amount <= 0f) return;
             float health = sections.TryGetValue(id, out var part) ? part.Health : current.Health / (float)ushort.MaxValue * definition.MaxHealth;
-            health = Mathf.Max(0f, health - amount * definition.DamageMultiplier(ammo));
+            health = Mathf.Max(0f, health - amount);
             float fraction = health / definition.MaxHealth;
             var next = health <= 0f ? ShipSectionState.Destroyed : fraction <= definition.CriticalThreshold ? ShipSectionState.Critical : fraction <= definition.DamagedThreshold ? ShipSectionState.Damaged : ShipSectionState.Intact;
             Change(id, health, next, point, normal, velocity, ammo, attacker, reason, amount);
+            if (Profile.Structure.Length > 0) return;
             branch.Clear(); branch.Enqueue(id);
             var visited = new HashSet<int>();
             while (branch.Count > 0)
@@ -191,11 +210,27 @@ namespace PirateSlop
                         branch.Enqueue(child);
                     }
         }
-        void Change(int id, float health, ShipSectionState next, Vector3 point, Vector3 normal, Vector3 velocity, InventoryItem ammo, GameObject attacker, ShipDamageReason reason, float damage)
+        void DetachUnsupported(Vector3 point, Vector3 normal, Vector3 velocity, InventoryItem ammo, GameObject attacker)
+        {
+            foreach (var entry in graph.Unsupported(id => state[id].RemovedFragments))
+                Change(entry.Key, 0f, ShipSectionState.Destroyed, point, normal, velocity, ammo, attacker, ShipDamageReason.SupportLost, 0f, state[entry.Key].RemovedFragments | entry.Value);
+        }
+        void Change(int id, float health, ShipSectionState next, Vector3 point, Vector3 normal, Vector3 velocity, InventoryItem ammo, GameObject attacker, ShipDamageReason reason, float damage, ulong? fragmentMask = null)
         {
             var current = state[id]; var previous = current.State; var definition = definitions[id];
             ulong previousFragments = current.RemovedFragments;
-            if (sections.TryGetValue(id, out var fragmentSection)) current.RemovedFragments = fragmentSection.BreakNear(point, damage, reason == ShipDamageReason.SupportLost);
+            if (sections.TryGetValue(id, out var fragmentSection))
+            {
+                current.RemovedFragments = fragmentMask ?? fragmentSection.BreakNear(point, damage, reason == ShipDamageReason.SupportLost);
+                if (fragmentSection.Fragments.Length > 0)
+                {
+                    int remaining = 0;
+                    for (int i = 0; i < fragmentSection.Fragments.Length; i++) if ((current.RemovedFragments & (1UL << i)) == 0) remaining++;
+                    float fraction = remaining / (float)fragmentSection.Fragments.Length;
+                    health = definition.MaxHealth * fraction;
+                    next = remaining == 0 ? ShipSectionState.Destroyed : fraction <= definition.CriticalThreshold ? ShipSectionState.Critical : ShipSectionState.Damaged;
+                }
+            }
             current.State = next; current.Health = (ushort)Mathf.RoundToInt(health / definition.MaxHealth * ushort.MaxValue);
             current.Revision = ++revision;
             if (Profile.EnableFlooding && definition.CanFlood && next != ShipSectionState.Intact)
@@ -295,15 +330,22 @@ namespace PirateSlop
         void ApplyModifiers()
         {
             float rudder = 1f;
+            bool helmAvailable = true;
             var sailEfficiency = new Dictionary<string, float>();
             foreach (var entry in state)
             {
                 var definition = definitions[entry.Key]; float efficiency = definition.Efficiency(entry.Value.State);
                 if (definition.Type == ShipSectionType.Rudder) rudder = Mathf.Min(rudder, efficiency);
+                if (definition.Type == ShipSectionType.Helm && entry.Value.State == ShipSectionState.Destroyed) helmAvailable = false;
                 foreach (string sail in definition.SailNames)
                     sailEfficiency[sail] = sailEfficiency.TryGetValue(sail, out float existing) ? Mathf.Min(existing, efficiency) : efficiency;
             }
             var sails = GetComponent<SailSystem>();
+            if (ship.Helm != null)
+            {
+                ship.Helm.StructurallyAvailable = helmAvailable;
+                if (!helmAvailable) ship.Helm.ReleaseControl();
+            }
             if (sails != null) sails.SetStructuralEfficiency(sailEfficiency);
             float medium = Mathf.InverseLerp(Profile.MediumWater, Profile.CriticalWater, flooding.Level);
             float high = Mathf.InverseLerp(Profile.HighWater, Profile.CriticalWater, flooding.Level);

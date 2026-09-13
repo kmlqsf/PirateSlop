@@ -17,6 +17,7 @@ namespace PirateSlop
             public float Expires;
             public bool Splashed;
             public bool Small;
+            public bool OwnsMesh;
         }
         ObjectPool<Chunk> pool;
         readonly List<Chunk> active = new();
@@ -63,7 +64,8 @@ namespace PirateSlop
                 for (int i = 0; i < section.Fragments.Length; i++) if ((impact.DetachedFragments & (1UL << i)) != 0) sources.Add(section.Fragments[i]);
             }
             else sources.AddRange(section.Debris);
-            int count = Mathf.Min(sources.Count, definition.MaxDebris);
+            bool cluster = impact.Reason == ShipDamageReason.SupportLost && sources.Count > 1;
+            int count = cluster ? 1 : Mathf.Min(sources.Count, definition.MaxDebris);
             for (int i = 0; i < count; i++)
             {
                 var source = sources[i];
@@ -71,12 +73,22 @@ namespace PirateSlop
                 MakeRoom(false);
                 var chunk = pool.Get();
                 chunk.Small = false; chunk.Collider.enabled = true;
-                chunk.Mesh.sharedMesh = filter.sharedMesh;
-                chunk.Renderer.sharedMaterials = source.GetComponent<MeshRenderer>().sharedMaterials;
-                chunk.Object.transform.SetPositionAndRotation(source.transform.position, source.transform.rotation);
-                chunk.Object.transform.localScale = source.transform.lossyScale;
-                var bounds = filter.sharedMesh.bounds;
-                chunk.Collider.center = bounds.center; chunk.Collider.size = bounds.size;
+                chunk.OwnsMesh = cluster;
+                if (cluster)
+                {
+                    chunk.Mesh.sharedMesh = Combine(sources, section.transform, out var materials);
+                    chunk.Renderer.sharedMaterials = materials;
+                }
+                else
+                {
+                    chunk.Mesh.sharedMesh = filter.sharedMesh;
+                    chunk.Renderer.sharedMaterials = source.GetComponent<MeshRenderer>().sharedMaterials;
+                }
+                var origin = cluster ? section.transform : source.transform;
+                chunk.Object.transform.SetPositionAndRotation(origin.position, origin.rotation);
+                chunk.Object.transform.localScale = origin.lossyScale;
+                var bounds = chunk.Mesh.sharedMesh.bounds;
+                chunk.Collider.center = bounds.center; chunk.Collider.size = Vector3.Max(bounds.size, Vector3.one * .015f);
                 chunk.Body.mass = Mathf.Max(1f, definition.DebrisMass / Mathf.Max(1, count));
                 chunk.Body.linearDamping = owner.Profile.LinearDamping; chunk.Body.angularDamping = owner.Profile.AngularDamping;
                 chunk.Object.SetActive(true); chunk.Body.isKinematic = false;
@@ -85,6 +97,33 @@ namespace PirateSlop
                 chunk.Expires = Time.time + definition.DebrisLifetime; chunk.Splashed = false;
                 active.Add(chunk);
             }
+        }
+        static Mesh Combine(List<GameObject> sources, Transform origin, out Material[] materials)
+        {
+            var groups = new Dictionary<Material, List<CombineInstance>>();
+            foreach (var source in sources)
+            {
+                var mesh = source.GetComponent<MeshFilter>().sharedMesh;
+                var slots = source.GetComponent<MeshRenderer>().sharedMaterials;
+                for (int i = 0; i < mesh.subMeshCount; i++)
+                {
+                    if (!groups.TryGetValue(slots[i], out var instances)) groups[slots[i]] = instances = new List<CombineInstance>();
+                    instances.Add(new CombineInstance { mesh = mesh, subMeshIndex = i, transform = origin.worldToLocalMatrix * source.transform.localToWorldMatrix });
+                }
+            }
+            var combined = new List<CombineInstance>();
+            var slotsList = new List<Material>();
+            foreach (var group in groups)
+            {
+                var mesh = new Mesh { indexFormat = UnityEngine.Rendering.IndexFormat.UInt32 };
+                mesh.CombineMeshes(group.Value.ToArray(), true, true);
+                combined.Add(new CombineInstance { mesh = mesh, transform = Matrix4x4.identity }); slotsList.Add(group.Key);
+            }
+            var result = new Mesh { name = "DetachedShipAssembly", indexFormat = UnityEngine.Rendering.IndexFormat.UInt32 };
+            result.CombineMeshes(combined.ToArray(), false, false);
+            foreach (var instance in combined) Destroy(instance.mesh);
+            materials = slotsList.ToArray();
+            return result;
         }
         void MakeRoom(bool small)
         {
@@ -105,7 +144,7 @@ namespace PirateSlop
                 MakeRoom(true);
                 var chunk = pool.Get();chunk.Small = true;chunk.Collider.enabled = false;
                 chunk.Mesh.sharedMesh = owner.Profile.SplinterMeshes[random.Next(owner.Profile.SplinterMeshes.Length)];
-                chunk.Renderer.sharedMaterial = owner.Profile.SplinterMaterial;
+                chunk.Renderer.sharedMaterials = new[] { owner.Profile.SplinterMaterial };
                 Vector3 spread = new Vector3((float)random.NextDouble()*2f-1f,(float)random.NextDouble()*2f-1f,(float)random.NextDouble()*2f-1f);
                 chunk.Object.transform.SetPositionAndRotation(point + normal * .08f + spread * .12f, Quaternion.Euler(spread * 180f));
                 chunk.Object.transform.localScale = Vector3.one * Mathf.Lerp(.6f,1.3f,(float)random.NextDouble());
@@ -135,6 +174,10 @@ namespace PirateSlop
         void Release(int index)
         {
             var chunk = active[index]; active.RemoveAt(index);
+            if (chunk.OwnsMesh)
+            {
+                Destroy(chunk.Mesh.sharedMesh); chunk.Mesh.sharedMesh = null; chunk.OwnsMesh = false;
+            }
             chunk.Body.linearVelocity = Vector3.zero; chunk.Body.angularVelocity = Vector3.zero; chunk.Body.isKinematic = true;
             pool.Release(chunk);
         }
