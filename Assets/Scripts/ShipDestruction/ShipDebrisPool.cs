@@ -30,7 +30,7 @@ namespace PirateSlop
             root = new GameObject("ShipDebrisPool").transform;
             UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene(root.gameObject, gameObject.scene);
             int capacity = owner.Profile.PhysicalLimit + owner.Profile.CosmeticLimit;
-            pool = new ObjectPool<Chunk>(Create, null, c => c.Object.SetActive(false), c => { if (c.Object != null) Destroy(c.Object); }, true, capacity, capacity);
+            pool = new ObjectPool<Chunk>(Create, null, c => { if (c.Object != null) c.Object.SetActive(false); }, c => { if (c.Object != null) Destroy(c.Object); }, true, capacity, capacity);
             StartCoroutine(Prewarm());
         }
         Chunk Create()
@@ -80,7 +80,9 @@ namespace PirateSlop
                 chunk.Body.mass = Mathf.Max(1f, definition.DebrisMass / Mathf.Max(1, count));
                 chunk.Body.linearDamping = owner.Profile.LinearDamping; chunk.Body.angularDamping = owner.Profile.AngularDamping;
                 chunk.Object.SetActive(true); chunk.Body.isKinematic = false;
-                chunk.Body.linearVelocity = impact.PointVelocity + Vector3.Cross(impact.AngularVelocity, chunk.Body.worldCenterOfMass - section.transform.position) + owner.transform.TransformDirection(impact.LocalVelocity.normalized) * definition.DebrisImpulse * impact.Impulse;
+                var radial = chunk.Body.worldCenterOfMass - owner.transform.TransformPoint(impact.LocalPoint);
+                var burst = (Direction(random) + radial.normalized * .4f).normalized;
+                chunk.Body.linearVelocity = impact.PointVelocity + Vector3.Cross(impact.AngularVelocity, chunk.Body.worldCenterOfMass - section.transform.position) + burst * owner.Profile.DebrisScatterSpeed * Mathf.Lerp(.7f,1.3f,(float)random.NextDouble()) + owner.transform.TransformDirection(impact.LocalVelocity.normalized) * definition.DebrisImpulse * impact.Impulse * .2f;
                 chunk.Body.angularVelocity = new Vector3((float)random.NextDouble() * 2f - 1f, (float)random.NextDouble() * 2f - 1f, (float)random.NextDouble() * 2f - 1f) * definition.AngularSpeed;
                 chunk.Expires = Time.time + definition.DebrisLifetime; chunk.Splashed = false;
                 active.Add(chunk);
@@ -111,7 +113,7 @@ namespace PirateSlop
                 chunk.Object.transform.localScale = Vector3.one * Mathf.Lerp(.6f,1.3f,(float)random.NextDouble());
                 chunk.Body.mass = .08f;chunk.Body.linearDamping = .15f;chunk.Body.angularDamping = .3f;
                 chunk.Object.SetActive(true);chunk.Body.isKinematic = false;
-                chunk.Body.linearVelocity = impact.PointVelocity + normal * Mathf.Lerp(2f,6f,(float)random.NextDouble()) + spread * 4f + Vector3.up * 2f;
+                chunk.Body.linearVelocity = impact.PointVelocity + Direction(random) * owner.Profile.SplinterScatterSpeed * Mathf.Lerp(.6f,1.4f,(float)random.NextDouble());
                 chunk.Body.angularVelocity = spread * 12f;
                 chunk.Expires = Time.time + 4f + (float)random.NextDouble()*2f;chunk.Splashed = true;
                 active.Add(chunk);
@@ -135,8 +137,15 @@ namespace PirateSlop
         void Release(int index)
         {
             var chunk = active[index]; active.RemoveAt(index);
-            chunk.Body.linearVelocity = Vector3.zero; chunk.Body.angularVelocity = Vector3.zero; chunk.Body.isKinematic = true;
+            if (chunk.Body != null) { chunk.Body.linearVelocity = Vector3.zero; chunk.Body.angularVelocity = Vector3.zero; chunk.Body.isKinematic = true; }
             pool.Release(chunk);
+        }
+        static Vector3 Direction(System.Random random)
+        {
+            float y = (float)random.NextDouble() * 2f - 1f;
+            float angle = (float)random.NextDouble() * Mathf.PI * 2f;
+            float radius = Mathf.Sqrt(1f - y * y);
+            return new Vector3(radius * Mathf.Cos(angle), y, radius * Mathf.Sin(angle));
         }
         public void Clear()
         {

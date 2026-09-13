@@ -149,7 +149,7 @@ namespace PirateSlop.EditorTools
             mesh.vertices = mesh.vertices.Select(v=>matrix.MultiplyPoint3x4(v)-pivot).ToArray();
             if (matrix.determinant < 0f)
                 for (int s=0;s<mesh.subMeshCount;s++) { var triangles=mesh.GetTriangles(s); for(int i=0;i<triangles.Length;i+=3) (triangles[i],triangles[i+2])=(triangles[i+2],triangles[i]); mesh.SetTriangles(triangles,s); }
-            mesh.RecalculateNormals(); mesh.RecalculateBounds();
+            mesh.RecalculateNormals(); mesh.RecalculateTangents(); mesh.RecalculateBounds();
             string path=Folder+"/Meshes/"+source.name+".asset";
             var stored=AssetDatabase.LoadAssetAtPath<Mesh>(path);
             if(stored==null) { AssetDatabase.CreateAsset(mesh,path); stored=mesh; }

@@ -1927,7 +1927,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 91624430496308308}
-  m_Mesh: {fileID: 4300000, guid: 061ed310799bcba46929d3924157300c, type: 2}
+  m_Mesh: {fileID: 4300000, guid: ee5043380fa6db7468c5d59c369918de, type: 2}
 --- !u!23 &4855945347458860797
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -15036,6 +15036,7 @@ MonoBehaviour:
   ReplacementColliders:
   - {fileID: 2467706210240059945}
   SafeColliderReplacement: 1
+  SurfaceDamage: 0
   Intact: {fileID: 4010748427121220500}
   Damaged: {fileID: 332320071415347825}
   Critical: {fileID: 2621034014961926275}
@@ -23471,6 +23472,7 @@ MonoBehaviour:
   ReplacementColliders:
   - {fileID: 6272793109549980868}
   SafeColliderReplacement: 0
+  SurfaceDamage: 0
   Intact: {fileID: 2532070837725976224}
   Damaged: {fileID: 4130761739297756672}
   Critical: {fileID: 9194605584476315413}
@@ -30439,7 +30441,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1440517044419139195}
-  m_Mesh: {fileID: 4300000, guid: 2164f4a792c876d419c9fe20a478c19e, type: 2}
+  m_Mesh: {fileID: 4300000, guid: 472056850fa7b1343ab0b46ecbaf7ade, type: 2}
 --- !u!23 &3656958926223883216
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -32203,6 +32205,7 @@ MonoBehaviour:
   ReplacementColliders:
   - {fileID: 2163305432837553257}
   SafeColliderReplacement: 1
+  SurfaceDamage: 0
   Intact: {fileID: 9203706291680938617}
   Damaged: {fileID: 1300001350485643870}
   Critical: {fileID: 8869978010674265300}
@@ -36064,7 +36067,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1764591200840903418}
-  m_Mesh: {fileID: 4300000, guid: bcc507ca5fe4a574f90a9d20484a6a58, type: 2}
+  m_Mesh: {fileID: 4300000, guid: fd0f858c5acf22149bdc19482ec4d842, type: 2}
 --- !u!23 &7512525886497955633
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -44631,6 +44634,7 @@ MonoBehaviour:
   ReplacementColliders:
   - {fileID: 1441087773678078255}
   SafeColliderReplacement: 1
+  SurfaceDamage: 0
   Intact: {fileID: 3605137403705233462}
   Damaged: {fileID: 480739997301895051}
   Critical: {fileID: 5024574957987391041}
@@ -45045,6 +45049,7 @@ MonoBehaviour:
   ReplacementColliders:
   - {fileID: 4624637434702303992}
   SafeColliderReplacement: 1
+  SurfaceDamage: 0
   Intact: {fileID: 2043354510097310378}
   Damaged: {fileID: 2940135105052962568}
   Critical: {fileID: 5735239422406933915}
@@ -47366,6 +47371,7 @@ MonoBehaviour:
   ReplacementColliders:
   - {fileID: 6709867034879291714}
   SafeColliderReplacement: 1
+  SurfaceDamage: 0
   Intact: {fileID: 6110506932485312138}
   Damaged: {fileID: 4906361144991123558}
   Critical: {fileID: 5440386109027053294}
@@ -49956,6 +49962,7 @@ MonoBehaviour:
   ReplacementColliders:
   - {fileID: 2676572479703390995}
   SafeColliderReplacement: 1
+  SurfaceDamage: 0
   Intact: {fileID: 2685336117919811588}
   Damaged: {fileID: 436976318560117949}
   Critical: {fileID: 7032086190387261340}
@@ -52389,6 +52396,7 @@ MonoBehaviour:
   ReplacementColliders:
   - {fileID: 4374863779844542203}
   SafeColliderReplacement: 1
+  SurfaceDamage: 0
   Intact: {fileID: 4742871557062469383}
   Damaged: {fileID: 6702088382795134464}
   Critical: {fileID: 4166227245093302899}
@@ -55481,6 +55489,7 @@ MonoBehaviour:
   ReplacementColliders:
   - {fileID: 2440399621596559764}
   SafeColliderReplacement: 1
+  SurfaceDamage: 0
   Intact: {fileID: 933933973581245209}
   Damaged: {fileID: 3397596707514065949}
   Critical: {fileID: 2693415852169169474}
@@ -64757,6 +64766,7 @@ MonoBehaviour:
   ReplacementColliders:
   - {fileID: 7860953897894206758}
   SafeColliderReplacement: 1
+  SurfaceDamage: 0
   Intact: {fileID: 7994625977554880720}
   Damaged: {fileID: 1101079197436037046}
   Critical: {fileID: 1981763574683959387}
@@ -66788,6 +66798,7 @@ MonoBehaviour:
   ReplacementColliders:
   - {fileID: 5803824593300187589}
   SafeColliderReplacement: 1
+  SurfaceDamage: 0
   Intact: {fileID: 5650407520114179890}
   Damaged: {fileID: 4575816765998513964}
   Critical: {fileID: 7505994983260463991}
@@ -67992,6 +68003,7 @@ MonoBehaviour:
   ReplacementColliders:
   - {fileID: 779051397166271851}
   SafeColliderReplacement: 0
+  SurfaceDamage: 1
   Intact: {fileID: 1764591200840903418}
   Damaged: {fileID: 6957030284628205118}
   Critical: {fileID: 5618698059149158608}
@@ -69750,6 +69762,7 @@ MonoBehaviour:
   ReplacementColliders:
   - {fileID: 1571688601888174611}
   SafeColliderReplacement: 1
+  SurfaceDamage: 0
   Intact: {fileID: 3778446504803938501}
   Damaged: {fileID: 9005766618327987354}
   Critical: {fileID: 580658779931322379}
@@ -79439,6 +79452,7 @@ MonoBehaviour:
   ReplacementColliders:
   - {fileID: 7343939965707826452}
   SafeColliderReplacement: 1
+  SurfaceDamage: 0
   Intact: {fileID: 8954837922184885037}
   Damaged: {fileID: 6799664910402247896}
   Critical: {fileID: 659532204451611402}
@@ -82563,7 +82577,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4209265541210401297}
-  m_Mesh: {fileID: 4300000, guid: 9a21ff74e547a194887df41886a6c4af, type: 2}
+  m_Mesh: {fileID: 4300000, guid: a298cb2e64d4a0244be825fe176a6087, type: 2}
 --- !u!23 &1004442801566094655
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -83342,6 +83356,7 @@ MonoBehaviour:
   ReplacementColliders:
   - {fileID: 820358892860479193}
   SafeColliderReplacement: 1
+  SurfaceDamage: 0
   Intact: {fileID: 7451258443866954835}
   Damaged: {fileID: 7409075260656485473}
   Critical: {fileID: 8046834620782751275}
@@ -86938,6 +86953,7 @@ MonoBehaviour:
   ReplacementColliders:
   - {fileID: 446613283646939697}
   SafeColliderReplacement: 0
+  SurfaceDamage: 1
   Intact: {fileID: 1440517044419139195}
   Damaged: {fileID: 8517137238947287298}
   Critical: {fileID: 2883251255442998743}
@@ -97301,6 +97317,7 @@ MonoBehaviour:
   ReplacementColliders:
   - {fileID: 1703897993986985016}
   SafeColliderReplacement: 1
+  SurfaceDamage: 0
   Intact: {fileID: 606492636599634684}
   Damaged: {fileID: 587308920707206374}
   Critical: {fileID: 9223103869331287882}
@@ -97606,6 +97623,7 @@ MonoBehaviour:
   ReplacementColliders:
   - {fileID: 3343245585648629703}
   SafeColliderReplacement: 1
+  SurfaceDamage: 0
   Intact: {fileID: 7954212490540594749}
   Damaged: {fileID: 5742181306373534107}
   Critical: {fileID: 3474099215802913667}
@@ -109031,6 +109049,7 @@ MonoBehaviour:
   ReplacementColliders:
   - {fileID: 1128412854683737327}
   SafeColliderReplacement: 1
+  SurfaceDamage: 0
   Intact: {fileID: 6091577823492881157}
   Damaged: {fileID: 1817492806680169654}
   Critical: {fileID: 1247087862087460516}
@@ -111706,6 +111725,7 @@ MonoBehaviour:
   ReplacementColliders:
   - {fileID: 3157784143943320036}
   SafeColliderReplacement: 1
+  SurfaceDamage: 0
   Intact: {fileID: 7448551513458781779}
   Damaged: {fileID: 7664942735039634875}
   Critical: {fileID: 6932557400050071495}
@@ -113752,6 +113772,7 @@ MonoBehaviour:
   ReplacementColliders:
   - {fileID: 8037592553763346792}
   SafeColliderReplacement: 1
+  SurfaceDamage: 0
   Intact: {fileID: 6090494016196427981}
   Damaged: {fileID: 5032685386059342863}
   Critical: {fileID: 6720472709393007021}
@@ -125529,6 +125550,7 @@ MonoBehaviour:
   ReplacementColliders:
   - {fileID: 3779518322254209866}
   SafeColliderReplacement: 1
+  SurfaceDamage: 0
   Intact: {fileID: 3761317016449880300}
   Damaged: {fileID: 1435909228931758964}
   Critical: {fileID: 1017478056851838822}
@@ -136985,6 +137007,7 @@ MonoBehaviour:
   ReplacementColliders:
   - {fileID: 377848506149757556}
   SafeColliderReplacement: 1
+  SurfaceDamage: 0
   Intact: {fileID: 4850296774539846444}
   Damaged: {fileID: 1146303560565336622}
   Critical: {fileID: 5450375256745302332}
@@ -139877,6 +139900,7 @@ MonoBehaviour:
   ReplacementColliders:
   - {fileID: 7899567103432787572}
   SafeColliderReplacement: 1
+  SurfaceDamage: 0
   Intact: {fileID: 513846402537666083}
   Damaged: {fileID: 1332282436971190588}
   Critical: {fileID: 2240235532471097252}
@@ -152884,6 +152908,7 @@ MonoBehaviour:
   ReplacementColliders:
   - {fileID: 9158992870135285031}
   SafeColliderReplacement: 0
+  SurfaceDamage: 1
   Intact: {fileID: 91624430496308308}
   Damaged: {fileID: 5987235045235392300}
   Critical: {fileID: 2130347553621286311}
@@ -159502,6 +159527,7 @@ MonoBehaviour:
   ReplacementColliders:
   - {fileID: 5356532544757067313}
   SafeColliderReplacement: 1
+  SurfaceDamage: 0
   Intact: {fileID: 8989690766715013354}
   Damaged: {fileID: 4701820668138915267}
   Critical: {fileID: 2520549788369008360}
@@ -163480,6 +163506,7 @@ MonoBehaviour:
   ReplacementColliders:
   - {fileID: 3938182970282918020}
   SafeColliderReplacement: 0
+  SurfaceDamage: 1
   Intact: {fileID: 4209265541210401297}
   Damaged: {fileID: 6735657581770420337}
   Critical: {fileID: 3266852221709765735}
@@ -170263,6 +170290,7 @@ MonoBehaviour:
   ReplacementColliders:
   - {fileID: 5345525207136257673}
   SafeColliderReplacement: 1
+  SurfaceDamage: 0
   Intact: {fileID: 8837116553429516307}
   Damaged: {fileID: 7901738771778783982}
   Critical: {fileID: 4859767166597873339}
@@ -171550,6 +171578,7 @@ MonoBehaviour:
   ReplacementColliders:
   - {fileID: 4302312850301708887}
   SafeColliderReplacement: 1
+  SurfaceDamage: 0
   Intact: {fileID: 2986492901514798047}
   Damaged: {fileID: 6213812756872710143}
   Critical: {fileID: 3901845467863198078}

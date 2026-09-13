@@ -101,7 +101,7 @@ namespace PirateSlop.EditorTools
                     if(storedCollision==null){AssetDatabase.CreateAsset(collisionMesh,collisionPath);storedCollision=collisionMesh;}
                     else{EditorUtility.CopySerialized(collisionMesh,storedCollision);UnityEngine.Object.DestroyImmediate(collisionMesh);}
 
-                    mesh.RecalculateNormals();mesh.RecalculateBounds();
+                    mesh.RecalculateNormals();mesh.RecalculateTangents();mesh.RecalculateBounds();
                     string path=folder+"/Fragment"+i.ToString("00")+".asset";
                     var stored=AssetDatabase.LoadAssetAtPath<Mesh>(path);
                     if(stored==null) { AssetDatabase.CreateAsset(mesh,path);stored=mesh; }

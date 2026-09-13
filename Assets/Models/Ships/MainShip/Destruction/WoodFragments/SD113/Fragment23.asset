@@ -59,15 +59,15 @@ Mesh:
       format: 0
       dimension: 3
     - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
       offset: 24
+      format: 0
+      dimension: 4
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 40
       format: 0
       dimension: 2
     - stream: 0
@@ -106,8 +106,8 @@ Mesh:
       offset: 0
       format: 0
       dimension: 0
-    m_DataSize: 384
-    _typelessdata: cda3f2bf57c04ebf654f8f3f0e15eabb54fe7f3f80ef0738fdd7403fc8c7443ea441d9bff5654ebfd7c911400e15eabb54fe7f3f80ef0738decc3f3f5a295e3e0d20c7bfc7234ebfb6ee15400e15eabb54fe7f3f80ef073846153f3f04955f3e6920b9bf636f72bfa7051640c93fb2bb07ff7f3f7e697b38ae4a3e3f42d85c3e1660fabfec1d73bfeb3c033fc93fb2bb07ff7f3f7e697b38d5c8403f3e5f353eb04bb9bfe86f72bfb9d01640c93fb2bb07ff7f3f7e697b382c4c3e3f8e1c5d3eb04bb9bfe86f72bfb9d01640085cb2bb08ff7f3fa04e7f382c4c3e3f8e1c5d3e1660fabfec1d73bfeb3c033f085cb2bb08ff7f3fa04e7f38d5c8403f3e5f353e1b6dd6bfadc072bfda291040085cb2bb08ff7f3fa04e7f3865623f3f29db5a3e1b6dd6bfadc072bfda291040ba44b2bb07ff7f3f9c6c7d3865623f3f29db5a3e1660fabfec1d73bfeb3c033fba44b2bb07ff7f3f9c6c7d38d5c8403f3e5f353e2a7ffcbfd82373bff70f043fba44b2bb07ff7f3f9c6c7d38fedc403faa70353e
+    m_DataSize: 576
+    _typelessdata: cda3f2bf57c04ebf654f8f3f0e15eabb54fe7f3f80ef073851fe7fbf3615eabbebe7213a0000803ffdd7403fc8c7443ea441d9bff5654ebfd7c911400e15eabb54fe7f3f80ef073851fe7fbf3615eabbebe7213a0000803fdecc3f3f5a295e3e0d20c7bfc7234ebfb6ee15400e15eabb54fe7f3f80ef073851fe7fbf3615eabbebe7213a0000803f46153f3f04955f3e6920b9bf636f72bfa7051640c93fb2bb07ff7f3f7e697b38a7fe7fbf3c41b2bb10e75e3b0000803fae4a3e3f42d85c3e1660fabfec1d73bfeb3c033fc93fb2bb07ff7f3f7e697b38fe0daf3489687bb80000803f0000803fd5c8403f3e5f353eb04bb9bfe86f72bfb9d01640c93fb2bb07ff7f3f7e697b38a7fe7fbf3c41b2bb10e75e3b0000803f2c4c3e3f8e1c5d3eb04bb9bfe86f72bfb9d01640085cb2bb08ff7f3fa04e7f389bfe7fbf925db2bb665a6b3b0000803f2c4c3e3f8e1c5d3e1660fabfec1d73bfeb3c033f085cb2bb08ff7f3fa04e7f389bfe7fbf925db2bb665a6b3b0000803fd5c8403f3e5f353e1b6dd6bfadc072bfda291040085cb2bb08ff7f3fa04e7f389bfe7fbf925db2bb665a6b3b0000803f65623f3f29db5a3e1b6dd6bfadc072bfda291040ba44b2bb07ff7f3f9c6c7d388d79b034a66b7db80000803f0000803f65623f3f29db5a3e1660fabfec1d73bfeb3c033fba44b2bb07ff7f3f9c6c7d389bfe7fbf4246b2bb15aa6b3b0000803fd5c8403f3e5f353e2a7ffcbfd82373bff70f043fba44b2bb07ff7f3f9c6c7d389bfe7fbf4246b2bb15aa6b3b0000803ffedc403faa70353e
   m_CompressedMesh:
     m_Vertices:
       m_NumItems: 0
