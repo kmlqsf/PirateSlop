@@ -15,9 +15,20 @@ public class ShipController : MonoBehaviour
     Vector3 pushVelocity;
     float pushYawVelocity, freezeRemaining, manualPushUntil;
     public bool IsFrozen => freezeRemaining > 0f;
+    float floodLevel, fullWaterline, fullBowPitch;
+    public bool IsFlooded => floodLevel >= 1f;
+    public void SetFlooding(float level, float waterline, float bowPitch)
+    {
+        floodLevel = Mathf.Clamp01(level);
+        fullWaterline = waterline;
+        fullBowPitch = bowPitch;
+        if (!IsFlooded) return;
+        speed = pushYawVelocity = 0f;
+        pushVelocity = cannonShove = Vector3.zero;
+    }
     public void ApplyManualPush(Vector3 direction)
     {
-        if(IsFrozen || !float.IsFinite(direction.sqrMagnitude)) return;
+        if(IsFrozen || IsFlooded || !float.IsFinite(direction.sqrMagnitude)) return;
         direction=Vector3.ProjectOnPlane(direction,Vector3.up).normalized;
         pushVelocity=Vector3.ClampMagnitude(pushVelocity+direction*.65f,1.8f);
         manualPushUntil=Time.time+1.1f;
@@ -31,7 +42,7 @@ public class ShipController : MonoBehaviour
     }
     public void ApplyPushImpulse(Vector3 point, Vector3 direction)
     {
-        if (IsFrozen || !float.IsFinite(point.sqrMagnitude) || !float.IsFinite(direction.sqrMagnitude)) return;
+        if (IsFrozen || IsFlooded || !float.IsFinite(point.sqrMagnitude) || !float.IsFinite(direction.sqrMagnitude)) return;
         Vector3 impulse = Vector3.ProjectOnPlane(direction, Vector3.up).normalized * pushImpulse;
         float mass = Mathf.Max(1f, impulseMass);
         pushVelocity += impulse / mass;
@@ -48,7 +59,7 @@ public class ShipController : MonoBehaviour
     public Vector3 MotionAngularVelocity => motionAngularVelocity;
     public void ApplyCannonImpulse(Vector3 point,Vector3 impulse,float strength)
     {
-        if(IsFrozen || !float.IsFinite(impulse.sqrMagnitude) || !float.IsFinite(point.sqrMagnitude)) return;
+        if(IsFrozen || IsFlooded || !float.IsFinite(impulse.sqrMagnitude) || !float.IsFinite(point.sqrMagnitude)) return;
         var local=Quaternion.Inverse(Quaternion.Euler(0,yaw,0))*Vector3.ClampMagnitude(impulse,1.5f);
         var offset=transform.InverseTransformPoint(point);
         float leverage=Mathf.Clamp(Mathf.Abs(offset.y)/5f,.65f,1.3f);
@@ -89,19 +100,21 @@ public class ShipController : MonoBehaviour
     void FixedUpdate() { if (!Networked) Simulate(Time.fixedDeltaTime); }
     public void Simulate(float dt)
     {
+        bool immobilized = IsFrozen || IsFlooded;
         if (IsFrozen)
         {
             freezeRemaining = Mathf.Max(0f, freezeRemaining - dt);
             speed = 0f; motionVelocity = motionAngularVelocity = Vector3.zero;
-            return;
+            if (floodLevel <= 0f) return;
         }
         SimulateCannonRock(dt);
         pushVelocity *= Mathf.Exp(-pushLinearDrag * dt);
         pushYawVelocity *= Mathf.Exp(-pushAngularDrag * dt);
         yaw += pushYawVelocity * dt;
-        float target = (sailSystem != null ? sailSystem.EffectiveDeploy : 0) * maxSpeed * destructionSpeed;
-        speed = Mathf.MoveTowards(speed, target, (target > speed ? acceleration * destructionAcceleration : deceleration) * dt);
-        float rudder = helm != null ? helm.CurrentRudderNormalized : 0;
+        float mobility = 1f - floodLevel;
+        float target = immobilized ? 0f : (sailSystem != null ? sailSystem.EffectiveDeploy : 0) * maxSpeed * destructionSpeed * mobility;
+        speed = immobilized ? 0f : Mathf.MoveTowards(speed, target, (target > speed ? acceleration * destructionAcceleration * mobility * mobility : deceleration) * dt);
+        float rudder = !immobilized && helm != null ? helm.CurrentRudderNormalized * mobility : 0;
         float factor = Mathf.Clamp01(speed / Mathf.Max(.1f, maxSpeed));
         yaw += rudder * turnSpeed * destructionRudder * Mathf.Lerp(.15f, 1, factor) * dt;
         bank = Mathf.Lerp(bank, -rudder * maxBankAngle * factor + destructionHeel, 1 - Mathf.Exp(-bankResponse * dt));
@@ -114,12 +127,14 @@ public class ShipController : MonoBehaviour
             float bow = ocean.Height(next + forward), stern = ocean.Height(next - forward);
             float starboard = ocean.Height(next + right), port = ocean.Height(next - right);
             float blend = 1f - Mathf.Exp(-buoyancyResponse * dt);
-            next.y = Mathf.Lerp(rb.position.y, waterHeight + (bow + stern + starboard + port) * .25f - ocean.SeaLevel, blend);
-            pitch = Mathf.Lerp(pitch, Mathf.Clamp(-Mathf.Atan2(bow - stern, floatLength * 2) * Mathf.Rad2Deg, -12, 12), blend);
+            float draftHeight = Mathf.Lerp(waterHeight, ocean.SeaLevel - fullWaterline, floodLevel);
+            next.y = Mathf.Lerp(rb.position.y, draftHeight + (bow + stern + starboard + port) * .25f - ocean.SeaLevel, blend);
+            pitch = Mathf.Lerp(pitch, Mathf.Clamp(-Mathf.Atan2(bow - stern, floatLength * 2) * Mathf.Rad2Deg, -12, 12) + fullBowPitch * floodLevel, blend);
             waveRoll = Mathf.Lerp(waveRoll, Mathf.Clamp(Mathf.Atan2(starboard - port, floatWidth * 2) * Mathf.Rad2Deg, -15, 15), blend);
         }
         var rotation = Quaternion.Euler(pitch + cannonTilt.x, yaw, bank + waveRoll + cannonTilt.y);
         PirateSlop.Networking.NetworkCannon.ConstrainBoarding(this, ref next, rotation);
+        if (IsFlooded) { next.x = rb.position.x; next.z = rb.position.z; }
         var world = PirateSlop.World.ProceduralWorld.Instance;
         if (world != null && world.Ready && !world.CanSail(next, yaw))
         {
@@ -169,7 +184,7 @@ public class ShipController : MonoBehaviour
     }
     public void ResolveCollision(Vector3 displacement)
     {
-        if (IsFrozen) return;
+        if (IsFrozen || IsFlooded) return;
         if (displacement.sqrMagnitude > .00001f)
         {
             Vector3 normal = displacement.normalized;

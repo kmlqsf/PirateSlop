@@ -112,6 +112,7 @@ namespace PirateSlop.EditorTools
                         {
                             SectionId = section.SectionId, Name = section.name, SourceGroup = source.name, Type = type,
                             MaxHealth = type == ShipSectionType.Hull ? 240f : 150f,
+                            CanFlood = type == ShipSectionType.Hull,
                             MaxDebris = 64, DebrisMass = type == ShipSectionType.Mast ? 240f : 80f,
                             SailNames = source.name.StartsWith("F2_Sail") ? new[] { source.name } : Array.Empty<string>(),
                             Ammo = new[] { new ShipAmmoMultiplier { Ammo = InventoryItem.BoardingHook, Multiplier = 0f }, new ShipAmmoMultiplier { Ammo = InventoryItem.IceCannonball, Multiplier = .6f }, new ShipAmmoMultiplier { Ammo = InventoryItem.PushCannonball, Multiplier = .5f } }
@@ -166,6 +167,7 @@ namespace PirateSlop.EditorTools
                 string structure = Connect(nodes);
                 destruction.Sections = sections.ToArray();
                 destruction.Profile.Sections = definitions.ToArray();
+                destruction.Profile.EnableFlooding = true;
                 destruction.Profile.Structure = nodes.Select(n => n.Connection).ToArray();
                 destruction.Profile.FallbackSectionId = definitions.First(d => d.Type == ShipSectionType.Hull).SectionId;
                 destruction.Profile.SectionsPrefab = SaveSections(container);

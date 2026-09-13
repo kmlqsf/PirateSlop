@@ -297,8 +297,8 @@ namespace PirateSlop
         void SetBreach(ShipSectionSnapshot entry)
         {
             var definition = definitions[entry.SectionId];
-            float scale = entry.State == ShipSectionState.Destroyed ? 1f : entry.State == ShipSectionState.Critical ? definition.CriticalLeak : definition.DamagedLeak;
-            flooding.SetBreach(entry.SectionId, entry.BreachPoint, entry.Breach ? definition.BreachArea * scale : 0f);
+            if (sections.TryGetValue(entry.SectionId, out var section))
+                flooding.SetSectionBreaches(section, entry, definition, Profile.EnableFlooding && definition.CanFlood);
         }
         void Publish()
         {
@@ -330,11 +330,11 @@ namespace PirateSlop
         {
             if (!ready || !IsServerInitialized || ship.IsSinking || !Profile.EnableFlooding) return;
             flooding.Simulate(Time.deltaTime, Profile);
-            if (flooding.Level >= Profile.CriticalWater) { ship.BeginSinking(); return; }
+            ApplyFloodModifiers();
             if (Time.time >= nextFloodPublish)
             {
                 nextFloodPublish = Time.time + .25f;
-                if (Mathf.Abs(publishedWater - flooding.Level) >= .001f)
+                if (Mathf.Abs(publishedWater - flooding.Level) >= .001f || flooding.Level >= 1f && publishedWater < 1f)
                 {
                     publishedWater = flooding.Level; ApplyModifiers(); ReceiveFlood(publishedWater, ++revision);
                 }
@@ -366,9 +366,12 @@ namespace PirateSlop
                 if (!helmAvailable) ship.Helm.ReleaseControl();
             }
             if (sails != null) sails.SetStructuralEfficiency(sailEfficiency);
-            float medium = Mathf.InverseLerp(Profile.MediumWater, Profile.CriticalWater, flooding.Level);
-            float high = Mathf.InverseLerp(Profile.HighWater, Profile.CriticalWater, flooding.Level);
-            ship.Motor.SetDestructionModifiers(Mathf.Lerp(1f, Profile.FloodSpeed, medium), Mathf.Lerp(1f, Profile.FloodAcceleration, medium), rudder * Mathf.Lerp(1f, Profile.FloodRudder, high), high * Profile.FloodHeel);
+            ship.Motor.SetDestructionModifiers(1f, 1f, rudder, 0f);
+            ApplyFloodModifiers();
+        }
+        void ApplyFloodModifiers()
+        {
+            ship.Motor.SetFlooding(Profile.EnableFlooding ? flooding.Level : 0f, flooding.FullWaterline, flooding.FullBowPitch);
         }
         public ShipSectionDefinition Definition(int id) => definitions[id];
         public ShipDamageSection Section(int id) => sections.TryGetValue(id, out var section) ? section : null;

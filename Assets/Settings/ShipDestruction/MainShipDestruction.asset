@@ -63,7 +63,7 @@ MonoBehaviour:
     Supports: 
     RequireAllSupports: 1
     RedirectSectionId: 0
-    CanFlood: 0
+    CanFlood: 1
     BreachArea: 1
     BreachAnchor: {x: 0, y: 0, z: 0}
     DamagedLeak: 0.1
@@ -96,7 +96,7 @@ MonoBehaviour:
     Supports: 
     RequireAllSupports: 1
     RedirectSectionId: 0
-    CanFlood: 0
+    CanFlood: 1
     BreachArea: 1
     BreachAnchor: {x: 0, y: 0, z: 0}
     DamagedLeak: 0.1
@@ -129,7 +129,7 @@ MonoBehaviour:
     Supports: 
     RequireAllSupports: 1
     RedirectSectionId: 0
-    CanFlood: 0
+    CanFlood: 1
     BreachArea: 1
     BreachAnchor: {x: 0, y: 0, z: 0}
     DamagedLeak: 0.1
@@ -162,7 +162,7 @@ MonoBehaviour:
     Supports: 
     RequireAllSupports: 1
     RedirectSectionId: 0
-    CanFlood: 0
+    CanFlood: 1
     BreachArea: 1
     BreachAnchor: {x: 0, y: 0, z: 0}
     DamagedLeak: 0.1
@@ -195,7 +195,7 @@ MonoBehaviour:
     Supports: 
     RequireAllSupports: 1
     RedirectSectionId: 0
-    CanFlood: 0
+    CanFlood: 1
     BreachArea: 1
     BreachAnchor: {x: 0, y: 0, z: 0}
     DamagedLeak: 0.1
@@ -228,7 +228,7 @@ MonoBehaviour:
     Supports: 
     RequireAllSupports: 1
     RedirectSectionId: 0
-    CanFlood: 0
+    CanFlood: 1
     BreachArea: 1
     BreachAnchor: {x: 0, y: 0, z: 0}
     DamagedLeak: 0.1
@@ -261,7 +261,7 @@ MonoBehaviour:
     Supports: 
     RequireAllSupports: 1
     RedirectSectionId: 0
-    CanFlood: 0
+    CanFlood: 1
     BreachArea: 1
     BreachAnchor: {x: 0, y: 0, z: 0}
     DamagedLeak: 0.1
@@ -294,7 +294,7 @@ MonoBehaviour:
     Supports: 
     RequireAllSupports: 1
     RedirectSectionId: 0
-    CanFlood: 0
+    CanFlood: 1
     BreachArea: 1
     BreachAnchor: {x: 0, y: 0, z: 0}
     DamagedLeak: 0.1
@@ -327,7 +327,7 @@ MonoBehaviour:
     Supports: 
     RequireAllSupports: 1
     RedirectSectionId: 0
-    CanFlood: 0
+    CanFlood: 1
     BreachArea: 1
     BreachAnchor: {x: 0, y: 0, z: 0}
     DamagedLeak: 0.1
@@ -360,7 +360,7 @@ MonoBehaviour:
     Supports: 
     RequireAllSupports: 1
     RedirectSectionId: 0
-    CanFlood: 0
+    CanFlood: 1
     BreachArea: 1
     BreachAnchor: {x: 0, y: 0, z: 0}
     DamagedLeak: 0.1
@@ -393,7 +393,7 @@ MonoBehaviour:
     Supports: 
     RequireAllSupports: 1
     RedirectSectionId: 0
-    CanFlood: 0
+    CanFlood: 1
     BreachArea: 1
     BreachAnchor: {x: 0, y: 0, z: 0}
     DamagedLeak: 0.1
@@ -426,7 +426,7 @@ MonoBehaviour:
     Supports: 
     RequireAllSupports: 1
     RedirectSectionId: 0
-    CanFlood: 0
+    CanFlood: 1
     BreachArea: 1
     BreachAnchor: {x: 0, y: 0, z: 0}
     DamagedLeak: 0.1
@@ -459,7 +459,7 @@ MonoBehaviour:
     Supports: 
     RequireAllSupports: 1
     RedirectSectionId: 0
-    CanFlood: 0
+    CanFlood: 1
     BreachArea: 1
     BreachAnchor: {x: 0, y: 0, z: 0}
     DamagedLeak: 0.1
@@ -492,7 +492,7 @@ MonoBehaviour:
     Supports: 
     RequireAllSupports: 1
     RedirectSectionId: 0
-    CanFlood: 0
+    CanFlood: 1
     BreachArea: 1
     BreachAnchor: {x: 0, y: 0, z: 0}
     DamagedLeak: 0.1
@@ -15146,7 +15146,7 @@ MonoBehaviour:
     Anchor: 0
     LoadBearing: 0
   SectionsPrefab: {fileID: 6041103922437285900, guid: 80f5e4e13947a874e88c73f8b4c592da, type: 3}
-  EnableFlooding: 0
+  EnableFlooding: 1
   SplinterMeshes:
   - {fileID: 4300000, guid: 19e19eba913acf84891601a2fa6495b9, type: 2}
   - {fileID: 4300000, guid: a65881a72e886544db17a558a9ca506f, type: 2}

@@ -18,6 +18,9 @@ namespace PirateSlop
         float timeOffset;
         bool synchronized;
         Mesh mesh;
+        Material runtimeMaterial;
+        bool simpleWater;
+        float simpleWaveSpeed, simpleWaveStrength, simpleWaveScale;
         ShipController[] ships;
         readonly Vector4[] wakes = new Vector4[32];
         float refreshAt;
@@ -30,6 +33,13 @@ namespace PirateSlop
         }
         public float Height(Vector3 position)
         {
+            if (simpleWater)
+            {
+                float t = WaveTime * simpleWaveSpeed;
+                float first = Mathf.Sin(position.x * simpleWaveScale + t);
+                float second = Mathf.Sin((position.z + position.x * .5f) * simpleWaveScale * .8f - t * 1.3f);
+                return SeaLevel + (first + second) * .5f * simpleWaveStrength;
+            }
             float height = SeaLevel;
             foreach (var w in Waves)
             {
@@ -41,6 +51,13 @@ namespace PirateSlop
         void Awake()
         {
             Instance = this;
+            if (WaterMaterial != null)
+            {
+                runtimeMaterial = Instantiate(WaterMaterial);
+                WaterMaterial = runtimeMaterial;
+                GetComponent<MeshRenderer>().sharedMaterial = WaterMaterial;
+            }
+            ReadWaveSettings();
             const int n = 256;
             var vertices = new Vector3[(n + 1) * (n + 1)];
             var indices = new int[n * n * 6];
@@ -66,6 +83,13 @@ namespace PirateSlop
             var camera = Camera.main;
             if (camera != null) transform.position = new Vector3(Mathf.Floor(camera.transform.position.x / 8) * 8, SeaLevel, Mathf.Floor(camera.transform.position.z / 8) * 8);
             if (WaterMaterial == null) return;
+            ReadWaveSettings();
+            if (simpleWater)
+            {
+                WaterMaterial.SetFloat("_UseWaveTime", 1f);
+                WaterMaterial.SetFloat("_WaveTime", WaveTime);
+                return;
+            }
             WaterMaterial.SetVectorArray("_Waves", Waves);
             WaterMaterial.SetFloat("_WaveTime", WaveTime);
             WaterMaterial.SetFloat("_WaveScale", WaveScale);
@@ -80,6 +104,14 @@ namespace PirateSlop
             WaterMaterial.SetVectorArray("_Wakes", wakes);
             WaterMaterial.SetInt("_WakeCount", count);
         }
-        void OnDestroy() { if (Instance == this) Instance = null; if (mesh != null) Destroy(mesh); }
+        void ReadWaveSettings()
+        {
+            simpleWater = WaterMaterial != null && WaterMaterial.HasProperty("_WaveStrength");
+            if (!simpleWater) return;
+            simpleWaveSpeed = WaterMaterial.GetFloat("_WaveSpeed");
+            simpleWaveStrength = WaterMaterial.GetFloat("_WaveStrength");
+            simpleWaveScale = WaterMaterial.GetFloat("_WaveScale");
+        }
+        void OnDestroy() { if (Instance == this) Instance = null; if (mesh != null) Destroy(mesh); if (runtimeMaterial != null) Destroy(runtimeMaterial); }
     }
 }
