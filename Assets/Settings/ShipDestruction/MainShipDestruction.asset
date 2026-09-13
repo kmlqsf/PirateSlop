@@ -17498,6 +17498,10 @@ MonoBehaviour:
   - {fileID: 4300000, guid: 49d9c763efc8529478b7e81e494a240b, type: 2}
   SplinterMaterial: {fileID: 2100000, guid: 710339ca47ce99d4ca1a511accd994dc, type: 2}
   SplintersPerHit: 12
+  HullDeckDamageRadius: 1.4
+  HullDeckDamageFraction: 0.3
+  DebrisScatterSpeed: 7
+  SplinterScatterSpeed: 10
   FallbackSectionId: 1001
   CannonDamage: 65
   FireDamagePerSecond: 4

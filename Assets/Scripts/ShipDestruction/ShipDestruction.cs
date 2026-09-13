@@ -162,6 +162,25 @@ namespace PirateSlop
             }
             foreach (var target in affected)
                 ApplyDamage(target.Key, Profile.CannonDamage * target.Value, point, normal, velocity, ammo, attacker, ShipDamageReason.Hit);
+            if (definitions[direct.SectionId].Type == ShipSectionType.Hull)
+            {
+                ShipDamageSection deck = null;
+                Vector3 deckPoint = point;
+                float nearest = Profile.HullDeckDamageRadius;
+                foreach (var candidate in sections.Values)
+                {
+                    if ((!candidate.SurfaceDamage && definitions[candidate.SectionId].Type != ShipSectionType.Deck) || affected.ContainsKey(candidate.SectionId) || candidate.Distance(point) >= nearest) continue;
+                    var visual = candidate.Intact.transform;
+                    var bounds = candidate.Intact.GetComponent<MeshFilter>().sharedMesh.bounds;
+                    var local = visual.InverseTransformPoint(point);
+                    var top = new Vector3(Mathf.Clamp(local.x, bounds.min.x, bounds.max.x), bounds.max.y, Mathf.Clamp(local.z, bounds.min.z, bounds.max.z));
+                    var world = visual.TransformPoint(top);
+                    float distance = Vector3.Distance(point, world);
+                    if (distance >= nearest) continue;
+                    nearest = distance;deck = candidate;deckPoint = world;
+                }
+                if (deck != null) ApplyDamage(deck.SectionId, Profile.CannonDamage * Profile.HullDeckDamageFraction, deckPoint, transform.up, velocity, ammo, attacker, ShipDamageReason.Hit);
+            }
             DetachUnsupported(point, normal, velocity, ammo, attacker);
             Publish();
         }
@@ -184,7 +203,7 @@ namespace PirateSlop
         void ApplyDamage(int id, float amount, Vector3 point, Vector3 normal, Vector3 velocity, InventoryItem ammo, GameObject attacker, ShipDamageReason reason)
         {
             if (!state.TryGetValue(id, out var current)) return;
-            if (current.State == ShipSectionState.Destroyed && (!sections.TryGetValue(id, out var fracturedPart) || fracturedPart.Fragments.Length == 0))
+            if (current.State == ShipSectionState.Destroyed && (!sections.TryGetValue(id, out var fracturedPart) || fracturedPart.Fragments.Length == 0 && !fracturedPart.SurfaceDamage))
             {
                 int redirect = definitions[id].RedirectSectionId;
                 if (redirect == 0 || redirect == id || !state.TryGetValue(redirect, out current) || current.State == ShipSectionState.Destroyed) return;

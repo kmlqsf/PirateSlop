@@ -56,6 +56,8 @@ namespace PirateSlop
         public Mesh[] SplinterMeshes = Array.Empty<Mesh>();
         public Material SplinterMaterial;
         public int SplintersPerHit = 12;
+        public float HullDeckDamageRadius = 1.4f, HullDeckDamageFraction = .3f;
+        public float DebrisScatterSpeed = 7f, SplinterScatterSpeed = 10f;
         public int FallbackSectionId;
         public float CannonDamage = 65f, FireDamagePerSecond = 4f;
         public float FloodCoefficient = .0015f, MaximumDepth = 8f;
