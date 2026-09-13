@@ -100,7 +100,12 @@ namespace PirateSlop
                 return;
             }
             if (network != null && network.Ship != null)
+            {
                 PirateHudStyle.Label(new Rect(24, sideY - 65, 280, 24), $"Ром корабля: {network.Ship.RumCount} возрождений", network.Ship.RumCount > 0 ? PirateHudStyle.Paper : PirateHudStyle.Gold);
+                var flooding = network.Ship.GetComponent<ShipFlooding>();
+                if (flooding != null && flooding.Level > 0f)
+                    PirateHudStyle.Label(new Rect(24, sideY - 91, 280, 24), $"Затопление: {flooding.Level * 100f:0}%", PirateHudStyle.Gold);
+            }
             if (inventory.PistolSelected || (equipment!=null && equipment.Active && equipment.Firearm))
             {
                 int count=inventory.PistolSelected ? (weapon.Loaded?1:0) : equipment.LoadedRounds;

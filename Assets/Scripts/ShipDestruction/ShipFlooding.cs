@@ -15,10 +15,31 @@ namespace PirateSlop
         public float EmptyHeight = -1f, FullHeight = 3.5f;
         public float FullWaterline = 4.1f;
         public float FullBowPitch = 8f;
-        public float FloodDuration = 30f, DrainDuration = 30f, WaterlineAllowance = .6f;
-        float restingWaterline;
+        public float DrainDuration = 30f, WaterlineAllowance = 3.5f;
+        public Vector4 FloodSecondsByHits = new(60f, 40f, 20f, 10f);
         public float Level { get; private set; }
         readonly Dictionary<int, ShipBreach> breaches = new();
+        readonly Dictionary<ulong, Dictionary<int, ulong>> impacts = new();
+        ulong impactId;
+        public int OpenImpactCount
+        {
+            get
+            {
+                int count = 0;
+                foreach (var impact in impacts.Values)
+                    foreach (var mask in impact.Values)
+                        if (mask != 0) { count++; break; }
+                return count;
+            }
+        }
+        public void BeginImpact() => impactId++;
+        public void RegisterImpact(int sectionId, ulong fragments)
+        {
+            if (fragments == 0) return;
+            if (!impacts.TryGetValue(impactId, out var impact)) impacts[impactId] = impact = new Dictionary<int, ulong>();
+            impact.TryGetValue(sectionId, out ulong previous);
+            impact[sectionId] = previous | fragments;
+        }
         public IEnumerable<ShipBreach> Breaches => breaches.Values;
         public void SetBreach(int id, Vector3 localPoint, float area)
         {
@@ -27,12 +48,14 @@ namespace PirateSlop
         }
         public void Clear()
         {
-            breaches.Clear(); SetLevel(0f);
-            restingWaterline = (OceanSurface.Instance != null ? OceanSurface.Instance.SeaLevel : 0f) - transform.position.y;
+            breaches.Clear(); impacts.Clear(); impactId = 0; SetLevel(0f);
         }
-        public bool CanOpenBreach(Vector3 point) => transform.InverseTransformPoint(point).y <= restingWaterline + WaterlineAllowance;
+        public bool CanOpenBreach(Vector3 point) => OceanSurface.Instance != null && point.y <= OceanSurface.Instance.Height(point) + WaterlineAllowance;
         public void SetSectionBreaches(ShipDamageSection section, ShipSectionSnapshot entry, ShipSectionDefinition definition, bool enabled)
         {
+            foreach (var impact in impacts.Values)
+                if (impact.TryGetValue(entry.SectionId, out ulong mask))
+                    impact[entry.SectionId] = mask & (enabled ? section.Fragments.Length == 0 ? entry.Breach ? 1UL : 0UL : entry.LeakingFragments & entry.RemovedFragments : 0UL);
             if (section.Fragments.Length == 0)
             {
                 float scale = entry.State == ShipSectionState.Destroyed ? 1f : entry.State == ShipSectionState.Critical ? definition.CriticalLeak : definition.DamagedLeak;
@@ -48,8 +71,7 @@ namespace PirateSlop
                 var filter = fragment.GetComponent<MeshFilter>();
                 if (filter == null || filter.sharedMesh == null) continue;
                 var bounds = filter.sharedMesh.bounds;
-                var local = bounds.ClosestPoint(fragment.transform.InverseTransformPoint(transform.TransformPoint(entry.BreachPoint)));
-                var point = transform.InverseTransformPoint(fragment.transform.TransformPoint(local));
+                var point = entry.BreachPoint;
                 var size = Vector3.Scale(bounds.size, fragment.transform.lossyScale);
                 float area = Mathf.Clamp(Mathf.Abs(size.y) * Mathf.Max(Mathf.Abs(size.x), Mathf.Abs(size.z)), .02f, 4f);
                 breaches[key] = new ShipBreach { SectionId = entry.SectionId, LocalPoint = point, Area = area };
@@ -59,16 +81,9 @@ namespace PirateSlop
         {
             var ocean = OceanSurface.Instance;
             if (ocean == null || dt <= 0f) return Level;
-            float flow = 0f;
-            foreach (var breach in breaches.Values)
-            {
-                var point = transform.TransformPoint(breach.LocalPoint);
-                float depth = ocean.SeaLevel + WaterlineAllowance - point.y;
-                if (depth < 0f) continue;
-                depth = Mathf.Clamp(depth, .025f, Mathf.Max(.025f, profile.MaximumDepth));
-                flow += breach.Area * Mathf.Sqrt(2f * 9.81f * depth);
-            }
-            float rate = flow > 0f ? 1f / Mathf.Max(30f, FloodDuration) : breaches.Count == 0 ? -1f / Mathf.Max(1f, DrainDuration) : 0f;
+            int count = OpenImpactCount;
+            float seconds = count == 1 ? FloodSecondsByHits.x : count == 2 ? FloodSecondsByHits.y : count == 3 ? FloodSecondsByHits.z : FloodSecondsByHits.w;
+            float rate = count > 0 ? 1f / Mathf.Max(10f, seconds) : -1f / Mathf.Max(1f, DrainDuration);
             SetLevel(Level + rate * dt);
             return Level;
         }
@@ -83,3 +98,4 @@ namespace PirateSlop
         }
     }
 }
+

@@ -44,6 +44,8 @@ namespace PirateSlop
         readonly List<ShipDestructionEvent> pending = new();
         readonly Queue<int> branch = new();
         readonly Dictionary<int, float> nextBurn = new();
+        readonly Dictionary<string, int> mastHits = new();
+        readonly HashSet<string> struckMasts = new();
         ShipStructuralGraph graph;
         NetworkShip ship;
         ShipFlooding flooding;
@@ -77,6 +79,7 @@ namespace PirateSlop
             if (!ready) return;
             state.Clear(); revision = 0; sequence = 0;
             nextBurn.Clear(); publishedWater = 0f;
+            mastHits.Clear();
             flooding.Clear();
             foreach (var entry in definitions)
             {
@@ -143,6 +146,8 @@ namespace PirateSlop
         {
             if (!ready || !IsServerInitialized || ship.IsSinking || !float.IsFinite(point.sqrMagnitude) || !float.IsFinite(velocity.sqrMagnitude)) return;
             var direct = Resolve(collider, point);
+            flooding.BeginImpact();
+            struckMasts.Clear();
             var affected = new Dictionary<int, float>();
             if (radius <= 0f)
             {
@@ -213,6 +218,13 @@ namespace PirateSlop
             var definition = definitions[id];
             amount *= definition.DamageMultiplier(ammo);
             if (amount <= 0f) return;
+            if (definition.Type == ShipSectionType.Mast && reason == ShipDamageReason.Hit)
+            {
+                string key = string.IsNullOrEmpty(definition.SourceGroup) ? definition.Name : definition.SourceGroup;
+                mastHits.TryGetValue(key, out int hits);
+                if (struckMasts.Add(key)) mastHits[key] = ++hits;
+                if (mastHits[key] < 2) return;
+            }
             float health = sections.TryGetValue(id, out var part) ? part.Health : current.Health / (float)ushort.MaxValue * definition.MaxHealth;
             health = Mathf.Max(0f, health - amount);
             float fraction = health / definition.MaxHealth;
@@ -258,6 +270,7 @@ namespace PirateSlop
                 if (!current.Breach) current.BreachPoint = transform.InverseTransformPoint(point);
                 current.Breach = true;
                 current.LeakingFragments |= current.RemovedFragments & ~previousFragments;
+                flooding.RegisterImpact(id, fragmentSection != null && fragmentSection.Fragments.Length > 0 ? current.RemovedFragments & ~previousFragments : 1UL);
             }
             state[id] = current;
             if (sections.TryGetValue(id, out var section))
@@ -304,15 +317,15 @@ namespace PirateSlop
         public bool RepairFragment(int id, int fragment)
         {
             if (!ready || !IsServerInitialized || ship.IsSinking || !state.TryGetValue(id, out var entry) || !sections.TryGetValue(id, out var section)) return false;
-            if (definitions[id].Type != ShipSectionType.Hull || fragment < 0 || fragment >= section.Fragments.Length || fragment >= 64) return false;
+            if (fragment < 0 || fragment >= section.RepairCount || fragment >= 64) return false;
             ulong bit = 1UL << fragment;
             if ((entry.RemovedFragments & bit) == 0) return false;
             entry.RemovedFragments &= ~bit;
             entry.LeakingFragments &= ~bit;
             entry.Breach = entry.LeakingFragments != 0;
             int remaining = 0;
-            for (int i = 0; i < section.Fragments.Length; i++) if ((entry.RemovedFragments & (1UL << i)) == 0) remaining++;
-            float fraction = remaining / (float)section.Fragments.Length;
+            for (int i = 0; i < section.RepairCount; i++) if ((entry.RemovedFragments & (1UL << i)) == 0) remaining++;
+            float fraction = remaining / (float)section.RepairCount;
             var definition = definitions[id];
             entry.State = entry.RemovedFragments == 0 ? ShipSectionState.Intact : fraction <= definition.CriticalThreshold ? ShipSectionState.Critical : ShipSectionState.Damaged;
             entry.Health = (ushort)Mathf.RoundToInt(fraction * ushort.MaxValue);
@@ -322,6 +335,70 @@ namespace PirateSlop
             section.Health = fraction * definition.MaxHealth;
             section.Apply(entry.State, entry.RemovedFragments);
             SetBreach(entry);
+            Publish();
+            return true;
+        }
+        public void RepairNearby(int id, int fragment, Vector3 point)
+        {
+            if (!RepairFragment(id, fragment)) return;
+            var candidates = new List<(int Id, int Fragment, float Distance)>();
+            foreach (var section in Sections)
+            {
+                for (int i = 0; i < section.RepairCount; i++)
+                {
+                    if ((section.RemovedFragments & (1UL << i)) == 0) continue;
+                    var anchor = section.RepairTransform(i);
+                    var closest = anchor.TransformPoint(section.RepairBounds(i).ClosestPoint(anchor.InverseTransformPoint(point)));
+                    float distance = Vector3.Distance(point, closest);
+                    if (distance <= 1.5f) candidates.Add((section.SectionId, i, distance));
+                }
+            }
+            candidates.Sort((a, b) => a.Distance.CompareTo(b.Distance));
+            for (int i = 0; i < Mathf.Min(2, candidates.Count); i++) RepairFragment(candidates[i].Id, candidates[i].Fragment);
+            var repaired = definitions[id];
+            if (repaired.Type == ShipSectionType.Mast)
+            {
+                string key = string.IsNullOrEmpty(repaired.SourceGroup) ? repaired.Name : repaired.SourceGroup;
+                bool complete = true;
+                foreach (var section in Sections) if (definitions[section.SectionId].SourceGroup == repaired.SourceGroup && section.RemovedFragments != 0) complete = false;
+                if (complete) mastHits.Remove(key);
+            }
+        }
+        public bool MastRepairPoint(int id, out Vector3 point)
+        {
+            point = Vector3.zero;
+            if (!definitions.TryGetValue(id, out var definition) || definition.Type != ShipSectionType.Mast) return false;
+            var source = transform.Find("MainShipVisual/" + definition.SourceGroup);
+            if (source == null) return false;
+            bool damaged = false;
+            foreach (var section in Sections) if (definitions[section.SectionId].SourceGroup == definition.SourceGroup && section.RemovedFragments != 0) damaged = true;
+            if (!damaged) return false;
+            var bounds = source.GetComponent<MeshFilter>().sharedMesh.bounds;
+            point = source.TransformPoint(bounds.center);
+            var local = transform.InverseTransformPoint(point);
+            local.x = 0f;
+            local.y = definition.SourceGroup.Contains("Back") ? 7.6f : 4.9f;
+            point = transform.TransformPoint(local);
+            return true;
+        }
+        public bool RepairMast(int id)
+        {
+            if (!ready || !IsServerInitialized || ship.IsSinking || !MastRepairPoint(id, out _)) return false;
+            string group = definitions[id].SourceGroup;
+            string suffix = group.Replace("F2_Mast", "");
+            foreach (var section in Sections)
+            {
+                var definition = definitions[section.SectionId];
+                if (definition.SourceGroup != group && !definition.SourceGroup.StartsWith("F2_Sail" + suffix)) continue;
+                var entry = state[section.SectionId];
+                entry.RemovedFragments = entry.LeakingFragments = 0;
+                entry.State = ShipSectionState.Intact; entry.Health = ushort.MaxValue;
+                entry.Breach = false; entry.Repair = true; entry.Revision = ++revision;
+                state[section.SectionId] = entry;
+                section.Health = definition.MaxHealth; section.Apply(ShipSectionState.Intact);
+                SetBreach(entry);
+            }
+            mastHits.Remove(group);
             Publish();
             return true;
         }

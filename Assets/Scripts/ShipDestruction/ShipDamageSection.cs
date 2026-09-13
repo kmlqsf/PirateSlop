@@ -125,6 +125,15 @@ namespace PirateSlop
                 if (collider != null && collider.enabled && collider.gameObject.activeInHierarchy) distance = Mathf.Min(distance, Vector3.Distance(collider is MeshCollider mesh && !mesh.convex ? collider.bounds.ClosestPoint(point) : collider.ClosestPoint(point), point));
             return distance;
         }
+        public int RepairCount => SurfaceDamage && Fragments.Length == 0 ? 64 : Fragments.Length;
+        public Transform RepairTransform(int index) => Fragments.Length > 0 ? Fragments[index].transform : Intact.transform;
+        public Bounds RepairBounds(int index)
+        {
+            var bounds = RepairTransform(index).GetComponent<MeshFilter>().sharedMesh.bounds;
+            if (Fragments.Length > 0) return bounds;
+            float width = bounds.size.x / 8f, length = bounds.size.z / 8f;
+            return new Bounds(new Vector3(bounds.min.x + (index % 8 + .5f) * width, bounds.max.y, bounds.min.z + (index / 8 + .5f) * length), new Vector3(width, .12f, length));
+        }
         void ApplySurface(ulong mask)
         {
             if (mask == appliedSurface) return;

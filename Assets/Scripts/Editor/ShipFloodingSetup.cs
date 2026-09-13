@@ -21,13 +21,13 @@ namespace PirateSlop.EditorTools
                     definition.CanFlood = definition.Type == ShipSectionType.Hull;
                 flooding.FullWaterline = 4.1f;
                 flooding.FullBowPitch = 8f;
-                flooding.FloodDuration = 30f;
+                flooding.FloodSecondsByHits = new Vector4(60f, 40f, 20f, 10f);
                 flooding.DrainDuration = 30f;
-                flooding.WaterlineAllowance = .6f;
+                flooding.WaterlineAllowance = 3.5f;
                 EditorUtility.SetDirty(destruction.Profile);
                 PrefabUtility.SaveAsPrefabAsset(root, path);
                 var config = AssetDatabase.LoadAssetAtPath<SessionConfig>("Assets/Settings/Networking/SessionConfig.asset");
-                config.ProtocolVersion = Mathf.Max(config.ProtocolVersion, 76);
+                config.ProtocolVersion = Mathf.Max(config.ProtocolVersion, 80);
                 EditorUtility.SetDirty(config);
                 AssetDatabase.SaveAssets();
             }
