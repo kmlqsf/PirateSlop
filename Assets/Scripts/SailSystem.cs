@@ -11,6 +11,23 @@ public class SailSystem : MonoBehaviour
     [SerializeField] private Transform[] sailMeshes;
 
     public float DeployPercentage => deployPercentage;
+    readonly System.Collections.Generic.Dictionary<string, float> structuralEfficiency = new();
+    public float EffectiveDeploy
+    {
+        get
+        {
+            if (sailMeshes == null || sailMeshes.Length == 0) return deployPercentage;
+            float total = 0f;
+            foreach (var sail in sailMeshes) if (sail != null) total += structuralEfficiency.TryGetValue(sail.name, out float efficiency) ? efficiency : 1f;
+            return deployPercentage * total / sailMeshes.Length;
+        }
+    }
+    public void SetStructuralEfficiency(System.Collections.Generic.Dictionary<string, float> values)
+    {
+        structuralEfficiency.Clear();
+        foreach (var entry in values) structuralEfficiency[entry.Key] = entry.Value;
+        UpdateVisuals();
+    }
     public Collider[] MastControls;
     public bool InRange(AdvancedPlayerController player)
     {
@@ -35,6 +52,9 @@ public class SailSystem : MonoBehaviour
         {
             if (sail != null)
             {
+                float efficiency = structuralEfficiency.TryGetValue(sail.name, out float value) ? value : 1f;
+                var renderer = sail.GetComponent<Renderer>();
+                if (renderer != null) renderer.enabled = efficiency > 0f;
                 sail.localScale = new Vector3(sail.localScale.x, Mathf.Lerp(0.1f, 1f, deployPercentage), sail.localScale.z);
             }
         }

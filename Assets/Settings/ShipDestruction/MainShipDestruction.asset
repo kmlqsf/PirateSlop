@@ -1,0 +1,982 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd0806508e1d2b948902a38e2f207da1, type: 3}
+  m_Name: MainShipDestruction
+  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.ShipDestructionProfile
+  Sections:
+  - SectionId: 100
+    Name: PortHull1
+    Type: 0
+    MaxHealth: 240
+    DamagedThreshold: 0.75
+    CriticalThreshold: 0.3
+    Ammo:
+    - Ammo: 18
+      Multiplier: 0
+    - Ammo: 9
+      Multiplier: 0.6
+    - Ammo: 10
+      Multiplier: 0.5
+    Supports: 
+    RequireAllSupports: 1
+    RedirectSectionId: 0
+    CanFlood: 1
+    BreachArea: 1.5
+    BreachAnchor: {x: -3.0817149, y: -0.6, z: 15.833334}
+    DamagedLeak: 0.1
+    CriticalLeak: 0.4
+    SailNames: []
+    DamagedEfficiency: 0.8
+    CriticalEfficiency: 0.35
+    DestroyedEfficiency: 0
+    Repairable: 0
+    MaxRepairHealth: 0.6
+    DebrisMass: 80
+    DebrisImpulse: 4
+    DebrisLifetime: 15
+    AngularSpeed: 2
+    MaxDebris: 4
+  - SectionId: 101
+    Name: PortHull2
+    Type: 0
+    MaxHealth: 240
+    DamagedThreshold: 0.75
+    CriticalThreshold: 0.3
+    Ammo:
+    - Ammo: 18
+      Multiplier: 0
+    - Ammo: 9
+      Multiplier: 0.6
+    - Ammo: 10
+      Multiplier: 0.5
+    Supports: 
+    RequireAllSupports: 1
+    RedirectSectionId: 0
+    CanFlood: 1
+    BreachArea: 1.5
+    BreachAnchor: {x: -3.2497716, y: -0.6, z: 9.5}
+    DamagedLeak: 0.1
+    CriticalLeak: 0.4
+    SailNames: []
+    DamagedEfficiency: 0.8
+    CriticalEfficiency: 0.35
+    DestroyedEfficiency: 0
+    Repairable: 0
+    MaxRepairHealth: 0.6
+    DebrisMass: 80
+    DebrisImpulse: 4
+    DebrisLifetime: 15
+    AngularSpeed: 2
+    MaxDebris: 4
+  - SectionId: 102
+    Name: PortHull3
+    Type: 0
+    MaxHealth: 240
+    DamagedThreshold: 0.75
+    CriticalThreshold: 0.3
+    Ammo:
+    - Ammo: 18
+      Multiplier: 0
+    - Ammo: 9
+      Multiplier: 0.6
+    - Ammo: 10
+      Multiplier: 0.5
+    Supports: 
+    RequireAllSupports: 1
+    RedirectSectionId: 0
+    CanFlood: 1
+    BreachArea: 1.5
+    BreachAnchor: {x: -3.2499938, y: -0.6, z: 3.166667}
+    DamagedLeak: 0.1
+    CriticalLeak: 0.4
+    SailNames: []
+    DamagedEfficiency: 0.8
+    CriticalEfficiency: 0.35
+    DestroyedEfficiency: 0
+    Repairable: 0
+    MaxRepairHealth: 0.6
+    DebrisMass: 80
+    DebrisImpulse: 4
+    DebrisLifetime: 15
+    AngularSpeed: 2
+    MaxDebris: 4
+  - SectionId: 103
+    Name: PortHull4
+    Type: 0
+    MaxHealth: 240
+    DamagedThreshold: 0.75
+    CriticalThreshold: 0.3
+    Ammo:
+    - Ammo: 18
+      Multiplier: 0
+    - Ammo: 9
+      Multiplier: 0.6
+    - Ammo: 10
+      Multiplier: 0.5
+    Supports: 
+    RequireAllSupports: 1
+    RedirectSectionId: 0
+    CanFlood: 1
+    BreachArea: 1.5
+    BreachAnchor: {x: -3.2499938, y: -0.6, z: -3.166667}
+    DamagedLeak: 0.1
+    CriticalLeak: 0.4
+    SailNames: []
+    DamagedEfficiency: 0.8
+    CriticalEfficiency: 0.35
+    DestroyedEfficiency: 0
+    Repairable: 0
+    MaxRepairHealth: 0.6
+    DebrisMass: 80
+    DebrisImpulse: 4
+    DebrisLifetime: 15
+    AngularSpeed: 2
+    MaxDebris: 4
+  - SectionId: 104
+    Name: PortHull5
+    Type: 0
+    MaxHealth: 240
+    DamagedThreshold: 0.75
+    CriticalThreshold: 0.3
+    Ammo:
+    - Ammo: 18
+      Multiplier: 0
+    - Ammo: 9
+      Multiplier: 0.6
+    - Ammo: 10
+      Multiplier: 0.5
+    Supports: 
+    RequireAllSupports: 1
+    RedirectSectionId: 0
+    CanFlood: 1
+    BreachArea: 1.5
+    BreachAnchor: {x: -3.2499938, y: -0.6, z: -9.5}
+    DamagedLeak: 0.1
+    CriticalLeak: 0.4
+    SailNames: []
+    DamagedEfficiency: 0.8
+    CriticalEfficiency: 0.35
+    DestroyedEfficiency: 0
+    Repairable: 0
+    MaxRepairHealth: 0.6
+    DebrisMass: 80
+    DebrisImpulse: 4
+    DebrisLifetime: 15
+    AngularSpeed: 2
+    MaxDebris: 4
+  - SectionId: 105
+    Name: PortHull6
+    Type: 0
+    MaxHealth: 240
+    DamagedThreshold: 0.75
+    CriticalThreshold: 0.3
+    Ammo:
+    - Ammo: 18
+      Multiplier: 0
+    - Ammo: 9
+      Multiplier: 0.6
+    - Ammo: 10
+      Multiplier: 0.5
+    Supports: 
+    RequireAllSupports: 1
+    RedirectSectionId: 0
+    CanFlood: 1
+    BreachArea: 1.5
+    BreachAnchor: {x: -3.1629684, y: -0.6, z: -15.833334}
+    DamagedLeak: 0.1
+    CriticalLeak: 0.4
+    SailNames: []
+    DamagedEfficiency: 0.8
+    CriticalEfficiency: 0.35
+    DestroyedEfficiency: 0
+    Repairable: 0
+    MaxRepairHealth: 0.6
+    DebrisMass: 80
+    DebrisImpulse: 4
+    DebrisLifetime: 15
+    AngularSpeed: 2
+    MaxDebris: 4
+  - SectionId: 110
+    Name: StarboardHull1
+    Type: 0
+    MaxHealth: 240
+    DamagedThreshold: 0.75
+    CriticalThreshold: 0.3
+    Ammo:
+    - Ammo: 18
+      Multiplier: 0
+    - Ammo: 9
+      Multiplier: 0.6
+    - Ammo: 10
+      Multiplier: 0.5
+    Supports: 
+    RequireAllSupports: 1
+    RedirectSectionId: 0
+    CanFlood: 1
+    BreachArea: 1.5
+    BreachAnchor: {x: 3.0817268, y: -0.6, z: 15.833334}
+    DamagedLeak: 0.1
+    CriticalLeak: 0.4
+    SailNames: []
+    DamagedEfficiency: 0.8
+    CriticalEfficiency: 0.35
+    DestroyedEfficiency: 0
+    Repairable: 0
+    MaxRepairHealth: 0.6
+    DebrisMass: 80
+    DebrisImpulse: 4
+    DebrisLifetime: 15
+    AngularSpeed: 2
+    MaxDebris: 4
+  - SectionId: 111
+    Name: StarboardHull2
+    Type: 0
+    MaxHealth: 240
+    DamagedThreshold: 0.75
+    CriticalThreshold: 0.3
+    Ammo:
+    - Ammo: 18
+      Multiplier: 0
+    - Ammo: 9
+      Multiplier: 0.6
+    - Ammo: 10
+      Multiplier: 0.5
+    Supports: 
+    RequireAllSupports: 1
+    RedirectSectionId: 0
+    CanFlood: 1
+    BreachArea: 1.5
+    BreachAnchor: {x: 3.2497838, y: -0.6, z: 9.5}
+    DamagedLeak: 0.1
+    CriticalLeak: 0.4
+    SailNames: []
+    DamagedEfficiency: 0.8
+    CriticalEfficiency: 0.35
+    DestroyedEfficiency: 0
+    Repairable: 0
+    MaxRepairHealth: 0.6
+    DebrisMass: 80
+    DebrisImpulse: 4
+    DebrisLifetime: 15
+    AngularSpeed: 2
+    MaxDebris: 4
+  - SectionId: 112
+    Name: StarboardHull3
+    Type: 0
+    MaxHealth: 240
+    DamagedThreshold: 0.75
+    CriticalThreshold: 0.3
+    Ammo:
+    - Ammo: 18
+      Multiplier: 0
+    - Ammo: 9
+      Multiplier: 0.6
+    - Ammo: 10
+      Multiplier: 0.5
+    Supports: 
+    RequireAllSupports: 1
+    RedirectSectionId: 0
+    CanFlood: 1
+    BreachArea: 1.5
+    BreachAnchor: {x: 3.250006, y: -0.6, z: 3.166667}
+    DamagedLeak: 0.1
+    CriticalLeak: 0.4
+    SailNames: []
+    DamagedEfficiency: 0.8
+    CriticalEfficiency: 0.35
+    DestroyedEfficiency: 0
+    Repairable: 0
+    MaxRepairHealth: 0.6
+    DebrisMass: 80
+    DebrisImpulse: 4
+    DebrisLifetime: 15
+    AngularSpeed: 2
+    MaxDebris: 4
+  - SectionId: 113
+    Name: StarboardHull4
+    Type: 0
+    MaxHealth: 240
+    DamagedThreshold: 0.75
+    CriticalThreshold: 0.3
+    Ammo:
+    - Ammo: 18
+      Multiplier: 0
+    - Ammo: 9
+      Multiplier: 0.6
+    - Ammo: 10
+      Multiplier: 0.5
+    Supports: 
+    RequireAllSupports: 1
+    RedirectSectionId: 0
+    CanFlood: 1
+    BreachArea: 1.5
+    BreachAnchor: {x: 3.250006, y: -0.6, z: -3.166667}
+    DamagedLeak: 0.1
+    CriticalLeak: 0.4
+    SailNames: []
+    DamagedEfficiency: 0.8
+    CriticalEfficiency: 0.35
+    DestroyedEfficiency: 0
+    Repairable: 0
+    MaxRepairHealth: 0.6
+    DebrisMass: 80
+    DebrisImpulse: 4
+    DebrisLifetime: 15
+    AngularSpeed: 2
+    MaxDebris: 4
+  - SectionId: 114
+    Name: StarboardHull5
+    Type: 0
+    MaxHealth: 240
+    DamagedThreshold: 0.75
+    CriticalThreshold: 0.3
+    Ammo:
+    - Ammo: 18
+      Multiplier: 0
+    - Ammo: 9
+      Multiplier: 0.6
+    - Ammo: 10
+      Multiplier: 0.5
+    Supports: 
+    RequireAllSupports: 1
+    RedirectSectionId: 0
+    CanFlood: 1
+    BreachArea: 1.5
+    BreachAnchor: {x: 3.250006, y: -0.6, z: -9.5}
+    DamagedLeak: 0.1
+    CriticalLeak: 0.4
+    SailNames: []
+    DamagedEfficiency: 0.8
+    CriticalEfficiency: 0.35
+    DestroyedEfficiency: 0
+    Repairable: 0
+    MaxRepairHealth: 0.6
+    DebrisMass: 80
+    DebrisImpulse: 4
+    DebrisLifetime: 15
+    AngularSpeed: 2
+    MaxDebris: 4
+  - SectionId: 115
+    Name: StarboardHull6
+    Type: 0
+    MaxHealth: 240
+    DamagedThreshold: 0.75
+    CriticalThreshold: 0.3
+    Ammo:
+    - Ammo: 18
+      Multiplier: 0
+    - Ammo: 9
+      Multiplier: 0.6
+    - Ammo: 10
+      Multiplier: 0.5
+    Supports: 
+    RequireAllSupports: 1
+    RedirectSectionId: 0
+    CanFlood: 1
+    BreachArea: 1.5
+    BreachAnchor: {x: 3.1629798, y: -0.6, z: -15.833334}
+    DamagedLeak: 0.1
+    CriticalLeak: 0.4
+    SailNames: []
+    DamagedEfficiency: 0.8
+    CriticalEfficiency: 0.35
+    DestroyedEfficiency: 0
+    Repairable: 0
+    MaxRepairHealth: 0.6
+    DebrisMass: 80
+    DebrisImpulse: 4
+    DebrisLifetime: 15
+    AngularSpeed: 2
+    MaxDebris: 4
+  - SectionId: 120
+    Name: BowHull
+    Type: 0
+    MaxHealth: 240
+    DamagedThreshold: 0.75
+    CriticalThreshold: 0.3
+    Ammo:
+    - Ammo: 18
+      Multiplier: 0
+    - Ammo: 9
+      Multiplier: 0.6
+    - Ammo: 10
+      Multiplier: 0.5
+    Supports: 
+    RequireAllSupports: 1
+    RedirectSectionId: 0
+    CanFlood: 1
+    BreachArea: 1.5
+    BreachAnchor: {x: 0.0000059604645, y: -0.6, z: 21}
+    DamagedLeak: 0.1
+    CriticalLeak: 0.4
+    SailNames: []
+    DamagedEfficiency: 0.8
+    CriticalEfficiency: 0.35
+    DestroyedEfficiency: 0
+    Repairable: 0
+    MaxRepairHealth: 0.6
+    DebrisMass: 80
+    DebrisImpulse: 4
+    DebrisLifetime: 15
+    AngularSpeed: 2
+    MaxDebris: 4
+  - SectionId: 121
+    Name: SternHull
+    Type: 0
+    MaxHealth: 240
+    DamagedThreshold: 0.75
+    CriticalThreshold: 0.3
+    Ammo:
+    - Ammo: 18
+      Multiplier: 0
+    - Ammo: 9
+      Multiplier: 0.6
+    - Ammo: 10
+      Multiplier: 0.5
+    Supports: 
+    RequireAllSupports: 1
+    RedirectSectionId: 0
+    CanFlood: 1
+    BreachArea: 1.5
+    BreachAnchor: {x: 0.000005722046, y: -0.6, z: -21}
+    DamagedLeak: 0.1
+    CriticalLeak: 0.4
+    SailNames: []
+    DamagedEfficiency: 0.8
+    CriticalEfficiency: 0.35
+    DestroyedEfficiency: 0
+    Repairable: 0
+    MaxRepairHealth: 0.6
+    DebrisMass: 80
+    DebrisImpulse: 4
+    DebrisLifetime: 15
+    AngularSpeed: 2
+    MaxDebris: 4
+  - SectionId: 200
+    Name: FloorFront
+    Type: 1
+    MaxHealth: 150
+    DamagedThreshold: 0.75
+    CriticalThreshold: 0.3
+    Ammo:
+    - Ammo: 18
+      Multiplier: 0
+    - Ammo: 9
+      Multiplier: 0.6
+    - Ammo: 10
+      Multiplier: 0.5
+    Supports: 
+    RequireAllSupports: 1
+    RedirectSectionId: 0
+    CanFlood: 0
+    BreachArea: 0
+    BreachAnchor: {x: 0, y: 4.147954, z: 15.408891}
+    DamagedLeak: 0.1
+    CriticalLeak: 0.4
+    SailNames: []
+    DamagedEfficiency: 0.8
+    CriticalEfficiency: 0.35
+    DestroyedEfficiency: 0
+    Repairable: 0
+    MaxRepairHealth: 0.6
+    DebrisMass: 80
+    DebrisImpulse: 4
+    DebrisLifetime: 15
+    AngularSpeed: 2
+    MaxDebris: 4
+  - SectionId: 201
+    Name: FloorMid
+    Type: 1
+    MaxHealth: 150
+    DamagedThreshold: 0.75
+    CriticalThreshold: 0.3
+    Ammo:
+    - Ammo: 18
+      Multiplier: 0
+    - Ammo: 9
+      Multiplier: 0.6
+    - Ammo: 10
+      Multiplier: 0.5
+    Supports: 
+    RequireAllSupports: 1
+    RedirectSectionId: 0
+    CanFlood: 0
+    BreachArea: 0
+    BreachAnchor: {x: 0.00000047683716, y: 4.161515, z: 0.37241936}
+    DamagedLeak: 0.1
+    CriticalLeak: 0.4
+    SailNames: []
+    DamagedEfficiency: 0.8
+    CriticalEfficiency: 0.35
+    DestroyedEfficiency: 0
+    Repairable: 0
+    MaxRepairHealth: 0.6
+    DebrisMass: 80
+    DebrisImpulse: 4
+    DebrisLifetime: 15
+    AngularSpeed: 2
+    MaxDebris: 4
+  - SectionId: 202
+    Name: FloorBackBottom
+    Type: 1
+    MaxHealth: 150
+    DamagedThreshold: 0.75
+    CriticalThreshold: 0.3
+    Ammo:
+    - Ammo: 18
+      Multiplier: 0
+    - Ammo: 9
+      Multiplier: 0.6
+    - Ammo: 10
+      Multiplier: 0.5
+    Supports: 
+    RequireAllSupports: 1
+    RedirectSectionId: 0
+    CanFlood: 0
+    BreachArea: 0
+    BreachAnchor: {x: -0.00000023841858, y: 4.1921606, z: -15.354504}
+    DamagedLeak: 0.1
+    CriticalLeak: 0.4
+    SailNames: []
+    DamagedEfficiency: 0.8
+    CriticalEfficiency: 0.35
+    DestroyedEfficiency: 0
+    Repairable: 0
+    MaxRepairHealth: 0.6
+    DebrisMass: 80
+    DebrisImpulse: 4
+    DebrisLifetime: 15
+    AngularSpeed: 2
+    MaxDebris: 4
+  - SectionId: 203
+    Name: FloorBackTop
+    Type: 1
+    MaxHealth: 150
+    DamagedThreshold: 0.75
+    CriticalThreshold: 0.3
+    Ammo:
+    - Ammo: 18
+      Multiplier: 0
+    - Ammo: 9
+      Multiplier: 0.6
+    - Ammo: 10
+      Multiplier: 0.5
+    Supports: 
+    RequireAllSupports: 1
+    RedirectSectionId: 0
+    CanFlood: 0
+    BreachArea: 0
+    BreachAnchor: {x: 0, y: 6.9449706, z: -15.334223}
+    DamagedLeak: 0.1
+    CriticalLeak: 0.4
+    SailNames: []
+    DamagedEfficiency: 0.8
+    CriticalEfficiency: 0.35
+    DestroyedEfficiency: 0
+    Repairable: 0
+    MaxRepairHealth: 0.6
+    DebrisMass: 80
+    DebrisImpulse: 4
+    DebrisLifetime: 15
+    AngularSpeed: 2
+    MaxDebris: 4
+  - SectionId: 300
+    Name: MastFront
+    Type: 2
+    MaxHealth: 220
+    DamagedThreshold: 0.75
+    CriticalThreshold: 0.3
+    Ammo:
+    - Ammo: 18
+      Multiplier: 0
+    - Ammo: 9
+      Multiplier: 0.6
+    - Ammo: 10
+      Multiplier: 0.5
+    Supports: 
+    RequireAllSupports: 1
+    RedirectSectionId: 0
+    CanFlood: 0
+    BreachArea: 0
+    BreachAnchor: {x: 0.0000021457672, y: 0.9312312, z: 13.281626}
+    DamagedLeak: 0.1
+    CriticalLeak: 0.4
+    SailNames:
+    - F2_SailFront
+    DamagedEfficiency: 0.8
+    CriticalEfficiency: 0.35
+    DestroyedEfficiency: 0
+    Repairable: 0
+    MaxRepairHealth: 0.6
+    DebrisMass: 240
+    DebrisImpulse: 4
+    DebrisLifetime: 15
+    AngularSpeed: 2
+    MaxDebris: 4
+  - SectionId: 301
+    Name: MastFrontUpper
+    Type: 3
+    MaxHealth: 150
+    DamagedThreshold: 0.75
+    CriticalThreshold: 0.3
+    Ammo:
+    - Ammo: 18
+      Multiplier: 0
+    - Ammo: 9
+      Multiplier: 0.6
+    - Ammo: 10
+      Multiplier: 0.5
+    Supports: 2c010000i
+    RequireAllSupports: 1
+    RedirectSectionId: 0
+    CanFlood: 0
+    BreachArea: 0
+    BreachAnchor: {x: 0.00000166893, y: 17, z: 13.236833}
+    DamagedLeak: 0.1
+    CriticalLeak: 0.4
+    SailNames:
+    - F2_SailFront
+    DamagedEfficiency: 0.8
+    CriticalEfficiency: 0.35
+    DestroyedEfficiency: 0
+    Repairable: 0
+    MaxRepairHealth: 0.6
+    DebrisMass: 80
+    DebrisImpulse: 4
+    DebrisLifetime: 15
+    AngularSpeed: 2
+    MaxDebris: 4
+  - SectionId: 310
+    Name: MastMid
+    Type: 2
+    MaxHealth: 220
+    DamagedThreshold: 0.75
+    CriticalThreshold: 0.3
+    Ammo:
+    - Ammo: 18
+      Multiplier: 0
+    - Ammo: 9
+      Multiplier: 0.6
+    - Ammo: 10
+      Multiplier: 0.5
+    Supports: 
+    RequireAllSupports: 1
+    RedirectSectionId: 0
+    CanFlood: 0
+    BreachArea: 0
+    BreachAnchor: {x: 0.0000014305115, y: 0.90782434, z: 2.0832403}
+    DamagedLeak: 0.1
+    CriticalLeak: 0.4
+    SailNames:
+    - F2_SailMid1
+    - F2_SailMid2
+    DamagedEfficiency: 0.8
+    CriticalEfficiency: 0.35
+    DestroyedEfficiency: 0
+    Repairable: 0
+    MaxRepairHealth: 0.6
+    DebrisMass: 240
+    DebrisImpulse: 4
+    DebrisLifetime: 15
+    AngularSpeed: 2
+    MaxDebris: 4
+  - SectionId: 311
+    Name: MastMidUpper
+    Type: 3
+    MaxHealth: 150
+    DamagedThreshold: 0.75
+    CriticalThreshold: 0.3
+    Ammo:
+    - Ammo: 18
+      Multiplier: 0
+    - Ammo: 9
+      Multiplier: 0.6
+    - Ammo: 10
+      Multiplier: 0.5
+    Supports: 36010000i
+    RequireAllSupports: 1
+    RedirectSectionId: 0
+    CanFlood: 0
+    BreachArea: 0
+    BreachAnchor: {x: -0.0000010728836, y: 23, z: 2.2227688}
+    DamagedLeak: 0.1
+    CriticalLeak: 0.4
+    SailNames:
+    - F2_SailMid2
+    DamagedEfficiency: 0.8
+    CriticalEfficiency: 0.35
+    DestroyedEfficiency: 0
+    Repairable: 0
+    MaxRepairHealth: 0.6
+    DebrisMass: 80
+    DebrisImpulse: 4
+    DebrisLifetime: 15
+    AngularSpeed: 2
+    MaxDebris: 4
+  - SectionId: 320
+    Name: MastBack
+    Type: 2
+    MaxHealth: 220
+    DamagedThreshold: 0.75
+    CriticalThreshold: 0.3
+    Ammo:
+    - Ammo: 18
+      Multiplier: 0
+    - Ammo: 9
+      Multiplier: 0.6
+    - Ammo: 10
+      Multiplier: 0.5
+    Supports: 
+    RequireAllSupports: 1
+    RedirectSectionId: 0
+    CanFlood: 0
+    BreachArea: 0
+    BreachAnchor: {x: 0.1355919, y: 0.9396052, z: -12.829754}
+    DamagedLeak: 0.1
+    CriticalLeak: 0.4
+    SailNames:
+    - F2_SailBack
+    DamagedEfficiency: 0.8
+    CriticalEfficiency: 0.35
+    DestroyedEfficiency: 0
+    Repairable: 0
+    MaxRepairHealth: 0.6
+    DebrisMass: 240
+    DebrisImpulse: 4
+    DebrisLifetime: 15
+    AngularSpeed: 2
+    MaxDebris: 4
+  - SectionId: 321
+    Name: MastBackUpper
+    Type: 3
+    MaxHealth: 150
+    DamagedThreshold: 0.75
+    CriticalThreshold: 0.3
+    Ammo:
+    - Ammo: 18
+      Multiplier: 0
+    - Ammo: 9
+      Multiplier: 0.6
+    - Ammo: 10
+      Multiplier: 0.5
+    Supports: 40010000i
+    RequireAllSupports: 1
+    RedirectSectionId: 0
+    CanFlood: 0
+    BreachArea: 0
+    BreachAnchor: {x: -0.00000059604645, y: 20, z: -19.760654}
+    DamagedLeak: 0.1
+    CriticalLeak: 0.4
+    SailNames:
+    - F2_SailBack
+    DamagedEfficiency: 0.8
+    CriticalEfficiency: 0.35
+    DestroyedEfficiency: 0
+    Repairable: 0
+    MaxRepairHealth: 0.6
+    DebrisMass: 80
+    DebrisImpulse: 4
+    DebrisLifetime: 15
+    AngularSpeed: 2
+    MaxDebris: 4
+  - SectionId: 330
+    Name: Bowsprit
+    Type: 4
+    MaxHealth: 150
+    DamagedThreshold: 0.75
+    CriticalThreshold: 0.3
+    Ammo:
+    - Ammo: 18
+      Multiplier: 0
+    - Ammo: 9
+      Multiplier: 0.6
+    - Ammo: 10
+      Multiplier: 0.5
+    Supports: 
+    RequireAllSupports: 1
+    RedirectSectionId: 0
+    CanFlood: 0
+    BreachArea: 0
+    BreachAnchor: {x: 0.000000059604645, y: 5.5664926, z: 28.643084}
+    DamagedLeak: 0.1
+    CriticalLeak: 0.4
+    SailNames: []
+    DamagedEfficiency: 0.8
+    CriticalEfficiency: 0.35
+    DestroyedEfficiency: 0
+    Repairable: 0
+    MaxRepairHealth: 0.6
+    DebrisMass: 80
+    DebrisImpulse: 4
+    DebrisLifetime: 15
+    AngularSpeed: 2
+    MaxDebris: 4
+  - SectionId: 400
+    Name: Rudder
+    Type: 5
+    MaxHealth: 150
+    DamagedThreshold: 0.75
+    CriticalThreshold: 0.3
+    Ammo:
+    - Ammo: 18
+      Multiplier: 0
+    - Ammo: 9
+      Multiplier: 0.6
+    - Ammo: 10
+      Multiplier: 0.5
+    Supports: 
+    RequireAllSupports: 1
+    RedirectSectionId: 0
+    CanFlood: 0
+    BreachArea: 0
+    BreachAnchor: {x: -0.040317893, y: -0.6, z: -22.496239}
+    DamagedLeak: 0.1
+    CriticalLeak: 0.4
+    SailNames: []
+    DamagedEfficiency: 0.8
+    CriticalEfficiency: 0.35
+    DestroyedEfficiency: 0.08
+    Repairable: 0
+    MaxRepairHealth: 0.6
+    DebrisMass: 80
+    DebrisImpulse: 4
+    DebrisLifetime: 15
+    AngularSpeed: 2
+    MaxDebris: 4
+  - SectionId: 500
+    Name: FencingFront
+    Type: 6
+    MaxHealth: 150
+    DamagedThreshold: 0.75
+    CriticalThreshold: 0.3
+    Ammo:
+    - Ammo: 18
+      Multiplier: 0
+    - Ammo: 9
+      Multiplier: 0.6
+    - Ammo: 10
+      Multiplier: 0.5
+    Supports: c8000000i
+    RequireAllSupports: 1
+    RedirectSectionId: 0
+    CanFlood: 0
+    BreachArea: 0
+    BreachAnchor: {x: 0, y: 5.857628, z: 15.282227}
+    DamagedLeak: 0.1
+    CriticalLeak: 0.4
+    SailNames: []
+    DamagedEfficiency: 0.8
+    CriticalEfficiency: 0.35
+    DestroyedEfficiency: 0
+    Repairable: 0
+    MaxRepairHealth: 0.6
+    DebrisMass: 80
+    DebrisImpulse: 4
+    DebrisLifetime: 15
+    AngularSpeed: 2
+    MaxDebris: 4
+  - SectionId: 501
+    Name: FencingMid
+    Type: 6
+    MaxHealth: 150
+    DamagedThreshold: 0.75
+    CriticalThreshold: 0.3
+    Ammo:
+    - Ammo: 18
+      Multiplier: 0
+    - Ammo: 9
+      Multiplier: 0.6
+    - Ammo: 10
+      Multiplier: 0.5
+    Supports: c9000000i
+    RequireAllSupports: 1
+    RedirectSectionId: 0
+    CanFlood: 0
+    BreachArea: 0
+    BreachAnchor: {x: 0, y: 4.9096217, z: 0.052927017}
+    DamagedLeak: 0.1
+    CriticalLeak: 0.4
+    SailNames: []
+    DamagedEfficiency: 0.8
+    CriticalEfficiency: 0.35
+    DestroyedEfficiency: 0
+    Repairable: 0
+    MaxRepairHealth: 0.6
+    DebrisMass: 80
+    DebrisImpulse: 4
+    DebrisLifetime: 15
+    AngularSpeed: 2
+    MaxDebris: 4
+  - SectionId: 502
+    Name: FencingBack
+    Type: 6
+    MaxHealth: 150
+    DamagedThreshold: 0.75
+    CriticalThreshold: 0.3
+    Ammo:
+    - Ammo: 18
+      Multiplier: 0
+    - Ammo: 9
+      Multiplier: 0.6
+    - Ammo: 10
+      Multiplier: 0.5
+    Supports: cb000000i
+    RequireAllSupports: 1
+    RedirectSectionId: 0
+    CanFlood: 0
+    BreachArea: 0
+    BreachAnchor: {x: 0, y: 7.4058933, z: -15.345473}
+    DamagedLeak: 0.1
+    CriticalLeak: 0.4
+    SailNames: []
+    DamagedEfficiency: 0.8
+    CriticalEfficiency: 0.35
+    DestroyedEfficiency: 0
+    Repairable: 0
+    MaxRepairHealth: 0.6
+    DebrisMass: 80
+    DebrisImpulse: 4
+    DebrisLifetime: 15
+    AngularSpeed: 2
+    MaxDebris: 4
+  SectionsPrefab: {fileID: 6041103922437285900, guid: 80f5e4e13947a874e88c73f8b4c592da, type: 3}
+  EnableFlooding: 0
+  SplinterMeshes:
+  - {fileID: 4300000, guid: 19e19eba913acf84891601a2fa6495b9, type: 2}
+  - {fileID: 4300000, guid: a65881a72e886544db17a558a9ca506f, type: 2}
+  - {fileID: 4300000, guid: 2c19e626118f7c640a8b180bd9e888d1, type: 2}
+  - {fileID: 4300000, guid: 02669364e26da19409ff0fb9b6ae5f55, type: 2}
+  - {fileID: 4300000, guid: 6f1b2336787628a4e9c53fcde445e7d7, type: 2}
+  - {fileID: 4300000, guid: 49d9c763efc8529478b7e81e494a240b, type: 2}
+  SplinterMaterial: {fileID: 2100000, guid: 710339ca47ce99d4ca1a511accd994dc, type: 2}
+  SplintersPerHit: 12
+  FallbackSectionId: 102
+  CannonDamage: 65
+  FireDamagePerSecond: 4
+  FloodCoefficient: 0.0015
+  MaximumDepth: 8
+  MediumWater: 0.3
+  HighWater: 0.65
+  CriticalWater: 0.95
+  FloodSpeed: 0.45
+  FloodAcceleration: 0.35
+  FloodRudder: 0.35
+  FloodHeel: 7
+  PhysicalLimit: 12
+  CosmeticLimit: 48
+  PrewarmPerFrame: 4
+  DebrisDistance: 180
+  LinearDamping: 0.4
+  AngularDamping: 0.5
+  DebrisLayer: ShipDebris
+  BreakSound: 25
+  FallSound: 23

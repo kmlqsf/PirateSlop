@@ -111,6 +111,8 @@ namespace PirateSlop.Networking
                     nextFireDamage = Time.time + .5f;
                     burnedPlayers.Clear();
                     foreach (var patch in firePatches)
+                        GetComponent<ShipDestruction>()?.Burn(transform.TransformPoint(patch.Position), .5f, fireAttackers[patch.Id]);
+                    foreach (var patch in firePatches)
                         foreach (var collider in Physics.OverlapBox(transform.TransformPoint(patch.Position + Vector3.up * 1.5f), FireHalfExtents, transform.rotation, ~0, QueryTriggerInteraction.Ignore))
                         {
                             if (patch.BlastRadius > 0f && (collider.ClosestPoint(transform.TransformPoint(patch.BlastCenter)) - transform.TransformPoint(patch.BlastCenter)).sqrMagnitude > patch.BlastRadius * patch.BlastRadius) continue;

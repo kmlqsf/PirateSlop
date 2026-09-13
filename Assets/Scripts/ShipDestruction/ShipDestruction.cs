@@ -1,0 +1,315 @@
+using System;
+using System.Collections.Generic;
+using FishNet.Object;
+using FishNet.Connection;
+using PirateSlop.Networking;
+using UnityEngine;
+
+namespace PirateSlop
+{
+    public struct ShipSectionSnapshot
+    {
+        public int SectionId;
+        public ShipSectionState State;
+        public ushort Health;
+        public bool Breach, Repair;
+        public uint Revision;
+        public Vector3 BreachPoint;
+        public ulong RemovedFragments;
+    }
+    public struct ShipDestructionEvent
+    {
+        public ulong EventId;
+        public uint Revision;
+        public int SectionId, Seed;
+        public ShipSectionState Previous, Current;
+        public Vector3 LocalPoint, LocalNormal, LocalVelocity, PointVelocity, AngularVelocity;
+        public float Impulse, BaseDamage;
+        public InventoryItem Ammo;
+        public int AttackerId;
+        public ShipDamageReason Reason;
+        public ulong RemovedFragments, DetachedFragments;
+    }
+    public sealed class ShipDestruction : NetworkBehaviour
+    {
+        public ShipDestructionProfile Profile;
+        public ShipDamageSection[] Sections = Array.Empty<ShipDamageSection>();
+        public event Action<ShipDestructionEvent> Hit;
+        public event Action<ShipDamageSection> SupportRemoved;
+        readonly Dictionary<int, ShipDamageSection> sections = new();
+        readonly Dictionary<int, ShipSectionDefinition> definitions = new();
+        readonly Dictionary<Collider, int> colliders = new();
+        readonly Dictionary<int, ShipSectionSnapshot> state = new();
+        readonly List<ShipDestructionEvent> pending = new();
+        readonly Queue<int> branch = new();
+        readonly Dictionary<int, float> nextBurn = new();
+        ShipStructuralGraph graph;
+        NetworkShip ship;
+        ShipFlooding flooding;
+        ShipDestructionVisuals visuals;
+        uint revision, appliedRevision;
+        ulong sequence, appliedEvent;
+        float nextFloodPublish, nextDiagnostic, publishedWater;
+        bool ready, snapshotReceived;
+        public ShipFlooding Flooding => flooding;
+        public uint Revision => revision;
+        void Awake()
+        {
+            ship = GetComponent<NetworkShip>();
+            flooding = GetComponent<ShipFlooding>();
+            visuals = GetComponent<ShipDestructionVisuals>();
+            if (Profile == null || flooding == null || ship == null) return;
+            graph = new ShipStructuralGraph(Profile);
+            foreach (var definition in Profile.Sections) definitions.Add(definition.SectionId, definition);
+            foreach (var section in Sections)
+            {
+                if (section == null || !definitions.ContainsKey(section.SectionId)) continue;
+                sections.Add(section.SectionId, section); section.Owner = this;
+                foreach (var collider in section.DamageColliders)
+                    if (collider != null && !colliders.TryAdd(collider, section.SectionId)) throw new ArgumentException("Ambiguous damage collider " + collider.name);
+            }
+            if (!sections.ContainsKey(Profile.FallbackSectionId)) throw new ArgumentException("Missing fallback section");
+            ready = true;
+        }
+        public override void OnStartServer()
+        {
+            if (!ready) return;
+            state.Clear(); revision = 0; sequence = 0;
+            nextBurn.Clear(); publishedWater = 0f;
+            flooding.Clear();
+            foreach (var entry in definitions)
+            {
+                state[entry.Key] = new ShipSectionSnapshot { SectionId = entry.Key, Health = ushort.MaxValue };
+                if (sections.TryGetValue(entry.Key, out var section)) { section.Health = entry.Value.MaxHealth; section.Apply(ShipSectionState.Intact); }
+            }
+            ApplyModifiers();
+        }
+        public override void OnStartClient()
+        {
+            if (!ready) return;
+            visuals?.Initialize(this);
+            if (!IsServerInitialized) RequestSnapshot(); else snapshotReceived = true;
+        }
+        [ServerRpc(RequireOwnership = false)]
+        void RequestSnapshot(NetworkConnection sender = null)
+        {
+            if (sender != null && ready) ReceiveSnapshot(sender, Snapshot(), flooding.Level, revision, sequence);
+        }
+        [TargetRpc]
+        void ReceiveSnapshot(NetworkConnection connection, ShipSectionSnapshot[] entries, float water, uint version, ulong eventId)
+        {
+            if (IsServerInitialized || (snapshotReceived && version < appliedRevision)) return;
+            ApplySnapshot(entries, water, version);
+            snapshotReceived = true; appliedEvent = Math.Max(appliedEvent, eventId);
+            foreach (var entry in pending) if (entry.Revision > appliedRevision) Present(entry);
+            pending.Clear();
+        }
+        ShipSectionSnapshot[] Snapshot()
+        {
+            var result = new ShipSectionSnapshot[state.Count]; int i = 0;
+            foreach (var item in state.Values) result[i++] = item;
+            return result;
+        }
+        public override void OnStopNetwork()
+        {
+            visuals?.Clear(); flooding?.Clear(); pending.Clear(); state.Clear();
+            snapshotReceived = false; appliedEvent = 0; appliedRevision = 0;
+        }
+        public ShipDamageSection Resolve(Collider collider, Vector3 point)
+        {
+            if (!ready) return null;
+            if (collider != null && collider.transform.IsChildOf(transform))
+            {
+                if (colliders.TryGetValue(collider, out int id)) return sections[id];
+                for (var current = collider.transform; current != null && current != transform; current = current.parent)
+                    if (current.TryGetComponent<ShipDamageSection>(out var section) && section.Owner == this) return section;
+            }
+            if (Time.time >= nextDiagnostic)
+            {
+                Debug.LogWarning("Ship section fallback: " + (collider != null ? collider.name : "none"), this);
+                nextDiagnostic = Time.time + 10f;
+            }
+            return sections[Profile.FallbackSectionId];
+        }
+        public void Damage(Collider collider, Vector3 point, Vector3 normal, Vector3 velocity, InventoryItem ammo, GameObject attacker, float radius = 0f)
+        {
+            if (!ready || !IsServerInitialized || ship.IsSinking || !float.IsFinite(point.sqrMagnitude) || !float.IsFinite(velocity.sqrMagnitude)) return;
+            var direct = Resolve(collider, point);
+            var affected = new Dictionary<int, float>();
+            if (radius <= 0f) affected[direct.SectionId] = 1f;
+            else
+            {
+                foreach (var section in sections.Values)
+                {
+                    float distance = section.Distance(point);
+                    if (distance < radius) affected[section.SectionId] = 1f - distance / radius;
+                }
+                if (affected.Count == 0) affected[direct.SectionId] = 1f;
+            }
+            foreach (var target in affected)
+                ApplyDamage(target.Key, Profile.CannonDamage * target.Value, point, normal, velocity, ammo, attacker, ShipDamageReason.Hit);
+            Publish();
+        }
+        public void Burn(Vector3 point, float seconds, GameObject attacker)
+        {
+            if (!ready || !IsServerInitialized || ship.IsSinking) return;
+            ShipDamageSection nearest = null; float distance = 3f;
+            foreach (var section in sections.Values)
+            {
+                float candidate = section.Distance(point);
+                if (candidate < distance) { distance = candidate; nearest = section; }
+            }
+            if (nearest == null) return;
+            if (nextBurn.TryGetValue(nearest.SectionId, out float next) && Time.time < next) return;
+            nextBurn[nearest.SectionId] = Time.time + seconds * .9f;
+            ApplyDamage(nearest.SectionId, Profile.FireDamagePerSecond * seconds, point, transform.up, Vector3.zero, InventoryItem.FireCannonball, attacker, ShipDamageReason.Fire);
+            Publish();
+        }
+        void ApplyDamage(int id, float amount, Vector3 point, Vector3 normal, Vector3 velocity, InventoryItem ammo, GameObject attacker, ShipDamageReason reason)
+        {
+            if (!state.TryGetValue(id, out var current)) return;
+            if (current.State == ShipSectionState.Destroyed && (!sections.TryGetValue(id, out var fracturedPart) || fracturedPart.Fragments.Length == 0))
+            {
+                int redirect = definitions[id].RedirectSectionId;
+                if (redirect == 0 || redirect == id || !state.TryGetValue(redirect, out current) || current.State == ShipSectionState.Destroyed) return;
+                id = redirect;
+            }
+            var definition = definitions[id];
+            float health = sections.TryGetValue(id, out var part) ? part.Health : current.Health / (float)ushort.MaxValue * definition.MaxHealth;
+            health = Mathf.Max(0f, health - amount * definition.DamageMultiplier(ammo));
+            float fraction = health / definition.MaxHealth;
+            var next = health <= 0f ? ShipSectionState.Destroyed : fraction <= definition.CriticalThreshold ? ShipSectionState.Critical : fraction <= definition.DamagedThreshold ? ShipSectionState.Damaged : ShipSectionState.Intact;
+            Change(id, health, next, point, normal, velocity, ammo, attacker, reason, amount);
+            branch.Clear(); branch.Enqueue(id);
+            var visited = new HashSet<int>();
+            while (branch.Count > 0)
+                foreach (int child in graph.Dependents(branch.Dequeue()))
+                    if (!visited.Contains(child) && state[child].State != ShipSectionState.Destroyed && !graph.Supported(child, parent => state[parent].State != ShipSectionState.Destroyed))
+                    {
+                        visited.Add(child);
+                        Change(child, 0f, ShipSectionState.Destroyed, point, normal, velocity, ammo, attacker, ShipDamageReason.SupportLost, 0f);
+                        branch.Enqueue(child);
+                    }
+        }
+        void Change(int id, float health, ShipSectionState next, Vector3 point, Vector3 normal, Vector3 velocity, InventoryItem ammo, GameObject attacker, ShipDamageReason reason, float damage)
+        {
+            var current = state[id]; var previous = current.State; var definition = definitions[id];
+            ulong previousFragments = current.RemovedFragments;
+            if (sections.TryGetValue(id, out var fragmentSection)) current.RemovedFragments = fragmentSection.BreakNear(point, damage, reason == ShipDamageReason.SupportLost);
+            current.State = next; current.Health = (ushort)Mathf.RoundToInt(health / definition.MaxHealth * ushort.MaxValue);
+            current.Revision = ++revision;
+            if (Profile.EnableFlooding && definition.CanFlood && next != ShipSectionState.Intact)
+            {
+                if (!current.Breach) current.BreachPoint = transform.InverseTransformPoint(point);
+                if (next == ShipSectionState.Destroyed) current.BreachPoint = definition.BreachAnchor;
+                current.Breach = true;
+            }
+            state[id] = current;
+            if (sections.TryGetValue(id, out var section))
+            {
+                section.Health = health; section.Apply(next, current.RemovedFragments);
+                if (next == ShipSectionState.Destroyed && previous != next) SupportRemoved?.Invoke(section);
+            }
+            SetBreach(current);
+            var player = attacker != null ? attacker.GetComponent<NetworkPlayer>() : null;
+            var impact = new ShipDestructionEvent
+            {
+                EventId = ++sequence, Revision = revision, SectionId = id, Previous = previous, Current = next,
+                LocalPoint = transform.InverseTransformPoint(point), LocalNormal = transform.InverseTransformDirection(normal),
+                LocalVelocity = transform.InverseTransformDirection(velocity), PointVelocity = ship.Motor.CannonPointVelocity(section != null ? section.transform.position : point),
+                Impulse = Mathf.Clamp(velocity.magnitude / 40f, 0f, 2f), Seed = unchecked((int)(sequence * 2654435761UL) ^ ObjectId),
+                AngularVelocity = ship.Motor.MotionAngularVelocity,
+                RemovedFragments = current.RemovedFragments, DetachedFragments = current.RemovedFragments & ~previousFragments,
+                Ammo = ammo, AttackerId = player != null ? player.ParticipantId.Value : 0, Reason = reason, BaseDamage = damage
+            };
+            if (IsClientInitialized) Present(impact);
+            ReceiveEvent(impact);
+        }
+        [ObserversRpc]
+        void ReceiveEvent(ShipDestructionEvent impact)
+        {
+            if (IsServerInitialized) return;
+            if (!snapshotReceived) { if (pending.Count < 256) pending.Add(impact); return; }
+            if (impact.Revision > appliedRevision) Present(impact);
+        }
+        void Present(ShipDestructionEvent impact)
+        {
+            if (impact.EventId <= appliedEvent) return;
+            appliedEvent = impact.EventId;
+            if (sections.TryGetValue(impact.SectionId, out var section)) section.Apply(impact.Current, impact.RemovedFragments);
+            visuals?.Present(impact);
+            Hit?.Invoke(impact);
+        }
+        void SetBreach(ShipSectionSnapshot entry)
+        {
+            var definition = definitions[entry.SectionId];
+            float scale = entry.State == ShipSectionState.Destroyed ? 1f : entry.State == ShipSectionState.Critical ? definition.CriticalLeak : definition.DamagedLeak;
+            flooding.SetBreach(entry.SectionId, entry.BreachPoint, entry.Breach ? definition.BreachArea * scale : 0f);
+        }
+        void Publish()
+        {
+            ApplyModifiers();
+            ReceiveState(Snapshot(), flooding.Level, revision);
+        }
+        [ObserversRpc(BufferLast = true)]
+        void ReceiveState(ShipSectionSnapshot[] entries, float water, uint version)
+        {
+            if (!IsServerInitialized && snapshotReceived && version >= appliedRevision) ApplySnapshot(entries, water, version);
+        }
+        void ApplySnapshot(ShipSectionSnapshot[] entries, float water, uint version)
+        {
+            appliedRevision = version;
+            foreach (var entry in entries)
+            {
+                if (!definitions.ContainsKey(entry.SectionId)) continue;
+                state[entry.SectionId] = entry;
+                if (sections.TryGetValue(entry.SectionId, out var section))
+                {
+                    section.Health = entry.Health / (float)ushort.MaxValue * definitions[entry.SectionId].MaxHealth;
+                    section.Apply(entry.State, entry.RemovedFragments);
+                }
+                SetBreach(entry);
+            }
+            flooding.SetLevel(water); ApplyModifiers();
+        }
+        void Update()
+        {
+            if (!ready || !IsServerInitialized || ship.IsSinking || !Profile.EnableFlooding) return;
+            flooding.Simulate(Time.deltaTime, Profile);
+            if (flooding.Level >= Profile.CriticalWater) { ship.BeginSinking(); return; }
+            if (Time.time >= nextFloodPublish)
+            {
+                nextFloodPublish = Time.time + .25f;
+                if (Mathf.Abs(publishedWater - flooding.Level) >= .001f)
+                {
+                    publishedWater = flooding.Level; ApplyModifiers(); ReceiveFlood(publishedWater, ++revision);
+                }
+            }
+        }
+        [ObserversRpc(BufferLast = true)]
+        void ReceiveFlood(float water, uint version)
+        {
+            if (IsServerInitialized || !snapshotReceived || version < appliedRevision) return;
+            appliedRevision = version; flooding.SetLevel(water); ApplyModifiers();
+        }
+        void ApplyModifiers()
+        {
+            float rudder = 1f;
+            var sailEfficiency = new Dictionary<string, float>();
+            foreach (var entry in state)
+            {
+                var definition = definitions[entry.Key]; float efficiency = definition.Efficiency(entry.Value.State);
+                if (definition.Type == ShipSectionType.Rudder) rudder = Mathf.Min(rudder, efficiency);
+                foreach (string sail in definition.SailNames)
+                    sailEfficiency[sail] = sailEfficiency.TryGetValue(sail, out float existing) ? Mathf.Min(existing, efficiency) : efficiency;
+            }
+            var sails = GetComponent<SailSystem>();
+            if (sails != null) sails.SetStructuralEfficiency(sailEfficiency);
+            float medium = Mathf.InverseLerp(Profile.MediumWater, Profile.CriticalWater, flooding.Level);
+            float high = Mathf.InverseLerp(Profile.HighWater, Profile.CriticalWater, flooding.Level);
+            ship.Motor.SetDestructionModifiers(Mathf.Lerp(1f, Profile.FloodSpeed, medium), Mathf.Lerp(1f, Profile.FloodAcceleration, medium), rudder * Mathf.Lerp(1f, Profile.FloodRudder, high), high * Profile.FloodHeel);
+        }
+        public ShipSectionDefinition Definition(int id) => definitions[id];
+        public ShipDamageSection Section(int id) => sections.TryGetValue(id, out var section) ? section : null;
+    }
+}

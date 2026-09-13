@@ -23,6 +23,7 @@ namespace PirateSlop
         Vector3 launchVelocity;
         public float BoomerangOutboundTime = 2f;
         readonly HashSet<Transform> hitTargets = new();
+        readonly HashSet<ShipDamageSection> hitSections = new();
 
         void Start()
         {
@@ -80,6 +81,9 @@ namespace PirateSlop
             float distance = delta.magnitude;
             foreach (var hit in Physics.SphereCastAll(transform.position, Radius, delta.normalized, distance, ~0, QueryTriggerInteraction.Ignore))
             {
+                if (hit.collider.gameObject.layer == LayerMask.NameToLayer("ShipDebris")) continue;
+                var section = hit.collider.GetComponentInParent<ShipDamageSection>();
+                if (section != null && hitSections.Contains(section)) continue;
                 if (hit.transform.IsChildOf(transform) || (Source != null && hit.transform.IsChildOf(Source)) ||
                     hit.collider.GetComponentInParent<CannonShotDamage>() != null) continue;
                 var health = hit.collider.GetComponentInParent<CombatHealth>();
@@ -147,6 +151,8 @@ namespace PirateSlop
                 var ship = hit.GetComponentInParent<NetworkShip>();
                 if (ship != null && ships.Add(ship))
                 {
+                    ship.GetComponent<ShipDestruction>()?.Damage(hit, point, normal, Velocity, Ammo, Attacker, CannonAmmo.MortarBlastRadius(Ammo));
+                    ship.Motor.ApplyCannonImpulse(point, Velocity.normalized, 1.5f);
                     if (Ammo == InventoryItem.FireCannonball) ship.Ignite(point, Attacker, CannonAmmo.MortarBlastRadius(Ammo));
                     if (Ammo == InventoryItem.IceCannonball) ship.FreezeFromShot();
                     if (Ammo == InventoryItem.PushCannonball) ship.GetComponent<ShipController>()?.ApplyPushImpulse(point, Velocity);
@@ -170,11 +176,14 @@ namespace PirateSlop
                 spent=true; Destroy(gameObject); return;
             }
             var health = collider.GetComponentInParent<CombatHealth>();
+            var damageSection = collider.GetComponentInParent<ShipDamageSection>();
+            if (damageSection != null) hitSections.Add(damageSection);
             hitTargets.Add(health != null ? health.transform : collider.transform);
             if (Authoritative)
             {
                 var ship = collider.GetComponentInParent<ShipController>();
                 var network = collider.GetComponentInParent<NetworkShip>();
+                if (network != null) network.GetComponent<ShipDestruction>()?.Damage(collider, point, normal, Velocity, Ammo, Attacker);
                 if (ship != null)
                 {
                     ship.ApplyCannonImpulse(point, Velocity.normalized * Mathf.Clamp(Velocity.magnitude / 40f, .5f, 1.5f), 1.5f);

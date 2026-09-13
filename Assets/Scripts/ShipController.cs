@@ -45,6 +45,7 @@ public class ShipController : MonoBehaviour
     Vector2 cannonTilt, cannonTiltVelocity;
     Vector3 cannonShove, motionVelocity, motionAngularVelocity;
     public Vector3 CannonPointVelocity(Vector3 point) => motionVelocity+Vector3.Cross(motionAngularVelocity,point-transform.position);
+    public Vector3 MotionAngularVelocity => motionAngularVelocity;
     public void ApplyCannonImpulse(Vector3 point,Vector3 impulse,float strength)
     {
         if(IsFrozen || !float.IsFinite(impulse.sqrMagnitude) || !float.IsFinite(point.sqrMagnitude)) return;
@@ -68,6 +69,12 @@ public class ShipController : MonoBehaviour
     }
     public bool Networked { get; set; }
     public float Speed => speed;
+    float destructionSpeed = 1f, destructionAcceleration = 1f, destructionRudder = 1f, destructionHeel;
+    public void SetDestructionModifiers(float speedFactor, float accelerationFactor, float rudderFactor, float heel)
+    {
+        destructionSpeed = Mathf.Clamp01(speedFactor); destructionAcceleration = Mathf.Clamp01(accelerationFactor);
+        destructionRudder = Mathf.Clamp01(rudderFactor); destructionHeel = heel;
+    }
     public float MaxSpeed => maxSpeed;
     public float Bank => bank;
     public void Configure(HelmInteraction value) { helm = value; sailSystem = GetComponent<SailSystem>(); }
@@ -92,12 +99,12 @@ public class ShipController : MonoBehaviour
         pushVelocity *= Mathf.Exp(-pushLinearDrag * dt);
         pushYawVelocity *= Mathf.Exp(-pushAngularDrag * dt);
         yaw += pushYawVelocity * dt;
-        float target = (sailSystem != null ? sailSystem.DeployPercentage : 0) * maxSpeed;
-        speed = Mathf.MoveTowards(speed, target, (target > speed ? acceleration : deceleration) * dt);
+        float target = (sailSystem != null ? sailSystem.EffectiveDeploy : 0) * maxSpeed * destructionSpeed;
+        speed = Mathf.MoveTowards(speed, target, (target > speed ? acceleration * destructionAcceleration : deceleration) * dt);
         float rudder = helm != null ? helm.CurrentRudderNormalized : 0;
         float factor = Mathf.Clamp01(speed / Mathf.Max(.1f, maxSpeed));
-        yaw += rudder * turnSpeed * Mathf.Lerp(.15f, 1, factor) * dt;
-        bank = Mathf.Lerp(bank, -rudder * maxBankAngle * factor, 1 - Mathf.Exp(-bankResponse * dt));
+        yaw += rudder * turnSpeed * destructionRudder * Mathf.Lerp(.15f, 1, factor) * dt;
+        bank = Mathf.Lerp(bank, -rudder * maxBankAngle * factor + destructionHeel, 1 - Mathf.Exp(-bankResponse * dt));
         var next = rb.position + Quaternion.Euler(0, yaw, 0) * Vector3.forward * speed * dt + (cannonShove + pushVelocity) * dt; next.y = waterHeight;
         var ocean = OceanSurface.Instance;
         if (ocean != null)
