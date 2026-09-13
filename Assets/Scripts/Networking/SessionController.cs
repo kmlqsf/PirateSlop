@@ -333,6 +333,7 @@ namespace PirateSlop.Networking
         }
         void OnDestroy()
         {
+            ReleaseMenu();
             if (manager != null) manager.TimeManager.OnPostTick -= ResolveShipCollisions;
         }
         public NetworkObject SpawnDeveloperShip(Vector3 origin, float yaw)

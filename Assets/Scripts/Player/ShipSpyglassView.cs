@@ -12,10 +12,12 @@ namespace PirateSlop
         public static bool IsViewing { get; private set; }
         public Material TrajectoryMaterial;
         [SerializeField] float viewpointLift = 1.25f;
+        public float ViewpointLift => viewpointLift;
         NetworkPlayer player;
         ShipSpyglass station, aimed;
         Camera cameraView;
         bool engaged;
+        bool markRequested;
         float originalFov, zoom = 48f, nextPreview;
         Vector2 angles;
         readonly List<LineRenderer> lines = new();
@@ -66,6 +68,7 @@ namespace PirateSlop
                 { Exit(); return; }
                 if (Mouse.current != null)
                 {
+                    markRequested |= Mouse.current.middleButton.wasPressedThisFrame;
                     var delta = Mouse.current.delta.ReadValue() * (.055f * zoom / 48f);
                     angles.x = Mathf.Clamp(angles.x - delta.y, -70f, 70f);
                     angles.y = Mathf.Repeat(angles.y + delta.x, 360f);
@@ -88,6 +91,11 @@ namespace PirateSlop
             if (!player.IsOwner || station == null) return;
             cameraView.transform.SetPositionAndRotation(station.Viewpoint.position + station.transform.up * viewpointLift, station.transform.rotation * Quaternion.Euler(angles.x, angles.y, 0f));
             cameraView.fieldOfView = Mathf.Lerp(cameraView.fieldOfView, zoom, 1f - Mathf.Exp(-12f * Time.unscaledDeltaTime));
+            if (markRequested)
+            {
+                markRequested = false;
+                player.MarkSpyglassTarget(cameraView.transform.forward);
+            }
             if (Time.unscaledTime >= nextPreview) { nextPreview = Time.unscaledTime + .2f; Preview(); }
         }
         void Preview()
@@ -141,7 +149,7 @@ namespace PirateSlop
         {
             RestoreVisibility();
             if (cameraView != null && engaged) cameraView.fieldOfView = originalFov;
-            station = null; engaged = IsViewing = false;
+            station = null; engaged = IsViewing = markRequested = false;
             foreach (var line in lines) if (line != null) line.gameObject.SetActive(false);
         }
         void OnDisable()
@@ -169,8 +177,9 @@ namespace PirateSlop
             GUI.DrawTexture(new Rect((Screen.width+size)/2f,0,Screen.width,size),Texture2D.whiteTexture);
             GUI.color=Color.white; GUI.DrawTexture(new Rect((Screen.width-size)/2f,0,size,size),mask);
             GUI.Label(new Rect(Screen.width/2f-5,Screen.height/2f-10,20,20),"+");
-            PirateHudStyle.Panel(new Rect(Screen.width/2f-285,Screen.height-65,570,35),"Колесо — зум · E / Esc — выйти · Золото: заряжена · Голубой: пуста"); GUI.color=old;
+            PirateHudStyle.Panel(new Rect(Screen.width/2f-330,Screen.height-65,660,35),"Колесо — зум · Нажать колесо — метка на 2 мин · E / Esc — выйти"); GUI.color=old;
             PlayerHud.DrawCompass(cameraView);
+            TargetMarkHud.Draw(player, cameraView);
         }
     }
 }

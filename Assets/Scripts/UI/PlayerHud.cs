@@ -20,7 +20,12 @@ namespace PirateSlop
             network = GetComponent<NetworkPlayer>(); trailingHealth = health.MaxHealth;
             handling=GetComponent<FirearmHandling>();equipment=GetComponent<NetworkEquipment>();
         }
-        void Update() => trailingHealth = Mathf.MoveTowards(trailingHealth, health.Current, Time.deltaTime * 22);
+        readonly CannonRangeHud cannonRange = new();
+        void Update()
+        {
+            trailingHealth = Mathf.MoveTowards(trailingHealth, health.Current, Time.deltaTime * 22);
+            if (network == null || network.IsOwner) cannonRange.Update(motor.ActiveCannon);
+        }
         static readonly string[] CompassDirections = { "С", "СВ", "В", "ЮВ", "Ю", "ЮЗ", "З", "СЗ" };
         static GUIStyle compassNumber, compassDirection, compassBearing;
         public static void DrawCompass(Camera view)
@@ -77,6 +82,8 @@ namespace PirateSlop
             if (motor.PlayerCamera == null || !motor.PlayerCamera.enabled || (network != null && !network.IsOwner) || SessionController.MenuOpen) return;
             if (ShipSpyglassView.IsViewing) return;
             DrawCompass(motor.PlayerCamera);
+            TargetMarkHud.Draw(network, motor.PlayerCamera);
+            cannonRange.Draw(motor.ActiveCannon);
             float sideY = Screen.width < 1050 ? Screen.height - 180 : Screen.height - 74;
             var bar = new Rect(65, sideY + 16, 200, 16);
             PirateHudStyle.Brush(new Rect(18, sideY - 24, 285, 105), new Color(.015f,.035f,.04f,.55f));

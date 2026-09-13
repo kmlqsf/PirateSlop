@@ -26,7 +26,7 @@ namespace PirateSlop.Networking
         public void Dispose() { }
     }
     [DefaultExecutionOrder(-10)]
-    public sealed class NetworkPlayer : NetworkBehaviour
+    public sealed partial class NetworkPlayer : NetworkBehaviour
     {
         public readonly SyncVar<NetworkObject> ShipObject = new();
         public readonly SyncVar<int> ParticipantId = new();
@@ -109,6 +109,7 @@ namespace PirateSlop.Networking
         }
         public override void OnStopNetwork()
         {
+            TargetMarks = System.Array.Empty<TargetMarkState>();
             bot?.Stop();
             TimeManager.OnTick -= Tick; TimeManager.OnPostTick -= PostTick;
             var active = ActiveShip;
@@ -167,6 +168,7 @@ namespace PirateSlop.Networking
         }
         void PostTick()
         {
+            PublishTargetMarks();
             if (!TryBind()) return;
             if (!IsBot.Value && (IsOwner || IsServerInitialized)) CreateReconcile();
             if (IsServerInitialized) SendObserverState(BuildState());

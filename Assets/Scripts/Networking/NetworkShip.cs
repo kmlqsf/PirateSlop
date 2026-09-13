@@ -60,6 +60,7 @@ namespace PirateSlop.Networking
         }
         public override void OnStopNetwork()
         {
+            targetMarks.Clear();
             ActiveShips.Remove(this);
             ClearAmmo();
             TimeManager.OnTick -= Tick;
