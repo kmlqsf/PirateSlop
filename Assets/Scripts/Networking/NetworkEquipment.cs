@@ -158,6 +158,11 @@ namespace PirateSlop.Networking
             if (Time.time < nextShot) return;
             int slot = inventory.SelectedSlot;
             direction.Value = forward.normalized;
+            if (Item == InventoryItem.Pufferfish || Item == InventoryItem.Swordfish)
+            {
+                if (request == 0 && network.ThrowFish(Item, forward)) nextShot = Time.time + .6f;
+                return;
+            }
             if (Item == InventoryItem.Wine) { BeginAction(2, 2.2f, slot); return; }
             if (Item == InventoryItem.BombParrot)
             {
@@ -240,7 +245,12 @@ namespace PirateSlop.Networking
                 }
                 var visual = Instantiate(model, root).transform;
                 foreach (var collider in visual.GetComponentsInChildren<Collider>()) Destroy(collider);
-                if (Firearm) { visual.localRotation = Quaternion.Euler(0, 90, 0); visual.localPosition = new Vector3(0, -.04f, .22f); }
+                if (Item == InventoryItem.Pufferfish || Item == InventoryItem.Swordfish)
+                {
+                    visual.localRotation = Quaternion.identity;
+                    visual.localPosition = new Vector3(0, -.05f, Item == InventoryItem.Swordfish ? .4f : .05f);
+                }
+                else if (Firearm) { visual.localRotation = Quaternion.Euler(0, 90, 0); visual.localPosition = new Vector3(0, -.04f, .22f); }
                 else { visual.localRotation = Quaternion.Euler(0, 180, 0); visual.localPosition = new Vector3(0, Item == InventoryItem.BombParrot ? -.16f : -.09f, 0); visual.localScale *= Item == InventoryItem.BombParrot ? .65f : 1f; }
             }
             viewRenderers = view.GetComponentsInChildren<Renderer>(); worldRenderers = world.GetComponentsInChildren<Renderer>();
@@ -300,7 +310,7 @@ namespace PirateSlop.Networking
             if(IsOwner && WaterRunning) PirateHudStyle.Label(new Rect(28,140,270,30),"Хождение по воде: "+waterRunRemaining.Value+" с",PirateHudStyle.Paper);
             if (!IsOwner || !Active || !motor.InputActive) return;
             if(Scoped) DrawScope();
-            if(Firearm) return;
+            if(Firearm || Item == InventoryItem.Pufferfish || Item == InventoryItem.Swordfish) return;
             string hint = action.Value == 2 ? "Пьём…" : Item == InventoryItem.GrapplingHook ? "Удерживать ЛКМ — крюк (35 м) · Отпустить ЛКМ — разорвать зацеп" : Item == InventoryItem.Wine ? "Удерживать ЛКМ — бег по воде на 60 с" : "ЛКМ — выпустить попугая • цель до 100 м • 50 урона";
             PirateHudStyle.Label(new Rect(Screen.width/2f-300,Screen.height-175,600,32),hint,PirateHudStyle.Paper);
         }

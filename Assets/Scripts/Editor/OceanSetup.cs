@@ -36,8 +36,8 @@ namespace PirateSlop.EditorTools
             if (sample == null) throw new System.InvalidOperationException("Simple Water sample material missing.");
             material.CopyPropertiesFromMaterial(sample);
             material.SetFloat("_WaveSpeed", .65f);
-            material.SetFloat("_WaveStrength", .38f);
-            material.SetFloat("_WaveScale", .18f);
+            material.SetFloat("_WaveStrength", 1.25f);
+            material.SetFloat("_WaveScale", .14f);
             material.SetFloat("_UseWaveTime", 0f);
             material.SetFloat("_WorldSpaceUV", 1f);
             material.SetFloat("_Cull", 0f);

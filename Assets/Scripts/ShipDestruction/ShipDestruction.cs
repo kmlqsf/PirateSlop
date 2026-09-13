@@ -16,6 +16,7 @@ namespace PirateSlop
         public uint Revision;
         public Vector3 BreachPoint;
         public ulong RemovedFragments;
+        public ulong LeakingFragments;
     }
     public struct ShipDestructionEvent
     {
@@ -252,11 +253,11 @@ namespace PirateSlop
             }
             current.State = next; current.Health = (ushort)Mathf.RoundToInt(health / definition.MaxHealth * ushort.MaxValue);
             current.Revision = ++revision;
-            if (Profile.EnableFlooding && definition.CanFlood && next != ShipSectionState.Intact)
+            if (Profile.EnableFlooding && definition.CanFlood && next != ShipSectionState.Intact && reason == ShipDamageReason.Hit && flooding.CanOpenBreach(point))
             {
                 if (!current.Breach) current.BreachPoint = transform.InverseTransformPoint(point);
-                if (next == ShipSectionState.Destroyed) current.BreachPoint = definition.BreachAnchor;
                 current.Breach = true;
+                current.LeakingFragments |= current.RemovedFragments & ~previousFragments;
             }
             state[id] = current;
             if (sections.TryGetValue(id, out var section))
@@ -299,6 +300,30 @@ namespace PirateSlop
             var definition = definitions[entry.SectionId];
             if (sections.TryGetValue(entry.SectionId, out var section))
                 flooding.SetSectionBreaches(section, entry, definition, Profile.EnableFlooding && definition.CanFlood);
+        }
+        public bool RepairFragment(int id, int fragment)
+        {
+            if (!ready || !IsServerInitialized || ship.IsSinking || !state.TryGetValue(id, out var entry) || !sections.TryGetValue(id, out var section)) return false;
+            if (definitions[id].Type != ShipSectionType.Hull || fragment < 0 || fragment >= section.Fragments.Length || fragment >= 64) return false;
+            ulong bit = 1UL << fragment;
+            if ((entry.RemovedFragments & bit) == 0) return false;
+            entry.RemovedFragments &= ~bit;
+            entry.LeakingFragments &= ~bit;
+            entry.Breach = entry.LeakingFragments != 0;
+            int remaining = 0;
+            for (int i = 0; i < section.Fragments.Length; i++) if ((entry.RemovedFragments & (1UL << i)) == 0) remaining++;
+            float fraction = remaining / (float)section.Fragments.Length;
+            var definition = definitions[id];
+            entry.State = entry.RemovedFragments == 0 ? ShipSectionState.Intact : fraction <= definition.CriticalThreshold ? ShipSectionState.Critical : ShipSectionState.Damaged;
+            entry.Health = (ushort)Mathf.RoundToInt(fraction * ushort.MaxValue);
+            entry.Repair = true;
+            entry.Revision = ++revision;
+            state[id] = entry;
+            section.Health = fraction * definition.MaxHealth;
+            section.Apply(entry.State, entry.RemovedFragments);
+            SetBreach(entry);
+            Publish();
+            return true;
         }
         void Publish()
         {

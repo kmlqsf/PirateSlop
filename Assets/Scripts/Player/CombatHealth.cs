@@ -61,16 +61,16 @@ namespace PirateSlop
                 if (disabledColliders != null) foreach (var collider in disabledColliders) if (collider != null) collider.enabled = true;
             }
         }
-        void Update()
+        public bool RespawnFromBell(NetworkShip ship)
         {
-            if (!IsDead || Time.time < respawnAt || (network != null && !network.IsServerInitialized)) return;
+            if (!IsDead || (network != null && !network.IsServerInitialized)) return false;
             var player = GetComponent<NetworkPlayer>();
-            var ship = player != null ? player.Ship : null;
-            if (player != null && (player.Eliminated.Value || ship == null || !ship.ConsumeRespawnRum())) return;
+            if (player == null || player.Eliminated.Value || ship == null || player.Ship != ship || !ship.ConsumeRespawnRum()) return false;
             Vector3 position = ship != null ? ship.transform.TransformPoint(SessionController.Instance.Config.PlayerLocalSpawn) : SpawnPosition;
             float yaw = ship != null ? ship.transform.eulerAngles.y : SpawnYaw;
             if (network != null) network.Respawn(position, yaw);
             else Respawn(position, yaw);
+            return true;
         }
         public void Respawn(Vector3 position, float yaw)
         {

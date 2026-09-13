@@ -96,7 +96,7 @@ namespace PirateSlop
                 bool eliminated = network != null && network.Eliminated.Value;
                 PirateHudStyle.Label(new Rect(Screen.width / 2f - 180, Screen.height / 2f - 43, 360, 35), eliminated ? "ЭКИПАЖ ВЫБЫЛ" : "ВЫ ПАЛИ В БОЮ", PirateHudStyle.Gold, true);
                 bool hasRum = network == null || (network.Ship != null && network.Ship.RumCount > 0);
-                PirateHudStyle.Label(new Rect(Screen.width / 2f - 180, Screen.height / 2f, 360, 25), eliminated ? "Корабль потерян. Возрождение недоступно." : hasRum ? $"Возвращение через {health.RespawnRemaining:0} с • −1 ром" : "Нет рома — экипаж должен пополнить полку", PirateHudStyle.Paper);
+                PirateHudStyle.Label(new Rect(Screen.width / 2f - 180, Screen.height / 2f, 360, 25), eliminated ? "Корабль потерян. Возрождение недоступно." : hasRum ? "Ждите звонка колокола в рубке • −1 ром" : "Нет рома — экипаж должен пополнить полку", PirateHudStyle.Paper);
                 return;
             }
             if (network != null && network.Ship != null)
@@ -117,7 +117,14 @@ namespace PirateSlop
                 if(equipment!=null && equipment.Scoped) return;
                 float x = Screen.width / 2f, y = Screen.height / 2f;
                 PirateHudStyle.Fill(new Rect(x - 1, y - 1, 2, 2), PirateHudStyle.Paper);
-                if (handling!=null && handling.Available && !handling.Aiming)
+                if (inventory.PistolSelected)
+                {
+                    PirateHudStyle.Fill(new Rect(x - 10, y - 1, 7, 2), PirateHudStyle.Paper);
+                    PirateHudStyle.Fill(new Rect(x + 3, y - 1, 7, 2), PirateHudStyle.Paper);
+                    PirateHudStyle.Fill(new Rect(x - 1, y - 10, 2, 7), PirateHudStyle.Paper);
+                    PirateHudStyle.Fill(new Rect(x - 1, y + 3, 2, 7), PirateHudStyle.Paper);
+                }
+                else if (handling!=null && handling.Available && !handling.Aiming)
                 {
                     float radius=handling.ReticleRadius;
                     PirateHudStyle.Fill(new Rect(x-radius-5,y,5,1),PirateHudStyle.Paper);

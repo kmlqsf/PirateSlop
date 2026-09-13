@@ -1,0 +1,100 @@
+using FishNet.Object;
+using FishNet.Object.Synchronizing;
+using UnityEngine;
+
+namespace PirateSlop.Networking
+{
+    [DefaultExecutionOrder(-5)]
+    public sealed class NetworkFishProjectile : NetworkBehaviour
+    {
+        readonly SyncVar<bool> flying = new();
+        public bool Flying => flying.Value;
+        NetworkFish pickup;
+        NetworkPlayer attacker;
+        Vector3 velocity;
+        float fuse, started;
+        void Awake() => pickup = GetComponent<NetworkFish>();
+        public void Launch(NetworkPlayer source, Vector3 direction)
+        {
+            attacker = source;
+            velocity = direction.normalized * (pickup.Item == InventoryItem.Swordfish ? 38f : 14f);
+            var ship = source.GetComponent<ShipDeckPassenger>()?.Ship;
+            if (ship != null) velocity += ship.GetComponent<ShipController>().CannonPointVelocity(transform.position);
+            started = Time.time;
+            fuse = Time.time + (pickup.Item == InventoryItem.Pufferfish ? 2.5f : 8f);
+            flying.Value = true;
+            pickup.Place(null, transform.position, transform.rotation);
+        }
+        void FixedUpdate()
+        {
+            if (!IsServerInitialized || !Flying) return;
+            if (Time.time >= fuse)
+            {
+                if (pickup.Item == InventoryItem.Pufferfish) Burst();
+                else { flying.Value = false; ServerManager.Despawn(NetworkObject); }
+                return;
+            }
+            velocity += Physics.gravity * Time.fixedDeltaTime;
+            Vector3 delta = velocity * Time.fixedDeltaTime;
+            RaycastHit nearest = default;
+            float distance = delta.magnitude;
+            foreach (var hit in Physics.SphereCastAll(transform.position, .12f, delta.normalized, distance, ~0, QueryTriggerInteraction.Collide))
+            {
+                if (!PlayerHitbox.IsTarget(hit.collider) || hit.transform.IsChildOf(transform)) continue;
+                if (attacker != null && hit.transform.IsChildOf(attacker.transform) && Time.time - started < .3f) continue;
+                if (hit.collider.gameObject.layer == LayerMask.NameToLayer("ShipDebris")) continue;
+                if (hit.distance <= distance) { nearest = hit; distance = hit.distance; }
+            }
+            if (nearest.collider != null)
+            {
+                if (pickup.Item == InventoryItem.Swordfish)
+                {
+                    var health = nearest.collider.GetComponentInParent<CombatHealth>();
+                    if (health != null)
+                    {
+                        health.Damage(70f, attacker != null ? attacker.gameObject : null);
+                        SoundObserversRpc(SoundCue.BulletFlesh, nearest.point, false);
+                        flying.Value = false;
+                        ServerManager.Despawn(NetworkObject);
+                        return;
+                    }
+                    var ship = nearest.collider.GetComponentInParent<NetworkShip>();
+                    pickup.Place(ship != null ? ship.NetworkObject : null, nearest.point - velocity.normalized * .65f, Quaternion.LookRotation(velocity));
+                    flying.Value = false;
+                    SoundObserversRpc(SoundCue.SwordfishStick, nearest.point, false);
+                    return;
+                }
+                pickup.Place(null, nearest.point + nearest.normal * .15f, transform.rotation);
+                velocity = Vector3.Reflect(velocity, nearest.normal) * .4f;
+            }
+            else pickup.Place(null, transform.position + delta, Quaternion.LookRotation(velocity));
+            var ocean = OceanSurface.Instance;
+            if (ocean != null && transform.position.y <= ocean.Height(transform.position))
+            {
+                if (pickup.Item == InventoryItem.Pufferfish) Burst();
+                else { SoundObserversRpc(SoundCue.Splash, transform.position, false); flying.Value = false; ServerManager.Despawn(NetworkObject); }
+            }
+        }
+        void Burst()
+        {
+            var damaged = new System.Collections.Generic.HashSet<CombatHealth>();
+            foreach (var collider in Physics.OverlapSphere(transform.position, 3f, ~0, QueryTriggerInteraction.Ignore))
+            {
+                var health = collider.GetComponentInParent<CombatHealth>();
+                if (health == null || !damaged.Add(health)) continue;
+                Vector3 end = collider.ClosestPoint(transform.position);
+                if (FirearmTrace.Cast(gameObject, transform.position, end, out var hit) && hit.collider.GetComponentInParent<CombatHealth>() != health) continue;
+                health.Damage(40f, attacker != null ? attacker.gameObject : null);
+            }
+            SoundObserversRpc(SoundCue.PufferBurst, transform.position, true);
+            flying.Value = false;
+            ServerManager.Despawn(NetworkObject);
+        }
+        [ObserversRpc(RunLocally = true)]
+        void SoundObserversRpc(SoundCue cue, Vector3 point, bool burst)
+        {
+            GameAudio.Play(cue, point);
+            if (burst) CombatVfx.Impact(point, Vector3.up, true);
+        }
+    }
+}

@@ -15,7 +15,7 @@ namespace PirateSlop.Networking
         readonly SyncList<int> fishCounts = new();
         readonly SyncList<int> ballCounts = new();
         readonly SyncList<InventoryItem> ballItems = new();
-        readonly SyncVar<int> malletSlots = new(0);
+        readonly SyncVar<int> malletSlots = new(1 << 3);
         readonly SyncList<int> plankCounts = new();
         readonly SyncList<int> rumCounts = new();
         readonly SyncList<InventoryItem> equipmentItems = new();
@@ -46,8 +46,8 @@ namespace PirateSlop.Networking
         }
         public bool CanAddItem(InventoryItem item)
         {
-            if (!IsServerInitialized || item < InventoryItem.Fish || item > InventoryItem.BoardingHook) return false;
-            if (item == InventoryItem.Mallet || item == InventoryItem.Plank) return false;
+            if (!IsServerInitialized || item < InventoryItem.Fish || item > InventoryItem.Swordfish) return false;
+            if (item == InventoryItem.Plank) return false;
             if (item == InventoryItem.Rum)
                 for (int i = 0; i < rumCounts.Count; i++) if (rumCounts[i] > 0 && rumCounts[i] < 6) return true;
             if (item == InventoryItem.Fish)

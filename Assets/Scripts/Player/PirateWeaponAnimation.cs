@@ -91,8 +91,9 @@ namespace PirateSlop
             if (!Equipped || !SabreEquipped || motor.IsDead || motor.LocomotionLocked || (hands != null && hands.HasHeldBall)) { attackStarted = -10; return; }
             if (elapsed < .30f || elapsed > .48f) return;
             Vector3 origin = transform.position + Vector3.up * (motor.IsCrouched ? .7f : 1.4f);
-            foreach (var collider in Physics.OverlapSphere(origin, 2.4f, ~0, QueryTriggerInteraction.Ignore))
+            foreach (var collider in Physics.OverlapSphere(origin, 2.4f, ~0, QueryTriggerInteraction.Collide))
             {
+                if (!PlayerHitbox.IsTarget(collider)) continue;
                 if (collider.transform.IsChildOf(transform)) continue;
                 var hook = collider.GetComponentInParent<BoardingHookTarget>();
                 if (hook != null)

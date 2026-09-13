@@ -10,7 +10,7 @@ namespace PirateSlop
 
         public static float MortarBlastRadius(InventoryItem item) => item switch
         {
-            InventoryItem.Cannonball => 2f,
+            InventoryItem.Cannonball => .8f,
             InventoryItem.BoardingHook => 3f,
             InventoryItem.BoomerangCannonball => 4f,
             InventoryItem.IceCannonball => 5f,

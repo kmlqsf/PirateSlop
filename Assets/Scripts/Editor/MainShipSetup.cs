@@ -117,6 +117,7 @@ namespace PirateSlop.EditorTools
                 var helm = root.GetComponentInChildren<HelmInteraction>(true);
                 helm.transform.localPosition = wheel.localPosition;
                 helm.Configure(wheel);
+                wheel.localScale = Vector3.one * 1.5f;
                 wheel.gameObject.AddComponent<ShipControlHandle>().Helm = helm;
                 var wheelBox = wheel.gameObject.AddComponent<BoxCollider>();
                 wheelBox.size = wheel.GetComponent<MeshFilter>().sharedMesh.bounds.size;

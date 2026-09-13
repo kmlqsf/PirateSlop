@@ -21,14 +21,37 @@ namespace PirateSlop.EditorTools
                     definition.CanFlood = definition.Type == ShipSectionType.Hull;
                 flooding.FullWaterline = 4.1f;
                 flooding.FullBowPitch = 8f;
+                flooding.FloodDuration = 30f;
+                flooding.DrainDuration = 30f;
+                flooding.WaterlineAllowance = .6f;
                 EditorUtility.SetDirty(destruction.Profile);
                 PrefabUtility.SaveAsPrefabAsset(root, path);
                 var config = AssetDatabase.LoadAssetAtPath<SessionConfig>("Assets/Settings/Networking/SessionConfig.asset");
-                config.ProtocolVersion = Mathf.Max(config.ProtocolVersion, 74);
+                config.ProtocolVersion = Mathf.Max(config.ProtocolVersion, 76);
                 EditorUtility.SetDirty(config);
                 AssetDatabase.SaveAssets();
             }
             finally { PrefabUtility.UnloadPrefabContents(root); }
+            const string playerPath = "Assets/Prefabs/Networking/NetworkPlayer.prefab";
+            var player = PrefabUtility.LoadPrefabContents(playerPath);
+            try
+            {
+                var repair = player.GetComponent<NetworkHullRepair>() ?? player.AddComponent<NetworkHullRepair>();
+                repair.MalletModel = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Repair/SM_RepairMallet.prefab");
+                var weapon = player.GetComponent<NetworkWeapon>();
+                var drops = weapon.DropPrefabs;
+                drops[(int)InventoryItem.Mallet] = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Repair/DroppedMallet.prefab").GetComponent<NetworkFish>();
+                weapon.DropPrefabs = drops;
+                var icons = player.GetComponent<PlayerInventory>().Icons;
+                icons.Icons[(int)InventoryItem.Mallet] = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/UI/Inventory/Mallet.png");
+                EditorUtility.SetDirty(icons);
+                var registry = AssetDatabase.LoadAssetAtPath<FishNet.Managing.Object.SinglePrefabObjects>("Assets/Settings/Networking/NetworkPrefabs.asset");
+                registry.AddObject(drops[(int)InventoryItem.Mallet].NetworkObject, true, true);
+                EditorUtility.SetDirty(registry);
+                PrefabUtility.SaveAsPrefabAsset(player, playerPath);
+            }
+            finally { PrefabUtility.UnloadPrefabContents(player); }
+            AssetDatabase.SaveAssets();
         }
     }
 }

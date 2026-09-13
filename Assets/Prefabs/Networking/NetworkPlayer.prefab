@@ -539,6 +539,74 @@ Transform:
   - {fileID: 170158380106679579}
   m_Father: {fileID: 1380899553463773785}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &546006166703886864
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8744328297279319951}
+  - component: {fileID: 6907814404634327843}
+  - component: {fileID: 4305354535530461004}
+  m_Layer: 0
+  m_Name: PlayerHitbox
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8744328297279319951
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 546006166703886864}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4577131539710440708}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &6907814404634327843
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 546006166703886864}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.495
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.9, z: 0}
+--- !u!114 &4305354535530461004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 546006166703886864}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a3ddadf5fc26184db4e6dd993801538, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.PlayerHitbox
 --- !u!1 &627961113624748541
 GameObject:
   m_ObjectHideFlags: 0
@@ -3760,6 +3828,8 @@ GameObject:
   - component: {fileID: 6873954375603879613}
   - component: {fileID: 8730755079242221971}
   - component: {fileID: 124468069414035651}
+  - component: {fileID: 3354481864229631810}
+  - component: {fileID: 3965722144531925235}
   m_Layer: 0
   m_Name: NetworkPlayer
   m_TagString: Player
@@ -3781,6 +3851,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3947817148549101838}
+  - {fileID: 8744328297279319951}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &5949794555580820883
@@ -4040,6 +4111,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 995290a6427940b4aae0973ff1c0390d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.CannonHands
+  aimSensitivity: 0.12
 --- !u!114 &5573834591614296885
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4105,6 +4177,8 @@ MonoBehaviour:
   - {fileID: 2332522239747272967, guid: 1df512fb641c70f4e835bf9e934b4420, type: 3}
   - {fileID: 1356193545609259471, guid: 7171fb8059069a64a8347c835d4e5573, type: 3}
   - {fileID: 0}
+  - {fileID: 4487986012749232088, guid: 2a0e3fa98ab49854981e3d0c2bf201d7, type: 3}
+  - {fileID: 2742591845182686104, guid: 95456148ac23ad3418f5464de8215631, type: 3}
 --- !u!114 &4694566103855019808
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4237,6 +4311,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.ShipSpyglassView
   TrajectoryMaterial: {fileID: 2100000, guid: 9edf76896be791745a50276eeb0562f2, type: 2}
+  viewpointLift: 1.25
 --- !u!114 &1783425920093483733
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4288,6 +4363,9 @@ MonoBehaviour:
   - {fileID: 4246104161241585170, guid: f056a9a5133d5594185a886cda15de8b, type: 3}
   - {fileID: 7701596119750937010, guid: 065649e6f66839044b780f671914b201, type: 3}
   - {fileID: 4613177525628647349, guid: 2d3964881a2a80945b8ad3ae50773001, type: 3}
+  - {fileID: 0}
+  - {fileID: 2917781114221085989, guid: 3b9a62f5e63e6804ab96f86a897308ec, type: 3}
+  - {fileID: 6827749572266201035, guid: 68d2bc300dc1734459f00eb5d44003ca, type: 3}
   ParrotPrefab: {fileID: 3399042490705193612, guid: 879b536b5b1c40a408199fc90cbf65be, type: 3}
 --- !u!114 &8730755079242221971
 MonoBehaviour:
@@ -4319,6 +4397,37 @@ MonoBehaviour:
   Animator: {fileID: 7593853047363271491}
   BodyProp: {fileID: 5508083288624209882}
   ViewProp: {fileID: 9090119410063096590}
+--- !u!114 &3354481864229631810
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4193507432475942729}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64dd189a8f140844d8fa271c0ba5c90c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.Networking.NetworkCrewBell
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 8718541801069254893}
+  _networkObjectCache: {fileID: 0}
+--- !u!114 &3965722144531925235
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4193507432475942729}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba8b3dadb15ed1a449e1581a93ad04b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.Networking.NetworkHullRepair
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 8718541801069254893}
+  _networkObjectCache: {fileID: 0}
+  MalletModel: {fileID: 5075510370247273477, guid: 08b8b52b8b62bda4496591436d1395ef, type: 3}
 --- !u!1 &4195186048672230144
 GameObject:
   m_ObjectHideFlags: 0

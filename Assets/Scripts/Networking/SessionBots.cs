@@ -20,7 +20,7 @@ namespace PirateSlop.Networking
             nextCrewCheck = Time.time + .5f;
             foreach (var ship in NetworkShip.ActiveShips.ToArray())
             {
-                if (ship == null || !ship.IsSpawned || ship.IsSinking || ship.TeamId.Value <= 0 || ship.RumCount > 0) continue;
+                if (ship == null || !ship.IsSpawned || ship.IsSinking || ship.TeamId.Value <= 0) continue;
                 var crew = players.Values.Where(p => p != null && p.HomeShipId.Value == ship.ParticipantId.Value).ToArray();
                 if (crew.Length == 0 || crew.Any(p => !p.Motor.IsDead)) continue;
                 eliminatedTeams.Add(ship.TeamId.Value);

@@ -16,6 +16,7 @@ namespace PirateSlop
         public float Radius = .12f, Drag = .015f;
         public static Vector3 StepVelocity(Vector3 velocity, float dt, float drag = .015f) => (velocity + Physics.gravity * dt) * Mathf.Exp(-drag * dt);
         public float PlayerDamage = 45f, PlayerPushSpeed = 22f;
+        public float StandardBlastRadius = .8f, StandardBlastDamage = 30f;
         public float BoomerangDuration = 6f, BoomerangWidth = 16f, BoomerangHeight = 8f;
         bool spent, returning;
         float age, returnAge;
@@ -79,8 +80,9 @@ namespace PirateSlop
             }
             RaycastHit nearest = default;
             float distance = delta.magnitude;
-            foreach (var hit in Physics.SphereCastAll(transform.position, Radius, delta.normalized, distance, ~0, QueryTriggerInteraction.Ignore))
+            foreach (var hit in Physics.SphereCastAll(transform.position, Radius, delta.normalized, distance, ~0, QueryTriggerInteraction.Collide))
             {
+                if (!PlayerHitbox.IsTarget(hit.collider)) continue;
                 if (hit.collider.gameObject.layer == LayerMask.NameToLayer("ShipDebris")) continue;
                 var section = hit.collider.GetComponentInParent<ShipDamageSection>();
                 if (section != null && hitSections.Contains(section)) continue;
@@ -141,7 +143,7 @@ namespace PirateSlop
                 var health = hit.GetComponentInParent<CombatHealth>();
                 if (health != null && damaged.Add(health))
                 {
-                    health.Damage(PlayerDamage, Attacker);
+                    health.Damage(Ammo == InventoryItem.Cannonball ? StandardBlastDamage : PlayerDamage, Attacker);
                     if (Ammo == InventoryItem.Cannonball || Ammo == InventoryItem.PushCannonball)
                     {
                         Vector3 direction = Vector3.ProjectOnPlane(health.transform.position - point, Vector3.up).normalized;
@@ -187,10 +189,6 @@ namespace PirateSlop
                 if (ship != null)
                 {
                     ship.ApplyCannonImpulse(point, Velocity.normalized * Mathf.Clamp(Velocity.magnitude / 40f, .5f, 1.5f), 1.5f);
-                    if (Ammo == InventoryItem.Cannonball)
-                        foreach (var passenger in FindObjectsByType<ShipDeckPassenger>(FindObjectsSortMode.None))
-                            if (passenger.Ship == ship.GetComponent<Rigidbody>())
-                                passenger.GetComponent<CombatHealth>()?.Damage(5f, Attacker);
                     if (Ammo == InventoryItem.PushCannonball) ship.ApplyPushImpulse(point, Velocity);
                     if (Ammo == InventoryItem.IceCannonball)
                     {
@@ -198,11 +196,21 @@ namespace PirateSlop
                     }
                 }
                 if (network != null) network.ImpactVfx(point, normal); else CombatVfx.Impact(point, normal, true, true);
+                if (Ammo == InventoryItem.Cannonball)
+                {
+                    var damaged = new HashSet<CombatHealth>();
+                    foreach (var hit in Physics.OverlapSphere(point, StandardBlastRadius, ~0, QueryTriggerInteraction.Ignore))
+                    {
+                        var target = hit.GetComponentInParent<CombatHealth>();
+                        if (target != null && damaged.Add(target)) target.Damage(StandardBlastDamage, Attacker);
+                    }
+                    if (health != null && damaged.Add(health)) health.Damage(StandardBlastDamage, Attacker);
+                }
                 if (health != null)
                 {
                     if (Ammo == InventoryItem.Cannonball)
                         health.GetComponent<AdvancedPlayerController>()?.ApplyKnockback(Vector3.ProjectOnPlane(Velocity, Vector3.up).normalized * PlayerPushSpeed + Vector3.up * 8f);
-                    health.Damage(PlayerDamage, Attacker);
+                    if (Ammo != InventoryItem.Cannonball) health.Damage(PlayerDamage, Attacker);
                 }
             }
             if (Ammo != InventoryItem.BoomerangCannonball) { spent = true; Destroy(gameObject); }

@@ -36,7 +36,7 @@ namespace PirateSlop
         public void SetRumCount(int slot, int count) => rumCounts[slot] = count;
         int malletSlots;
         public int PlankCount(int slot) => slot >= 0 && slot < 6 ? plankCounts[slot] : 0;
-        public bool HasMallet(int slot) => slot >= 2 && slot < 6 && (malletSlots & (1 << slot)) != 0;
+        public bool HasMallet(int slot) => slot >= 0 && slot < 6 && (malletSlots & (1 << slot)) != 0;
         public bool MalletSelected => HasMallet(SelectedSlot);
         public int TotalPlanks { get { int total = 0; foreach (int count in plankCounts) total += count; return total; } }
         public void SetRepairItems(int mallets, int slot, int count) { malletSlots = mallets; plankCounts[slot] = count; }
