@@ -18,6 +18,7 @@ namespace PirateSlop.Networking
         public bool FireQueued;
         public InventoryItem Ammo;
         public float Fuse;
+        public float Cooldown;
     }
 
     public sealed partial class NetworkCannon : NetworkBehaviour
@@ -72,7 +73,7 @@ namespace PirateSlop.Networking
         public bool StoreBall(NetworkWeapon player)
         {
             if (!IsServerInitialized || ball == null || ball.Loaded || (holder != -1 && holder != player.Owner.ClientId) || !player.CanReach(ball.transform.position, ball.transform)) return false;
-            if (!player.AddSupplyBalls(InventoryItem.Cannonball, 3)) return false;
+            if (!player.AddSupplyBalls(InventoryItem.Cannonball, PlayerInventory.AmmoCapacity)) return false;
             holder = -1; Crate.ResetSupply(); ResetStoredBallObserversRpc();
             return true;
         }
@@ -124,6 +125,7 @@ namespace PirateSlop.Networking
                     else if (!placements[i].Loaded && cannon.IsLoaded) cannon.ResetSupply();
                     cannon.ShowFuse(placements[i].Fuse);
                     cannon.ShowFireQueued(placements[i].FireQueued);
+                    cannon.ShowCooldown(placements[i].Cooldown);
                 }
                 if(!IsServerInitialized)
                 {
@@ -143,7 +145,9 @@ namespace PirateSlop.Networking
                     var cannon = Cannon(i);
                     if (cannon == null) continue;
                     var placement = placements[i];
-                    if (!cannon.IsIgnited && placement.FireQueued == cannon.IsFireQueued && placement.Occupied == (cannon.Operator != null)) continue;
+                    float cooldown = Mathf.Ceil(cannon.CooldownRemaining * 10f) * .1f;
+                    if (!cannon.IsIgnited && placement.FireQueued == cannon.IsFireQueued && placement.Occupied == (cannon.Operator != null) && placement.Cooldown == cooldown) continue;
+                    placement.Cooldown = cooldown;
                     placement.Occupied = cannon.Operator != null;
                     placement.FireQueued = cannon.IsFireQueued;
                     placement.Fuse = cannon.IsIgnited ? cannon.FuseProgress : -1f;
@@ -161,7 +165,7 @@ namespace PirateSlop.Networking
         }
         public void NotifyFired(int index, Vector3 position, Vector3 velocity, InventoryItem ammo)
         {
-            var placement = placements[index]; placement.Loaded = false; placement.FireQueued = false; placement.Fuse = -1f; placements[index] = placement;
+            var placement = placements[index]; placement.Loaded = false; placement.FireQueued = false; placement.Fuse = -1f; placement.Cooldown = Cannon(index).CooldownRemaining; placements[index] = placement;
             ShotObserversRpc(index, position, velocity, ammo);
         }
         [ObserversRpc]

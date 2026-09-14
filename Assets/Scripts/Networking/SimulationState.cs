@@ -16,7 +16,7 @@ namespace PirateSlop
         public Vector3 Position, SlideDirection, KnockbackVelocity;
         public float Yaw, VerticalVelocity, SlideTimer, Cooldown;
         public bool Crouched, Locked, Grounded;
-        public float PlanarSpeed;
+        public float PlanarSpeed, CrouchBlend;
         public bool Swimming;
         public Vector3 SwimVelocity;
         public float Breath;

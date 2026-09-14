@@ -13,6 +13,11 @@ namespace PirateSlop
         int nextShot;
         int nextFeedback;
         AudioSource ocean, wind, deck;
+        AudioSource underwater;
+        AudioSource flooding;
+        float floodBlend;
+        float cabinBlend, underwaterBlend, environmentAt, cabinTarget, underwaterTarget;
+        float underwaterVolume;
         int nextVoice;
 
         static GameAudio Get()
@@ -40,6 +45,17 @@ namespace PirateSlop
             instance.ocean = instance.Source("Ocean", true); instance.ocean.clip = bank.Ocean;
             instance.wind = instance.Source("Wind", true); instance.wind.clip = bank.Wind;
             instance.deck = instance.Source("Deck creaks", true); instance.deck.clip = bank.DeckCreaks;
+            instance.underwater = instance.Source("Underwater bubbles", true);
+            instance.underwater.GetComponent<SpatialAudioTone>().Environment = false;
+            instance.flooding = instance.Source("Water inside hull", true);
+            instance.flooding.pitch = .65f;
+            var bubbles = System.Array.Find(bank.Entries, e => e.Cue == SoundCue.UnderwaterBubbles);
+            if (bubbles != null && bubbles.Clips != null && bubbles.Clips.Length > 0)
+            {
+                instance.underwater.clip = bubbles.Clips[0];
+                instance.flooding.clip = bubbles.Clips[0];
+                instance.underwaterVolume = bubbles.Volume;
+            }
             return instance;
         }
         AudioSource Source(string name, bool loop)
@@ -62,7 +78,7 @@ namespace PirateSlop
             if(firearm!=null && firearm.ShotClips!=null && firearm.ShotClips.Length>0)
                 entry=new GameAudioBank.Entry { Cue=cue,Clips=firearm.ShotClips,Volume=firearm.ShotVolume,Distance=firearm.AudibleDistance };
             if (entry == null || entry.Clips == null || entry.Clips.Length == 0) return;
-            bool feedback = cue == SoundCue.Hurt || cue == SoundCue.Death || cue == SoundCue.HitConfirm;
+            bool feedback = cue == SoundCue.Hurt || cue == SoundCue.Death || cue == SoundCue.HitConfirm || cue == SoundCue.AirWarning;
             bool gunshot = firearm!=null || cue == SoundCue.Pistol || cue == SoundCue.Musket || cue == SoundCue.DoubleBarrel;
             var source = gunshot ? audio.shotVoices[audio.nextShot] : feedback ? audio.feedbackVoices[audio.nextFeedback] : audio.voices[audio.nextVoice];
             if (gunshot) audio.nextShot = (audio.nextShot + 1) % audio.shotVoices.Length;
@@ -95,23 +111,59 @@ namespace PirateSlop
             source.volume = entry.Volume * audio.bank.Master * audio.bank.Effects;
             source.clip = entry.Clips[Random.Range(0, entry.Clips.Length)]; source.Play();
         }
-        public static void Ambience(float speed, bool onShip = false)
+        public static void Ambience(float speed, bool onShip = false, float floodLevel = 0f)
         {
             var audio = Get(); if (audio == null) return;
+            audio.UpdateEnvironment(onShip);
+            audio.floodBlend = Mathf.Lerp(audio.floodBlend, onShip ? Mathf.Clamp01(floodLevel) : 0f, 1f - Mathf.Exp(-3f * Time.unscaledDeltaTime));
+            audio.flooding.volume = audio.bank.Master * audio.bank.Ambience * audio.floodBlend * Mathf.Lerp(.25f, .75f, audio.cabinBlend);
+            audio.flooding.pitch = Mathf.Lerp(.65f, .9f, audio.floodBlend);
+            if (audio.floodBlend > .005f && !audio.flooding.isPlaying && audio.flooding.clip != null) audio.flooding.Play();
+            else if (audio.floodBlend <= .005f) audio.flooding.Stop();
             audio.ocean.volume = audio.bank.Master * audio.bank.Ambience * Mathf.Lerp(.45f, .75f, speed);
             audio.wind.volume = audio.bank.Master * audio.bank.Ambience * Mathf.Lerp(.15f, .4f, speed);
+            audio.ocean.volume *= Mathf.Lerp(1f, .4f, audio.cabinBlend) * Mathf.Lerp(1f, .18f, audio.underwaterBlend);
+            audio.wind.volume *= Mathf.Lerp(1f, .15f, audio.cabinBlend) * (1f - audio.underwaterBlend);
             if (!audio.ocean.isPlaying && audio.ocean.clip != null) audio.ocean.Play();
             if (!audio.wind.isPlaying && audio.wind.clip != null) audio.wind.Play();
             audio.deck.volume = audio.bank.Master * audio.bank.Ambience * Mathf.Lerp(.2f, .4f, speed);
+            audio.deck.volume *= Mathf.Lerp(1f, 1.6f, audio.cabinBlend) * Mathf.Lerp(1f, .3f, audio.underwaterBlend);
+            audio.underwater.volume = audio.bank.Master * audio.bank.Ambience * audio.underwaterVolume * audio.underwaterBlend;
+            if (audio.underwaterBlend > .005f && !audio.underwater.isPlaying && audio.underwater.clip != null) audio.underwater.Play();
+            else if (audio.underwaterBlend <= .005f) audio.underwater.Stop();
             if (onShip && !audio.deck.isPlaying && audio.deck.clip != null) audio.deck.Play();
             else if (!onShip) audio.deck.Stop();
             audio.lastAmbience = Time.unscaledTime;
         }
         float lastAmbience;
+        void UpdateEnvironment(bool onShip)
+        {
+            if (Time.unscaledTime >= environmentAt)
+            {
+                environmentAt = Time.unscaledTime + .25f;
+                if (listener == null || !listener.isActiveAndEnabled)
+                    foreach (var candidate in FindObjectsByType<AudioListener>(FindObjectsSortMode.None))
+                        if (candidate.isActiveAndEnabled) { listener = candidate; break; }
+                cabinTarget = underwaterTarget = 0f;
+                if (listener != null)
+                {
+                    Vector3 eye = listener.transform.position;
+                    var sea = OceanSurface.Instance;
+                    underwaterTarget = sea != null && eye.y < sea.Height(eye) - .1f ? 1f : 0f;
+                    if (onShip)
+                        foreach (var hit in Physics.RaycastAll(eye, Vector3.up, 4f, ~0, QueryTriggerInteraction.Ignore))
+                            if (hit.collider.GetComponentInParent<ShipController>() != null && hit.collider.GetComponentInParent<AdvancedPlayerController>() == null)
+                            { cabinTarget = 1f; break; }
+                }
+            }
+            float blend = 1f - Mathf.Exp(-4f * Time.unscaledDeltaTime);
+            cabinBlend = Mathf.Lerp(cabinBlend, cabinTarget, blend);
+            underwaterBlend = Mathf.Lerp(underwaterBlend, underwaterTarget, blend);
+        }
         void Update()
         {
             if (Time.unscaledTime - lastAmbience < .3f) return;
-            ocean.Stop(); wind.Stop(); deck.Stop();
+            ocean.Stop(); wind.Stop(); deck.Stop(); underwater.Stop(); flooding.Stop();
         }
         void OnDestroy() { if (instance == this) instance = null; }
     }

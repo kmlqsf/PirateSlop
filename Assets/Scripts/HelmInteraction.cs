@@ -18,9 +18,9 @@ public class HelmInteraction : MonoBehaviour
     public AdvancedPlayerController Driver => IsControlling ? player : null;
     public Transform Wheel => wheelMesh;
     public bool IsControlledBy(AdvancedPlayerController candidate) => IsControlling && player == candidate;
-    public void Configure(Transform wheel) { wheelMesh = wheel; }
+    public void Configure(Transform wheel) { wheelMesh = wheel; if (wheelMesh != null) { wheelRest = wheelMesh.localRotation; HelmCenterMark.Add(wheelMesh); } }
     public void Bind(AdvancedPlayerController value) { player = value; }
-    void Awake() { if (wheelMesh != null) wheelRest = wheelMesh.localRotation; }
+    void Awake() { if (wheelMesh != null) { wheelRest = wheelMesh.localRotation; HelmCenterMark.Add(wheelMesh); } }
     public bool InRange(AdvancedPlayerController candidate) => StructurallyAvailable && candidate != null && Vector3.Distance(transform.position, candidate.transform.position + Vector3.up) <= interactionRadius;
     public bool TryTakeControl(AdvancedPlayerController candidate)
     {

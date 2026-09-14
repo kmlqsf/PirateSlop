@@ -27,8 +27,8 @@ namespace PirateSlop.Networking
         {
             base.OnStartServer();
             if (fishCounts.Count == 0) for (int i = 0; i < 6; i++) fishCounts.Add(0);
-            if (ballItems.Count == 0) for (int i = 0; i < 6; i++) ballItems.Add(InventoryItem.Cannonball);
-            if (ballCounts.Count == 0) for (int i = 0; i < 6; i++) ballCounts.Add(0);
+            if (ballItems.Count == 0) for (int i = 0; i < PlayerInventory.SlotCount; i++) ballItems.Add(InventoryItem.Cannonball);
+            if (ballCounts.Count == 0) for (int i = 0; i < PlayerInventory.SlotCount; i++) ballCounts.Add(0);
             if (plankCounts.Count == 0) for (int i = 0; i < 6; i++) plankCounts.Add(0);
             if (rumCounts.Count == 0) for (int i = 0; i < 6; i++) rumCounts.Add(0);
             if (equipmentItems.Count == 0) for (int i = 0; i < 6; i++) equipmentItems.Add(InventoryItem.None);
@@ -42,7 +42,7 @@ namespace PirateSlop.Networking
             for (int i = 0; i < 6; i++) inventory.SetRepairItems(malletSlots.Value, i, i < plankCounts.Count ? plankCounts[i] : 0);
             inventory.SetContents(cannonSlots.Value); inventory.PistolSlots = pistolSlots.Value; inventory.RodSlots = rodSlots.Value;
             for (int i = 0; i < 6; i++) inventory.SetFishCount(i, i < fishCounts.Count ? fishCounts[i] : 0);
-            for (int i = 0; i < 6; i++) inventory.SetBallCount(i, i < ballCounts.Count ? ballCounts[i] : 0, i < ballItems.Count ? ballItems[i] : InventoryItem.Cannonball);
+            for (int i = 0; i < PlayerInventory.SlotCount; i++) inventory.SetBallCount(i, i < ballCounts.Count ? ballCounts[i] : 0, i < ballItems.Count ? ballItems[i] : InventoryItem.Cannonball);
         }
         public bool CanAddItem(InventoryItem item)
         {
@@ -53,7 +53,7 @@ namespace PirateSlop.Networking
             if (item == InventoryItem.Fish)
                 for (int i = 0; i < fishCounts.Count; i++) if (fishCounts[i] > 0 && fishCounts[i] < 20) return true;
             if (CannonAmmo.IsBall(item))
-                for (int i = 0; i < ballCounts.Count; i++) if (ballCounts[i] > 0 && ballCounts[i] < 20 && ballItems[i] == item) return true;
+                return ballCounts[PlayerInventory.AmmoSlot] < PlayerInventory.AmmoCapacity && (ballCounts[PlayerInventory.AmmoSlot] == 0 || ballItems[PlayerInventory.AmmoSlot] == item);
             if (item == InventoryItem.Plank)
                 for (int i = 0; i < plankCounts.Count; i++) if (plankCounts[i] > 0 && plankCounts[i] < 20) return true;
             return inventory.EmptySlot() >= 0;
@@ -78,7 +78,7 @@ namespace PirateSlop.Networking
                 }
                 else if (CannonAmmo.IsBall(item))
                 {
-                    for (int i = 0; i < ballCounts.Count; i++) if (ballCounts[i] > 0 && ballCounts[i] < 20 && ballItems[i] == item) { slot = i; break; }
+                    slot = PlayerInventory.AmmoSlot;
                     ballItems[slot] = item; ballCounts[slot]++;
                 }
                 else if (item == InventoryItem.Plank)
@@ -102,11 +102,9 @@ namespace PirateSlop.Networking
         }
         public bool AddSupplyBalls(InventoryItem item, int count)
         {
-            if (!IsServerInitialized || !CannonAmmo.IsBall(item) || count < 1 || count > 20) return false;
-            int slot = inventory.EmptySlot();
-            for (int i = 0; i < ballCounts.Count; i++)
-                if (ballCounts[i] > 0 && ballCounts[i] <= 20 - count && ballItems[i] == item) { slot = i; break; }
-            if (slot < 0) return false;
+            if (!IsServerInitialized || count < 1 || !CanAddItem(item) || !CannonAmmo.IsBall(item)) return false;
+            int slot = PlayerInventory.AmmoSlot;
+            count = Mathf.Min(count, PlayerInventory.AmmoCapacity - ballCounts[slot]);
             ballItems[slot] = item; ballCounts[slot] += count;
             selectedSlot.Value = slot; inventory.SetSelection(slot);
             ApplyInventory(); SelectSupplyTargetRpc(Owner, slot);
@@ -169,7 +167,7 @@ namespace PirateSlop.Networking
         [ServerRpc]
         void SelectSlotServerRpc(int slot)
         {
-            if (inventory == null || slot < 0 || slot >= 6) return;
+            if (inventory == null || slot < 0 || slot >= PlayerInventory.SlotCount) return;
             selectedSlot.Value = slot; inventory.SetSelection(slot);
         }
         public void UseChest(NetworkObject target, int slot = -1) => UseChestServerRpc(target, slot);

@@ -178,7 +178,7 @@ public class ShipController : MonoBehaviour
         transform.SetPositionAndRotation(position, rotation);
         sailSystem.SetDeploy(s.Sail); helm.Restore(s.Rudder, s.Controlling, driver);
     }
-    public void ResolveCollision(Vector3 displacement)
+    public void ResolveCollision(Vector3 displacement, Vector3? contact = null, bool showEffect = true, float impactStrength = -1f)
     {
         if (IsFrozen) return;
         if (displacement.sqrMagnitude > .00001f)
@@ -190,9 +190,9 @@ public class ShipController : MonoBehaviour
         if (Time.time >= nextCollisionAudio && Time.time - lastCollisionContact > .75f && displacement.sqrMagnitude > .00001f)
         {
             var network = GetComponent<PirateSlop.Networking.NetworkShip>();
-            float strength = Mathf.Clamp01(Mathf.Abs(speed) / Mathf.Max(1f, maxSpeed) + displacement.magnitude * .2f);
+            float strength = impactStrength >= 0f ? Mathf.Clamp01(impactStrength) : Mathf.Clamp01(Mathf.Abs(speed) / Mathf.Max(1f, maxSpeed) + displacement.magnitude * .2f);
             ApplyCannonImpulse(transform.position - displacement.normalized * 5f, displacement.normalized, strength * .3f);
-            if (network != null) network.CollisionAudio(strength);
+            if (network != null) network.CollisionAudio(strength, contact ?? transform.position, contact.HasValue && showEffect);
             else GameAudio.Play(SoundCue.ShipCollision, transform.position);
             nextCollisionAudio = Time.time + 2f;
         }

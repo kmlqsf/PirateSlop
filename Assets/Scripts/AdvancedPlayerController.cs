@@ -78,6 +78,8 @@ public class AdvancedPlayerController : MonoBehaviour
     PirateSlop.Networking.NetworkWeapon lootNetwork;
     public bool IsSliding => slideTimer > 0f;
     public bool IsCrouched => crouched;
+    float crouchBlend;
+    public float CrouchBlend => crouchBlend;
     public float PlanarSpeed { get; private set; }
     public bool InputActive => !DeveloperMenu.IsOpen && !ShipSpyglassView.IsViewing && local && !IsDead && Cursor.lockState == CursorLockMode.Locked;
     public Camera PlayerCamera => playerCamera;
@@ -208,8 +210,9 @@ public class AdvancedPlayerController : MonoBehaviour
         bool wantCrouch = command.Crouch || IsSliding;
         if (!wantCrouch && crouched && !CanStand()) wantCrouch = true;
         SetHeight(wantCrouch);
+        crouchBlend = Mathf.MoveTowards(crouchBlend, crouched ? 1f : 0f, dt * 6f);
         float slideProgress = 1f - slideTimer / Mathf.Max(.01f, slideDuration);
-        var planar = IsSliding ? slideDirection * Mathf.Lerp(slideSpeed, crouchSpeed, slideProgress * slideProgress) : direction * (crouched ? crouchSpeed : command.Sprint ? sprintSpeed : walkSpeed);
+        var planar = IsSliding ? slideDirection * Mathf.Lerp(slideSpeed, crouchSpeed, slideProgress * slideProgress) : direction * Mathf.Lerp(command.Sprint ? sprintSpeed : walkSpeed, crouchSpeed, crouchBlend);
         PlanarSpeed = planar.magnitude;
         if (grounded && verticalVelocity < 0) verticalVelocity = -2;
         if (jumpBuffer > 0f && groundGrace > 0f && !crouched && !IsKnockedBack)
@@ -413,7 +416,7 @@ public class AdvancedPlayerController : MonoBehaviour
         verticalVelocity = 0; PlanarSpeed = new Vector2(rise, command.Move.x * .45f).magnitude * ladder.Speed;
         return true;
     }
-    public PlayerState Capture() => new PlayerState { Position = transform.position, Yaw = transform.eulerAngles.y, VerticalVelocity = verticalVelocity, SlideDirection = slideDirection, SlideTimer = slideTimer, Cooldown = cooldown, Crouched = crouched, Locked = locomotionLocked, PlanarSpeed = PlanarSpeed, Grounded = IsGrounded, Swimming = IsSwimming, SwimVelocity = swimVelocity, Breath = Breath, Climbing = IsClimbing, LadderCooldown = ladderCooldown, KnockbackVelocity = knockbackVelocity, KnockbackTime = knockbackTime, JumpBuffer = jumpBuffer, GroundGrace = groundGrace, LadderExiting = ladderExiting };
+    public PlayerState Capture() => new PlayerState { Position = transform.position, Yaw = transform.eulerAngles.y, VerticalVelocity = verticalVelocity, SlideDirection = slideDirection, SlideTimer = slideTimer, Cooldown = cooldown, Crouched = crouched, CrouchBlend = crouchBlend, Locked = locomotionLocked, PlanarSpeed = PlanarSpeed, Grounded = IsGrounded, Swimming = IsSwimming, SwimVelocity = swimVelocity, Breath = Breath, Climbing = IsClimbing, LadderCooldown = ladderCooldown, KnockbackVelocity = knockbackVelocity, KnockbackTime = knockbackTime, JumpBuffer = jumpBuffer, GroundGrace = groundGrace, LadderExiting = ladderExiting };
     public void Restore(PlayerState s)
     {
         controller.enabled = false; transform.SetPositionAndRotation(s.Position, Quaternion.Euler(0, s.Yaw, 0)); controller.enabled = !IsDead;
@@ -427,6 +430,7 @@ public class AdvancedPlayerController : MonoBehaviour
         IsClimbing = s.Climbing; ladderCooldown = s.LadderCooldown; ladderExiting = s.LadderExiting;
         knockbackVelocity = s.KnockbackVelocity; knockbackTime = s.KnockbackTime;
         slideTimer = s.SlideTimer; locomotionLocked = s.Locked; SetHeight(s.Crouched);
+        crouchBlend = Mathf.Clamp01(s.CrouchBlend);
     }
     public void ApplyRemoteState(Vector3 position, float yawValue, float blend)
     {

@@ -49,7 +49,8 @@ namespace PirateSlop
                 {
                     var passenger = GetComponent<ShipDeckPassenger>();
                     var platform = passenger != null && passenger.Ship != null ? passenger.Ship.GetComponent<ShipController>() : null;
-                    GameAudio.Ambience(platform != null ? platform.Speed / platform.MaxSpeed : 0f, platform != null);
+                    var flooding = platform != null ? platform.GetComponent<ShipFlooding>() : null;
+                    GameAudio.Ambience(platform != null ? platform.Speed / Mathf.Max(.01f, platform.MaxSpeed) : 0f, platform != null, flooding != null ? flooding.Level : 0f);
                 }
                 if (ready && !player.IsDead)
                 {

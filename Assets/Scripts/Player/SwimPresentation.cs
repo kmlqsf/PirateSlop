@@ -40,8 +40,8 @@ namespace PirateSlop
             if (motor.IsSwimming && !motor.IsDead && motor.PlanarSpeed > .4f && Time.time >= strokeAt)
             { GameAudio.Play(SoundCue.Splash, transform.position, .1f); strokeAt = Time.time + 1.2f; }
             swimming = motor.IsSwimming;
-            if (motor.PlayerCamera != null && motor.PlayerCamera.enabled && !motor.IsDead && motor.IsSwimming && motor.BreathFraction < .25f && Time.time >= breathWarningAt)
-            { GameAudio.Play(SoundCue.Hurt, transform.position, .25f, true); breathWarningAt = Time.time + Mathf.Lerp(.8f, 2.5f, motor.BreathFraction / .25f); }
+            if (motor.PlayerCamera != null && motor.PlayerCamera.enabled && !motor.IsDead && Underwater && motor.BreathFraction < .25f && Time.time >= breathWarningAt)
+            { GameAudio.Play(SoundCue.AirWarning, transform.position, 1f, true); breathWarningAt = Time.time + Mathf.Lerp(.8f, 2.5f, motor.BreathFraction / .25f); }
         }
         void OnGUI()
         {

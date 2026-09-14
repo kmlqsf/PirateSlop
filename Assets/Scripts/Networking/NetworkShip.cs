@@ -96,7 +96,7 @@ namespace PirateSlop.Networking
             ReceiveState(Motor.Capture(), driver);
         }
         public void DragWheel(float degrees, bool holding) => DragWheelServerRpc(degrees, holding);
-        public void CollisionAudio(float strength = 1f) { if (IsServerInitialized) CollisionAudioObserversRpc(strength); }
+        public void CollisionAudio(float strength, Vector3 point, bool showEffect) { if (IsServerInitialized) CollisionAudioObserversRpc(strength, point, showEffect); }
         public void ImpactVfx(Vector3 point, Vector3 normal) { if (IsServerInitialized) ImpactVfxObserversRpc(point, normal); }
         [ObserversRpc(RunLocally = true)]
         void ImpactVfxObserversRpc(Vector3 point, Vector3 normal)
@@ -105,9 +105,10 @@ namespace PirateSlop.Networking
             GameAudio.Play(SoundCue.ShipHit, point);
         }
         [ObserversRpc(RunLocally = true)]
-        void CollisionAudioObserversRpc(float strength)
+        void CollisionAudioObserversRpc(float strength, Vector3 point, bool showEffect)
         {
-            GameAudio.Play(SoundCue.ShipCollision, transform.position, Mathf.Lerp(.25f, 1f, strength));
+            GameAudio.Play(SoundCue.ShipCollision, point, Mathf.Lerp(.25f, 1f, strength));
+            if (showEffect && strength > .08f) CombatVfx.Splash(point, Mathf.Lerp(.25f, 1.2f, strength));
             FirstPersonFeedback.Kick(transform.position, Vector3.up, .06f * strength);
         }
         [ServerRpc(RequireOwnership = false)]

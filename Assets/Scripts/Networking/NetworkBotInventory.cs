@@ -39,7 +39,7 @@ namespace PirateSlop.Networking
         public bool BotSupplyBalls(NetworkCannon cannon)
         {
             if (!BotCanWork || cannon == null || cannon.Crate == null || !CanReach(cannon.Crate.Supply.transform.position, cannon.Crate.Supply.transform)) return false;
-            for (int i = 0; i < 3; i++) if (!AddItem(InventoryItem.Cannonball)) return i > 0;
+            for (int i = 0; i < PlayerInventory.AmmoCapacity; i++) if (!AddItem(InventoryItem.Cannonball)) return i > 0;
             return true;
         }
         public bool BotTakeLoose(NetworkFish item)

@@ -376,10 +376,23 @@ namespace PirateSlop.Networking
                     !HullAxis(br,delta,ar,af,a.HullHalfExtents,br,bf,b.HullHalfExtents,ref depth,ref normal) ||
                     !HullAxis(bf,delta,ar,af,a.HullHalfExtents,br,bf,b.HullHalfExtents,ref depth,ref normal)) continue;
                 Vector3 correction = new Vector3(normal.x,0,normal.y)*(depth+.002f);
+                Vector2 tangent = new(-normal.y, normal.x);
+                float an = Mathf.Abs(Vector2.Dot(ar, normal)) * a.HullHalfExtents.x + Mathf.Abs(Vector2.Dot(af, normal)) * a.HullHalfExtents.y;
+                float bn = Mathf.Abs(Vector2.Dot(br, normal)) * b.HullHalfExtents.x + Mathf.Abs(Vector2.Dot(bf, normal)) * b.HullHalfExtents.y;
+                float at = Mathf.Abs(Vector2.Dot(ar, tangent)) * a.HullHalfExtents.x + Mathf.Abs(Vector2.Dot(af, tangent)) * a.HullHalfExtents.y;
+                float bt = Mathf.Abs(Vector2.Dot(br, tangent)) * b.HullHalfExtents.x + Mathf.Abs(Vector2.Dot(bf, tangent)) * b.HullHalfExtents.y;
+                float offset = Vector2.Dot(delta, tangent);
+                float along = (Mathf.Max(-at, offset - bt) + Mathf.Min(at, offset + bt)) * .5f;
+                Vector2 contact = normal * ((an + Vector2.Dot(delta, normal) - bn) * .5f) + tangent * along;
+                Vector3 point = a.transform.position + new Vector3(contact.x, 0f, contact.y);
+                var ocean = OceanSurface.Instance;
+                if (ocean != null) point.y = ocean.Height(point) + .15f;
+                float impactSpeed = Mathf.Abs(Vector3.Dot(a.Motor.CannonPointVelocity(point) - b.Motor.CannonPointVelocity(point), new Vector3(normal.x, 0f, normal.y)));
+                float impactStrength = Mathf.Clamp01(impactSpeed / Mathf.Max(1f, Mathf.Max(a.Motor.MaxSpeed, b.Motor.MaxSpeed)));
                 if (a.Motor.IsFrozen && b.Motor.IsFrozen) continue;
-                if (a.Motor.IsFrozen) b.Motor.ResolveCollision(correction);
-                else if (b.Motor.IsFrozen) a.Motor.ResolveCollision(-correction);
-                else { a.Motor.ResolveCollision(-correction*.5f); b.Motor.ResolveCollision(correction*.5f); }
+                if (a.Motor.IsFrozen) b.Motor.ResolveCollision(correction, point, true, impactStrength);
+                else if (b.Motor.IsFrozen) a.Motor.ResolveCollision(-correction, point, true, impactStrength);
+                else { a.Motor.ResolveCollision(-correction*.5f, point, true, impactStrength); b.Motor.ResolveCollision(correction*.5f, point, false, impactStrength); }
             }
         }
         static bool HullAxis(Vector2 axis,Vector2 delta,Vector2 ar,Vector2 af,Vector2 ah,Vector2 br,Vector2 bf,Vector2 bh,ref float depth,ref Vector2 normal)

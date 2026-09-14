@@ -23,6 +23,13 @@ namespace PirateSlop.Networking
         readonly SyncVar<Vector3> position = new();
         readonly SyncVar<Quaternion> rotation = new(Quaternion.identity);
         bool taken;
+        bool visualReady;
+        int visualPlatformId;
+        Transform visualSupport;
+        Vector3 visualPosition;
+        Quaternion visualRotation;
+        NetworkFishProjectile projectile;
+        void OnDisable() => visualReady = false;
         public bool Available => IsSpawned && !taken && !(GetComponent<NetworkFishProjectile>()?.Flying ?? false);
         float expires;
         float nextFlop;
@@ -67,8 +74,14 @@ namespace PirateSlop.Networking
                 return;
             }
             var support = resolvedPlatform != null ? resolvedPlatform.transform : null;
-            transform.SetPositionAndRotation(support != null ? support.TransformPoint(position.Value) : position.Value,
-                support != null ? support.rotation * rotation.Value : rotation.Value);
+            if (projectile == null) projectile = GetComponent<NetworkFishProjectile>();
+            bool smooth = !IsServerInitialized && visualReady && visualSupport == support && visualPlatformId == platformId.Value && (projectile == null || !projectile.Flying) && (visualPosition - position.Value).sqrMagnitude < 4f;
+            float blend = smooth ? 1f - Mathf.Exp(-22f * Time.deltaTime) : 1f;
+            visualPosition = Vector3.Lerp(visualPosition, position.Value, blend);
+            visualRotation = smooth ? Quaternion.Slerp(visualRotation, rotation.Value, blend) : rotation.Value;
+            visualReady = true; visualSupport = support; visualPlatformId = platformId.Value;
+            transform.SetPositionAndRotation(support != null ? support.TransformPoint(visualPosition) : visualPosition,
+                support != null ? support.rotation * visualRotation : visualRotation);
             if (IsServerInitialized && Item == InventoryItem.Fish) SimulateFlop(Time.deltaTime);
             if (IsServerInitialized && IsSpawned && Time.time > expires) ServerManager.Despawn(NetworkObject);
         }

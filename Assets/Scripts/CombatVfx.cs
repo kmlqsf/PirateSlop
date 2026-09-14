@@ -92,6 +92,33 @@ namespace PirateSlop
                 Burst(position, Vector3.up, new Color(.65f, .85f, .9f, .6f), 24, .18f * scale, 6 * scale, 1, 1);
             Burst(position, Vector3.up, new Color(.85f, .95f, 1, .3f), 10, .6f * scale, .8f, 1.5f);
         }
+        public static void Respawn(Vector3 position, Transform platform)
+        {
+            if (!Available) return;
+            if (material == null) material = Resources.Load<Material>("CombatParticles");
+            if (material == null) return;
+            var root = new GameObject("CrewRespawnMist");
+            root.transform.position = position + Vector3.up * .6f;
+            if (platform != null) root.transform.SetParent(platform, true);
+            var particles = root.AddComponent<ParticleSystem>();
+            particles.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+            var main = particles.main;
+            main.loop = false; main.playOnAwake = false; main.duration = .1f;
+            main.simulationSpace = ParticleSystemSimulationSpace.Local;
+            main.startLifetime = new ParticleSystem.MinMaxCurve(.45f, .8f);
+            main.startSpeed = .35f; main.startSize = new ParticleSystem.MinMaxCurve(.12f, .3f);
+            main.startColor = new Color(.55f, .85f, .78f, .35f); main.maxParticles = 18;
+            var shape = particles.shape; shape.shapeType = ParticleSystemShapeType.Sphere; shape.radius = .55f;
+            var emission = particles.emission; emission.rateOverTime = 0;
+            emission.SetBursts(new[] { new ParticleSystem.Burst(0f, 18) });
+            var fade = particles.colorOverLifetime; fade.enabled = true;
+            var gradient = new Gradient();
+            gradient.SetKeys(new[] { new GradientColorKey(Color.white, 0), new GradientColorKey(Color.white, 1) }, new[] { new GradientAlphaKey(0, 0), new GradientAlphaKey(1, .1f), new GradientAlphaKey(0, 1) });
+            fade.color = gradient;
+            var renderer = particles.GetComponent<ParticleSystemRenderer>(); renderer.sharedMaterial = material;
+            renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            particles.Play(); Object.Destroy(root, 1f);
+        }
         public static void FireSmoke(Vector3 position)
         {
             Burst(position, Vector3.up, new Color(.19f, .18f, .17f, .32f), 3, 1.4f, 1.5f, 3.5f, -.04f);

@@ -85,7 +85,7 @@ namespace PirateSlop.Networking
             {
                 if (motor.IsDead) waterRunUntil = 0;
                 waterRunRemaining.Value = Mathf.Ceil(Mathf.Max(0,waterRunUntil-Time.time));
-                previousSlot = inventory.SelectedSlot; rounds.Value = ammunition[previousSlot];
+                previousSlot = inventory.SelectedSlot; rounds.Value = previousSlot < ammunition.Length ? ammunition[previousSlot] : 0;
                 if (!CanUse || (action.Value != 0 && actionSlot != inventory.SelectedSlot)) { action.Value = 0; aiming.Value = false; }
                 if (action.Value != 0 && Time.time >= until)
                 {

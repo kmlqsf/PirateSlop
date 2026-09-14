@@ -361,7 +361,7 @@ namespace PirateSlop.Networking
         void OnGUI()
         {
             if (!IsOwner || !motor.InputActive || !Available) return;
-            string hint = aimed != null && !IsFishing && !CarryingCatch ? (GetComponent<NetworkWeapon>().CanAddItem(aimed.CurrentItem) ? "E — подобрать " + aimed.ItemName : "Инвентарь заполнен · G — положить " + InventoryIcons.ItemName(inventory.ItemAt(inventory.SelectedSlot))) : HasFish ? (CarryingCatch ? "Инвентарь заполнен! " : "") + "G — выбросить рыбу · ПКМ — съесть (+25 HP)" : !inventory.RodSelected ? "" :
+            string hint = aimed != null && !IsFishing && !CarryingCatch ? (inventory.CanFitItem(aimed.CurrentItem) ? "E — подобрать " + aimed.ItemName : inventory.CannotFitHint(aimed.CurrentItem)) : HasFish ? (CarryingCatch ? "Инвентарь заполнен! " : "") + "G — выбросить рыбу · ПКМ — съесть (+25 HP)" : !inventory.RodSelected ? "" :
                 stage.Value == 0 ? "ЛКМ — забросить в море" : stage.Value == 1 ? "Заброс…" : stage.Value == 2 ? "Ждите поклёвку… · ПКМ — убрать удочку" : stage.Value == 3 ? "КЛЮЁТ! Зажмите ЛКМ!" : "Держите ЛКМ — вытянуть рыбу: " + Mathf.RoundToInt(progress.Value * 100) + "%";
             if (stage.Value == 4) hint = "ЛКМ — вытянуть: " + InventoryIcons.ItemName(catchItem.Value) + " · " + Mathf.RoundToInt(progress.Value * 100) + "%";
             if (CarryingCatch) hint = "Инвентарь заполнен: " + InventoryIcons.ItemName(catchItem.Value) + " · G — положить" + (catchItem.Value == InventoryItem.Fish ? " · ПКМ — съесть" : catchItem.Value == InventoryItem.Pufferfish || catchItem.Value == InventoryItem.Swordfish ? " · ЛКМ — бросить" : "");

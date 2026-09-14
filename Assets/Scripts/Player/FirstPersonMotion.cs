@@ -57,9 +57,9 @@ namespace PirateSlop
             landing = Mathf.MoveTowards(landing, 0f, dt * .2f);
             float weight = strength * (1f - focus * .94f);
             var target = new Vector3(Mathf.Sin(phase) * .014f * movement - sway.x * .012f,
-                Mathf.Cos(phase * 2f) * .012f * movement - landing - sprint * .065f,
+                Mathf.Cos(phase * 2f) * .012f * movement - landing - sprint * .065f - motor.CrouchBlend * .02f,
                 -sprint * .025f - Mathf.Clamp(motor.VerticalSpeed, -8f, 8f) * (active && !grounded ? .0015f : 0f));
-            var rotation = new Vector3(sway.y * 1.2f + sprint * 8f + landing * 60f, -sway.x * 1.8f,
+            var rotation = new Vector3(sway.y * 1.2f + sprint * 8f + landing * 60f + motor.CrouchBlend * 3f, -sway.x * 1.8f,
                 Mathf.Sin(phase) * movement * 1.2f - motor.LocalMove.x * movement * 1.8f);
             offset = Vector3.Lerp(offset, active ? target * weight : Vector3.zero, 1f - Mathf.Exp(-14f * dt));
             angles = Vector3.Lerp(angles, active ? rotation * weight : Vector3.zero, 1f - Mathf.Exp(-14f * dt));

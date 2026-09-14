@@ -17,6 +17,20 @@ namespace PirateSlop.Networking
         Transform[] visualParts;
         Vector3[] visualScales;
         SphereCollider recovery;
+        AudioSource warning;
+        float nextWarning;
+        void StopWarning()
+        {
+            if (warning != null) warning.Stop();
+            nextWarning = 0f;
+            visibleFlightAt = -1f;
+        }
+        void OnDisable() => StopWarning();
+        public override void OnStopClient()
+        {
+            StopWarning();
+            base.OnStopClient();
+        }
         void LateUpdate()
         {
             if (IsClientInitialized && pickup.Item == InventoryItem.Swordfish)
@@ -43,9 +57,15 @@ namespace PirateSlop.Networking
                 visualScales = new Vector3[visualParts.Length];
                 for (int i=0;i<visualParts.Length;i++) visualScales[i]=visualParts[i].localScale;
             }
-            if (!Flying) { visibleFlightAt = -1f; return; }
+            if (!Flying) { StopWarning(); return; }
             if (visibleFlightAt < 0f) visibleFlightAt = Time.time;
             float progress = burstProgress.Value;
+            if (Time.time >= nextWarning)
+            {
+                GameAudio.Attached(ref warning, SoundCue.PufferWarning, transform);
+                if (warning != null) warning.pitch = Mathf.Lerp(.9f, 1.45f, progress);
+                nextWarning = Time.time + Mathf.Lerp(.5f, .12f, progress);
+            }
             float pulse = 1f + progress * .35f + Mathf.Sin((Time.time-visibleFlightAt) * Mathf.Lerp(10f,35f,progress)) * progress * .07f;
             for (int i=0;i<visualParts.Length;i++) if(visualParts[i]!=null && visualParts[i]!=transform) visualParts[i].localScale=visualScales[i]*pulse;
         }

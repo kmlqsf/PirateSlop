@@ -84,6 +84,8 @@ namespace PirateSlop
                 GetComponent<ShipDeckPassenger>()?.Attach(null);
             }
             GameAudio.Play(SoundCue.Respawn, position);
+            if (player == null || (player.IsClientInitialized && !player.IsOwner))
+                CombatVfx.Respawn(position, player != null && player.Ship != null ? player.Ship.transform : null);
         }
         public void Heal(float amount)
         {

@@ -33,7 +33,7 @@ namespace PirateSlop
         public bool IsLoading => loadStarted >= 0f;
         public float LoadProgress => IsLoading ? Mathf.Clamp01((Time.time - loadStarted) / LoadSeconds) : IsLoaded ? 1f : 0f;
         public bool RemoteOccupied { get; set; }
-        public string StatusLabel => IsLoading ? "ЗАРЯЖАЕТСЯ" : IsIgnited ? "ФИТИЛЬ ГОРИТ" : IsLoaded ? "ЗАРЯЖЕНА" : "НЕ ЗАРЯЖЕНА";
+        public string StatusLabel => IsIgnited ? "ФИТИЛЬ ГОРИТ" : IsLoading ? "ЗАРЯЖАЕТСЯ" : Network != null && Network.HasBoarding(Index) ? "ТРОС ЗАКРЕПЛЁН" : CooldownRemaining > 0f ? "ПОДГОТОВКА " + CooldownRemaining.ToString("F1") + " с" : IsLoaded ? "ГОТОВА К ВЫСТРЕЛУ" : "НЕ ЗАРЯЖЕНА";
         public void SetLoadOrigin(Vector3 world)
         {
             if (!IsLoading || loaded == null) return;
@@ -55,6 +55,14 @@ namespace PirateSlop
         Vector3 supplyPosition;
         Quaternion supplyRotation;
         float nextFireTime;
+        float remoteCooldown = -1f;
+        public float CooldownRemaining => Mathf.Max(0f, nextFireTime - Time.time);
+        public void ShowCooldown(float remaining)
+        {
+            if (remoteCooldown == remaining) return;
+            remoteCooldown = remaining;
+            nextFireTime = Time.time + Mathf.Max(0f, remaining);
+        }
         public string Readiness => !IsLoaded ? "Empty" : IsLoading ? "Loading" : IsIgnited ? "Fuse burning" : Network != null && Network.HasBoarding(Index) ? "Boarding line attached" : Time.time < nextFireTime ? "Cooldown " + (nextFireTime - Time.time).ToString("F1") + "s" : "Ready";
         public bool IsFireQueued { get; private set; }
         public void ShowFireQueued(bool value) { IsFireQueued = value; }

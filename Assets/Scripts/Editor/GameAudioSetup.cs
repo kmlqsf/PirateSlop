@@ -51,7 +51,10 @@ namespace PirateSlop.EditorTools
                 Entry(SoundCue.ShipDeath, .85f, 200, "ship_destroyed_short"),
                 Entry(SoundCue.ShipCollision, .65f, 100, "ship_ram_ship_shortened"),
                 Entry(SoundCue.Splash, .6f, 100, "cannon_miss_1"),
-                Entry(SoundCue.Creak, .3f, 35, "creak1", "creak2", "creak3")
+                Entry(SoundCue.Creak, .3f, 35, "creak1", "creak2", "creak3"),
+                Entry(SoundCue.PufferWarning, .65f, 22, "puffer_warning"),
+                Entry(SoundCue.UnderwaterBubbles, .7f, 12, "underwater_bubbles"),
+                Entry(SoundCue.AirWarning, .75f, 12, "air_warning")
             };
             bank.Ocean = Clip("ocean"); bank.Wind = Clip("Wind");
             EditorUtility.SetDirty(bank);

@@ -119,7 +119,7 @@ namespace PirateSlop.Networking
             {
                 if (gun.Operator == player.Motor) gun.ReleaseControl();
                 bool ammo = false;
-                for (int slot = 0; slot < 6; slot++) if (inventory.BallCount(slot) > 0 && gun.AcceptsAmmo(inventory.BallItem(slot)) && inventory.BallItem(slot) != InventoryItem.BoardingHook && inventory.BallItem(slot) != InventoryItem.BoomerangCannonball) ammo = true;
+                for (int slot = 0; slot < PlayerInventory.SlotCount; slot++) if (inventory.BallCount(slot) > 0 && gun.AcceptsAmmo(inventory.BallItem(slot)) && inventory.BallItem(slot) != InventoryItem.BoardingHook && inventory.BallItem(slot) != InventoryItem.BoomerangCannonball) ammo = true;
                 if (!ammo)
                 {
                     if (weapon.BotSupplyBalls(cannons)) { navigation.Clear(); workStarted = Time.time; return idle; }

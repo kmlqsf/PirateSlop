@@ -11,6 +11,8 @@ namespace PirateSlop.Networking
         Transform aimed;
         float nextRing, requestAt = -30f, messageUntil;
         string crewMessage;
+        string bellStatus;
+        float statusAt;
         bool requested, serverRequested;
         void Awake() { motor = GetComponent<AdvancedPlayerController>(); player = GetComponent<NetworkPlayer>(); }
         void Update()
@@ -25,7 +27,36 @@ namespace PirateSlop.Networking
             var ship = hit.collider.GetComponentInParent<NetworkShip>();
             if (ship == null || ship != player.Ship) return;
             aimed = hit.collider.transform;
+            if (Time.unscaledTime >= statusAt || bellStatus == null)
+            {
+                statusAt = Time.unscaledTime + .25f;
+                RefreshBellStatus();
+            }
             if (Keyboard.current != null && Keyboard.current.eKey.wasPressedThisFrame) RingServerRpc();
+        }
+        void RefreshBellStatus()
+        {
+            var ship = player.Ship;
+            if (ship == null) { bellStatus = null; return; }
+            var waiting = new System.Collections.Generic.List<NetworkPlayer>();
+            int eliminated = 0;
+            foreach (var member in FindObjectsByType<NetworkPlayer>(FindObjectsSortMode.None))
+            {
+                if (member.Ship != ship || member.TeamId.Value != player.TeamId.Value || member.Motor == null || !member.Motor.IsDead) continue;
+                if (member.Eliminated.Value) eliminated++;
+                else waiting.Add(member);
+            }
+            waiting.Sort((a,b) => a.ParticipantId.Value.CompareTo(b.ParticipantId.Value));
+            var text = new System.Text.StringBuilder("КОЛОКОЛ ЭКИПАЖА");
+            for (int i = 0; i < Mathf.Min(4, waiting.Count); i++)
+                text.Append("\n").Append(waiting[i].IsBot.Value ? "Бот " : "Пират ").Append(waiting[i].ParticipantId.Value).Append(" — ждёт возрождения");
+            if (waiting.Count > 4) text.Append("\nИ ещё: ").Append(waiting.Count - 4);
+            if (eliminated > 0) text.Append("\nВыбыли без возможности возрождения: ").Append(eliminated);
+            if (ship.IsSinking) text.Append("\nКорабль погибает — возрождение недоступно");
+            else if (waiting.Count == 0) text.Append(eliminated > 0 ? "\nНекого вернуть колоколом" : "\nВесь экипаж жив");
+            else if (ship.RumCount == 0) text.Append("\nНет рома — нужен 1 ром на пирата");
+            else text.Append("\nМожно вернуть: ").Append(Mathf.Min(waiting.Count, ship.RumCount)).Append(" из ").Append(waiting.Count).Append("\nE — позвонить (1 ром за пирата)");
+            bellStatus = text.ToString();
         }
         [ServerRpc]
         void RingServerRpc()
@@ -65,11 +96,7 @@ namespace PirateSlop.Networking
             if (motor.IsDead && !player.Eliminated.Value)
                 PirateHudStyle.Panel(new Rect(Screen.width * .5f - 240, Screen.height * .5f + 65, 480, 32), requested ? "Просьба позвонить в колокол отправлена" : "R — попросить экипаж позвонить в колокол");
             if (aimed == null) return;
-            int dead = 0;
-            foreach (var member in FindObjectsByType<NetworkPlayer>(FindObjectsSortMode.None))
-                if (member.Ship == player.Ship && member.TeamId.Value == player.TeamId.Value && member.Motor.IsDead && !member.Eliminated.Value) dead++;
-            int rum = player.Ship != null ? player.Ship.RumCount : 0;
-            ContextPrompt.Offer(dead == 0 ? "КОЛОКОЛ · Весь экипаж жив" : rum == 0 ? "КОЛОКОЛ · Ждут: " + dead + " · Нет рома для возрождения" : "КОЛОКОЛ · Ждут: " + dead + " · Можно вернуть: " + Mathf.Min(dead,rum) + " · E — позвонить (1 ром за пирата)", 60);
+            ContextPrompt.Offer(bellStatus, 60);
         }
     }
 }
