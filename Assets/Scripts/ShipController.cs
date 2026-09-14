@@ -190,7 +190,9 @@ public class ShipController : MonoBehaviour
         if (Time.time >= nextCollisionAudio && Time.time - lastCollisionContact > .75f && displacement.sqrMagnitude > .00001f)
         {
             var network = GetComponent<PirateSlop.Networking.NetworkShip>();
-            if (network != null) network.CollisionAudio();
+            float strength = Mathf.Clamp01(Mathf.Abs(speed) / Mathf.Max(1f, maxSpeed) + displacement.magnitude * .2f);
+            ApplyCannonImpulse(transform.position - displacement.normalized * 5f, displacement.normalized, strength * .3f);
+            if (network != null) network.CollisionAudio(strength);
             else GameAudio.Play(SoundCue.ShipCollision, transform.position);
             nextCollisionAudio = Time.time + 2f;
         }

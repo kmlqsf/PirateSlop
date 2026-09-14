@@ -86,6 +86,7 @@ namespace PirateSlop
             float best = distance + 1f;
             foreach (var hit in Physics.SphereCastAll(origin, Radius * .95f, direction, distance, ~0, QueryTriggerInteraction.Ignore))
             {
+                if (hit.collider.GetComponentInParent<Networking.NetworkFish>() != null || hit.collider.GetComponentInParent<AdvancedPlayerController>() != null) continue;
                 if (hit.collider.attachedRigidbody == Body || hit.collider.transform.IsChildOf(transform) || hit.distance >= best) continue;
                 best = hit.distance; nearest = hit;
             }

@@ -14,8 +14,7 @@ namespace PirateSlop
         NetworkEquipment equipment;
         NetworkPlayer player;
         DirectShipControls controls;
-        float lastShot=-10, aim, baselineFov, nextReady, bloom, lastYaw, lastPitch;
-        Vector2 sway;
+        float lastShot=-10, aim, baselineFov, nextReady, bloom;
         bool heldAim;
         InventoryItem previous=InventoryItem.None;
         public FirearmDefinition Definition => inventory.PistolSelected ? Pistol : inventory.ItemAt(inventory.SelectedSlot)==InventoryItem.Musket ? Musket : inventory.ItemAt(inventory.SelectedSlot)==InventoryItem.DoubleBarrel ? Shotgun : null;
@@ -35,7 +34,7 @@ namespace PirateSlop
         {
             if(!Local) return;
             var selected=inventory.ItemAt(inventory.SelectedSlot);
-            if(selected!=previous){previous=selected;nextReady=Time.time+.18f;aim=0;heldAim=false;lastYaw=motor.AimEuler.y;lastPitch=motor.AimEuler.x;sway=Vector2.zero;}
+            if(selected!=previous){previous=selected;nextReady=Time.time+.18f;aim=0;heldAim=false;}
             bool reload=inventory.PistolSelected ? weapon.Reloading : equipment!=null && equipment.IsBusy;
             heldAim=Available && !reload && motor.InputActive && Mouse.current!=null && Mouse.current.rightButton.isPressed;
             if(heldAim && motor.IsThirdPerson) motor.SetThirdPerson(false);
@@ -46,15 +45,10 @@ namespace PirateSlop
             float fov=Definition.Scope && equipment!=null ? equipment.ScopeFov : Definition.AimFov;
             motor.PlayerCamera.fieldOfView=Mathf.Lerp(baselineFov,fov,Mathf.SmoothStep(0,1,aim));
             motor.AimSensitivityScale=Mathf.Lerp(1,Mathf.Tan(fov*Mathf.Deg2Rad*.5f)/Mathf.Tan(baselineFov*Mathf.Deg2Rad*.5f),aim);
-            var angles=motor.AimEuler;
-            Vector2 delta=new(Mathf.DeltaAngle(lastYaw,angles.y),Mathf.DeltaAngle(lastPitch,angles.x));lastYaw=angles.y;lastPitch=angles.x;
-            sway=Vector2.Lerp(sway,Vector2.ClampMagnitude(delta,3),1-Mathf.Exp(-12*Time.deltaTime));
             float age=Time.time-lastShot;
             float kick=age<.025f?Mathf.SmoothStep(0,1,age/.025f):1-Mathf.SmoothStep(0,1,(age-.025f)/Definition.KickRecovery);
-            float movement=Mathf.Clamp01(motor.PlanarSpeed/8)*(1-aim*.92f);
-            float cycle=Time.time*10;
-            PosePosition=new Vector3(-sway.x*.0015f,Mathf.Sin(cycle)*.004f*movement,-Definition.KickDistance*kick);
-            PoseRotation=new Vector3(-Definition.KickDegrees*kick+sway.y*.12f,-sway.x*.18f,Mathf.Sin(cycle*.5f)*.65f*movement)*(1-aim*.55f);
+            PosePosition=new Vector3(0,0,-Definition.KickDistance*kick);
+            PoseRotation=new Vector3(-Definition.KickDegrees*kick,0,0)*(1-aim*.55f);
         }
         public void Fire(Transform muzzle,Vector3 direction,bool cameraRecoil=true)
         {

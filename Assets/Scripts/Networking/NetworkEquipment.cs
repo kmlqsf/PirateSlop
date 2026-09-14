@@ -91,6 +91,7 @@ namespace PirateSlop.Networking
                 {
                     if (action.Value == 1) { ammunition[actionSlot] = CapacityFor(Item); rounds.Value = ammunition[actionSlot]; }
                     if (action.Value == 2 && network.ConsumeEquipment(actionSlot, InventoryItem.Wine)) { waterRunUntil = Time.time+60; waterRunRemaining.Value = 60; }
+                    if (action.Value == 4) network.ThrowFish(Item, direction.Value);
                     action.Value = 0;
                 }
             }
@@ -160,7 +161,12 @@ namespace PirateSlop.Networking
             direction.Value = forward.normalized;
             if (Item == InventoryItem.Pufferfish || Item == InventoryItem.Swordfish)
             {
-                if (request == 0 && network.ThrowFish(Item, forward)) nextShot = Time.time + .6f;
+                if (request == 0)
+                {
+                    if (Item == InventoryItem.Swordfish) BeginAction(4,.3f,slot);
+                    else network.ThrowFish(Item,forward);
+                    nextShot = Time.time + .6f;
+                }
                 return;
             }
             if (Item == InventoryItem.Wine) { BeginAction(2, 2.2f, slot); return; }
@@ -290,6 +296,12 @@ namespace PirateSlop.Networking
                 float amount = Mathf.SmoothStep(0,1,Mathf.Min(t / .45f, (2.2f-t) / .35f));
                 position = Vector3.Lerp(position,new Vector3(.07f,.18f,.34f),amount);
                 rotation = new Vector3(-115,0,-12)*amount;
+            }
+            if (visualAction == 4)
+            {
+                float windup = Mathf.Sin(Mathf.Clamp01(t / .3f) * Mathf.PI);
+                position += new Vector3(.06f,.09f,-.18f) * windup;
+                rotation += new Vector3(-22,12,0) * windup;
             }
             view.localPosition = position; view.localRotation = Quaternion.Euler(rotation);
             float pitch = Mathf.Asin(Mathf.Clamp(-direction.Value.y,-1,1))*Mathf.Rad2Deg;

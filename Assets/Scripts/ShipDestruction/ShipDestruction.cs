@@ -33,6 +33,7 @@ namespace PirateSlop
     }
     public sealed class ShipDestruction : NetworkBehaviour
     {
+        readonly FishNet.Object.Synchronizing.SyncVar<int> openImpacts = new();
         public ShipDestructionProfile Profile;
         public ShipDamageSection[] Sections = Array.Empty<ShipDamageSection>();
         public event Action<ShipDestructionEvent> Hit;
@@ -430,6 +431,11 @@ namespace PirateSlop
         }
         void Update()
         {
+            if (flooding != null)
+            {
+                if (IsServerInitialized) openImpacts.Value = flooding.OpenImpactCount;
+                flooding.ReportedOpenImpacts = openImpacts.Value;
+            }
             if (!ready || !IsServerInitialized || ship.IsSinking || !Profile.EnableFlooding) return;
             flooding.Simulate(Time.deltaTime, Profile);
             ApplyFloodModifiers();

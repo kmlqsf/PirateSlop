@@ -89,6 +89,7 @@ namespace PirateSlop.Networking
             motor = GetComponent<AdvancedPlayerController>(); motor.ConfigureNetwork(false);
             passenger = GetComponent<ShipDeckPassenger>(); passenger.Networked = true;
             graphicsRoot = transform.Find("PlayerGraphics");
+            if (GetComponent<CrewPresentation>() == null) gameObject.AddComponent<CrewPresentation>();
             if (GetComponent<FirstPersonFeedback>() == null) gameObject.AddComponent<FirstPersonFeedback>();
         }
         public override void OnStartNetwork()

@@ -65,6 +65,13 @@ namespace PirateSlop
                 player.ActiveCannon != controlled || keyboard == null || mouse == null || keyboard.eKey.wasPressedThisFrame || keyboard.qKey.wasPressedThisFrame)
             { LeaveCannon(); return; }
             var delta = mouse.delta.ReadValue() * aimSensitivity;
+            bool limit = delta.y > .01f && elevation >= controlled.MaxElevation - .01f || delta.y < -.01f && elevation <= controlled.MinElevation + .01f
+                || delta.x > .01f && traverse >= controlled.MaxTraverse - .01f || delta.x < -.01f && traverse <= -controlled.MaxTraverse + .01f;
+            if (limit)
+            {
+                limitUntil = Time.unscaledTime + .35f;
+                if (Time.unscaledTime >= nextLimitSound) { GameAudio.Play(SoundCue.Barrel, controlled.transform.position, .45f, true); nextLimitSound = Time.unscaledTime + .7f; }
+            }
             elevation = Mathf.Clamp(elevation + delta.y, controlled.MinElevation, controlled.MaxElevation);
             traverse = Mathf.Clamp(traverse + delta.x, -controlled.MaxTraverse, controlled.MaxTraverse);
             controlled.Aim(player, elevation, traverse);
@@ -115,6 +122,7 @@ namespace PirateSlop
                 if (template == null || template.AmmoModels == null || index >= template.AmmoModels.Length || template.AmmoModels[index] == null) return;
                 selectedVisual = Instantiate(template.AmmoModels[index]);
                 selectedVisual.name = "SelectedCannonball";
+                player.ViewMotion.Register(selectedVisual.transform);
                 foreach (var collider in selectedVisual.GetComponentsInChildren<Collider>(true)) collider.enabled = false;
                 visibleItem = item;
             }
@@ -225,17 +233,21 @@ namespace PirateSlop
             }
             
         }
+        float nextLimitSound, limitUntil;
         void OnGUI()
         {
             if (controlled != null && player.InputActive)
             {
-                PirateHudStyle.Panel(new Rect(Screen.width / 2f - 310, Screen.height - 125, 620, 28), controlled.IsIgnited ? "Фитиль горит… · E — выйти" : controlled.IsLoading ? "Зарядка… · E — выйти" : controlled.IsFireQueued ? "Ожидание готовности к выстрелу… · E — отменить" : !controlled.IsLoaded ? (controlled.IsMortar ? "Мортира не заряжена · E — выйти" : "Пушка не заряжена · E — выйти") : "Мышь — прицел · ЛКМ — поджечь фитиль · E — выйти");
+                PirateHudStyle.Panel(new Rect(Screen.width * .5f - 150f, Screen.height * .5f + 95f, 300f, 30f), Time.unscaledTime < limitUntil ? "ПРЕДЕЛ НАВЕДЕНИЯ" : controlled.StatusLabel);
+                if (controlled.IsLoading) PirateHudStyle.Bar(new Rect(Screen.width * .5f - 135f, Screen.height * .5f + 132f, 270f, 6f), controlled.LoadProgress, PirateHudStyle.Gold);
+                ContextPrompt.Offer(controlled.IsIgnited ? "Фитиль горит… · E — выйти" : controlled.IsLoading ? "Зарядка… · E — выйти" : controlled.IsFireQueued ? "Ожидание готовности к выстрелу… · E — отменить" : !controlled.IsLoaded ? (controlled.IsMortar ? "Мортира не заряжена · E — выйти" : "Пушка не заряжена · E — выйти") : "Мышь — прицел · ЛКМ — поджечь фитиль · E — выйти", 40);
                 return;
             }
             if (player == null || !player.InputActive || player.LocomotionLocked || (controls != null && controls.IsDragging) || (inventory != null && inventory.Placing)) return;
 
             string text = held != null ? "E — в инвентарь • Поднеси ядро к дулу • Колесо — ближе/дальше • Отпусти ЛКМ — бросить" : aimed != null && aimed.IsMortar ? "E — прицелиться · поднеси любое ядро к дулу" : aimed != null ? "E — прицелиться · поднеси ядро к дулу · Shift+E 7 с — снять" : "";
-            if (text.Length > 0) PirateHudStyle.Panel(new Rect(Screen.width / 2f - 310, Screen.height - 125, 620, 28), text);
+            if (aimed != null) text = aimed.StatusLabel + ((aimed.RemoteOccupied || aimed.Operator != null) && aimed.Operator != player ? " · ЗАНЯТА" : "") + " · " + text;
+            if (text.Length > 0) ContextPrompt.Offer(text, 40);
         }
     }
 }

@@ -14,6 +14,9 @@ namespace PirateSlop.Networking
         readonly SyncVar<int> holder = new(-1);
         Cannonball ball;
         bool localHolding;
+        NetworkObject visualPlatform;
+        Vector3 visualPosition;
+        Quaternion visualRotation;
         float nextSync, lastHold;
         public bool IsHeld => holder.Value >= 0;
         void Awake() { ball = GetComponent<Cannonball>(); }
@@ -126,9 +129,14 @@ namespace PirateSlop.Networking
             ball.Held = IsHeld; ball.GetComponent<Collider>().enabled = !IsHeld;
             if (platform.Value != null && !IsHeld)
             {
-                transform.SetPositionAndRotation(platform.Value.transform.TransformPoint(position.Value), platform.Value.transform.rotation * rotation.Value);
+                if (visualPlatform != platform.Value) { visualPlatform = platform.Value; visualPosition = position.Value; visualRotation = rotation.Value; }
+                float blend = 1f - Mathf.Exp(-25f * Time.deltaTime);
+                visualPosition = Vector3.Lerp(visualPosition, position.Value, blend);
+                visualRotation = Quaternion.Slerp(visualRotation, rotation.Value, blend);
+                transform.SetPositionAndRotation(platform.Value.transform.TransformPoint(visualPosition), platform.Value.transform.rotation * visualRotation);
                 return;
             }
+            visualPlatform = null;
             transform.SetPositionAndRotation(Vector3.Lerp(transform.position, position.Value, 1f - Mathf.Exp(-25f * Time.deltaTime)),
                 Quaternion.Slerp(transform.rotation, rotation.Value, 1f - Mathf.Exp(-25f * Time.deltaTime)));
         }

@@ -33,9 +33,17 @@ namespace PirateSlop
         public Vector3 LocalCenter => Owner.transform.InverseTransformPoint(transform.position);
         public void Apply(ShipSectionState state, ulong removedFragments = 0)
         {
+            ulong restored = RemovedFragments & ~removedFragments;
+            bool rebuilt = State == ShipSectionState.Destroyed && state != ShipSectionState.Destroyed;
             State = state;
             RemovedFragments = removedFragments;
-            if (SurfaceDamage && Fragments.Length == 0) ApplySurface(removedFragments);
+            if (SurfaceDamage && Fragments.Length == 0)
+            {
+                ApplySurface(removedFragments);
+                if (restored != 0 && Application.isPlaying)
+                    for (int i=0;i<64;i++) if ((restored & (1UL << i)) != 0)
+                        CombatVfx.Impact(RepairTransform(i).TransformPoint(RepairBounds(i).center), transform.up, false, true);
+            }
             if (Fragments.Length > 0)
             {
                 bool fractured = removedFragments != 0 || state == ShipSectionState.Destroyed;
@@ -45,6 +53,11 @@ namespace PirateSlop
                 foreach (var collider in CriticalColliders) if (collider != null) collider.enabled = false;
                 foreach (var collider in ReplacementColliders) if (collider != null) collider.enabled = false;
                 for (int i = 0; i < Fragments.Length; i++) Fragments[i].SetActive(fractured && state != ShipSectionState.Destroyed && (removedFragments & (1UL << i)) == 0);
+                if (restored != 0 || rebuilt)
+                {
+                    if (!fractured) RepairReveal.Show(Intact);
+                    else for (int i = 0; i < Fragments.Length; i++) if ((restored & (1UL << i)) != 0) RepairReveal.Show(Fragments[i]);
+                }
                 for (int i = 0; i < DisabledControls.Length; i++)
                     if (DisabledControls[i] != null) DisabledControls[i].enabled = state != ShipSectionState.Destroyed && (i >= ControlFragments.Length || (removedFragments & (1UL << ControlFragments[i])) == 0);
                 foreach (var renderer in DependentRenderers) if (renderer != null) renderer.enabled = state != ShipSectionState.Destroyed;
@@ -56,6 +69,7 @@ namespace PirateSlop
             foreach (var item in new[] { Intact, Damaged, Critical, Destroyed, Repaired }) if (item != null) item.SetActive(item == visible);
             foreach (var renderer in DependentRenderers) if (renderer != null) renderer.enabled = state != ShipSectionState.Destroyed;
             foreach (var collider in DisabledControls) if (collider != null) collider.enabled = state != ShipSectionState.Destroyed;
+            if (rebuilt && !SurfaceDamage) RepairReveal.Show(visible);
             if (!SafeColliderReplacement) return;
             bool damaged = state == ShipSectionState.Damaged && DamagedColliders.Length > 0;
             bool critical = state == ShipSectionState.Critical && CriticalColliders.Length > 0;

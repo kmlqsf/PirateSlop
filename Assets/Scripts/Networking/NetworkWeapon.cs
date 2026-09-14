@@ -139,20 +139,11 @@ namespace PirateSlop.Networking
             else return;
             int prefabIndex = CannonAmmo.IsBall(item) ? (int)InventoryItem.Cannonball : (int)item;
             if (DropPrefabs == null || prefabIndex >= DropPrefabs.Length || DropPrefabs[prefabIndex] == null) return;
-            Vector3 origin = transform.position + Vector3.up + transform.forward * .8f;
-            RaycastHit floor = default; float distance = 6f;
-            foreach (var hit in Physics.RaycastAll(origin, Vector3.down, distance, ~0, QueryTriggerInteraction.Ignore))
-                if (!hit.transform.IsChildOf(transform) && hit.normal.y > .5f && hit.distance < distance) { floor = hit; distance = hit.distance; }
-            if (floor.collider == null) return;
             var prefab = DropPrefabs[prefabIndex];
-            var orientation = Quaternion.FromToRotation(Vector3.up, floor.normal) * Quaternion.Euler(0, transform.eulerAngles.y, item == InventoryItem.Fish ? 90 : 0);
-            var shape = prefab.GetComponent<BoxCollider>();
-            float height = CannonAmmo.IsBall(item) ? prefab.GetComponent<SphereCollider>().radius + .02f : item == InventoryItem.Fish ? .12f : shape.size.y * .5f - shape.center.y + .02f;
-            Vector3 point = CannonAmmo.IsBall(item) ? origin : floor.point + floor.normal * height;
+            if (!LootPlacement.Find(transform, prefab, item, out var point, out var orientation, out var support)) return;
             var dropped = Instantiate(prefab, point, orientation);
             if (CannonAmmo.IsBall(item)) dropped.SetAmmoItem(item);
             UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene(dropped.gameObject, gameObject.scene);
-            var support = floor.collider.GetComponentInParent<NetworkShip>();
             dropped.Place(support != null ? support.NetworkObject : null, point, orientation);
             ServerManager.Spawn(dropped.NetworkObject);
             if (CannonAmmo.IsBall(item) && support != null) dropped.GetComponent<Cannonball>().RollOnPlatform(support.GetComponent<Rigidbody>());

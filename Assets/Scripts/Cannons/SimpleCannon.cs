@@ -31,6 +31,16 @@ namespace PirateSlop
         Vector3 loadStart;
         public float ProjectileRadius => supply != null ? supply.GetComponent<SphereCollider>().radius * Mathf.Max(supply.transform.lossyScale.x, supply.transform.lossyScale.y, supply.transform.lossyScale.z) : .12f;
         public bool IsLoading => loadStarted >= 0f;
+        public float LoadProgress => IsLoading ? Mathf.Clamp01((Time.time - loadStarted) / LoadSeconds) : IsLoaded ? 1f : 0f;
+        public bool RemoteOccupied { get; set; }
+        public string StatusLabel => IsLoading ? "ЗАРЯЖАЕТСЯ" : IsIgnited ? "ФИТИЛЬ ГОРИТ" : IsLoaded ? "ЗАРЯЖЕНА" : "НЕ ЗАРЯЖЕНА";
+        public void SetLoadOrigin(Vector3 world)
+        {
+            if (!IsLoading || loaded == null) return;
+            loadStart = Muzzle.InverseTransformPoint(world);
+            loaded.transform.localPosition = loadStart;
+        }
+
         public bool CanLoadFrom(Vector3 point)
         {
             if (Muzzle == null || Vector3.Distance(point, Muzzle.position) > LoadRadius) return false;
@@ -213,7 +223,10 @@ namespace PirateSlop
             if (IsLoading && loaded != null)
             {
                 float t = Mathf.Clamp01((Time.time - loadStarted) / LoadSeconds);
-                loaded.transform.localPosition = Vector3.Lerp(loadStart, Vector3.back * .5f, Mathf.SmoothStep(0f, 1f, t));
+                float approach = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(t / .7f));
+                loaded.transform.localPosition = t < .7f
+                    ? Vector3.Lerp(loadStart, Vector3.forward * .45f, approach) + Muzzle.InverseTransformVector(Vector3.up * (Mathf.Sin(approach * Mathf.PI) * .18f))
+                    : Vector3.Lerp(Vector3.forward * .45f, Vector3.back * .5f, Mathf.SmoothStep(0f, 1f, (t - .7f) / .3f));
                 if (t >= 1f)
                 {
                     loaded.gameObject.SetActive(false);

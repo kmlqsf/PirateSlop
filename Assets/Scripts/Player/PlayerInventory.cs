@@ -338,7 +338,7 @@ namespace PirateSlop
                 PirateHudStyle.Panel(new Rect(Screen.width * .5f - 240, Screen.height * .5f + 70, 480, 58), workHint);
             }
             else if (network != null && network.CarriedLoot != null)
-                PirateHudStyle.Panel(new Rect(Screen.width * .5f - 200, Screen.height - 165, 400, 44), "Несёте ящик · G — положить");
+                ContextPrompt.Offer("Несёте ящик · G — положить", 40);
             Color old = GUI.color;
             float width = Mathf.Min(76f, (Screen.width - 32f) / 6f);
             for (int i = 0; i < 6; i++)
@@ -366,15 +366,15 @@ namespace PirateSlop
                     if (take) network.UseChest(openChest.NetworkObject, i);
                 }
                 GUI.enabled = true;
-                PirateHudStyle.Label(new Rect(panel.x + 12, panel.yMax - 32, panelWidth - 110, 24), EmptySlot() < 0 ? "Инвентарь заполнен" : "Нажмите на предмет, чтобы забрать", PirateHudStyle.Muted);
+                PirateHudStyle.Label(new Rect(panel.x + 12, panel.yMax - 32, panelWidth - 110, 24), EmptySlot() < 0 ? "Нет свободного слота · В руках: " + InventoryIcons.ItemName(ItemAt(SelectedSlot)) : "Нажмите на предмет, чтобы забрать", PirateHudStyle.Muted);
                 if (PirateHudStyle.Button(new Rect(panel.xMax - 92, panel.yMax - 32, 80, 24), "Закрыть")) CloseLoot(true);
                 return;
             }
             if (Time.unscaledTime - selectionShownAt < 2.5f)
                 PirateHudStyle.Label(new Rect(Screen.width * .5f - 180, Screen.height - 138, 360, 26), InventoryIcons.ItemName(ItemAt(SelectedSlot)), PirateHudStyle.Paper);
             string hint = aimedCannon != null && aimedCannon.Network != null && aimedCannon.Network.HasBoarding(aimedCannon.Index) ? "Колесо вверх — натянуть · вниз — ослабить канат" : aimedBall != null && aimedBall.Network != null ? "ЛКМ / E — взять 3 ядра" : BallSelected && aimedCannon != null && !aimedCannon.AcceptsAmmo(BallItem(SelectedSlot)) ? "Неподходящий боеприпас · E — прицелиться" : BallSelected && aimedCannon != null && !aimedCannon.IsLoaded ? "E — зарядить выбранное ядро" : chest != null ? chest.Hint(this) : pickup != null ? (EmptySlot() >= 0 ? "E — взять разобранную пушку" : "Инвентарь заполнен") : Placing && !cancelled ? "ЛКМ — поставить · R/колесо — поворот · Q/E — наклон\nShift+Q/E — крен · ПКМ — отменить" : "";
-            if (hint.Length > 0) PirateHudStyle.Panel(new Rect(Screen.width * .5f - 290, Screen.height - 165, 580, 44), hint);
-            if (aimedRumShelf != null) PirateHudStyle.Panel(new Rect(Screen.width * .5f - 290, Screen.height - 165, 580, 44), aimedRumShelf.Hint);
+            if (hint.Length > 0) ContextPrompt.Offer(hint, 40);
+            if (aimedRumShelf != null) ContextPrompt.Offer(aimedRumShelf.Hint, 40);
         }
     }
 }

@@ -7,6 +7,11 @@ namespace PirateSlop.Networking
     public enum InventoryItem { None = -1, Fish = 0, Pistol = 1, Rod = 2, Cannon = 3, Cannonball = 4, Mallet = 5, Plank = 6, Sabre = 7, FireCannonball = 8, IceCannonball = 9, PushCannonball = 10, BoomerangCannonball = 11, Rum = 12, Wine = 13, Musket = 14, DoubleBarrel = 15, BombParrot = 16, GrapplingHook = 17, BoardingHook = 18, Pufferfish = 19, Swordfish = 20 }
     public sealed class NetworkFish : NetworkBehaviour
     {
+        void Awake()
+        {
+            var body = GetComponent<Rigidbody>();
+            if (body != null && GetComponent<NetworkLooseCannonball>() == null) { body.isKinematic = true; body.useGravity = false; }
+        }
         public InventoryItem Item;
         readonly SyncVar<InventoryItem> ammoItem = new(InventoryItem.None);
         public InventoryItem CurrentItem => ammoItem.Value != InventoryItem.None ? ammoItem.Value : Item;
@@ -26,6 +31,8 @@ namespace PirateSlop.Networking
         NetworkShip resolvedPlatform;
         public void Place(NetworkObject support, Vector3 point, Quaternion orientation)
         {
+            var body = GetComponent<Rigidbody>();
+            if (body != null && GetComponent<NetworkLooseCannonball>() == null) { body.isKinematic = true; body.useGravity = false; }
             platform.Value = support;
             platformId.Value = support != null ? support.GetComponent<NetworkShip>().ParticipantId.Value : 0;
             worldPosition.Value = point;

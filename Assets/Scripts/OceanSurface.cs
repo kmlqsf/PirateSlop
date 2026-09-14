@@ -23,6 +23,8 @@ namespace PirateSlop
         float simpleWaveSpeed, simpleWaveStrength, simpleWaveScale;
         ShipController[] ships;
         readonly Vector4[] wakes = new Vector4[32];
+        readonly float[] wakeStrength = new float[32];
+        readonly ShipController[] wakeShips = new ShipController[32];
         float refreshAt;
         public float WaveTime => Time.time + timeOffset;
         public void Synchronize(float serverTime)
@@ -88,7 +90,6 @@ namespace PirateSlop
             {
                 WaterMaterial.SetFloat("_UseWaveTime", 1f);
                 WaterMaterial.SetFloat("_WaveTime", WaveTime);
-                return;
             }
             WaterMaterial.SetVectorArray("_Waves", Waves);
             WaterMaterial.SetFloat("_WaveTime", WaveTime);
@@ -99,7 +100,10 @@ namespace PirateSlop
             {
                 if (ship == null || !ship.gameObject.activeInHierarchy || count >= wakes.Length) continue;
                 if (camera != null && (ship.transform.position - camera.transform.position).sqrMagnitude > 40000f) continue;
-                wakes[count++] = new Vector4(ship.transform.position.x, ship.transform.position.z, ship.transform.eulerAngles.y * Mathf.Deg2Rad, Mathf.Clamp01(ship.Speed / ship.MaxSpeed));
+                if (wakeShips[count] != ship) { wakeShips[count] = ship; wakeStrength[count] = 0f; }
+                wakeStrength[count] = Mathf.MoveTowards(wakeStrength[count], Mathf.Clamp01(Mathf.Abs(ship.Speed) / ship.MaxSpeed), Time.deltaTime * .65f);
+                wakes[count] = new Vector4(ship.transform.position.x, ship.transform.position.z, ship.transform.eulerAngles.y * Mathf.Deg2Rad, wakeStrength[count]);
+                count++;
             }
             WaterMaterial.SetVectorArray("_Wakes", wakes);
             WaterMaterial.SetInt("_WakeCount", count);

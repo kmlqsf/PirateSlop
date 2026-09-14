@@ -12,6 +12,10 @@ namespace PirateSlop
     public sealed class ShipFlooding : MonoBehaviour
     {
         public Transform WaterVisual;
+        public Mesh[] WaterSlices;
+        public int ReportedOpenImpacts { get; set; }
+        float visualLevel;
+        MeshFilter waterFilter;
         public float EmptyHeight = -1f, FullHeight = 3.5f;
         public float FullWaterline = 4.1f;
         public float FullBowPitch = 8f;
@@ -90,10 +94,19 @@ namespace PirateSlop
         public void SetLevel(float value)
         {
             Level = Mathf.Clamp01(value);
+        }
+        void LateUpdate()
+        {
             if (WaterVisual == null) return;
-            WaterVisual.gameObject.SetActive(Level > .001f);
+            visualLevel = Mathf.Lerp(visualLevel, Level, 1f - Mathf.Exp(-8f * Time.deltaTime));
+            WaterVisual.gameObject.SetActive(visualLevel > .001f);
+            if (WaterSlices != null && WaterSlices.Length > 0)
+            {
+                if (waterFilter == null) waterFilter = WaterVisual.GetComponent<MeshFilter>();
+                waterFilter.sharedMesh = WaterSlices[Mathf.Clamp(Mathf.FloorToInt(visualLevel * (WaterSlices.Length - 1)), 0, WaterSlices.Length - 1)];
+            }
             var position = WaterVisual.localPosition;
-            position.y = Mathf.Lerp(EmptyHeight, FullHeight, Level);
+            position.y = Mathf.Lerp(EmptyHeight, FullHeight, visualLevel);
             WaterVisual.localPosition = position;
         }
     }

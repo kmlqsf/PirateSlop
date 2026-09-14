@@ -34897,6 +34897,7 @@ Transform:
   - {fileID: 8350847789800008604}
   - {fileID: 3452358752873143170}
   - {fileID: 8570439858045460398}
+  - {fileID: 1509837860114048957}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &5818161410274910957
@@ -35053,6 +35054,8 @@ MonoBehaviour:
   _componentIndexCache: 255
   _addedNetworkObject: {fileID: 8899225424909593775}
   _networkObjectCache: {fileID: 0}
+  targetMarkLifetime: 120
+  maxTargetMarks: 8
   hullHalfExtents: {x: 6.5, y: 23}
   collisionRadiusOverride: 11.3
 --- !u!114 &3124443628067747900
@@ -35208,7 +35211,39 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 808f075bb58ea28449b0761834eaa983, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.ShipFlooding
-  WaterVisual: {fileID: 0}
+  WaterVisual: {fileID: 1509837860114048957}
+  WaterSlices:
+  - {fileID: 4300000, guid: c44ce316134f934428c17a94a65a063f, type: 2}
+  - {fileID: 4300000, guid: ed5f10340c3ae0d47b2b44f1571cc3b3, type: 2}
+  - {fileID: 4300000, guid: 25c618c7f4188da4c88901a56aedc139, type: 2}
+  - {fileID: 4300000, guid: 9488ce6e78e958e48a001134e4860d3a, type: 2}
+  - {fileID: 4300000, guid: 6e69974b98dbf0f46869ea2cf49e574a, type: 2}
+  - {fileID: 4300000, guid: 3cc7a36fd0f7898468033566827d7d65, type: 2}
+  - {fileID: 4300000, guid: 3240f724207db8145bd89e0ac83d14e1, type: 2}
+  - {fileID: 4300000, guid: df409b852aca4a34d9cbde5b1af4247a, type: 2}
+  - {fileID: 4300000, guid: a8bbcf82012b44f49b03460c8121a672, type: 2}
+  - {fileID: 4300000, guid: 3d820c5fdbb2ad84085076bb931fe232, type: 2}
+  - {fileID: 4300000, guid: 7f6bc9acf9b6b7046a1a77e2ef8d2e12, type: 2}
+  - {fileID: 4300000, guid: 0e8fb4de33a2e254ebbf8fa2d1b308d6, type: 2}
+  - {fileID: 4300000, guid: 0cb08e4159a5172409cfa8019c6dfd92, type: 2}
+  - {fileID: 4300000, guid: 85eef493e4fa03e4aaf8c47708d0c214, type: 2}
+  - {fileID: 4300000, guid: acc56bbb72c56b9499826f9d93747267, type: 2}
+  - {fileID: 4300000, guid: 0adb861964f5a704b9e7553403b5c6ff, type: 2}
+  - {fileID: 4300000, guid: 046b8e79882fe3d41bb538b9a19f0abf, type: 2}
+  - {fileID: 4300000, guid: 7723692b15317764783e31ef3c3ea946, type: 2}
+  - {fileID: 4300000, guid: 95e43138afbc6234ca377ef2ccd81e41, type: 2}
+  - {fileID: 4300000, guid: c9f324e1c9f87704e9326eab0666c824, type: 2}
+  - {fileID: 4300000, guid: b863887d7d0713947b319d40441558aa, type: 2}
+  - {fileID: 4300000, guid: 7d0d14528817eae45989b807cc1b19a3, type: 2}
+  - {fileID: 4300000, guid: 4db95c0b548375b4eaef6c24cdcb11bc, type: 2}
+  - {fileID: 4300000, guid: 18396cc9dd0dd944d82021a1fd7e340b, type: 2}
+  - {fileID: 4300000, guid: ff29cd1cc0900ec4bbbd7c26fe97a2ae, type: 2}
+  - {fileID: 4300000, guid: 98faa091a98ce48488845531c9640be6, type: 2}
+  - {fileID: 4300000, guid: 3809d24d6d5bfc34ea2347f9dbcb4143, type: 2}
+  - {fileID: 4300000, guid: 41793f1f2ecde1642aaa1f2348914aa8, type: 2}
+  - {fileID: 4300000, guid: f61acfa8a8d54c3468ecb23a288a80d7, type: 2}
+  - {fileID: 4300000, guid: 6bf05978344cdde4d91470b8b35aee0c, type: 2}
+  - {fileID: 4300000, guid: 3753f536c2de54f48a45b4275fc8f64d, type: 2}
   EmptyHeight: -1
   FullHeight: 3.5
   FullWaterline: 4.1
@@ -92679,9 +92714,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.ShipLadder
   Height: 6.4
   Speed: 2.8
-  ExitDepth: 1.2
-  HalfWidth: 2.2
+  ExitDepth: 1.65
+  HalfWidth: 1.8
   RopeClimb: 0
+  BoardingAccess: 1
+  ExitClearance: 1.35
   TopLean: 0
   ExitPoint: {x: 0, y: 0, z: 0}
 --- !u!1 &2394754378593712287
@@ -195296,6 +195333,96 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -6621152000265109911, guid: 10531a1697b7c934ba59cec634d06168, type: 2}
+--- !u!1 &5473701955202933933
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1509837860114048957}
+  - component: {fileID: 3526786174558580200}
+  - component: {fileID: 4160817599015734346}
+  m_Layer: 0
+  m_Name: FloodWater
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &1509837860114048957
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5473701955202933933}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -1, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 398825345446323577}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!33 &3526786174558580200
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5473701955202933933}
+  m_Mesh: {fileID: 4300000, guid: c44ce316134f934428c17a94a65a063f, type: 2}
+--- !u!23 &4160817599015734346
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5473701955202933933}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: fdbe3f6d476bdba4fab0e02491b864ac, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_MaskInteraction: 0
+  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &5473838047320325899
 GameObject:
   m_ObjectHideFlags: 0
@@ -268331,6 +268458,7 @@ Transform:
   - {fileID: 8997701478365871006}
   - {fileID: 5157534788410297158}
   - {fileID: 8337827265983544868}
+  - {fileID: 7405574825132850258}
   m_Father: {fileID: 398825345446323577}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7488714884387140380
@@ -275772,6 +275900,60 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -4819039893506041152, guid: 466cf5a49481fe840b079dcb123b6dba, type: 2}
+--- !u!1 &7675834005763039403
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7405574825132850258}
+  - component: {fileID: 8291205905460685542}
+  m_Layer: 0
+  m_Name: BoardingLadderPort
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7405574825132850258
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7675834005763039403}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: -0.7071068}
+  m_LocalPosition: {x: -6.65, y: -2, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 4681230185613167919}
+  m_Father: {fileID: 8350847789800008604}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8291205905460685542
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7675834005763039403}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 924e096b89e183e4f9d061201060a60d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.ShipLadder
+  Height: 6.4
+  Speed: 2.8
+  ExitDepth: 1.65
+  HalfWidth: 1.8
+  RopeClimb: 0
+  BoardingAccess: 1
+  ExitClearance: 1.35
+  TopLean: 0
+  ExitPoint: {x: 0, y: 0, z: 0}
 --- !u!1 &7676166372489427410
 GameObject:
   m_ObjectHideFlags: 0
@@ -277440,6 +277622,8 @@ MonoBehaviour:
   ExitDepth: 1.2
   HalfWidth: 0.7
   RopeClimb: 1
+  BoardingAccess: 0
+  ExitClearance: 1.35
   TopLean: -6.59
   ExitPoint: {x: -0.5975139, y: 16.52, z: -6.3992095}
 --- !u!1 &7733807635451631504
@@ -278201,6 +278385,96 @@ MeshRenderer:
   m_ScaleInLightmap: 1
   m_ReceiveGI: 1
   m_PreserveUVs: 1
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_MaskInteraction: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &7750212065618875648
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4681230185613167919}
+  - component: {fileID: 3215274888695227199}
+  - component: {fileID: 2555411487478641153}
+  m_Layer: 0
+  m_Name: BoardingNet
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4681230185613167919
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7750212065618875648}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 100, y: 100, z: 100}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7405574825132850258}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!33 &3215274888695227199
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7750212065618875648}
+  m_Mesh: {fileID: 467436116018105332, guid: 532d8e1f44ea87848a882e7ab8f2950a, type: 3}
+--- !u!23 &2555411487478641153
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7750212065618875648}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 77af2bc4db13ad24ca32155e8eb44cb0, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
   m_StitchLightmapSeams: 1
@@ -292570,6 +292844,8 @@ MonoBehaviour:
   ExitDepth: 1.1
   HalfWidth: 0.65
   RopeClimb: 0
+  BoardingAccess: 0
+  ExitClearance: 1.35
   TopLean: 0
   ExitPoint: {x: 0, y: 0, z: 0}
 --- !u!1 &8187972550588783340
@@ -304104,6 +304380,8 @@ MonoBehaviour:
   ExitDepth: 1.2
   HalfWidth: 0.7
   RopeClimb: 1
+  BoardingAccess: 0
+  ExitClearance: 1.35
   TopLean: -6.59
   ExitPoint: {x: 0.5975139, y: 16.52, z: -6.3992095}
 --- !u!1 &8547994928720712423

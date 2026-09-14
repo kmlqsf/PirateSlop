@@ -139,8 +139,13 @@ namespace PirateSlop
             var handle = grabbed != null ? grabbed : hovered;
             string hint = handle != null ? (handle.Helm != null ? "ЛКМ + движение мышью по кругу — повернуть штурвал" : "ЛКМ + мышь вверх/вниз — наклонить ствол") : "";
             if (handle != null && handle.Cannon != null) hint += "   " + handle.Cannon.Elevation.ToString("F0") + "°";
-            if (hint.Length > 0) PirateHudStyle.Panel(new Rect(Screen.width * .5f - 290, Screen.height - 270, 580, 32), hint);
-            if (grabbed != null && grabbed.Helm != null) PirateHudStyle.Panel(new Rect(pointer.x - 4, Screen.height - pointer.y - 4, 8, 8), "");
+            if (handle != null && handle.Helm != null)
+            {
+                float rudder = handle.Helm.CurrentRudderNormalized;
+                hint += Mathf.Abs(rudder) < .008f ? " · РУЛЬ ПРЯМО" : $" · {(rudder < 0f ? "ВЛЕВО" : "ВПРАВО")} {Mathf.Abs(rudder) * 100f:0}%";
+            }
+            if (hint.Length > 0) ContextPrompt.Offer(hint, 35);
+            if (grabbed != null && grabbed.Helm != null) PirateHudStyle.Diamond(new Vector2(pointer.x, Screen.height - pointer.y), 8, PirateHudStyle.Gold);
             if (nearbySails == null) return;
             var ship = nearbySails.GetComponent<ShipController>();
             float deploy = nearbySails.DeployPercentage;

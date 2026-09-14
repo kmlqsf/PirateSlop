@@ -64,13 +64,13 @@ namespace PirateSlop.World
                 }
             }
             var floor = new GameObject("Seabed"); floor.transform.SetParent(content.transform, false);
-            floor.transform.position = new Vector3(0, layout.SeaLevel - layout.Depth - 1, 0);
-            var box = floor.AddComponent<BoxCollider>(); box.size = new Vector3(layout.Radius * 2 + 400, 2, layout.Radius * 2 + 400);
-            float floorSize = layout.Radius + 200;
-            var floorMesh = new Mesh { name = "Seabed" };
-            floorMesh.vertices = new[] { new Vector3(-floorSize, 1, -floorSize), new Vector3(-floorSize, 1, floorSize), new Vector3(floorSize, 1, -floorSize), new Vector3(floorSize, 1, floorSize) };
-            floorMesh.triangles = new[] { 0, 1, 2, 2, 1, 3 }; floorMesh.colors = Enumerable.Repeat(new Color(.25f, .29f, .22f), 4).ToArray(); floorMesh.RecalculateNormals(); meshes.Add(floorMesh);
-            floor.AddComponent<MeshFilter>().sharedMesh = floorMesh; floor.AddComponent<MeshRenderer>().sharedMaterial = Profile.TerrainMaterial;
+            var floorMesh = SeabedTerrain.Build(layout); meshes.Add(floorMesh);
+            floor.AddComponent<MeshFilter>().sharedMesh = floorMesh;
+            floor.AddComponent<MeshCollider>().sharedMesh = floorMesh;
+            var sand = Resources.Load<Material>("Underwater/Seabed");
+            floor.AddComponent<MeshRenderer>().sharedMaterial = sand != null ? sand : Profile.TerrainMaterial;
+            content.AddComponent<UnderwaterLife>().Initialize(this);
+            foreach (var vertex in floorMesh.vertices) writer.Write(Mathf.RoundToInt(vertex.y * 1000));
             writer.Flush();
             using var sha = System.Security.Cryptography.SHA256.Create();
             Checksum = BitConverter.ToString(sha.ComputeHash(data.ToArray())).Replace("-", "");
@@ -175,7 +175,7 @@ namespace PirateSlop.World
         public float GroundHeight(Vector3 world)
         {
             if (Layout == null) return float.NegativeInfinity;
-            float result = Layout.SeaLevel - Layout.Depth;
+            float result = SeabedTerrain.Height(Layout,world);
             foreach (var location in Layout.Locations)
             {
                 float extent = location.Radius * 1.4f;

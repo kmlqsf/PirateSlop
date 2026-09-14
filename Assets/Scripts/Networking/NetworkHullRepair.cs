@@ -38,6 +38,7 @@ namespace PirateSlop.Networking
             if (model == null && MalletModel != null)
             {
                 model = Instantiate(MalletModel, transform);
+                if (IsOwner) motor.ViewMotion.Register(model.transform);
                 foreach (var collider in model.GetComponentsInChildren<Collider>()) Destroy(collider);
             }
             if (model != null)
@@ -151,7 +152,7 @@ namespace PirateSlop.Networking
         void OnGUI()
         {
             if (IsOwner && Available && motor.InputActive && !PlayerInventory.LootWindowOpen)
-                PirateHudStyle.Panel(new Rect(Screen.width * .5f - 240, Screen.height - 155, 480, 32), aimed != null ? aimedFragment == -1 ? "ЛКМ — восстановить мачту целиком (10 ударов)" : "ЛКМ — починить до 3 осколков (3 удара)" : "Наведитесь на подсвеченную повреждённую часть");
+                ContextPrompt.Offer(aimed != null ? aimedFragment == -1 ? "ЛКМ — восстановить мачту целиком (10 ударов)" : "ЛКМ — починить до 3 осколков (3 удара)" : "Наведитесь на подсвеченную повреждённую часть", aimed != null ? 50 : 5);
         }
         void OnDestroy() { if (model != null) Destroy(model); if (highlight != null) Destroy(highlight); if (surfaceHighlight != null) Destroy(surfaceHighlight); }
     }

@@ -14,8 +14,9 @@ namespace PirateSlop
         SimpleCannon cannon;
         float stepAt, motionAt, creakAt, rudder, sail, elevation;
         bool swimming, grounded, sliding, reloading, loaded, holding, cannonLoaded;
-        int selected, slots;
-        bool ready;
+        int selected, slots, lastStepPhase = -1;
+        bool ready, centerArmed;
+        float centerRudder;
         void Awake()
         {
             player = GetComponent<AdvancedPlayerController>(); weapon = GetComponent<PirateWeapon>();
@@ -56,11 +57,14 @@ namespace PirateSlop
                     if (player.IsGrounded && !grounded) GameAudio.Play(SoundCue.Land, transform.position);
                     if (!player.IsSwimming && !player.IsGrounded && grounded && player.VerticalSpeed > 0f) GameAudio.Play(SoundCue.Jump, transform.position);
                     if (player.IsSliding && !sliding) GameAudio.Play(SoundCue.Slide, transform.position);
-                    if (player.IsGrounded && !player.IsSliding && player.PlanarSpeed > .5f && Time.time >= stepAt)
+                    int phase = player.ViewMotion != null ? Mathf.FloorToInt(player.ViewMotion.StepPhase / Mathf.PI) : -1;
+                    bool step = local && !player.IsThirdPerson && phase >= 0 ? phase != lastStepPhase && lastStepPhase >= 0 : Time.time >= stepAt;
+                    if (player.IsGrounded && !player.IsSliding && player.PlanarSpeed > .5f && step)
                     {
                         GameAudio.Play(StepCue(), transform.position, player.IsCrouched ? .4f : 1f);
                         stepAt = Time.time + Mathf.Clamp(2f / player.PlanarSpeed, .24f, .65f);
                     }
+                    lastStepPhase = phase;
                     if (weapon != null)
                     {
                         if (weapon.Reloading && !reloading) GameAudio.Play(SoundCue.Reload, transform.position);
@@ -85,6 +89,11 @@ namespace PirateSlop
             }
             if (ship != null && helm != null && sails != null && ready)
             {
+                float currentRudder = helm.CurrentRudderNormalized;
+                if (Mathf.Abs(currentRudder) > .035f) centerArmed = true;
+                if (centerArmed && (Mathf.Abs(currentRudder) < .008f || currentRudder * centerRudder < 0f))
+                { GameAudio.Play(SoundCue.Place, helm.transform.position, .45f); centerArmed = false; }
+                centerRudder = currentRudder;
                 if (Time.time >= motionAt)
                 {
                     if (Mathf.Abs(helm.CurrentRudderNormalized - rudder) > .003f) { GameAudio.Play(SoundCue.Wheel, helm.transform.position); motionAt = Time.time + .85f; }

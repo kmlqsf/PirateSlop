@@ -32,6 +32,7 @@ public class AdvancedPlayerController : MonoBehaviour
         IsClimbing = false; IsGrounded = false; slideTimer = 0f;
     }
     float ladderCooldown;
+    bool ladderExiting;
     public bool IsClimbing { get; private set; }
     public bool IsSwimming { get; private set; }
     public float Breath { get; private set; } = 25f;
@@ -59,6 +60,10 @@ public class AdvancedPlayerController : MonoBehaviour
     public Vector3 AimDirection => Quaternion.Euler(AimEuler)*Vector3.forward;
     public void AddAimRecoil(float vertical,float horizontal) { if(local) aimRecoil+=new Vector2(vertical,horizontal); }
     float cameraHeight;
+    float jumpBuffer, groundGrace;
+    public Vector2 LocalMove => pending.Move;
+    public bool IsSprinting => pending.Sprint && !crouched;
+    public FirstPersonMotion ViewMotion { get; private set; }
     Vector3 slideDirection;
     bool crouched, networked, local = true;
     PlayerCommand pending;
@@ -84,6 +89,9 @@ public class AdvancedPlayerController : MonoBehaviour
         equipment = GetComponent<PirateSlop.Networking.NetworkEquipment>();
         shipControls = GetComponent<DirectShipControls>();
         controller = GetComponent<CharacterController>(); playerCamera = GetComponentInChildren<Camera>(true);
+        if (GetComponent<ContextPrompt>() == null) gameObject.AddComponent<ContextPrompt>();
+        ViewMotion = GetComponent<FirstPersonMotion>();
+        if (ViewMotion == null) ViewMotion = gameObject.AddComponent<FirstPersonMotion>();
         modelVisibility = GetComponentsInChildren<FirstPersonModelVisibility>(true);
         lookYaw = transform.eulerAngles.y; SetHeight(false);
         cameraHeight = standingHeight - .15f;
@@ -167,16 +175,18 @@ public class AdvancedPlayerController : MonoBehaviour
     public void AddPlatformYaw(float delta) { if (local) lookYaw = Mathf.Repeat(lookYaw + delta, 360); }
     public void Simulate(PlayerCommand command, float dt)
     {
-        if (IsDead) return;
+        if (IsDead) { jumpBuffer = groundGrace = 0f; return; }
         if (!command.IsValid) command = default;
         transform.rotation = Quaternion.Euler(0, command.Yaw, 0);
         cooldown = Mathf.Max(0, cooldown - dt);
-        if (LocomotionLocked && !(GetComponent<PirateSlop.Networking.NetworkWeapon>()?.BeingHooked ?? false)) { PlanarSpeed = 0f; verticalVelocity = 0f; slideTimer = 0f; return; }
+        jumpBuffer = command.Jump ? .12f : Mathf.Max(0f, jumpBuffer - dt);
+        groundGrace = Mathf.Max(0f, groundGrace - dt);
+        if (LocomotionLocked && !(GetComponent<PirateSlop.Networking.NetworkWeapon>()?.BeingHooked ?? false)) { PlanarSpeed = 0f; verticalVelocity = 0f; slideTimer = 0f; jumpBuffer = groundGrace = 0f; return; }
         ladderCooldown = Mathf.Max(0, ladderCooldown - dt);
         knockbackTime = Mathf.Max(0f, knockbackTime - dt);
         knockbackVelocity *= Mathf.Exp(-(IsSwimming ? 3f : .65f) * dt);
-        if (SimulateGrapple(command, dt)) return;
-        if (!IsKnockedBack && SimulateLadder(command, dt)) return;
+        if (SimulateGrapple(command, dt)) { jumpBuffer = groundGrace = 0f; return; }
+        if (!IsKnockedBack && SimulateLadder(command, dt)) { jumpBuffer = groundGrace = 0f; return; }
         var ocean = OceanSurface.Instance;
         float water = ocean != null ? ocean.Height(transform.position) : float.NegativeInfinity;
         bool waterSupport = ocean != null && equipment != null && equipment.WaterRunning && transform.position.y >= water-1.2f;
@@ -184,6 +194,7 @@ public class AdvancedPlayerController : MonoBehaviour
         IsSwimming = !waterSupport && ocean != null && water - transform.position.y > (IsSwimming ? .65f : 1.1f);
         if (IsSwimming)
         {
+            jumpBuffer = groundGrace = 0f;
             SimulateSwimming(command, dt, water, wasSwimming);
             return;
         }
@@ -191,6 +202,7 @@ public class AdvancedPlayerController : MonoBehaviour
         Breath = Mathf.MoveTowards(Breath, breathSeconds, dt * 8f);
         var direction = transform.right * command.Move.x + transform.forward * command.Move.y;
         bool grounded = verticalVelocity <= 0 && (HasGround() || (waterSupport && transform.position.y <= water+.15f));
+        if (grounded && !IsKnockedBack) groundGrace = .10f;
         if (command.Slide && command.Sprint && direction.sqrMagnitude > .1f && grounded && !crouched && cooldown <= 0) { slideTimer = slideDuration; cooldown = slideDuration + slideCooldown; slideDirection = direction.normalized; }
         if (IsSliding) { slideTimer = Mathf.Max(0, slideTimer - dt); if (!grounded) slideTimer = 0; }
         bool wantCrouch = command.Crouch || IsSliding;
@@ -200,8 +212,10 @@ public class AdvancedPlayerController : MonoBehaviour
         var planar = IsSliding ? slideDirection * Mathf.Lerp(slideSpeed, crouchSpeed, slideProgress * slideProgress) : direction * (crouched ? crouchSpeed : command.Sprint ? sprintSpeed : walkSpeed);
         PlanarSpeed = planar.magnitude;
         if (grounded && verticalVelocity < 0) verticalVelocity = -2;
-        if (command.Jump && grounded && !crouched) verticalVelocity = Mathf.Sqrt(jumpHeight * -2 * gravity);
+        if (jumpBuffer > 0f && groundGrace > 0f && !crouched && !IsKnockedBack)
+        { verticalVelocity = Mathf.Sqrt(jumpHeight * -2 * gravity); jumpBuffer = groundGrace = 0f; grounded = false; }
         verticalVelocity += gravity * dt;
+        controller.stepOffset = grounded ? Mathf.Min(.32f, controller.height * .4f) : 0f;
         cannonPushDirection=planar; cannonPushDelta=grounded ? dt : 0; pushedCannons.Clear();
         var flags = controller.Move((planar + knockbackVelocity + Vector3.up * verticalVelocity) * dt);
         if(waterSupport)
@@ -300,16 +314,17 @@ public class AdvancedPlayerController : MonoBehaviour
             float distance = p.x * p.x + depth * depth;
             if (distance < best) { best = distance; ladder = candidate; }
         }
-        if (ladder == null) { IsClimbing = false; return false; }
+        if (ladder == null) { IsClimbing = false; ladderExiting = false; return false; }
         if (ladder.RopeClimb) return SimulateRigging(ladder, command, dt);
         var localPosition = ladder.transform.InverseTransformPoint(transform.position);
         var move = transform.right * command.Move.x + transform.forward * command.Move.y;
         float approach = Vector3.Dot(move, -ladder.transform.forward);
         bool fromTop = localPosition.z < .5f && localPosition.y > ladder.Height - 1.5f && approach < -.1f;
-        if (!IsClimbing && (fromTop ? approach > -.1f : approach < .1f)) return false;
+        if (!IsClimbing && (fromTop ? approach > -.1f : approach < .1f) && !(command.Use && ladder.CanGrab(transform.position, command.Yaw, command.Pitch))) return false;
         var passenger = GetComponent<ShipDeckPassenger>();
-        if (command.Jump)
+        if (command.Jump || command.Release)
         {
+            ladderExiting = false;
             IsClimbing = false; ladderCooldown = .65f; verticalVelocity = 4;
             passenger?.Attach(null);
             controller.Move((ladder.transform.forward * 4 + Vector3.up * 4) * dt);
@@ -321,6 +336,17 @@ public class AdvancedPlayerController : MonoBehaviour
         float vertical = command.Move.y * (Vector3.Dot(transform.forward, -ladder.transform.forward) >= 0 ? 1 : -1);
         if (command.Crouch || command.Pitch > 55) vertical = -Mathf.Abs(command.Move.y);
         float sideSign = Vector3.Dot(transform.right, ladder.transform.right) >= 0 ? 1f : -1f;
+        if (ladder.BoardingAccess && (ladderExiting || !fromTop && localPosition.y >= ladder.Height - .15f && vertical > 0f))
+        {
+            if (localPosition.y >= ladder.Height + ladder.ExitClearance - .08f) ladderExiting = true;
+            var target = new Vector3(Mathf.Clamp(localPosition.x, -ladder.HalfWidth + .3f, ladder.HalfWidth - .3f), ladder.Height + ladder.ExitClearance,
+                ladderExiting ? -ladder.ExitDepth : .65f);
+            controller.Move(Vector3.ClampMagnitude(ladder.transform.TransformPoint(target) - transform.position, ladder.Speed * dt));
+            verticalVelocity = 0f; PlanarSpeed = ladder.Speed;
+            if (ladderExiting && ladder.transform.InverseTransformPoint(transform.position).z <= -ladder.ExitDepth + .15f)
+            { IsClimbing = false; ladderExiting = false; ladderCooldown = .65f; }
+            return true;
+        }
         Vector3 velocity = ladder.transform.up * vertical * ladder.Speed + ladder.transform.right * command.Move.x * sideSign * walkSpeed;
         if (fromTop)
         {
@@ -343,13 +369,13 @@ public class AdvancedPlayerController : MonoBehaviour
         if (!InputActive) return;
         if (IsClimbing)
         {
-            PirateSlop.PirateHudStyle.Panel(new Rect(Screen.width * .5f - 260, Screen.height - 260, 520, 28), "W/S — вверх/вниз · A/D — в сторону · Space — отпустить");
+            ContextPrompt.Offer("W/S — вверх/вниз · A/D — в сторону · Space — отпустить", 30);
             return;
         }
         foreach (var ladder in ShipLadder.Active)
             if (ladder.CanGrab(transform.position, lookYaw, pitch))
             {
-                PirateSlop.PirateHudStyle.Panel(new Rect(Screen.width * .5f - 180, Screen.height - 260, 360, 28), "E — схватиться за ванты");
+                ContextPrompt.Offer(ladder.BoardingAccess ? "E — взяться за лестницу" : "E — схватиться за ванты", 30);
                 break;
             }
     }
@@ -387,17 +413,18 @@ public class AdvancedPlayerController : MonoBehaviour
         verticalVelocity = 0; PlanarSpeed = new Vector2(rise, command.Move.x * .45f).magnitude * ladder.Speed;
         return true;
     }
-    public PlayerState Capture() => new PlayerState { Position = transform.position, Yaw = transform.eulerAngles.y, VerticalVelocity = verticalVelocity, SlideDirection = slideDirection, SlideTimer = slideTimer, Cooldown = cooldown, Crouched = crouched, Locked = locomotionLocked, PlanarSpeed = PlanarSpeed, Grounded = IsGrounded, Swimming = IsSwimming, SwimVelocity = swimVelocity, Breath = Breath, Climbing = IsClimbing, LadderCooldown = ladderCooldown, KnockbackVelocity = knockbackVelocity, KnockbackTime = knockbackTime };
+    public PlayerState Capture() => new PlayerState { Position = transform.position, Yaw = transform.eulerAngles.y, VerticalVelocity = verticalVelocity, SlideDirection = slideDirection, SlideTimer = slideTimer, Cooldown = cooldown, Crouched = crouched, Locked = locomotionLocked, PlanarSpeed = PlanarSpeed, Grounded = IsGrounded, Swimming = IsSwimming, SwimVelocity = swimVelocity, Breath = Breath, Climbing = IsClimbing, LadderCooldown = ladderCooldown, KnockbackVelocity = knockbackVelocity, KnockbackTime = knockbackTime, JumpBuffer = jumpBuffer, GroundGrace = groundGrace, LadderExiting = ladderExiting };
     public void Restore(PlayerState s)
     {
         controller.enabled = false; transform.SetPositionAndRotation(s.Position, Quaternion.Euler(0, s.Yaw, 0)); controller.enabled = !IsDead;
+        jumpBuffer = s.JumpBuffer; groundGrace = s.GroundGrace;
         verticalVelocity = s.VerticalVelocity; slideTimer = s.SlideTimer; cooldown = s.Cooldown; slideDirection = s.SlideDirection; ApplyAnimationState(s);
     }
     public void ApplyAnimationState(PlayerState s)
     {
         PlanarSpeed = s.PlanarSpeed; IsGrounded = s.Grounded; verticalVelocity = s.VerticalVelocity;
         IsSwimming = s.Swimming; swimVelocity = s.SwimVelocity; Breath = s.Swimming ? s.Breath : breathSeconds;
-        IsClimbing = s.Climbing; ladderCooldown = s.LadderCooldown;
+        IsClimbing = s.Climbing; ladderCooldown = s.LadderCooldown; ladderExiting = s.LadderExiting;
         knockbackVelocity = s.KnockbackVelocity; knockbackTime = s.KnockbackTime;
         slideTimer = s.SlideTimer; locomotionLocked = s.Locked; SetHeight(s.Crouched);
     }

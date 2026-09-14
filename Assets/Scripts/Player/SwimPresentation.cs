@@ -10,7 +10,7 @@ namespace PirateSlop
         Color previousColor;
         FogMode previousMode;
         float previousDensity;
-        float strokeAt;
+        float strokeAt, breathWarningAt;
         void Awake() { motor = GetComponent<AdvancedPlayerController>(); }
         void OnEnable() { RenderPipelineManager.beginCameraRendering += BeginCamera; RenderPipelineManager.endCameraRendering += EndCamera; }
         void OnDisable()
@@ -25,7 +25,7 @@ namespace PirateSlop
             previousFog = RenderSettings.fog; previousColor = RenderSettings.fogColor;
             previousMode = RenderSettings.fogMode; previousDensity = RenderSettings.fogDensity;
             RenderSettings.fog = true; RenderSettings.fogMode = FogMode.ExponentialSquared;
-            RenderSettings.fogColor = new Color(.015f, .16f, .2f); RenderSettings.fogDensity = .065f; changedFog = true;
+            RenderSettings.fogColor = new Color(.015f, .16f, .2f); RenderSettings.fogDensity = .027f; changedFog = true;
         }
         void EndCamera(ScriptableRenderContext context, Camera camera) { if (camera == motor.PlayerCamera) RestoreFog(); }
         void RestoreFog()
@@ -40,6 +40,8 @@ namespace PirateSlop
             if (motor.IsSwimming && !motor.IsDead && motor.PlanarSpeed > .4f && Time.time >= strokeAt)
             { GameAudio.Play(SoundCue.Splash, transform.position, .1f); strokeAt = Time.time + 1.2f; }
             swimming = motor.IsSwimming;
+            if (motor.PlayerCamera != null && motor.PlayerCamera.enabled && !motor.IsDead && motor.IsSwimming && motor.BreathFraction < .25f && Time.time >= breathWarningAt)
+            { GameAudio.Play(SoundCue.Hurt, transform.position, .25f, true); breathWarningAt = Time.time + Mathf.Lerp(.8f, 2.5f, motor.BreathFraction / .25f); }
         }
         void OnGUI()
         {
@@ -52,8 +54,9 @@ namespace PirateSlop
             }
             if (motor.IsSwimming)
             {
+                if (motor.BreathFraction < .25f) PirateHudStyle.Panel(new Rect(Screen.width * .5f - 180, Screen.height * .5f + 100f, 360, 32), "МАЛО ВОЗДУХА · Space — всплыть");
                 GUI.color = Color.white;
-                PirateHudStyle.Panel(new Rect(Screen.width / 2f - 260, Screen.height - 155, 520, 36), "WASD — плыть · Shift — быстрее · Space — вверх · Ctrl — вниз");
+                ContextPrompt.Offer("WASD — плыть · Shift — быстрее · Space — вверх · Ctrl — вниз", 10);
                 if (motor.BreathFraction < .99f && GetComponent<PlayerHud>() == null)
                 {
                     var rect = new Rect(Screen.width / 2f - 100, Screen.height - 180, 200, 18);

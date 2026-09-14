@@ -141,6 +141,11 @@ namespace PirateSlop.EditorTools
                     boarding.transform.SetParent(rigging, false);
                     boarding.transform.localPosition = new Vector3(6.65f, -2f, 0);
                     boarding.Height = 6.4f;
+                    boarding.BoardingAccess = true; boarding.HalfWidth = 1.8f; boarding.ExitDepth = 1.65f; boarding.ExitClearance = 1.35f;
+                    var portBoarding = UnityEngine.Object.Instantiate(boarding.gameObject, rigging).transform;
+                    portBoarding.name = "BoardingLadderPort";
+                    portBoarding.localPosition = new Vector3(-6.65f, -2f, 0);
+                    portBoarding.localRotation = Quaternion.Euler(0, 270f, 0);
                     foreach (var renderer in boarding.GetComponentsInChildren<Renderer>()) renderer.sharedMaterial = materials["Mat_StylShip_Masts"];
                 }
                 foreach (int side in new[] { -1, 1 })

@@ -8,11 +8,47 @@ namespace PirateSlop.Networking
     public sealed class NetworkFishProjectile : NetworkBehaviour
     {
         readonly SyncVar<bool> flying = new();
+        readonly SyncVar<float> burstProgress = new();
         public bool Flying => flying.Value;
         NetworkFish pickup;
         NetworkPlayer attacker;
         Vector3 velocity;
-        float fuse, started;
+        float fuse, started, visibleFlightAt = -1f;
+        Transform[] visualParts;
+        Vector3[] visualScales;
+        SphereCollider recovery;
+        void LateUpdate()
+        {
+            if (IsClientInitialized && pickup.Item == InventoryItem.Swordfish)
+            {
+                if (recovery == null)
+                {
+                    var root = new GameObject("SwordfishRecovery"); root.transform.SetParent(transform, false);
+                    root.transform.localPosition = new Vector3(0,0,-.25f);
+                    recovery = root.AddComponent<SphereCollider>(); recovery.isTrigger = true; recovery.radius = .45f;
+                }
+                recovery.enabled = !Flying;
+            }
+            if (!IsClientInitialized || pickup.Item != InventoryItem.Pufferfish) return;
+            if (visualParts == null)
+            {
+                var roots = new System.Collections.Generic.HashSet<Transform>();
+                foreach (var renderer in GetComponentsInChildren<MeshRenderer>(true))
+                {
+                    var part = renderer.transform;
+                    while (part.parent != null && part.parent != transform) part = part.parent;
+                    if (part != transform) roots.Add(part);
+                }
+                visualParts = new Transform[roots.Count]; roots.CopyTo(visualParts);
+                visualScales = new Vector3[visualParts.Length];
+                for (int i=0;i<visualParts.Length;i++) visualScales[i]=visualParts[i].localScale;
+            }
+            if (!Flying) { visibleFlightAt = -1f; return; }
+            if (visibleFlightAt < 0f) visibleFlightAt = Time.time;
+            float progress = burstProgress.Value;
+            float pulse = 1f + progress * .35f + Mathf.Sin((Time.time-visibleFlightAt) * Mathf.Lerp(10f,35f,progress)) * progress * .07f;
+            for (int i=0;i<visualParts.Length;i++) if(visualParts[i]!=null && visualParts[i]!=transform) visualParts[i].localScale=visualScales[i]*pulse;
+        }
         void Awake() => pickup = GetComponent<NetworkFish>();
         public void Launch(NetworkPlayer source, Vector3 direction)
         {
@@ -28,6 +64,7 @@ namespace PirateSlop.Networking
         void FixedUpdate()
         {
             if (!IsServerInitialized || !Flying) return;
+            if (pickup.Item == InventoryItem.Pufferfish) burstProgress.Value = Mathf.Clamp01(Mathf.Floor((Time.time-started)*10f)/25f);
             if (Time.time >= fuse)
             {
                 if (pickup.Item == InventoryItem.Pufferfish) Burst();

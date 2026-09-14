@@ -126,6 +126,8 @@ Shader "Custom/SimpleWaterURP"
                 float _FoamTiling;
                 float _FoamSpeed;
             CBUFFER_END
+            float4 _Wakes[32];
+            int _WakeCount;
 
             TEXTURE2D(_NormalMap); SAMPLER(sampler_NormalMap);
             TEXTURE2D(_FoamNoiseTex); SAMPLER(sampler_FoamNoiseTex);
@@ -217,6 +219,22 @@ Shader "Custom/SimpleWaterURP"
                 float foamBreakup = SAMPLE_TEXTURE2D(_NormalMap, sampler_NormalMap, foamUV * .17).g;
                 float foamEdge = 1.0 - smoothstep(0.0, _FoamDistance, depthY);
                 float foamLine = foamEdge * smoothstep(.22, .68, foamBreakup + foamEdge * .25) * foamNoise;
+                float shipFoam = 0;
+                for (int wakeIndex = 0; wakeIndex < min(_WakeCount, 32); wakeIndex++)
+                {
+                    float4 wake = _Wakes[wakeIndex];
+                    float2 delta = IN.positionWS.xz - wake.xy;
+                    float sine = sin(wake.z), cosine = cos(wake.z);
+                    float sideways = abs(delta.x * cosine - delta.y * sine);
+                    float ahead = delta.x * sine + delta.y * cosine;
+                    float behind = max(0, -ahead - 15);
+                    float lengthMask = smoothstep(0, 4, behind) * (1 - smoothstep(12, 45, behind));
+                    float edge = 1 - smoothstep(.2, 1.8, abs(sideways - (4.5 + behind * .16)));
+                    float center = (1 - smoothstep(0, 5.5 + behind * .12, sideways)) * .25;
+                    float bow = (1 - smoothstep(.2, 1.1, abs(sideways - (6.2 - max(0, ahead - 12) * .35)))) * smoothstep(5, 12, ahead) * (1 - smoothstep(17, 20, ahead));
+                    shipFoam = max(shipFoam, saturate(wake.w) * (lengthMask * (edge + center) + bow));
+                }
+                foamLine = max(foamLine, shipFoam * smoothstep(.12, .75, foamBreakup + foamNoise * .3));
                 float3 finalColor = lerp(colorWithReflection, _FoamColor.rgb, saturate(foamLine));
                 alpha = lerp(alpha, 1.0, saturate(foamLine));
 

@@ -9,11 +9,16 @@ namespace PirateSlop.Networking
         AdvancedPlayerController motor;
         NetworkPlayer player;
         Transform aimed;
-        float nextRing;
+        float nextRing, requestAt = -30f, messageUntil;
+        string crewMessage;
+        bool requested, serverRequested;
         void Awake() { motor = GetComponent<AdvancedPlayerController>(); player = GetComponent<NetworkPlayer>(); }
         void Update()
         {
             aimed = null;
+            if (!motor.IsDead) { requested = false; if (IsServerInitialized) serverRequested = false; }
+            if (IsOwner && motor.IsDead && !player.Eliminated.Value && !requested && !SessionController.MenuOpen && Keyboard.current != null && Keyboard.current.rKey.wasPressedThisFrame)
+            { requested = true; RequestRescueServerRpc(); }
             if (!IsOwner || !motor.InputActive || motor.IsDead || motor.LocomotionLocked || PlayerInventory.LootWindowOpen) return;
             if (!FirearmTrace.Cast(gameObject, motor.PlayerCamera.transform.position, motor.PlayerCamera.transform.position + motor.PlayerCamera.transform.forward * 3f, out var hit)) return;
             if (hit.collider.name != "CrewBell") return;
@@ -37,9 +42,34 @@ namespace PirateSlop.Networking
         }
         [ObserversRpc(RunLocally = true)]
         void RingObserversRpc(Vector3 point) => GameAudio.Play(SoundCue.ShipBell, point);
+        [ServerRpc]
+        void RequestRescueServerRpc()
+        {
+            if (!motor.IsDead || player.Eliminated.Value || player.Ship == null || player.Ship.IsSinking || serverRequested || Time.time - requestAt < 10f) return;
+            serverRequested = true; requestAt = Time.time;
+            foreach (var member in FindObjectsByType<NetworkPlayer>(FindObjectsSortMode.None))
+                if (member.TeamId.Value == player.TeamId.Value && member.Ship == player.Ship && member.Owner != null && member.Owner.IsActive && !member.IsBot.Value)
+                    RescueTargetRpc(member.Owner, player.ParticipantId.Value);
+        }
+        [TargetRpc]
+        void RescueTargetRpc(FishNet.Connection.NetworkConnection recipient, int id)
+        {
+            crewMessage = "Пират " + id + " ждёт колокола в рубке"; messageUntil = Time.unscaledTime + 5f;
+            GameAudio.Play(SoundCue.Select, transform.position, .7f, true);
+        }
         void OnGUI()
         {
-            if (aimed != null && IsOwner) PirateHudStyle.Panel(new Rect(Screen.width * .5f - 220, Screen.height - 155, 440, 32), "E — позвонить: возродить экипаж (1 ром за пирата)");
+            if (Time.unscaledTime < messageUntil && !SessionController.MenuOpen)
+                PirateHudStyle.Panel(new Rect(Screen.width * .5f - 250, 100, 500, 32), crewMessage);
+            if (!IsOwner || SessionController.MenuOpen) return;
+            if (motor.IsDead && !player.Eliminated.Value)
+                PirateHudStyle.Panel(new Rect(Screen.width * .5f - 240, Screen.height * .5f + 65, 480, 32), requested ? "Просьба позвонить в колокол отправлена" : "R — попросить экипаж позвонить в колокол");
+            if (aimed == null) return;
+            int dead = 0;
+            foreach (var member in FindObjectsByType<NetworkPlayer>(FindObjectsSortMode.None))
+                if (member.Ship == player.Ship && member.TeamId.Value == player.TeamId.Value && member.Motor.IsDead && !member.Eliminated.Value) dead++;
+            int rum = player.Ship != null ? player.Ship.RumCount : 0;
+            ContextPrompt.Offer(dead == 0 ? "КОЛОКОЛ · Весь экипаж жив" : rum == 0 ? "КОЛОКОЛ · Ждут: " + dead + " · Нет рома для возрождения" : "КОЛОКОЛ · Ждут: " + dead + " · Можно вернуть: " + Mathf.Min(dead,rum) + " · E — позвонить (1 ром за пирата)", 60);
         }
     }
 }

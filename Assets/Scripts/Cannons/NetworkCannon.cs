@@ -7,7 +7,8 @@ namespace PirateSlop.Networking
 {
     public struct CannonPlacement
     {
-        public Vector3 Position;
+        public Vector3 Position, LoadOrigin;
+        public bool HasLoadOrigin, Occupied;
         public Quaternion Rotation;
         public float Elevation;
         public float Traverse;
@@ -85,7 +86,10 @@ namespace PirateSlop.Networking
             var cannon = Cannon(index);
             if (!IsServerInitialized || cannon == null || HasBoarding(index) || cannon.IsLoaded || !CannonAmmo.IsBall(ammo) || !player.CanReachCannon(cannon)) return false;
             if (!cannon.LoadAmmo(ammo)) return false;
-            var placement = placements[index]; placement.Loaded = true; placement.Ammo = ammo; placement.Fuse = -1f; placements[index] = placement;
+            Vector3 origin = player.transform.TransformPoint(new Vector3(.22f, 1.2f, .55f));
+            cannon.SetLoadOrigin(origin);
+            var placement = placements[index]; placement.Loaded = true; placement.Ammo = ammo; placement.Fuse = -1f;
+            placement.LoadOrigin = transform.InverseTransformPoint(origin); placement.HasLoadOrigin = true; placements[index] = placement;
             return true;
         }
         public void MoveCarriage(int index,Vector3 position,Quaternion rotation)
@@ -107,11 +111,16 @@ namespace PirateSlop.Networking
                 var cannon=Crate.Cannons[i];
                 cannon.gameObject.SetActive(!placements[i].Removed);
                 if (placements[i].Removed) continue;
+                cannon.RemoteOccupied = placements[i].Occupied;
                 if (cannon.Operator == null || IsServerInitialized)
                     cannon.SetAim(placements[i].Elevation, placements[i].Traverse);
                 if (!IsServerInitialized)
                 {
-                    if (placements[i].Loaded && !cannon.IsLoaded) cannon.LoadAmmo(placements[i].Ammo);
+                    if (placements[i].Loaded && !cannon.IsLoaded)
+                    {
+                        cannon.LoadAmmo(placements[i].Ammo);
+                        if (placements[i].HasLoadOrigin) cannon.SetLoadOrigin(transform.TransformPoint(placements[i].LoadOrigin));
+                    }
                     else if (!placements[i].Loaded && cannon.IsLoaded) cannon.ResetSupply();
                     cannon.ShowFuse(placements[i].Fuse);
                     cannon.ShowFireQueued(placements[i].FireQueued);
@@ -134,7 +143,8 @@ namespace PirateSlop.Networking
                     var cannon = Cannon(i);
                     if (cannon == null) continue;
                     var placement = placements[i];
-                    if (!cannon.IsIgnited && placement.FireQueued == cannon.IsFireQueued) continue;
+                    if (!cannon.IsIgnited && placement.FireQueued == cannon.IsFireQueued && placement.Occupied == (cannon.Operator != null)) continue;
+                    placement.Occupied = cannon.Operator != null;
                     placement.FireQueued = cannon.IsFireQueued;
                     placement.Fuse = cannon.IsIgnited ? cannon.FuseProgress : -1f;
                     placements[i] = placement;
