@@ -30,6 +30,14 @@ namespace PirateSlop.Networking
             }
         }
         readonly SyncVar<float> progress = new();
+        readonly SyncVar<bool> pickingUp = new();
+        NetworkObject pickupTarget;
+        float pickupUntil;
+        const float MinimumPickupTime = 1.9f;
+        bool pickupSwap;
+        int pickupSlot, pickupCount;
+        InventoryItem pickupExpected, pickupKind;
+        public bool IsPickingUp => pickingUp.Value;
         readonly SyncVar<bool> eating = new();
         readonly SyncVar<float> eatProgress = new();
         float eatUntil;
@@ -59,6 +67,8 @@ namespace PirateSlop.Networking
         }
         void Update()
         {
+            if (IsServerInitialized) TickPickup();
+            motor.PickupLocked = IsPickingUp;
             if (IsServerInitialized) TickEating();
             if (IsServerInitialized) TickFishing();
             UpdateChewing();
@@ -66,6 +76,7 @@ namespace PirateSlop.Networking
             var mouse = Mouse.current; var keys = Keyboard.current;
             if (mouse == null || keys == null) return;
             if (IsEating) return;
+            if (IsPickingUp) return;
             aimed = FindFish();
             if (aimed != null && !aimed.Available) aimed = null;
             if (aimed != null && !IsFishing && !CarryingCatch && keys.eKey.wasPressedThisFrame) { PickupServerRpc(aimed.NetworkObject, keys.leftShiftKey.isPressed || keys.rightShiftKey.isPressed, inventory.SelectedSlot, inventory.ItemAt(inventory.SelectedSlot), inventory.ItemCount(inventory.SelectedSlot)); return; }
@@ -231,23 +242,57 @@ namespace PirateSlop.Networking
         [ServerRpc]
         void PickupServerRpc(NetworkObject target, bool swap, int slot, InventoryItem expected, int expectedCount)
         {
-            if (!Available || IsEating || stage.Value != 0 || target == null || Vector3.Distance(transform.position + Vector3.up, target.transform.position) > 3.5f) return;
+            if (!Available || IsEating || IsPickingUp || stage.Value != 0 || !CanPickupTarget(target)) return;
+            var kind = target.GetComponent<NetworkFish>().CurrentItem;
+            if (!GetComponent<NetworkWeapon>().CanAddItem(kind) && (!swap || inventory.SelectedSlot != slot || inventory.ItemAt(slot) != expected || inventory.ItemCount(slot) != expectedCount || !inventory.CanSwapItem(kind))) return;
+            pickupSwap = swap; pickupSlot = slot; pickupExpected = expected; pickupCount = expectedCount; pickupKind = kind;
+            pickupTarget = target;
+            pickupUntil = Time.time + MinimumPickupTime;
+            pickingUp.Value = true;
+        }
+        public void FinishPickup() { if (IsOwner && IsPickingUp) FinishPickupServerRpc(); }
+        [ServerRpc]
+        void FinishPickupServerRpc()
+        {
+            if (!IsPickingUp || Time.time < pickupUntil) return;
+            bool valid = !motor.IsDead && !motor.IsSwimming && !motor.IsClimbing && stage.Value == 0 && !IsEating;
+            var target = pickupTarget;
+            pickupTarget = null;
+            pickingUp.Value = false;
+            motor.PickupLocked = false;
+            if (!valid || !Available || !CanPickupTarget(target)) return;
             var item = target.GetComponent<NetworkFish>();
+            var kind = item.CurrentItem;
+            if (kind != pickupKind) return;
+            var equipment = GetComponent<NetworkWeapon>();
+            if (!equipment.CanAddItem(kind) && (!pickupSwap || !equipment.PrepareSwap(kind, pickupSlot, pickupExpected, pickupCount))) return;
+            if (equipment.CanAddItem(kind) && item.Take() && equipment.AddItem(kind)) SoundObserversRpc(SoundCue.Pickup, transform.position);
+        }
+        bool CanPickupTarget(NetworkObject target)
+        {
+            if (target == null || !target.IsSpawned || Vector3.Distance(transform.position + Vector3.up, target.transform.position) > 3.5f) return false;
+            var item = target.GetComponent<NetworkFish>();
+            if (item == null || !item.Available) return false;
             var loose = target.GetComponent<NetworkLooseCannonball>();
-            if (loose != null && loose.IsHeld) return;
+            if (loose != null && loose.IsHeld) return false;
             Vector3 origin = transform.position + Vector3.up * 1.5f;
             Vector3 delta = target.transform.position - origin;
             foreach (var hit in Physics.RaycastAll(origin, delta.normalized, delta.magnitude, ~0, QueryTriggerInteraction.Ignore))
-                if (!hit.transform.IsChildOf(transform) && !hit.transform.IsChildOf(target.transform)) return;
-            var equipment = GetComponent<NetworkWeapon>();
-            if (item == null || !item.Available) return;
-            if (swap && !equipment.CanAddItem(item.CurrentItem) && !equipment.PrepareSwap(item.CurrentItem, slot, expected, expectedCount)) return;
-            if (item != null && equipment.CanAddItem(item.CurrentItem))
+                if (!hit.transform.IsChildOf(transform) && !hit.transform.IsChildOf(target.transform)) return false;
+            return true;
+        }
+        void TickPickup()
+        {
+            if (!IsPickingUp) return;
+            bool valid = !motor.IsDead && !motor.IsSwimming && !motor.IsClimbing && stage.Value == 0 && !IsEating;
+            if (!valid || Time.time >= pickupUntil + 3f)
             {
-                var kind = item.CurrentItem;
-                if (item.Take()) { equipment.AddItem(kind); SoundObserversRpc(SoundCue.Pickup, transform.position); }
+                pickupTarget = null;
+                pickingUp.Value = false;
+                motor.PickupLocked = false;
             }
         }
+        void OnDisable() { if (motor != null) motor.PickupLocked = false; }
         [ServerRpc]
         void EatServerRpc()
         {
