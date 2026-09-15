@@ -19,6 +19,8 @@ namespace PirateSlop
         int[][] surfaceTriangles;
         float[] surfaceDamage;
         ulong appliedSurface;
+        Vector3[] surfaceRepairFrom, surfaceRepairTo, surfaceRepairWork;
+        float surfaceRepairAt;
         public GameObject Intact, Damaged, Critical, Destroyed, Repaired;
         public GameObject[] Debris = Array.Empty<GameObject>();
         public GameObject[] Fragments = Array.Empty<GameObject>();
@@ -151,6 +153,8 @@ namespace PirateSlop
         void ApplySurface(ulong mask)
         {
             if (mask == appliedSurface) return;
+            var repairFrom = Application.isPlaying && surfaceMesh != null && (appliedSurface & ~mask) != 0 ? surfaceMesh.vertices : null;
+            surfaceRepairFrom = null;
             if (surfaceMesh == null)
             {
                 var filter = Intact.GetComponent<MeshFilter>();
@@ -207,6 +211,20 @@ namespace PirateSlop
             surfaceMesh.SetTriangles(exposed, surfaceTriangles.Length, false);
             surfaceMesh.RecalculateNormals();
             surfaceMesh.RecalculateTangents();
+            if (repairFrom != null)
+            {
+                surfaceRepairFrom = repairFrom; surfaceRepairTo = vertices;
+                if (surfaceRepairWork == null || surfaceRepairWork.Length != vertices.Length) surfaceRepairWork = new Vector3[vertices.Length];
+                surfaceRepairAt = Time.time; surfaceMesh.vertices = repairFrom;
+            }
+        }
+        void LateUpdate()
+        {
+            if (surfaceRepairFrom == null || surfaceMesh == null) return;
+            float t = Mathf.SmoothStep(0f, 1f, (Time.time - surfaceRepairAt) / .24f);
+            for (int i = 0; i < surfaceRepairWork.Length; i++) surfaceRepairWork[i] = Vector3.Lerp(surfaceRepairFrom[i], surfaceRepairTo[i], t);
+            surfaceMesh.vertices = surfaceRepairWork;
+            if (t >= 1f) { surfaceRepairFrom = null; surfaceRepairTo = null; }
         }
         void OnDestroy()
         {

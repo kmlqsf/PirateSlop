@@ -113,15 +113,29 @@ namespace PirateSlop.Networking
         [TargetRpc]
         void SelectSupplyTargetRpc(FishNet.Connection.NetworkConnection connection, int slot) => inventory.SetSelection(slot);
         public void DropSelected() => DropSelectedServerRpc();
+        public bool PrepareSwap(InventoryItem incoming, int slot, InventoryItem expected, int expectedCount)
+        {
+            if (!IsServerInitialized) return false;
+            if (selectedSlot.Value != slot || inventory.ItemAt(slot) != expected || inventory.ItemCount(slot) != expectedCount || !inventory.CanSwapItem(incoming))
+            {
+                SwapRejectedTargetRpc(Owner, "Обмен отменён: выбранный предмет или количество изменились");
+                return false;
+            }
+            if (DropSelectedAuthority(true)) return true;
+            SwapRejectedTargetRpc(Owner, "Обмен не выполнен · Освободите место для выкладки всего стека");
+            return false;
+        }
+        [TargetRpc]
+        void SwapRejectedTargetRpc(FishNet.Connection.NetworkConnection connection, string message) => inventory.ShowMessage(message);
         [ServerRpc]
         void DropSelectedServerRpc()
         {
             DropSelectedAuthority();
         }
-        void DropSelectedAuthority()
+        bool DropSelectedAuthority(bool wholeSlot = false)
         {
             var motor = GetComponent<AdvancedPlayerController>();
-            if (LootHandsBusy || motor.IsDead || motor.IsSwimming || motor.IsClimbing || motor.LocomotionLocked || GetComponent<CannonHands>().HasHeldBall || inventory.Fishing.CarryingCatch || inventory.Fishing.IsEating) return;
+            if (LootHandsBusy || motor.IsDead || motor.IsSwimming || motor.IsClimbing || motor.LocomotionLocked || GetComponent<CannonHands>().HasHeldBall || inventory.Fishing.CarryingCatch || inventory.Fishing.IsEating) return false;
             int slot = selectedSlot.Value;
             InventoryItem item;
             if (inventory.EquipmentAt(slot) != InventoryItem.None) item = inventory.EquipmentAt(slot);
@@ -134,28 +148,50 @@ namespace PirateSlop.Networking
             else if (inventory.RumCount(slot) > 0) item = InventoryItem.Rum;
             else if (inventory.BallCount(slot) > 0) item = inventory.BallItem(slot);
             else if (slot < fishCounts.Count && fishCounts[slot] > 0) item = InventoryItem.Fish;
-            else return;
+            else return false;
             int prefabIndex = CannonAmmo.IsBall(item) ? (int)InventoryItem.Cannonball : (int)item;
-            if (DropPrefabs == null || prefabIndex >= DropPrefabs.Length || DropPrefabs[prefabIndex] == null) return;
+            if (DropPrefabs == null || prefabIndex >= DropPrefabs.Length || DropPrefabs[prefabIndex] == null) return false;
             var prefab = DropPrefabs[prefabIndex];
-            if (!LootPlacement.Find(transform, prefab, item, out var point, out var orientation, out var support)) return;
-            var dropped = Instantiate(prefab, point, orientation);
-            if (CannonAmmo.IsBall(item)) dropped.SetAmmoItem(item);
-            UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene(dropped.gameObject, gameObject.scene);
-            dropped.Place(support != null ? support.NetworkObject : null, point, orientation);
-            ServerManager.Spawn(dropped.NetworkObject);
-            if (CannonAmmo.IsBall(item) && support != null) dropped.GetComponent<Cannonball>().RollOnPlatform(support.GetComponent<Rigidbody>());
+            int amount = wholeSlot ? inventory.ItemCount(slot) : 1;
+            var reserved = new System.Collections.Generic.List<Bounds>();
+            var placements = new System.Collections.Generic.List<(Vector3 point, Quaternion rotation, NetworkShip support)>();
+            for (int i = 0; i < amount; i++)
+            {
+                if (!LootPlacement.Find(transform, prefab, item, out var point, out var orientation, out var support, reserved)) return false;
+                placements.Add((point, orientation, support));
+            }
+            var spawned = new System.Collections.Generic.List<NetworkFish>();
+            try
+            {
+                foreach (var placement in placements)
+                {
+                    var dropped = Instantiate(prefab, placement.point, placement.rotation);
+                    spawned.Add(dropped);
+                    if (CannonAmmo.IsBall(item)) dropped.SetAmmoItem(item);
+                    UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene(dropped.gameObject, gameObject.scene);
+                    dropped.Place(placement.support != null ? placement.support.NetworkObject : null, placement.point, placement.rotation);
+                    ServerManager.Spawn(dropped.NetworkObject);
+                    if (CannonAmmo.IsBall(item) && placement.support != null) dropped.GetComponent<Cannonball>()?.RollOnPlatform(placement.support.GetComponent<Rigidbody>());
+                }
+            }
+            catch (System.Exception exception)
+            {
+                foreach (var dropped in spawned)
+                    if (dropped != null) { if (dropped.IsSpawned) ServerManager.Despawn(dropped.NetworkObject); else Destroy(dropped.gameObject); }
+                Debug.LogException(exception, this);
+                return false;
+            }
             if (item >= InventoryItem.Wine && !CannonAmmo.IsBall(item)) equipmentItems[slot] = InventoryItem.None;
             else if (item == InventoryItem.Pistol) pistolSlots.Value &= ~(1 << slot);
             else if (item == InventoryItem.Rod) rodSlots.Value &= ~(1 << slot);
             else if (item == InventoryItem.Cannon) cannonSlots.Value &= ~(1 << slot);
-            else if (CannonAmmo.IsBall(item)) ballCounts[slot]--;
+            else if (CannonAmmo.IsBall(item)) ballCounts[slot] -= amount;
             else if (item == InventoryItem.Mallet) malletSlots.Value &= ~(1 << slot);
             else if (item == InventoryItem.Sabre) sabreSlots.Value &= ~(1 << slot);
-            else if (item == InventoryItem.Plank) plankCounts[slot]--;
-            else if (item == InventoryItem.Rum) rumCounts[slot]--;
-            else fishCounts[slot]--;
-            ApplyInventory(); DropSoundObserversRpc(point);
+            else if (item == InventoryItem.Plank) plankCounts[slot] -= amount;
+            else if (item == InventoryItem.Rum) rumCounts[slot] -= amount;
+            else fishCounts[slot] -= amount;
+            ApplyInventory(); DropSoundObserversRpc(placements[0].point); return true;
         }
         [ObserversRpc(RunLocally = true)] void DropSoundObserversRpc(Vector3 point) => GameAudio.Play(SoundCue.Place, point);
         public void SelectSlot(int slot) => SelectSlotServerRpc(slot);
@@ -170,9 +206,9 @@ namespace PirateSlop.Networking
             if (inventory == null || slot < 0 || slot >= PlayerInventory.SlotCount) return;
             selectedSlot.Value = slot; inventory.SetSelection(slot);
         }
-        public void UseChest(NetworkObject target, int slot = -1) => UseChestServerRpc(target, slot);
+        public void UseChest(NetworkObject target, int slot = -1, bool swap = false) => UseChestServerRpc(target, slot, swap, inventory.SelectedSlot, inventory.ItemAt(inventory.SelectedSlot), inventory.ItemCount(inventory.SelectedSlot));
         [ServerRpc]
-        void UseChestServerRpc(NetworkObject target, int slot)
+        void UseChestServerRpc(NetworkObject target, int slot, bool swap, int selected, InventoryItem expected, int expectedCount)
         {
             var motor = GetComponent<AdvancedPlayerController>();
             var fishing = inventory.Fishing;
@@ -185,7 +221,7 @@ namespace PirateSlop.Networking
             foreach (var hit in Physics.RaycastAll(origin, delta.normalized, delta.magnitude, ~0, QueryTriggerInteraction.Ignore))
                 if (!hit.transform.IsChildOf(transform) && !hit.transform.IsChildOf(target.transform)) return;
             if (slot < 0) { chest.Open(); OpenChestTargetRpc(Owner, target); }
-            else chest.Take(this, slot);
+            else chest.Take(this, slot, swap, selected, expected, expectedCount);
         }
         [TargetRpc]
         void OpenChestTargetRpc(FishNet.Connection.NetworkConnection connection, NetworkObject target)

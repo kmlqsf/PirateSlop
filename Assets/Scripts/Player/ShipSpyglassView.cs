@@ -163,7 +163,7 @@ namespace PirateSlop
         void OnGUI()
         {
             if (!player.IsOwner) return;
-            if (station == null) { if (aimed != null) PirateHudStyle.Panel(new Rect(Screen.width/2f-160,Screen.height-170,320,30), "E — смотреть в подзорную трубу"); return; }
+            if (station == null) { if (aimed != null) ContextPrompt.Offer("ПОДЗОРНАЯ ТРУБА · E — смотреть", 40); return; }
             if (mask == null)
             {
                 mask = new Texture2D(128,128,TextureFormat.RGBA32,false); mask.wrapMode = TextureWrapMode.Clamp;
@@ -177,7 +177,7 @@ namespace PirateSlop
             GUI.DrawTexture(new Rect((Screen.width+size)/2f,0,Screen.width,size),Texture2D.whiteTexture);
             GUI.color=Color.white; GUI.DrawTexture(new Rect((Screen.width-size)/2f,0,size,size),mask);
             GUI.Label(new Rect(Screen.width/2f-5,Screen.height/2f-10,20,20),"+");
-            PirateHudStyle.Panel(new Rect(Screen.width/2f-330,Screen.height-65,660,35),"Колесо — зум · Нажать колесо — метка на 2 мин · E / Esc — выйти"); GUI.color=old;
+            ContextPrompt.Draw("ПОДЗОРНАЯ ТРУБА · Колесо — зум · Нажать колесо — метка на 2 мин · E / Esc — выйти"); GUI.color=old;
             PlayerHud.DrawCompass(cameraView);
             TargetMarkHud.Draw(player, cameraView);
         }

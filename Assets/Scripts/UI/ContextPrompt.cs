@@ -19,10 +19,15 @@ namespace PirateSlop
         void OnGUI()
         {
             if (Event.current.type != EventType.Repaint || frame != Time.frameCount || !motor.InputActive || PlayerInventory.LootWindowOpen || string.IsNullOrEmpty(current)) return;
+            Draw(current);
+        }
+        public static void Draw(string text)
+        {
+            if (Event.current.type != EventType.Repaint || string.IsNullOrEmpty(text)) return;
             float scale = Mathf.Clamp(Screen.height / 1080f, .65f, 1.25f);
             var matrix = GUI.matrix;
             GUI.matrix = Matrix4x4.Scale(Vector3.one * scale);
-            string[] rows = current.Replace(" • ", " · ").Split(new[] { " · ", "\n" }, System.StringSplitOptions.RemoveEmptyEntries);
+            string[] rows = text.Replace(" • ", " · ").Split(new[] { " · ", "\n" }, System.StringSplitOptions.RemoveEmptyEntries);
             float width = 650f, height = rows.Length * 31f + 18f;
             var panel = new Rect(Screen.width / scale * .5f - width * .5f, Screen.height / scale - 190f - height, width, height);
             PirateHudStyle.Brush(panel, PirateHudStyle.Ink);

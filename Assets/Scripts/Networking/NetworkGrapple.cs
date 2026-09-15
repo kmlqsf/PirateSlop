@@ -193,7 +193,7 @@ namespace PirateSlop.Networking
         void OnGUI()
         {
             if (!IsOwner || hookPhase.Value == 0 || !GetComponent<AdvancedPlayerController>().InputActive) return;
-            PirateHudStyle.Panel(new Rect(Screen.width * .5f - 300, Screen.height - 180, 600, 32), "A/D — раскачиваться · Отпустить ЛКМ — отпустить канат");
+            ContextPrompt.Offer("КАНАТ · A/D — раскачиваться · Отпустить ЛКМ — отпустить канат", 60);
         }
     }
 }

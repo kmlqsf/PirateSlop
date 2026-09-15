@@ -25,10 +25,11 @@ namespace PirateSlop.Networking
         {
             if (IsServerInitialized && IsSpawned && Available) opened.Value = true;
         }
-        public void Take(NetworkWeapon player, int slot)
+        public void Take(NetworkWeapon player, int slot, bool swap = false, int selected = -1, InventoryItem expected = InventoryItem.None, int expectedCount = 0)
         {
             if (!IsServerInitialized || !IsSpawned || !opened.Value || !Available || player == null || !player.CanHandleLoot(this)) return;
             var item = ItemAt(slot);
+            if (item != InventoryItem.None && swap && !player.CanAddItem(item) && !player.PrepareSwap(item, selected, expected, expectedCount)) return;
             if (item != InventoryItem.None && player.AddItem(item)) contents[slot] = InventoryItem.None;
             for (int i = 0; i < contents.Count; i++) if (contents[i] != InventoryItem.None) return;
             ServerManager.Despawn(NetworkObject);

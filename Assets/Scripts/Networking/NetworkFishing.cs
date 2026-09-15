@@ -42,6 +42,7 @@ namespace PirateSlop.Networking
         CannonHands hands;
         DirectShipControls controls;
         GameObject rod, fish, bobber;
+        FishingRodBend rodBend;
         LineRenderer line;
         float deadline, lastReel, nextCast, nextInput, nextReelSound, castStarted;
         bool reeling;
@@ -67,7 +68,7 @@ namespace PirateSlop.Networking
             if (IsEating) return;
             aimed = FindFish();
             if (aimed != null && !aimed.Available) aimed = null;
-            if (aimed != null && !IsFishing && !CarryingCatch && keys.eKey.wasPressedThisFrame) { PickupServerRpc(aimed.NetworkObject); return; }
+            if (aimed != null && !IsFishing && !CarryingCatch && keys.eKey.wasPressedThisFrame) { PickupServerRpc(aimed.NetworkObject, keys.leftShiftKey.isPressed || keys.rightShiftKey.isPressed, inventory.SelectedSlot, inventory.ItemAt(inventory.SelectedSlot), inventory.ItemCount(inventory.SelectedSlot)); return; }
             if (CarryingCatch)
             {
                 if (keys.gKey.wasPressedThisFrame) DropServerRpc();
@@ -228,7 +229,7 @@ namespace PirateSlop.Networking
             SoundObserversRpc(SoundCue.FishDrop, point);
         }
         [ServerRpc]
-        void PickupServerRpc(NetworkObject target)
+        void PickupServerRpc(NetworkObject target, bool swap, int slot, InventoryItem expected, int expectedCount)
         {
             if (!Available || IsEating || stage.Value != 0 || target == null || Vector3.Distance(transform.position + Vector3.up, target.transform.position) > 3.5f) return;
             var item = target.GetComponent<NetworkFish>();
@@ -239,6 +240,8 @@ namespace PirateSlop.Networking
             foreach (var hit in Physics.RaycastAll(origin, delta.normalized, delta.magnitude, ~0, QueryTriggerInteraction.Ignore))
                 if (!hit.transform.IsChildOf(transform) && !hit.transform.IsChildOf(target.transform)) return;
             var equipment = GetComponent<NetworkWeapon>();
+            if (item == null || !item.Available) return;
+            if (swap && !equipment.CanAddItem(item.CurrentItem) && !equipment.PrepareSwap(item.CurrentItem, slot, expected, expectedCount)) return;
             if (item != null && equipment.CanAddItem(item.CurrentItem))
             {
                 var kind = item.CurrentItem;
@@ -287,6 +290,7 @@ namespace PirateSlop.Networking
             if (rod == null)
             {
                 rod = Instantiate(RodModel, transform); fish = Instantiate(FishModel, transform); bobber = Instantiate(FloatModel);
+                rodBend = rod.AddComponent<FishingRodBend>();
                 if (IsOwner) { motor.ViewMotion.Register(rod.transform); motor.ViewMotion.Register(fish.transform); }
                 var go = new GameObject("FishingLine"); go.transform.SetParent(transform);
                 line = go.AddComponent<LineRenderer>(); line.sharedMaterial = LineMaterial;
@@ -298,6 +302,7 @@ namespace PirateSlop.Networking
             rod.SetActive(inventory.RodSelected && !CarryingCatch && !HasFish && Available);
             fish.SetActive(HasFish && !CarryingCatch && !motor.IsDead);
             rod.transform.SetPositionAndRotation(hand, anchor.rotation * Quaternion.Euler(stage.Value == 3 ? -18f + Mathf.Sin(Time.time * 24f) * 5f : stage.Value == 4 ? -15f + Mathf.Sin(Time.time * 18f) * 2f : -12f, -8f, 0));
+            rodBend.SetBend(stage.Value == 3 ? .12f + Mathf.Sin(Time.time * 24f) * .07f : stage.Value == 4 ? .1f + Mathf.Sin(Time.time * 18f) * .025f : 0f);
             fish.transform.SetPositionAndRotation(hand, anchor.rotation * Quaternion.Euler(0, 90, Mathf.Sin(Time.time * 9f) * 4f));
             if (IsEating) fish.transform.position = Vector3.Lerp(hand, anchor.TransformPoint(first ? new Vector3(.05f, -.12f, .3f) : new Vector3(.1f, 1.55f, .25f)), .8f + Mathf.Sin(Time.time * 14f) * .1f);
             if (shownStage != stage.Value) { if (stage.Value == 1) castStarted = Time.time; shownStage = stage.Value; }
@@ -305,7 +310,7 @@ namespace PirateSlop.Networking
             float windup = Mathf.Sin(Mathf.Clamp01((Time.time - catchWindupAt) / .3f) * Mathf.PI);
             UpdateCatchVisual(hand + anchor.TransformVector(new Vector3(.06f,.09f,-.18f) * windup), anchor.rotation * Quaternion.Euler(-22f * windup,0,0));
             if (!IsFishing) return;
-            Vector3 tip = rod.transform.TransformPoint(new Vector3(0, .15f, 1.7f));
+            Vector3 tip = rodBend.Tip;
             Vector3 end = CastPosition;
             if (OceanSurface.Instance != null) end.y = OceanSurface.Instance.Height(end) + .04f;
             if (stage.Value == 3) end.y -= .12f + Mathf.Sin(Time.time * 24f) * .09f;
@@ -364,6 +369,7 @@ namespace PirateSlop.Networking
             string hint = aimed != null && !IsFishing && !CarryingCatch ? (inventory.CanFitItem(aimed.CurrentItem) ? "E — подобрать " + aimed.ItemName : inventory.CannotFitHint(aimed.CurrentItem)) : HasFish ? (CarryingCatch ? "Инвентарь заполнен! " : "") + "G — выбросить рыбу · ПКМ — съесть (+25 HP)" : !inventory.RodSelected ? "" :
                 stage.Value == 0 ? "ЛКМ — забросить в море" : stage.Value == 1 ? "Заброс…" : stage.Value == 2 ? "Ждите поклёвку… · ПКМ — убрать удочку" : stage.Value == 3 ? "КЛЮЁТ! Зажмите ЛКМ!" : "Держите ЛКМ — вытянуть рыбу: " + Mathf.RoundToInt(progress.Value * 100) + "%";
             if (stage.Value == 4) hint = "ЛКМ — вытянуть: " + InventoryIcons.ItemName(catchItem.Value) + " · " + Mathf.RoundToInt(progress.Value * 100) + "%";
+            if (aimed != null && !IsFishing && !CarryingCatch && inventory.CanSwapItem(aimed.CurrentItem)) hint = inventory.SwapHint(aimed.CurrentItem);
             if (CarryingCatch) hint = "Инвентарь заполнен: " + InventoryIcons.ItemName(catchItem.Value) + " · G — положить" + (catchItem.Value == InventoryItem.Fish ? " · ПКМ — съесть" : catchItem.Value == InventoryItem.Pufferfish || catchItem.Value == InventoryItem.Swordfish ? " · ЛКМ — бросить" : "");
             else if (inventory.EquipmentAt(inventory.SelectedSlot) == InventoryItem.Pufferfish || inventory.EquipmentAt(inventory.SelectedSlot) == InventoryItem.Swordfish) hint = InventoryIcons.ItemName(inventory.EquipmentAt(inventory.SelectedSlot)) + " · ЛКМ — бросить · G — положить";
             if (!IsEating && hint.Length > 0) ContextPrompt.Offer(hint, IsFishing || CarryingCatch ? 55 : aimed != null ? 45 : 5);

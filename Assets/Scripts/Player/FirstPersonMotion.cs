@@ -19,6 +19,7 @@ namespace PirateSlop
         Vector2 sway;
         float phase, movement, sprint, landing, previousVertical;
         bool grounded, initialized;
+        float previousSpeed, stopAt = -10f;
         public float StepPhase => phase;
         public void Register(Transform item) { if (item != null && !items.Contains(item)) items.Add(item); }
         void Awake() => motor = GetComponent<AdvancedPlayerController>();
@@ -48,6 +49,15 @@ namespace PirateSlop
             previousAim = aim;
             sway = Vector2.Lerp(sway, active ? Vector2.ClampMagnitude(turn / 180f, 1f) : Vector2.zero, 1f - Mathf.Exp(-10f * dt));
             float speed = active && motor.IsGrounded && !motor.IsSliding ? motor.PlanarSpeed : 0f;
+            if (active && motor.IsGrounded && !motor.IsSliding && previousSpeed > 5f && speed < .5f)
+            {
+                stopAt = Time.time;
+                var passenger = GetComponent<ShipDeckPassenger>();
+                GameAudio.Play(passenger != null && passenger.Ship != null ? SoundCue.FootstepWood : SoundCue.Footstep, transform.position, .55f);
+            }
+            previousSpeed = speed;
+            if (!active || !motor.IsGrounded || speed > .5f) stopAt = -10f;
+            float settle = Mathf.Sin(Mathf.Clamp01((Time.time - stopAt) / .18f) * Mathf.PI);
             movement = Mathf.Lerp(movement, Mathf.Clamp01(speed / 8f), 1f - Mathf.Exp(-12f * dt));
             phase = Mathf.Repeat(phase + speed * dt * Mathf.PI / 2f, Mathf.PI * 2f);
             float focus = handling != null ? handling.AimBlend : 0f;
@@ -57,9 +67,9 @@ namespace PirateSlop
             landing = Mathf.MoveTowards(landing, 0f, dt * .2f);
             float weight = strength * (1f - focus * .94f);
             var target = new Vector3(Mathf.Sin(phase) * .014f * movement - sway.x * .012f,
-                Mathf.Cos(phase * 2f) * .012f * movement - landing - sprint * .065f - motor.CrouchBlend * .02f,
+                Mathf.Cos(phase * 2f) * .012f * movement - landing - sprint * .065f - motor.CrouchBlend * .02f - settle * .018f,
                 -sprint * .025f - Mathf.Clamp(motor.VerticalSpeed, -8f, 8f) * (active && !grounded ? .0015f : 0f));
-            var rotation = new Vector3(sway.y * 1.2f + sprint * 8f + landing * 60f + motor.CrouchBlend * 3f, -sway.x * 1.8f,
+            var rotation = new Vector3(sway.y * 1.2f + sprint * 8f + landing * 60f + motor.CrouchBlend * 3f + settle * 1.5f, -sway.x * 1.8f,
                 Mathf.Sin(phase) * movement * 1.2f - motor.LocalMove.x * movement * 1.8f);
             offset = Vector3.Lerp(offset, active ? target * weight : Vector3.zero, 1f - Mathf.Exp(-14f * dt));
             angles = Vector3.Lerp(angles, active ? rotation * weight : Vector3.zero, 1f - Mathf.Exp(-14f * dt));

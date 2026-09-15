@@ -163,7 +163,7 @@ namespace PirateSlop
         {
             if (GetComponent<PlayerHud>() != null) return;
             if (!Equipped || !motor.InputActive || motor.LocomotionLocked || (hands != null && hands.HasHeldBall)) return;
-            GUI.Label(new Rect(Screen.width-290,Screen.height-65,280,55),SabreEquipped ? "Сабля · ЛКМ — удар" : reloading ? "Перезарядка…" : (loaded ? "Пистолет: 1 / ∞" : "Пистолет: 0 / ∞ — R") + "\nЛКМ — выстрел · R — перезарядка");
+            ContextPrompt.Offer(SabreEquipped ? "САБЛЯ · ЛКМ — удар" : reloading ? "ПИСТОЛЕТ · Перезарядка…" : (loaded ? "ПИСТОЛЕТ · Заряжен" : "ПИСТОЛЕТ · Не заряжен") + " · ЛКМ — выстрел · R — перезарядка", 10);
         }
     }
 }

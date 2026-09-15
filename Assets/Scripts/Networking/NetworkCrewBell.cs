@@ -94,7 +94,7 @@ namespace PirateSlop.Networking
                 PirateHudStyle.Panel(new Rect(Screen.width * .5f - 250, 100, 500, 32), crewMessage);
             if (!IsOwner || SessionController.MenuOpen) return;
             if (motor.IsDead && !player.Eliminated.Value)
-                PirateHudStyle.Panel(new Rect(Screen.width * .5f - 240, Screen.height * .5f + 65, 480, 32), requested ? "Просьба позвонить в колокол отправлена" : "R — попросить экипаж позвонить в колокол");
+                ContextPrompt.Draw(requested ? "ЭКИПАЖ · Просьба позвонить в колокол отправлена" : "ЭКИПАЖ · R — попросить позвонить в колокол");
             if (aimed == null) return;
             ContextPrompt.Offer(bellStatus, 60);
         }

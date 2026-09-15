@@ -324,7 +324,7 @@ namespace PirateSlop.Networking
             if(Scoped) DrawScope();
             if(Firearm || Item == InventoryItem.Pufferfish || Item == InventoryItem.Swordfish) return;
             string hint = action.Value == 2 ? "Пьём…" : Item == InventoryItem.GrapplingHook ? "Удерживать ЛКМ — крюк (35 м) · Отпустить ЛКМ — разорвать зацеп" : Item == InventoryItem.Wine ? "Удерживать ЛКМ — бег по воде на 60 с" : "ЛКМ — выпустить попугая • цель до 100 м • 50 урона";
-            PirateHudStyle.Label(new Rect(Screen.width/2f-300,Screen.height-175,600,32),hint,PirateHudStyle.Paper);
+            ContextPrompt.Offer(hint, 20);
         }
         void DrawScope()
         {

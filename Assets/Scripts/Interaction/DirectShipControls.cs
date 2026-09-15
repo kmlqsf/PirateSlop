@@ -144,17 +144,11 @@ namespace PirateSlop
                 float rudder = handle.Helm.CurrentRudderNormalized;
                 hint += Mathf.Abs(rudder) < .008f ? " · РУЛЬ ПРЯМО" : $" · {(rudder < 0f ? "ВЛЕВО" : "ВПРАВО")} {Mathf.Abs(rudder) * 100f:0}%";
             }
-            if (hint.Length > 0) ContextPrompt.Offer(hint, 35);
             if (grabbed != null && grabbed.Helm != null) PirateHudStyle.Diamond(new Vector2(pointer.x, Screen.height - pointer.y), 8, PirateHudStyle.Gold);
-            if (nearbySails == null) return;
+            if (nearbySails == null) { if (hint.Length > 0) ContextPrompt.Offer(hint, 35); return; }
             var ship = nearbySails.GetComponent<ShipController>();
             float deploy = nearbySails.DeployPercentage;
-            Rect panel = new Rect(Screen.width * .5f - 235, Screen.height - 230, 470, 66);
-            PirateHudStyle.Panel(panel, "Колесо мыши — паруса: " + Mathf.RoundToInt(deploy * 100f) + "%\nСкорость: " + ship.Speed.ToString("F1") + " / " + (ship.MaxSpeed * deploy).ToString("F1") + " м/с");
-            Color old = GUI.color;
-            GUI.color = new Color(.9f, .72f, .28f);
-            GUI.DrawTexture(new Rect(panel.x + 12, panel.yMax - 12, (panel.width - 24) * deploy, 5), Texture2D.whiteTexture);
-            GUI.color = old;
+            ContextPrompt.Offer((hint.Length > 0 ? hint + " · " : "ПАРУСА · ") + "Колесо мыши — паруса: " + Mathf.RoundToInt(deploy * 100f) + "% · Скорость: " + ship.Speed.ToString("F1") + " / " + (ship.MaxSpeed * deploy).ToString("F1") + " м/с", handle != null ? 35 : 15);
         }
     }
 }

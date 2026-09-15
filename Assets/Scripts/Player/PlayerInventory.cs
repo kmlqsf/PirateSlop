@@ -16,6 +16,9 @@ namespace PirateSlop
         public static bool LootWindowOpen => lootOwner != null && lootOwner.lootWindow;
         bool lootWindow;
         float selectionShownAt;
+        string actionMessage;
+        float messageUntil;
+        public void ShowMessage(string message) { actionMessage = message; messageUntil = Time.unscaledTime + 3f; }
         NetworkLootChest openChest;
         float nextLootInput, lockPromptAt;
         int shownLockRound = -1;
@@ -69,6 +72,14 @@ namespace PirateSlop
             if (!CannonAmmo.IsBall(item)) return FullInventoryHint;
             return "СЛОТ ЯДЕР " + BallCount(AmmoSlot) + "/2 · " + (BallCount(AmmoSlot) >= AmmoCapacity ? "Нет места" : "Уже хранится другой тип") + ": " + InventoryIcons.ItemName(BallItem(AmmoSlot)) + " · 7 — выбрать ядра · G — положить выбранное ядро";
         }
+        public bool CanSwapItem(InventoryItem incoming)
+        {
+            if (CanFitItem(incoming) || incoming < InventoryItem.Fish || incoming > InventoryItem.Swordfish || incoming == InventoryItem.Plank) return false;
+            if (CannonAmmo.IsBall(incoming)) return SelectedSlot == AmmoSlot && BallCount(AmmoSlot) > 0 && BallItem(AmmoSlot) != incoming;
+            return SelectedSlot < AmmoSlot && ItemAt(SelectedSlot) != InventoryItem.None;
+        }
+        public int ItemCount(int slot) => ItemAt(slot) == InventoryItem.None ? 0 : Mathf.Max(1, Mathf.Max(BallCount(slot), Mathf.Max(FishCount(slot), Mathf.Max(RumCount(slot), PlankCount(slot)))));
+        public string SwapHint(InventoryItem incoming) => "ВЗЯТЬ: " + InventoryIcons.ItemName(incoming) + " ×1 · НА ПАЛУБУ: " + InventoryIcons.ItemName(ItemAt(SelectedSlot)) + " ×" + ItemCount(SelectedSlot) + " · Shift+E — обменять весь выбранный слот";
         public void OpenLoot(NetworkLootChest target)
         {
             if (target == null || !target.Available || !network.IsOwner || motor.IsDead || network.LootHandsBusy || Vector3.Distance(transform.position, target.transform.position) > 5f) return;
@@ -360,6 +371,7 @@ namespace PirateSlop
         {
             if (motor == null || motor.PlayerCamera == null || !motor.PlayerCamera.enabled || SessionController.MenuOpen) return;
             if (motor.IsDead || ShipSpyglassView.IsViewing) return;
+            if (Time.unscaledTime < messageUntil && !lootWindow) ContextPrompt.Offer(actionMessage, 90);
             if (network != null && network.WorkingLoot != null)
             {
                 string workHint = network.WorkingLoot.Kind == SeaLootKind.Raft && Time.unscaledTime - lockPromptAt < .85f ? "Подготовка отмычки…" : network.WorkingLoot.WorkHint;
@@ -392,14 +404,15 @@ namespace PirateSlop
                     var item = openChest.ItemAt(i);
                     var rect = new Rect(panel.x + 12 + i % 6 * width, panel.y + 30 + i / 6 * 78, width - 4, 72);
                     bool fits = CanFitItem(item);
+                    bool swap = CanSwapItem(item);
                     if (item != InventoryItem.None && rect.Contains(Event.current.mousePosition))
-                        lootHint = fits ? "Забрать: " + InventoryIcons.ItemName(item) : "Нет места: " + InventoryIcons.ItemName(item);
-                    GUI.enabled = item != InventoryItem.None && fits;
+                        lootHint = fits ? "Забрать: " + InventoryIcons.ItemName(item) : swap ? "Shift+клик: выложить " + InventoryIcons.ItemName(ItemAt(SelectedSlot)) + " ×" + ItemCount(SelectedSlot) : "Нет места: " + InventoryIcons.ItemName(item);
+                    GUI.enabled = item != InventoryItem.None && (fits || swap);
                     bool take = Icons != null ? Icons.DrawSlot(rect, item, 1, "", true) : GUI.Button(rect, InventoryIcons.ItemName(item));
-                    if (take) network.UseChest(openChest.NetworkObject, i);
+                    if (take) network.UseChest(openChest.NetworkObject, i, Event.current.shift);
                 }
                 GUI.enabled = true;
-                PirateHudStyle.Label(new Rect(panel.x + 12, panel.yMax - 32, panelWidth - 110, 24), lootHint, PirateHudStyle.Muted);
+                PirateHudStyle.Label(new Rect(panel.x + 12, panel.yMax - 32, panelWidth - 110, 24), Time.unscaledTime < messageUntil ? "Обмен отменён — освободите место и повторите" : lootHint, PirateHudStyle.Muted);
                 if (PirateHudStyle.Button(new Rect(panel.xMax - 92, panel.yMax - 32, 80, 24), "Закрыть")) CloseLoot(true);
                 return;
             }
