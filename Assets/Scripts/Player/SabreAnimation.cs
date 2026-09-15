@@ -11,14 +11,16 @@ namespace PirateSlop
         public Quaternion GripRotation = Quaternion.FromToRotation(Vector3.up, Vector3.left);
         PirateWeapon weapon;
         PlayerInventory inventory;
+        PirateSlop.Networking.NetworkFishing fishing;
         Transform[] bodyBones, viewBones;
         int layer;
-        public bool Active => weapon != null && inventory != null && inventory.SabreSelected && weapon.AnimationEquipped;
+        public bool Active => weapon != null && inventory != null && inventory.SabreSelected && weapon.AnimationEquipped && (fishing == null || !fishing.IsPickingUp);
 
         void Awake()
         {
             weapon = GetComponent<PirateWeapon>();
             inventory = GetComponent<PlayerInventory>();
+            fishing = GetComponent<PirateSlop.Networking.NetworkFishing>();
             layer = BodyAnimator.GetLayerIndex("SabreCombat");
             var rig = GetComponent<WeaponArmRig>();
             var body = rig.BodyRig.GetComponentsInChildren<Transform>(true);

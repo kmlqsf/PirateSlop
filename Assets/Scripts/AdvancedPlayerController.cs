@@ -74,7 +74,8 @@ public class AdvancedPlayerController : MonoBehaviour
     public bool IsDead => health != null && health.IsDead;
     bool locomotionLocked;
     public SimpleCannon ActiveCannon { get; set; }
-    public bool LocomotionLocked => locomotionLocked || ActiveCannon != null || (lootNetwork != null && lootNetwork.LootWorkLocked);
+    public bool PickupLocked { get; set; }
+    public bool LocomotionLocked => locomotionLocked || PickupLocked || ActiveCannon != null || (lootNetwork != null && lootNetwork.LootWorkLocked);
     PirateSlop.Networking.NetworkWeapon lootNetwork;
     public bool IsSliding => slideTimer > 0f;
     public bool IsCrouched => crouched;
