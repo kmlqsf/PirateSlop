@@ -101,15 +101,21 @@ namespace PirateSlop.Networking
         public override void OnStartClient()
         {
             motor.ConfigureNetwork(IsOwner && !SessionController.Instance.Automated);
-            if (IsOwner) SessionController.Instance.PlayerReady(this);
+            if (IsOwner)
+            {
+                SessionController.Instance.PlayerReady(this);
+            }
+            StartVoice();
             TryBind();
         }
         public override void OnStartServer()
         {
+            if (!voicePlayers.Contains(this)) voicePlayers.Add(this);
             if (IsBot.Value) bot = new BotCaptain(this);
         }
         public override void OnStopNetwork()
         {
+            StopVoice();
             TargetMarks = System.Array.Empty<TargetMarkState>();
             bot?.Stop();
             TimeManager.OnTick -= Tick; TimeManager.OnPostTick -= PostTick;

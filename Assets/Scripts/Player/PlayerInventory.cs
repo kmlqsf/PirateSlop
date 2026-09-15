@@ -379,13 +379,14 @@ namespace PirateSlop
             }
             else if (network != null && network.CarriedLoot != null)
                 ContextPrompt.Offer("Несёте ящик · G — положить", 40);
+            using var layout = new HudLayout.Scope(true);
             Color old = GUI.color;
-            float width = Mathf.Min(76f, (Screen.width - 48f) / SlotCount);
+            float width = Mathf.Min(76f, (HudLayout.Width - 48f) / SlotCount);
             for (int i = 0; i < SlotCount; i++)
             {
                 if (i != AmmoSlot && !lootWindow && ItemAt(i) == InventoryItem.None && Time.unscaledTime - selectionShownAt > 3) continue;
                 GUI.color = i == SelectedSlot ? new Color(1f, .8f, .35f) : Color.white;
-                var rect = new Rect(Screen.width * .5f - width * 3.5f + width * i + (i == AmmoSlot ? 12f : 0f), Screen.height - 94, width - 4, 66);
+                var rect = new Rect(HudLayout.Width * .5f - (width * SlotCount + 12f) * .5f + width * i + (i == AmmoSlot ? 12f : 0f), HudLayout.Height - 94, width - 4, 66);
                 if (i == AmmoSlot) PirateHudStyle.Label(new Rect(rect.x - 8, rect.y - 24, rect.width + 16, 24), "ЯДРА " + BallCount(i) + "/2", PirateHudStyle.Gold);
                 if (Icons != null) Icons.DrawSlot(rect, ItemAt(i), Mathf.Max(RumCount(i), Mathf.Max(FishCount(i), Mathf.Max(BallCount(i), PlankCount(i)))), (i + 1).ToString(), false);
                 else PirateHudStyle.Panel(rect, (i + 1) + "\n" + InventoryIcons.ItemName(ItemAt(i)));
@@ -395,7 +396,7 @@ namespace PirateSlop
             {
                 int slots = Mathf.Max(6, openChest.SlotCount), rows = Mathf.CeilToInt(slots / 6f);
                 float panelWidth = width * 6 + 24, panelHeight = 75 + rows * 78;
-                var panel = new Rect((Screen.width - panelWidth) * .5f, (Screen.height - panelHeight) * .5f, panelWidth, panelHeight);
+                var panel = new Rect((HudLayout.Width - panelWidth) * .5f, (HudLayout.Height - panelHeight) * .5f, panelWidth, panelHeight);
                 PirateHudStyle.Panel(panel);
                 PirateHudStyle.Label(new Rect(panel.x + 12, panel.y + 4, panel.width - 24, 25), "СУНДУК  ·  Заберите припасы", PirateHudStyle.Gold);
                 string lootHint = "Нажмите на предмет, чтобы забрать";
@@ -417,7 +418,7 @@ namespace PirateSlop
                 return;
             }
             if (Time.unscaledTime - selectionShownAt < 2.5f)
-                PirateHudStyle.Label(new Rect(Screen.width * .5f - 180, Screen.height - 138, 360, 26), InventoryIcons.ItemName(ItemAt(SelectedSlot)), PirateHudStyle.Paper);
+                PirateHudStyle.Label(new Rect(HudLayout.Width * .5f - 180, HudLayout.Height - 138, 360, 26), InventoryIcons.ItemName(ItemAt(SelectedSlot)), PirateHudStyle.Paper);
             string hint = aimedCannon != null && aimedCannon.Network != null && aimedCannon.Network.HasBoarding(aimedCannon.Index) ? "Колесо вверх — натянуть · вниз — ослабить канат" : aimedBall != null && aimedBall.Network != null ? "ЛКМ / E — взять ядра (до 2 в слоте)" : BallSelected && aimedCannon != null && !aimedCannon.AcceptsAmmo(BallItem(SelectedSlot)) ? "Неподходящий боеприпас · E — прицелиться" : BallSelected && aimedCannon != null && !aimedCannon.IsLoaded ? "E — зарядить выбранное ядро" : chest != null ? chest.Hint(this) : pickup != null ? (EmptySlot() >= 0 ? "E — взять разобранную пушку" : "Инвентарь заполнен") : Placing && !cancelled ? "ЛКМ — поставить · R/колесо — поворот · Q/E — наклон\nShift+Q/E — крен · ПКМ — отменить" : "";
             if (hint.Length > 0) ContextPrompt.Offer(hint, 40);
             if (aimedRumShelf != null) ContextPrompt.Offer(aimedRumShelf.Hint, 40);

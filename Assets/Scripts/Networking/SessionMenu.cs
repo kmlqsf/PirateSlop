@@ -126,8 +126,10 @@ namespace PirateSlop.Networking
                     bank.Ambience=MenuVolume(x,y+210,panelWidth,"Море и ветер",bank.Ambience,"AudioAmbience");
                     bank.Interface=MenuVolume(x,y+285,panelWidth,"Интерфейс",bank.Interface,"AudioInterface");
                 }
-                if(MenuAction(x,y+365,panelWidth,"Назад")) { PlayerPrefs.Save(); menuPage=0; }
+                if(MenuAction(x,y+350,panelWidth,"Голосовой чат")) menuPage=6;
+                if(MenuAction(x,y+415,panelWidth,"Назад")) { PlayerPrefs.Save(); menuPage=0; }
             }
+            else if(menuPage==6) DrawVoiceMenu(x,y,panelWidth);
             else if(menuPage==4)
             {
                 MenuText(new Rect(x,y,panelWidth,35),"УПРАВЛЕНИЕ");
