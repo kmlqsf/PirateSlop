@@ -160,7 +160,7 @@ public class ShipController : MonoBehaviour
         cannonTilt=Vector2.zero; cannonTiltVelocity=Vector2.zero;
         speed = s.Speed; yaw = s.Yaw; bank = s.Bank; pitch = s.Pitch; waveRoll = s.WaveRoll;
         rb.position = s.Position; rb.rotation = Quaternion.Euler(pitch + cannonTilt.x, yaw, bank + waveRoll + cannonTilt.y); transform.SetPositionAndRotation(rb.position, rb.rotation);
-        sailSystem.SetDeploy(s.Sail); helm.Restore(s.Rudder, s.Controlling, driver);
+        sailSystem.ApplyAggregate(s.Sail); helm.Restore(s.Rudder, s.Controlling, driver);
     }
     public void ApplyRemoteState(ShipState s, float blend, AdvancedPlayerController driver = null)
     {
@@ -176,7 +176,7 @@ public class ShipController : MonoBehaviour
         motionAngularVelocity = float.IsFinite(axis.sqrMagnitude) ? axis * (angle * Mathf.Deg2Rad / dt) : Vector3.zero;
         rb.position = position; rb.rotation = rotation;
         transform.SetPositionAndRotation(position, rotation);
-        sailSystem.SetDeploy(s.Sail); helm.Restore(s.Rudder, s.Controlling, driver);
+        sailSystem.ApplyAggregate(s.Sail); helm.Restore(s.Rudder, s.Controlling, driver);
     }
     public void ResolveCollision(Vector3 displacement, Vector3? contact = null, bool showEffect = true, float impactStrength = -1f)
     {

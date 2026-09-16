@@ -14,6 +14,11 @@ namespace PirateSlop
         SailSystem nearbySails;
         Vector2 pointer;
         float pendingDrag, nextSend;
+        float grabStarted, savedUntil;
+        SailSystem savedSails;
+        int savedRope;
+        bool ropeLockOwned;
+        int Participant => GetComponent<NetworkPlayer>() != null ? GetComponent<NetworkPlayer>().ParticipantId.Value : -1;
         public bool IsDragging => grabbed != null;
         public bool BlocksPrimary => grabbed != null || hovered != null;
 
@@ -33,19 +38,28 @@ namespace PirateSlop
         bool InRange(ShipControlHandle handle)
         {
             if (handle == null) return false;
+            if (handle.Sails != null) return handle.Sails.InRange(motor, handle.RopeIndex);
             if (handle.Helm != null) return handle.Helm.InRange(motor);
             return handle.Cannon != null && handle.Cannon.InBreechRange(motor);
         }
         void Update()
         {
+            if (grabbed == null && ropeLockOwned) Release();
             nearbySails = null;
             if (inventory != null && (inventory.HandsOccupied || (inventory.Fishing != null && inventory.Fishing.IsFishing))) { Release(); Hover(null); return; }
             var mouse = Mouse.current;
-            if (!motor.InputActive || motor.LocomotionLocked || (motor.IsSwimming || motor.IsClimbing) || mouse == null || (inventory != null && inventory.Placing) || (hands != null && hands.HasHeldBall))
+            if (!motor.InputActive || motor.OtherLocomotionLocked || motor.IsKnockedBack || (motor.IsSwimming || motor.IsClimbing) || mouse == null || (inventory != null && inventory.Placing) || (hands != null && hands.HasHeldBall))
             { Release(); Hover(null); return; }
             if (grabbed != null)
             {
-                if (!mouse.leftButton.isPressed || !InRange(grabbed)) { Release(); Hover(null); return; }
+                var kb = Keyboard.current;
+                if (!mouse.leftButton.isPressed || !InRange(grabbed) || kb != null && (kb.qKey.wasPressedThisFrame || kb.eKey.wasPressedThisFrame || kb.escapeKey.wasPressedThisFrame)) { Release(); Hover(null); return; }
+                if (grabbed.Sails != null)
+                {
+                    int owner = grabbed.Sails.Owner(grabbed.RopeIndex);
+                    if (owner != 0 && owner != Participant || owner == 0 && Time.unscaledTime - grabStarted > 1.5f) { Release(); Hover(null); return; }
+                    nearbySails = grabbed.Sails;
+                }
                 Vector2 delta = mouse.delta.ReadValue();
                 if (grabbed.Helm != null)
                 {
@@ -57,6 +71,7 @@ namespace PirateSlop
                     if (before.sqrMagnitude > .0025f && after.sqrMagnitude > .0025f) pendingDrag += Vector3.SignedAngle(before, after, wheel.forward);
                     else pendingDrag += delta.x * .3f;
                 }
+                else if (grabbed.Sails != null) pendingDrag -= delta.y / 420f;
                 else pendingDrag += delta.y * .12f;
                 if (Time.unscaledTime >= nextSend) Send(true);
                 return;
@@ -89,20 +104,15 @@ namespace PirateSlop
             Hover(handle != null && handle.Cannon == null && InRange(handle) ? handle : null);
             if (hovered != null && mouse.leftButton.wasPressedThisFrame)
             {
+                if (hovered.Sails != null && hovered.Sails.Owner(hovered.RopeIndex) != 0 && hovered.Sails.Owner(hovered.RopeIndex) != Participant) return;
                 grabbed = hovered; pointer = new Vector2(Screen.width * .5f, Screen.height * .5f); pendingDrag = 0;
+                grabStarted = Time.unscaledTime;
+                if (grabbed.Sails != null) { ropeLockOwned = true; motor.SailPullLocked = true; nearbySails = grabbed.Sails; }
                 Send(true); return;
             }
-            if (hovered != null) return;
+            if (hovered != null) { nearbySails = hovered.Sails; return; }
             foreach (var sails in FindObjectsByType<SailSystem>(FindObjectsSortMode.None))
                 if (sails.InRange(motor)) { nearbySails = sails; break; }
-            if (nearbySails == null) return;
-            float scroll = mouse.scroll.ReadValue().y;
-            float steps = Mathf.Abs(scroll) >= 120f ? scroll / 120f : scroll;
-            float amount = Mathf.Clamp(steps * .075f, -.2f, .2f);
-            if (Mathf.Abs(amount) < .0001f) return;
-            var network = nearbySails.GetComponent<NetworkShip>();
-            if (network != null) network.AdjustSails(amount);
-            else nearbySails.AdjustSail(amount);
         }
         Vector3 WheelDirection(Transform wheel, Vector2 screenPoint)
         {
@@ -113,7 +123,13 @@ namespace PirateSlop
         void Send(bool holding)
         {
             if (grabbed == null) return;
-            if (grabbed.Helm != null)
+            if (grabbed.Sails != null)
+            {
+                var network = grabbed.Sails.GetComponent<NetworkShip>();
+                if (network != null) network.DragSailRope(grabbed.RopeIndex, pendingDrag, holding);
+                else grabbed.Sails.Drag(grabbed.RopeIndex, motor, pendingDrag, holding);
+            }
+            else if (grabbed.Helm != null)
             {
                 var network = grabbed.Helm.GetComponentInParent<NetworkShip>();
                 if (network != null) network.DragWheel(pendingDrag, holding);
@@ -129,6 +145,14 @@ namespace PirateSlop
         }
         void Release()
         {
+            if (ropeLockOwned && motor != null) motor.SailPullLocked = false;
+            ropeLockOwned = false;
+            if (grabbed != null && grabbed.Sails != null)
+            {
+                if (grabbed.Sails.Owner(grabbed.RopeIndex) == Participant)
+                { savedSails = grabbed.Sails; savedRope = grabbed.RopeIndex; savedUntil = Time.unscaledTime + 1.2f; }
+                motor.SailPullLocked = false;
+            }
             if (grabbed != null) { Send(false); grabbed.Highlight(false); }
             grabbed = null; pendingDrag = 0;
         }
@@ -137,7 +161,7 @@ namespace PirateSlop
         {
             if (motor == null || !motor.InputActive) return;
             var handle = grabbed != null ? grabbed : hovered;
-            string hint = handle != null ? (handle.Helm != null ? "ЛКМ + движение мышью по кругу — повернуть штурвал" : "ЛКМ + мышь вверх/вниз — наклонить ствол") : "";
+            string hint = handle != null && handle.Sails == null ? (handle.Helm != null ? "ЛКМ + движение мышью по кругу — повернуть штурвал" : "ЛКМ + мышь вверх/вниз — наклонить ствол") : "";
             if (handle != null && handle.Cannon != null) hint += "   " + handle.Cannon.Elevation.ToString("F0") + "°";
             if (handle != null && handle.Helm != null)
             {
@@ -145,10 +169,46 @@ namespace PirateSlop
                 hint += Mathf.Abs(rudder) < .008f ? " · РУЛЬ ПРЯМО" : $" · {(rudder < 0f ? "ВЛЕВО" : "ВПРАВО")} {Mathf.Abs(rudder) * 100f:0}%";
             }
             if (grabbed != null && grabbed.Helm != null) PirateHudStyle.Diamond(new Vector2(pointer.x, Screen.height - pointer.y), 8, PirateHudStyle.Gold);
-            if (nearbySails == null) { if (hint.Length > 0) ContextPrompt.Offer(hint, 35); return; }
-            var ship = nearbySails.GetComponent<ShipController>();
-            float deploy = nearbySails.DeployPercentage;
-            ContextPrompt.Offer((hint.Length > 0 ? hint + " · " : "ПАРУСА · ") + "Колесо мыши — паруса: " + Mathf.RoundToInt(deploy * 100f) + "% · Скорость: " + ship.Speed.ToString("F1") + " / " + (ship.MaxSpeed * deploy).ToString("F1") + " м/с", handle != null ? 35 : 15);
+            if (hint.Length > 0) ContextPrompt.Offer(hint, 35);
+            var displayed = nearbySails;
+            if (displayed == null && handle != null && handle.Helm != null) displayed = handle.Helm.GetComponentInParent<SailSystem>();
+            if (displayed == null && Time.unscaledTime < savedUntil) displayed = savedSails;
+            if (displayed == null) return;
+            DrawSails(displayed, handle != null && handle.Sails == displayed ? handle.RopeIndex : -1);
+        }
+        void DrawSails(SailSystem sails, int selected)
+        {
+            float scale = Mathf.Clamp(Screen.height / 1080f, .65f, 1.25f);
+            var matrix = GUI.matrix;
+            GUI.matrix = Matrix4x4.Scale(Vector3.one * scale);
+            float width = 330f, height = 88f + sails.RopeCount * 49f;
+            var panel = new Rect(Screen.width / scale - width - 35f, Screen.height / scale * .5f - height * .5f, width, height);
+            PirateHudStyle.Panel(panel);
+            PirateHudStyle.Label(new Rect(panel.x + 15, panel.y + 8, width - 30, 25), $"ПАРУСА   ·   ТЯГА {sails.EffectiveDeploy * 100f:0}%", PirateHudStyle.Gold);
+            for (int i = 0; i < sails.RopeCount; i++)
+            {
+                float y = panel.y + 41 + i * 49;
+                bool occupied = sails.Owner(i) != 0;
+                bool own = sails.Owner(i) == Participant;
+                float efficiency = sails.Efficiency(i), value = sails.Tension(i);
+                string state = efficiency <= 0f ? "УТРАЧЕН" : occupied ? own ? "ТЯНЕТЕ" : "ЗАНЯТ" : value <= .005f ? "ОСЛАБЛЕН" : "ЗАКРЕПЛЁН";
+                var color = efficiency < 1f ? new Color(.9f, .46f, .32f) : i == selected ? PirateHudStyle.Gold : PirateHudStyle.Paper;
+                if (i == selected) PirateHudStyle.Fill(new Rect(panel.x + 10, y, width - 20, 45), new Color(.4f, .32f, .17f, .25f));
+                PirateHudStyle.Label(new Rect(panel.x + 20, y, width - 40, 22), $"{i + 1}. {sails.RopeName(i)}   {value * 100f:0}%", color, false, TextAnchor.MiddleLeft);
+                PirateHudStyle.Bar(new Rect(panel.x + 20, y + 26, 138, 8), value, color);
+                if (efficiency > 0f && efficiency < 1f) state += " / УРОН";
+                PirateHudStyle.Label(new Rect(panel.x + 164, y + 20, width - 180, 23), state, color);
+            }
+            var ship = sails.GetComponent<ShipController>();
+            PirateHudStyle.Label(new Rect(panel.x + 15, panel.yMax - 36, width - 30, 25), ship != null ? $"Ход {ship.Speed:0.0} м/с · каждый парус {100f / Mathf.Max(1, sails.RopeCount):0}%" : "", PirateHudStyle.Muted);
+            GUI.matrix = matrix;
+            if (selected >= 0)
+            {
+                bool busy = sails.Owner(selected) != 0 && sails.Owner(selected) != Participant;
+                ContextPrompt.Offer(busy ? "Канат занят другим игроком" : grabbed != null ? "Мышь вниз — расправить · Мышь вверх — собрать · Отпустить ЛКМ — закрепить" : "ЛКМ — взять канат · Потянуть вниз — расправить; вверх — собрать", 40);
+            }
+            else if (sails == savedSails && Time.unscaledTime < savedUntil && sails.Owner(savedRope) == 0)
+                ContextPrompt.Offer($"{sails.RopeName(savedRope)}: закреплено {sails.Tension(savedRope) * 100f:0}%", 35);
         }
     }
 }

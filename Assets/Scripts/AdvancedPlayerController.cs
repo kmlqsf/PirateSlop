@@ -77,8 +77,10 @@ public class AdvancedPlayerController : MonoBehaviour
     public bool PickupLocked { get; set; }
     public PirateSlop.Networking.NetworkParrotDrone ActiveParrot { get; set; }
     public bool BellPullLocked { get; set; }
+    public bool SailPullLocked { get; set; }
     public float LookSensitivity => mouseSensitivity;
-    public bool LocomotionLocked => ActiveParrot != null || BellPullLocked || locomotionLocked || PickupLocked || ActiveCannon != null || (lootNetwork != null && lootNetwork.LootWorkLocked);
+    public bool OtherLocomotionLocked => ActiveParrot != null || BellPullLocked || locomotionLocked || PickupLocked || ActiveCannon != null || (lootNetwork != null && lootNetwork.LootWorkLocked);
+    public bool LocomotionLocked => SailPullLocked || OtherLocomotionLocked;
     PirateSlop.Networking.NetworkWeapon lootNetwork;
     public bool IsSliding => slideTimer > 0f;
     public bool IsCrouched => crouched;

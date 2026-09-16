@@ -1,5 +1,7 @@
 # Правила работы с Blender
 
+На ПК второго разработчика 2026-09-16 подтверждён Blender 5.2.2 LTS через действующий bridge 127.0.0.1:9876. Для такелажа парусов сохранён Art/Blender/SailRigging/SailRigging.blend; Blender не обновлялся в рамках задачи.
+
 Анимации персонажа и предметов: повторяемый MCP-процесс описан в `Art/Blender/Characters/ANIMATION_PIPELINE.md`; помощники `pose_studio.py`, пример `sabre_attack.py`, Unity-импорт `CharacterActionImport`.
 
 Сначала прочитать `project.md`; для импорта и интеграции — также `unity.md`.

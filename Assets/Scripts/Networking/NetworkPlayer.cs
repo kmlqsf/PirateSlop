@@ -115,6 +115,7 @@ namespace PirateSlop.Networking
         }
         public override void OnStopNetwork()
         {
+            foreach (var ship in NetworkShip.ActiveShips) ship.GetComponent<SailSystem>()?.ReleasePlayer(motor);
             StopVoice();
             TargetMarks = System.Array.Empty<TargetMarkState>();
             bot?.Stop();
