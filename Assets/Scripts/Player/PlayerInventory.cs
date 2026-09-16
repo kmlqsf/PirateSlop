@@ -47,7 +47,7 @@ namespace PirateSlop
         public InventoryItem ItemAt(int slot) => EquipmentAt(slot) != InventoryItem.None ? EquipmentAt(slot) : HasSabre(slot) ? InventoryItem.Sabre : PistolAt(slot) ? InventoryItem.Pistol : RodAt(slot) ? InventoryItem.Rod : HasCannon(slot) ? InventoryItem.Cannon : FishCount(slot) > 0 ? InventoryItem.Fish : BallCount(slot) > 0 ? BallItem(slot) : HasMallet(slot) ? InventoryItem.Mallet : PlankCount(slot) > 0 ? InventoryItem.Plank : RumCount(slot) > 0 ? InventoryItem.Rum : InventoryItem.None;
         public bool CanFitItem(InventoryItem item)
         {
-            if (item < InventoryItem.Fish || item > InventoryItem.Swordfish || item == InventoryItem.Plank) return false;
+            if (item < InventoryItem.Fish || item > InventoryItem.HolyGrenade || item == InventoryItem.Plank) return false;
             if (CannonAmmo.IsBall(item)) return BallCount(AmmoSlot) < AmmoCapacity && (BallCount(AmmoSlot) == 0 || BallItem(AmmoSlot) == item);
             for (int i = 0; i < 6; i++)
             {
@@ -74,7 +74,7 @@ namespace PirateSlop
         }
         public bool CanSwapItem(InventoryItem incoming)
         {
-            if (CanFitItem(incoming) || incoming < InventoryItem.Fish || incoming > InventoryItem.Swordfish || incoming == InventoryItem.Plank) return false;
+            if (CanFitItem(incoming) || incoming < InventoryItem.Fish || incoming > InventoryItem.HolyGrenade || incoming == InventoryItem.Plank) return false;
             if (CannonAmmo.IsBall(incoming)) return SelectedSlot == AmmoSlot && BallCount(AmmoSlot) > 0 && BallItem(AmmoSlot) != incoming;
             return SelectedSlot < AmmoSlot && ItemAt(SelectedSlot) != InventoryItem.None;
         }

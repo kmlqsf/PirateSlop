@@ -17,6 +17,7 @@ namespace PirateSlop
             InventoryItem.Musket => "Мушкет",
             InventoryItem.DoubleBarrel => "Двустволка",
             InventoryItem.BombParrot => "Попугай",
+            InventoryItem.HolyGrenade => "Святая граната",
             InventoryItem.GrapplingHook => "Крюк-кошка",
             InventoryItem.BoardingHook => "Абордажный крюк",
             InventoryItem.Pistol => "Пистолет",
@@ -72,6 +73,12 @@ namespace PirateSlop
                 GUIUtility.RotateAroundPivot(-40, center + Vector2.up * 14);
                 PirateHudStyle.Brush(new Rect(center.x - 3, center.y + 11, 25, 6), tint, true);
                 GUI.matrix = matrix;
+            }
+            else if (item == InventoryItem.HolyGrenade)
+            {
+                PirateHudStyle.Brush(new Rect(rect.center.x - 18, rect.y + 8, 36, 32), PirateHudStyle.Paper, true);
+                PirateHudStyle.Brush(new Rect(rect.center.x - 3, rect.y - 9, 6, 26), PirateHudStyle.Gold, true);
+                PirateHudStyle.Brush(new Rect(rect.center.x - 11, rect.y - 3, 22, 6), PirateHudStyle.Gold, true);
             }
             else if (item == InventoryItem.Rum)
             {

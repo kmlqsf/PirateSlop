@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace PirateSlop.Networking
 {
-    public enum InventoryItem { None = -1, Fish = 0, Pistol = 1, Rod = 2, Cannon = 3, Cannonball = 4, Mallet = 5, Plank = 6, Sabre = 7, FireCannonball = 8, IceCannonball = 9, PushCannonball = 10, BoomerangCannonball = 11, Rum = 12, Wine = 13, Musket = 14, DoubleBarrel = 15, BombParrot = 16, GrapplingHook = 17, BoardingHook = 18, Pufferfish = 19, Swordfish = 20 }
+    public enum InventoryItem { None = -1, Fish = 0, Pistol = 1, Rod = 2, Cannon = 3, Cannonball = 4, Mallet = 5, Plank = 6, Sabre = 7, FireCannonball = 8, IceCannonball = 9, PushCannonball = 10, BoomerangCannonball = 11, Rum = 12, Wine = 13, Musket = 14, DoubleBarrel = 15, BombParrot = 16, GrapplingHook = 17, BoardingHook = 18, Pufferfish = 19, Swordfish = 20, HolyGrenade = 21 }
     public sealed class NetworkFish : NetworkBehaviour
     {
         void Awake()
@@ -30,7 +30,7 @@ namespace PirateSlop.Networking
         Quaternion visualRotation;
         NetworkFishProjectile projectile;
         void OnDisable() => visualReady = false;
-        public bool Available => IsSpawned && !taken && !(GetComponent<NetworkFishProjectile>()?.Flying ?? false);
+        public bool Available => IsSpawned && !taken && !(GetComponent<NetworkFishProjectile>()?.Flying ?? false) && !(GetComponent<NetworkHolyGrenade>()?.Busy ?? false);
         float expires;
         float nextFlop;
         bool airborne;

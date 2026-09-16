@@ -75,14 +75,17 @@ public class AdvancedPlayerController : MonoBehaviour
     bool locomotionLocked;
     public SimpleCannon ActiveCannon { get; set; }
     public bool PickupLocked { get; set; }
-    public bool LocomotionLocked => locomotionLocked || PickupLocked || ActiveCannon != null || (lootNetwork != null && lootNetwork.LootWorkLocked);
+    public PirateSlop.Networking.NetworkParrotDrone ActiveParrot { get; set; }
+    public bool BellPullLocked { get; set; }
+    public float LookSensitivity => mouseSensitivity;
+    public bool LocomotionLocked => ActiveParrot != null || BellPullLocked || locomotionLocked || PickupLocked || ActiveCannon != null || (lootNetwork != null && lootNetwork.LootWorkLocked);
     PirateSlop.Networking.NetworkWeapon lootNetwork;
     public bool IsSliding => slideTimer > 0f;
     public bool IsCrouched => crouched;
     float crouchBlend;
     public float CrouchBlend => crouchBlend;
     public float PlanarSpeed { get; private set; }
-    public bool InputActive => !DeveloperMenu.IsOpen && !ShipSpyglassView.IsViewing && local && !IsDead && Cursor.lockState == CursorLockMode.Locked;
+    public bool InputActive => ActiveParrot == null && !BellPullLocked && !DeveloperMenu.IsOpen && !ShipSpyglassView.IsViewing && local && !IsDead && Cursor.lockState == CursorLockMode.Locked;
     public Camera PlayerCamera => playerCamera;
     void Awake()
     {
@@ -121,7 +124,7 @@ public class AdvancedPlayerController : MonoBehaviour
         aimRecoil=Vector2.Lerp(aimRecoil,Vector2.zero,1-Mathf.Exp(-7*Time.deltaTime));
         var kb = Keyboard.current; var mouse = Mouse.current;
         if (kb == null) return;
-        if (kb.f1Key.wasPressedThisFrame && ActiveCannon == null) SetThirdPerson(!IsThirdPerson);
+        if (kb.f1Key.wasPressedThisFrame && ActiveCannon == null && ActiveParrot == null && !BellPullLocked) SetThirdPerson(!IsThirdPerson);
         if (kb.escapeKey.wasPressedThisFrame) { pending.Release = true; SetCursor(false); }
         if (mouse != null && mouse.leftButton.wasPressedThisFrame && !PlayerInventory.LootWindowOpen && !PirateSlop.Networking.SessionController.MenuOpen) SetCursor(true);
         if (InputActive && ActiveCannon == null && mouse != null && (shipControls == null || !shipControls.IsDragging)) { var d = mouse.delta.ReadValue() * mouseSensitivity * AimSensitivityScale; lookYaw = Mathf.Repeat(lookYaw + d.x, 360f); pitch = Mathf.Clamp(pitch - d.y, -85f, 85f); }
@@ -461,5 +464,3 @@ public class AdvancedPlayerController : MonoBehaviour
         if ((controller.center - center).sqrMagnitude > .000001f) controller.center = center;
     }
 }
-
-

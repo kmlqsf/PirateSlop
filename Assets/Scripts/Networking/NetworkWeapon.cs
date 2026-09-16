@@ -46,7 +46,7 @@ namespace PirateSlop.Networking
         }
         public bool CanAddItem(InventoryItem item)
         {
-            if (!IsServerInitialized || item < InventoryItem.Fish || item > InventoryItem.Swordfish) return false;
+            if (!IsServerInitialized || item < InventoryItem.Fish || item > InventoryItem.HolyGrenade) return false;
             if (item == InventoryItem.Plank) return false;
             if (item == InventoryItem.Rum)
                 for (int i = 0; i < rumCounts.Count; i++) if (rumCounts[i] > 0 && rumCounts[i] < 6) return true;
@@ -134,6 +134,8 @@ namespace PirateSlop.Networking
         }
         bool DropSelectedAuthority(bool wholeSlot = false)
         {
+            var grenade = GetComponent<NetworkHolyGrenadeHands>();
+            if (grenade != null && grenade.Primed) return grenade.DropPrimed();
             var motor = GetComponent<AdvancedPlayerController>();
             if (LootHandsBusy || motor.IsDead || motor.IsSwimming || motor.IsClimbing || motor.LocomotionLocked || GetComponent<CannonHands>().HasHeldBall || inventory.Fishing.CarryingCatch || inventory.Fishing.IsEating) return false;
             int slot = selectedSlot.Value;

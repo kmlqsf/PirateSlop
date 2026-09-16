@@ -14,6 +14,7 @@ namespace PirateSlop
         Arm right, left, viewRight, viewLeft;
         Quaternion gripRotation;
         float weight;
+        PirateSlop.Networking.NetworkCrewBell bell;
         Transform[] triggerFingers;
         Quaternion[] triggerRest;
         PlayerInventory inventory;
@@ -52,6 +53,7 @@ namespace PirateSlop
         void Awake()
         {
             weapon = GetComponent<PirateWeapon>(); motor = GetComponent<AdvancedPlayerController>();
+            bell = GetComponent<PirateSlop.Networking.NetworkCrewBell>();
             right = new Arm(BodyRig, "R"); left = new Arm(BodyRig, "L");
             viewRight = new Arm(ViewArms, "R"); viewLeft = new Arm(ViewArms, "L");
             gripRotation = Quaternion.Euler(90, 0, 0);
@@ -67,12 +69,21 @@ namespace PirateSlop
         void Before(ScriptableRenderContext context, Camera camera)
         {
             if (renderers == null) return;
-            bool visible = (weapon.AnimationEquipped || (equipment != null && equipment.Active && !equipment.Scoped)) && camera == motor.PlayerCamera && camera.enabled && !motor.IsThirdPerson;
+            bool visible = ((bell != null && bell.IsPulling) || weapon.AnimationEquipped || (equipment != null && equipment.Active && !equipment.Scoped)) && camera == motor.PlayerCamera && camera.enabled && !motor.IsThirdPerson;
             foreach (var r in renderers) r.forceRenderingOff = !visible;
         }
         void After(ScriptableRenderContext context, Camera camera) { if (renderers != null) foreach (var r in renderers) r.forceRenderingOff = true; }
         void LateUpdate()
         {
+            if (bell != null && bell.IsPulling)
+            {
+                var point = bell.HandPoint;
+                right.Solve(point, transform.rotation * gripRotation, transform.TransformPoint(new Vector3(.6f, 1.2f, .3f)), 1);
+                left.Solve(point + Vector3.up * .12f, transform.rotation * gripRotation, transform.TransformPoint(new Vector3(-.6f, 1.2f, .3f)), 1);
+                viewRight.Solve(point, motor.PlayerCamera.transform.rotation * gripRotation, motor.PlayerCamera.transform.TransformPoint(new Vector3(.55f, -.35f, .3f)), 1);
+                viewLeft.Solve(point + Vector3.up * .12f, motor.PlayerCamera.transform.rotation * gripRotation, motor.PlayerCamera.transform.TransformPoint(new Vector3(-.55f, -.35f, .3f)), 1);
+                return;
+            }
             if (GetComponent<PirateSlop.Networking.NetworkFishing>()?.IsPickingUp == true) return;
             if (GetComponent<CharacterActions>() is { ControlsEquipment: true }) return;
             if (equipment != null && equipment.Active && equipment.View != null && equipment.World != null)

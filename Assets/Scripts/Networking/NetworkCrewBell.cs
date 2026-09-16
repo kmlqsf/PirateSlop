@@ -1,9 +1,11 @@
 using FishNet.Object;
+using FishNet.Object.Synchronizing;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace PirateSlop.Networking
 {
+    [DefaultExecutionOrder(-40)]
     public sealed class NetworkCrewBell : NetworkBehaviour
     {
         AdvancedPlayerController motor;
@@ -15,24 +17,111 @@ namespace PirateSlop.Networking
         float statusAt;
         bool requested, serverRequested;
         void Awake() { motor = GetComponent<AdvancedPlayerController>(); player = GetComponent<NetworkPlayer>(); }
+        readonly SyncVar<bool> pulling = new();
+        readonly SyncVar<float> pullAmount = new();
+        CrewBellMotion motion;
+        bool localPull, wasPulling;
+        float localAmount, nextSend, lastPullAt, serverAmount, serverStarted;
+        public bool IsPulling => localPull || pulling.Value;
+        public Vector3 HandPoint => motion != null ? motion.GripPoint : transform.position;
+        CrewBellMotion GetMotion()
+        {
+            if (player.Ship == null) return null;
+            var bell = player.Ship.transform.Find("CrewBell");
+            if (bell == null || !bell.gameObject.activeInHierarchy) return null;
+            var result = bell.GetComponent<CrewBellMotion>();
+            return result != null ? result : bell.gameObject.AddComponent<CrewBellMotion>();
+        }
         void Update()
         {
             aimed = null;
             if (!motor.IsDead) { requested = false; if (IsServerInitialized) serverRequested = false; }
+            if (IsServerInitialized && pulling.Value && (motor.IsDead || player.Ship == null || player.Ship.IsSinking || motion == null || !motion.gameObject.activeInHierarchy || Vector3.Distance(transform.position + Vector3.up, motion.GripPoint) > 3.5f || Time.time - lastPullAt > .75f || Owner == null || !Owner.IsActive)) StopServerPull();
+            if (IsPulling)
+            {
+                if (motion == null) motion = GetMotion();
+                if (motion != null) motion.SetPull(IsOwner && localPull ? localAmount : pullAmount.Value);
+            }
+            if (wasPulling && !IsPulling && motion != null) motion.SetPull(0);
+            wasPulling = IsPulling;
+            motor.BellPullLocked = IsPulling;
             if (IsOwner && motor.IsDead && !player.Eliminated.Value && !requested && !SessionController.MenuOpen && Keyboard.current != null && Keyboard.current.rKey.wasPressedThisFrame)
             { requested = true; RequestRescueServerRpc(); }
-            if (!IsOwner || !motor.InputActive || motor.IsDead || motor.LocomotionLocked || PlayerInventory.LootWindowOpen) return;
-            if (!FirearmTrace.Cast(gameObject, motor.PlayerCamera.transform.position, motor.PlayerCamera.transform.position + motor.PlayerCamera.transform.forward * 3f, out var hit)) return;
-            if (hit.collider.name != "CrewBell") return;
-            var ship = hit.collider.GetComponentInParent<NetworkShip>();
-            if (ship == null || ship != player.Ship) return;
-            aimed = hit.collider.transform;
-            if (Time.unscaledTime >= statusAt || bellStatus == null)
+            if (!IsOwner) return;
+            var mouse = Mouse.current;
+            if (localPull)
             {
-                statusAt = Time.unscaledTime + .25f;
-                RefreshBellStatus();
+                if (motor.IsDead || motor.ActiveParrot != null || SessionController.MenuOpen || DeveloperMenu.IsOpen || PlayerInventory.LootWindowOpen || Cursor.lockState != CursorLockMode.Locked || mouse == null || !mouse.leftButton.isPressed || motion == null || Vector3.Distance(transform.position + Vector3.up, motion.GripPoint) > 3.5f)
+                { StopLocalPull(); CancelPullServerRpc(); return; }
+                aimed = motion.transform;
+                localAmount = Mathf.Clamp01(localAmount - mouse.delta.ReadValue().y / 220f);
+                motion.SetPull(localAmount);
+                if (Time.unscaledTime >= nextSend)
+                {
+                    nextSend = Time.unscaledTime + .05f;
+                    PullServerRpc(localAmount);
+                }
+                return;
             }
-            if (Keyboard.current != null && Keyboard.current.eKey.wasPressedThisFrame) RingServerRpc();
+            if (!motor.InputActive || motor.IsDead || motor.LocomotionLocked || PlayerInventory.LootWindowOpen) return;
+            if (!FirearmTrace.Cast(gameObject, motor.PlayerCamera.transform.position, motor.PlayerCamera.transform.position + motor.PlayerCamera.transform.forward * 3f, out var hit)) return;
+            var candidate = hit.collider.GetComponentInParent<CrewBellMotion>();
+            if (candidate == null || hit.collider.name != "BellRopeGrip" || candidate.GetComponentInParent<NetworkShip>() != player.Ship) return;
+            aimed = candidate.transform;
+            if (Time.unscaledTime >= statusAt || bellStatus == null)
+            { statusAt = Time.unscaledTime + .25f; RefreshBellStatus(); }
+            if (mouse != null && mouse.leftButton.wasPressedThisFrame)
+            {
+                motion = candidate; localPull = true; localAmount = 0;
+                motor.BellPullLocked = true;
+                BeginPullServerRpc();
+            }
+        }
+        [ServerRpc]
+        void BeginPullServerRpc()
+        {
+            var candidate = GetMotion();
+            if (pulling.Value || motor.IsDead || motor.ActiveParrot != null || motor.ActiveCannon != null || motor.IsSwimming || motor.IsClimbing || player.Ship == null || player.Ship.IsSinking || candidate == null || Time.time < nextRing || (candidate.Holder != null && candidate.Holder != this) || Vector3.Distance(transform.position + Vector3.up, candidate.GripPoint) > 3.5f || !GetComponent<NetworkWeapon>().CanReach(candidate.GripPoint, candidate.transform))
+            { EndPullTargetRpc(Owner); return; }
+            motion = candidate; motion.Holder = this; pulling.Value = true; pullAmount.Value = 0; serverAmount = 0;
+            serverStarted = lastPullAt = Time.time; motor.BellPullLocked = true;
+        }
+        [ServerRpc]
+        void PullServerRpc(float amount)
+        {
+            if (!pulling.Value || !float.IsFinite(amount) || motion == null || motor.IsDead || player.Ship == null || player.Ship.IsSinking) return;
+            if (Vector3.Distance(transform.position + Vector3.up, motion.GripPoint) > 3.5f || !GetComponent<NetworkWeapon>().CanReach(motion.GripPoint, motion.transform)) { StopServerPull(); return; }
+            serverAmount = Mathf.MoveTowards(serverAmount, Mathf.Clamp01(amount), Mathf.Max(0, Time.time - lastPullAt) * 2f);
+            lastPullAt = Time.time; pullAmount.Value = serverAmount;
+            if (serverAmount >= .99f && Time.time - serverStarted >= .5f)
+            {
+                var ship = player.Ship;
+                nextRing = Time.time + 2f;
+                foreach (var member in FindObjectsByType<NetworkPlayer>(FindObjectsSortMode.None))
+                    if (member.Ship == ship && member.TeamId.Value == player.TeamId.Value && member.GetComponent<CombatHealth>() is { } health && health.RespawnFromBell(ship)) break;
+                RingObserversRpc(motion.transform.position);
+                StopServerPull();
+            }
+        }
+        [ServerRpc] void CancelPullServerRpc() { StopServerPull(); }
+        void StopServerPull()
+        {
+            pulling.Value = false; pullAmount.Value = 0;
+            if (motion != null && motion.Holder == this) { motion.Holder = null; motion.SetPull(0); }
+            motor.BellPullLocked = false;
+            if (Owner != null && Owner.IsActive) EndPullTargetRpc(Owner);
+        }
+        [TargetRpc] void EndPullTargetRpc(FishNet.Connection.NetworkConnection recipient) { StopLocalPull(); }
+        void StopLocalPull()
+        {
+            localPull = false; localAmount = 0; motor.BellPullLocked = false;
+            if (motion != null) motion.SetPull(0);
+        }
+        public override void OnStopNetwork()
+        {
+            if (IsServerInitialized) StopServerPull();
+            StopLocalPull();
+            base.OnStopNetwork();
         }
         void RefreshBellStatus()
         {
@@ -55,24 +144,16 @@ namespace PirateSlop.Networking
             if (ship.IsSinking) text.Append("\nКорабль погибает — возрождение недоступно");
             else if (waiting.Count == 0) text.Append(eliminated > 0 ? "\nНекого вернуть колоколом" : "\nВесь экипаж жив");
             else if (ship.RumCount == 0) text.Append("\nНет рома — нужен 1 ром на пирата");
-            else text.Append("\nМожно вернуть: ").Append(Mathf.Min(waiting.Count, ship.RumCount)).Append(" из ").Append(waiting.Count).Append("\nE — позвонить (1 ром за пирата)");
+            else text.Append("\nМожно вернуть: ").Append(Mathf.Min(waiting.Count, ship.RumCount)).Append(" из ").Append(waiting.Count).Append("\nЛКМ на верёвке + потянуть мышь вниз (1 ром за пирата)");
             bellStatus = text.ToString();
         }
-        [ServerRpc]
-        void RingServerRpc()
-        {
-            var ship = player.Ship;
-            if (ship == null || ship.IsSinking || motor.IsDead || motor.LocomotionLocked || Time.time < nextRing) return;
-            var bell = ship.transform.Find("CrewBell");
-            if (bell == null || !bell.gameObject.activeInHierarchy || Vector3.Distance(transform.position + Vector3.up, bell.position) > 3.5f) return;
-            if (!GetComponent<NetworkWeapon>().CanReach(bell.position, bell)) return;
-            nextRing = Time.time + 2f;
-            foreach (var member in FindObjectsByType<NetworkPlayer>(FindObjectsSortMode.None))
-                if (member.Ship == ship && member.TeamId.Value == player.TeamId.Value) member.GetComponent<CombatHealth>()?.RespawnFromBell(ship);
-            RingObserversRpc(bell.position);
-        }
         [ObserversRpc(RunLocally = true)]
-        void RingObserversRpc(Vector3 point) => GameAudio.Play(SoundCue.ShipBell, point);
+        void RingObserversRpc(Vector3 point)
+        {
+            if (motion == null) motion = GetMotion();
+            if (motion != null) motion.Ring();
+            GameAudio.Play(SoundCue.ShipBell, point);
+        }
         [ServerRpc]
         void RequestRescueServerRpc()
         {
@@ -96,7 +177,7 @@ namespace PirateSlop.Networking
             if (motor.IsDead && !player.Eliminated.Value)
                 ContextPrompt.Draw(requested ? "ЭКИПАЖ · Просьба позвонить в колокол отправлена" : "ЭКИПАЖ · R — попросить позвонить в колокол");
             if (aimed == null) return;
-            ContextPrompt.Offer(bellStatus, 60);
+            ContextPrompt.Offer(localPull ? "Удерживайте ЛКМ и тяните мышь вниз · " + Mathf.RoundToInt(localAmount * 100) + "%" : bellStatus, 60);
         }
     }
 }

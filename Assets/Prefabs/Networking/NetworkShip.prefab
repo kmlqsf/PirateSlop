@@ -35123,6 +35123,7 @@ MonoBehaviour:
   - {fileID: 3324085719176140404, guid: f55646c79a0e7c6409da7f30b6312a3d, type: 3}
   - {fileID: 2332522239747272967, guid: 1df512fb641c70f4e835bf9e934b4420, type: 3}
   - {fileID: 1356193545609259471, guid: 7171fb8059069a64a8347c835d4e5573, type: 3}
+  - {fileID: 106273991414545236, guid: 5ebb91205f12a0b41a73904cba074475, type: 3}
 --- !u!114 &2085898352164858561
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -42449,6 +42450,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8570439858045460398}
   - component: {fileID: 3594203434583372919}
+  - component: {fileID: 6750912774681524083}
   m_Layer: 0
   m_Name: CrewBell
   m_TagString: Untagged
@@ -42470,6 +42472,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7999494695347133585}
+  - {fileID: 5796131513733396982}
   m_Father: {fileID: 398825345446323577}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &3594203434583372919
@@ -42491,8 +42494,21 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.52, y: 0.95, z: 0.54}
-  m_Center: {x: 0, y: -0.1, z: 0}
+  m_Size: {x: 0.52, y: 0.48, z: 0.54}
+  m_Center: {x: 0, y: 0.06, z: 0}
+--- !u!114 &6750912774681524083
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1082745719913775778}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c4e3b968c5470d40a3077e43141e6ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.CrewBellMotion
+  Holder: {fileID: 0}
 --- !u!1 &1085664178251614381
 GameObject:
   m_ObjectHideFlags: 0
@@ -77342,6 +77358,59 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -2458491076356282707, guid: e8e69e6adeae4ae49873eccd94293d23, type: 2}
+--- !u!1 &2019770813560462081
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5796131513733396982}
+  - component: {fileID: 3059794792273851514}
+  m_Layer: 0
+  m_Name: BellRopeGrip
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5796131513733396982
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2019770813560462081}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.4, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8570439858045460398}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &3059794792273851514
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2019770813560462081}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.19, y: 0.38, z: 0.19}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &2020279082841279517
 GameObject:
   m_ObjectHideFlags: 0

@@ -110,6 +110,7 @@ namespace PirateSlop.Networking
                 AimServerRpc(aim, motor.AimDirection);
             }
             if (!can || mouse == null) { if (action.Value == 2) CancelServerRpc(); return; }
+            if (Item == InventoryItem.HolyGrenade) return;
             Vector3 eyeOffset = motor.PlayerCamera.transform.position-transform.position;
             if (keyboard != null && keyboard.rKey.wasPressedThisFrame && Firearm) UseServerRpc(1, motor.AimDirection, eyeOffset,++localSequence,aim);
             if (mouse.leftButton.wasPressedThisFrame && !pendingShot && !inventory.InteractionUsed && !hands.CanPickUpBall() && Time.time>=nextLocalFire && (!Firearm || handling.Ready))
@@ -172,7 +173,7 @@ namespace PirateSlop.Networking
             if (Item == InventoryItem.Wine) { BeginAction(2, 2.2f, slot); return; }
             if (Item == InventoryItem.BombParrot)
             {
-                if (ParrotPrefab == null || !network.ConsumeEquipment(slot, InventoryItem.BombParrot)) return;
+                if (request != 0 || ParrotPrefab == null || !network.ConsumeEquipment(slot, InventoryItem.BombParrot)) return;
                 var drone = Instantiate(ParrotPrefab,transform.position+Vector3.up*1.3f+transform.forward*.55f,Quaternion.LookRotation(forward));
                 UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene(drone.gameObject,gameObject.scene);
                 drone.Launch(GetComponent<NetworkPlayer>());
@@ -319,11 +320,13 @@ namespace PirateSlop.Networking
         void AfterCamera(ScriptableRenderContext context, Camera camera) { if(viewRenderers!=null) foreach(var r in viewRenderers) if(r!=null) r.forceRenderingOff=true; }
         void OnGUI()
         {
+            GetComponent<NetworkHolyGrenadeHands>()?.DrawFlash();
             if(IsOwner && WaterRunning) PirateHudStyle.Label(new Rect(28,140,270,30),"Хождение по воде: "+waterRunRemaining.Value+" с",PirateHudStyle.Paper);
             if (!IsOwner || !Active || !motor.InputActive) return;
             if(Scoped) DrawScope();
+            if (Item == InventoryItem.HolyGrenade) { ContextPrompt.Offer("СВЯТАЯ ГРАНАТА · ПКМ — фитиль 3 с · удерживать ЛКМ — прицел · отпустить — бросок", 20); return; }
             if(Firearm || Item == InventoryItem.Pufferfish || Item == InventoryItem.Swordfish) return;
-            string hint = action.Value == 2 ? "Пьём…" : Item == InventoryItem.GrapplingHook ? "Удерживать ЛКМ — крюк (35 м) · Отпустить ЛКМ — разорвать зацеп" : Item == InventoryItem.Wine ? "Удерживать ЛКМ — бег по воде на 60 с" : "ЛКМ — выпустить попугая • цель до 100 м • 50 урона";
+            string hint = action.Value == 2 ? "Пьём…" : Item == InventoryItem.GrapplingHook ? "Удерживать ЛКМ — крюк (35 м) · Отпустить ЛКМ — разорвать зацеп" : Item == InventoryItem.Wine ? "Удерживать ЛКМ — бег по воде на 60 с" : "ЛКМ — управлять попугаем • полёт 6 с • 50 урона";
             ContextPrompt.Offer(hint, 20);
         }
         void DrawScope()
@@ -351,4 +354,3 @@ namespace PirateSlop.Networking
         void OnDestroy() { if(scopeMask!=null) Destroy(scopeMask); if(view!=null) Destroy(view.gameObject); if(world!=null) Destroy(world.gameObject); }
     }
 }
-

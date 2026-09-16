@@ -33,7 +33,7 @@ namespace PirateSlop.Networking
         readonly SyncVar<bool> pickingUp = new();
         NetworkObject pickupTarget;
         float pickupUntil;
-        const float MinimumPickupTime = 1.9f;
+        const float MinimumPickupTime = .35f;
         bool pickupSwap;
         int pickupSlot, pickupCount;
         InventoryItem pickupExpected, pickupKind;
