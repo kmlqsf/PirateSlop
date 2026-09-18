@@ -7,7 +7,53 @@ namespace PirateSlop
     public sealed class InventoryIcons : ScriptableObject
     {
         public Texture2D[] Icons;
+        public Texture2D ChestIcon;
+        public Texture2D HotbarBase, HotbarSelected;
         Material hudMaterial;
+        GUIStyle hotbarNumber;
+        public void DrawHotbarSlot(Rect rect, InventoryItem item, int count, string key, bool selected)
+        {
+            Color previous = GUI.color;
+            float uiScale = rect.width / 56f;
+            GUI.color = Color.white;
+            var background = selected && HotbarSelected != null ? HotbarSelected : HotbarBase;
+            if (background != null) GUI.DrawTexture(rect, background, ScaleMode.StretchToFill, true);
+            else PirateHudStyle.Fill(rect, new Color(.094f, .106f, .114f, .72f));
+            int index = (int)item;
+            if (index >= 0 && Icons != null && index < Icons.Length && Icons[index] != null)
+            {
+                var icon = Icons[index];
+                float occupancy = item == InventoryItem.Rod || item == InventoryItem.Sabre || item == InventoryItem.Swordfish || item == InventoryItem.Musket ? .82f :
+                    CannonAmmo.IsBall(item) || item == InventoryItem.Pufferfish || item == InventoryItem.HolyGrenade ? .75f : .79f;
+                float size = rect.width * occupancy;
+                float scale = Mathf.Min(size / icon.width, size / icon.height);
+                var target = new Rect(rect.center.x - icon.width * scale * .5f, rect.center.y - 2 * uiScale - icon.height * scale * .5f, icon.width * scale, icon.height * scale);
+                if (hudMaterial == null)
+                {
+                    var shader = Resources.Load<Shader>("HudIcon");
+                    if (shader != null) hudMaterial = new Material(shader) { hideFlags = HideFlags.HideAndDontSave };
+                }
+                if (Event.current.type == EventType.Repaint && hudMaterial != null)
+                {
+                    hudMaterial.SetFloat("_Edge", 1f);
+                    Graphics.DrawTexture(target, icon, new Rect(0, 0, 1, 1), 0, 0, 0, 0, Color.white, hudMaterial);
+                    hudMaterial.SetFloat("_Edge", 0f);
+                }
+                else if (hudMaterial == null) GUI.DrawTexture(target, icon, ScaleMode.ScaleToFit, true);
+            }
+            hotbarNumber ??= new GUIStyle(GUI.skin.label) { fontSize = 11, fontStyle = FontStyle.Normal, padding = new RectOffset(), alignment = TextAnchor.LowerLeft };
+            hotbarNumber.fontSize = Mathf.RoundToInt(11 * uiScale);
+            hotbarNumber.normal.textColor = selected ? new Color(.9f, .88f, .83f, .95f) : new Color(.85f, .85f, .82f, .8f);
+            GUI.Label(new Rect(rect.x + 5 * uiScale, rect.yMax - 16 * uiScale, 20 * uiScale, 13 * uiScale), key, hotbarNumber);
+            if (count > 1 || CannonAmmo.IsBall(item))
+            {
+                hotbarNumber.alignment = TextAnchor.LowerRight;
+                hotbarNumber.normal.textColor = new Color(.9f, .88f, .83f, .9f);
+                GUI.Label(new Rect(rect.xMax - 28 * uiScale, rect.yMax - 16 * uiScale, 23 * uiScale, 13 * uiScale), count.ToString(), hotbarNumber);
+                hotbarNumber.alignment = TextAnchor.LowerLeft;
+            }
+            GUI.color = previous;
+        }
         public static string ItemName(InventoryItem item) => item switch
         {
             InventoryItem.Fish => "Рыба",
@@ -42,8 +88,8 @@ namespace PirateSlop
             bool hover = button && rect.Contains(Event.current.mousePosition);
             bool clicked = button && GUI.Button(rect, GUIContent.none, GUIStyle.none);
             if (selected || hover) PirateHudStyle.Brush(new Rect(rect.x - 8, rect.y - 10, rect.width + 16, rect.height + 10), new Color(.06f,.13f,.13f,.8f));
-            int index = CannonAmmo.IsBall(item) && item != InventoryItem.BoardingHook ? (int)InventoryItem.Cannonball : (int)item;
-            GUI.color = CannonAmmo.IsBall(item) ? CannonAmmo.Color(item) : PirateHudStyle.Paper;
+            int index = (int)item;
+            GUI.color = Color.white;
             if (index >= 0 && Icons != null && index < Icons.Length && Icons[index] != null)
             {
                 float inset = selected || hover ? 0 : 5;

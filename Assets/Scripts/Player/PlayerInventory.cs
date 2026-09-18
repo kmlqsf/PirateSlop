@@ -115,6 +115,8 @@ namespace PirateSlop
         public bool PistolSelected => PistolAt(SelectedSlot) && !HandsOccupied;
         public bool Placing => HasCannon(SelectedSlot);
         public bool InteractionUsed { get; private set; }
+        public bool ControlFocused => GetComponent<DirectShipControls>()?.BlocksPrimary ?? false;
+        public bool ControlItemHidden => GetComponent<DirectShipControls>()?.ItemHidden ?? false;
         AdvancedPlayerController motor;
         NetworkWeapon network;
         CannonHands hands;
@@ -382,13 +384,15 @@ namespace PirateSlop
             using var layout = new HudLayout.Scope(true);
             Color old = GUI.color;
             float width = Mathf.Min(76f, (HudLayout.Width - 48f) / SlotCount);
+            float hotbarScale = Mathf.Min(2f, (HudLayout.Width - 32f) / (56f * SlotCount + 6f * (SlotCount - 1) + 12f));
+            float slotSize = 56f * hotbarScale, slotGap = 6f * hotbarScale;
+            float ammoGap = 12f * hotbarScale;
+            float hotbarWidth = slotSize * SlotCount + slotGap * (SlotCount - 1) + ammoGap;
             for (int i = 0; i < SlotCount; i++)
             {
-                if (i != AmmoSlot && !lootWindow && ItemAt(i) == InventoryItem.None && Time.unscaledTime - selectionShownAt > 3) continue;
-                GUI.color = i == SelectedSlot ? new Color(1f, .8f, .35f) : Color.white;
-                var rect = new Rect(HudLayout.Width * .5f - (width * SlotCount + 12f) * .5f + width * i + (i == AmmoSlot ? 12f : 0f), HudLayout.Height - 94, width - 4, 66);
-                if (i == AmmoSlot) PirateHudStyle.Label(new Rect(rect.x - 8, rect.y - 24, rect.width + 16, 24), "ЯДРА " + BallCount(i) + "/2", PirateHudStyle.Gold);
-                if (Icons != null) Icons.DrawSlot(rect, ItemAt(i), Mathf.Max(RumCount(i), Mathf.Max(FishCount(i), Mathf.Max(BallCount(i), PlankCount(i)))), (i + 1).ToString(), false);
+                GUI.color = Color.white;
+                var rect = new Rect((HudLayout.Width - hotbarWidth) * .5f + (slotSize + slotGap) * i + (i >= AmmoSlot ? ammoGap : 0f), HudLayout.Height - slotSize - 24f, slotSize, slotSize);
+                if (Icons != null) Icons.DrawHotbarSlot(rect, ItemAt(i), ItemCount(i), (i + 1).ToString(), i == SelectedSlot);
                 else PirateHudStyle.Panel(rect, (i + 1) + "\n" + InventoryIcons.ItemName(ItemAt(i)));
             }
             GUI.color = old;
@@ -398,6 +402,8 @@ namespace PirateSlop
                 float panelWidth = width * 6 + 24, panelHeight = 75 + rows * 78;
                 var panel = new Rect((HudLayout.Width - panelWidth) * .5f, (HudLayout.Height - panelHeight) * .5f, panelWidth, panelHeight);
                 PirateHudStyle.Panel(panel);
+                if (Icons != null && Icons.ChestIcon != null)
+                    GUI.DrawTexture(new Rect(panel.x + 8, panel.y + 2, 28, 28), Icons.ChestIcon, ScaleMode.ScaleToFit, true);
                 PirateHudStyle.Label(new Rect(panel.x + 12, panel.y + 4, panel.width - 24, 25), "СУНДУК  ·  Заберите припасы", PirateHudStyle.Gold);
                 string lootHint = "Нажмите на предмет, чтобы забрать";
                 for (int i = 0; i < slots; i++)
@@ -418,7 +424,7 @@ namespace PirateSlop
                 return;
             }
             if (Time.unscaledTime - selectionShownAt < 2.5f)
-                PirateHudStyle.Label(new Rect(HudLayout.Width * .5f - 180, HudLayout.Height - 138, 360, 26), InventoryIcons.ItemName(ItemAt(SelectedSlot)), PirateHudStyle.Paper);
+                PirateHudStyle.Label(new Rect(HudLayout.Width * .5f - 180, HudLayout.Height - slotSize - 56, 360, 26), InventoryIcons.ItemName(ItemAt(SelectedSlot)), PirateHudStyle.Paper);
             string hint = aimedCannon != null && aimedCannon.Network != null && aimedCannon.Network.HasBoarding(aimedCannon.Index) ? "Колесо вверх — натянуть · вниз — ослабить канат" : aimedBall != null && aimedBall.Network != null ? "ЛКМ / E — взять ядра (до 2 в слоте)" : BallSelected && aimedCannon != null && !aimedCannon.AcceptsAmmo(BallItem(SelectedSlot)) ? "Неподходящий боеприпас · E — прицелиться" : BallSelected && aimedCannon != null && !aimedCannon.IsLoaded ? "E — зарядить выбранное ядро" : chest != null ? chest.Hint(this) : pickup != null ? (EmptySlot() >= 0 ? "E — взять разобранную пушку" : "Инвентарь заполнен") : Placing && !cancelled ? "ЛКМ — поставить · R/колесо — поворот · Q/E — наклон\nShift+Q/E — крен · ПКМ — отменить" : "";
             if (hint.Length > 0) ContextPrompt.Offer(hint, 40);
             if (aimedRumShelf != null) ContextPrompt.Offer(aimedRumShelf.Hint, 40);

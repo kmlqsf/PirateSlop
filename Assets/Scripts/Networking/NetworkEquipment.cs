@@ -98,7 +98,7 @@ namespace PirateSlop.Networking
             if (!IsOwner) return;
             var mouse = Mouse.current; var keyboard = Keyboard.current;
             if (Item == InventoryItem.GrapplingHook && mouse != null && mouse.leftButton.wasReleasedThisFrame) network.ReleaseGrapple();
-            bool can = CanUse && motor.InputActive && !PlayerInventory.LootWindowOpen;
+            bool can = CanUse && motor.InputActive && !PlayerInventory.LootWindowOpen && !inventory.ControlFocused;
             bool aim = can && Firearm && action.Value == 0 && handling!=null && handling.Aiming;
             if (aim && motor.IsThirdPerson) motor.SetThirdPerson(false);
             if (aim && Item == InventoryItem.Musket && mouse != null)
@@ -314,7 +314,8 @@ namespace PirateSlop.Networking
         void BeforeCamera(ScriptableRenderContext context, Camera camera)
         {
             bool first = IsOwner && camera == motor.PlayerCamera && !motor.IsThirdPerson;
-            if(viewRenderers!=null) foreach(var r in viewRenderers) if(r!=null) r.forceRenderingOff=!Active || !first || Scoped;
+            bool presenting = Active || IsSpawned && Item >= InventoryItem.Wine && motor.SailPullLocked && !motor.IsDead && !inventory.HandsOccupied;
+            if(viewRenderers!=null) foreach(var r in viewRenderers) if(r!=null) r.forceRenderingOff=!presenting || !first || Scoped || inventory.ControlItemHidden;
             if(worldRenderers!=null) foreach(var r in worldRenderers) if(r!=null) r.forceRenderingOff=!Active || first;
         }
         void AfterCamera(ScriptableRenderContext context, Camera camera) { if(viewRenderers!=null) foreach(var r in viewRenderers) if(r!=null) r.forceRenderingOff=true; }

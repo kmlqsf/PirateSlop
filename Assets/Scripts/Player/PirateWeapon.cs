@@ -23,7 +23,7 @@ namespace PirateSlop
         int shotSequence;
         readonly FirearmPrediction prediction=new();
         DirectShipControls controls;
-        bool Equipped => (motor == null || !(motor.IsSwimming || motor.IsClimbing || motor.IsDead)) && (inventory == null || inventory.PistolSelected || inventory.SabreSelected) && (controls == null || !controls.IsDragging);
+        bool Equipped => (motor == null || !(motor.IsSwimming || motor.IsClimbing || motor.IsDead)) && (inventory == null || inventory.PistolSelected || inventory.SabreSelected);
         bool loaded = true, reloading;
         float reloadUntil, nextAttack, recoil, stab, lift;
         Quaternion worldRest, viewRest;
@@ -51,7 +51,7 @@ namespace PirateSlop
         void BeforeCamera(ScriptableRenderContext context, Camera camera)
         {
             if (viewRenderers == null) return;
-            bool show = Equipped && camera == motor.PlayerCamera && motor.InputActive && !motor.IsThirdPerson && !motor.LocomotionLocked && (hands == null || !hands.HasHeldBall);
+            bool show = Equipped && !inventory.ControlItemHidden && camera == motor.PlayerCamera && motor.InputActive && !motor.IsThirdPerson && (!motor.LocomotionLocked || controls != null && controls.IsDragging) && (hands == null || !hands.HasHeldBall);
             foreach(var r in viewRenderers) if(r != null) r.forceRenderingOff = !show;
             bool hideWorld = !Equipped || (camera == motor.PlayerCamera && !motor.IsThirdPerson);
             foreach(var r in worldRenderers) if(r != null) r.forceRenderingOff = hideWorld;

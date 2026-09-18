@@ -30,14 +30,7 @@ namespace PirateSlop.Networking
             }
         }
         readonly SyncVar<float> progress = new();
-        readonly SyncVar<bool> pickingUp = new();
-        NetworkObject pickupTarget;
-        float pickupUntil;
-        const float MinimumPickupTime = .35f;
-        bool pickupSwap;
-        int pickupSlot, pickupCount;
-        InventoryItem pickupExpected, pickupKind;
-        public bool IsPickingUp => pickingUp.Value;
+        public bool IsPickingUp => false;
         readonly SyncVar<bool> eating = new();
         readonly SyncVar<float> eatProgress = new();
         float eatUntil;
@@ -67,8 +60,6 @@ namespace PirateSlop.Networking
         }
         void Update()
         {
-            if (IsServerInitialized) TickPickup();
-            motor.PickupLocked = IsPickingUp;
             if (IsServerInitialized) TickEating();
             if (IsServerInitialized) TickFishing();
             UpdateChewing();
@@ -245,29 +236,12 @@ namespace PirateSlop.Networking
             if (!Available || IsEating || IsPickingUp || stage.Value != 0 || !CanPickupTarget(target)) return;
             var kind = target.GetComponent<NetworkFish>().CurrentItem;
             if (!GetComponent<NetworkWeapon>().CanAddItem(kind) && (!swap || inventory.SelectedSlot != slot || inventory.ItemAt(slot) != expected || inventory.ItemCount(slot) != expectedCount || !inventory.CanSwapItem(kind))) return;
-            pickupSwap = swap; pickupSlot = slot; pickupExpected = expected; pickupCount = expectedCount; pickupKind = kind;
-            pickupTarget = target;
-            pickupUntil = Time.time + MinimumPickupTime;
-            pickingUp.Value = true;
-        }
-        public void FinishPickup() { if (IsOwner && IsPickingUp) FinishPickupServerRpc(); }
-        [ServerRpc]
-        void FinishPickupServerRpc()
-        {
-            if (!IsPickingUp || Time.time < pickupUntil) return;
-            bool valid = !motor.IsDead && !motor.IsSwimming && !motor.IsClimbing && stage.Value == 0 && !IsEating;
-            var target = pickupTarget;
-            pickupTarget = null;
-            pickingUp.Value = false;
-            motor.PickupLocked = false;
-            if (!valid || !Available || !CanPickupTarget(target)) return;
-            var item = target.GetComponent<NetworkFish>();
-            var kind = item.CurrentItem;
-            if (kind != pickupKind) return;
             var equipment = GetComponent<NetworkWeapon>();
-            if (!equipment.CanAddItem(kind) && (!pickupSwap || !equipment.PrepareSwap(kind, pickupSlot, pickupExpected, pickupCount))) return;
-            if (equipment.CanAddItem(kind) && item.Take() && equipment.AddItem(kind)) SoundObserversRpc(SoundCue.Pickup, transform.position);
+            if (!equipment.CanAddItem(kind) && (!swap || !equipment.PrepareSwap(kind, slot, expected, expectedCount))) return;
+            if (equipment.CanAddItem(kind) && target.GetComponent<NetworkFish>().Take() && equipment.AddItem(kind))
+                SoundObserversRpc(SoundCue.Pickup, transform.position);
         }
+        public void FinishPickup() { }
         bool CanPickupTarget(NetworkObject target)
         {
             if (target == null || !target.IsSpawned || Vector3.Distance(transform.position + Vector3.up, target.transform.position) > 3.5f) return false;
@@ -280,17 +254,6 @@ namespace PirateSlop.Networking
             foreach (var hit in Physics.RaycastAll(origin, delta.normalized, delta.magnitude, ~0, QueryTriggerInteraction.Ignore))
                 if (!hit.transform.IsChildOf(transform) && !hit.transform.IsChildOf(target.transform)) return false;
             return true;
-        }
-        void TickPickup()
-        {
-            if (!IsPickingUp) return;
-            bool valid = !motor.IsDead && !motor.IsSwimming && !motor.IsClimbing && stage.Value == 0 && !IsEating;
-            if (!valid || Time.time >= pickupUntil + 3f)
-            {
-                pickupTarget = null;
-                pickingUp.Value = false;
-                motor.PickupLocked = false;
-            }
         }
         void OnDisable() { if (motor != null) motor.PickupLocked = false; }
         [ServerRpc]
@@ -344,7 +307,7 @@ namespace PirateSlop.Networking
             bool first = IsOwner && !motor.IsThirdPerson;
             Transform anchor = first ? motor.PlayerCamera.transform : transform;
             var hand = anchor.TransformPoint(first ? new Vector3(.28f, -.3f, .55f) : new Vector3(.35f, 1.15f, .45f));
-            rod.SetActive(inventory.RodSelected && !CarryingCatch && !HasFish && Available);
+            rod.SetActive(inventory.RodSelected && !CarryingCatch && !HasFish && (Available || motor.SailPullLocked && !motor.IsDead) && !inventory.ControlItemHidden);
             fish.SetActive(HasFish && !CarryingCatch && !motor.IsDead);
             rod.transform.SetPositionAndRotation(hand, anchor.rotation * Quaternion.Euler(stage.Value == 3 ? -18f + Mathf.Sin(Time.time * 24f) * 5f : stage.Value == 4 ? -15f + Mathf.Sin(Time.time * 18f) * 2f : -12f, -8f, 0));
             rodBend.SetBend(stage.Value == 3 ? .12f + Mathf.Sin(Time.time * 24f) * .07f : stage.Value == 4 ? .1f + Mathf.Sin(Time.time * 18f) * .025f : 0f);

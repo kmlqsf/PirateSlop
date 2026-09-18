@@ -20,7 +20,12 @@ namespace PirateSlop
         bool ropeLockOwned;
         int Participant => GetComponent<NetworkPlayer>() != null ? GetComponent<NetworkPlayer>().ParticipantId.Value : -1;
         public bool IsDragging => grabbed != null;
-        public bool BlocksPrimary => grabbed != null || hovered != null;
+        const float HoverRadius = .14f;
+        float focusStarted, focusLostAt = -10f, lowerAmount;
+        bool awaitPrimaryRelease;
+        public bool BlocksPrimary => grabbed != null || hovered != null || awaitPrimaryRelease;
+        public float LowerAmount => Mathf.SmoothStep(0f, 1f, lowerAmount);
+        public bool ItemHidden => lowerAmount >= .999f;
 
         void Awake()
         {
@@ -33,7 +38,15 @@ namespace PirateSlop
             if (hovered == handle) return;
             if (hovered != null) hovered.Highlight(false);
             hovered = handle;
+            if (hovered != null) focusStarted = Time.unscaledTime;
+            else focusLostAt = Time.unscaledTime;
             if (hovered != null) hovered.Highlight(true);
+        }
+        void LateUpdate()
+        {
+            bool lower = grabbed != null || hovered != null && Time.unscaledTime - focusStarted >= .18f;
+            if (hovered == null && Time.unscaledTime - focusLostAt < .16f) lower = lowerAmount > 0f;
+            lowerAmount = Mathf.MoveTowards(lowerAmount, lower ? 1f : 0f, Time.unscaledDeltaTime / .24f);
         }
         bool InRange(ShipControlHandle handle)
         {
@@ -44,6 +57,8 @@ namespace PirateSlop
         }
         void Update()
         {
+            if (Mouse.current == null || !Mouse.current.leftButton.isPressed) awaitPrimaryRelease = false;
+            if ((hovered != null || grabbed != null) && Mouse.current != null && Mouse.current.leftButton.isPressed) awaitPrimaryRelease = true;
             if (grabbed == null && ropeLockOwned) Release();
             nearbySails = null;
             if (inventory != null && (inventory.HandsOccupied || (inventory.Fishing != null && inventory.Fishing.IsFishing))) { Release(); Hover(null); return; }
@@ -93,17 +108,24 @@ namespace PirateSlop
             if (handle == null)
             {
                 float best = 3f;
-                foreach (var hit in Physics.SphereCastAll(camera.transform.position, .18f, camera.transform.forward, 3f, ~0, QueryTriggerInteraction.Ignore))
+                foreach (var hit in Physics.SphereCastAll(camera.transform.position, HoverRadius, camera.transform.forward, 3f, ~0, QueryTriggerInteraction.Ignore))
                 {
                     var candidate = hit.collider.GetComponentInParent<ShipControlHandle>();
-                    if (candidate == null || candidate.Cannon == null || hit.distance >= best || !InRange(candidate)) continue;
-                    if (nearest.collider != null && nearest.collider.GetComponentInParent<SimpleCannon>() != candidate.Cannon && nearest.distance + .18f < hit.distance) continue;
+                    if (candidate == null || candidate.Cannon != null || hit.distance >= best || !InRange(candidate)) continue;
+                    if (nearest.collider != null && nearest.collider.GetComponentInParent<ShipControlHandle>() != candidate && nearest.distance + HoverRadius < hit.distance) continue;
+                    Vector3 target = hit.collider.ClosestPoint(camera.transform.position + camera.transform.forward * (hit.distance + HoverRadius));
+                    bool blocked = false;
+                    Vector3 delta = target - camera.transform.position;
+                    foreach (var obstacle in Physics.RaycastAll(camera.transform.position, delta.normalized, delta.magnitude, ~0, QueryTriggerInteraction.Ignore))
+                        if (!obstacle.transform.IsChildOf(transform) && obstacle.collider.GetComponentInParent<ShipControlHandle>() != candidate) { blocked = true; break; }
+                    if (blocked) continue;
                     handle = candidate; best = hit.distance;
                 }
             }
             Hover(handle != null && handle.Cannon == null && InRange(handle) ? handle : null);
             if (hovered != null && mouse.leftButton.wasPressedThisFrame)
             {
+                awaitPrimaryRelease = true;
                 if (hovered.Sails != null && hovered.Sails.Owner(hovered.RopeIndex) != 0 && hovered.Sails.Owner(hovered.RopeIndex) != Participant) return;
                 grabbed = hovered; pointer = new Vector2(Screen.width * .5f, Screen.height * .5f); pendingDrag = 0;
                 grabStarted = Time.unscaledTime;
@@ -156,7 +178,7 @@ namespace PirateSlop
             if (grabbed != null) { Send(false); grabbed.Highlight(false); }
             grabbed = null; pendingDrag = 0;
         }
-        void OnDisable() { Release(); Hover(null); }
+        void OnDisable() { Release(); Hover(null); lowerAmount = 0f; awaitPrimaryRelease = false; }
         void OnGUI()
         {
             if (motor == null || !motor.InputActive) return;

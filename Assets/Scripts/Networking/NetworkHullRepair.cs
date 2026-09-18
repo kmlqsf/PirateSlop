@@ -28,7 +28,7 @@ namespace PirateSlop.Networking
         }
         void Update()
         {
-            if (!IsOwner || !Available || !motor.InputActive || PlayerInventory.LootWindowOpen) return;
+            if (!IsOwner || !Available || !motor.InputActive || PlayerInventory.LootWindowOpen || inventory.ControlFocused) return;
             if (aimed != null && Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
                 RepairServerRpc(aimed.Owner.NetworkObject, aimed.SectionId, aimedFragment, aimed.Owner.transform.InverseTransformPoint(aimedPoint));
         }
@@ -43,7 +43,7 @@ namespace PirateSlop.Networking
             }
             if (model != null)
             {
-                model.SetActive(Available);
+                model.SetActive((Available || motor.SailPullLocked && inventory.MalletSelected && !motor.IsDead) && !inventory.ControlItemHidden);
                 bool first = IsOwner && !motor.IsThirdPerson;
                 var anchor = first ? motor.PlayerCamera.transform : transform;
                 float swing = Mathf.Sin(Mathf.Clamp01((Time.time - swingAt) / .35f) * Mathf.PI);

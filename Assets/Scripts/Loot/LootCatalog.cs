@@ -21,7 +21,7 @@ namespace PirateSlop
         public Vector2Int ChestsPerIsland = new(1, 3);
         public Vector2Int ItemsPerChest = new(1, 2);
         [Min(1)] public int SeaEventsPerType = 3;
-        [Min(10)] public float CaptureRadius = 65;
+        [Min(10)] public float CaptureRadius = 130;
         [Min(1)] public float CaptureSeconds = 45;
         [Min(1)] public int LockpickSteps = 5;
         [Min(1)] public float UntieSeconds = 4;

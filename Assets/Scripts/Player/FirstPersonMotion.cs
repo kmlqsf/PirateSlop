@@ -15,6 +15,7 @@ namespace PirateSlop
         WeaponArmRig arms;
         Networking.NetworkEquipment equipment;
         FirearmHandling handling;
+        DirectShipControls controls;
         Vector3 offset, angles, previousAim;
         Vector2 sway;
         float phase, movement, sprint, landing, previousVertical;
@@ -27,6 +28,7 @@ namespace PirateSlop
         {
             weapon = GetComponent<PirateWeapon>(); arms = GetComponent<WeaponArmRig>();
             equipment = GetComponent<Networking.NetworkEquipment>(); handling = GetComponent<FirearmHandling>();
+            controls = GetComponent<DirectShipControls>();
         }
         void OnEnable()
         {
@@ -84,7 +86,8 @@ namespace PirateSlop
             Register(equipment != null ? equipment.View : null);
             items.RemoveAll(item => item == null);
             var basis = camera.transform;
-            Quaternion turn = basis.rotation * Quaternion.Euler(angles) * Quaternion.Inverse(basis.rotation);
+            float lower = controls != null ? controls.LowerAmount : 0f;
+            Quaternion turn = basis.rotation * Quaternion.Euler(angles + Vector3.right * (lower * 28f)) * Quaternion.Inverse(basis.rotation);
             foreach (var item in items)
             {
                 if (!item.gameObject.activeInHierarchy) continue;
@@ -92,7 +95,7 @@ namespace PirateSlop
                 foreach (var other in items) if (other != item && item.IsChildOf(other)) { nested = true; break; }
                 if (nested) continue;
                 saved.Add((item, item.localPosition, item.localRotation));
-                item.SetPositionAndRotation(basis.position + turn * (item.position - basis.position) + basis.TransformVector(offset), turn * item.rotation);
+                item.SetPositionAndRotation(basis.position + turn * (item.position - basis.position) + basis.TransformVector(offset + new Vector3(0, -.65f, -.12f) * lower), turn * item.rotation);
             }
         }
         void AfterCamera(ScriptableRenderContext context, Camera camera) => Restore();

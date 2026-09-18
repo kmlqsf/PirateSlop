@@ -3830,7 +3830,6 @@ GameObject:
   - component: {fileID: 124468069414035651}
   - component: {fileID: 3354481864229631810}
   - component: {fileID: 3965722144531925235}
-  - component: {fileID: 2364810549612935030}
   - component: {fileID: 3103176091704272209}
   m_Layer: 0
   m_Name: NetworkPlayer
@@ -4432,18 +4431,6 @@ MonoBehaviour:
   _addedNetworkObject: {fileID: 8718541801069254893}
   _networkObjectCache: {fileID: 0}
   MalletModel: {fileID: 5075510370247273477, guid: 08b8b52b8b62bda4496591436d1395ef, type: 3}
---- !u!114 &2364810549612935030
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4193507432475942729}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0cc89d4a5a493f4cbc1bd3d6a05044f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.GroundPickupAnimation
 --- !u!114 &3103176091704272209
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -13,7 +13,7 @@ namespace PirateSlop.Networking
             UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene(eventVisual, gameObject.scene);
             eventVisual.transform.position = eventPoint.Value;
             var wood = chestRenderers[0].sharedMaterial;
-            markerMaterial = new Material(wood);
+            markerMaterial = new Material(Resources.Load<Shader>("SeaObjective"));
             markerMaterial.color = new Color(1, .7f, .15f);
             if (markerMaterial.HasProperty("_BaseColor")) markerMaterial.SetColor("_BaseColor", new Color(1, .7f, .15f));
             if (Kind == SeaLootKind.Raft)
@@ -29,7 +29,7 @@ namespace PirateSlop.Networking
                 ring.sharedMaterial = markerMaterial;
                 ring.useWorldSpace = false;
                 ring.loop = true;
-                ring.widthMultiplier = .7f;
+                ring.widthMultiplier = 1.2f;
                 ring.positionCount = 128;
                 for (int i = 0; i < ring.positionCount; i++)
                 {
@@ -48,6 +48,7 @@ namespace PirateSlop.Networking
                 rope.SetPosition(0, Vector3.zero);
                 rope.SetPosition(1, Vector3.down * Mathf.Max(3, Catalog.SunkenDepth));
             }
+            CreateObjectiveDetails();
         }
 
         void Piece(string label, PrimitiveType shape, Vector3 position, Vector3 scale, Material material, bool solid)

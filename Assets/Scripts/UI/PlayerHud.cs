@@ -126,9 +126,10 @@ namespace PirateSlop
             }
             if (motor.InputActive && !ShipSpyglassView.IsViewing)
             {
-                if(equipment!=null && equipment.Scoped) return;
+                if(equipment!=null && equipment.Scoped && !inventory.ControlFocused) return;
                 float x = Screen.width / 2f, y = Screen.height / 2f;
                 PirateHudStyle.Fill(new Rect(x - 1, y - 1, 2, 2), PirateHudStyle.Paper);
+                if (inventory.ControlFocused) return;
                 if (inventory.PistolSelected)
                 {
                     PirateHudStyle.Fill(new Rect(x - 10, y - 1, 7, 2), PirateHudStyle.Paper);
