@@ -1,0 +1,102 @@
+{
+  "liveSources": [
+    "ProjectSettings/ProjectVersion.txt",
+    "Packages/manifest.json",
+    "Assets/Settings/Networking/SessionConfig.asset",
+    "ProjectSettings/EditorBuildSettings.asset"
+  ],
+  "rules": [
+    "Сначала AGENTS.md. Этот отчёт заменяет обязательное чтение всей истории project.md; тематические документы читать только по задаче.",
+    "Сохранять чужие изменения, Unity GUID и несохранённую работу редакторов. Не коммитить и не выполнять push без явного разрешения.",
+    "Игровые изменения выполнять через существующие системы; сервер отвечает за урон, предметы и занятость. Наличие файла не доказывает подключение к сцене.",
+    "Перед работой в Unity/Blender подтвердить нужное MCP-соединение чтением. Файловый загрузчик соединение не проверяет. При недоступном нужном MCP остановить зависимую работу.",
+    "По умолчанию без сборок, Play Mode и игровых проверок. Пользователь проверяет игру; компиляция не подтверждает мультиплеер.",
+    "Карта путей поддерживается вручную. При изменении системы обновить только её запись в Tools/Context/topics.json; отсутствующий путь не заменять догадкой."
+  ],
+  "topics": [
+    {
+      "id": "inspector", "title": "Инспектор объектов Unity", "aliases": ["инспектор", "диагностика"],
+      "notes": ["Окно: PirateSlop > Diagnostics > Focused Inspector. Только чтение выбранного объекта или префаба.", "Для Codex вызвать FocusedInspector.CaptureSelection или CaptureAsset через Unity MCP. Сначала прочитать Tools/Context/inspector.md. Обрезанный отчёт не является полной проверкой."],
+      "files": ["Assets/Scripts/Editor/FocusedInspector.cs", "Assets/Scripts/Editor/FocusedInspectorWindow.cs"],
+      "docs": ["Tools/Context/inspector.md"]
+    },
+    {
+      "id": "overview", "title": "Проект и точки входа", "aliases": ["обзор", "проект"],
+      "notes": ["Windows, URP, FishNet; подключения по IP и Steam имеют отдельные ветки. Пакет file: в manifest — путь зависимости, а не её версия.", "Запуск через NetworkMenu, игровой мир NetworkOcean; корабль и игрок — сетевые префабы. Старые записи о SampleScene исторические."],
+      "files": ["Assets/Scripts/Networking/SessionController.cs", "Assets/Scripts/Networking/SessionConfig.cs", "Assets/Scenes/NetworkMenu.unity", "Assets/Scenes/NetworkOcean.unity", "Assets/Prefabs/Networking/NetworkShip.prefab", "Assets/Prefabs/Networking/NetworkPlayer.prefab"],
+      "docs": ["project.md", "unity.md"]
+    },
+    {
+      "id": "ship", "title": "Движение корабля и палуба", "aliases": ["корабль", "палуба", "helm", "штурвал"],
+      "notes": ["Корабль перемещается кинематически. Не переносить пассажира или предмет дважды вместе с кораблём; Rigidbody.GetPointVelocity не обязательно описывает это движение.", "Управление и освобождение штурвала согласовывать с сервером; старые альтернативные контроллеры не выбирать только по имени."],
+      "files": ["Assets/Scripts/ShipController.cs", "Assets/Scripts/ShipDeckPassenger.cs", "Assets/Scripts/HelmInteraction.cs", "Assets/Scripts/Networking/NetworkShip.cs", "Assets/Scripts/Interaction/DirectShipControls.cs", "Assets/Prefabs/Networking/NetworkShip.prefab"],
+      "docs": ["unity.md", "multiplayer-plan.md"]
+    },
+    {
+      "id": "sails", "title": "Паруса и канаты", "aliases": ["паруса", "парус", "канаты", "rigging"],
+      "notes": ["Разделять управление натяжением и визуальную геометрию канатов. Изменение модели не должно менять сетевую занятость.", "Настройка канатов и обновление их арта — отдельные редакторские операции; перед повторным запуском изучить соответствующий setup."],
+      "files": ["Assets/Scripts/SailSystem.cs", "Assets/Scripts/Interaction/DirectShipControls.cs", "Assets/Scripts/Interaction/ShipControlHandle.cs", "Assets/Scripts/Interaction/SailRopeVisual.cs", "Assets/Scripts/Interaction/SailRopeMesh.cs", "Assets/Scripts/Editor/SailRopeSetup.cs", "Assets/Scripts/Editor/SailRiggingArtSetup.cs", "Assets/Scripts/Networking/NetworkShip.cs"],
+      "docs": ["unity.md", "blender.md"]
+    },
+    {
+      "id": "cannons", "title": "Пушки, ядра и лафеты", "aliases": ["пушки", "пушка", "cannon", "ядра", "мортира"],
+      "notes": ["Проверять серверные условия выстрела, загрузки и занятости; локальные эффекты не подтверждают сетевой выстрел.", "Для движения ядра и лафета учитывать движение корабля. Баланс брать из текущих полей и ассетов, а не старых записей."],
+      "files": ["Assets/Scripts/Cannons/SimpleCannon.cs", "Assets/Scripts/Cannons/NetworkCannon.cs", "Assets/Scripts/Cannons/Cannonball.cs", "Assets/Scripts/Cannons/CannonShotDamage.cs", "Assets/Scripts/Cannons/CannonCarriage.cs", "Assets/Scripts/Cannons/MortarTrajectory.cs", "Assets/Scripts/Networking/NetworkLooseCannonball.cs", "Assets/Scripts/Editor/CannonInventorySetup.cs"],
+      "docs": ["combat-balance.md", "unity.md"]
+    },
+    {
+      "id": "player", "title": "Персонаж, камера и анимации", "aliases": ["игрок", "персонаж", "камера", "анимации"],
+      "notes": ["Ввод и камера принадлежат локальному игроку; движение наблюдателей и анимации сверять с сетевым состоянием.", "Проверять привязку компонентов к NetworkPlayer. Совпадение имён костей не гарантирует совместимость анимаций."],
+      "files": ["Assets/Scripts/AdvancedPlayerController.cs", "Assets/Scripts/ShipDeckPassenger.cs", "Assets/Scripts/Networking/NetworkPlayer.cs", "Assets/Scripts/Player/PlayerAnimatorDriver.cs", "Assets/Scripts/Player/FirstPersonModelVisibility.cs", "Assets/Scripts/Editor/PirateAnimationRetargeter.cs", "Assets/Prefabs/Networking/NetworkPlayer.prefab"],
+      "docs": ["animation-review.md", "unity.md"]
+    },
+    {
+      "id": "weapons", "title": "Личное оружие и урон", "aliases": ["оружие", "пистолет", "бой", "combat"],
+      "notes": ["Разделять локальный отклик оружия и серверное подтверждение урона/расхода боеприпасов.", "Настройки оружия искать через FirearmDefinition и используемые ссылки; не копировать числовой баланс из истории."],
+      "files": ["Assets/Scripts/Player/PirateWeapon.cs", "Assets/Scripts/Networking/NetworkWeapon.cs", "Assets/Scripts/Player/FirearmDefinition.cs", "Assets/Scripts/Player/FirearmHandling.cs", "Assets/Scripts/Player/CombatHealth.cs", "Assets/Scripts/Networking/NetworkHealth.cs", "Assets/Scripts/Editor/FirearmSetup.cs"],
+      "docs": ["firearm-foundation.md", "combat-balance.md"]
+    },
+    {
+      "id": "loot", "title": "Предметы, лут и инвентарь", "aliases": ["лут", "предметы", "инвентарь", "inventory"],
+      "notes": ["Подбор и расход предметов подтверждает сервер. Сверять идентификаторы предметов, иконки и каталог.", "NetworkWeapon имеет отдельные partial-файлы; для морского лута начать с NetworkWeapon.SeaLoot.cs."],
+      "files": ["Assets/Scripts/Player/PlayerInventory.cs", "Assets/Scripts/Loot/LootCatalog.cs", "Assets/Scripts/Loot/InventoryIcons.cs", "Assets/Scripts/Networking/NetworkWeapon.cs", "Assets/Scripts/Networking/NetworkWeapon.SeaLoot.cs", "Assets/Scripts/Networking/NetworkLootChest.cs", "Assets/Settings/Loot/DefaultLoot.asset", "Assets/Scripts/Editor/LootSetup.cs"],
+      "docs": ["rum-loot.md", "combat-balance.md"]
+    },
+    {
+      "id": "repair", "title": "Повреждения корпуса, ремонт и затопление", "aliases": ["ремонт", "repairing", "разрушение", "затопление", "damage"],
+      "notes": ["Текущая точка входа ремонта — NetworkHullRepair, а не старый путь Scripts/Repair/ShipRepair.cs.", "Урон, ремонт фрагментов и затопление связаны с секциями корабля. Старое описание накладных досок не считать актуальной архитектурой."],
+      "files": ["Assets/Scripts/Networking/NetworkHullRepair.cs", "Assets/Scripts/ShipDestruction/ShipDestruction.cs", "Assets/Scripts/ShipDestruction/ShipDamageSection.cs", "Assets/Scripts/ShipDestruction/ShipFlooding.cs", "Assets/Scripts/ShipDestruction/ShipDestructionProfile.cs", "Assets/Scripts/ShipDestruction/ShipStructuralGraph.cs", "Assets/Scripts/Editor/ShipDestructionSetup.cs"],
+      "docs": ["ship-destruction.md", "unity.md"]
+    },
+    {
+      "id": "world", "title": "Мир, острова и океан", "aliases": ["мир", "острова", "карта", "океан", "water"],
+      "notes": ["Согласовывать генерацию карты и её состояние между участниками; seed и профиль брать из используемых ассетов.", "CPU-поверхность воды используется игровой логикой: визуальные волны нельзя менять независимо от OceanSurface без проверки связи."],
+      "files": ["Assets/Scripts/World/ProceduralWorld.cs", "Assets/Scripts/World/WorldProfile.cs", "Assets/Scripts/World/WorldGenerator.cs", "Assets/Scripts/World/BalancedWorldGenerator.cs", "Assets/Scripts/OceanSurface.cs", "Assets/Scripts/Editor/OceanSetup.cs", "Assets/Scripts/Editor/WorldGenerationSetup.cs", "Assets/Scenes/NetworkOcean.unity"],
+      "docs": ["procedural-world.md", "unity.md"]
+    },
+    {
+      "id": "networking", "title": "Сеть, сессия и Steam", "aliases": ["сеть", "мультиплеер", "steam", "network"],
+      "notes": ["FishNet: серверный авторитет. Изменения формата сообщений согласовывать с ProtocolVersion; не повышать его автоматически без изменения протокола.", "IP/Tugboat и Steam — отдельные способы подключения. localhost не подтверждает работу через интернет; позднее подключение и отключение требуют отдельной приёмки."],
+      "files": ["Assets/Scripts/Networking/SessionController.cs", "Assets/Scripts/Networking/SessionConfig.cs", "Assets/Scripts/Networking/SessionAuthenticator.cs", "Assets/Scripts/Networking/SteamParty.cs", "Assets/Scripts/Networking/NetworkPlayer.cs", "Assets/Scripts/Networking/NetworkShip.cs", "Assets/Scripts/Networking/SimulationState.cs", "Assets/Settings/Networking/SessionConfig.asset"],
+      "docs": ["multiplayer-plan.md", "unity.md"]
+    },
+    {
+      "id": "art", "title": "Модели и Blender", "aliases": ["модели", "blender", "арт", "модель"],
+      "notes": ["Перед моделированием прочитать blender.md и подтвердить реальный Blender MCP; при импорте нужен также Unity MCP.", "Редактируемые модели хранить в Art/Blender, игровые модели в Assets/Models. Сохранять GUID и несохранённую работу; свойства конкретной модели сверять с её импортёром."],
+      "files": ["Assets/Scripts/Editor/GltfPropImporter.cs", "Assets/Scripts/Editor/PirateCharacterImport.cs", "Assets/Scripts/Editor/SailRiggingArtSetup.cs", "Assets/Scripts/Editor/MainShipSetup.cs"],
+      "docs": ["blender.md", "unity.md", "frigate.md"]
+    },
+    {
+      "id": "audio", "title": "Звуки и голос", "aliases": ["звук", "звуки", "голос", "voice"],
+      "notes": ["Назначения звуков хранить в существующем GameAudioBank. Источники и лицензии проверять в CREDITS.", "Голосовой чат — отдельная система от игровых звуков."],
+      "files": ["Assets/Scripts/Audio/GameAudio.cs", "Assets/Scripts/Audio/GameAudioBank.cs", "Assets/Scripts/Audio/GameplayAudio.cs", "Assets/Scripts/Audio/PirateVoiceChat.cs", "Assets/Scripts/Networking/NetworkPlayer.Voice.cs", "Assets/Resources/GameAudioBank.asset"],
+      "docs": ["AudioIntegration.md", "Assets/Audio/CREDITS.md"]
+    },
+    {
+      "id": "ui", "title": "Меню и HUD", "aliases": ["интерфейс", "меню", "hud"],
+      "notes": ["SessionController разделён на partial-файлы меню. Различать меню сессии и игровой HUD.", "Сохранённое оформление меню и его runtime-поведение имеют разные точки входа."],
+      "files": ["Assets/Scripts/Networking/SessionMenu.cs", "Assets/Scripts/Networking/SessionPartyMenu.cs", "Assets/Scripts/UI/PlayerHud.cs", "Assets/Scripts/UI/PirateHudStyle.cs", "Assets/Scripts/UI/HudLayout.cs", "Assets/Scripts/Player/MenuBackdrop.cs", "Assets/Scripts/Editor/MenuPresentationSetup.cs"],
+      "docs": ["unity.md", "qol-roadmap.md"]
+    }
+  ]
+}

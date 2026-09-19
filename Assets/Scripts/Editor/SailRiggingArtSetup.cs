@@ -23,14 +23,20 @@ public static class SailRiggingArtSetup
         var rack = root.transform.Find("SailRopeRack");
         if (rack == null) throw new InvalidOperationException("Configure sail ropes first.");
         var materialMap = Materials();
-        foreach (string name in new[] { "LeftPost", "RightPost", "TopBeam", "LowerBeam" })
+        foreach (string name in new[] { "LeftPost", "RightPost", "TopBeam", "LowerBeam", "CraftedRack" })
         {
             var part = rack.Find(name);
-            if (part != null) StripMesh(part.gameObject);
+            if (part != null) UnityEngine.Object.DestroyImmediate(part.gameObject);
         }
-        InstallMesh(rack, "CraftedRack", "SailRack", materialMap);
+        rack.localPosition = Vector3.zero;
+        rack.localRotation = Quaternion.identity;
         foreach (var rope in rack.GetComponentsInChildren<SailRopeVisual>(true))
         {
+            PlaceAtMast(root, rope);
+            InstallMesh(rope.transform, "CraftedStation", "SailRack", materialMap, true);
+            var support = rope.transform.Find("CraftedStation").gameObject.AddComponent<BoxCollider>();
+            support.center = new Vector3(.29f, 1.02f, 0);
+            support.size = new Vector3(.20f, 2.04f, .24f);
             var handle = rope.Handle;
             StripMesh(handle.gameObject);
             handle.localScale = Vector3.one;
@@ -38,8 +44,8 @@ public static class SailRiggingArtSetup
             if (collider != null) { collider.size = new Vector3(.38f, .24f, .22f); collider.center = new Vector3(0, .035f, 0); }
             InstallMesh(handle, "CraftedGrip", "SailGrip", materialMap);
             var cleat = rope.transform.Find("Cleat_" + rope.Index);
-            if (cleat != null) StripMesh(cleat.gameObject);
-            rope.Guide = new Vector3(rope.Guide.x, 1.80f, -.115f);
+            if (cleat != null) UnityEngine.Object.DestroyImmediate(cleat.gameObject);
+            rope.Guide = new Vector3(0, 1.80f, -.115f);
             var tube = rope.GetComponent<SailRopeMesh>();
             if (tube == null) tube = rope.gameObject.AddComponent<SailRopeMesh>();
             tube.Rope = rope;
@@ -48,6 +54,25 @@ public static class SailRiggingArtSetup
             rope.Line.enabled = false;
             BuildRestRope(rope);
         }
+    }
+    static void PlaceAtMast(GameObject root, SailRopeVisual rope)
+    {
+        string sail = rope.Anchor.name;
+        bool back = sail.Contains("Back"), front = sail.Contains("Front"), upper = sail.Contains("Mid2");
+        string controlName = back ? "F2_MastBackControl" : front ? "F2_MastFrontControl" : "F2_MastMidControl";
+        Transform control = null;
+        foreach (var candidate in root.GetComponentsInChildren<Transform>(true))
+            if (candidate.name == controlName) { control = candidate; break; }
+        if (control == null) throw new InvalidOperationException("Missing mast reference " + controlName);
+        Vector3 reference = root.transform.InverseTransformPoint(control.position);
+        float z = back ? -17.95f : front ? 13.25f : 2.10f;
+        float radius = back || front ? .26f : .35f;
+        float offset = radius + .35f;
+        rope.transform.localPosition = new Vector3(upper ? -offset : offset, reference.y - 1.3f, z);
+        rope.transform.localRotation = Quaternion.Euler(0, upper ? 0 : 180f, 0);
+        rope.transform.localScale = Vector3.one;
+        rope.HandleTop = new Vector3(0, 1.65f, -.21f);
+        rope.Handle.localPosition = rope.HandleTop;
     }
     static void BuildRestRope(SailRopeVisual rope)
     {
@@ -97,7 +122,7 @@ public static class SailRiggingArtSetup
         if (renderer != null) UnityEngine.Object.DestroyImmediate(renderer);
         if (filter != null) UnityEngine.Object.DestroyImmediate(filter);
     }
-    static void InstallMesh(Transform parent, string childName, string modelName, Dictionary<string, Material> materials)
+    static void InstallMesh(Transform parent, string childName, string modelName, Dictionary<string, Material> materials, bool singleStation = false)
     {
         var source = AssetDatabase.LoadAssetAtPath<GameObject>(Folder + modelName + ".fbx");
         if (source == null) throw new InvalidOperationException("Missing model " + modelName);
@@ -106,6 +131,25 @@ public static class SailRiggingArtSetup
         var grouped = new Dictionary<Material, List<CombineInstance>>();
         foreach (var filter in source.GetComponentsInChildren<MeshFilter>(true))
         {
+            Matrix4x4 transform = source.transform.worldToLocalMatrix * filter.transform.localToWorldMatrix;
+            if (singleStation)
+            {
+                string partName = filter.name.Split('.')[0];
+                Vector3 center = transform.MultiplyPoint3x4(filter.sharedMesh.bounds.center);
+                bool beam = partName == "CrownBeam" || partName == "BelayingRail" || partName == "BackApron";
+                bool post = partName == "Upright" || partName == "Foot" || partName == "PostCap" || partName == "IronStrap" || partName == "KneeBrace" || partName == "BraceFoot" || partName == "DeckBolt" || partName.StartsWith("StrapRivet") || partName.StartsWith("BeamBolt") || partName.StartsWith("RailBolt");
+                if (beam) transform = Matrix4x4.Scale(new Vector3(.29f, 1, 1)) * transform;
+                else if (post)
+                {
+                    if (center.x < .9f) continue;
+                    transform = Matrix4x4.Translate(new Vector3(-.79f, 0, 0)) * transform;
+                }
+                else
+                {
+                    if (Mathf.Abs(center.x - .78f) > .19f) continue;
+                    transform = Matrix4x4.Translate(new Vector3(-.78f, 0, 0)) * transform;
+                }
+            }
             var renderer = filter.GetComponent<MeshRenderer>();
             for (int i = 0; i < filter.sharedMesh.subMeshCount; i++)
             {
@@ -114,7 +158,7 @@ public static class SailRiggingArtSetup
                 if (suffix >= 0) name = name.Substring(0, suffix);
                 if (!materials.TryGetValue(name, out var material)) throw new InvalidOperationException("Unknown rigging material " + name);
                 if (!grouped.TryGetValue(material, out var list)) grouped[material] = list = new List<CombineInstance>();
-                list.Add(new CombineInstance { mesh = filter.sharedMesh, subMeshIndex = i, transform = source.transform.worldToLocalMatrix * filter.transform.localToWorldMatrix });
+                list.Add(new CombineInstance { mesh = filter.sharedMesh, subMeshIndex = i, transform = transform });
             }
         }
         var merged = new List<CombineInstance>();
@@ -126,12 +170,13 @@ public static class SailRiggingArtSetup
             merged.Add(new CombineInstance { mesh = mesh, transform = Matrix4x4.identity });
             slots.Add(entry.Key);
         }
-        var combined = new Mesh { name = modelName + "Combined", indexFormat = IndexFormat.UInt32 };
+        string meshName = singleStation ? "SailSingleStationCombined" : modelName + "Combined";
+        var combined = new Mesh { name = meshName, indexFormat = IndexFormat.UInt32 };
         combined.CombineMeshes(merged.ToArray(), false, false);
         foreach (var part in merged) UnityEngine.Object.DestroyImmediate(part.mesh);
         var obj = new GameObject(childName, typeof(MeshFilter), typeof(MeshRenderer));
         obj.transform.SetParent(parent, false);
-        obj.GetComponent<MeshFilter>().sharedMesh = SaveMesh(combined, Folder + modelName + "Combined.asset");
+        obj.GetComponent<MeshFilter>().sharedMesh = SaveMesh(combined, Folder + meshName + ".asset");
         obj.GetComponent<MeshRenderer>().sharedMaterials = slots.ToArray();
     }
     static Mesh SaveMesh(Mesh mesh, string path)
