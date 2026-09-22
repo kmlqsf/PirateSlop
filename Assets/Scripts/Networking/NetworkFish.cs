@@ -7,6 +7,9 @@ namespace PirateSlop.Networking
     public enum InventoryItem { None = -1, Fish = 0, Pistol = 1, Rod = 2, Cannon = 3, Cannonball = 4, Mallet = 5, Plank = 6, Sabre = 7, FireCannonball = 8, IceCannonball = 9, PushCannonball = 10, BoomerangCannonball = 11, Rum = 12, Wine = 13, Musket = 14, DoubleBarrel = 15, BombParrot = 16, GrapplingHook = 17, BoardingHook = 18, Pufferfish = 19, Swordfish = 20, HolyGrenade = 21 }
     public sealed class NetworkFish : NetworkBehaviour
     {
+        public static readonly System.Collections.Generic.List<NetworkFish> ServerItems = new();
+        public bool OnShip => platformId.Value != 0;
+        public override void OnStopServer() { ServerItems.Remove(this); base.OnStopServer(); }
         void Awake()
         {
             var body = GetComponent<Rigidbody>();
@@ -49,6 +52,7 @@ namespace PirateSlop.Networking
         }
         public override void OnStartServer()
         {
+            ServerItems.Add(this);
             base.OnStartServer(); expires = Item == InventoryItem.Fish ? Time.time + 600f : float.PositiveInfinity;
             nextFlop = Time.time + Random.Range(10f, 30f);
         }

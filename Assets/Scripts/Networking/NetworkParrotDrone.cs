@@ -19,6 +19,11 @@ namespace PirateSlop.Networking
         NetworkShip homeShip;
         float launched, nextInput, yaw, pitch;
         bool exploded;
+        public bool BotSteer(NetworkPlayer player, Vector3 forward)
+        {
+            if (!IsServerInitialized || player != shooter || !player.IsBot.Value || exploded || !float.IsFinite(forward.sqrMagnitude) || forward.sqrMagnitude < .5f) return false;
+            steering = forward.normalized; return true;
+        }
         Camera flightCamera;
         Renderer[] flightRenderers;
         AudioListener playerListener;
@@ -134,7 +139,8 @@ namespace PirateSlop.Networking
         void Fly(float dt)
         {
             remaining.Value = Mathf.Max(0, FlightSeconds - (Time.time - launched));
-            if (remaining.Value <= 0 || shooter == null || !shooter.IsSpawned || shooter.Motor.IsDead || shooter.Owner == null || !shooter.Owner.IsActive) { Explode(); return; }
+            if (remaining.Value <= 0 || shooter == null || !shooter.IsSpawned || shooter.Motor.IsDead ||
+                !shooter.IsBot.Value && (shooter.Owner == null || !shooter.Owner.IsActive)) { Explode(); return; }
             foreach (var overlap in Physics.OverlapSphere(transform.position, .18f, ~0, QueryTriggerInteraction.Ignore))
                 if (!Ignored(overlap)) { Explode(); return; }
             transform.rotation = Quaternion.LookRotation(steering);

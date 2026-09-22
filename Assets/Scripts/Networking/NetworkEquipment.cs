@@ -34,6 +34,22 @@ namespace PirateSlop.Networking
         public float ScopeFov => scopeFov;
         public int LoadedRounds => pendingShot?0:rounds.Value;
         public bool IsReloading => action.Value==1;
+        public int ServerRounds(int slot) => IsServerInitialized && slot >= 0 && slot < ammunition.Length ? ammunition[slot] : 0;
+        public bool TryFirearm(byte request, Vector3 forward, Vector3 eyeOffset, bool aimed)
+        {
+            if (!IsServerInitialized || !Firearm || request > 1) return false;
+            int before = ServerRounds(inventory.SelectedSlot);
+            bool reloading = IsReloading;
+            UseAuthority(request, forward, eyeOffset, ++localSequence, aimed);
+            return request == 1 ? !reloading && IsReloading : ServerRounds(inventory.SelectedSlot) < before;
+        }
+        public bool TryBotUtility(Vector3 forward)
+        {
+            var player = GetComponent<NetworkPlayer>();
+            if (!IsServerInitialized || player == null || !player.IsBot.Value || (Item != InventoryItem.Wine && Item != InventoryItem.BombParrot)) return false;
+            UseAuthority(0, forward, Vector3.up * 1.5f, ++localSequence, false);
+            return Item == InventoryItem.Wine ? IsBusy : player.Motor.ActiveParrot != null;
+        }
         public float ShotAge => Time.time - recoilAt;
         public bool AnimationAiming => IsOwner ? sentAim : aiming.Value;
         public Vector3 AnimationDirection => direction.Value;
@@ -66,6 +82,15 @@ namespace PirateSlop.Networking
         public Vector3 GripOffset => Firearm ? new Vector3(0, -.03f, 0) : new Vector3(.03f, .06f, 0);
         int CapacityFor(InventoryItem item) => item==InventoryItem.DoubleBarrel ? handling.Shotgun.Capacity : item==InventoryItem.Musket ? handling.Musket.Capacity : 1;
         public void ResetSlot(int slot, InventoryItem item) { if(IsServerInitialized) ammunition[slot] = CapacityFor(item); }
+        public void TransferAmmunitionTo(NetworkEquipment target)
+        {
+            if (!IsServerInitialized || target == null || !target.IsServerInitialized || target == this)
+                throw new System.InvalidOperationException("Ammunition replacement requires two server players.");
+            System.Array.Copy(ammunition, target.ammunition, ammunition.Length);
+            target.nextShot = nextShot;
+            target.rounds.Value = target.ammunition[target.inventory.SelectedSlot];
+            System.Array.Clear(ammunition, 0, ammunition.Length);
+        }
         void Awake()
         {
             inventory = GetComponent<PlayerInventory>(); motor = GetComponent<AdvancedPlayerController>();
@@ -190,7 +215,7 @@ namespace PirateSlop.Networking
                 return;
             }
             if (request != 0) return;
-            if (ammunition[slot] < capacity) { EmptyTargetRpc(Owner); return; }
+            if (ammunition[slot] < capacity) { if (Owner != null && Owner.IsActive) EmptyTargetRpc(Owner); return; }
             aiming.Value=aimed;
             ammunition[slot] -= capacity; rounds.Value = ammunition[slot]; nextShot = Time.time + definition.Ballistics.ShotInterval;
             Vector3 eye = transform.position + Vector3.up * (motor.IsCrouched ? .8f : 1.6f);

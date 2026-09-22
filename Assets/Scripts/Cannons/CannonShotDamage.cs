@@ -17,12 +17,19 @@ namespace PirateSlop
         public static Vector3 StepVelocity(Vector3 velocity, float dt, float drag = .015f) => (velocity + Physics.gravity * dt) * Mathf.Exp(-drag * dt);
         public float PlayerDamage = 45f, PlayerPushSpeed = 22f;
         public float StandardBlastRadius = .8f, StandardBlastDamage = 30f;
-        public float BoomerangDuration = 6f, BoomerangWidth = 16f, BoomerangHeight = 8f;
+        public const float DefaultBoomerangDuration = 6f, DefaultBoomerangWidth = 16f, DefaultBoomerangHeight = 8f, DefaultBoomerangOutboundTime = 2f;
+        public float BoomerangDuration = DefaultBoomerangDuration, BoomerangWidth = DefaultBoomerangWidth, BoomerangHeight = DefaultBoomerangHeight;
         bool spent, returning;
         float age, returnAge;
         Vector3 launchPoint, launchLocal, forward, right, returnStart, returnControl;
         Vector3 launchVelocity;
-        public float BoomerangOutboundTime = 2f;
+        public float BoomerangOutboundTime = DefaultBoomerangOutboundTime;
+        public static Vector3 ReturnCurve(Vector3 start, Vector3 control, Vector3 target, Vector3 right, float width, float height, float t)
+        {
+            float u = 1f - t;
+            return start * (u * u * u) + control * (3f * u * u * t) +
+                (target - right * width + Vector3.up * height) * (3f * u * t * t) + target * (t * t * t);
+        }
         readonly HashSet<Transform> hitTargets = new();
         readonly HashSet<ShipDamageSection> hitSections = new();
 
@@ -47,10 +54,8 @@ namespace PirateSlop
             {
                 returnAge += dt;
                 float t = Mathf.Clamp01(returnAge / (BoomerangDuration * .5f));
-                float u = 1f - t;
                 Vector3 target = ReturnPoint;
-                return returnStart * (u * u * u) + returnControl * (3f * u * u * t) +
-                    (target - right * BoomerangWidth + Vector3.up * BoomerangHeight) * (3f * u * t * t) + target * (t * t * t);
+                return ReturnCurve(returnStart, returnControl, target, right, BoomerangWidth, BoomerangHeight, t);
             }
             return launchPoint + launchVelocity * age;
         }

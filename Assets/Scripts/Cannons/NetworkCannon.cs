@@ -72,7 +72,9 @@ namespace PirateSlop.Networking
         }
         public bool StoreBall(NetworkWeapon player)
         {
-            if (!IsServerInitialized || ball == null || ball.Loaded || (holder != -1 && holder != player.Owner.ClientId) || !player.CanReach(ball.transform.position, ball.transform)) return false;
+            if (!IsServerInitialized || player == null || ball == null || ball.Loaded ||
+                (holder != -1 && (player.Owner == null || !player.Owner.IsActive || holder != player.Owner.ClientId)) ||
+                !player.CanReach(ball.transform.position, ball.transform)) return false;
             if (!player.AddSupplyBalls(InventoryItem.Cannonball, PlayerInventory.AmmoCapacity)) return false;
             holder = -1; Crate.ResetSupply(); ResetStoredBallObserversRpc();
             return true;
@@ -250,10 +252,16 @@ namespace PirateSlop.Networking
         [ServerRpc(RequireOwnership = false)]
         void FireServerRpc(int index, NetworkConnection sender = null)
         {
-            var cannon = Cannon(index);
             var player = sender != null ? SessionController.Instance.GetPlayer(sender.ClientId) : null;
-            if (cannon != null && player != null && cannon.Operator == player.Motor && cannon.InBreechRange(player.Motor))
-                cannon.Fire(player.gameObject);
+            TryFire(player, index);
+        }
+        public bool TryFire(NetworkPlayer player, int index)
+        {
+            var cannon = Cannon(index);
+            if (!IsServerInitialized || cannon == null || player == null || player.Motor.IsDead || player.Motor.IsSwimming ||
+                player.Motor.IsClimbing || cannon.Operator != player.Motor || !cannon.InBreechRange(player.Motor)) return false;
+            cannon.Fire(player.gameObject);
+            return cannon.IsIgnited || cannon.IsFireQueued;
         }
         public void RequestLoad(int index, Vector3 localPosition) => LoadServerRpc(index, localPosition);
         [ServerRpc(RequireOwnership = false)]

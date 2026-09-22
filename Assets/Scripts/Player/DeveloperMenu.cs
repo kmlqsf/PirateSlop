@@ -20,7 +20,7 @@ namespace PirateSlop
         void Awake() => network = GetComponent<NetworkWeapon>();
         void Update()
         {
-            if (!Available || network == null || !network.IsOwner) return;
+            if (!Available || BotDebugPanel.ConsumedInput || network == null || !network.IsOwner) return;
             if (Keyboard.current != null && Keyboard.current.f8Key.wasPressedThisFrame)
             { IsOpen = !IsOpen; AdvancedPlayerController.SetCursor(!IsOpen); }
         }

@@ -69,6 +69,7 @@ namespace PirateSlop.Networking
             var args = Environment.GetCommandLineArgs();
             dedicated = Has(args, "-server"); Automated = Has(args, "-autoclient");
             fillWithBots = Has(args, "-bots");
+            RemoteBotDiagnosticsAllowed = Has(args, "-botdebugremote");
             if (int.TryParse(Value(args, "-maxPlayers"), out var max)) MaxPlayers = Mathf.Clamp(max, 1, 128);
             MaxPlayers = Mathf.Max(CrewSize, MaxPlayers / CrewSize * CrewSize);
             if (int.TryParse(Value(args, "-protocol"), out var protocol)) ProtocolVersion = protocol;
@@ -96,9 +97,10 @@ namespace PirateSlop.Networking
             if (starting || connecting || playing || manager.ServerManager.Started) return;
             if (host && !string.IsNullOrWhiteSpace(seedInput) && !int.TryParse(seedInput, out _)) { SetError("Seed должен быть целым числом."); return; }
             if (!ParseEndpoint(endpoint, out var ip, out var port)) { SetError("Введите IPv4:порт, например 192.168.1.10:7777"); return; }
+            observerSession = host && fillWithBots && observerSelected && !dedicated && !Automated;
             error = ""; address = endpoint; startedAt = Time.realtimeSinceStartup; connecting = true; starting = true; hostRequested = host;
             status = host ? "Создание сессии…" : "Подключение…";
-            sessionBots = host && fillWithBots;
+            botRosterPolicy = host ? new InitialFillBotRosterPolicy(fillWithBots) : null;
             StartCoroutine(StartSession(host, ip, port));
         }
         IEnumerator StartSession(bool host, string ip, ushort port)
@@ -153,6 +155,7 @@ namespace PirateSlop.Networking
             {
                 Debug.Log($"SESSION_READY id={SessionId} port={transport.GetPort()} capacity={MaxPlayers}");
                 SeaLootSpawner.Spawn(ProceduralWorld.Instance, manager, Config.Loot);
+                InitializeBotRoster();
                 if (steamSession) party.ServerReady();
                 if (dedicated) { connecting = false; status = "Сервер запущен"; }
                 else if (hostRequested) manager.ClientManager.StartConnection();
@@ -161,12 +164,13 @@ namespace PirateSlop.Networking
             {
                 if (connecting && error == "") SetError("Сервер не запущен: порт занят или недоступен");
                 players.Clear(); slots.Clear(); awaitingWorld.Clear(); population = 0;
-                ResetBots();
+                ResetRoster();
             }
         }
         void ClientState(ClientConnectionStateArgs args)
         {
             if (args.ConnectionState != LocalConnectionState.Stopped) return;
+            StopObserver();
             bool unexpected = playing || connecting;
             playing = connecting = false;
             if (steamSession && unexpected) { party?.LeaveSession(); steamSession = false; }
@@ -222,6 +226,8 @@ namespace PirateSlop.Networking
         {
             if (!conn.IsAuthenticated || !awaitingWorld.Remove(conn.ClientId) || players.ContainsKey(conn.ClientId)) return;
             if (message.Checksum != worldChecksum) { conn.Disconnect(true); return; }
+            if (observerSession && manager.ClientManager.Connection != null && conn.ClientId == manager.ClientManager.Connection.ClientId)
+            { StartObserver(); return; }
             SpawnPlayer(conn);
         }
         void SpawnPlayer(NetworkConnection conn)
@@ -230,9 +236,10 @@ namespace PirateSlop.Networking
             if (steamSession && crew <= 0) { conn.Disconnect(true); return; }
             int team = HumanTeam(crew);
             if (team <= 0) { conn.Disconnect(true); return; }
-            if (players.Values.Count(p => p != null && p.TeamId.Value == team) >= CrewSize && !RemoveOneBot(team)) { conn.Disconnect(true); return; }
-            while (players.Count >= MaxPlayers && RemoveOneBot()) { }
-            if (players.Count >= MaxPlayers) { conn.Disconnect(true); return; }
+            var replacement = FindReplacementBot(team);
+            int teamCount = players.Values.Count(p => p != null && p.TeamId.Value == team);
+            if (teamCount >= CrewSize && (replacement == null || replacement.TeamId.Value != team)) { conn.Disconnect(true); return; }
+            if (players.Count >= MaxPlayers && replacement == null) { conn.Disconnect(true); return; }
             var crewmate = players.Values.FirstOrDefault(p => p != null && p.TeamId.Value == team && p.Ship != null);
             NetworkShip ship;
             int slot;
@@ -247,12 +254,17 @@ namespace PirateSlop.Networking
             }
             slots[conn.ClientId] = slot;
             int id = nextParticipant++;
-            var player = Instantiate(PlayerPrefab, CrewSpawn(ship), ship.transform.rotation).GetComponent<NetworkPlayer>();
+            var player = Instantiate(PlayerPrefab, CrewSpawn(ship, replacement), ship.transform.rotation).GetComponent<NetworkPlayer>();
             player.ParticipantId.Value = id; player.ShipObject.Value = ship.NetworkObject;
             player.HomeShipId.Value = ship.ParticipantId.Value;
             player.TeamId.Value = team;
             players.Add(conn.ClientId, player);
             manager.ServerManager.Spawn(player.NetworkObject, conn);
+            if (replacement != null)
+            {
+                replacement.GetComponent<NetworkWeapon>().TransferInventoryTo(player.GetComponent<NetworkWeapon>());
+                RetireReplacedBot(replacement);
+            }
             manager.SceneManager.AddOwnerToDefaultScene(player.NetworkObject);
             if (!stormRunning) StartStorm();
             manager.ServerManager.Broadcast(conn, CurrentStorm());
@@ -311,6 +323,7 @@ namespace PirateSlop.Networking
         public void SetError(string message) { error = message; status = message; Debug.LogWarning("SESSION_ERROR " + message); }
         public void Disconnect()
         {
+            StopObserver();
             playing = connecting = false; hostRequested = false;
             if (worldLoading != null) { StopCoroutine(worldLoading); worldLoading = null; }
             manager.ClientManager.StopConnection(); if (manager.ServerManager.Started) manager.ServerManager.StopConnection(true);
@@ -324,7 +337,9 @@ namespace PirateSlop.Networking
             if (steamSession && !SessionBusy && !string.IsNullOrEmpty(error)) { party?.LeaveSession(); steamSession = false; }
             TickStorm();
             TickCrewElimination();
-            TickBots();
+            TickBotDiagnostics();
+            TickBotTasks();
+            if (manager != null && manager.ServerManager.Started) BotPaths.Tick(Config.BotMotion.PathNodesPerFrame, Config.BotMotion.PathMillisecondsPerFrame);
             if (manager != null && manager.ServerManager.Started)
                 foreach (var id in awaitingWorld.Where(p => Time.realtimeSinceStartup - p.Value > 120).Select(p => p.Key).ToArray())
                 { awaitingWorld.Remove(id); if (manager.ServerManager.Clients.TryGetValue(id, out var conn)) conn.Disconnect(true); }
@@ -333,6 +348,7 @@ namespace PirateSlop.Networking
         }
         void OnDestroy()
         {
+            StopObserver();
             ReleaseMenu();
             if (manager != null) manager.TimeManager.OnPostTick -= ResolveShipCollisions;
         }

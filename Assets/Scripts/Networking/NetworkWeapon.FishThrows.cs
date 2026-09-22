@@ -8,6 +8,7 @@ namespace PirateSlop.Networking
         public bool ThrowFish(InventoryItem item, Vector3 direction, bool carriedCatch = false)
         {
             if (!IsServerInitialized || (item != InventoryItem.Pufferfish && item != InventoryItem.Swordfish) || !float.IsFinite(direction.sqrMagnitude) || direction.sqrMagnitude < .5f) return false;
+            if (!carriedCatch && !CanHandleBall()) return false;
             int index = (int)item;
             if (DropPrefabs == null || index >= DropPrefabs.Length || DropPrefabs[index] == null || DropPrefabs[index].GetComponent<NetworkFishProjectile>() == null) return false;
             Vector3 origin = transform.position + Vector3.up * 1.5f;

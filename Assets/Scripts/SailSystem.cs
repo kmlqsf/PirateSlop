@@ -14,6 +14,8 @@ public class SailSystem : MonoBehaviour
     AdvancedPlayerController[] drivers;
     Vector3[] restScale;
     NetworkShip network;
+    readonly System.Collections.Generic.Dictionary<int, float> humanUse = new();
+    public float LastHumanControlTime(int index) => humanUse.TryGetValue(index, out float time) ? time : float.NegativeInfinity;
     readonly System.Collections.Generic.Dictionary<string, float> structuralEfficiency = new();
     public int RopeCount => RopeHandles == null ? 0 : RopeHandles.Length;
     public float DeployPercentage => deployPercentage;
@@ -77,7 +79,15 @@ public class SailSystem : MonoBehaviour
             if (CanUse(player, index)) tensions[index] = Mathf.Clamp01(tensions[index] + Mathf.Clamp(amount, -.15f, .15f));
             Release(index); Aggregate(); return;
         }
-        if (!CanUse(player, index) || drivers[index] != null && drivers[index] != player) return;
+        if (!CanUse(player, index)) return;
+        var incoming = player.GetComponent<NetworkPlayer>();
+        if (incoming != null && incoming.IsServerInitialized && !incoming.IsBot.Value)
+        {
+            var current = drivers[index] != null ? drivers[index].GetComponent<NetworkPlayer>() : null;
+            if (current != null && current.IsBot.Value && current.TeamId.Value == incoming.TeamId.Value) Release(index);
+            if (drivers[index] == null || drivers[index] == player) humanUse[index] = Time.time;
+        }
+        if (drivers[index] != null && drivers[index] != player) return;
         for (int i = 0; i < drivers.Length; i++) if (i != index && drivers[i] == player) Release(i);
         bool first = drivers[index] == null;
         drivers[index] = player;

@@ -52,6 +52,15 @@ namespace PirateSlop.Networking
         public bool CarryingCatch => stage.Value == 5;
         public bool HasFish => (CarryingCatch && catchItem.Value == InventoryItem.Fish) || (inventory != null && inventory.FishSelected);
         public bool IsFishing => stage.Value > 0 && stage.Value < 5;
+        public bool BotFish(Vector3 aim)
+        {
+            if (!IsServerInitialized || GetComponent<NetworkPlayer>()?.IsBot.Value != true) return false;
+            if (stage.Value == 0) CastAuthority(aim);
+            else if (stage.Value == 3) PullAuthority();
+            else if (stage.Value == 4) { reeling = true; lastReel = Time.time; }
+            return IsFishing || CarryingCatch;
+        }
+        public void CancelBotFishing() { if (IsServerInitialized && IsFishing) ResetFishing(); }
         bool Available => !motor.IsDead && !motor.IsSwimming && !motor.IsClimbing && !motor.LocomotionLocked && !hands.HasHeldBall && !(GetComponent<NetworkWeapon>()?.LootHandsBusy ?? false);
         void Awake()
         {
@@ -109,7 +118,8 @@ namespace PirateSlop.Networking
             return result;
         }
         [ServerRpc]
-        void CastServerRpc(Vector3 aim)
+        void CastServerRpc(Vector3 aim) => CastAuthority(aim);
+        void CastAuthority(Vector3 aim)
         {
             if (!Available || !inventory.RodSelected || stage.Value != 0 || Time.time < nextCast || !float.IsFinite(aim.sqrMagnitude) || aim.sqrMagnitude < .5f || OceanSurface.Instance == null) return;
             aim.Normalize();
@@ -181,7 +191,8 @@ namespace PirateSlop.Networking
         }
         [ServerRpc] void CancelServerRpc() { if (IsFishing) ResetFishing(); }
         [ServerRpc]
-        void PullServerRpc()
+        void PullServerRpc() => PullAuthority();
+        void PullAuthority()
         {
             if (!Available || !inventory.RodSelected) return;
             if (stage.Value == 3 && Time.time < deadline)
@@ -232,14 +243,17 @@ namespace PirateSlop.Networking
         }
         [ServerRpc]
         void PickupServerRpc(NetworkObject target, bool swap, int slot, InventoryItem expected, int expectedCount)
+            => TryPickup(target, swap, slot, expected, expectedCount);
+        public bool TryPickup(NetworkObject target, bool swap = false, int slot = -1, InventoryItem expected = InventoryItem.None, int expectedCount = 0)
         {
-            if (!Available || IsEating || IsPickingUp || stage.Value != 0 || !CanPickupTarget(target)) return;
+            if (!IsServerInitialized || !Available || IsEating || IsPickingUp || stage.Value != 0 || !CanPickupTarget(target)) return false;
             var kind = target.GetComponent<NetworkFish>().CurrentItem;
-            if (!GetComponent<NetworkWeapon>().CanAddItem(kind) && (!swap || inventory.SelectedSlot != slot || inventory.ItemAt(slot) != expected || inventory.ItemCount(slot) != expectedCount || !inventory.CanSwapItem(kind))) return;
+            if (!GetComponent<NetworkWeapon>().CanAddItem(kind) && (!swap || inventory.SelectedSlot != slot || inventory.ItemAt(slot) != expected || inventory.ItemCount(slot) != expectedCount || !inventory.CanSwapItem(kind))) return false;
             var equipment = GetComponent<NetworkWeapon>();
-            if (!equipment.CanAddItem(kind) && (!swap || !equipment.PrepareSwap(kind, slot, expected, expectedCount))) return;
+            if (!equipment.CanAddItem(kind) && (!swap || !equipment.PrepareSwap(kind, slot, expected, expectedCount))) return false;
             if (equipment.CanAddItem(kind) && target.GetComponent<NetworkFish>().Take() && equipment.AddItem(kind))
-                SoundObserversRpc(SoundCue.Pickup, transform.position);
+            { SoundObserversRpc(SoundCue.Pickup, transform.position); return true; }
+            return false;
         }
         public void FinishPickup() { }
         bool CanPickupTarget(NetworkObject target)
@@ -257,12 +271,15 @@ namespace PirateSlop.Networking
         }
         void OnDisable() { if (motor != null) motor.PickupLocked = false; }
         [ServerRpc]
-        void EatServerRpc()
+        void EatServerRpc() => TryEat();
+        public bool TryEat()
         {
-            if (!HasFish || !Available || IsEating || catchThrowUntil > 0f) return;
+            if (!IsServerInitialized || !HasFish || !Available || IsEating || catchThrowUntil > 0f) return false;
             eatCatch = CarryingCatch; eatSlot = inventory.SelectedSlot;
             eatUntil = Time.time + 3f; eatProgress.Value = 0; eating.Value = true;
+            return true;
         }
+        public void CancelEating() { if (IsServerInitialized) eating.Value = false; }
         void TickEating()
         {
             if (!IsEating) return;

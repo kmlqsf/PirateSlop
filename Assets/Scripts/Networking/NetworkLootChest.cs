@@ -7,6 +7,8 @@ namespace PirateSlop.Networking
 {
     public sealed partial class NetworkLootChest : NetworkBehaviour
     {
+        public static readonly System.Collections.Generic.List<NetworkLootChest> ServerChests = new();
+        public override void OnStartServer() { base.OnStartServer(); ServerChests.Add(this); }
         public LootCatalog Catalog;
         public Transform Lid;
         readonly SyncVar<bool> opened = new();

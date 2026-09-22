@@ -87,7 +87,7 @@ public class AdvancedPlayerController : MonoBehaviour
     float crouchBlend;
     public float CrouchBlend => crouchBlend;
     public float PlanarSpeed { get; private set; }
-    public bool InputActive => ActiveParrot == null && !BellPullLocked && !DeveloperMenu.IsOpen && !ShipSpyglassView.IsViewing && local && !IsDead && Cursor.lockState == CursorLockMode.Locked;
+    public bool InputActive => ActiveParrot == null && !BellPullLocked && !DeveloperMenu.IsOpen && !BotDebugPanel.ConsumedInput && !ShipSpyglassView.IsViewing && local && !IsDead && Cursor.lockState == CursorLockMode.Locked;
     public Camera PlayerCamera => playerCamera;
     void Awake()
     {
@@ -123,6 +123,7 @@ public class AdvancedPlayerController : MonoBehaviour
     void Update()
     {
         if (!local) return;
+        if (BotDebugPanel.ConsumedInput) { pending = new PlayerCommand { Yaw = lookYaw, Pitch = pitch, Release = true }; return; }
         aimRecoil=Vector2.Lerp(aimRecoil,Vector2.zero,1-Mathf.Exp(-7*Time.deltaTime));
         var kb = Keyboard.current; var mouse = Mouse.current;
         if (kb == null) return;

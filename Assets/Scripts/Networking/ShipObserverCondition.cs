@@ -13,6 +13,7 @@ namespace PirateSlop.Networking
             notProcessed = false;
             var session = SessionController.Instance;
             if (session == null) return false;
+            if (session.IsSpectatorConnection(connection)) return true;
             var viewer = session.GetPlayer(connection.ClientId);
             if (viewer == null) return NetworkObject.Owner == connection;
             var targetPlayer = NetworkObject.GetComponent<NetworkPlayer>();
