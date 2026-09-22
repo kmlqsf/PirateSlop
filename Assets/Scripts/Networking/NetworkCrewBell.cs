@@ -22,6 +22,7 @@ namespace PirateSlop.Networking
         CrewBellMotion motion;
         bool localPull, wasPulling;
         float localAmount, nextSend, lastPullAt, serverAmount, serverStarted;
+        public uint ServerRingCount { get; private set; }
         public bool IsPulling => localPull || pulling.Value;
         public Vector3 HandPoint => motion != null ? motion.GripPoint : transform.position;
         CrewBellMotion GetMotion()
@@ -36,7 +37,7 @@ namespace PirateSlop.Networking
         {
             aimed = null;
             if (!motor.IsDead) { requested = false; if (IsServerInitialized) serverRequested = false; }
-            if (IsServerInitialized && pulling.Value && (motor.IsDead || player.Ship == null || player.Ship.IsSinking || motion == null || !motion.gameObject.activeInHierarchy || Vector3.Distance(transform.position + Vector3.up, motion.GripPoint) > 3.5f || Time.time - lastPullAt > .75f || Owner == null || !Owner.IsActive)) StopServerPull();
+            if (IsServerInitialized && pulling.Value && (motor.IsDead || player.Ship == null || player.Ship.IsSinking || motion == null || !motion.gameObject.activeInHierarchy || Vector3.Distance(transform.position + Vector3.up, motion.GripPoint) > 3.5f || Time.time - lastPullAt > .75f || !player.IsBot.Value && (Owner == null || !Owner.IsActive))) StopServerPull();
             if (IsPulling)
             {
                 if (motion == null) motion = GetMotion();
@@ -78,16 +79,22 @@ namespace PirateSlop.Networking
             }
         }
         [ServerRpc]
-        void BeginPullServerRpc()
+        void BeginPullServerRpc() { BeginServerPull(); }
+        public bool BeginBotPull() => IsServerInitialized && player.IsBot.Value && BeginServerPull();
+        public void PullBot(float amount) { if (IsServerInitialized && player.IsBot.Value) PullServer(amount); }
+        public void CancelBotPull() { if (IsServerInitialized && player.IsBot.Value) StopServerPull(); }
+        bool BeginServerPull()
         {
             var candidate = GetMotion();
             if (pulling.Value || motor.IsDead || motor.ActiveParrot != null || motor.ActiveCannon != null || motor.IsSwimming || motor.IsClimbing || player.Ship == null || player.Ship.IsSinking || candidate == null || Time.time < nextRing || (candidate.Holder != null && candidate.Holder != this) || Vector3.Distance(transform.position + Vector3.up, candidate.GripPoint) > 3.5f || !GetComponent<NetworkWeapon>().CanReach(candidate.GripPoint, candidate.transform))
-            { EndPullTargetRpc(Owner); return; }
+            { if (Owner != null && Owner.IsActive) EndPullTargetRpc(Owner); return false; }
             motion = candidate; motion.Holder = this; pulling.Value = true; pullAmount.Value = 0; serverAmount = 0;
             serverStarted = lastPullAt = Time.time; motor.BellPullLocked = true;
+            return true;
         }
         [ServerRpc]
-        void PullServerRpc(float amount)
+        void PullServerRpc(float amount) { PullServer(amount); }
+        void PullServer(float amount)
         {
             if (!pulling.Value || !float.IsFinite(amount) || motion == null || motor.IsDead || player.Ship == null || player.Ship.IsSinking) return;
             if (Vector3.Distance(transform.position + Vector3.up, motion.GripPoint) > 3.5f || !GetComponent<NetworkWeapon>().CanReach(motion.GripPoint, motion.transform)) { StopServerPull(); return; }
@@ -99,6 +106,7 @@ namespace PirateSlop.Networking
                 nextRing = Time.time + 2f;
                 foreach (var member in FindObjectsByType<NetworkPlayer>(FindObjectsSortMode.None))
                     if (member.Ship == ship && member.TeamId.Value == player.TeamId.Value && member.GetComponent<CombatHealth>() is { } health && health.RespawnFromBell(ship)) break;
+                ServerRingCount++;
                 RingObserversRpc(motion.transform.position);
                 StopServerPull();
             }

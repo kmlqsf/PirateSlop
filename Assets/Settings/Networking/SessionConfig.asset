@@ -13,12 +13,34 @@ MonoBehaviour:
   m_Name: SessionConfig
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.Networking.SessionConfig
   Loot: {fileID: 11400000, guid: 042c2934844dcd546a82e80071b0a132, type: 2}
+  BotMotion:
+    PathNodesPerFrame: 48
+    PathMillisecondsPerFrame: 1.5
+    MaxPathNodes: 1000
+    CellSize: 0.6
+    SearchRadius: 35
+    RetryAfter: 3
+    RecoveryAfter: 12
+    TaskTimeout: 90
+    AllowEmergencyTeleport: 1
+    HumanStationGrace: 30
+    FailedTaskRetry: 15
+    CruiseSails: 1
+    CannonSites:
+    - {x: -3.8, y: 4.5, z: -1}
+    - {x: 3.8, y: 4.5, z: -1}
+    - {x: -3.8, y: 4.5, z: 2}
+    - {x: 3.8, y: 4.5, z: 2}
+    - {x: -3.8, y: 4.5, z: 5}
+    - {x: 3.8, y: 4.5, z: 5}
+    TeleportCooldown: 60
+    RecoveryRadius: 2
   ShipComparisonEnabled: 0
   ComparisonShips: []
   Port: 7777
   MaxPlayers: 30
   TickRate: 30
-  ProtocolVersion: 94
+  ProtocolVersion: 96
   ConnectTimeout: 15
   ObserverRadius: 1000
   ObserverHysteresis: 0.2

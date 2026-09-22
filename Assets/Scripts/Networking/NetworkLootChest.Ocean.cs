@@ -329,6 +329,7 @@ namespace PirateSlop.Networking
 
         public override void OnStopServer()
         {
+            ServerChests.Remove(this);
             if (worker != null) worker.SetLootWork(null);
             if (carryingPlayer != null) carryingPlayer.SetCarriedLoot(null);
             worker = carryingPlayer = null;

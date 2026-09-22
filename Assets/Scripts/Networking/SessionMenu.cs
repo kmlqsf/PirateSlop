@@ -78,7 +78,7 @@ namespace PirateSlop.Networking
         }
         void DrawSessionMenu()
         {
-            if(DeveloperMenu.IsOpen || dedicated || Automated || !MenuOpen) return;
+            if(BotDebugPanel.ConsumedInput || DeveloperMenu.IsOpen || dedicated || Automated || !MenuOpen) return;
             PrepareMenu();
             var oldMatrix=GUI.matrix; var oldColor=GUI.color;
             GUI.color=Color.white; GUI.DrawTexture(new Rect(0,0,Screen.width,Screen.height),menuShade);
@@ -99,6 +99,13 @@ namespace PirateSlop.Networking
                 MenuText(new Rect(x,y+115,panelWidth,30),"Подготовка моря и островов…",true);
                 if(MenuAction(x,y+180,panelWidth,"Отменить подключение")) Disconnect();
             }
+            else if(chooseObserver)
+            {
+                MenuText(new Rect(x,y,panelWidth,50),"СВОБОДНАЯ КАМЕРА?");
+                MenuText(new Rect(x,y+60,panelWidth,100),"На карте будут только боты. Ваш корабль не появится.\nWASD и мышь — полёт, Q / E — высота.",true);
+                if(MenuAction(x,y+180,panelWidth,"Да · наблюдать за ботами",true)) { observerSelected=true; chooseObserver=false; }
+                if(MenuAction(x,y+250,panelWidth,"Нет · играть на своём корабле")) { observerSelected=false; chooseObserver=false; }
+            }
             else if(menuPage==5) { DrawSteamParty(x,y-42,panelWidth); }
             else if(menuPage==1 || menuPage==2)
             {
@@ -112,7 +119,7 @@ namespace PirateSlop.Networking
                     DrawBotToggle(x,y+238,panelWidth);
                 }
                 else MenuText(new Rect(x,y+150,panelWidth,70),"Введите адрес, который сообщил капитан вашей сессии.",true);
-                if(MenuAction(x,y+285,panelWidth,menuPage==1?"Выйти в море":"Подключиться",true)) { PlayerPrefs.SetString("LastEndpoint",address); PlayerPrefs.Save(); Begin(menuPage==1,address); }
+                if(MenuAction(x,y+285,panelWidth,menuPage==1?(fillWithBots && observerSelected?"Наблюдать за ботами":"Выйти в море"):"Подключиться",true)) { PlayerPrefs.SetString("LastEndpoint",address); PlayerPrefs.Save(); Begin(menuPage==1,address); }
                 if(MenuAction(x,y+350,panelWidth,"Назад")) menuPage=0;
             }
             else if(menuPage==3)
@@ -168,15 +175,37 @@ namespace PirateSlop.Networking
         }
         void DrawBotToggle(float x, float y, float width)
         {
+            bool previous = fillWithBots;
             fillWithBots = MenuToggle(x,y,width,fillWithBots,"Заполнить свободные места ботами");
+            if (fillWithBots && !previous) chooseObserver = true;
+            if (!fillWithBots) { observerSelected = false; chooseObserver = false; }
         }
         bool MenuToggle(float x,float y,float width,bool value,string label)
         {
-            bool next=GUI.Toggle(new Rect(x,y,width,35),value,GUIContent.none,GUIStyle.none);
-            PirateHudStyle.Diamond(new Vector2(x+11,y+17),14,GUI.enabled?menuGold:PirateHudStyle.Muted);
-            PirateHudStyle.Diamond(new Vector2(x+11,y+17),next?7:11,next?PirateHudStyle.Paper:new Color(.025f,.07f,.085f));
+            bool next=value;
+            if(GUI.Button(new Rect(x,y,width,35),GUIContent.none,GUIStyle.none))
+            {
+                next=!value;
+                GameAudio.Play(SoundCue.Select,Vector3.zero,1f,true);
+            }
+            PirateHudStyle.Fill(new Rect(x,y+6,22,22),GUI.enabled?menuGold:PirateHudStyle.Muted);
+            PirateHudStyle.Fill(new Rect(x+2,y+8,18,18),new Color(.025f,.07f,.085f));
+            if(next)
+            {
+                MenuCheckStroke(new Vector2(x+5,y+17),new Vector2(x+10,y+22));
+                MenuCheckStroke(new Vector2(x+10,y+22),new Vector2(x+18,y+12));
+            }
             MenuText(new Rect(x+30,y,width-30,35),label,true);
             return next;
+        }
+        void MenuCheckStroke(Vector2 from,Vector2 to)
+        {
+            int steps=Mathf.CeilToInt(Vector2.Distance(from,to));
+            for(int i=0;i<=steps;i++)
+            {
+                var point=Vector2.Lerp(from,to,i/(float)Mathf.Max(1,steps));
+                PirateHudStyle.Fill(new Rect(point.x-1.5f,point.y-1.5f,3,3),GUI.enabled?PirateHudStyle.Paper:PirateHudStyle.Muted);
+            }
         }
         float MenuVolume(float x,float y,float width,string label,float value,string key)
         {

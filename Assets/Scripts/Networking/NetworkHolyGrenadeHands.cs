@@ -24,6 +24,8 @@ namespace PirateSlop.Networking
         LineRenderer arc;
         readonly Vector3[] points = new Vector3[251];
         float flashAt = -10, flashStrength;
+        float botBlindedUntil;
+        public bool BotBlinded => Time.time < botBlindedUntil;
         void Awake()
         {
             inventory = GetComponent<PlayerInventory>();
@@ -96,7 +98,7 @@ namespace PirateSlop.Networking
             arc.positionCount = count;
             for (int i = 0; i < count; i++) arc.SetPosition(i, points[i]);
         }
-        void GetLaunch(Vector3 forward, out Vector3 point, out Vector3 velocity)
+        public void GetLaunch(Vector3 forward, out Vector3 point, out Vector3 velocity)
         {
             forward.Normalize();
             Vector3 eye = transform.position + Vector3.up * (motor.IsCrouched ? .8f : 1.5f);
@@ -119,6 +121,16 @@ namespace PirateSlop.Networking
         {
             if (!CanUse || !float.IsFinite(forward.sqrMagnitude) || forward.sqrMagnitude < .5f) return;
             Release(forward, false);
+        }
+        public bool TryBotThrow(Vector3 forward)
+        {
+            var player = GetComponent<NetworkPlayer>();
+            if (!IsServerInitialized || player == null || !player.IsBot.Value || !CanUse || Primed || Prefab == null ||
+                !float.IsFinite(forward.sqrMagnitude) || forward.sqrMagnitude < .5f) return false;
+            primedSlot = inventory.SelectedSlot; deadline = Time.time + FuseSeconds; remaining.Value = FuseSeconds;
+            bool released = Release(forward, false);
+            if (!released) ClearPrime();
+            return released;
         }
         public bool DropPrimed()
         {
@@ -147,7 +159,9 @@ namespace PirateSlop.Networking
         }
         public void Flash(float strength)
         {
-            if (IsServerInitialized && Owner.IsValid) FlashTargetRpc(Owner, Mathf.Clamp01(strength));
+            if (IsServerInitialized && GetComponent<NetworkPlayer>() is NetworkPlayer player && player.IsBot.Value && strength > .05f)
+                botBlindedUntil = Mathf.Max(botBlindedUntil, Time.time + 1.65f * Mathf.Clamp01(strength));
+            if (IsServerInitialized && Owner != null && Owner.IsValid) FlashTargetRpc(Owner, Mathf.Clamp01(strength));
         }
         [TargetRpc]
         void FlashTargetRpc(FishNet.Connection.NetworkConnection connection, float strength)

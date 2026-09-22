@@ -17,6 +17,7 @@ namespace PirateSlop
         public float Traverse { get; private set; }
         public AdvancedPlayerController Operator { get; private set; }
         float lastControl;
+        public float LastHumanControlTime { get; private set; } = -1000f;
         Quaternion barrelRest;
         AdvancedPlayerController grip;
         float lastGrip;
@@ -101,6 +102,8 @@ namespace PirateSlop
             if (!InBreechRange(player) || player.IsSwimming || player.IsClimbing || player.IsKnockedBack ||
                 (player.LocomotionLocked && player.ActiveCannon != this) || (Operator != null && Operator != player)) return false;
             Operator = player;
+            var controllerPlayer = player.GetComponent<NetworkPlayer>();
+            if (controllerPlayer == null || !controllerPlayer.IsBot.Value) LastHumanControlTime = Time.time;
             player.ActiveCannon = this;
             lastControl = Time.time;
             return true;

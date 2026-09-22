@@ -7,6 +7,8 @@ namespace PirateSlop.Networking
     [DefaultExecutionOrder(-5)]
     public sealed class NetworkFishProjectile : NetworkBehaviour
     {
+        public const float SwordfishSpeed = 38f;
+        public const float PufferSpeed = 14f, PufferFuse = 2.5f, PufferRadius = 3f, PufferBounce = .4f;
         readonly SyncVar<bool> flying = new();
         readonly SyncVar<float> burstProgress = new();
         public bool Flying => flying.Value;
@@ -73,11 +75,11 @@ namespace PirateSlop.Networking
         public void Launch(NetworkPlayer source, Vector3 direction)
         {
             attacker = source;
-            velocity = direction.normalized * (pickup.Item == InventoryItem.Swordfish ? 38f : 14f);
+            velocity = direction.normalized * (pickup.Item == InventoryItem.Swordfish ? SwordfishSpeed : PufferSpeed);
             var ship = source.GetComponent<ShipDeckPassenger>()?.Ship;
             if (ship != null) velocity += ship.GetComponent<ShipController>().CannonPointVelocity(transform.position);
             started = Time.time;
-            fuse = Time.time + (pickup.Item == InventoryItem.Pufferfish ? 2.5f : 8f);
+            fuse = Time.time + (pickup.Item == InventoryItem.Pufferfish ? PufferFuse : 8f);
             flying.Value = true;
             pickup.Place(null, transform.position, transform.rotation);
         }
@@ -122,7 +124,7 @@ namespace PirateSlop.Networking
                     return;
                 }
                 pickup.Place(null, nearest.point + nearest.normal * .15f, transform.rotation);
-                velocity = Vector3.Reflect(velocity, nearest.normal) * .4f;
+                velocity = Vector3.Reflect(velocity, nearest.normal) * PufferBounce;
             }
             else pickup.Place(null, transform.position + delta, Quaternion.LookRotation(velocity));
             var ocean = OceanSurface.Instance;
@@ -135,7 +137,7 @@ namespace PirateSlop.Networking
         void Burst()
         {
             var damaged = new System.Collections.Generic.HashSet<CombatHealth>();
-            foreach (var collider in Physics.OverlapSphere(transform.position, 3f, ~0, QueryTriggerInteraction.Ignore))
+            foreach (var collider in Physics.OverlapSphere(transform.position, PufferRadius, ~0, QueryTriggerInteraction.Ignore))
             {
                 var health = collider.GetComponentInParent<CombatHealth>();
                 if (health == null || !damaged.Add(health)) continue;

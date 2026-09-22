@@ -34,10 +34,11 @@ namespace PirateSlop.Networking
         public readonly SyncVar<int> TeamId = new();
         public readonly SyncVar<bool> IsBot = new();
         public readonly SyncVar<bool> Eliminated = new();
-        BotCaptain bot;
+        public int BotNumber => IsBot.Value ? ParticipantId.Value : 0;
+        BotActionExecutor botActions;
+        public float NextBotRecovery { get; set; }
         public bool IsTrainingDummy { get; set; }
-        public string BotStatus => !IsBot.Value ? "Human controlled" : bot != null ? bot.Status : "Awaiting server brain";
-        public bool OnSupplyTrip => bot != null && bot.OnSupplyTrip;
+        public string BotStatus => !IsBot.Value ? "Human controlled" : botActions?.Status ?? "Ожидание задачи";
         AdvancedPlayerController motor;
         ShipDeckPassenger passenger;
         bool bound;
@@ -90,6 +91,7 @@ namespace PirateSlop.Networking
             passenger = GetComponent<ShipDeckPassenger>(); passenger.Networked = true;
             graphicsRoot = transform.Find("PlayerGraphics");
             if (GetComponent<CrewPresentation>() == null) gameObject.AddComponent<CrewPresentation>();
+            if (GetComponent<BotDebugPanel>() == null) gameObject.AddComponent<BotDebugPanel>();
             if (GetComponent<FirstPersonFeedback>() == null) gameObject.AddComponent<FirstPersonFeedback>();
         }
         public override void OnStartNetwork()
@@ -111,17 +113,33 @@ namespace PirateSlop.Networking
         public override void OnStartServer()
         {
             if (!voicePlayers.Contains(this)) voicePlayers.Add(this);
-            if (IsBot.Value) bot = new BotCaptain(this);
+            if (IsBot.Value) SessionController.Instance.RegisterBotDiagnostics(this);
+            if (IsBot.Value) botActions = new BotActionExecutor(this);
         }
         public override void OnStopNetwork()
         {
             foreach (var ship in NetworkShip.ActiveShips) ship.GetComponent<SailSystem>()?.ReleasePlayer(motor);
             StopVoice();
             TargetMarks = System.Array.Empty<TargetMarkState>();
-            bot?.Stop();
+            ReleaseServerInteractions();
             TimeManager.OnTick -= Tick; TimeManager.OnPostTick -= PostTick;
             var active = ActiveShip;
             if (active != null && active.Helm.IsControlledBy(motor)) active.Helm.ReleaseControl();
+        }
+        public void ReleaseServerInteractions()
+        {
+            if (!IsServerInitialized) return;
+            botActions?.Cancel("Освобождение взаимодействий персонажа");
+            foreach (var ship in NetworkShip.ActiveShips)
+            {
+                if (ship.Helm.IsControlledBy(motor)) ship.Helm.ReleaseControl();
+                ship.GetComponent<SailSystem>()?.ReleasePlayer(motor);
+            }
+            if (motor.ActiveCannon != null && motor.ActiveCannon.Operator == motor) motor.ActiveCannon.ReleaseControl();
+            var inventory = GetComponent<NetworkWeapon>();
+            inventory?.CancelLootWork();
+            if (inventory != null && inventory.CarriedLoot != null) inventory.CarriedLoot.Drop();
+            motor.SetLocomotionLocked(false);
         }
         bool TryBind()
         {
@@ -142,11 +160,11 @@ namespace PirateSlop.Networking
             }
             if (IsBot.Value)
             {
-                if (IsServerInitialized && bot != null)
+                if (IsServerInitialized)
                 {
                     if (!motor.IsDead) passenger.Carry();
                     Physics.SyncTransforms();
-                    SimulateCommand(bot.Command(), true);
+                    SimulateCommand(botActions != null ? botActions.Tick((float)TimeManager.TickDelta) : new PlayerCommand { Yaw = motor.transform.eulerAngles.y }, true);
                 }
                 return;
             }
@@ -216,7 +234,7 @@ namespace PirateSlop.Networking
             passenger.Detect();
             CaptureVisualAnchor();
             float homeHeight = Ship != null ? Ship.transform.position.y : GetComponent<CombatHealth>().SpawnPosition.y;
-            if (!motor.IsSwimming && motor.transform.position.y < homeHeight - 30) ReturnHome();
+            if (!IsBot.Value && !motor.IsSwimming && motor.transform.position.y < homeHeight - 30) ReturnHome();
         }
         public override void CreateReconcile()
         {

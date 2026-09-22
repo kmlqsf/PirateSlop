@@ -118,34 +118,36 @@ namespace PirateSlop.Networking
             return delta.magnitude <= 3.5f && !FirearmTrace.Cast(gameObject, origin, point - delta.normalized * .08f, out _);
         }
         [ServerRpc]
-        void RepairServerRpc(NetworkObject target, int sectionId, int fragmentId, Vector3 localPoint)
+        void RepairServerRpc(NetworkObject target, int sectionId, int fragmentId, Vector3 localPoint) => TryRepair(target, sectionId, fragmentId, localPoint);
+        public bool TryRepair(NetworkObject target, int sectionId, int fragmentId, Vector3 localPoint)
         {
-            if (!Available || target == null || Time.time < nextStrike || !float.IsFinite(localPoint.sqrMagnitude)) return;
+            if (!IsServerInitialized || !Available || target == null || Time.time < nextStrike || !float.IsFinite(localPoint.sqrMagnitude)) return false;
             var destruction = target.GetComponent<ShipDestruction>();
-            if (destruction == null || !destruction.IsSpawned || target.GetComponent<NetworkShip>().IsSinking) return;
+            if (destruction == null || !destruction.IsSpawned || target.GetComponent<NetworkShip>().IsSinking) return false;
             var section = destruction.Section(sectionId);
             if (fragmentId == -1)
             {
-                if (!destruction.MastRepairPoint(sectionId, out var basePoint)) return;
+                if (!destruction.MastRepairPoint(sectionId, out var basePoint)) return false;
                 Vector3 hitPoint = target.transform.TransformPoint(localPoint);
-                if (Vector3.Distance(hitPoint, basePoint) > 1.3f || !Reachable(hitPoint)) return;
+                if (Vector3.Distance(hitPoint, basePoint) > 1.3f || !Reachable(hitPoint)) return false;
                 if (target != lastShip || sectionId != lastSection || Time.time - lastStrikeAt > 3f) strikes = 0;
                 lastShip = target; lastSection = sectionId; lastFragment = -1;
                 nextStrike = Time.time + .5f; lastStrikeAt = Time.time;
                 if (++strikes >= 10) { destruction.RepairMast(sectionId); strikes = 0; }
                 StrikeObserversRpc(hitPoint);
-                return;
+                return true;
             }
-            if (section == null || fragmentId < 0 || fragmentId >= section.RepairCount || fragmentId >= 64 || (section.RemovedFragments & (1UL << fragmentId)) == 0) return;
+            if (section == null || fragmentId < 0 || fragmentId >= section.RepairCount || fragmentId >= 64 || (section.RemovedFragments & (1UL << fragmentId)) == 0) return false;
             Vector3 point = target.transform.TransformPoint(localPoint);
             var fragment = section.RepairTransform(fragmentId).GetComponent<MeshFilter>();
-            if (fragment == null || section.RepairBounds(fragmentId).SqrDistance(fragment.transform.InverseTransformPoint(point)) > .025f || !Reachable(point)) return;
+            if (fragment == null || section.RepairBounds(fragmentId).SqrDistance(fragment.transform.InverseTransformPoint(point)) > .025f || !Reachable(point)) return false;
             if (target != lastShip || sectionId != lastSection || fragmentId != lastFragment || Time.time - lastStrikeAt > 3f) strikes = 0;
             lastShip = target; lastSection = sectionId; lastFragment = fragmentId;
             nextStrike = Time.time + .5f; lastStrikeAt = Time.time;
             strikes++;
             if (strikes >= 3) { destruction.RepairNearby(sectionId, fragmentId, point); strikes = 0; }
             StrikeObserversRpc(point);
+            return true;
         }
         [ObserversRpc(RunLocally = true)]
         void StrikeObserversRpc(Vector3 point) { swingAt = Time.time; GameAudio.Play(SoundCue.BulletWood, point, .8f); }

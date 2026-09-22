@@ -8,6 +8,7 @@ public class ShipDeckPassenger : MonoBehaviour
     Rigidbody ship;
     Vector3 lastPosition;
     Quaternion lastRotation;
+    readonly RaycastHit[] supportHits = new RaycastHit[16];
     public bool Networked { get; set; }
     public Rigidbody Ship => ship;
     void Awake() { controller = GetComponent<CharacterController>(); player = GetComponent<AdvancedPlayerController>(); }
@@ -30,13 +31,15 @@ public class ShipDeckPassenger : MonoBehaviour
         if (player != null && player.IsClimbing) return;
         if (player != null && player.IsSwimming) { if (ship != null) Attach(null); return; }
         if (player != null && player.LocomotionLocked) return;
-        if (ship != null && player != null && !player.IsGrounded)
-        {
-            foreach (var support in Physics.SphereCastAll(transform.position + Vector3.up * .3f, .2f, Vector3.down, 3.5f, ~0, QueryTriggerInteraction.Ignore))
-                if (support.rigidbody == ship && support.normal.y > .5f) return;
-        }
         Rigidbody nextShip = null;
         if (Physics.SphereCast(transform.position + Vector3.up * .4f, .2f, Vector3.down, out var hit, .35f, ~0, QueryTriggerInteraction.Ignore) && hit.rigidbody != null && hit.rigidbody.GetComponent<ShipController>() != null) nextShip = hit.rigidbody;
+        if (nextShip == null && ship != null && player != null)
+        {
+            int count = Physics.SphereCastNonAlloc(transform.position + Vector3.up * .3f, .2f, Vector3.down,
+                supportHits, player.IsGrounded ? .75f : 3.5f, ~0, QueryTriggerInteraction.Ignore);
+            for (int i = 0; i < count; i++)
+                if (supportHits[i].rigidbody == ship && supportHits[i].normal.y > .5f) return;
+        }
         if (nextShip != ship) Attach(nextShip);
     }
     void Update() { if (!Networked && (player == null || !player.IsDead)) { Carry(true); Detect(); } }

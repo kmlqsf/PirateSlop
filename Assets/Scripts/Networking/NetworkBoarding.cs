@@ -23,6 +23,21 @@ namespace PirateSlop.Networking
             foreach (var cable in cables) if (cable.Cannon == index && cable.Target != null && cable.Target.IsSpawned) return true;
             return false;
         }
+        public bool BotManageCable(NetworkPlayer player, int index, bool release)
+        {
+            var cannon = Cannon(index);
+            if (!IsServerInitialized || player == null || !player.IsBot.Value || player.Ship != GetComponent<NetworkShip>() ||
+                cannon == null || !player.GetComponent<NetworkWeapon>().CanReachCannon(cannon)) return false;
+            for (int i = 0; i < cables.Count; i++)
+            {
+                var cable = cables[i];
+                if (cable.Cannon != index || cable.Target == null) continue;
+                if (release) { StrikeBoarding(i); return !HasBoarding(index); }
+                else cable.Desired = Mathf.Max(25f, cable.Desired - 2f);
+                cables[i] = cable; return true;
+            }
+            return false;
+        }
         public void AttachBoarding(int index, NetworkShip target, Vector3 point, Vector3 normal)
         {
             var cannon=Cannon(index);

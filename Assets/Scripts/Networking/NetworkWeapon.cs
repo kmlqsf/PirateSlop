@@ -107,7 +107,8 @@ namespace PirateSlop.Networking
             count = Mathf.Min(count, PlayerInventory.AmmoCapacity - ballCounts[slot]);
             ballItems[slot] = item; ballCounts[slot] += count;
             selectedSlot.Value = slot; inventory.SetSelection(slot);
-            ApplyInventory(); SelectSupplyTargetRpc(Owner, slot);
+            ApplyInventory();
+            if (Owner != null && Owner.IsActive) SelectSupplyTargetRpc(Owner, slot);
             return true;
         }
         [TargetRpc]
@@ -211,19 +212,28 @@ namespace PirateSlop.Networking
         public void UseChest(NetworkObject target, int slot = -1, bool swap = false) => UseChestServerRpc(target, slot, swap, inventory.SelectedSlot, inventory.ItemAt(inventory.SelectedSlot), inventory.ItemCount(inventory.SelectedSlot));
         [ServerRpc]
         void UseChestServerRpc(NetworkObject target, int slot, bool swap, int selected, InventoryItem expected, int expectedCount)
+            => TryUseChest(target, slot, swap, selected, expected, expectedCount);
+        public bool TryUseChest(NetworkObject target, int slot = -1, bool swap = false, int selected = -1, InventoryItem expected = InventoryItem.None, int expectedCount = 0)
         {
             var motor = GetComponent<AdvancedPlayerController>();
             var fishing = inventory.Fishing;
-            if (target == null || LootHandsBusy || motor.IsDead || motor.IsClimbing || motor.LocomotionLocked || GetComponent<CannonHands>().HasHeldBall) return;
-            if (fishing != null && (fishing.CarryingCatch || fishing.IsFishing || fishing.IsEating)) return;
+            if (!IsServerInitialized || target == null || LootHandsBusy || motor.IsDead || motor.IsClimbing || motor.LocomotionLocked || GetComponent<CannonHands>().HasHeldBall) return false;
+            if (fishing != null && (fishing.CarryingCatch || fishing.IsFishing || fishing.IsEating)) return false;
             var chest = target.GetComponent<NetworkLootChest>();
-            if (chest == null || !chest.IsSpawned || !chest.Available || Vector3.Distance(transform.position, target.transform.position) > 5f) return;
+            if (chest == null || !chest.IsSpawned || !chest.Available || Vector3.Distance(transform.position, target.transform.position) > 5f) return false;
             Vector3 origin = transform.position + Vector3.up * 1.5f;
             Vector3 delta = target.transform.position + Vector3.up * .4f - origin;
             foreach (var hit in Physics.RaycastAll(origin, delta.normalized, delta.magnitude, ~0, QueryTriggerInteraction.Ignore))
-                if (!hit.transform.IsChildOf(transform) && !hit.transform.IsChildOf(target.transform)) return;
-            if (slot < 0) { chest.Open(); OpenChestTargetRpc(Owner, target); }
-            else chest.Take(this, slot, swap, selected, expected, expectedCount);
+                if (!hit.transform.IsChildOf(transform) && !hit.transform.IsChildOf(target.transform)) return false;
+            if (slot < 0)
+            {
+                chest.Open();
+                if (Owner != null && Owner.IsActive) OpenChestTargetRpc(Owner, target);
+                return true;
+            }
+            var before = chest.ItemAt(slot);
+            chest.Take(this, slot, swap, selected, expected, expectedCount);
+            return before != InventoryItem.None && (chest == null || !chest.IsSpawned || chest.ItemAt(slot) == InventoryItem.None);
         }
         [TargetRpc]
         void OpenChestTargetRpc(FishNet.Connection.NetworkConnection connection, NetworkObject target)
@@ -232,21 +242,24 @@ namespace PirateSlop.Networking
         }
         public void StoreBall(NetworkObject ship) => StoreBallServerRpc(ship);
         [ServerRpc]
-        void StoreBallServerRpc(NetworkObject ship)
+        void StoreBallServerRpc(NetworkObject ship) => TryStoreBall(ship);
+        public bool TryStoreBall(NetworkObject ship)
         {
-            if (ship == null || !CanHandleBall()) return;
+            if (!IsServerInitialized || ship == null || !CanHandleBall()) return false;
             var cannon = ship.GetComponent<NetworkCannon>();
-            if (cannon != null) cannon.StoreBall(this);
+            return cannon != null && cannon.StoreBall(this);
         }
         public void LoadBall(NetworkObject ship, int index) => LoadBallServerRpc(ship, index);
         [ServerRpc]
-        void LoadBallServerRpc(NetworkObject ship, int index)
+        void LoadBallServerRpc(NetworkObject ship, int index) => TryLoadBall(ship, index);
+        public bool TryLoadBall(NetworkObject ship, int index)
         {
             int slot = selectedSlot.Value;
-            if (ship == null || !CanHandleBall() || GetComponent<CannonHands>().HasHeldBall || inventory.BallCount(slot) <= 0) return;
+            if (!IsServerInitialized || ship == null || !CanHandleBall() || GetComponent<CannonHands>().HasHeldBall || inventory.BallCount(slot) <= 0) return false;
             var cannon = ship.GetComponent<NetworkCannon>();
             if (cannon != null && cannon.LoadInventoryBall(this, index, ballItems[slot]))
-            { ballCounts[slot]--; ApplyInventory(); }
+            { ballCounts[slot]--; ApplyInventory(); return true; }
+            return false;
         }
         bool CanHandleBall()
         {
@@ -275,34 +288,52 @@ namespace PirateSlop.Networking
         public void TakeCannon(NetworkObject ship) => TakeCannonServerRpc(ship);
         [ServerRpc]
         void TakeCannonServerRpc(NetworkObject ship)
+            => TryTakeCannon(ship);
+
+        public bool TryTakeCannon(NetworkObject ship)
         {
-            if (inventory == null || ship == null) return;
-            var motor = GetComponent<AdvancedPlayerController>();
+            if (!IsServerInitialized || inventory == null || ship == null) return false;
             var cannon = ship.GetComponent<NetworkCannon>();
             int slot = inventory.EmptySlot();
-            if (motor.IsDead || motor.LocomotionLocked || slot < 0 || cannon == null || cannon.Crate == null || Vector3.Distance(transform.position, cannon.Crate.Kit.transform.position) > 6f) return;
-            if (!cannon.TakeKit()) return;
+            if (!CanHandleBall() || GetComponent<CannonHands>().HasHeldBall || slot < 0 || cannon == null || cannon.Crate == null ||
+                cannon.Crate.Kit == null || Vector3.Distance(transform.position, cannon.Crate.Kit.transform.position) > 6f) return false;
+            if (!cannon.TakeKit()) return false;
             cannonSlots.Value |= 1 << slot;
             inventory.SetContents(cannonSlots.Value);
+            return true;
         }
         public void PlaceCannon(NetworkObject ship, int slot, Vector3 localPosition, Quaternion rotation) => PlaceCannonServerRpc(ship, slot, localPosition, rotation);
         [ServerRpc]
         void PlaceCannonServerRpc(NetworkObject ship, int slot, Vector3 localPosition, Quaternion rotation)
+            => TryPlaceCannon(ship, slot, localPosition, rotation);
+
+        public bool TryPlaceCannon(NetworkObject ship, int slot, Vector3 localPosition, Quaternion rotation)
         {
-            if (inventory == null || ship == null || selectedSlot.Value != slot || !inventory.HasCannon(slot)) return;
+            if (!IsServerInitialized || inventory == null || ship == null || selectedSlot.Value != slot || !inventory.HasCannon(slot) ||
+                !CanHandleBall() || GetComponent<CannonHands>().HasHeldBall) return false;
             var cannon = ship.GetComponent<NetworkCannon>();
-            if (cannon == null || !PlayerInventory.CanPlace(cannon.Crate, localPosition, rotation, GetComponent<AdvancedPlayerController>())) return;
+            if (cannon == null || !PlayerInventory.CanPlace(cannon.Crate, localPosition, rotation, GetComponent<AdvancedPlayerController>())) return false;
             cannon.Place(localPosition, rotation);
             cannonSlots.Value &= ~(1 << slot);
             inventory.SetContents(cannonSlots.Value);
+            return true;
+        }
+        public bool SelectServerSlot(int slot)
+        {
+            if (!IsServerInitialized || inventory == null || slot < 0 || slot >= PlayerInventory.SlotCount) return false;
+            selectedSlot.Value = slot; inventory.SetSelection(slot); return true;
         }
         public void Request(byte action, Vector3 direction, Vector3 eyeOffset,bool aimed=false,int seed=0) => ActionServerRpc(action,direction,eyeOffset,aimed,seed);
         [ServerRpc] void ActionServerRpc(byte action, Vector3 direction, Vector3 eyeOffset,bool aimed,int seed)
+            => TryAct(action, direction, eyeOffset, aimed, seed);
+        public bool TryAct(byte action, Vector3 direction, Vector3 eyeOffset, bool aimed = false, int seed = -1)
         {
+            if (!IsServerInitialized) return false;
             weapon.TickAuthority();
             bool accepted = weapon.Act(action, direction, eyeOffset,aimed,seed);
-            if (action == 0 && !accepted) RejectShotTargetRpc(Owner);
+            if (action == 0 && !accepted && Owner != null && Owner.IsActive) RejectShotTargetRpc(Owner);
             loaded.Value = weapon.Loaded; reloading.Value = weapon.Reloading;
+            return accepted;
         }
         [TargetRpc]
         void RejectShotTargetRpc(FishNet.Connection.NetworkConnection connection) => weapon.RejectPredictedShot();
