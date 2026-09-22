@@ -4,6 +4,19 @@ namespace PirateSlop.Networking
 {
     public sealed partial class SessionController
     {
+        internal bool BotBoardingAdvantage(NetworkShip own, NetworkShip target)
+        {
+            if (own == null || target == null) return false;
+            int allies = 0, enemies = 0;
+            foreach (var member in players.Values)
+            {
+                if (member == null || member.Motor.IsDead || member.Eliminated.Value) continue;
+                if (member.Ship == own) allies++;
+                if (member.Ship == target) enemies++;
+            }
+            return allies > enemies && allies >= 2;
+        }
+
         internal bool BotAllyInShotSegment(Vector3 from, Vector3 to, float radius, float future, NetworkPlayer observer, bool ignoreObserver = false)
         {
             var line = to - from;

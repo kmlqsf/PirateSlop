@@ -4,24 +4,27 @@ namespace PirateSlop.Networking
 {
     public sealed class BotIslandLootAction : IBotAction, IBotOutsideWork
     {
-        enum Phase { Plan, Depart, Outbound, Loot, Return, Board }
+        enum Phase { Plan, Depart, Outbound, Loot, Breathe, Return, Board }
         readonly NetworkPlayer player;
         readonly NetworkShip ship;
         readonly NetworkLootChest chest;
         readonly NetworkFish pickup;
-        bool TargetAvailable => chest != null ? chest.Available : pickup != null && pickup.Available;
+        bool TargetAvailable => chest != null ? chest.BotLootCandidate : pickup != null && pickup.Available;
         readonly NetworkWeapon weapon;
         readonly BotShoreRoute route;
         readonly Vector3 destination;
         ShipLadder ladder;
         IBotAction travel;
-        Phase phase;
+        Phase phase, afterBreathing;
+        float breathingStarted;
         bool wineTried, drinkingWine;
         int winePrevious;
         float wineDeadline;
         Vector3 anchor, plannedReturn;
         float started, progressAt, nextProbe, nextLoot, nextReport, nextReplan;
-        int taken, replans;
+        int taken, replans, observedLockRound = -1;
+        float lockAnswerAt;
+        bool SeaChest => chest != null && chest.Kind != SeaLootKind.None;
         bool edgeClear = true;
         readonly bool returnOnly;
         public static BotIslandLootAction ReturnToShip(NetworkPlayer player) => new(player, null);
@@ -45,7 +48,7 @@ namespace PirateSlop.Networking
             pickup = target != null ? target.GetComponent<NetworkFish>() : null; ship = player.Ship;
             weapon = player.GetComponent<NetworkWeapon>(); route = new BotShoreRoute(player);
             returnOnly = target == null;
-            destination = returnOnly ? player.transform.position : target.transform.position;
+            destination = returnOnly ? player.transform.position : chest != null ? chest.BotLootPoint : target.transform.position;
         }
         public bool Begin(out string reason)
         {
@@ -59,7 +62,7 @@ namespace PirateSlop.Networking
             if (ladder == null) return End(false, reason);
             started = progressAt = Time.time; anchor = player.transform.position;
             if (returnOnly) { BeginReturn("Возвращение после прерванной вылазки"); reason = "Вернуться к своему кораблю"; return true; }
-            route.Begin(ReturnPoint, destination, true); phase = Phase.Plan;
+            route.Begin(ReturnPoint, destination, !SeaChest); phase = Phase.Plan;
             reason = "Проверить путь до замеченного островного лута до выхода за борт";
             Status = reason; return true;
         }
@@ -78,11 +81,28 @@ namespace PirateSlop.Networking
             }
             if ((player.transform.position - anchor).sqrMagnitude > .25f)
             { anchor = player.transform.position; progressAt = Time.time; }
-            if ((phase is Phase.Outbound or Phase.Loot) && (Time.time - started > 150f ||
-                player.BotRecallOutside || player.Motor.Breath < 8f || !TargetAvailable || player.BotVision.Visible ||
+            if ((phase is Phase.Outbound or Phase.Loot or Phase.Breathe) && (phase != Phase.Breathe && Time.time - started > 150f ||
+                player.BotRecallOutside || !TargetAvailable || player.BotVision.Visible ||
                 new Vector2(destination.x, destination.z).magnitude > SessionController.Instance.SafeRadius(60f) - 15f ||
                 Vector3.Distance(player.transform.position, ship.transform.position) > 140f))
-                BeginReturn("Время, безопасная зона, воздух или состояние цели требуют возвращения");
+                BeginReturn("Время, безопасная зона или состояние цели требуют возвращения");
+            if ((phase is Phase.Outbound or Phase.Loot) && player.Motor.IsSwimming && player.Motor.Breath < 8f)
+            {
+                if (weapon.WorkingLoot == chest) weapon.CancelLootWork();
+                afterBreathing = phase; phase = Phase.Breathe; breathingStarted = Time.time;
+                SessionController.Instance.RecordBotEvent(player.BotNumber, "Всплыть за воздухом, затем продолжить вылазку");
+            }
+            if (phase == Phase.Breathe)
+            {
+                Status = "Всплывает и восстанавливает воздух перед продолжением работы";
+                progressAt = Time.time;
+                Report();
+                if (player.Motor.BreathFraction < .98f)
+                    return new PlayerCommand { Yaw = player.transform.eulerAngles.y, Rise = player.Motor.IsSwimming };
+                started += Time.time - breathingStarted;
+                phase = afterBreathing;
+                if (phase == Phase.Outbound) route.Begin(player.transform.position, destination, !SeaChest);
+            }
             Report();
             if (phase == Phase.Plan)
             {
@@ -101,11 +121,12 @@ namespace PirateSlop.Networking
                 if (phase == Phase.Board) { End(travel.State == BotActionState.Succeeded && (taken > 0 || returnOnly), travel.Failure == "Нет" ? Failure : travel.Failure); return command; }
                 if (travel.State != BotActionState.Succeeded || !player.Motor.IsSwimming)
                 { End(false, travel.Failure == "Нет" ? "Выход за борт не завершён" : travel.Failure); return command; }
-                phase = Phase.Outbound; route.Begin(player.transform.position, destination, true); progressAt = Time.time;
+                phase = Phase.Outbound; route.Begin(player.transform.position, destination, !SeaChest); progressAt = Time.time;
                 return command;
             }
             if (phase == Phase.Loot)
             {
+                if (SeaChest && (!chest.Available || !weapon.CanHandleLoot(chest))) return WorkSeaChest();
                 Status = pickup != null ? "Подбирает островной предмет" : "Осматривает сундук и забирает подходящие предметы";
                 if (Time.time < nextLoot) return Idle;
                 nextLoot = Time.time + .4f;
@@ -184,7 +205,7 @@ namespace PirateSlop.Networking
                 var probe = Vector3.MoveTowards(player.transform.position, target, 1f);
                 edgeClear = route.Sample(player.transform.position, out var foot) && route.Sample(probe, out var ground) && route.Edge(foot, ground, true);
                 if (!edgeClear && Time.time - progressAt > 3f && Time.time >= nextReplan)
-                { route.Begin(player.transform.position, phase == Phase.Return ? ReturnPoint : destination, phase != Phase.Return); nextReplan = Time.time + 3f; }
+                { route.Begin(player.transform.position, phase == Phase.Return ? ReturnPoint : destination, phase != Phase.Return && !SeaChest); nextReplan = Time.time + 3f; }
             }
             if (!edgeClear) { Status += "; проход занят"; return Idle; }
             var offset = target - player.transform.position;
@@ -195,14 +216,57 @@ namespace PirateSlop.Networking
                 Crouch = player.Motor.IsSwimming && offset.y < -.4f
             };
         }
+        PlayerCommand WorkSeaChest()
+        {
+            Status = chest.BotLootRising ? "Ждёт всплытия добычи" : chest.Kind == SeaLootKind.Raft ? "Взламывает ящик на плоту" : "Освобождает подводные крепления";
+            if (chest.BotLootRising) return Idle;
+            if (weapon.WorkingLoot == chest)
+            {
+                if (Time.time >= nextLoot)
+                {
+                    nextLoot = Time.time + .2f;
+                    int answer = -1;
+                    if (chest.Kind == SeaLootKind.Raft)
+                    {
+                        if (observedLockRound != chest.LockRound)
+                        { observedLockRound = chest.LockRound; lockAnswerAt = Time.time + .85f; }
+                        if (Time.time >= lockAnswerAt) answer = chest.LockKey;
+                    }
+                    chest.WorkInput(weapon, answer, chest.LockRound);
+                }
+                return new PlayerCommand { Yaw = player.transform.eulerAngles.y };
+            }
+            var point = chest.WorkPoint(player.transform.position + Vector3.up);
+            if (weapon.CanHandleLoot(chest))
+            {
+                if (!chest.Available && chest.Kind == SeaLootKind.Raft && player.Motor.IsSwimming)
+                { chest.BoardRaft(weapon); return Idle; }
+                if (!chest.Available) chest.StartWork(weapon);
+                if (weapon.WorkingLoot == chest || chest.Available) return Idle;
+            }
+            var goal = point - Vector3.up;
+            if (chest.Kind != SeaLootKind.Sunken || chest.Available)
+                goal.y = OceanSurface.Instance.Height(goal) - 1.25f;
+            var delta = goal - player.transform.position;
+            return new PlayerCommand {
+                Yaw = Mathf.Atan2(delta.x, delta.z) * Mathf.Rad2Deg,
+                Move = Vector3.ProjectOnPlane(delta, Vector3.up).sqrMagnitude > 1f ? Vector2.up : Vector2.zero,
+                Rise = player.Motor.IsSwimming && delta.y > .15f,
+                Crouch = player.Motor.IsSwimming && delta.y < -.15f,
+                Jump = player.Motor.IsGrounded && delta.y > .3f
+            };
+        }
+
         void BeginReturn(string reason)
         {
+            if (weapon.WorkingLoot == chest) weapon.CancelLootWork();
             Failure = taken > 0 ? "Нет" : reason; phase = Phase.Return;
             plannedReturn = ReturnPoint; route.Begin(player.transform.position, plannedReturn); progressAt = Time.time; replans = 0;
             SessionController.Instance.RecordBotEvent(player.BotNumber, reason + "; возвращение на корабль");
         }
         bool End(bool success, string reason)
         {
+            if (weapon.WorkingLoot == chest) weapon.CancelLootWork();
             if (drinkingWine) { weapon.SelectServerSlot(winePrevious); drinkingWine = false; }
             State = success ? BotActionState.Succeeded : BotActionState.Failed;
             Failure = success ? "Нет" : reason; Status = success ? $"Вылазка завершена; собрано {taken}" : "Вылазка прервана";

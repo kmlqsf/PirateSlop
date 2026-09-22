@@ -33,34 +33,83 @@ namespace PirateSlop.Networking
                 int probes = 0;
                 foreach (var candidate in NetworkShip.ActiveShips)
                 {
-                    if (crew.Pilot.CombatTarget != null && candidate != crew.Pilot.CombatTarget) continue;
                     if (candidate == null || candidate.IsSinking || candidate.TeamId.Value == crew.Ship.TeamId.Value) continue;
                     var delta = candidate.transform.position - cannon.transform.position;
                     float distance = delta.sqrMagnitude;
                     if (distance > 160f * 160f || distance < 15f * 15f || distance >= best) continue;
                     var local = cannon.transform.InverseTransformDirection(delta);
                     if (Mathf.Abs(Mathf.Atan2(local.x, local.z) * Mathf.Rad2Deg) > cannon.MaxTraverse + 10f) continue;
-                    if (++probes > 3) break;
+                    if (++probes > 3) continue;
                     if (!BotCannonStation.Visible(worker, candidate)) continue;
                     target = candidate; best = distance;
                 }
                 if (target == null) continue;
                 crew.DangerUntil = Time.time + 3f;
                 worker.BotCandidates = $"Пушка {cannon.Index + 1}; видимый корабль команды {target.TeamId.Value}; дальность {Mathf.Sqrt(best):F0} м";
+                if (worker.BotTaskRunning) worker.PreemptBotTask("Боевой пост: вести огонь по вражескому кораблю");
                 worker.AssignBotStation(key, new BotCannonStation(cannon, crew.Ship, target), "Видимый вражеский корабль в секторе пушки; проверка упреждения и дуги");
                 if (!worker.BotTaskRunning) worker.FinishBotTask();
-                if (worker.BotTaskRunning) return;
+                if (worker.BotTaskRunning) { crew.Reserved.Add(key); return; }
             }
+        }
+
+        internal bool BotPersonalShotSafe(NetworkPlayer player, Vector3 start, Vector3 end, bool melee, float spread)
+        {
+            var delta = end - start;
+            float length = delta.magnitude;
+            var direction = delta.normalized;
+            foreach (var ally in players.Values)
+            {
+                if (ally == null || ally == player || ally.Motor.IsDead || ally.TeamId.Value != player.TeamId.Value) continue;
+                var point = ally.transform.position + Vector3.up;
+                float along = Vector3.Dot(point - start, direction);
+                if (along < 0f || along > length) continue;
+                float radius = melee ? 1.2f : .4f + Mathf.Tan(spread * Mathf.Deg2Rad) * along;
+                if ((point - start - direction * along).sqrMagnitude < radius * radius) return false;
+            }
+            return true;
+        }
+
+        bool CloseShipContact(NetworkShip ship, NetworkShip other)
+        {
+            if (other == null || other == ship || other.IsSinking || other.TeamId.Value == ship.TeamId.Value) return false;
+            float range = ship.CollisionRadius + other.CollisionRadius + 12f;
+            return Vector3.ProjectOnPlane(other.transform.position - ship.transform.position, Vector3.up).sqrMagnitude <= range * range;
+        }
+
+        bool CannonCoversContact(BotCrew crew, NetworkShip target)
+        {
+            var network = crew.Ship.GetComponent<NetworkCannon>();
+            if (network == null || network.Crate == null) return false;
+            foreach (var cannon in network.Crate.Cannons)
+            {
+                if (cannon == null || !cannon.gameObject.activeInHierarchy || cannon.IsLoaded && !BotCannonAmmoPolicy.Supported(cannon.LoadedAmmo)) continue;
+                if (network.HasBoarding(cannon.Index))
+                { if (BotBoardingAdvantage(crew.Ship, target)) return true; continue; }
+                bool blocked = false;
+                foreach (var member in crew.Members)
+                    if (member != null && (member.BotStationDeferred(70000 + cannon.Index) || member.BotTaskRunning && member.BotTaskKey == 70000 + cannon.Index && member.BotArtilleryBlocked)) blocked = true;
+                if (blocked) continue;
+                var delta = target.transform.position + Vector3.up * 3f - cannon.transform.position;
+                if (delta.sqrMagnitude < 15f * 15f || delta.sqrMagnitude > 160f * 160f) continue;
+                var local = cannon.transform.InverseTransformDirection(delta);
+                if (Mathf.Abs(Mathf.Atan2(local.x, local.z) * Mathf.Rad2Deg) <= cannon.MaxTraverse) return true;
+            }
+            return false;
         }
 
         void ObserveBotCombat(BotCrew crew)
         {
+            bool alert = false;
+            crew.ContactCombat = false;
+            foreach (var ship in NetworkShip.ActiveShips)
+                if (CloseShipContact(crew.Ship, ship)) { alert = true; if (!CannonCoversContact(crew, ship)) crew.ContactCombat = true; }
             for (int i = 0; i < crew.Members.Count; i++)
             {
                 crew.CombatObserverCursor %= crew.Members.Count;
                 var observer = crew.Members[crew.CombatObserverCursor++];
                 if (observer == null || !observer.IsBot.Value || observer.Motor.IsDead) continue;
-                observer.BotVision.Observe(observer, players.Values);
+                observer.BotVision.Observe(observer, players.Values, alert);
                 if (observer.BotVision.Visible) crew.DangerUntil = Time.time + 3f;
                 if (observer.BotVision.Visible && observer.BotTaskKey == 52000)
                     observer.PreemptBotTask("Рыбалка прервана: замечен противник");
@@ -74,10 +123,18 @@ namespace PirateSlop.Networking
                 if (player == null || !player.IsBot.Value || player.BotNeedsShipWait) continue;
                 var sight = player.BotVision;
                 if (!sight.Visible || Time.time - sight.LastSeen > 2f || !BotCombatMemory.Enemy(player, sight.Target)) continue;
-                if (sight.Target.Passenger.Ship != crew.Ship.Body && (sight.LastPosition - player.transform.position).sqrMagnitude > 12f * 12f) continue;
-                if (player.BotTaskRunning && player.BotTaskKey >= 1000 && player.BotTaskKey != 60000 && player.BotTaskKey != 60001 &&
-                    (sight.LastPosition - player.transform.position).sqrMagnitude < 10f * 10f)
-                { player.PreemptBotTask("Противник рядом; палубная работа отложена"); }
+                bool contactFight = CloseShipContact(crew.Ship, sight.Target.Ship) && !CannonCoversContact(crew, sight.Target.Ship);
+                float separation = (sight.LastPosition - player.transform.position).sqrMagnitude;
+                bool boarder = sight.Target.Passenger.Ship == crew.Ship.Body;
+                if (!boarder && !contactFight && separation > 12f * 12f) continue;
+                bool protectedWork = player.BotHasManualTask || player.BotTaskKey == -1 || player.BotTaskKey == 53000 || player.BotTaskKey == 51000 ||
+                    player.BotTaskKey >= 100000 || player.BotTaskKey >= 0 && player.BotTaskKey < 1000 && (crew.UrgentSails || crew.Pilot.AvoidingCollision);
+                bool fighting = player.BotTaskKey == 60000 || player.BotTaskKey == 60001;
+                if (player.BotTaskRunning && !fighting && !protectedWork && (contactFight || separation < 10f * 10f) && player.BotCanPlanReplacement(60000))
+                {
+                    if (player.BotTaskKey >= 70000 && player.BotTaskKey < 80000) player.DeferBotStation(player.BotTaskKey, 5f);
+                    player.PreemptBotTask("Тесный контакт: пушки не достают, атаковать экипаж личным оружием");
+                }
                 if (!player.BotCanReceiveStation(60000)) continue;
                 player.BotCandidates = $"Цель {sight.Target.ParticipantId.Value}: видна лично; задержка реакции и проверка союзников";
                 int throwingSlot = BotSwordfishAction.Slot(player);

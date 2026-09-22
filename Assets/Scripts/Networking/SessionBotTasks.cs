@@ -19,8 +19,10 @@ namespace PirateSlop.Networking
             public float DangerUntil;
             public string RevivalStatus = "";
             public int RescueRepairSection = -1;
+            public int NavigationRepairSection = -1;
             public float NextRescuePlan;
-            public bool FloodEmergency, ZoneThreat, EscapeZone;
+            public bool FloodEmergency, ZoneThreat, EscapeZone, CriticalFlood, ContactCombat;
+            public bool UrgentSails => Sails != null && Pilot.PlannedSails <= 0f && Sails.EffectiveDeploy > .05f;
             public string PriorityReason;
             public float NextAmmoPlan;
             public int CannonSiteCursor;
@@ -36,8 +38,8 @@ namespace PirateSlop.Networking
             public Vector3 LootAnchorage;
             public readonly Dictionary<int, float> LootRetry = new();
             public bool SailWorkReady => Time.time - Updated < 2f &&
-                (Pilot.PlannedSails <= 0f || Steering && Pilot.Sails > 0f);
-            public float SailTarget => Time.time - Updated < 2f ? Pilot.Sails : 0f;
+                (Pilot.PlannedSails <= 0f || Steering);
+            public float SailTarget => Time.time - Updated < 2f ? Pilot.PlannedSails : 0f;
             public float RudderTarget => Time.time - Updated < 2f ? Pilot.Rudder : 0f;
         }
 
@@ -103,6 +105,7 @@ namespace PirateSlop.Networking
             crew.FloodEmergency = flooding != null && (flooding.OpenImpactCount > 0 || flooding.Level > .25f);
             if (flooding != null)
                 foreach (var breach in flooding.Breaches) if (breach.Area > 0f) { crew.FloodEmergency = true; break; }
+            crew.CriticalFlood = flooding != null && flooding.Level >= .65f;
             float radius = new Vector2(ship.transform.position.x, ship.transform.position.z).magnitude;
             crew.ZoneThreat = radius > Mathf.Max(10f, SafeRadius(30f) - 40f);
             crew.EscapeZone = crew.ZoneThreat && (!crew.FloodEmergency || flooding == null || flooding.Level < .65f);
@@ -111,13 +114,13 @@ namespace PirateSlop.Networking
             foreach (var member in crew.Members)
             {
                 if (member == null || !member.IsBot.Value) continue;
-                member.BotRecallOutside = crew.EscapeZone || crew.FloodEmergency && member.BotTaskKey == 800000;
+                member.BotRecallOutside = crew.EscapeZone || (crew.FloodEmergency || Time.time < crew.DangerUntil) && member.BotTaskKey == 800000;
                 if (crew.EscapeZone && member.BotTaskRunning && !member.BotNeedsShipWait && member.BotTaskKey >= 1000 &&
                     member.BotTaskKey != 53000 && member.BotTaskKey != 51000 && member.BotTaskKey < 100000 &&
                     (!member.BotVision.Visible || (member.BotVision.LastPosition - member.transform.position).sqrMagnitude > 36f))
                     member.PreemptBotTask("Выход из зоны: освободить экипаж для руля и парусов");
             }
-            bool canCruise = (!crew.FloodEmergency || crew.EscapeZone) && !crew.Human && !manualHelm && available >= 2 && !ship.IsSinking;
+            bool canCruise = (!crew.FloodEmergency || crew.EscapeZone) && !crew.Human && !manualHelm && available >= 2 && !ship.IsSinking && ship.Helm != null && ship.Helm.StructurallyAvailable;
             ObserveBotCombat(crew);
             if (!canCruise)
                 foreach (var player in crew.Members)
@@ -152,23 +155,40 @@ namespace PirateSlop.Networking
                 crew.NextRescuePlan = Time.time + .5f;
                 int previousRepair = crew.RescueRepairSection;
                 crew.RescueRepairSection = FindRescueRepair(crew);
+                int previousNavigationRepair = crew.NavigationRepairSection;
+                crew.NavigationRepairSection = FindNavigationRepair(crew);
+                if (previousNavigationRepair >= 0 && ship.Helm != null && ship.Helm.StructurallyAvailable)
+                    foreach (var member in crew.Members) if (member != null) member.AllowBotStationRetry(-1);
                 if (previousRepair >= 0 && crew.RescueRepairSection < 0)
                     foreach (var member in crew.Members) if (member != null) member.AllowBotStationRetry(53000);
             }
-            AssignMaintenance(crew, true);
+            if (crew.CriticalFlood || crew.RescueRepairSection >= 0) AssignMaintenance(crew, true);
             AssignConsumables(crew);
             AssignRevival(crew);
+            AssignMaintenance(crew, true);
             var armament = ship.GetComponent<NetworkCannon>();
             bool needsFirstCannon = armament != null && armament.Crate != null && armament.Crate.Cannons.Count == 0;
-            if (needsFirstCannon) AssignCannonWork(crew);
+            if (canCruise && crew.Pilot.AvoidingCollision && !crew.Reserved.Contains(-1) && !ship.Helm.IsControlling)
+                foreach (var member in crew.Members)
+                    if (member != null && member.BotTaskRunning && member.BotCanPlanReplacement(-1) &&
+                        (member.BotTaskKey == 52000 || member.BotTaskKey >= 1000 && member.BotTaskKey < 50000))
+                    { member.PreemptBotTask("Предотвратить столкновение: немедленно занять штурвал"); break; }
             if (canCruise && ship.Helm != null && !crew.Reserved.Contains(-1) && !ship.Helm.IsControlling &&
                 Time.time - ship.Helm.LastHumanControlTime >= Mathf.Max(5f, Config.BotMotion.HumanStationGrace))
                 AssignNearest(crew, -1, new BotHelmStation(ship.Helm, () => crew.RudderTarget), "Нужен рулевой автономного экипажа");
+            if (needsFirstCannon && !crew.Pilot.AvoidingCollision) AssignCannonWork(crew);
+            AssignArtillery(crew);
+            AssignMaintenance(crew);
             if (!crew.Human && !manualHelm && !ship.IsSinking && crew.Sails != null)
             {
-                if (crew.Pilot.PlannedSails <= 0f && crew.Sails.EffectiveDeploy > .05f)
-                    foreach (var player in crew.Members)
-                        if (player != null && player.BotTaskKey >= 1000 && player.BotTaskKey != 53000 && player.BotTaskKey < 100000 && !player.BotNeedsShipWait) player.PreemptBotTask("Сначала убрать паруса; предметы сохранены в инвентаре");
+                bool sailWorker = false;
+                foreach (var member in crew.Members)
+                    if (member != null && member.BotTaskRunning && member.BotTaskKey >= 0 && member.BotTaskKey < 1000) sailWorker = true;
+                if (!sailWorker && crew.Pilot.PlannedSails <= 0f && crew.Sails.EffectiveDeploy > .05f)
+                    foreach (var member in crew.Members)
+                        if (member != null && member.BotTaskRunning && !member.BotNeedsShipWait &&
+                            (member.BotTaskKey == 52000 || member.BotTaskKey >= 1000 && member.BotTaskKey < 50000))
+                        { member.PreemptBotTask("Убрать паруса для безопасной остановки"); break; }
                 for (int i = 0; i < crew.Sails.RopeCount; i++)
                 {
                     if (crew.Reserved.Contains(i) || Time.time - crew.Sails.LastHumanControlTime(i) < Mathf.Max(5f, Config.BotMotion.HumanStationGrace) ||
@@ -176,12 +196,10 @@ namespace PirateSlop.Networking
                     var station = new BotSailStation(crew.Sails, i, () => crew.SailTarget, () => crew.SailWorkReady);
                     if (!station.Available || station.Busy) continue;
                     AssignNearest(crew, i, station, crew.Pilot.Reason);
+                    if (crew.Pilot.CombatTarget != null && !crew.Pilot.AvoidingCollision && crew.Reserved.Contains(i)) break;
                 }
             }
-            AssignConsumables(crew);
-            AssignArtillery(crew);
             AssignPersonalCombat(crew);
-            AssignMaintenance(crew);
             AssignIslandLoot(crew);
             AssignCannonWork(crew);
             if (!crew.ZoneThreat && !crew.FloodEmergency && crew.Pilot.CombatTarget == null && Time.time >= crew.DangerUntil && !ship.IsSinking)
@@ -284,10 +302,12 @@ namespace PirateSlop.Networking
             foreach (var member in crew.Members)
             {
                 if (member == null || !member.IsBot.Value || member.Motor.IsDead || member.Motor.IsSwimming || member.Motor.IsClimbing ||
-                    member.Motor.IsKnockedBack || member.Passenger.Ship != crew.Ship.Body || member.BotNeedsShipWait || crew.FloodEmergency && member.BotTaskRunning && member.BotTaskKey >= 100000 || !member.BotCanPlanReplacement(53000)) continue;
+                    member.Motor.IsKnockedBack || member.Passenger.Ship != crew.Ship.Body || member.BotNeedsShipWait || crew.CriticalFlood && member.BotTaskRunning && member.BotTaskKey >= 100000 || !member.BotCanPlanReplacement(53000)) continue;
                 if (member.BotVision.Visible && member.BotVision.Target != null &&
                     member.BotVision.Target.Passenger.Ship == crew.Ship.Body &&
                     (member.BotVision.LastPosition - member.transform.position).sqrMagnitude < 36f) continue;
+                var bellHandler = member.GetComponent<NetworkCrewBell>();
+                if (bellHandler == null || !bellHandler.BotReadyToRing) continue;
                 float distance = (member.transform.position - bell.GripPoint).sqrMagnitude;
                 if (member.BotTaskRunning && member.BotTaskKey == -1) distance += 10000f;
                 if (distance >= best) continue;
@@ -308,8 +328,7 @@ namespace PirateSlop.Networking
             if (crew.LootMission != null)
             {
                 var chest = crew.LootMission.GetComponent<NetworkLootChest>();
-                if (chest == null || !chest.Available || Time.time > crew.LootMissionUntil ||
-                    crew.LootRetry.TryGetValue(crew.LootMission.ObjectId, out float retry) && Time.time < retry ||
+                if (chest == null || !chest.BotLootCandidate || Time.time > crew.LootMissionUntil ||
                     new Vector2(chest.transform.position.x, chest.transform.position.z).magnitude > SafeRadius(120f) - 40f)
                 {
                     crew.LootRetry[crew.LootMission.ObjectId] = Time.time + 90f;
@@ -321,23 +340,30 @@ namespace PirateSlop.Networking
             crew.NextLootSearch = Time.time + .5f;
             bool room = false;
             foreach (var member in crew.Members)
-                if (member != null && member.IsBot.Value && !member.Motor.IsDead && member.GetComponent<PlayerInventory>().EmptySlot() >= 0) room = true;
+                if (member != null && member.IsBot.Value && !member.Motor.IsDead && (member.GetComponent<PlayerInventory>().EmptySlot() >= 0 || member.GetComponent<NetworkWeapon>().CanAddItem(InventoryItem.Rum))) room = true;
             if (!room) return;
             var world = PirateSlop.World.ProceduralWorld.Instance;
             var chests = NetworkLootChest.ServerChests;
             if (world == null || !world.Ready || chests.Count == 0) return;
+            float bestLootScore = float.PositiveInfinity;
             for (int i = 0; i < Mathf.Min(16, chests.Count); i++)
             {
                 crew.LootSearchCursor %= chests.Count;
                 var chest = chests[crew.LootSearchCursor++];
-                if (chest == null || !chest.Available || chest.Kind != SeaLootKind.None || chest.GetComponentInParent<NetworkShip>() != null ||
+                if (chest == null || !chest.BotLootCandidate || chest.GetComponentInParent<NetworkShip>() != null ||
                     crew.LootRetry.TryGetValue(chest.ObjectId, out float retry) && Time.time < retry) continue;
-                var point = chest.transform.position;
-                if (OceanSurface.Instance == null || point.y < OceanSurface.Instance.SeaLevel + .1f ||
+                var point = chest.BotLootPoint;
+                if (OceanSurface.Instance == null || chest.Kind == SeaLootKind.None && point.y < OceanSurface.Instance.SeaLevel + .1f ||
                     (point - crew.Ship.transform.position).sqrMagnitude > 450f * 450f ||
                     new Vector2(point.x, point.z).magnitude > SafeRadius(120f) - 40f) continue;
-                var towardShip = Vector3.ProjectOnPlane(crew.Ship.transform.position - point, Vector3.up).normalized;
-                var anchorage = point + towardShip * 65f;
+                var offset = Vector3.ProjectOnPlane(point - crew.Ship.transform.position, Vector3.up);
+                float along = Vector3.Dot(offset, crew.Ship.transform.forward);
+                float detour = (offset - crew.Ship.transform.forward * Mathf.Clamp(along, 0f, 450f)).magnitude;
+                float score = offset.magnitude + detour * 2f;
+                if (score >= bestLootScore) continue;
+                var towardShip = -offset.normalized;
+                float standOff = chest.Kind == SeaLootKind.Capture ? Mathf.Max(5f, chest.Catalog.CaptureRadius * .45f) : chest.Kind == SeaLootKind.None ? 65f : 35f;
+                var anchorage = point + towardShip * standOff;
                 anchorage.y = crew.Ship.transform.position.y;
                 float heading = Mathf.Atan2(-towardShip.x, -towardShip.z) * Mathf.Rad2Deg;
                 bool clear = true;
@@ -348,7 +374,7 @@ namespace PirateSlop.Networking
                 crew.LootMissionUntil = Time.time + 120f;
                 crew.LootAnchorage = anchorage;
                 crew.Pilot.LootDestination = anchorage;
-                return;
+                bestLootScore = score;
             }
         }
 
@@ -360,7 +386,7 @@ namespace PirateSlop.Networking
                 if (member != null && (member.BotNeedsShipWait || member.BotVision.Visible && Time.time - member.BotVision.LastSeen < 3f || member.BotTaskRunning && (member.BotTaskKey >= 100000 || member.BotTaskKey >= 60000 && member.BotTaskKey < 80000 || member.BotHasManualTask))) return;
             NetworkPlayer worker = null;
             foreach (var member in crew.Members)
-                if (member != null && member.IsBot.Value && member.BotCanReceiveWork(800000) && member.GetComponent<PlayerInventory>().EmptySlot() >= 0)
+                if (member != null && member.IsBot.Value && (member.BotCanReceiveWork(800000) || member.BotCanPlanReplacement(800000) && member.BotTaskKey >= 1000 && member.BotTaskKey < 2000) && (member.GetComponent<PlayerInventory>().EmptySlot() >= 0 || member.GetComponent<NetworkWeapon>().CanAddItem(InventoryItem.Rum)))
                 { worker = member; break; }
             if (worker == null) return;
             var chests = NetworkLootChest.ServerChests;
@@ -376,7 +402,7 @@ namespace PirateSlop.Networking
                 if (index < chests.Count)
                 {
                     var chest = chests[index];
-                    if (chest == null || !chest.Available || chest.Kind != SeaLootKind.None || chest.GetComponentInParent<NetworkShip>() != null) continue;
+                    if (chest == null || !chest.BotLootCandidate || chest.GetComponentInParent<NetworkShip>() != null) continue;
                     target = chest.NetworkObject;
                 }
                 else
@@ -387,13 +413,16 @@ namespace PirateSlop.Networking
                 }
                 int id = target.ObjectId;
                 if (crew.LootRetry.TryGetValue(id, out float retry) && Time.time < retry) continue;
-                var point = target.transform.position;
-                if (OceanSurface.Instance == null || point.y < OceanSurface.Instance.SeaLevel + .1f ||
+                var targetChest = target.GetComponent<NetworkLootChest>();
+                if (targetChest != null && targetChest.BotCapturePending) continue;
+                var point = targetChest != null ? targetChest.BotLootPoint : target.transform.position;
+                if (OceanSurface.Instance == null || (targetChest == null || targetChest.Kind == SeaLootKind.None) && point.y < OceanSurface.Instance.SeaLevel + .1f ||
                     (point - crew.Ship.transform.position).sqrMagnitude > 100f * 100f ||
                     new Vector2(point.x, point.z).magnitude > SafeRadius(120f) - 30f) continue;
                 crew.LootRetry[id] = Time.time + 45f;
                 if (crew.LootRetry.Count > 128) crew.LootRetry.Clear();
                 worker.BotCandidates = $"Замечен островной лут в {Vector3.Distance(point, worker.transform.position):F0} м; один сборщик БОТ{worker.BotNumber}";
+                if (worker.BotTaskRunning) worker.PreemptBotTask("Сбор припасов у ближайшей точки интереса");
                 worker.AssignBotJob(800000, new BotIslandLootAction(worker, target));
                 if (!worker.BotTaskRunning) worker.FinishBotTask();
                 return;
@@ -402,7 +431,7 @@ namespace PirateSlop.Networking
 
         void AssignCannonWork(BotCrew crew)
         {
-            if (crew.Ship.IsSinking || crew.ZoneThreat || crew.FloodEmergency || Time.time < crew.NextCannonPlan) return;
+            if (crew.Ship.IsSinking || crew.ZoneThreat || crew.FloodEmergency || crew.Pilot.AvoidingCollision || crew.ContactCombat || Time.time < crew.NextCannonPlan) return;
             if (!crew.Human && crew.Sails != null && crew.Pilot.PlannedSails <= 0f && crew.Sails.EffectiveDeploy > .05f) return;
             crew.NextCannonPlan = Time.time + 1f;
             foreach (var member in crew.Members)
@@ -452,11 +481,16 @@ namespace PirateSlop.Networking
             {
                 if (player == null || !player.IsBot.Value) continue;
                 bool reload = key >= 2000 && key < 50000;
-                bool replace = reload && player.BotTaskRunning && player.BotTaskKey >= 1000 && player.BotTaskKey < 2000 && player.BotCanPlanReplacement(key);
-                bool repairPriority = repair && (crew.FloodEmergency || crew.RescueRepairSection >= 0 || player.BotTaskKey == 52000 || player.BotTaskKey >= 1000 && player.BotTaskKey < 2000) && player.BotCanPlanReplacement(key) && player.BotTaskRunning &&
+                bool combatWork = reload || key >= 70000 && key < 80000;
+                bool replace = combatWork && player.BotTaskRunning && player.BotCanPlanReplacement(key) &&
+                    (player.BotTaskKey >= 1000 && player.BotTaskKey < 2000 || crew.Pilot.CombatTarget != null && !crew.UrgentSails && player.BotTaskKey >= 0 && player.BotTaskKey < 1000);
+                bool repairPriority = repair && (crew.FloodEmergency || crew.RescueRepairSection >= 0 || key == 100000 + crew.NavigationRepairSection || player.BotTaskKey == 52000 || player.BotTaskKey >= 1000 && player.BotTaskKey < 2000) && player.BotCanPlanReplacement(key) && player.BotTaskRunning &&
                     player.BotTaskKey >= 1000 && player.BotTaskKey < 100000 && player.BotTaskKey != 53000 && player.BotTaskKey != 51000 && !player.BotNeedsShipWait &&
                     (!player.BotVision.Visible || (player.BotVision.LastPosition - player.transform.position).sqrMagnitude > 36f);
-                if (!player.BotCanReceiveWork(key) && !replace && !repairPriority) continue;
+                bool restoreNavigation = repair && crew.NavigationRepairSection >= 0 && key == 100000 + crew.NavigationRepairSection &&
+                    player.BotCanPlanReplacement(key) && !player.BotNeedsShipWait &&
+                    (player.BotTaskKey >= 0 && player.BotTaskKey < 1000 || player.BotTaskKey == -1 && !crew.Ship.Helm.StructurallyAvailable);
+                if (!player.BotCanReceiveWork(key) && !replace && !repairPriority && !restoreNavigation) continue;
                 var inventory = player.GetComponent<PlayerInventory>();
                 if (repair && BotMaintenanceAction.MalletSlot(inventory) < 0) continue;
                 float score = (player.transform.position - point).sqrMagnitude;
@@ -464,7 +498,7 @@ namespace PirateSlop.Networking
                 {
                     bool carrying = inventory.BallCount(PlayerInventory.AmmoSlot) > 0;
                     var ammo = carrying ? inventory.BallItem(PlayerInventory.AmmoSlot) : InventoryItem.Cannonball;
-                    if (!BotCannonAmmoPolicy.Supported(ammo)) continue;
+                    if (!BotCannonAmmoPolicy.Supported(ammo) || ammo == InventoryItem.BoardingHook && !BotBoardingAdvantage(crew.Ship, crew.Pilot.CombatTarget)) continue;
                     if (ammo != InventoryItem.Cannonball && crew.Pilot.CombatTarget == null) continue;
                     if (crew.Pilot.CombatTarget != null)
                     {
@@ -477,6 +511,22 @@ namespace PirateSlop.Networking
                 best = score; selected = player;
             }
             return selected;
+        }
+
+        int FindNavigationRepair(BotCrew crew)
+        {
+            var destruction = crew.Ship.GetComponent<ShipDestruction>();
+            if (destruction == null) return -1;
+            int mast = -1;
+            for (int i = 0; i < destruction.Sections.Length; i++)
+            {
+                var section = destruction.Sections[i];
+                if (section == null) continue;
+                var type = destruction.Definition(section.SectionId).Type;
+                if (type == ShipSectionType.Helm && section.RemovedFragments != 0) return i;
+                if (mast < 0 && type == ShipSectionType.Mast && destruction.MastRepairPoint(section.SectionId, out _)) mast = i;
+            }
+            return mast;
         }
 
         int UrgentBreachSection(BotCrew crew, ShipDestruction destruction)
@@ -503,19 +553,26 @@ namespace PirateSlop.Networking
                 if (member != null && member.BotTaskRunning && member.BotTaskKey >= 100000 && member.BotTaskKey < 800000) repairing++;
             int repairLimit = crew.FloodEmergency && crew.Sails != null && crew.Sails.EffectiveDeploy < .05f ? 2 : 1;
             var destruction = crew.Ship.GetComponent<ShipDestruction>();
-            if (repairOnly && !crew.EscapeZone && repairing < repairLimit && destruction != null && destruction.Sections.Length > 0)
+            bool rescueWaiting = false;
+            foreach (var member in crew.Members)
+                if (member != null && member.Motor.IsDead && !member.Eliminated.Value && crew.Ship.RumCount > 0) rescueWaiting = true;
+            if (repairOnly && (!rescueWaiting || crew.Reserved.Contains(53000) || crew.CriticalFlood || crew.RescueRepairSection >= 0) && (!crew.EscapeZone || crew.NavigationRepairSection >= 0) && repairing < repairLimit && destruction != null && destruction.Sections.Length > 0)
             {
                 int urgent = UrgentBreachSection(crew, destruction);
                 for (int probe = 0; probe < Mathf.Min(12, destruction.Sections.Length); probe++)
                 {
-                    int index = probe == 0 && urgent >= 0 ? urgent : probe <= 1 && crew.RescueRepairSection >= 0 ? crew.RescueRepairSection : crew.RepairCursor++ % destruction.Sections.Length;
+                    int index = crew.EscapeZone ? crew.NavigationRepairSection : probe == 0 && urgent >= 0 ? urgent :
+                        probe <= 1 && crew.RescueRepairSection >= 0 ? crew.RescueRepairSection :
+                        probe <= 2 && crew.NavigationRepairSection >= 0 ? crew.NavigationRepairSection : crew.RepairCursor++ % destruction.Sections.Length;
                     var section = destruction.Sections[index];
-                    if (section == null || section.RemovedFragments == 0) continue;
+                    if (section == null) continue;
+                    bool mast = destruction.Definition(section.SectionId).Type == ShipSectionType.Mast;
+                    if (!mast && section.RemovedFragments == 0) continue;
                     int key = 100000 + index;
                     if (crew.Reserved.Contains(key)) continue;
                     int fragment = -1;
                     Vector3 point;
-                    if (destruction.Definition(section.SectionId).Type == ShipSectionType.Mast)
+                    if (mast)
                     {
                         if (!destruction.MastRepairPoint(section.SectionId, out point)) continue;
                     }
@@ -548,7 +605,7 @@ namespace PirateSlop.Networking
                     worker.FinishBotTask();
                 }
             }
-            if (repairOnly || crew.EscapeZone) return;
+            if (repairOnly || crew.EscapeZone || crew.ContactCombat) return;
             var network = crew.Ship.GetComponent<NetworkCannon>();
             if (network == null || network.Crate == null || network.Crate.Cannons.Count == 0) return;
             for (int probe = 0; probe < Mathf.Min(4, network.Crate.Cannons.Count); probe++)

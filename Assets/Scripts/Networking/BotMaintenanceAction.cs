@@ -10,14 +10,15 @@ namespace PirateSlop.Networking
         readonly SimpleCannon cannon;
         readonly ShipDamageSection section;
         readonly int fragment;
-        readonly Vector3 localRepairPoint;
+        Vector3 localRepairPoint;
         BotStationAction step;
         BotHullWaterRepairAction outside;
         public bool RequiresShipWait => outside != null && outside.State == BotActionState.Running;
-        bool supplying;
+        bool supplying, holdingAmmoPost;
+        float ammoPostUntil;
         int previousSlot;
         public BotActionState State { get; private set; } = BotActionState.Running;
-        public string Status => outside?.Status ?? step?.Status ?? "Подготовка палубных работ";
+        public string Status => holdingAmmoPost ? "Заряжающий: у пушки, готовит следующий выстрел" : outside?.Status ?? step?.Status ?? "Подготовка палубных работ";
         public string Failure => outside?.Failure ?? step?.Failure ?? "Нет";
 
         public BotMaintenanceAction(NetworkPlayer player, SimpleCannon cannon)
@@ -63,6 +64,19 @@ namespace PirateSlop.Networking
         }
         public PlayerCommand Tick(float delta)
         {
+            if (holdingAmmoPost)
+            {
+                if (player.Motor.IsDead || player.Motor.IsSwimming || player.Motor.IsClimbing || player.Ship == null ||
+                    player.Ship.IsSinking || cannon == null || !cannon.gameObject.activeInHierarchy || Time.time >= ammoPostUntil)
+                { holdingAmmoPost = false; State = BotActionState.Succeeded; return new PlayerCommand { Yaw = player.transform.eulerAngles.y }; }
+                if (!cannon.IsLoaded && !cannon.IsIgnited && !cannon.IsLoading)
+                {
+                    holdingAmmoPost = false;
+                    supplying = inventory.BallCount(PlayerInventory.AmmoSlot) == 0;
+                    StartStep(out _);
+                }
+                return new PlayerCommand { Yaw = player.transform.eulerAngles.y };
+            }
             if (outside != null)
             {
                 var result = outside.Tick(delta);
@@ -78,6 +92,10 @@ namespace PirateSlop.Networking
             {
                 supplying = false; StartStep(out _); return command;
             }
+            if (step.State == BotActionState.Succeeded && cannon != null)
+                foreach (var target in NetworkShip.ActiveShips)
+                    if (target != null && target.TeamId.Value != player.TeamId.Value && BotCannonStation.Visible(player, target))
+                    { holdingAmmoPost = true; ammoPostUntil = Time.time + 20f; weapon.SelectServerSlot(previousSlot); return command; }
             State = step.State; weapon.SelectServerSlot(previousSlot); return command;
         }
         public void Cancel(string reason)
@@ -96,7 +114,7 @@ namespace PirateSlop.Networking
             bool Repair => job.section != null;
             public float ApproachRadius => Repair ? 3.4f : 1.7f;
             NetworkCannon Network => job.cannon != null ? job.cannon.Network : null;
-            public string Name => Repair ? job.fragment < 0 ? "Ремонт мачты" : "Ремонт корпуса" :
+            public string Name => Repair ? job.fragment < 0 ? "Ремонт мачты" : job.section.Owner.Definition(job.section.SectionId).Type == ShipSectionType.Helm ? "Ремонт штурвала" : "Ремонт корпуса" :
                 supply ? "Подбор ядер" : $"Зарядка пушки {job.cannon.Index + 1}";
             public Vector3 Position => Repair ? job.player.Ship.transform.TransformPoint(job.localRepairPoint) :
                 supply ? Network.Crate.Supply.transform.position : job.cannon.transform.position + Vector3.up;
@@ -114,8 +132,15 @@ namespace PirateSlop.Networking
             {
                 if (!Repair) return true;
                 var eye = worldPosition + Vector3.up * 1.5f;
-                var delta = Position - eye;
-                return delta.magnitude <= 3.5f && !FirearmTrace.Cast(job.player.gameObject, eye, Position - delta.normalized * .08f, out _);
+                var point = RepairPoint(eye);
+                var delta = point - eye;
+                return delta.magnitude <= 3.5f && !FirearmTrace.Cast(job.player.gameObject, eye, point - delta.normalized * .08f, out _);
+            }
+            Vector3 RepairPoint(Vector3 eye)
+            {
+                if (job.fragment < 0) return Position;
+                var anchor = job.section.RepairTransform(job.fragment);
+                return anchor.TransformPoint(job.section.RepairBounds(job.fragment).ClosestPoint(anchor.InverseTransformPoint(eye)));
             }
             public bool Acquire(NetworkPlayer player)
             {
@@ -124,6 +149,7 @@ namespace PirateSlop.Networking
                 if (Repair)
                 {
                     if (!job.weapon.SelectServerSlot(MalletSlot(job.inventory))) return false;
+                    job.localRepairPoint = player.Ship.transform.InverseTransformPoint(RepairPoint(player.transform.position + Vector3.up * 1.5f));
                     acquired = true; lastProgress = Time.time; Work(player, 0); return true;
                 }
                 done = supply ? job.weapon.TryStoreBall(Network.NetworkObject) :

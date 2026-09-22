@@ -40,6 +40,10 @@ namespace PirateSlop.Networking
         LineRenderer rope;
         Material markerMaterial;
         bool visualCreated;
+        internal bool BotLootCandidate => IsSpawned && carrier.Value == null && supportId.Value == 0;
+        internal bool BotCapturePending => Kind == SeaLootKind.Capture && phase.Value == SeaLootState.Locked;
+        internal bool BotLootRising => phase.Value == SeaLootState.Rising;
+        internal Vector3 BotLootPoint => Kind == SeaLootKind.None ? transform.position : eventPoint.Value;
         public SeaLootKind Kind => kind.Value;
         public bool Available => IsSpawned && phase.Value == SeaLootState.Ready && carrier.Value == null;
         public int LockRound => lockRound.Value;

@@ -22,6 +22,7 @@ namespace PirateSlop.Networking
         CrewBellMotion motion;
         bool localPull, wasPulling;
         float localAmount, nextSend, lastPullAt, serverAmount, serverStarted;
+        public bool BotReadyToRing => Time.time >= nextRing && !pulling.Value;
         public uint ServerRingCount { get; private set; }
         public bool IsPulling => localPull || pulling.Value;
         public Vector3 HandPoint => motion != null ? motion.GripPoint : transform.position;

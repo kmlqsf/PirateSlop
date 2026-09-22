@@ -27,6 +27,7 @@ namespace PirateSlop.Networking
         BotYieldAction yielding;
         float nextYield;
         public bool Running => yielding != null && yielding.State == BotActionState.Running || action != null && action.State == BotActionState.Running;
+        public bool ArtilleryBlocked => action is BotStationAction station && station.ArtilleryBlocked;
         public bool Succeeded => action != null && action.State == BotActionState.Succeeded;
         public string Failure => action?.Failure ?? "Нет";
         public string Status => yielding != null && yielding.State == BotActionState.Running ? yielding.Status : action != null ? action.Status : "Ожидание задачи";
@@ -105,6 +106,7 @@ namespace PirateSlop.Networking
             this.player = player; this.settings = settings; this.station = station; assignmentReason = reason; route = new DeckRoute(player, settings);
         }
 
+        public bool ArtilleryBlocked => station is BotCannonStation cannon && cannon.CannotEngage;
         public bool CanYield => State == BotActionState.Running && !holding;
         Vector3 Local => ship.transform.InverseTransformPoint(player.transform.position);
         PlayerCommand Idle => new() { Yaw = player.transform.eulerAngles.y };
@@ -128,7 +130,7 @@ namespace PirateSlop.Networking
             {
                 float angle = i * Mathf.PI * .25f;
                 var near = center + new Vector3(Mathf.Cos(angle), 0, Mathf.Sin(angle)) * (ring * .85f);
-                if (!route.Ground(near, out var point, 1.5f) || !route.ClearAt(point, true)) continue;
+                if (!route.Ground(near, out var point, station is IBotApproachRange ? 3f : 1.5f) || !route.ClearAt(point, true)) continue;
                 if (station is IBotApproachConstraint constraint && !constraint.AllowsApproach(ship.transform.TransformPoint(point))) continue;
                 if (Vector3.Distance(ship.transform.TransformPoint(point) + Vector3.up, station.Position) > (station is IBotApproachRange ? 3.5f : 2.5f)) continue;
                 float distance = Vector3.Distance(Local, point);
@@ -193,7 +195,7 @@ namespace PirateSlop.Networking
             occupiedSeconds = humanBlocked ? occupiedSeconds + delta : 0f;
             if (occupiedSeconds >= .75f && Time.time >= nextOccupiedRetry)
             {
-                nextOccupiedRetry = Time.time + 5f;
+                nextOccupiedRetry = Time.time + 1.5f;
                 occupiedSeconds = 0f;
                 var blocker = route.BlockingBot(probe) ?? route.BlockingBot(Local);
                 bool yielding = blocker != null && blocker.TryYieldBotPassage(player);
@@ -204,17 +206,18 @@ namespace PirateSlop.Networking
                 return command;
             }
             phase = humanBlocked ? "Ожидание: проход занят персонажем" : staticBlocked ? "Препятствие; восстановление пути" : "Подход: " + station.Name;
-            if (!humanBlocked && evidence.Retries < 2 && evidence.AttemptSeconds >= Mathf.Max(1f, settings.RetryAfter) * (evidence.Retries + 1))
+            if (!humanBlocked && evidence.Retries < 2 && evidence.AttemptSeconds >= Mathf.Clamp(settings.RetryAfter, .75f, 1.5f) * (evidence.Retries + 1))
             {
                 evidence.Retried();
                 bool movedAside = false;
-                for (int sign = -1; evidence.Retries == 1 && sign <= 1; sign += 2)
+                for (int option = 0; evidence.Retries == 1 && option < 3; option++)
                 {
-                    var side = Local + new Vector3(direction.z, 0, -direction.x).normalized * (sign * .6f);
+                    var escape = option == 2 ? -direction.normalized : new Vector3(direction.z, 0, -direction.x).normalized * (option == 0 ? -1f : 1f);
+                    var side = Local + escape * .6f;
                     if (!route.Ground(side, out side) || !route.Edge(Local, side, true)) continue;
                     sideStep = side; sideStepUntil = Time.time + .8f; nextProbe = 0; movedAside = true; break;
                 }
-                if (!movedAside) route.Begin(ship, Local, goal);
+                if (!movedAside) route.Begin(ship, Local, approaches, true);
                 SessionController.Instance.RecordBotEvent(player.BotNumber, $"Восстановление {evidence.Retries}: {(movedAside ? "попытка отойти в сторону" : "повторный поиск пути")}");
                 Report(true); return command;
             }
@@ -242,8 +245,8 @@ namespace PirateSlop.Networking
                 float yaw = Mathf.Atan2(worldDirection.x, worldDirection.z) * Mathf.Rad2Deg;
                 command.Yaw = Mathf.MoveTowardsAngle(command.Yaw, yaw, 150f * delta);
                 var relative = Quaternion.Inverse(Quaternion.Euler(0, command.Yaw, 0)) * worldDirection;
-                command.Move = Vector2.ClampMagnitude(new Vector2(relative.x, relative.z), 1f);
-                command.Jump = motor.IsGrounded && target.y - Local.y > .28f;
+                command.Move = Vector2.ClampMagnitude(new Vector2(relative.x, relative.z), 1f) * Mathf.Clamp01(direction.magnitude / .35f);
+                command.Jump = motor.IsGrounded && target.y - Local.y > player.GetComponent<CharacterController>().stepOffset;
             }
             Report(); return command;
         }

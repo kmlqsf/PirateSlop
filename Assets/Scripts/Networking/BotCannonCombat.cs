@@ -10,7 +10,8 @@ namespace PirateSlop.Networking
         readonly Collider[] overlaps = new Collider[32];
         float nextScan, seenAt = -100f, started;
         Vector3 observed, velocity;
-        bool acquired, fired;
+        bool acquired, fired, wasLoaded, blockedAim;
+        public bool CannotEngage => acquired && blockedAim && Time.time - started > 2f;
         BotBoomerangShot boomerang;
         public string Reason { get; private set; } = "Наблюдение цели";
         public string Name => "Артиллерист: " + Reason;
@@ -18,7 +19,7 @@ namespace PirateSlop.Networking
         public bool Available => cannon != null && cannon.gameObject.activeInHierarchy && ship != null && !ship.IsSinking &&
             (fired || target != null && !target.IsSinking) && cannon.Network != null;
         public bool Busy => cannon.Operator != null || cannon.RemoteOccupied;
-        public bool Complete => acquired && !cannon.IsIgnited && (target == null || target.IsSinking || Time.time - started > 14f || Time.time - seenAt > 3f);
+        public bool Complete => acquired && !cannon.IsIgnited && (target == null || target.IsSinking || (cannon.IsLoaded && Time.time - started > 14f) || Time.time - seenAt > 3f);
         public BotCannonStation(SimpleCannon cannon, NetworkShip ship, NetworkShip target)
         { this.cannon = cannon; this.ship = ship; this.target = target; }
         public void Validate() { }
@@ -26,7 +27,7 @@ namespace PirateSlop.Networking
         public bool Acquire(NetworkPlayer player)
         {
             if (!cannon.TakeControl(player.Motor)) return false;
-            acquired = true; started = seenAt = Time.time; observed = target.transform.position + Vector3.up * 3f;
+            acquired = true; wasLoaded = cannon.IsLoaded; started = seenAt = Time.time; observed = target.transform.position + Vector3.up * 3f;
             return true;
         }
         public void Release(NetworkPlayer player) { if (Owned(player)) cannon.ReleaseControl(); }
@@ -132,7 +133,7 @@ namespace PirateSlop.Networking
             float duration = flight + cannon.FuseSeconds;
             var impact = observed + velocity * duration;
             float radius = target.CollisionRadius + (cannon.IsMortar ? CannonAmmo.MortarBlastRadius(cannon.LoadedAmmo) + 3f : BotCannonAmmoPolicy.SafetyRadius(cannon.LoadedAmmo));
-            if (cannon.LoadedAmmo == InventoryItem.BoardingHook && (Vector3.Distance(ship.transform.position, observed) > 55f || Mathf.Abs(ship.Motor.Speed) > 2f)) return false;
+            if (cannon.LoadedAmmo == InventoryItem.BoardingHook && (!SessionController.Instance.BotBoardingAdvantage(ship, target) || Vector3.Distance(ship.transform.position, observed) > 55f || Mathf.Abs(ship.Motor.Speed) > 2f)) return false;
             if (SessionController.Instance.BotAllyNear(impact, radius, player)) return false;
             foreach (var other in NetworkShip.ActiveShips)
             {
@@ -146,6 +147,8 @@ namespace PirateSlop.Networking
         {
             if (!Owned(player)) return;
             cannon.TakeControl(player.Motor);
+            if (cannon.IsLoaded && !wasLoaded) started = Time.time;
+            wasLoaded = cannon.IsLoaded;
             if (cannon.IsIgnited) { Reason = "фитиль горит; наведение зафиксировано"; return; }
             if (Time.time < nextScan) return;
             nextScan = Time.time + .2f;
@@ -154,7 +157,8 @@ namespace PirateSlop.Networking
             float elapsed = Time.time - seenAt;
             velocity = elapsed > .1f && elapsed < 1.5f ? Vector3.ClampMagnitude((point - observed) / elapsed, 20f) : Vector3.zero;
             observed = point; seenAt = Time.time;
-            if (!Solve(out var direction, out float flight)) { Reason = "цель вне дальности или углов наведения"; return; }
+            blockedAim = false;
+            if (!Solve(out var direction, out float flight)) { blockedAim = true; Reason = "цель вне дальности или углов наведения"; return; }
             var local = cannon.transform.InverseTransformDirection(direction);
             float elevation = Mathf.Atan2(local.y, new Vector2(local.x, local.z).magnitude) * Mathf.Rad2Deg;
             float traverse = Mathf.Atan2(local.x, local.z) * Mathf.Rad2Deg;
@@ -168,10 +172,10 @@ namespace PirateSlop.Networking
             {
                 boomerang ??= new BotBoomerangShot();
                 if (!boomerang.Clear(player, cannon, ship, target, cannon.Muzzle.forward))
-                { Reason = "прямой или обратный путь ядра небезопасен"; return; }
+                { blockedAim = true; Reason = "прямой или обратный путь ядра небезопасен"; return; }
             }
-            else if (!ClearArc(cannon.Muzzle.forward, flight)) { Reason = "траектория небезопасна"; return; }
-            if (!SafeEffect(player, flight)) { Reason = "эффект ядра опасен для своего экипажа или союзников"; return; }
+            else if (!ClearArc(cannon.Muzzle.forward, flight)) { blockedAim = true; Reason = "траектория небезопасна"; return; }
+            if (!SafeEffect(player, flight)) { blockedAim = true; Reason = "эффект ядра опасен для своего экипажа или союзников"; return; }
             if (cannon.Network.TryFire(player, cannon.Index)) { fired = true; started = Time.time; Reason = "поджёг фитиль: " + BotCannonAmmoPolicy.Purpose(cannon.LoadedAmmo); }
         }
     }

@@ -4,7 +4,7 @@ namespace PirateSlop.Networking
 {
     public sealed class BotHullWaterRepairAction : IBotAction, IBotOutsideWork
     {
-        enum Phase { Wait, Approach, Jump, SwimOut, SwimAlong, Repair, ReturnOut, ReturnAlong, Board }
+        enum Phase { Wait, Approach, Jump, SwimOut, SwimAlong, Repair, Breathe, ReturnOut, ReturnAlong, Board }
         readonly NetworkPlayer player;
         readonly NetworkShip ship;
         readonly ShipDamageSection section;
@@ -18,7 +18,8 @@ namespace PirateSlop.Networking
         static readonly float[] AvoidAngles = { 45f, -45f, 90f, -90f, 135f, -135f };
         ShipLadder ladder;
         BotStationAction approach;
-        Phase phase;
+        Phase phase, afterBreathing;
+        float breathingStarted;
         Vector3 localPoint, anchor;
         float side, corridor, phaseAt, started, nextStrike, nextProbe, nextReport, progressAt, nextJump;
         Vector3 swimDirection;
@@ -91,6 +92,7 @@ namespace PirateSlop.Networking
                 Phase.SwimOut => "Отплывает от борта",
                 Phase.SwimAlong => "Плывёт вдоль корпуса к повреждению",
                 Phase.Repair => "Ремонт корпуса с воды",
+                Phase.Breathe => "Всплывает за воздухом; ремонт продолжится после вдоха",
                 Phase.ReturnOut => "Возвращение: всплывает и отходит от корпуса",
                 Phase.ReturnAlong => "Возвращение к боковой лестнице",
                 _ => "Подъём по боковой лестнице на палубу"
@@ -109,10 +111,26 @@ namespace PirateSlop.Networking
             }
             if (Vector3.Distance(anchor, Local) > .35f) { anchor = Local; progressAt = Time.time; }
             if (phase == Phase.Repair && Complete && section != null) TryNextRepair();
-            if (!Returning && phase >= Phase.Jump && (player.Motor.Breath < 8f || Time.time - started > 90f || Complete ||
-                Mathf.Abs(ship.Motor.Speed) > 2f)) Return("Работы завершены либо требуется возвращение: воздух, время или движение корабля");
+            if (!Returning && phase >= Phase.Jump && (phase != Phase.Breathe && Time.time - started > 90f || Complete ||
+                Mathf.Abs(ship.Motor.Speed) > 2f)) Return("Работы завершены либо требуется возвращение: время или движение корабля");
             if (Returning && !player.Motor.IsSwimming && !player.Motor.IsClimbing && player.Motor.IsGrounded && player.Passenger.Ship == ship.Body)
             { End(repaired || section == null, repaired ? "Нет" : Failure); return Idle; }
+            if (!Returning && phase >= Phase.Jump && phase != Phase.Breathe && player.Motor.IsSwimming && player.Motor.Breath < 8f)
+            {
+                afterBreathing = phase; breathingStarted = Time.time; SetPhase(Phase.Breathe);
+            }
+            if (phase == Phase.Breathe)
+            {
+                Report();
+                progressAt = Time.time;
+                if (player.Motor.BreathFraction < .98f)
+                {
+                    var surface = Local; surface.x = side * corridor;
+                    return Swim(Surface(surface));
+                }
+                started += Time.time - breathingStarted;
+                SetPhase(afterBreathing);
+            }
             Report();
             if (phase == Phase.Wait)
             {

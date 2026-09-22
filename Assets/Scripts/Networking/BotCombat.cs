@@ -29,7 +29,7 @@ namespace PirateSlop.Networking
                 return hit.collider.GetComponentInParent<NetworkPlayer>() == target;
             return true;
         }
-        public void Observe(NetworkPlayer observer, IEnumerable<NetworkPlayer> candidates)
+        public void Observe(NetworkPlayer observer, IEnumerable<NetworkPlayer> candidates, bool alert = false)
         {
             Visible = false;
             for (int i = 0; i < nearest.Length; i++) nearest[i] = null;
@@ -38,7 +38,7 @@ namespace PirateSlop.Networking
                 if (!Enemy(observer, candidate)) continue;
                 var offset = candidate.transform.position - observer.transform.position;
                 float distance = offset.sqrMagnitude;
-                if (distance > 45f * 45f || distance > 8f * 8f && Vector3.Dot(observer.transform.forward, offset.normalized) < -.3f) continue;
+                if (distance > 45f * 45f || !alert && distance > 8f * 8f && Vector3.Dot(observer.transform.forward, offset.normalized) < -.3f) continue;
                 for (int i = 0; i < nearest.Length; i++)
                     if (nearest[i] == null || distance < (nearest[i].transform.position - observer.transform.position).sqrMagnitude)
                     {
@@ -64,7 +64,6 @@ namespace PirateSlop.Networking
         readonly BotPersonalWeapons weapons;
         readonly PlayerInventory inventory;
         readonly BotCombatPosition position;
-        readonly Collider[] allies = new Collider[24];
         int previousSlot;
         float readyAt, nextDecision, lastSeen, nextReport, started;
         Vector3 aim;
@@ -86,6 +85,7 @@ namespace PirateSlop.Networking
         public bool Begin(out string reason)
         {
             previousSlot = inventory.SelectedSlot;
+            if (target != null) aim = target.transform.position + Vector3.up * 1.1f;
             reason = "Нет доступного оружия или видимой вражеской цели";
             if (!player.IsServerInitialized || !BotCombatMemory.CanSee(player, target) || Slot(false) < 0 && Slot(true) < 0)
             { Finish(false, reason); return false; }
@@ -96,24 +96,17 @@ namespace PirateSlop.Networking
         bool ClearForAllies(Vector3 end, bool melee)
         {
             var start = BotCombatMemory.Eye(player);
-            float radius = 1.2f;
+            float spread = 0f;
             if (!melee)
             {
                 var definition = weapons.Selected;
                 if (definition == null) return false;
-                float range = definition.Ballistics.Range;
-                end = start + (end - start).normalized * range;
-                radius = .4f + Mathf.Tan((definition.AimSpread + definition.MovingSpread * .3f) * Mathf.Deg2Rad) * range;
+                end = start + (end - start).normalized * definition.Ballistics.Range;
+                spread = definition.AimSpread + definition.MovingSpread * .3f;
             }
-            int count = Physics.OverlapCapsuleNonAlloc(start, end, radius, allies, ~0, QueryTriggerInteraction.Collide);
-            if (count == allies.Length) return false;
-            for (int i = 0; i < count; i++)
-            {
-                var other = allies[i].GetComponentInParent<NetworkPlayer>();
-                if (other != null && other != player && !other.Motor.IsDead && other.TeamId.Value == player.TeamId.Value) return false;
-            }
-            return true;
+            return SessionController.Instance.BotPersonalShotSafe(player, start, end, melee, spread);
         }
+
         public PlayerCommand Tick(float delta)
         {
             var command = new PlayerCommand { Yaw = player.transform.eulerAngles.y };
@@ -136,7 +129,7 @@ namespace PirateSlop.Networking
                     aim = target.transform.position + Vector3.up * (target.Motor.IsCrouched ? .65f : 1.1f);
                     float distance = Vector3.Distance(player.transform.position, target.transform.position);
                     bool melee = distance < 2.1f && Slot(true) >= 0;
-                    bool close = target.Passenger.Ship == player.Ship.Body && Slot(true) >= 0 && (Slot(false) < 0 || distance < 6f);
+                    bool close = Slot(true) >= 0 && (distance < 2.1f || target.Passenger.Ship == player.Ship.Body && (Slot(false) < 0 || distance < 6f));
 
                     int slot = Slot(melee);
                     if (slot < 0 && close) slot = Slot(true);

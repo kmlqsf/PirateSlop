@@ -19,7 +19,8 @@ namespace PirateSlop.Networking
             using var sample = marker.Auto();
             long started = System.Diagnostics.Stopwatch.GetTimestamp();
             double limit = Mathf.Clamp(milliseconds, .25f, 4f) * System.Diagnostics.Stopwatch.Frequency / 1000.0;
-            for (int i = 0; i < Mathf.Clamp(budget, 1, 64) && pending.Count > 0; i++)
+            int nodeBudget = Mathf.Clamp(Mathf.Max(budget, pending.Count * 8), 1, 256);
+            for (int i = 0; i < nodeBudget && pending.Count > 0; i++)
             {
                 var route = pending.Dequeue();
                 if (route.Searching) route.Expand();
@@ -122,7 +123,7 @@ namespace PirateSlop.Networking
         {
             var center = foot + Vector3.up * capsule.center.y;
             float half = Mathf.Max(0, capsule.height * .5f - Radius);
-            bottom = center - Vector3.up * Mathf.Max(0, half - (full ? 0 : .42f));
+            bottom = center - Vector3.up * Mathf.Max(0, half - (full ? 0 : Mathf.Min(.42f, capsule.stepOffset)));
             top = center + Vector3.up * half;
         }
 
@@ -132,6 +133,11 @@ namespace PirateSlop.Networking
             int count = Physics.OverlapCapsuleNonAlloc(bottom, top, Radius, overlaps, ~0, QueryTriggerInteraction.Ignore);
             if (count == overlaps.Length) return false;
             for (int i = 0; i < count; i++) if (!Ignore(overlaps[i], includePlayers)) return false;
+            Capsule(ship.transform.TransformPoint(point), out bottom, out top, true);
+            count = Physics.OverlapCapsuleNonAlloc(bottom, top, Radius, overlaps, ~0, QueryTriggerInteraction.Ignore);
+            if (count == overlaps.Length) return false;
+            for (int i = 0; i < count; i++)
+                if (!Ignore(overlaps[i], includePlayers) && overlaps[i].GetComponentInParent<Cannonball>() != null) return false;
             return true;
         }
 
@@ -181,6 +187,11 @@ namespace PirateSlop.Networking
             int count = Physics.CapsuleCastNonAlloc(bottom, top, Radius, delta.normalized, hits, delta.magnitude, ~0, QueryTriggerInteraction.Ignore);
             if (count == hits.Length) return false;
             for (int i = 0; i < count; i++) if (!Ignore(hits[i].collider, includePlayers) && hits[i].normal.y < .7f) return false;
+            Capsule(ship.transform.TransformPoint(from), out bottom, out top, true);
+            count = Physics.CapsuleCastNonAlloc(bottom, top, Radius, delta.normalized, hits, delta.magnitude, ~0, QueryTriggerInteraction.Ignore);
+            if (count == hits.Length) return false;
+            for (int i = 0; i < count; i++)
+                if (!Ignore(hits[i].collider, includePlayers) && hits[i].collider.GetComponentInParent<Cannonball>() != null) return false;
             return true;
         }
 
@@ -286,7 +297,7 @@ namespace PirateSlop.Networking
         static bool Reached(Vector3 current, Vector3 target)
         {
             var difference = current - target;
-            if (difference.sqrMagnitude < .09f) return true;
+            if (Mathf.Abs(difference.y) <= .12f && difference.x * difference.x + difference.z * difference.z < .0625f) return true;
             return difference.y >= 0f && difference.y <= .5f &&
                 difference.x * difference.x + difference.z * difference.z < .0625f;
         }

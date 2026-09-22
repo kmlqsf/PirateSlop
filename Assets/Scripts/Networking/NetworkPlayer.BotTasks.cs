@@ -17,6 +17,7 @@ namespace PirateSlop.Networking
         public int BotTaskKey { get; private set; } = -2;
         public string BotAssignment { get; internal set; } = "Нет назначения";
         public string BotCandidates { get; internal set; } = "Нет вариантов";
+        internal bool BotArtilleryBlocked => botActions != null && botActions.ArtilleryBlocked;
         public bool BotTaskRunning => botActions != null && botActions.Running;
         public bool BotNeedsShipWait => botActions != null && botActions.RequiresShipWait;
         internal void RecoverBotFromWater()
@@ -57,6 +58,7 @@ namespace PirateSlop.Networking
             (!botStationRetry.TryGetValue(key, out float retry) || Time.time >= retry);
 
         internal bool BotStationDeferred(int key) => botStationRetry.TryGetValue(key, out float retry) && Time.time < retry;
+        internal void DeferBotStation(int key, float seconds) => botStationRetry[key] = Time.time + seconds;
         internal void AllowBotStationRetry(int key) => botStationRetry.Remove(key);
 
         internal bool TryYieldBotPassage(NetworkPlayer requester) => IsServerInitialized && IsBot.Value && !botManualTask &&
@@ -92,7 +94,10 @@ namespace PirateSlop.Networking
         {
             if (BotTaskRunning) return;
             if (BotTaskKey != -2 && botActions != null && !botActions.Succeeded)
-                botStationRetry[BotTaskKey] = Time.time + Mathf.Max(2f, SessionController.Instance.Config.BotMotion.FailedTaskRetry);
+            {
+                bool occupied = botActions.Failure.Contains("занят") || botActions.Failure.Contains("Нет свободной позиции");
+                botStationRetry[BotTaskKey] = Time.time + (BotTaskKey == 53000 ? 2f : occupied ? 3f : Mathf.Max(2f, SessionController.Instance.Config.BotMotion.FailedTaskRetry));
+            }
             if (BotTaskKey != -2 || botManualTask) nextBotTask = Time.time;
             BotTaskKey = -2;
             botManualTask = false;
