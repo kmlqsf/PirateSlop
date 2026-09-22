@@ -1,0 +1,73 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6645701693531692133
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6667575568957014901}
+  - component: {fileID: 6504910906743386392}
+  m_Layer: 0
+  m_Name: BRZoneVisual
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6667575568957014901
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6645701693531692133}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6504910906743386392
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6645701693531692133}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5a0299b5426be948a9e3de183d4d3fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.BRZoneVisual
+  WallMaterial: {fileID: 2100000, guid: 24b5126b50ff9cc42b829b867e4e8ea8, type: 2}
+  FoamMaterial: {fileID: 2100000, guid: 9cfae91a40bd84c43b9f78145a945314, type: 2}
+  ParticleMaterial: {fileID: 2100000, guid: 5ab80323e3b5ce34daaf6d815bf1d72d, type: 2}
+  MistPrefab: {fileID: 7716662351238580643, guid: 02af99709c31e4147b1c8b18614ec57d, type: 3}
+  SprayPrefab: {fileID: 5167041931270771925, guid: 3e95b7627b854974383e412a04006bbb, type: 3}
+  Wall: 1
+  Foam: 1
+  Particles: 1
+  PostFX: 1
+  Lightning: 1
+  Segments: 256
+  WallHeight: 90
+  Thickness: 12
+  FoamWidth: 7
+  WarningDistance: 85
+  StrongDistance: 28
+  Opacity: 0.38
+  ParticleDensity: 24
+  Preview: 0
+  PreviewCenter: {x: 0, y: 0, z: 0}
+  PreviewTargetCenter: {x: 0, y: 0, z: 0}
+  PreviewRadius: 1500
+  PreviewTargetRadius: 100
+  PreviewProgress: 0
+  currentRadius: 0
+  targetRadius: 0
+  distanceToBorder: 0

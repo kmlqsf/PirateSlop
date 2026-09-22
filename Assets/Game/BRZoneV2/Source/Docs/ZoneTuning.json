@@ -1,0 +1,46 @@
+{
+  "design_target": "Readable low-poly pirate battle royale storm wall; threat without obscuring the world.",
+  "zone_visual": {
+    "wall_height_m": 90,
+    "wall_thickness_m": 12,
+    "segments": 128,
+    "inside_transmittance": 0.5,
+    "outside_transmittance": 0.3,
+    "base_opacity_range": [
+      0.22,
+      0.48
+    ],
+    "top_fade": 0.65,
+    "noise_world_scale_large": 0.006,
+    "noise_world_scale_detail": 0.028,
+    "scroll_speed_tangent": 0.035,
+    "scroll_speed_vertical": 0.018,
+    "foam_width_m": 7,
+    "foam_height_offset_m": 0.15
+  },
+  "proximity_fx": {
+    "warning_distance_m": 85,
+    "strong_fx_distance_m": 28,
+    "safe_zone_postfx_strength": 0.0,
+    "border_postfx_max": 0.2,
+    "outside_postfx_strength": 0.5,
+    "outside_desaturation": 0.18,
+    "outside_exposure_ev": -0.25,
+    "outside_vignette": 0.22
+  },
+  "lightning": {
+    "inside_wall_only": true,
+    "average_interval_s": [
+      5.0,
+      12.0
+    ],
+    "max_screen_flash": 0.08,
+    "bolt_count_max": 3
+  },
+  "performance": {
+    "target_gpu_ms_budget": 2.0,
+    "avoid_fullscreen_transparent_noise": true,
+    "avoid_multiple_fullscreen_blits": true,
+    "prefer_depth_fade": true
+  }
+}

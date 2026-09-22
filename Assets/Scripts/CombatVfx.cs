@@ -34,6 +34,7 @@ namespace PirateSlop
         }
         public static void Fire(Vector3 position, Vector3 direction, bool cannon)
         {
+            if (cannon && Available) SeaMistRendererFeature.CannonFlash(position);
             FirstPersonFeedback.Kick(position, -direction, cannon ? .055f : .012f);
             float scale = cannon ? 3f : 1f;
             Burst(position, direction, new Color(1, .58f, .12f, .9f), cannon ? 12 : 5, .3f * scale, 7 * scale, .09f);
