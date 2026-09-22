@@ -12,6 +12,7 @@ public class ShipController : MonoBehaviour
     float nextCollisionAudio, lastCollisionContact = -10f;
     [SerializeField] float pushImpulse = 450000f, pushLinearDrag = .55f, pushAngularDrag = .7f;
     [SerializeField] float impulseMass = 15000f, hullLength = 46f, hullWidth = 13f;
+    public Vector2 HullFootprint => new Vector2(hullWidth, hullLength);
     Vector3 pushVelocity;
     float pushYawVelocity, freezeRemaining, manualPushUntil;
     public bool IsFrozen => freezeRemaining > 0f;

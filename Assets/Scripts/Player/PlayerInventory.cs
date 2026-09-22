@@ -384,9 +384,9 @@ namespace PirateSlop
             using var layout = new HudLayout.Scope(true);
             Color old = GUI.color;
             float width = Mathf.Min(76f, (HudLayout.Width - 48f) / SlotCount);
-            float hotbarScale = Mathf.Min(2f, (HudLayout.Width - 32f) / (56f * SlotCount + 6f * (SlotCount - 1) + 12f));
+            float hotbarScale = Mathf.Min(1.6f, (HudLayout.Width - 32f) / (56f * SlotCount + 6f * (SlotCount - 1) + 30f));
             float slotSize = 56f * hotbarScale, slotGap = 6f * hotbarScale;
-            float ammoGap = 12f * hotbarScale;
+            float ammoGap = 30f * hotbarScale;
             float hotbarWidth = slotSize * SlotCount + slotGap * (SlotCount - 1) + ammoGap;
             for (int i = 0; i < SlotCount; i++)
             {
