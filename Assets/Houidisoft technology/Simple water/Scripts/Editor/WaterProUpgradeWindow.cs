@@ -1,12 +1,12 @@
 using UnityEditor;
 using UnityEngine;
 namespace Houidisoft.SimpleWater{
-[InitializeOnLoad]
+// [InitializeOnLoad]
 public static class WaterUpgradePopupLoader
 {
     static WaterUpgradePopupLoader()
     {
-        EditorApplication.delayCall += OpenPopupSafely;
+        // EditorApplication.delayCall += OpenPopupSafely;
     }
 
     static void OpenPopupSafely()
