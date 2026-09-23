@@ -115,6 +115,16 @@ public class AdvancedPlayerController : MonoBehaviour
         if (playerCamera != null) { playerCamera.enabled = owner; var listener = playerCamera.GetComponent<AudioListener>(); if (listener != null) listener.enabled = owner; }
         if (owner) { lookYaw = transform.eulerAngles.y; SetCursor(true); }
     }
+    public void LookAtPoint(Vector3 worldPoint, float speed = 14f)
+    {
+        if (playerCamera == null) return;
+        Vector3 dir = worldPoint - playerCamera.transform.position;
+        if (dir.sqrMagnitude < 0.001f) return;
+        float targetYaw = Mathf.Atan2(dir.x, dir.z) * Mathf.Rad2Deg;
+        float targetPitch = -Mathf.Asin(Mathf.Clamp(dir.y / dir.magnitude, -0.99f, 0.99f)) * Mathf.Rad2Deg;
+        lookYaw = Mathf.LerpAngle(lookYaw, targetYaw, 1f - Mathf.Exp(-speed * Time.deltaTime));
+        pitch = Mathf.Lerp(pitch, targetPitch, 1f - Mathf.Exp(-speed * Time.deltaTime));
+    }
     public void SetLocomotionLocked(bool value)
     {
         if (locomotionLocked == value) return;

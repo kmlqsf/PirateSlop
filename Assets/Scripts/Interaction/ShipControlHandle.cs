@@ -8,14 +8,16 @@ namespace PirateSlop
         public SimpleCannon Cannon;
         public SailSystem Sails;
         public int RopeIndex;
+        public CapstanStation Capstan;
+        public int SpokeIndex;
         Renderer targetRenderer;
         MaterialPropertyBlock[] saved;
         bool highlighted;
 
         public void Highlight(bool value)
         {
-            if ((Helm == null && Sails == null) || highlighted == value) return;
-            if (targetRenderer == null) targetRenderer = GetComponent<Renderer>() ?? GetComponentInChildren<Renderer>(true);
+            if ((Helm == null && Sails == null && Capstan == null) || highlighted == value) return;
+            if (targetRenderer == null) targetRenderer = GetComponent<Renderer>() ?? GetComponentInParent<Renderer>() ?? GetComponentInChildren<Renderer>(true);
             if (targetRenderer == null) return;
             var materials = targetRenderer.sharedMaterials;
             if (value)

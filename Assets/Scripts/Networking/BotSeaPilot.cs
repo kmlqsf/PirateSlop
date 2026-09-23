@@ -124,6 +124,7 @@ namespace PirateSlop.Networking
             }
             if (avoiding) PlannedSails = Mathf.Abs(error) < 20f ? .3f : 0f;
             if (helmsman) Sails = PlannedSails;
+            if (ship.AnchorDropped) Reason += "; якорь опущен (ожидание подъёма)";
             else Reason += "; матросы занимают канаты, ожидание рулевого";
         }
 

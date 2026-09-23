@@ -73,7 +73,7 @@ namespace PirateSlop.Networking
                 botCrews.RemoveAll(c => c.Ship == null || c.Members.Count == 0);
             }
             if (botCrews.Count == 0) return;
-            int crewBudget = Mathf.Clamp(Mathf.CeilToInt(botCrews.Count * Time.unscaledDeltaTime / .1f), 1, 4);
+            int crewBudget = Mathf.Clamp(Mathf.CeilToInt(botCrews.Count * Time.unscaledDeltaTime / .05f), 1, 4);
             for (int i = 0; i < Mathf.Min(crewBudget, botCrews.Count); i++)
             {
                 botCrewCursor %= botCrews.Count;
@@ -176,7 +176,7 @@ namespace PirateSlop.Networking
             if (canCruise && ship.Helm != null && !crew.Reserved.Contains(-1) && !ship.Helm.IsControlling &&
                 Time.time - ship.Helm.LastHumanControlTime >= Mathf.Max(5f, Config.BotMotion.HumanStationGrace))
                 AssignNearest(crew, -1, new BotHelmStation(ship.Helm, () => crew.RudderTarget), "Нужен рулевой автономного экипажа");
-            if (needsFirstCannon && !crew.Pilot.AvoidingCollision) AssignCannonWork(crew);
+            if (needsFirstCannon) AssignCannonWork(crew);
             AssignArtillery(crew);
             AssignMaintenance(crew);
             if (!crew.Human && !manualHelm && !ship.IsSinking && crew.Sails != null)
@@ -184,7 +184,8 @@ namespace PirateSlop.Networking
                 bool sailWorker = false;
                 foreach (var member in crew.Members)
                     if (member != null && member.BotTaskRunning && member.BotTaskKey >= 0 && member.BotTaskKey < 1000) sailWorker = true;
-                if (!sailWorker && crew.Pilot.PlannedSails <= 0f && crew.Sails.EffectiveDeploy > .05f)
+                if (!sailWorker && crew.Pilot.PlannedSails <= 0f && crew.Sails.EffectiveDeploy > .05f &&
+                    (!needsFirstCannon || crew.Pilot.AvoidingCollision))
                     foreach (var member in crew.Members)
                         if (member != null && member.BotTaskRunning && !member.BotNeedsShipWait &&
                             (member.BotTaskKey == 52000 || member.BotTaskKey >= 1000 && member.BotTaskKey < 50000))
@@ -197,6 +198,26 @@ namespace PirateSlop.Networking
                     if (!station.Available || station.Busy) continue;
                     AssignNearest(crew, i, station, crew.Pilot.Reason);
                     if (crew.Pilot.CombatTarget != null && !crew.Pilot.AvoidingCollision && crew.Reserved.Contains(i)) break;
+                }
+            }
+            if (!crew.Human && !manualHelm && !ship.IsSinking)
+            {
+                bool wantsFullStop = outsideWork || crew.CriticalFlood ||
+                    (crew.Pilot.LootDestination.HasValue &&
+                     new Vector2(ship.transform.position.x - crew.Pilot.LootDestination.Value.x, ship.transform.position.z - crew.Pilot.LootDestination.Value.z).sqrMagnitude < 22f * 22f &&
+                     crew.Pilot.PlannedSails <= 0f);
+
+                if (wantsFullStop && !ship.AnchorDropped && Mathf.Abs(ship.Motor.Speed) < 3.5f)
+                {
+                    if (!crew.Reserved.Contains(54000))
+                        AssignNearest(crew, 54000, new BotCapstanDropStation(ship), "Полная остановка корабля: сбросить якорь");
+                }
+                else if (!wantsFullStop && (ship.AnchorDropped || ship.AnchorRaiseProgress < 0.99f))
+                {
+                    if (!crew.Reserved.Contains(54001))
+                        AssignNearest(crew, 54001, new BotCapstanRaiseStation(ship, 0), "Сняться с якоря для продолжения плавания");
+                    if (available >= 3 && !crew.Reserved.Contains(54002))
+                        AssignNearest(crew, 54002, new BotCapstanRaiseStation(ship, 1), "Помощь в подъёме якоря");
                 }
             }
             AssignPersonalCombat(crew);
@@ -223,7 +244,7 @@ namespace PirateSlop.Networking
             {
                 if (player == null || !player.IsBot.Value) continue;
                 player.BotAssignment = $"Экипаж {player.TeamId.Value}; капитан БОТ{crew.CaptainNumber}; " +
-                    $"{(player.BotTaskKey == -1 ? "рулевой" : player.BotTaskKey == 50000 ? "лечение рыбой" : player.BotTaskKey == 51000 ? "доставка рома" : player.BotTaskKey == 52000 ? "рыбалка" : player.BotTaskKey == 53000 ? "колокол: возрождение" : player.BotTaskKey == 60001 ? "метательный предмет" : player.BotTaskKey == 60000 ? "личный бой" : player.BotTaskKey >= 70000 && player.BotTaskKey < 80000 ? "артиллерист" : player.BotTaskKey == 900000 ? "возвращение" : player.BotTaskKey == 800000 ? "островная вылазка" : player.BotTaskKey >= 100000 ? "ремонт" : player.BotTaskKey >= 2000 ? "снабжение пушки" : player.BotTaskKey >= 1000 ? "оснащение корабля" : player.BotTaskKey >= 0 ? crew.Sails.RopeName(player.BotTaskKey) : "свободен")}; {crew.PriorityReason}; {crew.Pilot.Reason}; {crew.RevivalStatus}";
+                    $"{(player.BotTaskKey == -1 ? "рулевой" : player.BotTaskKey == 50000 ? "лечение рыбой" : player.BotTaskKey == 51000 ? "доставка рома" : player.BotTaskKey == 52000 ? "рыбалка" : player.BotTaskKey == 53000 ? "колокол: возрождение" : player.BotTaskKey == 54000 ? "сброс якоря" : player.BotTaskKey == 54001 || player.BotTaskKey == 54002 ? "подъём якоря" : player.BotTaskKey == 60001 ? "метательный предмет" : player.BotTaskKey == 60000 ? "личный бой" : player.BotTaskKey >= 70000 && player.BotTaskKey < 80000 ? "артиллерист" : player.BotTaskKey == 900000 ? "возвращение" : player.BotTaskKey == 800000 ? "островная вылазка" : player.BotTaskKey >= 100000 ? "ремонт" : player.BotTaskKey >= 2000 ? "снабжение пушки" : player.BotTaskKey >= 1000 ? "оснащение корабля" : player.BotTaskKey >= 0 ? crew.Sails.RopeName(player.BotTaskKey) : "свободен")}; {crew.PriorityReason}; {crew.Pilot.Reason}; {crew.RevivalStatus}";
                 if (!player.BotTaskRunning)
                     RecordBotDecision(player.BotNumber, "Ожидание задачи", crew.Pilot.Reason, player.BotStatus,
                         player.BotCanReceiveTask ? "Готов к назначению" : player.BotTaskBlockReason,
@@ -257,7 +278,7 @@ namespace PirateSlop.Networking
                 var section = destruction.Sections[i];
                 if (section == null || section.RemovedFragments == 0) continue;
                 var type = destruction.Definition(section.SectionId).Type;
-                if (type != ShipSectionType.Deck && type != ShipSectionType.Stairs && type != ShipSectionType.Fitting) continue;
+                if (type != ShipSectionType.Deck && type != ShipSectionType.Stairs && type != ShipSectionType.Fitting && type != ShipSectionType.Capstan) continue;
                 for (int fragment = 0; fragment < Mathf.Min(64, section.RepairCount); fragment++)
                 {
                     if ((section.RemovedFragments & (1UL << fragment)) == 0) continue;
@@ -289,8 +310,8 @@ namespace PirateSlop.Networking
             crew.RevivalStatus = "Товарищ ждёт колокола";
             if (crew.Ship.IsSinking) { crew.RevivalStatus += ": корабль тонет"; return; }
             if (crew.Ship.RumCount <= 0) { crew.RevivalStatus += ": на корабле нет рома"; return; }
-            if (crew.RescueRepairSection >= 0)
-            { crew.RevivalStatus += ": сначала восстановить проход или опору колокола"; return; }
+            if (crew.RescueRepairSection >= 0 && crew.Reserved.Contains(100000 + crew.RescueRepairSection))
+            { crew.RevivalStatus += ": восстанавливается проход или опора колокола"; return; }
             if (crew.Reserved.Contains(53000)) { crew.RevivalStatus += ": спасатель назначен"; return; }
             var root = crew.Ship.transform.Find("CrewBell");
             if (root == null || !root.gameObject.activeInHierarchy) { crew.RevivalStatus += ": колокол недоступен"; return; }
@@ -431,9 +452,8 @@ namespace PirateSlop.Networking
 
         void AssignCannonWork(BotCrew crew)
         {
-            if (crew.Ship.IsSinking || crew.ZoneThreat || crew.FloodEmergency || crew.Pilot.AvoidingCollision || crew.ContactCombat || Time.time < crew.NextCannonPlan) return;
-            if (!crew.Human && crew.Sails != null && crew.Pilot.PlannedSails <= 0f && crew.Sails.EffectiveDeploy > .05f) return;
-            crew.NextCannonPlan = Time.time + 1f;
+            if (crew.Ship.IsSinking || crew.ZoneThreat || crew.FloodEmergency || Time.time < crew.NextCannonPlan) return;
+            crew.NextCannonPlan = Time.time + .25f;
             foreach (var member in crew.Members)
                 if (member != null && member.BotTaskRunning && member.BotTaskKey >= 1000 && member.BotTaskKey < 2000) return;
             var cannon = crew.Ship.GetComponent<NetworkCannon>();
@@ -449,8 +469,9 @@ namespace PirateSlop.Networking
                 {
                     if (player == null || !player.IsBot.Value) continue;
                     bool firstGun = cannon.Crate.Cannons.Count == 0;
-                    if (!player.BotCanReceiveWork(key) && !(firstGun && player.BotCanPlanReplacement(key) &&
-                        player.BotTaskKey >= 1000 && player.BotTaskKey < 100000 && player.BotTaskKey != 53000 && player.BotTaskKey != 51000 && !player.BotNeedsShipWait &&
+                    if (!player.BotCanReceiveWork(key) && !((firstGun || player.GetComponent<PlayerInventory>().CannonSlots != 0) && player.BotCanPlanReplacement(key) &&
+                        player.BotTaskKey >= 0 && player.BotTaskKey < 50000 &&
+                        (player.BotTaskKey >= 1000 || !crew.UrgentSails && !crew.Pilot.AvoidingCollision) && !player.BotNeedsShipWait &&
                         (!player.BotVision.Visible || (player.BotVision.LastPosition - player.transform.position).sqrMagnitude > 144f))) continue;
                     var inventory = player.GetComponent<PlayerInventory>();
                     bool carrying = inventory.CannonSlots != 0;
@@ -524,6 +545,7 @@ namespace PirateSlop.Networking
                 if (section == null) continue;
                 var type = destruction.Definition(section.SectionId).Type;
                 if (type == ShipSectionType.Helm && section.RemovedFragments != 0) return i;
+                if (type == ShipSectionType.Capstan && section.RemovedFragments != 0) return i;
                 if (mast < 0 && type == ShipSectionType.Mast && destruction.MastRepairPoint(section.SectionId, out _)) mast = i;
             }
             return mast;
@@ -605,7 +627,7 @@ namespace PirateSlop.Networking
                     worker.FinishBotTask();
                 }
             }
-            if (repairOnly || crew.EscapeZone || crew.ContactCombat) return;
+            if (repairOnly || crew.EscapeZone) return;
             var network = crew.Ship.GetComponent<NetworkCannon>();
             if (network == null || network.Crate == null || network.Crate.Cannons.Count == 0) return;
             for (int probe = 0; probe < Mathf.Min(4, network.Crate.Cannons.Count); probe++)

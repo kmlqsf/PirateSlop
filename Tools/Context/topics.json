@@ -31,7 +31,7 @@
     {
       "id": "ship", "title": "Движение корабля и палуба", "aliases": ["корабль", "палуба", "helm", "штурвал"],
       "notes": ["Корабль перемещается кинематически. Не переносить пассажира или предмет дважды вместе с кораблём; Rigidbody.GetPointVelocity не обязательно описывает это движение.", "Управление и освобождение штурвала согласовывать с сервером; старые альтернативные контроллеры не выбирать только по имени."],
-      "files": ["Assets/Scripts/ShipController.cs", "Assets/Scripts/ShipDeckPassenger.cs", "Assets/Scripts/HelmInteraction.cs", "Assets/Scripts/Networking/NetworkShip.cs", "Assets/Scripts/Interaction/DirectShipControls.cs", "Assets/Prefabs/Networking/NetworkShip.prefab"],
+      "files": ["Assets/Scripts/ShipController.cs", "Assets/Scripts/ShipDeckPassenger.cs", "Assets/Scripts/HelmInteraction.cs", "Assets/Scripts/Networking/NetworkShip.cs", "Assets/Scripts/Interaction/DirectShipControls.cs", "Assets/Scripts/Stations/CapstanStation.cs", "Assets/Scripts/Networking/NetworkShip.Anchor.cs", "Assets/Prefabs/Networking/NetworkShip.prefab"],
       "docs": ["unity.md", "multiplayer-plan.md"]
     },
     {

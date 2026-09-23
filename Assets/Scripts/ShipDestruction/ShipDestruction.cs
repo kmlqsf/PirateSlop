@@ -458,12 +458,14 @@ namespace PirateSlop
         {
             float rudder = 1f;
             bool helmAvailable = true;
+            bool capstanAvailable = true;
             var sailEfficiency = new Dictionary<string, float>();
             foreach (var entry in state)
             {
                 var definition = definitions[entry.Key]; float efficiency = definition.Efficiency(entry.Value.State);
                 if (definition.Type == ShipSectionType.Rudder) rudder = Mathf.Min(rudder, efficiency);
                 if (definition.Type == ShipSectionType.Helm && entry.Value.State == ShipSectionState.Destroyed) helmAvailable = false;
+                if (definition.Type == ShipSectionType.Capstan && entry.Value.State == ShipSectionState.Destroyed) capstanAvailable = false;
                 foreach (string sail in definition.SailNames)
                     sailEfficiency[sail] = sailEfficiency.TryGetValue(sail, out float existing) ? Mathf.Min(existing, efficiency) : efficiency;
             }
@@ -472,6 +474,11 @@ namespace PirateSlop
             {
                 ship.Helm.StructurallyAvailable = helmAvailable;
                 if (!helmAvailable) ship.Helm.ReleaseControl();
+            }
+            if (ship.Capstan != null)
+            {
+                ship.Capstan.StructurallyAvailable = capstanAvailable;
+                if (!capstanAvailable) ship.Capstan.CancelPush();
             }
             if (sails != null) sails.SetStructuralEfficiency(sailEfficiency);
             ship.Motor.SetDestructionModifiers(1f, 1f, rudder, 0f);

@@ -77,6 +77,30 @@ public class ShipController : MonoBehaviour
         cannonShove*=Mathf.Exp(-2f*dt);
     }
     public bool Networked { get; set; }
+        [SerializeField] bool isAnchored;
+    Vector3 anchorPoint;
+    float anchorCableLength = 6f;
+    public bool IsAnchored => isAnchored;
+    public Vector3 AnchorPoint => anchorPoint;
+    public void SetAnchored(bool value, Vector3? dropPoint = null)
+    {
+        if (isAnchored == value) return;
+        isAnchored = value;
+        if (isAnchored)
+        {
+            anchorPoint = dropPoint ?? (transform.position + transform.forward * 5f);
+            anchorCableLength = Mathf.Max(3f, Vector3.Distance(new Vector3(transform.position.x, 0, transform.position.z), new Vector3(anchorPoint.x, 0, anchorPoint.z)));
+            float initialSpeed = speed;
+            speed = 0f;
+            pushVelocity = Vector3.zero;
+            if (Mathf.Abs(initialSpeed) > .5f)
+            {
+                float rudder = helm != null ? helm.CurrentRudderNormalized : 0f;
+                float swingDir = Mathf.Abs(rudder) > .1f ? Mathf.Sign(rudder) : 1f;
+                pushYawVelocity += swingDir * initialSpeed * 4f;
+            }
+        }
+    }
     public float Speed => speed;
     float destructionSpeed = 1f, destructionAcceleration = 1f, destructionRudder = 1f, destructionHeel;
     public void SetDestructionModifiers(float speedFactor, float accelerationFactor, float rudderFactor, float heel)
@@ -110,13 +134,33 @@ public class ShipController : MonoBehaviour
         pushYawVelocity *= Mathf.Exp(-pushAngularDrag * dt);
         yaw += pushYawVelocity * dt;
         float mobility = Mathf.Lerp(1f, .1f, floodLevel);
-        float target = immobilized ? 0f : (sailSystem != null ? sailSystem.EffectiveDeploy : 0) * maxSpeed * destructionSpeed * mobility;
-        speed = immobilized ? 0f : Mathf.MoveTowards(speed, target, (target > speed ? acceleration * destructionAcceleration * mobility : deceleration) * dt);
+        float target = (immobilized || isAnchored) ? 0f : (sailSystem != null ? sailSystem.EffectiveDeploy : 0) * maxSpeed * destructionSpeed * mobility;
+        speed = (immobilized || isAnchored) ? 0f : Mathf.MoveTowards(speed, target, (target > speed ? acceleration * destructionAcceleration * mobility : deceleration) * dt);
         float rudder = !immobilized && helm != null ? helm.CurrentRudderNormalized * mobility : 0;
         float factor = Mathf.Clamp01(speed / Mathf.Max(.1f, maxSpeed * mobility));
-        yaw += rudder * turnSpeed * destructionRudder * Mathf.Lerp(.15f, 1, factor) * dt;
+        float yawDelta = (isAnchored ? rudder * turnSpeed * .35f : rudder * turnSpeed * destructionRudder * Mathf.Lerp(.15f, 1, factor)) * dt;
+        yaw += yawDelta;
         bank = Mathf.Lerp(bank, -rudder * maxBankAngle * factor + destructionHeel, 1 - Mathf.Exp(-bankResponse * dt));
         var next = rb.position + Quaternion.Euler(0, yaw, 0) * Vector3.forward * speed * dt + (cannonShove + pushVelocity) * dt; next.y = waterHeight;
+        if (isAnchored)
+        {
+            Vector3 anchorFlat = new Vector3(anchorPoint.x, 0, anchorPoint.z);
+            Vector3 shipFlat = new Vector3(next.x, 0, next.z);
+            Vector3 arm = shipFlat - anchorFlat;
+            float totalYawDelta = (pushYawVelocity * dt) + yawDelta;
+            if (Mathf.Abs(totalYawDelta) > .0001f && arm.sqrMagnitude > .01f)
+            {
+                arm = Quaternion.Euler(0, totalYawDelta, 0) * arm;
+                shipFlat = anchorFlat + arm;
+            }
+            if (arm.magnitude > anchorCableLength)
+            {
+                shipFlat = anchorFlat + arm.normalized * anchorCableLength;
+                pushVelocity = Vector3.ProjectOnPlane(pushVelocity, arm.normalized);
+            }
+            next.x = shipFlat.x;
+            next.z = shipFlat.z;
+        }
         var ocean = OceanSurface.Instance;
         if (ocean != null)
         {
