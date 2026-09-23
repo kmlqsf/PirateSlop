@@ -131,7 +131,7 @@ MonoBehaviour:
   m_Name: Sea Mist
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.SeaMistRendererFeature
   m_Active: 1
-  injectionPoint: 550
+  injectionPoint: 499
   fetchColorBuffer: 0
   requirements: 1
   passMaterial: {fileID: 2100000, guid: 3fbff046e801d2e4cafec7cfb44c5d11, type: 2}
@@ -152,7 +152,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.StormVolumeRendererFeature
   m_Active: 1
   Template: {fileID: 2100000, guid: 1e49c52a2511a07488f80377d549cd99, type: 2}
-  ResolutionScale: 0.5
+  ResolutionScale: 0.67
 --- !u!114 &7833122117494664109
 MonoBehaviour:
   m_ObjectHideFlags: 1

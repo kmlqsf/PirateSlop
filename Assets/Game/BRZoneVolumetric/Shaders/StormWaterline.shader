@@ -4,7 +4,7 @@ Shader "PirateSlop/StormWaterline"
     {
         _Color("Cold Foam / Mist", Color) = (.82,.87,.87,1)
         _ParticleMode("Particle Mode", Float) = 0
-        _WaterlineSettings("Opacity / Noise Scale / Speed / Height", Vector) = (.52,.024,1,4)
+        _WaterlineSettings("Opacity / Noise Scale / Speed / Height", Vector) = (.64,.019,1,5.5)
         _WaterlineCenter("Center / Radius", Vector) = (0,0,0,1500)
     }
     SubShader
@@ -27,7 +27,7 @@ Shader "PirateSlop/StormWaterline"
             float4 _WaterlineCenter;
             CBUFFER_END
             struct Attributes { float4 positionOS:POSITION; float2 uv:TEXCOORD0; float2 kind:TEXCOORD1; half4 color:COLOR; };
-            struct Varyings { float4 positionCS:SV_POSITION; float3 world:TEXCOORD0; float2 uv:TEXCOORD1; float2 kind:TEXCOORD2; half4 color:COLOR; float4 screen:TEXCOORD3; };
+            struct Varyings { float4 positionCS:SV_POSITION; float3 world:TEXCOORD0; float2 uv:TEXCOORD1; float2 kind:TEXCOORD2; half4 color:COLOR; };
             float Hash(float2 p) { return frac(sin(dot(p,float2(127.1,311.7))) * 43758.5453); }
             float Noise(float2 p)
             {
@@ -39,61 +39,72 @@ Shader "PirateSlop/StormWaterline"
                 Varyings o;
                 o.world=TransformObjectToWorld(input.positionOS.xyz);
                 o.positionCS=TransformWorldToHClip(o.world);
-                o.screen=ComputeScreenPos(o.positionCS);
                 o.uv=input.uv; o.kind=input.kind; o.color=input.color;
                 return o;
             }
             half4 Frag(Varyings i):SV_Target
             {
                 float t=_Time.y*_WaterlineSettings.z;
+                float2 offset=i.world.xz-_WaterlineCenter.xz;
+                float radialDistance=length(offset);
+                float2 radial=offset/max(1,radialDistance);
+                float2 tangent=float2(-radial.y,radial.x);
                 float2 p=i.world.xz*_WaterlineSettings.y;
-                float broad=Noise(p*.28+float2(t*.018,-t*.011));
-                float medium=Noise(p*1.9+float2(-t*.15,t*.09)+broad*.7);
-                float fine=Noise(p*5.7+float2(t*.27,t*.18));
-                float patches=smoothstep(.23,.6,broad*.85+medium*.15);
+                float broad=Noise(p*.31+float2(t*.015,-t*.009));
+                float medium=Noise(p*1.75-tangent*t*.09+radial*t*.032+broad*.8);
+                float fine=Noise(p*6.2-tangent*t*.31-radial*t*.16);
+                float patches=smoothstep(.27,.64,broad*.84+medium*.16);
                 float alpha;
                 half3 color=_Color.rgb;
                 if (_ParticleMode > .5)
                 {
                     float2 uv=i.uv*2-1;
                     float body=saturate(1-dot(uv,uv));
-                    alpha=smoothstep(0,.28,body)*body*smoothstep(.26,.62,medium*.4+fine*.6)*i.color.a;
-                    color*=i.color.rgb;
+                    float breakup=Noise(i.uv*5.5+i.world.xz*.12+float2(t*.21,-t*.13));
+                    alpha=smoothstep(0,.3,body)*body*lerp(.38,1,smoothstep(.25,.66,breakup))*i.color.a;
+                    float heightFade=smoothstep(2,12,i.world.y-_WaterlineCenter.y);
+                    alpha*=lerp(1,.55,heightFade);
+                    color*=i.color.rgb*lerp(half3(1,1,1),half3(.67,.77,.84),heightFade);
                 }
                 else if (i.kind.x < .5)
                 {
-                    float edge=smoothstep(0,.22,i.uv.y)*(1-smoothstep(.78,1,i.uv.y));
-                    float2 radial=normalize(i.world.xz-_WaterlineCenter.xz);
-                    float2 tangent=float2(-radial.y,radial.x);
-                    float streak=Noise(float2(dot(i.world.xz,tangent)*.045-t*.42,length(i.world.xz-_WaterlineCenter.xz)*.48+t*.17));
-                    float band=1-smoothstep(4,8,abs(length(i.world.xz-_WaterlineCenter.xz)-_WaterlineCenter.w+(broad-.5)*5));
-                    float foam=smoothstep(.4,.66,medium*.6+fine*.4);
-                    float churn=band*smoothstep(.42,.7,streak)*smoothstep(.25,.6,broad);
-                    alpha=edge*(patches*foam*1.2+churn)*_WaterlineSettings.x;
-                    color=lerp(half3(.38,.5,.55),_Color.rgb,saturate(foam*.6+churn));
+                    float edge=smoothstep(0,.16,i.uv.y)*(1-smoothstep(.8,1,i.uv.y));
+                    float2 advected=i.world.xz-tangent*t*5+radial*t*2;
+                    float streak=Noise(float2(advected.x*.045+advected.y*.023,advected.y*.21-advected.x*.12)+medium*.9);
+                    float band=1-smoothstep(4,9,abs(radialDistance-_WaterlineCenter.w+(broad-.5)*8));
+                    float foam=smoothstep(.39,.68,medium*.63+fine*.37);
+                    float churn=band*smoothstep(.37,.66,streak)*smoothstep(.22,.58,broad);
+                    float foamVeins=1-smoothstep(.07,.19,abs(fine-.52));
+                    alpha=edge*(patches*(foam*.8+foamVeins*.35)+churn*.85)*_WaterlineSettings.x;
+                    color=lerp(half3(.32,.45,.5),_Color.rgb,saturate(foam*.68+churn*.7+foamVeins*.22));
                 }
                 else
                 {
-                    float crown=lerp(.45,1,broad);
-                    float vertical=(1-smoothstep(crown*.12,crown,i.uv.y));
-                    alpha=vertical*patches*(.35+medium*.55)*_WaterlineSettings.x;
-                    color=lerp(_Color.rgb*.84,half3(.4,.53,.6),i.uv.y);
+                    float layer=i.kind.y;
+                    float curls=Noise(p*2.8-tangent*t*.14+float2(i.world.y*.31,layer*4.7));
+                    float crown=lerp(.48,1,broad*.7+curls*.3);
+                    float vertical=(1-smoothstep(crown*.08,crown,i.uv.y));
+                    float wisps=smoothstep(.22,.64,medium*.45+curls*.55);
+                    alpha=vertical*patches*(.3+wisps*.7)*_WaterlineSettings.x*.9;
+                    color=lerp(_Color.rgb*.95,half3(.43,.56,.63),smoothstep(.02,.8,i.uv.y));
                 }
-                float scene=LinearEyeDepth(SampleSceneDepth(i.screen.xy/i.screen.w),_ZBufferParams);
+                float scene=LinearEyeDepth(SampleSceneDepth(GetNormalizedScreenSpaceUV(i.positionCS)),_ZBufferParams);
                 float eye=-TransformWorldToView(i.world).z;
-                alpha*=saturate((scene-eye)/(_ParticleMode < .5 && i.kind.x < .5 ? .08 : 1.2));
-                alpha*=smoothstep(.4,2.5,distance(_WorldSpaceCameraPos,i.world));
+                alpha*=saturate((scene-eye)/(_ParticleMode < .5 && i.kind.x < .5 ? .08 : .65));
+                float cameraDistance=distance(_WorldSpaceCameraPos,i.world);
+                alpha*=smoothstep(.4,2.5,cameraDistance);
                 if (_ParticleMode < .5)
                 {
                     float2 cameraOffset=_WorldSpaceCameraPos.xz-_WaterlineCenter.xz;
                     float cameraRadius=length(cameraOffset);
                     if (cameraRadius > _WaterlineCenter.w+20)
                     {
-                        float2 radial=normalize(i.world.xz-_WaterlineCenter.xz);
                         float facing=dot(radial,cameraOffset/max(1,cameraRadius));
                         alpha*=smoothstep(_WaterlineCenter.w/cameraRadius-.12,_WaterlineCenter.w/cameraRadius+.04,facing);
                     }
                 }
+                float aerial=saturate((cameraDistance-120)/1800)*.24;
+                color=lerp(color,half3(.49,.59,.64),aerial);
                 return half4(color,saturate(alpha));
             }
             ENDHLSL

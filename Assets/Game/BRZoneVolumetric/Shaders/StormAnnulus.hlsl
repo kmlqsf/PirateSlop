@@ -4,6 +4,8 @@ float4 _StormCenterWater;
 float4 _StormBand;
 float4 _StormShape;
 float4 _StormStyle;
+float4 _StormLightning;
+float4 _StormLightningColor;
 float StormInward(float h)
 {
     float offset;
@@ -36,7 +38,7 @@ float StormDensityMask(float3 p, float mip, bool lightSampling, out float macro,
     float scale = max(0.00001, _StormStyle.z);
     float3 rolling = local;
     rolling.xz = StormRotate(local.xz, -_StormStyle.w * 0.00042);
-    float3 q = rolling * scale * float3(1.0, 1.18, 1.0);
+    float3 q = rolling * scale * float3(1.0, 1.5, 1.0);
     float3 phase = q.zxy * 2.7 + q.yzx * 1.1;
     float3 primaryCurl = sin(phase + float3(t * 0.137, t * 0.173 + 2.1, -t * 0.119 + 4.7));
     float3 primaryCoords = q * 0.52 + primaryCurl * 0.075;
@@ -47,7 +49,7 @@ float StormDensityMask(float3 p, float mip, bool lightSampling, out float macro,
     float primaryB = SAMPLE_TEXTURE3D_LOD(_Worley128RGBA, s_trilinear_repeat_sampler, overlapCoords, mip).r;
     float unionBlend = saturate(0.5 + 0.5 * (primaryA - primaryB) / 0.12);
     macro = lerp(primaryB, primaryA, unionBlend) + 0.12 * unionBlend * (1.0 - unionBlend);
-    macro = smoothstep(0.58, 0.96, macro);
+    macro = smoothstep(0.54, 0.94, macro);
 
     billow = 0.65;
     if (!lightSampling)
@@ -64,13 +66,13 @@ float StormDensityMask(float3 p, float mip, bool lightSampling, out float macro,
 
     float softness = max(0.1, min(_StormBand.w, (_StormBand.y + _StormBand.z) * 0.30));
     float lobes = saturate(macro * 0.68 + billow * 0.32);
-    float carve = (1.0 - lobes) * 0.90;
+    float carve = (1.0 - lobes) * 0.64;
     float innerEdge = radius - _StormBand.y + _StormBand.y * carve;
     float outerEdge = radius + _StormBand.z - _StormBand.z * carve;
     float inner = smoothstep(innerEdge, innerEdge + softness, d);
     float outer = 1.0 - smoothstep(outerEdge - softness, outerEdge, d);
-    float crownHeight = 0.66 + 0.33 * lobes;
-    float crown = 1.0 - smoothstep(crownHeight - 0.085, crownHeight, h);
+    float crownHeight = 0.72 + 0.27 * lobes;
+    float crown = 1.0 - smoothstep(crownHeight - 0.045, crownHeight, h);
     return inner * outer * smoothstep(0.0, 0.018, h) * crown;
 }
 bool StormCylinder(float2 p, float2 d, float radius, out float2 span)

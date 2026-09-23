@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2015004232568437652}
   - component: {fileID: 8851085139401561645}
   - component: {fileID: 7466655072615049111}
+  - component: {fileID: 6268059016703589692}
   m_Layer: 0
   m_Name: BRStormVolume
   m_TagString: Untagged
@@ -43,19 +44,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5aa786cbbd73b2444ba1a6318e8f2abe, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.StormVolumeController
   EnableStormVolume: 1
-  InnerThickness: 80
-  OuterThickness: 120
-  EdgeSoftness: 10
-  StormHeight: 260
-  TopInwardOffset: 65
-  DensityMultiplier: 0.74
-  NoiseScale: 260
+  InnerThickness: 30
+  OuterThickness: 110
+  EdgeSoftness: 6
+  StormHeight: 320
+  TopInwardOffset: 45
+  DensityMultiplier: 0.68
+  NoiseScale: 420
   WindSpeed: 9
-  ShapeContrast: 0.65
-  MagicIntensity: 0.35
+  ShapeContrast: 0.78
+  MagicIntensity: 0.16
   FreezeZoneValues: 0
   ManualRadius: 1400
 --- !u!114 &7466655072615049111
@@ -68,15 +69,35 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7223d10aa29ef1f45807161ccf0d993c, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.StormWaterlineController
   WaterlineMaterial: {fileID: 2100000, guid: 16dc6738a37b98f4baae775a0e37d0f6, type: 2}
   SprayMaterial: {fileID: 2100000, guid: e8a734d52dff0bd46b76800a2bdd081b, type: 2}
   WaterY: 0
-  FoamWidth: 36
-  MistHeight: 4
-  BaseOpacity: 0.52
-  NoiseScale: 0.024
+  FoamWidth: 38
+  MistHeight: 5.5
+  BaseOpacity: 0.64
+  NoiseScale: 0.019
   NoiseSpeed: 1
   NearSprayDistance: 260
   ActiveSprayCount: 12
+--- !u!114 &6268059016703589692
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5682249384526165914}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0eba18e57785dc4ba390bdb59dcd843, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.StormWeatherController
+  RainMaterial: {fileID: 2100000, guid: f0f8067785c21074e900989e9ea0ccd6, type: 2}
+  BoltMaterial: {fileID: 2100000, guid: 82c28a11f8c0f7d4988756bc1400e532, type: 2}
+  RainOpacity: 0.34
+  RainSpeed: 24
+  RainHeightFraction: 0.72
+  LightningInterval: 8
+  BoltChance: 0.7
+  LightningIntensity: 0.85
