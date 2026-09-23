@@ -5,7 +5,7 @@ using PirateSlop.Networking;
 namespace PirateSlop
 {
     public enum ShipSectionState : byte { Intact, Damaged, Critical, Destroyed, Repaired }
-    public enum ShipSectionType : byte { Hull, Deck, Mast, Yard, Bowsprit, Rudder, Railing, Helm, Stairs, Fitting }
+    public enum ShipSectionType : byte { Hull, Deck, Mast, Yard, Bowsprit, Rudder, Railing, Helm, Stairs, Fitting, Capstan }
     public enum ShipDamageReason : byte { Hit, Fire, SupportLost, Flooding, Scripted }
 
     [Serializable]

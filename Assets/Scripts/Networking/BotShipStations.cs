@@ -83,4 +83,108 @@ namespace PirateSlop.Networking
         }
         public void Release(NetworkPlayer player) { if (Owned(player)) sails.Drag(index, player.Motor, 0, false); }
     }
+    public sealed class BotCapstanDropStation : IBotShipStation
+    {
+        readonly NetworkShip ship;
+        readonly CapstanStation capstan;
+        NetworkPlayer owner;
+        float timer;
+
+        public BotCapstanDropStation(NetworkShip ship)
+        {
+            this.ship = ship;
+            capstan = ship != null ? ship.GetComponentInChildren<CapstanStation>() : null;
+        }
+
+        public string Name => "Сброс якоря";
+        public Vector3 Position => capstan != null ? capstan.transform.position + Vector3.up * 0.7f : (ship != null ? ship.transform.position : Vector3.zero);
+        public bool Available => ship != null && capstan != null && capstan.StructurallyAvailable && !ship.AnchorDropped && !ship.IsSinking;
+        public bool Busy => owner != null;
+        public bool Complete => ship != null && ship.AnchorDropped;
+
+        public void Validate()
+        {
+            if (ship == null || ship.AnchorDropped) owner = null;
+        }
+
+        public bool Owned(NetworkPlayer player) => owner == player;
+
+        public bool Acquire(NetworkPlayer player)
+        {
+            if (owner != null && owner != player) return false;
+            owner = player;
+            timer = 0f;
+            return true;
+        }
+
+        public void Work(NetworkPlayer player, float delta)
+        {
+            if (owner != player || ship == null || capstan == null) return;
+            timer += delta;
+            if (timer >= 1.5f)
+            {
+                capstan.DropAnchor();
+                owner = null;
+            }
+        }
+
+        public void Release(NetworkPlayer player)
+        {
+            if (owner == player) owner = null;
+        }
+    }
+
+    public sealed class BotCapstanRaiseStation : IBotShipStation
+    {
+        readonly NetworkShip ship;
+        readonly CapstanStation capstan;
+        readonly int spokeIndex;
+        NetworkPlayer owner;
+
+        public BotCapstanRaiseStation(NetworkShip ship, int spokeIndex = 0)
+        {
+            this.ship = ship;
+            this.spokeIndex = spokeIndex;
+            capstan = ship != null ? ship.GetComponentInChildren<CapstanStation>() : null;
+        }
+
+        public string Name => "Подъём якоря";
+        public Vector3 Position => capstan != null ? capstan.transform.TransformPoint(new Vector3(spokeIndex == 0 ? 0.75f : -0.75f, 0.7f, 0f)) : (ship != null ? ship.transform.position : Vector3.zero);
+        public bool Available => ship != null && capstan != null && capstan.StructurallyAvailable && (ship.AnchorDropped || ship.AnchorRaiseProgress < 1f) && !ship.IsSinking;
+        public bool Busy => owner != null;
+        public bool Complete => ship != null && !ship.AnchorDropped && ship.AnchorRaiseProgress >= 0.99f;
+
+        public void Validate()
+        {
+            if (ship == null || (!ship.AnchorDropped && ship.AnchorRaiseProgress >= 0.99f)) owner = null;
+        }
+
+        public bool Owned(NetworkPlayer player) => owner == player;
+
+        public bool Acquire(NetworkPlayer player)
+        {
+            if (owner != null && owner != player) return false;
+            owner = player;
+            if (capstan != null && player.Motor != null)
+                capstan.BeginPush(player.Motor, spokeIndex);
+            return true;
+        }
+
+        public void Work(NetworkPlayer player, float delta)
+        {
+            if (owner != player || ship == null || capstan == null) return;
+            float turnSpeedDegrees = 120f;
+            capstan.BotPushDelta(turnSpeedDegrees * delta);
+        }
+
+        public void Release(NetworkPlayer player)
+        {
+            if (owner == player)
+            {
+                if (capstan != null && player.Motor != null)
+                    capstan.EndPush(player.Motor);
+                owner = null;
+            }
+        }
+    }
 }

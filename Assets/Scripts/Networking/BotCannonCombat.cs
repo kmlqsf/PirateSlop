@@ -19,7 +19,7 @@ namespace PirateSlop.Networking
         public bool Available => cannon != null && cannon.gameObject.activeInHierarchy && ship != null && !ship.IsSinking &&
             (fired || target != null && !target.IsSinking) && cannon.Network != null;
         public bool Busy => cannon.Operator != null || cannon.RemoteOccupied;
-        public bool Complete => acquired && !cannon.IsIgnited && (target == null || target.IsSinking || (cannon.IsLoaded && Time.time - started > 14f) || Time.time - seenAt > 3f);
+        public bool Complete => acquired && !cannon.IsIgnited && (fired && !cannon.IsLoaded || target == null || target.IsSinking || (cannon.IsLoaded && Time.time - started > 14f) || Time.time - seenAt > 3f);
         public BotCannonStation(SimpleCannon cannon, NetworkShip ship, NetworkShip target)
         { this.cannon = cannon; this.ship = ship; this.target = target; }
         public void Validate() { }

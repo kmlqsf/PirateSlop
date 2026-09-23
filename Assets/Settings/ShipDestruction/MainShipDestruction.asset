@@ -1964,6 +1964,33 @@ MonoBehaviour:
     DebrisLifetime: 15
     AngularSpeed: 2
     MaxDebris: 64
+  - SectionId: 1059
+    Name: F2_Capstan_0
+    SourceGroup: F2_Capstan
+    Type: 10
+    MaxHealth: 150
+    DamagedThreshold: 0.75
+    CriticalThreshold: 0.3
+    Ammo: []
+    Supports: 00040000i
+    RequireAllSupports: 1
+    RedirectSectionId: 0
+    CanFlood: 0
+    BreachArea: 1
+    BreachAnchor: {x: 0, y: 0, z: 0}
+    DamagedLeak: 0.1
+    CriticalLeak: 0.4
+    SailNames: []
+    DamagedEfficiency: 1
+    CriticalEfficiency: 1
+    DestroyedEfficiency: 0
+    Repairable: 1
+    MaxRepairHealth: 1
+    DebrisMass: 80
+    DebrisImpulse: 4
+    DebrisLifetime: 15
+    AngularSpeed: 2
+    MaxDebris: 4
   Structure:
   - SectionId: 1000
     Fragment: 0

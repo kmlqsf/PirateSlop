@@ -8,15 +8,14 @@ namespace PirateSlop.Networking
         {
             if (crew.Ship.IsSinking || crew.EscapeZone || Time.time < crew.NextArtilleryPlan) return;
             crew.NextArtilleryPlan = Time.time + .15f;
-            foreach (var member in crew.Members)
-                if (member != null && member.BotTaskRunning && member.BotTaskKey >= 70000 && member.BotTaskKey < 80000) return;
             var network = crew.Ship.GetComponent<NetworkCannon>();
             if (network == null || network.Crate == null || network.Crate.Cannons.Count == 0) return;
             for (int scan = 0; scan < Mathf.Min(8, network.Crate.Cannons.Count); scan++)
             {
                 int index = crew.ArtilleryCursor++ % network.Crate.Cannons.Count;
                 var cannon = network.Crate.Cannons[index];
-                if (cannon != null && network.HasBoarding(cannon.Index) && Time.time - cannon.LastHumanControlTime >= Config.BotMotion.HumanStationGrace)
+                if (cannon == null || crew.Reserved.Contains(70000 + cannon.Index)) continue;
+                if (network.HasBoarding(cannon.Index) && Time.time - cannon.LastHumanControlTime >= Config.BotMotion.HumanStationGrace)
                 {
                     var handler = MaintenanceWorker(crew, 70000 + cannon.Index, cannon.transform.position, false);
                     if (handler != null) handler.AssignBotStation(70000 + cannon.Index, new BotBoardingStation(cannon), "Кратко подтянуть связанный корабль и освободить трос");
@@ -36,7 +35,7 @@ namespace PirateSlop.Networking
                     if (candidate == null || candidate.IsSinking || candidate.TeamId.Value == crew.Ship.TeamId.Value) continue;
                     var delta = candidate.transform.position - cannon.transform.position;
                     float distance = delta.sqrMagnitude;
-                    if (distance > 160f * 160f || distance < 15f * 15f || distance >= best) continue;
+                    if (distance > 160f * 160f || distance >= best) continue;
                     var local = cannon.transform.InverseTransformDirection(delta);
                     if (Mathf.Abs(Mathf.Atan2(local.x, local.z) * Mathf.Rad2Deg) > cannon.MaxTraverse + 10f) continue;
                     if (++probes > 3) continue;
@@ -49,7 +48,7 @@ namespace PirateSlop.Networking
                 if (worker.BotTaskRunning) worker.PreemptBotTask("Боевой пост: вести огонь по вражескому кораблю");
                 worker.AssignBotStation(key, new BotCannonStation(cannon, crew.Ship, target), "Видимый вражеский корабль в секторе пушки; проверка упреждения и дуги");
                 if (!worker.BotTaskRunning) worker.FinishBotTask();
-                if (worker.BotTaskRunning) { crew.Reserved.Add(key); return; }
+                if (worker.BotTaskRunning) crew.Reserved.Add(key);
             }
         }
 
