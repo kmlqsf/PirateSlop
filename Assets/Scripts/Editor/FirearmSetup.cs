@@ -51,8 +51,8 @@ namespace PirateSlop.EditorTools
             if(name=="Pistol")
             {
                 definition.DamageCap=70;definition.CameraKick=1.7f;definition.AimFov=56;
-                definition.HipPosition=new Vector3(.22f,-.17f,.36f);definition.MuzzleOffset=new Vector3(0,.11f,.41f);
-                definition.AimPosition=new Vector3(0,-.10f,.35f);
+                definition.HipPosition=new Vector3(.28f,-.22f,.45f);definition.MuzzleOffset=new Vector3(0,.11f,.41f);
+                definition.AimPosition=new Vector3(0f,-0.145f,0.35f);
                 definition.AudibleDistance=120;
             }
             if(name=="Musket")

@@ -29,10 +29,13 @@ namespace PirateSlop.Networking
         CrewBellMotion GetMotion()
         {
             if (player.Ship == null) return null;
-            var bell = player.Ship.transform.Find("CrewBell");
-            if (bell == null || !bell.gameObject.activeInHierarchy) return null;
-            var result = bell.GetComponent<CrewBellMotion>();
-            return result != null ? result : bell.gameObject.AddComponent<CrewBellMotion>();
+            var result = player.Ship.GetComponentInChildren<CrewBellMotion>(true);
+            if (result != null) return result;
+            foreach (var t in player.Ship.GetComponentsInChildren<Transform>(true))
+            {
+                if (t.name == "CrewBell") return t.gameObject.AddComponent<CrewBellMotion>();
+            }
+            return null;
         }
         void Update()
         {
@@ -151,8 +154,8 @@ namespace PirateSlop.Networking
             if (waiting.Count > 4) text.Append("\nИ ещё: ").Append(waiting.Count - 4);
             if (eliminated > 0) text.Append("\nВыбыли без возможности возрождения: ").Append(eliminated);
             if (ship.IsSinking) text.Append("\nКорабль погибает — возрождение недоступно");
-            else if (waiting.Count == 0) text.Append(eliminated > 0 ? "\nНекого вернуть колоколом" : "\nВесь экипаж жив");
-            else if (ship.RumCount == 0) text.Append("\nНет рома — нужен 1 ром на пирата");
+            else if (waiting.Count == 0) text.Append(eliminated > 0 ? "\nНекого вернуть колоколом" : "\nВесь экипаж жив").Append("\nЛКМ на верёвке + потянуть мышь вниз (просто позвонить)");
+            else if (ship.RumCount == 0) text.Append("\nНет рома — нужен 1 ром на пирата").Append("\nЛКМ на верёвке + потянуть мышь вниз (просто позвонить)");
             else text.Append("\nМожно вернуть: ").Append(Mathf.Min(waiting.Count, ship.RumCount)).Append(" из ").Append(waiting.Count).Append("\nЛКМ на верёвке + потянуть мышь вниз (1 ром за пирата)");
             bellStatus = text.ToString();
         }

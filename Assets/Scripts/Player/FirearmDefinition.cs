@@ -15,7 +15,7 @@ namespace PirateSlop
         public float AimSeconds = .18f, AimFov = 55, CameraKick = 1.4f, CameraYaw = .25f;
         public float KickDegrees = 12, KickDistance = .075f, KickRecovery = .28f, FlashPower = 1;
         public float TracerWidth = .022f, TracerSpeed = 450;
-        public Vector3 HipPosition = new(.22f,-.25f,.45f), AimPosition = new(0,-.15f,.3f);
+        public Vector3 HipPosition = new(.28f,-.28f,.55f), AimPosition = new(0,-.18f,.4f);
         public Vector3 MuzzleOffset = new(0,.075f,.75f);
         public float ShooterKnockback;
         public bool Scope;

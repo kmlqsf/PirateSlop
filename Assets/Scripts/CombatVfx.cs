@@ -37,13 +37,37 @@ namespace PirateSlop
             if (cannon && Available) SeaMistRendererFeature.CannonFlash(position);
             FirstPersonFeedback.Kick(position, -direction, cannon ? .055f : .012f);
             float scale = cannon ? 3f : 1f;
+            
+            // Add a plausible muzzle flash billboard
+            if (Available)
+            {
+                if (material == null) material = Resources.Load<Material>("CombatParticles");
+                if (material != null)
+                {
+                    var flashGo = new GameObject("MuzzleFlashEffect");
+                    flashGo.transform.SetPositionAndRotation(position + direction * (cannon ? 0.8f : 0.2f), Quaternion.LookRotation(direction));
+                    var flashPs = flashGo.AddComponent<ParticleSystem>();
+                    flashPs.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+                    var fMain = flashPs.main;
+                    fMain.duration = 0.1f; fMain.startLifetime = 0.15f; fMain.startSpeed = 1f;
+                    fMain.startSize = cannon ? 7f : 1.5f; fMain.startRotation = new ParticleSystem.MinMaxCurve(0, 360 * Mathf.Deg2Rad);
+                    fMain.startColor = new Color(1f, 0.8f, 0.2f, 0.95f); fMain.maxParticles = 1; fMain.simulationSpace = ParticleSystemSimulationSpace.World;
+                    var fEmission = flashPs.emission; fEmission.rateOverTime = 0; fEmission.SetBursts(new[] { new ParticleSystem.Burst(0, 1) });
+                    var fFade = flashPs.colorOverLifetime; fFade.enabled = true;
+                    var fGradient = new Gradient(); fGradient.SetKeys(new[] { new GradientColorKey(new Color(1f, 0.9f, 0.4f), 0f), new GradientColorKey(new Color(1f, 0.2f, 0f), 1f) }, new[] { new GradientAlphaKey(1f, 0f), new GradientAlphaKey(0f, 1f) }); fFade.color = fGradient;
+                    var fSize = flashPs.sizeOverLifetime; fSize.enabled = true; fSize.size = new ParticleSystem.MinMaxCurve(1, AnimationCurve.EaseInOut(0, 0.2f, 1, 1.5f));
+                    var fRenderer = flashPs.GetComponent<ParticleSystemRenderer>(); fRenderer.sharedMaterial = material; fRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+                    flashPs.Play(); Object.Destroy(flashGo, 0.2f);
+                }
+            }
+
             Burst(position, direction, new Color(1, .58f, .12f, .9f), cannon ? 12 : 5, .3f * scale, 7 * scale, .09f);
             Burst(position, direction, new Color(.7f, .69f, .65f, .25f), cannon ? 28 : 12, .45f * scale, 1.4f * scale, cannon ? 4 : 2, -.025f);
             Burst(position, direction, new Color(1, .65f, .2f), cannon ? 16 : 6, .025f * scale, 9 * scale, .25f, .2f);
             if (!Available) return;
             var go = new GameObject("MuzzleLight"); go.transform.position = position;
-            var light = go.AddComponent<Light>(); light.color = new Color(1, .55f, .18f); light.intensity = cannon ? 5 : 2; light.range = cannon ? 9 : 3;
-            Object.Destroy(go, .065f);
+            var light = go.AddComponent<Light>(); light.color = new Color(1, .55f, .18f); light.intensity = cannon ? 8 : 2; light.range = cannon ? 15 : 3;
+            Object.Destroy(go, .085f);
         }
         public static void Impact(Vector3 position, Vector3 normal, bool cannon, bool wood = false)
         {

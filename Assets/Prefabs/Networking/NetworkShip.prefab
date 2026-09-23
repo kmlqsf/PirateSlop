@@ -35211,22 +35211,26 @@ MonoBehaviour:
   _spectatorInterpolation: 2
   _enableTeleport: 0
   _teleportThreshold: 1
-  <PrefabId>k__BackingField: 65535
+  <PrefabId>k__BackingField: 0
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 2109282982949040799
   SceneId: 0
   SerializedTransformProperties:
     Position: {x: 0, y: 0, z: 0}
-    Rotation: {x: 0, y: 0, z: 0, w: 0}
-    Scale: {x: 0, y: 0, z: 0}
-    IsValid: 0
+    Rotation: {x: 0, y: 0, z: 0, w: 1}
+    Scale: {x: 1, y: 1, z: 1}
+    IsValid: 1
   <IsNested>k__BackingField: 0
   WasActiveDuringEdit: 0
   WasActiveDuringEdit_Set1: 1
   <ComponentIndex>k__BackingField: 0
   <PredictedSpawn>k__BackingField: {fileID: 0}
   <PredictedOwner>k__BackingField: {fileID: 0}
-  NetworkBehaviours: []
+  NetworkBehaviours:
+  - {fileID: 37050319885465183}
+  - {fileID: 1121161916591391745}
+  - {fileID: 9089776358189069193}
+  - {fileID: 2085898352164858561}
   InitializedParentNetworkBehaviour: {fileID: 0}
   InitializedNestedNetworkObjects: []
   RuntimeParentNetworkBehaviour: {fileID: 0}
@@ -35237,7 +35241,7 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: 0
+  _initializedTimestamp: -8584114096545934099
 --- !u!114 &37050319885465183
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -35250,9 +35254,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94382c2acbe9db442ac752733d2775a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.Networking.NetworkShip
-  _componentIndexCache: 255
+  _componentIndexCache: 0
   _addedNetworkObject: {fileID: 8899225424909593775}
-  _networkObjectCache: {fileID: 0}
+  _networkObjectCache: {fileID: 8899225424909593775}
   targetMarkLifetime: 120
   maxTargetMarks: 8
   hullHalfExtents: {x: 6.5, y: 23}
@@ -35285,9 +35289,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70386c8e7dc2fa349b5fbedced097ba8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.Networking.NetworkCannon
-  _componentIndexCache: 255
+  _componentIndexCache: 1
   _addedNetworkObject: {fileID: 8899225424909593775}
-  _networkObjectCache: {fileID: 0}
+  _networkObjectCache: {fileID: 8899225424909593775}
 --- !u!114 &1564273186473263874
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -35312,9 +35316,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84d028074490225419bc64a5627af117, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.Networking.ExperimentalShipEquipment
-  _componentIndexCache: 255
+  _componentIndexCache: 2
   _addedNetworkObject: {fileID: 8899225424909593775}
-  _networkObjectCache: {fileID: 0}
+  _networkObjectCache: {fileID: 8899225424909593775}
   Enabled: 1
   Prefabs:
   - {fileID: 9151745374303548764, guid: 8c2b62242da5c724194f4819e075686f, type: 3}
@@ -35335,9 +35339,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6df9d34ddf933a14bb6dfd70459cd31e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.ShipDestruction
-  _componentIndexCache: 255
+  _componentIndexCache: 3
   _addedNetworkObject: {fileID: 8899225424909593775}
-  _networkObjectCache: {fileID: 0}
+  _networkObjectCache: {fileID: 8899225424909593775}
   Profile: {fileID: 11400000, guid: 4bad1fa1c50171f4dbfbc508cc4864b4, type: 2}
   Sections:
   - {fileID: 6732848802814008742}
@@ -67497,7 +67501,7 @@ Transform:
   m_GameObject: {fileID: 1734849139634465727}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.00000008940697, y: 7.82256, z: -10.421321}
+  m_LocalPosition: {x: 0, y: 7.999, z: -10.34}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -181355,8 +181359,8 @@ Transform:
   m_GameObject: {fileID: 5060049630392790095}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.00000008940697, y: 7.82256, z: -10.421321}
-  m_LocalScale: {x: 2.25, y: 2.25, z: 2.25}
+  m_LocalPosition: {x: 0, y: 7.999, z: -10.34}
+  m_LocalScale: {x: 1.69, y: 1.69, z: 1.69}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3313448606277398424}

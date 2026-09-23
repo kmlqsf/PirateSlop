@@ -16,25 +16,29 @@ namespace PirateSlop
         public float RopeDepth(float height) => TopLean * Mathf.Clamp01(height / Height);
         public bool CanGrab(Vector3 feet, float yaw, float pitch)
         {
-            if ((!RopeClimb && !BoardingAccess) || !Contains(feet, false)) return false;
             var p = transform.InverseTransformPoint(feet + Vector3.up * 1.4f);
+            if (p.z > 2.0f || p.z < -0.5f || Mathf.Abs(p.x) > HalfWidth + 0.6f || p.y < -1f || p.y > Height + 1f) return false;
             var target = transform.TransformPoint(new Vector3(Mathf.Clamp(p.x, -.6f, .6f), Mathf.Clamp(p.y, 0, Height + 1f), RopeDepth(p.y)));
             var origin = feet + Vector3.up * 1.4f;
             var delta = target - origin;
-            if (delta.magnitude > (BoardingAccess ? 2.3f : 1.65f) || Vector3.Dot(Quaternion.Euler(pitch, yaw, 0) * Vector3.forward, delta.normalized) < (BoardingAccess ? .25f : .65f)) return false;
-            foreach (var hit in Physics.RaycastAll(origin, delta.normalized, delta.magnitude, ~0, QueryTriggerInteraction.Ignore))
-                if (hit.collider.attachedRigidbody != null && hit.collider.attachedRigidbody != Body || hit.collider.GetComponentInParent<AdvancedPlayerController>() != null) continue;
-                else if (!hit.transform.IsChildOf(transform)) return false;
+            if (delta.magnitude > (BoardingAccess ? 2.5f : 1.85f) || Vector3.Dot(Quaternion.Euler(pitch, yaw, 0) * Vector3.forward, delta.normalized) < (BoardingAccess ? .15f : .55f)) return false;
             return true;
         }
         public Rigidbody Body { get; private set; }
-        void Awake() { Body = GetComponentInParent<Rigidbody>(); }
+        void Awake()
+        {
+            Body = GetComponentInParent<Rigidbody>();
+            var col = gameObject.AddComponent<BoxCollider>();
+            col.center = new Vector3(0, Height / 2 - 0.6f, 0f);
+            col.size = new Vector3(HalfWidth * 2, Height - 1.2f, 0.2f);
+            col.isTrigger = false;
+        }
         void OnEnable() { Active.Add(this); }
         void OnDisable() { Active.Remove(this); }
         public bool Contains(Vector3 feet, bool climbing)
         {
             var p = transform.InverseTransformPoint(feet);
-            float margin = climbing ? .35f : 0f;
+            float margin = climbing ? 1.5f : 0f;
             if (BoardingAccess)
                 return Mathf.Abs(p.x) <= HalfWidth + margin && p.y >= -1f && p.y <= Height + ExitClearance + .5f
                     && p.z <= 2.1f + margin && p.z >= (p.y > Height - 1.5f ? -ExitDepth - .5f : .15f - margin);

@@ -72,7 +72,7 @@ namespace PirateSlop
             bool visible = ((bell != null && bell.IsPulling) || weapon.AnimationEquipped || (equipment != null && equipment.Active && !equipment.Scoped)) && camera == motor.PlayerCamera && camera.enabled && !motor.IsThirdPerson;
             if (motor.SailPullLocked && camera == motor.PlayerCamera && camera.enabled && !motor.IsThirdPerson && !motor.IsDead)
                 visible |= inventory.PistolSelected || inventory.SabreSelected || equipment != null && equipment.Item >= PirateSlop.Networking.InventoryItem.Wine;
-            foreach (var r in renderers) r.forceRenderingOff = !visible || inventory.ControlItemHidden;
+            foreach (var r in renderers) r.forceRenderingOff = true;
         }
         void After(ScriptableRenderContext context, Camera camera) { if (renderers != null) foreach (var r in renderers) r.forceRenderingOff = true; }
         void LateUpdate()
