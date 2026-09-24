@@ -16,6 +16,7 @@ namespace PirateSlop
         public void ReceiveDamage(float amount, bool dead)
         {
             if (!Local) return;
+            GameAudio.LastDamageTime = Time.time;
             FirstPersonFeedback.Kick(transform.position, -transform.forward, Mathf.Clamp(amount / 1500f, .008f, .04f));
             flash = Mathf.Clamp01(flash + Mathf.Lerp(.35f, 1f, Mathf.Clamp01(amount / 50f)));
             if (dead || Time.unscaledTime >= nextHurtSound)
@@ -27,7 +28,11 @@ namespace PirateSlop
 
         public void ConfirmHit()
         {
-            if(Local) confirmedUntil=Time.unscaledTime+.16f;
+            if(Local) 
+            {
+                confirmedUntil = Time.unscaledTime + .16f;
+                GameAudio.LastDamageTime = Time.time;
+            }
             if (!Local || Time.unscaledTime < nextHitSound) return;
             nextHitSound = Time.unscaledTime + .06f;
             GameAudio.Play(SoundCue.HitConfirm, transform.position, 1f, true);

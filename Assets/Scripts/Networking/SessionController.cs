@@ -33,11 +33,11 @@ namespace PirateSlop.Networking
         public bool SessionBusy => connecting || playing || starting || (manager != null && manager.ServerManager.Started);
         public int SteamTeam(NetworkConnection conn) => !steamSession ? 0 : party.AdmittedTeam(manager.TransportManager.Transport.GetConnectionAddress(conn.ClientId));
         public bool AcceptSteamConnection(NetworkConnection conn) => !steamSession || SteamTeam(conn) > 0;
-        public void BeginSteam(bool host, ulong steamId)
+        public void BeginSteam(bool host, ulong steamId, bool environmentTest = false)
         {
             if (SessionBusy || party == null || !party.Available) return;
             steamSession = true; steamHost = steamId;
-            Begin(host, "127.0.0.1:" + Config.Port);
+            Begin(host, "127.0.0.1:" + Config.Port, environmentTest);
         }
         readonly Dictionary<int, NetworkPlayer> players = new();
         public IEnumerable<NetworkPlayer> AllPlayers => players.Values;
@@ -54,6 +54,8 @@ namespace PirateSlop.Networking
         void Awake() { Instance = this; Application.runInBackground = true; }
         void Start()
         {
+            var sc = GameObject.Find("SettingsCanvas");
+            if (sc != null) Destroy(sc);
             manager = GetComponent<NetworkManager>(); transport = GetComponent<Tugboat>();
             party = GetComponent<SteamParty>();
             MaxPlayers = Config.MaxPlayers; ProtocolVersion = Config.ProtocolVersion; SessionId = Guid.NewGuid().ToString("N");

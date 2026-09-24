@@ -189,9 +189,11 @@ namespace PirateSlop.Networking
             GUILayout.Label(Status);
             if (GUILayout.Button("Закрыть", GUILayout.Height(30))) inviteVisible = false;
         }
-        public void Launch()
+        bool launchEnvironmentTest;
+        public void Launch(bool environmentTest = false)
         {
             if (!CanLaunch()) return;
+            launchEnvironmentTest = environmentTest;
             Busy = true; pendingAt = Time.unscaledTime;
             matchCreated.Set(SteamMatchmaking.CreateLobby(ELobbyType.k_ELobbyTypePublic, session.MaxPlayers));
         }
@@ -213,11 +215,12 @@ namespace PirateSlop.Networking
             SteamMatchmaking.SetLobbyData(MatchLobby, "protocol", session.ProtocolVersion.ToString());
             SteamMatchmaking.SetLobbyData(MatchLobby, "host", SteamUser.GetSteamID().ToString());
             SteamMatchmaking.SetLobbyData(MatchLobby, "state", "loading");
+            if (launchEnvironmentTest) SteamMatchmaking.SetLobbyData(MatchLobby, "environment_test", "1");
             PublishMembership();
             PublishSession();
             joiningMatch = true;
             UpdateAdmissions();
-            session.BeginSteam(true, SteamUser.GetSteamID().m_SteamID);
+            session.BeginSteam(true, SteamUser.GetSteamID().m_SteamID, launchEnvironmentTest);
         }
         public void JoinSession(ulong id)
         {
@@ -302,6 +305,7 @@ namespace PirateSlop.Networking
         }
         public void LeaveSession()
         {
+            launchEnvironmentTest = false;
             matchCreated?.Cancel(); matchEntered?.Cancel(); Busy = false;
             if (Available && MatchLobby.m_SteamID != 0)
             {

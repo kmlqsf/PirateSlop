@@ -39,17 +39,24 @@ namespace PirateSlop.Networking
             if(MenuAction(x+width/2+5,y+235,width/2-5,party.IsReady(SteamUser.GetSteamID())?"Не готов":"Готов",true)) party.Ready(!party.IsReady(SteamUser.GetSteamID()));
             if(party.IsLeader)
             {
-                DrawBotToggle(x,y+297,width);
-                if(MenuAction(x,y+333,width,party.SeparateTeams?"Выйти в море против друзей":"Выйти в море всей командой",true)) party.Launch();
-                MenuText(new Rect(x,y+393,width,25),"Или ID сессии другого капитана:",true);
-                matchInput=GUI.TextField(new Rect(x,y+423,width-135,45),matchInput,20,menuInput);
-                if(MenuAction(x+width-125,y+423,125,"Войти") && ulong.TryParse(matchInput,out var match)) party.JoinSession(match);
+                float halfW=(width-10)*.5f;
+                if(MenuChoice(x,y+288,halfW,"Обычная карта",!useTestMap)) useTestMap=false;
+                if(MenuChoice(x+halfW+10,y+288,halfW,"Тестовая карта",useTestMap)) useTestMap=true;
+                if(!useTestMap) DrawBotToggle(x,y+338,width);
+                float launchY=!useTestMap?y+375:y+338;
+                if(MenuAction(x,launchY,width,party.SeparateTeams?"Выйти в море против друзей":"Выйти в море всей командой",true)) party.Launch(useTestMap);
+                float joinY=launchY+58;
+                MenuText(new Rect(x,joinY,width,25),"Или ID сессии другого капитана:",true);
+                matchInput=GUI.TextField(new Rect(x,joinY+24,width-135,45),matchInput,20,menuInput);
+                if(MenuAction(x+width-125,joinY+24,125,"Войти") && ulong.TryParse(matchInput,out var match)) party.JoinSession(match);
             }
-            else MenuText(new Rect(x,y+310,width,60),party.SeparateTeams?"Капитан выберет сессию. Каждый участник получит свой корабль и будет противником остальных.":"Капитан выберет сессию. Вся команда отправится на одном корабле.",true);
+            else MenuText(new Rect(x,y+295,width,60),party.SeparateTeams?"Капитан выберет сессию. Каждый участник получит свой корабль и будет противником остальных.":"Капитан выберет сессию. Вся команда отправится на одном корабле.",true);
             GUI.enabled=true;
-            if(party.MatchLobby.m_SteamID != 0 && MenuLink(new Rect(x,y+483,width,30),"Копировать ID сессии: "+party.MatchLobby)) GUIUtility.systemCopyBuffer=party.MatchLobby.ToString();
-            if(!SessionBusy && MenuLink(new Rect(x,y+523,width*.6f,30),"Покинуть команду")) { party.Leave(); menuPage=0; }
-            if(MenuLink(new Rect(x+width*.7f,y+523,width*.3f,30),"Назад")) menuPage=0;
+            float bottomY=party.IsLeader?(!useTestMap?y+508:y+470):y+370;
+            if(party.MatchLobby.m_SteamID != 0 && MenuLink(new Rect(x,bottomY,width,30),"Копировать ID сессии: "+party.MatchLobby)) GUIUtility.systemCopyBuffer=party.MatchLobby.ToString();
+            float linkY=party.MatchLobby.m_SteamID != 0 ? bottomY + 34 : bottomY;
+            if(!SessionBusy && MenuLink(new Rect(x,linkY,width*.6f,30),"Покинуть команду")) { party.Leave(); menuPage=0; }
+            if(MenuLink(new Rect(x+width*.7f,linkY,width*.3f,30),"Назад")) menuPage=0;
         }
     }
 }

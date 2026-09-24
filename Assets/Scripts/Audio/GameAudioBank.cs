@@ -17,6 +17,7 @@ namespace PirateSlop
         }
         public Entry[] Entries;
         public AudioClip Ocean, Wind, DeckCreaks;
-        [Range(0f, 1f)] public float Master = .8f, Effects = .8f, Ambience = .25f, Interface = .45f;
+        public AudioClip MainMenuMusic, SailingMusic, CombatMusic;
+        [Range(0f, 1f)] public float Master = .8f, Effects = .8f, Ambience = .25f, Interface = .45f, Music = .2f;
     }
 }

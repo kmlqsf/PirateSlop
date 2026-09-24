@@ -44,6 +44,11 @@ namespace PirateSlop.EditorTools
             water.CopyPropertiesFromMaterial(ocean);
             water.name = "MenuSea";
             water.SetFloat("_UseWaveTime", 0f);
+            water.SetFloat("_SunStrength", 3.2f);
+            water.SetFloat("_SunSharpness", 32f);
+            water.SetFloat("_ReflectionStrength", 0.9f);
+            water.SetFloat("_Smouthness", 0.98f);
+            water.SetFloat("_NormalStrength", 0.38f);
             EditorUtility.SetDirty(water);
             backdrop.Water = water;
             var sea = backdrop.Content.transform.Find("MenuSea");
@@ -60,24 +65,44 @@ namespace PirateSlop.EditorTools
             var cameraData = backdrop.View.GetComponent<UniversalAdditionalCameraData>();
             if (cameraData != null) { cameraData.requiresDepthTexture = true; cameraData.requiresColorTexture = true; }
             backdrop.PositionView(0f);
-            RenderSettings.skybox = AssetDatabase.LoadAssetAtPath<Material>(AssetDatabase.GUIDToAssetPath("b09fc253e00ba79409aed387f6999cf5"));
-            RenderSettings.fogColor = new Color(.73f,.81f,.86f);
-            RenderSettings.fogDensity = .0016f;
+            RenderSettings.skybox = AssetDatabase.LoadAssetAtPath<Material>("Assets/Materials/MaritimeSky.mat");
+            RenderSettings.fog = true;
+            RenderSettings.fogColor = new Color(.88f,.58f,.38f);
+            RenderSettings.fogDensity = .0009f;
             RenderSettings.ambientMode = AmbientMode.Trilight;
-            RenderSettings.ambientSkyColor = new Color(.78f,.84f,.9f);
-            RenderSettings.ambientEquatorColor = new Color(.65f,.73f,.79f);
-            RenderSettings.ambientGroundColor = new Color(.4f,.47f,.52f);
-            RenderSettings.ambientIntensity = 1.15f;
+            RenderSettings.ambientSkyColor = new Color(.78f,.48f,.42f);
+            RenderSettings.ambientEquatorColor = new Color(.85f,.52f,.32f);
+            RenderSettings.ambientGroundColor = new Color(.14f,.16f,.22f);
+            RenderSettings.ambientIntensity = 1.25f;
             foreach (var root in scene.GetRootGameObjects())
             {
                 if (root.name != "MenuLight") continue;
                 var light = root.GetComponent<Light>();
-                light.color = new Color(1f,.89f,.72f);
-                light.intensity = 2.2f;
-                light.transform.rotation = Quaternion.Euler(35f,-45f,0);
+                light.color = new Color(1f,.60f,.28f);
+                light.intensity = 3.4f;
+                light.transform.rotation = Quaternion.Euler(2.8f,137f,0);
+                light.shadows = LightShadows.Soft;
+                light.shadowStrength = 0.95f;
                 light.cullingMask = 1 << 30;
                 RenderSettings.sun = light;
             }
+            var existingBeam = backdrop.Content.transform.Find("ShipSunBeam");
+            GameObject beamObj = existingBeam != null ? existingBeam.gameObject : new GameObject("ShipSunBeam");
+            beamObj.name = "ShipSunBeam";
+            beamObj.layer = 30;
+            beamObj.transform.SetParent(backdrop.Content.transform, false);
+            beamObj.transform.position = backdrop.Ship.position + new Vector3(-25f, 32f, 30f);
+            beamObj.transform.rotation = Quaternion.Euler(26f, 138f, 0f);
+            var spot = beamObj.GetComponent<Light>();
+            if (spot == null) spot = beamObj.AddComponent<Light>();
+            spot.type = LightType.Spot;
+            spot.range = 80f;
+            spot.spotAngle = 65f;
+            spot.innerSpotAngle = 35f;
+            spot.color = new Color(1f, 0.68f, 0.32f);
+            spot.intensity = 6.5f;
+            spot.shadows = LightShadows.Soft;
+            spot.cullingMask = 1 << 30;
             EditorUtility.SetDirty(backdrop);
             AssetDatabase.SaveAssetIfDirty(water);
             AssetDatabase.SaveAssetIfDirty(sea.GetComponent<MeshFilter>().sharedMesh);

@@ -21,6 +21,8 @@ namespace PirateSlop
         float cabinBlend, underwaterBlend, environmentAt, cabinTarget, underwaterTarget;
         float underwaterVolume;
         int nextVoice;
+        AudioSource music;
+        public static float LastDamageTime = -1000f;
 
         static GameAudio Get()
         {
@@ -29,6 +31,7 @@ namespace PirateSlop
             var bank = Resources.Load<GameAudioBank>("GameAudioBank");
             if (bank == null) return null;
             bank.Master = PlayerPrefs.GetFloat("AudioMaster",bank.Master);
+            bank.Music = PlayerPrefs.GetFloat("AudioMusic", 0.2f);
             bank.Effects = PlayerPrefs.GetFloat("AudioEffects",bank.Effects);
             bank.Ambience = PlayerPrefs.GetFloat("AudioAmbience",bank.Ambience);
             bank.Interface = PlayerPrefs.GetFloat("AudioInterface",bank.Interface);
@@ -60,6 +63,9 @@ namespace PirateSlop
                 instance.flooding.clip = bubbles.Clips[0];
                 instance.underwaterVolume = bubbles.Volume;
             }
+            instance.music = instance.Source("Music", true);
+            instance.music.spatialBlend = 0f;
+            instance.music.GetComponent<SpatialAudioTone>().Environment = false;
             return instance;
         }
         AudioSource Source(string name, bool loop)
@@ -170,8 +176,51 @@ namespace PirateSlop
         }
         void Update()
         {
+            UpdateMusic();
             if (Time.unscaledTime - lastAmbience < .3f) return;
             ocean.Stop(); wind.Stop(); deck.Stop(); underwater.Stop(); flooding.Stop();
+        }
+        void UpdateMusic()
+        {
+            bool isMenu = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "NetworkMenu";
+            AudioClip targetClip = null;
+            float targetVolume = bank.Master * bank.Music;
+            
+            if (isMenu)
+            {
+                targetClip = bank.MainMenuMusic;
+            }
+            else
+            {
+                if (Time.time < LastDamageTime + 20f)
+                {
+                    targetClip = bank.CombatMusic;
+                }
+                else
+                {
+                    targetClip = bank.SailingMusic;
+                }
+            }
+            
+            if (music.clip != targetClip)
+            {
+                if (music.volume > 0.05f && music.clip != null)
+                {
+                    music.volume = Mathf.MoveTowards(music.volume, 0f, Time.unscaledDeltaTime * 0.5f);
+                }
+                else
+                {
+                    music.clip = targetClip;
+                    music.volume = 0f;
+                    if (targetClip != null) music.Play();
+                    else music.Stop();
+                }
+            }
+            else if (targetClip != null)
+            {
+                if (!music.isPlaying) music.Play();
+                music.volume = Mathf.MoveTowards(music.volume, targetVolume, Time.unscaledDeltaTime * 0.5f);
+            }
         }
         void OnDestroy() { if (instance == this) instance = null; }
     }

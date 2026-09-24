@@ -310,6 +310,17 @@ namespace PirateSlop
             if (sections.TryGetValue(impact.SectionId, out var section)) section.Apply(impact.Current, impact.RemovedFragments);
             visuals?.Present(impact);
             Hit?.Invoke(impact);
+            if (impact.BaseDamage > 0f)
+            {
+                foreach (var p in PirateSlop.Networking.NetworkPlayer.Active)
+                {
+                    if (p.IsOwner)
+                    {
+                        if (p.Ship != null && p.Ship.gameObject == gameObject) GameAudio.LastDamageTime = Time.time;
+                        if (impact.AttackerId != 0 && p.ParticipantId.Value == impact.AttackerId) GameAudio.LastDamageTime = Time.time;
+                    }
+                }
+            }
         }
         void SetBreach(ShipSectionSnapshot entry)
         {
