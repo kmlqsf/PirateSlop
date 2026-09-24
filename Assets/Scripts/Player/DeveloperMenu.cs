@@ -14,6 +14,9 @@ namespace PirateSlop
         string message = "";
         Vector2 scroll;
         int quantity;
+        float zoneSpeedMultiplier = 1f;
+        float fogMultiplier = 1f;
+        float originalFogDensity = -1f;
         static readonly int[] quantities = { 1, 5, 20 };
         static readonly InventoryItem[] items = { InventoryItem.Cannon, InventoryItem.Pistol, InventoryItem.Sabre, InventoryItem.Rod, InventoryItem.Fish, InventoryItem.Swordfish, InventoryItem.Pufferfish, InventoryItem.Cannonball, InventoryItem.FireCannonball, InventoryItem.IceCannonball, InventoryItem.PushCannonball, InventoryItem.BoomerangCannonball };
         static readonly string[] names = { "Пушка", "Пистолет", "Сабля", "Удочка", "Рыба", "Рыба-меч", "Рыба-фугу", "Обычное ядро", "Огненное ядро", "Ледяное ядро", "Отталкивающее ядро", "Бумеранг" };
@@ -39,6 +42,56 @@ namespace PirateSlop
             Button("Создать корабль рядом", 0);
             Button("Создать тренировочную мишень", 1);
             Button("Создать врага-манекена перед собой", 13);
+            GUILayout.Label("Управление (Зона и Корабль)");
+            GUILayout.BeginHorizontal();
+            GUILayout.Label($"Скорость зоны: {zoneSpeedMultiplier:0.0}x", GUILayout.Width(150));
+            zoneSpeedMultiplier = GUILayout.HorizontalSlider(zoneSpeedMultiplier, 0.1f, 100f);
+            if (GUILayout.Button("Применить", GUILayout.Width(80))) network.DeveloperCommand(16, Mathf.RoundToInt(600f / zoneSpeedMultiplier));
+            GUILayout.EndHorizontal();
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button("Паруса на макс.", GUILayout.Height(29))) network.DeveloperCommand(17);
+            if (GUILayout.Button("Паруса на мин.", GUILayout.Height(29))) network.DeveloperCommand(18);
+            GUILayout.EndHorizontal();
+            GUILayout.BeginHorizontal();
+            GUILayout.Label($"Туман: {fogMultiplier:0.0}x", GUILayout.Width(150));
+            float newFog = GUILayout.HorizontalSlider(fogMultiplier, 0f, 3f);
+            if (Mathf.Abs(newFog - fogMultiplier) > 0.01f)
+            {
+                if (originalFogDensity < 0f) originalFogDensity = RenderSettings.fogDensity;
+                fogMultiplier = newFog;
+                RenderSettings.fogDensity = originalFogDensity * fogMultiplier;
+                RenderSettings.fog = fogMultiplier > 0.01f;
+                
+                // For linear fog
+                RenderSettings.fogStartDistance = fogMultiplier > 0.01f ? 200f : 99999f;
+                RenderSettings.fogEndDistance = fogMultiplier > 0.01f ? 1500f * (1.001f - fogMultiplier / 4f) : 99999f;
+                
+                // For URP Volume components (Fog, Volumetric Fog, etc.)
+                foreach (var vol in FindObjectsByType<UnityEngine.Rendering.Volume>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+                {
+                    if (vol.profile != null)
+                    {
+                        foreach (var comp in vol.profile.components)
+                        {
+                            string n = comp.GetType().Name.ToLower();
+                            if (n.Contains("fog") || n.Contains("atmospher"))
+                            {
+                                comp.active = fogMultiplier > 0.01f;
+                            }
+                        }
+                    }
+                }
+                // For AERO Volumetric Fog
+                foreach (var mat in Resources.FindObjectsOfTypeAll<Material>())
+                {
+                    if (mat.name.Contains("Volumetric Fog"))
+                    {
+                        mat.SetFloat("_Density", fogMultiplier);
+                    }
+                }
+            }
+            GUILayout.EndHorizontal();
+            
             if (GUILayout.Button("Trigger Kraken", GUILayout.Height(29)))
             {
                 if (network != null) network.DeveloperCommand(15);

@@ -24,6 +24,42 @@ namespace PirateSlop.Networking
                 DeveloperResultTargetRpc(Owner, !changed ? "Зона ещё не запущена." : session.StormPaused ? "Зона остановлена. Сужение и урон на паузе." : "Зона продолжает сужаться. Урон включён.");
                 return;
             }
+            if (command == 16)
+            {
+                if (session != null) session.SetStormDuration(count);
+                DeveloperResultTargetRpc(Owner, "Скорость зоны применена.");
+                return;
+            }
+            if (command == 17 || command == 18)
+            {
+                var player = GetComponent<NetworkPlayer>();
+                var ship = player != null ? player.Ship : null;
+                if (ship == null)
+                {
+                    float minDist = float.MaxValue;
+                    foreach (var s in NetworkShip.ActiveShips)
+                    {
+                        if (s == null) continue;
+                        float d = Vector3.Distance(transform.position, s.transform.position);
+                        if (d < minDist) { minDist = d; ship = s; }
+                    }
+                }
+                if (ship != null)
+                {
+                    var sailSystem = ship.GetComponent<SailSystem>();
+                    if (sailSystem != null)
+                    {
+                        float val = command == 17 ? 1f : 0f;
+                        var tensions = sailSystem.CaptureTensions();
+                        var owners = sailSystem.CaptureOwners();
+                        for (int i = 0; i < tensions.Length; i++) { tensions[i] = val; owners[i] = 0; }
+                        sailSystem.ApplyRopes(tensions, owners);
+                        DeveloperResultTargetRpc(Owner, command == 17 ? "Паруса опущены (макс скорость)." : "Паруса подняты (мин скорость).");
+                    }
+                }
+                else DeveloperResultTargetRpc(Owner, "Корабль не найден.");
+                return;
+            }
             if (command == 15)
             {
                 var player = GetComponent<NetworkPlayer>();

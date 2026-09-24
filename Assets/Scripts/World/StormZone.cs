@@ -5,7 +5,7 @@ namespace PirateSlop.World
     public sealed class StormZone : MonoBehaviour
     {
         float elapsed, receivedAt, duration = 600, startRadius;
-        public const float FinalRadius = 100f;
+        public const float FinalRadius = 250f;
         public static StormZone Instance { get; private set; }
         Networking.NetworkPlayer localPlayer;
         public Networking.NetworkShip LocalShip => localPlayer != null ? localPlayer.Ship : null;
@@ -35,6 +35,8 @@ namespace PirateSlop.World
             var prefab = Resources.Load<GameObject>("BRZoneVisual");
             if (prefab != null) Instantiate(prefab, transform);
             else Debug.LogError("BRZoneVisual prefab is missing.");
+            
+            gameObject.AddComponent<WhirlpoolVFX>();
         }
 
         void Update()
@@ -42,7 +44,15 @@ namespace PirateSlop.World
             if (localPlayer == null)
                 foreach (var player in Networking.NetworkPlayer.Active)
                     if (player.IsOwner) { localPlayer = player; break; }
-            if (OceanSurface.Instance != null) OceanSurface.Instance.WaveScale = Mathf.Lerp(.06f, 2.5f, Progress * Progress);
+            if (OceanSurface.Instance != null)
+            {
+                OceanSurface.Instance.WaveScale = Mathf.Lerp(.06f, 0.08f, Progress);
+                float whirlpoolIntensity = Progress >= 0.9f ? Mathf.Clamp01((Progress - 0.9f) * 10f) : 0f;
+                OceanSurface.Instance.WhirlpoolDepth = Mathf.Lerp(0f, 120f, whirlpoolIntensity);
+                OceanSurface.Instance.WhirlpoolRadius = FinalRadius;
+                OceanSurface.Instance.WhirlpoolTwist = 2f;
+                OceanSurface.Instance.WhirlpoolCenter = Center;
+            }
         }
         void OnGUI()
         {
@@ -65,7 +75,11 @@ namespace PirateSlop.World
             if (Instance == this) Instance = null;
 
 
-            if (OceanSurface.Instance != null) OceanSurface.Instance.WaveScale = .06f;
+            if (OceanSurface.Instance != null) OceanSurface.Instance.WaveScale = .06f; OceanSurface.Instance.WhirlpoolDepth = 0f;
         }
     }
 }
+
+
+
+

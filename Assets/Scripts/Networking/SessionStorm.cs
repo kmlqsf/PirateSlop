@@ -18,10 +18,30 @@ namespace PirateSlop.Networking
         float stormPausedAt;
         public bool StormPaused => manager != null && manager.ServerManager.Started ? stormPaused : storm != null && storm.Paused;
         float StormElapsed => (stormPaused ? stormPausedAt : Time.time) - stormStarted;
+                public float stormDuration = 600f;
         float stormStarted, stormTick, stormRadius;
+
+        public void SetStormDuration(float newDuration)
+        {
+            if (!stormRunning) return;
+            // Adjust stormStarted so that the current progress is preserved?
+            // Or just change duration. If we just change duration, progress jumps.
+            // Preserving progress:
+            // current_progress = StormElapsed / old_duration
+            // new_elapsed = current_progress * newDuration
+            // stormStarted = Time.time - new_elapsed
+            float progress = Mathf.Clamp01(StormElapsed / stormDuration);
+            stormDuration = Mathf.Max(1f, newDuration);
+            float newElapsed = progress * stormDuration;
+            if (stormPaused) stormPausedAt = stormStarted + newElapsed;
+            else stormStarted = Time.time - newElapsed;
+            
+            stormTick = Time.time;
+            manager.ServerManager.Broadcast(CurrentStorm());
+        }
         StormZone storm;
         public float SafeRadius(float ahead = 0f) => stormRunning
-            ? Mathf.Lerp(stormRadius, StormZone.FinalRadius, Mathf.Clamp01((StormElapsed + (stormPaused ? 0 : ahead)) / 600f))
+            ? Mathf.Lerp(stormRadius, StormZone.FinalRadius, Mathf.Clamp01((StormElapsed + (stormPaused ? 0 : ahead)) / stormDuration))
             : ProceduralWorld.Instance.Layout.Radius;
 
         void StartStorm()
@@ -37,7 +57,7 @@ namespace PirateSlop.Networking
         {
             Elapsed = StormElapsed,
             Paused = stormPaused,
-            Duration = 600f,
+            Duration = stormDuration,
             StartRadius = stormRadius
         };
 
@@ -87,3 +107,4 @@ namespace PirateSlop.Networking
         }
     }
 }
+

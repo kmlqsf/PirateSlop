@@ -8,6 +8,10 @@ namespace PirateSlop
         public static OceanSurface Instance { get; private set; }
         public float WaveScale = 1f;
         public float SeaLevel;
+        public Vector3 WhirlpoolCenter;
+        public float WhirlpoolRadius;
+        public float WhirlpoolDepth;
+        public float WhirlpoolTwist;
         public Material WaterMaterial;
         static readonly Vector4[] Waves = {
             new Vector4(.94f, .342f, .65f, 42f),
@@ -33,14 +37,25 @@ namespace PirateSlop
             timeOffset = synchronized ? Mathf.Lerp(timeOffset, offset, .05f) : offset;
             synchronized = true;
         }
+
+        public float GetWhirlpoolHeight(Vector3 position)
+        {
+            if (WhirlpoolRadius <= 0f) return 0f;
+            float dist = Vector2.Distance(new Vector2(position.x, position.z), new Vector2(WhirlpoolCenter.x, WhirlpoolCenter.z));
+            float t = Mathf.Clamp01(dist / WhirlpoolRadius);
+            float falloff = 1f - t;
+            return -WhirlpoolDepth * (falloff * falloff);
+        }
+
         public float Height(Vector3 position)
         {
+            float wHeight = GetWhirlpoolHeight(position);
             if (simpleWater)
             {
                 float t = WaveTime * simpleWaveSpeed;
                 float first = Mathf.Sin(position.x * simpleWaveScale + t);
                 float second = Mathf.Sin((position.z + position.x * .5f) * simpleWaveScale * .8f - t * 1.3f);
-                return SeaLevel + (first + second) * .5f * simpleWaveStrength;
+                return SeaLevel + (first + second) * .5f * simpleWaveStrength + wHeight;
             }
             float height = SeaLevel;
             foreach (var w in Waves)
@@ -48,7 +63,7 @@ namespace PirateSlop
                 float k = 2f * Mathf.PI / w.w;
                 height += WaveScale * w.z * Mathf.Sin(k * (w.x * position.x + w.y * position.z) - Mathf.Sqrt(9.81f * k) * WaveTime);
             }
-            return height;
+            return height + wHeight;
         }
         void Awake()
         {
@@ -94,6 +109,10 @@ namespace PirateSlop
             WaterMaterial.SetVectorArray("_Waves", Waves);
             WaterMaterial.SetFloat("_WaveTime", WaveTime);
             WaterMaterial.SetFloat("_WaveScale", WaveScale);
+            WaterMaterial.SetVector("_WhirlpoolCenter", WhirlpoolCenter);
+            WaterMaterial.SetFloat("_WhirlpoolRadius", WhirlpoolRadius);
+            WaterMaterial.SetFloat("_WhirlpoolDepth", WhirlpoolDepth);
+            WaterMaterial.SetFloat("_WhirlpoolTwist", WhirlpoolTwist);
             ships = ShipController.ActiveControllers.ToArray();
             int count = 0;
             if (ships != null) foreach (var ship in ships)
@@ -119,3 +138,4 @@ namespace PirateSlop
         void OnDestroy() { if (Instance == this) Instance = null; if (mesh != null) Destroy(mesh); if (runtimeMaterial != null) Destroy(runtimeMaterial); }
     }
 }
+

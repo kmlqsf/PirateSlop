@@ -177,6 +177,29 @@ public class ShipController : MonoBehaviour
         yaw += yawDelta;
         bank = Mathf.Lerp(bank, -rudder * maxBankAngle * factor + destructionHeel, 1 - Mathf.Exp(-bankResponse * dt));
         var next = rb.position + Quaternion.Euler(0, yaw, 0) * Vector3.forward * speed * dt + (cannonShove + pushVelocity) * dt; next.y = waterHeight;
+        if (OceanSurface.Instance != null && OceanSurface.Instance.WhirlpoolDepth > 0f && !isAnchored)
+        {
+            float w_R = OceanSurface.Instance.WhirlpoolRadius;
+            Vector2 shipPosXZ = new Vector2(next.x, next.z);
+            Vector2 centerXZ = new Vector2(OceanSurface.Instance.WhirlpoolCenter.x, OceanSurface.Instance.WhirlpoolCenter.z);
+            float w_dist = Vector2.Distance(shipPosXZ, centerXZ);
+            if (w_dist < w_R && w_dist > 1f)
+            {
+                float w_t = Mathf.Clamp01(w_dist / w_R);
+                  float tangentSpeed = (1f - w_t) * 15f; 
+                  float inwardSpeed = (1f - w_t) * 6f;   
+                  
+                  Vector2 dirToCenter = (centerXZ - shipPosXZ).normalized;
+                  Vector2 tangent = new Vector2(-dirToCenter.y, dirToCenter.x);
+                  
+                  Vector2 velocityAdd = dirToCenter * inwardSpeed + tangent * tangentSpeed;
+                  next.x += velocityAdd.x * dt;
+                  next.z += velocityAdd.y * dt;
+                  
+                  float targetYaw = Mathf.Atan2(tangent.x, tangent.y) * Mathf.Rad2Deg;
+                  yaw = Mathf.MoveTowardsAngle(yaw, targetYaw, (1f - w_t) * 10f * dt);
+            }
+        }
         if (isAnchored)
         {
             Vector3 anchorFlat = new Vector3(anchorPoint.x, 0, anchorPoint.z);
@@ -284,4 +307,5 @@ public class ShipController : MonoBehaviour
         speed *= .35f;
     }
 }
+
 
