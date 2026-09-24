@@ -16,7 +16,7 @@ namespace PirateSlop
             public float Distance = 25f;
         }
         public Entry[] Entries;
-        public AudioClip Ocean, Wind, DeckCreaks;
+        public AudioClip Ocean, Wind, DeckCreaks, Storm;
         [Range(0f, 1f)] public float Master = .8f, Effects = .8f, Ambience = .25f, Interface = .45f;
     }
 }

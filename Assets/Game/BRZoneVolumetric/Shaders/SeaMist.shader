@@ -4,6 +4,7 @@ Shader "PirateSlop/SeaMist"
     {
         _MistColor("Mist Color", Color) = (.46,.54,.58,1)
         _Density("Density", Range(0,.04)) = .028
+        _DensityMultiplier("Density Multiplier", Float) = 1
         _Height("Height", Float) = 100
         _MaxOpacity("Maximum Opacity", Range(0,1)) = .995
         _SeaLevel("Sea Level", Float) = 0
@@ -23,7 +24,7 @@ Shader "PirateSlop/SeaMist"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareDepthTexture.hlsl"
             CBUFFER_START(UnityPerMaterial)
             half4 _MistColor;
-            float _Density, _Height, _MaxOpacity, _SeaLevel;
+            float _Density, _Height, _MaxOpacity, _SeaLevel, _DensityMultiplier;
             CBUFFER_END
             float4 _FogFlashes[16];
             int _FogFlashCount;
@@ -82,7 +83,8 @@ Shader "PirateSlop/SeaMist"
                     float3 p=_WorldSpaceCameraPos+direction*(320+tail*(j+.5)/8);
                     opticalDepth+=exp(-max(0,p.y-_SeaLevel)/max(1,_Height))*tail*.40/8*ClearMask(p);
                 }
-                float opacity=min(_MaxOpacity,1-exp(-opticalDepth*_Density));
+                float density = _Density * _DensityMultiplier;
+                float opacity=min(_MaxOpacity,1-exp(-opticalDepth*density));
                 float3 glow=0;
                 [loop] for(int k=0;k<_FogFlashCount;k++)
                 {
@@ -95,7 +97,7 @@ Shader "PirateSlop/SeaMist"
                     float halo=exp(-lateralSq/(radius*radius)*2.5);
                     float core=exp(-lateralSq/4)*.45;
                     float strength=_FogFlashes[k].w*exp(-range/1100)*smoothstep(8,35,range);
-                    glow+=float3(1,.43,.12)*(halo+core)*strength*.9*saturate(opticalDepth*_Density*3);
+                    glow+=float3(1,.43,.12)*(halo+core)*strength*.9*saturate(opticalDepth*density*3);
                 }
                 return half4(_MistColor.rgb*opacity+glow,opacity);
             }

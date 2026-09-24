@@ -8,11 +8,11 @@ namespace PirateSlop
     {
         public Material BoltMaterial;
         [Min(2)] public float LightningInterval = 4;
-        [Range(0, 1)] public float BoltChance = .15f;
+        [Range(0, 1)] public float BoltChance = .85f;
         [Range(0, 3)] public float LightningIntensity = .65f;
         static readonly int LightningId = Shader.PropertyToID("_StormLightning");
         static readonly int LightningColorId = Shader.PropertyToID("_StormLightningColor");
-        readonly LineRenderer[] bolts = new LineRenderer[3];
+        readonly LineRenderer[] bolts = new LineRenderer[5];
         readonly Vector3[] boltPath = new Vector3[33];
         readonly Vector3[] branchPath = new Vector3[13];
         MaterialPropertyBlock properties;
@@ -44,8 +44,8 @@ namespace PirateSlop
                 line.useWorldSpace = true;
                 line.alignment = LineAlignment.View;
                 line.textureMode = LineTextureMode.Stretch;
-                line.numCornerVertices = 1;
-                line.numCapVertices = 1;
+                line.numCornerVertices = 3;
+                line.numCapVertices = 3;
                 line.shadowCastingMode = ShadowCastingMode.Off;
                 line.receiveShadows = false;
                 line.enabled = false;
@@ -73,7 +73,7 @@ namespace PirateSlop
                 BeginLightning(storm, center);
             }
             float age = (Time.time - flashStarted) / Mathf.Max(.01f, flashDuration);
-            float envelope = age < 1 ? Mathf.Exp(-age * 8) + .16f * Mathf.Exp(-Mathf.Pow((age - .24f) * 22, 2)) : 0;
+            float envelope = age >= 0 && age < 1 ? Mathf.Exp(-age * 5) + .7f * Mathf.Exp(-Mathf.Pow((age - .24f) * 28, 2)) + .35f * Mathf.Exp(-Mathf.Pow((age - .48f) * 30, 2)) : 0;
             float strength = Mathf.Clamp01(envelope) * LightningIntensity;
             Shader.SetGlobalVector(LightningId, new Vector4(flashPosition.x, flashPosition.y, flashPosition.z, strength));
             for (int i = 0; i < bolts.Length; i++)
@@ -81,7 +81,7 @@ namespace PirateSlop
                 var line = bolts[i];
                 line.SetPropertyBlock(properties);
                 line.enabled = showBolts && strength > .008f && BoltMaterial != null;
-                var color = new Color(.77f, .83f, .92f, Mathf.Clamp01(strength * (i == 0 ? 1 : .65f)));
+                var color = new Color(.58f, .76f, 1f, Mathf.Clamp01(strength * (i == 0 ? 1.5f : .9f)));
                 line.startColor = color;
                 line.endColor = new Color(color.r, color.g, color.b, color.a * .55f);
             }
@@ -128,18 +128,19 @@ namespace PirateSlop
             }
             bolts[0].positionCount = boltPath.Length;
             bolts[0].SetPositions(boltPath);
-            float width = Mathf.Clamp(storm.StormHeight * .004f, .45f, 1.2f);
+            float width = Mathf.Clamp(storm.StormHeight * .009f, 1.2f, 2.8f);
             bolts[0].startWidth = width;
             bolts[0].endWidth = width * .3f;
             for (int branch = 1; branch < bolts.Length; branch++)
             {
                 int root = 8 + branch * 5;
                 Vector3 origin = boltPath[root];
-                float direction = branch == 1 ? 1 : -1;
+                float direction = branch % 2 == 1 ? 1 : -1;
+                float length = 18f + Next01() * 30f;
                 for (int i = 0; i < branchPath.Length; i++)
                 {
                     float u = i / (float)(branchPath.Length - 1);
-                    branchPath[i] = origin + tangent * (direction * u * 23 + (Next01() - .5f) * 5 * u) - Vector3.up * u * 26 + radial * (Next01() - .5f) * 4 * u;
+                    branchPath[i] = origin + tangent * (direction * u * length + (Next01() - .5f) * 5 * u) - Vector3.up * u * length * .8f + radial * (Next01() - .5f) * 4 * u;
                 }
                 bolts[branch].positionCount = branchPath.Length;
                 bolts[branch].SetPositions(branchPath);
@@ -148,7 +149,7 @@ namespace PirateSlop
             }
             flashPosition = boltPath[12];
             flashStarted = Time.time;
-            flashDuration = .3f + Next01() * .2f;
+            flashDuration = .5f + Next01() * .2f;
             showBolts = Next01() < BoltChance;
         }
 

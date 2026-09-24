@@ -135,7 +135,7 @@ namespace PirateSlop.Networking
                 AimServerRpc(aim, motor.AimDirection);
             }
             if (!can || mouse == null) { if (action.Value == 2) CancelServerRpc(); return; }
-            if (Item == InventoryItem.HolyGrenade) return;
+            if (Item == InventoryItem.HolyGrenade || Item == InventoryItem.Spyglass) return;
             Vector3 eyeOffset = motor.PlayerCamera.transform.position-transform.position;
             if (keyboard != null && keyboard.rKey.wasPressedThisFrame && Firearm) UseServerRpc(1, motor.AimDirection, eyeOffset,++localSequence,aim);
             if (mouse.leftButton.wasPressedThisFrame && !pendingShot && !inventory.InteractionUsed && !hands.CanPickUpBall() && Time.time>=nextLocalFire && (!Firearm || handling.Ready))
@@ -282,6 +282,7 @@ namespace PirateSlop.Networking
                     visual.localRotation = Quaternion.identity;
                     visual.localPosition = new Vector3(0, -.05f, Item == InventoryItem.Swordfish ? .4f : .05f);
                 }
+                else if (Item == InventoryItem.Spyglass) { visual.localRotation = Quaternion.identity; visual.localPosition = new Vector3(0, -.02f, .18f); }
                 else if (Firearm) { visual.localRotation = Quaternion.Euler(0, 90, 0); visual.localPosition = new Vector3(0, -.04f, .22f); }
                 else { visual.localRotation = Quaternion.Euler(0, 180, 0); visual.localPosition = new Vector3(0, Item == InventoryItem.BombParrot ? -.16f : -.09f, 0); visual.localScale *= Item == InventoryItem.BombParrot ? .65f : 1f; }
             }
@@ -350,6 +351,7 @@ namespace PirateSlop.Networking
             if(IsOwner && WaterRunning) PirateHudStyle.Label(new Rect(28,140,270,30),"Хождение по воде: "+waterRunRemaining.Value+" с",PirateHudStyle.Paper);
             if (!IsOwner || !Active || !motor.InputActive) return;
             if(Scoped) DrawScope();
+            if (Item == InventoryItem.Spyglass) { ContextPrompt.Offer("ПОДЗОРНАЯ ТРУБА · удерживать ПКМ — смотреть · колесо — зум", 20); return; }
             if (Item == InventoryItem.HolyGrenade) { ContextPrompt.Offer("СВЯТАЯ ГРАНАТА · ПКМ — фитиль 3 с · удерживать ЛКМ — прицел · отпустить — бросок", 20); return; }
             if(Firearm || Item == InventoryItem.Pufferfish || Item == InventoryItem.Swordfish) return;
             string hint = action.Value == 2 ? "Пьём…" : Item == InventoryItem.GrapplingHook ? "Удерживать ЛКМ — крюк (35 м) · Отпустить ЛКМ — разорвать зацеп" : Item == InventoryItem.Wine ? "Удерживать ЛКМ — бег по воде на 60 с" : "ЛКМ — управлять попугаем • полёт 6 с • 50 урона";

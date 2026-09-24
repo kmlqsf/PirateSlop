@@ -81,6 +81,7 @@ namespace PirateSlop
             InventoryItem.DoubleBarrel => "Двустволка",
             InventoryItem.BombParrot => "Попугай",
             InventoryItem.HolyGrenade => "Святая граната",
+            InventoryItem.Spyglass => "Подзорная труба",
             InventoryItem.GrapplingHook => "Крюк-кошка",
             InventoryItem.BoardingHook => "Абордажный крюк",
             InventoryItem.Pistol => "Пистолет",

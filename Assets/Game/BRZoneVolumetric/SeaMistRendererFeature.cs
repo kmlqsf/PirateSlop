@@ -5,6 +5,7 @@ namespace PirateSlop
 {
     public sealed class SeaMistRendererFeature : FullScreenPassRendererFeature
     {
+        public static float DensityMultiplier { get; set; } = 1f;
         static readonly Vector4[] flashes = new Vector4[16];
         static readonly float[] flashTimes = new float[16];
         static readonly Vector4[] visibleFlashes = new Vector4[16];
@@ -17,6 +18,7 @@ namespace PirateSlop
         {
             System.Array.Clear(flashes, 0, flashes.Length);
             nextFlash = 0;
+            DensityMultiplier = 1f;
         }
 
         public static void CannonFlash(Vector3 position)
@@ -28,8 +30,10 @@ namespace PirateSlop
 
         public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData)
         {
+            if (ShipSpyglassView.ClearsFog(renderingData.cameraData.camera)) return;
             if (renderingData.cameraData.cameraType != CameraType.Game || renderingData.cameraData.renderType != CameraRenderType.Base || OceanSurface.Instance == null || OceanSurface.Instance.gameObject.scene.name != "NetworkOcean" || passMaterial == null) return;
             passMaterial.SetFloat("_SeaLevel", OceanSurface.Instance.SeaLevel);
+            passMaterial.SetFloat("_DensityMultiplier", Mathf.Clamp(DensityMultiplier, 0f, 3f));
             var cameraPosition = renderingData.cameraData.camera.transform.position;
             if (Time.time >= nextShipSearch)
             {

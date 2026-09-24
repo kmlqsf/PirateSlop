@@ -17,6 +17,8 @@ namespace PirateSlop
         AudioSource ocean, wind, deck;
         AudioSource underwater;
         AudioSource flooding;
+        AudioSource storm;
+        float stormBlend;
         float floodBlend;
         float cabinBlend, underwaterBlend, environmentAt, cabinTarget, underwaterTarget;
         float underwaterVolume;
@@ -49,6 +51,7 @@ namespace PirateSlop
             for (int i = 0; i < instance.feedbackVoices.Length; i++) instance.feedbackVoices[i] = instance.Source("Damage feedback " + i, false);
             instance.ocean = instance.Source("Ocean", true); instance.ocean.clip = bank.Ocean;
             instance.wind = instance.Source("Wind", true); instance.wind.clip = bank.Wind;
+            instance.storm = instance.Source("Storm wind", true); instance.storm.clip = bank.Storm;
             instance.deck = instance.Source("Deck creaks", true); instance.deck.clip = bank.DeckCreaks;
             instance.underwater = instance.Source("Underwater bubbles", true);
             instance.underwater.GetComponent<SpatialAudioTone>().Environment = false;
@@ -119,6 +122,19 @@ namespace PirateSlop
         {
             var audio = Get(); if (audio == null) return;
             audio.UpdateEnvironment(onShip);
+            var weather = StormVolumeController.Instance;
+            float stormTarget = 0;
+            if (weather != null && weather.Ready && audio.listener != null)
+            {
+                var eye = audio.listener.transform.position;
+                float clearance = weather.CurrentRadius - new Vector2(eye.x - weather.CurrentCenter.x, eye.z - weather.CurrentCenter.z).magnitude;
+                stormTarget = 1f - Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(-30f, 550f, clearance));
+            }
+            audio.stormBlend = Mathf.Lerp(audio.stormBlend, stormTarget, 1f - Mathf.Exp(-2f * Time.unscaledDeltaTime));
+            audio.storm.volume = audio.bank.Master * audio.bank.Ambience * audio.stormBlend * 1.8f * Mathf.Lerp(1f, .35f, audio.cabinBlend) * Mathf.Lerp(1f, .12f, audio.underwaterBlend);
+            audio.storm.pitch = Mathf.Lerp(.72f, .95f, audio.stormBlend);
+            if (audio.stormBlend > .005f && !audio.storm.isPlaying && audio.storm.clip != null) audio.storm.Play();
+            else if (audio.stormBlend <= .005f) audio.storm.Stop();
             audio.floodBlend = Mathf.Lerp(audio.floodBlend, onShip ? Mathf.Clamp01(floodLevel) : 0f, 1f - Mathf.Exp(-3f * Time.unscaledDeltaTime));
             audio.flooding.volume = audio.bank.Master * audio.bank.Ambience * audio.floodBlend * Mathf.Lerp(.25f, .75f, audio.cabinBlend);
             audio.flooding.pitch = Mathf.Lerp(.65f, .9f, audio.floodBlend);
@@ -171,7 +187,7 @@ namespace PirateSlop
         void Update()
         {
             if (Time.unscaledTime - lastAmbience < .3f) return;
-            ocean.Stop(); wind.Stop(); deck.Stop(); underwater.Stop(); flooding.Stop();
+            ocean.Stop(); wind.Stop(); deck.Stop(); underwater.Stop(); flooding.Stop(); storm.Stop(); stormBlend = 0;
         }
         void OnDestroy() { if (instance == this) instance = null; }
     }
