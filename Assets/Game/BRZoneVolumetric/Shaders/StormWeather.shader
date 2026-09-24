@@ -10,7 +10,7 @@ Shader "PirateSlop/StormWeather"
         Pass
         {
             Tags { "LightMode"="StormWaterContact" }
-            Blend SrcAlpha OneMinusSrcAlpha
+            Blend SrcAlpha One
             ZWrite Off Cull Off
             HLSLPROGRAM
             #pragma vertex Vert
@@ -45,10 +45,11 @@ Shader "PirateSlop/StormWeather"
                     visibility=smoothstep(_WeatherCenter.w/cameraRadius-.08,_WeatherCenter.w/cameraRadius+.08,facing);
                 }
                 float side=abs(i.uv.y*2-1);
-                float core=1-smoothstep(.05,.4,side);
-                float glow=pow(saturate(1-side),1.4);
-                half3 color=lerp(i.color.rgb,i.color.rgb*1.65,core);
-                return half4(color, saturate((core*.65+glow*.55)*i.color.a)*depthFade*visibility);
+                float core=1-smoothstep(.02,.18,side);
+                float glow=pow(saturate(1-side),2.4);
+                half3 color=i.color.rgb*glow*1.6+half3(1,.97,.9)*core*5;
+                float haze=exp(-max(0,distance(_WorldSpaceCameraPos,i.world)-90)*.003);
+                return half4(color,i.color.a*depthFade*visibility*haze);
 
             }
             ENDHLSL

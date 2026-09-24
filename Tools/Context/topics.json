@@ -61,7 +61,7 @@
     {
       "id": "loot", "title": "Предметы, лут и инвентарь", "aliases": ["лут", "предметы", "инвентарь", "inventory"],
       "notes": ["Подбор и расход предметов подтверждает сервер. Сверять идентификаторы предметов, иконки и каталог.", "NetworkWeapon имеет отдельные partial-файлы; для морского лута начать с NetworkWeapon.SeaLoot.cs."],
-      "files": ["Assets/Scripts/Player/PlayerInventory.cs", "Assets/Scripts/Loot/LootCatalog.cs", "Assets/Scripts/Loot/InventoryIcons.cs", "Assets/Scripts/Networking/NetworkWeapon.cs", "Assets/Scripts/Networking/NetworkWeapon.SeaLoot.cs", "Assets/Scripts/Networking/NetworkLootChest.cs", "Assets/Settings/Loot/DefaultLoot.asset", "Assets/Scripts/Editor/LootSetup.cs"],
+      "files": ["Assets/Scripts/Player/PlayerInventory.cs", "Assets/Scripts/Loot/LootCatalog.cs", "Assets/Scripts/Loot/InventoryIcons.cs", "Assets/Scripts/Networking/NetworkWeapon.cs", "Assets/Scripts/Networking/NetworkWeapon.SeaLoot.cs", "Assets/Scripts/Networking/NetworkLootChest.cs", "Assets/Settings/Loot/DefaultLoot.asset", "Assets/Scripts/Editor/LootSetup.cs", "Assets/Scripts/Player/ShipSpyglassView.cs", "Assets/Scripts/Editor/SpyglassSetup.cs"],
       "docs": ["rum-loot.md", "combat-balance.md"]
     },
     {

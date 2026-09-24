@@ -10,6 +10,8 @@ namespace PirateSlop
     public sealed class ShipSpyglassView : MonoBehaviour
     {
         public static bool IsViewing { get; private set; }
+        static Camera viewingCamera;
+        public static bool ClearsFog(Camera camera) => IsViewing && camera == viewingCamera;
         public Material TrajectoryMaterial;
         [SerializeField] float viewpointLift = 1.25f;
         public float ViewpointLift => viewpointLift;
@@ -17,6 +19,9 @@ namespace PirateSlop
         ShipSpyglass station, aimed;
         Camera cameraView;
         bool engaged;
+        bool portable, fogOverridden, savedFog;
+        PlayerInventory inventory;
+        NetworkEquipment equipment;
         bool markRequested;
         float originalFov, zoom = 48f, nextPreview;
         Vector2 angles;
@@ -32,11 +37,17 @@ namespace PirateSlop
         }
         void BeginCamera(ScriptableRenderContext context, Camera camera)
         {
-            if (!engaged || station == null || camera != cameraView) return;
+            if (!engaged || camera != cameraView) return;
+            savedFog = RenderSettings.fog;
+            RenderSettings.fog = false;
+            fogOverridden = true;
             RestoreVisibility();
             GetComponentsInChildren<Renderer>(true, renderers);
-            station.GetComponentsInChildren<Renderer>(true, stationRenderers);
-            renderers.AddRange(stationRenderers);
+            if (station != null)
+            {
+                station.GetComponentsInChildren<Renderer>(true, stationRenderers);
+                renderers.AddRange(stationRenderers);
+            }
             foreach (var renderer in renderers)
             {
                 if (renderer == null) continue;
@@ -46,7 +57,13 @@ namespace PirateSlop
         }
         void EndCamera(ScriptableRenderContext context, Camera camera)
         {
-            if (camera == cameraView) RestoreVisibility();
+            if (camera == cameraView) { RestoreVisibility(); RestoreFog(); }
+        }
+        void RestoreFog()
+        {
+            if (!fogOverridden) return;
+            RenderSettings.fog = savedFog;
+            fogOverridden = false;
         }
         void RestoreVisibility()
         {
@@ -54,49 +71,62 @@ namespace PirateSlop
                 if (state.renderer != null) state.renderer.forceRenderingOff = state.hidden;
             visibility.Clear();
         }
-        void Awake() { player = GetComponent<NetworkPlayer>(); }
+        void Awake() { player = GetComponent<NetworkPlayer>(); inventory = GetComponent<PlayerInventory>(); equipment = GetComponent<NetworkEquipment>(); }
         void Update()
         {
             if (!player.IsOwner) return;
-            if (engaged && station == null) Exit();
+            if (engaged && !portable && station == null) Exit();
             var keys = Keyboard.current;
             if (keys == null) return;
-            if (station != null)
+            if (engaged)
             {
                 if (player.Motor.IsDead || player.Motor.IsSwimming || player.Motor.IsClimbing || Cursor.lockState != CursorLockMode.Locked ||
-                    Vector3.Distance(transform.position, station.transform.position) > 3.5f || keys.eKey.wasPressedThisFrame || keys.escapeKey.wasPressedThisFrame)
+                    (portable ? equipment == null || !equipment.Active || inventory.ItemAt(inventory.SelectedSlot) != InventoryItem.Spyglass || Mouse.current == null || !Mouse.current.rightButton.isPressed : Vector3.Distance(transform.position, station.transform.position) > 3.5f) || keys.eKey.wasPressedThisFrame || keys.escapeKey.wasPressedThisFrame)
                 { Exit(); return; }
                 if (Mouse.current != null)
                 {
-                    markRequested |= Mouse.current.middleButton.wasPressedThisFrame;
+                    if (!portable) markRequested |= Mouse.current.middleButton.wasPressedThisFrame;
                     var delta = Mouse.current.delta.ReadValue() * (.055f * zoom / 48f);
                     angles.x = Mathf.Clamp(angles.x - delta.y, -70f, 70f);
                     angles.y = Mathf.Repeat(angles.y + delta.x, 360f);
                     float wheel = Mouse.current.scroll.ReadValue().y;
-                    if (Mathf.Abs(wheel) > .01f) zoom = Mathf.Clamp(zoom - Mathf.Sign(wheel) * 3f, 32f, 62f);
+                    if (Mathf.Abs(wheel) > .01f) zoom = Mathf.Clamp(zoom - Mathf.Sign(wheel) * 3f, portable ? 12f : 32f, portable ? 48f : 62f);
                 }
                 return;
             }
             aimed = null;
             if (!player.Motor.InputActive || player.Motor.IsSwimming || player.Motor.IsClimbing || player.Motor.LocomotionLocked || GetComponent<CannonHands>().HasHeldBall) return;
             cameraView = player.Motor.PlayerCamera;
+            if (equipment != null && equipment.Active && inventory.ItemAt(inventory.SelectedSlot) == InventoryItem.Spyglass && !PlayerInventory.LootWindowOpen && !inventory.ControlFocused && Mouse.current != null && Mouse.current.rightButton.wasPressedThisFrame)
+            {
+                player.Motor.SetThirdPerson(false);
+                originalFov = cameraView.fieldOfView;
+                var rotation = cameraView.transform.eulerAngles;
+                angles = new Vector2(Mathf.DeltaAngle(0, rotation.x), rotation.y);
+                zoom = 24f;
+                portable = engaged = IsViewing = true;
+                viewingCamera = cameraView;
+                return;
+            }
             if (Physics.Raycast(cameraView.transform.position, cameraView.transform.forward, out var hit, 3f, ~0, QueryTriggerInteraction.Ignore))
                 aimed = hit.collider.GetComponentInParent<ShipSpyglass>();
             if (aimed == null || aimed.GetComponentInParent<NetworkShip>() != player.Ship || !keys.eKey.wasPressedThisFrame) return;
             station = aimed; originalFov = cameraView.fieldOfView; angles = Vector2.zero; zoom = 48f;
             engaged = IsViewing = true; nextPreview = 0f;
+            viewingCamera = cameraView;
         }
         void LateUpdate()
         {
-            if (!player.IsOwner || station == null) return;
-            cameraView.transform.SetPositionAndRotation(station.Viewpoint.position + station.transform.up * viewpointLift, station.transform.rotation * Quaternion.Euler(angles.x, angles.y, 0f));
+            if (!player.IsOwner || !engaged) return;
+            if (portable) cameraView.transform.rotation = Quaternion.Euler(angles.x, angles.y, 0f);
+            else if (station != null) cameraView.transform.SetPositionAndRotation(station.Viewpoint.position + station.transform.up * viewpointLift, station.transform.rotation * Quaternion.Euler(angles.x, angles.y, 0f));
             cameraView.fieldOfView = Mathf.Lerp(cameraView.fieldOfView, zoom, 1f - Mathf.Exp(-12f * Time.unscaledDeltaTime));
             if (markRequested)
             {
                 markRequested = false;
                 player.MarkSpyglassTarget(cameraView.transform.forward);
             }
-            if (Time.unscaledTime >= nextPreview) { nextPreview = Time.unscaledTime + .2f; Preview(); }
+            if (!portable && player.Ship != null && Time.unscaledTime >= nextPreview) { nextPreview = Time.unscaledTime + .2f; Preview(); }
         }
         void Preview()
         {
@@ -148,8 +178,11 @@ namespace PirateSlop
         void Exit()
         {
             RestoreVisibility();
+            RestoreFog();
+            if (engaged && portable) player.Motor.SetLookAngles(angles.y, angles.x);
             if (cameraView != null && engaged) cameraView.fieldOfView = originalFov;
             station = null; engaged = IsViewing = markRequested = false;
+            portable = false; viewingCamera = null;
             foreach (var line in lines) if (line != null) line.gameObject.SetActive(false);
         }
         void OnDisable()
@@ -163,12 +196,24 @@ namespace PirateSlop
         void OnGUI()
         {
             if (!player.IsOwner) return;
-            if (station == null) { if (aimed != null) ContextPrompt.Offer("ПОДЗОРНАЯ ТРУБА · E — смотреть", 40); return; }
+            if (!engaged) { if (aimed != null) ContextPrompt.Offer("ПОДЗОРНАЯ ТРУБА · E — смотреть", 40); return; }
             if (mask == null)
             {
-                mask = new Texture2D(128,128,TextureFormat.RGBA32,false); mask.wrapMode = TextureWrapMode.Clamp;
-                var pixels = new Color[128*128];
-                for(int y=0;y<128;y++) for(int x=0;x<128;x++) { float radius = new Vector2((x-63.5f)/63.5f,(y-63.5f)/63.5f).magnitude; pixels[y*128+x]=new Color(.008f,.015f,.02f,Mathf.SmoothStep(0f,1f,Mathf.InverseLerp(.89f,.98f,radius))); }
+                const int resolution = 512;
+                mask = new Texture2D(resolution,resolution,TextureFormat.RGBA32,false);
+                mask.wrapMode = TextureWrapMode.Clamp;
+                mask.filterMode = FilterMode.Bilinear;
+                var pixels = new Color[resolution*resolution];
+                for(int y=0;y<resolution;y++) for(int x=0;x<resolution;x++)
+                {
+                    float u = (x + .5f) / resolution, v = (y + .5f) / resolution;
+                    float radius = new Vector2(u * 2 - 1, v * 2 - 1).magnitude;
+                    float rim = Mathf.SmoothStep(0f,1f,Mathf.InverseLerp(.91f,.985f,radius));
+                    float haze = .025f + .055f * Mathf.Pow(Mathf.Clamp01(radius), 3) + .025f * Mathf.PerlinNoise(u * 6f + 4f,v * 7f + 13f);
+                    var glass = Color.Lerp(new Color(.68f,.74f,.68f), new Color(.008f,.015f,.02f), rim);
+                    glass.a = Mathf.Lerp(haze, 1f, rim);
+                    pixels[y*resolution+x] = glass;
+                }
                 mask.SetPixels(pixels); mask.Apply();
             }
             float size = Screen.height;
@@ -177,7 +222,7 @@ namespace PirateSlop
             GUI.DrawTexture(new Rect((Screen.width+size)/2f,0,Screen.width,size),Texture2D.whiteTexture);
             GUI.color=Color.white; GUI.DrawTexture(new Rect((Screen.width-size)/2f,0,size,size),mask);
             GUI.Label(new Rect(Screen.width/2f-5,Screen.height/2f-10,20,20),"+");
-            ContextPrompt.Draw("ПОДЗОРНАЯ ТРУБА · Колесо — зум · Нажать колесо — метка на 2 мин · E / Esc — выйти"); GUI.color=old;
+            ContextPrompt.Draw(portable ? "ПОДЗОРНАЯ ТРУБА · колесо — зум · отпустить ПКМ — выйти" : "ПОДЗОРНАЯ ТРУБА · Колесо — зум · Нажать колесо — метка на 2 мин · E / Esc — выйти"); GUI.color=old;
             PlayerHud.DrawCompass(cameraView);
             TargetMarkHud.Draw(player, cameraView);
         }

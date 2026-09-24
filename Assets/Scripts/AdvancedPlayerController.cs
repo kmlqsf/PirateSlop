@@ -128,6 +128,15 @@ public class AdvancedPlayerController : MonoBehaviour
         lookYaw = Mathf.LerpAngle(lookYaw, targetYaw, 1f - Mathf.Exp(-speed * Time.deltaTime));
         pitch = Mathf.Lerp(pitch, targetPitch, 1f - Mathf.Exp(-speed * Time.deltaTime));
     }
+    public void SetLookAngles(float yaw, float elevation)
+    {
+        if (!local) return;
+        lookYaw = Mathf.Repeat(yaw, 360f);
+        pitch = Mathf.Clamp(elevation, -85f, 85f);
+        aimRecoil = Vector2.zero;
+        pending.Yaw = lookYaw;
+        pending.Pitch = pitch;
+    }
     public void SetLocomotionLocked(bool value)
     {
         if (locomotionLocked == value) return;

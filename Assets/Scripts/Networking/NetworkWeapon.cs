@@ -46,7 +46,7 @@ namespace PirateSlop.Networking
         }
         public bool CanAddItem(InventoryItem item)
         {
-            if (!IsServerInitialized || item < InventoryItem.Fish || item > InventoryItem.HolyGrenade) return false;
+            if (!IsServerInitialized || item < InventoryItem.Fish || item > InventoryItem.Spyglass) return false;
             if (item == InventoryItem.Plank) return false;
             if (item == InventoryItem.Rum)
                 for (int i = 0; i < rumCounts.Count; i++) if (rumCounts[i] > 0 && rumCounts[i] < 6) return true;
