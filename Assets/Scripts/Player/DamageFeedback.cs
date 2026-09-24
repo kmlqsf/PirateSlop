@@ -37,7 +37,8 @@ namespace PirateSlop
 
         void OnGUI()
         {
-            if(Local && Time.unscaledTime<confirmedUntil)
+            if (Event.current.type != EventType.Repaint || !Local) return;
+            if(Time.unscaledTime<confirmedUntil)
             {
                 var matrix=GUI.matrix;var color=GUI.color;int oldDepth=GUI.depth;GUI.depth=-75;
                 var center=new Vector2(Screen.width*.5f,Screen.height*.5f);
@@ -49,7 +50,7 @@ namespace PirateSlop
                 GUI.DrawTexture(new Rect(center.x-1,center.y+5,2,8),Texture2D.whiteTexture);
                 GUI.matrix=matrix;GUI.color=color;GUI.depth=oldDepth;
             }
-            if (!Local || flash <= 0f || Event.current.type != EventType.Repaint) return;
+            if (flash <= 0f) return;
             if (vignette == null)
             {
                 const int size = 64;

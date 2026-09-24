@@ -15,6 +15,8 @@ namespace PirateSlop.Networking
         Material highlight;
         Mesh surfaceHighlight;
         ShipDamageSection aimed;
+        Harpoon.HarpoonGun aimedHarpoon;
+        Vector3 aimedHarpoonPoint;
         int aimedFragment = -1, lastSection, lastFragment, strikes;
         NetworkObject lastShip;
         Vector3 aimedPoint;
@@ -29,6 +31,18 @@ namespace PirateSlop.Networking
         void Update()
         {
             if (!IsOwner || !Available || !motor.InputActive || PlayerInventory.LootWindowOpen || inventory.ControlFocused) return;
+            if (aimedHarpoon != null && Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
+            {
+                var ship = aimedHarpoon.GetComponentInParent<NetworkShip>();
+                if (ship != null && ship.IsClientInitialized)
+                    RepairHarpoonServerRpc(ship.NetworkObject, aimedHarpoonPoint);
+                else
+                {
+                    aimedHarpoon.RepairStrike(gameObject);
+                    StrikeObserversRpc(aimedHarpoonPoint);
+                }
+                return;
+            }
             if (aimed != null && Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
                 RepairServerRpc(aimed.Owner.NetworkObject, aimed.SectionId, aimedFragment, aimed.Owner.transform.InverseTransformPoint(aimedPoint));
         }
@@ -49,7 +63,7 @@ namespace PirateSlop.Networking
                 float swing = Mathf.Sin(Mathf.Clamp01((Time.time - swingAt) / .35f) * Mathf.PI);
                 model.transform.SetPositionAndRotation(anchor.TransformPoint(first ? new Vector3(.32f, -.42f, .5f) : new Vector3(.35f, 1.05f, .4f)), anchor.rotation * Quaternion.Euler(-15f + swing * 75f, 0, -15f));
             }
-            aimed = null; aimedFragment = -1;
+            aimed = null; aimedFragment = -1; aimedHarpoon = null;
             if (!IsOwner || !Available || !motor.InputActive || PlayerInventory.LootWindowOpen) return;
             if (highlight == null)
             {
@@ -110,6 +124,20 @@ namespace PirateSlop.Networking
                     }
                 }
             }
+            if (aimed == null)
+            {
+                foreach (var hit in Physics.RaycastAll(ray, 3.5f, ~0, QueryTriggerInteraction.Ignore))
+                {
+                    if (hit.transform.IsChildOf(transform)) continue;
+                    var gun = hit.collider.GetComponentInParent<Harpoon.HarpoonGun>();
+                    if (gun != null && gun.IsBroken && Reachable(hit.point))
+                    {
+                        aimedHarpoon = gun;
+                        aimedHarpoonPoint = hit.point;
+                        break;
+                    }
+                }
+            }
         }
         bool Reachable(Vector3 point)
         {
@@ -119,6 +147,22 @@ namespace PirateSlop.Networking
         }
         [ServerRpc]
         void RepairServerRpc(NetworkObject target, int sectionId, int fragmentId, Vector3 localPoint) => TryRepair(target, sectionId, fragmentId, localPoint);
+        [ServerRpc]
+        void RepairHarpoonServerRpc(NetworkObject target, Vector3 point)
+        {
+            if (!IsServerInitialized || !Available || target == null || Time.time < nextStrike) return;
+            var guns = target.GetComponentsInChildren<Harpoon.HarpoonGun>();
+            foreach (var gun in guns)
+            {
+                if (gun != null && gun.IsBroken && Vector3.Distance(gun.transform.position, point) <= 3.8f)
+                {
+                    nextStrike = Time.time + .45f;
+                    gun.RepairStrike(gameObject);
+                    StrikeObserversRpc(point);
+                    break;
+                }
+            }
+        }
         public bool TryRepair(NetworkObject target, int sectionId, int fragmentId, Vector3 localPoint)
         {
             if (!IsServerInitialized || !Available || target == null || Time.time < nextStrike || !float.IsFinite(localPoint.sqrMagnitude)) return false;
@@ -154,7 +198,12 @@ namespace PirateSlop.Networking
         void OnGUI()
         {
             if (IsOwner && Available && motor.InputActive && !PlayerInventory.LootWindowOpen)
-                ContextPrompt.Offer(aimed != null ? aimedFragment == -1 ? "ЛКМ — восстановить мачту целиком (10 ударов)" : "ЛКМ — починить до 3 осколков (3 удара)" : "Наведитесь на подсвеченную повреждённую часть", aimed != null ? 50 : 5);
+            {
+                if (aimedHarpoon != null)
+                    ContextPrompt.Offer($"ЛКМ — починить гарпунную пушку ({3 - aimedHarpoon.RepairStrikes} удара)", 50);
+                else
+                    ContextPrompt.Offer(aimed != null ? aimedFragment == -1 ? "ЛКМ — восстановить мачту целиком (10 ударов)" : "ЛКМ — починить до 3 осколков (3 удара)" : "Наведитесь на подсвеченную повреждённую часть", aimed != null ? 50 : 5);
+            }
         }
         void OnDestroy() { if (model != null) Destroy(model); if (highlight != null) Destroy(highlight); if (surfaceHighlight != null) Destroy(surfaceHighlight); }
     }

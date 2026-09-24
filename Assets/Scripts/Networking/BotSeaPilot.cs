@@ -25,6 +25,9 @@ namespace PirateSlop.Networking
         public float Sails { get; private set; }
         public float PlannedSails { get; private set; }
         public string Reason { get; private set; } = "Ожидание маршрута";
+        float stuckTimer;
+        float reverseUntil;
+        float reverseSteer;
 
         static float Distance(Vector3 a, Vector3 b) => new Vector2(a.x - b.x, a.z - b.z).magnitude;
 
@@ -33,6 +36,14 @@ namespace PirateSlop.Networking
         public void Tick(NetworkShip ship, BotMotionSettings settings, bool helmsman, NetworkPlayer observer)
         {
             PlannedSails = Sails = Rudder = 0;
+            if (Time.time < reverseUntil)
+            {
+                PlannedSails = -.5f;
+                Rudder = reverseSteer;
+                Reason = "Застревание: реверс тяги и отворот от препятствия";
+                if (helmsman) Sails = PlannedSails;
+                return;
+            }
             var world = ProceduralWorld.Instance;
             if (world == null || !world.Ready || ship.IsSinking || ship.Motor.IsFlooded || ship.Motor.IsFrozen)
             { Stop("Плавание недоступно: мир или состояние корабля"); return; }
@@ -103,10 +114,37 @@ namespace PirateSlop.Networking
             }
             float horizon = Mathf.Clamp(35f + Mathf.Abs(ship.Motor.Speed) * 12f, 35f, 100f);
             var forward = Quaternion.Euler(0, yaw, 0) * Vector3.forward;
+            bool directBlocked = false;
             for (int i = 1; i <= 4; i++)
             {
                 var probe = position + forward * (horizon * i / 4f);
-                if (!world.CanSail(probe, yaw)) { Reason = "Препятствие по курсу; паруса убрать"; return; }
+                if (!world.CanSail(probe, yaw)) { directBlocked = true; break; }
+            }
+            if (directBlocked)
+            {
+                float[] fanAngles = { 15f, -15f, 30f, -30f, 45f, -45f, 60f, -60f };
+                bool bypassed = false;
+                foreach (float angle in fanAngles)
+                {
+                    float testYaw = yaw + angle;
+                    var testFwd = Quaternion.Euler(0, testYaw, 0) * Vector3.forward;
+                    bool clear = true;
+                    for (int i = 1; i <= 3; i++)
+                    {
+                        var probe = position + testFwd * (horizon * i / 3f);
+                        if (!world.CanSail(probe, testYaw)) { clear = false; break; }
+                    }
+                    if (clear)
+                    {
+                        desired = testYaw;
+                        error = Mathf.DeltaAngle(yaw, desired);
+                        Rudder = Mathf.Clamp(error / 35f, -1f, 1f);
+                        Reason = "Динамический обход препятствия по вееру курсов";
+                        bypassed = true;
+                        break;
+                    }
+                }
+                if (!bypassed) { Reason = "Препятствие по курсу; паруса убрать"; return; }
             }
             for (int i = 1; i <= 4; i++)
             {
@@ -115,7 +153,7 @@ namespace PirateSlop.Networking
                 if (!world.CanSail(probe, Mathf.LerpAngle(yaw, desired, fraction)))
                 { Reason = "Подход к точке перекрыт; паруса убрать"; return; }
             }
-            PlannedSails = Mathf.Clamp(settings.CruiseSails, .1f, 1f) * (Mathf.Abs(error) > 25f ? .4f : 1f);
+            PlannedSails = Mathf.Clamp(settings.CruiseSails, .1f, 1f) * (1f - Mathf.Abs(Rudder) * .3f);
             if (looting) PlannedSails *= Mathf.Clamp01((Distance(position, target) - 12f) / 75f);
             if (fighting)
             {
@@ -126,6 +164,22 @@ namespace PirateSlop.Networking
             if (helmsman) Sails = PlannedSails;
             if (ship.AnchorDropped) Reason += "; якорь опущен (ожидание подъёма)";
             else Reason += "; матросы занимают канаты, ожидание рулевого";
+
+            if (PlannedSails > .3f && Mathf.Abs(ship.Motor.Speed) < .5f)
+            {
+                stuckTimer += Time.deltaTime;
+                if (stuckTimer >= 3f)
+                {
+                    stuckTimer = 0f;
+                    reverseUntil = Time.time + 3f;
+                    reverseSteer = Rudder >= 0f ? -1f : 1f;
+                    PlannedSails = -.5f;
+                    Rudder = reverseSteer;
+                    Reason = "Застревание: экстренный реверс на 3 секунды";
+                    if (helmsman) Sails = PlannedSails;
+                }
+            }
+            else stuckTimer = 0f;
         }
 
         bool TryAvoidShip(ProceduralWorld world, NetworkShip ship, float safe, out Vector3 point)
@@ -140,7 +194,9 @@ namespace PirateSlop.Networking
                 if (other == null || other == ship || other.IsSinking) continue;
                 var offset = Vector3.ProjectOnPlane(other.transform.position - position, Vector3.up);
                 if (offset.sqrMagnitude > 240f * 240f) continue;
-                var relativeVelocity = Vector3.ProjectOnPlane(other.Motor.CannonPointVelocity(other.transform.position), Vector3.up) - ownVelocity;
+                var otherVelocity = Vector3.ProjectOnPlane(other.Motor.CannonPointVelocity(other.transform.position), Vector3.up);
+                var relativeVelocity = otherVelocity - ownVelocity;
+                if (Vector3.Dot(ownVelocity, otherVelocity) > .3f && Vector3.Dot(offset, relativeVelocity) > 0f) continue;
                 float time = Mathf.Clamp(-Vector3.Dot(offset, relativeVelocity) / Mathf.Max(.01f, relativeVelocity.sqrMagnitude), 0f, 20f);
                 float clearance = ship.CollisionRadius + other.CollisionRadius + 18f;
                 if ((offset + relativeVelocity * time).sqrMagnitude >= clearance * clearance) continue;

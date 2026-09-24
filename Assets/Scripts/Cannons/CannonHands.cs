@@ -215,7 +215,7 @@ namespace PirateSlop
                 var loose = held.GetComponent<PirateSlop.Networking.NetworkLooseCannonball>();
                 if (loose != null && Time.unscaledTime >= nextHeldSync)
                 { nextHeldSync = Time.unscaledTime + .05f; loose.RequestHold(true, held.transform.position); }
-                foreach (var cannon in FindObjectsByType<SimpleCannon>(FindObjectsSortMode.None))
+                foreach (var cannon in SimpleCannon.Active)
                     if (Time.unscaledTime >= nextLoadRequest && cannon.AcceptsAmmo(held.Ammo) && cannon.CanLoadFrom(held.transform.position) && !cannon.IsLoaded)
                     {
                         var network = cannon.GetComponentInParent<PirateSlop.Networking.NetworkCannon>();

@@ -209,6 +209,8 @@ namespace PirateSlop
         }
         void ApplyDamage(int id, float amount, Vector3 point, Vector3 normal, Vector3 velocity, InventoryItem ammo, GameObject attacker, ShipDamageReason reason)
         {
+            if (attacker != null)
+                PirateSlop.Networking.SessionController.Instance?.NotifyCombatDamage(ship, attacker);
             if (!state.TryGetValue(id, out var current)) return;
             if (current.State == ShipSectionState.Destroyed && (!sections.TryGetValue(id, out var fracturedPart) || fracturedPart.Fragments.Length == 0 && !fracturedPart.SurfaceDamage))
             {

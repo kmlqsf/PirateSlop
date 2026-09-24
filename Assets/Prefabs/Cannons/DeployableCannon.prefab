@@ -2894,6 +2894,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.ShipControlHandle
   Helm: {fileID: 0}
   Cannon: {fileID: 6766262252996742549}
+  Sails: {fileID: 0}
+  RopeIndex: 0
+  Capstan: {fileID: 0}
+  SpokeIndex: 0
 --- !u!135 &4077820062719979824
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -4556,6 +4560,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.SimpleCannon
   Muzzle: {fileID: 8982002635803476142}
+  cannonballPrefab: {fileID: 7988514449991322393, guid: 7dbdb9bb93049584e8703c8be8854dfc, type: 3}
+  fusePrefab: {fileID: 878318906978561882, guid: 432b1b34728f1ff448a962ff0d612f51, type: 3}
   IsMortar: 0
   LaunchSpeed: 45
   BarrelPivot: {fileID: 7171116490545454119}

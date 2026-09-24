@@ -40,6 +40,7 @@ namespace PirateSlop.Networking
             Begin(host, "127.0.0.1:" + Config.Port);
         }
         readonly Dictionary<int, NetworkPlayer> players = new();
+        public IEnumerable<NetworkPlayer> AllPlayers => players.Values;
         readonly Dictionary<int, int> slots = new();
         int nextParticipant = 1, population;
         string address = "127.0.0.1:7777", status = "Создайте сессию или введите IPv4:порт", error = "";
@@ -316,11 +317,21 @@ namespace PirateSlop.Networking
             }
             Debug.Log($"PLAYER_LEFT connection={conn.ClientId}"); BroadcastPopulation();
         }
+        static readonly HashSet<int> teamPopulationSet = new();
+        static readonly List<int> expiredAwaitingKeys = new();
         void BroadcastPopulation()
         {
             population = players.Count;
-            botPopulation = players.Values.Count(p => p != null && p.IsBot.Value);
-            teamPopulation = players.Values.Where(p => p != null && !TeamEliminated(p.TeamId.Value)).Select(p => p.TeamId.Value).Distinct().Count();
+            int bots = 0;
+            teamPopulationSet.Clear();
+            foreach (var p in players.Values)
+            {
+                if (p == null) continue;
+                if (p.IsBot.Value) bots++;
+                if (!TeamEliminated(p.TeamId.Value)) teamPopulationSet.Add(p.TeamId.Value);
+            }
+            botPopulation = bots;
+            teamPopulation = teamPopulationSet.Count;
             manager.ServerManager.Broadcast(new PopulationMessage { Count = population, Bots = botPopulation, Teams = teamPopulation, SessionId = SessionId });
         }
         void Population(PopulationMessage message, Channel channel) { population = message.Count; botPopulation = message.Bots; teamPopulation = message.Teams; SessionId = message.SessionId; }
@@ -350,9 +361,19 @@ namespace PirateSlop.Networking
             TickBotDiagnostics();
             TickBotTasks();
             if (manager != null && manager.ServerManager.Started) BotPaths.Tick(Config.BotMotion.PathNodesPerFrame, Config.BotMotion.PathMillisecondsPerFrame);
-            if (manager != null && manager.ServerManager.Started)
-                foreach (var id in awaitingWorld.Where(p => Time.realtimeSinceStartup - p.Value > 120).Select(p => p.Key).ToArray())
-                { awaitingWorld.Remove(id); if (manager.ServerManager.Clients.TryGetValue(id, out var conn)) conn.Disconnect(true); }
+            if (manager != null && manager.ServerManager.Started && awaitingWorld.Count > 0)
+            {
+                expiredAwaitingKeys.Clear();
+                float now = Time.realtimeSinceStartup;
+                foreach (var pair in awaitingWorld)
+                    if (now - pair.Value > 120f) expiredAwaitingKeys.Add(pair.Key);
+                for (int i = 0; i < expiredAwaitingKeys.Count; i++)
+                {
+                    int id = expiredAwaitingKeys[i];
+                    awaitingWorld.Remove(id);
+                    if (manager.ServerManager.Clients.TryGetValue(id, out var conn)) conn.Disconnect(true);
+                }
+            }
             if (quitAt > 0 && Time.realtimeSinceStartup >= quitAt) { Disconnect(); Application.Quit(); }
             if (connecting && Time.realtimeSinceStartup - startedAt >= Config.ConnectTimeout) { var reason = error == "" ? "Тайм-аут подключения (15 с): проверьте IP, UDP-порт и Firewall" : error; Disconnect(); SetError(reason); }
         }

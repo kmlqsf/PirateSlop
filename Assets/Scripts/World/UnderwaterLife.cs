@@ -50,7 +50,7 @@ namespace PirateSlop.World
             {
                 checkAt=Time.unscaledTime+.5f;
                 view=null;
-                foreach(var player in FindObjectsByType<Networking.NetworkPlayer>(FindObjectsSortMode.None))
+                foreach(var player in Networking.NetworkPlayer.Active)
                     if(player.IsOwner && player.Motor!=null && !player.Motor.IsDead && player.Motor.PlayerCamera.enabled) {view=player.Motor.PlayerCamera;break;}
             }
             bool underwater=view!=null && OceanSurface.Instance!=null && view.transform.position.y<OceanSurface.Instance.Height(view.transform.position)-.2f;

@@ -21,6 +21,9 @@ namespace PirateSlop
         int Participant => GetComponent<NetworkPlayer>() != null ? GetComponent<NetworkPlayer>().ParticipantId.Value : -1;
         public bool IsDragging => grabbed != null;
         public HelmInteraction TurningHelm => grabbed != null ? grabbed.Helm : null;
+        static readonly RaycastHit[] rayBuffer = new RaycastHit[16];
+        static readonly RaycastHit[] sphereBuffer = new RaycastHit[16];
+        static readonly RaycastHit[] obstacleBuffer = new RaycastHit[16];
         const float HoverRadius = .14f;
         float focusStarted, focusLostAt = -10f, lowerAmount;
         bool awaitPrimaryRelease;
@@ -97,8 +100,12 @@ namespace PirateSlop
             var camera = motor.PlayerCamera;
             RaycastHit nearest = default;
             float distance = 3f;
-            foreach (var hit in Physics.RaycastAll(camera.transform.position, camera.transform.forward, distance, ~0, QueryTriggerInteraction.Ignore))
+            int rayCount = Physics.RaycastNonAlloc(camera.transform.position, camera.transform.forward, rayBuffer, distance, ~0, QueryTriggerInteraction.Ignore);
+            for (int i = 0; i < rayCount; i++)
+            {
+                var hit = rayBuffer[i];
                 if (!hit.transform.IsChildOf(transform) && hit.distance < distance) { nearest = hit; distance = hit.distance; }
+            }
             var handle = nearest.collider != null ? nearest.collider.GetComponentInParent<ShipControlHandle>() : null;
             if (handle == null && nearest.collider != null)
             {
@@ -111,16 +118,22 @@ namespace PirateSlop
             if (handle == null)
             {
                 float best = 3f;
-                foreach (var hit in Physics.SphereCastAll(camera.transform.position, HoverRadius, camera.transform.forward, 3f, ~0, QueryTriggerInteraction.Ignore))
+                int sphereCount = Physics.SphereCastNonAlloc(camera.transform.position, HoverRadius, camera.transform.forward, sphereBuffer, 3f, ~0, QueryTriggerInteraction.Ignore);
+                for (int i = 0; i < sphereCount; i++)
                 {
+                    var hit = sphereBuffer[i];
                     var candidate = hit.collider.GetComponentInParent<ShipControlHandle>();
                     if (candidate == null || candidate.Cannon != null || hit.distance >= best || !InRange(candidate)) continue;
                     if (nearest.collider != null && nearest.collider.GetComponentInParent<ShipControlHandle>() != candidate && nearest.distance + HoverRadius < hit.distance) continue;
                     Vector3 target = hit.collider.ClosestPoint(camera.transform.position + camera.transform.forward * (hit.distance + HoverRadius));
                     bool blocked = false;
                     Vector3 delta = target - camera.transform.position;
-                    foreach (var obstacle in Physics.RaycastAll(camera.transform.position, delta.normalized, delta.magnitude, ~0, QueryTriggerInteraction.Ignore))
+                    int obsCount = Physics.RaycastNonAlloc(camera.transform.position, delta.normalized, obstacleBuffer, delta.magnitude, ~0, QueryTriggerInteraction.Ignore);
+                    for (int j = 0; j < obsCount; j++)
+                    {
+                        var obstacle = obstacleBuffer[j];
                         if (!obstacle.transform.IsChildOf(transform) && obstacle.collider.GetComponentInParent<ShipControlHandle>() != candidate) { blocked = true; break; }
+                    }
                     if (blocked) continue;
                     handle = candidate; best = hit.distance;
                 }
@@ -146,7 +159,7 @@ namespace PirateSlop
                 Send(true); return;
             }
             if (hovered != null) { nearbySails = hovered.Sails; return; }
-            foreach (var sails in FindObjectsByType<SailSystem>(FindObjectsSortMode.None))
+            foreach (var sails in SailSystem.Active)
                 if (sails.InRange(motor)) { nearbySails = sails; break; }
         }
         Vector3 WheelDirection(Transform wheel, Vector2 screenPoint)

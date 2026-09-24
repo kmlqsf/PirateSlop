@@ -12,6 +12,7 @@ namespace PirateSlop.Networking
         public LootCatalog Catalog;
         public Transform Lid;
         readonly SyncVar<bool> opened = new();
+        public bool Opened => opened.Value;
         readonly SyncList<InventoryItem> contents = new();
         public int SlotCount => contents.Count;
         public InventoryItem ItemAt(int slot) => slot >= 0 && slot < contents.Count ? contents[slot] : InventoryItem.None;

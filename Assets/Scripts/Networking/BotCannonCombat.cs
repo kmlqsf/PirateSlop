@@ -113,6 +113,8 @@ namespace PirateSlop.Networking
                     if (hits[i].transform.IsChildOf(cannon.transform)) continue;
                     var body = hits[i].collider.GetComponentInParent<NetworkShip>();
                     if (body == target) continue;
+                    var allyPlayer = hits[i].collider.GetComponentInParent<NetworkPlayer>();
+                    if (allyPlayer != null && allyPlayer.TeamId.Value == ship.TeamId.Value && Vector3.Distance(cannon.ShotPosition, hits[i].point) > 12f) continue;
                     return false;
                 }
                 if (OceanSurface.Instance != null && next.y < OceanSurface.Instance.Height(next)) return false;
@@ -154,6 +156,28 @@ namespace PirateSlop.Networking
             nextScan = Time.time + .2f;
             if (!Visible(player, target)) { Reason = "цель скрылась; огонь запрещён"; return; }
             var point = target.transform.position + Vector3.up * 3f;
+            var targetDestruction = target.GetComponent<ShipDestruction>();
+            if (targetDestruction != null && targetDestruction.Sections != null)
+            {
+                float bestSectionDist = float.PositiveInfinity;
+                Vector3 candidatePoint = point;
+                foreach (var sec in targetDestruction.Sections)
+                {
+                    if (sec == null || sec.RemovedFragments == ulong.MaxValue) continue;
+                    if (targetDestruction.Definition(sec.SectionId).Type != ShipSectionType.Hull) continue;
+                    for (int frag = 0; frag < Mathf.Min(64, sec.RepairCount); frag++)
+                    {
+                        if ((sec.RemovedFragments & (1UL << frag)) != 0) continue;
+                        var tForm = sec.RepairTransform(frag);
+                        if (tForm == null) continue;
+                        var p = tForm.TransformPoint(sec.RepairBounds(frag).center);
+                        float d = Vector3.Distance(cannon.transform.position, p);
+                        if (d < bestSectionDist) { bestSectionDist = d; candidatePoint = p; }
+                        break;
+                    }
+                }
+                if (!float.IsPositiveInfinity(bestSectionDist)) point = candidatePoint;
+            }
             float elapsed = Time.time - seenAt;
             velocity = elapsed > .1f && elapsed < 1.5f ? Vector3.ClampMagnitude((point - observed) / elapsed, 20f) : Vector3.zero;
             observed = point; seenAt = Time.time;
@@ -162,12 +186,17 @@ namespace PirateSlop.Networking
             var local = cannon.transform.InverseTransformDirection(direction);
             float elevation = Mathf.Atan2(local.y, new Vector2(local.x, local.z).magnitude) * Mathf.Rad2Deg;
             float traverse = Mathf.Atan2(local.x, local.z) * Mathf.Rad2Deg;
+            float dist = Vector3.Distance(cannon.transform.position, point);
+            float spreadScale = Mathf.Clamp01((dist - 15f) / 100f);
+            elevation += Mathf.Sin(Time.time * 1.7f + cannon.Index * 3.1f) * 1.5f * spreadScale;
+            traverse += Mathf.Cos(Time.time * 1.9f + cannon.Index * 2.3f) * 1.5f * spreadScale;
             cannon.Aim(player.Motor, Mathf.MoveTowards(cannon.Elevation, elevation, 9f), Mathf.MoveTowardsAngle(cannon.Traverse, traverse, 12f));
             cannon.Network.PublishBotAim(cannon);
             if (Vector3.Angle(cannon.Muzzle.forward, direction) > 1.5f) { Reason = "наведение с упреждением"; return; }
             if (!cannon.IsLoaded || cannon.IsLoading || cannon.CooldownRemaining > 0f) { Reason = "ожидание готовности пушки"; return; }
             if (cannon.IsIgnited) { Reason = "фитиль горит"; return; }
-            if (Time.time - started < 1f) { Reason = "прицеливание не завершено"; return; }
+            float volleyDelay = (cannon.Index % 4) * .15f;
+            if (Time.time - started < 1f + volleyDelay) { Reason = "синхронизация бортового залпа"; return; }
             if (!cannon.IsMortar && cannon.LoadedAmmo == InventoryItem.BoomerangCannonball)
             {
                 boomerang ??= new BotBoomerangShot();

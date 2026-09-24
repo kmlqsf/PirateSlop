@@ -48,6 +48,11 @@ namespace PirateSlop.Networking
                 rope.SetPosition(0, Vector3.zero);
                 rope.SetPosition(1, Vector3.down * Mathf.Max(3, Catalog.SunkenDepth));
             }
+            else if (Kind == SeaLootKind.Shark)
+            {
+                swarm = eventVisual.AddComponent<SharkSwarmVisual>();
+                swarm.Initialize(this);
+            }
             CreateObjectiveDetails();
         }
 
@@ -64,17 +69,27 @@ namespace PirateSlop.Networking
 
         void OnGUI()
         {
+            if (Event.current.type != EventType.Repaint) return;
             if (!IsSpawned || Kind == SeaLootKind.None || SessionController.MenuOpen) return;
             var camera = Camera.main;
             if (camera == null || !camera.isActiveAndEnabled) return;
             var viewer = camera.GetComponentInParent<NetworkPlayer>();
             if (viewer == null || !viewer.IsOwner || viewer.Motor.IsDead) return;
-            Vector3 point = phase.Value == SeaLootState.Ready ? transform.position : eventPoint.Value;
+            bool isSharkObjective = Kind == SeaLootKind.Shark && !Opened && carrier.Value == null;
+            Vector3 point = (phase.Value == SeaLootState.Ready && !isSharkObjective) ? transform.position : eventPoint.Value;
             float distance = Vector3.Distance(camera.transform.position, point);
-            if (distance > 1200 || (phase.Value == SeaLootState.Ready && distance > 100)) return;
+            if (distance > 1200 || (!isSharkObjective && phase.Value == SeaLootState.Ready && distance > 100)) return;
             Vector3 screen = camera.WorldToScreenPoint(point + Vector3.up * 4);
             if (screen.z <= 0) return;
-            string label = phase.Value == SeaLootState.Ready ? "Ящик с припасами" : Kind == SeaLootKind.Capture ? "Зона захвата" : Kind == SeaLootKind.Raft ? "Плот с припасами" : "Подводный тайник";
+            string label = Kind == SeaLootKind.Shark
+                ? (Opened || carrier.Value != null ? "Ящик с припасами" : SharksDistracted ? "Ящик с припасами" : "Стая акул")
+                : phase.Value == SeaLootState.Ready
+                    ? "Ящик с припасами"
+                    : Kind == SeaLootKind.Capture
+                        ? "Зона захвата"
+                        : Kind == SeaLootKind.Raft
+                            ? "Плот с припасами"
+                            : "Подводный тайник";
             if (Kind == SeaLootKind.Capture && phase.Value == SeaLootState.Locked)
                 label += $" · {Mathf.RoundToInt(Progress * 100)}%" + (contested.Value ? " · оспаривается" : captureShip.Value != 0 ? $" · корабль {captureShip.Value}" : "");
             PirateHudStyle.Panel(new Rect(screen.x - 170, Screen.height - screen.y, 340, 28), $"{label} · {Mathf.RoundToInt(distance)} м");

@@ -148,7 +148,7 @@ namespace PirateSlop.Networking
             if (IsServerInitialized || !hasRemoteState) return;
             AdvancedPlayerController driver = null;
             if (remoteDriver > 0)
-                foreach (var p in FindObjectsByType<NetworkPlayer>(FindObjectsSortMode.None))
+                foreach (var p in NetworkPlayer.Active)
                     if (p.ParticipantId.Value == remoteDriver) { driver = p.Motor; break; }
             Motor.ApplyRemoteState(remoteState, 1f - Mathf.Exp(-16f * Time.deltaTime), driver);
         }

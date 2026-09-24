@@ -18,7 +18,7 @@ public class AdvancedPlayerController : MonoBehaviour
     public void ApplyKnockback(Vector3 velocity)
     {
         if (IsDead || !float.IsFinite(velocity.sqrMagnitude)) return;
-        foreach (var helm in FindObjectsByType<HelmInteraction>(FindObjectsSortMode.None))
+        foreach (var helm in HelmInteraction.Active)
             if (helm.IsControlledBy(this)) helm.ReleaseControl();
         SetLocomotionLocked(false);
         var passenger = GetComponent<ShipDeckPassenger>();
@@ -76,12 +76,13 @@ public class AdvancedPlayerController : MonoBehaviour
     public bool IsDead => health != null && health.IsDead;
     bool locomotionLocked;
     public SimpleCannon ActiveCannon { get; set; }
+    public PirateSlop.Harpoon.HarpoonGun ActiveHarpoon { get; set; }
     public bool PickupLocked { get; set; }
     public PirateSlop.Networking.NetworkParrotDrone ActiveParrot { get; set; }
     public bool BellPullLocked { get; set; }
     public bool SailPullLocked { get; set; }
     public float LookSensitivity => mouseSensitivity;
-    public bool OtherLocomotionLocked => ActiveParrot != null || BellPullLocked || locomotionLocked || PickupLocked || ActiveCannon != null || (lootNetwork != null && lootNetwork.LootWorkLocked);
+    public bool OtherLocomotionLocked => ActiveParrot != null || BellPullLocked || locomotionLocked || PickupLocked || ActiveCannon != null || ActiveHarpoon != null || (lootNetwork != null && lootNetwork.LootWorkLocked);
     public bool LocomotionLocked => SailPullLocked || OtherLocomotionLocked;
     PirateSlop.Networking.NetworkWeapon lootNetwork;
     public bool IsSliding => slideTimer > 0f;
@@ -139,10 +140,10 @@ public class AdvancedPlayerController : MonoBehaviour
         aimRecoil=Vector2.Lerp(aimRecoil,Vector2.zero,1-Mathf.Exp(-7*Time.deltaTime));
         var kb = Keyboard.current; var mouse = Mouse.current;
         if (kb == null) return;
-        if (kb.f1Key.wasPressedThisFrame && ActiveCannon == null && ActiveParrot == null && !BellPullLocked) SetThirdPerson(!IsThirdPerson);
+        if (kb.f1Key.wasPressedThisFrame && ActiveCannon == null && ActiveHarpoon == null && ActiveParrot == null && !BellPullLocked) SetThirdPerson(!IsThirdPerson);
         if (kb.escapeKey.wasPressedThisFrame) { pending.Release = true; SetCursor(false); }
         if (mouse != null && mouse.leftButton.wasPressedThisFrame && !PlayerInventory.LootWindowOpen && !PirateSlop.Networking.SessionController.MenuOpen) SetCursor(true);
-        if (InputActive && ActiveCannon == null && mouse != null && (shipControls == null || !shipControls.IsDragging)) { var d = mouse.delta.ReadValue() * mouseSensitivity * AimSensitivityScale; lookYaw = Mathf.Repeat(lookYaw + d.x, 360f); pitch = Mathf.Clamp(pitch - d.y, -85f, 85f); }
+        if (InputActive && ActiveCannon == null && ActiveHarpoon == null && mouse != null && (shipControls == null || !shipControls.IsDragging)) { var d = mouse.delta.ReadValue() * mouseSensitivity * AimSensitivityScale; lookYaw = Mathf.Repeat(lookYaw + d.x, 360f); pitch = Mathf.Clamp(pitch - d.y, -85f, 85f); }
         pending.Move = InputActive ? Vector2.ClampMagnitude(new Vector2((kb.dKey.isPressed || kb.rightArrowKey.isPressed ? 1 : 0) - (kb.aKey.isPressed || kb.leftArrowKey.isPressed ? 1 : 0), (kb.wKey.isPressed || kb.upArrowKey.isPressed ? 1 : 0) - (kb.sKey.isPressed || kb.downArrowKey.isPressed ? 1 : 0)), 1) : Vector2.zero;
         pending.Yaw = lookYaw;
         pending.Pitch = pitch;
@@ -168,6 +169,11 @@ public class AdvancedPlayerController : MonoBehaviour
             turningShipYaw = shipYaw;
         }
         else turningShip = null;
+        if (ActiveHarpoon != null && ActiveHarpoon.CameraMount != null)
+        {
+            playerCamera.transform.SetPositionAndRotation(ActiveHarpoon.CameraMount.position, ActiveHarpoon.CameraMount.rotation);
+            return;
+        }
         if (ActiveCannon != null && ActiveCannon.Muzzle != null)
         {
             var cannon = ActiveCannon;

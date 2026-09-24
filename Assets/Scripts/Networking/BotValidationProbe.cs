@@ -1,4 +1,4 @@
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || DEBUG
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -72,7 +72,7 @@ namespace PirateSlop.Networking
                 CpuMeanMs = new double[4], CounterAvailable = new bool[4] };
             var states = new List<string>();
             var numbers = new HashSet<int>();
-            foreach (var player in FindObjectsByType<NetworkPlayer>(FindObjectsSortMode.None))
+            foreach (var player in NetworkPlayer.Active)
             {
                 sample.Players++;
                 sample.Server |= player.IsServerInitialized;

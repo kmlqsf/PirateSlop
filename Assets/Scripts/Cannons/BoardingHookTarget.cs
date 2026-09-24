@@ -3,13 +3,13 @@ using PirateSlop.Networking;
 
 namespace PirateSlop
 {
-    public sealed class BoardingHookTarget : MonoBehaviour
+    public class BoardingHookTarget : MonoBehaviour
     {
         public NetworkCannon Source;
         public int Slot;
         public LineRenderer Rope;
-        float struckAt=-10;
-        public void Strike(GameObject attacker)
+        protected float struckAt = -10;
+        public virtual void Strike(GameObject attacker)
         {
             if(Source==null || !Source.IsServerInitialized || attacker==null || Time.time-struckAt<.55f) return;
             var health=attacker.GetComponent<CombatHealth>();

@@ -15,8 +15,8 @@ namespace PirateSlop
         Vector2 scroll;
         int quantity;
         static readonly int[] quantities = { 1, 5, 20 };
-        static readonly InventoryItem[] items = { InventoryItem.Cannon, InventoryItem.Pistol, InventoryItem.Sabre, InventoryItem.Rod, InventoryItem.Fish, InventoryItem.Cannonball, InventoryItem.FireCannonball, InventoryItem.IceCannonball, InventoryItem.PushCannonball, InventoryItem.BoomerangCannonball };
-        static readonly string[] names = { "Пушка", "Пистолет", "Сабля", "Удочка", "Рыба", "Обычное ядро", "Огненное ядро", "Ледяное ядро", "Отталкивающее ядро", "Бумеранг" };
+        static readonly InventoryItem[] items = { InventoryItem.Cannon, InventoryItem.Pistol, InventoryItem.Sabre, InventoryItem.Rod, InventoryItem.Fish, InventoryItem.Swordfish, InventoryItem.Pufferfish, InventoryItem.Cannonball, InventoryItem.FireCannonball, InventoryItem.IceCannonball, InventoryItem.PushCannonball, InventoryItem.BoomerangCannonball };
+        static readonly string[] names = { "Пушка", "Пистолет", "Сабля", "Удочка", "Рыба", "Рыба-меч", "Рыба-фугу", "Обычное ядро", "Огненное ядро", "Ледяное ядро", "Отталкивающее ядро", "Бумеранг" };
         void Awake() => network = GetComponent<NetworkWeapon>();
         void Update()
         {
@@ -39,6 +39,15 @@ namespace PirateSlop
             Button("Создать корабль рядом", 0);
             Button("Создать тренировочную мишень", 1);
             Button("Создать врага-манекена перед собой", 13);
+            if (GUILayout.Button("Trigger Kraken", GUILayout.Height(29)))
+            {
+                if (network != null) network.DeveloperCommand(15);
+                else
+                {
+                    var ship = FindFirstObjectByType<ShipController>();
+                    ship?.GetComponent<KrakenEncounterManager>()?.TriggerEncounter();
+                }
+            }
             GUILayout.Space(8);
             GUILayout.Label("Количество при выдаче в инвентарь");
             quantity = GUILayout.Toolbar(quantity, new[] { "1", "5", "20" });

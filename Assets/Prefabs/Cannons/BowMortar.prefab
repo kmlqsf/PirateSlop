@@ -1462,6 +1462,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.SimpleCannon
   Muzzle: {fileID: 6122857583475279149}
+  cannonballPrefab: {fileID: 7988514449991322393, guid: 7dbdb9bb93049584e8703c8be8854dfc, type: 3}
+  fusePrefab: {fileID: 878318906978561882, guid: 432b1b34728f1ff448a962ff0d612f51, type: 3}
   IsMortar: 1
   LaunchSpeed: 30
   BarrelPivot: {fileID: 1993436805694752459}

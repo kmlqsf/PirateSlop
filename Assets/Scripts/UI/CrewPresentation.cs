@@ -21,7 +21,7 @@ namespace PirateSlop
             if (wasDead) return;
             var camera = owner.Motor.PlayerCamera;
             if (camera == null) return;
-            foreach (var member in FindObjectsByType<NetworkPlayer>(FindObjectsSortMode.None))
+            foreach (var member in NetworkPlayer.Active)
             {
                 if (member == owner || (!member.IsBot.Value && member.TeamId.Value != owner.TeamId.Value) || member.Motor == null || member.Motor.IsDead) continue;
                 Vector3 head = member.transform.position + Vector3.up * 1.5f;

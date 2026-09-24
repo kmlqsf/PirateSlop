@@ -45,6 +45,7 @@ namespace PirateSlop
         }
         void OnGUI()
         {
+            if (Event.current.type != EventType.Repaint) return;
             if (motor.PlayerCamera == null || !motor.PlayerCamera.enabled || motor.IsDead) return;
             Color old = GUI.color;
             if (Underwater)

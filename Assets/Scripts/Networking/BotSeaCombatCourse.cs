@@ -27,7 +27,7 @@ namespace PirateSlop.Networking
                 demand = Mathf.Clamp01(distanceError / 25f);
                 if (Mathf.Abs(ship.Motor.Speed) > 2f && distanceError < 12f) demand = 0f;
             }
-            demand *= 1f - Mathf.InverseLerp(15f, 60f, turn);
+            demand *= 1f - Mathf.Clamp01(turn / 60f) * .3f;
             return Mathf.Round(Mathf.Clamp01(demand) * 10f) / 10f;
         }
         public NetworkShip Target { get; private set; }
@@ -38,6 +38,7 @@ namespace PirateSlop.Networking
 
         public bool TryCourse(NetworkShip ship, NetworkPlayer observer, float safe, out Vector3 point, out string description)
         {
+            if (Target != null && Target.IsSinking) { Clear(); }
             if (Time.time >= nextScan)
             {
                 nextScan = Time.time + 1f; active = false;
@@ -89,20 +90,57 @@ namespace PirateSlop.Networking
                         float yaw = bearing - Mathf.Atan2(local.x, local.z) * Mathf.Rad2Deg;
                         var heading = Quaternion.Euler(0, yaw, 0) * Vector3.forward;
                         float distance = offset.magnitude;
-                        float clearance = Mathf.Max(45f, ship.CollisionRadius + Target.CollisionRadius + 15f);
+                        var flood = ship.GetComponent<ShipFlooding>();
+                        float hpFraction = flood != null ? 1f - flood.Level : 1f;
+                        float clearance = Mathf.Max(40f, ship.CollisionRadius + Target.CollisionRadius + 10f);
                         float desiredRange = Mathf.Max(85f, clearance + 20f);
-                        if (battery.LoadedAmmo == InventoryItem.BoomerangCannonball)
+                        bool closeWeapon = battery.LoadedAmmo == InventoryItem.PushCannonball || battery.LoadedAmmo == InventoryItem.BoomerangCannonball || battery.LoadedAmmo == InventoryItem.BoardingHook;
+                        if (hpFraction > .5f && closeWeapon) desiredRange = Mathf.Clamp(clearance + 5f, 40f, 60f);
+                        else if (hpFraction < .3f) desiredRange = 175f;
+                        else if (battery.LoadedAmmo == InventoryItem.BoomerangCannonball)
                             desiredRange = Mathf.Max(clearance + 5f, Mathf.Min(85f, battery.LaunchSpeed * 1.15f * 1.4f));
                         closingSpeed = observedTarget == Target && Time.time - observedAt < 2.5f ?
                             Mathf.Clamp((range - distance) / Mathf.Max(.1f, Time.time - observedAt), -20f, 20f) : 0f;
                         observedTarget = Target; observedAt = Time.time;
                         range = distance; clearanceRange = clearance; firingRange = desiredRange;
+                        var toUs = (ship.transform.position - Target.transform.position).normalized;
+                        if (Mathf.Abs(Vector3.Dot(toUs, Target.transform.right)) > .35f)
+                        {
+                            var saferSide = Vector3.Dot(toUs, Target.transform.forward) >= 0 ? Target.transform.forward : -Target.transform.forward;
+                            heading = (heading + saferSide * .6f).normalized;
+                        }
                         heading = distance < clearance ? -offset.normalized :
                             (heading + offset.normalized * Mathf.Clamp((distance - desiredRange) / 40f, -.7f, .7f)).normalized;
                         course = ship.transform.position + heading * 60f;
+                        if (hpFraction < .3f && PirateSlop.World.ProceduralWorld.Instance != null)
+                        {
+                            var islands = PirateSlop.World.ProceduralWorld.Instance.Layout.Locations;
+                            if (islands != null)
+                            {
+                                float bestCover = float.PositiveInfinity;
+                                Vector3 coverPoint = course;
+                                foreach (var island in islands)
+                                {
+                                    var toIsland = island.Position - Target.transform.position;
+                                    var toShipPos = ship.transform.position - Target.transform.position;
+                                    if (Vector3.Dot(toIsland.normalized, toShipPos.normalized) > .5f && toIsland.sqrMagnitude < toShipPos.sqrMagnitude)
+                                    {
+                                        var behindIsland = island.Position + (island.Position - Target.transform.position).normalized * (island.Radius + 30f);
+                                        float d = Vector3.Distance(ship.transform.position, behindIsland);
+                                        if (d < bestCover) { bestCover = d; coverPoint = behindIsland; }
+                                    }
+                                }
+                                if (!float.IsPositiveInfinity(bestCover))
+                                {
+                                    course = coverPoint;
+                                    reason = $"Отступление в укрытие за остров: LoS перекрыт; дальность {distance:F0} м";
+                                }
+                            }
+                        }
                         active = new Vector2(course.x, course.z).magnitude < safe;
-                        reason = $"Боевой курс: команда {Target.TeamId.Value}, пушка {battery.Index + 1}, {distance:F0} м; " +
-                            (distance < clearance ? "увеличить дистанцию" : "вывести цель в сектор пушки");
+                        if (reason == null || !reason.StartsWith("Отступление"))
+                            reason = $"Боевой курс: команда {Target.TeamId.Value}, пушка {battery.Index + 1}, {distance:F0} м; " +
+                                (distance < clearance ? "увеличить дистанцию" : "вывести цель в сектор пушки");
                     }
                 }
                 if (!active) Target = null;

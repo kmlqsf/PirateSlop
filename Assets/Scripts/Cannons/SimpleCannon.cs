@@ -4,7 +4,13 @@ namespace PirateSlop
 {
     public sealed class SimpleCannon : MonoBehaviour
     {
+        static readonly System.Collections.Generic.List<SimpleCannon> active = new();
+        public static System.Collections.Generic.IReadOnlyList<SimpleCannon> Active => active;
+        void OnEnable() => active.Add(this);
+
         public Transform Muzzle;
+        [SerializeField] Cannonball cannonballPrefab;
+        [SerializeField] GameObject fusePrefab;
         public bool IsMortar;
         public bool AcceptsAmmo(InventoryItem ammo) => CannonAmmo.IsBall(ammo);
         public float LaunchSpeed = 30f;
@@ -160,33 +166,41 @@ namespace PirateSlop
         }
         public void SpawnShot(Vector3 position, Vector3 velocity, bool authoritative, InventoryItem ammo = InventoryItem.Cannonball)
         {
-            if (supply == null) return;
+            var prefabToUse = cannonballPrefab != null ? cannonballPrefab : supply;
+            if (prefabToUse == null) return;
             GameAudio.Play(SoundCue.Cannon, position);
             CombatVfx.Fire(Muzzle.position, velocity.normalized, true);
-            var shot = Instantiate(supply, position, Quaternion.identity);
+            var shot = Instantiate(prefabToUse, position, Quaternion.identity);
             shot.Ammo = ammo;
             shot.name = "FiredCannonball"; shot.Network = null; shot.Loaded = shot.Held = false;
             shot.gameObject.SetActive(true);
             shot.RefreshVisual();
             shot.transform.SetParent(null, true);
             shot.AttachToPlatform(null);
-            shot.GetComponent<Collider>().enabled = false;
+            var col = shot.GetComponent<Collider>();
+            if (col != null) col.enabled = false;
             shot.Body.isKinematic = true; shot.Body.useGravity = false;
-            var projectile=shot.gameObject.AddComponent<CannonShotDamage>();
-            projectile.Authoritative=authoritative;projectile.Source=GetComponentInParent<ShipController>().transform;
-            projectile.Velocity=velocity; projectile.Ammo=ammo;
-            projectile.SourceCannonIndex=Index; projectile.MortarShot = IsMortar;
+            var projectile = shot.GetComponent<CannonShotDamage>();
+            if (projectile == null) projectile = shot.gameObject.AddComponent<CannonShotDamage>();
+            projectile.Authoritative = authoritative; projectile.Source = GetComponentInParent<ShipController>().transform;
+            projectile.Velocity = velocity; projectile.Ammo = ammo;
+            projectile.SourceCannonIndex = Index; projectile.MortarShot = IsMortar;
             projectile.Attacker = authoritative ? firingPlayer : null;
-            projectile.Radius=shot.GetComponent<SphereCollider>().radius*Mathf.Max(shot.transform.lossyScale.x,shot.transform.lossyScale.y,shot.transform.lossyScale.z);
-            if (shot.FlightTrailMaterial != null)
+            projectile.Radius = shot.GetComponent<SphereCollider>().radius * Mathf.Max(shot.transform.lossyScale.x, shot.transform.lossyScale.y, shot.transform.lossyScale.z);
+            var trail = shot.GetComponent<TrailRenderer>();
+            if (trail == null && shot.FlightTrailMaterial != null)
             {
-                var trail = shot.gameObject.AddComponent<TrailRenderer>();
+                trail = shot.gameObject.AddComponent<TrailRenderer>();
                 trail.sharedMaterial = shot.FlightTrailMaterial;
                 trail.time = .22f; trail.minVertexDistance = .08f;
                 trail.startWidth = .18f; trail.endWidth = .015f;
-                trail.startColor = CannonAmmo.Color(ammo); trail.endColor = new Color(.5f, .5f, .5f, 0f);
                 trail.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
                 trail.receiveShadows = false;
+            }
+            if (trail != null)
+            {
+                trail.startColor = CannonAmmo.Color(ammo);
+                trail.endColor = new Color(.5f, .5f, .5f, 0f);
             }
             Destroy(shot.gameObject, 20f);
         }
@@ -276,40 +290,55 @@ namespace PirateSlop
         void CreateFuse()
         {
             if (fuse != null || BarrelPivot == null) return;
-            var shader = Shader.Find("Universal Render Pipeline/Unlit");
-            if (shader == null) shader = Shader.Find("Sprites/Default");
-            ropeMaterial = new Material(shader);
-            ropeMaterial.color = new Color(.28f, .19f, .08f);
-            emberMaterial = new Material(shader);
-            emberMaterial.color = new Color(1f, .32f, .025f);
-            var root = new GameObject("CannonFuse");
-            root.transform.SetParent(BarrelPivot, false);
-            fuse = root.AddComponent<LineRenderer>();
-            fuse.useWorldSpace = false; fuse.positionCount = 3;
-            fuse.startWidth = fuse.endWidth = .025f;
-            fuse.numCapVertices = 3; fuse.numCornerVertices = 3;
-            fuse.sharedMaterial = ropeMaterial;
+            GameObject root;
+            if (fusePrefab != null)
+            {
+                root = Instantiate(fusePrefab, BarrelPivot);
+                root.transform.localPosition = Vector3.zero;
+                root.transform.localRotation = Quaternion.identity;
+                fuse = root.GetComponent<LineRenderer>();
+                var emberTransform = root.transform.Find("FuseEmber");
+                if (emberTransform != null) ember = emberTransform;
+                fuseLight = root.GetComponentInChildren<Light>();
+                sparks = root.GetComponentInChildren<ParticleSystem>();
+            }
+            else
+            {
+                if (ropeMaterial == null)
+                {
+                    var shader = Shader.Find("Universal Render Pipeline/Unlit") ?? Shader.Find("Sprites/Default");
+                    ropeMaterial = new Material(shader) { color = new Color(.28f, .19f, .08f) };
+                    emberMaterial = new Material(shader) { color = new Color(1f, .32f, .025f) };
+                }
+                root = new GameObject("CannonFuse");
+                root.transform.SetParent(BarrelPivot, false);
+                fuse = root.AddComponent<LineRenderer>();
+                fuse.useWorldSpace = false; fuse.positionCount = 3;
+                fuse.startWidth = fuse.endWidth = .025f;
+                fuse.numCapVertices = 3; fuse.numCornerVertices = 3;
+                fuse.sharedMaterial = ropeMaterial;
+                var glow = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                glow.name = "FuseEmber"; Destroy(glow.GetComponent<Collider>());
+                ember = glow.transform; ember.SetParent(root.transform, false); ember.localScale = Vector3.one * .055f;
+                glow.GetComponent<Renderer>().sharedMaterial = emberMaterial;
+                fuseLight = glow.AddComponent<Light>();
+                fuseLight.color = new Color(1f, .35f, .05f); fuseLight.range = 1.4f; fuseLight.intensity = 1.5f;
+                var sparkObject = new GameObject("FuseSparks");
+                sparkObject.transform.SetParent(root.transform, false);
+                sparks = sparkObject.AddComponent<ParticleSystem>();
+                sparks.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+                var main = sparks.main;
+                main.playOnAwake = false; main.loop = true; main.startLifetime = .25f;
+                main.startSpeed = .55f; main.startSize = .018f;
+                main.startColor = new Color(1f, .65f, .12f); main.maxParticles = 24;
+                main.simulationSpace = ParticleSystemSimulationSpace.Local;
+                var emission = sparks.emission; emission.rateOverTime = 28f;
+                var shape = sparks.shape; shape.shapeType = ParticleSystemShapeType.Sphere; shape.radius = .025f;
+                sparks.GetComponent<ParticleSystemRenderer>().sharedMaterial = emberMaterial;
+            }
             Vector3 origin = Breech != null ? Breech.position : BarrelPivot.position;
             fuseBase = BarrelPivot.InverseTransformPoint(origin + transform.up * .16f);
             fuseTip = BarrelPivot.InverseTransformPoint(origin + transform.up * .42f - transform.forward * .2f);
-            var glow = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            glow.name = "FuseEmber"; Destroy(glow.GetComponent<Collider>());
-            ember = glow.transform; ember.SetParent(root.transform, false); ember.localScale = Vector3.one * .055f;
-            glow.GetComponent<Renderer>().sharedMaterial = emberMaterial;
-            fuseLight = glow.AddComponent<Light>();
-            fuseLight.color = new Color(1f, .35f, .05f); fuseLight.range = 1.4f; fuseLight.intensity = 1.5f;
-            var sparkObject = new GameObject("FuseSparks");
-            sparkObject.transform.SetParent(root.transform, false);
-            sparks = sparkObject.AddComponent<ParticleSystem>();
-            sparks.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
-            var main = sparks.main;
-            main.playOnAwake = false; main.loop = true; main.startLifetime = .25f;
-            main.startSpeed = .55f; main.startSize = .018f;
-            main.startColor = new Color(1f, .65f, .12f); main.maxParticles = 24;
-            main.simulationSpace = ParticleSystemSimulationSpace.Local;
-            var emission = sparks.emission; emission.rateOverTime = 28f;
-            var shape = sparks.shape; shape.shapeType = ParticleSystemShapeType.Sphere; shape.radius = .025f;
-            sparks.GetComponent<ParticleSystemRenderer>().sharedMaterial = emberMaterial;
         }
         public void ShowFuse(float progress)
         {
@@ -329,7 +358,7 @@ namespace PirateSlop
             fuseLight.intensity = 1.4f + Mathf.Sin(Time.time * 47f) * .4f;
             if (!sparks.isPlaying) sparks.Play();
         }
-        void OnDisable() { ReleaseControl(); }
+        void OnDisable() { active.Remove(this); ReleaseControl(); }
         void OnDestroy()
         {
             if (ropeMaterial != null) Destroy(ropeMaterial);

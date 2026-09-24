@@ -69,7 +69,7 @@ namespace PirateSlop.Networking
             if (platformId.Value == 0) resolvedPlatform = null;
             if (platform.Value != null) resolvedPlatform = platform.Value.GetComponent<NetworkShip>();
             if (resolvedPlatform == null && platformId.Value > 0)
-                foreach (var ship in FindObjectsByType<NetworkShip>(FindObjectsSortMode.None))
+                foreach (var ship in FindObjectsByType<NetworkShip>(FindObjectsInactive.Exclude))
                     if (ship.ParticipantId.Value == platformId.Value) { resolvedPlatform = ship; break; }
             if (platformId.Value > 0 && resolvedPlatform == null)
             {
@@ -130,6 +130,15 @@ namespace PirateSlop.Networking
                 var ocean = OceanSurface.Instance;
                 if (ocean != null && transform.position.y <= ocean.Height(transform.position))
                 {
+                    Vector3 splashPoint = transform.position;
+                    foreach (var chest in NetworkLootChest.ServerChests)
+                    {
+                        if (chest != null && chest.IsSpawned && chest.Kind == SeaLootKind.Shark)
+                        {
+                            if (Vector3.Distance(splashPoint, chest.EventPoint) <= 12f)
+                                chest.FeedSharks(Item, splashPoint);
+                        }
+                    }
                     FlopSoundObserversRpc(SoundCue.Splash, transform.position);
                     ServerManager.Despawn(NetworkObject); return;
                 }

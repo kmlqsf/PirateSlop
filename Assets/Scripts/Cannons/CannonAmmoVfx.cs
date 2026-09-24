@@ -4,9 +4,40 @@ namespace PirateSlop
 {
     public sealed class CannonAmmoVfx : MonoBehaviour
     {
+        [SerializeField] Material vfxMaterial;
+        static Material defaultMaterial;
         Material material;
         bool burning;
         float nextSmoke;
+        Camera cam;
+        float nextCamCheck;
+
+        static Material GetDefaultMaterial()
+        {
+            if (defaultMaterial != null) return defaultMaterial;
+            var shader = Shader.Find("Universal Render Pipeline/Particles/Unlit") ?? Shader.Find("Sprites/Default");
+            defaultMaterial = new Material(shader);
+            if (defaultMaterial.HasProperty("_Surface")) defaultMaterial.SetFloat("_Surface", 1f);
+            if (defaultMaterial.HasProperty("_SrcBlend")) defaultMaterial.SetFloat("_SrcBlend", (float)UnityEngine.Rendering.BlendMode.SrcAlpha);
+            if (defaultMaterial.HasProperty("_DstBlend")) defaultMaterial.SetFloat("_DstBlend", (float)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+            if (defaultMaterial.HasProperty("_ZWrite")) defaultMaterial.SetFloat("_ZWrite", 0f);
+            defaultMaterial.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");
+            defaultMaterial.renderQueue = 3000;
+            return defaultMaterial;
+        }
+
+        Camera MainCamera
+        {
+            get
+            {
+                if (cam != null && cam.isActiveAndEnabled) return cam;
+                if (Time.unscaledTime < nextCamCheck) return cam;
+                nextCamCheck = Time.unscaledTime + 1f;
+                cam = Camera.main;
+                return cam;
+            }
+        }
+
         public static CannonAmmoVfx Create(Transform parent, Vector3 position, bool frozen)
         {
             var root = new GameObject(frozen ? "FrozenShip" : "CannonFire");
@@ -21,15 +52,7 @@ namespace PirateSlop
         {
             burning = !frozen;
             nextSmoke = Time.time + Random.value * .9f;
-            var shader = Shader.Find("Universal Render Pipeline/Particles/Unlit");
-            if (shader == null) shader = Shader.Find("Sprites/Default");
-            material = new Material(shader);
-            if (material.HasProperty("_Surface")) material.SetFloat("_Surface", 1f);
-            if (material.HasProperty("_SrcBlend")) material.SetFloat("_SrcBlend", (float)UnityEngine.Rendering.BlendMode.SrcAlpha);
-            if (material.HasProperty("_DstBlend")) material.SetFloat("_DstBlend", (float)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
-            if (material.HasProperty("_ZWrite")) material.SetFloat("_ZWrite", 0f);
-            material.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");
-            material.renderQueue = 3000;
+            material = vfxMaterial != null ? vfxMaterial : GetDefaultMaterial();
             var particles = gameObject.AddComponent<ParticleSystem>();
             particles.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
             var main = particles.main;
@@ -68,10 +91,9 @@ namespace PirateSlop
         {
             if (!burning || Time.time < nextSmoke) return;
             nextSmoke = Time.time + .9f;
-            var camera = Camera.main;
+            var camera = MainCamera;
             if (camera == null || (camera.transform.position - transform.position).sqrMagnitude > 160f * 160f) return;
             CombatVfx.FireSmoke(transform.position + Vector3.up * .8f);
         }
-        void OnDestroy() { if (material != null) Destroy(material); }
     }
 }

@@ -40,12 +40,13 @@ namespace PirateSlop.World
         void Update()
         {
             if (localPlayer == null)
-                foreach (var player in FindObjectsByType<Networking.NetworkPlayer>(FindObjectsSortMode.None))
+                foreach (var player in Networking.NetworkPlayer.Active)
                     if (player.IsOwner) { localPlayer = player; break; }
             if (OceanSurface.Instance != null) OceanSurface.Instance.WaveScale = Mathf.Lerp(.06f, 2.5f, Progress * Progress);
         }
         void OnGUI()
         {
+            if (Event.current.type != EventType.Repaint) return;
             var camera = Camera.main;
             if (camera == null || !camera.enabled || Networking.SessionController.MenuOpen) return;
             Color old = GUI.color;

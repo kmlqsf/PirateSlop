@@ -106,6 +106,17 @@ namespace PirateSlop
                     if (!hidden) hook.Strike(gameObject);
                     continue;
                 }
+                var harpoonGun = collider.GetComponentInParent<Harpoon.HarpoonGun>();
+                if (harpoonGun != null)
+                {
+                    Vector3 deltaGun = collider.ClosestPoint(origin + attackDirection) - origin;
+                    if (Vector3.Angle(attackDirection, deltaGun) <= 75f)
+                    {
+                        harpoonGun.TakeDamage(25f, gameObject);
+                        CombatVfx.Impact(collider.ClosestPoint(origin + attackDirection), Vector3.up, false, true);
+                    }
+                    continue;
+                }
                 var health = collider.GetComponentInParent<CombatHealth>();
                 if (health == null || struck.Contains(health)) continue;
                 Vector3 point = collider.ClosestPoint(origin + attackDirection), delta = point - origin;

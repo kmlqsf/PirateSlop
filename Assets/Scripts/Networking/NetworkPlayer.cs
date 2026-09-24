@@ -28,6 +28,11 @@ namespace PirateSlop.Networking
     [DefaultExecutionOrder(-10)]
     public sealed partial class NetworkPlayer : NetworkBehaviour
     {
+        static readonly System.Collections.Generic.List<NetworkPlayer> active = new();
+        public static System.Collections.Generic.IReadOnlyList<NetworkPlayer> Active => active;
+        void OnEnable() => active.Add(this);
+        void OnDisable() => active.Remove(this);
+
         public readonly SyncVar<NetworkObject> ShipObject = new();
         public readonly SyncVar<int> ParticipantId = new();
         public readonly SyncVar<int> HomeShipId = new();
@@ -115,6 +120,21 @@ namespace PirateSlop.Networking
             if (!voicePlayers.Contains(this)) voicePlayers.Add(this);
             if (IsBot.Value) SessionController.Instance.RegisterBotDiagnostics(this);
             if (IsBot.Value) botActions = new BotActionExecutor(this);
+            if (IsBot.Value)
+            {
+                var cc = GetComponent<CharacterController>();
+                if (cc != null && SessionController.Instance != null)
+                {
+                    foreach (var other in SessionController.Instance.AllPlayers)
+                    {
+                        if (other != null && other != this && other.IsBot.Value)
+                        {
+                            var otherCc = other.GetComponent<CharacterController>();
+                            if (otherCc != null) Physics.IgnoreCollision(cc, otherCc, true);
+                        }
+                    }
+                }
+            }
         }
         public override void OnStopNetwork()
         {

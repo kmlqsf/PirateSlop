@@ -6,6 +6,8 @@ namespace PirateSlop
     {
         static GameAudio instance;
         GameAudioBank bank;
+        readonly System.Collections.Generic.Dictionary<SoundCue, GameAudioBank.Entry> entryMap = new();
+        static readonly RaycastHit[] envHits = new RaycastHit[16];
         AudioSource[] voices;
         AudioSource[] feedbackVoices;
         AudioSource[] shotVoices;
@@ -33,7 +35,10 @@ namespace PirateSlop
             instance = new GameObject("GameAudio").AddComponent<GameAudio>();
             DontDestroyOnLoad(instance.gameObject);
             instance.bank = bank;
-            instance.voices = new AudioSource[32];
+            if (bank.Entries != null)
+                foreach (var e in bank.Entries)
+                    if (e != null) instance.entryMap[e.Cue] = e;
+            instance.voices = new AudioSource[16];
             for (int i = 0; i < instance.voices.Length; i++) instance.voices[i] = instance.Source("Effect " + i, false);
             instance.feedbackVoices = new AudioSource[4];
             instance.shotVoices = new AudioSource[12];
@@ -49,8 +54,7 @@ namespace PirateSlop
             instance.underwater.GetComponent<SpatialAudioTone>().Environment = false;
             instance.flooding = instance.Source("Water inside hull", true);
             instance.flooding.pitch = .65f;
-            var bubbles = System.Array.Find(bank.Entries, e => e.Cue == SoundCue.UnderwaterBubbles);
-            if (bubbles != null && bubbles.Clips != null && bubbles.Clips.Length > 0)
+            if (instance.entryMap.TryGetValue(SoundCue.UnderwaterBubbles, out var bubbles) && bubbles != null && bubbles.Clips != null && bubbles.Clips.Length > 0)
             {
                 instance.underwater.clip = bubbles.Clips[0];
                 instance.flooding.clip = bubbles.Clips[0];
@@ -74,7 +78,7 @@ namespace PirateSlop
         public static void Play(SoundCue cue, Vector3 position, float scale = 1f, bool ui = false,FirearmDefinition firearm=null)
         {
             var audio = Get(); if (audio == null) return;
-            var entry = System.Array.Find(audio.bank.Entries, e => e.Cue == cue);
+            audio.entryMap.TryGetValue(cue, out var entry);
             if(firearm!=null && firearm.ShotClips!=null && firearm.ShotClips.Length>0)
                 entry=new GameAudioBank.Entry { Cue=cue,Clips=firearm.ShotClips,Volume=firearm.ShotVolume,Distance=firearm.AudibleDistance };
             if (entry == null || entry.Clips == null || entry.Clips.Length == 0) return;
@@ -96,7 +100,7 @@ namespace PirateSlop
         {
             var audio = Get();
             if (audio == null) return;
-            var entry = System.Array.Find(audio.bank.Entries, e => e.Cue == cue);
+            audio.entryMap.TryGetValue(cue, out var entry);
             if (entry == null || entry.Clips == null || entry.Clips.Length == 0) return;
             if (source == null)
             {
@@ -141,9 +145,7 @@ namespace PirateSlop
             if (Time.unscaledTime >= environmentAt)
             {
                 environmentAt = Time.unscaledTime + .25f;
-                if (listener == null || !listener.isActiveAndEnabled)
-                    foreach (var candidate in FindObjectsByType<AudioListener>(FindObjectsSortMode.None))
-                        if (candidate.isActiveAndEnabled) { listener = candidate; break; }
+                listener = SpatialAudioTone.FindListener();
                 cabinTarget = underwaterTarget = 0f;
                 if (listener != null)
                 {
@@ -151,9 +153,15 @@ namespace PirateSlop
                     var sea = OceanSurface.Instance;
                     underwaterTarget = sea != null && eye.y < sea.Height(eye) - .1f ? 1f : 0f;
                     if (onShip)
-                        foreach (var hit in Physics.RaycastAll(eye, Vector3.up, 4f, ~0, QueryTriggerInteraction.Ignore))
-                            if (hit.collider.GetComponentInParent<ShipController>() != null && hit.collider.GetComponentInParent<AdvancedPlayerController>() == null)
+                    {
+                        int count = Physics.RaycastNonAlloc(eye, Vector3.up, envHits, 4f, ~0, QueryTriggerInteraction.Ignore);
+                        for (int i = 0; i < count; i++)
+                        {
+                            var col = envHits[i].collider;
+                            if (col != null && col.GetComponentInParent<ShipController>() != null && col.GetComponentInParent<AdvancedPlayerController>() == null)
                             { cabinTarget = 1f; break; }
+                        }
+                    }
                 }
             }
             float blend = 1f - Mathf.Exp(-4f * Time.unscaledDeltaTime);

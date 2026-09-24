@@ -13,7 +13,7 @@ namespace PirateSlop.World
             if (world == null || !world.Ready || catalog == null || catalog.ChestPrefab == null) return;
             var random = new MapRandom((uint)world.Layout.Seed ^ 0x79c526abu);
             var occupied = new List<Vector3>();
-            int count = Mathf.Clamp(catalog.SeaEventsPerType, 1, 20) * 3;
+            int count = Mathf.Clamp(catalog.SeaEventsPerType, 1, 20) * 4;
             float separation = Mathf.Max(160, catalog.CaptureRadius * 2.5f);
             for (int i = 0; i < count; i++)
             {
@@ -35,7 +35,7 @@ namespace PirateSlop.World
                     SceneManager.MoveGameObjectToScene(chest.gameObject, world.gameObject.scene);
                     chest.Catalog = catalog;
                     chest.Fill(ref random);
-                    chest.ConfigureOcean((SeaLootKind)(1 + i % 3), point);
+                    chest.ConfigureOcean((SeaLootKind)(1 + i % 4), point);
                     manager.ServerManager.Spawn(chest.NetworkObject);
                     occupied.Add(point);
                     break;
