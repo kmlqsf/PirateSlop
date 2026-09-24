@@ -75,13 +75,14 @@ namespace PirateSlop.Networking
             if (camera == null || !camera.isActiveAndEnabled) return;
             var viewer = camera.GetComponentInParent<NetworkPlayer>();
             if (viewer == null || !viewer.IsOwner || viewer.Motor.IsDead) return;
-            Vector3 point = phase.Value == SeaLootState.Ready ? transform.position : eventPoint.Value;
+            bool isSharkObjective = Kind == SeaLootKind.Shark && !Opened && carrier.Value == null;
+            Vector3 point = (phase.Value == SeaLootState.Ready && !isSharkObjective) ? transform.position : eventPoint.Value;
             float distance = Vector3.Distance(camera.transform.position, point);
-            if (distance > 1200 || (phase.Value == SeaLootState.Ready && distance > 100)) return;
+            if (distance > 1200 || (!isSharkObjective && phase.Value == SeaLootState.Ready && distance > 100)) return;
             Vector3 screen = camera.WorldToScreenPoint(point + Vector3.up * 4);
             if (screen.z <= 0) return;
             string label = Kind == SeaLootKind.Shark
-                ? (SharksDistracted ? "Ящик с припасами" : "Стая акул")
+                ? (Opened || carrier.Value != null ? "Ящик с припасами" : SharksDistracted ? "Ящик с припасами" : "Стая акул")
                 : phase.Value == SeaLootState.Ready
                     ? "Ящик с припасами"
                     : Kind == SeaLootKind.Capture

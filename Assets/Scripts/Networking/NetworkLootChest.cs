@@ -26,7 +26,7 @@ namespace PirateSlop.Networking
         }
         public void Open()
         {
-            if (IsServerInitialized && IsSpawned && Available && (Kind != SeaLootKind.Shark || SharksDistracted)) opened.Value = true;
+            if (IsServerInitialized && IsSpawned && Available) opened.Value = true;
         }
         public void Take(NetworkWeapon player, int slot, bool swap = false, int selected = -1, InventoryItem expected = InventoryItem.None, int expectedCount = 0)
         {

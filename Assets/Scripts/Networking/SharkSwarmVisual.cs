@@ -51,23 +51,17 @@ namespace PirateSlop.Networking
 
         public void AttackLunge(Vector3 targetPoint)
         {
-            if (sharks == null || sharks.Length == 0) return;
-            int nearest = 0;
-            float minDist = float.MaxValue;
+            if (sharks == null) return;
             for (int i = 0; i < sharks.Length; i++)
             {
                 if (sharks[i] == null) continue;
-                float d = (sharks[i].transform.position - targetPoint).sqrMagnitude;
-                if (d < minDist) { minDist = d; nearest = i; }
+                if ((sharks[i].transform.position - targetPoint).sqrMagnitude < 36f && animators[i] != null)
+                {
+                    animators[i].SetTrigger("Bite");
+                    animators[i].SetBool("Biting", true);
+                }
             }
-            attackingIndex = nearest;
-            attackTimer = 1.0f;
-            attackTarget = targetPoint;
-            if (animators[nearest] != null)
-            {
-                animators[nearest].SetTrigger("Bite");
-                animators[nearest].SetBool("Biting", true);
-            }
+            CombatVfx.Splash(targetPoint);
         }
 
         void Update()
@@ -96,77 +90,139 @@ namespace PirateSlop.Networking
                 return;
             }
 
-            bool distracted = chest.SharksDistracted;
-            Vector3 targetCenter = distracted ? chest.SharkBaitPoint : chest.EventPoint;
-            float radius = distracted ? BaitRadius : PatrolRadius;
-            float speed = distracted ? BaitSpeed : PatrolSpeed;
             var ocean = OceanSurface.Instance;
+            bool hasTarget = false;
+            Vector3 targetPoint = Vector3.zero;
 
-            if (distracted && Time.time >= nextBaitSplash)
+            if (chest.SharksDistracted)
             {
-                nextBaitSplash = Time.time + 0.8f;
-                CombatVfx.Splash(chest.SharkBaitPoint);
+                hasTarget = true;
+                targetPoint = chest.SharkBaitPoint;
             }
-
-            if (attackTimer > 0f)
+            else if (chest.SharkTargetPlayer != null)
             {
-                attackTimer -= Time.deltaTime;
-                if (attackTimer <= 0.3f && attackingIndex >= 0 && animators[attackingIndex] != null && !distracted)
-                    animators[attackingIndex].SetBool("Biting", false);
-                if (attackTimer <= 0f)
-                    attackingIndex = -1;
+                hasTarget = true;
+                targetPoint = chest.SharkTargetPlayer.transform.position;
             }
-
-            for (int i = 0; i < sharks.Length; i++)
+            else
             {
-                if (sharks[i] == null) continue;
-
-                bool isAttacking = (i == attackingIndex && attackTimer > 0.25f);
-                if (animators[i] != null)
+                float aggroDistSqr = 16f * 16f;
+                Vector3 center = chest.EventPoint;
+                float bestDistSqr = aggroDistSqr;
+                foreach (var p in NetworkPlayer.Active)
                 {
-                    if (!isAttacking && attackTimer <= 0.3f)
-                        animators[i].SetBool("Biting", distracted);
-                    animators[i].speed = isAttacking ? 1.8f : (distracted ? 1.5f : 1.0f);
-                }
-
-                Vector3 targetPos;
-                Quaternion targetRot;
-                float blendPos;
-                float blendRot;
-
-                if (isAttacking)
-                {
-                    targetPos = attackTarget;
-                    float waterY = ocean != null ? ocean.Height(targetPos) : targetCenter.y;
-                    targetPos.y = waterY - DepthOffset;
-
-                    Vector3 toTarget = attackTarget - sharks[i].transform.position;
-                    toTarget.y = 0f;
-                    targetRot = toTarget.sqrMagnitude > 0.05f ? Quaternion.LookRotation(toTarget.normalized, Vector3.up) : sharks[i].transform.rotation;
-                    blendPos = 1f - Mathf.Exp(-14f * Time.deltaTime);
-                    blendRot = 1f - Mathf.Exp(-16f * Time.deltaTime);
-                }
-                else
-                {
-                    angles[i] += (speed / radius) * Time.deltaTime;
-                    targetPos = targetCenter + new Vector3(Mathf.Cos(angles[i]) * radius, 0f, Mathf.Sin(angles[i]) * radius);
-                    float waterY = ocean != null ? ocean.Height(targetPos) : targetCenter.y;
-                    targetPos.y = waterY - DepthOffset;
-
-                    Vector3 forward = new Vector3(-Mathf.Sin(angles[i]), 0f, Mathf.Cos(angles[i]));
-                    if (ocean != null)
+                    if (p == null || !p.IsSpawned || p.Motor.IsDead || !p.Motor.IsSwimming) continue;
+                    Vector3 pPos = p.transform.position;
+                    pPos.y = center.y;
+                    float sqr = (pPos - center).sqrMagnitude;
+                    if (sqr < bestDistSqr)
                     {
-                        float forwardY = ocean.Height(targetPos + forward * 0.8f) - ocean.Height(targetPos - forward * 0.8f);
-                        forward.y = forwardY * 0.5f;
+                        bestDistSqr = sqr;
+                        targetPoint = p.transform.position;
+                        hasTarget = true;
+                    }
+                }
+            }
+
+            if (hasTarget)
+            {
+                if (Time.time >= nextBaitSplash)
+                {
+                    nextBaitSplash = Time.time + 0.6f;
+                    CombatVfx.Splash(targetPoint);
+                }
+
+                for (int i = 0; i < sharks.Length; i++)
+                {
+                    if (sharks[i] == null) continue;
+
+                    angles[i] += 3.5f * Time.deltaTime;
+                    Vector3 diff = targetPoint - sharks[i].transform.position;
+                    diff.y = 0f;
+                    float dist = diff.magnitude;
+
+                    Vector3 targetPos;
+                    Quaternion targetRot;
+
+                    if (dist > 2.5f)
+                    {
+                        Vector3 offset = new Vector3(Mathf.Cos(angles[i]), 0f, Mathf.Sin(angles[i])) * 1.5f;
+                        targetPos = targetPoint + offset;
+                        float waterY = ocean != null ? ocean.Height(targetPos) : targetPoint.y;
+                        targetPos.y = waterY - DepthOffset;
+
+                        targetRot = diff.sqrMagnitude > 0.05f ? Quaternion.LookRotation(diff.normalized, Vector3.up) : sharks[i].transform.rotation;
+
+                        if (animators[i] != null)
+                        {
+                            animators[i].speed = 1.6f;
+                            animators[i].SetBool("Biting", false);
+                        }
+
+                        sharks[i].transform.position = Vector3.MoveTowards(sharks[i].transform.position, targetPos, 11f * Time.deltaTime);
+                        sharks[i].transform.rotation = Quaternion.Slerp(sharks[i].transform.rotation, targetRot, 1f - Mathf.Exp(-12f * Time.deltaTime));
+                    }
+                    else
+                    {
+                        Vector3 circleOffset = new Vector3(Mathf.Cos(angles[i]) * 1.8f, 0f, Mathf.Sin(angles[i]) * 1.8f);
+                        targetPos = targetPoint + circleOffset;
+                        float waterY = ocean != null ? ocean.Height(targetPos) : targetPoint.y;
+                        targetPos.y = waterY - DepthOffset;
+
+                        Vector3 tangent = new Vector3(-Mathf.Sin(angles[i]), 0f, Mathf.Cos(angles[i]));
+                        targetRot = Quaternion.LookRotation(tangent.normalized, Vector3.up);
+
+                        if (animators[i] != null)
+                        {
+                            animators[i].speed = 1.8f;
+                            animators[i].SetBool("Biting", true);
+                        }
+
+                        sharks[i].transform.position = Vector3.Lerp(sharks[i].transform.position, targetPos, 1f - Mathf.Exp(-10f * Time.deltaTime));
+                        sharks[i].transform.rotation = Quaternion.Slerp(sharks[i].transform.rotation, targetRot, 1f - Mathf.Exp(-12f * Time.deltaTime));
+                    }
+                }
+            }
+            else
+            {
+                Vector3 center = chest.EventPoint;
+                for (int i = 0; i < sharks.Length; i++)
+                {
+                    if (sharks[i] == null) continue;
+
+                    if (animators[i] != null)
+                    {
+                        animators[i].speed = 1.0f;
+                        animators[i].SetBool("Biting", false);
                     }
 
-                    targetRot = Quaternion.LookRotation(forward.normalized, Vector3.up);
-                    blendPos = 1f - Mathf.Exp(-8f * Time.deltaTime);
-                    blendRot = 1f - Mathf.Exp(-10f * Time.deltaTime);
-                }
+                    angles[i] += (PatrolSpeed / PatrolRadius) * Time.deltaTime;
+                    Vector3 patrolPos = center + new Vector3(Mathf.Cos(angles[i]) * PatrolRadius, 0f, Mathf.Sin(angles[i]) * PatrolRadius);
+                    float waterY = ocean != null ? ocean.Height(patrolPos) : center.y;
+                    patrolPos.y = waterY - DepthOffset;
 
-                sharks[i].transform.position = Vector3.Lerp(sharks[i].transform.position, targetPos, blendPos);
-                sharks[i].transform.rotation = Quaternion.Slerp(sharks[i].transform.rotation, targetRot, blendRot);
+                    Vector3 toPatrol = patrolPos - sharks[i].transform.position;
+                    toPatrol.y = 0f;
+
+                    if (toPatrol.magnitude > 2.0f)
+                    {
+                        Quaternion targetRot = Quaternion.LookRotation(toPatrol.normalized, Vector3.up);
+                        sharks[i].transform.position = Vector3.MoveTowards(sharks[i].transform.position, patrolPos, 6.5f * Time.deltaTime);
+                        sharks[i].transform.rotation = Quaternion.Slerp(sharks[i].transform.rotation, targetRot, 1f - Mathf.Exp(-6f * Time.deltaTime));
+                    }
+                    else
+                    {
+                        Vector3 forward = new Vector3(-Mathf.Sin(angles[i]), 0f, Mathf.Cos(angles[i]));
+                        if (ocean != null)
+                        {
+                            float forwardY = ocean.Height(patrolPos + forward * 0.8f) - ocean.Height(patrolPos - forward * 0.8f);
+                            forward.y = forwardY * 0.5f;
+                        }
+                        Quaternion targetRot = Quaternion.LookRotation(forward.normalized, Vector3.up);
+                        sharks[i].transform.position = Vector3.Lerp(sharks[i].transform.position, patrolPos, 1f - Mathf.Exp(-6f * Time.deltaTime));
+                        sharks[i].transform.rotation = Quaternion.Slerp(sharks[i].transform.rotation, targetRot, 1f - Mathf.Exp(-8f * Time.deltaTime));
+                    }
+                }
             }
         }
     }
