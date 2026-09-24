@@ -10,9 +10,9 @@ namespace PirateSlop
         public Material WaterlineMaterial;
         public Material SprayMaterial;
         public float WaterY;
-        [Range(20, 40)] public float FoamWidth = 38;
-        [Range(2, 20)] public float MistHeight = 5.5f;
-        [Range(0, 1)] public float BaseOpacity = .64f;
+        [Range(20, 40)] public float FoamWidth = 30;
+        [Range(2, 20)] public float MistHeight = 6.5f;
+        [Range(0, 1)] public float BaseOpacity = .78f;
         [Min(.001f)] public float NoiseScale = .019f;
         [Min(0)] public float NoiseSpeed = 1;
         [Min(20)] public float NearSprayDistance = 260;
@@ -87,10 +87,10 @@ namespace PirateSlop
             bool mist = i % 3 == 0;
             main.startLifetime = new ParticleSystem.MinMaxCurve(mist ? 1.15f : .7f, mist ? 2.15f : 1.45f);
             main.startSpeed = new ParticleSystem.MinMaxCurve(mist ? 1.2f : 5, mist ? 2.5f : 10);
-            main.startSize = new ParticleSystem.MinMaxCurve(mist ? .65f : .14f, mist ? 1.35f : .48f);
+            main.startSize = new ParticleSystem.MinMaxCurve(mist ? .65f : .18f, mist ? 1.35f : .58f);
             main.startRotation = new ParticleSystem.MinMaxCurve(0, Mathf.PI * 2);
             main.gravityModifier = mist ? .08f : 1f;
-            main.startColor = mist ? new ParticleSystem.MinMaxGradient(new Color(.53f,.64f,.69f,.17f),new Color(.69f,.77f,.79f,.3f)) : new ParticleSystem.MinMaxGradient(new Color(.74f,.82f,.85f,.55f),new Color(.92f,.94f,.93f,.9f));
+            main.startColor = mist ? new ParticleSystem.MinMaxGradient(new Color(.58f,.68f,.72f,.2f),new Color(.73f,.8f,.82f,.36f)) : new ParticleSystem.MinMaxGradient(new Color(.78f,.85f,.87f,.62f),new Color(.94f,.95f,.94f,.92f));
             main.cullingMode = ParticleSystemCullingMode.Automatic;
             var emission = system.emission;
             emission.rateOverTime = 0;
@@ -135,9 +135,9 @@ namespace PirateSlop
                 SetVisible(false);
                 return;
             }
-            SetVisible(true);
             Vector3 center = zone.Center;
             float radius = zone.Radius;
+            SetVisible(true);
             var ocean = OceanSurface.Instance;
             center.y = ocean != null ? ocean.SeaLevel : WaterY;
             transform.position = center;
@@ -178,14 +178,14 @@ namespace PirateSlop
                 sprayRenderers[i].SetPropertyBlock(properties);
                 float cluster = Mathf.SmoothStep(0, 1, Mathf.InverseLerp(.24f,.68f,Mathf.PerlinNoise(position.x*.008f+Time.time*.035f,position.z*.008f)));
                 var emission = system.emission;
-                emission.rateOverTime = lod * cluster * (mist ? 2.2f : 5.5f);
+                emission.rateOverTime = lod * cluster * (mist ? 3.3f : 8);
                 if (!system.isPlaying) system.Play();
                 if (Time.time >= nextBurst[i])
                 {
                     float variation = Random01(ref burstSequence[i]);
-                    nextBurst[i] = Time.time + .65f + variation * 2.4f;
+                    nextBurst[i] = Time.time + .55f + variation * 1.9f;
                     bool tall = !mist && variation > .84f && cluster > .45f;
-                    int burstCount = Mathf.FloorToInt(lod * (.3f + cluster * .7f) * (tall ? 20 : mist ? 7 : 14));
+                    int burstCount = Mathf.FloorToInt(lod * (.3f + cluster * .7f) * (tall ? 24 : mist ? 9 : 18));
                     for (int p = 0; p < burstCount; p++)
                     {
                         float spread = Random01(ref burstSequence[i]);
@@ -197,7 +197,7 @@ namespace PirateSlop
                             position = source,
                             applyShapeToPosition = false,
                             velocity = tangent * (2 + spread * 4) - radial * (1 + speed * 2) + Vector3.up * (tall ? 13 + speed * 4 : mist ? .6f + speed : 4 + speed * 6),
-                            startSize = mist ? .7f + speed * .65f : .16f + speed * .29f,
+                            startSize = mist ? .7f + speed * .65f : .19f + speed * .35f,
                             startLifetime = tall ? 2.8f + speed * .5f : mist ? 1.7f + speed * .4f : .85f + speed * .7f
                         };
                         system.Emit(burst, 1);

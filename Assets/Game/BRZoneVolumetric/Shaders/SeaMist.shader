@@ -3,8 +3,8 @@ Shader "PirateSlop/SeaMist"
     Properties
     {
         _MistColor("Mist Color", Color) = (.46,.54,.58,1)
-        _Density("Density", Range(0,.04)) = .018
-        _Height("Height", Float) = 85
+        _Density("Density", Range(0,.04)) = .028
+        _Height("Height", Float) = 100
         _MaxOpacity("Maximum Opacity", Range(0,1)) = .995
         _SeaLevel("Sea Level", Float) = 0
     }
@@ -74,13 +74,13 @@ Shader "PirateSlop/SeaMist"
                     float a=VolumeNoise(q+float3(_Time.y*.018,-_Time.y*.008,_Time.y*.011));
                     float b=VolumeNoise(q*2.3+float3(-_Time.y*.025,_Time.y*.012,_Time.y*.017)+a*.6);
                     float wisps=smoothstep(.42,.72,a*.75+b*.25);
-                    opticalDepth+=height*(.12+wisps*2.8)*stepLength*ClearMask(p);
+                    opticalDepth+=height*(.18+wisps*3.0)*stepLength*ClearMask(p);
                 }
                 float tail=max(0,min(distanceToSurface,1800)-320);
                 [unroll] for(int j=0;j<8;j++)
                 {
                     float3 p=_WorldSpaceCameraPos+direction*(320+tail*(j+.5)/8);
-                    opticalDepth+=exp(-max(0,p.y-_SeaLevel)/max(1,_Height))*tail*.32/8*ClearMask(p);
+                    opticalDepth+=exp(-max(0,p.y-_SeaLevel)/max(1,_Height))*tail*.40/8*ClearMask(p);
                 }
                 float opacity=min(_MaxOpacity,1-exp(-opticalDepth*_Density));
                 float3 glow=0;

@@ -41,10 +41,10 @@ float StormDensityMask(float3 p, float mip, bool lightSampling, out float macro,
     float3 q = rolling * scale * float3(1.0, 1.5, 1.0);
     float3 phase = q.zxy * 2.7 + q.yzx * 1.1;
     float3 primaryCurl = sin(phase + float3(t * 0.137, t * 0.173 + 2.1, -t * 0.119 + 4.7));
-    float3 primaryCoords = q * 0.52 + primaryCurl * 0.075;
+    float3 primaryCoords = q * 0.52 + primaryCurl * 0.105;
     primaryCoords.y -= t * 0.0031;
     float primaryA = SAMPLE_TEXTURE3D_LOD(_Worley128RGBA, s_trilinear_repeat_sampler, primaryCoords, mip).r;
-    float3 overlapCoords = q * 0.61 + float3(0.37, 0.63, 0.19) - primaryCurl.yzx * 0.055;
+    float3 overlapCoords = q * 0.61 + float3(0.37, 0.63, 0.19) - primaryCurl.yzx * 0.08;
     overlapCoords.y += t * 0.0023;
     float primaryB = SAMPLE_TEXTURE3D_LOD(_Worley128RGBA, s_trilinear_repeat_sampler, overlapCoords, mip).r;
     float unionBlend = saturate(0.5 + 0.5 * (primaryA - primaryB) / 0.12);
@@ -58,7 +58,7 @@ float StormDensityMask(float3 p, float mip, bool lightSampling, out float macro,
         secondary.xz = StormRotate(local.xz, _StormStyle.w * 0.00027 + 0.71);
         float3 secondaryQ = secondary * scale;
         float3 secondaryCurl = sin(secondaryQ.yzx * 3.9 + float3(-t * 0.487 + 1.7, t * 0.373 + 3.2, t * 0.563));
-        flow = secondaryQ * 2.1 + secondaryCurl * 0.10 + primaryCurl * 0.06;
+        flow = secondaryQ * 1.85 + secondaryCurl * 0.145 + primaryCurl * 0.065;
         flow.y -= t * 0.011;
         billow = SAMPLE_TEXTURE3D_LOD(_Worley128RGBA, s_trilinear_repeat_sampler, flow + float3(0.19, 0.47, 0.83), mip).r;
         billow = smoothstep(0.46, 0.94, billow);
@@ -66,7 +66,7 @@ float StormDensityMask(float3 p, float mip, bool lightSampling, out float macro,
 
     float softness = max(0.1, min(_StormBand.w, (_StormBand.y + _StormBand.z) * 0.30));
     float lobes = saturate(macro * 0.68 + billow * 0.32);
-    float carve = (1.0 - lobes) * 0.64;
+    float carve = (1.0 - lobes) * 0.72;
     float innerEdge = radius - _StormBand.y + _StormBand.y * carve;
     float outerEdge = radius + _StormBand.z - _StormBand.z * carve;
     float inner = smoothstep(innerEdge, innerEdge + softness, d);

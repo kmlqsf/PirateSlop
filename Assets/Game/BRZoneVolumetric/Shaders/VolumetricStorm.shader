@@ -149,6 +149,12 @@ Shader "PirateSlop/VolumetricStorm"
 
                 cloudsColor = half4(result.scattering.xyz, result.transmittance);
 
+                // Sea Mist is rendered before the storm. Attenuate each cloud ray by its
+                // own distance so the distant ring does not overwrite the open-water haze.
+                float stormVisibility = 1.0 - smoothstep(90.0, 380.0, result.meanDistance);
+                cloudsColor.rgb *= stormVisibility;
+                cloudsColor.a = lerp(1.0, cloudsColor.a, stormVisibility);
+
                 // Perceptual Blending
             #if defined(_PERCEPTUAL_BLENDING)
                 half3 sceneColor = SAMPLE_TEXTURE2D_X_LOD(_BlitTexture, s_point_clamp_sampler, screenUV, 0).rgb;

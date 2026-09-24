@@ -20,6 +20,7 @@ namespace PirateSlop
         bool ropeLockOwned;
         int Participant => GetComponent<NetworkPlayer>() != null ? GetComponent<NetworkPlayer>().ParticipantId.Value : -1;
         public bool IsDragging => grabbed != null;
+        public HelmInteraction TurningHelm => grabbed != null ? grabbed.Helm : null;
         const float HoverRadius = .14f;
         float focusStarted, focusLostAt = -10f, lowerAmount;
         bool awaitPrimaryRelease;

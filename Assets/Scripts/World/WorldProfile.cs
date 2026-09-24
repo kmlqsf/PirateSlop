@@ -1,7 +1,18 @@
+using System;
 using UnityEngine;
 
 namespace PirateSlop.World
 {
+    [Serializable]
+    public sealed class WorldDecoration
+    {
+        public GameObject Prefab;
+        public float ClearanceRadius;
+        public int MinCount = 1;
+        public int MaxCount = 2;
+        public string PrefabVersion;
+    }
+
     [CreateAssetMenu(menuName = "PirateSlop/World/Map Profile")]
     public sealed class WorldProfile : ScriptableObject
     {
@@ -18,6 +29,7 @@ namespace PirateSlop.World
         [Min(100)] public float SpawnSpacing = 140;
         [Min(1)] public int CatalogRevision = 1;
         public LocationDefinition[] Locations;
+        public WorldDecoration[] Decorations;
         public Material TerrainMaterial;
         public bool BalancedLayout;
         [Range(4, 24)] public int StartingSectors = 16;

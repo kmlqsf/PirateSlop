@@ -73,7 +73,7 @@
     {
       "id": "world", "title": "Мир, острова и океан", "aliases": ["мир", "острова", "карта", "океан", "water"],
       "notes": ["Согласовывать генерацию карты и её состояние между участниками; seed и профиль брать из используемых ассетов.", "CPU-поверхность воды используется игровой логикой: визуальные волны нельзя менять независимо от OceanSurface без проверки связи."],
-      "files": ["Assets/Scripts/World/ProceduralWorld.cs", "Assets/Scripts/World/WorldProfile.cs", "Assets/Scripts/World/WorldGenerator.cs", "Assets/Scripts/World/BalancedWorldGenerator.cs", "Assets/Scripts/OceanSurface.cs", "Assets/Scripts/Editor/OceanSetup.cs", "Assets/Scripts/Editor/WorldGenerationSetup.cs", "Assets/Scenes/NetworkOcean.unity"],
+      "files": ["Assets/Scripts/World/ProceduralWorld.cs", "Assets/Scripts/World/WorldProfile.cs", "Assets/Scripts/World/WorldGenerator.cs", "Assets/Scripts/World/BalancedWorldGenerator.cs", "Assets/Scripts/World/WorldDecorationPlacer.cs", "Assets/Scripts/OceanSurface.cs", "Assets/Scripts/Editor/OceanSetup.cs", "Assets/Scripts/Editor/WorldGenerationSetup.cs", "Assets/Scripts/World/EnvironmentTestGallery.cs", "Assets/Scripts/Editor/EnvironmentTestSetup.cs", "Assets/Scenes/NetworkOcean.unity"],
       "docs": ["procedural-world.md", "unity.md"]
     },
     {

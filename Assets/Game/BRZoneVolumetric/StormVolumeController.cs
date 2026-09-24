@@ -1,5 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 using PirateSlop.World;
 
 namespace PirateSlop
@@ -18,6 +20,8 @@ namespace PirateSlop
         public float WindSpeed = 9;
         [Range(0, 1)] public float ShapeContrast = .65f;
         [Range(0, 1)] public float MagicIntensity = .35f;
+        [Min(1)] public float FeedbackDistance = 100;
+        [Range(0, 1)] public float FeedbackStrength = 1;
         public bool FreezeZoneValues;
         [Min(10)] public float ManualRadius = 1400;
         public static StormVolumeController Instance { get; private set; }
@@ -37,6 +41,9 @@ namespace PirateSlop
         float nextSearch;
         float windDistance;
         float motionTime;
+        Volume feedbackVolume;
+        VolumeProfile feedbackProfile;
+        Camera feedbackCamera;
         static readonly int CenterId = Shader.PropertyToID("_StormCenterWater");
         static readonly int BandId = Shader.PropertyToID("_StormBand");
         static readonly int ShapeId = Shader.PropertyToID("_StormShape");
@@ -78,6 +85,22 @@ namespace PirateSlop
             CloudSettings.sunLightDimmer.value = .55f;
             CloudSettings.scatteringTint.value = new Color(.12f, .06f, .01f);
             CloudSettings.shadows.value = false;
+            feedbackProfile = ScriptableObject.CreateInstance<VolumeProfile>();
+            feedbackProfile.name = "StormBoundaryFeedback";
+            feedbackProfile.hideFlags = HideFlags.HideAndDontSave;
+            var vignette = feedbackProfile.Add<Vignette>();
+            vignette.intensity.Override(.24f);
+            vignette.smoothness.Override(.64f);
+            vignette.color.Override(new Color(.045f, .052f, .056f));
+            var grading = feedbackProfile.Add<ColorAdjustments>();
+            grading.saturation.Override(-12);
+            grading.postExposure.Override(-.12f);
+            grading.colorFilter.Override(new Color(.96f, .98f, 1));
+            feedbackVolume = gameObject.AddComponent<Volume>();
+            feedbackVolume.isGlobal = true;
+            feedbackVolume.priority = 60;
+            feedbackVolume.weight = 0;
+            feedbackVolume.sharedProfile = feedbackProfile;
         }
         void LateUpdate()
         {
@@ -94,7 +117,7 @@ namespace PirateSlop
             if (arc != null && arc.gameObject.activeSelf) arc.gameObject.SetActive(false);
             if (curtain != null && curtain.gameObject.activeSelf) curtain.gameObject.SetActive(false);
             zone = StormZone.Instance;
-            if (zone == null) { CurrentRadius = 0; return; }
+            if (zone == null) { CurrentRadius = 0; feedbackVolume.weight = 0; return; }
             if (!FreezeZoneValues || !frozen)
             {
                 CurrentCenter = zone.Center;
@@ -112,6 +135,21 @@ namespace PirateSlop
             CloudSettings.densityMultiplier.value = DensityMultiplier;
             CloudSettings.shapeScale.value = NoiseScale;
             CloudSettings.globalSpeed.value = WindSpeed;
+            UpdateFeedback();
+        }
+        void UpdateFeedback()
+        {
+            if (feedbackCamera == null || !feedbackCamera.isActiveAndEnabled) feedbackCamera = Camera.main;
+            float target = 0;
+            if (Ready && feedbackCamera != null)
+            {
+                var position = feedbackCamera.transform.position;
+                float signedDistance = Vector2.Distance(new Vector2(position.x, position.z), new Vector2(zone.Center.x, zone.Center.z)) - zone.Radius;
+                float approach = 1 - Mathf.SmoothStep(0, 1, Mathf.Clamp01(-signedDistance / Mathf.Max(1, FeedbackDistance)));
+                float crossing = Mathf.SmoothStep(0, 1, Mathf.InverseLerp(-12, 18, signedDistance));
+                target = Mathf.Clamp01(FeedbackStrength) * (approach * .35f + crossing * .65f);
+            }
+            feedbackVolume.weight = Mathf.Lerp(feedbackVolume.weight, target, 1 - Mathf.Exp(-Time.unscaledDeltaTime * 3));
         }
         public void Apply(Material material)
         {
@@ -124,7 +162,14 @@ namespace PirateSlop
         {
             if (Instance == this) Instance = null;
             if (CloudSettings != null) Destroy(CloudSettings);
+            if (feedbackVolume != null) Destroy(feedbackVolume);
+            if (feedbackProfile != null)
+            {
+                foreach (var component in feedbackProfile.components) if (component != null) Destroy(component);
+                Destroy(feedbackProfile);
+            }
         }
+        void OnDisable() { if (feedbackVolume != null) feedbackVolume.weight = 0; }
         void OnDrawGizmosSelected()
         {
             if (CurrentRadius <= 0) return;

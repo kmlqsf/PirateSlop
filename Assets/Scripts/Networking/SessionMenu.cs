@@ -160,6 +160,7 @@ namespace PirateSlop.Networking
                 if(MenuAction(x,y+204,panelWidth,"Настройки звука")) menuPage=3;
                 if(MenuAction(x,y+272,panelWidth,"Управление")) menuPage=4;
                 if(MenuAction(x,y+340,panelWidth,"Выйти из игры")) Application.Quit();
+                if(!playing && MenuAction(x,y+408,panelWidth,"Test Environments")) Begin(true,"127.0.0.1:"+Config.Port,true);
             }
             if(!string.IsNullOrEmpty(error))
             {

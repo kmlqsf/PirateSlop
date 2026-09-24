@@ -4,7 +4,7 @@ Shader "PirateSlop/StormWaterline"
     {
         _Color("Cold Foam / Mist", Color) = (.82,.87,.87,1)
         _ParticleMode("Particle Mode", Float) = 0
-        _WaterlineSettings("Opacity / Noise Scale / Speed / Height", Vector) = (.64,.019,1,5.5)
+        _WaterlineSettings("Opacity / Noise Scale / Speed / Height", Vector) = (.78,.019,1,6.5)
         _WaterlineCenter("Center / Radius", Vector) = (0,0,0,1500)
     }
     SubShader
@@ -53,7 +53,7 @@ Shader "PirateSlop/StormWaterline"
                 float broad=Noise(p*.31+float2(t*.015,-t*.009));
                 float medium=Noise(p*1.75-tangent*t*.09+radial*t*.032+broad*.8);
                 float fine=Noise(p*6.2-tangent*t*.31-radial*t*.16);
-                float patches=smoothstep(.27,.64,broad*.84+medium*.16);
+                float patches=smoothstep(.24,.6,broad*.84+medium*.16);
                 float alpha;
                 half3 color=_Color.rgb;
                 if (_ParticleMode > .5)
@@ -68,24 +68,27 @@ Shader "PirateSlop/StormWaterline"
                 }
                 else if (i.kind.x < .5)
                 {
-                    float edge=smoothstep(0,.16,i.uv.y)*(1-smoothstep(.8,1,i.uv.y));
+                    float across=i.uv.y+(medium-.5)*.14+(fine-.5)*.08;
+                    float edge=smoothstep(0,.18,across)*(1-smoothstep(.76,1,across));
                     float2 advected=i.world.xz-tangent*t*5+radial*t*2;
                     float streak=Noise(float2(advected.x*.045+advected.y*.023,advected.y*.21-advected.x*.12)+medium*.9);
-                    float band=1-smoothstep(4,9,abs(radialDistance-_WaterlineCenter.w+(broad-.5)*8));
-                    float foam=smoothstep(.39,.68,medium*.63+fine*.37);
+                    float band=1-smoothstep(5.5,10.5,abs(radialDistance-_WaterlineCenter.w+(broad-.5)*8));
+                    float foam=smoothstep(.36,.65,medium*.63+fine*.37);
                     float churn=band*smoothstep(.37,.66,streak)*smoothstep(.22,.58,broad);
                     float foamVeins=1-smoothstep(.07,.19,abs(fine-.52));
-                    alpha=edge*(patches*(foam*.8+foamVeins*.35)+churn*.85)*_WaterlineSettings.x;
-                    color=lerp(half3(.32,.45,.5),_Color.rgb,saturate(foam*.68+churn*.7+foamVeins*.22));
+                    float lace=Noise(p*22-tangent*t*.41+radial*t*.23);
+                    float breakup=smoothstep(.35,.7,lace*.7+fine*.3);
+                    alpha=edge*(patches*(foam*.95+foamVeins*.42)+churn*1.05)*lerp(.16,1,breakup)*_WaterlineSettings.x;
+                    color=lerp(half3(.4,.52,.57),_Color.rgb,saturate(foam*.8+churn*.8+foamVeins*.25));
                 }
                 else
                 {
                     float layer=i.kind.y;
                     float curls=Noise(p*2.8-tangent*t*.14+float2(i.world.y*.31,layer*4.7));
                     float crown=lerp(.48,1,broad*.7+curls*.3);
-                    float vertical=(1-smoothstep(crown*.08,crown,i.uv.y));
+                    float vertical=(1-smoothstep(crown*.2,crown,i.uv.y));
                     float wisps=smoothstep(.22,.64,medium*.45+curls*.55);
-                    alpha=vertical*patches*(.3+wisps*.7)*_WaterlineSettings.x*.9;
+                    alpha=vertical*patches*(.3+wisps*.7)*_WaterlineSettings.x*1.08;
                     color=lerp(_Color.rgb*.95,half3(.43,.56,.63),smoothstep(.02,.8,i.uv.y));
                 }
                 float scene=LinearEyeDepth(SampleSceneDepth(GetNormalizedScreenSpaceUV(i.positionCS)),_ZBufferParams);
@@ -93,6 +96,9 @@ Shader "PirateSlop/StormWaterline"
                 alpha*=saturate((scene-eye)/(_ParticleMode < .5 && i.kind.x < .5 ? .08 : .65));
                 float cameraDistance=distance(_WorldSpaceCameraPos,i.world);
                 alpha*=smoothstep(.4,2.5,cameraDistance);
+                // Keep the distant waterline under the same haze as the cloud wall.
+                if (_ParticleMode < .5)
+                    alpha*=1-smoothstep(90,380,cameraDistance);
                 if (_ParticleMode < .5)
                 {
                     float2 cameraOffset=_WorldSpaceCameraPos.xz-_WaterlineCenter.xz;

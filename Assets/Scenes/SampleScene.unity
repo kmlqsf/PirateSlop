@@ -5679,6 +5679,96 @@ Transform:
   - {fileID: 2122635136}
   m_Father: {fileID: 120930756}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &292050135
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 292050136}
+  - component: {fileID: 292050138}
+  - component: {fileID: 292050137}
+  m_Layer: 0
+  m_Name: BlackHole
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &292050136
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 292050135}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.02, z: 0}
+  m_LocalScale: {x: 1, y: 0.06, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1115846603}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!23 &292050137
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 292050135}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: aa66034b270dce94184b53c5bd44b68b, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 1
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_MaskInteraction: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &292050138
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 292050135}
+  m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &293881439
 GameObject:
   m_ObjectHideFlags: 0
@@ -6199,6 +6289,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 995290a6427940b4aae0973ff1c0390d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.CannonHands
+  aimSensitivity: 0.12
 --- !u!114 &336972268
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9034,6 +9125,96 @@ Transform:
   - {fileID: 2100074884}
   m_Father: {fileID: 377163413}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &761631128
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 761631129}
+  - component: {fileID: 761631131}
+  - component: {fileID: 761631130}
+  m_Layer: 0
+  m_Name: WoodFrame
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &761631129
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 761631128}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1.2, y: 0.05, z: 1.2}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1115846603}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!23 &761631130
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 761631128}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 7b605428988cedb4e8476a88b1d4184b, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 1
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_MaskInteraction: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &761631131
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 761631128}
+  m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &771860351
 GameObject:
   m_ObjectHideFlags: 0
@@ -10313,6 +10494,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.ShipControlHandle
   Helm: {fileID: 213673065}
   Cannon: {fileID: 0}
+  Sails: {fileID: 0}
+  RopeIndex: 0
+  Capstan: {fileID: 0}
+  SpokeIndex: 0
 --- !u!1 &935508526
 GameObject:
   m_ObjectHideFlags: 0
@@ -11105,6 +11290,54 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.15, y: 0.94, z: 2.0056171}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &1115846602
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1115846603}
+  - component: {fileID: 1115846604}
+  m_Layer: 0
+  m_Name: CannonballDropperHole
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1115846603
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1115846602}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 5.5, z: 1.2}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 761631129}
+  - {fileID: 292050136}
+  m_Father: {fileID: 1842566546}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1115846604
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1115846602}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9718afea481883c489917c932554e9d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CannonballDropper
+  cannonballPrefab: {fileID: 5316358912498670384, guid: 01877598ed5ed3a4ea3fd373c6bc76ed, type: 3}
+  dropInterval: 30
 --- !u!1 &1118387360
 GameObject:
   m_ObjectHideFlags: 0
@@ -13483,6 +13716,8 @@ MonoBehaviour:
   SpecialSupplySpacing: 0.65
   Kit: {fileID: 758351939}
   CannonPrefab: {fileID: 6766262252996742549, guid: a259d1526047caa44936b87a9a2dd31b, type: 3}
+  MortarPrefab: {fileID: 0}
+  MortarPosition: {x: 0, y: 4.3, z: 18}
 --- !u!1 &1578835278
 GameObject:
   m_ObjectHideFlags: 0
@@ -14998,11 +15233,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SailSystem
   deployPercentage: 0
-  deploySpeed: 0.35
   sailMeshes: []
   MastControls:
   - {fileID: 426301652}
   - {fileID: 1727180920}
+  RopeHandles: []
+  RopeNames: []
 --- !u!114 &1842566543
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15035,6 +15271,7 @@ MonoBehaviour:
   cannonRockStrength: 20
   cannonRockSpring: 9
   cannonRockDamping: 3.5
+  isAnchored: 0
 --- !u!4 &1842566546 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6265553338235036548, guid: 536fad593b81e1248a467f1078001b3a, type: 3}
@@ -16882,6 +17119,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 6265553338235036548, guid: 536fad593b81e1248a467f1078001b3a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 758351938}
+    - targetCorrespondingSourceObject: {fileID: 6265553338235036548, guid: 536fad593b81e1248a467f1078001b3a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1115846603}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 4635455791906578854, guid: 536fad593b81e1248a467f1078001b3a, type: 3}
       insertIndex: -1

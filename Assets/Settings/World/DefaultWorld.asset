@@ -16,7 +16,7 @@ MonoBehaviour:
   RandomSeed: 1
   GenerateIslands: 0
   FixedLayout: {fileID: 0}
-  Radius: 1500
+  Radius: 3000
   LocationCount: 28
   Resolution: 96
   SeaDepth: 45
@@ -44,6 +44,42 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 2a3773fdf21391d48b3ce0c31634fac3, type: 2}
   - {fileID: 11400000, guid: 65fe61ae470dea14e9bdad9654366d01, type: 2}
   - {fileID: 11400000, guid: f4d4380f5264e9d4caa2171aac4b5da9, type: 2}
+  Decorations:
+  - Prefab: {fileID: 5231348972684006522, guid: 377d287456916304f94e2c263175d292, type: 3}
+    ClearanceRadius: 236.72435
+    MinCount: 5
+    MaxCount: 10
+    PrefabVersion: 315c12a2f0b273f443217afc5f13a3f2
+  - Prefab: {fileID: 7782841081735753353, guid: 2395b2485acf8b04bb4e82e6260a9053, type: 3}
+    ClearanceRadius: 36.11343
+    MinCount: 15
+    MaxCount: 20
+    PrefabVersion: 17d2feffcee3f957d64fa76ef99c3888
+  - Prefab: {fileID: 6069779577392107521, guid: c771590765e955845a1267b99676d201, type: 3}
+    ClearanceRadius: 33.687508
+    MinCount: 15
+    MaxCount: 20
+    PrefabVersion: e6cc8dd3a60cd11e86f5995d92f20bdd
+  - Prefab: {fileID: 178923617029726008, guid: 8963025a34121824da352ca8c5fcbea6, type: 3}
+    ClearanceRadius: 69.14657
+    MinCount: 15
+    MaxCount: 20
+    PrefabVersion: 17c4a8d62e01030058b301575a0e9765
+  - Prefab: {fileID: 383911720981368521, guid: e08cf59bdc0e68a4b8a8b2d4851e25fa, type: 3}
+    ClearanceRadius: 105.08721
+    MinCount: 5
+    MaxCount: 10
+    PrefabVersion: fa27dd6e30238074726f81947fd148cb
+  - Prefab: {fileID: 1159517191757354780, guid: 7e459818d793cc1458cc8856a562cc01, type: 3}
+    ClearanceRadius: 114.25386
+    MinCount: 5
+    MaxCount: 10
+    PrefabVersion: 1570eced6e87c45c591070c41dd87de6
+  - Prefab: {fileID: 816557115258466517, guid: 4bb63a96f0552e44f9adef527b1df99d, type: 3}
+    ClearanceRadius: 29.573584
+    MinCount: 15
+    MaxCount: 20
+    PrefabVersion: 97ece7b5ca54a890645d556c9472fd5e
   TerrainMaterial: {fileID: 2100000, guid: 5e0a2b6c30bd3c1418e6ba0729b2a5e5, type: 2}
   BalancedLayout: 1
   StartingSectors: 16

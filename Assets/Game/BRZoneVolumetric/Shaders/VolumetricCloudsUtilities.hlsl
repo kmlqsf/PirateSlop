@@ -402,7 +402,7 @@ void EvaluateCloudProperties(float3 positionPS, float noiseMipOffset, float eros
 
     properties.height = EvaluateNormalizedCloudHeight(positionPS);
     float cavities = (1.0 - billow) * (1.0 - macro * 0.65);
-    float mass = macro * .74 + billow * .26 - cavities * 0.28;
+    float mass = macro * .69 + billow * .31 - cavities * 0.34;
     float shape = smoothstep(0.28, 0.72, mass);
     float erosion = 0.0;
     if (!cheapVersion)
@@ -415,7 +415,7 @@ void EvaluateCloudProperties(float3 positionPS, float noiseMipOffset, float eros
     }
     float body = saturate((shape - erosion) / max(0.01, 1.0 - erosion));
     body = smoothstep(lerp(0.04, 0.14, _StormStyle.x), lerp(0.88, 0.66, _StormStyle.x), body);
-    float lowerBank = (1.0 - smoothstep(0.10, 0.34, properties.height)) * (0.075 + 0.17 * billow);
+    float lowerBank = (1.0 - smoothstep(0.10, 0.34, properties.height)) * (0.045 + 0.19 * billow);
     body = max(body, lowerBank);
     properties.body = body * stormMask;
     properties.density = body * _DensityMultiplier * stormMask;
@@ -581,9 +581,10 @@ void EvaluateCloud(CloudProperties cloudProperties, half3 rayDirection,
                + 0.34h * smoothstep(0.58h, 0.78h, visibility);
     half shading = lerp(visibility, bands, _StormStyle.x);
     half diffuseFill = smoothstep(0.22h, 0.78h, cloudProperties.ambientOcclusion);
+    shading *= lerp(0.65h, 1.0h, diffuseFill);
     shading = max(shading, 0.08h + diffuseFill * 0.36h);
     half edge = (1.0h - smoothstep(0.12h, 0.68h, cloudProperties.body));
-    half fill = 0.45h + 0.45h * diffuseFill;
+    half fill = 0.30h + 0.55h * diffuseFill;
     half3 interior = lerp(_StormCoreColor.rgb, _StormBodyColor.rgb, fill);
     half3 color = lerp(interior, _StormLitColor.rgb, shading * 0.88h);
     half softEdge = edge * smoothstep(0.15h, 0.85h, visibility);
@@ -593,7 +594,7 @@ void EvaluateCloud(CloudProperties cloudProperties, half3 rayDirection,
     float distanceToViewer = distance(currentPositionPS, GetCameraPositionWS());
     color = lerp(color, half3(.47,.50,.51), smoothstep(120,1800,distanceToViewer)*.20);
     float flashDistance = distance(currentPositionPS, _StormLightning.xyz);
-    color += _StormLightningColor.rgb * _StormLightning.w * exp(-flashDistance*flashDistance/11000.0) * .42;
+    color += _StormLightningColor.rgb * _StormLightning.w * exp(-flashDistance*flashDistance/6400.0) * .48;
     half contribution = volumetricRay.transmittance * (1.0h - transmittance);
     volumetricRay.scattering += color * contribution;
     volumetricRay.transmittance *= transmittance;

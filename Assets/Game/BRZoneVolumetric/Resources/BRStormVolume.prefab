@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5aa786cbbd73b2444ba1a6318e8f2abe, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.StormVolumeController
   EnableStormVolume: 1
   InnerThickness: 30
@@ -57,6 +57,8 @@ MonoBehaviour:
   WindSpeed: 9
   ShapeContrast: 0.78
   MagicIntensity: 0.16
+  FeedbackDistance: 100
+  FeedbackStrength: 1
   FreezeZoneValues: 0
   ManualRadius: 1400
 --- !u!114 &7466655072615049111
@@ -69,14 +71,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7223d10aa29ef1f45807161ccf0d993c, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.StormWaterlineController
   WaterlineMaterial: {fileID: 2100000, guid: 16dc6738a37b98f4baae775a0e37d0f6, type: 2}
   SprayMaterial: {fileID: 2100000, guid: e8a734d52dff0bd46b76800a2bdd081b, type: 2}
   WaterY: 0
-  FoamWidth: 38
-  MistHeight: 5.5
-  BaseOpacity: 0.64
+  FoamWidth: 30
+  MistHeight: 6.5
+  BaseOpacity: 0.78
   NoiseScale: 0.019
   NoiseSpeed: 1
   NearSprayDistance: 260
@@ -91,13 +93,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c0eba18e57785dc4ba390bdb59dcd843, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.StormWeatherController
-  RainMaterial: {fileID: 2100000, guid: f0f8067785c21074e900989e9ea0ccd6, type: 2}
   BoltMaterial: {fileID: 2100000, guid: 82c28a11f8c0f7d4988756bc1400e532, type: 2}
-  RainOpacity: 0.34
-  RainSpeed: 24
-  RainHeightFraction: 0.72
-  LightningInterval: 8
-  BoltChance: 0.7
-  LightningIntensity: 0.85
+  LightningInterval: 4
+  BoltChance: 0.15
+  LightningIntensity: 0.65

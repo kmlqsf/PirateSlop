@@ -30,6 +30,7 @@ namespace PirateSlop.World
             if (layout.CatalogHash != WorldGenerator.CatalogHash(Profile)) throw new InvalidOperationException("Map catalog differs from the server. Update both games.");
             Clear(); Layout = layout;
             content = new GameObject("GeneratedMap"); content.transform.SetParent(transform, false);
+            if (EnvironmentTestGallery.IsTest(layout)) EnvironmentTestGallery.SpawnInto(layout, content.transform);
             using var data = new MemoryStream();
             using var writer = new BinaryWriter(data);
             writer.Write(layout.ToJson());
@@ -45,9 +46,16 @@ namespace PirateSlop.World
                 var pointPosition = point.Position;
                 var pointDefinition = Profile.Locations.FirstOrDefault(d => d.Settings.Id == point.TypeId);
                 bool atOrigin = pointDefinition != null && point.Rule >= 0 && point.Rule < pointDefinition.Points.Length && pointDefinition.Points[point.Rule].AtLocationOrigin;
-                if (point.Tag != "ship_spawn" && point.Tag != "ship_approach" && point.Tag != "sea_route" && !atOrigin) pointPosition.y = GroundHeight(pointPosition) + .15f;
+                if (point.Tag != "ship_spawn" && point.Tag != "ship_approach" && point.Tag != "sea_route" && point.Tag != WorldDecorationPlacer.Tag && !atOrigin) pointPosition.y = GroundHeight(pointPosition) + .15f;
                 go.transform.SetPositionAndRotation(pointPosition, Quaternion.Euler(0, point.Yaw, 0));
                 var marker = go.AddComponent<WorldSpawnPoint>(); marker.Id = point.Id; marker.Tag = point.Tag;
+                if (point.Tag == WorldDecorationPlacer.Tag)
+                {
+                    if (Profile.Decorations == null || point.Rule < 0 || point.Rule >= Profile.Decorations.Length || Profile.Decorations[point.Rule].Prefab == null)
+                        throw new InvalidOperationException("Missing world decoration: " + point.Id);
+                    Instantiate(Profile.Decorations[point.Rule].Prefab, go.transform);
+                    continue;
+                }
                 var definition = Profile.Locations.FirstOrDefault(d => d.Settings.Id == point.TypeId);
                 if (definition == null || point.Rule < 0 || point.Rule >= definition.Points.Length) continue;
                 var prefab = definition.Points[point.Rule].StaticPrefab;

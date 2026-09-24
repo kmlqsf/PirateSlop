@@ -8,12 +8,12 @@ namespace PirateSlop.World
     {
         public static string CatalogHash(WorldProfile profile)
         {
-            return WorldLayout.Hash(profile.CatalogRevision + "|" + string.Join("|", profile.Locations.Select(d => JsonUtility.ToJson(d.Settings) + string.Join(";", d.Points.Select(p => JsonUtility.ToJson(new LocationPointRule { Tag = p.Tag, Count = p.Count, Height = p.Height, MaxSlope = p.MaxSlope, Spacing = p.Spacing, AtLocationOrigin = p.AtLocationOrigin, AtSeaLevel = p.AtSeaLevel, LocalOffset = p.LocalOffset, PrefabVersion = p.PrefabVersion }) + ":" + (p.StaticPrefab != null ? p.StaticPrefab.name : ""))))));
+            return WorldLayout.Hash(profile.CatalogRevision + "|" + string.Join("|", profile.Locations.Select(d => JsonUtility.ToJson(d.Settings) + string.Join(";", d.Points.Select(p => JsonUtility.ToJson(new LocationPointRule { Tag = p.Tag, Count = p.Count, Height = p.Height, MaxSlope = p.MaxSlope, Spacing = p.Spacing, AtLocationOrigin = p.AtLocationOrigin, AtSeaLevel = p.AtSeaLevel, LocalOffset = p.LocalOffset, PrefabVersion = p.PrefabVersion }) + ":" + (p.StaticPrefab != null ? p.StaticPrefab.name : ""))))) + "|" + string.Join("|", (profile.Decorations ?? Array.Empty<WorldDecoration>()).Select(d => d == null || d.Prefab == null ? "missing" : d.Prefab.name + ":" + d.ClearanceRadius.ToString("R", System.Globalization.CultureInfo.InvariantCulture) + ":" + d.MinCount + ":" + d.MaxCount + ":" + d.PrefabVersion)));
         }
         public static WorldLayout Generate(WorldProfile profile, int seed, int shipCount, float seaLevel)
         {
             var map = GenerateLayout(profile, seed, shipCount, seaLevel);
-            if (profile.GenerateIslands) return map;
+            if (profile.GenerateIslands) { WorldDecorationPlacer.Place(map, profile); return WorldLayout.FromJson(map.ToJson()); }
             var removed = map.Locations.Where(l => l.Type.Shape != Landform.Reef && l.Type.Shape != Landform.SeaStack &&
                 l.Type.Shape != Landform.RockPassage && l.Type.Shape != Landform.ReefPassage).ToArray();
             var typeIds = removed.Select(l => l.Type.Id).ToHashSet();
@@ -24,6 +24,7 @@ namespace PirateSlop.World
             map.Points.RemoveAll(p => typeIds.Contains(p.TypeId) || approaches.Contains(p.Id) || removed.Any(l => p.Id.StartsWith(l.Id + "/", StringComparison.Ordinal)));
             var pointIds = map.Points.Select(p => p.Id).ToHashSet();
             map.Routes.RemoveAll(r => !pointIds.Contains(r.FromId) || !pointIds.Contains(r.ToId));
+            WorldDecorationPlacer.Place(map, profile);
             return WorldLayout.FromJson(map.ToJson());
         }
         static WorldLayout GenerateLayout(WorldProfile profile, int seed, int shipCount, float seaLevel)

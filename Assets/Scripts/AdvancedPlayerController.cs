@@ -60,6 +60,8 @@ public class AdvancedPlayerController : MonoBehaviour
     public Vector3 AimDirection => Quaternion.Euler(AimEuler)*Vector3.forward;
     public void AddAimRecoil(float vertical,float horizontal) { if(local) aimRecoil+=new Vector2(vertical,horizontal); }
     float cameraHeight;
+    Transform turningShip;
+    float turningShipYaw;
     float jumpBuffer, groundGrace;
     public Vector2 LocalMove => pending.Move;
     public bool IsSprinting => pending.Sprint && !crouched;
@@ -156,6 +158,16 @@ public class AdvancedPlayerController : MonoBehaviour
     void LateUpdate()
     {
         if (!local || playerCamera == null) return;
+        var helm = shipControls != null ? shipControls.TurningHelm : null;
+        var ship = helm != null ? helm.GetComponentInParent<ShipController>() : null;
+        if (ship != null)
+        {
+            float shipYaw = ship.transform.eulerAngles.y;
+            if (turningShip == ship.transform) AddPlatformYaw(Mathf.DeltaAngle(turningShipYaw, shipYaw));
+            turningShip = ship.transform;
+            turningShipYaw = shipYaw;
+        }
+        else turningShip = null;
         if (ActiveCannon != null && ActiveCannon.Muzzle != null)
         {
             var cannon = ActiveCannon;

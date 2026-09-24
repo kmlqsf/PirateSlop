@@ -92,15 +92,18 @@ namespace PirateSlop.Networking
             if (parts.Length != 2 || !IPAddress.TryParse(parts[0], out var ip) || ip.AddressFamily != System.Net.Sockets.AddressFamily.InterNetwork || !ushort.TryParse(parts[1], out port) || port == 0) return false;
             host = ip.ToString(); return true;
         }
-        public void Begin(bool host, string endpoint)
+        bool environmentTestRequested;
+        bool EnvironmentTestActive => EnvironmentTestGallery.IsTest(ProceduralWorld.Instance != null ? ProceduralWorld.Instance.Layout : null);
+        public void Begin(bool host, string endpoint, bool environmentTest = false)
         {
             if (starting || connecting || playing || manager.ServerManager.Started) return;
-            if (host && !string.IsNullOrWhiteSpace(seedInput) && !int.TryParse(seedInput, out _)) { SetError("Seed должен быть целым числом."); return; }
+            if (host && !environmentTest && !string.IsNullOrWhiteSpace(seedInput) && !int.TryParse(seedInput, out _)) { SetError("Seed должен быть целым числом."); return; }
             if (!ParseEndpoint(endpoint, out var ip, out var port)) { SetError("Введите IPv4:порт, например 192.168.1.10:7777"); return; }
-            observerSession = host && fillWithBots && observerSelected && !dedicated && !Automated;
+            environmentTestRequested = host && environmentTest;
+            observerSession = !environmentTestRequested && host && fillWithBots && observerSelected && !dedicated && !Automated;
             error = ""; address = endpoint; startedAt = Time.realtimeSinceStartup; connecting = true; starting = true; hostRequested = host;
             status = host ? "Создание сессии…" : "Подключение…";
-            botRosterPolicy = host ? new InitialFillBotRosterPolicy(fillWithBots) : null;
+            botRosterPolicy = host ? new InitialFillBotRosterPolicy(fillWithBots && !environmentTestRequested) : null;
             StartCoroutine(StartSession(host, ip, port));
         }
         IEnumerator StartSession(bool host, string ip, ushort port)
@@ -110,13 +113,17 @@ namespace PirateSlop.Networking
             SceneManager.SetActiveScene(SceneManager.GetSceneByName(Config.GameScene));
             var world = ProceduralWorld.Instance;
             if (world == null) { starting = false; connecting = false; SetError("В NetworkOcean отсутствует ProceduralWorld."); yield break; }
+            stormRunning = stormPaused = false;
+            if (storm != null) Destroy(storm.gameObject);
+            if (OceanSurface.Instance != null) OceanSurface.Instance.WaveScale = .06f;
             if (host)
             {
                 WorldLayout layout = null;
                 try
                 {
                     int seed = int.TryParse(seedInput, out var requestedSeed) ? requestedSeed : world.Profile.RandomSeed ? BitConverter.ToInt32(Guid.NewGuid().ToByteArray(), 0) : world.Profile.Seed;
-                    layout = WorldGenerator.Generate(world.Profile, seed, MaxPlayers, OceanSurface.Instance != null ? OceanSurface.Instance.SeaLevel : 0);
+                    float seaLevel = OceanSurface.Instance != null ? OceanSurface.Instance.SeaLevel : 0;
+                    layout = environmentTestRequested ? EnvironmentTestGallery.CreateLayout(world.Profile, seaLevel) : WorldGenerator.Generate(world.Profile, seed, MaxPlayers, seaLevel);
                 }
                 catch (Exception ex) { SetError("Генерация карты: " + ex.Message); }
                 if (layout == null) { starting = connecting = false; yield break; }
@@ -154,7 +161,7 @@ namespace PirateSlop.Networking
             if (args.ConnectionState == LocalConnectionState.Started)
             {
                 Debug.Log($"SESSION_READY id={SessionId} port={transport.GetPort()} capacity={MaxPlayers}");
-                SeaLootSpawner.Spawn(ProceduralWorld.Instance, manager, Config.Loot);
+                if (!EnvironmentTestActive) SeaLootSpawner.Spawn(ProceduralWorld.Instance, manager, Config.Loot);
                 InitializeBotRoster();
                 if (steamSession) party.ServerReady();
                 if (dedicated) { connecting = false; status = "Сервер запущен"; }
@@ -200,7 +207,7 @@ namespace PirateSlop.Networking
                 yield return builder.Current;
             }
             (builder as IDisposable)?.Dispose();
-            if (world.Ready) ShipComparison.Spawn(world, Config);
+            if (world.Ready && !EnvironmentTestActive) ShipComparison.Spawn(world, Config);
         }
         void WorldManifest(WorldManifestMessage message, Channel channel)
         {
@@ -266,8 +273,11 @@ namespace PirateSlop.Networking
                 RetireReplacedBot(replacement);
             }
             manager.SceneManager.AddOwnerToDefaultScene(player.NetworkObject);
-            if (!stormRunning) StartStorm();
-            manager.ServerManager.Broadcast(conn, CurrentStorm());
+            if (!EnvironmentTestActive)
+            {
+                if (!stormRunning) StartStorm();
+                manager.ServerManager.Broadcast(conn, CurrentStorm());
+            }
             BroadcastPopulation();
             Debug.Log($"PLAYER_SPAWN participant={id} connection={conn.ClientId} slot={slot} position={player.transform.position}");
         }
