@@ -14,6 +14,7 @@ public class ShipController : MonoBehaviour
     [SerializeField] float impulseMass = 15000f, hullLength = 46f, hullWidth = 13f;
     public Vector2 HullFootprint => new Vector2(hullWidth, hullLength);
     Vector3 pushVelocity;
+    public Vector3 PushVelocity => pushVelocity;
     float pushYawVelocity, freezeRemaining, manualPushUntil;
     public bool IsFrozen => freezeRemaining > 0f;
     float floodLevel, fullWaterline, fullBowPitch;
@@ -50,6 +51,35 @@ public class ShipController : MonoBehaviour
         Vector3 offset = point - rb.worldCenterOfMass;
         float inertia = mass * (hullLength * hullLength + hullWidth * hullWidth) / 12f;
         pushYawVelocity += Vector3.Cross(offset, impulse).y / Mathf.Max(1f, inertia) * Mathf.Rad2Deg;
+    }
+    public float ImpulseMass => impulseMass;
+    public float SailDeploy => sailSystem != null ? sailSystem.EffectiveDeploy : 0f;
+    float towingSpeedLimit = -1f;
+    public void SetTowingSpeedLimit(float limit)
+    {
+        if (limit < 0f) return;
+        towingSpeedLimit = towingSpeedLimit < 0f ? limit : Mathf.Min(towingSpeedLimit, limit);
+    }
+    public void ApplyTowing(Vector3 point, Vector3 pullForce, float speedCap = -1f)
+    {
+        if (IsFrozen || isAnchored || !float.IsFinite(point.sqrMagnitude) || !float.IsFinite(pullForce.sqrMagnitude)) return;
+        Vector3 flatPull = Vector3.ProjectOnPlane(pullForce, Vector3.up);
+        float dt = Time.fixedDeltaTime;
+        float mass = Mathf.Max(1f, impulseMass);
+        pushVelocity += (flatPull / mass) * dt;
+        Vector3 offset = point - rb.worldCenterOfMass;
+        float inertia = mass * (hullLength * hullLength + hullWidth * hullWidth) / 12f;
+        pushYawVelocity += (Vector3.Cross(offset, flatPull).y / Mathf.Max(1f, inertia) * Mathf.Rad2Deg) * dt;
+        pushYawVelocity = Mathf.Clamp(pushYawVelocity, -45f, 45f);
+
+        if (speedCap >= 0f)
+        {
+            SetTowingSpeedLimit(speedCap);
+            if (speed > speedCap)
+            {
+                speed = Mathf.MoveTowards(speed, speedCap, deceleration * dt);
+            }
+        }
     }
     [SerializeField] float buoyancyResponse = 2.5f, floatLength = 8f, floatWidth = 3f;
     float pitch, waveRoll;
@@ -138,6 +168,8 @@ public class ShipController : MonoBehaviour
         yaw += pushYawVelocity * dt;
         float mobility = Mathf.Lerp(1f, .1f, floodLevel);
         float target = (immobilized || isAnchored) ? 0f : (sailSystem != null ? sailSystem.EffectiveDeploy : 0) * maxSpeed * destructionSpeed * mobility;
+        if (towingSpeedLimit >= 0f) target = Mathf.Min(target, towingSpeedLimit);
+        towingSpeedLimit = -1f;
         speed = (immobilized || isAnchored) ? 0f : Mathf.MoveTowards(speed, target, (target > speed ? acceleration * destructionAcceleration * mobility : deceleration) * dt);
         float rudder = !immobilized && helm != null ? helm.CurrentRudderNormalized * mobility : 0;
         float factor = Mathf.Clamp01(speed / Mathf.Max(.1f, maxSpeed * mobility));
@@ -179,6 +211,7 @@ public class ShipController : MonoBehaviour
         }
         var rotation = Quaternion.Euler(pitch + cannonTilt.x, yaw, bank + waveRoll + cannonTilt.y);
         PirateSlop.Networking.NetworkCannon.ConstrainBoarding(this, ref next, rotation);
+        PirateSlop.Harpoon.HarpoonProjectile.ConstrainHarpoons(this, ref next, rotation);
         var world = PirateSlop.World.ProceduralWorld.Instance;
         if (world != null && world.Ready && !world.CanSail(next, yaw))
         {
@@ -200,7 +233,7 @@ public class ShipController : MonoBehaviour
         if(angle>180f) angle-=360f;
         motionAngularVelocity=float.IsFinite(axis.sqrMagnitude) ? axis*(angle*Mathf.Deg2Rad/Mathf.Max(.001f,dt)) : Vector3.zero;
         if (Networked) { rb.position = next; rb.rotation = rotation; transform.SetPositionAndRotation(next, rotation); }
-        else { rb.MoveRotation(rotation); rb.MovePosition(next); }
+        else { rb.MoveRotation(rotation); rb.MovePosition(next); transform.SetPositionAndRotation(next, rotation); }
     }
     public ShipState Capture() => new ShipState { Position = rb.position, Yaw = yaw, Speed = speed, Bank = bank, Pitch = pitch + cannonTilt.x, WaveRoll = waveRoll + cannonTilt.y, WaveTime = OceanSurface.Instance != null ? OceanSurface.Instance.WaveTime : Time.time, Sail = sailSystem.DeployPercentage, Rudder = helm.CurrentRudderNormalized, Controlling = helm.IsControlling };
     public void Restore(ShipState s, AdvancedPlayerController driver)

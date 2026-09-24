@@ -78,7 +78,7 @@ namespace PirateSlop.Networking
             }
             var itemType = command >= 64 ? (InventoryItem)(command - 64) : command == 2 ? InventoryItem.Cannon : command == 3 ? InventoryItem.Pistol : command == 4 ? InventoryItem.Sabre : InventoryItem.Cannonball;
             if (command > 5 && command < 64 && command != 13) return;
-            if (itemType < InventoryItem.Fish || itemType > InventoryItem.BoomerangCannonball || itemType == InventoryItem.Mallet || itemType == InventoryItem.Plank) return;
+            if (itemType < InventoryItem.Fish || (itemType > InventoryItem.BoomerangCannonball && itemType != InventoryItem.Pufferfish && itemType != InventoryItem.Swordfish) || itemType == InventoryItem.Mallet || itemType == InventoryItem.Plank) return;
             int prefabIndex = CannonAmmo.IsBall(itemType) ? (int)InventoryItem.Cannonball : (int)itemType;
             if (command != 1 && command != 13 && (DropPrefabs == null || prefabIndex >= DropPrefabs.Length || DropPrefabs[prefabIndex] == null))
             { DeveloperResultTargetRpc(Owner, "Префаб предмета не назначен."); return; }

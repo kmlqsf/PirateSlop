@@ -103,6 +103,7 @@ namespace PirateSlop.Harpoon
         Rigidbody shipBody;
         AdvancedPlayerController operatorPlayer;
         HarpoonProjectile activeProjectile;
+        Transform restingTip;
         Transform restingKnot;
         int enteredFrame = -1;
         int exitedFrame = -1;
@@ -120,8 +121,16 @@ namespace PirateSlop.Harpoon
             if (barrelPitch == null && baseYaw != null) barrelPitch = baseYaw.Find("Barrel_Pitch");
             if (winchDrum == null && baseYaw != null) winchDrum = baseYaw.Find("Winch_Drum");
             if (drumAxle == null && baseYaw != null) drumAxle = baseYaw.Find("Winch_Axle");
-            if (restingHarpoon == null && barrelPitch != null) restingHarpoon = barrelPitch.Find("Harpoon_Projectile");
-            if (restingKnot == null && barrelPitch != null) restingKnot = barrelPitch.Find("Harpoon_Rope_Knot");
+
+            if (barrelPitch != null)
+            {
+                if (restingHarpoon == null) restingHarpoon = barrelPitch.Find("Harpoon_Projectile");
+                if (restingTip == null) restingTip = barrelPitch.Find("Harpoon_Tip");
+                if (restingKnot == null) restingKnot = barrelPitch.Find("Harpoon_Rope_Knot");
+            }
+            if (restingHarpoon == null) restingHarpoon = transform.Find("Visual/Base_Yaw/Barrel_Pitch/Harpoon_Projectile") ?? transform.Find("Base_Yaw/Barrel_Pitch/Harpoon_Projectile");
+            if (restingTip == null) restingTip = transform.Find("Visual/Base_Yaw/Barrel_Pitch/Harpoon_Tip") ?? transform.Find("Base_Yaw/Barrel_Pitch/Harpoon_Tip");
+            if (restingKnot == null) restingKnot = transform.Find("Visual/Base_Yaw/Barrel_Pitch/Harpoon_Rope_Knot") ?? transform.Find("Base_Yaw/Barrel_Pitch/Harpoon_Rope_Knot");
 
             if (drumAxle != null) cachedAxleDir = drumAxle.forward;
             else cachedAxleDir = transform.right;
@@ -132,6 +141,16 @@ namespace PirateSlop.Harpoon
                 ropeRenderer.positionCount = 24;
                 ropeRenderer.enabled = true;
             }
+        }
+
+        void SetRestingHarpoonVisible(bool visible)
+        {
+            if (restingHarpoon != null && restingHarpoon.gameObject.activeSelf != visible)
+                restingHarpoon.gameObject.SetActive(visible);
+            if (restingTip != null && restingTip.gameObject.activeSelf != visible)
+                restingTip.gameObject.SetActive(visible);
+            if (restingKnot != null && restingKnot.gameObject.activeSelf != visible)
+                restingKnot.gameObject.SetActive(visible);
         }
 
         public bool InRange(AdvancedPlayerController player)
@@ -238,7 +257,7 @@ namespace PirateSlop.Harpoon
 
             activeProjectile.Launch(this, vel);
 
-            if (restingHarpoon != null) restingHarpoon.gameObject.SetActive(false);
+            SetRestingHarpoonVisible(false);
             if (ropeRenderer != null) ropeRenderer.enabled = true;
 
             lastDistance = 0f;
@@ -257,7 +276,7 @@ namespace PirateSlop.Harpoon
         public void OnProjectileReturned(HarpoonProjectile proj)
         {
             activeProjectile = null;
-            if (restingHarpoon != null) restingHarpoon.gameObject.SetActive(true);
+            SetRestingHarpoonVisible(true);
             if (ropeRenderer != null) ropeRenderer.enabled = true;
         }
 
@@ -269,6 +288,8 @@ namespace PirateSlop.Harpoon
 
         void UpdateDrumAndRope()
         {
+            SetRestingHarpoonVisible(activeProjectile == null);
+
             if (ropeRenderer == null || muzzle == null) return;
 
             Vector3 drumTop = winchDrum != null ? (winchDrum.position + transform.up * 0.125f) : muzzle.position;

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+using UnityEngine;
+using System.Collections.Generic;
 
 namespace PirateSlop.Harpoon
 {
@@ -12,6 +13,8 @@ namespace PirateSlop.Harpoon
             Attached,
             Rewinding
         }
+
+        public static readonly List<HarpoonProjectile> ActiveAttached = new();
 
         public HarpoonGun Gun { get; private set; }
         public HarpoonState State => state;
@@ -27,10 +30,11 @@ namespace PirateSlop.Harpoon
         Rigidbody body;
         Collider col;
         HarpoonHookTarget hookTarget;
-        ConfigurableJoint joint;
         HarpoonState state = HarpoonState.Flying;
         float currentCableLength = 45f;
         Rigidbody shipBody;
+        ShipController launcherShip;
+        ShipController targetShip;
         bool isStaticTarget;
         Transform hitParent;
         Vector3 hitLocalPos;
@@ -55,7 +59,11 @@ namespace PirateSlop.Harpoon
             body.isKinematic = false;
             body.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
             body.linearVelocity = initialVelocity;
-            if (Gun != null && Gun.ShipBody != null) shipBody = Gun.ShipBody;
+            if (Gun != null && Gun.ShipBody != null)
+            {
+                shipBody = Gun.ShipBody;
+                launcherShip = shipBody.GetComponent<ShipController>();
+            }
         }
 
         void FixedUpdate()
@@ -78,16 +86,231 @@ namespace PirateSlop.Harpoon
             }
             else if (state == HarpoonState.Attached)
             {
-                if (isStaticTarget && shipBody != null)
+                if (hitParent != null)
                 {
-                    Vector3 up = shipBody.transform.up;
-                    if (Vector3.Dot(up, Vector3.up) < 0.98f)
+                    transform.position = hitParent.TransformPoint(hitLocalPos);
+                    transform.rotation = hitParent.rotation * hitLocalRot;
+                }
+                SimulateTetherPhysics();
+            }
+        }
+
+        void SimulateTetherPhysics()
+        {
+            if (Gun == null || Gun.Muzzle == null)
+            {
+                DetachAndRewind();
+                return;
+            }
+
+            if (hitParent == null && !isStaticTarget)
+            {
+                DetachAndRewind();
+                return;
+            }
+
+            Vector3 pointA = Gun.Muzzle.position;
+            Vector3 pointB = hitParent != null ? hitParent.TransformPoint(hitLocalPos) : transform.position;
+
+            Vector3 diff = pointB - pointA;
+            float dist = diff.magnitude;
+
+            if (dist > maxRange * 1.4f)
+            {
+                DetachAndRewind();
+                return;
+            }
+
+            Vector3 flatDiff = Vector3.ProjectOnPlane(diff, Vector3.up);
+            float flatDist = flatDiff.magnitude;
+            if (flatDist < 0.01f) return;
+            Vector3 u = flatDiff / flatDist;
+
+            float limit = currentCableLength;
+            float excess = Mathf.Max(0f, dist - limit);
+
+            if (targetShip != null && launcherShip != null)
+            {
+                float alignA = Mathf.Max(0f, -Vector3.Dot(launcherShip.transform.forward, u));
+                float alignB = Mathf.Max(0f, Vector3.Dot(targetShip.transform.forward, u));
+
+                float powerA = (launcherShip.IsFrozen || launcherShip.IsAnchored) ? 0f : alignA * Mathf.Max(launcherShip.Speed, launcherShip.SailDeploy * launcherShip.MaxSpeed);
+                float powerB = (targetShip.IsFrozen || targetShip.IsAnchored) ? 0f : alignB * Mathf.Max(targetShip.Speed, targetShip.SailDeploy * targetShip.MaxSpeed);
+
+                if (powerA > powerB + 0.3f)
+                {
+                    if (targetShip.IsAnchored)
                     {
-                        Vector3 upright = Vector3.Cross(up, Vector3.up) * (shipBody.mass * 35f);
-                        shipBody.AddTorque(upright, ForceMode.Force);
+                        if (dist >= limit * 0.95f)
+                        {
+                            launcherShip.ApplyTowing(pointA, u * 150000f, 0f);
+                        }
                     }
-                    Vector3 av = shipBody.angularVelocity;
-                    shipBody.angularVelocity = new Vector3(av.x * 0.85f, av.y, av.z * 0.85f);
+                    else
+                    {
+                        float towSpeed = launcherShip.MaxSpeed * Mathf.Lerp(0.55f, 0.9f, powerB / Mathf.Max(0.01f, powerA));
+                        if (dist >= limit * 0.92f)
+                        {
+                            launcherShip.SetTowingSpeedLimit(towSpeed);
+                            float targetSpeed = Mathf.Max(launcherShip.Speed, 2.5f);
+                            float massB = targetShip.ImpulseMass;
+                            Vector3 v2 = targetShip.transform.forward * targetShip.Speed + targetShip.PushVelocity;
+                            float currentSpeedB = -Vector3.Dot(v2, u);
+                            float neededAccel = Mathf.Max(0f, targetSpeed - currentSpeedB) * 4f + excess * 15f;
+                            Vector3 pullB = -u * (massB * neededAccel);
+                            targetShip.ApplyTowing(pointB, pullB, -1f);
+                            launcherShip.ApplyTowing(pointA, u * (neededAccel * massB * 0.2f), towSpeed);
+                        }
+                    }
+                }
+                else if (powerB > powerA + 0.3f)
+                {
+                    if (launcherShip.IsAnchored)
+                    {
+                        if (dist >= limit * 0.95f)
+                        {
+                            targetShip.ApplyTowing(pointB, -u * 150000f, 0f);
+                        }
+                    }
+                    else
+                    {
+                        float towSpeed = targetShip.MaxSpeed * Mathf.Lerp(0.55f, 0.9f, powerA / Mathf.Max(0.01f, powerB));
+                        if (dist >= limit * 0.92f)
+                        {
+                            targetShip.SetTowingSpeedLimit(towSpeed);
+                            float targetSpeed = Mathf.Max(targetShip.Speed, 2.5f);
+                            float massA = launcherShip.ImpulseMass;
+                            Vector3 v1 = launcherShip.transform.forward * launcherShip.Speed + launcherShip.PushVelocity;
+                            float currentSpeedA = Vector3.Dot(v1, u);
+                            float neededAccel = Mathf.Max(0f, targetSpeed - currentSpeedA) * 4f + excess * 15f;
+                            Vector3 pullA = u * (massA * neededAccel);
+                            launcherShip.ApplyTowing(pointA, pullA, -1f);
+                            targetShip.ApplyTowing(pointB, -u * (neededAccel * massA * 0.2f), towSpeed);
+                        }
+                    }
+                }
+                else
+                {
+                    if (dist >= limit * 0.95f)
+                    {
+                        if (powerA > 0.5f && powerB > 0.5f)
+                        {
+                            launcherShip.ApplyTowing(pointA, u * 150000f, 0f);
+                            targetShip.ApplyTowing(pointB, -u * 150000f, 0f);
+                        }
+                        else
+                        {
+                            float tension = excess * 60000f;
+                            launcherShip.ApplyTowing(pointA, u * tension, -1f);
+                            targetShip.ApplyTowing(pointB, -u * tension, -1f);
+                        }
+                    }
+                }
+            }
+            else if (launcherShip != null)
+            {
+                if (dist >= limit * 0.95f)
+                {
+                    float align1 = Mathf.Max(0f, -Vector3.Dot(u, launcherShip.transform.forward));
+                    if (align1 > 0.1f)
+                    {
+                        launcherShip.ApplyTowing(pointA, u * (excess * 150000f + 50000f), 0f);
+                    }
+                }
+
+                Vector3 up = launcherShip.transform.up;
+                if (Vector3.Dot(up, Vector3.up) < 0.98f && shipBody != null)
+                {
+                    Vector3 upright = Vector3.Cross(up, Vector3.up) * (shipBody.mass * 35f);
+                    shipBody.AddTorque(upright, ForceMode.Force);
+                }
+            }
+        }
+
+        public float GetConstraintWeight(ShipController ship)
+        {
+            if (ship == null) return 0.5f;
+            if (targetShip == null || launcherShip == null) return 1.0f;
+
+            bool isLauncher = ship.gameObject == launcherShip.gameObject;
+            bool isTarget = ship.gameObject == targetShip.gameObject;
+            if (!isLauncher && !isTarget) return 0f;
+
+            if (ship.IsAnchored) return 0f;
+
+            ShipController otherShip = isLauncher ? targetShip : launcherShip;
+            if (otherShip.IsAnchored) return 1.0f;
+
+            Vector3 pointA = Gun != null && Gun.Muzzle != null ? Gun.Muzzle.position : launcherShip.transform.position;
+            Vector3 pointB = hitParent != null ? hitParent.TransformPoint(hitLocalPos) : targetShip.transform.position;
+            Vector3 diff = pointB - pointA;
+            Vector3 u = Vector3.ProjectOnPlane(diff, Vector3.up);
+            if (u.sqrMagnitude < 0.001f) return 0.5f;
+            u.Normalize();
+
+            float alignA = Mathf.Max(0f, -Vector3.Dot(launcherShip.transform.forward, u));
+            float alignB = Mathf.Max(0f, Vector3.Dot(targetShip.transform.forward, u));
+
+            float powerA = (launcherShip.IsFrozen || launcherShip.IsAnchored) ? 0f : alignA * Mathf.Max(launcherShip.Speed, launcherShip.SailDeploy * launcherShip.MaxSpeed);
+            float powerB = (targetShip.IsFrozen || targetShip.IsAnchored) ? 0f : alignB * Mathf.Max(targetShip.Speed, targetShip.SailDeploy * targetShip.MaxSpeed);
+
+            if (powerA > powerB + 0.3f)
+            {
+                return isLauncher ? 0f : 1.0f;
+            }
+            if (powerB > powerA + 0.3f)
+            {
+                return isTarget ? 0f : 1.0f;
+            }
+
+            return 0.5f;
+        }
+
+        public static void ConstrainHarpoons(ShipController ship, ref Vector3 position, Quaternion rotation)
+        {
+            if (ship == null || ActiveAttached.Count == 0) return;
+
+            for (int pass = 0; pass < 2; pass++)
+            {
+                for (int i = 0; i < ActiveAttached.Count; i++)
+                {
+                    var harpoon = ActiveAttached[i];
+                    if (harpoon == null || harpoon.state != HarpoonState.Attached) continue;
+
+                    Vector3 local, other;
+
+                    if (harpoon.launcherShip != null && ship.gameObject == harpoon.launcherShip.gameObject)
+                    {
+                        local = harpoon.Gun != null && harpoon.Gun.Muzzle != null
+                            ? harpoon.launcherShip.transform.InverseTransformPoint(harpoon.Gun.Muzzle.position)
+                            : Vector3.zero;
+                        other = harpoon.hitParent != null
+                            ? harpoon.hitParent.TransformPoint(harpoon.hitLocalPos)
+                            : harpoon.transform.position;
+                    }
+                    else if (harpoon.targetShip != null && ship.gameObject == harpoon.targetShip.gameObject)
+                    {
+                        local = harpoon.hitLocalPos;
+                        other = harpoon.Gun != null && harpoon.Gun.Muzzle != null
+                            ? harpoon.Gun.Muzzle.position
+                            : (harpoon.shipBody != null ? harpoon.shipBody.position : harpoon.transform.position);
+                    }
+                    else continue;
+
+                    Vector3 anchor = position + rotation * local;
+                    Vector3 flat = Vector3.ProjectOnPlane(anchor - other, Vector3.up);
+                    float height = anchor.y - other.y;
+                    float limit = Mathf.Sqrt(Mathf.Max(1f, harpoon.currentCableLength * harpoon.currentCableLength - height * height));
+
+                    if (flat.magnitude > limit)
+                    {
+                        float weight = harpoon.GetConstraintWeight(ship);
+                        if (weight > 0.001f)
+                        {
+                            Vector3 correction = flat.normalized * (flat.magnitude - limit);
+                            position -= correction * weight;
+                        }
+                    }
                 }
             }
         }
@@ -159,38 +382,29 @@ namespace PirateSlop.Harpoon
             hitLocalPos = hitParent.InverseTransformPoint(contact.point);
             hitLocalRot = Quaternion.Inverse(hitParent.rotation) * transform.rotation;
 
-            isStaticTarget = !isShip;
-
-            if (shipBody != null && Gun != null && Gun.Muzzle != null)
+            launcherShip = shipBody != null ? (shipBody.GetComponent<ShipController>() ?? shipBody.GetComponentInParent<ShipController>()) : null;
+            if (launcherShip == null && shipBody != null)
             {
-                joint = shipBody.gameObject.AddComponent<ConfigurableJoint>();
-                joint.autoConfigureConnectedAnchor = false;
-                joint.anchor = shipBody.transform.InverseTransformPoint(Gun.Muzzle.position);
-
-                float dist = Vector3.Distance(Gun.Muzzle.position, contact.point);
-                currentCableLength = Mathf.Clamp(dist, 8f, 45f);
-
-                if (isShip && collision.collider.attachedRigidbody != null)
-                {
-                    joint.connectedBody = collision.collider.attachedRigidbody;
-                    joint.connectedAnchor = collision.collider.attachedRigidbody.transform.InverseTransformPoint(contact.point);
-                }
-                else
-                {
-                    joint.connectedAnchor = contact.point;
-                }
-
-                joint.xMotion = ConfigurableJointMotion.Limited;
-                joint.yMotion = ConfigurableJointMotion.Limited;
-                joint.zMotion = ConfigurableJointMotion.Limited;
-                joint.linearLimit = new SoftJointLimit { limit = currentCableLength };
-                joint.linearLimitSpring = new SoftJointLimitSpring { spring = 80000f, damper = 8000f };
-                joint.angularXMotion = ConfigurableJointMotion.Free;
-                joint.angularYMotion = ConfigurableJointMotion.Free;
-                joint.angularZMotion = ConfigurableJointMotion.Free;
-                joint.breakForce = Mathf.Infinity;
-                joint.breakTorque = Mathf.Infinity;
+                var netShip = shipBody.GetComponent<PirateSlop.Networking.NetworkShip>() ?? shipBody.GetComponentInParent<PirateSlop.Networking.NetworkShip>();
+                if (netShip != null) launcherShip = netShip.Motor;
             }
+
+            targetShip = isShip && collision.collider != null ? (collision.collider.GetComponentInParent<ShipController>() ?? collision.collider.GetComponent<ShipController>()) : null;
+            if (targetShip == null && isShip && collision.collider != null)
+            {
+                var netShip = collision.collider.GetComponentInParent<PirateSlop.Networking.NetworkShip>() ?? collision.collider.GetComponent<PirateSlop.Networking.NetworkShip>();
+                if (netShip != null) targetShip = netShip.Motor;
+            }
+
+            isStaticTarget = !isShip || targetShip == null;
+
+            if (Gun != null && Gun.Muzzle != null)
+            {
+                float dist = Vector3.Distance(Gun.Muzzle.position, contact.point);
+                currentCableLength = Mathf.Clamp(dist, 8f, maxRange);
+            }
+
+            if (!ActiveAttached.Contains(this)) ActiveAttached.Add(this);
 
             GameAudio.Play(SoundCue.BulletMetal, transform.position, 1.0f);
             if (Gun != null) Gun.OnProjectileAttached(this);
@@ -198,22 +412,14 @@ namespace PirateSlop.Harpoon
 
         public void SetCableLength(float length)
         {
-            currentCableLength = Mathf.Clamp(length, 8f, 45f);
-            if (joint != null)
-            {
-                joint.linearLimit = new SoftJointLimit { limit = currentCableLength };
-            }
+            currentCableLength = Mathf.Clamp(length, 8f, maxRange);
         }
 
         public void DetachAndRewind()
         {
             if (state == HarpoonState.Rewinding) return;
             state = HarpoonState.Rewinding;
-            if (joint != null)
-            {
-                Destroy(joint);
-                joint = null;
-            }
+            ActiveAttached.Remove(this);
             hitParent = null;
             transform.SetParent(null);
             body.isKinematic = true;
@@ -223,7 +429,7 @@ namespace PirateSlop.Harpoon
 
         void OnDestroy()
         {
-            if (joint != null) Destroy(joint);
+            ActiveAttached.Remove(this);
         }
     }
 }

@@ -12,6 +12,7 @@ namespace PirateSlop.Networking
         public LootCatalog Catalog;
         public Transform Lid;
         readonly SyncVar<bool> opened = new();
+        public bool Opened => opened.Value;
         readonly SyncList<InventoryItem> contents = new();
         public int SlotCount => contents.Count;
         public InventoryItem ItemAt(int slot) => slot >= 0 && slot < contents.Count ? contents[slot] : InventoryItem.None;
@@ -25,7 +26,7 @@ namespace PirateSlop.Networking
         }
         public void Open()
         {
-            if (IsServerInitialized && IsSpawned && Available) opened.Value = true;
+            if (IsServerInitialized && IsSpawned && Available && (Kind != SeaLootKind.Shark || SharksDistracted)) opened.Value = true;
         }
         public void Take(NetworkWeapon player, int slot, bool swap = false, int selected = -1, InventoryItem expected = InventoryItem.None, int expectedCount = 0)
         {
