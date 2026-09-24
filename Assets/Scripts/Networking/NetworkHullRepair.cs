@@ -158,7 +158,11 @@ namespace PirateSlop.Networking
                 {
                     nextStrike = Time.time + .45f;
                     gun.RepairStrike(gameObject);
-                    StrikeObserversRpc(point);
+                    var ship = target.GetComponent<NetworkShip>();
+                    if (ship != null && gun.MountIndex >= 0)
+                        ship.HarpoonRepairStrike(gun.MountIndex, gun.CurrentHealth, gun.IsBroken, gun.RepairStrikes, point);
+                    else
+                        StrikeObserversRpc(point);
                     break;
                 }
             }

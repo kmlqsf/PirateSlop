@@ -1,7 +1,7 @@
 import bpy, math, json, os
 from mathutils import Vector
 from collections import defaultdict
-ROOT=r'C:\Users\K\Project'
+ROOT = r'D:\projects\Pirate_BR\PirateGame'
 OUT=ROOT+'/Assets/Models/Ships/Frigate'
 scene=bpy.data.scenes.get('PirateFrigate')
 if scene:
@@ -302,3 +302,26 @@ manifest={'boxes':[c for c in collisions if 'p' in c],'hulls':[{'name':c['name']
 with open(OUT+'/FrigateLayout.json','w') as f: json.dump(manifest,f)
 bpy.data.libraries.write(ROOT+'/Art/Blender/Frigate/PirateFrigate.blend',{scene},fake_user=True)
 result={'objects':len(scene.objects),'polygons':sum(len(o.data.polygons) for o in scene.objects if o.type=='MESH'),'fbx':OUT+'/PirateFrigate.fbx','blend':ROOT+'/Art/Blender/Frigate/PirateFrigate.blend'}
+
+lod1_del = ['Ratlines', 'RunningRigging', 'StandingRigging', 'Deadeyes', 'Cleats', 'BarrelHoops', 'Lanterns', 'LanternGlass', 'StairRails', 'StairPosts', 'HelmWheel', 'AnchorCable', 'PennantBones', 'PennantSkull', 'PennantJaw', 'SternScrolls']
+for obj in list(scene.objects):
+ if any(obj.name.startswith(x) for x in lod1_del):
+  bpy.data.objects.remove(obj, do_unlink=True)
+for obj in scene.objects:
+ if obj.type == 'MESH':
+  mod = obj.modifiers.new('DecimateLOD', 'DECIMATE'); mod.ratio = 0.5
+bpy.ops.object.select_all(action='DESELECT')
+for obj in scene.objects: obj.select_set(True)
+bpy.ops.export_scene.fbx(filepath=OUT+'/PirateFrigate_LOD1.fbx',use_selection=True,object_types={'MESH','EMPTY'},axis_forward='-Z',axis_up='Y',apply_unit_scale=True,bake_space_transform=True,add_leaf_bones=False)
+
+lod2_del = ['Yards', 'NestBraces', 'NestPosts', 'NestRails', 'StairStringers', 'HoldStairsRiser', 'BridgeStairsRiser', 'Capstan', 'CapstanBars', 'Anchor', 'CargoCrates', 'Barrels', 'GunBayCheek', 'GunBayCap', 'GunBayStuds', 'BridgeFrontRail', 'BridgePosts', 'SternRail', 'SternPosts', 'MastLadder', 'LadderBrackets', 'BowspritTreads', 'BowspritBindings', 'JibInner']
+for obj in list(scene.objects):
+ if any(obj.name.startswith(x) for x in lod2_del):
+  bpy.data.objects.remove(obj, do_unlink=True)
+for obj in scene.objects:
+ if obj.type == 'MESH':
+  for mod in obj.modifiers:
+   if mod.name == 'DecimateLOD': mod.ratio = 0.15
+bpy.ops.object.select_all(action='DESELECT')
+for obj in scene.objects: obj.select_set(True)
+bpy.ops.export_scene.fbx(filepath=OUT+'/PirateFrigate_LOD2.fbx',use_selection=True,object_types={'MESH','EMPTY'},axis_forward='-Z',axis_up='Y',apply_unit_scale=True,bake_space_transform=True,add_leaf_bones=False)

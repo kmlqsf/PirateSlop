@@ -11,6 +11,10 @@ namespace PirateSlop.Harpoon
         HarpoonGun gunPort;
         HarpoonGun gunStarboard;
 
+        public HarpoonGun GunPort => gunPort;
+        public HarpoonGun GunStarboard => gunStarboard;
+        public HarpoonGun GetGun(int index) => index == 0 ? gunPort : gunStarboard;
+
         void Awake()
         {
             SpawnHarpoons();
@@ -42,11 +46,13 @@ namespace PirateSlop.Harpoon
             if (mountPort != null && gunPort == null)
             {
                 gunPort = Instantiate(harpoonPrefab, mountPort.position, mountPort.rotation, mountPort);
+                gunPort.InitializeMount(this, 0);
                 if (railingSection != null) gunPort.SetMountSection(railingSection);
             }
             if (mountStarboard != null && gunStarboard == null)
             {
                 gunStarboard = Instantiate(harpoonPrefab, mountStarboard.position, mountStarboard.rotation, mountStarboard);
+                gunStarboard.InitializeMount(this, 1);
                 if (railingSection != null) gunStarboard.SetMountSection(railingSection);
             }
         }

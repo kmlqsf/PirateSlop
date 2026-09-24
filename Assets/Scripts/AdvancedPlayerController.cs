@@ -68,6 +68,7 @@ public class AdvancedPlayerController : MonoBehaviour
     public FirstPersonMotion ViewMotion { get; private set; }
     Vector3 slideDirection;
     bool crouched, networked, local = true;
+    public bool IsLocal => local;
     PlayerCommand pending;
     CombatHealth health;
     PlayerInventory inventory;
@@ -142,9 +143,37 @@ public class AdvancedPlayerController : MonoBehaviour
         if (locomotionLocked == value) return;
         locomotionLocked = value; verticalVelocity = 0; slideTimer = 0; PlanarSpeed = 0;
     }
+    public PirateSlop.Networking.NetworkPlayer SpectatorTarget { get; private set; }
+
+    void CycleSpectatorTarget()
+    {
+        var networkSelf = GetComponent<PirateSlop.Networking.NetworkPlayer>();
+        if (networkSelf == null) return;
+        var teammates = new System.Collections.Generic.List<PirateSlop.Networking.NetworkPlayer>();
+        foreach (var p in PirateSlop.Networking.NetworkPlayer.Active)
+        {
+            if (p.TeamId.Value == networkSelf.TeamId.Value && p != networkSelf && p.Motor != null && !p.Motor.IsDead)
+                teammates.Add(p);
+        }
+        if (teammates.Count == 0)
+        {
+            SpectatorTarget = null;
+            return;
+        }
+        int index = SpectatorTarget != null ? teammates.IndexOf(SpectatorTarget) : -1;
+        index = (index + 1) % teammates.Count;
+        SpectatorTarget = teammates[index];
+    }
+
     void Update()
     {
         if (!local) return;
+        if (IsDead)
+        {
+            var m = Mouse.current;
+            if (m != null && m.leftButton.wasPressedThisFrame)
+                CycleSpectatorTarget();
+        }
         if (BotDebugPanel.ConsumedInput) { pending = new PlayerCommand { Yaw = lookYaw, Pitch = pitch, Release = true }; return; }
         aimRecoil=Vector2.Lerp(aimRecoil,Vector2.zero,1-Mathf.Exp(-7*Time.deltaTime));
         var kb = Keyboard.current; var mouse = Mouse.current;
@@ -168,6 +197,26 @@ public class AdvancedPlayerController : MonoBehaviour
     void LateUpdate()
     {
         if (!local || playerCamera == null) return;
+        if (IsDead)
+        {
+            if (SpectatorTarget != null && SpectatorTarget.Motor != null && !SpectatorTarget.Motor.IsDead)
+            {
+                var targetCam = SpectatorTarget.Motor.PlayerCamera;
+                if (targetCam != null)
+                {
+                    playerCamera.transform.rotation = targetCam.transform.rotation;
+                    var targetPivot = targetCam.transform.position;
+                    var targetDir = -targetCam.transform.forward;
+                    float distance = thirdPersonDistance;
+                    foreach (var hit in Physics.SphereCastAll(targetPivot, .15f, targetDir, distance, ~0, QueryTriggerInteraction.Ignore))
+                        if (!hit.transform.IsChildOf(SpectatorTarget.transform)) 
+                            distance = Mathf.Min(distance, Mathf.Max(0, hit.distance - .05f));
+                    playerCamera.transform.position = targetPivot + targetDir * distance;
+                    playerCamera.fieldOfView = targetCam.fieldOfView;
+                }
+            }
+            return;
+        }
         var helm = shipControls != null ? shipControls.TurningHelm : null;
         var ship = helm != null ? helm.GetComponentInParent<ShipController>() : null;
         if (ship != null)

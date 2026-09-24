@@ -97,6 +97,8 @@ namespace PirateSlop.Harpoon
 
         void SimulateTetherPhysics()
         {
+            if (Gun != null && Gun.NetworkShip != null && !Gun.NetworkShip.IsServerInitialized) return;
+
             if (Gun == null || Gun.Muzzle == null)
             {
                 DetachAndRewind();
@@ -406,6 +408,46 @@ namespace PirateSlop.Harpoon
 
             if (!ActiveAttached.Contains(this)) ActiveAttached.Add(this);
 
+            GameAudio.Play(SoundCue.BulletMetal, transform.position, 1.0f);
+            if (Gun != null) Gun.OnProjectileAttached(this);
+
+            if (Gun != null && Gun.NetworkShip != null && Gun.NetworkShip.IsServerInitialized && Gun.MountIndex >= 0)
+            {
+                var targetNetObj = collision.collider != null ? collision.collider.GetComponentInParent<FishNet.Object.NetworkObject>() : null;
+                Gun.NetworkShip.HarpoonAttach(Gun.MountIndex, isShip, targetNetObj, hitLocalPos, hitLocalRot, currentCableLength);
+            }
+        }
+
+        public void AttachFromNetwork(bool isShip, FishNet.Object.NetworkObject targetNetObj, Vector3 localHitPos, Quaternion localHitRot, float cableLength)
+        {
+            state = HarpoonState.Attached;
+            body.isKinematic = true;
+            body.collisionDetectionMode = CollisionDetectionMode.Discrete;
+            if (col != null) col.isTrigger = true;
+
+            Transform targetTransform = targetNetObj != null ? targetNetObj.transform : null;
+            hitParent = targetTransform;
+            hitLocalPos = localHitPos;
+            hitLocalRot = localHitRot;
+
+            if (hitParent != null)
+            {
+                transform.position = hitParent.TransformPoint(hitLocalPos);
+                transform.rotation = hitParent.rotation * hitLocalRot;
+            }
+
+            launcherShip = shipBody != null ? (shipBody.GetComponent<ShipController>() ?? shipBody.GetComponentInParent<ShipController>()) : null;
+            if (launcherShip == null && shipBody != null)
+            {
+                var netShip = shipBody.GetComponent<PirateSlop.Networking.NetworkShip>() ?? shipBody.GetComponentInParent<PirateSlop.Networking.NetworkShip>();
+                if (netShip != null) launcherShip = netShip.Motor;
+            }
+
+            targetShip = isShip && targetNetObj != null ? (targetNetObj.GetComponent<ShipController>() ?? targetNetObj.GetComponentInChildren<ShipController>()) : null;
+            isStaticTarget = !isShip || targetShip == null;
+            currentCableLength = Mathf.Clamp(cableLength, 8f, maxRange);
+
+            if (!ActiveAttached.Contains(this)) ActiveAttached.Add(this);
             GameAudio.Play(SoundCue.BulletMetal, transform.position, 1.0f);
             if (Gun != null) Gun.OnProjectileAttached(this);
         }

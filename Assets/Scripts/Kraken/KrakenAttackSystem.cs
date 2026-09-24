@@ -28,6 +28,9 @@ namespace PirateSlop
         {
             if (targetShip == null || tentacles.Count == 0) return;
 
+            var netShip = targetShip.GetComponent<PirateSlop.Networking.NetworkShip>();
+            if (netShip != null && !netShip.IsServerInitialized) return;
+
             if (Time.time >= nextAttackTime)
             {
                 nextAttackTime = Time.time + attackInterval;
@@ -60,6 +63,13 @@ namespace PirateSlop
 
         void LaunchTentacleAttack(KrakenTentacle tentacle, float crewDamage)
         {
+            int index = tentacles.IndexOf(tentacle);
+            var netShip = targetShip != null ? targetShip.GetComponent<PirateSlop.Networking.NetworkShip>() : null;
+            if (netShip != null && netShip.IsServerInitialized && index >= 0)
+            {
+                netShip.KrakenAttackTentacle(index, targetShip.position);
+            }
+
             tentacle.Attack(targetShip.position, () => OnTentacleImpact(tentacle, crewDamage));
         }
 
@@ -68,10 +78,19 @@ namespace PirateSlop
             if (tentacle == null) return;
             Vector3 strikePoint = tentacle.TipPosition;
 
-            GameAudio.Play(SoundCue.Splash, strikePoint);
-            GameAudio.Play(SoundCue.ShipCollision, strikePoint);
-            CombatVfx.Splash(strikePoint);
-            CombatVfx.Impact(strikePoint, Vector3.up, true, true);
+            int index = tentacles.IndexOf(tentacle);
+            var netShip = targetShip != null ? targetShip.GetComponent<PirateSlop.Networking.NetworkShip>() : null;
+            if (netShip != null && netShip.IsServerInitialized && index >= 0)
+            {
+                netShip.KrakenTentacleImpact(index, strikePoint);
+            }
+            else
+            {
+                GameAudio.Play(SoundCue.Splash, strikePoint);
+                GameAudio.Play(SoundCue.ShipCollision, strikePoint);
+                CombatVfx.Splash(strikePoint);
+                CombatVfx.Impact(strikePoint, Vector3.up, true, true);
+            }
 
             DamageShip(strikePoint);
 

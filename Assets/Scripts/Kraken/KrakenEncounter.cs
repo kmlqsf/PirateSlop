@@ -39,6 +39,9 @@ namespace PirateSlop
 
         void SpawnTentacles()
         {
+            if (tentaclePrefab == null)
+                tentaclePrefab = Resources.Load<GameObject>("KrakenTentacle");
+
             for (int i = 0; i < formationOffsets.Length; i++)
             {
                 Vector3 worldPos = targetShip.TransformPoint(formationOffsets[i]);
@@ -64,6 +67,19 @@ namespace PirateSlop
             }
         }
 
+        public void ExecuteTentacleAttack(int index, Vector3 targetPos)
+        {
+            if (index >= 0 && index < tentacles.Count && tentacles[index] != null)
+            {
+                tentacles[index].Attack(targetPos, null);
+            }
+        }
+
+        public void TriggerSinkLocal()
+        {
+            isSinking = true;
+        }
+
         void Update()
         {
             if (isSinking)
@@ -78,11 +94,16 @@ namespace PirateSlop
                 return;
             }
 
-            float distanceToShip = Vector3.Distance(transform.position, targetShip.position);
-            if (distanceToShip > escapeDistance)
+            var netShip = targetShip.GetComponent<PirateSlop.Networking.NetworkShip>();
+            if (netShip == null || netShip.IsServerInitialized)
             {
-                isSinking = true;
-                return;
+                float distanceToShip = Vector3.Distance(transform.position, targetShip.position);
+                if (distanceToShip > escapeDistance)
+                {
+                    if (netShip != null) netShip.KrakenSink();
+                    isSinking = true;
+                    return;
+                }
             }
 
             UpdateChase();
@@ -138,6 +159,11 @@ namespace PirateSlop
                     if (tentacles[i] != null)
                         Destroy(tentacles[i].gameObject);
                 }
+                if (targetShip != null)
+                {
+                    var mgr = targetShip.GetComponent<KrakenEncounterManager>();
+                    mgr?.ClearEncounter();
+                }
                 Destroy(gameObject);
             }
         }
@@ -148,6 +174,11 @@ namespace PirateSlop
             {
                 if (tentacles[i] != null)
                     Destroy(tentacles[i].gameObject);
+            }
+            if (targetShip != null)
+            {
+                var mgr = targetShip.GetComponent<KrakenEncounterManager>();
+                mgr?.ClearEncounter();
             }
         }
     }

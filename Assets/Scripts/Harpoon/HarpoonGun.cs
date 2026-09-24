@@ -54,6 +54,10 @@ namespace PirateSlop.Harpoon
             {
                 BreakGun();
             }
+            if (NetworkShip != null && NetworkShip.IsServerInitialized && MountIndex >= 0)
+            {
+                NetworkShip.PublishHarpoonState(MountIndex, currentHealth, isBroken);
+            }
         }
 
         public void BreakGun()
@@ -93,6 +97,16 @@ namespace PirateSlop.Harpoon
             RepairReveal.Show(gameObject);
         }
 
+        public int MountIndex { get; private set; } = -1;
+        public HarpoonShipMount Mount { get; private set; }
+        public PirateSlop.Networking.NetworkShip NetworkShip => Mount != null ? Mount.GetComponentInParent<PirateSlop.Networking.NetworkShip>() : GetComponentInParent<PirateSlop.Networking.NetworkShip>();
+
+        public void InitializeMount(HarpoonShipMount mount, int index)
+        {
+            Mount = mount;
+            MountIndex = index;
+        }
+
         public Transform Muzzle => muzzle;
         public Transform CameraMount => cameraMount;
         public Rigidbody ShipBody => shipBody != null ? shipBody : (shipBody = GetComponentInParent<Rigidbody>());
@@ -110,6 +124,7 @@ namespace PirateSlop.Harpoon
         float currentYaw;
         float currentPitch;
         float lastDistance;
+        float nextAimSync;
         Vector3 cachedAxleDir;
 
         void Awake()
@@ -170,11 +185,36 @@ namespace PirateSlop.Harpoon
             return true;
         }
 
+        public void SetRemoteOperator(AdvancedPlayerController player)
+        {
+            if (player != null && player.IsLocal)
+            {
+                TakeControl(player);
+            }
+            else
+            {
+                operatorPlayer = player;
+            }
+        }
+
+        public void SetRemoteAim(float yaw, float pitch)
+        {
+            if (operatorPlayer != null && operatorPlayer.IsLocal) return;
+            currentYaw = yaw;
+            currentPitch = pitch;
+            if (baseYaw != null) baseYaw.localRotation = Quaternion.Euler(0, 0, currentYaw);
+            if (barrelPitch != null) barrelPitch.localRotation = Quaternion.Euler(currentPitch, 0, 0);
+        }
+
         public void ReleaseControl()
         {
             exitedFrame = Time.frameCount;
             if (operatorPlayer != null)
             {
+                if (NetworkShip != null && operatorPlayer.IsLocal && MountIndex >= 0)
+                {
+                    NetworkShip.ReleaseHarpoonControl(MountIndex);
+                }
                 if (operatorPlayer.ActiveHarpoon == this)
                     operatorPlayer.ActiveHarpoon = null;
                 operatorPlayer = null;
@@ -214,6 +254,12 @@ namespace PirateSlop.Harpoon
             if (baseYaw != null) baseYaw.localRotation = Quaternion.Euler(0, 0, currentYaw);
             if (barrelPitch != null) barrelPitch.localRotation = Quaternion.Euler(currentPitch, 0, 0);
 
+            if (NetworkShip != null && MountIndex >= 0 && Time.time >= nextAimSync)
+            {
+                nextAimSync = Time.time + 0.05f;
+                NetworkShip.HarpoonAim(MountIndex, currentYaw, currentPitch);
+            }
+
             if (mouse.leftButton.wasPressedThisFrame)
             {
                 if (activeProjectile == null)
@@ -222,11 +268,15 @@ namespace PirateSlop.Harpoon
                 }
                 else
                 {
+                    if (NetworkShip != null && MountIndex >= 0)
+                        NetworkShip.HarpoonDetach(MountIndex);
                     activeProjectile.DetachAndRewind();
                 }
             }
             else if (mouse.rightButton.wasPressedThisFrame && activeProjectile != null)
             {
+                if (NetworkShip != null && MountIndex >= 0)
+                    NetworkShip.HarpoonDetach(MountIndex);
                 activeProjectile.DetachAndRewind();
             }
 
@@ -236,10 +286,17 @@ namespace PirateSlop.Harpoon
                 if (Mathf.Abs(scroll) > 0.01f)
                 {
                     float deltaLength = Mathf.Sign(scroll) * 1.5f;
-                    float newLen = activeProjectile.CurrentCableLength - deltaLength;
-                    activeProjectile.SetCableLength(newLen);
-                    RotateWinchDrum(deltaLength * 70f);
-                    GameAudio.Play(SoundCue.BulletMetal, transform.position, 0.4f);
+                    if (NetworkShip != null && MountIndex >= 0)
+                    {
+                        NetworkShip.HarpoonWinch(MountIndex, deltaLength);
+                    }
+                    else
+                    {
+                        float newLen = activeProjectile.CurrentCableLength - deltaLength;
+                        activeProjectile.SetCableLength(newLen);
+                        RotateWinchDrum(deltaLength * 70f);
+                        GameAudio.Play(SoundCue.BulletMetal, transform.position, 0.4f);
+                    }
                 }
             }
         }
@@ -249,12 +306,27 @@ namespace PirateSlop.Harpoon
             if (projectilePrefab == null || muzzle == null) return;
 
             Vector3 spawnPos = muzzle.position;
-            Quaternion spawnRot = muzzle.rotation;
-
-            activeProjectile = Instantiate(projectilePrefab, spawnPos, spawnRot);
             Vector3 vel = muzzle.forward * launchSpeed;
             if (ShipBody != null) vel += ShipBody.linearVelocity;
 
+            if (NetworkShip != null && MountIndex >= 0)
+            {
+                NetworkShip.HarpoonFire(MountIndex, spawnPos, vel);
+            }
+            LaunchInternal(spawnPos, vel);
+        }
+
+        public void LaunchFromNetwork(Vector3 spawnPos, Vector3 vel)
+        {
+            if (activeProjectile != null) return;
+            LaunchInternal(spawnPos, vel);
+        }
+
+        void LaunchInternal(Vector3 spawnPos, Vector3 vel)
+        {
+            if (projectilePrefab == null || muzzle == null) return;
+
+            activeProjectile = Instantiate(projectilePrefab, spawnPos, Quaternion.LookRotation(vel.normalized, Vector3.up));
             activeProjectile.Launch(this, vel);
 
             SetRestingHarpoonVisible(false);
@@ -263,6 +335,31 @@ namespace PirateSlop.Harpoon
             lastDistance = 0f;
             GameAudio.Play(SoundCue.Cannon, muzzle.position, 1.0f);
             GameAudio.Play(SoundCue.HookThrow, muzzle.position, 0.8f);
+        }
+
+        public void ApplyNetworkState(float health, bool broken)
+        {
+            currentHealth = health;
+            if (broken && !isBroken)
+            {
+                BreakGun();
+            }
+            else if (!broken && isBroken)
+            {
+                RepairFully();
+            }
+        }
+
+        public void ApplyRepairNetworkState(float health, bool broken, int strikes, Vector3 strikePoint)
+        {
+            currentHealth = health;
+            repairStrikes = strikes;
+            GameAudio.Play(SoundCue.BulletMetal, strikePoint, 0.9f);
+            CombatVfx.Impact(strikePoint, Vector3.up, false, true);
+            if (!broken && isBroken)
+            {
+                RepairFully();
+            }
         }
 
         public void OnProjectileAttached(HarpoonProjectile proj)
@@ -280,7 +377,7 @@ namespace PirateSlop.Harpoon
             if (ropeRenderer != null) ropeRenderer.enabled = true;
         }
 
-        void RotateWinchDrum(float angle)
+        public void RotateWinchDrum(float angle)
         {
             if (winchDrum == null) return;
             winchDrum.Rotate(0, 0, angle, Space.Self);

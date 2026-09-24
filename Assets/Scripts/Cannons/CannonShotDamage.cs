@@ -157,6 +157,8 @@ namespace PirateSlop
                 }
                 var harpoon = hit.GetComponentInParent<Harpoon.HarpoonGun>();
                 if (harpoon != null) harpoon.TakeDamage(Ammo == InventoryItem.Cannonball ? StandardBlastDamage : PlayerDamage, Attacker);
+                var tentacle = hit.GetComponentInParent<KrakenTentacle>();
+                if (tentacle != null) tentacle.TakeDamage(Ammo == InventoryItem.Cannonball ? StandardBlastDamage : PlayerDamage, Attacker);
                 var ship = hit.GetComponentInParent<NetworkShip>();
                 if (ship != null && ships.Add(ship))
                 {
@@ -189,9 +191,11 @@ namespace PirateSlop
             if (damageSection != null) hitSections.Add(damageSection);
             hitTargets.Add(health != null ? health.transform : collider.transform);
             var directHarpoon = collider.GetComponentInParent<Harpoon.HarpoonGun>();
+            var directTentacle = collider.GetComponentInParent<KrakenTentacle>();
             if (Authoritative)
             {
                 if (directHarpoon != null) directHarpoon.TakeDamage(Ammo == InventoryItem.Cannonball ? 60f : 45f, Attacker);
+                if (directTentacle != null) directTentacle.TakeDamage(Ammo == InventoryItem.Cannonball ? 60f : 45f, Attacker);
                 var ship = collider.GetComponentInParent<ShipController>();
                 var network = collider.GetComponentInParent<NetworkShip>();
                 if (network != null) network.GetComponent<ShipDestruction>()?.Damage(collider, point, normal, Velocity, Ammo, Attacker);
@@ -214,6 +218,8 @@ namespace PirateSlop
                         if (target != null && damaged.Add(target)) target.Damage(StandardBlastDamage, Attacker);
                         var h = hit.GetComponentInParent<Harpoon.HarpoonGun>();
                         if (h != null && h != directHarpoon) h.TakeDamage(StandardBlastDamage, Attacker);
+                        var t = hit.GetComponentInParent<KrakenTentacle>();
+                        if (t != null && t != directTentacle) t.TakeDamage(StandardBlastDamage, Attacker);
                     }
                     if (health != null && damaged.Add(health)) health.Damage(StandardBlastDamage, Attacker);
                 }

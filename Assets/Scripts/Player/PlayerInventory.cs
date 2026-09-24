@@ -212,7 +212,19 @@ namespace PirateSlop
                     ShowMessage("Гарпунная пушка сломана! Используйте молоток для починки.");
                     return;
                 }
-                aimedHarpoon.TakeControl(motor);
+                if (aimedHarpoon.IsOccupied && aimedHarpoon.Operator != motor)
+                {
+                    ShowMessage("Гарпунная пушка занята.");
+                    return;
+                }
+                if (Networked && aimedHarpoon.NetworkShip != null && aimedHarpoon.MountIndex >= 0)
+                {
+                    aimedHarpoon.NetworkShip.RequestHarpoonControl(aimedHarpoon.MountIndex);
+                }
+                else
+                {
+                    aimedHarpoon.TakeControl(motor);
+                }
                 return;
             }
             if (Networked && aimedCannon != null && aimedCannon.Network != null && aimedCannon.Network.HasBoarding(aimedCannon.Index) && mouse.scroll.ReadValue().y != 0)

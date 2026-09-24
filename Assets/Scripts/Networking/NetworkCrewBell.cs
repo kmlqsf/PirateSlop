@@ -90,7 +90,7 @@ namespace PirateSlop.Networking
         bool BeginServerPull()
         {
             var candidate = GetMotion();
-            if (pulling.Value || motor.IsDead || motor.ActiveParrot != null || motor.ActiveCannon != null || motor.IsSwimming || motor.IsClimbing || player.Ship == null || player.Ship.IsSinking || candidate == null || Time.time < nextRing || (candidate.Holder != null && candidate.Holder != this) || Vector3.Distance(transform.position + Vector3.up, candidate.GripPoint) > 3.5f || !GetComponent<NetworkWeapon>().CanReach(candidate.GripPoint, candidate.transform))
+            if (pulling.Value || motor.IsDead || motor.ActiveParrot != null || motor.ActiveCannon != null || motor.IsSwimming || motor.IsClimbing || player.Ship == null || player.Ship.IsSinking || candidate == null || Time.time < nextRing || (candidate.Holder != null && candidate.Holder != this) || Vector3.Distance(transform.position + Vector3.up, candidate.GripPoint) > 3.5f || !GetComponent<NetworkWeapon>().CanReach(candidate.GripPoint, candidate.transform.parent))
             { if (Owner != null && Owner.IsActive) EndPullTargetRpc(Owner); return false; }
             motion = candidate; motion.Holder = this; pulling.Value = true; pullAmount.Value = 0; serverAmount = 0;
             serverStarted = lastPullAt = Time.time; motor.BellPullLocked = true;
@@ -101,7 +101,7 @@ namespace PirateSlop.Networking
         void PullServer(float amount)
         {
             if (!pulling.Value || !float.IsFinite(amount) || motion == null || motor.IsDead || player.Ship == null || player.Ship.IsSinking) return;
-            if (Vector3.Distance(transform.position + Vector3.up, motion.GripPoint) > 3.5f || !GetComponent<NetworkWeapon>().CanReach(motion.GripPoint, motion.transform)) { StopServerPull(); return; }
+            if (Vector3.Distance(transform.position + Vector3.up, motion.GripPoint) > 3.5f || !GetComponent<NetworkWeapon>().CanReach(motion.GripPoint, motion.transform.parent)) { StopServerPull(); return; }
             serverAmount = Mathf.MoveTowards(serverAmount, Mathf.Clamp01(amount), Mathf.Max(0, Time.time - lastPullAt) * 2f);
             lastPullAt = Time.time; pullAmount.Value = serverAmount;
             if (serverAmount >= .99f && Time.time - serverStarted >= .5f)
