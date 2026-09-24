@@ -18,6 +18,9 @@ public class ShipController : MonoBehaviour
     public bool IsFrozen => freezeRemaining > 0f;
     float floodLevel, fullWaterline, fullBowPitch;
     public bool IsFlooded => floodLevel >= 1f;
+    public static readonly System.Collections.Generic.List<ShipController> ActiveControllers = new();
+    void OnEnable() { ActiveControllers.Add(this); }
+    void OnDisable() { ActiveControllers.Remove(this); }
     public void SetFlooding(float level, float waterline, float bowPitch)
     {
         floodLevel = Mathf.Clamp01(level);

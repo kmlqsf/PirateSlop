@@ -4,6 +4,10 @@ using PirateSlop.Networking;
 
 public class SailSystem : MonoBehaviour
 {
+    static readonly System.Collections.Generic.List<SailSystem> active = new();
+    public static System.Collections.Generic.IReadOnlyList<SailSystem> Active => active;
+    void OnEnable() => active.Add(this);
+
     [SerializeField, Range(0f, 1f)] float deployPercentage;
     [SerializeField] Transform[] sailMeshes;
     public Collider[] MastControls;
@@ -13,6 +17,7 @@ public class SailSystem : MonoBehaviour
     int[] owners;
     AdvancedPlayerController[] drivers;
     Vector3[] restScale;
+    Renderer[] renderers;
     NetworkShip network;
     readonly System.Collections.Generic.Dictionary<int, float> humanUse = new();
     public float LastHumanControlTime(int index) => humanUse.TryGetValue(index, out float time) ? time : float.NegativeInfinity;
@@ -36,10 +41,12 @@ public class SailSystem : MonoBehaviour
         if (tensions != null && tensions.Length == count) return;
         tensions = new float[count]; visualDeploy = new float[count]; lastGrip = new float[count];
         owners = new int[count]; drivers = new AdvancedPlayerController[count]; restScale = new Vector3[count];
+        renderers = new Renderer[count];
         for (int i = 0; i < count; i++)
         {
             tensions[i] = visualDeploy[i] = deployPercentage;
             restScale[i] = sailMeshes[i] != null ? sailMeshes[i].localScale : Vector3.one;
+            renderers[i] = sailMeshes[i] != null ? sailMeshes[i].GetComponent<Renderer>() : null;
         }
     }
     public float Tension(int index) { Initialize(); return index >= 0 && index < tensions.Length ? tensions[index] : 0f; }
@@ -159,13 +166,14 @@ public class SailSystem : MonoBehaviour
             var sail = sailMeshes[i];
             if (sail == null) continue;
             visualDeploy[i] = Mathf.MoveTowards(visualDeploy[i], tensions[i], Time.deltaTime * 1.5f);
-            var renderer = sail.GetComponent<Renderer>();
+            var renderer = renderers != null && i < renderers.Length ? renderers[i] : null;
             if (renderer != null) renderer.enabled = Efficiency(i) > 0f;
             var scale = restScale[i]; scale.y *= Mathf.Lerp(.06f, 1f, visualDeploy[i]); sail.localScale = scale;
         }
     }
     void OnDisable()
     {
+        active.Remove(this);
         if (drivers == null) return;
         for (int i = 0; i < drivers.Length; i++) Release(i);
     }

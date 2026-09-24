@@ -79,6 +79,7 @@ namespace PirateSlop
         }
         void OnGUI()
         {
+            if (Event.current.type != EventType.Repaint) return;
             if (motor.PlayerCamera == null || !motor.PlayerCamera.enabled || (network != null && !network.IsOwner) || SessionController.MenuOpen) return;
             if (ShipSpyglassView.IsViewing) return;
             DrawCompass(motor.PlayerCamera);

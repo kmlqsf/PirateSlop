@@ -9,8 +9,29 @@ namespace PirateSlop
         public Texture2D[] Icons;
         public Texture2D ChestIcon;
         public Texture2D HotbarBase, HotbarSelected;
-        Material hudMaterial;
+        static Material sharedHudMaterial;
+        static readonly string[] numberStrings = new string[100];
         GUIStyle hotbarNumber;
+
+        static InventoryIcons()
+        {
+            for (int i = 0; i < 100; i++) numberStrings[i] = i.ToString();
+        }
+        static string Num(int n) => n >= 0 && n < 100 ? numberStrings[n] : n.ToString();
+
+        static Material HudMaterial
+        {
+            get
+            {
+                if (sharedHudMaterial == null)
+                {
+                    var shader = Resources.Load<Shader>("HudIcon");
+                    if (shader != null) sharedHudMaterial = new Material(shader) { hideFlags = HideFlags.HideAndDontSave };
+                }
+                return sharedHudMaterial;
+            }
+        }
+
         public void DrawHotbarSlot(Rect rect, InventoryItem item, int count, string key, bool selected)
         {
             Color previous = GUI.color;
@@ -28,18 +49,14 @@ namespace PirateSlop
                 float size = rect.width * occupancy;
                 float scale = Mathf.Min(size / icon.width, size / icon.height);
                 var target = new Rect(rect.center.x - icon.width * scale * .5f, rect.center.y - 2 * uiScale - icon.height * scale * .5f, icon.width * scale, icon.height * scale);
-                if (hudMaterial == null)
+                var mat = HudMaterial;
+                if (Event.current.type == EventType.Repaint && mat != null)
                 {
-                    var shader = Resources.Load<Shader>("HudIcon");
-                    if (shader != null) hudMaterial = new Material(shader) { hideFlags = HideFlags.HideAndDontSave };
+                    mat.SetFloat("_Edge", 1f);
+                    Graphics.DrawTexture(target, icon, new Rect(0, 0, 1, 1), 0, 0, 0, 0, Color.white, mat);
+                    mat.SetFloat("_Edge", 0f);
                 }
-                if (Event.current.type == EventType.Repaint && hudMaterial != null)
-                {
-                    hudMaterial.SetFloat("_Edge", 1f);
-                    Graphics.DrawTexture(target, icon, new Rect(0, 0, 1, 1), 0, 0, 0, 0, Color.white, hudMaterial);
-                    hudMaterial.SetFloat("_Edge", 0f);
-                }
-                else if (hudMaterial == null) GUI.DrawTexture(target, icon, ScaleMode.ScaleToFit, true);
+                else if (mat == null) GUI.DrawTexture(target, icon, ScaleMode.ScaleToFit, true);
             }
             hotbarNumber ??= new GUIStyle(GUI.skin.label) { fontSize = 11, fontStyle = FontStyle.Normal, padding = new RectOffset(), alignment = TextAnchor.LowerLeft };
             hotbarNumber.fontSize = Mathf.RoundToInt(11 * uiScale);
@@ -49,7 +66,7 @@ namespace PirateSlop
             {
                 hotbarNumber.alignment = TextAnchor.LowerRight;
                 hotbarNumber.normal.textColor = new Color(.9f, .88f, .83f, .9f);
-                GUI.Label(new Rect(rect.xMax - 28 * uiScale, rect.yMax - 16 * uiScale, 23 * uiScale, 13 * uiScale), count.ToString(), hotbarNumber);
+                GUI.Label(new Rect(rect.xMax - 28 * uiScale, rect.yMax - 16 * uiScale, 23 * uiScale, 13 * uiScale), Num(count), hotbarNumber);
                 hotbarNumber.alignment = TextAnchor.LowerLeft;
             }
             GUI.color = previous;
@@ -97,14 +114,10 @@ namespace PirateSlop
                 var icon = Icons[index];
                 float scale = Mathf.Min(target.width / icon.width, target.height / icon.height);
                 target = new Rect(target.center.x - icon.width * scale / 2, target.center.y - icon.height * scale / 2, icon.width * scale, icon.height * scale);
-                if (hudMaterial == null)
-                {
-                    var shader = Resources.Load<Shader>("HudIcon");
-                    if (shader != null) hudMaterial = new Material(shader) { hideFlags = HideFlags.HideAndDontSave };
-                }
-                if (Event.current.type == EventType.Repaint && hudMaterial != null)
-                    Graphics.DrawTexture(target, icon, new Rect(0, 0, 1, 1), 0, 0, 0, 0, GUI.color, hudMaterial);
-                else if (hudMaterial == null) GUI.DrawTexture(target, icon, ScaleMode.ScaleToFit, true);
+                var mat = HudMaterial;
+                if (Event.current.type == EventType.Repaint && mat != null)
+                    Graphics.DrawTexture(target, icon, new Rect(0, 0, 1, 1), 0, 0, 0, 0, GUI.color, mat);
+                else if (mat == null) GUI.DrawTexture(target, icon, ScaleMode.ScaleToFit, true);
             }
             else if (item == InventoryItem.GrapplingHook || item == InventoryItem.BoardingHook)
             {
@@ -145,11 +158,10 @@ namespace PirateSlop
             GUI.color = Color.white;
             if (selected) PirateHudStyle.Brush(new Rect(rect.x + 13, rect.yMax - 15, rect.width - 26, 7), PirateHudStyle.Gold, true);
             PirateHudStyle.Label(new Rect(rect.center.x - 10, rect.yMax - 9, 20, 20), key, selected ? PirateHudStyle.Paper : PirateHudStyle.Muted);
-            if (count > 1) PirateHudStyle.Label(new Rect(rect.xMax - 25, rect.y + 28, 27, 22), count.ToString(), PirateHudStyle.Paper);
+            if (count > 1) PirateHudStyle.Label(new Rect(rect.xMax - 25, rect.y + 28, 27, 22), Num(count), PirateHudStyle.Paper);
             if (button) PirateHudStyle.Label(new Rect(rect.x - 4, rect.yMax - 19, rect.width + 8, 24), ItemName(item), PirateHudStyle.Paper);
             GUI.color = oldColor;
             return clicked;
         }
-        void OnDisable() { if (hudMaterial != null) DestroyImmediate(hudMaterial); }
     }
 }

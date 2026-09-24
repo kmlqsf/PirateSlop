@@ -44,7 +44,7 @@ namespace PirateSlop
             if(visible!=wasVisible)
             {
                 wasVisible=visible;
-                foreach(var light in FindObjectsByType<Light>(FindObjectsSortMode.None))
+                foreach(var light in FindObjectsByType<Light>(FindObjectsInactive.Exclude))
                     if(light.type==LightType.Directional && light.enabled && ((light.cullingMask & (1<<30))!=0)==visible) { RenderSettings.sun=light; break; }
             }
             if(!visible) return;

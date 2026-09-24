@@ -18,6 +18,7 @@ namespace PirateSlop
         [SerializeField] Collider spokeHandleWest;
         [SerializeField] Mesh intactRotorMesh;
         [SerializeField] Mesh damagedRotorMesh;
+        [SerializeField] float maxPinLift = 0.20f;
 
         ShipController ship;
         NetworkShip networkShip;
@@ -36,6 +37,7 @@ namespace PirateSlop
         float reverseSpinSpeed;
         float lastClickAngle;
         float pinRestZ;
+        float currentPinLift;
 
         public float Progress => networkShip != null && networkShip.IsSpawned ? (isPushing ? Mathf.Max(networkShip.AnchorRaiseProgress, progress) : networkShip.AnchorRaiseProgress) : progress;
         public bool IsAnchored => networkShip != null && networkShip.IsSpawned ? networkShip.AnchorDropped : (ship != null && ship.IsAnchored);
@@ -53,7 +55,11 @@ namespace PirateSlop
             if (coil3 == null && rotor != null) coil3 = rotor.Find("Capstan_Chain_Coil3")?.gameObject;
             if (pawlLeft == null) pawlLeft = transform.Find("CapstanVisual/Capstan_Pawl_Left");
             if (pawlRight == null) pawlRight = transform.Find("CapstanVisual/Capstan_Pawl_Right");
-            if (anchorPin != null) pinRestZ = anchorPin.localPosition.z;
+            if (anchorPin != null)
+            {
+                pinRestZ = 0f;
+                anchorPin.localPosition = Vector3.zero;
+            }
 
             if (rotor != null) rotorFilter = rotor.GetComponent<MeshFilter>();
             if (rotorFilter != null && intactRotorMesh == null) intactRotorMesh = rotorFilter.sharedMesh;
@@ -234,8 +240,25 @@ namespace PirateSlop
 
             if (anchorPin != null)
             {
-                float pinZ = pinRestZ + Mathf.Lerp(0.08f, 0f, curProgress);
-                anchorPin.localPosition = new Vector3(anchorPin.localPosition.x, anchorPin.localPosition.y, pinZ);
+                float targetLift;
+                if (reverseSpinRemaining > 0f)
+                {
+                    float dropFraction = 1f - Mathf.Clamp01(reverseSpinRemaining / 1.8f);
+                    float smoothDrop = Mathf.SmoothStep(0f, 1f, dropFraction);
+                    targetLift = Mathf.Lerp(0f, maxPinLift, smoothDrop);
+                }
+                else if (IsAnchored || curProgress < 1f)
+                {
+                    targetLift = Mathf.Lerp(maxPinLift, 0f, curProgress);
+                }
+                else
+                {
+                    targetLift = 0f;
+                }
+
+                float liftSpeed = (reverseSpinRemaining > 0f || isPushing) ? 0.45f : 0.20f;
+                currentPinLift = Mathf.MoveTowards(currentPinLift, targetLift, liftSpeed * Time.deltaTime);
+                anchorPin.localPosition = new Vector3(0f, 0f, pinRestZ + currentPinLift);
             }
 
             if (coil2 != null) coil2.SetActive(curProgress >= 0.33f);
@@ -257,7 +280,7 @@ namespace PirateSlop
             if (spokeHandleEast != null)
             {
                 spokeHandleEast.transform.localEulerAngles = damaged ? new Vector3(0, 0, -28f) : Vector3.zero;
-                spokeHandleEast.transform.localPosition = damaged ? new Vector3(0.72f, 0, 0.52f) : new Vector3(0.75f, 0, 0.67f);
+                spokeHandleEast.transform.localPosition = damaged ? new Vector3(0.70f, 0, 0.75f) : new Vector3(0.75f, 0, 0.94f);
             }
 
             CheckLocalInteraction(curProgress);
@@ -352,7 +375,7 @@ namespace PirateSlop
 
         AdvancedPlayerController FindLocalPlayerMotor()
         {
-            foreach (var p in FindObjectsByType<NetworkPlayer>(FindObjectsSortMode.None))
+            foreach (var p in NetworkPlayer.Active)
             {
                 if (p != null && p.IsOwner && !p.IsBot.Value && p.Motor != null) return p.Motor;
             }

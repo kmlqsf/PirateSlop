@@ -49,6 +49,7 @@ namespace PirateSlop.Networking
         void PushAudioObserversRpc(Vector3 point) => GameAudio.Play(SoundCue.Creak,point,.8f);
         void OnGUI()
         {
+            if (Event.current.type != EventType.Repaint) return;
             if(IsOwner && aimed!=null && player.Motor.InputActive)
                 ContextPrompt.Offer("КОРАБЛЬ · E — оттолкнуть корабль", 40);
         }

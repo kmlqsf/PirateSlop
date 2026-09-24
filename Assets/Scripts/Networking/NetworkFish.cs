@@ -69,7 +69,7 @@ namespace PirateSlop.Networking
             if (platformId.Value == 0) resolvedPlatform = null;
             if (platform.Value != null) resolvedPlatform = platform.Value.GetComponent<NetworkShip>();
             if (resolvedPlatform == null && platformId.Value > 0)
-                foreach (var ship in FindObjectsByType<NetworkShip>(FindObjectsSortMode.None))
+                foreach (var ship in FindObjectsByType<NetworkShip>(FindObjectsInactive.Exclude))
                     if (ship.ParticipantId.Value == platformId.Value) { resolvedPlatform = ship; break; }
             if (platformId.Value > 0 && resolvedPlatform == null)
             {

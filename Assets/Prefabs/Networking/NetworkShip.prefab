@@ -29174,8 +29174,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 726559336565634362}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0, y: 0, z: 0.010199999}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -35331,6 +35331,8 @@ GameObject:
   - component: {fileID: 3085885336811682772}
   - component: {fileID: 4471622586789432815}
   - component: {fileID: 4608257710853303369}
+  - component: {fileID: 7848606723250395865}
+  - component: {fileID: 915285850979835581}
   m_Layer: 0
   m_Name: NetworkShip
   m_TagString: Ship
@@ -35366,6 +35368,8 @@ Transform:
   - {fileID: 5147445779414142028}
   - {fileID: 7749284975368566653}
   - {fileID: 6670243130149189671}
+  - {fileID: 1479914723430055747}
+  - {fileID: 5405834817471663396}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &5818161410274910957
@@ -35759,6 +35763,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c93875d1b3134f499ff3dbd8ac159ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.ShipDebrisPool
+--- !u!114 &7848606723250395865
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 898423509851137951}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 323fc3b1f92758943af82a716e328d9f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.KrakenEncounterManager
+  encounterPrefab: {fileID: 6162287077553449743, guid: 9d0c5d4e42325fe4596293956981ee44, type: 3}
+  checkInterval: 1
+  stationaryRadius: 20
+  stationaryDuration: 300
+--- !u!114 &915285850979835581
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 898423509851137951}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec22064a18ce0354697b220a1bbc94f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.Harpoon.HarpoonShipMount
+  harpoonPrefab: {fileID: 2723707571563254777, guid: c9e65645411a8d744823b05e89ce5b30, type: 3}
+  mountPort: {fileID: 1479914723430055747}
+  mountStarboard: {fileID: 5405834817471663396}
 --- !u!1 &899355808016077052
 GameObject:
   m_ObjectHideFlags: 0
@@ -103168,7 +103203,7 @@ Transform:
   m_GameObject: {fileID: 2668788807325246113}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 7.47, z: -14}
+  m_LocalPosition: {x: 0, y: 7.085, z: -14}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -103221,6 +103256,7 @@ MonoBehaviour:
   spokeHandleWest: {fileID: 9032983612455739787}
   intactRotorMesh: {fileID: 2842669125195869377, guid: aa103b42833d71e44bcb115f75856c7f, type: 3}
   damagedRotorMesh: {fileID: 4300000, guid: f0038e7433b636c45998184d182bd0c5, type: 2}
+  maxPinLift: 0.2
 --- !u!1 &2673559534251161212
 GameObject:
   m_ObjectHideFlags: 0
@@ -106515,6 +106551,37 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -1695350399883994520, guid: 410c8d0084e30db499e51727e6de23ef, type: 2}
+--- !u!1 &2736499612228592539
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5405834817471663396}
+  m_Layer: 0
+  m_Name: HarpoonMount_Starboard
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5405834817471663396
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2736499612228592539}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0.5504807, z: 0, w: 0.83484787}
+  m_LocalPosition: {x: 4.62, y: 6.72, z: 17}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 398825345446323577}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2736631485860293999
 GameObject:
   m_ObjectHideFlags: 0
@@ -141121,6 +141188,37 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -6700736956082966055, guid: ffe9250c0833db94ba18616ca88faf44, type: 2}
+--- !u!1 &3787887546425827125
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1479914723430055747}
+  m_Layer: 0
+  m_Name: HarpoonMount_Port
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1479914723430055747
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3787887546425827125}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: -0.5504807, z: 0, w: 0.83484787}
+  m_LocalPosition: {x: -4.62, y: 6.72, z: 17}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 398825345446323577}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3789536730852862333
 GameObject:
   m_ObjectHideFlags: 0
@@ -141943,7 +142041,7 @@ Transform:
   m_GameObject: {fileID: 3803553874021275142}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.75, y: 0, z: 0.67}
+  m_LocalPosition: {x: 0.75, y: 0, z: 0.94}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -168360,7 +168458,7 @@ Transform:
   m_GameObject: {fileID: 4600917060567310986}
   serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 7.47, z: -14}
+  m_LocalPosition: {x: 0, y: 7.085, z: -14}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -283207,7 +283305,7 @@ Transform:
   m_GameObject: {fileID: 7799224024703793549}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.75, y: 0, z: 0.67}
+  m_LocalPosition: {x: -0.75, y: 0, z: 0.94}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

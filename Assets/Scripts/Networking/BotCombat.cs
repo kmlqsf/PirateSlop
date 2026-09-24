@@ -11,8 +11,10 @@ namespace PirateSlop.Networking
         public float LastSeen { get; private set; } = -100f;
         public float AcquiredAt { get; private set; }
         public bool Visible { get; private set; }
+        public bool CalledOut { get; private set; }
         public string Status => Target == null ? "Противник не обнаружен" :
             Visible ? $"Виден противник {Target.ParticipantId.Value}; наблюдение {Time.time - AcquiredAt:F1} с" :
+            CalledOut ? $"Угроза передана экипажем; позиция {LastPosition:F1}" :
             $"Цель потеряна; последняя позиция {LastPosition:F1}, {Time.time - LastSeen:F1} с назад";
 
         public static bool Enemy(NetworkPlayer observer, NetworkPlayer target) => target != null && target != observer && target.IsSpawned &&
@@ -31,7 +33,7 @@ namespace PirateSlop.Networking
         }
         public void Observe(NetworkPlayer observer, IEnumerable<NetworkPlayer> candidates, bool alert = false)
         {
-            Visible = false;
+            Visible = false; CalledOut = false;
             for (int i = 0; i < nearest.Length; i++) nearest[i] = null;
             foreach (var candidate in candidates)
             {
@@ -53,6 +55,13 @@ namespace PirateSlop.Networking
                 Target = candidate; LastPosition = candidate.transform.position; LastSeen = Time.time; Visible = true; return;
             }
             if (!Enemy(observer, Target) || Time.time - LastSeen > 5f) Target = null;
+        }
+        public void ReceiveCallout(NetworkPlayer target, Vector3 position)
+        {
+            if (Target == target && Visible) return;
+            if (Target != target || Time.time - LastSeen > 2f) AcquiredAt = Time.time;
+            Target = target; LastPosition = position; LastSeen = Time.time;
+            CalledOut = true;
         }
     }
 
@@ -149,6 +158,7 @@ namespace PirateSlop.Networking
                         weapons.Act(true, false, direction, Vector3.up * 1.65f); Status = "Перезарядка: " + weapons.Name;
                     }
                     else if (position.Moving || inventory.SabreSelected && !melee) Status = "Занимает позицию перед атакой";
+                    else if (!melee && distance > 10f && !weapons.Reloading && position.Moving) Status = "Сближается для точной стрельбы";
                     else if (!melee && weapons.Selected != null && distance > weapons.Selected.Ballistics.Range) Status = "Цель вне дальности оружия";
                     else
                     {

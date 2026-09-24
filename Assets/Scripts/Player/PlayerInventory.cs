@@ -24,6 +24,7 @@ namespace PirateSlop
         int shownLockRound = -1;
         Cannonball aimedBall;
         SimpleCannon aimedCannon;
+        PirateSlop.Harpoon.HarpoonGun aimedHarpoon;
         readonly int[] ballCounts = new int[SlotCount];
         readonly InventoryItem[] ballItems = new InventoryItem[SlotCount];
         public InventoryItem BallItem(int slot) => BallCount(slot) > 0 ? ballItems[slot] : InventoryItem.Cannonball;
@@ -157,7 +158,7 @@ namespace PirateSlop
         void Update()
         {
             placementPending = false;
-            InteractionUsed = false; pickup = null; chest = null; aimedBall = null; aimedCannon = null; valid = false;
+            InteractionUsed = false; pickup = null; chest = null; aimedBall = null; aimedCannon = null; aimedHarpoon = null; valid = false;
             aimedRumShelf = null;
             if (preview != null) preview.SetActive(false);
             if (lootWindow)
@@ -199,8 +200,20 @@ namespace PirateSlop
             {
                 aimedBall = nearest.collider.GetComponent<Cannonball>();
                 aimedCannon = nearest.collider.GetComponentInParent<SimpleCannon>();
+                aimedHarpoon = nearest.collider.GetComponentInParent<PirateSlop.Harpoon.HarpoonGun>();
                 pickup = nearest.collider.GetComponentInParent<CannonPickup>();
                 aimedRumShelf = nearest.collider.GetComponentInParent<RumShelf>();
+            }
+            if (keyboard.eKey.wasPressedThisFrame && aimedHarpoon != null && motor.ActiveHarpoon == null)
+            {
+                InteractionUsed = true;
+                if (aimedHarpoon.IsBroken)
+                {
+                    ShowMessage("Гарпунная пушка сломана! Используйте молоток для починки.");
+                    return;
+                }
+                aimedHarpoon.TakeControl(motor);
+                return;
             }
             if (Networked && aimedCannon != null && aimedCannon.Network != null && aimedCannon.Network.HasBoarding(aimedCannon.Index) && mouse.scroll.ReadValue().y != 0)
             {
@@ -428,6 +441,11 @@ namespace PirateSlop
             string hint = aimedCannon != null && aimedCannon.Network != null && aimedCannon.Network.HasBoarding(aimedCannon.Index) ? "Колесо вверх — натянуть · вниз — ослабить канат" : aimedBall != null && aimedBall.Network != null ? "ЛКМ / E — взять ядра (до 2 в слоте)" : BallSelected && aimedCannon != null && !aimedCannon.AcceptsAmmo(BallItem(SelectedSlot)) ? "Неподходящий боеприпас · E — прицелиться" : BallSelected && aimedCannon != null && !aimedCannon.IsLoaded ? "E — зарядить выбранное ядро" : chest != null ? chest.Hint(this) : pickup != null ? (EmptySlot() >= 0 ? "E — взять разобранную пушку" : "Инвентарь заполнен") : Placing && !cancelled ? "ЛКМ — поставить · R/колесо — поворот · Q/E — наклон\nShift+Q/E — крен · ПКМ — отменить" : "";
             if (hint.Length > 0) ContextPrompt.Offer(hint, 40);
             if (aimedRumShelf != null) ContextPrompt.Offer(aimedRumShelf.Hint, 40);
+            if (aimedHarpoon != null)
+            {
+                if (aimedHarpoon.IsBroken) ContextPrompt.Offer("Гарпун сломан · Требуется починка молотком", 40);
+                else if (!aimedHarpoon.IsOccupied) ContextPrompt.Offer("E — встать за гарпун", 40);
+            }
         }
     }
 }

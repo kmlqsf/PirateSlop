@@ -21,6 +21,6 @@ namespace PirateSlop
             shape.radius = body.radius * 1.65f;
             shape.height = Mathf.Max(body.height + .2f, shape.radius * 2f);
         }
-        public static bool IsTarget(Collider collider) => !collider.isTrigger || collider.GetComponent<PlayerHitbox>() != null;
+        public static bool IsTarget(Collider collider) => !collider.isTrigger || collider.GetComponent<PlayerHitbox>() != null || collider.GetComponentInParent<KrakenTentacle>() != null;
     }
 }

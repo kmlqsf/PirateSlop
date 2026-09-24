@@ -9,12 +9,15 @@ namespace PirateSlop.Networking
         float nextPlan, nextProbe, progressAt;
         Vector3 anchor;
         bool edgeClear;
+        float strafeTimeOffset, nextJumpTime;
         public string Status { get; private set; } = "Удерживает позицию";
         public bool Moving => route.Searching || route.Ready;
         public BotCombatPosition(NetworkPlayer player)
         {
             this.player = player;
             route = new DeckRoute(player, SessionController.Instance.Config.BotMotion);
+            strafeTimeOffset = Random.Range(0f, 100f);
+            nextJumpTime = Time.time + Random.Range(2f, 5f);
         }
         public void Clear() { route.Clear(); Status = "Удерживает позицию"; }
         bool Safe(Vector3 point)
@@ -87,8 +90,14 @@ namespace PirateSlop.Networking
             if (!edgeClear) return;
             var world = ship.transform.TransformVector(target - local); world.y = 0;
             var relative = Quaternion.Inverse(Quaternion.Euler(0, command.Yaw, 0)) * world.normalized;
-            command.Move = Vector2.ClampMagnitude(new Vector2(relative.x, relative.z), 1f);
-            command.Jump = player.Motor.IsGrounded && target.y - local.y > .28f;
+            
+            float strafe = Mathf.Sin(Time.time * 3.5f + strafeTimeOffset) * 0.75f;
+            command.Move = Vector2.ClampMagnitude(new Vector2(relative.x + strafe, relative.z), 1f);
+            
+            bool routeJump = player.Motor.IsGrounded && target.y - local.y > .28f;
+            bool randomJump = player.Motor.IsGrounded && Time.time >= nextJumpTime;
+            if (randomJump) nextJumpTime = Time.time + Random.Range(2f, 4.5f);
+            command.Jump = routeJump || randomJump;
         }
     }
 }

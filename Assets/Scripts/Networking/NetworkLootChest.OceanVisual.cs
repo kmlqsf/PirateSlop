@@ -64,6 +64,7 @@ namespace PirateSlop.Networking
 
         void OnGUI()
         {
+            if (Event.current.type != EventType.Repaint) return;
             if (!IsSpawned || Kind == SeaLootKind.None || SessionController.MenuOpen) return;
             var camera = Camera.main;
             if (camera == null || !camera.isActiveAndEnabled) return;

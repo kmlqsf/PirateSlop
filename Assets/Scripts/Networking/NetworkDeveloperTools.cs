@@ -24,6 +24,33 @@ namespace PirateSlop.Networking
                 DeveloperResultTargetRpc(Owner, !changed ? "Зона ещё не запущена." : session.StormPaused ? "Зона остановлена. Сужение и урон на паузе." : "Зона продолжает сужаться. Урон включён.");
                 return;
             }
+            if (command == 15)
+            {
+                var player = GetComponent<NetworkPlayer>();
+                var ship = player != null ? player.Ship : null;
+                if (ship == null)
+                {
+                    float minDist = float.MaxValue;
+                    foreach (var s in NetworkShip.ActiveShips)
+                    {
+                        if (s == null) continue;
+                        float d = Vector3.Distance(transform.position, s.transform.position);
+                        if (d < minDist) { minDist = d; ship = s; }
+                    }
+                }
+                if (ship != null)
+                {
+                    var manager = ship.GetComponent<KrakenEncounterManager>();
+                    if (manager == null) manager = ship.gameObject.AddComponent<KrakenEncounterManager>();
+                    manager.TriggerEncounter();
+                    DeveloperResultTargetRpc(Owner, "Кракен вызван.");
+                }
+                else
+                {
+                    DeveloperResultTargetRpc(Owner, "Активный корабль не найден.");
+                }
+                return;
+            }
             var health = GetComponent<CombatHealth>();
             if (command == 6) { health.Heal(health.MaxHealth); DeveloperResultTargetRpc(Owner, "Здоровье восстановлено."); return; }
             if (command == 12) { health.Damage(10f); DeveloperResultTargetRpc(Owner, "Нанесено 10 урона."); return; }

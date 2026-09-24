@@ -38,16 +38,28 @@ namespace PirateSlop
             velocity += Quaternion.Euler(0, Random.Range(-8f,8f),0) * backward * Random.Range(RecoilSpeed*.85f, RecoilSpeed*1.15f);
             spin += Random.Range(-16f,16f);
         }
+        static readonly Vector3[] Corners = new[]
+        {
+            new Vector3(-.62f, 0, -.72f),
+            new Vector3(.62f, 0, -.72f),
+            new Vector3(-.62f, 0, .72f),
+            new Vector3(.62f, 0, .72f)
+        };
+        static readonly RaycastHit[] rayBuffer = new RaycastHit[16];
+        static readonly Collider[] overlapBuffer = new Collider[16];
+
         bool Supported(Vector3 position, Quaternion rotation)
         {
-            foreach(var corner in new[]{new Vector3(-.62f,0,-.72f),new Vector3(.62f,0,-.72f),new Vector3(-.62f,0,.72f),new Vector3(.62f,0,.72f)})
+            for (int c = 0; c < Corners.Length; c++)
             {
-                var point = ship.TransformPoint(position + rotation * corner);
+                var point = ship.TransformPoint(position + rotation * Corners[c]);
                 bool found = false;
-                foreach(var hit in Physics.RaycastAll(point + ship.up * .16f, -ship.up, .26f, ~0, QueryTriggerInteraction.Ignore))
+                int count = Physics.RaycastNonAlloc(point + ship.up * .16f, -ship.up, rayBuffer, .26f, ~0, QueryTriggerInteraction.Ignore);
+                for (int i = 0; i < count; i++)
                 {
+                    var hit = rayBuffer[i];
                     if (!hit.transform.IsChildOf(ship) || hit.collider.GetComponentInParent<SimpleCannon>() != null || hit.collider.GetComponentInParent<Cannonball>() != null) continue;
-                    if (Vector3.Dot(hit.normal,ship.up) > .95f) { found=true; break; }
+                    if (Vector3.Dot(hit.normal, ship.up) > .95f) { found = true; break; }
                 }
                 if (!found) return false;
             }
@@ -55,11 +67,13 @@ namespace PirateSlop
         }
         bool Free(Vector3 position, Quaternion rotation)
         {
-            if (!Supported(position,rotation)) return false;
+            if (!Supported(position, rotation)) return false;
             var center = ship.TransformPoint(position + rotation * footprint.center);
-            var extents = footprint.size * .5f - new Vector3(.04f,.07f,.04f);
-            foreach(var hit in Physics.OverlapBox(center,extents,ship.rotation*rotation,~0,QueryTriggerInteraction.Ignore))
+            var extents = footprint.size * .5f - new Vector3(.04f, .07f, .04f);
+            int count = Physics.OverlapBoxNonAlloc(center, extents, overlapBuffer, ship.rotation * rotation, ~0, QueryTriggerInteraction.Ignore);
+            for (int i = 0; i < count; i++)
             {
+                var hit = overlapBuffer[i];
                 if (hit.transform.IsChildOf(transform) || hit.GetComponentInParent<AdvancedPlayerController>() != null || hit.GetComponentInParent<Cannonball>() != null) continue;
                 return false;
             }

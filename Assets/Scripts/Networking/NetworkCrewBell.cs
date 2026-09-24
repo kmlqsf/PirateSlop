@@ -108,7 +108,7 @@ namespace PirateSlop.Networking
             {
                 var ship = player.Ship;
                 nextRing = Time.time + 2f;
-                foreach (var member in FindObjectsByType<NetworkPlayer>(FindObjectsSortMode.None))
+                foreach (var member in NetworkPlayer.Active)
                     if (member.Ship == ship && member.TeamId.Value == player.TeamId.Value && member.GetComponent<CombatHealth>() is { } health && health.RespawnFromBell(ship)) break;
                 ServerRingCount++;
                 RingObserversRpc(motion.transform.position);
@@ -141,7 +141,7 @@ namespace PirateSlop.Networking
             if (ship == null) { bellStatus = null; return; }
             var waiting = new System.Collections.Generic.List<NetworkPlayer>();
             int eliminated = 0;
-            foreach (var member in FindObjectsByType<NetworkPlayer>(FindObjectsSortMode.None))
+            foreach (var member in NetworkPlayer.Active)
             {
                 if (member.Ship != ship || member.TeamId.Value != player.TeamId.Value || member.Motor == null || !member.Motor.IsDead) continue;
                 if (member.Eliminated.Value) eliminated++;
@@ -171,7 +171,7 @@ namespace PirateSlop.Networking
         {
             if (!motor.IsDead || player.Eliminated.Value || player.Ship == null || player.Ship.IsSinking || serverRequested || Time.time - requestAt < 10f) return;
             serverRequested = true; requestAt = Time.time;
-            foreach (var member in FindObjectsByType<NetworkPlayer>(FindObjectsSortMode.None))
+            foreach (var member in NetworkPlayer.Active)
                 if (member.TeamId.Value == player.TeamId.Value && member.Ship == player.Ship && member.Owner != null && member.Owner.IsActive && !member.IsBot.Value)
                     RescueTargetRpc(member.Owner, player.ParticipantId.Value);
         }

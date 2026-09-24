@@ -3,6 +3,11 @@ using UnityEngine;
 [RequireComponent(typeof(CharacterController))]
 public class ShipDeckPassenger : MonoBehaviour
 {
+    static readonly System.Collections.Generic.List<ShipDeckPassenger> active = new();
+    public static System.Collections.Generic.IReadOnlyList<ShipDeckPassenger> Active => active;
+    void OnEnable() => active.Add(this);
+    void OnDisable() => active.Remove(this);
+
     CharacterController controller;
     AdvancedPlayerController player;
     Rigidbody ship;

@@ -4,6 +4,10 @@ namespace PirateSlop
 {
     public sealed class CombatHealth : MonoBehaviour, IWeaponTarget
     {
+        static readonly System.Collections.Generic.List<CombatHealth> active = new();
+        public static System.Collections.Generic.IReadOnlyList<CombatHealth> Active => active;
+        void OnEnable() => active.Add(this);
+        void OnDisable() => active.Remove(this);
 
         public float MaxHealth = 100f;
         public float BarHeight = 2.2f;
@@ -47,7 +51,7 @@ namespace PirateSlop
             {
                 respawnAt = Time.time + RespawnDelay;
                 var motor = GetComponent<AdvancedPlayerController>();
-                foreach (var helm in FindObjectsByType<HelmInteraction>(FindObjectsSortMode.None))
+                foreach (var helm in HelmInteraction.Active)
                     if (motor != null && helm.IsControlledBy(motor)) helm.ReleaseControl();
                 GetComponent<ShipDeckPassenger>()?.Attach(null);
                 hiddenRenderers = System.Array.FindAll(GetComponentsInChildren<Renderer>(true), r => r.enabled);
@@ -133,10 +137,23 @@ namespace PirateSlop
                 var source = attacker.GetComponent<NetworkHealth>();
                 if (source != null) source.ConfirmHit();
                 else attacker.GetComponent<DamageFeedback>()?.ConfirmHit();
+                var p = GetComponent<PirateSlop.Networking.NetworkPlayer>();
+                if (p != null && p.Ship != null)
+                    PirateSlop.Networking.SessionController.Instance?.NotifyCombatDamage(p.Ship, attacker);
             }
             if (network != null) network.Publish(Current);
         }
-        public void ReceiveWeaponHit(float damage, GameObject attacker) { Damage(damage, attacker); }
+        public void ReceiveWeaponHit(float damage, GameObject attacker)
+        {
+            var inv = GetComponent<PlayerInventory>();
+            if (inv != null && inv.SabreSelected && Random.value < .45f)
+            {
+                GameAudio.Play(SoundCue.SwordEquip, transform.position);
+                Damage(damage * .25f, attacker);
+                return;
+            }
+            Damage(damage, attacker);
+        }
         public void ReceiveFirearmHit(float distance, Vector3 point, GameObject attacker, FirearmSettings settings)
         {
 
@@ -145,6 +162,7 @@ namespace PirateSlop
                 head ? settings.FarHeadDamage : settings.FarDamage,
                 Mathf.InverseLerp(settings.FalloffStart, settings.FalloffEnd, distance)), attacker);
         }
+        string cachedHealthLabel; float cachedHealthValue = -1;
         void OnGUI()
         {
             var owner = GetComponent<NetworkPlayer>();
@@ -163,7 +181,12 @@ namespace PirateSlop
             GUI.color = ally ? Color.green : Color.red;
             GUI.DrawTexture(new Rect(bar.x + 1, bar.y + 1, (width - 2) * Current / MaxHealth, 8), Texture2D.whiteTexture);
             GUI.color = Color.white;
-            GUI.Label(new Rect(bar.x, bar.y - 21, width, 22), Mathf.CeilToInt(Current) + " / " + Mathf.CeilToInt(MaxHealth));
+            if (Current != cachedHealthValue)
+            {
+                cachedHealthValue = Current;
+                cachedHealthLabel = Mathf.CeilToInt(Current) + " / " + Mathf.CeilToInt(MaxHealth);
+            }
+            GUI.Label(new Rect(bar.x, bar.y - 21, width, 22), cachedHealthLabel);
             GUI.color = old;
         }
     }

@@ -39,6 +39,15 @@ namespace PirateSlop
             Button("Создать корабль рядом", 0);
             Button("Создать тренировочную мишень", 1);
             Button("Создать врага-манекена перед собой", 13);
+            if (GUILayout.Button("Trigger Kraken", GUILayout.Height(29)))
+            {
+                if (network != null) network.DeveloperCommand(15);
+                else
+                {
+                    var ship = FindFirstObjectByType<ShipController>();
+                    ship?.GetComponent<KrakenEncounterManager>()?.TriggerEncounter();
+                }
+            }
             GUILayout.Space(8);
             GUILayout.Label("Количество при выдаче в инвентарь");
             quantity = GUILayout.Toolbar(quantity, new[] { "1", "5", "20" });

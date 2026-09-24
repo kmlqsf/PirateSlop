@@ -10,8 +10,8 @@ namespace PirateSlop.Networking
         [Min(32)] public int MaxPathNodes = 1000;
         [Min(.3f)] public float CellSize = .6f;
         [Min(1)] public float SearchRadius = 35f;
-        [Min(1)] public float RetryAfter = 3f;
-        [Min(6)] public float RecoveryAfter = 12f;
+        [Min(1)] public float RetryAfter = 1f;
+        [Min(1)] public float RecoveryAfter = 3f;
         [Min(15)] public float TaskTimeout = 90f;
         public bool AllowEmergencyTeleport = true;
         [Min(5)] public float HumanStationGrace = 30f;

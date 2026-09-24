@@ -80,7 +80,7 @@ namespace PirateSlop.Networking
         }
         public void Retried() => Retries++;
         public bool Eligible(float threshold, bool staticObstruction, bool validSupport, bool humanBlocking)
-            => Retries >= 2 && AttemptSeconds >= threshold && staticObstruction && validSupport && !humanBlocking;
+            => Retries >= 1 && AttemptSeconds >= threshold && staticObstruction && validSupport && !humanBlocking;
     }
 
     public sealed class BotStationAction : IBotAction
@@ -206,7 +206,7 @@ namespace PirateSlop.Networking
                 return command;
             }
             phase = humanBlocked ? "Ожидание: проход занят персонажем" : staticBlocked ? "Препятствие; восстановление пути" : "Подход: " + station.Name;
-            if (!humanBlocked && evidence.Retries < 2 && evidence.AttemptSeconds >= Mathf.Clamp(settings.RetryAfter, .75f, 1.5f) * (evidence.Retries + 1))
+            if (!humanBlocked && evidence.Retries < 2 && evidence.AttemptSeconds >= Mathf.Clamp(settings.RetryAfter, .5f, 1f) * (evidence.Retries + 1))
             {
                 evidence.Retried();
                 bool movedAside = false;
@@ -221,12 +221,12 @@ namespace PirateSlop.Networking
                 SessionController.Instance.RecordBotEvent(player.BotNumber, $"Восстановление {evidence.Retries}: {(movedAside ? "попытка отойти в сторону" : "повторный поиск пути")}");
                 Report(true); return command;
             }
-            if (evidence.AttemptSeconds >= Mathf.Max(6, settings.RecoveryAfter) && evidence.Retries >= 2)
+            if (evidence.AttemptSeconds >= Mathf.Max(3f, settings.RecoveryAfter) && evidence.Retries >= 1)
             {
                 bool supported = motor.IsGrounded && route.Ground(Local, out _);
                 bool obstructed = staticBlocked || !route.ClearAt(Local, false, true);
                 if (settings.AllowEmergencyTeleport && Time.time >= player.NextBotRecovery && hasSafe &&
-                    evidence.Eligible(Mathf.Max(6, settings.RecoveryAfter), obstructed, supported, humanBlocked) &&
+                    evidence.Eligible(Mathf.Max(3f, settings.RecoveryAfter), obstructed, supported, humanBlocked) &&
                     route.RecoveryPoint(Local, lastSafe, out var recovery))
                 {
                     var from = player.transform.position;
@@ -242,6 +242,13 @@ namespace PirateSlop.Networking
             if (!staticBlocked && !humanBlocked && !route.Searching)
             {
                 var worldDirection = ship.transform.TransformDirection(direction.normalized);
+                var blockerBot = route.BlockingBot(Local);
+                if (blockerBot != null)
+                {
+                    var away = Vector3.ProjectOnPlane(player.transform.position - blockerBot.transform.position, Vector3.up);
+                    if (away.sqrMagnitude > .001f && away.sqrMagnitude < 1.44f)
+                        worldDirection = (worldDirection + away.normalized * .8f).normalized;
+                }
                 float yaw = Mathf.Atan2(worldDirection.x, worldDirection.z) * Mathf.Rad2Deg;
                 command.Yaw = Mathf.MoveTowardsAngle(command.Yaw, yaw, 150f * delta);
                 var relative = Quaternion.Inverse(Quaternion.Euler(0, command.Yaw, 0)) * worldDirection;

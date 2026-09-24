@@ -9,10 +9,29 @@ namespace PirateSlop
         public Material FlightTrailMaterial;
         GameObject ammoVisual;
         PirateSlop.Networking.InventoryItem visibleAmmo = PirateSlop.Networking.InventoryItem.None;
+
+        Rigidbody body;
+        SphereCollider sphereCol;
+        PirateSlop.Networking.NetworkFish networkFish;
+        CannonShotDamage shotDamage;
+        static readonly RaycastHit[] castBuffer = new RaycastHit[32];
+
+        public Rigidbody Body => body != null ? body : (body = GetComponent<Rigidbody>());
+        public SphereCollider SphereCol => sphereCol != null ? sphereCol : (sphereCol = GetComponent<SphereCollider>());
+        public CannonShotDamage ShotDamage => shotDamage != null ? shotDamage : (shotDamage = GetComponent<CannonShotDamage>());
+
+        void Awake()
+        {
+            body = GetComponent<Rigidbody>();
+            sphereCol = GetComponent<SphereCollider>();
+            networkFish = GetComponent<PirateSlop.Networking.NetworkFish>();
+            shotDamage = GetComponent<CannonShotDamage>();
+        }
+
         void Update() => RefreshVisual();
         public void RefreshVisual()
         {
-            var item = GetComponent<PirateSlop.Networking.NetworkFish>();
+            var item = networkFish != null ? networkFish : (networkFish = GetComponent<PirateSlop.Networking.NetworkFish>());
             var ammo = item != null ? item.CurrentItem : Ammo;
             if (visibleAmmo == ammo && ammoVisual != null) return;
             int index = ammo == PirateSlop.Networking.InventoryItem.Cannonball ? 0 : ammo == PirateSlop.Networking.InventoryItem.BoardingHook ? 5 : (int)ammo - 7;
@@ -29,14 +48,13 @@ namespace PirateSlop
             ammoVisual.name = "AmmoVisual";
             ammoVisual.transform.localPosition = Vector3.zero;
             ammoVisual.transform.localRotation = Quaternion.identity;
-            ammoVisual.transform.localScale = AmmoModels[index].transform.localScale * (GetComponent<SphereCollider>().radius / .12f);
+            ammoVisual.transform.localScale = AmmoModels[index].transform.localScale * (SphereCol.radius / .12f);
             foreach (var renderer in ammoVisual.GetComponentsInChildren<Renderer>(true)) renderer.enabled = true;
             visibleAmmo = ammo;
         }
         public bool Loaded { get; set; }
         public bool Held { get; set; }
         public PirateSlop.Networking.NetworkCannon Network { get; set; }
-        public Rigidbody Body => GetComponent<Rigidbody>();
         public Rigidbody PlatformBody { get; set; }
         Vector3 deckVelocity;
         bool rolling;
@@ -45,7 +63,7 @@ namespace PirateSlop
         float nextImpactAudio;
         void OnCollisionEnter(Collision collision)
         {
-            if (Held || Loaded || GetComponent<CannonShotDamage>() != null) return;
+            if (Held || Loaded || ShotDamage != null) return;
             var ship = collision.collider.GetComponentInParent<ShipController>();
             if (ship != null && !Body.isKinematic && collision.contactCount > 0 && collision.GetContact(0).normal.y > .5f)
             {
@@ -67,7 +85,7 @@ namespace PirateSlop
         }
         void FixedUpdate()
         {
-            if (Held || Loaded || GetComponent<CannonShotDamage>() != null) return;
+            if (Held || Loaded || ShotDamage != null) return;
             if (PlatformBody == null || !Body.isKinematic) return;
             if (rolling) RollOnDeck();
             if (PlatformBody == null) return;
@@ -76,16 +94,18 @@ namespace PirateSlop
         }
         void LateUpdate()
         {
-            if (Held || Loaded || PlatformBody == null || !Body.isKinematic || GetComponent<CannonShotDamage>() != null) return;
+            if (Held || Loaded || PlatformBody == null || !Body.isKinematic || ShotDamage != null) return;
             transform.SetPositionAndRotation(PlatformBody.transform.TransformPoint(deckLocalPosition), PlatformBody.rotation * deckLocalRotation);
         }
-        float Radius => GetComponent<SphereCollider>().radius * Mathf.Max(transform.lossyScale.x, transform.lossyScale.y, transform.lossyScale.z);
+        float Radius => SphereCol.radius * Mathf.Max(transform.lossyScale.x, transform.lossyScale.y, transform.lossyScale.z);
         bool Cast(Vector3 origin, Vector3 direction, float distance, out RaycastHit nearest)
         {
             nearest = default;
             float best = distance + 1f;
-            foreach (var hit in Physics.SphereCastAll(origin, Radius * .95f, direction, distance, ~0, QueryTriggerInteraction.Ignore))
+            int count = Physics.SphereCastNonAlloc(origin, Radius * .95f, direction, castBuffer, distance, ~0, QueryTriggerInteraction.Ignore);
+            for (int i = 0; i < count; i++)
             {
+                var hit = castBuffer[i];
                 if (hit.collider.GetComponentInParent<Networking.NetworkFish>() != null || hit.collider.GetComponentInParent<AdvancedPlayerController>() != null) continue;
                 if (hit.collider.attachedRigidbody == Body || hit.collider.transform.IsChildOf(transform) || hit.distance >= best) continue;
                 best = hit.distance; nearest = hit;

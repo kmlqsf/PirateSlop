@@ -22,7 +22,9 @@ public class WaterGridGenerator : MonoBehaviour
                 var renderer = buoy.GetComponent<Renderer>();
                 if (renderer != null)
                 {
-                    renderer.material.color = new Color(1f, 0.5f, 0f);
+                    MaterialPropertyBlock block = new MaterialPropertyBlock();
+                    block.SetColor("_Color", new Color(1f, 0.5f, 0f));
+                    renderer.SetPropertyBlock(block);
                 }
                 
                 // Убираем коллайдер, чтобы корабль не цеплялся за них

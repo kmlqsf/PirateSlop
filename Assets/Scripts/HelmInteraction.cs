@@ -4,6 +4,8 @@ using PirateSlop;
 [DefaultExecutionOrder(-100)]
 public class HelmInteraction : MonoBehaviour
 {
+    public static readonly System.Collections.Generic.List<HelmInteraction> Active = new();
+    void OnEnable() { Active.Add(this); }
     [SerializeField] float interactionRadius = 2.8f;
     [SerializeField, Min(1f)] float wheelTurnsToFullSteer = 2f;
     [SerializeField, Min(.01f)] float centeringSpeed = .35f;
@@ -59,7 +61,7 @@ public class HelmInteraction : MonoBehaviour
     {
         if (IsControlling && (player == null || player.IsDead || !InRange(player) || Time.time - lastGrip > .75f)) ReleaseControl();
     }
-    void OnDisable() { ReleaseControl(); }
+    void OnDisable() { Active.Remove(this); ReleaseControl(); }
     public void Simulate(PlayerCommand command, AdvancedPlayerController candidate, float dt)
     {
         ValidateGrip();

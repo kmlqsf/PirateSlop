@@ -122,6 +122,7 @@ namespace PirateSlop
             if (arc != null) arc.enabled = false;
             if (circle != null) circle.enabled = false;
         }
+        static readonly RaycastHit[] hitBuffer = new RaycastHit[32];
         public static bool Trace(Vector3 position, Vector3 delta, float radius, Transform source, out Vector3 point, out Vector3 normal, out Collider collider)
         {
             point = position + delta;
@@ -129,8 +130,10 @@ namespace PirateSlop
             collider = null;
             float distance = delta.magnitude;
             bool found = false;
-            foreach (var hit in Physics.SphereCastAll(position, radius, delta.normalized, distance, ~0, QueryTriggerInteraction.Collide))
+            int count = Physics.SphereCastNonAlloc(position, radius, delta.normalized, hitBuffer, distance, ~0, QueryTriggerInteraction.Collide);
+            for (int i = 0; i < count; i++)
             {
+                var hit = hitBuffer[i];
                 if (!PlayerHitbox.IsTarget(hit.collider)) continue;
                 if (hit.collider.gameObject.layer == LayerMask.NameToLayer("ShipDebris")) continue;
                 if ((source != null && hit.transform.IsChildOf(source)) || hit.collider.GetComponentInParent<CannonShotDamage>() != null || hit.distance > distance) continue;

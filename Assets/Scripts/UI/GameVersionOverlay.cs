@@ -24,6 +24,7 @@ namespace PirateSlop
 
         void OnGUI()
         {
+            if (Event.current.type != EventType.Repaint) return;
             if (style == null)
                 style = new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleRight, fontSize = 13 };
             var color = GUI.color;

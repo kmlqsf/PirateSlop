@@ -75,7 +75,7 @@ namespace PirateSlop
                 indices[t++] = a; indices[t++] = b; indices[t++] = a + 1;
                 indices[t++] = a + 1; indices[t++] = b; indices[t++] = b + 1;
             }
-            mesh = new Mesh { name = "OceanGrid", indexFormat = UnityEngine.Rendering.IndexFormat.UInt32 };
+            mesh = new Mesh { name = "OceanGrid", indexFormat = UnityEngine.Rendering.IndexFormat.UInt32 }; mesh.MarkDynamic();
             mesh.vertices = vertices; mesh.triangles = indices;
             mesh.bounds = new Bounds(Vector3.zero, new Vector3(8100, 30, 8100));
             GetComponent<MeshFilter>().sharedMesh = mesh;
@@ -94,7 +94,7 @@ namespace PirateSlop
             WaterMaterial.SetVectorArray("_Waves", Waves);
             WaterMaterial.SetFloat("_WaveTime", WaveTime);
             WaterMaterial.SetFloat("_WaveScale", WaveScale);
-            if (Time.time >= refreshAt) { ships = FindObjectsByType<ShipController>(FindObjectsSortMode.None); refreshAt = Time.time + 1; }
+            ships = ShipController.ActiveControllers.ToArray();
             int count = 0;
             if (ships != null) foreach (var ship in ships)
             {

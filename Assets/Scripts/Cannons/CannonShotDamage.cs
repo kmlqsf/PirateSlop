@@ -155,6 +155,8 @@ namespace PirateSlop
                         health.GetComponent<AdvancedPlayerController>()?.ApplyKnockback(direction * PlayerPushSpeed + Vector3.up * 8f);
                     }
                 }
+                var harpoon = hit.GetComponentInParent<Harpoon.HarpoonGun>();
+                if (harpoon != null) harpoon.TakeDamage(Ammo == InventoryItem.Cannonball ? StandardBlastDamage : PlayerDamage, Attacker);
                 var ship = hit.GetComponentInParent<NetworkShip>();
                 if (ship != null && ships.Add(ship))
                 {
@@ -186,8 +188,10 @@ namespace PirateSlop
             var damageSection = collider.GetComponentInParent<ShipDamageSection>();
             if (damageSection != null) hitSections.Add(damageSection);
             hitTargets.Add(health != null ? health.transform : collider.transform);
+            var directHarpoon = collider.GetComponentInParent<Harpoon.HarpoonGun>();
             if (Authoritative)
             {
+                if (directHarpoon != null) directHarpoon.TakeDamage(Ammo == InventoryItem.Cannonball ? 60f : 45f, Attacker);
                 var ship = collider.GetComponentInParent<ShipController>();
                 var network = collider.GetComponentInParent<NetworkShip>();
                 if (network != null) network.GetComponent<ShipDestruction>()?.Damage(collider, point, normal, Velocity, Ammo, Attacker);
@@ -208,6 +212,8 @@ namespace PirateSlop
                     {
                         var target = hit.GetComponentInParent<CombatHealth>();
                         if (target != null && damaged.Add(target)) target.Damage(StandardBlastDamage, Attacker);
+                        var h = hit.GetComponentInParent<Harpoon.HarpoonGun>();
+                        if (h != null && h != directHarpoon) h.TakeDamage(StandardBlastDamage, Attacker);
                     }
                     if (health != null && damaged.Add(health)) health.Damage(StandardBlastDamage, Attacker);
                 }

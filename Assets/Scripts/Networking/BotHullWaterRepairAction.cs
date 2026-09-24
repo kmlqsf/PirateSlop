@@ -7,7 +7,7 @@ namespace PirateSlop.Networking
         enum Phase { Wait, Approach, Jump, SwimOut, SwimAlong, Repair, Breathe, ReturnOut, ReturnAlong, Board }
         readonly NetworkPlayer player;
         readonly NetworkShip ship;
-        readonly ShipDamageSection section;
+        ShipDamageSection section;
         int fragment;
         Vector3? departureTarget;
         public static BotHullWaterRepairAction Depart(NetworkPlayer player, Vector3 towards)
@@ -111,8 +111,10 @@ namespace PirateSlop.Networking
             }
             if (Vector3.Distance(anchor, Local) > .35f) { anchor = Local; progressAt = Time.time; }
             if (phase == Phase.Repair && Complete && section != null) TryNextRepair();
-            if (!Returning && phase >= Phase.Jump && (phase != Phase.Breathe && Time.time - started > 90f || Complete ||
-                Mathf.Abs(ship.Motor.Speed) > 2f)) Return("Работы завершены либо требуется возвращение: время или движение корабля");
+            var sails = ship.GetComponent<SailSystem>();
+            bool activeMovement = (sails != null && sails.EffectiveDeploy > .1f && (ship.Capstan == null || !ship.Capstan.IsAnchored)) || Mathf.Abs(ship.Motor.Speed) > 5f;
+            if (!Returning && phase >= Phase.Jump && (phase != Phase.Breathe && Time.time - started > 90f || Complete || activeMovement))
+                Return("Работы завершены либо требуется возвращение: время или активное движение корабля");
             if (Returning && !player.Motor.IsSwimming && !player.Motor.IsClimbing && player.Motor.IsGrounded && player.Passenger.Ship == ship.Body)
             { End(repaired || section == null, repaired ? "Нет" : Failure); return Idle; }
             if (!Returning && phase >= Phase.Jump && phase != Phase.Breathe && player.Motor.IsSwimming && player.Motor.Breath < 8f)
@@ -135,7 +137,6 @@ namespace PirateSlop.Networking
             if (phase == Phase.Wait)
             {
                 if (Complete) { End(true, "Нет"); return Idle; }
-                var sails = ship.GetComponent<SailSystem>();
                 if (Mathf.Abs(ship.Motor.Speed) > .75f || sails != null && sails.EffectiveDeploy > .03f)
                 {
                     if (Time.time - phaseAt > 60f) End(false, "Корабль не остановился; выход за борт отменён");
@@ -222,22 +223,34 @@ namespace PirateSlop.Networking
         }
         void TryNextRepair()
         {
-            float best = 36f;
-            int next = -1;
+            float best = 144f;
+            int nextFragment = -1;
+            ShipDamageSection nextSection = null;
             Vector3 point = default;
-            for (int i = 0; i < Mathf.Min(64, section.RepairCount); i++)
+            var destruction = ship.GetComponent<ShipDestruction>();
+            if (destruction != null)
             {
-                if ((section.RemovedFragments & (1UL << i)) == 0) continue;
-                var source = section.RepairTransform(i);
-                if (source == null) continue;
-                var world = source.TransformPoint(section.RepairBounds(i).ClosestPoint(source.InverseTransformPoint(player.transform.position + Vector3.up * 1.2f)));
-                var local = ship.transform.InverseTransformPoint(world);
-                float distance = (local - localPoint).sqrMagnitude;
-                if (Mathf.Sign(local.x) != side || distance >= best) continue;
-                next = i; best = distance; point = local;
+                foreach (var candidateSection in destruction.Sections)
+                {
+                    if (candidateSection == null || candidateSection.RemovedFragments == 0) continue;
+                    if (destruction.Definition(candidateSection.SectionId).Type != ShipSectionType.Hull) continue;
+                    int count = Mathf.Min(64, candidateSection.RepairCount);
+                    for (int i = 0; i < count; i++)
+                    {
+                        if ((candidateSection.RemovedFragments & (1UL << i)) == 0) continue;
+                        var source = candidateSection.RepairTransform(i);
+                        if (source == null) continue;
+                        var world = source.TransformPoint(candidateSection.RepairBounds(i).ClosestPoint(source.InverseTransformPoint(player.transform.position + Vector3.up * 1.2f)));
+                        var local = ship.transform.InverseTransformPoint(world);
+                        float distance = (local - localPoint).sqrMagnitude;
+                        if (Mathf.Sign(local.x) != side || distance >= best) continue;
+                        nextFragment = i; nextSection = candidateSection; best = distance; point = local;
+                    }
+                }
             }
-            if (next < 0) return;
-            fragment = next; localPoint = point; progressAt = Time.time;
+            if (nextFragment < 0 || nextSection == null) return;
+            section = nextSection; fragment = nextFragment; localPoint = point; progressAt = Time.time;
+            repaired = false;
             SessionController.Instance.RecordBotEvent(player.BotNumber, "Пробоина закрыта; продолжает ремонт соседнего повреждения с воды");
         }
 

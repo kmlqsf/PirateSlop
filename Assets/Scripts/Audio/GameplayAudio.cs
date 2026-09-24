@@ -24,6 +24,27 @@ namespace PirateSlop
             ship = GetComponent<ShipController>(); helm = GetComponentInChildren<HelmInteraction>();
             sails = GetComponent<SailSystem>(); cannon = GetComponent<SimpleCannon>();
         }
+        static readonly RaycastHit[] stepHits = new RaycastHit[16];
+        static readonly System.Collections.Generic.Dictionary<Collider, bool> stoneColliderCache = new();
+
+        static bool IsStoneSurface(Collider col)
+        {
+            if (col == null) return false;
+            if (stoneColliderCache.TryGetValue(col, out bool isStone)) return isStone;
+            string colName = col.name;
+            var mat = col.sharedMaterial;
+            string matName = mat != null ? mat.name : null;
+            isStone = (colName != null && (colName.IndexOf("stone", System.StringComparison.OrdinalIgnoreCase) >= 0 ||
+                                           colName.IndexOf("rock", System.StringComparison.OrdinalIgnoreCase) >= 0 ||
+                                           colName.IndexOf("reef", System.StringComparison.OrdinalIgnoreCase) >= 0 ||
+                                           colName.IndexOf("cliff", System.StringComparison.OrdinalIgnoreCase) >= 0)) ||
+                      (matName != null && (matName.IndexOf("stone", System.StringComparison.OrdinalIgnoreCase) >= 0 ||
+                                           matName.IndexOf("rock", System.StringComparison.OrdinalIgnoreCase) >= 0 ||
+                                           matName.IndexOf("reef", System.StringComparison.OrdinalIgnoreCase) >= 0));
+            stoneColliderCache[col] = isStone;
+            return isStone;
+        }
+
         SoundCue StepCue()
         {
             var passenger = GetComponent<ShipDeckPassenger>();
@@ -31,13 +52,14 @@ namespace PirateSlop
                 return player.PlanarSpeed > 5f ? SoundCue.FootstepWoodRun : SoundCue.FootstepWood;
             RaycastHit nearest = default;
             float distance = 1.5f;
-            foreach (var hit in Physics.RaycastAll(transform.position + Vector3.up * .3f, Vector3.down, distance, ~0, QueryTriggerInteraction.Ignore))
-                if (!hit.transform.IsChildOf(transform) && hit.distance < distance) { nearest = hit; distance = hit.distance; }
-            if (nearest.collider != null)
+            int count = Physics.RaycastNonAlloc(transform.position + Vector3.up * .3f, Vector3.down, stepHits, distance, ~0, QueryTriggerInteraction.Ignore);
+            for (int i = 0; i < count; i++)
             {
-                string surface = (nearest.collider.name + " " + (nearest.collider.sharedMaterial != null ? nearest.collider.sharedMaterial.name : "")).ToLowerInvariant();
-                if (surface.Contains("stone") || surface.Contains("rock") || surface.Contains("reef")) return SoundCue.FootstepStone;
+                var hit = stepHits[i];
+                if (!hit.transform.IsChildOf(transform) && hit.distance < distance) { nearest = hit; distance = hit.distance; }
             }
+            if (nearest.collider != null && IsStoneSurface(nearest.collider))
+                return SoundCue.FootstepStone;
             return SoundCue.Footstep;
         }
         void LateUpdate()

@@ -16,6 +16,12 @@ namespace PirateSlop.Networking
         readonly System.Collections.Generic.Dictionary<int, float> botStationRetry = new();
         public int BotTaskKey { get; private set; } = -2;
         public string BotAssignment { get; internal set; } = "Нет назначения";
+        internal int lastAssignmentTaskKey = int.MinValue;
+        internal int lastAssignmentCaptain = int.MinValue;
+        internal int lastAssignmentTeam = int.MinValue;
+        internal string lastAssignmentPriority;
+        internal string lastAssignmentPilotReason;
+        internal string lastAssignmentRevival;
         public string BotCandidates { get; internal set; } = "Нет вариантов";
         internal bool BotArtilleryBlocked => botActions != null && botActions.ArtilleryBlocked;
         public bool BotTaskRunning => botActions != null && botActions.Running;

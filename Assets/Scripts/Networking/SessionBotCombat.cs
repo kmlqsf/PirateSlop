@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace PirateSlop.Networking
@@ -35,12 +36,15 @@ namespace PirateSlop.Networking
                     if (candidate == null || candidate.IsSinking || candidate.TeamId.Value == crew.Ship.TeamId.Value) continue;
                     var delta = candidate.transform.position - cannon.transform.position;
                     float distance = delta.sqrMagnitude;
-                    if (distance > 160f * 160f || distance >= best) continue;
+                    if (distance > 160f * 160f) continue;
+                    float score = distance;
+                    if (crew.LastDamagedBy == candidate) score *= 0.4f;
+                    if (score >= best) continue;
                     var local = cannon.transform.InverseTransformDirection(delta);
                     if (Mathf.Abs(Mathf.Atan2(local.x, local.z) * Mathf.Rad2Deg) > cannon.MaxTraverse + 10f) continue;
                     if (++probes > 3) continue;
                     if (!BotCannonStation.Visible(worker, candidate)) continue;
-                    target = candidate; best = distance;
+                    target = candidate; best = score;
                 }
                 if (target == null) continue;
                 crew.DangerUntil = Time.time + 3f;
@@ -55,7 +59,7 @@ namespace PirateSlop.Networking
         internal bool BotPersonalShotSafe(NetworkPlayer player, Vector3 start, Vector3 end, bool melee, float spread)
         {
             var delta = end - start;
-            float length = delta.magnitude;
+            float length = Mathf.Min(delta.magnitude, melee ? 2f : 12f);
             var direction = delta.normalized;
             foreach (var ally in players.Values)
             {
@@ -63,7 +67,7 @@ namespace PirateSlop.Networking
                 var point = ally.transform.position + Vector3.up;
                 float along = Vector3.Dot(point - start, direction);
                 if (along < 0f || along > length) continue;
-                float radius = melee ? 1.2f : .4f + Mathf.Tan(spread * Mathf.Deg2Rad) * along;
+                float radius = melee ? 1.0f : Mathf.Min(.5f + Mathf.Tan(Mathf.Min(spread, 3.5f) * Mathf.Deg2Rad) * along, 1.2f);
                 if ((point - start - direction * along).sqrMagnitude < radius * radius) return false;
             }
             return true;
@@ -103,28 +107,68 @@ namespace PirateSlop.Networking
             crew.ContactCombat = false;
             foreach (var ship in NetworkShip.ActiveShips)
                 if (CloseShipContact(crew.Ship, ship)) { alert = true; if (!CannonCoversContact(crew, ship)) crew.ContactCombat = true; }
+                
+            NetworkPlayer boarder = null;
+            Vector3 boarderPos = default;
+            
             for (int i = 0; i < crew.Members.Count; i++)
             {
                 crew.CombatObserverCursor %= crew.Members.Count;
                 var observer = crew.Members[crew.CombatObserverCursor++];
                 if (observer == null || !observer.IsBot.Value || observer.Motor.IsDead) continue;
                 observer.BotVision.Observe(observer, players.Values, alert);
-                if (observer.BotVision.Visible) crew.DangerUntil = Time.time + 3f;
+                if (observer.BotVision.Visible)
+                {
+                    crew.DangerUntil = Time.time + 3f;
+                    if (observer.BotVision.Target != null && observer.BotVision.Target.Passenger.Ship == crew.Ship.Body)
+                    {
+                        boarder = observer.BotVision.Target;
+                        boarderPos = observer.BotVision.LastPosition;
+                    }
+                }
                 if (observer.BotVision.Visible && observer.BotTaskKey == 52000)
                     observer.PreemptBotTask("Рыбалка прервана: замечен противник");
+            }
+            
+            if (boarder != null)
+            {
+                foreach (var member in crew.Members)
+                {
+                    if (member == null || !member.IsBot.Value || member.Motor.IsDead) continue;
+                    member.BotVision.ReceiveCallout(boarder, boarderPos);
+                }
             }
         }
         void AssignPersonalCombat(BotCrew crew)
         {
             if (crew.Ship.IsSinking) return;
+            var assignedTargets = new HashSet<NetworkPlayer>();
+            foreach (var m in crew.Members)
+                if (m != null && m.BotTaskRunning && (m.BotTaskKey == 60000 || m.BotTaskKey == 60001) && m.BotVision.Target != null)
+                    assignedTargets.Add(m.BotVision.Target);
+
             foreach (var player in crew.Members)
             {
                 if (player == null || !player.IsBot.Value || player.BotNeedsShipWait) continue;
                 var sight = player.BotVision;
-                if (!sight.Visible || Time.time - sight.LastSeen > 2f || !BotCombatMemory.Enemy(player, sight.Target)) continue;
-                bool contactFight = CloseShipContact(crew.Ship, sight.Target.Ship) && !CannonCoversContact(crew, sight.Target.Ship);
+                if (!sight.Visible || Time.time - sight.LastSeen > 2f) continue;
+                NetworkPlayer targetEnemy = sight.Target;
+                if (!BotCombatMemory.Enemy(player, targetEnemy)) continue;
+                if (assignedTargets.Contains(targetEnemy))
+                {
+                    float closestAlt = float.PositiveInfinity;
+                    foreach (var other in players.Values)
+                    {
+                        if (other == null || other.Motor.IsDead || other.TeamId.Value == player.TeamId.Value) continue;
+                        if (other == targetEnemy || !BotCombatMemory.CanSee(player, other)) continue;
+                        float d = (other.transform.position - player.transform.position).sqrMagnitude;
+                        if (d < closestAlt) { closestAlt = d; targetEnemy = other; }
+                    }
+                }
+                assignedTargets.Add(targetEnemy);
+                bool contactFight = CloseShipContact(crew.Ship, targetEnemy.Ship) && !CannonCoversContact(crew, targetEnemy.Ship);
                 float separation = (sight.LastPosition - player.transform.position).sqrMagnitude;
-                bool boarder = sight.Target.Passenger.Ship == crew.Ship.Body;
+                bool boarder = targetEnemy.Passenger.Ship == crew.Ship.Body;
                 if (!boarder && !contactFight && separation > 12f * 12f) continue;
                 bool protectedWork = player.BotHasManualTask || player.BotTaskKey == -1 || player.BotTaskKey == 53000 || player.BotTaskKey == 51000 ||
                     player.BotTaskKey >= 100000 || player.BotTaskKey >= 0 && player.BotTaskKey < 1000 && (crew.UrgentSails || crew.Pilot.AvoidingCollision);
@@ -135,7 +179,7 @@ namespace PirateSlop.Networking
                     player.PreemptBotTask("Тесный контакт: пушки не достают, атаковать экипаж личным оружием");
                 }
                 if (!player.BotCanReceiveStation(60000)) continue;
-                player.BotCandidates = $"Цель {sight.Target.ParticipantId.Value}: видна лично; задержка реакции и проверка союзников";
+                player.BotCandidates = $"Цель {targetEnemy.ParticipantId.Value}: видна лично; задержка реакции и проверка союзников";
                 int throwingSlot = BotSwordfishAction.Slot(player);
                 int areaSlot = BotAreaThrowAction.Slot(player);
                 int parrotSlot = BotUtilityAction.Slot(player, InventoryItem.BombParrot);
@@ -144,10 +188,10 @@ namespace PirateSlop.Networking
                 bool throwing = throwingSlot >= 0 && distance >= 5f && distance <= 30f && Time.time >= player.NextBotThrow && player.BotCanReceiveStation(60001);
                 bool areaThrow = !throwing && areaSlot >= 0 && distance >= 8f && distance <= 30f && Time.time >= player.NextBotThrow && player.BotCanReceiveStation(60001);
                 bool utility = !throwing && !areaThrow && Time.time >= player.NextBotThrow && player.BotCanReceiveStation(60001) &&
-                    (parrotSlot >= 0 && distance > 12f && distance < 45f || hookSlot >= 0 && distance > 4f && distance < 20f && sight.Target.Passenger.Ship == crew.Ship.Body);
+                    (parrotSlot >= 0 && distance > 12f && distance < 45f || hookSlot >= 0 && distance > 4f && distance < 20f && targetEnemy.Passenger.Ship == crew.Ship.Body);
                 IBotAction combat = utility ? new BotUtilityAction(player, parrotSlot >= 0 && distance > 12f ? InventoryItem.BombParrot : InventoryItem.GrapplingHook,
-                    parrotSlot >= 0 && distance > 12f ? parrotSlot : hookSlot, sight.Target) : areaThrow ? new BotAreaThrowAction(player, sight.Target, areaSlot) : throwing ?
-                    new BotSwordfishAction(player, sight.Target, throwingSlot) : new BotPersonalCombatAction(player, sight.Target);
+                    parrotSlot >= 0 && distance > 12f ? parrotSlot : hookSlot, targetEnemy) : areaThrow ? new BotAreaThrowAction(player, targetEnemy, areaSlot) : throwing ?
+                    new BotSwordfishAction(player, targetEnemy, throwingSlot) : new BotPersonalCombatAction(player, targetEnemy);
                 if (throwing || areaThrow || utility) player.NextBotThrow = Time.time + 20f;
                 player.AssignBotJob(throwing || areaThrow || utility ? 60001 : 60000, combat);
                 if (!player.BotTaskRunning) player.FinishBotTask();
