@@ -255,6 +255,7 @@ GameObject:
   - component: {fileID: 13843142}
   - component: {fileID: 13843144}
   - component: {fileID: 13843143}
+  - component: {fileID: 13843145}
   m_Layer: 30
   m_Name: F2_SailMid2
   m_TagString: Untagged
@@ -302,7 +303,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a26deede058a74e4993a12a8bca6ed7d, type: 2}
+  - {fileID: 1685256724}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -333,6 +334,28 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 13843141}
+  m_Mesh: {fileID: 4300000, guid: f04a7959234156f4993daafafc301e32, type: 2}
+--- !u!64 &13843145
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 13843141}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: f04a7959234156f4993daafafc301e32, type: 2}
 --- !u!1 &17345845
 GameObject:
@@ -690,6 +713,7 @@ GameObject:
   - component: {fileID: 83676137}
   - component: {fileID: 83676139}
   - component: {fileID: 83676138}
+  - component: {fileID: 83676140}
   m_Layer: 30
   m_Name: F2_SailMid1
   m_TagString: Untagged
@@ -737,7 +761,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a26deede058a74e4993a12a8bca6ed7d, type: 2}
+  - {fileID: 1914560584}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -768,6 +792,28 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 83676136}
+  m_Mesh: {fileID: 4300000, guid: 9e30cec279d264347bdcbee44f8140b9, type: 2}
+--- !u!64 &83676140
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 83676136}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: 9e30cec279d264347bdcbee44f8140b9, type: 2}
 --- !u!1 &92136596
 GameObject:
@@ -4449,6 +4495,68 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 645232484}
   m_Mesh: {fileID: -7210188618900461702, guid: 1695505a6f5c603469effd7413da7aa4, type: 3}
+--- !u!21 &655043788
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: PartMat_F2_Flag2_6
+  m_Shader: {fileID: 4800000, guid: 589bb044053f70644b8ca3e9a244c775, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _BaseMap:
+        m_Texture: {fileID: 2800000, guid: a87187ec4bacc1946a8ed6401e3b52c1, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DecalTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DecalTex2:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _OcclusionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _BlendMode: 0
+    - _BlendMode2: 0
+    - _DecalRotation: 0
+    - _DecalRotation2: 0
+    - _Grime: 0
+    - _MirrorBack: 1
+    - _OcclusionStrength: 0.45
+    - _Smoothness: 0.05
+    - _Weathering: 0
+    m_Colors:
+    - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
+    - _DecalColor: {r: 0, g: 0, b: 0, a: 0}
+    - _DecalColor2: {r: 0, g: 0, b: 0, a: 0}
+    - _DecalTransform: {r: 1, g: 1, b: 0, a: 0}
+    - _DecalTransform2: {r: 1, g: 1, b: 0, a: 0}
+    - _HighlightColor: {r: 0, g: 0, b: 0, a: 1}
+    - _SailUVBounds: {r: 0, g: 0, b: 1, a: 1}
+    - _SailUVBoundsBack: {r: 0.1662, g: 0.7217, b: 0.0739, a: 0.2206}
+    - _SailUVBoundsFront: {r: 0.1604, g: 0.7608, b: 0.0739, a: 0.2239}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1
 --- !u!1 &668859086
 GameObject:
   m_ObjectHideFlags: 0
@@ -4921,7 +5029,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1373554265}
-  - {fileID: 1854171298}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &715373200
@@ -6712,6 +6819,7 @@ GameObject:
   m_Component:
   - component: {fileID: 954924697}
   - component: {fileID: 954924698}
+  - component: {fileID: 954924699}
   m_Layer: 0
   m_Name: ShipSunBeam
   m_TagString: Untagged
@@ -6799,6 +6907,35 @@ Light:
   m_LightUnit: 1
   m_LuxAtDistance: 1
   m_EnableSpotReflector: 1
+--- !u!114 &954924699
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 954924696}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Runtime::UnityEngine.Rendering.Universal.UniversalAdditionalLightData
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_CustomShadowLayers: 0
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
+  m_SoftShadowQuality: 0
+  m_RenderingLayersMask:
+    serializedVersion: 0
+    m_Bits: 1
+  m_ShadowRenderingLayersMask:
+    serializedVersion: 0
+    m_Bits: 1
+  m_Version: 4
+  m_LightLayerMask: 1
+  m_ShadowLayerMask: 1
+  m_RenderingLayers: 1
+  m_ShadowRenderingLayers: 1
 --- !u!1 &977378966
 GameObject:
   m_ObjectHideFlags: 0
@@ -6889,6 +7026,68 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 977378966}
   m_Mesh: {fileID: 5105206591869454522, guid: 1695505a6f5c603469effd7413da7aa4, type: 3}
+--- !u!21 &982094965
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: PartMat_F2_MainFlag_4
+  m_Shader: {fileID: 4800000, guid: 589bb044053f70644b8ca3e9a244c775, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _BaseMap:
+        m_Texture: {fileID: 2800000, guid: a87187ec4bacc1946a8ed6401e3b52c1, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DecalTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DecalTex2:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _OcclusionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _BlendMode: 0
+    - _BlendMode2: 0
+    - _DecalRotation: 0
+    - _DecalRotation2: 0
+    - _Grime: 0
+    - _MirrorBack: 1
+    - _OcclusionStrength: 0.45
+    - _Smoothness: 0.05
+    - _Weathering: 0
+    m_Colors:
+    - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
+    - _DecalColor: {r: 0, g: 0, b: 0, a: 0}
+    - _DecalColor2: {r: 0, g: 0, b: 0, a: 0}
+    - _DecalTransform: {r: 1, g: 1, b: 0, a: 0}
+    - _DecalTransform2: {r: 1, g: 1, b: 0, a: 0}
+    - _HighlightColor: {r: 0, g: 0, b: 0, a: 1}
+    - _SailUVBounds: {r: 0, g: 0, b: 1, a: 1}
+    - _SailUVBoundsBack: {r: 0.709, g: 0.0094, b: 0.1148, a: 0.0598}
+    - _SailUVBoundsFront: {r: 0.6511, g: 0.0094, b: 0.2462, a: 0.0598}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1
 --- !u!1 &985918061
 GameObject:
   m_ObjectHideFlags: 0
@@ -8663,6 +8862,7 @@ GameObject:
   - component: {fileID: 1132766087}
   - component: {fileID: 1132766089}
   - component: {fileID: 1132766088}
+  - component: {fileID: 1132766090}
   m_Layer: 30
   m_Name: F2_MainFlag
   m_TagString: Untagged
@@ -8710,7 +8910,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a26deede058a74e4993a12a8bca6ed7d, type: 2}
+  - {fileID: 982094965}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -8741,6 +8941,28 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1132766086}
+  m_Mesh: {fileID: 4300000, guid: 8ec564631113da443b97c86b425b3f3f, type: 2}
+--- !u!64 &1132766090
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1132766086}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: 8ec564631113da443b97c86b425b3f3f, type: 2}
 --- !u!1 &1139531538
 GameObject:
@@ -8880,6 +9102,7 @@ GameObject:
   - component: {fileID: 1147968280}
   - component: {fileID: 1147968282}
   - component: {fileID: 1147968281}
+  - component: {fileID: 1147968283}
   m_Layer: 30
   m_Name: F2_Flag1
   m_TagString: Untagged
@@ -8927,7 +9150,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a26deede058a74e4993a12a8bca6ed7d, type: 2}
+  - {fileID: 1385975385}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -8958,6 +9181,28 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1147968279}
+  m_Mesh: {fileID: 4300000, guid: beb9995f862fdb34a893e33022377ada, type: 2}
+--- !u!64 &1147968283
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1147968279}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: beb9995f862fdb34a893e33022377ada, type: 2}
 --- !u!1 &1150909516
 GameObject:
@@ -9894,6 +10139,68 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1225908604}
   m_Mesh: {fileID: -7442158117537580628, guid: 1695505a6f5c603469effd7413da7aa4, type: 3}
+--- !u!21 &1230529808
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: PartMat_F2_SailBack_0
+  m_Shader: {fileID: 4800000, guid: 589bb044053f70644b8ca3e9a244c775, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _BaseMap:
+        m_Texture: {fileID: 2800000, guid: a87187ec4bacc1946a8ed6401e3b52c1, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DecalTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DecalTex2:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _OcclusionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _BlendMode: 0
+    - _BlendMode2: 0
+    - _DecalRotation: 0
+    - _DecalRotation2: 0
+    - _Grime: 0
+    - _MirrorBack: 1
+    - _OcclusionStrength: 0.45
+    - _Smoothness: 0.05
+    - _Weathering: 0
+    m_Colors:
+    - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
+    - _DecalColor: {r: 0, g: 0, b: 0, a: 0}
+    - _DecalColor2: {r: 0, g: 0, b: 0, a: 0}
+    - _DecalTransform: {r: 1, g: 1, b: 0, a: 0}
+    - _DecalTransform2: {r: 1, g: 1, b: 0, a: 0}
+    - _HighlightColor: {r: 0.35, g: 0.25, b: 0.08, a: 1}
+    - _SailUVBounds: {r: 0, g: 0, b: 1, a: 1}
+    - _SailUVBoundsBack: {r: 0.5888, g: 0.0658, b: 0.4014, a: 0.2011}
+    - _SailUVBoundsFront: {r: 0.5081, g: 0.0865, b: 0.4163, a: 0.1997}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1
 --- !u!1 &1241532664
 GameObject:
   m_ObjectHideFlags: 0
@@ -11190,6 +11497,68 @@ Transform:
   - {fileID: 1729137216}
   m_Father: {fileID: 710083854}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!21 &1385975385
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: PartMat_F2_Flag1_5
+  m_Shader: {fileID: 4800000, guid: 589bb044053f70644b8ca3e9a244c775, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _BaseMap:
+        m_Texture: {fileID: 2800000, guid: a87187ec4bacc1946a8ed6401e3b52c1, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DecalTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DecalTex2:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _OcclusionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _BlendMode: 0
+    - _BlendMode2: 0
+    - _DecalRotation: 0
+    - _DecalRotation2: 0
+    - _Grime: 0
+    - _MirrorBack: 1
+    - _OcclusionStrength: 0.45
+    - _Smoothness: 0.05
+    - _Weathering: 0
+    m_Colors:
+    - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
+    - _DecalColor: {r: 0, g: 0, b: 0, a: 0}
+    - _DecalColor2: {r: 0, g: 0, b: 0, a: 0}
+    - _DecalTransform: {r: 1, g: 1, b: 0, a: 0}
+    - _DecalTransform2: {r: 1, g: 1, b: 0, a: 0}
+    - _HighlightColor: {r: 0, g: 0, b: 0, a: 1}
+    - _SailUVBounds: {r: 0, g: 0, b: 1, a: 1}
+    - _SailUVBoundsBack: {r: 0.1598, g: 0.7221, b: 0.0734, a: 0.2206}
+    - _SailUVBoundsFront: {r: 0.1656, g: 0.7646, b: 0.0734, a: 0.2173}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1
 --- !u!1 &1390470720
 GameObject:
   m_ObjectHideFlags: 0
@@ -11777,6 +12146,7 @@ GameObject:
   - component: {fileID: 1448262047}
   - component: {fileID: 1448262049}
   - component: {fileID: 1448262048}
+  - component: {fileID: 1448262050}
   m_Layer: 30
   m_Name: F2_Flag2
   m_TagString: Untagged
@@ -11824,7 +12194,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a26deede058a74e4993a12a8bca6ed7d, type: 2}
+  - {fileID: 655043788}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -11855,6 +12225,28 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1448262046}
+  m_Mesh: {fileID: 4300000, guid: da045f84a267b7b4095e70b60ed59a2c, type: 2}
+--- !u!64 &1448262050
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1448262046}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: da045f84a267b7b4095e70b60ed59a2c, type: 2}
 --- !u!1 &1464031601
 GameObject:
@@ -13500,6 +13892,7 @@ GameObject:
   - component: {fileID: 1629112791}
   - component: {fileID: 1629112793}
   - component: {fileID: 1629112792}
+  - component: {fileID: 1629112794}
   m_Layer: 30
   m_Name: F2_SailBack
   m_TagString: Untagged
@@ -13547,7 +13940,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a26deede058a74e4993a12a8bca6ed7d, type: 2}
+  - {fileID: 1230529808}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -13578,6 +13971,28 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1629112790}
+  m_Mesh: {fileID: 4300000, guid: 96b792ce654ed1242ab2e3282a824ae5, type: 2}
+--- !u!64 &1629112794
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1629112790}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: 96b792ce654ed1242ab2e3282a824ae5, type: 2}
 --- !u!1 &1634711218
 GameObject:
@@ -13712,6 +14127,7 @@ GameObject:
   - component: {fileID: 1646949370}
   - component: {fileID: 1646949372}
   - component: {fileID: 1646949371}
+  - component: {fileID: 1646949373}
   m_Layer: 30
   m_Name: F2_SailFront
   m_TagString: Untagged
@@ -13759,7 +14175,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a26deede058a74e4993a12a8bca6ed7d, type: 2}
+  - {fileID: 2109805664}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -13790,6 +14206,28 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1646949369}
+  m_Mesh: {fileID: 4300000, guid: 5bdf5b2d6f77d0b429727c6e1ded2c69, type: 2}
+--- !u!64 &1646949373
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1646949369}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: 5bdf5b2d6f77d0b429727c6e1ded2c69, type: 2}
 --- !u!1 &1665956392
 GameObject:
@@ -13971,6 +14409,68 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1683815919}
   m_Mesh: {fileID: 4300000, guid: 38ccff4b340d33f4b900cde720eabe08, type: 2}
+--- !u!21 &1685256724
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: PartMat_F2_SailMid2_3
+  m_Shader: {fileID: 4800000, guid: 589bb044053f70644b8ca3e9a244c775, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _BaseMap:
+        m_Texture: {fileID: 2800000, guid: a87187ec4bacc1946a8ed6401e3b52c1, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DecalTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DecalTex2:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _OcclusionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _BlendMode: 0
+    - _BlendMode2: 0
+    - _DecalRotation: 0
+    - _DecalRotation2: 0
+    - _Grime: 0
+    - _MirrorBack: 1
+    - _OcclusionStrength: 0.45
+    - _Smoothness: 0.05
+    - _Weathering: 0
+    m_Colors:
+    - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
+    - _DecalColor: {r: 0, g: 0, b: 0, a: 0}
+    - _DecalColor2: {r: 0, g: 0, b: 0, a: 0}
+    - _DecalTransform: {r: 1, g: 1, b: 0, a: 0}
+    - _DecalTransform2: {r: 1, g: 1, b: 0, a: 0}
+    - _HighlightColor: {r: 0, g: 0, b: 0, a: 1}
+    - _SailUVBounds: {r: 0, g: 0, b: 1, a: 1}
+    - _SailUVBoundsBack: {r: 0.3573, g: 0.2298, b: 0.1534, a: 0.1435}
+    - _SailUVBoundsFront: {r: 0.1827, g: 0.2304, b: 0.1534, a: 0.1435}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1
 --- !u!1 &1690256633
 GameObject:
   m_ObjectHideFlags: 0
@@ -14588,6 +15088,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1729137216}
+  - component: {fileID: 1729137217}
   m_Layer: 30
   m_Name: MenuShip
   m_TagString: Untagged
@@ -14625,6 +15126,27 @@ Transform:
   - {fileID: 1883205916}
   m_Father: {fileID: 1373554265}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1729137217
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1729137215}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5926e63be6e13384ab0e70d0e53c46cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.Customization.SailCustomizer
+  partRenderers:
+  - {fileID: 1629112792}
+  - {fileID: 1646949371}
+  - {fileID: 83676138}
+  - {fileID: 13843143}
+  - {fileID: 1132766088}
+  - {fileID: 1147968281}
+  - {fileID: 1448262048}
+  sailBaseMaterial: {fileID: 2100000, guid: 09686e4bfad915e4c8fbe856d3cd01bc, type: 2}
 --- !u!1 &1733209175
 GameObject:
   m_ObjectHideFlags: 0
@@ -15768,7 +16290,7 @@ GameObject:
   - component: {fileID: 1854171299}
   m_Layer: 0
   m_Name: MenuCamera
-  m_TagString: Untagged
+  m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -15841,11 +16363,11 @@ Transform:
   m_GameObject: {fileID: 1854171295}
   serializedVersion: 2
   m_LocalRotation: {x: 0.060464565, y: -0.44593826, z: 0.030210892, w: 0.892508}
-  m_LocalPosition: {x: 58.86035, y: 29.291948, z: -69.52637}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 12058.86, y: 29.291948, z: 11930.474}
+  m_LocalScale: {x: 1, y: 1, z: 1.0000001}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 710083854}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1854171299
 MonoBehaviour:
@@ -16448,6 +16970,68 @@ Transform:
   - {fileID: 668859087}
   m_Father: {fileID: 1729137216}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!21 &1914560584
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: PartMat_F2_SailMid1_2
+  m_Shader: {fileID: 4800000, guid: 589bb044053f70644b8ca3e9a244c775, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _BaseMap:
+        m_Texture: {fileID: 2800000, guid: a87187ec4bacc1946a8ed6401e3b52c1, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DecalTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DecalTex2:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _OcclusionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _BlendMode: 0
+    - _BlendMode2: 0
+    - _DecalRotation: 0
+    - _DecalRotation2: 0
+    - _Grime: 0
+    - _MirrorBack: 1
+    - _OcclusionStrength: 0.45
+    - _Smoothness: 0.05
+    - _Weathering: 0
+    m_Colors:
+    - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
+    - _DecalColor: {r: 0, g: 0, b: 0, a: 0}
+    - _DecalColor2: {r: 0, g: 0, b: 0, a: 0}
+    - _DecalTransform: {r: 1, g: 1, b: 0, a: 0}
+    - _DecalTransform2: {r: 1, g: 1, b: 0, a: 0}
+    - _HighlightColor: {r: 0, g: 0, b: 0, a: 1}
+    - _SailUVBounds: {r: 0, g: 0, b: 1, a: 1}
+    - _SailUVBoundsBack: {r: 0.6167, g: 0.3262, b: 0.3708, a: 0.322}
+    - _SailUVBoundsFront: {r: 0.6157, g: 0.6629, b: 0.3708, a: 0.322}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1
 --- !u!1 &1925065910
 GameObject:
   m_ObjectHideFlags: 0
@@ -18112,6 +18696,68 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1729137216}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!21 &2109805664
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: PartMat_F2_SailFront_1
+  m_Shader: {fileID: 4800000, guid: 589bb044053f70644b8ca3e9a244c775, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _BaseMap:
+        m_Texture: {fileID: 2800000, guid: a87187ec4bacc1946a8ed6401e3b52c1, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DecalTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DecalTex2:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _OcclusionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _BlendMode: 0
+    - _BlendMode2: 0
+    - _DecalRotation: 0
+    - _DecalRotation2: 0
+    - _Grime: 0
+    - _MirrorBack: 1
+    - _OcclusionStrength: 0.45
+    - _Smoothness: 0.05
+    - _Weathering: 0
+    m_Colors:
+    - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
+    - _DecalColor: {r: 0, g: 0, b: 0, a: 0}
+    - _DecalColor2: {r: 0, g: 0, b: 0, a: 0}
+    - _DecalTransform: {r: 1, g: 1, b: 0, a: 0}
+    - _DecalTransform2: {r: 1, g: 1, b: 0, a: 0}
+    - _HighlightColor: {r: 0, g: 0, b: 0, a: 1}
+    - _SailUVBounds: {r: 0, g: 0, b: 1, a: 1}
+    - _SailUVBoundsBack: {r: 0.2568, g: 0.7023, b: 0.3275, a: 0.2832}
+    - _SailUVBoundsFront: {r: 0.2542, g: 0.4021, b: 0.3275, a: 0.2832}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1
 --- !u!1 &2114416320
 GameObject:
   m_ObjectHideFlags: 0
@@ -18606,3 +19252,4 @@ SceneRoots:
   - {fileID: 1719603654}
   - {fileID: 1980048673}
   - {fileID: 710083854}
+  - {fileID: 1854171298}

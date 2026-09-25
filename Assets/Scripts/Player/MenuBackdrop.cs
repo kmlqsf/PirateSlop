@@ -37,8 +37,28 @@ namespace PirateSlop
             Vector3 right = Vector3.Cross(Vector3.up, -offset.normalized).normalized;
             View.transform.LookAt(focus - right * (distance * tangent * View.aspect * .34f));
         }
+        void Start()
+        {
+            ApplyShipCustomization();
+        }
+
+        public void ApplyShipCustomization()
+        {
+            if (Ship != null)
+            {
+                var customizer = Ship.GetComponent<PirateSlop.Customization.SailCustomizer>();
+                if (customizer == null) customizer = Ship.gameObject.AddComponent<PirateSlop.Customization.SailCustomizer>();
+                customizer.InitializeSails();
+                if (PirateSlop.Customization.SailCustomizationStorage.Load(out var savedData, out var savedTextures))
+                {
+                    customizer.ApplyCustomization(savedData, savedTextures, false);
+                }
+            }
+        }
+
         void Update()
         {
+            if (PirateSlop.Customization.SailCustomizationUI.IsOpen) return;
             bool visible=View!=null && View.gameObject.activeInHierarchy;
             Content.SetActive(visible);
             if(visible!=wasVisible)

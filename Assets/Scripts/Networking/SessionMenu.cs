@@ -91,7 +91,7 @@ namespace PirateSlop.Networking
         }
         void DrawSessionMenu()
         {
-            if(BotDebugPanel.ConsumedInput || DeveloperMenu.IsOpen || dedicated || Automated || !MenuOpen) return;
+            if(BotDebugPanel.ConsumedInput || DeveloperMenu.IsOpen || dedicated || Automated || !MenuOpen || (PirateSlop.Customization.SailCustomizationUI.IsOpen && PirateSlop.Customization.SailCustomizationUI.Instance != null)) return;
             PrepareMenu();
             var oldMatrix=GUI.matrix; var oldColor=GUI.color;
             GUI.color=Color.white; GUI.DrawTexture(new Rect(0,0,Screen.width,Screen.height),menuShade);
@@ -252,9 +252,11 @@ namespace PirateSlop.Networking
                     if(MenuAction(x,y+58,panelWidth,"Присоединиться к сессии")) menuPage=party != null && party.InLobby ? 5 : 2;
                 }
                 if(MenuAction(x,y+116,panelWidth,"Команда · Steam")) menuPage=5;
-                if(MenuAction(x,y+174,panelWidth,"Настройки")) menuPage=7;
-                if(MenuAction(x,y+232,panelWidth,"Выйти из игры")) Application.Quit();
-                if(!playing && MenuAction(x,y+290,panelWidth,"Тестовая карта")) Begin(true,"127.0.0.1:"+Config.Port,true);
+                bool isLeader = party == null || !party.InLobby || party.IsLeader;
+                if(isLeader && MenuAction(x,y+174,panelWidth,"Кастомизация")) PirateSlop.Customization.SailCustomizationUI.Open();
+                if(MenuAction(x,y+232,panelWidth,"Настройки")) menuPage=7;
+                if(MenuAction(x,y+290,panelWidth,"Выйти из игры")) Application.Quit();
+                if(!playing && MenuAction(x,y+348,panelWidth,"Тестовая карта")) Begin(true,"127.0.0.1:"+Config.Port,true);
             }
             if(!string.IsNullOrEmpty(error))
             {

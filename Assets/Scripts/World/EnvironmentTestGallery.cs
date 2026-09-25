@@ -33,6 +33,13 @@ namespace PirateSlop.World
                 throw new InvalidOperationException("Environment gallery differs from the host. Update the game assets.");
             var instance = Instantiate(gallery, parent);
             instance.transform.localPosition = Vector3.up * layout.SeaLevel; var wp = instance.gameObject.AddComponent<WhirlpoolTest>(); wp.Center = gallery.Spawn + new Vector3(200f, 0, -400f);
+            var whalePrefab = Resources.Load<GameObject>("Whale/WhaleLootPOI");
+            if (whalePrefab != null)
+            {
+                var whale = Instantiate(whalePrefab, parent);
+                whale.transform.position = gallery.Spawn + new Vector3(140f, layout.SeaLevel - 4.5f, 160f);
+                whale.transform.rotation = Quaternion.Euler(0f, -30f, 0f);
+            }
         }
 
         void OnGUI()

@@ -37,7 +37,7 @@
     {
       "id": "sails", "title": "Паруса и канаты", "aliases": ["паруса", "парус", "канаты", "rigging"],
       "notes": ["Разделять управление натяжением и визуальную геометрию канатов. Изменение модели не должно менять сетевую занятость.", "Настройка канатов и обновление их арта — отдельные редакторские операции; перед повторным запуском изучить соответствующий setup."],
-      "files": ["Assets/Scripts/SailSystem.cs", "Assets/Scripts/Interaction/DirectShipControls.cs", "Assets/Scripts/Interaction/ShipControlHandle.cs", "Assets/Scripts/Interaction/SailRopeVisual.cs", "Assets/Scripts/Interaction/SailRopeMesh.cs", "Assets/Scripts/Editor/SailRopeSetup.cs", "Assets/Scripts/Editor/SailRiggingArtSetup.cs", "Assets/Scripts/Networking/NetworkShip.cs"],
+      "files": ["Assets/Scripts/SailSystem.cs", "Assets/Scripts/Interaction/DirectShipControls.cs", "Assets/Scripts/Interaction/ShipControlHandle.cs", "Assets/Scripts/Interaction/SailRopeVisual.cs", "Assets/Scripts/Interaction/SailRopeMesh.cs", "Assets/Scripts/Editor/SailRopeSetup.cs", "Assets/Scripts/Editor/SailRiggingArtSetup.cs", "Assets/Scripts/Networking/NetworkShip.cs", "Assets/Scripts/Customization/SailCustomizer.cs", "Assets/Scripts/Customization/SailCustomizationUI.cs", "Assets/Scripts/Customization/SailCustomizationStorage.cs", "Assets/Scripts/Customization/SailImageLoader.cs", "Assets/Shaders/Sail.shader"],
       "docs": ["unity.md", "blender.md"]
     },
     {

@@ -15,8 +15,10 @@ mats={}
 for name,color in palette.items():
  m=bpy.data.materials.get('Frigate_'+name) or bpy.data.materials.new('Frigate_'+name)
  m.diffuse_color=color; m.use_nodes=True
- bs=m.node_tree.nodes.get('Principled BSDF'); bs.inputs['Base Color'].default_value=color; bs.inputs['Roughness'].default_value=.7 if name not in ('Brass','Glass') else .32
- bs.inputs['Metallic'].default_value=.65 if name in ('Brass','Iron') else 0
+ bs=next((n for n in m.node_tree.nodes if n.type=='BSDF_PRINCIPLED'),None)
+ if bs:
+  bs.inputs['Base Color'].default_value=color; bs.inputs['Roughness'].default_value=.7 if name not in ('Brass','Glass') else .32
+  bs.inputs['Metallic'].default_value=.65 if name in ('Brass','Iron') else 0
  mats[name]=m
 batches=defaultdict(lambda:[[],[],[]]); collisions=[]; sails=[]
 def V(p): return (p[0],-p[2],p[1])
@@ -172,9 +174,9 @@ for name,z,top,base in [('Fore',13,28,1),('Main',-2,33,1),('Mizzen',-16,25,4.3)]
   mesh(group,verts,faces,'Canvas')
   for col in range(0,nx+1,2):
    pts=[tuple(Vector(verts[row*(nx+1)+col])+Vector((0,0,.02))) for row in range(ny+1)]
-   line(group,pts,.014,'CanvasShade',5)
-  for row in [0,ny]: line(group,[verts[row*(nx+1)+col] for col in range(nx+1)],.04,'Rope')
-  for col in [0,nx]: line(group,[verts[row*(nx+1)+col] for row in range(ny+1)],.04,'Rope')
+   line(group+'_Details',pts,.014,'CanvasShade',5)
+  for row in [0,ny]: line(group+'_Details',[verts[row*(nx+1)+col] for col in range(nx+1)],.04,'Rope')
+  for col in [0,nx]: line(group+'_Details',[verts[row*(nx+1)+col] for row in range(ny+1)],.04,'Rope')
   sails.append({'name':group,'pivot':[0,yy,z+.35]})
   for side in [-1,1]:
    tube('RunningRigging',(side*(w+.45),yy,z+.35),(side*min(width(z)-.5,5.2),4.8 if z>-12 else 7.6,z-2),.027,'Rope',6)
@@ -292,8 +294,10 @@ for name,(verts,faces,colors) in batches.items():
   mod=obj.modifiers.new('CraftedEdges','BEVEL'); mod.width=.025; mod.segments=2
 os.makedirs(OUT,exist_ok=True)
 scene.world=bpy.data.worlds.new('FrigateStudio'); scene.world.use_nodes=True
-scene.world.node_tree.nodes['Background'].inputs[0].default_value=(.07,.095,.12,1)
-scene.world.node_tree.nodes['Background'].inputs[1].default_value=.6
+bg=next((n for n in scene.world.node_tree.nodes if n.type=='BACKGROUND'),None)
+if bg:
+ bg.inputs[0].default_value=(.07,.095,.12,1)
+ bg.inputs[1].default_value=.6
 bpy.ops.object.select_all(action='DESELECT')
 for obj in scene.objects: obj.select_set(True)
 bpy.context.view_layer.objects.active=scene.objects.get('FrigateHull')
@@ -303,25 +307,43 @@ with open(OUT+'/FrigateLayout.json','w') as f: json.dump(manifest,f)
 bpy.data.libraries.write(ROOT+'/Art/Blender/Frigate/PirateFrigate.blend',{scene},fake_user=True)
 result={'objects':len(scene.objects),'polygons':sum(len(o.data.polygons) for o in scene.objects if o.type=='MESH'),'fbx':OUT+'/PirateFrigate.fbx','blend':ROOT+'/Art/Blender/Frigate/PirateFrigate.blend'}
 
-lod1_del = ['Ratlines', 'RunningRigging', 'StandingRigging', 'Deadeyes', 'Cleats', 'BarrelHoops', 'Lanterns', 'LanternGlass', 'StairRails', 'StairPosts', 'HelmWheel', 'AnchorCable', 'PennantBones', 'PennantSkull', 'PennantJaw', 'SternScrolls']
+lod1_del = [
+ 'Ratlines', 'RunningRigging', 'StandingRigging', 'Deadeyes', 'Cleats',
+ 'BarrelHoops', 'Lanterns', 'LanternGlass', 'StairRails', 'StairPosts',
+ 'HelmWheel', 'AnchorCable', 'PennantBones', 'PennantSkull', 'PennantJaw',
+ 'SternScrolls', 'HullSeams', 'HullFasteners', 'MastBands', 'BowspritBindings',
+ 'DeckCaulking', 'DeckButts', 'Forestays', '_Details'
+]
 for obj in list(scene.objects):
- if any(obj.name.startswith(x) for x in lod1_del):
+ if any(x in obj.name for x in lod1_del):
   bpy.data.objects.remove(obj, do_unlink=True)
 for obj in scene.objects:
  if obj.type == 'MESH':
-  mod = obj.modifiers.new('DecimateLOD', 'DECIMATE'); mod.ratio = 0.5
+  for m in list(obj.modifiers):
+   if m.name == 'CraftedEdges': obj.modifiers.remove(m)
+  mod = obj.modifiers.new('DecimateLOD', 'DECIMATE'); mod.ratio = 0.65
 bpy.ops.object.select_all(action='DESELECT')
 for obj in scene.objects: obj.select_set(True)
 bpy.ops.export_scene.fbx(filepath=OUT+'/PirateFrigate_LOD1.fbx',use_selection=True,object_types={'MESH','EMPTY'},axis_forward='-Z',axis_up='Y',apply_unit_scale=True,bake_space_transform=True,add_leaf_bones=False)
 
-lod2_del = ['Yards', 'NestBraces', 'NestPosts', 'NestRails', 'StairStringers', 'HoldStairsRiser', 'BridgeStairsRiser', 'Capstan', 'CapstanBars', 'Anchor', 'CargoCrates', 'Barrels', 'GunBayCheek', 'GunBayCap', 'GunBayStuds', 'BridgeFrontRail', 'BridgePosts', 'SternRail', 'SternPosts', 'MastLadder', 'LadderBrackets', 'BowspritTreads', 'BowspritBindings', 'JibInner']
+lod2_del = [
+ 'Yards', 'NestBraces', 'NestPosts', 'NestRails', 'NestFloor',
+ 'StairStringers', 'HoldStairs', 'HoldStairsRiser', 'BridgeStairs', 'BridgeStairsRiser',
+ 'StairNosing', 'HatchRails', 'HatchPosts', 'HatchEndRail', 'Capstan', 'CapstanBars',
+ 'Anchor', 'CargoCrates', 'Barrels', 'GunBayCheek', 'GunBayCap', 'GunBayStuds',
+ 'BridgeFrontRail', 'BridgePosts', 'SternRail', 'SternPosts', 'MastLadder',
+ 'LadderBrackets', 'BowspritTreads', 'BowspritWalkway', 'JibInner', 'HoldFloor',
+ 'HoldRibs', 'DeckBeams', 'SternCornice', 'SternWindows', 'WindowFrames',
+ 'CabinWindow', 'CabinFrames', 'DoorLintel', 'BulwarkSill', 'RailCap', 'RailPosts'
+]
 for obj in list(scene.objects):
  if any(obj.name.startswith(x) for x in lod2_del):
   bpy.data.objects.remove(obj, do_unlink=True)
 for obj in scene.objects:
  if obj.type == 'MESH':
   for mod in obj.modifiers:
-   if mod.name == 'DecimateLOD': mod.ratio = 0.15
+   if mod.name == 'DecimateLOD': mod.ratio = 0.22
 bpy.ops.object.select_all(action='DESELECT')
 for obj in scene.objects: obj.select_set(True)
 bpy.ops.export_scene.fbx(filepath=OUT+'/PirateFrigate_LOD2.fbx',use_selection=True,object_types={'MESH','EMPTY'},axis_forward='-Z',axis_up='Y',apply_unit_scale=True,bake_space_transform=True,add_leaf_bones=False)
+
