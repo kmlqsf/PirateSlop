@@ -53,7 +53,7 @@ public class AdvancedPlayerController : MonoBehaviour
     }
     CharacterController controller;
     Camera playerCamera;
-    float pitch, verticalVelocity, slideTimer, cooldown, lookYaw;
+    float pitch, verticalVelocity, slideTimer, cooldown, lookYaw, bodyYaw;
     Vector2 aimRecoil;
     public float AimSensitivityScale { get; set; } = 1;
     public Vector3 AimEuler => new Vector3(Mathf.Clamp(pitch-aimRecoil.x,-85,85),lookYaw+aimRecoil.y,0);
@@ -105,7 +105,7 @@ public class AdvancedPlayerController : MonoBehaviour
         ViewMotion = GetComponent<FirstPersonMotion>();
         if (ViewMotion == null) ViewMotion = gameObject.AddComponent<FirstPersonMotion>();
         modelVisibility = GetComponentsInChildren<FirstPersonModelVisibility>(true);
-        lookYaw = transform.eulerAngles.y; SetHeight(false);
+        lookYaw = transform.eulerAngles.y; bodyYaw = lookYaw; SetHeight(false);
         cameraHeight = standingHeight - .15f;
         Breath = breathSeconds;
         if (GetComponent<SwimPresentation>() == null) gameObject.AddComponent<SwimPresentation>();
@@ -117,7 +117,7 @@ public class AdvancedPlayerController : MonoBehaviour
     {
         networked = true; local = owner;
         if (playerCamera != null) { playerCamera.enabled = owner; var listener = playerCamera.GetComponent<AudioListener>(); if (listener != null) listener.enabled = owner; }
-        if (owner) { lookYaw = transform.eulerAngles.y; SetCursor(true); }
+        if (owner) { lookYaw = transform.eulerAngles.y; bodyYaw = lookYaw; SetCursor(true); }
     }
     public void LookAtPoint(Vector3 worldPoint, float speed = 14f)
     {
@@ -133,6 +133,7 @@ public class AdvancedPlayerController : MonoBehaviour
     {
         if (!local) return;
         lookYaw = Mathf.Repeat(yaw, 360f);
+        bodyYaw = lookYaw;
         pitch = Mathf.Clamp(elevation, -85f, 85f);
         aimRecoil = Vector2.zero;
         pending.Yaw = lookYaw;
@@ -182,8 +183,33 @@ public class AdvancedPlayerController : MonoBehaviour
         if (kb.escapeKey.wasPressedThisFrame) { pending.Release = true; SetCursor(false); }
         if (mouse != null && mouse.leftButton.wasPressedThisFrame && !PlayerInventory.LootWindowOpen && !PirateSlop.Networking.SessionController.MenuOpen) SetCursor(true);
         if (InputActive && ActiveCannon == null && ActiveHarpoon == null && mouse != null && (shipControls == null || !shipControls.IsDragging)) { var d = mouse.delta.ReadValue() * mouseSensitivity * AimSensitivityScale; lookYaw = Mathf.Repeat(lookYaw + d.x, 360f); pitch = Mathf.Clamp(pitch - d.y, -85f, 85f); }
-        pending.Move = InputActive ? Vector2.ClampMagnitude(new Vector2((kb.dKey.isPressed || kb.rightArrowKey.isPressed ? 1 : 0) - (kb.aKey.isPressed || kb.leftArrowKey.isPressed ? 1 : 0), (kb.wKey.isPressed || kb.upArrowKey.isPressed ? 1 : 0) - (kb.sKey.isPressed || kb.downArrowKey.isPressed ? 1 : 0)), 1) : Vector2.zero;
-        pending.Yaw = lookYaw;
+        if (IsThirdPerson && mouse != null)
+        {
+            float scroll = mouse.scroll.ReadValue().y;
+            if (Mathf.Abs(scroll) > 0.01f) thirdPersonDistance = Mathf.Clamp(thirdPersonDistance - Mathf.Sign(scroll) * 0.5f, 1.2f, 6f);
+        }
+        var rawMove = InputActive ? Vector2.ClampMagnitude(new Vector2((kb.dKey.isPressed || kb.rightArrowKey.isPressed ? 1 : 0) - (kb.aKey.isPressed || kb.leftArrowKey.isPressed ? 1 : 0), (kb.wKey.isPressed || kb.upArrowKey.isPressed ? 1 : 0) - (kb.sKey.isPressed || kb.downArrowKey.isPressed ? 1 : 0)), 1) : Vector2.zero;
+        if (IsThirdPerson)
+        {
+            if (rawMove.sqrMagnitude > 0.001f)
+            {
+                var camForward = Quaternion.Euler(0, lookYaw, 0) * Vector3.forward;
+                var camRight = Quaternion.Euler(0, lookYaw, 0) * Vector3.right;
+                var moveWorld = camRight * rawMove.x + camForward * rawMove.y;
+                float moveAngle = Mathf.Atan2(moveWorld.x, moveWorld.z) * Mathf.Rad2Deg;
+                bodyYaw = Mathf.MoveTowardsAngle(bodyYaw, moveAngle, 720f * Time.deltaTime);
+                var localMove = Quaternion.Euler(0, -bodyYaw, 0) * moveWorld;
+                pending.Move = new Vector2(localMove.x, localMove.z);
+            }
+            else pending.Move = Vector2.zero;
+            pending.Yaw = bodyYaw;
+        }
+        else
+        {
+            bodyYaw = lookYaw;
+            pending.Move = rawMove;
+            pending.Yaw = lookYaw;
+        }
         pending.Pitch = pitch;
         pending.Rise = InputActive && kb.spaceKey.isPressed;
         pending.Sprint = InputActive && (kb.leftShiftKey.isPressed || kb.rightShiftKey.isPressed);
@@ -260,6 +286,8 @@ public class AdvancedPlayerController : MonoBehaviour
     public void SetThirdPerson(bool value)
     {
         if (!local) return;
+        if (value && !IsThirdPerson) bodyYaw = transform.eulerAngles.y;
+        else if (!value && IsThirdPerson) lookYaw = bodyYaw;
         IsThirdPerson = value;
         foreach (var visibility in modelVisibility) visibility.SetFirstPerson(!value);
     }
@@ -267,7 +295,7 @@ public class AdvancedPlayerController : MonoBehaviour
     {
         var result = pending; pending.Jump = pending.Slide = pending.Use = pending.Release = false; return result;
     }
-    public void AddPlatformYaw(float delta) { if (local) lookYaw = Mathf.Repeat(lookYaw + delta, 360); }
+    public void AddPlatformYaw(float delta) { if (local) { lookYaw = Mathf.Repeat(lookYaw + delta, 360); bodyYaw = Mathf.Repeat(bodyYaw + delta, 360); } }
     public void Simulate(PlayerCommand command, float dt)
     {
         if (IsDead) { jumpBuffer = groundGrace = 0f; return; }

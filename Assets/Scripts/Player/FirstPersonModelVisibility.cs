@@ -23,7 +23,7 @@ namespace PirateSlop
         void BeforeCamera(ScriptableRenderContext context, Camera camera)
         {
             Restore();
-            if (camera != ownerCamera || !firstPerson) return;
+            if (camera != ownerCamera || !firstPerson || renderers == null) return;
             for (int i = 0; i < renderers.Length; i++)
             {
                 if (renderers[i] == null) continue;
@@ -35,7 +35,7 @@ namespace PirateSlop
         void AfterCamera(ScriptableRenderContext context, Camera camera) => Restore();
         void Restore()
         {
-            if (!hidden) return;
+            if (!hidden || renderers == null) return;
             for (int i = 0; i < renderers.Length; i++)
                 if (renderers[i] != null) renderers[i].shadowCastingMode = savedModes[i];
             hidden = false;
