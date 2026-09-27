@@ -18,9 +18,11 @@ namespace PirateSlop
         public static AudioListener FindListener()
         {
             if (cachedListener != null && cachedListener.isActiveAndEnabled) return cachedListener;
-            if (Time.unscaledTime < listenerCheckTime) return cachedListener;
+            if (cachedListener == null && Time.unscaledTime < listenerCheckTime) return null;
             listenerCheckTime = Time.unscaledTime + 1f;
-            cachedListener = Object.FindAnyObjectByType<AudioListener>();
+            cachedListener = null;
+            foreach (var candidate in Object.FindObjectsByType<AudioListener>(FindObjectsSortMode.None))
+                if (candidate.isActiveAndEnabled) { cachedListener = candidate; break; }
             return cachedListener;
         }
 

@@ -19,20 +19,20 @@ namespace PirateSlop.Networking
             var gun = HarpoonMount != null ? HarpoonMount.GetGun(index) : null;
             if (gun == null) return;
             var player = sender != null ? SessionController.Instance.GetPlayer(sender.ClientId) : null;
-            if (player == null || player.Motor.IsDead) return;
+            if (player == null || take && player.Motor.IsDead) return;
 
             if (take)
             {
                 if (gun.IsBroken || !gun.StructurallyAvailable || (gun.Operator != null && gun.Operator != player.Motor))
                     return;
-                gun.TakeControl(player.Motor);
+                if (!gun.TakeControl(player.Motor)) return;
                 HarpoonOccupantObserversRpc(index, player.NetworkObject);
             }
             else
             {
                 if (gun.Operator == player.Motor)
                 {
-                    gun.ReleaseControl();
+                    gun.ReleaseControl(false);
                     HarpoonOccupantObserversRpc(index, null);
                 }
             }

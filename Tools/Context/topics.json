@@ -108,6 +108,126 @@
       "notes": ["SessionController разделён на partial-файлы меню. Различать меню сессии и игровой HUD.", "Сохранённое оформление меню и его runtime-поведение имеют разные точки входа."],
       "files": ["Assets/Scripts/Networking/SessionMenu.cs", "Assets/Scripts/Networking/SessionPartyMenu.cs", "Assets/Scripts/UI/PlayerHud.cs", "Assets/Scripts/UI/PirateHudStyle.cs", "Assets/Scripts/UI/HudLayout.cs", "Assets/Scripts/Player/MenuBackdrop.cs", "Assets/Scripts/Editor/MenuPresentationSetup.cs"],
       "docs": ["unity.md", "qol-roadmap.md"]
+    },
+    {
+      "id": "storm",
+      "title": "Шторм, зона и объёмный туман",
+      "aliases": [
+        "шторм",
+        "зона",
+        "туман",
+        "fog",
+        "brzone"
+      ],
+      "notes": [
+        "Логика зоны и её сетевое состояние находятся в StormZone и SessionStorm; визуал объёмного шторма — в BRZoneVolumetric.",
+        "В каталоге Assets/Game также есть BRZoneV2, BRZoneV3 и BRZoneFinal. Наличие нескольких вариантов не означает, что все подключены: проверять ссылки только нужной сцены/префаба."
+      ],
+      "files": [
+        "Assets/Scripts/World/StormZone.cs",
+        "Assets/Scripts/Networking/SessionStorm.cs",
+        "Assets/Scripts/World/StormWeather.cs",
+        "Assets/Game/BRZoneVolumetric/StormVolumeController.cs",
+        "Assets/Game/BRZoneVolumetric/SeaMistRendererFeature.cs",
+        "Assets/Game/BRZoneVolumetric/SeaMist.mat"
+      ],
+      "docs": []
+    },
+    {
+      "id": "harpoon",
+      "title": "Гарпун и корабельное крепление",
+      "aliases": [
+        "гарпун"
+      ],
+      "notes": [
+        "Наведение, выстрел, трос и прочность установки — HarpoonGun; снаряд и цель зацепления вынесены отдельно. Сетевая часть корабля — NetworkShip.Harpoon."
+      ],
+      "files": [
+        "Assets/Scripts/Harpoon/HarpoonGun.cs",
+        "Assets/Scripts/Harpoon/HarpoonProjectile.cs",
+        "Assets/Scripts/Harpoon/HarpoonHookTarget.cs",
+        "Assets/Scripts/Harpoon/HarpoonShipMount.cs",
+        "Assets/Scripts/Networking/NetworkShip.Harpoon.cs"
+      ],
+      "docs": []
+    },
+    {
+      "id": "kraken",
+      "title": "Кракен и щупальца",
+      "aliases": [
+        "кракен",
+        "щупальца"
+      ],
+      "notes": [
+        "KrakenEncounterManager отслеживает стоянку корабля и управляет встречей; для сетевого корабля обновление ограничено сервером. Атаки, щупальца и их анимация разделены по файлам."
+      ],
+      "files": [
+        "Assets/Scripts/Kraken/KrakenEncounterManager.cs",
+        "Assets/Scripts/Kraken/KrakenEncounter.cs",
+        "Assets/Scripts/Kraken/KrakenAttackSystem.cs",
+        "Assets/Scripts/Kraken/KrakenTentacle.cs",
+        "Assets/Scripts/Kraken/TentacleAnimator.cs",
+        "Assets/Scripts/Networking/NetworkShip.Kraken.cs"
+      ],
+      "docs": []
+    },
+    {
+      "id": "whale",
+      "title": "Кит — точка интереса и сундук",
+      "aliases": [
+        "кит",
+        "poi"
+      ],
+      "notes": [
+        "WhaleLootPoint хранит состояния Idle, Agitated, Diving, Cleared и таймер испытания. Гарпуны, сундук и знак вынесены в отдельные компоненты. Наличие кода не подтверждает игровую или сетевую приёмку."
+      ],
+      "files": [
+        "Assets/Scripts/WhalePOI/WhaleLootPoint.cs",
+        "Assets/Scripts/WhalePOI/WhaleChest.cs",
+        "Assets/Scripts/WhalePOI/WhaleHarpoonPin.cs",
+        "Assets/Scripts/WhalePOI/WhaleYellowSign.cs"
+      ],
+      "docs": []
+    },
+    {
+      "id": "fishing",
+      "title": "Рыбалка и рыба",
+      "aliases": [
+        "рыбалка",
+        "рыба"
+      ],
+      "notes": [
+        "Рыбалка — NetworkFishing; предмет рыбы и его полёт — NetworkFish и NetworkFishProjectile. Использование рыбы как метательного предмета находится в NetworkWeapon.FishThrows."
+      ],
+      "files": [
+        "Assets/Scripts/Networking/NetworkFishing.cs",
+        "Assets/Scripts/Networking/NetworkFish.cs",
+        "Assets/Scripts/Networking/NetworkFishProjectile.cs",
+        "Assets/Scripts/Networking/NetworkWeapon.FishThrows.cs",
+        "Assets/Scripts/Player/FishingRodBend.cs",
+        "Assets/Scripts/Editor/FishingSetup.cs"
+      ],
+      "docs": []
+    },
+    {
+      "id": "test-gallery",
+      "title": "Тестовая карта и водоворот",
+      "aliases": [
+        "тестовая карта",
+        "галерея",
+        "водоворот",
+        "whirlpool"
+      ],
+      "notes": [
+        "Точка входа тестовой карты — EnvironmentTestGallery, подготовка — EnvironmentTestSetup. Водоворот имеет отдельные файлы поведения и визуала; не путать этот режим со старой SampleScene."
+      ],
+      "files": [
+        "Assets/Scripts/World/EnvironmentTestGallery.cs",
+        "Assets/Scripts/Editor/EnvironmentTestSetup.cs",
+        "Assets/Scripts/World/WhirlpoolTest.cs",
+        "Assets/Scripts/World/WhirlpoolVFX.cs"
+      ],
+      "docs": []
     }
   ]
 }

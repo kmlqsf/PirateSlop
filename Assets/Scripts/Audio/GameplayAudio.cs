@@ -79,11 +79,11 @@ namespace PirateSlop
         {
             if (player != null)
             {
-                bool local = player.PlayerCamera != null && player.PlayerCamera.enabled;
+                bool local = player.IsLocal && player.PlayerCamera != null && (player.PlayerCamera.enabled || player.ActiveParrot != null);
                 if (local)
                 {
                     var passenger = GetComponent<ShipDeckPassenger>();
-                    var platform = passenger != null && passenger.Ship != null ? passenger.Ship.GetComponent<ShipController>() : null;
+                    var platform = player.ActiveParrot == null && passenger != null && passenger.Ship != null ? passenger.Ship.GetComponent<ShipController>() : null;
                     var flooding = platform != null ? platform.GetComponent<ShipFlooding>() : null;
                     GameAudio.Ambience(platform != null ? platform.Speed / Mathf.Max(.01f, platform.MaxSpeed) : 0f, platform != null, flooding != null ? flooding.Level : 0f);
                 }

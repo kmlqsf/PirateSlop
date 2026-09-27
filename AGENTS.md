@@ -16,9 +16,11 @@
 
 Для короткого отчёта по конкретному объекту или префабу Unity используй `PirateSlop.Editor.FocusedInspector` через рабочий Unity MCP. Инструкция и примеры: `Tools/Context/inspector.md`. Начинай с одного объекта и фильтра компонента; отчёт не подтверждает игровой приёмки.
 
-Перед выполнением задачи запусти `./Tools/Context/context.ps1 <тема>` из корня репозитория; без темы выводится обзор, `-List` показывает темы и русские синонимы. Скрипт также работает по абсолютному пути из любой папки. Используй одну или несколько тем, непосредственно относящихся к задаче.
-Загрузчик заменяет обязательное полное чтение `project.md` и `unity.md`: история сохранена, но не нужна для каждой задачи. Читай указанные в отчёте исходники и разделы документов только по необходимости. Для моделирования прочитай `blender.md`; для передачи модели в Unity также применимые правила импорта из `unity.md`.
-Если загрузчик недоступен или тема не покрыта, прочитай необходимые разделы `project.md` и профильного документа. Не считай карту путей или исторические записи доказательством состояния живой сцены. При переименовании файла обнови затронутую запись в `Tools/Context/topics.json`.
+Перед выполнением задачи прочитай `lessons.md` и [PROJECT_MAP.md](PROJECT_MAP.md). Это основной справочник путей и систем проекта для каждого нового чата. Сначала выбери раздел механики, затем при необходимости открой связанный каталог `Docs/ProjectMap/*.md` и читай только нужные исходники по точным путям. Поиск внутри карты разрешён; обзор папок и поиск файлов по всему проекту по умолчанию не выполнять.
+
+Карта заменяет обязательный запуск загрузчика и полное чтение `project.md`/`unity.md`. Исторические и профильные документы читать по необходимости; для моделирования также `blender.md`, для импорта — применимые правила `unity.md`. `Tools/Context/context.ps1 <тема>` остаётся необязательным помощником, когда нужны актуальные значения сохранённых конфигов.
+
+При добавлении, удалении, переименовании файлов или изменении назначения механики обнови соответствующую тему в `Tools/Context/topics.json` и пересобери карту командой `python Tools/Context/update_project_map.py`. Не пересобирай её при каждом новом чате. Если путь отсутствует, проверь конкретный путь; если карта и ссылки не помогают, запроси разрешение на ограниченный поиск. Наличие файла не доказывает подключение к живой сцене.
 
 Документация и ответы пользователю — по-русски; код, имена файлов и объектов — по-английски.
 Выполняй задачу до сохранённого результата, пригодного для ручной проверки, в пределах доступных инструментов. Не заявляй об успешной проверке без фактического выполнения.
@@ -71,5 +73,5 @@ These preferences supersede conflicting earlier style and context-reading requir
 - When only part of a file changes, use a diff or the changed method/block. Never output the entire existing script or class for a partial change. In displayed snippets only, omitted code may be represented by `// ... existing code ...`; never replace real file contents with placeholders.
 - Do not generate code comments or XML documentation, including summary tags. The omission marker above is only for displayed excerpts.
 - Read only files directly needed for the current change. Do not scan folders or read adjacent classes merely for context. Read a dependency only when it directly affects the change; avoid repeating already-read instructions.
-- If the exact file path is unknown, ask the user for it instead of searching across the project.
+- If the exact file path is unknown, consult PROJECT_MAP.md and its linked catalogs first. If still unresolved, ask for the path or permission for a scoped search instead of searching across the project.
 - Continue making the actual requested edits; a code-only response preference does not replace performing the task. Keep any required progress or completion messages minimal.
