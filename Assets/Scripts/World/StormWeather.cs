@@ -15,6 +15,7 @@ namespace PirateSlop.World
         ParticleSystem rain;
         AudioSource rainfall;
         AudioClip rainClip;
+        GameAudioBank audioBank;
         float intensity, wetness, exposure = 1, shelterAt;
         float sprayAt;
         int spraySample;
@@ -29,6 +30,7 @@ namespace PirateSlop.World
 
         void Start()
         {
+            audioBank = Resources.Load<GameAudioBank>("GameAudioBank");
             atmosphere = new Material(Resources.Load<Shader>("StormWeather"));
             rainMaterial = new Material(Resources.Load<Shader>("StormRain"));
             screenMesh = new Mesh { name = "StormWeatherScreen" };
@@ -137,7 +139,7 @@ namespace PirateSlop.World
             emission.rateOverTime = rainAmount * 3200 * gust;
             var velocity = rain.velocityOverLifetime;
             velocity.x = 12 * gust; velocity.z = 5 + Mathf.Sin(Time.time * .17f) * 2;
-            rainfall.volume = volume * rainAmount * Mathf.Lerp(.15f, .65f, exposure) * gust;
+            rainfall.volume = volume * (audioBank != null ? audioBank.RainLevel : 1f) * rainAmount * Mathf.Lerp(.15f, .65f, exposure) * gust;
             rainfall.pitch = .92f + gust * .1f;
             if (!underwater && exposure > .5f && intensity > .45f && camera.transform.position.y - sea < 22f && Time.time >= sprayAt)
             {

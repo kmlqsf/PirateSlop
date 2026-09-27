@@ -100,7 +100,7 @@
     {
       "id": "audio", "title": "Звуки и голос", "aliases": ["звук", "звуки", "голос", "voice"],
       "notes": ["Назначения звуков хранить в существующем GameAudioBank. Источники и лицензии проверять в CREDITS.", "Голосовой чат — отдельная система от игровых звуков."],
-      "files": ["Assets/Scripts/Audio/GameAudio.cs", "Assets/Scripts/Audio/GameAudioBank.cs", "Assets/Scripts/Audio/GameplayAudio.cs", "Assets/Scripts/Audio/PirateVoiceChat.cs", "Assets/Scripts/Networking/NetworkPlayer.Voice.cs", "Assets/Resources/GameAudioBank.asset"],
+      "files": ["Assets/Scripts/Audio/GameAudio.cs", "Assets/Scripts/Audio/GameAudioBank.cs", "Assets/Scripts/Audio/GameplayAudio.cs", "Assets/Scripts/Audio/PirateVoiceChat.cs", "Assets/Scripts/Networking/NetworkPlayer.Voice.cs", "Assets/Scripts/World/StormWeather.cs", "Assets/Scripts/Editor/AudioBankWindow.cs", "Assets/Resources/GameAudioBank.asset"],
       "docs": ["AudioIntegration.md", "Assets/Audio/CREDITS.md"]
     },
     {

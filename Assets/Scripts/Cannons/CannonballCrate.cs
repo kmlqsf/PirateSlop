@@ -24,6 +24,7 @@ namespace PirateSlop
         public ShipController Ship => GetComponentInParent<ShipController>();
         public NetworkCannon Network => Ship != null ? Ship.GetComponent<NetworkCannon>() : null;
         public bool KitAvailable => Kit != null && Kit.activeSelf;
+        bool supplyInitialized;
 
         void Start()
         {
@@ -32,6 +33,8 @@ namespace PirateSlop
 
         public void ResetSupply()
         {
+            if (supplyInitialized) GameAudio.Play(SoundCue.CannonballDispense, SpawnPoint.position);
+            supplyInitialized = true;
             Supply.Loaded = Supply.Held = false;
             Supply.Ammo = InventoryItem.Cannonball;
             Supply.Body.isKinematic = true;

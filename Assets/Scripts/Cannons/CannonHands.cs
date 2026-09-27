@@ -90,6 +90,9 @@ namespace PirateSlop
         float nextHeldSync, nextLoadRequest;
         GameObject selectedVisual;
         PirateSlop.Networking.InventoryItem visibleItem = PirateSlop.Networking.InventoryItem.None;
+        AudioSource heldAmmoAudio;
+        GameAudioBank heldAudioBank;
+        SoundCue heldAudioCue = (SoundCue)(-1);
         public bool HasHeldBall => held != null;
         public Cannonball HeldBall => held;
         public bool CanPickUpBall()
@@ -103,7 +106,31 @@ namespace PirateSlop
             return ball != null && !ball.Loaded;
         }
         void Awake() { if (GetComponent<CannonDismantle>() == null) gameObject.AddComponent<CannonDismantle>(); player = GetComponent<AdvancedPlayerController>(); inventory = GetComponent<PlayerInventory>(); controls = GetComponent<DirectShipControls>(); }
-        void OnDisable() { LeaveCannon(); Drop(); if (selectedVisual != null) selectedVisual.SetActive(false); }
+        void OnDisable() { LeaveCannon(); Drop(); if (selectedVisual != null) selectedVisual.SetActive(false); if (heldAmmoAudio != null) heldAmmoAudio.Stop(); heldAudioCue = (SoundCue)(-1); }
+        void UpdateHeldAmmoAudio()
+        {
+            var item = held != null ? held.CurrentAmmo : selectedVisual != null && selectedVisual.activeSelf && inventory != null ? inventory.BallItem(inventory.SelectedSlot) : PirateSlop.Networking.InventoryItem.None;
+            SoundCue cue = item == PirateSlop.Networking.InventoryItem.FireCannonball ? SoundCue.FireCannonballHeld :
+                item == PirateSlop.Networking.InventoryItem.IceCannonball ? SoundCue.IceCannonballHeld :
+                item == PirateSlop.Networking.InventoryItem.PushCannonball ? SoundCue.PushCannonballHeld : (SoundCue)(-1);
+            if (cue != heldAudioCue)
+            {
+                heldAudioCue = cue;
+                if (heldAmmoAudio != null) heldAmmoAudio.Stop();
+                if ((int)cue < 0) return;
+                if (heldAudioBank == null) heldAudioBank = Resources.Load<GameAudioBank>("GameAudioBank");
+                if (heldAudioBank == null || heldAudioBank.Entries == null) return;
+                foreach (var entry in heldAudioBank.Entries)
+                {
+                    if (entry == null || entry.Cue != cue || entry.Clips == null || entry.Clips.Length == 0 || entry.Clips[0] == null) continue;
+                    if (heldAmmoAudio == null) { heldAmmoAudio = gameObject.AddComponent<AudioSource>(); heldAmmoAudio.playOnAwake = false; heldAmmoAudio.loop = true; heldAmmoAudio.spatialBlend = 0f; }
+                    heldAmmoAudio.clip = entry.Clips[0];
+                    heldAmmoAudio.volume = entry.Volume * heldAudioBank.Master * heldAudioBank.Effects;
+                    heldAmmoAudio.Play();
+                    return;
+                }
+            }
+        }
         void OnDestroy() { if (selectedVisual != null) Destroy(selectedVisual); }
         void UpdateSelectedVisual()
         {
@@ -141,6 +168,7 @@ namespace PirateSlop
         {
             if (held != null)
             {
+                held.ArmManualDropAudio();
                 held.Held = false;
                 held.GetComponent<Collider>().enabled = true;
                 var loose = held.GetComponent<PirateSlop.Networking.NetworkLooseCannonball>();
@@ -158,6 +186,7 @@ namespace PirateSlop
         public void PresentHands()
         {
             UpdateSelectedVisual();
+            UpdateHeldAmmoAudio();
             aimed = null;
             if (inventory != null && (inventory.RodSelected || inventory.HandsOccupied)) { Drop(); return; }
             if (held != null && !held.Held) held = null;

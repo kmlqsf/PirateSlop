@@ -94,8 +94,11 @@ MonoBehaviour:
     Distance: 15
   - Cue: 13
     Clips:
-    - {fileID: 8300000, guid: c9f38f9b052d43c8a7c4b8073bdaae84, type: 3}
-    Volume: 0.32
+    - {fileID: 8300000, guid: b659dd13ebfb4244fa61447c3deaa4ad, type: 3}
+    - {fileID: 8300000, guid: f8cc04c83249eae49862075f85390ac3, type: 3}
+    - {fileID: 8300000, guid: 9e11f6ee13dfd8641bbda0ed95c848f5, type: 3}
+    - {fileID: 8300000, guid: 745fe02fa8a4c7d45b2878e2897f5a60, type: 3}
+    Volume: 0.604
     Distance: 18
   - Cue: 14
     Clips:
@@ -160,9 +163,10 @@ MonoBehaviour:
     Distance: 100
   - Cue: 25
     Clips:
-    - {fileID: 8300000, guid: 736df4269b690db44bc181e4f6d7eb1d, type: 3}
-    - {fileID: 8300000, guid: f12214b5dc33b654aa28a3285f021c74, type: 3}
-    - {fileID: 8300000, guid: 0978c69aea6b3b14e8e2b4d6965486a1, type: 3}
+    - {fileID: 8300000, guid: 5a2f15005f9b6a6419bf889af9b67daf, type: 3}
+    - {fileID: 8300000, guid: c38c161ad5ba7df4d8c41d68be968723, type: 3}
+    - {fileID: 8300000, guid: e87a42e7faae1b44a8d1203d5f749311, type: 3}
+    - {fileID: 8300000, guid: de6f3554e4ff6b44d98df9e1bf9bd2a6, type: 3}
     Volume: 0.3
     Distance: 35
   - Cue: 26
@@ -363,15 +367,96 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 532a4187db6d00e49b98f3b1e61ed9b4, type: 3}
     Volume: 0.8
     Distance: 40
-  Ocean: {fileID: 8300000, guid: 9de2f318560bc8c4ab5e9ec56e309527, type: 3}
-  Wind: {fileID: 8300000, guid: bbfaea3b5e9fb3a438dc9716b12d1004, type: 3}
-  DeckCreaks: {fileID: 8300000, guid: d01c9dd399e8b414c959557529004362, type: 3}
-  Storm: {fileID: 8300000, guid: e80fba1eea75cc8479d4415448245cab, type: 3}
+  - Cue: 62
+    Clips:
+    - {fileID: 8300000, guid: 9a065c652ee8f554cbe8ddb817913820, type: 3}
+    - {fileID: 8300000, guid: aaa579e0608e67241a1cd9f438cbeff4, type: 3}
+    - {fileID: 8300000, guid: 43a8c962aa123474ea83ce34f2308c67, type: 3}
+    - {fileID: 8300000, guid: 6a265c8d1610429429c0c4b483553db9, type: 3}
+    - {fileID: 8300000, guid: d590674ea548def42a28f58462bce5bb, type: 3}
+    - {fileID: 8300000, guid: ff503e4c8892a0e4c9224e5aee1fd3dd, type: 3}
+    - {fileID: 8300000, guid: 36847b3eb2b0acd44b3e63a7b8943163, type: 3}
+    - {fileID: 8300000, guid: 47928c37e3d44da4a951c06edba9bb1e, type: 3}
+    - {fileID: 8300000, guid: 2a5c8579a232a564c926b762319f96f0, type: 3}
+    - {fileID: 8300000, guid: 0945d0ac3241286449050c8663bbcc18, type: 3}
+    Volume: 0.18
+    Distance: 20
+  - Cue: 63
+    Clips:
+    - {fileID: 8300000, guid: e87a42e7faae1b44a8d1203d5f749311, type: 3}
+    - {fileID: 8300000, guid: de6f3554e4ff6b44d98df9e1bf9bd2a6, type: 3}
+    Volume: 0.777
+    Distance: 18
+  - Cue: 64
+    Clips:
+    - {fileID: 8300000, guid: ec8d27f106ccf7848aa88b59334eb8c3, type: 3}
+    Volume: 0.4
+    Distance: 35
+  - Cue: 65
+    Clips:
+    - {fileID: 8300000, guid: b973fec5d7be79243886f7c9bd770ad3, type: 3}
+    Volume: 0.5
+    Distance: 25
+  - Cue: 66
+    Clips:
+    - {fileID: 8300000, guid: e180869159b71c447997349a791adb3c, type: 3}
+    - {fileID: 8300000, guid: d49f17e8e856f4446a084ddf30e4ecbb, type: 3}
+    - {fileID: 8300000, guid: 68cee0f3a4e82ad4c8ff31b68d85c854, type: 3}
+    - {fileID: 8300000, guid: 4505b00cbe2e8d647bd4687a6a27a040, type: 3}
+    - {fileID: 8300000, guid: b18ef2d86594fe64cb6b4cfbcef94cdb, type: 3}
+    - {fileID: 8300000, guid: eaa69e23d00326b42bf4aff67540c702, type: 3}
+    - {fileID: 8300000, guid: f7cbf02ff64fb2549896a97edc193517, type: 3}
+    - {fileID: 8300000, guid: bd936285505b9b047bdbc3e4237f4f09, type: 3}
+    - {fileID: 8300000, guid: de88b386ea1ad65449cee0062a804f68, type: 3}
+    - {fileID: 8300000, guid: 97255d7ad5c3a6841b9f79fe27a586d8, type: 3}
+    - {fileID: 8300000, guid: 0b5f0e9e3da54054daebf2994fc73e11, type: 3}
+    - {fileID: 8300000, guid: 89a78033746745d46bbed7066e8314f7, type: 3}
+    Volume: 0.3
+    Distance: 25
+  - Cue: 67
+    Clips:
+    - {fileID: 8300000, guid: 96c3adb425f2c2c4992403ff426ca9b6, type: 3}
+    Volume: 0.5
+    Distance: 30
+  - Cue: 68
+    Clips:
+    - {fileID: 8300000, guid: 913ab5c6e5f6d104e82cec4f3456307f, type: 3}
+    Volume: 0.24
+    Distance: 6
+  - Cue: 69
+    Clips:
+    - {fileID: 8300000, guid: b726fdaf559ed974284283fe3450f43c, type: 3}
+    Volume: 0.24
+    Distance: 6
+  - Cue: 70
+    Clips:
+    - {fileID: 8300000, guid: 0e824abd63429414d96d302323b756b5, type: 3}
+    Volume: 0.24
+    Distance: 6
+  Ocean: {fileID: 8300000, guid: 385ddaa5ad1a27148a313c3f3ac90d8b, type: 3}
+  Wind: {fileID: 8300000, guid: 78aafbe2a5d44ac499fd27fe5bdf180f, type: 3}
+  DeckCreaks: {fileID: 0}
+  Storm: {fileID: 8300000, guid: c637634fabb0fee4f901013efe59c92a, type: 3}
+  StormThunder:
+  - {fileID: 8300000, guid: 0c559706751bc6140baaa2379e58ad44, type: 3}
+  - {fileID: 8300000, guid: 1221b879dc58b6142a974b38d64f2e9f, type: 3}
+  - {fileID: 8300000, guid: 9cd5fd44a2039b145a63012fcdd71797, type: 3}
   MainMenuMusic: {fileID: 8300000, guid: 2d390a2a573ed8947879498cc76fdf74, type: 3}
   SailingMusic: {fileID: 8300000, guid: e382a826b2ed79a4a8326183c9f1ea47, type: 3}
   CombatMusic: {fileID: 8300000, guid: 5c91f6305a2df524b9176378e9fa0a40, type: 3}
-  Master: 0.8
+  Master: 0.41348243
   Effects: 0.8
   Ambience: 0.25
   Interface: 0.45
-  Music: 0.2
+  Music: 0
+  OceanLevel: 0.7
+  WindLevel: 1.522
+  DeckLevel: 1
+  StormLevel: 1.26
+  ThunderLevel: 0.63
+  RainLevel: 1
+  UnderwaterLevel: 1
+  FloodingLevel: 1
+  MainMenuMusicLevel: 1
+  SailingMusicLevel: 1
+  CombatMusicLevel: 1

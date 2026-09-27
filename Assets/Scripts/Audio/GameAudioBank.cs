@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace PirateSlop
 {
-    public enum SoundCue { Pistol, Cannon, Knife, Reload, ReloadReady, DryFire, Footstep, Jump, Land, Slide, Hurt, Death, Respawn, Wheel, Sail, Barrel, Load, Pickup, Place, Select, Impact, ShipHit, ShipDeath, ShipCollision, Splash, Creak, FishingCast, FishingBite, FishingReel, FishingCatch, FishDrop, FishEat, FishingEscape, HitConfirm, Musket, DoubleBarrel, BulletWood, BulletMetal, BulletStone, BulletFlesh, HookThrow, HookTension, HookRelease, FootstepWood, FootstepWoodRun, FootstepStone, ChestOpen, ChestClose, SwordEquip, SwordSheathe, BottleOpen, BottleClose, WaterSplash, PufferThrow, PufferBurst, SwordfishThrow, SwordfishStick, ShipBell, PufferWarning, UnderwaterBubbles, AirWarning, HolyFlash }
+    public enum SoundCue { Pistol, Cannon, Knife, Reload, ReloadReady, DryFire, Footstep, Jump, Land, Slide, Hurt, Death, Respawn, Wheel, Sail, Barrel, Load, Pickup, Place, Select, Impact, ShipHit, ShipDeath, ShipCollision, Splash, Creak, FishingCast, FishingBite, FishingReel, FishingCatch, FishDrop, FishEat, FishingEscape, HitConfirm, Musket, DoubleBarrel, BulletWood, BulletMetal, BulletStone, BulletFlesh, HookThrow, HookTension, HookRelease, FootstepWood, FootstepWoodRun, FootstepStone, ChestOpen, ChestClose, SwordEquip, SwordSheathe, BottleOpen, BottleClose, WaterSplash, PufferThrow, PufferBurst, SwordfishThrow, SwordfishStick, ShipBell, PufferWarning, UnderwaterBubbles, AirWarning, HolyFlash, WheelReverseRope, WheelIdleLeather, CannonFuse, CannonballDispense, CannonballRoll, CannonballDrop, FireCannonballHeld, IceCannonballHeld, PushCannonballHeld }
 
     [CreateAssetMenu(menuName = "PirateSlop/Audio Bank")]
     public sealed class GameAudioBank : ScriptableObject
@@ -17,7 +17,11 @@ namespace PirateSlop
         }
         public Entry[] Entries;
         public AudioClip Ocean, Wind, DeckCreaks, Storm;
+        public AudioClip[] StormThunder;
         public AudioClip MainMenuMusic, SailingMusic, CombatMusic;
         [Range(0f, 1f)] public float Master = .8f, Effects = .8f, Ambience = .25f, Interface = .45f, Music = .2f;
+        [Range(0f, 2f)] public float OceanLevel = .7f, WindLevel = 1f, DeckLevel = 1f, StormLevel = 1.26f, ThunderLevel = .63f, RainLevel = 1f;
+        [Range(0f, 2f)] public float UnderwaterLevel = 1f, FloodingLevel = 1f;
+        [Range(0f, 2f)] public float MainMenuMusicLevel = 1f, SailingMusicLevel = 1f, CombatMusicLevel = 1f;
     }
 }

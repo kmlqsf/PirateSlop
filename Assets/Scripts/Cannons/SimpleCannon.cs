@@ -77,6 +77,7 @@ namespace PirateSlop
         public float FuseSeconds => fuseDuration;
         float ignitionTime = -1f;
         float visibleFuse = -1f;
+        AudioSource fuseAudio;
         LineRenderer fuse;
         Transform ember;
         ParticleSystem sparks;
@@ -342,7 +343,10 @@ namespace PirateSlop
         }
         public void ShowFuse(float progress)
         {
+            bool wasBurning = visibleFuse >= 0f;
             visibleFuse = progress;
+            if (progress >= 0f && !wasBurning) GameAudio.Attached(ref fuseAudio, SoundCue.CannonFuse, Breech != null ? Breech : transform);
+            if (progress < 0f && fuseAudio != null) fuseAudio.Stop();
             if (fuse == null && progress < 0f) return;
             CreateFuse();
             if (fuse == null) return;
@@ -358,7 +362,7 @@ namespace PirateSlop
             fuseLight.intensity = 1.4f + Mathf.Sin(Time.time * 47f) * .4f;
             if (!sparks.isPlaying) sparks.Play();
         }
-        void OnDisable() { active.Remove(this); ReleaseControl(); }
+        void OnDisable() { if (fuseAudio != null) fuseAudio.Stop(); active.Remove(this); ReleaseControl(); }
         void OnDestroy()
         {
             if (ropeMaterial != null) Destroy(ropeMaterial);

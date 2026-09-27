@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Rendering;
+using System.Collections;
 
 namespace PirateSlop
 {
@@ -151,6 +152,19 @@ namespace PirateSlop
             flashStarted = Time.time;
             flashDuration = .5f + Next01() * .2f;
             showBolts = Next01() < BoltChance;
+            if (viewer != null)
+            {
+                float distance = Vector3.Distance(viewer.transform.position, flashPosition);
+                StartCoroutine(PlayThunderAfterDelay(flashPosition, Mathf.Clamp(distance / 343f, .08f, 4f)));
+            }
+        }
+
+        IEnumerator PlayThunderAfterDelay(Vector3 position, float delay)
+        {
+            yield return new WaitForSeconds(delay);
+            var storm = StormVolumeController.Instance;
+            if (viewer != null && storm != null && storm.Ready)
+                GameAudio.StormThunder(position, GameAudio.StormProximity(storm, viewer.transform.position));
         }
 
         void ClearLightning()
