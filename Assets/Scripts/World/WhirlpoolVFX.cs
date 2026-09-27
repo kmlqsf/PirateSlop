@@ -11,6 +11,7 @@ namespace PirateSlop.World
             var mistObj = new GameObject("MistParticles");
             mistObj.transform.SetParent(transform, false);
             mist = mistObj.AddComponent<ParticleSystem>();
+            mist.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
             var mistMain = mist.main;
             mistMain.duration = 5f;
             mistMain.startLifetime = 3f;
@@ -69,6 +70,7 @@ namespace PirateSlop.World
             churnObj.transform.SetParent(transform, false);
             churnObj.transform.localPosition = new Vector3(0, -120f, 0);
             churn = churnObj.AddComponent<ParticleSystem>();
+            churn.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
             var churnMain = churn.main;
             churnMain.startLifetime = 1f;
             churnMain.startSpeed = 15f;
@@ -80,6 +82,8 @@ namespace PirateSlop.World
             churnShape.radius = 15f;
             var churnRend = churn.GetComponent<ParticleSystemRenderer>();
             churnRend.material = softMat;
+            mist.Play();
+            churn.Play();
         }
 
         void Update()

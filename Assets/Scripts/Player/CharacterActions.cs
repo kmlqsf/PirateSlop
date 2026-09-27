@@ -31,12 +31,13 @@ namespace PirateSlop
             viewRoot = rig.ViewArms;
             viewRest = viewRoot.localPosition;
             var views = rig.ViewArms.GetComponentsInChildren<Transform>(true).ToDictionary(t => t.name);
-            hips = rig.BodyRig.GetComponentsInChildren<Transform>(true).First(t => t.name == "Hips");
+            var bones = rig.BodyRig.GetComponentsInChildren<Transform>(true);
+            hips = bones.First(t => t.name == "Hips" || t.name == "mixamorig:Hips");
             hipsRest = hips.localPosition;
             hipsRestRotation = hips.localRotation;
             body = hips.GetComponentsInChildren<Transform>(true).Where(t => views.ContainsKey("View_" + t.name)).ToArray();
             view = body.Select(t => views["View_" + t.name]).ToArray();
-            chest = body.First(t => t.name == "Chest");
+            chest = bones.First(t => t.name == "Chest" || t.name == "mixamorig:Spine2");
         }
 
         void Update()
