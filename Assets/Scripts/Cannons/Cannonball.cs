@@ -17,6 +17,7 @@ namespace PirateSlop
         static readonly RaycastHit[] castBuffer = new RaycastHit[32];
 
         public Rigidbody Body => body != null ? body : (body = GetComponent<Rigidbody>());
+        public PirateSlop.Networking.InventoryItem CurrentAmmo => (networkFish != null ? networkFish : (networkFish = GetComponent<PirateSlop.Networking.NetworkFish>())) is { } item ? item.CurrentItem : Ammo;
         public SphereCollider SphereCol => sphereCol != null ? sphereCol : (sphereCol = GetComponent<SphereCollider>());
         public CannonShotDamage ShotDamage => shotDamage != null ? shotDamage : (shotDamage = GetComponent<CannonShotDamage>());
 
@@ -28,7 +29,11 @@ namespace PirateSlop
             shotDamage = GetComponent<CannonShotDamage>();
         }
 
-        void Update() => RefreshVisual();
+        void Update()
+        {
+            RefreshVisual();
+            UpdateManualDropAudio();
+        }
         public void RefreshVisual()
         {
             var item = networkFish != null ? networkFish : (networkFish = GetComponent<PirateSlop.Networking.NetworkFish>());
@@ -61,6 +66,31 @@ namespace PirateSlop
         Vector3 deckLocalPosition;
         Quaternion deckLocalRotation;
         float nextImpactAudio;
+        float nextRollAudio;
+        bool manualDropPending;
+        float manualDropDeadline;
+        public void ArmManualDropAudio()
+        {
+            manualDropPending = true;
+            manualDropDeadline = Time.time + 2.5f;
+        }
+        void UpdateManualDropAudio()
+        {
+            if (!manualDropPending) return;
+            if (Time.time > manualDropDeadline || Held || Loaded || ShotDamage != null)
+            {
+                if (Time.time > manualDropDeadline || Loaded || ShotDamage != null) manualDropPending = false;
+                return;
+            }
+            foreach (var hit in Physics.RaycastAll(transform.position + Vector3.up * .05f, Vector3.down, Radius + .15f, ~0, QueryTriggerInteraction.Ignore))
+            {
+                if (hit.normal.y < .5f || hit.distance > Radius + .085f || hit.collider.GetComponentInParent<ShipController>() == null) continue;
+                GameAudio.Play(SoundCue.CannonballDrop, hit.point, .7f);
+                manualDropPending = false;
+                nextImpactAudio = Time.time + .75f;
+                break;
+            }
+        }
         void OnCollisionEnter(Collision collision)
         {
             if (Held || Loaded || ShotDamage != null) return;
@@ -71,8 +101,15 @@ namespace PirateSlop
                 RollOnPlatform(ship.GetComponent<Rigidbody>());
                 deckVelocity = ship.transform.InverseTransformDirection(relative);
             }
+            if (manualDropPending && ship != null && collision.contactCount > 0 && collision.GetContact(0).normal.y > .5f)
+            {
+                GameAudio.Play(SoundCue.CannonballDrop, collision.GetContact(0).point, .7f);
+                manualDropPending = false;
+                nextImpactAudio = Time.time + .75f;
+                return;
+            }
             if (collision.relativeVelocity.sqrMagnitude < .5f || Time.time < nextImpactAudio) return;
-            GameAudio.Play(SoundCue.Load, transform.position, .5f);
+            GameAudio.Play(SoundCue.CannonballDrop, transform.position, Mathf.Clamp(collision.relativeVelocity.magnitude / 4f, .3f, 1f));
             nextImpactAudio = Time.time + .25f;
         }
         public void AttachToPlatform(Rigidbody platform)
@@ -125,6 +162,11 @@ namespace PirateSlop
             var frame = PlatformBody.transform;
             float dt = Time.fixedDeltaTime;
             deckVelocity += frame.InverseTransformDirection(Physics.gravity) * dt;
+            if (deckVelocity.magnitude > .45f && Time.time >= nextRollAudio)
+            {
+                GameAudio.Play(SoundCue.CannonballRoll, transform.position, Mathf.Clamp01(deckVelocity.magnitude / 3f));
+                nextRollAudio = Time.time + Random.Range(.85f, 1.3f);
+            }
             Vector3 point = frame.TransformPoint(deckLocalPosition);
             Vector3 velocity = frame.TransformDirection(deckVelocity);
             float remaining = dt;

@@ -187,6 +187,11 @@ namespace PirateSlop.Harpoon
 
         public void SetRemoteOperator(AdvancedPlayerController player)
         {
+            if (player == null)
+            {
+                ReleaseControl(false);
+                return;
+            }
             if (player != null && player.IsLocal)
             {
                 TakeControl(player);
@@ -206,17 +211,20 @@ namespace PirateSlop.Harpoon
             if (barrelPitch != null) barrelPitch.localRotation = Quaternion.Euler(currentPitch, 0, 0);
         }
 
-        public void ReleaseControl()
+        public void ReleaseControl(bool notifyServer = true)
         {
             exitedFrame = Time.frameCount;
             if (operatorPlayer != null)
             {
-                if (NetworkShip != null && operatorPlayer.IsLocal && MountIndex >= 0)
+                var previousOperator = operatorPlayer;
+                if (previousOperator.IsLocal)
+                    previousOperator.GetComponent<PlayerInventory>()?.ConsumeHarpoonExitInput();
+                if (notifyServer && NetworkShip != null && previousOperator.IsLocal && MountIndex >= 0)
                 {
                     NetworkShip.ReleaseHarpoonControl(MountIndex);
                 }
-                if (operatorPlayer.ActiveHarpoon == this)
-                    operatorPlayer.ActiveHarpoon = null;
+                if (previousOperator.ActiveHarpoon == this)
+                    previousOperator.ActiveHarpoon = null;
                 operatorPlayer = null;
             }
         }
@@ -233,7 +241,7 @@ namespace PirateSlop.Harpoon
 
         void HandleOperatorInput()
         {
-            if (operatorPlayer == null) return;
+            if (operatorPlayer == null || !operatorPlayer.IsLocal) return;
             if (Time.frameCount == enteredFrame) return;
 
             var keyboard = Keyboard.current;

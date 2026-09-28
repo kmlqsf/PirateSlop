@@ -23,6 +23,8 @@ namespace PirateSlop
         float cabinBlend, underwaterBlend, environmentAt, cabinTarget, underwaterTarget;
         float underwaterVolume;
         int nextVoice;
+        int lastStormThunder = -1;
+        readonly System.Collections.Generic.Dictionary<SoundCue, int> lastVariants = new();
         AudioSource music;
         public static float LastDamageTime = -1000f;
 
@@ -84,6 +86,31 @@ namespace PirateSlop
         {
             Play(definition.Sound,position,1,false,definition);
         }
+        public static void StormThunder(Vector3 position, float scale)
+        {
+            if (scale <= .001f) return;
+            var audio = Get();
+            if (audio == null || audio.bank.StormThunder == null || audio.bank.StormThunder.Length == 0) return;
+            int count = audio.bank.StormThunder.Length;
+            int index = Random.Range(0, count - (count > 1 ? 1 : 0));
+            if (count > 1 && audio.lastStormThunder >= 0 && index >= audio.lastStormThunder) index++;
+            audio.lastStormThunder = index;
+            var clip = audio.bank.StormThunder[index];
+            if (clip == null) return;
+            var source = audio.voices[audio.nextVoice];
+            audio.nextVoice = (audio.nextVoice + 1) % audio.voices.Length;
+            source.Stop();
+            source.transform.position = position;
+            source.spatialBlend = 1f;
+            source.rolloffMode = AudioRolloffMode.Linear;
+            source.minDistance = 80f;
+            source.maxDistance = 1800f;
+            source.priority = 65;
+            source.volume = Mathf.Clamp01(audio.bank.ThunderLevel * scale * audio.bank.Master * audio.bank.Effects);
+            source.pitch = Random.Range(.96f, 1.04f);
+            source.clip = clip;
+            source.Play();
+        }
         public static void Play(SoundCue cue, Vector3 position, float scale = 1f, bool ui = false,FirearmDefinition firearm=null)
         {
             var audio = Get(); if (audio == null) return;
@@ -103,7 +130,17 @@ namespace PirateSlop
             source.priority = gunshot ? 40 : feedback ? 32 : 128;
             source.volume = Mathf.Clamp01(entry.Volume * scale * audio.bank.Master * (ui && !feedback ? audio.bank.Interface : audio.bank.Effects));
             source.pitch = ui ? 1f : gunshot ? Random.Range(.975f,1.025f) : Random.Range(.94f, 1.06f);
-            source.clip = entry.Clips[Random.Range(0, entry.Clips.Length)]; source.Play();
+            int clipIndex = Random.Range(0, entry.Clips.Length);
+            if ((cue == SoundCue.Creak || cue == SoundCue.Wheel || cue == SoundCue.WheelReverseRope || cue == SoundCue.CannonballRoll) && entry.Clips.Length > 1)
+            {
+                if (audio.lastVariants.TryGetValue(cue, out int lastVariant))
+                {
+                    clipIndex = Random.Range(0, entry.Clips.Length - 1);
+                    if (clipIndex >= lastVariant) clipIndex++;
+                }
+                audio.lastVariants[cue] = clipIndex;
+            }
+            source.clip = entry.Clips[clipIndex]; source.Play();
         }
         public static void Attached(ref AudioSource source, SoundCue cue, Transform parent)
         {
@@ -129,37 +166,40 @@ namespace PirateSlop
             var audio = Get(); if (audio == null) return;
             audio.UpdateEnvironment(onShip);
             var weather = StormVolumeController.Instance;
-            float stormTarget = 0;
-            if (weather != null && weather.Ready && audio.listener != null)
-            {
-                var eye = audio.listener.transform.position;
-                float clearance = weather.CurrentRadius - new Vector2(eye.x - weather.CurrentCenter.x, eye.z - weather.CurrentCenter.z).magnitude;
-                stormTarget = 1f - Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(-30f, 550f, clearance));
-            }
+            float stormTarget = weather != null && audio.listener != null
+                ? StormProximity(weather, audio.listener.transform.position) : 0f;
             audio.stormBlend = Mathf.Lerp(audio.stormBlend, stormTarget, 1f - Mathf.Exp(-2f * Time.unscaledDeltaTime));
-            audio.storm.volume = audio.bank.Master * audio.bank.Ambience * audio.stormBlend * 1.8f * Mathf.Lerp(1f, .35f, audio.cabinBlend) * Mathf.Lerp(1f, .12f, audio.underwaterBlend);
-            audio.storm.pitch = Mathf.Lerp(.72f, .95f, audio.stormBlend);
+            audio.storm.volume = audio.bank.Master * audio.bank.Ambience * audio.stormBlend * audio.bank.StormLevel * Mathf.Lerp(1f, .35f, audio.cabinBlend) * Mathf.Lerp(1f, .12f, audio.underwaterBlend);
+            audio.storm.pitch = 1f;
             if (audio.stormBlend > .005f && !audio.storm.isPlaying && audio.storm.clip != null) audio.storm.Play();
             else if (audio.stormBlend <= .005f) audio.storm.Stop();
             audio.floodBlend = Mathf.Lerp(audio.floodBlend, onShip ? Mathf.Clamp01(floodLevel) : 0f, 1f - Mathf.Exp(-3f * Time.unscaledDeltaTime));
-            audio.flooding.volume = audio.bank.Master * audio.bank.Ambience * audio.floodBlend * Mathf.Lerp(.25f, .75f, audio.cabinBlend);
+            audio.flooding.volume = audio.bank.Master * audio.bank.Ambience * audio.floodBlend * audio.bank.FloodingLevel * Mathf.Lerp(.25f, .75f, audio.cabinBlend);
             audio.flooding.pitch = Mathf.Lerp(.65f, .9f, audio.floodBlend);
             if (audio.floodBlend > .005f && !audio.flooding.isPlaying && audio.flooding.clip != null) audio.flooding.Play();
             else if (audio.floodBlend <= .005f) audio.flooding.Stop();
-            audio.ocean.volume = audio.bank.Master * audio.bank.Ambience * Mathf.Lerp(.45f, .75f, speed);
-            audio.wind.volume = audio.bank.Master * audio.bank.Ambience * Mathf.Lerp(.15f, .4f, speed);
+            audio.ocean.volume = audio.bank.Master * audio.bank.Ambience * audio.bank.OceanLevel;
+            audio.wind.volume = audio.bank.Master * audio.bank.Ambience * audio.bank.WindLevel * Mathf.Clamp01(speed);
             audio.ocean.volume *= Mathf.Lerp(1f, .4f, audio.cabinBlend) * Mathf.Lerp(1f, .18f, audio.underwaterBlend);
             audio.wind.volume *= Mathf.Lerp(1f, .15f, audio.cabinBlend) * (1f - audio.underwaterBlend);
             if (!audio.ocean.isPlaying && audio.ocean.clip != null) audio.ocean.Play();
             if (!audio.wind.isPlaying && audio.wind.clip != null) audio.wind.Play();
-            audio.deck.volume = audio.bank.Master * audio.bank.Ambience * Mathf.Lerp(.2f, .4f, speed);
+            audio.deck.volume = audio.bank.Master * audio.bank.Ambience * audio.bank.DeckLevel * Mathf.Lerp(.2f, .4f, speed);
             audio.deck.volume *= Mathf.Lerp(1f, 1.6f, audio.cabinBlend) * Mathf.Lerp(1f, .3f, audio.underwaterBlend);
-            audio.underwater.volume = audio.bank.Master * audio.bank.Ambience * audio.underwaterVolume * audio.underwaterBlend;
+            audio.underwater.volume = audio.bank.Master * audio.bank.Ambience * audio.bank.UnderwaterLevel * audio.underwaterVolume * audio.underwaterBlend;
             if (audio.underwaterBlend > .005f && !audio.underwater.isPlaying && audio.underwater.clip != null) audio.underwater.Play();
             else if (audio.underwaterBlend <= .005f) audio.underwater.Stop();
             if (onShip && !audio.deck.isPlaying && audio.deck.clip != null) audio.deck.Play();
             else if (!onShip) audio.deck.Stop();
             audio.lastAmbience = Time.unscaledTime;
+        }
+        public static float StormProximity(StormVolumeController weather, Vector3 position)
+        {
+            if (weather == null || !weather.Ready) return 0f;
+            float clearance = weather.CurrentRadius - new Vector2(position.x - weather.CurrentCenter.x, position.z - weather.CurrentCenter.z).magnitude;
+            if (clearance >= 210f) return 0f;
+            if (clearance >= 200f) return .05f * (210f - clearance) / 10f;
+            return Mathf.Lerp(.05f, 1f, Mathf.SmoothStep(0f, 1f, 1f - Mathf.Clamp01(clearance / 200f)));
         }
         float lastAmbience;
         void UpdateEnvironment(bool onShip)
@@ -205,16 +245,19 @@ namespace PirateSlop
             if (isMenu)
             {
                 targetClip = bank.MainMenuMusic;
+                targetVolume *= bank.MainMenuMusicLevel;
             }
             else
             {
                 if (Time.time < LastDamageTime + 20f)
                 {
                     targetClip = bank.CombatMusic;
+                    targetVolume *= bank.CombatMusicLevel;
                 }
                 else
                 {
                     targetClip = bank.SailingMusic;
+                    targetVolume *= bank.SailingMusicLevel;
                 }
             }
             

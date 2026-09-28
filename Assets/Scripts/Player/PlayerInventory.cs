@@ -25,6 +25,12 @@ namespace PirateSlop
         Cannonball aimedBall;
         SimpleCannon aimedCannon;
         PirateSlop.Harpoon.HarpoonGun aimedHarpoon;
+        int harpoonExitFrame = -1;
+        public void ConsumeHarpoonExitInput()
+        {
+            harpoonExitFrame = Time.frameCount;
+            InteractionUsed = true;
+        }
         readonly int[] ballCounts = new int[SlotCount];
         readonly InventoryItem[] ballItems = new InventoryItem[SlotCount];
         public InventoryItem BallItem(int slot) => BallCount(slot) > 0 ? ballItems[slot] : InventoryItem.Cannonball;
@@ -161,6 +167,11 @@ namespace PirateSlop
             InteractionUsed = false; pickup = null; chest = null; aimedBall = null; aimedCannon = null; aimedHarpoon = null; valid = false;
             aimedRumShelf = null;
             if (preview != null) preview.SetActive(false);
+            if (harpoonExitFrame == Time.frameCount)
+            {
+                InteractionUsed = true;
+                return;
+            }
             if (lootWindow)
             {
                 InteractionUsed = true;

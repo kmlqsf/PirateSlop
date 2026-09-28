@@ -25,7 +25,7 @@ namespace PirateSlop
             var rig = GetComponent<WeaponArmRig>();
             var body = rig.BodyRig.GetComponentsInChildren<Transform>(true);
             var view = rig.ViewArms.GetComponentsInChildren<Transform>(true);
-            var spine = body.First(t => t.name == "Spine");
+            var spine = body.First(t => t.name == "Spine" || t.name == "mixamorig:Spine");
             bodyBones = spine.GetComponentsInChildren<Transform>(true).Where(b => view.Any(t => t.name == "View_" + b.name)).ToArray();
             viewBones = bodyBones.Select(b => view.First(t => t.name == "View_" + b.name)).ToArray();
         }
@@ -39,7 +39,7 @@ namespace PirateSlop
 
         void Mount(Transform pivot, Transform rig, string handName)
         {
-            var hand = rig.GetComponentsInChildren<Transform>(true).First(t => t.name == handName);
+            var hand = rig.GetComponentsInChildren<Transform>(true).First(t => t.name == handName || handName == "Hand.R" && t.name == "mixamorig:RightHand");
             pivot.SetParent(hand, false);
             pivot.localPosition = GripPosition;
             pivot.localRotation = GripRotation;

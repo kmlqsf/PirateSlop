@@ -17,12 +17,25 @@ namespace PirateSlop
         int selected, slots, lastStepPhase = -1;
         bool ready, centerArmed;
         float centerRudder;
+        float wheelAt, ropeAt, wheelLastMotion, wheelIdleSwitchAt;
+        int wheelDirection, wheelIdleVoice = -1;
+        bool wheelHeld;
+        GameAudioBank wheelBank;
+        GameAudioBank.Entry wheelIdleEntry;
+        readonly AudioSource[] wheelIdleSources = new AudioSource[2];
         void Awake()
         {
             player = GetComponent<AdvancedPlayerController>(); weapon = GetComponent<PirateWeapon>();
             inventory = GetComponent<PlayerInventory>(); hands = GetComponent<CannonHands>();
             ship = GetComponent<ShipController>(); helm = GetComponentInChildren<HelmInteraction>();
             sails = GetComponent<SailSystem>(); cannon = GetComponent<SimpleCannon>();
+            if (ship != null && helm != null)
+            {
+                wheelBank = Resources.Load<GameAudioBank>("GameAudioBank");
+                if (wheelBank != null && wheelBank.Entries != null)
+                    foreach (var entry in wheelBank.Entries)
+                        if (entry != null && entry.Cue == SoundCue.WheelIdleLeather) { wheelIdleEntry = entry; break; }
+            }
         }
         static readonly RaycastHit[] stepHits = new RaycastHit[16];
         static readonly System.Collections.Generic.Dictionary<Collider, bool> stoneColliderCache = new();
@@ -66,11 +79,11 @@ namespace PirateSlop
         {
             if (player != null)
             {
-                bool local = player.PlayerCamera != null && player.PlayerCamera.enabled;
+                bool local = player.IsLocal && player.PlayerCamera != null && (player.PlayerCamera.enabled || player.ActiveParrot != null);
                 if (local)
                 {
                     var passenger = GetComponent<ShipDeckPassenger>();
-                    var platform = passenger != null && passenger.Ship != null ? passenger.Ship.GetComponent<ShipController>() : null;
+                    var platform = player.ActiveParrot == null && passenger != null && passenger.Ship != null ? passenger.Ship.GetComponent<ShipController>() : null;
                     var flooding = platform != null ? platform.GetComponent<ShipFlooding>() : null;
                     GameAudio.Ambience(platform != null ? platform.Speed / Mathf.Max(.01f, platform.MaxSpeed) : 0f, platform != null, flooding != null ? flooding.Level : 0f);
                 }
@@ -113,17 +126,39 @@ namespace PirateSlop
             if (ship != null && helm != null && sails != null && ready)
             {
                 float currentRudder = helm.CurrentRudderNormalized;
+                bool gripping = helm.IsControlling;
+                if (gripping && !wheelHeld) { wheelLastMotion = Time.time; wheelDirection = 0; }
+                float wheelDelta = currentRudder - rudder;
+                if (gripping && Mathf.Abs(wheelDelta) > .0015f)
+                {
+                    int direction = wheelDelta > 0f ? 1 : -1;
+                    if (wheelDirection != 0 && direction != wheelDirection && Time.time >= ropeAt)
+                    {
+                        GameAudio.Play(SoundCue.WheelReverseRope, helm.transform.position);
+                        ropeAt = Time.time + .4f;
+                    }
+                    wheelDirection = direction;
+                    wheelLastMotion = Time.time;
+                    if (Time.time >= wheelAt)
+                    {
+                        GameAudio.Play(SoundCue.Wheel, helm.transform.position);
+                        wheelAt = Time.time + Random.Range(.65f, .9f);
+                    }
+                }
+                if (!gripping) wheelDirection = 0;
+                UpdateWheelIdle(gripping && Time.time - wheelLastMotion > .35f);
+                wheelHeld = gripping;
+                rudder = currentRudder;
                 if (Mathf.Abs(currentRudder) > .035f) centerArmed = true;
                 if (centerArmed && (Mathf.Abs(currentRudder) < .008f || currentRudder * centerRudder < 0f))
                 { GameAudio.Play(SoundCue.Place, helm.transform.position, .45f); centerArmed = false; }
                 centerRudder = currentRudder;
                 if (Time.time >= motionAt)
                 {
-                    if (Mathf.Abs(helm.CurrentRudderNormalized - rudder) > .003f) { GameAudio.Play(SoundCue.Wheel, helm.transform.position); motionAt = Time.time + .85f; }
-                    else if (Mathf.Abs(sails.DeployPercentage - sail) > .001f) { GameAudio.Play(SoundCue.Sail, transform.position + Vector3.up * 5f); motionAt = Time.time + 1.15f; }
-                    rudder = helm.CurrentRudderNormalized; sail = sails.DeployPercentage;
+                    if (Mathf.Abs(sails.DeployPercentage - sail) > .001f) { GameAudio.Play(SoundCue.Sail, transform.position + Vector3.up * 5f); motionAt = Time.time + 1.15f; }
+                    sail = sails.DeployPercentage;
                 }
-                if (ship.Speed > .3f && Time.time >= creakAt) { GameAudio.Play(SoundCue.Creak, transform.position + Vector3.up * 4f); creakAt = Time.time + Random.Range(5f, 11f); }
+                if (Time.time >= creakAt) { GameAudio.Play(SoundCue.Creak, transform.position + Vector3.up * 4f); creakAt = Time.time + Random.Range(5f, 11f); }
             }
             if (cannon != null)
             {
@@ -133,6 +168,65 @@ namespace PirateSlop
                 cannonLoaded = cannon.IsLoaded;
             }
             ready = true;
+        }
+
+        void UpdateWheelIdle(bool idle)
+        {
+            if (wheelIdleEntry == null || wheelIdleEntry.Clips == null || wheelIdleEntry.Clips.Length < 2 ||
+                wheelIdleEntry.Clips[0] == null || wheelIdleEntry.Clips[1] == null || wheelBank == null) return;
+            if (idle)
+            {
+                if (wheelIdleSources[0] == null) CreateWheelIdleSources();
+                if (wheelIdleVoice < 0 || Time.time >= wheelIdleSwitchAt)
+                {
+                    wheelIdleVoice = wheelIdleVoice < 0 ? Random.Range(0, 2) : 1 - wheelIdleVoice;
+                    var source = wheelIdleSources[wheelIdleVoice];
+                    source.Stop();
+                    source.clip = wheelIdleEntry.Clips[wheelIdleVoice];
+                    source.volume = 0f;
+                    source.Play();
+                    wheelIdleSwitchAt = Time.time + Mathf.Max(.6f, source.clip.length / source.pitch - .55f);
+                }
+            }
+            else wheelIdleVoice = -1;
+
+            float fullVolume = wheelBank.Master * wheelBank.Effects * wheelIdleEntry.Volume;
+            for (int i = 0; i < wheelIdleSources.Length; i++)
+            {
+                var source = wheelIdleSources[i];
+                if (source == null) continue;
+                source.maxDistance = wheelIdleEntry.Distance;
+                float target = idle && i == wheelIdleVoice ? fullVolume : 0f;
+                source.volume = Mathf.MoveTowards(source.volume, target, Mathf.Max(.001f, fullVolume) * Time.deltaTime / .55f);
+                if (source.volume <= .001f && i != wheelIdleVoice && source.isPlaying) source.Stop();
+            }
+        }
+
+        void CreateWheelIdleSources()
+        {
+            for (int i = 0; i < wheelIdleSources.Length; i++)
+            {
+                var go = new GameObject("WheelIdleLeather" + (i + 1));
+                go.transform.SetParent(helm.transform, false);
+                var source = go.AddComponent<AudioSource>();
+                source.playOnAwake = false;
+                source.spatialBlend = 1f;
+                source.rolloffMode = AudioRolloffMode.Linear;
+                source.dopplerLevel = 0f;
+                source.minDistance = 2f;
+                source.maxDistance = wheelIdleEntry.Distance;
+                source.pitch = .82f;
+                source.priority = 135;
+                go.AddComponent<SpatialAudioTone>();
+                wheelIdleSources[i] = source;
+            }
+        }
+
+        void OnDisable()
+        {
+            foreach (var source in wheelIdleSources) if (source != null) source.Stop();
+            wheelIdleVoice = -1;
+            wheelHeld = false;
         }
     }
 }

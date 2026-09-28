@@ -28,9 +28,10 @@ namespace PirateSlop
             {
                 var bones = root.GetComponentsInChildren<Transform>(true);
                 string prefix = root.name == "WeaponViewArms" ? "View_" : "";
-                Upper = bones.First(t => t.name == prefix + "UpperArm." + side);
-                Fore = bones.First(t => t.name == prefix + "Forearm." + side);
-                Hand = bones.First(t => t.name == prefix + "Hand." + side);
+                string mixamoSide = side == "R" ? "Right" : "Left";
+                Upper = bones.First(t => t.name == prefix + "UpperArm." + side || t.name == "mixamorig:" + mixamoSide + "Arm");
+                Fore = bones.First(t => t.name == prefix + "Forearm." + side || t.name == "mixamorig:" + mixamoSide + "ForeArm");
+                Hand = bones.First(t => t.name == prefix + "Hand." + side || t.name == "mixamorig:" + mixamoSide + "Hand");
                 wristRest = Quaternion.Inverse(Fore.rotation) * Hand.rotation;
             }
             public void Solve(Vector3 point, Quaternion rotation, Vector3 pole, float blend)
