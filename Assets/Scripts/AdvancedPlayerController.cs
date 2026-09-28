@@ -34,6 +34,7 @@ public class AdvancedPlayerController : MonoBehaviour
     float ladderCooldown;
     bool ladderExiting;
     public bool IsClimbing { get; private set; }
+    public float ClimbVelocity { get; private set; }
     public bool IsSwimming { get; private set; }
     public float Breath { get; private set; } = 25f;
     public float BreathFraction => Mathf.Clamp01(Breath / breathSeconds);
@@ -189,7 +190,12 @@ public class AdvancedPlayerController : MonoBehaviour
             if (Mathf.Abs(scroll) > 0.01f) thirdPersonDistance = Mathf.Clamp(thirdPersonDistance - Mathf.Sign(scroll) * 0.5f, 1.2f, 6f);
         }
         var rawMove = InputActive ? Vector2.ClampMagnitude(new Vector2((kb.dKey.isPressed || kb.rightArrowKey.isPressed ? 1 : 0) - (kb.aKey.isPressed || kb.leftArrowKey.isPressed ? 1 : 0), (kb.wKey.isPressed || kb.upArrowKey.isPressed ? 1 : 0) - (kb.sKey.isPressed || kb.downArrowKey.isPressed ? 1 : 0)), 1) : Vector2.zero;
-        if (IsThirdPerson)
+        if (IsClimbing)
+        {
+            pending.Move = rawMove;
+            pending.Yaw = bodyYaw;
+        }
+        else if (IsThirdPerson)
         {
             if (rawMove.sqrMagnitude > 0.001f)
             {
@@ -456,35 +462,54 @@ public class AdvancedPlayerController : MonoBehaviour
         IsClimbing = true; IsSwimming = false; IsGrounded = false; slideTimer = 0; swimVelocity = Vector3.zero;
         SetHeight(false); Breath = Mathf.MoveTowards(Breath, breathSeconds, dt * 8);
         passenger?.Attach(ladder.Body);
-        float vertical = command.Move.y * (Vector3.Dot(transform.forward, -ladder.transform.forward) >= 0 ? 1 : -1);
+        float ladderYaw = Quaternion.LookRotation(-ladder.transform.forward, Vector3.up).eulerAngles.y;
+        bodyYaw = ladderYaw;
+        transform.rotation = Quaternion.Euler(0, ladderYaw, 0);
+        float vertical = command.Move.y;
         if (command.Crouch || command.Pitch > 55) vertical = -Mathf.Abs(command.Move.y);
         float sideSign = Vector3.Dot(transform.right, ladder.transform.right) >= 0 ? 1f : -1f;
         if (ladder.BoardingAccess && (ladderExiting || !fromTop && localPosition.y >= ladder.Height - .15f && vertical > 0f))
         {
             if (localPosition.y >= ladder.Height + ladder.ExitClearance - .08f) ladderExiting = true;
             var target = new Vector3(Mathf.Clamp(localPosition.x, -ladder.HalfWidth + .3f, ladder.HalfWidth - .3f), ladder.Height + ladder.ExitClearance,
-                ladderExiting ? -ladder.ExitDepth : .65f);
+                ladderExiting ? -ladder.ExitDepth : .38f);
             controller.Move(Vector3.ClampMagnitude(ladder.transform.TransformPoint(target) - transform.position, ladder.Speed * dt));
             verticalVelocity = 0f; PlanarSpeed = ladder.Speed;
             if (ladderExiting && ladder.transform.InverseTransformPoint(transform.position).z <= -ladder.ExitDepth + .15f)
             { IsClimbing = false; ladderExiting = false; ladderCooldown = .65f; }
             return true;
         }
-        Vector3 velocity = ladder.transform.up * vertical * ladder.Speed;
+        float climbSpeed = vertical < 0 ? ladder.Speed * 0.5f : ladder.Speed * 0.75f;
+        float horizontal = command.Move.x;
+        if (localPosition.x > ladder.HalfWidth - 0.15f && horizontal > 0) horizontal = 0;
+        if (localPosition.x < -ladder.HalfWidth + 0.15f && horizontal < 0) horizontal = 0;
+        float horizontalSpeed = ladder.Speed * 0.5f;
+        Vector3 velocity = ladder.transform.up * vertical * climbSpeed + ladder.transform.right * horizontal * horizontalSpeed;
         if (fromTop)
         {
-            velocity = ladder.transform.forward * Mathf.Abs(command.Move.y) * ladder.Speed;
-            if (localPosition.y < ladder.Height + .05f) velocity += ladder.transform.up * ladder.Speed;
+            velocity += ladder.transform.forward * Mathf.Abs(command.Move.y) * climbSpeed;
+            if (localPosition.y < ladder.Height + .05f) velocity += ladder.transform.up * climbSpeed;
         }
         else if (localPosition.y >= ladder.Height && vertical > 0)
         {
-            velocity = -ladder.transform.forward * ladder.Speed + ladder.transform.up * .3f;
+            velocity += -ladder.transform.forward * climbSpeed + ladder.transform.up * .3f;
         }
-        else velocity += ladder.transform.forward * Mathf.Clamp((.65f - localPosition.z) * 5, -2, 2);
-        controller.Move(velocity * dt); verticalVelocity = 0; PlanarSpeed = Mathf.Abs(vertical * ladder.Speed);
+        else velocity += ladder.transform.forward * Mathf.Clamp((.38f - localPosition.z) * 5, -2, 2);
+        controller.Move(velocity * dt);
+        verticalVelocity = 0;
+        PlanarSpeed = Mathf.Max(Mathf.Abs(vertical * climbSpeed), Mathf.Abs(horizontal * horizontalSpeed));
+        ClimbVelocity = vertical * climbSpeed;
         localPosition = ladder.transform.InverseTransformPoint(transform.position);
-        if (localPosition.y >= ladder.Height && localPosition.z < -ladder.ExitDepth && !fromTop || localPosition.y <= 0 && vertical < 0 || Mathf.Abs(localPosition.x) > ladder.HalfWidth + .2f)
-        { IsClimbing = false; ladderCooldown = .3f; }
+        bool dismountTop = !fromTop && localPosition.y >= ladder.Height && localPosition.z < -ladder.ExitDepth;
+        bool dismountBottom = (localPosition.y <= 0.15f || controller.isGrounded) && vertical < 0;
+        bool dismountSide = Mathf.Abs(localPosition.x) > ladder.HalfWidth + .25f;
+        if (dismountTop || dismountBottom || dismountSide)
+        {
+            IsClimbing = false;
+            ladderCooldown = .3f;
+            passenger?.Attach(null);
+            if (dismountBottom) controller.Move(ladder.transform.forward * 0.25f);
+        }
         return true;
     }
     void OnGUI()
@@ -515,25 +540,29 @@ public class AdvancedPlayerController : MonoBehaviour
         }
         IsClimbing = true; IsSwimming = false; IsGrounded = false; slideTimer = 0; swimVelocity = Vector3.zero;
         SetHeight(false); passenger?.Attach(ladder.Body);
+        float ladderYaw = Quaternion.LookRotation(-ladder.transform.forward, Vector3.up).eulerAngles.y;
+        bodyYaw = ladderYaw;
+        transform.rotation = Quaternion.Euler(0, ladderYaw, 0);
         var p = ladder.transform.InverseTransformPoint(transform.position);
         float rise = command.Crouch ? -Mathf.Abs(command.Move.y) : command.Move.y;
+        float climbSpeed = rise < 0 ? ladder.Speed * 0.5f : ladder.Speed * 0.75f;
         Vector3 target;
         if (p.y >= ladder.Height - .05f && rise > 0)
         {
             target = ladder.transform.TransformPoint(ladder.ExitPoint);
-            controller.Move(Vector3.ClampMagnitude(target - transform.position, ladder.Speed * dt));
+            controller.Move(Vector3.ClampMagnitude(target - transform.position, climbSpeed * dt));
             if (Vector3.Distance(transform.position, target) < .2f) { IsClimbing = false; ladderCooldown = .5f; }
         }
         else
         {
-            float height = Mathf.Clamp(p.y + rise * ladder.Speed * dt, 0, ladder.Height);
+            float height = Mathf.Clamp(p.y + rise * climbSpeed * dt, 0, ladder.Height);
             float sideSign = Vector3.Dot(transform.right, ladder.transform.right) >= 0 ? 1f : -1f;
-            float sideways = p.x;
-            target = ladder.transform.TransformPoint(new Vector3(sideways, height, ladder.RopeDepth(height) + .5f));
-            controller.Move(Vector3.ClampMagnitude(target - transform.position, ladder.Speed * 1.5f * dt));
-            if (height <= 0 && rise < 0) { IsClimbing = false; ladderCooldown = .5f; }
+            float sideways = Mathf.Clamp(p.x + command.Move.x * ladder.Speed * 0.5f * dt, -ladder.HalfWidth + 0.15f, ladder.HalfWidth - 0.15f);
+            target = ladder.transform.TransformPoint(new Vector3(sideways, height, ladder.RopeDepth(height) + .38f));
+            controller.Move(Vector3.ClampMagnitude(target - transform.position, climbSpeed * 1.5f * dt));
+            if ((height <= 0.15f || controller.isGrounded) && rise < 0) { IsClimbing = false; ladderCooldown = .5f; passenger?.Attach(null); controller.Move(ladder.transform.forward * 0.25f); }
         }
-        verticalVelocity = 0; PlanarSpeed = Mathf.Abs(rise * ladder.Speed);
+        verticalVelocity = 0; PlanarSpeed = Mathf.Abs(rise * climbSpeed); ClimbVelocity = rise * climbSpeed;
         return true;
     }
     public PlayerState Capture() => new PlayerState { Position = transform.position, Yaw = transform.eulerAngles.y, VerticalVelocity = verticalVelocity, SlideDirection = slideDirection, SlideTimer = slideTimer, Cooldown = cooldown, Crouched = crouched, CrouchBlend = crouchBlend, Locked = locomotionLocked, PlanarSpeed = PlanarSpeed, Grounded = IsGrounded, Swimming = IsSwimming, SwimVelocity = swimVelocity, Breath = Breath, Climbing = IsClimbing, LadderCooldown = ladderCooldown, KnockbackVelocity = knockbackVelocity, KnockbackTime = knockbackTime, JumpBuffer = jumpBuffer, GroundGrace = groundGrace, LadderExiting = ladderExiting };

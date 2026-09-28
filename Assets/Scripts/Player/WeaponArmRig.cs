@@ -23,19 +23,25 @@ namespace PirateSlop
         sealed class Arm
         {
             public Transform Upper, Fore, Hand;
-            Quaternion wristRest;
+            public Quaternion wristRest;
             public Arm(Transform root, string side)
             {
+                if (root == null) return;
                 var bones = root.GetComponentsInChildren<Transform>(true);
                 string prefix = root.name == "WeaponViewArms" ? "View_" : "";
-                string mixamoSide = side == "R" ? "Right" : "Left";
-                Upper = bones.First(t => t.name == prefix + "UpperArm." + side || t.name == "mixamorig:" + mixamoSide + "Arm");
-                Fore = bones.First(t => t.name == prefix + "Forearm." + side || t.name == "mixamorig:" + mixamoSide + "ForeArm");
-                Hand = bones.First(t => t.name == prefix + "Hand." + side || t.name == "mixamorig:" + mixamoSide + "Hand");
-                wristRest = Quaternion.Inverse(Fore.rotation) * Hand.rotation;
+                string sideFull = side == "R" ? "Right" : "Left";
+                Upper = bones.FirstOrDefault(t => t.name == prefix + "UpperArm." + side)
+                     ?? bones.FirstOrDefault(t => t.name == "mixamorig:" + sideFull + "Arm");
+                Fore = bones.FirstOrDefault(t => t.name == prefix + "Forearm." + side)
+                    ?? bones.FirstOrDefault(t => t.name == "mixamorig:" + sideFull + "ForeArm");
+                Hand = bones.FirstOrDefault(t => t.name == prefix + "Hand." + side)
+                    ?? bones.FirstOrDefault(t => t.name == "mixamorig:" + sideFull + "Hand");
+                if (Fore != null && Hand != null)
+                    wristRest = Quaternion.Inverse(Fore.rotation) * Hand.rotation;
             }
             public void Solve(Vector3 point, Quaternion rotation, Vector3 pole, float blend)
             {
+                if (Upper == null || Fore == null || Hand == null) return;
                 Vector3 origin = Upper.position;
                 float a = Vector3.Distance(origin, Fore.position), b = Vector3.Distance(Fore.position, Hand.position);
                 Vector3 delta = point - origin;

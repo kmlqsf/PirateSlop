@@ -1,0 +1,17 @@
+﻿{
+    "mcpServers":  {
+                       "unityMCP":  {
+                                        "url":  "http://127.0.0.1:8080/mcp"
+                                    },
+                       "gamedevHub":  {
+                                          "disabled":  false,
+                                          "command":  "node",
+                                          "args":  [
+                                                       "C:/Users/pipai/AppData/Local/Temp/hub_test_extract/server/mcpStdioServer.js"
+                                                   ],
+                                          "env":  {
+                                                      "HUB_URL":  "http://localhost:3888"
+                                                  }
+                                      }
+                   }
+}

@@ -10,6 +10,8 @@ namespace PirateSlop
         static readonly int Sliding = Animator.StringToHash("Sliding");
         static readonly int Grounded = Animator.StringToHash("Grounded");
         static readonly int ClimbSpeed = Animator.StringToHash("ClimbSpeed");
+        static readonly int ClimbMotionSpeed = Animator.StringToHash("ClimbMotionSpeed");
+        static readonly int VerticalSpeed = Animator.StringToHash("VerticalSpeed");
 
         AdvancedPlayerController motor;
         Animator animator;
@@ -30,7 +32,11 @@ namespace PirateSlop
             if (motor.IsClimbing)
             {
                 if (!wasClimbing) animator.CrossFadeInFixedTime("LadderClimb", .15f);
-                animator.SetFloat(ClimbSpeed, Mathf.Min(2.5f, motor.PlanarSpeed / .48f));
+                float moveSpeed = Mathf.Max(Mathf.Abs(motor.ClimbVelocity), motor.PlanarSpeed);
+                float dir = motor.ClimbVelocity > 0.05f ? 1f : motor.ClimbVelocity < -0.05f ? -1f : 1f;
+                animator.SetFloat(ClimbSpeed, dir);
+                float playbackSpeed = moveSpeed > 0.05f ? Mathf.Clamp(moveSpeed / 1.1f, 0.6f, 1.8f) : 0f;
+                animator.SetFloat(ClimbMotionSpeed, playbackSpeed);
                 wasClimbing = true;
                 wasSwimming = false;
                 airborneTime = 0;
@@ -54,6 +60,7 @@ namespace PirateSlop
             animator.SetBool(Sliding, motor.IsSliding);
             airborneTime = motor.IsGrounded || motor.LocomotionLocked ? 0 : airborneTime + Time.deltaTime;
             animator.SetBool(Grounded, motor.IsGrounded || motor.LocomotionLocked || (motor.VerticalSpeed <= 0 && airborneTime < .08f));
+            animator.SetFloat(VerticalSpeed, motor.VerticalSpeed);
         }
     }
 }

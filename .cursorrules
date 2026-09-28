@@ -1,0 +1,32 @@
+# Cursor Rules for PirateSlop & GameDev Hub
+
+Always respect GameDev Hub running at http://localhost:3888 and direct native MCP.
+
+## Short Natural Language Commands Routing (Zero-Boilerplate)
+When the user gives short commands in Russian or English, automatically invoke the corresponding workflow:
+
+1. "Возьми задачу TASK-XXX [в работу]" / "Take task TASK-XXX":
+   - Automatically call MCP tool `claim_task(taskId: "TASK-XXX")`
+   - Automatically call MCP tool `get_task_envelope(taskId: "TASK-XXX")`
+   - Read acceptance criteria and SSoT decisions
+   - Confirm briefly to the user and begin implementing code directly in Unity C#
+
+2. "Сдай задачу TASK-XXX" / "TASK-XXX готова" / "Submit TASK-XXX":
+   - Validate compilation in Unity
+   - Automatically call MCP tool `propose_task_ready(taskId: "TASK-XXX", testResults: "...")`
+   - Confirm to the user that the task is now in NEEDS_HUMAN_TEST in the Hub
+
+3. "Придумай / спроектируй механику [...]" / "Design mechanic [...]":
+   - DO NOT edit game code!
+   - Analyze systems and active SSoT
+   - Automatically call MCP tool `propose_design_dilemma` with gameplayPros, technicalRisks, suggestedTasks
+   - Inform the user it has been posted to Design Lab
+
+4. "Проанализируй предложение LAB-XXX":
+   - Automatically call MCP tool `analyze_design_proposal(proposalId: "LAB-XXX")`
+
+5. "Запиши баг [...]" / "Bug [...]":
+   - Automatically call MCP tool `propose_bug(...)`
+
+6. "Добавь в референсы [...]":
+   - Automatically call MCP tool `add_reference(...)`

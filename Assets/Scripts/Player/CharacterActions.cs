@@ -31,13 +31,22 @@ namespace PirateSlop
             viewRoot = rig.ViewArms;
             viewRest = viewRoot.localPosition;
             var views = rig.ViewArms.GetComponentsInChildren<Transform>(true).ToDictionary(t => t.name);
-            var bones = rig.BodyRig.GetComponentsInChildren<Transform>(true);
-            hips = bones.First(t => t.name == "Hips" || t.name == "mixamorig:Hips");
-            hipsRest = hips.localPosition;
-            hipsRestRotation = hips.localRotation;
-            body = hips.GetComponentsInChildren<Transform>(true).Where(t => views.ContainsKey("View_" + t.name)).ToArray();
-            view = body.Select(t => views["View_" + t.name]).ToArray();
-            chest = bones.First(t => t.name == "Chest" || t.name == "mixamorig:Spine2");
+            var allBones = rig.BodyRig.GetComponentsInChildren<Transform>(true);
+            hips = allBones.FirstOrDefault(t => t.name == "Hips" || t.name == "mixamorig:Hips");
+            if (hips != null)
+            {
+                hipsRest = hips.localPosition;
+                hipsRestRotation = hips.localRotation;
+                body = hips.GetComponentsInChildren<Transform>(true).Where(t => views.ContainsKey("View_" + t.name)).ToArray();
+                view = body.Select(t => views["View_" + t.name]).ToArray();
+                chest = allBones.FirstOrDefault(t => t.name == "Chest" || t.name == "mixamorig:Spine2") ?? hips;
+            }
+            else
+            {
+                body = new Transform[0];
+                view = new Transform[0];
+                chest = transform;
+            }
         }
 
         void Update()
@@ -65,6 +74,7 @@ namespace PirateSlop
 
         void LateUpdate()
         {
+            if (hips == null || chest == null) return;
             var targetShift = ControlsEquipment ? equipment.AnimationAiming && !equipment.IsReloading ? new Vector3(-.18f, -.13f, .25f) : new Vector3(0, -.13f, .12f) : Vector3.zero;
             viewShift = Vector3.Lerp(viewShift, targetShift, 1 - Mathf.Exp(-20 * Time.deltaTime));
             if (viewRoot != null) viewRoot.localPosition = viewRest + viewShift;

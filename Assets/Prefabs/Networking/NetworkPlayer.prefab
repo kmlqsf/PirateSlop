@@ -3982,22 +3982,31 @@ MonoBehaviour:
   _spectatorInterpolation: 2
   _enableTeleport: 0
   _teleportThreshold: 1
-  <PrefabId>k__BackingField: 65535
+  <PrefabId>k__BackingField: 1
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 4612764277556831533
   SceneId: 0
   SerializedTransformProperties:
     Position: {x: 0, y: 0, z: 0}
-    Rotation: {x: 0, y: 0, z: 0, w: 0}
-    Scale: {x: 0, y: 0, z: 0}
-    IsValid: 0
+    Rotation: {x: 0, y: 0, z: 0, w: 1}
+    Scale: {x: 1, y: 1, z: 1}
+    IsValid: 1
   <IsNested>k__BackingField: 0
   WasActiveDuringEdit: 0
   WasActiveDuringEdit_Set1: 1
   <ComponentIndex>k__BackingField: 0
   <PredictedSpawn>k__BackingField: {fileID: 0}
   <PredictedOwner>k__BackingField: {fileID: 0}
-  NetworkBehaviours: []
+  NetworkBehaviours:
+  - {fileID: 3240335010585323169}
+  - {fileID: 215226514602522168}
+  - {fileID: 2669655026264017984}
+  - {fileID: 5414072499666844625}
+  - {fileID: 1783425920093483733}
+  - {fileID: 6873954375603879613}
+  - {fileID: 3354481864229631810}
+  - {fileID: 3965722144531925235}
+  - {fileID: 3103176091704272209}
   InitializedParentNetworkBehaviour: {fileID: 0}
   InitializedNestedNetworkObjects: []
   RuntimeParentNetworkBehaviour: {fileID: 0}
@@ -4008,7 +4017,7 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: 0
+  _initializedTimestamp: -8584111454302617273
 --- !u!114 &3240335010585323169
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4021,9 +4030,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c39deea4edcb3474cbf2668470e7155f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.Networking.NetworkPlayer
-  _componentIndexCache: 255
+  _componentIndexCache: 0
   _addedNetworkObject: {fileID: 8718541801069254893}
-  _networkObjectCache: {fileID: 0}
+  _networkObjectCache: {fileID: 8718541801069254893}
 --- !u!114 &2313410635838124457
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4106,9 +4115,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6bde19f7fab07c847b600287b3150ab7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.Networking.NetworkWeapon
-  _componentIndexCache: 255
+  _componentIndexCache: 1
   _addedNetworkObject: {fileID: 8718541801069254893}
-  _networkObjectCache: {fileID: 0}
+  _networkObjectCache: {fileID: 8718541801069254893}
   DeveloperTargetPrefab: {fileID: 5178000782115004735, guid: 3910234f663633144b9f38280f6e42ee, type: 3}
   DropPrefabs:
   - {fileID: 7154578386564942902, guid: 72facc83af7c1c04dba3889d3f5718af, type: 3}
@@ -4161,9 +4170,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53b0a67e17fb01f4e90316e55402c562, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.Networking.NetworkHealth
-  _componentIndexCache: 255
+  _componentIndexCache: 2
   _addedNetworkObject: {fileID: 8718541801069254893}
-  _networkObjectCache: {fileID: 0}
+  _networkObjectCache: {fileID: 8718541801069254893}
 --- !u!114 &7508799110096596672
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4215,9 +4224,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1fcf2ff6ee7c3a04c8a844c13185107a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.Networking.NetworkFishing
-  _componentIndexCache: 255
+  _componentIndexCache: 3
   _addedNetworkObject: {fileID: 8718541801069254893}
-  _networkObjectCache: {fileID: 0}
+  _networkObjectCache: {fileID: 8718541801069254893}
   RodModel: {fileID: 6914134225266954562, guid: 73e934b4a8059e44196ead905af92ca1, type: 3}
   FishModel: {fileID: 4191528624897285126, guid: bf28e351ec591714db79d91ee7f08446, type: 3}
   FloatModel: {fileID: 2726251997487994342, guid: 3deac3ad037964c4da461db07172330a, type: 3}
@@ -4279,9 +4288,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e764bc32dc86069448e2fa2485347daf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.Networking.NetworkShipPush
-  _componentIndexCache: 255
+  _componentIndexCache: 4
   _addedNetworkObject: {fileID: 8718541801069254893}
-  _networkObjectCache: {fileID: 0}
+  _networkObjectCache: {fileID: 8718541801069254893}
 --- !u!114 &8285007558616661583
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4295,8 +4304,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.SabreAnimation
   BodyAnimator: {fileID: 7593853047363271491}
-  GripPosition: {x: 0.008319811, y: 0.07499979, z: 0.012481216}
-  GripRotation: {x: -0.33365387, y: 0.62343836, z: 0.6234384, w: 0.3336536}
+  GripPosition: {x: 0, y: 0.055, z: 0.015}
+  GripRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
 --- !u!114 &6873954375603879613
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4309,9 +4318,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: abd564b69dc7cfe4b941beda2b2e3f2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.Networking.NetworkEquipment
-  _componentIndexCache: 255
+  _componentIndexCache: 5
   _addedNetworkObject: {fileID: 8718541801069254893}
-  _networkObjectCache: {fileID: 0}
+  _networkObjectCache: {fileID: 8718541801069254893}
   Models:
   - {fileID: 6315706825796137226, guid: 57ff4511143359247b680f53fe7a1742, type: 3}
   - {fileID: 2226489005907870759, guid: 5d711393c4b69be49aad2e7f53d87392, type: 3}
@@ -4366,9 +4375,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64dd189a8f140844d8fa271c0ba5c90c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.Networking.NetworkCrewBell
-  _componentIndexCache: 255
+  _componentIndexCache: 6
   _addedNetworkObject: {fileID: 8718541801069254893}
-  _networkObjectCache: {fileID: 0}
+  _networkObjectCache: {fileID: 8718541801069254893}
 --- !u!114 &3965722144531925235
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4381,9 +4390,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba8b3dadb15ed1a449e1581a93ad04b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.Networking.NetworkHullRepair
-  _componentIndexCache: 255
+  _componentIndexCache: 7
   _addedNetworkObject: {fileID: 8718541801069254893}
-  _networkObjectCache: {fileID: 0}
+  _networkObjectCache: {fileID: 8718541801069254893}
   MalletModel: {fileID: 5075510370247273477, guid: 08b8b52b8b62bda4496591436d1395ef, type: 3}
 --- !u!114 &3103176091704272209
 MonoBehaviour:
@@ -4397,9 +4406,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d874d9638124a6b4ca9fc33c66b38f1d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.Networking.NetworkHolyGrenadeHands
-  _componentIndexCache: 255
+  _componentIndexCache: 8
   _addedNetworkObject: {fileID: 8718541801069254893}
-  _networkObjectCache: {fileID: 0}
+  _networkObjectCache: {fileID: 8718541801069254893}
   Prefab: {fileID: 3144419379224583224, guid: 5ebb91205f12a0b41a73904cba074475, type: 3}
   ArcMaterial: {fileID: 2100000, guid: 5e26dad1322d51b4387628558ebe106c, type: 2}
   ThrowSpeed: 14
