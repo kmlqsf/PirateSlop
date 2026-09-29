@@ -50,10 +50,23 @@
 
 | Файл | Краткое описание |
 | --- | --- |
+| [Assets/Models/Characters/NewPirate/Climbing Down Wall.fbx](<../../Assets/Models/Characters/NewPirate/Climbing Down Wall.fbx>) | Модель / анимации FBX |
+| [Assets/Models/Characters/NewPirate/Climbing Ladder.fbx](<../../Assets/Models/Characters/NewPirate/Climbing Ladder.fbx>) | Модель / анимации FBX |
+| [Assets/Models/Characters/NewPirate/Crouched Walking.fbx](<../../Assets/Models/Characters/NewPirate/Crouched Walking.fbx>) | Модель / анимации FBX |
+| [Assets/Models/Characters/NewPirate/Crouching Idle.fbx](<../../Assets/Models/Characters/NewPirate/Crouching Idle.fbx>) | Модель / анимации FBX |
+| [Assets/Models/Characters/NewPirate/Falling Idle.fbx](<../../Assets/Models/Characters/NewPirate/Falling Idle.fbx>) | Модель / анимации FBX |
+| [Assets/Models/Characters/NewPirate/Jumping Up.fbx](<../../Assets/Models/Characters/NewPirate/Jumping Up.fbx>) | Модель / анимации FBX |
+| [Assets/Models/Characters/NewPirate/Landing.fbx](<../../Assets/Models/Characters/NewPirate/Landing.fbx>) | Модель / анимации FBX |
+| [Assets/Models/Characters/NewPirate/Pistol Aim.fbx](<../../Assets/Models/Characters/NewPirate/Pistol Aim.fbx>) | Модель / анимации FBX |
 | [Assets/Models/Characters/NewPirate/Running.fbx](<../../Assets/Models/Characters/NewPirate/Running.fbx>) | Модель / анимации FBX |
+| [Assets/Models/Characters/NewPirate/Shooting.fbx](<../../Assets/Models/Characters/NewPirate/Shooting.fbx>) | Модель / анимации FBX |
+| [Assets/Models/Characters/NewPirate/Stable Sword Inward Slash.fbx](<../../Assets/Models/Characters/NewPirate/Stable Sword Inward Slash.fbx>) | Модель / анимации FBX |
+| [Assets/Models/Characters/NewPirate/Stable Sword Outward Slash.fbx](<../../Assets/Models/Characters/NewPirate/Stable Sword Outward Slash.fbx>) | Модель / анимации FBX |
 | [Assets/Models/Characters/NewPirate/Start Walking.fbx](<../../Assets/Models/Characters/NewPirate/Start Walking.fbx>) | Модель / анимации FBX |
 | [Assets/Models/Characters/NewPirate/Stop Walking.fbx](<../../Assets/Models/Characters/NewPirate/Stop Walking.fbx>) | Модель / анимации FBX |
-| [Assets/Models/Characters/NewPirate/Walking.fbx](<../../Assets/Models/Characters/NewPirate/Walking.fbx>) | Модель / анимации FBX |
+| [Assets/Models/Characters/NewPirate/Swimming.fbx](<../../Assets/Models/Characters/NewPirate/Swimming.fbx>) | Модель / анимации FBX |
+| [Assets/Models/Characters/NewPirate/Treading Water.fbx](<../../Assets/Models/Characters/NewPirate/Treading Water.fbx>) | Модель / анимации FBX |
+| [Assets/Models/Characters/NewPirate/Walking.fbx](<../../Assets/Models/Characters/NewPirate/Walking.fbx>) | Модель / анимации FBX; Персонаж, камера и анимации |
 
 ## Assets/Models/Characters/NewPirate/pirate character 3d model
 

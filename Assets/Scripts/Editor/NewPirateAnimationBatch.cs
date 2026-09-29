@@ -34,7 +34,7 @@ namespace PirateSlop.EditorTools
                 // 1. Process all 13 FBX animations into .anim clips
                 // Locomotion & Movement (Stage 1)
                 ProcessSeamlessIdle();
-                ProcessSabreReady();
+
                 ProcessClip("Jumping Up.fbx", "New_JumpUp.anim", false, inPlace: true);
                 ProcessClip("Falling Idle.fbx", "New_FallingIdle.anim", true, inPlace: true);
                 // Trim Landing: starts when feet hit ground at 0.366s, dips knees, recovers to standing at 1.0s
@@ -47,8 +47,8 @@ namespace PirateSlop.EditorTools
                 ProcessClip("Swimming.fbx", "New_Swimming.anim", true, inPlace: true);
 
                 // Melee Combat (Stage 2)
-                ProcessClip("Stable Sword Outward Slash.fbx", "New_SwordSlash1.anim", false, inPlace: true);
-                ProcessClip("Stable Sword Inward Slash.fbx", "New_SwordSlash2.anim", false, inPlace: true);
+                NewPirateSabrePoses.Rebuild();
+
 
                 // Firearms (Stage 3)
                 ProcessClip("Pistol Aim.fbx", "New_PistolAim.anim", true, inPlace: true);
@@ -82,39 +82,6 @@ namespace PirateSlop.EditorTools
             clip.ClearCurves();
             clip.frameRate = 30f;
             float restT = 2.95f, clipDur = 2.0f;
-            var bindings = AnimationUtility.GetCurveBindings(srcClip);
-            foreach (var b in bindings)
-            {
-                var srcCurve = AnimationUtility.GetEditorCurve(srcClip, b);
-                float restVal = srcCurve.Evaluate(restT);
-                if (b.path == "mixamorig:Hips" && (b.propertyName.EndsWith("m_LocalPosition.x") || b.propertyName.EndsWith("m_LocalPosition.z")))
-                    restVal = 0f;
-                Keyframe[] keys;
-                if (b.path.Contains("Spine") && b.propertyName.EndsWith("m_LocalRotation.x"))
-                    keys = new[] { new Keyframe(0f, restVal, 0f, 0f), new Keyframe(clipDur * 0.5f, restVal + 0.005f, 0f, 0f), new Keyframe(clipDur, restVal, 0f, 0f) };
-                else
-                    keys = new[] { new Keyframe(0f, restVal, 0f, 0f), new Keyframe(clipDur, restVal, 0f, 0f) };
-                clip.SetCurve(b.path, b.type, b.propertyName, new AnimationCurve(keys));
-            }
-            clip.EnsureQuaternionContinuity();
-            var settings = AnimationUtility.GetAnimationClipSettings(clip);
-            settings.loopTime = true;
-            AnimationUtility.SetAnimationClipSettings(clip, settings);
-            EditorUtility.SetDirty(clip);
-        }
-
-        static void ProcessSabreReady()
-        {
-            string fbxPath = FbxFolder + "/Stable Sword Outward Slash.fbx";
-            string animPath = AnimFolder + "/New_SabreReady.anim";
-            var allAssets = AssetDatabase.LoadAllAssetsAtPath(fbxPath);
-            var srcClip = allAssets.OfType<AnimationClip>().FirstOrDefault(c => !c.name.StartsWith("__preview__"));
-            if (srcClip == null) return;
-            var clip = AssetDatabase.LoadAssetAtPath<AnimationClip>(animPath);
-            if (clip == null) { clip = new AnimationClip { name = "New_SabreReady" }; AssetDatabase.CreateAsset(clip, animPath); }
-            clip.ClearCurves();
-            clip.frameRate = 30f;
-            float restT = 0.0f, clipDur = 1.5f;
             var bindings = AnimationUtility.GetCurveBindings(srcClip);
             foreach (var b in bindings)
             {
@@ -265,7 +232,6 @@ namespace PirateSlop.EditorTools
             var slash2 = AssetDatabase.LoadAssetAtPath<AnimationClip>(AnimFolder + "/New_SwordSlash2.anim");
             var pistolAim = AssetDatabase.LoadAssetAtPath<AnimationClip>(AnimFolder + "/New_PistolAim.anim");
             var shooting = AssetDatabase.LoadAssetAtPath<AnimationClip>(AnimFolder + "/New_Shooting.anim");
-            var newIdle = AssetDatabase.LoadAssetAtPath<AnimationClip>(AnimFolder + "/New_Idle.anim");
             var sabreReady = AssetDatabase.LoadAssetAtPath<AnimationClip>(AnimFolder + "/New_SabreReady.anim");
 
             // --- 1. Base Layer ---
@@ -433,8 +399,7 @@ namespace PirateSlop.EditorTools
                 var readyState = sabreSm.states.FirstOrDefault(s => s.state.name == "Ready").state;
                 if (readyState != null)
                 {
-                    // Default back to clean newIdle (layer weight only active during slash)
-                    readyState.motion = newIdle;
+                    readyState.motion = sabreReady;
                     EditorUtility.SetDirty(readyState);
                 }
 

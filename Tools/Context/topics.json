@@ -48,14 +48,14 @@
     },
     {
       "id": "player", "title": "Персонаж, камера и анимации", "aliases": ["игрок", "персонаж", "камера", "анимации"],
-      "notes": ["Ввод и камера принадлежат локальному игроку; движение наблюдателей и анимации сверять с сетевым состоянием.", "Проверять привязку компонентов к NetworkPlayer. Совпадение имён костей не гарантирует совместимость анимаций."],
-      "files": ["Assets/Scripts/AdvancedPlayerController.cs", "Assets/Scripts/ShipDeckPassenger.cs", "Assets/Scripts/Networking/NetworkPlayer.cs", "Assets/Scripts/Player/PlayerAnimatorDriver.cs", "Assets/Scripts/Player/FirstPersonModelVisibility.cs", "Assets/Scripts/Editor/PirateAnimationRetargeter.cs", "Assets/Prefabs/Networking/NetworkPlayer.prefab"],
+      "notes": ["Ввод и камера принадлежат локальному игроку; движение наблюдателей и анимации сверять с сетевым состоянием.", "Проверять привязку компонентов к NetworkPlayer. Совпадение имён костей не гарантирует совместимость анимаций.", "NetworkPlayer использует Tripo/Mixamo Walking.fbx из NewPirate. Лицо и борода имеют исправленные веса Head; исходник и способ сохранения FBX — Art/Blender/Characters/NewPirate/README.md."],
+      "files": ["Assets/Scripts/AdvancedPlayerController.cs", "Assets/Scripts/ShipDeckPassenger.cs", "Assets/Scripts/Networking/NetworkPlayer.cs", "Assets/Scripts/Player/PlayerAnimatorDriver.cs", "Assets/Scripts/Player/FirstPersonModelVisibility.cs", "Assets/Scripts/Editor/PirateAnimationRetargeter.cs", "Assets/Prefabs/Networking/NetworkPlayer.prefab", "Assets/Models/Characters/NewPirate/Walking.fbx", "Art/Blender/Characters/NewPirate/Pirate_HeadWeights.blend", "Art/Blender/Characters/NewPirate/repair_head_weights.py", "Art/Blender/Characters/NewPirate/README.md"],
       "docs": ["animation-review.md", "unity.md"]
     },
     {
       "id": "weapons", "title": "Личное оружие и урон", "aliases": ["оружие", "пистолет", "бой", "combat"],
-      "notes": ["Разделять локальный отклик оружия и серверное подтверждение урона/расхода боеприпасов.", "Настройки оружия искать через FirearmDefinition и используемые ссылки; не копировать числовой баланс из истории."],
-      "files": ["Assets/Scripts/Player/PirateWeapon.cs", "Assets/Scripts/Networking/NetworkWeapon.cs", "Assets/Scripts/Player/FirearmDefinition.cs", "Assets/Scripts/Player/FirearmHandling.cs", "Assets/Scripts/Player/CombatHealth.cs", "Assets/Scripts/Networking/NetworkHealth.cs", "Assets/Scripts/Editor/FirearmSetup.cs"],
+      "notes": ["Разделять локальный отклик оружия и серверное подтверждение урона/расхода боеприпасов.", "Настройки оружия искать через FirearmDefinition и используемые ссылки; не копировать числовой баланс из истории.", "SabreAnimation использует отдельный хват Mixamo и переносит движение игровой сабли в координаты камеры для первого лица. Слой SabreCombat активен при выбранной сабле; Ready использует New_SabreReady. NewPirateAnimationBatch сохраняет эту стойку при переимпорте."],
+      "files": ["Assets/Scripts/Player/PirateWeapon.cs", "Assets/Scripts/Networking/NetworkWeapon.cs", "Assets/Scripts/Player/FirearmDefinition.cs", "Assets/Scripts/Player/FirearmHandling.cs", "Assets/Scripts/Player/CombatHealth.cs", "Assets/Scripts/Networking/NetworkHealth.cs", "Assets/Scripts/Editor/FirearmSetup.cs", "Assets/Scripts/Player/SabreAnimation.cs", "Assets/Scripts/Editor/NewPirateAnimationBatch.cs"],
       "docs": ["firearm-foundation.md", "combat-balance.md"]
     },
     {

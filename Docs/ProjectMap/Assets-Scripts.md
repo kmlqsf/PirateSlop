@@ -96,6 +96,7 @@
 | [Assets/Scripts/Editor/MultiplayerSceneSetup.cs](<../../Assets/Scripts/Editor/MultiplayerSceneSetup.cs>) | Исходник C#: MultiplayerSceneSetup |
 | [Assets/Scripts/Editor/MultiplayerStartup.cs](<../../Assets/Scripts/Editor/MultiplayerStartup.cs>) | Исходник C#: MultiplayerStartup |
 | [Assets/Scripts/Editor/MultiplayerWorkBridge.cs](<../../Assets/Scripts/Editor/MultiplayerWorkBridge.cs>) | Исходник C#: MultiplayerWorkBridge |
+| [Assets/Scripts/Editor/NewPirateAnimationBatch.cs](<../../Assets/Scripts/Editor/NewPirateAnimationBatch.cs>) | Исходник C#: NewPirateAnimationBatch; Личное оружие и урон |
 | [Assets/Scripts/Editor/OceanSetup.cs](<../../Assets/Scripts/Editor/OceanSetup.cs>) | Исходник C#: OceanSetup; Мир, острова и океан |
 | [Assets/Scripts/Editor/ParrotBellSetup.cs](<../../Assets/Scripts/Editor/ParrotBellSetup.cs>) | Исходник C#: ParrotBellSetup |
 | [Assets/Scripts/Editor/PirateAnimationRetargeter.cs](<../../Assets/Scripts/Editor/PirateAnimationRetargeter.cs>) | Исходник C#: PirateAnimationRetargeter; Персонаж, камера и анимации |
@@ -301,7 +302,7 @@
 | [Assets/Scripts/Player/PlayerMotor.cs](<../../Assets/Scripts/Player/PlayerMotor.cs>) | Исходник C#: PlayerMotor |
 | [Assets/Scripts/Player/PlayerMotorConfig.cs](<../../Assets/Scripts/Player/PlayerMotorConfig.cs>) | Исходник C#: PlayerMotorConfig |
 | [Assets/Scripts/Player/PlayerPresentation.cs](<../../Assets/Scripts/Player/PlayerPresentation.cs>) | Исходник C#: PlayerPresentation |
-| [Assets/Scripts/Player/SabreAnimation.cs](<../../Assets/Scripts/Player/SabreAnimation.cs>) | Исходник C#: SabreAnimation |
+| [Assets/Scripts/Player/SabreAnimation.cs](<../../Assets/Scripts/Player/SabreAnimation.cs>) | Исходник C#: SabreAnimation; Личное оружие и урон |
 | [Assets/Scripts/Player/ShipSpyglass.cs](<../../Assets/Scripts/Player/ShipSpyglass.cs>) | Исходник C#: ShipSpyglass |
 | [Assets/Scripts/Player/ShipSpyglassView.cs](<../../Assets/Scripts/Player/ShipSpyglassView.cs>) | Исходник C#: ShipSpyglassView; Предметы, лут и инвентарь |
 | [Assets/Scripts/Player/SwimPresentation.cs](<../../Assets/Scripts/Player/SwimPresentation.cs>) | Исходник C#: SwimPresentation |

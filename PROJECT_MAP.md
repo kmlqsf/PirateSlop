@@ -1,6 +1,6 @@
 # PirateSlop — карта проекта
 
-Снимок файлов: 2026-09-27. Корень: `C:\Users\K\Project`.
+Снимок файлов: 2026-09-29. Корень: `C:\Users\K\Project`.
 
 ## Как пользоваться
 
@@ -12,29 +12,31 @@
 
 ## Полный каталог
 
-Учтено 3678 файлов без `.meta`. Ещё 3862 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
+Учтено 3585 файлов без `.meta`. Ещё 3879 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
 
 | Раздел | Назначение | Файлов |
 | --- | --- | ---: |
-| [.opencode](<Docs/ProjectMap/.opencode.md>) | Ресурсы раздела; точный состав — в каталоге | 1 |
-| [Art](<Docs/ProjectMap/Art.md>) | Исходники арта и Blender | 109 |
+| [.agents](<Docs/ProjectMap/.agents.md>) | Ресурсы раздела; точный состав — в каталоге | 1 |
+| [.cursor](<Docs/ProjectMap/.cursor.md>) | Ресурсы раздела; точный состав — в каталоге | 1 |
+| [.opencode](<Docs/ProjectMap/.opencode.md>) | Ресурсы раздела; точный состав — в каталоге | 4 |
+| [Art](<Docs/ProjectMap/Art.md>) | Исходники арта и Blender | 98 |
 | [Assets](<Docs/ProjectMap/Assets.md>) | Ресурсы раздела; точный состав — в каталоге | 3 |
-| [Assets/Animations](<Docs/ProjectMap/Assets-Animations.md>) | Анимации | 37 |
+| [Assets/Animations](<Docs/ProjectMap/Assets-Animations.md>) | Анимации | 51 |
 | [Assets/Audio](<Docs/ProjectMap/Assets-Audio.md>) | Звуковые ресурсы и лицензии | 173 |
 | [Assets/Branding](<Docs/ProjectMap/Assets-Branding.md>) | Оформление проекта | 1 |
+| [Assets/Editor](<Docs/ProjectMap/Assets-Editor.md>) | Редакторские ресурсы | 1 |
 | [Assets/Fog Particles](<Docs/ProjectMap/Assets-Fog Particles.md>) | Ресурсы раздела; точный состав — в каталоге | 17 |
 | [Assets/Game](<Docs/ProjectMap/Assets-Game.md>) | Игровые подсистемы и эффекты | 79 |
 | [Assets/Houidisoft technology](<Docs/ProjectMap/Assets-Houidisoft technology.md>) | Ресурсы раздела; точный состав — в каталоге | 15 |
-| [Assets/JMO Assets](<Docs/ProjectMap/Assets-JMO Assets.md>) | Ресурсы раздела; точный состав — в каталоге | 489 |
+| [Assets/JMO Assets](<Docs/ProjectMap/Assets-JMO Assets.md>) | Ресурсы раздела; точный состав — в каталоге | 488 |
 | [Assets/Materials](<Docs/ProjectMap/Assets-Materials.md>) | Материалы | 146 |
 | [Assets/Mirza](<Docs/ProjectMap/Assets-Mirza.md>) | Ресурсы раздела; точный состав — в каталоге | 186 |
-| [Assets/Models](<Docs/ProjectMap/Assets-Models.md>) | Модели и связанные ресурсы | 681 |
+| [Assets/Models](<Docs/ProjectMap/Assets-Models.md>) | Модели и связанные ресурсы | 694 |
 | [Assets/Plugins](<Docs/ProjectMap/Assets-Plugins.md>) | Плагины | 5 |
 | [Assets/Prefabs](<Docs/ProjectMap/Assets-Prefabs.md>) | Готовые игровые объекты | 126 |
 | [Assets/Resources](<Docs/ProjectMap/Assets-Resources.md>) | Ресурсы, доступные для загрузки по имени | 36 |
 | [Assets/Scenes](<Docs/ProjectMap/Assets-Scenes.md>) | Сохранённые сцены | 3 |
-| [Assets/Screenshots](<Docs/ProjectMap/Assets-Screenshots.md>) | Сохранённые изображения | 8 |
-| [Assets/Scripts](<Docs/ProjectMap/Assets-Scripts.md>) | Игровой код и редакторские инструменты | 292 |
+| [Assets/Scripts](<Docs/ProjectMap/Assets-Scripts.md>) | Игровой код и редакторские инструменты | 293 |
 | [Assets/Settings](<Docs/ProjectMap/Assets-Settings.md>) | Настройки игровых систем и рендеринга | 43 |
 | [Assets/Shaders](<Docs/ProjectMap/Assets-Shaders.md>) | Шейдеры | 7 |
 | [Assets/Tests](<Docs/ProjectMap/Assets-Tests.md>) | Исходники проверок | 31 |
@@ -42,10 +44,10 @@
 | [Assets/TutorialInfo](<Docs/ProjectMap/Assets-TutorialInfo.md>) | Ресурсы раздела; точный состав — в каталоге | 7 |
 | [Assets/UI](<Docs/ProjectMap/Assets-UI.md>) | Ресурсы интерфейса | 32 |
 | [Assets/_Recovery](<Docs/ProjectMap/Assets-_Recovery.md>) | Сохранённые восстановленные данные | 7 |
-| [Docs](<Docs/ProjectMap/Docs.md>) | Документы и сохранённые отчёты | 137 |
-| [Packages](<Docs/ProjectMap/Packages.md>) | Манифест, lock-файл и встроенные пакеты | 918 |
+| [Docs](<Docs/ProjectMap/Docs.md>) | Документы и сохранённые отчёты | 29 |
+| [Packages](<Docs/ProjectMap/Packages.md>) | Манифест, lock-файл и встроенные пакеты | 916 |
 | [ProjectSettings](<Docs/ProjectMap/ProjectSettings.md>) | Настройки Unity | 28 |
-| [Root](<Docs/ProjectMap/Root.md>) | Корневые инструкции, планы и служебные файлы | 26 |
+| [Root](<Docs/ProjectMap/Root.md>) | Корневые инструкции, планы и служебные файлы | 29 |
 | [ThirdParty](<Docs/ProjectMap/ThirdParty.md>) | Сторонние ресурсы | 2 |
 | [Tools](<Docs/ProjectMap/Tools.md>) | Инструменты разработки и загрузчик контекста | 6 |
 
@@ -147,6 +149,7 @@ Windows, URP, FishNet; подключения по IP и Steam имеют отд
 
 Ввод и камера принадлежат локальному игроку; движение наблюдателей и анимации сверять с сетевым состоянием.
 Проверять привязку компонентов к NetworkPlayer. Совпадение имён костей не гарантирует совместимость анимаций.
+NetworkPlayer использует Tripo/Mixamo Walking.fbx из NewPirate. Лицо и борода имеют исправленные веса Head; исходник и способ сохранения FBX — Art/Blender/Characters/NewPirate/README.md.
 
 - [Assets/Scripts/AdvancedPlayerController.cs](<Assets/Scripts/AdvancedPlayerController.cs>) — Исходник C#: AdvancedPlayerController.
 - [Assets/Scripts/ShipDeckPassenger.cs](<Assets/Scripts/ShipDeckPassenger.cs>) — Исходник C#: ShipDeckPassenger.
@@ -155,6 +158,10 @@ Windows, URP, FishNet; подключения по IP и Steam имеют отд
 - [Assets/Scripts/Player/FirstPersonModelVisibility.cs](<Assets/Scripts/Player/FirstPersonModelVisibility.cs>) — Исходник C#: FirstPersonModelVisibility.
 - [Assets/Scripts/Editor/PirateAnimationRetargeter.cs](<Assets/Scripts/Editor/PirateAnimationRetargeter.cs>) — Исходник C#: PirateAnimationRetargeter.
 - [Assets/Prefabs/Networking/NetworkPlayer.prefab](<Assets/Prefabs/Networking/NetworkPlayer.prefab>) — Префаб Unity.
+- [Assets/Models/Characters/NewPirate/Walking.fbx](<Assets/Models/Characters/NewPirate/Walking.fbx>) — Модель / анимации FBX.
+- [Art/Blender/Characters/NewPirate/Pirate_HeadWeights.blend](<Art/Blender/Characters/NewPirate/Pirate_HeadWeights.blend>) — Редактируемая сцена Blender.
+- [Art/Blender/Characters/NewPirate/repair_head_weights.py](<Art/Blender/Characters/NewPirate/repair_head_weights.py>) — Инструмент Python.
+- [Art/Blender/Characters/NewPirate/README.md](<Art/Blender/Characters/NewPirate/README.md>) — Документация.
 - [animation-review.md](<animation-review.md>) — Документация.
 - [unity.md](<unity.md>) — Документация.
 
@@ -164,6 +171,7 @@ Windows, URP, FishNet; подключения по IP и Steam имеют отд
 
 Разделять локальный отклик оружия и серверное подтверждение урона/расхода боеприпасов.
 Настройки оружия искать через FirearmDefinition и используемые ссылки; не копировать числовой баланс из истории.
+SabreAnimation использует отдельный хват Mixamo и переносит движение игровой сабли в координаты камеры для первого лица. Слой SabreCombat активен при выбранной сабле; Ready использует New_SabreReady. NewPirateAnimationBatch сохраняет эту стойку при переимпорте.
 
 - [Assets/Scripts/Player/PirateWeapon.cs](<Assets/Scripts/Player/PirateWeapon.cs>) — Исходник C#: IWeaponTarget, PirateWeapon.
 - [Assets/Scripts/Networking/NetworkWeapon.cs](<Assets/Scripts/Networking/NetworkWeapon.cs>) — Исходник C#: NetworkWeapon.
@@ -172,6 +180,8 @@ Windows, URP, FishNet; подключения по IP и Steam имеют отд
 - [Assets/Scripts/Player/CombatHealth.cs](<Assets/Scripts/Player/CombatHealth.cs>) — Исходник C#: CombatHealth.
 - [Assets/Scripts/Networking/NetworkHealth.cs](<Assets/Scripts/Networking/NetworkHealth.cs>) — Исходник C#: NetworkHealth.
 - [Assets/Scripts/Editor/FirearmSetup.cs](<Assets/Scripts/Editor/FirearmSetup.cs>) — Исходник C#: FirearmSetup.
+- [Assets/Scripts/Player/SabreAnimation.cs](<Assets/Scripts/Player/SabreAnimation.cs>) — Исходник C#: SabreAnimation.
+- [Assets/Scripts/Editor/NewPirateAnimationBatch.cs](<Assets/Scripts/Editor/NewPirateAnimationBatch.cs>) — Исходник C#: NewPirateAnimationBatch.
 - [firearm-foundation.md](<firearm-foundation.md>) — Документация.
 - [combat-balance.md](<combat-balance.md>) — Документация.
 

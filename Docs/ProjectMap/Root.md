@@ -10,6 +10,7 @@
 
 | Файл | Краткое описание |
 | --- | --- |
+| [.cursorrules](<../../.cursorrules>) | Файл без расширения |
 | [.gitattributes](<../../.gitattributes>) | Файл без расширения |
 | [.gitignore](<../../.gitignore>) | Файл без расширения |
 | [AGENTS.md](<../../AGENTS.md>) | Документация |
@@ -17,6 +18,7 @@
 | [BOT_ITEMS.md](<../../BOT_ITEMS.md>) | Документация; Новая система ботов |
 | [BOT_PROGRESS.md](<../../BOT_PROGRESS.md>) | Документация; Новая система ботов |
 | [BOT_SPEC.md](<../../BOT_SPEC.md>) | Документация; Новая система ботов |
+| [GEMINI.md](<../../GEMINI.md>) | Документация |
 | [animation-review.md](<../../animation-review.md>) | Документация; Персонаж, камера и анимации |
 | [blender.md](<../../blender.md>) | Документация; Паруса и канаты, Модели и Blender |
 | [combat-balance.md](<../../combat-balance.md>) | Документация; Пушки, ядра и лафеты, Личное оружие и урон, Предметы, лут и инвентарь |
@@ -27,6 +29,7 @@
 | [harpoon_generator.py](<../../harpoon_generator.py>) | Инструмент Python |
 | [harpoon_tz.md](<../../harpoon_tz.md>) | Документация |
 | [harpoon_unity_tz.md](<../../harpoon_unity_tz.md>) | Документация |
+| [import_anim.log](<../../import_anim.log>) | Файл .log |
 | [lessons.md](<../../lessons.md>) | Документация |
 | [multiplayer-plan.md](<../../multiplayer-plan.md>) | Документация; Движение корабля и палуба, Сеть, сессия и Steam |
 | [procedural-world.md](<../../procedural-world.md>) | Документация; Мир, острова и океан |
