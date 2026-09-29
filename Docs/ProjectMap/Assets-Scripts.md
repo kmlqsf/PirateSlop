@@ -97,6 +97,7 @@
 | [Assets/Scripts/Editor/MultiplayerStartup.cs](<../../Assets/Scripts/Editor/MultiplayerStartup.cs>) | Исходник C#: MultiplayerStartup |
 | [Assets/Scripts/Editor/MultiplayerWorkBridge.cs](<../../Assets/Scripts/Editor/MultiplayerWorkBridge.cs>) | Исходник C#: MultiplayerWorkBridge |
 | [Assets/Scripts/Editor/NewPirateAnimationBatch.cs](<../../Assets/Scripts/Editor/NewPirateAnimationBatch.cs>) | Исходник C#: NewPirateAnimationBatch; Личное оружие и урон |
+| [Assets/Scripts/Editor/NewPirateSabrePoses.cs](<../../Assets/Scripts/Editor/NewPirateSabrePoses.cs>) | Исходник C#: NewPirateSabrePoses |
 | [Assets/Scripts/Editor/OceanSetup.cs](<../../Assets/Scripts/Editor/OceanSetup.cs>) | Исходник C#: OceanSetup; Мир, острова и океан |
 | [Assets/Scripts/Editor/ParrotBellSetup.cs](<../../Assets/Scripts/Editor/ParrotBellSetup.cs>) | Исходник C#: ParrotBellSetup |
 | [Assets/Scripts/Editor/PirateAnimationRetargeter.cs](<../../Assets/Scripts/Editor/PirateAnimationRetargeter.cs>) | Исходник C#: PirateAnimationRetargeter; Персонаж, камера и анимации |

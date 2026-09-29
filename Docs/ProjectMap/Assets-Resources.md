@@ -52,6 +52,12 @@
 | --- | --- |
 | [Assets/Resources/EnvironmentTest/Gallery.prefab](<../../Assets/Resources/EnvironmentTest/Gallery.prefab>) | Префаб Unity |
 
+## Assets/Resources/Ships
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Resources/Ships/ShipSkeletonTest.prefab](<../../Assets/Resources/Ships/ShipSkeletonTest.prefab>) | Префаб Unity |
+
 ## Assets/Resources/Underwater
 
 | Файл | Краткое описание |

@@ -40,6 +40,15 @@ namespace PirateSlop.World
                 whale.transform.position = gallery.Spawn + new Vector3(140f, layout.SeaLevel - 4.5f, 160f);
                 whale.transform.rotation = Quaternion.Euler(0f, -30f, 0f);
             }
+            var skeletonShipPrefab = Resources.Load<GameObject>("Ships/ShipSkeletonTest");
+            if (skeletonShipPrefab != null)
+            {
+                var skeleton = Instantiate(skeletonShipPrefab, parent);
+                Quaternion shipRot = Quaternion.Euler(0f, 90f, 0f);
+                Vector3 rightOffset = shipRot * Vector3.right * 50f;
+                skeleton.transform.position = gallery.Spawn + new Vector3(0f, layout.SeaLevel, 0f) + rightOffset;
+                skeleton.transform.rotation = shipRot;
+            }
         }
 
         void OnGUI()

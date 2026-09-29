@@ -12,7 +12,7 @@
 
 ## Полный каталог
 
-Учтено 3585 файлов без `.meta`. Ещё 3879 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
+Учтено 3683 файлов без `.meta`. Ещё 3981 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
 
 | Раздел | Назначение | Файлов |
 | --- | --- | ---: |
@@ -31,12 +31,12 @@
 | [Assets/JMO Assets](<Docs/ProjectMap/Assets-JMO Assets.md>) | Ресурсы раздела; точный состав — в каталоге | 488 |
 | [Assets/Materials](<Docs/ProjectMap/Assets-Materials.md>) | Материалы | 146 |
 | [Assets/Mirza](<Docs/ProjectMap/Assets-Mirza.md>) | Ресурсы раздела; точный состав — в каталоге | 186 |
-| [Assets/Models](<Docs/ProjectMap/Assets-Models.md>) | Модели и связанные ресурсы | 694 |
+| [Assets/Models](<Docs/ProjectMap/Assets-Models.md>) | Модели и связанные ресурсы | 789 |
 | [Assets/Plugins](<Docs/ProjectMap/Assets-Plugins.md>) | Плагины | 5 |
-| [Assets/Prefabs](<Docs/ProjectMap/Assets-Prefabs.md>) | Готовые игровые объекты | 126 |
-| [Assets/Resources](<Docs/ProjectMap/Assets-Resources.md>) | Ресурсы, доступные для загрузки по имени | 36 |
+| [Assets/Prefabs](<Docs/ProjectMap/Assets-Prefabs.md>) | Готовые игровые объекты | 127 |
+| [Assets/Resources](<Docs/ProjectMap/Assets-Resources.md>) | Ресурсы, доступные для загрузки по имени | 37 |
 | [Assets/Scenes](<Docs/ProjectMap/Assets-Scenes.md>) | Сохранённые сцены | 3 |
-| [Assets/Scripts](<Docs/ProjectMap/Assets-Scripts.md>) | Игровой код и редакторские инструменты | 293 |
+| [Assets/Scripts](<Docs/ProjectMap/Assets-Scripts.md>) | Игровой код и редакторские инструменты | 294 |
 | [Assets/Settings](<Docs/ProjectMap/Assets-Settings.md>) | Настройки игровых систем и рендеринга | 43 |
 | [Assets/Shaders](<Docs/ProjectMap/Assets-Shaders.md>) | Шейдеры | 7 |
 | [Assets/Tests](<Docs/ProjectMap/Assets-Tests.md>) | Исходники проверок | 31 |
@@ -99,6 +99,7 @@ Windows, URP, FishNet; подключения по IP и Steam имеют отд
 - [Assets/Scripts/Stations/CapstanStation.cs](<Assets/Scripts/Stations/CapstanStation.cs>) — Исходник C#: CapstanStation.
 - [Assets/Scripts/Networking/NetworkShip.Anchor.cs](<Assets/Scripts/Networking/NetworkShip.Anchor.cs>) — Исходник C#: NetworkShip.
 - [Assets/Prefabs/Networking/NetworkShip.prefab](<Assets/Prefabs/Networking/NetworkShip.prefab>) — Префаб Unity.
+- [Assets/Prefabs/Ships/ShipSkeletonTest.prefab](<Assets/Prefabs/Ships/ShipSkeletonTest.prefab>) — Префаб Unity.
 - [unity.md](<unity.md>) — Документация.
 - [multiplayer-plan.md](<multiplayer-plan.md>) — Документация.
 

@@ -872,6 +872,116 @@
 | [Assets/Models/Ships/MainShip/Textures/StylShip_ShipHull_BaseColor.png](<../../Assets/Models/Ships/MainShip/Textures/StylShip_ShipHull_BaseColor.png>) | Изображение / текстура |
 | [Assets/Models/Ships/MainShip/Textures/StylShip_ShipHull_NormalOpenGL.png](<../../Assets/Models/Ships/MainShip/Textures/StylShip_ShipHull_NormalOpenGL.png>) | Изображение / текстура |
 
+## Assets/Models/Ships/ShipSkeleton
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/Ships/ShipSkeleton/Ship_Skeleton.blend](<../../Assets/Models/Ships/ShipSkeleton/Ship_Skeleton.blend>) | Редактируемая сцена Blender |
+| [Assets/Models/Ships/ShipSkeleton/Ship_Skeleton.fbx](<../../Assets/Models/Ships/ShipSkeleton/Ship_Skeleton.fbx>) | Модель / анимации FBX |
+
+## Assets/Models/Ships/ShipSkeleton/Materials
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/Ships/ShipSkeleton/Materials/Deck_Wood_Tone_0.mat](<../../Assets/Models/Ships/ShipSkeleton/Materials/Deck_Wood_Tone_0.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipSkeleton/Materials/Deck_Wood_Tone_1.mat](<../../Assets/Models/Ships/ShipSkeleton/Materials/Deck_Wood_Tone_1.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipSkeleton/Materials/Deck_Wood_Tone_2.mat](<../../Assets/Models/Ships/ShipSkeleton/Materials/Deck_Wood_Tone_2.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipSkeleton/Materials/Deck_Wood_Tone_3.mat](<../../Assets/Models/Ships/ShipSkeleton/Materials/Deck_Wood_Tone_3.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipSkeleton/Materials/Deck_Wood_Tone_4.mat](<../../Assets/Models/Ships/ShipSkeleton/Materials/Deck_Wood_Tone_4.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipSkeleton/Materials/Frame_Fair_Wood.mat](<../../Assets/Models/Ships/ShipSkeleton/Materials/Frame_Fair_Wood.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipSkeleton/Materials/Frame_Timber_Wood.mat](<../../Assets/Models/Ships/ShipSkeleton/Materials/Frame_Timber_Wood.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipSkeleton/Materials/Hull_Pitched_Seams.mat](<../../Assets/Models/Ships/ShipSkeleton/Materials/Hull_Pitched_Seams.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipSkeleton/Materials/Hull_Wood_A_1.mat](<../../Assets/Models/Ships/ShipSkeleton/Materials/Hull_Wood_A_1.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipSkeleton/Materials/Hull_Wood_A_2.mat](<../../Assets/Models/Ships/ShipSkeleton/Materials/Hull_Wood_A_2.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipSkeleton/Materials/Hull_Wood_A_3.mat](<../../Assets/Models/Ships/ShipSkeleton/Materials/Hull_Wood_A_3.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipSkeleton/Materials/Hull_Wood_A_4.mat](<../../Assets/Models/Ships/ShipSkeleton/Materials/Hull_Wood_A_4.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipSkeleton/Materials/Hull_Wood_A_5.mat](<../../Assets/Models/Ships/ShipSkeleton/Materials/Hull_Wood_A_5.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipSkeleton/Materials/Hull_Wood_B_1.mat](<../../Assets/Models/Ships/ShipSkeleton/Materials/Hull_Wood_B_1.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipSkeleton/Materials/Hull_Wood_B_2.mat](<../../Assets/Models/Ships/ShipSkeleton/Materials/Hull_Wood_B_2.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipSkeleton/Materials/Hull_Wood_B_3.mat](<../../Assets/Models/Ships/ShipSkeleton/Materials/Hull_Wood_B_3.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipSkeleton/Materials/Hull_Wood_B_4.mat](<../../Assets/Models/Ships/ShipSkeleton/Materials/Hull_Wood_B_4.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipSkeleton/Materials/Hull_Wood_B_5.mat](<../../Assets/Models/Ships/ShipSkeleton/Materials/Hull_Wood_B_5.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipSkeleton/Materials/Hull_Wood_C_1.mat](<../../Assets/Models/Ships/ShipSkeleton/Materials/Hull_Wood_C_1.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipSkeleton/Materials/Hull_Wood_C_2.mat](<../../Assets/Models/Ships/ShipSkeleton/Materials/Hull_Wood_C_2.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipSkeleton/Materials/Hull_Wood_C_3.mat](<../../Assets/Models/Ships/ShipSkeleton/Materials/Hull_Wood_C_3.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipSkeleton/Materials/Hull_Wood_C_4.mat](<../../Assets/Models/Ships/ShipSkeleton/Materials/Hull_Wood_C_4.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipSkeleton/Materials/Hull_Wood_C_5.mat](<../../Assets/Models/Ships/ShipSkeleton/Materials/Hull_Wood_C_5.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipSkeleton/Materials/tripo_mat_2868da2a.001.mat](<../../Assets/Models/Ships/ShipSkeleton/Materials/tripo_mat_2868da2a.001.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipSkeleton/Materials/tripo_mat_30f26cab.mat](<../../Assets/Models/Ships/ShipSkeleton/Materials/tripo_mat_30f26cab.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipSkeleton/Materials/tripo_mat_48a3f202.mat](<../../Assets/Models/Ships/ShipSkeleton/Materials/tripo_mat_48a3f202.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipSkeleton/Materials/tripo_mat_4ba0b6ce.mat](<../../Assets/Models/Ships/ShipSkeleton/Materials/tripo_mat_4ba0b6ce.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipSkeleton/Materials/tripo_mat_55737ea7.mat](<../../Assets/Models/Ships/ShipSkeleton/Materials/tripo_mat_55737ea7.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipSkeleton/Materials/tripo_mat_7ef8707e.mat](<../../Assets/Models/Ships/ShipSkeleton/Materials/tripo_mat_7ef8707e.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipSkeleton/Materials/tripo_mat_863a0ec8.mat](<../../Assets/Models/Ships/ShipSkeleton/Materials/tripo_mat_863a0ec8.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipSkeleton/Materials/tripo_mat_fcfed6b4.mat](<../../Assets/Models/Ships/ShipSkeleton/Materials/tripo_mat_fcfed6b4.mat>) | Материал Unity |
+
+## Assets/Models/Ships/ShipSkeleton/Textures
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/Ships/ShipSkeleton/Textures/log_block_3d_model_basecolor.JPEG.png](<../../Assets/Models/Ships/ShipSkeleton/Textures/log_block_3d_model_basecolor.JPEG.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipSkeleton/Textures/log_block_3d_model_metallic.JPEG.png](<../../Assets/Models/Ships/ShipSkeleton/Textures/log_block_3d_model_metallic.JPEG.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipSkeleton/Textures/log_block_3d_model_normal.PNG.png](<../../Assets/Models/Ships/ShipSkeleton/Textures/log_block_3d_model_normal.PNG.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipSkeleton/Textures/log_block_3d_model_roughness.JPEG.png](<../../Assets/Models/Ships/ShipSkeleton/Textures/log_block_3d_model_roughness.JPEG.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipSkeleton/Textures/tripo_node_00cb165a-dd6f-41b9-869b-e5e94a4bbf7e_BaseColor.jpg](<../../Assets/Models/Ships/ShipSkeleton/Textures/tripo_node_00cb165a-dd6f-41b9-869b-e5e94a4bbf7e_BaseColor.jpg>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipSkeleton/Textures/tripo_node_00cb165a-dd6f-41b9-869b-e5e94a4bbf7e_Normal_Bake.jpg](<../../Assets/Models/Ships/ShipSkeleton/Textures/tripo_node_00cb165a-dd6f-41b9-869b-e5e94a4bbf7e_Normal_Bake.jpg>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipSkeleton/Textures/tripo_node_4de6bd52-25bc-4b3e-8a54-95fd8484c8e6_BaseColor.jpg](<../../Assets/Models/Ships/ShipSkeleton/Textures/tripo_node_4de6bd52-25bc-4b3e-8a54-95fd8484c8e6_BaseColor.jpg>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipSkeleton/Textures/tripo_node_4de6bd52-25bc-4b3e-8a54-95fd8484c8e6_Normal_Bake.jpg](<../../Assets/Models/Ships/ShipSkeleton/Textures/tripo_node_4de6bd52-25bc-4b3e-8a54-95fd8484c8e6_Normal_Bake.jpg>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipSkeleton/Textures/wooden_floor_tile_3d_model_basecolor.JPEG.png](<../../Assets/Models/Ships/ShipSkeleton/Textures/wooden_floor_tile_3d_model_basecolor.JPEG.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipSkeleton/Textures/wooden_floor_tile_3d_model_metallic.JPEG.png](<../../Assets/Models/Ships/ShipSkeleton/Textures/wooden_floor_tile_3d_model_metallic.JPEG.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipSkeleton/Textures/wooden_floor_tile_3d_model_normal.PNG.png](<../../Assets/Models/Ships/ShipSkeleton/Textures/wooden_floor_tile_3d_model_normal.PNG.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipSkeleton/Textures/wooden_floor_tile_3d_model_roughness.JPEG.png](<../../Assets/Models/Ships/ShipSkeleton/Textures/wooden_floor_tile_3d_model_roughness.JPEG.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipSkeleton/Textures/wooden_log_3d_model_basecolor.JPEG.png](<../../Assets/Models/Ships/ShipSkeleton/Textures/wooden_log_3d_model_basecolor.JPEG.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipSkeleton/Textures/wooden_log_3d_model_metallic.JPEG.png](<../../Assets/Models/Ships/ShipSkeleton/Textures/wooden_log_3d_model_metallic.JPEG.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipSkeleton/Textures/wooden_log_3d_model_normal.PNG.png](<../../Assets/Models/Ships/ShipSkeleton/Textures/wooden_log_3d_model_normal.PNG.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipSkeleton/Textures/wooden_log_3d_model_roughness.JPEG.png](<../../Assets/Models/Ships/ShipSkeleton/Textures/wooden_log_3d_model_roughness.JPEG.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipSkeleton/Textures/wooden_log_frame_3d_model_basecolor.JPEG.png](<../../Assets/Models/Ships/ShipSkeleton/Textures/wooden_log_frame_3d_model_basecolor.JPEG.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipSkeleton/Textures/wooden_log_frame_3d_model_metallic.JPEG.png](<../../Assets/Models/Ships/ShipSkeleton/Textures/wooden_log_frame_3d_model_metallic.JPEG.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipSkeleton/Textures/wooden_log_frame_3d_model_normal.PNG.png](<../../Assets/Models/Ships/ShipSkeleton/Textures/wooden_log_frame_3d_model_normal.PNG.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipSkeleton/Textures/wooden_log_frame_3d_model_roughness.JPEG.png](<../../Assets/Models/Ships/ShipSkeleton/Textures/wooden_log_frame_3d_model_roughness.JPEG.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipSkeleton/Textures/wooden_plank_3d_model_basecolor.JPEG.png](<../../Assets/Models/Ships/ShipSkeleton/Textures/wooden_plank_3d_model_basecolor.JPEG.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipSkeleton/Textures/wooden_plank_3d_model_metallic.JPEG.png](<../../Assets/Models/Ships/ShipSkeleton/Textures/wooden_plank_3d_model_metallic.JPEG.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipSkeleton/Textures/wooden_plank_3d_model_normal.PNG.png](<../../Assets/Models/Ships/ShipSkeleton/Textures/wooden_plank_3d_model_normal.PNG.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipSkeleton/Textures/wooden_plank_3d_model_roughness.JPEG.png](<../../Assets/Models/Ships/ShipSkeleton/Textures/wooden_plank_3d_model_roughness.JPEG.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipSkeleton/Textures/Изогнутая_А_metallic.JPEG.png](<../../Assets/Models/Ships/ShipSkeleton/Textures/Изогнутая_А_metallic.JPEG.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipSkeleton/Textures/Изогнутая_А_roughness.JPEG.png](<../../Assets/Models/Ships/ShipSkeleton/Textures/Изогнутая_А_roughness.JPEG.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipSkeleton/Textures/ИзогнутаяВ_basecolor.JPEG.png](<../../Assets/Models/Ships/ShipSkeleton/Textures/ИзогнутаяВ_basecolor.JPEG.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipSkeleton/Textures/ИзогнутаяВ_metallic.JPEG.png](<../../Assets/Models/Ships/ShipSkeleton/Textures/ИзогнутаяВ_metallic.JPEG.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipSkeleton/Textures/ИзогнутаяВ_normal.PNG.png](<../../Assets/Models/Ships/ShipSkeleton/Textures/ИзогнутаяВ_normal.PNG.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipSkeleton/Textures/ИзогнутаяВ_roughness.JPEG.png](<../../Assets/Models/Ships/ShipSkeleton/Textures/ИзогнутаяВ_roughness.JPEG.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipSkeleton/Textures/Сетка_basecolor.JPEG](<../../Assets/Models/Ships/ShipSkeleton/Textures/Сетка_basecolor.JPEG>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipSkeleton/Textures/Сетка_metallic.JPEG](<../../Assets/Models/Ships/ShipSkeleton/Textures/Сетка_metallic.JPEG>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipSkeleton/Textures/Сетка_normal.PNG](<../../Assets/Models/Ships/ShipSkeleton/Textures/Сетка_normal.PNG>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipSkeleton/Textures/Сетка_rm.JPEG](<../../Assets/Models/Ships/ShipSkeleton/Textures/Сетка_rm.JPEG>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipSkeleton/Textures/Сетка_roughness.JPEG](<../../Assets/Models/Ships/ShipSkeleton/Textures/Сетка_roughness.JPEG>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipSkeleton/Textures/колонка_штурвала_basecolor.JPEG](<../../Assets/Models/Ships/ShipSkeleton/Textures/колонка_штурвала_basecolor.JPEG>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipSkeleton/Textures/колонка_штурвала_metallic.JPEG](<../../Assets/Models/Ships/ShipSkeleton/Textures/колонка_штурвала_metallic.JPEG>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipSkeleton/Textures/колонка_штурвала_normal.PNG](<../../Assets/Models/Ships/ShipSkeleton/Textures/колонка_штурвала_normal.PNG>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipSkeleton/Textures/колонка_штурвала_rm.JPEG](<../../Assets/Models/Ships/ShipSkeleton/Textures/колонка_штурвала_rm.JPEG>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipSkeleton/Textures/колонка_штурвала_roughness.JPEG](<../../Assets/Models/Ships/ShipSkeleton/Textures/колонка_штурвала_roughness.JPEG>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipSkeleton/Textures/мачта_basecolor.JPEG](<../../Assets/Models/Ships/ShipSkeleton/Textures/мачта_basecolor.JPEG>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipSkeleton/Textures/мачта_metallic.JPEG](<../../Assets/Models/Ships/ShipSkeleton/Textures/мачта_metallic.JPEG>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipSkeleton/Textures/мачта_normal.PNG](<../../Assets/Models/Ships/ShipSkeleton/Textures/мачта_normal.PNG>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipSkeleton/Textures/мачта_rm.JPEG](<../../Assets/Models/Ships/ShipSkeleton/Textures/мачта_rm.JPEG>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipSkeleton/Textures/мачта_roughness.JPEG](<../../Assets/Models/Ships/ShipSkeleton/Textures/мачта_roughness.JPEG>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipSkeleton/Textures/мачта_основание_basecolor.JPEG](<../../Assets/Models/Ships/ShipSkeleton/Textures/мачта_основание_basecolor.JPEG>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipSkeleton/Textures/мачта_основание_metallic.JPEG](<../../Assets/Models/Ships/ShipSkeleton/Textures/мачта_основание_metallic.JPEG>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipSkeleton/Textures/мачта_основание_normal.PNG](<../../Assets/Models/Ships/ShipSkeleton/Textures/мачта_основание_normal.PNG>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipSkeleton/Textures/мачта_основание_rm.JPEG](<../../Assets/Models/Ships/ShipSkeleton/Textures/мачта_основание_rm.JPEG>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipSkeleton/Textures/мачта_основание_roughness.JPEG](<../../Assets/Models/Ships/ShipSkeleton/Textures/мачта_основание_roughness.JPEG>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipSkeleton/Textures/рея_basecolor.JPEG](<../../Assets/Models/Ships/ShipSkeleton/Textures/рея_basecolor.JPEG>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipSkeleton/Textures/рея_metallic.JPEG](<../../Assets/Models/Ships/ShipSkeleton/Textures/рея_metallic.JPEG>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipSkeleton/Textures/рея_normal.PNG](<../../Assets/Models/Ships/ShipSkeleton/Textures/рея_normal.PNG>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipSkeleton/Textures/рея_rm.JPEG](<../../Assets/Models/Ships/ShipSkeleton/Textures/рея_rm.JPEG>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipSkeleton/Textures/рея_roughness.JPEG](<../../Assets/Models/Ships/ShipSkeleton/Textures/рея_roughness.JPEG>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipSkeleton/Textures/стык_metallic.JPEG.png](<../../Assets/Models/Ships/ShipSkeleton/Textures/стык_metallic.JPEG.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipSkeleton/Textures/стык_roughness.JPEG.png](<../../Assets/Models/Ships/ShipSkeleton/Textures/стык_roughness.JPEG.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipSkeleton/Textures/штурвал_basecolor.JPEG](<../../Assets/Models/Ships/ShipSkeleton/Textures/штурвал_basecolor.JPEG>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipSkeleton/Textures/штурвал_metallic.JPEG](<../../Assets/Models/Ships/ShipSkeleton/Textures/штурвал_metallic.JPEG>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipSkeleton/Textures/штурвал_normal.PNG](<../../Assets/Models/Ships/ShipSkeleton/Textures/штурвал_normal.PNG>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipSkeleton/Textures/штурвал_rm.JPEG](<../../Assets/Models/Ships/ShipSkeleton/Textures/штурвал_rm.JPEG>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipSkeleton/Textures/штурвал_roughness.JPEG](<../../Assets/Models/Ships/ShipSkeleton/Textures/штурвал_roughness.JPEG>) | Изображение / текстура |
+
 ## Assets/Models/Whale
 
 | Файл | Краткое описание |
