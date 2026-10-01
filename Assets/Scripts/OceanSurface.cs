@@ -12,10 +12,10 @@ namespace PirateSlop
         [Min(0f)] public float SwellStrength = 1f;
         [Min(1f)] public float FinalSwellMultiplier = 2.5f;
         static readonly Vector4[] Swells = {
-            new Vector4(.94f, .342f, .55f, 90f),
-            new Vector4(-.4f, .916515f, .28f, 60f),
-            new Vector4(.6f, -.8f, .18f, 45f),
-            new Vector4(-.8f, -.6f, .12f, 32f)
+            new Vector4(.94f, .342f, 1.1f, 180f),
+            new Vector4(-.4f, .916515f, .56f, 120f),
+            new Vector4(.6f, -.8f, .36f, 90f),
+            new Vector4(-.8f, -.6f, .24f, 64f)
         };
         readonly Vector4[] swellWaves = new Vector4[4];
         float SeaProgress => Networking.SessionController.Instance != null ? Networking.SessionController.Instance.StormProgress : 0f;

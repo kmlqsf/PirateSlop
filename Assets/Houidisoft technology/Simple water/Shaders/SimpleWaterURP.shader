@@ -228,11 +228,28 @@ Shader "Custom/SimpleWaterURP"
                 float3 rippleB = UnpackNormalScale(SAMPLE_TEXTURE2D(_NormalMap, sampler_NormalMap, uvB), 1.0);
                 float distanceFade = lerp(1.0, .25, saturate(length(viewVector) / 500.0));
                 float2 rippleXY = (rippleA.xy + rippleB.xy) * _NormalStrength * distanceFade;
+                float oceanTime = lerp(_Time.y, _WaveTime, _UseWaveTime);
+                float2 vortexDelta = IN.positionWS.xz - _WhirlpoolCenter.xz;
+                float vortexRadius = length(vortexDelta);
+                float vortexT = saturate(vortexRadius / max(1.0, _WhirlpoolRadius));
+                float vortexActive = step(1.0, _WhirlpoolRadius) * saturate(_WhirlpoolDepth * .1);
+                float vortexMask = smoothstep(.02, .10, vortexT) * (1.0 - smoothstep(.72, .97, vortexT)) * vortexActive;
+                float flowAngle = vortexT * _WhirlpoolTwist * 6.283185 + oceanTime * .16;
+                float flowSine, flowCosine;
+                sincos(flowAngle, flowSine, flowCosine);
+                float2 flowPosition = float2(vortexDelta.x * flowCosine - vortexDelta.y * flowSine, vortexDelta.x * flowSine + vortexDelta.y * flowCosine);
+                float2 flowUV = flowPosition * _NormalTiling + float2(oceanTime * .025, 0.0);
+                float2 flowNormal = UnpackNormalScale(SAMPLE_TEXTURE2D(_NormalMap, sampler_NormalMap, flowUV), 1.0).xy;
+                float2 flowNormalWS = float2(flowNormal.x * flowCosine + flowNormal.y * flowSine, -flowNormal.x * flowSine + flowNormal.y * flowCosine);
+                rippleXY = lerp(rippleXY, flowNormalWS * _NormalStrength * distanceFade * 1.5, vortexMask);
                 float waveTime = lerp(_Time.y, _WaveTime, _UseWaveTime) * _WaveSpeed;
                 float phaseA = IN.positionWS.x * _WaveScale + waveTime;
                 float phaseB = (IN.positionWS.z + IN.positionWS.x * .5) * _WaveScale * .8 - waveTime * 1.3;
                 float chop = lerp(1.0, _SeaChop, _UseWaveTime);
                 float2 slope = float2(cos(phaseA) + .4 * cos(phaseB), .8 * cos(phaseB)) * _WaveScale * _WaveStrength * .5 * chop + SwellWave(IN.positionWS.xz).yz;
+                float vortexFalloff = 1.0 - vortexT * vortexT * (3.0 - 2.0 * vortexT);
+                float vortexSlope = 12.0 * _WhirlpoolDepth * vortexFalloff * vortexT * (1.0 - vortexT) / max(1.0, _WhirlpoolRadius);
+                slope += vortexDelta / max(.01, vortexRadius) * vortexSlope * vortexActive;
                 float3 normalWS = normalize(float3(rippleXY.x - slope.x, 1.0, rippleXY.y - slope.y));
 
                 float fresnel = pow(1.0 - saturate(dot(normalWS, viewDir)), _FresnelPower);
@@ -267,6 +284,12 @@ Shader "Custom/SimpleWaterURP"
                 float whirlpoolFoamMask = 1.0 - (1.0 - smoothstep(0.95, 1.15, whirlpoolDistance)) * step(0.01, _WhirlpoolDepth);
                 float foamEdge = (1.0 - smoothstep(0.0, _FoamDistance, contactDepth)) * hasSceneGeometry * whirlpoolFoamMask;
                 float foamLine = foamEdge * smoothstep(.22, .68, foamBreakup + foamEdge * .25) * foamNoise;
+                float vortexAngle = atan2(vortexDelta.y, vortexDelta.x + .00001);
+                float spiralPhase = vortexAngle * 3.0 - vortexT * _WhirlpoolTwist * 6.283185 + oceanTime * .48;
+                float spiralStripe = smoothstep(.80, .98, sin(spiralPhase));
+                float spiralNoise = SAMPLE_TEXTURE2D(_FoamNoiseTex, sampler_FoamNoiseTex, flowPosition * .035 + float2(oceanTime * .018, 0.0)).r;
+                float spiralFoam = spiralStripe * lerp(.35, 1.0, smoothstep(.2, .8, spiralNoise)) * vortexMask * .32;
+                foamLine = max(foamLine, spiralFoam);
                 float shipFoam = 0;
                 for (int wakeIndex = 0; wakeIndex < min(_WakeCount, 32); wakeIndex++)
                 {

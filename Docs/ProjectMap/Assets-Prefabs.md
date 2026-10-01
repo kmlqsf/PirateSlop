@@ -59,6 +59,8 @@
 | --- | --- |
 | [Assets/Prefabs/Loot/IslandCannonball.prefab](<../../Assets/Prefabs/Loot/IslandCannonball.prefab>) | Префаб Unity |
 | [Assets/Prefabs/Loot/RumBottle.prefab](<../../Assets/Prefabs/Loot/RumBottle.prefab>) | Префаб Unity |
+| [Assets/Prefabs/Loot/VortexBottle.prefab](<../../Assets/Prefabs/Loot/VortexBottle.prefab>) | Префаб Unity; Предметы, лут и инвентарь |
+| [Assets/Prefabs/Loot/VortexBottlePickup.prefab](<../../Assets/Prefabs/Loot/VortexBottlePickup.prefab>) | Префаб Unity; Предметы, лут и инвентарь |
 
 ## Assets/Prefabs/Networking
 

@@ -12,6 +12,7 @@ namespace PirateSlop.Networking
         public Vector2 HullHalfExtents => hullHalfExtents;
         public readonly SyncVar<int> ParticipantId = new();
         public readonly SyncVar<int> TeamId = new();
+        public readonly SyncVar<float> DeveloperSpeedMultiplier = new(1f);
         public ShipController Motor { get; private set; }
         public HelmInteraction Helm { get; private set; }
         public Rigidbody Body { get; private set; }
@@ -70,6 +71,7 @@ namespace PirateSlop.Networking
         void Tick()
         {
             if (!IsServerInitialized) return;
+            TickVortexBoost();
             if (IsSinking)
             {
                 float progress = Mathf.Clamp01((Time.time - sinkingStarted) / 12f);
@@ -83,6 +85,7 @@ namespace PirateSlop.Networking
             }
             Helm.Simulate(default, null, (float)TimeManager.TickDelta);
             Motor.Simulate((float)TimeManager.TickDelta);
+            if (VortexBoostActive.Value && AnchorDropped) anchorSeabedPoint.Value = Motor.AnchorPoint;
         }
         void Publish()
         {

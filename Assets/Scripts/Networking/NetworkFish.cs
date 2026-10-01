@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace PirateSlop.Networking
 {
-    public enum InventoryItem { None = -1, Fish = 0, Pistol = 1, Rod = 2, Cannon = 3, Cannonball = 4, Mallet = 5, Plank = 6, Sabre = 7, FireCannonball = 8, IceCannonball = 9, PushCannonball = 10, BoomerangCannonball = 11, Rum = 12, Wine = 13, Musket = 14, DoubleBarrel = 15, BombParrot = 16, GrapplingHook = 17, BoardingHook = 18, Pufferfish = 19, Swordfish = 20, HolyGrenade = 21, Spyglass = 22 }
+    public enum InventoryItem { None = -1, Fish = 0, Pistol = 1, Rod = 2, Cannon = 3, Cannonball = 4, Mallet = 5, Plank = 6, Sabre = 7, FireCannonball = 8, IceCannonball = 9, PushCannonball = 10, BoomerangCannonball = 11, Rum = 12, Wine = 13, Musket = 14, DoubleBarrel = 15, BombParrot = 16, GrapplingHook = 17, BoardingHook = 18, Pufferfish = 19, Swordfish = 20, HolyGrenade = 21, Spyglass = 22, VortexBottle = 23 }
     public sealed class NetworkFish : NetworkBehaviour
     {
         public static readonly System.Collections.Generic.List<NetworkFish> ServerItems = new();
@@ -33,7 +33,7 @@ namespace PirateSlop.Networking
         Quaternion visualRotation;
         NetworkFishProjectile projectile;
         void OnDisable() => visualReady = false;
-        public bool Available => IsSpawned && !taken && !(GetComponent<NetworkFishProjectile>()?.Flying ?? false) && !(GetComponent<NetworkHolyGrenade>()?.Busy ?? false);
+        public bool Available => IsSpawned && !taken && !(GetComponent<NetworkFishProjectile>()?.Flying ?? false) && !(GetComponent<NetworkHolyGrenade>()?.Busy ?? false) && !(GetComponent<NetworkVortexBottle>()?.Flying ?? false);
         float expires;
         float nextFlop;
         bool airborne;
@@ -79,7 +79,7 @@ namespace PirateSlop.Networking
             }
             var support = resolvedPlatform != null ? resolvedPlatform.transform : null;
             if (projectile == null) projectile = GetComponent<NetworkFishProjectile>();
-            bool smooth = !IsServerInitialized && visualReady && visualSupport == support && visualPlatformId == platformId.Value && (projectile == null || !projectile.Flying) && (visualPosition - position.Value).sqrMagnitude < 4f;
+            bool smooth = !IsServerInitialized && visualReady && visualSupport == support && visualPlatformId == platformId.Value && (projectile == null || !projectile.Flying) && !(GetComponent<NetworkVortexBottle>()?.Flying ?? false) && (visualPosition - position.Value).sqrMagnitude < 4f;
             float blend = smooth ? 1f - Mathf.Exp(-22f * Time.deltaTime) : 1f;
             visualPosition = Vector3.Lerp(visualPosition, position.Value, blend);
             visualRotation = smooth ? Quaternion.Slerp(visualRotation, rotation.Value, blend) : rotation.Value;

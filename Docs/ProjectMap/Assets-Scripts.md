@@ -126,6 +126,7 @@
 | [Assets/Scripts/Editor/SteamTestBuild.cs](<../../Assets/Scripts/Editor/SteamTestBuild.cs>) | Исходник C#: SteamTestBuild |
 | [Assets/Scripts/Editor/SupplyCompositionSetup.cs](<../../Assets/Scripts/Editor/SupplyCompositionSetup.cs>) | Исходник C#: SupplyCompositionSetup |
 | [Assets/Scripts/Editor/SwimmingSetup.cs](<../../Assets/Scripts/Editor/SwimmingSetup.cs>) | Исходник C#: SwimmingSetup |
+| [Assets/Scripts/Editor/VortexBottleSetup.cs](<../../Assets/Scripts/Editor/VortexBottleSetup.cs>) | Исходник C#: VortexBottleSetup; Предметы, лут и инвентарь |
 | [Assets/Scripts/Editor/WeaponArmsSetup.cs](<../../Assets/Scripts/Editor/WeaponArmsSetup.cs>) | Исходник C#: WeaponArmsSetup |
 | [Assets/Scripts/Editor/WorldGenerationSetup.cs](<../../Assets/Scripts/Editor/WorldGenerationSetup.cs>) | Исходник C#: WorldGenerationSetup; Мир, острова и океан |
 
@@ -174,6 +175,7 @@
 | [Assets/Scripts/Loot/InventoryIcons.cs](<../../Assets/Scripts/Loot/InventoryIcons.cs>) | Исходник C#: InventoryIcons; Предметы, лут и инвентарь |
 | [Assets/Scripts/Loot/LootCatalog.cs](<../../Assets/Scripts/Loot/LootCatalog.cs>) | Исходник C#: LootCatalog, Entry; Предметы, лут и инвентарь |
 | [Assets/Scripts/Loot/RumShelf.cs](<../../Assets/Scripts/Loot/RumShelf.cs>) | Исходник C#: RumShelf |
+| [Assets/Scripts/Loot/VortexBottleVisual.cs](<../../Assets/Scripts/Loot/VortexBottleVisual.cs>) | Исходник C#: VortexBottleVisual; Предметы, лут и инвентарь |
 
 ## Assets/Scripts/Networking
 
@@ -244,14 +246,17 @@
 | [Assets/Scripts/Networking/NetworkShip.Harpoon.cs](<../../Assets/Scripts/Networking/NetworkShip.Harpoon.cs>) | Исходник C#: NetworkShip; Гарпун и корабельное крепление |
 | [Assets/Scripts/Networking/NetworkShip.Kraken.cs](<../../Assets/Scripts/Networking/NetworkShip.Kraken.cs>) | Исходник C#: NetworkShip; Кракен и щупальца |
 | [Assets/Scripts/Networking/NetworkShip.TargetMarks.cs](<../../Assets/Scripts/Networking/NetworkShip.TargetMarks.cs>) | Исходник C#: NetworkShip, TargetMark |
+| [Assets/Scripts/Networking/NetworkShip.VortexBoost.cs](<../../Assets/Scripts/Networking/NetworkShip.VortexBoost.cs>) | Исходник C#: NetworkShip; Предметы, лут и инвентарь |
 | [Assets/Scripts/Networking/NetworkShip.cs](<../../Assets/Scripts/Networking/NetworkShip.cs>) | Исходник C#: NetworkShip; Движение корабля и палуба, Паруса и канаты, Сеть, сессия и Steam |
 | [Assets/Scripts/Networking/NetworkShipAmmo.cs](<../../Assets/Scripts/Networking/NetworkShipAmmo.cs>) | Исходник C#: ShipFirePatch, NetworkShip |
 | [Assets/Scripts/Networking/NetworkShipPush.cs](<../../Assets/Scripts/Networking/NetworkShipPush.cs>) | Исходник C#: NetworkShipPush |
 | [Assets/Scripts/Networking/NetworkShipRum.cs](<../../Assets/Scripts/Networking/NetworkShipRum.cs>) | Исходник C#: NetworkShip |
+| [Assets/Scripts/Networking/NetworkVortexBottle.cs](<../../Assets/Scripts/Networking/NetworkVortexBottle.cs>) | Исходник C#: NetworkVortexBottle; Предметы, лут и инвентарь |
 | [Assets/Scripts/Networking/NetworkWeapon.FishThrows.cs](<../../Assets/Scripts/Networking/NetworkWeapon.FishThrows.cs>) | Исходник C#: NetworkWeapon; Рыбалка и рыба |
 | [Assets/Scripts/Networking/NetworkWeapon.Roster.cs](<../../Assets/Scripts/Networking/NetworkWeapon.Roster.cs>) | Исходник C#: NetworkWeapon; Предметы, лут и инвентарь, Новая система ботов |
 | [Assets/Scripts/Networking/NetworkWeapon.SeaLoot.cs](<../../Assets/Scripts/Networking/NetworkWeapon.SeaLoot.cs>) | Исходник C#: NetworkWeapon; Предметы, лут и инвентарь |
 | [Assets/Scripts/Networking/NetworkWeapon.ShipComparison.cs](<../../Assets/Scripts/Networking/NetworkWeapon.ShipComparison.cs>) | Исходник C#: NetworkWeapon |
+| [Assets/Scripts/Networking/NetworkWeapon.VortexBottle.cs](<../../Assets/Scripts/Networking/NetworkWeapon.VortexBottle.cs>) | Исходник C#: NetworkWeapon; Предметы, лут и инвентарь |
 | [Assets/Scripts/Networking/NetworkWeapon.cs](<../../Assets/Scripts/Networking/NetworkWeapon.cs>) | Исходник C#: NetworkWeapon; Личное оружие и урон, Предметы, лут и инвентарь |
 | [Assets/Scripts/Networking/RaftPlatform.cs](<../../Assets/Scripts/Networking/RaftPlatform.cs>) | Исходник C#: RaftPlatform; Предметы, лут и инвентарь |
 | [Assets/Scripts/Networking/SessionAuthenticator.cs](<../../Assets/Scripts/Networking/SessionAuthenticator.cs>) | Исходник C#: HelloMessage, AdmissionMessage, PopulationMessage, SessionAuthenticator; Сеть, сессия и Steam |

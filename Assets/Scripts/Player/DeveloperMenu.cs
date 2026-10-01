@@ -21,6 +21,17 @@ namespace PirateSlop
         bool lootEventListOpen;
         static readonly string[] lootEventNames = { "Зона захвата", "Плот с закрытым сундуком", "Подводный тайник", "Сундук со стаей акул" };
         float zoneSpeedMultiplier = 1f;
+        float shipSpeedPercent = 100f, nextShipSpeedSend;
+        bool shipSpeedPending;
+        NetworkShip SpeedShip
+        {
+            get
+            {
+                var player = GetComponent<NetworkPlayer>();
+                var deck = player != null && player.Passenger != null ? player.Passenger.Ship : null;
+                return deck != null ? deck.GetComponent<NetworkShip>() : player != null ? player.Ship : null;
+            }
+        }
         float fogMultiplier => SeaMistRendererFeature.DensityMultiplier;
         static readonly int[] quantities = { 1, 5, 20 };
         static readonly InventoryItem[] items = { InventoryItem.Cannon, InventoryItem.Pistol, InventoryItem.Sabre, InventoryItem.Rod, InventoryItem.Fish, InventoryItem.Swordfish, InventoryItem.Pufferfish, InventoryItem.Cannonball, InventoryItem.FireCannonball, InventoryItem.IceCannonball, InventoryItem.PushCannonball, InventoryItem.BoomerangCannonball };
@@ -30,7 +41,17 @@ namespace PirateSlop
         {
             if (!Available || BotDebugPanel.ConsumedInput || network == null || !network.IsOwner) return;
             if (Keyboard.current != null && Keyboard.current.f8Key.wasPressedThisFrame)
-            { IsOpen = !IsOpen; AdvancedPlayerController.SetCursor(!IsOpen); }
+            {
+                IsOpen = !IsOpen;
+                if (IsOpen && !shipSpeedPending) shipSpeedPercent = SpeedShip != null ? SpeedShip.DeveloperSpeedMultiplier.Value * 100f : 100f;
+                AdvancedPlayerController.SetCursor(!IsOpen);
+            }
+            if (shipSpeedPending && Time.unscaledTime >= nextShipSpeedSend)
+            {
+                network.DeveloperCommand(20, Mathf.RoundToInt(shipSpeedPercent));
+                shipSpeedPending = false;
+                nextShipSpeedSend = Time.unscaledTime + .25f;
+            }
         }
         void OnDisable() { if (network != null && network.IsOwner) IsOpen = false; }
         void OnGUI()
@@ -48,6 +69,11 @@ namespace PirateSlop
             Button("Создать тренировочную мишень", 1);
             Button("Создать врага-манекена перед собой", 13);
             GUILayout.Label("Управление (Зона и Корабль)");
+            GUILayout.BeginHorizontal();
+            GUILayout.Label($"Скорость корабля: {shipSpeedPercent:0}%", GUILayout.Width(180));
+            float speedPercent = Mathf.Round(GUILayout.HorizontalSlider(shipSpeedPercent, 100f, 500f));
+            if (!Mathf.Approximately(speedPercent, shipSpeedPercent)) { shipSpeedPercent = speedPercent; shipSpeedPending = true; }
+            GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
             GUILayout.Label($"Скорость зоны: {zoneSpeedMultiplier:0.0}x", GUILayout.Width(150));
             zoneSpeedMultiplier = GUILayout.HorizontalSlider(zoneSpeedMultiplier, 0.1f, 100f);

@@ -10,11 +10,23 @@ namespace PirateSlop.Networking
         public NetworkObject DeveloperTargetPrefab;
         readonly List<NetworkObject> developerObjects = new();
         float nextDeveloperCommand;
+        float nextDeveloperSpeedCommand;
         public void DeveloperCommand(byte command, int count = 1) => DeveloperCommandServerRpc(command, count);
         [ServerRpc]
         void DeveloperCommandServerRpc(byte command, int count)
         {
             if (!DeveloperMenu.Available || (!IsOwner && !DeveloperMenu.AllowRemote)) { DeveloperResultTargetRpc(Owner, "Нужно разрешение хоста."); return; }
+            if (command == 20)
+            {
+                if (Time.unscaledTime < nextDeveloperSpeedCommand) return;
+                nextDeveloperSpeedCommand = Time.unscaledTime + .15f;
+                var player = GetComponent<NetworkPlayer>();
+                var deck = player != null && player.Passenger != null ? player.Passenger.Ship : null;
+                var ship = deck != null ? deck.GetComponent<NetworkShip>() : player != null ? player.Ship : null;
+                if (ship == null || !ship.IsSpawned || ship.IsSinking) { DeveloperResultTargetRpc(Owner, "Корабль не найден."); return; }
+                ship.DeveloperSpeedMultiplier.Value = Mathf.Clamp(count, 100, 500) / 100f;
+                return;
+            }
             if (Time.time < nextDeveloperCommand) return;
             nextDeveloperCommand = Time.time + .3f;
             var session = SessionController.Instance;

@@ -183,6 +183,11 @@ namespace PirateSlop.Networking
             if (!CanUse || action.Value != 0 || !float.IsFinite(forward.sqrMagnitude) || forward.sqrMagnitude < .5f) return;
             if (Item == InventoryItem.GrapplingHook) { if (request == 0) network.ThrowGrapple(forward, eyeOffset); return; }
             if (Time.time < nextShot) return;
+            if (Item == InventoryItem.VortexBottle)
+            {
+                if (request == 0 && network.ThrowVortexBottle(forward, eyeOffset)) nextShot = Time.time + .6f;
+                return;
+            }
             int slot = inventory.SelectedSlot;
             direction.Value = forward.normalized;
             if (Item == InventoryItem.Pufferfish || Item == InventoryItem.Swordfish)
@@ -351,6 +356,7 @@ namespace PirateSlop.Networking
             if(IsOwner && WaterRunning) PirateHudStyle.Label(new Rect(28,140,270,30),"Хождение по воде: "+waterRunRemaining.Value+" с",PirateHudStyle.Paper);
             if (!IsOwner || !Active || !motor.InputActive) return;
             if(Scoped) DrawScope();
+            if (Item == InventoryItem.VortexBottle) { ContextPrompt.Offer("БУТЫЛКА ВИХРЯ · ЛКМ — бросить · попадание в корабль: скорость 500% на 10 с", 20); return; }
             if (Item == InventoryItem.Spyglass) { ContextPrompt.Offer("ПОДЗОРНАЯ ТРУБА · удерживать ПКМ — смотреть · колесо — зум", 20); return; }
             if (Item == InventoryItem.HolyGrenade) { ContextPrompt.Offer("СВЯТАЯ ГРАНАТА · ПКМ — фитиль 3 с · удерживать ЛКМ — прицел · отпустить — бросок", 20); return; }
             if(Firearm || Item == InventoryItem.Pufferfish || Item == InventoryItem.Swordfish) return;
@@ -382,3 +388,4 @@ namespace PirateSlop.Networking
         void OnDestroy() { if(scopeMask!=null) Destroy(scopeMask); if(view!=null) Destroy(view.gameObject); if(world!=null) Destroy(world.gameObject); }
     }
 }
+

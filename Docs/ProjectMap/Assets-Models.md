@@ -234,6 +234,15 @@
 | --- | --- |
 | [Assets/Models/Loot/Kenney/Textures/colormap.png](<../../Assets/Models/Loot/Kenney/Textures/colormap.png>) | Изображение / текстура |
 
+## Assets/Models/Loot/VortexBottle
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/Loot/VortexBottle/VortexBottleIcon.asset](<../../Assets/Models/Loot/VortexBottle/VortexBottleIcon.asset>) | Настройки или данные Unity |
+| [Assets/Models/Loot/VortexBottle/VortexCork.mat](<../../Assets/Models/Loot/VortexBottle/VortexCork.mat>) | Материал Unity |
+| [Assets/Models/Loot/VortexBottle/VortexGlass.mat](<../../Assets/Models/Loot/VortexBottle/VortexGlass.mat>) | Материал Unity |
+| [Assets/Models/Loot/VortexBottle/VortexGlow.mat](<../../Assets/Models/Loot/VortexBottle/VortexGlow.mat>) | Материал Unity |
+
 ## Assets/Models/Mortar
 
 | Файл | Краткое описание |
