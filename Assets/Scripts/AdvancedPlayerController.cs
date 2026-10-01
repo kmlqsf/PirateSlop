@@ -10,6 +10,7 @@ public class AdvancedPlayerController : MonoBehaviour
     [SerializeField] float standingHeight = 1.8f, crouchHeight = 0.9f;
     [SerializeField] float slideDuration = 1.2f, slideCooldown = 1f, mouseSensitivity = 0.12f;
     [SerializeField] float thirdPersonDistance = 3f;
+    [SerializeField, Min(100f)] float viewDistance = 1000f;
     [SerializeField] float swimSpeed = 3f, fastSwimSpeed = 4.5f, swimAcceleration = 6f, breathSeconds = 25f;
     Vector3 swimVelocity;
     Vector3 knockbackVelocity;
@@ -102,6 +103,7 @@ public class AdvancedPlayerController : MonoBehaviour
         equipment = GetComponent<PirateSlop.Networking.NetworkEquipment>();
         shipControls = GetComponent<DirectShipControls>();
         controller = GetComponent<CharacterController>(); playerCamera = GetComponentInChildren<Camera>(true);
+        ConfigureDistanceCulling();
         if (GetComponent<ContextPrompt>() == null) gameObject.AddComponent<ContextPrompt>();
         ViewMotion = GetComponent<FirstPersonMotion>();
         if (ViewMotion == null) ViewMotion = gameObject.AddComponent<FirstPersonMotion>();
@@ -112,6 +114,20 @@ public class AdvancedPlayerController : MonoBehaviour
         if (GetComponent<SwimPresentation>() == null) gameObject.AddComponent<SwimPresentation>();
     }
     void Start() { if (local) SetCursor(true); }
+    void ConfigureDistanceCulling()
+    {
+        if (playerCamera == null) return;
+        var distances = playerCamera.layerCullDistances;
+        float maximum = 0f;
+        for (int i = 0; i < distances.Length; i++)
+        {
+            if (distances[i] <= 0f) distances[i] = viewDistance;
+            maximum = Mathf.Max(maximum, distances[i]);
+        }
+        playerCamera.layerCullDistances = distances;
+        playerCamera.layerCullSpherical = true;
+        playerCamera.farClipPlane = Mathf.Max(playerCamera.farClipPlane, Mathf.Max(5000f, maximum * 2f));
+    }
     void OnDisable() { if (local) SetCursor(false); }
     public static void SetCursor(bool locked) { Cursor.lockState = locked ? CursorLockMode.Locked : CursorLockMode.None; Cursor.visible = !locked; }
     public void ConfigureNetwork(bool owner)
@@ -183,7 +199,7 @@ public class AdvancedPlayerController : MonoBehaviour
         if (kb.f1Key.wasPressedThisFrame && ActiveCannon == null && ActiveHarpoon == null && ActiveParrot == null && !BellPullLocked) SetThirdPerson(!IsThirdPerson);
         if (kb.escapeKey.wasPressedThisFrame) { pending.Release = true; SetCursor(false); }
         if (mouse != null && mouse.leftButton.wasPressedThisFrame && !PlayerInventory.LootWindowOpen && !PirateSlop.Networking.SessionController.MenuOpen) SetCursor(true);
-        if (InputActive && ActiveCannon == null && ActiveHarpoon == null && mouse != null && (shipControls == null || !shipControls.IsDragging)) { var d = mouse.delta.ReadValue() * mouseSensitivity * AimSensitivityScale; lookYaw = Mathf.Repeat(lookYaw + d.x, 360f); pitch = Mathf.Clamp(pitch - d.y, -85f, 85f); }
+        if (InputActive && ActiveCannon == null && ActiveHarpoon == null && mouse != null && (lootNetwork == null || !lootNetwork.LootWorkLocked) && (shipControls == null || !shipControls.IsDragging)) { var d = mouse.delta.ReadValue() * mouseSensitivity * AimSensitivityScale; lookYaw = Mathf.Repeat(lookYaw + d.x, 360f); pitch = Mathf.Clamp(pitch - d.y, -85f, 85f); }
         if (IsThirdPerson && mouse != null)
         {
             float scroll = mouse.scroll.ReadValue().y;
@@ -320,7 +336,15 @@ public class AdvancedPlayerController : MonoBehaviour
         float water = ocean != null ? ocean.Height(transform.position) : float.NegativeInfinity;
         bool waterSupport = ocean != null && equipment != null && equipment.WaterRunning && transform.position.y >= water-1.2f;
         bool wasSwimming = IsSwimming;
-        IsSwimming = !waterSupport && ocean != null && water - transform.position.y > (IsSwimming ? .65f : 1.1f);
+        bool risingFromWater = !wasSwimming && verticalVelocity > 0f;
+        IsSwimming = !risingFromWater && !waterSupport && ocean != null && water - transform.position.y > (wasSwimming ? .65f : 1.1f);
+        if (IsSwimming && jumpBuffer > 0f && !command.Crouch && !IsKnockedBack && water - transform.position.y <= 1.4f && CanStand())
+        {
+            GetComponent<ShipDeckPassenger>()?.Attach(null);
+            verticalVelocity = Mathf.Sqrt((Mathf.Max(0f, water - transform.position.y) + jumpHeight) * -2f * gravity);
+            IsSwimming = IsGrounded = false;
+            slideTimer = jumpBuffer = groundGrace = 0f;
+        }
         if (IsSwimming)
         {
             jumpBuffer = groundGrace = 0f;

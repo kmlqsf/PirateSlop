@@ -1,6 +1,6 @@
 # PirateSlop — карта проекта
 
-Снимок файлов: 2026-09-29. Корень: `C:\Users\K\Project`.
+Снимок файлов: 2026-10-01. Корень: `C:\Users\K\Project`.
 
 ## Как пользоваться
 
@@ -12,42 +12,44 @@
 
 ## Полный каталог
 
-Учтено 3683 файлов без `.meta`. Ещё 3981 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
+Учтено 3831 файлов без `.meta`. Ещё 4015 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
 
 | Раздел | Назначение | Файлов |
 | --- | --- | ---: |
 | [.agents](<Docs/ProjectMap/.agents.md>) | Ресурсы раздела; точный состав — в каталоге | 1 |
 | [.cursor](<Docs/ProjectMap/.cursor.md>) | Ресурсы раздела; точный состав — в каталоге | 1 |
-| [.opencode](<Docs/ProjectMap/.opencode.md>) | Ресурсы раздела; точный состав — в каталоге | 4 |
-| [Art](<Docs/ProjectMap/Art.md>) | Исходники арта и Blender | 98 |
+| [.opencode](<Docs/ProjectMap/.opencode.md>) | Ресурсы раздела; точный состав — в каталоге | 1 |
+| [Art](<Docs/ProjectMap/Art.md>) | Исходники арта и Blender | 112 |
 | [Assets](<Docs/ProjectMap/Assets.md>) | Ресурсы раздела; точный состав — в каталоге | 3 |
 | [Assets/Animations](<Docs/ProjectMap/Assets-Animations.md>) | Анимации | 51 |
-| [Assets/Audio](<Docs/ProjectMap/Assets-Audio.md>) | Звуковые ресурсы и лицензии | 173 |
+| [Assets/Audio](<Docs/ProjectMap/Assets-Audio.md>) | Звуковые ресурсы и лицензии | 182 |
 | [Assets/Branding](<Docs/ProjectMap/Assets-Branding.md>) | Оформление проекта | 1 |
 | [Assets/Editor](<Docs/ProjectMap/Assets-Editor.md>) | Редакторские ресурсы | 1 |
 | [Assets/Fog Particles](<Docs/ProjectMap/Assets-Fog Particles.md>) | Ресурсы раздела; точный состав — в каталоге | 17 |
 | [Assets/Game](<Docs/ProjectMap/Assets-Game.md>) | Игровые подсистемы и эффекты | 79 |
 | [Assets/Houidisoft technology](<Docs/ProjectMap/Assets-Houidisoft technology.md>) | Ресурсы раздела; точный состав — в каталоге | 15 |
-| [Assets/JMO Assets](<Docs/ProjectMap/Assets-JMO Assets.md>) | Ресурсы раздела; точный состав — в каталоге | 488 |
+| [Assets/JMO Assets](<Docs/ProjectMap/Assets-JMO Assets.md>) | Ресурсы раздела; точный состав — в каталоге | 489 |
 | [Assets/Materials](<Docs/ProjectMap/Assets-Materials.md>) | Материалы | 146 |
 | [Assets/Mirza](<Docs/ProjectMap/Assets-Mirza.md>) | Ресурсы раздела; точный состав — в каталоге | 186 |
 | [Assets/Models](<Docs/ProjectMap/Assets-Models.md>) | Модели и связанные ресурсы | 789 |
 | [Assets/Plugins](<Docs/ProjectMap/Assets-Plugins.md>) | Плагины | 5 |
 | [Assets/Prefabs](<Docs/ProjectMap/Assets-Prefabs.md>) | Готовые игровые объекты | 127 |
-| [Assets/Resources](<Docs/ProjectMap/Assets-Resources.md>) | Ресурсы, доступные для загрузки по имени | 37 |
+| [Assets/Resources](<Docs/ProjectMap/Assets-Resources.md>) | Ресурсы, доступные для загрузки по имени | 39 |
 | [Assets/Scenes](<Docs/ProjectMap/Assets-Scenes.md>) | Сохранённые сцены | 3 |
-| [Assets/Scripts](<Docs/ProjectMap/Assets-Scripts.md>) | Игровой код и редакторские инструменты | 294 |
+| [Assets/Screenshots](<Docs/ProjectMap/Assets-Screenshots.md>) | Сохранённые изображения | 8 |
+| [Assets/Scripts](<Docs/ProjectMap/Assets-Scripts.md>) | Игровой код и редакторские инструменты | 300 |
 | [Assets/Settings](<Docs/ProjectMap/Assets-Settings.md>) | Настройки игровых систем и рендеринга | 43 |
 | [Assets/Shaders](<Docs/ProjectMap/Assets-Shaders.md>) | Шейдеры | 7 |
+| [Assets/StreamingAssets](<Docs/ProjectMap/Assets-StreamingAssets.md>) | Ресурсы раздела; точный состав — в каталоге | 2 |
 | [Assets/Tests](<Docs/ProjectMap/Assets-Tests.md>) | Исходники проверок | 31 |
 | [Assets/ThirdParty](<Docs/ProjectMap/Assets-ThirdParty.md>) | Сторонние ресурсы | 27 |
 | [Assets/TutorialInfo](<Docs/ProjectMap/Assets-TutorialInfo.md>) | Ресурсы раздела; точный состав — в каталоге | 7 |
 | [Assets/UI](<Docs/ProjectMap/Assets-UI.md>) | Ресурсы интерфейса | 32 |
 | [Assets/_Recovery](<Docs/ProjectMap/Assets-_Recovery.md>) | Сохранённые восстановленные данные | 7 |
-| [Docs](<Docs/ProjectMap/Docs.md>) | Документы и сохранённые отчёты | 29 |
-| [Packages](<Docs/ProjectMap/Packages.md>) | Манифест, lock-файл и встроенные пакеты | 916 |
+| [Docs](<Docs/ProjectMap/Docs.md>) | Документы и сохранённые отчёты | 137 |
+| [Packages](<Docs/ProjectMap/Packages.md>) | Манифест, lock-файл и встроенные пакеты | 918 |
 | [ProjectSettings](<Docs/ProjectMap/ProjectSettings.md>) | Настройки Unity | 28 |
-| [Root](<Docs/ProjectMap/Root.md>) | Корневые инструкции, планы и служебные файлы | 29 |
+| [Root](<Docs/ProjectMap/Root.md>) | Корневые инструкции, планы и служебные файлы | 28 |
 | [ThirdParty](<Docs/ProjectMap/ThirdParty.md>) | Сторонние ресурсы | 2 |
 | [Tools](<Docs/ProjectMap/Tools.md>) | Инструменты разработки и загрузчик контекста | 6 |
 
@@ -148,9 +150,10 @@ Windows, URP, FishNet; подключения по IP и Steam имеют отд
 
 Ключевые слова: игрок, персонаж, камера, анимации.
 
-Ввод и камера принадлежат локальному игроку; движение наблюдателей и анимации сверять с сетевым состоянием.
+Ввод и камера принадлежат локальному игроку; движение наблюдателей и анимации сверять с сетевым состоянием. Камера NetworkPlayer использует сферическое отсечение по слоям на 1000 м; дальняя плоскость вынесена до 5000 м, чтобы поворот камеры не менял дальность видимости. AdvancedPlayerController сохраняет эту настройку при запуске.
 Проверять привязку компонентов к NetworkPlayer. Совпадение имён костей не гарантирует совместимость анимаций.
 NetworkPlayer использует Tripo/Mixamo Walking.fbx из NewPirate. Лицо и борода имеют исправленные веса Head; исходник и способ сохранения FBX — Art/Blender/Characters/NewPirate/README.md.
+AdvancedPlayerController: новое нажатие пробела у поверхности воды (глубина ног <= 1.4 м) запускает прыжок с высотой jumpHeight над водой; при подъёме персонаж остаётся в воздушной симуляции. В глубине удержание пробела по-прежнему поднимает пловца. Используются существующие сетевые Swimming/VerticalVelocity без новых полей состояния.
 
 - [Assets/Scripts/AdvancedPlayerController.cs](<Assets/Scripts/AdvancedPlayerController.cs>) — Исходник C#: AdvancedPlayerController.
 - [Assets/Scripts/ShipDeckPassenger.cs](<Assets/Scripts/ShipDeckPassenger.cs>) — Исходник C#: ShipDeckPassenger.
@@ -190,15 +193,35 @@ SabreAnimation использует отдельный хват Mixamo и пер
 
 Ключевые слова: лут, предметы, инвентарь, inventory.
 
-Подбор и расход предметов подтверждает сервер. Сверять идентификаторы предметов, иконки и каталог.
+Подбор и расход предметов подтверждает сервер. Сверять идентификаторы предметов, иконки и каталог. Одинаковые предметы складываются в стак без игрового лимита количества; ядра сохраняют отдельный слот на 2 ядра одного типа. NetworkWeapon.stackCounts хранит количество оружия/снаряжения; рыба и ром используют прежние счётчики без лимитов 20/6. Расход, сброс, установка пушек и TransferInventoryTo сохраняют остаток стака. DeveloperMenu содержит выпадающий список четырёх морских ивентов и спаун перед текущим/собственным кораблём через команду 19 NetworkDeveloperTools. Сервер проверяет свободную воду, наполняет сундук из ChestLoot.json и учитывает его при удалении тестовых объектов. Надписи морских лутовых ивентов скрыты по умолчанию; локальный переключатель DeveloperMenu показывает все доступные клиенту ивенты без ограничения расстояния.
 NetworkWeapon имеет отдельные partial-файлы; для морского лута начать с NetworkWeapon.SeaLoot.cs.
+Состав сундуков и число разных типов (до 10) задаёт Assets/StreamingAssets/Loot/ChestLoot.json; любой новый лут сундуков обязательно подключать туда. Сервер перечитывает таблицу при наполнении; инструкция рядом в ChestLoot.README.md.
+Плот движется на сервере со скоростью 20% MaxSpeed корабля, поворачивает внутрь за 150 м от границы зоны; ограничение радиуса оставляет 108 м от центра плота до границы при сужении. RaftPlatform и ShipDeckPassenger переносят игрока, сетевой Platform ссылается на сундук. Экранный взлом: мышь/A/D задают угол, ЛКМ/пробел вращают замок, три отмычки на попытку; секретный угол и успех проверяет сервер.
+Подводный сундук: только сундук и верёвка от дна с витками вокруг корпуса. E схватывает верёвку; сервер считает реальное плавание вокруг сундука, по умолчанию два круга (LootCatalog.SunkenUnwrapTurns). Обратное движение наматывает обратно; E/Q/Esc отпускают с сохранением прогресса. После полного разматывания сундук всплывает. Боты плывут по орбите, прежние буй и три крепления удалены. Две процедурные чайки с взмахами крыльев кружат на высоте 10–12 м над водой по радиусам 6–8 м до завершения всплытия, обозначая место сундука.
 
 - [Assets/Scripts/Player/PlayerInventory.cs](<Assets/Scripts/Player/PlayerInventory.cs>) — Исходник C#: PlayerInventory.
+- [Assets/Scripts/Player/PlayerInventory.RaftLockpick.cs](<Assets/Scripts/Player/PlayerInventory.RaftLockpick.cs>) — Исходник C#: PlayerInventory.
+- [Assets/Scripts/Player/DeveloperMenu.cs](<Assets/Scripts/Player/DeveloperMenu.cs>) — Исходник C#: DeveloperMenu.
+- [Assets/Scripts/Networking/NetworkDeveloperTools.cs](<Assets/Scripts/Networking/NetworkDeveloperTools.cs>) — Исходник C#: NetworkWeapon.
+- [Assets/Scripts/World/SeaLootSpawner.cs](<Assets/Scripts/World/SeaLootSpawner.cs>) — Исходник C#: SeaLootSpawner.
 - [Assets/Scripts/Loot/LootCatalog.cs](<Assets/Scripts/Loot/LootCatalog.cs>) — Исходник C#: LootCatalog, Entry.
+- [Assets/Scripts/Loot/ChestLootTable.cs](<Assets/Scripts/Loot/ChestLootTable.cs>) — Исходник C#: ChestLootStack, ChestLootTable, Table, ChestSettings, Entry.
+- [Assets/StreamingAssets/Loot/ChestLoot.json](<Assets/StreamingAssets/Loot/ChestLoot.json>) — Конфигурация / данные JSON.
+- [Assets/StreamingAssets/Loot/ChestLoot.README.md](<Assets/StreamingAssets/Loot/ChestLoot.README.md>) — Документация.
 - [Assets/Scripts/Loot/InventoryIcons.cs](<Assets/Scripts/Loot/InventoryIcons.cs>) — Исходник C#: InventoryIcons.
 - [Assets/Scripts/Networking/NetworkWeapon.cs](<Assets/Scripts/Networking/NetworkWeapon.cs>) — Исходник C#: NetworkWeapon.
 - [Assets/Scripts/Networking/NetworkWeapon.SeaLoot.cs](<Assets/Scripts/Networking/NetworkWeapon.SeaLoot.cs>) — Исходник C#: NetworkWeapon.
 - [Assets/Scripts/Networking/NetworkLootChest.cs](<Assets/Scripts/Networking/NetworkLootChest.cs>) — Исходник C#: NetworkLootChest.
+- [Assets/Scripts/Networking/NetworkLootChest.Ocean.cs](<Assets/Scripts/Networking/NetworkLootChest.Ocean.cs>) — Исходник C#: SeaLootKind, SeaLootState, NetworkLootChest.
+- [Assets/Scripts/Networking/NetworkLootChest.OceanVisual.cs](<Assets/Scripts/Networking/NetworkLootChest.OceanVisual.cs>) — Исходник C#: NetworkLootChest.
+- [Assets/Scripts/Networking/NetworkLootChest.Raft.cs](<Assets/Scripts/Networking/NetworkLootChest.Raft.cs>) — Исходник C#: NetworkLootChest.
+- [Assets/Scripts/Networking/NetworkLootChest.Sunken.cs](<Assets/Scripts/Networking/NetworkLootChest.Sunken.cs>) — Исходник C#: NetworkLootChest.
+- [Assets/Scripts/Networking/NetworkLootChest.Seagulls.cs](<Assets/Scripts/Networking/NetworkLootChest.Seagulls.cs>) — Исходник C#: NetworkLootChest.
+- [Assets/Scripts/Networking/NetworkLootChest.ObjectivePresentation.cs](<Assets/Scripts/Networking/NetworkLootChest.ObjectivePresentation.cs>) — Исходник C#: NetworkLootChest.
+- [Assets/Scripts/Networking/NetworkWeapon.Roster.cs](<Assets/Scripts/Networking/NetworkWeapon.Roster.cs>) — Исходник C#: NetworkWeapon.
+- [Assets/Scripts/Networking/RaftPlatform.cs](<Assets/Scripts/Networking/RaftPlatform.cs>) — Исходник C#: RaftPlatform.
+- [Assets/Scripts/ShipDeckPassenger.cs](<Assets/Scripts/ShipDeckPassenger.cs>) — Исходник C#: ShipDeckPassenger.
+- [Assets/Scripts/Networking/NetworkPlayer.cs](<Assets/Scripts/Networking/NetworkPlayer.cs>) — Исходник C#: CaptainInput, CaptainState, NetworkPlayer.
 - [Assets/Settings/Loot/DefaultLoot.asset](<Assets/Settings/Loot/DefaultLoot.asset>) — Настройки или данные Unity.
 - [Assets/Scripts/Editor/LootSetup.cs](<Assets/Scripts/Editor/LootSetup.cs>) — Исходник C#: LootSetup.
 - [Assets/Scripts/Player/ShipSpyglassView.cs](<Assets/Scripts/Player/ShipSpyglassView.cs>) — Исходник C#: ShipSpyglassView.
@@ -338,6 +361,7 @@ BotNumber использует стабильный ParticipantId; номера 
 
 Назначения звуков хранить в существующем GameAudioBank. Источники и лицензии проверять в CREDITS.
 Голосовой чат — отдельная система от игровых звуков.
+Взлом плота: шесть Lockpick cues в GameAudioBank. Движение отмычки, вращение и заедание звучат локально с ограничением частоты; начало, поломка и успех подтверждаются сервером и слышны рядом. Короткие CC0-записи и обработка перечислены в Assets/Audio/Lockpick/SOURCE.md; варианты движения/заедания не повторяются подряд.
 
 - [Assets/Scripts/Audio/GameAudio.cs](<Assets/Scripts/Audio/GameAudio.cs>) — Исходник C#: GameAudio.
 - [Assets/Scripts/Audio/GameAudioBank.cs](<Assets/Scripts/Audio/GameAudioBank.cs>) — Исходник C#: SoundCue, GameAudioBank, Entry.
@@ -347,6 +371,17 @@ BotNumber использует стабильный ParticipantId; номера 
 - [Assets/Scripts/World/StormWeather.cs](<Assets/Scripts/World/StormWeather.cs>) — Исходник C#: StormWeather.
 - [Assets/Scripts/Editor/AudioBankWindow.cs](<Assets/Scripts/Editor/AudioBankWindow.cs>) — Исходник C#: AudioBankWindow, Page.
 - [Assets/Resources/GameAudioBank.asset](<Assets/Resources/GameAudioBank.asset>) — Настройки или данные Unity.
+- [Assets/Scripts/Player/PlayerInventory.RaftLockpick.cs](<Assets/Scripts/Player/PlayerInventory.RaftLockpick.cs>) — Исходник C#: PlayerInventory.
+- [Assets/Scripts/Networking/NetworkLootChest.Raft.cs](<Assets/Scripts/Networking/NetworkLootChest.Raft.cs>) — Исходник C#: NetworkLootChest.
+- [Assets/Audio/Lockpick/SOURCE.md](<Assets/Audio/Lockpick/SOURCE.md>) — Документация.
+- [Assets/Audio/Lockpick/PickMove01.wav](<Assets/Audio/Lockpick/PickMove01.wav>) — Аудио.
+- [Assets/Audio/Lockpick/PickMove02.wav](<Assets/Audio/Lockpick/PickMove02.wav>) — Аудио.
+- [Assets/Audio/Lockpick/PickMove03.wav](<Assets/Audio/Lockpick/PickMove03.wav>) — Аудио.
+- [Assets/Audio/Lockpick/LockTurn.wav](<Assets/Audio/Lockpick/LockTurn.wav>) — Аудио.
+- [Assets/Audio/Lockpick/LockJam01.wav](<Assets/Audio/Lockpick/LockJam01.wav>) — Аудио.
+- [Assets/Audio/Lockpick/LockJam02.wav](<Assets/Audio/Lockpick/LockJam02.wav>) — Аудио.
+- [Assets/Audio/Lockpick/PickBreak.wav](<Assets/Audio/Lockpick/PickBreak.wav>) — Аудио.
+- [Assets/Audio/Lockpick/LockSuccess.wav](<Assets/Audio/Lockpick/LockSuccess.wav>) — Аудио.
 - [AudioIntegration.md](<AudioIntegration.md>) — Документация.
 - [Assets/Audio/CREDITS.md](<Assets/Audio/CREDITS.md>) — Документация.
 
@@ -371,7 +406,7 @@ SessionController разделён на partial-файлы меню. Разли�
 
 Ключевые слова: шторм, зона, туман, fog, brzone.
 
-Логика зоны и её сетевое состояние находятся в StormZone и SessionStorm; визуал объёмного шторма — в BRZoneVolumetric.
+Логика зоны и её сетевое состояние находятся в StormZone и SessionStorm; визуал объёмного шторма — в BRZoneVolumetric. SeaMistRendererFeature задаёт туман 15% по умолчанию; OceanSurface при запуске NetworkOcean применяет тот же множитель к обычному туману. DeveloperMenu показывает процент и меняет оба вида тумана от общей базовой плотности.
 В каталоге Assets/Game также есть BRZoneV2, BRZoneV3 и BRZoneFinal. Наличие нескольких вариантов не означает, что все подключены: проверять ссылки только нужной сцены/префаба.
 
 - [Assets/Scripts/World/StormZone.cs](<Assets/Scripts/World/StormZone.cs>) — Исходник C#: StormZone.
@@ -379,6 +414,8 @@ SessionController разделён на partial-файлы меню. Разли�
 - [Assets/Scripts/World/StormWeather.cs](<Assets/Scripts/World/StormWeather.cs>) — Исходник C#: StormWeather.
 - [Assets/Game/BRZoneVolumetric/StormVolumeController.cs](<Assets/Game/BRZoneVolumetric/StormVolumeController.cs>) — Исходник C#: StormVolumeController.
 - [Assets/Game/BRZoneVolumetric/SeaMistRendererFeature.cs](<Assets/Game/BRZoneVolumetric/SeaMistRendererFeature.cs>) — Исходник C#: SeaMistRendererFeature.
+- [Assets/Scripts/Player/DeveloperMenu.cs](<Assets/Scripts/Player/DeveloperMenu.cs>) — Исходник C#: DeveloperMenu.
+- [Assets/Scripts/OceanSurface.cs](<Assets/Scripts/OceanSurface.cs>) — Исходник C#: OceanSurface.
 - [Assets/Game/BRZoneVolumetric/SeaMist.mat](<Assets/Game/BRZoneVolumetric/SeaMist.mat>) — Материал Unity.
 
 ### Гарпун и корабельное крепление (`harpoon`)

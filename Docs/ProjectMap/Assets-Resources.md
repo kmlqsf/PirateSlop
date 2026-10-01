@@ -27,6 +27,8 @@
 | [Assets/Resources/KrakenEncounter.prefab](<../../Assets/Resources/KrakenEncounter.prefab>) | Префаб Unity |
 | [Assets/Resources/KrakenTentacle.prefab](<../../Assets/Resources/KrakenTentacle.prefab>) | Префаб Unity |
 | [Assets/Resources/ParticleSoft.asset](<../../Assets/Resources/ParticleSoft.asset>) | Настройки или данные Unity |
+| [Assets/Resources/PerformanceTestRunInfo.json](<../../Assets/Resources/PerformanceTestRunInfo.json>) | Конфигурация / данные JSON |
+| [Assets/Resources/PerformanceTestRunSettings.json](<../../Assets/Resources/PerformanceTestRunSettings.json>) | Конфигурация / данные JSON |
 | [Assets/Resources/SailCustom.mat](<../../Assets/Resources/SailCustom.mat>) | Материал Unity |
 | [Assets/Resources/SeaObjective.shader](<../../Assets/Resources/SeaObjective.shader>) | Шейдер |
 | [Assets/Resources/SharkVisual.prefab](<../../Assets/Resources/SharkVisual.prefab>) | Префаб Unity |

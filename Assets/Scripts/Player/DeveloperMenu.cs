@@ -10,14 +10,18 @@ namespace PirateSlop
         public static bool IsOpen { get; private set; }
         public static bool Available => Application.isEditor || Debug.isDebugBuild;
         public static bool AllowRemote;
+        public static bool ShowLootEventLabels { get; private set; }
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        static void ResetLootLabels() => ShowLootEventLabels = false;
         NetworkWeapon network;
         string message = "";
         Vector2 scroll;
         int quantity;
+        int lootEvent;
+        bool lootEventListOpen;
+        static readonly string[] lootEventNames = { "Зона захвата", "Плот с закрытым сундуком", "Подводный тайник", "Сундук со стаей акул" };
         float zoneSpeedMultiplier = 1f;
         float fogMultiplier => SeaMistRendererFeature.DensityMultiplier;
-        float originalFogDensity = -1f;
-        bool originalFogEnabled;
         static readonly int[] quantities = { 1, 5, 20 };
         static readonly InventoryItem[] items = { InventoryItem.Cannon, InventoryItem.Pistol, InventoryItem.Sabre, InventoryItem.Rod, InventoryItem.Fish, InventoryItem.Swordfish, InventoryItem.Pufferfish, InventoryItem.Cannonball, InventoryItem.FireCannonball, InventoryItem.IceCannonball, InventoryItem.PushCannonball, InventoryItem.BoomerangCannonball };
         static readonly string[] names = { "Пушка", "Пистолет", "Сабля", "Удочка", "Рыба", "Рыба-меч", "Рыба-фугу", "Обычное ядро", "Огненное ядро", "Ледяное ядро", "Отталкивающее ядро", "Бумеранг" };
@@ -54,20 +58,27 @@ namespace PirateSlop
             if (GUILayout.Button("Паруса на мин.", GUILayout.Height(29))) network.DeveloperCommand(18);
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
-            GUILayout.Label($"Морской туман: {fogMultiplier:0.0}x", GUILayout.Width(180));
+            GUILayout.Label($"Морской туман: {fogMultiplier * 100f:0}%", GUILayout.Width(180));
             float newFog = GUILayout.HorizontalSlider(fogMultiplier, 0f, 3f);
             if (!Mathf.Approximately(newFog, fogMultiplier))
+                SeaMistRendererFeature.SetDensityMultiplier(newFog);
+            GUILayout.EndHorizontal();
+            ShowLootEventLabels = GUILayout.Toggle(ShowLootEventLabels, "Показывать надписи всех лутовых ивентов");
+            GUILayout.Space(8);
+            GUILayout.Label("Лутовый ивент перед кораблём");
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button(lootEventNames[lootEvent] + " ▼", GUILayout.Height(29))) lootEventListOpen = !lootEventListOpen;
+            if (GUILayout.Button("Спаун", GUILayout.Width(80), GUILayout.Height(29)))
             {
-                if (originalFogDensity < 0f)
-                {
-                    originalFogDensity = RenderSettings.fogDensity;
-                    originalFogEnabled = RenderSettings.fog;
-                }
-                SeaMistRendererFeature.DensityMultiplier = newFog;
-                RenderSettings.fogDensity = originalFogDensity * fogMultiplier;
-                RenderSettings.fog = originalFogEnabled && fogMultiplier > 0.01f;
+                lootEventListOpen = false;
+                network.DeveloperCommand(19, lootEvent + 1);
             }
             GUILayout.EndHorizontal();
+            if (lootEventListOpen)
+            {
+                for (int i = 0; i < lootEventNames.Length; i++)
+                    if (GUILayout.Button(lootEventNames[i], GUILayout.Height(27))) { lootEvent = i; lootEventListOpen = false; }
+            }
             
             if (GUILayout.Button("Trigger Kraken", GUILayout.Height(29)))
             {

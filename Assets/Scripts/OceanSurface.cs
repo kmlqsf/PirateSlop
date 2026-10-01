@@ -68,6 +68,7 @@ namespace PirateSlop
         void Awake()
         {
             Instance = this;
+            if (gameObject.scene.name == "NetworkOcean") SeaMistRendererFeature.InitializeGlobalFog();
             if (WaterMaterial != null)
             {
                 runtimeMaterial = Instantiate(WaterMaterial);

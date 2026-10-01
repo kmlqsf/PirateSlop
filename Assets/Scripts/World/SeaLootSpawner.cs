@@ -34,7 +34,8 @@ namespace PirateSlop.World
                     var chest = Object.Instantiate(catalog.ChestPrefab, point, Quaternion.identity);
                     SceneManager.MoveGameObjectToScene(chest.gameObject, world.gameObject.scene);
                     chest.Catalog = catalog;
-                    chest.Fill(ref random);
+                    var lootRandom = new MapRandom(unchecked((uint)world.Layout.Seed ^ 0xa35f19c7u ^ ((uint)i * 2654435761u)));
+                    chest.Fill(ref lootRandom);
                     chest.ConfigureOcean((SeaLootKind)(1 + i % 4), point);
                     manager.ServerManager.Spawn(chest.NetworkObject);
                     occupied.Add(point);

@@ -5,7 +5,10 @@ namespace PirateSlop
 {
     public sealed class SeaMistRendererFeature : FullScreenPassRendererFeature
     {
-        public static float DensityMultiplier { get; set; } = 1f;
+        public const float DefaultDensityMultiplier = .15f;
+        public static float DensityMultiplier { get; private set; } = DefaultDensityMultiplier;
+        static float baseFogDensity;
+        static bool baseFogEnabled, fogConfigured;
         static readonly Vector4[] flashes = new Vector4[16];
         static readonly float[] flashTimes = new float[16];
         static readonly Vector4[] visibleFlashes = new Vector4[16];
@@ -18,7 +21,24 @@ namespace PirateSlop
         {
             System.Array.Clear(flashes, 0, flashes.Length);
             nextFlash = 0;
-            DensityMultiplier = 1f;
+            DensityMultiplier = DefaultDensityMultiplier;
+            fogConfigured = false;
+        }
+
+        public static void InitializeGlobalFog()
+        {
+            baseFogDensity = RenderSettings.fogDensity;
+            baseFogEnabled = RenderSettings.fog;
+            fogConfigured = true;
+            SetDensityMultiplier(DensityMultiplier);
+        }
+
+        public static void SetDensityMultiplier(float value)
+        {
+            DensityMultiplier = Mathf.Clamp(value, 0f, 3f);
+            if (!fogConfigured) return;
+            RenderSettings.fogDensity = baseFogDensity * DensityMultiplier;
+            RenderSettings.fog = baseFogEnabled && DensityMultiplier > .01f;
         }
 
         public static void CannonFlash(Vector3 position)

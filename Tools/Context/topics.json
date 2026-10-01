@@ -48,7 +48,7 @@
     },
     {
       "id": "player", "title": "Персонаж, камера и анимации", "aliases": ["игрок", "персонаж", "камера", "анимации"],
-      "notes": ["Ввод и камера принадлежат локальному игроку; движение наблюдателей и анимации сверять с сетевым состоянием.", "Проверять привязку компонентов к NetworkPlayer. Совпадение имён костей не гарантирует совместимость анимаций.", "NetworkPlayer использует Tripo/Mixamo Walking.fbx из NewPirate. Лицо и борода имеют исправленные веса Head; исходник и способ сохранения FBX — Art/Blender/Characters/NewPirate/README.md."],
+      "notes": ["Ввод и камера принадлежат локальному игроку; движение наблюдателей и анимации сверять с сетевым состоянием. Камера NetworkPlayer использует сферическое отсечение по слоям на 1000 м; дальняя плоскость вынесена до 5000 м, чтобы поворот камеры не менял дальность видимости. AdvancedPlayerController сохраняет эту настройку при запуске.", "Проверять привязку компонентов к NetworkPlayer. Совпадение имён костей не гарантирует совместимость анимаций.", "NetworkPlayer использует Tripo/Mixamo Walking.fbx из NewPirate. Лицо и борода имеют исправленные веса Head; исходник и способ сохранения FBX — Art/Blender/Characters/NewPirate/README.md.", "AdvancedPlayerController: новое нажатие пробела у поверхности воды (глубина ног <= 1.4 м) запускает прыжок с высотой jumpHeight над водой; при подъёме персонаж остаётся в воздушной симуляции. В глубине удержание пробела по-прежнему поднимает пловца. Используются существующие сетевые Swimming/VerticalVelocity без новых полей состояния."],
       "files": ["Assets/Scripts/AdvancedPlayerController.cs", "Assets/Scripts/ShipDeckPassenger.cs", "Assets/Scripts/Networking/NetworkPlayer.cs", "Assets/Scripts/Player/PlayerAnimatorDriver.cs", "Assets/Scripts/Player/FirstPersonModelVisibility.cs", "Assets/Scripts/Editor/PirateAnimationRetargeter.cs", "Assets/Prefabs/Networking/NetworkPlayer.prefab", "Assets/Models/Characters/NewPirate/Walking.fbx", "Art/Blender/Characters/NewPirate/Pirate_HeadWeights.blend", "Art/Blender/Characters/NewPirate/repair_head_weights.py", "Art/Blender/Characters/NewPirate/README.md"],
       "docs": ["animation-review.md", "unity.md"]
     },
@@ -60,8 +60,8 @@
     },
     {
       "id": "loot", "title": "Предметы, лут и инвентарь", "aliases": ["лут", "предметы", "инвентарь", "inventory"],
-      "notes": ["Подбор и расход предметов подтверждает сервер. Сверять идентификаторы предметов, иконки и каталог.", "NetworkWeapon имеет отдельные partial-файлы; для морского лута начать с NetworkWeapon.SeaLoot.cs."],
-      "files": ["Assets/Scripts/Player/PlayerInventory.cs", "Assets/Scripts/Loot/LootCatalog.cs", "Assets/Scripts/Loot/InventoryIcons.cs", "Assets/Scripts/Networking/NetworkWeapon.cs", "Assets/Scripts/Networking/NetworkWeapon.SeaLoot.cs", "Assets/Scripts/Networking/NetworkLootChest.cs", "Assets/Settings/Loot/DefaultLoot.asset", "Assets/Scripts/Editor/LootSetup.cs", "Assets/Scripts/Player/ShipSpyglassView.cs", "Assets/Scripts/Editor/SpyglassSetup.cs"],
+      "notes": ["Подбор и расход предметов подтверждает сервер. Сверять идентификаторы предметов, иконки и каталог. Одинаковые предметы складываются в стак без игрового лимита количества; ядра сохраняют отдельный слот на 2 ядра одного типа. NetworkWeapon.stackCounts хранит количество оружия/снаряжения; рыба и ром используют прежние счётчики без лимитов 20/6. Расход, сброс, установка пушек и TransferInventoryTo сохраняют остаток стака. DeveloperMenu содержит выпадающий список четырёх морских ивентов и спаун перед текущим/собственным кораблём через команду 19 NetworkDeveloperTools. Сервер проверяет свободную воду, наполняет сундук из ChestLoot.json и учитывает его при удалении тестовых объектов. Надписи морских лутовых ивентов скрыты по умолчанию; локальный переключатель DeveloperMenu показывает все доступные клиенту ивенты без ограничения расстояния.", "NetworkWeapon имеет отдельные partial-файлы; для морского лута начать с NetworkWeapon.SeaLoot.cs.", "Состав сундуков и число разных типов (до 10) задаёт Assets/StreamingAssets/Loot/ChestLoot.json; любой новый лут сундуков обязательно подключать туда. Сервер перечитывает таблицу при наполнении; инструкция рядом в ChestLoot.README.md.", "Плот движется на сервере со скоростью 20% MaxSpeed корабля, поворачивает внутрь за 150 м от границы зоны; ограничение радиуса оставляет 108 м от центра плота до границы при сужении. RaftPlatform и ShipDeckPassenger переносят игрока, сетевой Platform ссылается на сундук. Экранный взлом: мышь/A/D задают угол, ЛКМ/пробел вращают замок, три отмычки на попытку; секретный угол и успех проверяет сервер.", "Подводный сундук: только сундук и верёвка от дна с витками вокруг корпуса. E схватывает верёвку; сервер считает реальное плавание вокруг сундука, по умолчанию два круга (LootCatalog.SunkenUnwrapTurns). Обратное движение наматывает обратно; E/Q/Esc отпускают с сохранением прогресса. После полного разматывания сундук всплывает. Боты плывут по орбите, прежние буй и три крепления удалены. Две процедурные чайки с взмахами крыльев кружат на высоте 10–12 м над водой по радиусам 6–8 м до завершения всплытия, обозначая место сундука."],
+      "files": ["Assets/Scripts/Player/PlayerInventory.cs", "Assets/Scripts/Player/PlayerInventory.RaftLockpick.cs", "Assets/Scripts/Player/DeveloperMenu.cs", "Assets/Scripts/Networking/NetworkDeveloperTools.cs", "Assets/Scripts/World/SeaLootSpawner.cs", "Assets/Scripts/Loot/LootCatalog.cs", "Assets/Scripts/Loot/ChestLootTable.cs", "Assets/StreamingAssets/Loot/ChestLoot.json", "Assets/StreamingAssets/Loot/ChestLoot.README.md", "Assets/Scripts/Loot/InventoryIcons.cs", "Assets/Scripts/Networking/NetworkWeapon.cs", "Assets/Scripts/Networking/NetworkWeapon.SeaLoot.cs", "Assets/Scripts/Networking/NetworkLootChest.cs", "Assets/Scripts/Networking/NetworkLootChest.Ocean.cs", "Assets/Scripts/Networking/NetworkLootChest.OceanVisual.cs", "Assets/Scripts/Networking/NetworkLootChest.Raft.cs", "Assets/Scripts/Networking/NetworkLootChest.Sunken.cs", "Assets/Scripts/Networking/NetworkLootChest.Seagulls.cs", "Assets/Scripts/Networking/NetworkLootChest.ObjectivePresentation.cs", "Assets/Scripts/Networking/NetworkWeapon.Roster.cs", "Assets/Scripts/Networking/RaftPlatform.cs", "Assets/Scripts/ShipDeckPassenger.cs", "Assets/Scripts/Networking/NetworkPlayer.cs", "Assets/Settings/Loot/DefaultLoot.asset", "Assets/Scripts/Editor/LootSetup.cs", "Assets/Scripts/Player/ShipSpyglassView.cs", "Assets/Scripts/Editor/SpyglassSetup.cs"],
       "docs": ["rum-loot.md", "combat-balance.md"]
     },
     {
@@ -99,8 +99,8 @@
     },
     {
       "id": "audio", "title": "Звуки и голос", "aliases": ["звук", "звуки", "голос", "voice"],
-      "notes": ["Назначения звуков хранить в существующем GameAudioBank. Источники и лицензии проверять в CREDITS.", "Голосовой чат — отдельная система от игровых звуков."],
-      "files": ["Assets/Scripts/Audio/GameAudio.cs", "Assets/Scripts/Audio/GameAudioBank.cs", "Assets/Scripts/Audio/GameplayAudio.cs", "Assets/Scripts/Audio/PirateVoiceChat.cs", "Assets/Scripts/Networking/NetworkPlayer.Voice.cs", "Assets/Scripts/World/StormWeather.cs", "Assets/Scripts/Editor/AudioBankWindow.cs", "Assets/Resources/GameAudioBank.asset"],
+      "notes": ["Назначения звуков хранить в существующем GameAudioBank. Источники и лицензии проверять в CREDITS.", "Голосовой чат — отдельная система от игровых звуков.", "Взлом плота: шесть Lockpick cues в GameAudioBank. Движение отмычки, вращение и заедание звучат локально с ограничением частоты; начало, поломка и успех подтверждаются сервером и слышны рядом. Короткие CC0-записи и обработка перечислены в Assets/Audio/Lockpick/SOURCE.md; варианты движения/заедания не повторяются подряд."],
+      "files": ["Assets/Scripts/Audio/GameAudio.cs", "Assets/Scripts/Audio/GameAudioBank.cs", "Assets/Scripts/Audio/GameplayAudio.cs", "Assets/Scripts/Audio/PirateVoiceChat.cs", "Assets/Scripts/Networking/NetworkPlayer.Voice.cs", "Assets/Scripts/World/StormWeather.cs", "Assets/Scripts/Editor/AudioBankWindow.cs", "Assets/Resources/GameAudioBank.asset", "Assets/Scripts/Player/PlayerInventory.RaftLockpick.cs", "Assets/Scripts/Networking/NetworkLootChest.Raft.cs", "Assets/Audio/Lockpick/SOURCE.md", "Assets/Audio/Lockpick/PickMove01.wav", "Assets/Audio/Lockpick/PickMove02.wav", "Assets/Audio/Lockpick/PickMove03.wav", "Assets/Audio/Lockpick/LockTurn.wav", "Assets/Audio/Lockpick/LockJam01.wav", "Assets/Audio/Lockpick/LockJam02.wav", "Assets/Audio/Lockpick/PickBreak.wav", "Assets/Audio/Lockpick/LockSuccess.wav"],
       "docs": ["AudioIntegration.md", "Assets/Audio/CREDITS.md"]
     },
     {
@@ -120,7 +120,7 @@
         "brzone"
       ],
       "notes": [
-        "Логика зоны и её сетевое состояние находятся в StormZone и SessionStorm; визуал объёмного шторма — в BRZoneVolumetric.",
+        "Логика зоны и её сетевое состояние находятся в StormZone и SessionStorm; визуал объёмного шторма — в BRZoneVolumetric. SeaMistRendererFeature задаёт туман 15% по умолчанию; OceanSurface при запуске NetworkOcean применяет тот же множитель к обычному туману. DeveloperMenu показывает процент и меняет оба вида тумана от общей базовой плотности.",
         "В каталоге Assets/Game также есть BRZoneV2, BRZoneV3 и BRZoneFinal. Наличие нескольких вариантов не означает, что все подключены: проверять ссылки только нужной сцены/префаба."
       ],
       "files": [
@@ -129,6 +129,8 @@
         "Assets/Scripts/World/StormWeather.cs",
         "Assets/Game/BRZoneVolumetric/StormVolumeController.cs",
         "Assets/Game/BRZoneVolumetric/SeaMistRendererFeature.cs",
+        "Assets/Scripts/Player/DeveloperMenu.cs",
+        "Assets/Scripts/OceanSurface.cs",
         "Assets/Game/BRZoneVolumetric/SeaMist.mat"
       ],
       "docs": []

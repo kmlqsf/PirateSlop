@@ -165,6 +165,20 @@
 | [Assets/Audio/HolyGrenade/SOURCE.md](<../../Assets/Audio/HolyGrenade/SOURCE.md>) | Документация |
 | [Assets/Audio/HolyGrenade/flashbang_explode1.wav](<../../Assets/Audio/HolyGrenade/flashbang_explode1.wav>) | Аудио |
 
+## Assets/Audio/Lockpick
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Audio/Lockpick/LockJam01.wav](<../../Assets/Audio/Lockpick/LockJam01.wav>) | Аудио; Звуки и голос |
+| [Assets/Audio/Lockpick/LockJam02.wav](<../../Assets/Audio/Lockpick/LockJam02.wav>) | Аудио; Звуки и голос |
+| [Assets/Audio/Lockpick/LockSuccess.wav](<../../Assets/Audio/Lockpick/LockSuccess.wav>) | Аудио; Звуки и голос |
+| [Assets/Audio/Lockpick/LockTurn.wav](<../../Assets/Audio/Lockpick/LockTurn.wav>) | Аудио; Звуки и голос |
+| [Assets/Audio/Lockpick/PickBreak.wav](<../../Assets/Audio/Lockpick/PickBreak.wav>) | Аудио; Звуки и голос |
+| [Assets/Audio/Lockpick/PickMove01.wav](<../../Assets/Audio/Lockpick/PickMove01.wav>) | Аудио; Звуки и голос |
+| [Assets/Audio/Lockpick/PickMove02.wav](<../../Assets/Audio/Lockpick/PickMove02.wav>) | Аудио; Звуки и голос |
+| [Assets/Audio/Lockpick/PickMove03.wav](<../../Assets/Audio/Lockpick/PickMove03.wav>) | Аудио; Звуки и голос |
+| [Assets/Audio/Lockpick/SOURCE.md](<../../Assets/Audio/Lockpick/SOURCE.md>) | Документация; Звуки и голос |
+
 ## Assets/Audio/Naval
 
 | Файл | Краткое описание |

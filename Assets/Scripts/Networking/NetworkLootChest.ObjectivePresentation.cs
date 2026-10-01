@@ -6,8 +6,6 @@ namespace PirateSlop.Networking
     {
         LineRenderer captureArc;
         Material arcMaterial;
-        readonly LineRenderer[] tethers = new LineRenderer[3];
-        readonly GameObject[] knots = new GameObject[3];
         float shownProgress, floatVelocity;
         SeaLootState lastPhase;
         bool phaseKnown;
@@ -27,23 +25,6 @@ namespace PirateSlop.Networking
                 captureArc.widthMultiplier = ring.widthMultiplier;
                 captureArc.numCapVertices = 4;
                 shownProgress = progress.Value;
-            }
-            if (Kind != SeaLootKind.Sunken) return;
-            for (int i = 0; i < 3; i++)
-            {
-                knots[i] = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-                knots[i].name = "ReleaseTether" + (i + 1);
-                knots[i].transform.SetParent(transform, true);
-                knots[i].transform.position = TetherPoint(i);
-                knots[i].transform.localScale = Vector3.one * .45f;
-                knots[i].GetComponent<Renderer>().sharedMaterial = markerMaterial;
-                var line = new GameObject("Tether" + (i + 1));
-                line.transform.SetParent(eventVisual.transform, false);
-                tethers[i] = line.AddComponent<LineRenderer>();
-                tethers[i].sharedMaterial = markerMaterial;
-                tethers[i].widthMultiplier = .075f;
-                tethers[i].positionCount = 3;
-                tethers[i].useWorldSpace = true;
             }
         }
 
@@ -79,20 +60,10 @@ namespace PirateSlop.Networking
                     ring.SetPosition(i, SurfaceVertex(new Vector3(Mathf.Sin(angle), 0, Mathf.Cos(angle)) * Catalog.CaptureRadius));
                 }
             }
-            for (int i = 0; i < 3; i++)
+            if (Kind == SeaLootKind.Sunken)
             {
-                if (tethers[i] == null) continue;
-                bool locked = phase.Value == SeaLootState.Locked && (releasedTethers.Value & (1 << i)) == 0;
-                tethers[i].enabled = locked;
-                knots[i].SetActive(locked);
-                if (!locked) continue;
-                var end = TetherPoint(i);
-                knots[i].transform.position = end;
-                tethers[i].SetPosition(0, transform.position + Vector3.up * .3f);
-                tethers[i].SetPosition(1, Vector3.Lerp(transform.position, end, .5f) + Vector3.down * .18f);
-                tethers[i].SetPosition(2, end);
-                Color color = activeTether.Value == i ? new Color(.2f, 1f, .5f) : new Color(1f, .78f, .3f);
-                tethers[i].startColor = tethers[i].endColor = color;
+                UpdateSunkenRope();
+                UpdateSunkenGulls();
             }
         }
 

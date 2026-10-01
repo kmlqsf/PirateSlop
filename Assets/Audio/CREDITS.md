@@ -25,3 +25,7 @@ Wheel/WheelTurn01.wav through WheelTurn04.wav were cut from the four distinct sq
 The cannon fire, fuse, dispenser, rolling, drop, and held elemental cannonball recordings came from `C:\Users\K\Desktop\game sounds\ядро`. `CannonballDispense.wav` plays at double speed. The long rolling recording was split into 12 randomized clips. `CannonFuse.wav` contains the beginning of the source and stops with the in-game fuse. `FireHeld.wav` and `PushHeld.wav` are shortened loops. Original creator and license details were not supplied.
 `CannonFireLong01-03.wav` are extended-tail edits of the three supplied cannon fire recordings.
 `CannonballDropTight.wav` trims the leading silence from the supplied cannonball drop recording to align its onset with deck contact.
+
+# Lockpicking audio
+
+Lockpick/PickMove01-03.wav derives from Tegurd, https://opengameart.org/content/lockpicking-sound (CC0). Lockpick/LockTurn.wav, LockJam01-02.wav and LockSuccess.wav derive from Cough-E, https://opengameart.org/content/door-lock-sounds (CC0). Lockpick/PickBreak.wav adapts Kenney RPG Audio metalClick.ogg; the start cue reuses metalLatch.ogg (CC0). Editing details are in Lockpick/SOURCE.md.

@@ -39,12 +39,11 @@ MonoBehaviour:
   - {fileID: 3439995257933403803, guid: 9e927a72c9fa87c46b44e9cbaa981dc7, type: 3}
   LooseItemsPerIsland: {x: 2, y: 4}
   ChestsPerIsland: {x: 1, y: 3}
-  ItemsPerChest: {x: 1, y: 2}
   SeaEventsPerType: 3
   CaptureRadius: 130
   CaptureSeconds: 45
   LockpickSteps: 5
-  UntieSeconds: 4
+  SunkenUnwrapTurns: 2
   SunkenDepth: 8
   LootRiseSpeed: 1.5
   Items:

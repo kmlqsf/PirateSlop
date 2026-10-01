@@ -50,6 +50,12 @@ namespace PirateSlop.Networking
         }
 
         public void LootInput(bool active, int key = -1, int round = 0) => LootInputServerRpc(active, key, round);
+        public void RaftLockInput(float angle, bool torque, int round) => RaftLockInputServerRpc(angle, torque, round);
+        [ServerRpc]
+        void RaftLockInputServerRpc(float angle, bool torque, int round)
+        {
+            if (WorkingLoot != null) WorkingLoot.RaftLockInput(this, angle, torque, round);
+        }
         [ServerRpc]
         void LootInputServerRpc(bool active, int key, int round)
         {

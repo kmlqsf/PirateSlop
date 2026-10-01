@@ -19,6 +19,7 @@ namespace PirateSlop.Networking
             CopyRosterItems(plankCounts, target.plankCounts);
             CopyRosterItems(rumCounts, target.rumCounts);
             CopyRosterItems(equipmentItems, target.equipmentItems);
+            CopyRosterItems(stackCounts, target.stackCounts);
             target.loaded.Value = weapon.Loaded;
             target.reloading.Value = false;
             target.weapon.SetState(weapon.Loaded, false);
@@ -30,6 +31,7 @@ namespace PirateSlop.Networking
             for (int i = 0; i < plankCounts.Count; i++) plankCounts[i] = 0;
             for (int i = 0; i < rumCounts.Count; i++) rumCounts[i] = 0;
             for (int i = 0; i < equipmentItems.Count; i++) equipmentItems[i] = InventoryItem.None;
+            for (int i = 0; i < stackCounts.Count; i++) stackCounts[i] = 0;
             ApplyInventory();
         }
 

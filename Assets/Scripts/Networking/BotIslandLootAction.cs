@@ -22,8 +22,7 @@ namespace PirateSlop.Networking
         float wineDeadline;
         Vector3 anchor, plannedReturn;
         float started, progressAt, nextProbe, nextLoot, nextReport, nextReplan;
-        int taken, replans, observedLockRound = -1;
-        float lockAnswerAt;
+        int taken, replans;
         bool SeaChest => chest != null && chest.Kind != SeaLootKind.None;
         bool edgeClear = true;
         readonly bool returnOnly;
@@ -218,23 +217,18 @@ namespace PirateSlop.Networking
         }
         PlayerCommand WorkSeaChest()
         {
-            Status = chest.BotLootRising ? "Ждёт всплытия добычи" : chest.Kind == SeaLootKind.Raft ? "Взламывает ящик на плоту" : "Освобождает подводные крепления";
+            Status = chest.BotLootRising ? "Ждёт всплытия добычи" : chest.Kind == SeaLootKind.Raft ? "Взламывает ящик на плоту" : "Разматывает верёвку вокруг сундука";
             if (chest.BotLootRising) return Idle;
             if (weapon.WorkingLoot == chest)
             {
                 if (Time.time >= nextLoot)
                 {
                     nextLoot = Time.time + .2f;
-                    int answer = -1;
                     if (chest.Kind == SeaLootKind.Raft)
-                    {
-                        if (observedLockRound != chest.LockRound)
-                        { observedLockRound = chest.LockRound; lockAnswerAt = Time.time + .85f; }
-                        if (Time.time >= lockAnswerAt) answer = chest.LockKey;
-                    }
-                    chest.WorkInput(weapon, answer, chest.LockRound);
+                        chest.BotRaftLockInput(weapon);
+                    else chest.WorkInput(weapon, -1, chest.LockRound);
                 }
-                return new PlayerCommand { Yaw = player.transform.eulerAngles.y };
+                return chest.Kind == SeaLootKind.Sunken ? chest.SunkenOrbitCommand(player.transform.position) : new PlayerCommand { Yaw = player.transform.eulerAngles.y };
             }
             var point = chest.WorkPoint(player.transform.position + Vector3.up);
             if (weapon.CanHandleLoot(chest))

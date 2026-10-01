@@ -264,10 +264,10 @@ namespace PirateSlop.Networking
         {
             var activeShip = ActiveShip ?? Ship;
             var state = new CaptainState { Ship = activeShip != null ? activeShip.Motor.Capture() : default, Player = motor.Capture(), ActiveShip = activeShip != null ? activeShip.NetworkObject : null };
-            if (passenger.Ship != null)
+            if (passenger.Support != null)
             {
-                state.Platform = passenger.Ship.GetComponent<NetworkObject>();
-                state.RelativePosition = passenger.Ship.transform.InverseTransformPoint(motor.transform.position);
+                state.Platform = passenger.PlatformObject;
+                state.RelativePosition = passenger.Support.transform.InverseTransformPoint(motor.transform.position);
             }
             return state;
         }
@@ -298,7 +298,7 @@ namespace PirateSlop.Networking
             var position = observerState.Player.Position;
             if (observerState.Platform != null)
             {
-                var platform = observerState.Platform.GetComponent<Rigidbody>();
+                var platform = ResolvePlatform(observerState.Platform);
                 if (observerPlatform != observerState.Platform)
                 {
                     observerPlatform = observerState.Platform;
@@ -319,7 +319,7 @@ namespace PirateSlop.Networking
         }
         void CaptureVisualAnchor()
         {
-            visualPlatform = passenger.Ship;
+            visualPlatform = passenger.Support;
             var grapple = GetComponent<NetworkWeapon>();
             if (visualPlatform == null && grapple != null && grapple.GrappleActive)
                 visualPlatform = grapple.GrappleBody;
@@ -356,12 +356,18 @@ namespace PirateSlop.Networking
             if (!TryBind()) return;
             var activeShip = state.ActiveShip == null ? Ship : state.ActiveShip.GetComponent<NetworkShip>();
             // Player reconciliation must never rewind a shared ship.
-            var platform = state.Platform == null ? null : state.Platform.GetComponent<Rigidbody>();
+            var platform = ResolvePlatform(state.Platform);
             if (platform != null) state.Player.Position = platform.transform.TransformPoint(state.RelativePosition);
             motor.Restore(state.Player);
             passenger.Attach(platform);
             CaptureVisualAnchor();
             Physics.SyncTransforms();
+        }
+        static Rigidbody ResolvePlatform(NetworkObject platform)
+        {
+            if (platform == null) return null;
+            var chest = platform.GetComponent<NetworkLootChest>();
+            return chest != null && chest.Kind == SeaLootKind.Raft ? chest.RaftBody : platform.GetComponent<Rigidbody>();
         }
         public void ReturnHome()
         {

@@ -3948,6 +3948,7 @@ MonoBehaviour:
   slideCooldown: 1
   mouseSensitivity: 0.12
   thirdPersonDistance: 3
+  viewDistance: 1000
   swimSpeed: 3
   fastSwimSpeed: 4.5
   swimAcceleration: 6
@@ -7080,7 +7081,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.05
-  far clip plane: 1000
+  far clip plane: 5000
   field of view: 80
   orthographic: 0
   orthographic size: 5

@@ -5,9 +5,17 @@ using PirateSlop.Networking;
 namespace PirateSlop
 {
     [DefaultExecutionOrder(10)]
-    public sealed class PlayerInventory : MonoBehaviour
+    public sealed partial class PlayerInventory : MonoBehaviour
     {
         public const int AmmoSlot = 6, SlotCount = 7, AmmoCapacity = 2;
+        readonly int[] stackCounts = new int[6];
+        public void SetStackCount(int slot, int count) => stackCounts[slot] = count;
+        public int StackSlot(InventoryItem item)
+        {
+            for (int i = 0; i < AmmoSlot; i++)
+                if (ItemAt(i) == item && ItemCount(i) < int.MaxValue) return i;
+            return EmptySlot();
+        }
         public InventoryIcons Icons;
         public int SabreSlots { get; set; } = 1 << 2;
         public bool HasSabre(int slot) => slot >= 0 && slot < 6 && (SabreSlots & (1 << slot)) != 0;
@@ -15,13 +23,14 @@ namespace PirateSlop
         static PlayerInventory lootOwner;
         public static bool LootWindowOpen => lootOwner != null && lootOwner.lootWindow;
         bool lootWindow;
+        NetworkLootChest sunkenWorkChest;
+        float sunkenWorkStartedAt;
         float selectionShownAt;
         string actionMessage;
         float messageUntil;
         public void ShowMessage(string message) { actionMessage = message; messageUntil = Time.unscaledTime + 3f; }
         NetworkLootChest openChest;
-        float nextLootInput, lockPromptAt;
-        int shownLockRound = -1;
+        float nextLootInput;
         Cannonball aimedBall;
         SimpleCannon aimedCannon;
         PirateSlop.Harpoon.HarpoonGun aimedHarpoon;
@@ -56,13 +65,7 @@ namespace PirateSlop
         {
             if (item < InventoryItem.Fish || item > InventoryItem.Spyglass || item == InventoryItem.Plank) return false;
             if (CannonAmmo.IsBall(item)) return BallCount(AmmoSlot) < AmmoCapacity && (BallCount(AmmoSlot) == 0 || BallItem(AmmoSlot) == item);
-            for (int i = 0; i < 6; i++)
-            {
-                if (ItemAt(i) == InventoryItem.None) return true;
-                if (item == InventoryItem.Fish && FishCount(i) > 0 && FishCount(i) < 20) return true;
-                if (item == InventoryItem.Rum && RumCount(i) > 0 && RumCount(i) < 6) return true;
-            }
-            return false;
+            return StackSlot(item) >= 0;
         }
         public string FullInventoryHint
         {
@@ -70,7 +73,7 @@ namespace PirateSlop
             {
                 var item = ItemAt(SelectedSlot);
                 if (item == InventoryItem.None) return "Инвентарь обновляется…";
-                int count = Mathf.Max(1, Mathf.Max(FishCount(SelectedSlot), Mathf.Max(BallCount(SelectedSlot), Mathf.Max(PlankCount(SelectedSlot), RumCount(SelectedSlot)))));
+                int count = ItemCount(SelectedSlot);
                 return "Инвентарь заполнен · G — положить " + InventoryIcons.ItemName(item) + (count > 1 ? " (1 из " + count + ") · Слот останется занят — выбери одиночный предмет" : " · Освободится слот " + (SelectedSlot + 1));
             }
         }
@@ -85,7 +88,16 @@ namespace PirateSlop
             if (CannonAmmo.IsBall(incoming)) return SelectedSlot == AmmoSlot && BallCount(AmmoSlot) > 0 && BallItem(AmmoSlot) != incoming;
             return SelectedSlot < AmmoSlot && ItemAt(SelectedSlot) != InventoryItem.None;
         }
-        public int ItemCount(int slot) => ItemAt(slot) == InventoryItem.None ? 0 : Mathf.Max(1, Mathf.Max(BallCount(slot), Mathf.Max(FishCount(slot), Mathf.Max(RumCount(slot), PlankCount(slot)))));
+        public int ItemCount(int slot)
+        {
+            var item = ItemAt(slot);
+            if (item == InventoryItem.None) return 0;
+            if (CannonAmmo.IsBall(item)) return BallCount(slot);
+            if (item == InventoryItem.Fish) return FishCount(slot);
+            if (item == InventoryItem.Rum) return RumCount(slot);
+            if (item == InventoryItem.Plank) return PlankCount(slot);
+            return Mathf.Max(1, stackCounts[slot]);
+        }
         public string SwapHint(InventoryItem incoming) => "ВЗЯТЬ: " + InventoryIcons.ItemName(incoming) + " ×1 · НА ПАЛУБУ: " + InventoryIcons.ItemName(ItemAt(SelectedSlot)) + " ×" + ItemCount(SelectedSlot) + " · Shift+E — обменять весь выбранный слот";
         public void OpenLoot(NetworkLootChest target)
         {
@@ -321,7 +333,12 @@ namespace PirateSlop
             if (!valid || !mouse.leftButton.wasPressedThisFrame) return;
             Vector3 localPosition = ship.transform.InverseTransformPoint(position);
             if (Networked) network.PlaceCannon(crate.Network.NetworkObject, SelectedSlot, localPosition, localRotation);
-            else { crate.AddCannon(localPosition, localRotation); CannonSlots &= ~(1 << SelectedSlot); }
+            else
+            {
+                crate.AddCannon(localPosition, localRotation);
+                stackCounts[SelectedSlot] = Mathf.Max(0, ItemCount(SelectedSlot) - 1);
+                if (stackCounts[SelectedSlot] == 0) CannonSlots &= ~(1 << SelectedSlot);
+            }
         }
 
         bool HandleSeaLoot()
@@ -333,21 +350,19 @@ namespace PirateSlop
             if (working != null)
             {
                 InteractionUsed = true;
-                if (shownLockRound != working.LockRound) { shownLockRound = working.LockRound; lockPromptAt = Time.unscaledTime; }
+                if (working.Kind == SeaLootKind.Raft) return HandleRaftLockpick(working);
+                if (sunkenWorkChest != working) { sunkenWorkChest = working; sunkenWorkStartedAt = Time.unscaledTime; }
                 bool active = motor.InputActive && !keyboard.qKey.wasPressedThisFrame && !keyboard.escapeKey.wasPressedThisFrame;
-                if (working.Kind == SeaLootKind.Sunken) active &= keyboard.eKey.isPressed;
-                else active &= !keyboard.eKey.wasPressedThisFrame;
-                int key = -1;
-                if (Time.unscaledTime - lockPromptAt >= .85f)
-                    for (int i = 0; i < 4; i++) if (keyboard[(Key)((int)Key.Digit1 + i)].wasPressedThisFrame) key = i;
-                if (!active || key >= 0 || Time.unscaledTime >= nextLootInput)
+                active &= !(Time.unscaledTime - sunkenWorkStartedAt > .25f && keyboard.eKey.wasPressedThisFrame);
+                if (!active || Time.unscaledTime >= nextLootInput)
                 {
-                    network.LootInput(active, key, working.LockRound);
+                    network.LootInput(active);
                     nextLootInput = Time.unscaledTime + .2f;
                 }
                 return true;
             }
-            shownLockRound = -1;
+            lockpickChest = null;
+            sunkenWorkChest = null;
             if (network.CarriedLoot != null)
             {
                 InteractionUsed = true;
@@ -409,10 +424,15 @@ namespace PirateSlop
         {
             if (motor == null || motor.PlayerCamera == null || !motor.PlayerCamera.enabled || SessionController.MenuOpen) return;
             if (motor.IsDead || ShipSpyglassView.IsViewing) return;
+            if (network != null && network.IsOwner && network.WorkingLoot != null && network.WorkingLoot.Kind == SeaLootKind.Raft)
+            {
+                DrawRaftLockpick(network.WorkingLoot);
+                return;
+            }
             if (Time.unscaledTime < messageUntil && !lootWindow) ContextPrompt.Offer(actionMessage, 90);
             if (network != null && network.WorkingLoot != null)
             {
-                string workHint = network.WorkingLoot.Kind == SeaLootKind.Raft && Time.unscaledTime - lockPromptAt < .85f ? "Подготовка отмычки…" : network.WorkingLoot.WorkHint;
+                string workHint = network.WorkingLoot.WorkHint;
                 ContextPrompt.Offer(workHint, 65);
             }
             else if (network != null && network.CarriedLoot != null)
@@ -441,7 +461,7 @@ namespace PirateSlop
                 if (Icons != null && Icons.ChestIcon != null)
                     GUI.DrawTexture(new Rect(panel.x + 8, panel.y + 2, 28, 28), Icons.ChestIcon, ScaleMode.ScaleToFit, true);
                 PirateHudStyle.Label(new Rect(panel.x + 12, panel.y + 4, panel.width - 24, 25), "СУНДУК  ·  Заберите припасы", PirateHudStyle.Gold);
-                string lootHint = "Нажмите на предмет, чтобы забрать";
+                string lootHint = "Клик — забрать столько, сколько помещается";
                 for (int i = 0; i < slots; i++)
                 {
                     var item = openChest.ItemAt(i);
@@ -449,9 +469,9 @@ namespace PirateSlop
                     bool fits = CanFitItem(item);
                     bool swap = CanSwapItem(item);
                     if (item != InventoryItem.None && rect.Contains(Event.current.mousePosition))
-                        lootHint = fits ? "Забрать: " + InventoryIcons.ItemName(item) : swap ? "Shift+клик: выложить " + InventoryIcons.ItemName(ItemAt(SelectedSlot)) + " ×" + ItemCount(SelectedSlot) : "Нет места: " + InventoryIcons.ItemName(item);
+                        lootHint = fits ? "Забрать: " + InventoryIcons.ItemName(item) + " ×" + openChest.CountAt(i) : swap ? "Shift+клик: выложить " + InventoryIcons.ItemName(ItemAt(SelectedSlot)) + " ×" + ItemCount(SelectedSlot) : "Нет места: " + InventoryIcons.ItemName(item);
                     GUI.enabled = item != InventoryItem.None && (fits || swap);
-                    bool take = Icons != null ? Icons.DrawSlot(rect, item, 1, "", true) : GUI.Button(rect, InventoryIcons.ItemName(item));
+                    bool take = Icons != null ? Icons.DrawSlot(rect, item, openChest.CountAt(i), "", true) : GUI.Button(rect, InventoryIcons.ItemName(item) + " ×" + openChest.CountAt(i));
                     if (take) network.UseChest(openChest.NetworkObject, i, Event.current.shift);
                 }
                 GUI.enabled = true;

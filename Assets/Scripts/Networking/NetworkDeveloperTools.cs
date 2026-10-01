@@ -105,6 +105,11 @@ namespace PirateSlop.Networking
             }
             developerObjects.RemoveAll(o => o == null || !o.IsSpawned);
             if (developerObjects.Count >= 20) { DeveloperResultTargetRpc(Owner, "Удалите тестовые объекты: достигнут лимит 20."); return; }
+            if (command == 19)
+            {
+                SpawnDeveloperLootEvent((SeaLootKind)count);
+                return;
+            }
             if (command == 0)
             {
                 if (session == null) return;
@@ -153,6 +158,63 @@ namespace PirateSlop.Networking
             if (target != null) target.Place(support, position);
             ServerManager.Spawn(obj); developerObjects.Add(obj);
             DeveloperResultTargetRpc(Owner, "Объект создан.");
+        }
+        void SpawnDeveloperLootEvent(SeaLootKind kind)
+        {
+            if (kind < SeaLootKind.Capture || kind > SeaLootKind.Shark) return;
+            var session = SessionController.Instance;
+            var world = PirateSlop.World.ProceduralWorld.Instance;
+            var catalog = session != null && session.Config != null ? session.Config.Loot : null;
+            var player = GetComponent<NetworkPlayer>();
+            var deck = player != null && player.Passenger != null ? player.Passenger.Ship : null;
+            var ship = deck != null ? deck.GetComponent<NetworkShip>() : player != null ? player.Ship : null;
+            if (ship == null || !ship.IsSpawned || ship.IsSinking)
+            { DeveloperResultTargetRpc(Owner, "Корабль игрока не найден."); return; }
+            if (world == null || !world.Ready || catalog == null || catalog.ChestPrefab == null)
+            { DeveloperResultTargetRpc(Owner, "Мир или каталог лута ещё не готовы."); return; }
+            var forward = Vector3.ProjectOnPlane(ship.transform.forward, Vector3.up).normalized;
+            float clearance = kind == SeaLootKind.Capture ? catalog.CaptureRadius : 8f;
+            float distance = ship.Motor.HullFootprint.y * .5f + clearance + 15f;
+            float depth = kind == SeaLootKind.Sunken ? catalog.SunkenDepth + 2f : 3f;
+            for (int attempt = 0; attempt < 12; attempt++)
+            {
+                var point = ship.transform.position + forward * (distance + attempt * 20f);
+                point.y = world.Layout.SeaLevel;
+                if (kind == SeaLootKind.Raft && new Vector2(point.x, point.z).magnitude > session.SafeRadius() - 150f) continue;
+                if (!world.CanSail(point, ship.transform.eulerAngles.y) || world.GroundHeight(point) > point.y - depth) continue;
+                bool clear = true;
+                foreach (var chest in NetworkLootChest.ServerChests)
+                    if (chest != null && chest.IsSpawned && chest.Carrier == null && chest.Kind != SeaLootKind.None &&
+                        Vector3.Distance(point, chest.EventPoint) < clearance + (chest.Kind == SeaLootKind.Capture ? catalog.CaptureRadius : 8f))
+                    { clear = false; break; }
+                if (kind == SeaLootKind.Capture)
+                    for (int side = 0; clear && side < 8; side++)
+                    {
+                        float bearing = side * Mathf.PI / 4f;
+                        var sample = point + new Vector3(Mathf.Cos(bearing), 0, Mathf.Sin(bearing)) * clearance;
+                        clear = world.CanSail(sample, side * 45f);
+                    }
+                if (!clear) continue;
+                var spawned = Instantiate(catalog.ChestPrefab, point, Quaternion.identity);
+                UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene(spawned.gameObject, world.gameObject.scene);
+                spawned.Catalog = catalog;
+                try
+                {
+                    var random = new PirateSlop.World.MapRandom(unchecked((uint)Random.Range(1, int.MaxValue)));
+                    spawned.Fill(ref random);
+                    spawned.ConfigureOcean(kind, point);
+                    ServerManager.Spawn(spawned.NetworkObject);
+                    developerObjects.Add(spawned.NetworkObject);
+                    DeveloperResultTargetRpc(Owner, "Лутовый ивент создан перед кораблём.");
+                }
+                catch (System.InvalidOperationException error)
+                {
+                    Destroy(spawned.gameObject);
+                    DeveloperResultTargetRpc(Owner, "Не удалось наполнить сундук: " + error.Message);
+                }
+                return;
+            }
+            DeveloperResultTargetRpc(Owner, "Перед кораблём нет свободной воды для этого ивента. Переместите корабль.");
         }
         [TargetRpc] void DeveloperResultTargetRpc(NetworkConnection connection, string message) => GetComponent<DeveloperMenu>().Report(message);
     }

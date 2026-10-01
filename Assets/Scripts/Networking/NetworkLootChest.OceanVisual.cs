@@ -18,6 +18,10 @@ namespace PirateSlop.Networking
             if (markerMaterial.HasProperty("_BaseColor")) markerMaterial.SetColor("_BaseColor", new Color(1, .7f, .15f));
             if (Kind == SeaLootKind.Raft)
             {
+                raftBody = eventVisual.AddComponent<Rigidbody>();
+                raftBody.isKinematic = true;
+                raftBody.useGravity = false;
+                eventVisual.AddComponent<RaftPlatform>().Chest = this;
                 for (int i = 0; i < 7; i++)
                     Piece("RaftLog", PrimitiveType.Cube, new Vector3((i - 3) * .55f, .2f, 0), new Vector3(.52f, .45f, 4), wood, true);
                 Piece("Crossbeam", PrimitiveType.Cube, new Vector3(0, -.08f, -1.2f), new Vector3(4, .2f, .25f), wood, false);
@@ -39,14 +43,8 @@ namespace PirateSlop.Networking
             }
             else if (Kind == SeaLootKind.Sunken)
             {
-                Piece("Buoy", PrimitiveType.Cylinder, new Vector3(0, .3f, 0), new Vector3(.7f, .6f, .7f), markerMaterial, false);
-                rope = eventVisual.AddComponent<LineRenderer>();
-                rope.sharedMaterial = wood;
-                rope.useWorldSpace = false;
-                rope.widthMultiplier = .06f;
-                rope.positionCount = 2;
-                rope.SetPosition(0, Vector3.zero);
-                rope.SetPosition(1, Vector3.down * Mathf.Max(3, Catalog.SunkenDepth));
+                CreateSunkenRope();
+                CreateSunkenGulls();
             }
             else if (Kind == SeaLootKind.Shark)
             {
@@ -70,6 +68,7 @@ namespace PirateSlop.Networking
         void OnGUI()
         {
             if (Event.current.type != EventType.Repaint) return;
+            if (!DeveloperMenu.Available || !DeveloperMenu.ShowLootEventLabels) return;
             if (!IsSpawned || Kind == SeaLootKind.None || SessionController.MenuOpen) return;
             var camera = Camera.main;
             if (camera == null || !camera.isActiveAndEnabled) return;
@@ -78,7 +77,6 @@ namespace PirateSlop.Networking
             bool isSharkObjective = Kind == SeaLootKind.Shark && !Opened && carrier.Value == null;
             Vector3 point = (phase.Value == SeaLootState.Ready && !isSharkObjective) ? transform.position : eventPoint.Value;
             float distance = Vector3.Distance(camera.transform.position, point);
-            if (distance > 1200 || (!isSharkObjective && phase.Value == SeaLootState.Ready && distance > 100)) return;
             Vector3 screen = camera.WorldToScreenPoint(point + Vector3.up * 4);
             if (screen.z <= 0) return;
             string label = Kind == SeaLootKind.Shark
