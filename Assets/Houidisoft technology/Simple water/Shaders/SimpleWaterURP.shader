@@ -136,6 +136,21 @@ Shader "Custom/SimpleWaterURP"
                 float _WhirlpoolDepth;
                 float _WhirlpoolTwist;
             CBUFFER_END
+            float4 _SwellWaves[4];
+            float _SeaChop;
+            float3 SwellWave(float2 oceanPosition)
+            {
+                float3 value = 0;
+                for (int i = 0; i < 4; i++)
+                {
+                    float4 wave = _SwellWaves[i];
+                    float k = 6.2831853 / max(1.0, wave.w);
+                    float phase = k * dot(wave.xy, oceanPosition) - sqrt(9.81 * k) * _WaveTime;
+                    value.x += wave.z * sin(phase);
+                    value.yz += wave.z * k * wave.xy * cos(phase);
+                }
+                return value;
+            }
             float4 _Wakes[32];
             int _WakeCount;
 
@@ -172,7 +187,8 @@ Shader "Custom/SimpleWaterURP"
                 float t = lerp(_Time.y, _WaveTime, _UseWaveTime) * _WaveSpeed;
                 float wave1 = sin(positionWS.x * _WaveScale + t);
                 float wave2 = sin((positionWS.z + positionWS.x * 0.5) * _WaveScale * 0.8 - t * 1.3);
-                positionWS.y += (wave1 + wave2) * 0.5 * _WaveStrength;
+                float chop = lerp(1.0, _SeaChop, _UseWaveTime);
+                positionWS.y += (wave1 + wave2) * 0.5 * _WaveStrength * chop + SwellWave(positionWS.xz).x;
                 
                 positionWS.y += GetWhirlpoolHeight(positionWS);
 
@@ -193,25 +209,17 @@ Shader "Custom/SimpleWaterURP"
                 // ---- Reconstruct the world position behind the water from the depth ----
                 // ---- texture, then compare its height to the water surface's height. ----
                 float rawSceneDepth = SampleSceneDepth(screenUV);
+                #if UNITY_REVERSED_Z
+                    float hasSceneGeometry = step(0.00001, rawSceneDepth);
+                #else
+                    float hasSceneGeometry = 1.0 - step(0.99999, rawSceneDepth);
+                #endif
                 float sceneEyeDepth = LinearEyeDepth(rawSceneDepth, _ZBufferParams);
 
                 float3 viewVector = GetCameraPositionWS() - IN.positionWS;
                 float3 viewDir = normalize(viewVector);
                 float3 scenePositionWS = GetCameraPositionWS() - viewVector * (sceneEyeDepth / surfaceEyeDepth);
-                float depthY = max(IN.positionWS.y - scenePositionWS.y, 0.0);
-                  // --- Maelstrom Coordinates ---
-                  float2 delta = IN.positionWS.xz - _WhirlpoolCenter.xz;
-                  float w_dist = length(delta);
-                  float w_t = saturate(w_dist / max(_WhirlpoolRadius, 0.0001));
-                  float vortexMask = pow(1.0 - w_t, 1.5) * saturate(_WhirlpoolDepth * 0.1);
-
-                  // Polar UV for swirling details (radius, angle)
-                  float angle = atan2(delta.y, delta.x);
-                  // Spiral flow: pulls inward (x) and spins (y)
-                  float2 polarUV = float2(w_dist * 0.05 - _Time.y * 1.5, (angle / 6.28318) * 6.0 + _Time.y * 0.8);
-
-                  // Sample a chaotic vortex normal and blend it with the base ripple
-                  float3 vortexNormal = UnpackNormalScale(SAMPLE_TEXTURE2D_LOD(_NormalMap, sampler_NormalMap, polarUV, 0), 1.5);
+                float depthY = lerp(_WaterDepth * 20.0, max(IN.positionWS.y - scenePositionWS.y, 0.0), hasSceneGeometry);
 
                 // ---- Ripple normal: one texture, panned in two directions ----
                 float2 uvA = IN.uv * _NormalTiling + float2(1.0, 0.5) * _NormalSpeed * _Time.y;
@@ -223,9 +231,9 @@ Shader "Custom/SimpleWaterURP"
                 float waveTime = lerp(_Time.y, _WaveTime, _UseWaveTime) * _WaveSpeed;
                 float phaseA = IN.positionWS.x * _WaveScale + waveTime;
                 float phaseB = (IN.positionWS.z + IN.positionWS.x * .5) * _WaveScale * .8 - waveTime * 1.3;
-                float2 slope = float2(cos(phaseA) + .4 * cos(phaseB), .8 * cos(phaseB)) * _WaveScale * _WaveStrength * .5;
+                float chop = lerp(1.0, _SeaChop, _UseWaveTime);
+                float2 slope = float2(cos(phaseA) + .4 * cos(phaseB), .8 * cos(phaseB)) * _WaveScale * _WaveStrength * .5 * chop + SwellWave(IN.positionWS.xz).yz;
                 float3 normalWS = normalize(float3(rippleXY.x - slope.x, 1.0, rippleXY.y - slope.y));
-                  normalWS = normalize(lerp(normalWS, vortexNormal + float3(0, 1, 0), vortexMask));
 
                 float fresnel = pow(1.0 - saturate(dot(normalWS, viewDir)), _FresnelPower);
 
@@ -234,9 +242,6 @@ Shader "Custom/SimpleWaterURP"
                 // linear ramp — fades in quickly then eases off, reading as more natural.
                 float depthFactor = 1.0 - saturate(exp(-depthY / max(_WaterDepth, 0.0001)));
                 float3 waterColor = lerp(_ShallowColor.rgb, _DeepColor.rgb, depthFactor);
-                  float3 abyssColor = float3(0.0, 0.01, 0.02);
-                  float abyssMix = 1.0 - smoothstep(0.0, 0.8, w_t);
-                  waterColor = lerp(waterColor, abyssColor, abyssMix);
                 float alpha = lerp(_ShallowColor.a, _DeepColor.a, depthFactor);
 
                 // ---- Reflection (nearest reflection probe / skybox) ----
@@ -250,20 +255,18 @@ Shader "Custom/SimpleWaterURP"
                 float specular = pow(saturate(dot(normalWS, halfDirection)), _SunSharpness);
                 float broadHighlight = pow(saturate(dot(normalWS, halfDirection)), 24.0) * .08;
                 waterColor *= .78 + diffuse * .22;
-                float reflectionMask = smoothstep(0.6, 1.0, w_t);
-                  float3 colorWithReflection = lerp(waterColor, reflectionColor, (.12 + .88 * fresnel) * _ReflectionStrength * reflectionMask);
-                  colorWithReflection += sun.color * (specular + broadHighlight) * _SunStrength * reflectionMask;
+                float3 colorWithReflection = lerp(waterColor, reflectionColor, (.12 + .88 * fresnel) * _ReflectionStrength);
+                colorWithReflection += sun.color * (specular + broadHighlight) * _SunStrength;
 
                 // ---- Foam near shorelines / underwater objects ----
                 float2 foamUV = IN.uv * _FoamTiling + float2(1.0, 1.0) * _FoamSpeed * _Time.y;
                   float foamNoise = SAMPLE_TEXTURE2D(_FoamNoiseTex, sampler_FoamNoiseTex, foamUV).r;
-                    float vortexFoamNoise = SAMPLE_TEXTURE2D_LOD(_FoamNoiseTex, sampler_FoamNoiseTex, polarUV * 0.5, 0).r;
-                    float foamFadeAtCenter = smoothstep(0.7, 1.0, w_t); // Only show foam at the very outer edge
-                    float centerFoam = smoothstep(0.6, 0.9, vortexFoamNoise) * vortexMask * foamFadeAtCenter * 0.5;
                 float foamBreakup = SAMPLE_TEXTURE2D(_NormalMap, sampler_NormalMap, foamUV * .17).g;
-                float foamEdge = 1.0 - smoothstep(0.0, _FoamDistance, depthY);
+                float contactDepth = max(depthY, max(0.0, sceneEyeDepth - surfaceEyeDepth));
+                float whirlpoolDistance = distance(IN.positionWS.xz, _WhirlpoolCenter.xz) / max(1.0, _WhirlpoolRadius);
+                float whirlpoolFoamMask = 1.0 - (1.0 - smoothstep(0.95, 1.15, whirlpoolDistance)) * step(0.01, _WhirlpoolDepth);
+                float foamEdge = (1.0 - smoothstep(0.0, _FoamDistance, contactDepth)) * hasSceneGeometry * whirlpoolFoamMask;
                 float foamLine = foamEdge * smoothstep(.22, .68, foamBreakup + foamEdge * .25) * foamNoise;
-                  foamLine = saturate(foamLine + centerFoam);
                 float shipFoam = 0;
                 for (int wakeIndex = 0; wakeIndex < min(_WakeCount, 32); wakeIndex++)
                 {

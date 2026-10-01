@@ -26,6 +26,7 @@
 | [Assets/Resources/HudIcon.shader](<../../Assets/Resources/HudIcon.shader>) | Шейдер |
 | [Assets/Resources/KrakenEncounter.prefab](<../../Assets/Resources/KrakenEncounter.prefab>) | Префаб Unity |
 | [Assets/Resources/KrakenTentacle.prefab](<../../Assets/Resources/KrakenTentacle.prefab>) | Префаб Unity |
+| [Assets/Resources/LootEventBeam.shader](<../../Assets/Resources/LootEventBeam.shader>) | Шейдер; Предметы, лут и инвентарь |
 | [Assets/Resources/ParticleSoft.asset](<../../Assets/Resources/ParticleSoft.asset>) | Настройки или данные Unity |
 | [Assets/Resources/PerformanceTestRunInfo.json](<../../Assets/Resources/PerformanceTestRunInfo.json>) | Конфигурация / данные JSON |
 | [Assets/Resources/PerformanceTestRunSettings.json](<../../Assets/Resources/PerformanceTestRunSettings.json>) | Конфигурация / данные JSON |

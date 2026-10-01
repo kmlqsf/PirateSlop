@@ -17,6 +17,8 @@ namespace PirateSlop.Networking
         bool stormPaused;
         float stormPausedAt;
         public bool StormPaused => manager != null && manager.ServerManager.Started ? stormPaused : storm != null && storm.Paused;
+        public float StormProgress => manager != null && manager.ServerManager.Started && stormRunning
+            ? Mathf.Clamp01(StormElapsed / Mathf.Max(1f, stormDuration)) : storm != null ? storm.Progress : 0f;
         float StormElapsed => (stormPaused ? stormPausedAt : Time.time) - stormStarted;
                 public float stormDuration = 600f;
         float stormStarted, stormTick, stormRadius;
@@ -95,7 +97,6 @@ namespace PirateSlop.Networking
             manager.ServerManager.Broadcast(message);
             float progress = Mathf.Clamp01(message.Elapsed / message.Duration);
             float radius = Mathf.Lerp(stormRadius, StormZone.FinalRadius, progress);
-            if (OceanSurface.Instance != null) OceanSurface.Instance.WaveScale = Mathf.Lerp(.06f, 2.5f, progress * progress);
             if (stormPaused) return;
             foreach (var player in players.Values)
             {

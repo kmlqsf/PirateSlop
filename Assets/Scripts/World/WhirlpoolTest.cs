@@ -5,17 +5,8 @@ namespace PirateSlop.World
     public class WhirlpoolTest : MonoBehaviour
     {
         public Vector3 Center;
-        public float Radius = 250f;
-        public float Depth = 80f; // Reduced from 120 so it doesn't clip below sea floor
-
-        WhirlpoolVFX vfx;
-
-        void Start()
-        {
-            var vfxObj = new GameObject("WhirlpoolVFX_Test");
-            vfxObj.transform.position = Center;
-            vfx = vfxObj.AddComponent<WhirlpoolVFX>();
-        }
+        public float Radius = OceanSurface.CentralWhirlpoolRadius;
+        public float Depth = 45f;
 
         void Update()
         {

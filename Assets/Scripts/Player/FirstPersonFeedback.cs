@@ -31,7 +31,7 @@ namespace PirateSlop
         void Awake() => player = GetComponent<NetworkPlayer>();
         void LateUpdate()
         {
-            if (player == null || !player.IsOwner || player.Motor.IsThirdPerson) { initialized = false; return; }
+            if (player == null || !player.IsOwner || player.Motor.IsThirdPerson || player.Motor.IsDead) { initialized = false; return; }
             view = player.Motor.PlayerCamera;
             if (view == null || !view.isActiveAndEnabled) { initialized = false; return; }
             int nextMode = ShipSpyglassView.IsViewing ? 2 : player.Motor.ActiveCannon != null ? (player.Motor.ActiveCannon.IsMortar ? 3 : 1) : 0;

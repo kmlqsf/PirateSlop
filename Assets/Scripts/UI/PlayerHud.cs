@@ -100,20 +100,27 @@ namespace PirateSlop
             }
             if (health.IsDead)
             {
-                PirateHudStyle.Panel(new Rect(Screen.width / 2f - 200, Screen.height / 2f - 55, 400, 160));
+                float deathX = Screen.width / 2f - 260f;
+                float deathY = Screen.height - 145f;
+                PirateHudStyle.Panel(new Rect(deathX, deathY, 520, 125));
                 bool eliminated = network != null && network.Eliminated.Value;
-                PirateHudStyle.Label(new Rect(Screen.width / 2f - 180, Screen.height / 2f - 43, 360, 35), eliminated ? "ЭКИПАЖ ВЫБЫЛ" : "ВЫ ПАЛИ В БОЮ", PirateHudStyle.Gold, true);
+                PirateHudStyle.Label(new Rect(deathX + 15, deathY + 5, 490, 30), eliminated ? "ЭКИПАЖ ВЫБЫЛ" : "ВЫ ПАЛИ В БОЮ", PirateHudStyle.Gold, true);
                 bool hasRum = network == null || (network.Ship != null && network.Ship.RumCount > 0);
-                PirateHudStyle.Label(new Rect(Screen.width / 2f - 180, Screen.height / 2f, 360, 25), eliminated ? "Корабль потерян. Возрождение недоступно." : hasRum ? "Ждите звонка колокола в рубке • −1 ром" : "Нет рома — экипаж должен пополнить полку", PirateHudStyle.Paper);
+                PirateHudStyle.Label(new Rect(deathX + 15, deathY + 35, 490, 25), eliminated ? "Корабль потерян. Возрождение недоступно." : hasRum ? "Ждите звонка колокола в рубке • −1 ром" : "Нет рома — экипаж должен пополнить полку", PirateHudStyle.Paper);
                 
                 if (motor.SpectatorTarget != null && motor.SpectatorTarget.Motor != null && !motor.SpectatorTarget.Motor.IsDead)
                 {
-                    PirateHudStyle.Label(new Rect(Screen.width / 2f - 180, Screen.height / 2f + 35, 360, 25), $"Наблюдение за: Игрок {motor.SpectatorTarget.ParticipantId.Value}", PirateHudStyle.Gold, false, TextAnchor.MiddleCenter);
-                    PirateHudStyle.Label(new Rect(Screen.width / 2f - 180, Screen.height / 2f + 55, 360, 25), "ЛКМ для смены цели", PirateHudStyle.Muted, false, TextAnchor.MiddleCenter);
+                    PirateHudStyle.Label(new Rect(deathX + 15, deathY + 65, 490, 25), $"Наблюдение за: Игрок {motor.SpectatorTarget.ParticipantId.Value}", PirateHudStyle.Gold, false, TextAnchor.MiddleCenter);
+                    PirateHudStyle.Label(new Rect(deathX + 15, deathY + 90, 490, 25), "ЛКМ — следующий союзник · мышь — обзор", PirateHudStyle.Muted, false, TextAnchor.MiddleCenter);
+                }
+                else if (motor.FreeSpectating)
+                {
+                    PirateHudStyle.Label(new Rect(deathX + 15, deathY + 65, 490, 25), "Свободное наблюдение", PirateHudStyle.Gold);
+                    PirateHudStyle.Label(new Rect(deathX + 15, deathY + 90, 490, 25), "WASD · пробел / Ctrl — вверх / вниз · Shift — быстрее", PirateHudStyle.Muted);
                 }
                 else if (network != null && !eliminated)
                 {
-                    PirateHudStyle.Label(new Rect(Screen.width / 2f - 180, Screen.height / 2f + 35, 360, 25), "ЛКМ для наблюдения", PirateHudStyle.Muted, false, TextAnchor.MiddleCenter);
+                    PirateHudStyle.Label(new Rect(deathX + 15, deathY + 65, 490, 25), "Подключение к наблюдению за союзниками…", PirateHudStyle.Muted, false, TextAnchor.MiddleCenter);
                 }
                 return;
             }

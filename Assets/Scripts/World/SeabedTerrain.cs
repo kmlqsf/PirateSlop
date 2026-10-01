@@ -16,7 +16,11 @@ namespace PirateSlop.World
                 float distance = Vector2.Distance(new Vector2(x,z), new Vector2(location.Position.x,location.Position.z));
                 influence = Mathf.Min(influence, Mathf.SmoothStep(0,1,Mathf.InverseLerp(location.Radius * 1.45f, location.Radius * 1.8f + 20f,distance)));
             }
-            return layout.SeaLevel - layout.Depth + relief * influence;
+            float radius = OceanSurface.CentralWhirlpoolRadius * 1.25f;
+            float distanceFromCenter = new Vector2(x, z).magnitude;
+            float falloff = 1f - Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(distanceFromCenter / radius));
+            float bowl = (OceanSurface.CentralWhirlpoolDepth + 25f) * falloff * falloff;
+            return layout.SeaLevel - layout.Depth + relief * influence - bowl;
         }
         public static float Height(WorldLayout layout, Vector3 point)
         {

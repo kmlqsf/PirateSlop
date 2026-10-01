@@ -36,7 +36,6 @@ namespace PirateSlop.World
             if (prefab != null) Instantiate(prefab, transform);
             else Debug.LogError("BRZoneVisual prefab is missing.");
             
-            gameObject.AddComponent<WhirlpoolVFX>();
         }
 
         void Update()
@@ -47,11 +46,6 @@ namespace PirateSlop.World
             if (OceanSurface.Instance != null)
             {
                 OceanSurface.Instance.WaveScale = Mathf.Lerp(.06f, 0.08f, Progress);
-                float whirlpoolIntensity = Progress >= 0.9f ? Mathf.Clamp01((Progress - 0.9f) * 10f) : 0f;
-                OceanSurface.Instance.WhirlpoolDepth = Mathf.Lerp(0f, 120f, whirlpoolIntensity);
-                OceanSurface.Instance.WhirlpoolRadius = FinalRadius;
-                OceanSurface.Instance.WhirlpoolTwist = 2f;
-                OceanSurface.Instance.WhirlpoolCenter = Center;
             }
         }
         void OnGUI()
@@ -75,7 +69,7 @@ namespace PirateSlop.World
             if (Instance == this) Instance = null;
 
 
-            if (OceanSurface.Instance != null) OceanSurface.Instance.WaveScale = .06f; OceanSurface.Instance.WhirlpoolDepth = 0f;
+            if (OceanSurface.Instance != null) OceanSurface.Instance.WaveScale = .06f;
         }
     }
 }

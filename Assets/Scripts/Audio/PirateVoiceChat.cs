@@ -18,12 +18,16 @@ namespace PirateSlop
         readonly List<PirateVoiceChat> nearby = new();
         public static bool VoiceEnabled { get => PlayerPrefs.GetInt("VoiceEnabled", 1) != 0; set => PlayerPrefs.SetInt("VoiceEnabled", value ? 1 : 0); }
         public static float Volume { get => PlayerPrefs.GetFloat("VoiceVolume", .8f); set => PlayerPrefs.SetFloat("VoiceVolume", Mathf.Clamp01(value)); }
+        public static bool VoiceActivation { get => PlayerPrefs.GetInt("VoiceActivation", 0) != 0; set => PlayerPrefs.SetInt("VoiceActivation", value ? 1 : 0); }
+        public static float ActivationThresholdDb { get => Mathf.Clamp(PlayerPrefs.GetFloat("VoiceThresholdDb", -40f), -60f, -20f); set => PlayerPrefs.SetFloat("VoiceThresholdDb", Mathf.Clamp(value, -60f, -20f)); }
         public bool IsSelf => player != null && player.IsOwner;
         public bool IsMuted { get; private set; }
         public bool Transmitting { get; private set; }
         public bool SpeechDetected => !IsMuted && Time.unscaledTime - lastSpeech < .25f;
         public string DisplayName => "Пират " + player.ParticipantId.Value;
-        public string Status => !VoiceEnabled ? "Голос отключён" : input.Mic == null || !input.Mic.IsRecording ? "Микрофон недоступен" : "V — говорить рядом";
+        public string Status => !VoiceEnabled ? "Голос отключён" : input.Mic == null || !input.Mic.IsRecording ? "Микрофон недоступен" : VoiceActivation ? "Активация голосом · рядом" : "V — говорить рядом";
+        internal bool CanTransmit => IsSelf && VoiceEnabled && Application.isFocused && !player.Motor.IsDead && !SessionController.MenuOpen && !DeveloperMenu.IsOpen && !PlayerInventory.LootWindowOpen && Cursor.lockState == CursorLockMode.Locked;
+        internal void SetTransmitting(bool value) => Transmitting = value;
         public IReadOnlyList<PirateVoiceChat> Participants
         {
             get
@@ -56,6 +60,9 @@ namespace PirateSlop
             voice.codec.isSpeaking = new MetaSerializableReactiveProperty<bool>();
             voice.input = root.AddComponent<VcMicAudioInput>();
             voice.input.metaVc = voice.codec;
+            var gate = root.AddComponent<PirateVoiceInputFilter>();
+            gate.Voice = voice;
+            voice.input.optionalFirstInputFilter = gate;
             voice.output = root.AddComponent<AudioSource>();
             voice.output.playOnAwake = false;
             voice.output.spatialBlend = 1f;
@@ -83,9 +90,11 @@ namespace PirateSlop
         void Update()
         {
             if (!started) return;
-            bool talk = IsSelf && VoiceEnabled && Application.isFocused && !player.Motor.IsDead && !SessionController.MenuOpen && !DeveloperMenu.IsOpen && !PlayerInventory.LootWindowOpen && Cursor.lockState == CursorLockMode.Locked && Keyboard.current != null && Keyboard.current.vKey.isPressed;
-            Transmitting = talk && input.Mic != null && input.Mic.IsRecording;
-            codec.isInputMuted.Value = !Transmitting;
+            bool talk = CanTransmit && (VoiceActivation || (Keyboard.current != null && Keyboard.current.vKey.isPressed));
+            bool recording = input.Mic != null && input.Mic.IsRecording;
+            if (!talk || !recording) Transmitting = false;
+            else if (!VoiceActivation) Transmitting = true;
+            codec.isInputMuted.Value = !talk || !recording;
             codec.isDeafened.Value = !VoiceEnabled;
             codec.isOutputMuted.Value = IsMuted;
             bool audible = !IsSelf && !IsMuted && VoiceEnabled && Instance != null && !player.Motor.IsDead && (Instance.transform.position - transform.position).sqrMagnitude <= 3600f;

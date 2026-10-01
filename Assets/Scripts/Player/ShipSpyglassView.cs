@@ -7,11 +7,21 @@ using PirateSlop.Networking;
 namespace PirateSlop
 {
     [DefaultExecutionOrder(200)]
-    public sealed class ShipSpyglassView : MonoBehaviour
+    public sealed partial class ShipSpyglassView : MonoBehaviour
     {
         public static bool IsViewing { get; private set; }
         static Camera viewingCamera;
-        public static bool ClearsFog(Camera camera) => IsViewing && camera == viewingCamera;
+        public static bool IsViewingCamera(Camera camera) => IsViewing && camera == viewingCamera;
+        static float viewingStarted;
+        public static float FogMultiplier(Camera camera) => IsViewing && camera == viewingCamera
+            ? Mathf.Lerp(1f, .01f, Mathf.SmoothStep(0f, 1f, Mathf.Clamp01((Time.unscaledTime - viewingStarted - 1f) / 3f))) : 1f;
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        static void ResetView()
+        {
+            IsViewing = false;
+            viewingCamera = null;
+            viewingStarted = 0f;
+        }
         public Material TrajectoryMaterial;
         [SerializeField] float viewpointLift = 1.25f;
         public float ViewpointLift => viewpointLift;
@@ -20,6 +30,7 @@ namespace PirateSlop
         Camera cameraView;
         bool engaged;
         bool portable, fogOverridden, savedFog;
+        float savedFogDensity, savedFogStart, savedFogEnd;
         PlayerInventory inventory;
         NetworkEquipment equipment;
         bool markRequested;
@@ -37,9 +48,19 @@ namespace PirateSlop
         }
         void BeginCamera(ScriptableRenderContext context, Camera camera)
         {
+            ShowLootBeam(camera);
             if (!engaged || camera != cameraView) return;
             savedFog = RenderSettings.fog;
-            RenderSettings.fog = false;
+            savedFogDensity = RenderSettings.fogDensity;
+            savedFogStart = RenderSettings.fogStartDistance;
+            savedFogEnd = RenderSettings.fogEndDistance;
+            float multiplier = FogMultiplier(camera);
+            RenderSettings.fogDensity = savedFogDensity * multiplier;
+            if (RenderSettings.fogMode == FogMode.Linear)
+            {
+                RenderSettings.fogStartDistance = savedFogStart / multiplier;
+                RenderSettings.fogEndDistance = savedFogEnd / multiplier;
+            }
             fogOverridden = true;
             RestoreVisibility();
             GetComponentsInChildren<Renderer>(true, renderers);
@@ -57,12 +78,15 @@ namespace PirateSlop
         }
         void EndCamera(ScriptableRenderContext context, Camera camera)
         {
-            if (camera == cameraView) { RestoreVisibility(); RestoreFog(); }
+            if (camera == cameraView) { RestoreVisibility(); RestoreFog(); HideLootBeam(); }
         }
         void RestoreFog()
         {
             if (!fogOverridden) return;
             RenderSettings.fog = savedFog;
+            RenderSettings.fogDensity = savedFogDensity;
+            RenderSettings.fogStartDistance = savedFogStart;
+            RenderSettings.fogEndDistance = savedFogEnd;
             fogOverridden = false;
         }
         void RestoreVisibility()
@@ -105,6 +129,7 @@ namespace PirateSlop
                 angles = new Vector2(Mathf.DeltaAngle(0, rotation.x), rotation.y);
                 zoom = 24f;
                 portable = engaged = IsViewing = true;
+                viewingStarted = Time.unscaledTime;
                 viewingCamera = cameraView;
                 return;
             }
@@ -113,6 +138,7 @@ namespace PirateSlop
             if (aimed == null || aimed.GetComponentInParent<NetworkShip>() != player.Ship || !keys.eKey.wasPressedThisFrame) return;
             station = aimed; originalFov = cameraView.fieldOfView; angles = Vector2.zero; zoom = 48f;
             engaged = IsViewing = true; nextPreview = 0f;
+            viewingStarted = Time.unscaledTime;
             viewingCamera = cameraView;
         }
         void LateUpdate()
@@ -121,6 +147,7 @@ namespace PirateSlop
             if (portable) cameraView.transform.rotation = Quaternion.Euler(angles.x, angles.y, 0f);
             else if (station != null) cameraView.transform.SetPositionAndRotation(station.Viewpoint.position + station.transform.up * viewpointLift, station.transform.rotation * Quaternion.Euler(angles.x, angles.y, 0f));
             cameraView.fieldOfView = Mathf.Lerp(cameraView.fieldOfView, zoom, 1f - Mathf.Exp(-12f * Time.unscaledDeltaTime));
+            UpdateLootHint();
             if (markRequested)
             {
                 markRequested = false;
@@ -182,6 +209,7 @@ namespace PirateSlop
             if (engaged && portable) player.Motor.SetLookAngles(angles.y, angles.x);
             if (cameraView != null && engaged) cameraView.fieldOfView = originalFov;
             station = null; engaged = IsViewing = markRequested = false;
+            lootHint = null; HideLootBeam();
             portable = false; viewingCamera = null;
             foreach (var line in lines) if (line != null) line.gameObject.SetActive(false);
         }
@@ -192,7 +220,7 @@ namespace PirateSlop
             RestoreVisibility();
             if (engaged) Exit();
         }
-        void OnDestroy() { foreach (var line in lines) if (line != null) Destroy(line.gameObject); if (mask != null) Destroy(mask); }
+        void OnDestroy() { foreach (var line in lines) if (line != null) Destroy(line.gameObject); if (mask != null) Destroy(mask); DestroyLootBeam(); }
         void OnGUI()
         {
             if (!player.IsOwner) return;

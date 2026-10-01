@@ -49,4 +49,4 @@
 
 | Файл | Краткое описание |
 | --- | --- |
-| [Assets/Houidisoft technology/Simple water/Shaders/SimpleWaterURP.shader](<../../Assets/Houidisoft technology/Simple water/Shaders/SimpleWaterURP.shader>) | Шейдер |
+| [Assets/Houidisoft technology/Simple water/Shaders/SimpleWaterURP.shader](<../../Assets/Houidisoft technology/Simple water/Shaders/SimpleWaterURP.shader>) | Шейдер; Мир, острова и океан, Тестовая карта и водоворот |

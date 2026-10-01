@@ -1,6 +1,6 @@
 # PirateSlop — карта проекта
 
-Снимок файлов: 2026-10-01. Корень: `C:\Users\K\Project`.
+Снимок файлов: 2026-10-02. Корень: `C:\Users\K\Project`.
 
 ## Как пользоваться
 
@@ -12,7 +12,7 @@
 
 ## Полный каталог
 
-Учтено 3831 файлов без `.meta`. Ещё 4015 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
+Учтено 3835 файлов без `.meta`. Ещё 4019 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
 
 | Раздел | Назначение | Файлов |
 | --- | --- | ---: |
@@ -34,10 +34,10 @@
 | [Assets/Models](<Docs/ProjectMap/Assets-Models.md>) | Модели и связанные ресурсы | 789 |
 | [Assets/Plugins](<Docs/ProjectMap/Assets-Plugins.md>) | Плагины | 5 |
 | [Assets/Prefabs](<Docs/ProjectMap/Assets-Prefabs.md>) | Готовые игровые объекты | 127 |
-| [Assets/Resources](<Docs/ProjectMap/Assets-Resources.md>) | Ресурсы, доступные для загрузки по имени | 39 |
+| [Assets/Resources](<Docs/ProjectMap/Assets-Resources.md>) | Ресурсы, доступные для загрузки по имени | 40 |
 | [Assets/Scenes](<Docs/ProjectMap/Assets-Scenes.md>) | Сохранённые сцены | 3 |
 | [Assets/Screenshots](<Docs/ProjectMap/Assets-Screenshots.md>) | Сохранённые изображения | 8 |
-| [Assets/Scripts](<Docs/ProjectMap/Assets-Scripts.md>) | Игровой код и редакторские инструменты | 300 |
+| [Assets/Scripts](<Docs/ProjectMap/Assets-Scripts.md>) | Игровой код и редакторские инструменты | 303 |
 | [Assets/Settings](<Docs/ProjectMap/Assets-Settings.md>) | Настройки игровых систем и рендеринга | 43 |
 | [Assets/Shaders](<Docs/ProjectMap/Assets-Shaders.md>) | Шейдеры | 7 |
 | [Assets/StreamingAssets](<Docs/ProjectMap/Assets-StreamingAssets.md>) | Ресурсы раздела; точный состав — в каталоге | 2 |
@@ -150,12 +150,14 @@ Windows, URP, FishNet; подключения по IP и Steam имеют отд
 
 Ключевые слова: игрок, персонаж, камера, анимации.
 
-Ввод и камера принадлежат локальному игроку; движение наблюдателей и анимации сверять с сетевым состоянием. Камера NetworkPlayer использует сферическое отсечение по слоям на 1000 м; дальняя плоскость вынесена до 5000 м, чтобы поворот камеры не менял дальность видимости. AdvancedPlayerController сохраняет эту настройку при запуске.
+AdvancedPlayerController.Spectator: через 1.5 с после смерти автоматически наблюдает живого союзника, ЛКМ переключает; после Eliminated — свободный полёт WASD/Space/Ctrl, Shift ускоряет. Камера перемещается локально, тело остаётся на месте; возрождение возвращает обычное управление. ShipObserverCondition передаёт умершим/выбывшим объекты вне обычного радиуса видимости. Ввод и камера принадлежат локальному игроку; движение наблюдателей и анимации сверять с сетевым состоянием. Камера NetworkPlayer использует сферическое отсечение по слоям на 1000 м; дальняя плоскость вынесена до 5000 м, чтобы поворот камеры не менял дальность видимости. AdvancedPlayerController сохраняет эту настройку при запуске.
 Проверять привязку компонентов к NetworkPlayer. Совпадение имён костей не гарантирует совместимость анимаций.
 NetworkPlayer использует Tripo/Mixamo Walking.fbx из NewPirate. Лицо и борода имеют исправленные веса Head; исходник и способ сохранения FBX — Art/Blender/Characters/NewPirate/README.md.
 AdvancedPlayerController: новое нажатие пробела у поверхности воды (глубина ног <= 1.4 м) запускает прыжок с высотой jumpHeight над водой; при подъёме персонаж остаётся в воздушной симуляции. В глубине удержание пробела по-прежнему поднимает пловца. Используются существующие сетевые Swimming/VerticalVelocity без новых полей состояния.
 
 - [Assets/Scripts/AdvancedPlayerController.cs](<Assets/Scripts/AdvancedPlayerController.cs>) — Исходник C#: AdvancedPlayerController.
+- [Assets/Scripts/AdvancedPlayerController.Spectator.cs](<Assets/Scripts/AdvancedPlayerController.Spectator.cs>) — Исходник C#: AdvancedPlayerController.
+- [Assets/Scripts/Networking/ShipObserverCondition.cs](<Assets/Scripts/Networking/ShipObserverCondition.cs>) — Исходник C#: ShipObserverCondition.
 - [Assets/Scripts/ShipDeckPassenger.cs](<Assets/Scripts/ShipDeckPassenger.cs>) — Исходник C#: ShipDeckPassenger.
 - [Assets/Scripts/Networking/NetworkPlayer.cs](<Assets/Scripts/Networking/NetworkPlayer.cs>) — Исходник C#: CaptainInput, CaptainState, NetworkPlayer.
 - [Assets/Scripts/Player/PlayerAnimatorDriver.cs](<Assets/Scripts/Player/PlayerAnimatorDriver.cs>) — Исходник C#: PlayerAnimatorDriver.
@@ -196,7 +198,7 @@ SabreAnimation использует отдельный хват Mixamo и пер
 Подбор и расход предметов подтверждает сервер. Сверять идентификаторы предметов, иконки и каталог. Одинаковые предметы складываются в стак без игрового лимита количества; ядра сохраняют отдельный слот на 2 ядра одного типа. NetworkWeapon.stackCounts хранит количество оружия/снаряжения; рыба и ром используют прежние счётчики без лимитов 20/6. Расход, сброс, установка пушек и TransferInventoryTo сохраняют остаток стака. DeveloperMenu содержит выпадающий список четырёх морских ивентов и спаун перед текущим/собственным кораблём через команду 19 NetworkDeveloperTools. Сервер проверяет свободную воду, наполняет сундук из ChestLoot.json и учитывает его при удалении тестовых объектов. Надписи морских лутовых ивентов скрыты по умолчанию; локальный переключатель DeveloperMenu показывает все доступные клиенту ивенты без ограничения расстояния.
 NetworkWeapon имеет отдельные partial-файлы; для морского лута начать с NetworkWeapon.SeaLoot.cs.
 Состав сундуков и число разных типов (до 10) задаёт Assets/StreamingAssets/Loot/ChestLoot.json; любой новый лут сундуков обязательно подключать туда. Сервер перечитывает таблицу при наполнении; инструкция рядом в ChestLoot.README.md.
-Плот движется на сервере со скоростью 20% MaxSpeed корабля, поворачивает внутрь за 150 м от границы зоны; ограничение радиуса оставляет 108 м от центра плота до границы при сужении. RaftPlatform и ShipDeckPassenger переносят игрока, сетевой Platform ссылается на сундук. Экранный взлом: мышь/A/D задают угол, ЛКМ/пробел вращают замок, три отмычки на попытку; секретный угол и успех проверяет сервер.
+Плот движется на сервере со скоростью 20% MaxSpeed корабля, поворачивает внутрь за 150 м от границы зоны; ограничение радиуса оставляет 108 м от центра плота до границы при сужении. RaftPlatform и ShipDeckPassenger переносят игрока, сетевой Platform ссылается на сундук. ShipSpyglassView.LootHint создаёт один полупрозрачный золотистый столб света с сечением 1×1 м и высотой 300 м над ближайшим активным морским ивентом из ClientChests. Выбор по расстоянию от игрока не зависит от направления взгляда; переносимые, пустые и закреплённые на корабле сундуки исключаются. LootEventBeam.shader использует мягкие края, затухание к вершине и depth test. Render callbacks показывают столб только камере подзорной трубы, на выходе скрывают. Экранное пятно удалено. В обеих подзорных трубах туман сохраняется первую секунду, затем за 3 с SmoothStep ослабляет его плотность до 1% исходной. ShipSpyglassView.FogMultiplier применяется к обычному и SeaMist туману только камеры трубы; выход восстанавливает значения. Экранный взлом: мышь/A/D задают угол, ЛКМ/пробел вращают замок, три отмычки на попытку; секретный угол и успех проверяет сервер.
 Подводный сундук: только сундук и верёвка от дна с витками вокруг корпуса. E схватывает верёвку; сервер считает реальное плавание вокруг сундука, по умолчанию два круга (LootCatalog.SunkenUnwrapTurns). Обратное движение наматывает обратно; E/Q/Esc отпускают с сохранением прогресса. После полного разматывания сундук всплывает. Боты плывут по орбите, прежние буй и три крепления удалены. Две процедурные чайки с взмахами крыльев кружат на высоте 10–12 м над водой по радиусам 6–8 м до завершения всплытия, обозначая место сундука.
 
 - [Assets/Scripts/Player/PlayerInventory.cs](<Assets/Scripts/Player/PlayerInventory.cs>) — Исходник C#: PlayerInventory.
@@ -225,6 +227,8 @@ NetworkWeapon имеет отдельные partial-файлы; для морс�
 - [Assets/Settings/Loot/DefaultLoot.asset](<Assets/Settings/Loot/DefaultLoot.asset>) — Настройки или данные Unity.
 - [Assets/Scripts/Editor/LootSetup.cs](<Assets/Scripts/Editor/LootSetup.cs>) — Исходник C#: LootSetup.
 - [Assets/Scripts/Player/ShipSpyglassView.cs](<Assets/Scripts/Player/ShipSpyglassView.cs>) — Исходник C#: ShipSpyglassView.
+- [Assets/Scripts/Player/ShipSpyglassView.LootHint.cs](<Assets/Scripts/Player/ShipSpyglassView.LootHint.cs>) — Исходник C#: ShipSpyglassView.
+- [Assets/Resources/LootEventBeam.shader](<Assets/Resources/LootEventBeam.shader>) — Шейдер.
 - [Assets/Scripts/Editor/SpyglassSetup.cs](<Assets/Scripts/Editor/SpyglassSetup.cs>) — Исходник C#: SpyglassSetup.
 - [rum-loot.md](<rum-loot.md>) — Документация.
 - [combat-balance.md](<combat-balance.md>) — Документация.
@@ -251,7 +255,7 @@ NetworkWeapon имеет отдельные partial-файлы; для морс�
 Ключевые слова: мир, острова, карта, океан, water.
 
 Согласовывать генерацию карты и её состояние между участниками; seed и профиль брать из используемых ассетов.
-CPU-поверхность воды используется игровой логикой: визуальные волны нельзя менять независимо от OceanSurface без проверки связи.
+CPU-поверхность воды используется игровой логикой: визуальные волны нельзя менять независимо от OceanSurface без проверки связи. OceanSurface добавляет длинные волны 90/60 м; по StormProgress плавно подключаются 45/32 м, высота растёт до FinalSwellMultiplier=2.5 и усиливается мелкое волнение. SwellStrength задаёт базовую высоту. Одинаковые параметры _SwellWaves и время используются CPU и обоими шейдерами воды; ShipController продолжает брать высоту в четырёх точках корпуса. SessionStorm больше не меняет неиспользуемый активным SimpleWater параметр WaveScale.
 
 - [Assets/Scripts/World/ProceduralWorld.cs](<Assets/Scripts/World/ProceduralWorld.cs>) — Исходник C#: ProceduralWorld.
 - [Assets/Scripts/World/WorldProfile.cs](<Assets/Scripts/World/WorldProfile.cs>) — Исходник C#: WorldDecoration, WorldProfile.
@@ -259,6 +263,9 @@ CPU-поверхность воды используется игровой ло
 - [Assets/Scripts/World/BalancedWorldGenerator.cs](<Assets/Scripts/World/BalancedWorldGenerator.cs>) — Исходник C#: BalancedWorldGenerator.
 - [Assets/Scripts/World/WorldDecorationPlacer.cs](<Assets/Scripts/World/WorldDecorationPlacer.cs>) — Исходник C#: WorldDecorationPlacer.
 - [Assets/Scripts/OceanSurface.cs](<Assets/Scripts/OceanSurface.cs>) — Исходник C#: OceanSurface.
+- [Assets/Shaders/Ocean.shader](<Assets/Shaders/Ocean.shader>) — Шейдер.
+- [Assets/Houidisoft technology/Simple water/Shaders/SimpleWaterURP.shader](<Assets/Houidisoft technology/Simple water/Shaders/SimpleWaterURP.shader>) — Шейдер.
+- [Assets/Scripts/Networking/SessionStorm.cs](<Assets/Scripts/Networking/SessionStorm.cs>) — Исходник C#: StormMessage, SessionController.
 - [Assets/Scripts/Editor/OceanSetup.cs](<Assets/Scripts/Editor/OceanSetup.cs>) — Исходник C#: OceanSetup.
 - [Assets/Scripts/Editor/WorldGenerationSetup.cs](<Assets/Scripts/Editor/WorldGenerationSetup.cs>) — Исходник C#: WorldGenerationSetup.
 - [Assets/Scripts/World/EnvironmentTestGallery.cs](<Assets/Scripts/World/EnvironmentTestGallery.cs>) — Исходник C#: EnvironmentTestGallery.
@@ -360,13 +367,15 @@ BotNumber использует стабильный ParticipantId; номера 
 Ключевые слова: звук, звуки, голос, voice.
 
 Назначения звуков хранить в существующем GameAudioBank. Источники и лицензии проверять в CREDITS.
-Голосовой чат — отдельная система от игровых звуков.
+Голосовой чат — отдельная система от игровых звуков. SessionVoiceMenu переключает сохранённый режим VOIP: удержание V (по умолчанию) или активация микрофона по RMS-порогу -60..-20 дБ (по умолчанию -40), с хвостом 0.3 с. PirateVoiceInputFilter фильтрует исходящие кадры до кодирования; запреты в меню, без фокуса и при смерти сохраняются.
 Взлом плота: шесть Lockpick cues в GameAudioBank. Движение отмычки, вращение и заедание звучат локально с ограничением частоты; начало, поломка и успех подтверждаются сервером и слышны рядом. Короткие CC0-записи и обработка перечислены в Assets/Audio/Lockpick/SOURCE.md; варианты движения/заедания не повторяются подряд.
 
 - [Assets/Scripts/Audio/GameAudio.cs](<Assets/Scripts/Audio/GameAudio.cs>) — Исходник C#: GameAudio.
 - [Assets/Scripts/Audio/GameAudioBank.cs](<Assets/Scripts/Audio/GameAudioBank.cs>) — Исходник C#: SoundCue, GameAudioBank, Entry.
 - [Assets/Scripts/Audio/GameplayAudio.cs](<Assets/Scripts/Audio/GameplayAudio.cs>) — Исходник C#: GameplayAudio.
 - [Assets/Scripts/Audio/PirateVoiceChat.cs](<Assets/Scripts/Audio/PirateVoiceChat.cs>) — Исходник C#: PirateVoiceChat.
+- [Assets/Scripts/Audio/PirateVoiceInputFilter.cs](<Assets/Scripts/Audio/PirateVoiceInputFilter.cs>) — Исходник C#: PirateVoiceInputFilter.
+- [Assets/Scripts/Networking/SessionVoiceMenu.cs](<Assets/Scripts/Networking/SessionVoiceMenu.cs>) — Исходник C#: SessionController.
 - [Assets/Scripts/Networking/NetworkPlayer.Voice.cs](<Assets/Scripts/Networking/NetworkPlayer.Voice.cs>) — Исходник C#: NetworkPlayer.
 - [Assets/Scripts/World/StormWeather.cs](<Assets/Scripts/World/StormWeather.cs>) — Исходник C#: StormWeather.
 - [Assets/Scripts/Editor/AudioBankWindow.cs](<Assets/Scripts/Editor/AudioBankWindow.cs>) — Исходник C#: AudioBankWindow, Page.
@@ -471,11 +480,16 @@ WhaleLootPoint хранит состояния Idle, Agitated, Diving, Cleared �
 
 Ключевые слова: тестовая карта, галерея, водоворот, whirlpool.
 
-Точка входа тестовой карты — EnvironmentTestGallery, подготовка — EnvironmentTestSetup. Водоворот имеет отдельные файлы поведения и визуала; не путать этот режим со старой SampleScene.
+В NetworkOcean водоворот всегда активен в центре: OceanSurface.CentralWhirlpoolRadius=500 м (вдвое прежнего), CentralWhirlpoolDepth=120 м. StormZone больше не запускает его в финале и не создаёт WhirlpoolVFX. SeabedTerrain формирует локальное углубление радиусом 625 м с запасом под воронкой, CPU и mesh используют одну функцию. WaterGridGenerator больше не создаёт 81 сферу WaterBuoy в меню и удаляет старые объекты по точным именам. SimpleWater исключает небо из depth-пены, проверяет расстояние до контакта геометрии и подавляет береговую пену внутри и у края воронки. В SimpleWater убраны вихревые нормали, специальная пена и затемнение; bounds воды учитывают глубокую воронку. WhirlpoolTest использует радиус 500 м без частиц, глубину 45 м для отдельной тестовой площадки. Точка входа тестовой карты — EnvironmentTestGallery, подготовка — EnvironmentTestSetup. Водоворот имеет отдельные файлы поведения и визуала; не путать этот режим со старой SampleScene.
 
 - [Assets/Scripts/World/EnvironmentTestGallery.cs](<Assets/Scripts/World/EnvironmentTestGallery.cs>) — Исходник C#: EnvironmentTestGallery.
 - [Assets/Scripts/Editor/EnvironmentTestSetup.cs](<Assets/Scripts/Editor/EnvironmentTestSetup.cs>) — Исходник C#: EnvironmentTestSetup.
 - [Assets/Scripts/World/WhirlpoolTest.cs](<Assets/Scripts/World/WhirlpoolTest.cs>) — Исходник C#: WhirlpoolTest.
+- [Assets/Scripts/World/SeabedTerrain.cs](<Assets/Scripts/World/SeabedTerrain.cs>) — Исходник C#: SeabedTerrain.
+- [Assets/Scripts/WaterGridGenerator.cs](<Assets/Scripts/WaterGridGenerator.cs>) — Исходник C#: WaterGridGenerator.
+- [Assets/Scripts/OceanSurface.cs](<Assets/Scripts/OceanSurface.cs>) — Исходник C#: OceanSurface.
+- [Assets/Scripts/World/StormZone.cs](<Assets/Scripts/World/StormZone.cs>) — Исходник C#: StormZone.
+- [Assets/Houidisoft technology/Simple water/Shaders/SimpleWaterURP.shader](<Assets/Houidisoft technology/Simple water/Shaders/SimpleWaterURP.shader>) — Шейдер.
 - [Assets/Scripts/World/WhirlpoolVFX.cs](<Assets/Scripts/World/WhirlpoolVFX.cs>) — Исходник C#: WhirlpoolVFX.
 
 ## Источники актуальных настроек

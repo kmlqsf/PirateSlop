@@ -53,6 +53,24 @@ namespace PirateSlop.Networking
         public Vector3 SharkBaitPoint => sharkBaitPoint.Value;
         public NetworkObject SharkTargetPlayer => sharkTargetPlayer.Value;
         public bool Available => IsSpawned && phase.Value == SeaLootState.Ready && carrier.Value == null;
+        public bool LootHintEligible
+        {
+            get
+            {
+                if (!IsSpawned || Kind == SeaLootKind.None || carrier.Value != null || supportId.Value != 0) return false;
+                for (int i = 0; i < contents.Count; i++) if (contents[i].Count > 0) return true;
+                return false;
+            }
+        }
+        public Vector3 LootHintPoint
+        {
+            get
+            {
+                var point = phase.Value == SeaLootState.Ready ? transform.position : eventPoint.Value;
+                if (Kind == SeaLootKind.Sunken && phase.Value != SeaLootState.Ready && OceanSurface.Instance != null) point.y = OceanSurface.Instance.Height(point);
+                return point + Vector3.up * 2f;
+            }
+        }
         public int LockRound => lockRound.Value;
         public float Progress => progress.Value;
         public string WorkHint => Kind == SeaLootKind.Raft
@@ -402,6 +420,7 @@ namespace PirateSlop.Networking
 
         public override void OnStopNetwork()
         {
+            ClientChests.Remove(this);
             if (eventVisual != null) Destroy(eventVisual);
             if (markerMaterial != null) Destroy(markerMaterial);
             if (arcMaterial != null) Destroy(arcMaterial);

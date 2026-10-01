@@ -37,7 +37,7 @@ namespace PirateSlop
             storm.Apply(material);
             pass.cloudsVolume = storm.CloudSettings;
             pass.colorAdjustments = null;
-            pass.resolutionScale = ShipSpyglassView.ClearsFog(renderingData.cameraData.camera) ? 1f : ResolutionScale;
+            pass.resolutionScale = ShipSpyglassView.IsViewingCamera(renderingData.cameraData.camera) ? 1f : ResolutionScale;
             pass.ConfigureInput(ScriptableRenderPassInput.Depth);
             renderer.EnqueuePass(pass);
         }

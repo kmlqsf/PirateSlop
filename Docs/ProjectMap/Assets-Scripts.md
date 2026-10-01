@@ -10,18 +10,19 @@
 
 | Файл | Краткое описание |
 | --- | --- |
+| [Assets/Scripts/AdvancedPlayerController.Spectator.cs](<../../Assets/Scripts/AdvancedPlayerController.Spectator.cs>) | Исходник C#: AdvancedPlayerController; Персонаж, камера и анимации |
 | [Assets/Scripts/AdvancedPlayerController.cs](<../../Assets/Scripts/AdvancedPlayerController.cs>) | Исходник C#: AdvancedPlayerController; Персонаж, камера и анимации |
 | [Assets/Scripts/CannonballDropper.cs](<../../Assets/Scripts/CannonballDropper.cs>) | Исходник C#: CannonballDropper |
 | [Assets/Scripts/CombatVfx.cs](<../../Assets/Scripts/CombatVfx.cs>) | Исходник C#: CombatVfx |
 | [Assets/Scripts/GpuWaterSpray.cs](<../../Assets/Scripts/GpuWaterSpray.cs>) | Исходник C#: GpuWaterSpray |
 | [Assets/Scripts/HelmCenterMark.cs](<../../Assets/Scripts/HelmCenterMark.cs>) | Исходник C#: HelmCenterMark |
 | [Assets/Scripts/HelmInteraction.cs](<../../Assets/Scripts/HelmInteraction.cs>) | Исходник C#: HelmInteraction; Движение корабля и палуба |
-| [Assets/Scripts/OceanSurface.cs](<../../Assets/Scripts/OceanSurface.cs>) | Исходник C#: OceanSurface; Мир, острова и океан, Шторм, зона и объёмный туман |
+| [Assets/Scripts/OceanSurface.cs](<../../Assets/Scripts/OceanSurface.cs>) | Исходник C#: OceanSurface; Мир, острова и океан, Шторм, зона и объёмный туман, Тестовая карта и водоворот |
 | [Assets/Scripts/SailSystem.cs](<../../Assets/Scripts/SailSystem.cs>) | Исходник C#: SailSystem; Паруса и канаты |
 | [Assets/Scripts/ShipController.cs](<../../Assets/Scripts/ShipController.cs>) | Исходник C#: ShipController; Движение корабля и палуба |
 | [Assets/Scripts/ShipDeckPassenger.cs](<../../Assets/Scripts/ShipDeckPassenger.cs>) | Исходник C#: ShipDeckPassenger; Движение корабля и палуба, Персонаж, камера и анимации, Предметы, лут и инвентарь |
 | [Assets/Scripts/VfxPool.cs](<../../Assets/Scripts/VfxPool.cs>) | Исходник C#: VfxPool, Entry |
-| [Assets/Scripts/WaterGridGenerator.cs](<../../Assets/Scripts/WaterGridGenerator.cs>) | Исходник C#: WaterGridGenerator |
+| [Assets/Scripts/WaterGridGenerator.cs](<../../Assets/Scripts/WaterGridGenerator.cs>) | Исходник C#: WaterGridGenerator; Тестовая карта и водоворот |
 
 ## Assets/Scripts/Audio
 
@@ -32,6 +33,7 @@
 | [Assets/Scripts/Audio/GameAudioBank.cs](<../../Assets/Scripts/Audio/GameAudioBank.cs>) | Исходник C#: SoundCue, GameAudioBank, Entry; Звуки и голос |
 | [Assets/Scripts/Audio/GameplayAudio.cs](<../../Assets/Scripts/Audio/GameplayAudio.cs>) | Исходник C#: GameplayAudio; Звуки и голос |
 | [Assets/Scripts/Audio/PirateVoiceChat.cs](<../../Assets/Scripts/Audio/PirateVoiceChat.cs>) | Исходник C#: PirateVoiceChat; Звуки и голос |
+| [Assets/Scripts/Audio/PirateVoiceInputFilter.cs](<../../Assets/Scripts/Audio/PirateVoiceInputFilter.cs>) | Исходник C#: PirateVoiceInputFilter; Звуки и голос |
 | [Assets/Scripts/Audio/SpatialAudioTone.cs](<../../Assets/Scripts/Audio/SpatialAudioTone.cs>) | Исходник C#: SpatialAudioTone |
 
 ## Assets/Scripts/Cannons
@@ -264,10 +266,10 @@
 | [Assets/Scripts/Networking/SessionMetrics.cs](<../../Assets/Scripts/Networking/SessionMetrics.cs>) | Исходник C#: SessionMetrics |
 | [Assets/Scripts/Networking/SessionPartyMenu.cs](<../../Assets/Scripts/Networking/SessionPartyMenu.cs>) | Исходник C#: SessionController; Меню и HUD |
 | [Assets/Scripts/Networking/SessionSpectator.cs](<../../Assets/Scripts/Networking/SessionSpectator.cs>) | Исходник C#: SessionController; Проект и точки входа |
-| [Assets/Scripts/Networking/SessionStorm.cs](<../../Assets/Scripts/Networking/SessionStorm.cs>) | Исходник C#: StormMessage, SessionController; Шторм, зона и объёмный туман |
-| [Assets/Scripts/Networking/SessionVoiceMenu.cs](<../../Assets/Scripts/Networking/SessionVoiceMenu.cs>) | Исходник C#: SessionController |
+| [Assets/Scripts/Networking/SessionStorm.cs](<../../Assets/Scripts/Networking/SessionStorm.cs>) | Исходник C#: StormMessage, SessionController; Мир, острова и океан, Шторм, зона и объёмный туман |
+| [Assets/Scripts/Networking/SessionVoiceMenu.cs](<../../Assets/Scripts/Networking/SessionVoiceMenu.cs>) | Исходник C#: SessionController; Звуки и голос |
 | [Assets/Scripts/Networking/SharkSwarmVisual.cs](<../../Assets/Scripts/Networking/SharkSwarmVisual.cs>) | Исходник C#: SharkSwarmVisual |
-| [Assets/Scripts/Networking/ShipObserverCondition.cs](<../../Assets/Scripts/Networking/ShipObserverCondition.cs>) | Исходник C#: ShipObserverCondition |
+| [Assets/Scripts/Networking/ShipObserverCondition.cs](<../../Assets/Scripts/Networking/ShipObserverCondition.cs>) | Исходник C#: ShipObserverCondition; Персонаж, камера и анимации |
 | [Assets/Scripts/Networking/ShipSinkingVfx.cs](<../../Assets/Scripts/Networking/ShipSinkingVfx.cs>) | Исходник C#: ShipSinkingVfx |
 | [Assets/Scripts/Networking/SimulationState.cs](<../../Assets/Scripts/Networking/SimulationState.cs>) | Исходник C#: PlayerCommand, PlayerState, ShipState; Сеть, сессия и Steam |
 | [Assets/Scripts/Networking/SteamParty.cs](<../../Assets/Scripts/Networking/SteamParty.cs>) | Исходник C#: SteamParty; Сеть, сессия и Steam |
@@ -311,6 +313,7 @@
 | [Assets/Scripts/Player/PlayerPresentation.cs](<../../Assets/Scripts/Player/PlayerPresentation.cs>) | Исходник C#: PlayerPresentation |
 | [Assets/Scripts/Player/SabreAnimation.cs](<../../Assets/Scripts/Player/SabreAnimation.cs>) | Исходник C#: SabreAnimation; Личное оружие и урон |
 | [Assets/Scripts/Player/ShipSpyglass.cs](<../../Assets/Scripts/Player/ShipSpyglass.cs>) | Исходник C#: ShipSpyglass |
+| [Assets/Scripts/Player/ShipSpyglassView.LootHint.cs](<../../Assets/Scripts/Player/ShipSpyglassView.LootHint.cs>) | Исходник C#: ShipSpyglassView; Предметы, лут и инвентарь |
 | [Assets/Scripts/Player/ShipSpyglassView.cs](<../../Assets/Scripts/Player/ShipSpyglassView.cs>) | Исходник C#: ShipSpyglassView; Предметы, лут и инвентарь |
 | [Assets/Scripts/Player/SwimPresentation.cs](<../../Assets/Scripts/Player/SwimPresentation.cs>) | Исходник C#: SwimPresentation |
 | [Assets/Scripts/Player/WeaponArmRig.cs](<../../Assets/Scripts/Player/WeaponArmRig.cs>) | Исходник C#: WeaponArmRig, Arm |
@@ -380,10 +383,10 @@
 | [Assets/Scripts/World/LocationDefinition.cs](<../../Assets/Scripts/World/LocationDefinition.cs>) | Исходник C#: Landform, LocationSettings, LocationPointRule, LocationDefinition |
 | [Assets/Scripts/World/ProceduralWorld.cs](<../../Assets/Scripts/World/ProceduralWorld.cs>) | Исходник C#: ProceduralWorld; Мир, острова и океан |
 | [Assets/Scripts/World/SeaLootSpawner.cs](<../../Assets/Scripts/World/SeaLootSpawner.cs>) | Исходник C#: SeaLootSpawner; Предметы, лут и инвентарь |
-| [Assets/Scripts/World/SeabedTerrain.cs](<../../Assets/Scripts/World/SeabedTerrain.cs>) | Исходник C#: SeabedTerrain |
+| [Assets/Scripts/World/SeabedTerrain.cs](<../../Assets/Scripts/World/SeabedTerrain.cs>) | Исходник C#: SeabedTerrain; Тестовая карта и водоворот |
 | [Assets/Scripts/World/ShipComparison.cs](<../../Assets/Scripts/World/ShipComparison.cs>) | Исходник C#: ShipComparison |
 | [Assets/Scripts/World/StormWeather.cs](<../../Assets/Scripts/World/StormWeather.cs>) | Исходник C#: StormWeather; Звуки и голос, Шторм, зона и объёмный туман |
-| [Assets/Scripts/World/StormZone.cs](<../../Assets/Scripts/World/StormZone.cs>) | Исходник C#: StormZone; Шторм, зона и объёмный туман |
+| [Assets/Scripts/World/StormZone.cs](<../../Assets/Scripts/World/StormZone.cs>) | Исходник C#: StormZone; Шторм, зона и объёмный туман, Тестовая карта и водоворот |
 | [Assets/Scripts/World/SupplyIslandComposition.cs](<../../Assets/Scripts/World/SupplyIslandComposition.cs>) | Исходник C#: SupplyIslandComposition |
 | [Assets/Scripts/World/UnderwaterLife.cs](<../../Assets/Scripts/World/UnderwaterLife.cs>) | Исходник C#: UnderwaterLife |
 | [Assets/Scripts/World/WhirlpoolTest.cs](<../../Assets/Scripts/World/WhirlpoolTest.cs>) | Исходник C#: WhirlpoolTest; Тестовая карта и водоворот |

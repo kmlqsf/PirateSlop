@@ -25,6 +25,7 @@ Shader "PirateSlop/Ocean"
             float4 _Waves[4], _Wakes[32];
             int _WakeCount;
             float _WaveTime, _WaveScale;
+            float4 _SwellWaves[4];
             CBUFFER_START(UnityPerMaterial)
                 half4 _DeepColor, _ShallowColor, _FoamColor;
             CBUFFER_END
@@ -40,7 +41,16 @@ Shader "PirateSlop/Ocean"
                     value.x += w.z*sin(phase);
                     value.yz += w.z*k*w.xy*cos(phase);
                 }
-                return value*_WaveScale;
+                value *= _WaveScale;
+                for (int j = 0; j < 4; j++)
+                {
+                    float4 swell = _SwellWaves[j];
+                    float k = 6.2831853 / max(1.0, swell.w);
+                    float phase = k * dot(swell.xy, p) - sqrt(9.81 * k) * _WaveTime;
+                    value.x += swell.z * sin(phase);
+                    value.yz += swell.z * k * swell.xy * cos(phase);
+                }
+                return value;
             }
             Varyings Vert(Attributes input)
             {

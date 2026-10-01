@@ -6,7 +6,41 @@ namespace PirateSlop
     public sealed class OceanSurface : MonoBehaviour
     {
         public static OceanSurface Instance { get; private set; }
+        public const float CentralWhirlpoolRadius = 500f;
+        public const float CentralWhirlpoolDepth = 120f;
         public float WaveScale = 1f;
+        [Min(0f)] public float SwellStrength = 1f;
+        [Min(1f)] public float FinalSwellMultiplier = 2.5f;
+        static readonly Vector4[] Swells = {
+            new Vector4(.94f, .342f, .55f, 90f),
+            new Vector4(-.4f, .916515f, .28f, 60f),
+            new Vector4(.6f, -.8f, .18f, 45f),
+            new Vector4(-.8f, -.6f, .12f, 32f)
+        };
+        readonly Vector4[] swellWaves = new Vector4[4];
+        float SeaProgress => Networking.SessionController.Instance != null ? Networking.SessionController.Instance.StormProgress : 0f;
+        float SeaChop => Mathf.Lerp(.22f, .55f, Mathf.SmoothStep(0f, 1f, SeaProgress));
+
+        Vector4 Swell(int index)
+        {
+            float progress = Mathf.SmoothStep(0f, 1f, SeaProgress);
+            var wave = Swells[index];
+            wave.z *= SwellStrength * Mathf.Lerp(1f, FinalSwellMultiplier, progress);
+            if (index >= 2) wave.z *= progress;
+            return wave;
+        }
+
+        float SwellHeight(Vector3 position)
+        {
+            float height = 0f;
+            for (int i = 0; i < Swells.Length; i++)
+            {
+                var wave = Swell(i);
+                float k = 2f * Mathf.PI / wave.w;
+                height += wave.z * Mathf.Sin(k * (wave.x * position.x + wave.y * position.z) - Mathf.Sqrt(9.81f * k) * WaveTime);
+            }
+            return height;
+        }
         public float SeaLevel;
         public Vector3 WhirlpoolCenter;
         public float WhirlpoolRadius;
@@ -49,13 +83,13 @@ namespace PirateSlop
 
         public float Height(Vector3 position)
         {
-            float wHeight = GetWhirlpoolHeight(position);
+            float wHeight = GetWhirlpoolHeight(position) + SwellHeight(position);
             if (simpleWater)
             {
                 float t = WaveTime * simpleWaveSpeed;
                 float first = Mathf.Sin(position.x * simpleWaveScale + t);
                 float second = Mathf.Sin((position.z + position.x * .5f) * simpleWaveScale * .8f - t * 1.3f);
-                return SeaLevel + (first + second) * .5f * simpleWaveStrength + wHeight;
+                return SeaLevel + (first + second) * .5f * simpleWaveStrength * SeaChop + wHeight;
             }
             float height = SeaLevel;
             foreach (var w in Waves)
@@ -68,6 +102,13 @@ namespace PirateSlop
         void Awake()
         {
             Instance = this;
+            if (gameObject.scene.name == "NetworkOcean")
+            {
+                WhirlpoolCenter = Vector3.zero;
+                WhirlpoolRadius = CentralWhirlpoolRadius;
+                WhirlpoolDepth = CentralWhirlpoolDepth;
+                WhirlpoolTwist = 2f;
+            }
             if (gameObject.scene.name == "NetworkOcean") SeaMistRendererFeature.InitializeGlobalFog();
             if (WaterMaterial != null)
             {
@@ -93,7 +134,7 @@ namespace PirateSlop
             }
             mesh = new Mesh { name = "OceanGrid", indexFormat = UnityEngine.Rendering.IndexFormat.UInt32 }; mesh.MarkDynamic();
             mesh.vertices = vertices; mesh.triangles = indices;
-            mesh.bounds = new Bounds(Vector3.zero, new Vector3(8100, 30, 8100));
+            mesh.bounds = new Bounds(Vector3.zero, new Vector3(8100, (CentralWhirlpoolDepth + 40f) * 2f, 8100));
             GetComponent<MeshFilter>().sharedMesh = mesh;
         }
         void LateUpdate()
@@ -102,6 +143,9 @@ namespace PirateSlop
             if (camera != null) transform.position = new Vector3(Mathf.Floor(camera.transform.position.x / 8) * 8, SeaLevel, Mathf.Floor(camera.transform.position.z / 8) * 8);
             if (WaterMaterial == null) return;
             ReadWaveSettings();
+            for (int i = 0; i < Swells.Length; i++) swellWaves[i] = Swell(i);
+            WaterMaterial.SetVectorArray("_SwellWaves", swellWaves);
+            WaterMaterial.SetFloat("_SeaChop", SeaChop);
             if (simpleWater)
             {
                 WaterMaterial.SetFloat("_UseWaveTime", 1f);

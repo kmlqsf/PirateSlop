@@ -16,6 +16,7 @@ namespace PirateSlop.Networking
             if (session.IsSpectatorConnection(connection)) return true;
             var viewer = session.GetPlayer(connection.ClientId);
             if (viewer == null) return NetworkObject.Owner == connection;
+            if (viewer.Eliminated.Value || (viewer.Motor != null && viewer.Motor.IsDead)) return true;
             var targetPlayer = NetworkObject.GetComponent<NetworkPlayer>();
             var target = targetPlayer != null ? targetPlayer.Ship : NetworkObject.GetComponent<NetworkShip>();
             if (target == null)

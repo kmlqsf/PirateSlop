@@ -3,7 +3,7 @@ using UnityEngine.InputSystem;
 using PirateSlop;
 
 [RequireComponent(typeof(CharacterController))]
-public class AdvancedPlayerController : MonoBehaviour
+public partial class AdvancedPlayerController : MonoBehaviour
 {
     [SerializeField] float walkSpeed = 5f, sprintSpeed = 8f, crouchSpeed = 2.5f, slideSpeed = 6f;
     [SerializeField] float jumpHeight = 1.2f, gravity = -25f;
@@ -170,7 +170,7 @@ public class AdvancedPlayerController : MonoBehaviour
         var teammates = new System.Collections.Generic.List<PirateSlop.Networking.NetworkPlayer>();
         foreach (var p in PirateSlop.Networking.NetworkPlayer.Active)
         {
-            if (p.TeamId.Value == networkSelf.TeamId.Value && p != networkSelf && p.Motor != null && !p.Motor.IsDead)
+            if (p.IsSpawned && p.TeamId.Value == networkSelf.TeamId.Value && p != networkSelf && !p.Eliminated.Value && p.Motor != null && !p.Motor.IsDead)
                 teammates.Add(p);
         }
         if (teammates.Count == 0)
@@ -188,10 +188,11 @@ public class AdvancedPlayerController : MonoBehaviour
         if (!local) return;
         if (IsDead)
         {
-            var m = Mouse.current;
-            if (m != null && m.leftButton.wasPressedThisFrame)
-                CycleSpectatorTarget();
+            UpdateDeathSpectator();
+            pending = new PlayerCommand { Yaw = lookYaw, Pitch = pitch, Release = true };
+            return;
         }
+        ResetDeathSpectator();
         if (BotDebugPanel.ConsumedInput) { pending = new PlayerCommand { Yaw = lookYaw, Pitch = pitch, Release = true }; return; }
         aimRecoil=Vector2.Lerp(aimRecoil,Vector2.zero,1-Mathf.Exp(-7*Time.deltaTime));
         var kb = Keyboard.current; var mouse = Mouse.current;
@@ -247,22 +248,7 @@ public class AdvancedPlayerController : MonoBehaviour
         if (!local || playerCamera == null) return;
         if (IsDead)
         {
-            if (SpectatorTarget != null && SpectatorTarget.Motor != null && !SpectatorTarget.Motor.IsDead)
-            {
-                var targetCam = SpectatorTarget.Motor.PlayerCamera;
-                if (targetCam != null)
-                {
-                    playerCamera.transform.rotation = targetCam.transform.rotation;
-                    var targetPivot = targetCam.transform.position;
-                    var targetDir = -targetCam.transform.forward;
-                    float distance = thirdPersonDistance;
-                    foreach (var hit in Physics.SphereCastAll(targetPivot, .15f, targetDir, distance, ~0, QueryTriggerInteraction.Ignore))
-                        if (!hit.transform.IsChildOf(SpectatorTarget.transform)) 
-                            distance = Mathf.Min(distance, Mathf.Max(0, hit.distance - .05f));
-                    playerCamera.transform.position = targetPivot + targetDir * distance;
-                    playerCamera.fieldOfView = targetCam.fieldOfView;
-                }
-            }
+            PositionDeathSpectator();
             return;
         }
         var helm = shipControls != null ? shipControls.TurningHelm : null;
