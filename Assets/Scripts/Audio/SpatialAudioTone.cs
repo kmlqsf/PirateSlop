@@ -15,6 +15,13 @@ namespace PirateSlop
         static float listenerCheckTime;
         static readonly RaycastHit[] hitBuffer = new RaycastHit[32];
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        static void ResetListenerCache()
+        {
+            cachedListener = null;
+            listenerCheckTime = 0f;
+        }
+
         public static AudioListener FindListener()
         {
             if (cachedListener != null && cachedListener.isActiveAndEnabled) return cachedListener;
