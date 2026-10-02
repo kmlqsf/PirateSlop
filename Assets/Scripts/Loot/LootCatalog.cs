@@ -16,6 +16,10 @@ namespace PirateSlop
             [Min(0)] public float Weight = 1;
         }
         public NetworkLootChest ChestPrefab;
+        public NetworkSkullEvent SkullEventPrefab;
+        [Min(0)] public float SkullRotationSpeed = 8f;
+        [Min(.1f)] public float SkullRewardDelay = 3f;
+        [Min(.5f)] public float SkullRewardFlightSeconds = 2.5f;
         public NetworkFish[] LoosePrefabs;
         public Vector2Int LooseItemsPerIsland = new(2, 4);
         public Vector2Int ChestsPerIsland = new(1, 3);

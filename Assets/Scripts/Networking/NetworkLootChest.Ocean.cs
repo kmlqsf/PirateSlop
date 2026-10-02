@@ -5,8 +5,8 @@ using UnityEngine;
 
 namespace PirateSlop.Networking
 {
-    public enum SeaLootKind : byte { None, Capture, Raft, Sunken, Shark }
-    public enum SeaLootState : byte { Locked, Rising, Ready }
+    public enum SeaLootKind : byte { None, Capture, Raft, Sunken, Shark, Skull, FloatingReward }
+    public enum SeaLootState : byte { Locked, Rising, Ready, Flying }
 
     public sealed partial class NetworkLootChest
     {
@@ -44,7 +44,7 @@ namespace PirateSlop.Networking
         bool visualCreated;
         internal bool BotLootCandidate => IsSpawned && carrier.Value == null && supportId.Value == 0;
         internal bool BotCapturePending => Kind == SeaLootKind.Capture && phase.Value == SeaLootState.Locked;
-        internal bool BotLootRising => phase.Value == SeaLootState.Rising;
+        internal bool BotLootRising => phase.Value == SeaLootState.Rising || phase.Value == SeaLootState.Flying;
         internal Vector3 BotLootPoint => Kind == SeaLootKind.None ? transform.position : eventPoint.Value;
         public SeaLootKind Kind => kind.Value;
         public Vector3 EventPoint => eventPoint.Value;
@@ -76,7 +76,8 @@ namespace PirateSlop.Networking
         public string WorkHint => Kind == SeaLootKind.Raft
             ? "Мышь — угол отмычки · ЛКМ — повернуть замок · Q / E / Esc — отменить"
             : $"Верёвка: {Mathf.RoundToInt(Progress * 100)}% · плыви вокруг сундука · E / Q — отпустить";
-        public string OceanHint => phase.Value == SeaLootState.Rising ? "Ящик всплывает"
+        public string OceanHint => phase.Value == SeaLootState.Flying ? "Череп выплюнул сундук"
+            : phase.Value == SeaLootState.Rising ? "Ящик всплывает"
             : carrier.Value != null ? "Ящик несут"
             : phase.Value == SeaLootState.Ready ? (Kind == SeaLootKind.Shark && !SharksDistracted ? "E — открыть · F — нести ящик · Акулы агрессивны!" : "E — открыть · F — нести ящик")
             : Kind == SeaLootKind.Capture ? $"Захват: {Mathf.RoundToInt(Progress * 100)}%" + (contested.Value ? " · оспаривается" : " · удерживайте корабль в круге")
@@ -340,6 +341,7 @@ namespace PirateSlop.Networking
             if (!visualCreated) CreateOceanVisual();
             if (IsServerInitialized)
             {
+                TickRewardFlight();
                 if (Kind == SeaLootKind.Raft) TickRaft();
                 if (occupied.Value)
                 {
@@ -379,7 +381,9 @@ namespace PirateSlop.Networking
                 supportId.Value = 0;
                 deck = null;
             }
-            if (carrier.Value != null)
+            if (phase.Value == SeaLootState.Flying)
+                transform.SetPositionAndRotation(RewardFlightPoint(), deck != null ? deck.transform.rotation * facing.Value : facing.Value);
+            else if (carrier.Value != null)
             {
                 var holder = carrier.Value.transform;
                 transform.SetPositionAndRotation(holder.position + holder.forward * .9f + holder.right * .35f + Vector3.up * .65f, holder.rotation);
@@ -396,7 +400,7 @@ namespace PirateSlop.Networking
             }
             bool show = Kind != SeaLootKind.Capture || phase.Value != SeaLootState.Locked;
             foreach (var renderer in chestRenderers) if (renderer != null) renderer.enabled = show;
-            if (chestCollider != null) chestCollider.enabled = show && carrier.Value == null;
+            if (chestCollider != null) chestCollider.enabled = show && carrier.Value == null && phase.Value != SeaLootState.Flying;
             if (ring != null)
             {
                 ring.enabled = phase.Value == SeaLootState.Locked;

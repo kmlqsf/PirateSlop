@@ -19,7 +19,7 @@ namespace PirateSlop
         int quantity;
         int lootEvent;
         bool lootEventListOpen;
-        static readonly string[] lootEventNames = { "Зона захвата", "Плот с закрытым сундуком", "Подводный тайник", "Сундук со стаей акул" };
+        static readonly string[] lootEventNames = { "Зона захвата", "Плот с закрытым сундуком", "Подводный тайник", "Сундук со стаей акул", "Огненный череп" };
         float zoneSpeedMultiplier = 1f;
         float shipSpeedPercent = 100f, nextShipSpeedSend;
         bool shipSpeedPending;

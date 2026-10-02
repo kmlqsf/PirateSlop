@@ -9,6 +9,7 @@ namespace PirateSlop
         [SerializeField, Min(.1f)] float lootBeamWidth = 1f;
         [SerializeField, Min(10f)] float lootBeamHeight = 300f;
         NetworkLootChest lootHint;
+        NetworkSkullEvent skullHint;
         GameObject lootBeam;
         MeshRenderer lootBeamRenderer;
         Mesh lootBeamMesh;
@@ -29,9 +30,20 @@ namespace PirateSlop
                 nearest = chest;
             }
             lootHint = nearest;
-            if (nearest == null) { HideLootBeam(); return; }
+            skullHint = null;
+            foreach (var altar in NetworkSkullEvent.ClientEvents)
+            {
+                if (altar == null || !altar.LootHintEligible) continue;
+                var offset = altar.LootHintPoint - player.transform.position;
+                offset.y = 0f;
+                if (offset.sqrMagnitude >= nearestDistance) continue;
+                nearestDistance = offset.sqrMagnitude;
+                skullHint = altar;
+                lootHint = null;
+            }
+            if (lootHint == null && skullHint == null) { HideLootBeam(); return; }
             if (lootBeam == null) CreateLootBeam();
-            lootBeam.transform.position = nearest.LootHintPoint - Vector3.up * 1.85f;
+            lootBeam.transform.position = (skullHint != null ? skullHint.LootHintPoint : lootHint.LootHintPoint) - Vector3.up * 1.85f;
             lootBeam.transform.localScale = new Vector3(lootBeamWidth, lootBeamHeight, lootBeamWidth);
         }
 
@@ -70,7 +82,8 @@ namespace PirateSlop
 
         void ShowLootBeam(Camera camera)
         {
-            if (lootBeamRenderer != null) lootBeamRenderer.enabled = engaged && camera == cameraView && lootHint != null && lootHint.LootHintEligible;
+            if (lootBeamRenderer != null) lootBeamRenderer.enabled = engaged && camera == cameraView &&
+                ((lootHint != null && lootHint.LootHintEligible) || (skullHint != null && skullHint.LootHintEligible));
         }
 
         void HideLootBeam()

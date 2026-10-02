@@ -12,14 +12,14 @@
 
 ## Полный каталог
 
-Учтено 3861 файлов без `.meta`. Ещё 4047 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
+Учтено 3883 файлов без `.meta`. Ещё 4071 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
 
 | Раздел | Назначение | Файлов |
 | --- | --- | ---: |
 | [.agents](<Docs/ProjectMap/.agents.md>) | Ресурсы раздела; точный состав — в каталоге | 1 |
 | [.cursor](<Docs/ProjectMap/.cursor.md>) | Ресурсы раздела; точный состав — в каталоге | 1 |
 | [.opencode](<Docs/ProjectMap/.opencode.md>) | Ресурсы раздела; точный состав — в каталоге | 1 |
-| [Art](<Docs/ProjectMap/Art.md>) | Исходники арта и Blender | 112 |
+| [Art](<Docs/ProjectMap/Art.md>) | Исходники арта и Blender | 113 |
 | [Assets](<Docs/ProjectMap/Assets.md>) | Ресурсы раздела; точный состав — в каталоге | 3 |
 | [Assets/Animations](<Docs/ProjectMap/Assets-Animations.md>) | Анимации | 51 |
 | [Assets/Audio](<Docs/ProjectMap/Assets-Audio.md>) | Звуковые ресурсы и лицензии | 182 |
@@ -29,15 +29,15 @@
 | [Assets/Game](<Docs/ProjectMap/Assets-Game.md>) | Игровые подсистемы и эффекты | 79 |
 | [Assets/Houidisoft technology](<Docs/ProjectMap/Assets-Houidisoft technology.md>) | Ресурсы раздела; точный состав — в каталоге | 15 |
 | [Assets/JMO Assets](<Docs/ProjectMap/Assets-JMO Assets.md>) | Ресурсы раздела; точный состав — в каталоге | 489 |
-| [Assets/Materials](<Docs/ProjectMap/Assets-Materials.md>) | Материалы | 146 |
+| [Assets/Materials](<Docs/ProjectMap/Assets-Materials.md>) | Материалы | 151 |
 | [Assets/Mirza](<Docs/ProjectMap/Assets-Mirza.md>) | Ресурсы раздела; точный состав — в каталоге | 186 |
-| [Assets/Models](<Docs/ProjectMap/Assets-Models.md>) | Модели и связанные ресурсы | 795 |
+| [Assets/Models](<Docs/ProjectMap/Assets-Models.md>) | Модели и связанные ресурсы | 806 |
 | [Assets/Plugins](<Docs/ProjectMap/Assets-Plugins.md>) | Плагины | 5 |
-| [Assets/Prefabs](<Docs/ProjectMap/Assets-Prefabs.md>) | Готовые игровые объекты | 132 |
-| [Assets/Resources](<Docs/ProjectMap/Assets-Resources.md>) | Ресурсы, доступные для загрузки по имени | 41 |
+| [Assets/Prefabs](<Docs/ProjectMap/Assets-Prefabs.md>) | Готовые игровые объекты | 133 |
+| [Assets/Resources](<Docs/ProjectMap/Assets-Resources.md>) | Ресурсы, доступные для загрузки по имени | 40 |
 | [Assets/Scenes](<Docs/ProjectMap/Assets-Scenes.md>) | Сохранённые сцены | 3 |
 | [Assets/Screenshots](<Docs/ProjectMap/Assets-Screenshots.md>) | Сохранённые изображения | 8 |
-| [Assets/Scripts](<Docs/ProjectMap/Assets-Scripts.md>) | Игровой код и редакторские инструменты | 317 |
+| [Assets/Scripts](<Docs/ProjectMap/Assets-Scripts.md>) | Игровой код и редакторские инструменты | 322 |
 | [Assets/Settings](<Docs/ProjectMap/Assets-Settings.md>) | Настройки игровых систем и рендеринга | 43 |
 | [Assets/Shaders](<Docs/ProjectMap/Assets-Shaders.md>) | Шейдеры | 7 |
 | [Assets/StreamingAssets](<Docs/ProjectMap/Assets-StreamingAssets.md>) | Ресурсы раздела; точный состав — в каталоге | 2 |
@@ -202,13 +202,14 @@ SabreAnimation использует отдельный хват Mixamo и пер
 
 Ключевые слова: лут, предметы, инвентарь, inventory.
 
-Подбор и расход предметов подтверждает сервер. Сверять идентификаторы предметов, иконки и каталог. Одинаковые предметы складываются в стак без игрового лимита количества; ядра сохраняют отдельный слот на 2 ядра одного типа. NetworkWeapon.stackCounts хранит количество оружия/снаряжения; рыба и ром используют прежние счётчики без лимитов 20/6. Расход, сброс, установка пушек и TransferInventoryTo сохраняют остаток стака. DeveloperMenu содержит ползунок скорости корабля 100–500%: команда 20 применяет к текущему кораблю под игроком либо его собственному. Сервер меняет NetworkShip.DeveloperSpeedMultiplier (SyncVar); ShipController масштабирует максимальную скорость и разгон/торможение, сохраняя ограничения якоря, повреждений, затопления и буксировки. DeveloperMenu содержит выпадающий список четырёх морских ивентов и спаун перед текущим/собственным кораблём через команду 19 NetworkDeveloperTools. Сервер проверяет свободную воду, наполняет сундук из ChestLoot.json и учитывает его при удалении тестовых объектов. Надписи морских лутовых ивентов скрыты по умолчанию; локальный переключатель DeveloperMenu показывает все доступные клиенту ивенты без ограничения расстояния.
+Подбор и расход предметов подтверждает сервер. Сверять идентификаторы предметов, иконки и каталог. Одинаковые предметы складываются в стак без игрового лимита количества; ядра сохраняют отдельный слот на 2 ядра одного типа. NetworkWeapon.stackCounts хранит количество оружия/снаряжения; рыба и ром используют прежние счётчики без лимитов 20/6. Расход, сброс, установка пушек и TransferInventoryTo сохраняют остаток стака. DeveloperMenu содержит ползунок скорости корабля 100–500%: команда 20 применяет к текущему кораблю под игроком либо его собственному. Сервер меняет NetworkShip.DeveloperSpeedMultiplier (SyncVar); ShipController масштабирует максимальную скорость и разгон/торможение, сохраняя ограничения якоря, повреждений, затопления и буксировки. DeveloperMenu содержит выпадающий список пяти морских ивентов и спаун перед текущим/собственным кораблём через команду 19 NetworkDeveloperTools. Сервер проверяет свободную воду, наполняет сундук из ChestLoot.json и учитывает его при удалении тестовых объектов. Надписи морских лутовых ивентов скрыты по умолчанию; локальный переключатель DeveloperMenu показывает все доступные клиенту ивенты без ограничения расстояния.
 NetworkWeapon имеет отдельные partial-файлы; для морского лута начать с NetworkWeapon.SeaLoot.cs.
 Состав сундуков и число разных типов (до 10) задаёт Assets/StreamingAssets/Loot/ChestLoot.json; любой новый лут сундуков обязательно подключать туда. Сервер перечитывает таблицу при наполнении; инструкция рядом в ChestLoot.README.md.
 Плот движется на сервере со скоростью 20% MaxSpeed корабля, поворачивает внутрь за 150 м от границы зоны; ограничение радиуса оставляет 108 м от центра плота до границы при сужении. RaftPlatform и ShipDeckPassenger переносят игрока, сетевой Platform ссылается на сундук. ShipSpyglassView.LootHint создаёт один полупрозрачный золотистый столб света с сечением 1×1 м и высотой 300 м над ближайшим активным морским ивентом из ClientChests. Выбор по расстоянию от игрока не зависит от направления взгляда; переносимые, пустые и закреплённые на корабле сундуки исключаются. LootEventBeam.shader использует мягкие края, затухание к вершине и depth test. Render callbacks показывают столб только камере подзорной трубы, на выходе скрывают. Экранное пятно удалено. В обеих подзорных трубах туман сохраняется первую секунду, затем за 3 с SmoothStep ослабляет его плотность до 1% исходной. ShipSpyglassView.FogMultiplier применяется к обычному и SeaMist туману только камеры трубы; выход восстанавливает значения. Экранный взлом: мышь/A/D задают угол, ЛКМ/пробел вращают замок, три отмычки на попытку; секретный угол и успех проверяет сервер.
 Подводный сундук: только сундук и верёвка от дна с витками вокруг корпуса. E схватывает верёвку; сервер считает реальное плавание вокруг сундука, по умолчанию два круга (LootCatalog.SunkenUnwrapTurns). Обратное движение наматывает обратно; E/Q/Esc отпускают с сохранением прогресса. После полного разматывания сундук всплывает. Боты плывут по орбите, прежние буй и три крепления удалены. Две процедурные чайки с взмахами крыльев кружат на высоте 10–12 м над водой по радиусам 6–8 м до завершения всплытия, обозначая место сундука.
 VortexBottle=23 — бутылка с вращающимся вихрем. ЛКМ бросает через NetworkEquipment и NetworkWeapon.VortexBottle. NetworkVortexBottle считает полёт и столкновения на сервере; удар по NetworkShip даёт 500% обычной скорости на 10 с, повторный удар обновляет таймер без сложения. NetworkShip.VortexBoost хранит SyncVar, ShipController за 0.35 с разгоняет до 500% базовой максимальной скорости самостоятельной тягой, включая старт с нуля, закрытые паруса и опущенный якорь. На время эффекта обычные ограничения тяги и буксировки не задают скорость, якорь перемещается вместе с кораблём через anchorSeabedPoint; после 10 с возвращаются обычные правила, опущенный якорь останавливает корабль в новой точке. DeveloperSpeedMultiplier сохраняется. VortexBottleSetup регистрирует pickup/model/icon/DefaultLoot и тестовую палубу. ChestLoot.json содержит отдельный настраиваемый entry. VortexBottleVisual создаёт три вращающиеся спиральные ленты внутри прозрачной бутылки при Awake.
 FogBottle=24 — бутылка тумана, бросок по ЛКМ через NetworkWeapon.FogBottle и NetworkEquipment. NetworkFogBottle считает попадание на сервере, включая геометрию и первую точку пересечения CPU-поверхности воды. При разбитии создаёт отдельный сетевой FogCloud в мировой точке удара. NetworkFogCloud живёт 15 с, синхронизирует возраст каждые 0.2 с и даёт клиентам плавное время, включая позднее появление. FogCloudVisual/BottleFog.shader рисуют объём эллипсоида радиусом 50 м и высотой 44 м, цвет .23/.28/.29, плотность .18; raymarch с depth clipping работает снаружи и изнутри, независимо от обычного тумана, читов и подзорной трубы. Облако разворачивается за .55 с и исчезает в последние 1.1 с. FogBottleVisual использует тот же эффект внутри стеклянной бутылки с отдельными локальными осями, плотностью 45 и очередью 3000 перед стеклом. FogBottleSetup сохраняет модель/pickup/cloud, иконку, каталог, сетевой реестр, тестовую палубу; ChestLoot.json имеет отдельную настраиваемую строку без изменения прежних настроек. ProtocolVersion=108.
+Огненный череп — пятый морской ивент. NetworkSkullEvent вращает платформу и череп 8°/с; сервер принимает первое фронтальное попадание ядром в увеличенный объём рта 25.2×13.68×20 м, включая зубы и края, через SkullMouthTarget или коллайдер черепа, гасит огонь и фиксирует угол. Через 3 с создаёт наш сундук из ChestLoot.json и запускает дугой 2.5 с на свободную поверхность палубы корабля стрелявшего. TryFindRewardDeckPoint использует коллайдеры палубы, включая секции разрушения; траектория следует за локальной точкой корабля через существующие support/anchor, после посадки сундук остаётся закреплён на корабле. При отсутствии пригодной палубы или потере корабля награда падает в воду. Платформа остаётся потушенной. SkullFireVfx: девять ParticleSystem, три источника света, URP SkullFire; затухание .55 с, late join восстанавливает состояние. SeaLootSpawner, F8 и подсказка подзорной трубы поддерживают ивент. SkullEventSetup сохраняет префаб, каталог и FishNet registry. ProtocolVersion=109; игровая и сетевая приёмка выполняется пользователем. После правки размеры: череп высотой 54 м, платформа шириной 96 м; текущий масштаб ивента ×2 (последний размер уменьшен в 1.5 раза) через RotatingRoot префаба, исходная модель FBX/BLEND сохраняет авторский масштаб; посадка вычислена по контакту нижней поверхности черепа с местной поверхностью платформы. Позиция ивента фиксирована как у острова, Rigidbody FreezeAll. Сокеты, область рта и пространственные параметры огня увеличены ×3; радиус платформы 50 м учитывается при спауне и выбросе сундука. ParticleSystemScalingMode.Hierarchy применяет масштаб иерархии один раз; дальность света и SoftDistance увеличены отдельно. Сундук остаётся обычного размера.
 
 - [Assets/Scripts/Player/PlayerInventory.cs](<Assets/Scripts/Player/PlayerInventory.cs>) — Исходник C#: PlayerInventory.
 - [Assets/Scripts/Player/PlayerInventory.RaftLockpick.cs](<Assets/Scripts/Player/PlayerInventory.RaftLockpick.cs>) — Исходник C#: PlayerInventory.
@@ -256,6 +257,15 @@ FogBottle=24 — бутылка тумана, бросок по ЛКМ чере�
 - [Assets/Prefabs/Loot/FogBottle.prefab](<Assets/Prefabs/Loot/FogBottle.prefab>) — Префаб Unity.
 - [Assets/Prefabs/Loot/FogBottlePickup.prefab](<Assets/Prefabs/Loot/FogBottlePickup.prefab>) — Префаб Unity.
 - [Assets/Prefabs/Loot/FogCloud.prefab](<Assets/Prefabs/Loot/FogCloud.prefab>) — Префаб Unity.
+- [Assets/Scripts/Networking/NetworkSkullEvent.cs](<Assets/Scripts/Networking/NetworkSkullEvent.cs>) — Исходник C#: NetworkSkullEvent.
+- [Assets/Scripts/Networking/SkullMouthTarget.cs](<Assets/Scripts/Networking/SkullMouthTarget.cs>) — Исходник C#: SkullMouthTarget.
+- [Assets/Scripts/Networking/NetworkLootChest.RewardFlight.cs](<Assets/Scripts/Networking/NetworkLootChest.RewardFlight.cs>) — Исходник C#: NetworkLootChest.
+- [Assets/Scripts/Loot/SkullFireVfx.cs](<Assets/Scripts/Loot/SkullFireVfx.cs>) — Исходник C#: SkullFireVfx.
+- [Assets/Scripts/Editor/SkullEventSetup.cs](<Assets/Scripts/Editor/SkullEventSetup.cs>) — Исходник C#: SkullEventSetup.
+- [Assets/Resources/SkullFire.shader](<Assets/Resources/SkullFire.shader>) — Шейдер.
+- [Assets/Prefabs/Networking/NetworkSkullEvent.prefab](<Assets/Prefabs/Networking/NetworkSkullEvent.prefab>) — Префаб Unity.
+- [Assets/Models/SeaEvents/SkullAltar/SkullAltar.fbx](<Assets/Models/SeaEvents/SkullAltar/SkullAltar.fbx>) — Модель / анимации FBX.
+- [Art/Blender/SeaEvents/SkullAltar.blend](<Art/Blender/SeaEvents/SkullAltar.blend>) — Редактируемая сцена Blender.
 - [rum-loot.md](<rum-loot.md>) — Документация.
 - [combat-balance.md](<combat-balance.md>) — Документация.
 

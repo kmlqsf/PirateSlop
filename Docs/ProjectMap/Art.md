@@ -186,6 +186,12 @@
 | [Art/Blender/SailRigging/SailRigging.blend](<../../Art/Blender/SailRigging/SailRigging.blend>) | Редактируемая сцена Blender |
 | [Art/Blender/SailRigging/build_sail_rigging.py](<../../Art/Blender/SailRigging/build_sail_rigging.py>) | Инструмент Python |
 
+## Art/Blender/SeaEvents
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/SeaEvents/SkullAltar.blend](<../../Art/Blender/SeaEvents/SkullAltar.blend>) | Редактируемая сцена Blender; Предметы, лут и инвентарь |
+
 ## Art/Blender/Shark
 
 | Файл | Краткое описание |

@@ -13,7 +13,8 @@ namespace PirateSlop.World
             if (world == null || !world.Ready || catalog == null || catalog.ChestPrefab == null) return;
             var random = new MapRandom((uint)world.Layout.Seed ^ 0x79c526abu);
             var occupied = new List<Vector3>();
-            int count = Mathf.Clamp(catalog.SeaEventsPerType, 1, 20) * 4;
+            int types = catalog.SkullEventPrefab != null ? 5 : 4;
+            int count = Mathf.Clamp(catalog.SeaEventsPerType, 1, 20) * types;
             float separation = Mathf.Max(160, catalog.CaptureRadius * 2.5f);
             for (int i = 0; i < count; i++)
             {
@@ -31,12 +32,18 @@ namespace PirateSlop.World
                         if (!world.CanSail(sample, side * 45)) { clear = false; break; }
                     }
                     if (!clear || !world.CanSail(point, 0) || world.GroundHeight(point) > point.y - catalog.SunkenDepth - 2) continue;
+                    if (i % types == 4)
+                    {
+                        NetworkSkullEvent.SpawnEvent(catalog, manager, point, world.gameObject.scene);
+                        occupied.Add(point);
+                        break;
+                    }
                     var chest = Object.Instantiate(catalog.ChestPrefab, point, Quaternion.identity);
                     SceneManager.MoveGameObjectToScene(chest.gameObject, world.gameObject.scene);
                     chest.Catalog = catalog;
                     var lootRandom = new MapRandom(unchecked((uint)world.Layout.Seed ^ 0xa35f19c7u ^ ((uint)i * 2654435761u)));
                     chest.Fill(ref lootRandom);
-                    chest.ConfigureOcean((SeaLootKind)(1 + i % 4), point);
+                    chest.ConfigureOcean((SeaLootKind)(1 + i % types), point);
                     manager.ServerManager.Spawn(chest.NetworkObject);
                     occupied.Add(point);
                     break;

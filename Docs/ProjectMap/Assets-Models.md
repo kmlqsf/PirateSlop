@@ -382,6 +382,22 @@
 | [Assets/Models/SailRigging/SailRopeSample.fbx](<../../Assets/Models/SailRigging/SailRopeSample.fbx>) | Модель / анимации FBX |
 | [Assets/Models/SailRigging/SailSingleStationCombined.asset](<../../Assets/Models/SailRigging/SailSingleStationCombined.asset>) | Настройки или данные Unity |
 
+## Assets/Models/SeaEvents/SkullAltar
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/SeaEvents/SkullAltar/Platform_basecolor.jpeg](<../../Assets/Models/SeaEvents/SkullAltar/Platform_basecolor.jpeg>) | Изображение / текстура |
+| [Assets/Models/SeaEvents/SkullAltar/Platform_metallic.jpeg](<../../Assets/Models/SeaEvents/SkullAltar/Platform_metallic.jpeg>) | Изображение / текстура |
+| [Assets/Models/SeaEvents/SkullAltar/Platform_normal.png](<../../Assets/Models/SeaEvents/SkullAltar/Platform_normal.png>) | Изображение / текстура |
+| [Assets/Models/SeaEvents/SkullAltar/Platform_rm.jpeg](<../../Assets/Models/SeaEvents/SkullAltar/Platform_rm.jpeg>) | Изображение / текстура |
+| [Assets/Models/SeaEvents/SkullAltar/Platform_roughness.jpeg](<../../Assets/Models/SeaEvents/SkullAltar/Platform_roughness.jpeg>) | Изображение / текстура |
+| [Assets/Models/SeaEvents/SkullAltar/SkullAltar.fbx](<../../Assets/Models/SeaEvents/SkullAltar/SkullAltar.fbx>) | Модель / анимации FBX; Предметы, лут и инвентарь |
+| [Assets/Models/SeaEvents/SkullAltar/Skull_basecolor.jpeg](<../../Assets/Models/SeaEvents/SkullAltar/Skull_basecolor.jpeg>) | Изображение / текстура |
+| [Assets/Models/SeaEvents/SkullAltar/Skull_metallic.jpeg](<../../Assets/Models/SeaEvents/SkullAltar/Skull_metallic.jpeg>) | Изображение / текстура |
+| [Assets/Models/SeaEvents/SkullAltar/Skull_normal.png](<../../Assets/Models/SeaEvents/SkullAltar/Skull_normal.png>) | Изображение / текстура |
+| [Assets/Models/SeaEvents/SkullAltar/Skull_rm.jpeg](<../../Assets/Models/SeaEvents/SkullAltar/Skull_rm.jpeg>) | Изображение / текстура |
+| [Assets/Models/SeaEvents/SkullAltar/Skull_roughness.jpeg](<../../Assets/Models/SeaEvents/SkullAltar/Skull_roughness.jpeg>) | Изображение / текстура |
+
 ## Assets/Models/Shark
 
 | Файл | Краткое описание |

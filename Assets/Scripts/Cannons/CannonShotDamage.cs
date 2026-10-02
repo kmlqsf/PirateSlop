@@ -87,6 +87,7 @@ namespace PirateSlop
                 if (MortarTrajectory.Trace(transform.position, delta, Radius, Source, out var point, out var normal, out var collider))
                 {
                     MoveShot(point + normal * Radius);
+                    if (HitSkullMouth(collider, point)) return;
                     ExplodeArea(point, normal, collider);
                     spent = true;
                     Destroy(gameObject);
@@ -145,6 +146,7 @@ namespace PirateSlop
                     float fraction = delta.sqrMagnitude > .000001f ? Mathf.Clamp01(nearest.distance / delta.magnitude) : 0f;
                     MoveShot(transform.position + delta * fraction);
                     Velocity = Vector3.Lerp(Velocity, nextVelocity, fraction);
+                    if (HitSkullMouth(nearest.collider, nearest.point)) return;
                     if (!boomerang && Ammo != InventoryItem.BoardingHook && IsWorldSurface(nearest.collider))
                     {
                         CombatVfx.Impact(nearest.point, nearest.normal, true);
@@ -175,6 +177,19 @@ namespace PirateSlop
                 spent = true;
                 Destroy(gameObject);
             }
+        }
+
+        bool HitSkullMouth(Collider collider, Vector3 point)
+        {
+            if (collider == null) return false;
+            var target = collider.GetComponent<SkullMouthTarget>();
+            var altar = collider.GetComponentInParent<NetworkSkullEvent>();
+            bool accepted = target != null ? target.Hit(this, point) : altar != null && altar.HitMouth(this, point);
+            if (!accepted) return false;
+            CombatVfx.Impact(point, -Velocity.normalized, true);
+            spent = true;
+            Destroy(gameObject);
+            return true;
         }
 
         static bool IsWorldSurface(Collider collider) => !collider.isTrigger &&

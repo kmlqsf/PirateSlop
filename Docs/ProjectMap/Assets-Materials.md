@@ -180,6 +180,16 @@
 | [Assets/Materials/SailRigging/SailRackWood.mat](<../../Assets/Materials/SailRigging/SailRackWood.mat>) | Материал Unity |
 | [Assets/Materials/SailRigging/SailRopeHemp.mat](<../../Assets/Materials/SailRigging/SailRopeHemp.mat>) | Материал Unity |
 
+## Assets/Materials/SeaEvents
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Materials/SeaEvents/PlatformAltar.mat](<../../Assets/Materials/SeaEvents/PlatformAltar.mat>) | Материал Unity |
+| [Assets/Materials/SeaEvents/SkullAltar.mat](<../../Assets/Materials/SeaEvents/SkullAltar.mat>) | Материал Unity |
+| [Assets/Materials/SeaEvents/SkullEmber.mat](<../../Assets/Materials/SeaEvents/SkullEmber.mat>) | Материал Unity |
+| [Assets/Materials/SeaEvents/SkullFlame.mat](<../../Assets/Materials/SeaEvents/SkullFlame.mat>) | Материал Unity |
+| [Assets/Materials/SeaEvents/SkullGlow.mat](<../../Assets/Materials/SeaEvents/SkullGlow.mat>) | Материал Unity |
+
 ## Assets/Materials/Spyglass
 
 | Файл | Краткое описание |

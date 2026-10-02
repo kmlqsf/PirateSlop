@@ -123,6 +123,7 @@
 | [Assets/Scripts/Editor/ShipLodSetup.cs](<../../Assets/Scripts/Editor/ShipLodSetup.cs>) | Исходник C#: ShipLodSetup |
 | [Assets/Scripts/Editor/ShipSurfaceDamageSetup.cs](<../../Assets/Scripts/Editor/ShipSurfaceDamageSetup.cs>) | Исходник C#: ShipSurfaceDamageSetup |
 | [Assets/Scripts/Editor/ShipWoodFractureSetup.cs](<../../Assets/Scripts/Editor/ShipWoodFractureSetup.cs>) | Исходник C#: ShipWoodFractureSetup |
+| [Assets/Scripts/Editor/SkullEventSetup.cs](<../../Assets/Scripts/Editor/SkullEventSetup.cs>) | Исходник C#: SkullEventSetup; Предметы, лут и инвентарь |
 | [Assets/Scripts/Editor/SpyglassSetup.cs](<../../Assets/Scripts/Editor/SpyglassSetup.cs>) | Исходник C#: SpyglassSetup; Предметы, лут и инвентарь |
 | [Assets/Scripts/Editor/StarterIslandSetup.cs](<../../Assets/Scripts/Editor/StarterIslandSetup.cs>) | Исходник C#: StarterIslandSetup |
 | [Assets/Scripts/Editor/SteamTestBuild.cs](<../../Assets/Scripts/Editor/SteamTestBuild.cs>) | Исходник C#: SteamTestBuild |
@@ -179,6 +180,7 @@
 | [Assets/Scripts/Loot/InventoryIcons.cs](<../../Assets/Scripts/Loot/InventoryIcons.cs>) | Исходник C#: InventoryIcons; Предметы, лут и инвентарь |
 | [Assets/Scripts/Loot/LootCatalog.cs](<../../Assets/Scripts/Loot/LootCatalog.cs>) | Исходник C#: LootCatalog, Entry; Предметы, лут и инвентарь |
 | [Assets/Scripts/Loot/RumShelf.cs](<../../Assets/Scripts/Loot/RumShelf.cs>) | Исходник C#: RumShelf |
+| [Assets/Scripts/Loot/SkullFireVfx.cs](<../../Assets/Scripts/Loot/SkullFireVfx.cs>) | Исходник C#: SkullFireVfx; Предметы, лут и инвентарь |
 | [Assets/Scripts/Loot/VortexBottleVisual.cs](<../../Assets/Scripts/Loot/VortexBottleVisual.cs>) | Исходник C#: VortexBottleVisual; Предметы, лут и инвентарь |
 
 ## Assets/Scripts/Networking
@@ -238,6 +240,7 @@
 | [Assets/Scripts/Networking/NetworkLootChest.Ocean.cs](<../../Assets/Scripts/Networking/NetworkLootChest.Ocean.cs>) | Исходник C#: SeaLootKind, SeaLootState, NetworkLootChest; Предметы, лут и инвентарь, Новая система ботов |
 | [Assets/Scripts/Networking/NetworkLootChest.OceanVisual.cs](<../../Assets/Scripts/Networking/NetworkLootChest.OceanVisual.cs>) | Исходник C#: NetworkLootChest; Предметы, лут и инвентарь |
 | [Assets/Scripts/Networking/NetworkLootChest.Raft.cs](<../../Assets/Scripts/Networking/NetworkLootChest.Raft.cs>) | Исходник C#: NetworkLootChest; Предметы, лут и инвентарь, Звуки и голос |
+| [Assets/Scripts/Networking/NetworkLootChest.RewardFlight.cs](<../../Assets/Scripts/Networking/NetworkLootChest.RewardFlight.cs>) | Исходник C#: NetworkLootChest; Предметы, лут и инвентарь |
 | [Assets/Scripts/Networking/NetworkLootChest.Seagulls.cs](<../../Assets/Scripts/Networking/NetworkLootChest.Seagulls.cs>) | Исходник C#: NetworkLootChest; Предметы, лут и инвентарь |
 | [Assets/Scripts/Networking/NetworkLootChest.Sunken.cs](<../../Assets/Scripts/Networking/NetworkLootChest.Sunken.cs>) | Исходник C#: NetworkLootChest; Предметы, лут и инвентарь |
 | [Assets/Scripts/Networking/NetworkLootChest.cs](<../../Assets/Scripts/Networking/NetworkLootChest.cs>) | Исходник C#: NetworkLootChest; Предметы, лут и инвентарь |
@@ -257,6 +260,7 @@
 | [Assets/Scripts/Networking/NetworkShipAmmo.cs](<../../Assets/Scripts/Networking/NetworkShipAmmo.cs>) | Исходник C#: ShipFirePatch, NetworkShip |
 | [Assets/Scripts/Networking/NetworkShipPush.cs](<../../Assets/Scripts/Networking/NetworkShipPush.cs>) | Исходник C#: NetworkShipPush |
 | [Assets/Scripts/Networking/NetworkShipRum.cs](<../../Assets/Scripts/Networking/NetworkShipRum.cs>) | Исходник C#: NetworkShip |
+| [Assets/Scripts/Networking/NetworkSkullEvent.cs](<../../Assets/Scripts/Networking/NetworkSkullEvent.cs>) | Исходник C#: NetworkSkullEvent; Предметы, лут и инвентарь |
 | [Assets/Scripts/Networking/NetworkVortexBottle.cs](<../../Assets/Scripts/Networking/NetworkVortexBottle.cs>) | Исходник C#: NetworkVortexBottle; Предметы, лут и инвентарь |
 | [Assets/Scripts/Networking/NetworkWeapon.FishThrows.cs](<../../Assets/Scripts/Networking/NetworkWeapon.FishThrows.cs>) | Исходник C#: NetworkWeapon; Рыбалка и рыба |
 | [Assets/Scripts/Networking/NetworkWeapon.FogBottle.cs](<../../Assets/Scripts/Networking/NetworkWeapon.FogBottle.cs>) | Исходник C#: NetworkWeapon; Предметы, лут и инвентарь |
@@ -284,6 +288,7 @@
 | [Assets/Scripts/Networking/ShipObserverCondition.cs](<../../Assets/Scripts/Networking/ShipObserverCondition.cs>) | Исходник C#: ShipObserverCondition; Персонаж, камера и анимации |
 | [Assets/Scripts/Networking/ShipSinkingVfx.cs](<../../Assets/Scripts/Networking/ShipSinkingVfx.cs>) | Исходник C#: ShipSinkingVfx |
 | [Assets/Scripts/Networking/SimulationState.cs](<../../Assets/Scripts/Networking/SimulationState.cs>) | Исходник C#: PlayerCommand, PlayerState, ShipState; Сеть, сессия и Steam |
+| [Assets/Scripts/Networking/SkullMouthTarget.cs](<../../Assets/Scripts/Networking/SkullMouthTarget.cs>) | Исходник C#: SkullMouthTarget; Предметы, лут и инвентарь |
 | [Assets/Scripts/Networking/SteamParty.cs](<../../Assets/Scripts/Networking/SteamParty.cs>) | Исходник C#: SteamParty; Сеть, сессия и Steam |
 | [Assets/Scripts/Networking/WorldMessages.cs](<../../Assets/Scripts/Networking/WorldMessages.cs>) | Исходник C#: WorldManifestMessage, WorldReadyMessage |
 
