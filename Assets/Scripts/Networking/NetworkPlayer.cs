@@ -86,7 +86,7 @@ namespace PirateSlop.Networking
             get
             {
                 foreach (var candidate in FindObjectsByType<NetworkShip>(FindObjectsSortMode.None))
-                    if (candidate.Helm.IsControlledBy(motor)) return candidate;
+                    if (candidate != null && candidate.Helm != null && candidate.Helm.IsControlledBy(motor)) return candidate;
                 return Ship;
             }
         }
@@ -138,13 +138,14 @@ namespace PirateSlop.Networking
         }
         public override void OnStopNetwork()
         {
-            foreach (var ship in NetworkShip.ActiveShips) ship.GetComponent<SailSystem>()?.ReleasePlayer(motor);
+            foreach (var ship in NetworkShip.ActiveShips)
+                if (ship != null) ship.GetComponent<SailSystem>()?.ReleasePlayer(motor);
             StopVoice();
             TargetMarks = System.Array.Empty<TargetMarkState>();
             ReleaseServerInteractions();
             TimeManager.OnTick -= Tick; TimeManager.OnPostTick -= PostTick;
             var active = ActiveShip;
-            if (active != null && active.Helm.IsControlledBy(motor)) active.Helm.ReleaseControl();
+            if (active != null && active.Helm != null && active.Helm.IsControlledBy(motor)) active.Helm.ReleaseControl();
         }
         public void ReleaseServerInteractions()
         {
@@ -152,7 +153,8 @@ namespace PirateSlop.Networking
             botActions?.Cancel("Освобождение взаимодействий персонажа");
             foreach (var ship in NetworkShip.ActiveShips)
             {
-                if (ship.Helm.IsControlledBy(motor)) ship.Helm.ReleaseControl();
+                if (ship == null) continue;
+                if (ship.Helm != null && ship.Helm.IsControlledBy(motor)) ship.Helm.ReleaseControl();
                 ship.GetComponent<SailSystem>()?.ReleasePlayer(motor);
             }
             if (motor.ActiveCannon != null && motor.ActiveCannon.Operator == motor) motor.ActiveCannon.ReleaseControl();

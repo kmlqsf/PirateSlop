@@ -17,12 +17,15 @@ namespace PirateSlop
         public static Vector3 StepVelocity(Vector3 velocity, float dt, float drag = .015f) => (velocity + Physics.gravity * dt) * Mathf.Exp(-drag * dt);
         public float PlayerDamage = 45f, PlayerPushSpeed = 22f;
         public float StandardBlastRadius = .8f, StandardBlastDamage = 30f;
+        public float WorldRestitution = .55f, WorldTangentialRetention = .82f;
         public const float DefaultBoomerangDuration = 6f, DefaultBoomerangWidth = 16f, DefaultBoomerangHeight = 8f, DefaultBoomerangOutboundTime = 2f;
         public float BoomerangDuration = DefaultBoomerangDuration, BoomerangWidth = DefaultBoomerangWidth, BoomerangHeight = DefaultBoomerangHeight;
         bool spent, returning;
         float age, returnAge;
         Vector3 launchPoint, launchLocal, forward, right, returnStart, returnControl;
         Vector3 launchVelocity;
+        CannonSmokeTrail smoke;
+        int worldBounces;
         public float BoomerangOutboundTime = DefaultBoomerangOutboundTime;
         public static Vector3 ReturnCurve(Vector3 start, Vector3 control, Vector3 target, Vector3 right, float width, float height, float t)
         {
@@ -41,6 +44,18 @@ namespace PirateSlop
             if (forward.sqrMagnitude < .01f) forward = Vector3.forward;
             right = Vector3.Cross(Vector3.up, forward);
             launchVelocity = Velocity;
+            smoke = CannonSmokeTrail.Create(transform.position);
+        }
+
+        void MoveShot(Vector3 position)
+        {
+            if (smoke != null) smoke.Segment(transform.position, position);
+            transform.position = position;
+        }
+
+        void OnDestroy()
+        {
+            if (smoke != null) smoke.Finish();
         }
 
         Vector3 ReturnPoint => Source != null ? Source.TransformPoint(launchLocal) : launchPoint;
@@ -71,11 +86,12 @@ namespace PirateSlop
             {
                 if (MortarTrajectory.Trace(transform.position, delta, Radius, Source, out var point, out var normal, out var collider))
                 {
+                    MoveShot(point + normal * Radius);
                     ExplodeArea(point, normal, collider);
                     spent = true;
                     Destroy(gameObject);
                 }
-                else { transform.position += delta; Velocity = nextVelocity; }
+                else { MoveShot(transform.position + delta); Velocity = nextVelocity; }
                 return;
             }
             if (boomerang)
@@ -83,55 +99,88 @@ namespace PirateSlop
                 nextVelocity = Velocity = delta / dt;
                 transform.Rotate(Vector3.up, 900f * dt, Space.Self);
             }
-            RaycastHit nearest = default;
-            float distance = delta.magnitude;
-            foreach (var hit in Physics.SphereCastAll(transform.position, Radius, delta.normalized, distance, ~0, QueryTriggerInteraction.Collide))
+            float remaining = dt;
+            for (int contact = 0; contact < 4 && !spent; contact++)
             {
-                if (!PlayerHitbox.IsTarget(hit.collider)) continue;
-                if (hit.collider.gameObject.layer == LayerMask.NameToLayer("ShipDebris")) continue;
-                var section = hit.collider.GetComponentInParent<ShipDamageSection>();
-                if (section != null && hitSections.Contains(section)) continue;
-                if (hit.transform.IsChildOf(transform) || (Source != null && hit.transform.IsChildOf(Source)) ||
-                    hit.collider.GetComponentInParent<CannonShotDamage>() != null) continue;
-                var health = hit.collider.GetComponentInParent<CombatHealth>();
-                var target = health != null ? health.transform : hit.collider.transform;
-                if (hitTargets.Contains(target)) continue;
-                if (hit.distance <= distance) { nearest = hit; distance = hit.distance; }
-            }
-            var ocean = OceanSurface.Instance;
-            if (ocean != null && (transform.position + delta).y - Radius <= ocean.Height(transform.position + delta))
-            {
-                float low = 0f, high = 1f;
-                for (int i = 0; i < 8; i++)
+                RaycastHit nearest = default;
+                float distance = delta.magnitude;
+                var hits = MortarTrajectory.CastHits(transform.position, delta, Radius, out int count);
+                for (int i = 0; i < count; i++)
                 {
-                    float t = (low + high) * .5f;
-                    var sample = transform.position + delta * t;
-                    if (sample.y - Radius > ocean.Height(sample)) low = t; else high = t;
+                    var hit = hits[i];
+                    if (!PlayerHitbox.IsTarget(hit.collider)) continue;
+                    if (hit.collider.gameObject.layer == LayerMask.NameToLayer("ShipDebris")) continue;
+                    var section = hit.collider.GetComponentInParent<ShipDamageSection>();
+                    if (section != null && hitSections.Contains(section)) continue;
+                    if (hit.transform.IsChildOf(transform) || (Source != null && hit.transform.IsChildOf(Source)) ||
+                        hit.collider.GetComponentInParent<CannonShotDamage>() != null) continue;
+                    var health = hit.collider.GetComponentInParent<CombatHealth>();
+                    var target = health != null ? health.transform : hit.collider.transform;
+                    if (hitTargets.Contains(target)) continue;
+                    if (hit.distance <= distance) { nearest = hit; distance = hit.distance; }
                 }
-                if (nearest.collider == null || delta.magnitude * high < nearest.distance)
+                var ocean = OceanSurface.Instance;
+                if (ocean != null && (transform.position + delta).y - Radius <= ocean.Height(transform.position + delta))
                 {
-                    var point = transform.position + delta * high;
-                    point.y = ocean.Height(point);
-                    CombatVfx.Splash(point); GameAudio.Play(SoundCue.Splash, point);
-                    if (boomerang && !returning) BeginReturn(point + Vector3.up * (Radius + .05f), Vector3.up);
-                    else { spent = true; Destroy(gameObject); }
+                    float low = 0f, high = 1f;
+                    for (int i = 0; i < 8; i++)
+                    {
+                        float t = (low + high) * .5f;
+                        var sample = transform.position + delta * t;
+                        if (sample.y - Radius > ocean.Height(sample)) low = t; else high = t;
+                    }
+                    if (nearest.collider == null || delta.magnitude * high < nearest.distance)
+                    {
+                        var point = transform.position + delta * high;
+                        MoveShot(point);
+                        point.y = ocean.Height(point);
+                        CombatVfx.Splash(point); GameAudio.Play(SoundCue.Splash, point);
+                        if (boomerang && !returning) BeginReturn(point + Vector3.up * (Radius + .05f), Vector3.up);
+                        else { spent = true; Destroy(gameObject); }
+                        return;
+                    }
+                }
+                if (nearest.collider != null)
+                {
+                    float fraction = delta.sqrMagnitude > .000001f ? Mathf.Clamp01(nearest.distance / delta.magnitude) : 0f;
+                    MoveShot(transform.position + delta * fraction);
+                    Velocity = Vector3.Lerp(Velocity, nextVelocity, fraction);
+                    if (!boomerang && Ammo != InventoryItem.BoardingHook && IsWorldSurface(nearest.collider))
+                    {
+                        CombatVfx.Impact(nearest.point, nearest.normal, true);
+                        GameAudio.Play(SoundCue.Impact, nearest.point);
+                        Vector3 normalVelocity = Vector3.Project(Velocity, nearest.normal);
+                        Velocity = (Velocity - normalVelocity) * WorldTangentialRetention - normalVelocity * WorldRestitution;
+                        MoveShot(transform.position + nearest.normal * .02f);
+                        if (++worldBounces >= 8 || Velocity.sqrMagnitude < 16f)
+                        {
+                            spent = true; Destroy(gameObject); return;
+                        }
+                        remaining *= 1f - fraction;
+                        if (remaining <= .0001f) return;
+                        nextVelocity = StepVelocity(Velocity, remaining, Drag);
+                        delta = (Velocity + nextVelocity) * (.5f * remaining);
+                        continue;
+                    }
+                    Impact(nearest.collider, nearest.point, nearest.normal);
+                    if (boomerang && !returning) BeginReturn(nearest.point + nearest.normal * (Radius + .05f), nearest.normal);
+                    else if (boomerang) MoveShot(transform.position + delta * (1f - fraction));
                     return;
                 }
+                MoveShot(transform.position + delta); Velocity = nextVelocity;
+                break;
             }
-            if (nearest.collider != null)
-            {
-                Impact(nearest.collider, nearest.point, nearest.normal);
-                if (boomerang && !returning) BeginReturn(nearest.point + nearest.normal * (Radius + .05f), nearest.normal);
-                else if (boomerang) transform.position += delta;
-                return;
-            }
-            transform.position += delta; Velocity = nextVelocity;
             if (boomerang && (returning ? returnAge >= BoomerangDuration * .5f : age >= BoomerangDuration))
             {
                 spent = true;
                 Destroy(gameObject);
             }
         }
+
+        static bool IsWorldSurface(Collider collider) => !collider.isTrigger &&
+            collider.GetComponentInParent<ShipController>() == null && collider.GetComponentInParent<NetworkShip>() == null &&
+            collider.GetComponentInParent<CombatHealth>() == null && collider.GetComponentInParent<Harpoon.HarpoonGun>() == null &&
+            collider.GetComponentInParent<KrakenTentacle>() == null;
 
         void ExplodeArea(Vector3 point, Vector3 normal, Collider surface)
         {
@@ -174,7 +223,8 @@ namespace PirateSlop
         void BeginReturn(Vector3 point, Vector3 normal)
         {
             returning = true; returnAge = 0f;
-            transform.position = returnStart = point;
+            MoveShot(point);
+            returnStart = point;
             returnControl = point + normal * 8f + Vector3.up * BoomerangHeight;
         }
 

@@ -57,6 +57,9 @@
 
 | Файл | Краткое описание |
 | --- | --- |
+| [Assets/Prefabs/Loot/FogBottle.prefab](<../../Assets/Prefabs/Loot/FogBottle.prefab>) | Префаб Unity; Предметы, лут и инвентарь |
+| [Assets/Prefabs/Loot/FogBottlePickup.prefab](<../../Assets/Prefabs/Loot/FogBottlePickup.prefab>) | Префаб Unity; Предметы, лут и инвентарь |
+| [Assets/Prefabs/Loot/FogCloud.prefab](<../../Assets/Prefabs/Loot/FogCloud.prefab>) | Префаб Unity; Предметы, лут и инвентарь |
 | [Assets/Prefabs/Loot/IslandCannonball.prefab](<../../Assets/Prefabs/Loot/IslandCannonball.prefab>) | Префаб Unity |
 | [Assets/Prefabs/Loot/RumBottle.prefab](<../../Assets/Prefabs/Loot/RumBottle.prefab>) | Префаб Unity |
 | [Assets/Prefabs/Loot/VortexBottle.prefab](<../../Assets/Prefabs/Loot/VortexBottle.prefab>) | Префаб Unity; Предметы, лут и инвентарь |

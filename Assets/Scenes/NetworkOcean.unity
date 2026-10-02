@@ -223,7 +223,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.OceanSurface
   WaveScale: 0.06
+  SwellStrength: 1
+  FinalSwellMultiplier: 2.5
   SeaLevel: 0
+  WhirlpoolCenter: {x: 0, y: 0, z: 0}
+  WhirlpoolRadius: 0
+  WhirlpoolDepth: 0
+  WhirlpoolTwist: 0
   WaterMaterial: {fileID: 2100000, guid: c8e676f2fa3e9d34c81f843598fefee7, type: 2}
 --- !u!1 &57996940
 GameObject:

@@ -236,6 +236,8 @@ namespace PirateSlop.Networking
                 PlayerPrefs.SetInt("ShowCompass", cp ? 1 : 0);
                 bool iy = MenuToggle(x, y+220, panelWidth, PlayerPrefs.GetInt("InvertY", 0) == 1, "Инверсия мыши (ось Y)");
                 PlayerPrefs.SetInt("InvertY", iy ? 1 : 0);
+                bool telemetry = MenuToggle(x, y+260, panelWidth, GameTelemetry.Visible, "Полная телеметрия");
+                if (telemetry != GameTelemetry.Visible) GameTelemetry.SetVisible(telemetry);
                 if(MenuAction(x,y+345,panelWidth,"Назад")) menuPage=7;
             }
             else

@@ -48,6 +48,7 @@
 | [Assets/Scripts/Cannons/CannonHands.cs](<../../Assets/Scripts/Cannons/CannonHands.cs>) | Исходник C#: CannonHands |
 | [Assets/Scripts/Cannons/CannonPickup.cs](<../../Assets/Scripts/Cannons/CannonPickup.cs>) | Исходник C#: CannonPickup |
 | [Assets/Scripts/Cannons/CannonShotDamage.cs](<../../Assets/Scripts/Cannons/CannonShotDamage.cs>) | Исходник C#: CannonShotDamage; Пушки, ядра и лафеты |
+| [Assets/Scripts/Cannons/CannonSmokeTrail.cs](<../../Assets/Scripts/Cannons/CannonSmokeTrail.cs>) | Исходник C#: CannonSmokeTrail; Пушки, ядра и лафеты, Личное оружие и урон |
 | [Assets/Scripts/Cannons/Cannonball.cs](<../../Assets/Scripts/Cannons/Cannonball.cs>) | Исходник C#: Cannonball; Пушки, ядра и лафеты |
 | [Assets/Scripts/Cannons/CannonballCrate.cs](<../../Assets/Scripts/Cannons/CannonballCrate.cs>) | Исходник C#: CannonballCrate |
 | [Assets/Scripts/Cannons/MortarTrajectory.cs](<../../Assets/Scripts/Cannons/MortarTrajectory.cs>) | Исходник C#: MortarTrajectory; Пушки, ядра и лафеты |
@@ -82,6 +83,7 @@
 | [Assets/Scripts/Editor/FishingSetup.cs](<../../Assets/Scripts/Editor/FishingSetup.cs>) | Исходник C#: FishingSetup; Рыбалка и рыба |
 | [Assets/Scripts/Editor/FocusedInspector.cs](<../../Assets/Scripts/Editor/FocusedInspector.cs>) | Исходник C#: FocusedInspector, Report; Инспектор объектов Unity |
 | [Assets/Scripts/Editor/FocusedInspectorWindow.cs](<../../Assets/Scripts/Editor/FocusedInspectorWindow.cs>) | Исходник C#: FocusedInspectorWindow; Инспектор объектов Unity |
+| [Assets/Scripts/Editor/FogBottleSetup.cs](<../../Assets/Scripts/Editor/FogBottleSetup.cs>) | Исходник C#: FogBottleSetup; Предметы, лут и инвентарь |
 | [Assets/Scripts/Editor/GameVersionStamp.cs](<../../Assets/Scripts/Editor/GameVersionStamp.cs>) | Исходник C#: GameVersionStamp |
 | [Assets/Scripts/Editor/GameplayDiagnostics.cs](<../../Assets/Scripts/Editor/GameplayDiagnostics.cs>) | Исходник C#: GameplayDiagnostics |
 | [Assets/Scripts/Editor/GameplayImprovementsSetup.cs](<../../Assets/Scripts/Editor/GameplayImprovementsSetup.cs>) | Исходник C#: GameplayImprovementsSetup |
@@ -172,6 +174,8 @@
 | Файл | Краткое описание |
 | --- | --- |
 | [Assets/Scripts/Loot/ChestLootTable.cs](<../../Assets/Scripts/Loot/ChestLootTable.cs>) | Исходник C#: ChestLootStack, ChestLootTable, Table, ChestSettings, Entry; Предметы, лут и инвентарь |
+| [Assets/Scripts/Loot/FogBottleVisual.cs](<../../Assets/Scripts/Loot/FogBottleVisual.cs>) | Исходник C#: FogBottleVisual; Предметы, лут и инвентарь |
+| [Assets/Scripts/Loot/FogCloudVisual.cs](<../../Assets/Scripts/Loot/FogCloudVisual.cs>) | Исходник C#: FogCloudVisual; Предметы, лут и инвентарь |
 | [Assets/Scripts/Loot/InventoryIcons.cs](<../../Assets/Scripts/Loot/InventoryIcons.cs>) | Исходник C#: InventoryIcons; Предметы, лут и инвентарь |
 | [Assets/Scripts/Loot/LootCatalog.cs](<../../Assets/Scripts/Loot/LootCatalog.cs>) | Исходник C#: LootCatalog, Entry; Предметы, лут и инвентарь |
 | [Assets/Scripts/Loot/RumShelf.cs](<../../Assets/Scripts/Loot/RumShelf.cs>) | Исходник C#: RumShelf |
@@ -222,6 +226,8 @@
 | [Assets/Scripts/Networking/NetworkFish.cs](<../../Assets/Scripts/Networking/NetworkFish.cs>) | Исходник C#: InventoryItem, NetworkFish; Рыбалка и рыба |
 | [Assets/Scripts/Networking/NetworkFishProjectile.cs](<../../Assets/Scripts/Networking/NetworkFishProjectile.cs>) | Исходник C#: NetworkFishProjectile; Рыбалка и рыба |
 | [Assets/Scripts/Networking/NetworkFishing.cs](<../../Assets/Scripts/Networking/NetworkFishing.cs>) | Исходник C#: NetworkFishing; Рыбалка и рыба |
+| [Assets/Scripts/Networking/NetworkFogBottle.cs](<../../Assets/Scripts/Networking/NetworkFogBottle.cs>) | Исходник C#: NetworkFogBottle; Предметы, лут и инвентарь |
+| [Assets/Scripts/Networking/NetworkFogCloud.cs](<../../Assets/Scripts/Networking/NetworkFogCloud.cs>) | Исходник C#: NetworkFogCloud; Предметы, лут и инвентарь |
 | [Assets/Scripts/Networking/NetworkGrapple.cs](<../../Assets/Scripts/Networking/NetworkGrapple.cs>) | Исходник C#: NetworkWeapon |
 | [Assets/Scripts/Networking/NetworkHealth.cs](<../../Assets/Scripts/Networking/NetworkHealth.cs>) | Исходник C#: NetworkHealth; Личное оружие и урон |
 | [Assets/Scripts/Networking/NetworkHolyGrenade.cs](<../../Assets/Scripts/Networking/NetworkHolyGrenade.cs>) | Исходник C#: NetworkHolyGrenade |
@@ -253,6 +259,7 @@
 | [Assets/Scripts/Networking/NetworkShipRum.cs](<../../Assets/Scripts/Networking/NetworkShipRum.cs>) | Исходник C#: NetworkShip |
 | [Assets/Scripts/Networking/NetworkVortexBottle.cs](<../../Assets/Scripts/Networking/NetworkVortexBottle.cs>) | Исходник C#: NetworkVortexBottle; Предметы, лут и инвентарь |
 | [Assets/Scripts/Networking/NetworkWeapon.FishThrows.cs](<../../Assets/Scripts/Networking/NetworkWeapon.FishThrows.cs>) | Исходник C#: NetworkWeapon; Рыбалка и рыба |
+| [Assets/Scripts/Networking/NetworkWeapon.FogBottle.cs](<../../Assets/Scripts/Networking/NetworkWeapon.FogBottle.cs>) | Исходник C#: NetworkWeapon; Предметы, лут и инвентарь |
 | [Assets/Scripts/Networking/NetworkWeapon.Roster.cs](<../../Assets/Scripts/Networking/NetworkWeapon.Roster.cs>) | Исходник C#: NetworkWeapon; Предметы, лут и инвентарь, Новая система ботов |
 | [Assets/Scripts/Networking/NetworkWeapon.SeaLoot.cs](<../../Assets/Scripts/Networking/NetworkWeapon.SeaLoot.cs>) | Исходник C#: NetworkWeapon; Предметы, лут и инвентарь |
 | [Assets/Scripts/Networking/NetworkWeapon.ShipComparison.cs](<../../Assets/Scripts/Networking/NetworkWeapon.ShipComparison.cs>) | Исходник C#: NetworkWeapon |
@@ -307,7 +314,7 @@
 | [Assets/Scripts/Player/MenuBackdrop.cs](<../../Assets/Scripts/Player/MenuBackdrop.cs>) | Исходник C#: MenuBackdrop; Меню и HUD |
 | [Assets/Scripts/Player/PirateWeapon.cs](<../../Assets/Scripts/Player/PirateWeapon.cs>) | Исходник C#: IWeaponTarget, PirateWeapon; Личное оружие и урон |
 | [Assets/Scripts/Player/PirateWeaponAnimation.cs](<../../Assets/Scripts/Player/PirateWeaponAnimation.cs>) | Исходник C#: PirateWeapon |
-| [Assets/Scripts/Player/PistolBullet.cs](<../../Assets/Scripts/Player/PistolBullet.cs>) | Исходник C#: PistolBullet |
+| [Assets/Scripts/Player/PistolBullet.cs](<../../Assets/Scripts/Player/PistolBullet.cs>) | Исходник C#: PistolBullet; Личное оружие и урон |
 | [Assets/Scripts/Player/PlayerAnimatorDriver.cs](<../../Assets/Scripts/Player/PlayerAnimatorDriver.cs>) | Исходник C#: PlayerAnimatorDriver; Персонаж, камера и анимации |
 | [Assets/Scripts/Player/PlayerBrain.cs](<../../Assets/Scripts/Player/PlayerBrain.cs>) | Исходник C#: PlayerBrain |
 | [Assets/Scripts/Player/PlayerHitbox.cs](<../../Assets/Scripts/Player/PlayerHitbox.cs>) | Исходник C#: PlayerHitbox |
@@ -362,6 +369,7 @@
 | [Assets/Scripts/UI/CannonRangeHud.cs](<../../Assets/Scripts/UI/CannonRangeHud.cs>) | Исходник C#: CannonRangeHud |
 | [Assets/Scripts/UI/ContextPrompt.cs](<../../Assets/Scripts/UI/ContextPrompt.cs>) | Исходник C#: ContextPrompt |
 | [Assets/Scripts/UI/CrewPresentation.cs](<../../Assets/Scripts/UI/CrewPresentation.cs>) | Исходник C#: CrewPresentation; Новая система ботов |
+| [Assets/Scripts/UI/GameTelemetry.cs](<../../Assets/Scripts/UI/GameTelemetry.cs>) | Исходник C#: GameTelemetry; Меню и HUD |
 | [Assets/Scripts/UI/GameVersionOverlay.cs](<../../Assets/Scripts/UI/GameVersionOverlay.cs>) | Исходник C#: GameVersionOverlay |
 | [Assets/Scripts/UI/HudLayout.cs](<../../Assets/Scripts/UI/HudLayout.cs>) | Исходник C#: HudLayout, Scope; Меню и HUD |
 | [Assets/Scripts/UI/InteractionHud.cs](<../../Assets/Scripts/UI/InteractionHud.cs>) | Исходник C#: InteractionHud |
@@ -403,3 +411,4 @@
 | [Assets/Scripts/World/WorldProfile.cs](<../../Assets/Scripts/World/WorldProfile.cs>) | Исходник C#: WorldDecoration, WorldProfile; Мир, острова и океан |
 | [Assets/Scripts/World/WorldRoutePlanner.cs](<../../Assets/Scripts/World/WorldRoutePlanner.cs>) | Исходник C#: WorldRoutePlanner |
 | [Assets/Scripts/World/WorldSpawnPoint.cs](<../../Assets/Scripts/World/WorldSpawnPoint.cs>) | Исходник C#: WorldSpawnPoint |
+| [Assets/Scripts/World/WorldStructureCollision.cs](<../../Assets/Scripts/World/WorldStructureCollision.cs>) | Исходник C#: WorldStructureCollision; Пушки, ядра и лафеты |

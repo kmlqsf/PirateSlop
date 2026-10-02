@@ -218,6 +218,13 @@
 | [Assets/Models/Hooks/Anchor.mat](<../../Assets/Models/Hooks/Anchor.mat>) | Материал Unity |
 | [Assets/Models/Hooks/AnchorAtlas.png](<../../Assets/Models/Hooks/AnchorAtlas.png>) | Изображение / текстура |
 
+## Assets/Models/Loot/FogBottle
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/Loot/FogBottle/FogBottleIcon.asset](<../../Assets/Models/Loot/FogBottle/FogBottleIcon.asset>) | Настройки или данные Unity |
+| [Assets/Models/Loot/FogBottle/FogGlass.mat](<../../Assets/Models/Loot/FogBottle/FogGlass.mat>) | Материал Unity |
+
 ## Assets/Models/Loot/Kenney
 
 | Файл | Краткое описание |

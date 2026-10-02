@@ -129,6 +129,7 @@ namespace PirateSlop
                 angles = new Vector2(Mathf.DeltaAngle(0, rotation.x), rotation.y);
                 zoom = 24f;
                 portable = engaged = IsViewing = true;
+                nextPreview = 0f;
                 viewingStarted = Time.unscaledTime;
                 viewingCamera = cameraView;
                 return;
@@ -153,7 +154,7 @@ namespace PirateSlop
                 markRequested = false;
                 player.MarkSpyglassTarget(cameraView.transform.forward);
             }
-            if (!portable && player.Ship != null && Time.unscaledTime >= nextPreview) { nextPreview = Time.unscaledTime + .2f; Preview(); }
+            if (player.Ship != null && Time.unscaledTime >= nextPreview) { nextPreview = Time.unscaledTime + .2f; Preview(); }
         }
         void Preview()
         {

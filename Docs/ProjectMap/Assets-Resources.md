@@ -12,6 +12,7 @@
 | --- | --- |
 | [Assets/Resources/BoardingHookAmmo.prefab](<../../Assets/Resources/BoardingHookAmmo.prefab>) | Префаб Unity |
 | [Assets/Resources/BoardingHookVisual.prefab](<../../Assets/Resources/BoardingHookVisual.prefab>) | Префаб Unity |
+| [Assets/Resources/BottleFog.shader](<../../Assets/Resources/BottleFog.shader>) | Шейдер; Предметы, лут и инвентарь |
 | [Assets/Resources/BulletMark.mat](<../../Assets/Resources/BulletMark.mat>) | Материал Unity |
 | [Assets/Resources/BulletMark.shader](<../../Assets/Resources/BulletMark.shader>) | Шейдер |
 | [Assets/Resources/CombatParticles.mat](<../../Assets/Resources/CombatParticles.mat>) | Материал Unity |

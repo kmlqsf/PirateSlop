@@ -71,6 +71,7 @@ namespace PirateSlop.World
                     }
                 }
             }
+            WorldStructureCollision.Ensure(content);
             var floor = new GameObject("Seabed"); floor.transform.SetParent(content.transform, false);
             var floorMesh = SeabedTerrain.Build(layout); meshes.Add(floorMesh);
             floor.AddComponent<MeshFilter>().sharedMesh = floorMesh;

@@ -189,20 +189,7 @@ namespace PirateSlop
             projectile.Attacker = authoritative ? firingPlayer : null;
             projectile.Radius = shot.GetComponent<SphereCollider>().radius * Mathf.Max(shot.transform.lossyScale.x, shot.transform.lossyScale.y, shot.transform.lossyScale.z);
             var trail = shot.GetComponent<TrailRenderer>();
-            if (trail == null && shot.FlightTrailMaterial != null)
-            {
-                trail = shot.gameObject.AddComponent<TrailRenderer>();
-                trail.sharedMaterial = shot.FlightTrailMaterial;
-                trail.time = .22f; trail.minVertexDistance = .08f;
-                trail.startWidth = .18f; trail.endWidth = .015f;
-                trail.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-                trail.receiveShadows = false;
-            }
-            if (trail != null)
-            {
-                trail.startColor = CannonAmmo.Color(ammo);
-                trail.endColor = new Color(.5f, .5f, .5f, 0f);
-            }
+            if (trail != null) trail.enabled = false;
             Destroy(shot.gameObject, 20f);
         }
         public bool IsLoaded => loaded != null;

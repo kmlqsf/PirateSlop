@@ -8,6 +8,9 @@ namespace PirateSlop.Networking
     public sealed partial class NetworkShip : NetworkBehaviour
     {
         public static readonly System.Collections.Generic.List<NetworkShip> ActiveShips = new();
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        static void ResetActiveShips() => ActiveShips.Clear();
+        void OnDestroy() => ActiveShips.Remove(this);
         [SerializeField] Vector2 hullHalfExtents = new(6.5f, 23f);
         public Vector2 HullHalfExtents => hullHalfExtents;
         public readonly SyncVar<int> ParticipantId = new();

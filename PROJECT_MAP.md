@@ -12,7 +12,7 @@
 
 ## Полный каталог
 
-Учтено 3846 файлов без `.meta`. Ещё 4031 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
+Учтено 3861 файлов без `.meta`. Ещё 4047 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
 
 | Раздел | Назначение | Файлов |
 | --- | --- | ---: |
@@ -31,13 +31,13 @@
 | [Assets/JMO Assets](<Docs/ProjectMap/Assets-JMO Assets.md>) | Ресурсы раздела; точный состав — в каталоге | 489 |
 | [Assets/Materials](<Docs/ProjectMap/Assets-Materials.md>) | Материалы | 146 |
 | [Assets/Mirza](<Docs/ProjectMap/Assets-Mirza.md>) | Ресурсы раздела; точный состав — в каталоге | 186 |
-| [Assets/Models](<Docs/ProjectMap/Assets-Models.md>) | Модели и связанные ресурсы | 793 |
+| [Assets/Models](<Docs/ProjectMap/Assets-Models.md>) | Модели и связанные ресурсы | 795 |
 | [Assets/Plugins](<Docs/ProjectMap/Assets-Plugins.md>) | Плагины | 5 |
-| [Assets/Prefabs](<Docs/ProjectMap/Assets-Prefabs.md>) | Готовые игровые объекты | 129 |
-| [Assets/Resources](<Docs/ProjectMap/Assets-Resources.md>) | Ресурсы, доступные для загрузки по имени | 40 |
+| [Assets/Prefabs](<Docs/ProjectMap/Assets-Prefabs.md>) | Готовые игровые объекты | 132 |
+| [Assets/Resources](<Docs/ProjectMap/Assets-Resources.md>) | Ресурсы, доступные для загрузки по имени | 41 |
 | [Assets/Scenes](<Docs/ProjectMap/Assets-Scenes.md>) | Сохранённые сцены | 3 |
 | [Assets/Screenshots](<Docs/ProjectMap/Assets-Screenshots.md>) | Сохранённые изображения | 8 |
-| [Assets/Scripts](<Docs/ProjectMap/Assets-Scripts.md>) | Игровой код и редакторские инструменты | 308 |
+| [Assets/Scripts](<Docs/ProjectMap/Assets-Scripts.md>) | Игровой код и редакторские инструменты | 317 |
 | [Assets/Settings](<Docs/ProjectMap/Assets-Settings.md>) | Настройки игровых систем и рендеринга | 43 |
 | [Assets/Shaders](<Docs/ProjectMap/Assets-Shaders.md>) | Шейдеры | 7 |
 | [Assets/StreamingAssets](<Docs/ProjectMap/Assets-StreamingAssets.md>) | Ресурсы раздела; точный состав — в каталоге | 2 |
@@ -134,11 +134,15 @@ Windows, URP, FishNet; подключения по IP и Steam имеют отд
 
 Проверять серверные условия выстрела, загрузки и занятости; локальные эффекты не подтверждают сетевой выстрел.
 Для движения ядра и лафета учитывать движение корабля. Баланс брать из текущих полей и ассетов, а не старых записей.
+ShipSpyglassView показывает прогноз траекторий пушек своего корабля через стационарную и ручную подзорные трубы, обновляет каждые 0.2 с и скрывает линии при выходе.
+CannonSmokeTrail: дым в мировых координатах по пройденным сегментам, затухает за 3.3 с и сохраняется после уничтожения ядра; общий более тёмный серый материал частиц, масштаб 0.3 для огнестрельного оружия. CannonShotDamage: обычные, ледяные и толкающие ядра рикошетят от окружения с потерей скорости; корабли и живые цели сохраняют урон, огненные и мортирные снаряды — взрыв. WorldStructureCollision добавляет недостающие MeshCollider статической геометрии при построении мира; ревизия входит в CatalogHash.
 
 - [Assets/Scripts/Cannons/SimpleCannon.cs](<Assets/Scripts/Cannons/SimpleCannon.cs>) — Исходник C#: SimpleCannon.
 - [Assets/Scripts/Cannons/NetworkCannon.cs](<Assets/Scripts/Cannons/NetworkCannon.cs>) — Исходник C#: CannonPlacement, NetworkCannon.
 - [Assets/Scripts/Cannons/Cannonball.cs](<Assets/Scripts/Cannons/Cannonball.cs>) — Исходник C#: Cannonball.
 - [Assets/Scripts/Cannons/CannonShotDamage.cs](<Assets/Scripts/Cannons/CannonShotDamage.cs>) — Исходник C#: CannonShotDamage.
+- [Assets/Scripts/Cannons/CannonSmokeTrail.cs](<Assets/Scripts/Cannons/CannonSmokeTrail.cs>) — Исходник C#: CannonSmokeTrail.
+- [Assets/Scripts/World/WorldStructureCollision.cs](<Assets/Scripts/World/WorldStructureCollision.cs>) — Исходник C#: WorldStructureCollision.
 - [Assets/Scripts/Cannons/CannonCarriage.cs](<Assets/Scripts/Cannons/CannonCarriage.cs>) — Исходник C#: CannonCarriage.
 - [Assets/Scripts/Cannons/MortarTrajectory.cs](<Assets/Scripts/Cannons/MortarTrajectory.cs>) — Исходник C#: MortarTrajectory.
 - [Assets/Scripts/Networking/NetworkLooseCannonball.cs](<Assets/Scripts/Networking/NetworkLooseCannonball.cs>) — Исходник C#: NetworkLooseCannonball.
@@ -177,12 +181,15 @@ AdvancedPlayerController: новое нажатие пробела у повер
 
 Разделять локальный отклик оружия и серверное подтверждение урона/расхода боеприпасов.
 Настройки оружия искать через FirearmDefinition и используемые ссылки; не копировать числовой баланс из истории.
+PistolBullet создаёт мини-дым CannonSmokeTrail по фактическому движению визуальной пули для пистолета, мушкета и каждой дробины двустволки, включая предсказанные и удалённые выстрелы. Масштаб 0.3, шаг 0.12 м, затухание 3.3 с; дым сохраняется при попадании и повторном использовании пула трассеров.
 SabreAnimation использует отдельный хват Mixamo и переносит движение игровой сабли в координаты камеры для первого лица. Слой SabreCombat активен при выбранной сабле; Ready использует New_SabreReady. NewPirateAnimationBatch сохраняет эту стойку при переимпорте.
 
 - [Assets/Scripts/Player/PirateWeapon.cs](<Assets/Scripts/Player/PirateWeapon.cs>) — Исходник C#: IWeaponTarget, PirateWeapon.
 - [Assets/Scripts/Networking/NetworkWeapon.cs](<Assets/Scripts/Networking/NetworkWeapon.cs>) — Исходник C#: NetworkWeapon.
 - [Assets/Scripts/Player/FirearmDefinition.cs](<Assets/Scripts/Player/FirearmDefinition.cs>) — Исходник C#: FirearmDefinition, FirearmCombat.
 - [Assets/Scripts/Player/FirearmHandling.cs](<Assets/Scripts/Player/FirearmHandling.cs>) — Исходник C#: FirearmHandling.
+- [Assets/Scripts/Player/PistolBullet.cs](<Assets/Scripts/Player/PistolBullet.cs>) — Исходник C#: PistolBullet.
+- [Assets/Scripts/Cannons/CannonSmokeTrail.cs](<Assets/Scripts/Cannons/CannonSmokeTrail.cs>) — Исходник C#: CannonSmokeTrail.
 - [Assets/Scripts/Player/CombatHealth.cs](<Assets/Scripts/Player/CombatHealth.cs>) — Исходник C#: CombatHealth.
 - [Assets/Scripts/Networking/NetworkHealth.cs](<Assets/Scripts/Networking/NetworkHealth.cs>) — Исходник C#: NetworkHealth.
 - [Assets/Scripts/Editor/FirearmSetup.cs](<Assets/Scripts/Editor/FirearmSetup.cs>) — Исходник C#: FirearmSetup.
@@ -201,6 +208,7 @@ NetworkWeapon имеет отдельные partial-файлы; для морс�
 Плот движется на сервере со скоростью 20% MaxSpeed корабля, поворачивает внутрь за 150 м от границы зоны; ограничение радиуса оставляет 108 м от центра плота до границы при сужении. RaftPlatform и ShipDeckPassenger переносят игрока, сетевой Platform ссылается на сундук. ShipSpyglassView.LootHint создаёт один полупрозрачный золотистый столб света с сечением 1×1 м и высотой 300 м над ближайшим активным морским ивентом из ClientChests. Выбор по расстоянию от игрока не зависит от направления взгляда; переносимые, пустые и закреплённые на корабле сундуки исключаются. LootEventBeam.shader использует мягкие края, затухание к вершине и depth test. Render callbacks показывают столб только камере подзорной трубы, на выходе скрывают. Экранное пятно удалено. В обеих подзорных трубах туман сохраняется первую секунду, затем за 3 с SmoothStep ослабляет его плотность до 1% исходной. ShipSpyglassView.FogMultiplier применяется к обычному и SeaMist туману только камеры трубы; выход восстанавливает значения. Экранный взлом: мышь/A/D задают угол, ЛКМ/пробел вращают замок, три отмычки на попытку; секретный угол и успех проверяет сервер.
 Подводный сундук: только сундук и верёвка от дна с витками вокруг корпуса. E схватывает верёвку; сервер считает реальное плавание вокруг сундука, по умолчанию два круга (LootCatalog.SunkenUnwrapTurns). Обратное движение наматывает обратно; E/Q/Esc отпускают с сохранением прогресса. После полного разматывания сундук всплывает. Боты плывут по орбите, прежние буй и три крепления удалены. Две процедурные чайки с взмахами крыльев кружат на высоте 10–12 м над водой по радиусам 6–8 м до завершения всплытия, обозначая место сундука.
 VortexBottle=23 — бутылка с вращающимся вихрем. ЛКМ бросает через NetworkEquipment и NetworkWeapon.VortexBottle. NetworkVortexBottle считает полёт и столкновения на сервере; удар по NetworkShip даёт 500% обычной скорости на 10 с, повторный удар обновляет таймер без сложения. NetworkShip.VortexBoost хранит SyncVar, ShipController за 0.35 с разгоняет до 500% базовой максимальной скорости самостоятельной тягой, включая старт с нуля, закрытые паруса и опущенный якорь. На время эффекта обычные ограничения тяги и буксировки не задают скорость, якорь перемещается вместе с кораблём через anchorSeabedPoint; после 10 с возвращаются обычные правила, опущенный якорь останавливает корабль в новой точке. DeveloperSpeedMultiplier сохраняется. VortexBottleSetup регистрирует pickup/model/icon/DefaultLoot и тестовую палубу. ChestLoot.json содержит отдельный настраиваемый entry. VortexBottleVisual создаёт три вращающиеся спиральные ленты внутри прозрачной бутылки при Awake.
+FogBottle=24 — бутылка тумана, бросок по ЛКМ через NetworkWeapon.FogBottle и NetworkEquipment. NetworkFogBottle считает попадание на сервере, включая геометрию и первую точку пересечения CPU-поверхности воды. При разбитии создаёт отдельный сетевой FogCloud в мировой точке удара. NetworkFogCloud живёт 15 с, синхронизирует возраст каждые 0.2 с и даёт клиентам плавное время, включая позднее появление. FogCloudVisual/BottleFog.shader рисуют объём эллипсоида радиусом 50 м и высотой 44 м, цвет .23/.28/.29, плотность .18; raymarch с depth clipping работает снаружи и изнутри, независимо от обычного тумана, читов и подзорной трубы. Облако разворачивается за .55 с и исчезает в последние 1.1 с. FogBottleVisual использует тот же эффект внутри стеклянной бутылки с отдельными локальными осями, плотностью 45 и очередью 3000 перед стеклом. FogBottleSetup сохраняет модель/pickup/cloud, иконку, каталог, сетевой реестр, тестовую палубу; ChestLoot.json имеет отдельную настраиваемую строку без изменения прежних настроек. ProtocolVersion=108.
 
 - [Assets/Scripts/Player/PlayerInventory.cs](<Assets/Scripts/Player/PlayerInventory.cs>) — Исходник C#: PlayerInventory.
 - [Assets/Scripts/Player/PlayerInventory.RaftLockpick.cs](<Assets/Scripts/Player/PlayerInventory.RaftLockpick.cs>) — Исходник C#: PlayerInventory.
@@ -238,6 +246,16 @@ VortexBottle=23 — бутылка с вращающимся вихрем. ЛК�
 - [Assets/Scripts/Editor/VortexBottleSetup.cs](<Assets/Scripts/Editor/VortexBottleSetup.cs>) — Исходник C#: VortexBottleSetup.
 - [Assets/Prefabs/Loot/VortexBottle.prefab](<Assets/Prefabs/Loot/VortexBottle.prefab>) — Префаб Unity.
 - [Assets/Prefabs/Loot/VortexBottlePickup.prefab](<Assets/Prefabs/Loot/VortexBottlePickup.prefab>) — Префаб Unity.
+- [Assets/Scripts/Networking/NetworkFogBottle.cs](<Assets/Scripts/Networking/NetworkFogBottle.cs>) — Исходник C#: NetworkFogBottle.
+- [Assets/Scripts/Networking/NetworkFogCloud.cs](<Assets/Scripts/Networking/NetworkFogCloud.cs>) — Исходник C#: NetworkFogCloud.
+- [Assets/Scripts/Networking/NetworkWeapon.FogBottle.cs](<Assets/Scripts/Networking/NetworkWeapon.FogBottle.cs>) — Исходник C#: NetworkWeapon.
+- [Assets/Scripts/Loot/FogBottleVisual.cs](<Assets/Scripts/Loot/FogBottleVisual.cs>) — Исходник C#: FogBottleVisual.
+- [Assets/Scripts/Loot/FogCloudVisual.cs](<Assets/Scripts/Loot/FogCloudVisual.cs>) — Исходник C#: FogCloudVisual.
+- [Assets/Scripts/Editor/FogBottleSetup.cs](<Assets/Scripts/Editor/FogBottleSetup.cs>) — Исходник C#: FogBottleSetup.
+- [Assets/Resources/BottleFog.shader](<Assets/Resources/BottleFog.shader>) — Шейдер.
+- [Assets/Prefabs/Loot/FogBottle.prefab](<Assets/Prefabs/Loot/FogBottle.prefab>) — Префаб Unity.
+- [Assets/Prefabs/Loot/FogBottlePickup.prefab](<Assets/Prefabs/Loot/FogBottlePickup.prefab>) — Префаб Unity.
+- [Assets/Prefabs/Loot/FogCloud.prefab](<Assets/Prefabs/Loot/FogCloud.prefab>) — Префаб Unity.
 - [rum-loot.md](<rum-loot.md>) — Документация.
 - [combat-balance.md](<combat-balance.md>) — Документация.
 
@@ -408,10 +426,12 @@ BotNumber использует стабильный ParticipantId; номера 
 
 SessionController разделён на partial-файлы меню. Различать меню сессии и игровой HUD.
 Сохранённое оформление меню и его runtime-поведение имеют разные точки входа.
+GameTelemetry подключается в SessionController.Awake. Настройки → Игра и интерфейс → Полная телеметрия сохраняют ShowTelemetry (по умолчанию выключено). Локальная панель справа под HUD шторма обновляется раз в 0.5 с: FPS/кадр, доступные CPU/Render/GPU и render counters, Unity/GC память, RTT/тики/роль, загруженные игроки/корабли/сундуки, XYZ и скорость корабля. Недоступные счётчики показаны прочерком; сбор отключён вместе с панелью.
 
 - [Assets/Scripts/Networking/SessionMenu.cs](<Assets/Scripts/Networking/SessionMenu.cs>) — Исходник C#: SessionController.
 - [Assets/Scripts/Networking/SessionPartyMenu.cs](<Assets/Scripts/Networking/SessionPartyMenu.cs>) — Исходник C#: SessionController.
 - [Assets/Scripts/UI/PlayerHud.cs](<Assets/Scripts/UI/PlayerHud.cs>) — Исходник C#: PlayerHud.
+- [Assets/Scripts/UI/GameTelemetry.cs](<Assets/Scripts/UI/GameTelemetry.cs>) — Исходник C#: GameTelemetry.
 - [Assets/Scripts/UI/PirateHudStyle.cs](<Assets/Scripts/UI/PirateHudStyle.cs>) — Исходник C#: PirateHudStyle.
 - [Assets/Scripts/UI/HudLayout.cs](<Assets/Scripts/UI/HudLayout.cs>) — Исходник C#: HudLayout, Scope.
 - [Assets/Scripts/Player/MenuBackdrop.cs](<Assets/Scripts/Player/MenuBackdrop.cs>) — Исходник C#: MenuBackdrop.

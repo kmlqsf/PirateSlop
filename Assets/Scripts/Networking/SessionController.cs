@@ -51,7 +51,12 @@ namespace PirateSlop.Networking
         Coroutine worldLoading;
         string seedInput = "";
         public NetworkPlayer GetPlayer(int connectionId) => players.TryGetValue(connectionId, out var p) ? p : null;
-        void Awake() { Instance = this; Application.runInBackground = true; }
+        void Awake()
+        {
+            Instance = this;
+            Application.runInBackground = true;
+            if (GetComponent<GameTelemetry>() == null) gameObject.AddComponent<GameTelemetry>();
+        }
         void Start()
         {
             var sc = GameObject.Find("SettingsCanvas");

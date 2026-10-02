@@ -33,11 +33,17 @@ namespace PirateSlop
         bool impacted;
         bool impactEffects;
         float width;
+        CannonSmokeTrail smoke;
+        Vector3 smokeHead;
+        float smokeProgress;
 
         public void Initialize(Vector3 visibleStart, FirearmShot result, Material template, float thickness=.022f, bool showImpact=true, float speed=450)
         {
+            FinishSmoke();
             age=0;impacted=false;authoritative=true;Generation++;gameObject.SetActive(true);
             start = visibleStart; shot = result;
+            smokeHead = start; smokeProgress = 0f;
+            smoke = CannonSmokeTrail.Create(start, .3f);
             duration = Mathf.Clamp(Vector3.Distance(start, shot.End) / Mathf.Max(50,speed), .025f, .45f);
             impactEffects=showImpact; width=thickness;
             material = Resources.Load<Material>("FirearmGlow");
@@ -61,6 +67,13 @@ namespace PirateSlop
         {
             FirearmImpact.ResolvePoint(ref shot);
             float head = Mathf.Clamp01(time / duration);
+            if (smoke != null && head > smokeProgress)
+            {
+                Vector3 position = Vector3.Lerp(start, shot.End, head);
+                smoke.Segment(smokeHead, position);
+                smokeHead = position; smokeProgress = head;
+                if (head >= 1f) FinishSmoke();
+            }
             float tail = Mathf.Clamp01((time-Mathf.Min(.009f,duration*.45f))/duration);
             tracer.SetPosition(0, Vector3.Lerp(start, shot.End, tail));
             tracer.SetPosition(1, Vector3.Lerp(start, shot.End, head));
@@ -78,6 +91,16 @@ namespace PirateSlop
             impacted = true;
             if(authoritative) FirearmImpact.Present(shot,impactEffects);
         }
+
+        void FinishSmoke()
+        {
+            if (smoke == null) return;
+            smoke.Finish();
+            smoke = null;
+        }
+
+        void OnDisable() => FinishSmoke();
+        void OnDestroy() => FinishSmoke();
 
     }
 }

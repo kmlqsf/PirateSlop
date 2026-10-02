@@ -83,6 +83,7 @@ namespace PirateSlop
             InventoryItem.HolyGrenade => "Святая граната",
             InventoryItem.Spyglass => "Подзорная труба",
             InventoryItem.VortexBottle => "Бутылка вихря",
+            InventoryItem.FogBottle => "Бутылка тумана",
             InventoryItem.GrapplingHook => "Крюк-кошка",
             InventoryItem.BoardingHook => "Абордажный крюк",
             InventoryItem.Pistol => "Пистолет",
