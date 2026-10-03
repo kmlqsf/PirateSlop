@@ -126,7 +126,7 @@
 | [Assets/Models/Fishing/FishBody.asset](<../../Assets/Models/Fishing/FishBody.asset>) | Настройки или данные Unity |
 | [Assets/Models/Fishing/FishFins.mat](<../../Assets/Models/Fishing/FishFins.mat>) | Материал Unity |
 | [Assets/Models/Fishing/FishSilver.mat](<../../Assets/Models/Fishing/FishSilver.mat>) | Материал Unity |
-| [Assets/Models/Fishing/FishVisual.prefab](<../../Assets/Models/Fishing/FishVisual.prefab>) | Префаб Unity |
+| [Assets/Models/Fishing/FishVisual.prefab](<../../Assets/Models/Fishing/FishVisual.prefab>) | Префаб Unity; Рыбалка и рыба |
 | [Assets/Models/Fishing/FishingFloat.prefab](<../../Assets/Models/Fishing/FishingFloat.prefab>) | Префаб Unity |
 | [Assets/Models/Fishing/FishingRod.prefab](<../../Assets/Models/Fishing/FishingRod.prefab>) | Префаб Unity |
 | [Assets/Models/Fishing/FloatRed.mat](<../../Assets/Models/Fishing/FloatRed.mat>) | Материал Unity |
@@ -153,13 +153,13 @@
 | [Assets/Models/FishingWeapons/PufferGold.mat](<../../Assets/Models/FishingWeapons/PufferGold.mat>) | Материал Unity |
 | [Assets/Models/FishingWeapons/Pufferfish.fbx](<../../Assets/Models/FishingWeapons/Pufferfish.fbx>) | Модель / анимации FBX |
 | [Assets/Models/FishingWeapons/PufferfishIcon.png](<../../Assets/Models/FishingWeapons/PufferfishIcon.png>) | Изображение / текстура |
-| [Assets/Models/FishingWeapons/PufferfishPickup.prefab](<../../Assets/Models/FishingWeapons/PufferfishPickup.prefab>) | Префаб Unity |
-| [Assets/Models/FishingWeapons/PufferfishVisual.prefab](<../../Assets/Models/FishingWeapons/PufferfishVisual.prefab>) | Префаб Unity |
+| [Assets/Models/FishingWeapons/PufferfishPickup.prefab](<../../Assets/Models/FishingWeapons/PufferfishPickup.prefab>) | Префаб Unity; Рыбалка и рыба |
+| [Assets/Models/FishingWeapons/PufferfishVisual.prefab](<../../Assets/Models/FishingWeapons/PufferfishVisual.prefab>) | Префаб Unity; Рыбалка и рыба |
 | [Assets/Models/FishingWeapons/Swordfish.fbx](<../../Assets/Models/FishingWeapons/Swordfish.fbx>) | Модель / анимации FBX |
 | [Assets/Models/FishingWeapons/SwordfishBlue.mat](<../../Assets/Models/FishingWeapons/SwordfishBlue.mat>) | Материал Unity |
 | [Assets/Models/FishingWeapons/SwordfishIcon.png](<../../Assets/Models/FishingWeapons/SwordfishIcon.png>) | Изображение / текстура |
-| [Assets/Models/FishingWeapons/SwordfishPickup.prefab](<../../Assets/Models/FishingWeapons/SwordfishPickup.prefab>) | Префаб Unity |
-| [Assets/Models/FishingWeapons/SwordfishVisual.prefab](<../../Assets/Models/FishingWeapons/SwordfishVisual.prefab>) | Префаб Unity |
+| [Assets/Models/FishingWeapons/SwordfishPickup.prefab](<../../Assets/Models/FishingWeapons/SwordfishPickup.prefab>) | Префаб Unity; Рыбалка и рыба |
+| [Assets/Models/FishingWeapons/SwordfishVisual.prefab](<../../Assets/Models/FishingWeapons/SwordfishVisual.prefab>) | Префаб Unity; Рыбалка и рыба |
 
 ## Assets/Models/FloodWater
 
@@ -240,6 +240,18 @@
 | Файл | Краткое описание |
 | --- | --- |
 | [Assets/Models/Loot/Kenney/Textures/colormap.png](<../../Assets/Models/Loot/Kenney/Textures/colormap.png>) | Изображение / текстура |
+
+## Assets/Models/Loot/Replacement/BoardingHarpoon
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/Loot/Replacement/BoardingHarpoon/BoardingHarpoon.fbx](<../../Assets/Models/Loot/Replacement/BoardingHarpoon/BoardingHarpoon.fbx>) | Модель / анимации FBX |
+| [Assets/Models/Loot/Replacement/BoardingHarpoon/BoardingHarpoon.mat](<../../Assets/Models/Loot/Replacement/BoardingHarpoon/BoardingHarpoon.mat>) | Материал Unity |
+| [Assets/Models/Loot/Replacement/BoardingHarpoon/BoardingHarpoonBaseColor.jpg](<../../Assets/Models/Loot/Replacement/BoardingHarpoon/BoardingHarpoonBaseColor.jpg>) | Изображение / текстура |
+| [Assets/Models/Loot/Replacement/BoardingHarpoon/BoardingHarpoonMetalSmooth.png](<../../Assets/Models/Loot/Replacement/BoardingHarpoon/BoardingHarpoonMetalSmooth.png>) | Изображение / текстура |
+| [Assets/Models/Loot/Replacement/BoardingHarpoon/BoardingHarpoonNormal.png](<../../Assets/Models/Loot/Replacement/BoardingHarpoon/BoardingHarpoonNormal.png>) | Изображение / текстура |
+| [Assets/Models/Loot/Replacement/BoardingHarpoon/BoardingHarpoonPairVisual.prefab](<../../Assets/Models/Loot/Replacement/BoardingHarpoon/BoardingHarpoonPairVisual.prefab>) | Префаб Unity; Предметы, лут и инвентарь |
+| [Assets/Models/Loot/Replacement/BoardingHarpoon/BoardingHarpoonVisual.prefab](<../../Assets/Models/Loot/Replacement/BoardingHarpoon/BoardingHarpoonVisual.prefab>) | Префаб Unity; Предметы, лут и инвентарь |
 
 ## Assets/Models/Loot/Replacement/CannonBarrel
 
@@ -358,6 +370,16 @@
 | [Assets/Models/Loot/Replacement/CannonballStandard/CannonballStandardRoughness.png](<../../Assets/Models/Loot/Replacement/CannonballStandard/CannonballStandardRoughness.png>) | Изображение / текстура |
 | [Assets/Models/Loot/Replacement/CannonballStandard/CannonballStandardVisual.prefab](<../../Assets/Models/Loot/Replacement/CannonballStandard/CannonballStandardVisual.prefab>) | Префаб Unity |
 
+## Assets/Models/Loot/Replacement/Fish
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/Loot/Replacement/Fish/Fish.fbx](<../../Assets/Models/Loot/Replacement/Fish/Fish.fbx>) | Модель / анимации FBX; Модели и Blender |
+| [Assets/Models/Loot/Replacement/Fish/Fish.mat](<../../Assets/Models/Loot/Replacement/Fish/Fish.mat>) | Материал Unity; Модели и Blender |
+| [Assets/Models/Loot/Replacement/Fish/FishMetalSmooth.png](<../../Assets/Models/Loot/Replacement/Fish/FishMetalSmooth.png>) | Изображение / текстура; Модели и Blender |
+| [Assets/Models/Loot/Replacement/Fish/Fish_basecolor.jpeg](<../../Assets/Models/Loot/Replacement/Fish/Fish_basecolor.jpeg>) | Изображение / текстура; Модели и Blender |
+| [Assets/Models/Loot/Replacement/Fish/Fish_normal.png](<../../Assets/Models/Loot/Replacement/Fish/Fish_normal.png>) | Изображение / текстура; Модели и Blender |
+
 ## Assets/Models/Loot/Replacement/GrappleHook
 
 | Файл | Краткое описание |
@@ -384,6 +406,16 @@
 | [Assets/Models/Loot/Replacement/HolyGrenade/HolyGrenadeRoughness.png](<../../Assets/Models/Loot/Replacement/HolyGrenade/HolyGrenadeRoughness.png>) | Изображение / текстура |
 | [Assets/Models/Loot/Replacement/HolyGrenade/HolyGrenadeVisual.prefab](<../../Assets/Models/Loot/Replacement/HolyGrenade/HolyGrenadeVisual.prefab>) | Префаб Unity |
 
+## Assets/Models/Loot/Replacement/Pufferfish
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/Loot/Replacement/Pufferfish/Pufferfish.fbx](<../../Assets/Models/Loot/Replacement/Pufferfish/Pufferfish.fbx>) | Модель / анимации FBX; Модели и Blender |
+| [Assets/Models/Loot/Replacement/Pufferfish/Pufferfish.mat](<../../Assets/Models/Loot/Replacement/Pufferfish/Pufferfish.mat>) | Материал Unity; Модели и Blender |
+| [Assets/Models/Loot/Replacement/Pufferfish/PufferfishMetalSmooth.png](<../../Assets/Models/Loot/Replacement/Pufferfish/PufferfishMetalSmooth.png>) | Изображение / текстура; Модели и Blender |
+| [Assets/Models/Loot/Replacement/Pufferfish/Pufferfish_basecolor.jpeg](<../../Assets/Models/Loot/Replacement/Pufferfish/Pufferfish_basecolor.jpeg>) | Изображение / текстура; Модели и Blender |
+| [Assets/Models/Loot/Replacement/Pufferfish/Pufferfish_normal.png](<../../Assets/Models/Loot/Replacement/Pufferfish/Pufferfish_normal.png>) | Изображение / текстура; Модели и Blender |
+
 ## Assets/Models/Loot/Replacement/RumBottle
 
 | Файл | Краткое описание |
@@ -396,6 +428,49 @@
 | [Assets/Models/Loot/Replacement/RumBottle/RumBottleNormal.png](<../../Assets/Models/Loot/Replacement/RumBottle/RumBottleNormal.png>) | Изображение / текстура |
 | [Assets/Models/Loot/Replacement/RumBottle/RumBottleRoughness.png](<../../Assets/Models/Loot/Replacement/RumBottle/RumBottleRoughness.png>) | Изображение / текстура |
 | [Assets/Models/Loot/Replacement/RumBottle/RumBottleVisual.prefab](<../../Assets/Models/Loot/Replacement/RumBottle/RumBottleVisual.prefab>) | Префаб Unity |
+
+## Assets/Models/Loot/Replacement/SpyglassTube
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/Loot/Replacement/SpyglassTube/SpyglassTube.fbx](<../../Assets/Models/Loot/Replacement/SpyglassTube/SpyglassTube.fbx>) | Модель / анимации FBX |
+| [Assets/Models/Loot/Replacement/SpyglassTube/SpyglassTube.mat](<../../Assets/Models/Loot/Replacement/SpyglassTube/SpyglassTube.mat>) | Материал Unity |
+| [Assets/Models/Loot/Replacement/SpyglassTube/SpyglassTubeBaseColor.jpg](<../../Assets/Models/Loot/Replacement/SpyglassTube/SpyglassTubeBaseColor.jpg>) | Изображение / текстура |
+| [Assets/Models/Loot/Replacement/SpyglassTube/SpyglassTubeMetalSmooth.png](<../../Assets/Models/Loot/Replacement/SpyglassTube/SpyglassTubeMetalSmooth.png>) | Изображение / текстура |
+| [Assets/Models/Loot/Replacement/SpyglassTube/SpyglassTubeNormal.png](<../../Assets/Models/Loot/Replacement/SpyglassTube/SpyglassTubeNormal.png>) | Изображение / текстура |
+| [Assets/Models/Loot/Replacement/SpyglassTube/SpyglassTubeVisual.prefab](<../../Assets/Models/Loot/Replacement/SpyglassTube/SpyglassTubeVisual.prefab>) | Префаб Unity; Предметы, лут и инвентарь |
+
+## Assets/Models/Loot/Replacement/Swordfish
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/Loot/Replacement/Swordfish/Swordfish.fbx](<../../Assets/Models/Loot/Replacement/Swordfish/Swordfish.fbx>) | Модель / анимации FBX; Модели и Blender |
+| [Assets/Models/Loot/Replacement/Swordfish/Swordfish.mat](<../../Assets/Models/Loot/Replacement/Swordfish/Swordfish.mat>) | Материал Unity; Модели и Blender |
+| [Assets/Models/Loot/Replacement/Swordfish/SwordfishMetalSmooth.png](<../../Assets/Models/Loot/Replacement/Swordfish/SwordfishMetalSmooth.png>) | Изображение / текстура; Модели и Blender |
+| [Assets/Models/Loot/Replacement/Swordfish/Swordfish_basecolor.jpeg](<../../Assets/Models/Loot/Replacement/Swordfish/Swordfish_basecolor.jpeg>) | Изображение / текстура; Модели и Blender |
+| [Assets/Models/Loot/Replacement/Swordfish/Swordfish_normal.png](<../../Assets/Models/Loot/Replacement/Swordfish/Swordfish_normal.png>) | Изображение / текстура; Модели и Blender |
+
+## Assets/Models/Loot/Replacement/WhiskyBottle
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/Loot/Replacement/WhiskyBottle/CorkBaseColor.png](<../../Assets/Models/Loot/Replacement/WhiskyBottle/CorkBaseColor.png>) | Изображение / текстура; Модели и Blender |
+| [Assets/Models/Loot/Replacement/WhiskyBottle/CorkNormal.png](<../../Assets/Models/Loot/Replacement/WhiskyBottle/CorkNormal.png>) | Изображение / текстура; Модели и Blender |
+| [Assets/Models/Loot/Replacement/WhiskyBottle/WhiskyBottleEmpty.fbx](<../../Assets/Models/Loot/Replacement/WhiskyBottle/WhiskyBottleEmpty.fbx>) | Модель / анимации FBX; Модели и Blender |
+| [Assets/Models/Loot/Replacement/WhiskyBottle/WhiskyCork.mat](<../../Assets/Models/Loot/Replacement/WhiskyBottle/WhiskyCork.mat>) | Материал Unity; Модели и Blender |
+| [Assets/Models/Loot/Replacement/WhiskyBottle/WhiskyGlass.mat](<../../Assets/Models/Loot/Replacement/WhiskyBottle/WhiskyGlass.mat>) | Материал Unity; Модели и Blender |
+| [Assets/Models/Loot/Replacement/WhiskyBottle/WhiskySwirl.mat](<../../Assets/Models/Loot/Replacement/WhiskyBottle/WhiskySwirl.mat>) | Материал Unity; Модели и Blender |
+
+## Assets/Models/Loot/Replacement/WineBottle
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/Loot/Replacement/WineBottle/WineBottle.fbx](<../../Assets/Models/Loot/Replacement/WineBottle/WineBottle.fbx>) | Модель / анимации FBX |
+| [Assets/Models/Loot/Replacement/WineBottle/WineBottle.mat](<../../Assets/Models/Loot/Replacement/WineBottle/WineBottle.mat>) | Материал Unity |
+| [Assets/Models/Loot/Replacement/WineBottle/WineBottleBaseColor.jpg](<../../Assets/Models/Loot/Replacement/WineBottle/WineBottleBaseColor.jpg>) | Изображение / текстура |
+| [Assets/Models/Loot/Replacement/WineBottle/WineBottleMetalSmooth.png](<../../Assets/Models/Loot/Replacement/WineBottle/WineBottleMetalSmooth.png>) | Изображение / текстура |
+| [Assets/Models/Loot/Replacement/WineBottle/WineBottleNormal.png](<../../Assets/Models/Loot/Replacement/WineBottle/WineBottleNormal.png>) | Изображение / текстура |
+| [Assets/Models/Loot/Replacement/WineBottle/WineBottleVisual.prefab](<../../Assets/Models/Loot/Replacement/WineBottle/WineBottleVisual.prefab>) | Префаб Unity; Предметы, лут и инвентарь |
 
 ## Assets/Models/Loot/VortexBottle
 
@@ -1336,6 +1411,73 @@
 | [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_97.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_97.asset>) | Настройки или данные Unity |
 | [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_98.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_98.asset>) | Настройки или данные Unity |
 | [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_99.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_99.asset>) | Настройки или данные Unity |
+
+## Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_0.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_0.asset>) | Настройки или данные Unity; Движение корабля и палуба |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_1.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_1.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_10.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_10.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_11.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_11.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_12.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_12.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_13.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_13.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_14.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_14.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_15.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_15.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_16.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_16.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_17.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_17.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_18.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_18.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_19.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_19.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_2.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_2.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_20.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_20.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_21.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_21.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_22.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_22.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_23.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_23.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_24.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_24.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_25.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_25.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_26.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_26.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_27.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_27.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_28.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_28.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_29.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_29.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_3.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_3.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_30.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_30.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_31.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_31.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_32.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_32.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_33.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_33.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_34.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_34.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_35.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_35.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_36.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_36.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_37.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_37.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_38.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_38.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_39.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_39.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_4.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_4.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_40.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_40.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_41.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_41.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_42.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_42.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_43.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_43.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_44.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_44.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_45.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_45.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_46.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_46.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_47.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_47.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_48.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_48.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_5.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_5.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_6.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_6.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_7.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_7.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_8.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_8.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_9.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_9.asset>) | Настройки или данные Unity |
+
+## Assets/Models/Ships/ShipV3/RuntimeMeshes/Shadows
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Shadows/ShipV3Batch_12.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Shadows/ShipV3Batch_12.asset>) | Настройки или данные Unity; Движение корабля и палуба |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Shadows/ShipV3Batch_13.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Shadows/ShipV3Batch_13.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Shadows/ShipV3Batch_14.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Shadows/ShipV3Batch_14.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Shadows/ShipV3Batch_15.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Shadows/ShipV3Batch_15.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Shadows/ShipV3Batch_2.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Shadows/ShipV3Batch_2.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Shadows/ShipV3Batch_3.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Shadows/ShipV3Batch_3.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Shadows/ShipV3Batch_4.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Shadows/ShipV3Batch_4.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Shadows/ShipV3Batch_87.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Shadows/ShipV3Batch_87.asset>) | Настройки или данные Unity |
 
 ## Assets/Models/Ships/ShipV3/Textures
 

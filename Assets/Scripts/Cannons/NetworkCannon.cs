@@ -1,6 +1,7 @@
 using FishNet.Object;
 using FishNet.Object.Synchronizing;
 using FishNet.Connection;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace PirateSlop.Networking
@@ -24,12 +25,47 @@ namespace PirateSlop.Networking
     public sealed partial class NetworkCannon : NetworkBehaviour
     {
         readonly SyncVar<bool> kitTaken = new(false);
-        readonly SyncList<CannonPlacement> placements = new();
+        readonly SyncList<CannonPlacement> placements = new(new SyncTypeSettings(.05f));
+        readonly List<RemoteCarriagePose> remoteCarriages = new();
         public CannonballCrate Crate { get; private set; }
         Cannonball ball;
         Rigidbody shipBody;
         int holder = -1;
         float nextSync;
+        Vector3 remoteBallPosition;
+        Quaternion remoteBallRotation;
+        bool remoteBallReady;
+
+        sealed class RemoteCarriagePose
+        {
+            CannonPlacement from, target;
+            float receivedAt, duration = .05f;
+            bool ready;
+            public CannonPlacement Update(CannonPlacement value)
+            {
+                float time = Time.unscaledTime;
+                if (!ready) { from = target = value; receivedAt = time; ready = true; return value; }
+                if ((value.Position - target.Position).sqrMagnitude > .00000001f || Mathf.Abs(Quaternion.Dot(value.Rotation, target.Rotation)) < .999999f ||
+                    !Mathf.Approximately(value.Elevation, target.Elevation) || !Mathf.Approximately(value.Traverse, target.Traverse))
+                {
+                    from = Sample(time);
+                    duration = Mathf.Clamp(time - receivedAt, .033f, .12f);
+                    target = value;
+                    receivedAt = time;
+                }
+                return Sample(time);
+            }
+            CannonPlacement Sample(float time)
+            {
+                float blend = Mathf.Clamp01((time - receivedAt) / duration);
+                var result = target;
+                result.Position = Vector3.Lerp(from.Position, target.Position, blend);
+                result.Rotation = Quaternion.Slerp(from.Rotation, target.Rotation, blend);
+                result.Elevation = Mathf.Lerp(from.Elevation, target.Elevation, blend);
+                result.Traverse = Mathf.Lerp(from.Traverse, target.Traverse, blend);
+                return result;
+            }
+        }
 
         void Awake()
         {
@@ -40,6 +76,7 @@ namespace PirateSlop.Networking
         public override void OnStartServer() { base.OnStartServer(); if (Crate != null) { Crate.ResetSupply(); if (Crate.MortarPrefab != null) { placements.Add(new CannonPlacement { Position = Crate.MortarPosition, Rotation = Quaternion.identity, Elevation = 60f, Fuse = -1f, Mortar = true }); ApplyState(); } } }
         public override void OnStopServer() { if (Crate != null) Crate.ClearSpecialSupply(); base.OnStopServer(); }
         public override void OnStartClient() { base.OnStartClient(); ApplyState(); }
+        public override void OnStopClient() { remoteCarriages.Clear(); remoteBallReady = false; base.OnStopClient(); }
         public bool TakeKit()
         {
             if (!IsServerInitialized || Crate == null || kitTaken.Value || !Crate.KitAvailable) return false;
@@ -114,9 +151,15 @@ namespace PirateSlop.Networking
                 var cannon=Crate.Cannons[i];
                 cannon.gameObject.SetActive(!placements[i].Removed);
                 if (placements[i].Removed) continue;
+                var pose = placements[i];
+                if (!IsServerInitialized)
+                {
+                    while (remoteCarriages.Count <= i) remoteCarriages.Add(new RemoteCarriagePose());
+                    pose = remoteCarriages[i].Update(pose);
+                }
                 cannon.RemoteOccupied = placements[i].Occupied;
                 if (cannon.Operator == null || IsServerInitialized)
-                    cannon.SetAim(placements[i].Elevation, placements[i].Traverse);
+                    cannon.SetAim(pose.Elevation, pose.Traverse);
                 if (!IsServerInitialized)
                 {
                     if (placements[i].Loaded && !cannon.IsLoaded)
@@ -131,9 +174,7 @@ namespace PirateSlop.Networking
                 }
                 if(!IsServerInitialized)
                 {
-                    float blend=1f-Mathf.Exp(-20f*Time.deltaTime);
-                    cannon.transform.localPosition=Vector3.Lerp(cannon.transform.localPosition,placements[i].Position,blend);
-                    cannon.transform.localRotation=Quaternion.Slerp(cannon.transform.localRotation,placements[i].Rotation,blend);
+                    cannon.transform.SetLocalPositionAndRotation(pose.Position, pose.Rotation);
                 }
             }
         }
@@ -157,6 +198,12 @@ namespace PirateSlop.Networking
                 }
             }
             if (IsClientInitialized || IsServerInitialized) ApplyState();
+            if (!IsServerInitialized && remoteBallReady && ball != null && !ball.Loaded && !ball.Held)
+            {
+                float blend = 1f - Mathf.Exp(-18f * Time.deltaTime);
+                ball.transform.SetLocalPositionAndRotation(Vector3.Lerp(ball.transform.localPosition, remoteBallPosition, blend),
+                    Quaternion.Slerp(ball.transform.localRotation, remoteBallRotation, blend));
+            }
         }
         public void NotifyIgnited(int index) { var placement = placements[index]; placement.Fuse = 0f; placements[index] = placement; }
         SimpleCannon Cannon(int index) => Crate != null && index >= 0 && index < Crate.Cannons.Count && index < placements.Count && !placements[index].Removed ? Crate.Cannons[index] : null;
@@ -165,18 +212,19 @@ namespace PirateSlop.Networking
             var player = sender != null ? SessionController.Instance.GetPlayer(sender.ClientId) : null;
             return player != null && !player.Motor.IsDead && !player.Motor.LocomotionLocked && float.IsFinite(point.sqrMagnitude) && Vector3.Distance(player.transform.position, point) <= 6f;
         }
-        public void NotifyFired(int index, Vector3 position, Vector3 velocity, InventoryItem ammo)
+        public void NotifyFired(int index, Vector3 position, Vector3 velocity, InventoryItem ammo, int boardingShot = 0)
         {
+            if (ammo != InventoryItem.BoardingHook) boardingFlights.Remove(index);
             var placement = placements[index]; placement.Loaded = false; placement.FireQueued = false; placement.Fuse = -1f; placement.Cooldown = Cannon(index).CooldownRemaining; placements[index] = placement;
-            ShotObserversRpc(index, position, velocity, ammo);
+            ShotObserversRpc(index, position, velocity, ammo, boardingShot);
         }
         [ObserversRpc]
-        void ShotObserversRpc(int index, Vector3 position, Vector3 velocity, InventoryItem ammo)
+        void ShotObserversRpc(int index, Vector3 position, Vector3 velocity, InventoryItem ammo, int boardingShot)
         {
             if (IsServerInitialized) return;
             ApplyState();
             var cannon = Cannon(index);
-            if (cannon != null) { cannon.SpawnShot(position, velocity, false, ammo); cannon.ResetSupply(); }
+            if (cannon != null) { cannon.SpawnShot(position, velocity, false, ammo, boardingShot); cannon.ResetSupply(); }
         }
         public void RequestBall(bool holding, Vector3 position) => BallServerRpc(holding, transform.InverseTransformPoint(position));
         [ServerRpc(RequireOwnership = false)]
@@ -290,8 +338,10 @@ namespace PirateSlop.Networking
         {
             if (IsServerInitialized || ball == null || ball.Loaded || ball.Held) return;
             ball.transform.SetParent(shipBody.transform, false);
-            ball.transform.localPosition = localPosition;
-            ball.transform.localRotation = localRotation;
+            remoteBallPosition = localPosition;
+            remoteBallRotation = localRotation;
+            if (!remoteBallReady) ball.transform.SetLocalPositionAndRotation(localPosition, localRotation);
+            remoteBallReady = true;
             ball.Body.isKinematic = true;
             ball.AttachToPlatform(shipBody);
         }

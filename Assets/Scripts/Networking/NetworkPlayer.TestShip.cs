@@ -10,6 +10,12 @@ namespace PirateSlop.Networking
         public void TeleportToTestShip()
         {
             if (motor == null || motor.IsDead || IsBot.Value) return;
+            var home = Ship != null ? Ship.GetComponent<ShipV3Features>() : null;
+            if (home != null && home.IsSpawned && home.RespawnPoint != null)
+            {
+                TestShipTeleportObserversRpc(home.RespawnPoint.position, home.transform.eulerAngles.y, home.NetworkObject);
+                return;
+            }
             foreach (var target in FindObjectsByType<ShipV3Features>(FindObjectsSortMode.None))
             {
                 if (!target.IsSpawned || target.RespawnPoint == null || target.gameObject.scene != gameObject.scene) continue;

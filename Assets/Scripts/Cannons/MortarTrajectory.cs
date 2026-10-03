@@ -145,6 +145,7 @@ namespace PirateSlop
                 var hit = hits[i];
                 if (!PlayerHitbox.IsTarget(hit.collider)) continue;
                 if (hit.collider.gameObject.layer == LayerMask.NameToLayer("ShipDebris")) continue;
+                if (hit.collider.GetComponentInParent<BoardingWalkSurface>() != null) continue;
                 if ((source != null && hit.transform.IsChildOf(source)) || hit.collider.GetComponentInParent<CannonShotDamage>() != null || hit.distance > distance) continue;
                 point = hit.point; normal = hit.normal; collider = hit.collider; distance = hit.distance; found = true;
             }

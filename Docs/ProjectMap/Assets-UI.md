@@ -10,6 +10,7 @@
 
 | Файл | Краткое описание |
 | --- | --- |
+| [Assets/UI/Inventory/BoardingHook.png](<../../Assets/UI/Inventory/BoardingHook.png>) | Изображение / текстура |
 | [Assets/UI/Inventory/Cannon.png](<../../Assets/UI/Inventory/Cannon.png>) | Изображение / текстура |
 | [Assets/UI/Inventory/Cannonball.png](<../../Assets/UI/Inventory/Cannonball.png>) | Изображение / текстура |
 | [Assets/UI/Inventory/FireCannonball.png](<../../Assets/UI/Inventory/FireCannonball.png>) | Изображение / текстура |
@@ -25,6 +26,7 @@
 | [Assets/UI/Inventory/Rod.png](<../../Assets/UI/Inventory/Rod.png>) | Изображение / текстура |
 | [Assets/UI/Inventory/Rum.png](<../../Assets/UI/Inventory/Rum.png>) | Изображение / текстура |
 | [Assets/UI/Inventory/Spyglass.png](<../../Assets/UI/Inventory/Spyglass.png>) | Изображение / текстура |
+| [Assets/UI/Inventory/Wine.png](<../../Assets/UI/Inventory/Wine.png>) | Изображение / текстура |
 
 ## Assets/UI/Inventory/Custom
 

@@ -8,8 +8,8 @@ namespace PirateSlop.Networking
     [RequireComponent(typeof(Cannonball))]
     public sealed class NetworkLooseCannonball : NetworkBehaviour
     {
-        readonly SyncVar<Vector3> position = new();
-        readonly SyncVar<Quaternion> rotation = new(Quaternion.identity);
+        readonly SyncVar<Vector3> position = new(new SyncTypeSettings(.05f));
+        readonly SyncVar<Quaternion> rotation = new(Quaternion.identity, new SyncTypeSettings(.05f));
         readonly SyncVar<NetworkObject> platform = new();
         readonly SyncVar<int> holder = new(-1);
         Cannonball ball;

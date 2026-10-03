@@ -50,27 +50,7 @@ namespace PirateSlop.EditorTools
                 motions.Add(new ShipV3Motion { Target = target, SailIndex = sailIndex, Poses = poses });
             }
             rig.Motions = motions.ToArray();
-            var wheel = Find("V3_Transfer_S029_Helm_P0554_Intact");
-            var wheelMesh = wheel.GetComponent<MeshFilter>().sharedMesh;
-            Vector3 wheelAxis = wheel.localToWorldMatrix.MultiplyVector(WheelAxis(wheelMesh)).normalized;
-            if (Vector3.Dot(wheelAxis, root.transform.forward) < 0f) wheelAxis = -wheelAxis;
-            var helm = wheel.GetComponentInParent<HelmInteraction>();
-            var wheelPivot = wheel.GetComponentInParent<ShipDamageSection>().transform;
-            var children = wheelPivot.Cast<Transform>().ToArray();
-            var positions = children.Select(t => t.position).ToArray();
-            var rotations = children.Select(t => t.rotation).ToArray();
-            var scales = children.Select(t => t.lossyScale).ToArray();
-            Vector3 wheelCenter = wheel.TransformPoint(wheelMesh.bounds.center);
-            wheelPivot.SetParent(root.transform, true);
-            wheelPivot.localScale = Vector3.one;
-            wheelPivot.SetPositionAndRotation(wheelCenter, Quaternion.LookRotation(wheelAxis, root.transform.up));
-            for (int i = 0; i < children.Length; i++)
-            {
-                children[i].SetPositionAndRotation(positions[i], rotations[i]);
-                var parentScale = wheelPivot.lossyScale;
-                children[i].localScale = new Vector3(scales[i].x / parentScale.x, scales[i].y / parentScale.y, scales[i].z / parentScale.z);
-            }
-            helm.Configure(wheelPivot);
+            ShipV3GameplayRepair.ConfigureHelm(root);
             string[] tags = { "Main_Course", "Main_Topsail", "Fore_Course", "Fore_Topsail", "Mizzen" };
             for (int i = 0; i < tags.Length; i++)
             {
@@ -79,14 +59,8 @@ namespace PirateSlop.EditorTools
                 if (handle == null) handle = lever.gameObject.AddComponent<ShipControlHandle>();
                 handle.Sails = sails; handle.RopeIndex = i; sails.RopeHandles[i] = handle;
             }
-            features.DoorAssembly = new[] { features.DoorHinge.parent, Find("V3_Transfer_Hold_Doorway_Frame"), Find("V6_Hold_Door_Lintel") };
-            foreach (var door in features.DoorAssembly)
-            {
-                var doorTarget = door.GetComponent<ShipV3InteractionTarget>();
-                if (doorTarget == null) doorTarget = door.gameObject.AddComponent<ShipV3InteractionTarget>();
-                doorTarget.Kind = ShipV3TargetKind.Door; doorTarget.Ship = features;
-            }
-            features.DoorAxis = features.DoorHinge.InverseTransformDirection(root.transform.up);
+            RemoveDoor(root);
+            ConfigureDispenserBindings(root);
             var rope = Find("V8_Bell_PullRope");
             var ropeBounds = rope.GetComponent<Renderer>().bounds;
             var grip = names.TryGetValue("BellRopeGrip", out var previous) ? previous : new GameObject("BellRopeGrip").transform;
@@ -96,7 +70,7 @@ namespace PirateSlop.EditorTools
             grip.localScale = new Vector3(1f / Mathf.Abs(scale.x), 1f / Mathf.Abs(scale.y), 1f / Mathf.Abs(scale.z));
             var gripCollider = grip.GetComponent<CapsuleCollider>();
             if (gripCollider == null) gripCollider = grip.gameObject.AddComponent<CapsuleCollider>();
-            gripCollider.direction = 1; gripCollider.radius = .14f; gripCollider.height = Mathf.Max(.5f, ropeBounds.size.y + .12f); gripCollider.isTrigger = true;
+            gripCollider.direction = 1; gripCollider.radius = .22f; gripCollider.height = Mathf.Max(.6f, ropeBounds.size.y + .16f); gripCollider.isTrigger = true;
             var bellTarget = grip.GetComponent<ShipV3InteractionTarget>();
             if (bellTarget == null) bellTarget = grip.gameObject.AddComponent<ShipV3InteractionTarget>();
             bellTarget.Kind = ShipV3TargetKind.Bell; bellTarget.Ship = features;
@@ -130,6 +104,23 @@ namespace PirateSlop.EditorTools
                 camera.SetPositionAndRotation(muzzle.position - muzzle.forward * 1.45f + root.transform.up * .48f, Quaternion.LookRotation(muzzle.forward, root.transform.up));
             }
             typeof(ShipV3VisualRig).GetMethod("UpdateChain", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).Invoke(rig, null);
+            ShipV3GameplayRepair.Configure(root);
+        }
+
+        public static void RemoveDoor(GameObject root)
+        {
+            var features = root.GetComponent<ShipV3Features>();
+            var mount = root.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "V16_Hold_Door_Mount");
+            if (mount != null) mount.gameObject.SetActive(false);
+            foreach (var target in root.GetComponentsInChildren<ShipV3InteractionTarget>(true).Where(t => t.Kind == ShipV3TargetKind.Door))
+                UnityEngine.Object.DestroyImmediate(target);
+            features.DoorHinge = features.DoorGrip = null;
+            features.DoorAssembly = Array.Empty<Transform>();
+        }
+
+        public static void ConfigureDispenserBindings(GameObject root)
+        {
+            ShipV3GameplayRepair.ConfigureDispenser(root);
         }
 
         public static void ConfigureClimbing(GameObject root)
@@ -178,6 +169,7 @@ namespace PirateSlop.EditorTools
             access.localScale = new Vector3(1f / Mathf.Abs(scale.x), 1f / Mathf.Abs(scale.y), 1f / Mathf.Abs(scale.z));
             var ladder = access.gameObject.AddComponent<ShipLadder>();
             ladder.FollowRopePath = true; ladder.RopeClimb = true; ladder.BoardingAccess = boarding;
+            ladder.BothSides = !boarding;
             ladder.RopeStandOff = boarding ? -.45f : .38f;
             ladder.HalfWidth = Mathf.Max(.55f, width); ladder.ExitClearance = boarding ? 1.1f : 1.35f;
             var endpoint = access.InverseTransformPoint(root.transform.TransformPoint(top));
@@ -203,46 +195,6 @@ namespace PirateSlop.EditorTools
             var end = new Bounds(vertices[0], Vector3.zero);
             foreach (var vertex in vertices) end.Encapsulate(vertex);
             return end;
-        }
-
-        static Vector3 WheelAxis(Mesh mesh)
-        {
-            var vertices = mesh.vertices;
-            var center = vertices.Aggregate(Vector3.zero, (sum, v) => sum + v) / vertices.Length;
-            var covariance = new double[3, 3]; var basis = new double[3, 3];
-            for (int i = 0; i < 3; i++) basis[i, i] = 1d;
-            foreach (var vertex in vertices)
-            {
-                var point = vertex - center;
-                for (int i = 0; i < 3; i++) for (int j = 0; j < 3; j++) covariance[i, j] += (double)point[i] * point[j];
-            }
-            for (int iteration = 0; iteration < 24; iteration++)
-            {
-                int p = 0, q = 1;
-                for (int i = 0; i < 3; i++) for (int j = i + 1; j < 3; j++)
-                    if (Math.Abs(covariance[i, j]) > Math.Abs(covariance[p, q])) { p = i; q = j; }
-                if (Math.Abs(covariance[p, q]) < 1e-14d) break;
-                double angle = .5d * Math.Atan2(2d * covariance[p, q], covariance[q, q] - covariance[p, p]);
-                double c = Math.Cos(angle), s = Math.Sin(angle);
-                var previous = (double[,])covariance.Clone();
-                double pp = previous[p, p], qq = previous[q, q], pq = previous[p, q];
-                covariance[p, p] = c * c * pp - 2d * s * c * pq + s * s * qq;
-                covariance[q, q] = s * s * pp + 2d * s * c * pq + c * c * qq;
-                covariance[p, q] = covariance[q, p] = 0d;
-                for (int k = 0; k < 3; k++)
-                {
-                    if (k != p && k != q)
-                    {
-                        covariance[k, p] = covariance[p, k] = c * previous[k, p] - s * previous[k, q];
-                        covariance[k, q] = covariance[q, k] = s * previous[k, p] + c * previous[k, q];
-                    }
-                    double bp = basis[k, p], bq = basis[k, q];
-                    basis[k, p] = c * bp - s * bq; basis[k, q] = s * bp + c * bq;
-                }
-            }
-            int smallest = covariance[0, 0] < covariance[1, 1] ? 0 : 1;
-            if (covariance[2, 2] < covariance[smallest, smallest]) smallest = 2;
-            return new Vector3((float)basis[0, smallest], (float)basis[1, smallest], (float)basis[2, smallest]).normalized;
         }
 
         static Vector3 Vector(JToken value) => new((float)value[0], (float)value[1], (float)value[2]);

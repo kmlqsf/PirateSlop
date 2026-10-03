@@ -25,7 +25,7 @@ namespace PirateSlop.EditorTools
         {
             if (EditorApplication.isPlaying) throw new InvalidOperationException("Exit Play Mode first.");
             var config = AssetDatabase.LoadAssetAtPath<SessionConfig>("Assets/Settings/Networking/SessionConfig.asset");
-            var ship = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Networking/NetworkShip.prefab");
+            var ship = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Resources/Ships/ShipV3Test.prefab");
             var player = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Networking/NetworkPlayer.prefab");
             if (config == null || ship == null || player == null || !File.Exists(MenuPath) || !File.Exists(OceanPath))
                 throw new InvalidOperationException("Multiplayer scenes, config and prefabs must exist.");
@@ -39,12 +39,40 @@ namespace PirateSlop.EditorTools
                 if (session == null) throw new InvalidOperationException("SessionController missing in NetworkMenu.");
                 session.Config = config; session.ShipPrefab = ship.GetComponent<NetworkObject>(); session.PlayerPrefab = player.GetComponent<NetworkObject>();
                 config.GameScene = "NetworkOcean";
+                config.PlayerLocalSpawn = ship.transform.InverseTransformPoint(ship.GetComponent<PirateSlop.Ships.ShipV3Features>().RespawnPoint.position);
+                config.ShipComparisonEnabled = false;
                 EditorUtility.SetDirty(config);
                 EditorSceneManager.MarkSceneDirty(menu); EditorSceneManager.SaveScene(menu);
                 EditorBuildSettings.scenes = new[] { new EditorBuildSettingsScene(MenuPath, true), new EditorBuildSettingsScene(OceanPath, true) };
                 AssetDatabase.SaveAssets();
             }
             finally { EditorSceneManager.RestoreSceneManagerSetup(previous); }
+        }
+        [MenuItem("PirateSlop/Multiplayer/Use Ship V3")]
+        public static void PromoteShipV3()
+        {
+            var scene = SceneManager.GetActiveScene();
+            if (EditorApplication.isPlaying || scene.path != MenuPath || scene.isDirty)
+                throw new InvalidOperationException("Open the saved NetworkMenu scene outside Play Mode first.");
+            var ship = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Resources/Ships/ShipV3Test.prefab");
+            var session = UnityEngine.Object.FindFirstObjectByType<SessionController>();
+            var backdrop = UnityEngine.Object.FindFirstObjectByType<PirateSlop.MenuBackdrop>();
+            if (ship == null || session == null || session.Config == null || backdrop == null)
+                throw new InvalidOperationException("Ship V3, session config or menu backdrop is missing.");
+            var features = ship.GetComponent<PirateSlop.Ships.ShipV3Features>();
+            var networkObject = ship.GetComponent<NetworkObject>();
+            if (features == null || features.RespawnPoint == null || networkObject == null)
+                throw new InvalidOperationException("Ship V3 gameplay bindings are incomplete.");
+            MenuPresentationSetup.ReplaceShip(backdrop, ship);
+            session.ShipPrefab = networkObject;
+            session.Config.PlayerLocalSpawn = ship.transform.InverseTransformPoint(features.RespawnPoint.position);
+            session.Config.ShipComparisonEnabled = false;
+            session.Config.ComparisonShips = Array.Empty<PirateSlop.World.ShipComparison>();
+            EditorUtility.SetDirty(session);
+            EditorUtility.SetDirty(session.Config);
+            AssetDatabase.SaveAssetIfDirty(session.Config);
+            EditorSceneManager.MarkSceneDirty(scene);
+            if (!EditorSceneManager.SaveScene(scene)) throw new InvalidOperationException("NetworkMenu could not be saved.");
         }
         static void Unpack(GameObject go) { if (PrefabUtility.IsPartOfPrefabInstance(go)) PrefabUtility.UnpackPrefabInstance(go, PrefabUnpackMode.Completely, InteractionMode.AutomatedAction); }
         static T LoadOrCreate<T>(string path) where T : ScriptableObject

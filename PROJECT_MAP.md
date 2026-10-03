@@ -12,14 +12,14 @@
 
 ## Полный каталог
 
-Учтено 4240 файлов без `.meta`. Ещё 4535 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
+Учтено 4400 файлов без `.meta`. Ещё 4655 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
 
 | Раздел | Назначение | Файлов |
 | --- | --- | ---: |
 | [.agents](<Docs/ProjectMap/.agents.md>) | Ресурсы раздела; точный состав — в каталоге | 1 |
 | [.cursor](<Docs/ProjectMap/.cursor.md>) | Ресурсы раздела; точный состав — в каталоге | 1 |
 | [.opencode](<Docs/ProjectMap/.opencode.md>) | Ресурсы раздела; точный состав — в каталоге | 4 |
-| [Art](<Docs/ProjectMap/Art.md>) | Исходники арта и Blender | 114 |
+| [Art](<Docs/ProjectMap/Art.md>) | Исходники арта и Blender | 157 |
 | [Assets](<Docs/ProjectMap/Assets.md>) | Ресурсы раздела; точный состав — в каталоге | 3 |
 | [Assets/Animations](<Docs/ProjectMap/Assets-Animations.md>) | Анимации | 51 |
 | [Assets/Audio](<Docs/ProjectMap/Assets-Audio.md>) | Звуковые ресурсы и лицензии | 182 |
@@ -31,26 +31,26 @@
 | [Assets/JMO Assets](<Docs/ProjectMap/Assets-JMO Assets.md>) | Ресурсы раздела; точный состав — в каталоге | 488 |
 | [Assets/Materials](<Docs/ProjectMap/Assets-Materials.md>) | Материалы | 151 |
 | [Assets/Mirza](<Docs/ProjectMap/Assets-Mirza.md>) | Ресурсы раздела; точный состав — в каталоге | 186 |
-| [Assets/Models](<Docs/ProjectMap/Assets-Models.md>) | Модели и связанные ресурсы | 1241 |
+| [Assets/Models](<Docs/ProjectMap/Assets-Models.md>) | Модели и связанные ресурсы | 1338 |
 | [Assets/Plugins](<Docs/ProjectMap/Assets-Plugins.md>) | Плагины | 5 |
 | [Assets/Prefabs](<Docs/ProjectMap/Assets-Prefabs.md>) | Готовые игровые объекты | 132 |
-| [Assets/Resources](<Docs/ProjectMap/Assets-Resources.md>) | Ресурсы, доступные для загрузки по имени | 42 |
+| [Assets/Resources](<Docs/ProjectMap/Assets-Resources.md>) | Ресурсы, доступные для загрузки по имени | 43 |
 | [Assets/Scenes](<Docs/ProjectMap/Assets-Scenes.md>) | Сохранённые сцены | 3 |
-| [Assets/Scripts](<Docs/ProjectMap/Assets-Scripts.md>) | Игровой код и редакторские инструменты | 337 |
+| [Assets/Scripts](<Docs/ProjectMap/Assets-Scripts.md>) | Игровой код и редакторские инструменты | 346 |
 | [Assets/Settings](<Docs/ProjectMap/Assets-Settings.md>) | Настройки игровых систем и рендеринга | 44 |
 | [Assets/Shaders](<Docs/ProjectMap/Assets-Shaders.md>) | Шейдеры | 7 |
 | [Assets/StreamingAssets](<Docs/ProjectMap/Assets-StreamingAssets.md>) | Ресурсы раздела; точный состав — в каталоге | 2 |
 | [Assets/Tests](<Docs/ProjectMap/Assets-Tests.md>) | Исходники проверок | 31 |
 | [Assets/ThirdParty](<Docs/ProjectMap/Assets-ThirdParty.md>) | Сторонние ресурсы | 27 |
 | [Assets/TutorialInfo](<Docs/ProjectMap/Assets-TutorialInfo.md>) | Ресурсы раздела; точный состав — в каталоге | 7 |
-| [Assets/UI](<Docs/ProjectMap/Assets-UI.md>) | Ресурсы интерфейса | 38 |
-| [Assets/_Recovery](<Docs/ProjectMap/Assets-_Recovery.md>) | Сохранённые восстановленные данные | 7 |
+| [Assets/UI](<Docs/ProjectMap/Assets-UI.md>) | Ресурсы интерфейса | 40 |
+| [Assets/_Recovery](<Docs/ProjectMap/Assets-_Recovery.md>) | Сохранённые восстановленные данные | 9 |
 | [Docs](<Docs/ProjectMap/Docs.md>) | Документы и сохранённые отчёты | 36 |
 | [Packages](<Docs/ProjectMap/Packages.md>) | Манифест, lock-файл и встроенные пакеты | 916 |
 | [ProjectSettings](<Docs/ProjectMap/ProjectSettings.md>) | Настройки Unity | 28 |
 | [Root](<Docs/ProjectMap/Root.md>) | Корневые инструкции, планы и служебные файлы | 29 |
 | [ThirdParty](<Docs/ProjectMap/ThirdParty.md>) | Сторонние ресурсы | 2 |
-| [Tools](<Docs/ProjectMap/Tools.md>) | Инструменты разработки и загрузчик контекста | 12 |
+| [Tools](<Docs/ProjectMap/Tools.md>) | Инструменты разработки и загрузчик контекста | 18 |
 
 Не индексируются генерируемые сборки, кэши и локальное состояние: `.git/`, `.idea/`, `.vs/`, `Builds/`, `Library/`, `Logs/`, `Temp/`, `UserSettings/`, `__pycache__/`, `bin/`, `node_modules/`, `obj/`. Зависимости из Unity PackageCache представлены манифестом/lock-файлом; встроенные пакеты из `Packages/` перечислены полностью. Скрытые конфиги вне исключённых папок включены только как пути, их содержимое не копируется.
 
@@ -73,11 +73,13 @@
 
 Windows, URP, FishNet; подключения по IP и Steam имеют отдельные ветки. Пакет file: в manifest — путь зависимости, а не её версия.
 Запуск через NetworkMenu, игровой мир NetworkOcean; корабль и игрок — сетевые префабы. Старые записи о SampleScene исторические.
+Ship V3 теперь единственный игровой корабль: SessionController.ShipPrefab в NetworkMenu указывает на Assets/Resources/Ships/ShipV3Test.prefab. Старый NetworkShip.prefab сохранён как архивный ассет и не создаётся в игре. Историческое имя ShipV3Test сохранено вместе с GUID и регистрацией FishNet.
 
 - [Assets/Scripts/Networking/SessionController.cs](<Assets/Scripts/Networking/SessionController.cs>) — Исходник C#: SessionController.
 - [Assets/Scripts/Networking/SessionSpectator.cs](<Assets/Scripts/Networking/SessionSpectator.cs>) — Исходник C#: SessionController.
 - [Assets/Scripts/Networking/BotSpectatorCamera.cs](<Assets/Scripts/Networking/BotSpectatorCamera.cs>) — Исходник C#: BotSpectatorCamera.
 - [Assets/Scripts/Networking/SessionConfig.cs](<Assets/Scripts/Networking/SessionConfig.cs>) — Исходник C#: SessionConfig.
+- [Assets/Resources/Ships/ShipV3Test.prefab](<Assets/Resources/Ships/ShipV3Test.prefab>) — Префаб Unity.
 - [Assets/Scenes/NetworkMenu.unity](<Assets/Scenes/NetworkMenu.unity>) — Сцена Unity.
 - [Assets/Scenes/NetworkOcean.unity](<Assets/Scenes/NetworkOcean.unity>) — Сцена Unity.
 - [Assets/Prefabs/Networking/NetworkShip.prefab](<Assets/Prefabs/Networking/NetworkShip.prefab>) — Префаб Unity.
@@ -89,9 +91,17 @@ Windows, URP, FishNet; подключения по IP и Steam имеют отд
 
 Ключевые слова: корабль, палуба, helm, штурвал.
 
+Основной корабль игроков, ботов и разработческого спавна — Ship V3. Начальный спавн экипажа и возрождение используют SessionConfig.PlayerLocalSpawn, взятый из ShipV3Features.RespawnPoint. F2 прежде всего переносит на Ship V3 своей команды. Старые модель и префаб сохранены в проекте, но не появляются в игре.
 Корабль перемещается кинематически. Не переносить пассажира или предмет дважды вместе с кораблём; Rigidbody.GetPointVelocity не обязательно описывает это движение.
 Управление и освобождение штурвала согласовывать с сервером; старые альтернативные контроллеры не выбирать только по имени.
-ShipV3BindingRepair восстанавливает evaluated-позы механизмов в базисе родителя. Штурвал вращает всю собственную секцию с единичным масштабом вокруг оси по геометрии колеса. DoorAssembly включает шарнир, отдельную раму и перемычку; захват и серверная проверка используют всю дверную сборку, расстояние удержания считается от DoorGrip. Верёвка рынды имеет капсулу захвата; язычок реагирует на мышь с меньшим сопротивлением joint. Верх кабестана проходит равномерно весь ход 0.45 м по прогрессу якоря. Цепь следует Deck_Chain_Outlet/Starboard_Hawse/Swing_Pivot с шагом 0.085 м; физический якорь закреплён к корню, connectedAnchor следует AnchorTravel.
+ShipV3BindingRepair восстанавливает evaluated-позы механизмов в базисе родителя. У штурвала отдельный HelmWheelRotor: вращаются только колесо и его фрагменты вокруг авторского центра и оси плоскости меша. fixedWheelCenter сохраняет локальную позицию центра; несущая секция и точка захвата не вращаются. DoorAssembly включает шарнир, отдельную раму и перемычку; захват и серверная проверка используют всю дверную сборку, расстояние удержания считается от DoorGrip. Верёвка рынды имеет капсулу захвата; язычок реагирует на мышь с меньшим сопротивлением joint. Верх кабестана проходит равномерно весь ход 0.45 м по прогрессу якоря. Цепь следует Deck_Chain_Outlet/Starboard_Hawse/Swing_Pivot с шагом 0.085 м; физический якорь закреплён к корню, connectedAnchor следует AnchorTravel.
+По запросу пользователя дверь Ship V3 исключена из игрового корабля: V16_Hold_Door_Mount неактивен вместе с полотном и коллайдерами, все Door interaction targets удалены, DoorHinge/DoorGrip очищены, DoorAssembly пуст. Рама проёма сохранена. RemoveDoor применяется к сохранённому префабу, полному импорту и ремонту привязок. Исходник Blender не изменён. Игровой запуск и проверка двумя игроками не выполнялись.
+ShipV3GameplayRepair сохраняет увеличенную до 1.8 м маску выдачи ядер и рычаг из модели механизма мачты со стороны бывшей двери. ShipV3Features.PullDispenser выдаёт одно обычное ядро при полном опускании; сервер возвращает рычаг за 5 секунд, блокируя захват лишь до полного подъёма. Автоматическая выдача по таймеру удалена. Фонарь Hold Starboard отведён от маски; подвесы трюма имеют правильные connectedAnchor и качаются от движения корабля. Повторный импорт и RepairMechanismBindings сохраняют эти настройки.
+У рычага выдачи ядер продольное направление ручки совпадает с DispenserDirection, ось встроена в раму маски со стороны прежнего дверного проёма. ConfigureLanterns переносит также V3_Lamp_Hold_Starboard_Bracket, который в исходном импорте был отдельным объектом вне Mount; кронштейны трюма присоединены к Mount. Joint.anchor фонаря находится у верхней петли модели, connectedAnchor рассчитан из той же точки. ConfigureGeometryBudget исключает Helm.Wheel из объединённой неподвижной геометрии.
+Оптимизация 2026-10-03: неподвижные точные MeshCollider Ship V3 объединены в 49 пространственных групп ShipV3CollisionBatch; активных коллайдеров сохранённого корабля 187 вместо 2490. Исходные отключённые коллайдеры сохранены для связей разрушения. ResolveSection и Distance находят исходную секцию; повреждение перестраивает группу, оставшиеся фрагменты используют прежние ленивые коллайдеры. Секции и render batches обновляют геометрию по VisualChanged; полусекундная проверка остаётся для изменений без события. RepairReveal уведомляет объединённый рендеринг.
+ShipV3RenderBudget оставляет тени только у ближайшего включённого фонаря в радиусе 8 м, общий лимит один на все корабли. PC_RPAsset: дистанция теней 80 м, два каскада, дополнительные тени 1024, medium soft shadows. Для восьми плотных непрозрачных render batches отдельная ShadowsOnly геометрия с шагом 2 см: 978208 -> 540961 треугольник; видимая модель сохраняется. При повреждении proxy получает актуальную геометрию группы, после полного ремонта возвращается облегчённая кэшированная тень.
+Замеры на RTX 3050 8 ГБ / i5-9400F, тестовая карта, один корабль, Unity Editor 1471x714: до оптимизации около 31 FPS, CPU main 32.2 мс, Physics.SyncTransforms 14.0 мс; после объединения коллайдеров среднее 98.3 FPS за 571 кадр, медиана 119.6, P95 12.36 мс; Physics.SyncTransforms 0.48 мс и Simulate 0.22 мс. Отдельные shadow proxies и последние правки ручки/флагов добавлены после замера. Финальный игровой прогон прекращён по просьбе пользователя; стабильные 90–100 FPS, 1080p, билд и два клиента не подтверждены.
+ConfigureDispenser разворачивает поперечный захват горизонтально, сохраняет направление стержня вдоль выхода ядра и удлиняет вынос стержня на 25% через DispenserLeverLength. Область взаимодействия следует за настоящим концом рукоятки. ConfigureFlags поднимает низ полотна на 2.3 м над площадкой гнезда, удлиняет неподвижный флагшток, удаляет с него ShipV3ClothMotion. Полотно имеет закреплённый край и только горизонтальное колыхание, промежуточная фаза ветра сглаживается между сетевыми тиками.
 
 - [Assets/Scripts/ShipController.cs](<Assets/Scripts/ShipController.cs>) — Исходник C#: ShipController.
 - [Assets/Scripts/ShipDeckPassenger.cs](<Assets/Scripts/ShipDeckPassenger.cs>) — Исходник C#: ShipDeckPassenger.
@@ -104,9 +114,16 @@ ShipV3BindingRepair восстанавливает evaluated-позы механ
 - [Assets/Scripts/Ships/ShipV3VisualRig.cs](<Assets/Scripts/Ships/ShipV3VisualRig.cs>) — Исходник C#: ShipV3Pose, ShipV3Motion, ShipV3VisualRig.
 - [Assets/Scripts/Ships/ShipV3Features.cs](<Assets/Scripts/Ships/ShipV3Features.cs>) — Исходник C#: ShipV3TargetKind, ShipV3Lantern, ShipV3DiceSlot, ShipV3PhysicsPose, ShipV3Support, ShipV3Attachment, ShipV3Features.
 - [Assets/Scripts/Ships/ShipV3RenderBatch.cs](<Assets/Scripts/Ships/ShipV3RenderBatch.cs>) — Исходник C#: ShipV3RenderBatch.
+- [Assets/Scripts/Ships/ShipV3CollisionBatch.cs](<Assets/Scripts/Ships/ShipV3CollisionBatch.cs>) — Исходник C#: ShipV3CollisionBatch.
+- [Assets/Scripts/Ships/ShipV3RenderBudget.cs](<Assets/Scripts/Ships/ShipV3RenderBudget.cs>) — Исходник C#: ShipV3RenderBudget.
+- [Assets/Scripts/Editor/ShipV3PerformanceSetup.cs](<Assets/Scripts/Editor/ShipV3PerformanceSetup.cs>) — Исходник C#: ShipV3PerformanceSetup.
+- [Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_0.asset](<Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_0.asset>) — Настройки или данные Unity.
+- [Assets/Models/Ships/ShipV3/RuntimeMeshes/Shadows/ShipV3Batch_12.asset](<Assets/Models/Ships/ShipV3/RuntimeMeshes/Shadows/ShipV3Batch_12.asset>) — Настройки или данные Unity.
 - [Assets/Scripts/Ships/ShipV3ChainInstances.cs](<Assets/Scripts/Ships/ShipV3ChainInstances.cs>) — Исходник C#: ShipV3ChainInstances.
 - [Assets/Resources/Ships/ShipV3Test.prefab](<Assets/Resources/Ships/ShipV3Test.prefab>) — Префаб Unity.
 - [Assets/Scripts/Editor/ShipV3BindingRepair.cs](<Assets/Scripts/Editor/ShipV3BindingRepair.cs>) — Исходник C#: ShipV3BindingRepair.
+- [Assets/Scripts/Editor/ShipV3GameplayRepair.cs](<Assets/Scripts/Editor/ShipV3GameplayRepair.cs>) — Исходник C#: ShipV3GameplayRepair.
+- [Assets/Scripts/Ships/ShipV3PlayerInteraction.cs](<Assets/Scripts/Ships/ShipV3PlayerInteraction.cs>) — Исходник C#: ShipV3PlayerInteraction.
 - [unity.md](<unity.md>) — Документация.
 - [multiplayer-plan.md](<multiplayer-plan.md>) — Документация.
 
@@ -116,6 +133,8 @@ ShipV3BindingRepair восстанавливает evaluated-позы механ
 
 Разделять управление натяжением и визуальную геометрию канатов. Изменение модели не должно менять сетевую занятость.
 Настройка канатов и обновление их арта — отдельные редакторские операции; перед повторным запуском изучить соответствующий setup.
+У четырёх маршрутов Ship V3 к гнёздам включён ShipLadder.BothSides: AdvancedPlayerController выбирает смещение и направление взгляда по стороне захвата. У боковых сеток PinTop вершины смещаются вместе с весом по высоте, сохраняя верхнее крепление; деформация вдоль нормалей, раздувавшая сетку, убрана.
+ShipGripAim расширяет наведение на парусные ручки до 0.38 м от ближайшей точки коллайдера; ShipControlHandle.Active даёт поиск без обязательного попадания лучом в мелкий меш. Видимость, InRange и серверное владение сохранены. Для рынды и маски выдачи ShipV3 применяется тот же допуск, триггеры увеличены до 0.22 м.
 
 - [Assets/Scripts/SailSystem.cs](<Assets/Scripts/SailSystem.cs>) — Исходник C#: SailSystem.
 - [Assets/Scripts/Interaction/DirectShipControls.cs](<Assets/Scripts/Interaction/DirectShipControls.cs>) — Исходник C#: DirectShipControls.
@@ -131,6 +150,7 @@ ShipV3BindingRepair восстанавливает evaluated-позы механ
 - [Assets/Scripts/Customization/SailImageLoader.cs](<Assets/Scripts/Customization/SailImageLoader.cs>) — Исходник C#: SailImageLoader, OpenFileName.
 - [Assets/Shaders/Sail.shader](<Assets/Shaders/Sail.shader>) — Шейдер.
 - [Assets/Scripts/Ships/ShipV3VisualRig.cs](<Assets/Scripts/Ships/ShipV3VisualRig.cs>) — Исходник C#: ShipV3Pose, ShipV3Motion, ShipV3VisualRig.
+- [Assets/Scripts/Interaction/ShipGripAim.cs](<Assets/Scripts/Interaction/ShipGripAim.cs>) — Исходник C#: ShipGripAim.
 - [unity.md](<unity.md>) — Документация.
 - [blender.md](<blender.md>) — Документация.
 
@@ -143,9 +163,12 @@ ShipV3BindingRepair восстанавливает evaluated-позы механ
 ShipSpyglassView показывает прогноз траекторий пушек своего корабля через стационарную и ручную подзорные трубы, обновляет каждые 0.2 с и скрывает линии при выходе.
 CannonSmokeTrail: дым в мировых координатах по пройденным сегментам, затухает за 3.3 с и сохраняется после уничтожения ядра; общий более тёмный серый материал частиц, масштаб 0.3 для огнестрельного оружия. CannonShotDamage: обычные, ледяные и толкающие ядра рикошетят от окружения с потерей скорости; корабли и живые цели сохраняют урон, огненные и мортирные снаряды — взрыв. WorldStructureCollision добавляет недостающие MeshCollider статической геометрии при построении мира; ревизия входит в CatalogHash.
 Новые лутаемые модели из Blender/Лутабельные подключены через LootModelReplacementSetup к прежним игровым префабам. Пушка собрана из CannonBase (исходная «люлька»), CannonMount («Лафет»), CannonBarrel и четырёх CannonWheel. SimpleCannon.TraversePivot поворачивает ложе отдельно от наклона BarrelPivot; при отсутствии TraversePivot сохранена прежняя схема. CannonWheelVisual вращает колёса от перемещения относительно корабля, включая сетевое движение и отдачу. Коллайдер ствола и Breech следуют новым частям. Стрельба, боеприпасы и параметры лафета сохранены.
+Кинематическое качение Cannonball учитывает столкновения с другими свободными ядрами: SphereCast движения, устранение перекрытий через OverlapSphereNonAlloc, импульс с учётом массы и скорости корабля. Опорная палуба ищется без других ядер. Серверный NetworkLooseCannonball передаёт итоговые позы прежним способом; загруженные ядра, удержание и механика выстрела сохранены.
+Парный BoardingHook: BoardingShotFlight плавно разводит два гарпуна, моделирует два попадания и вытягивание верёвок. Хост хранит два BoardingCable с общим Shot и отдельными Hook/Hits; каждому нужны два удара саблей. BoardingWalkSurface создаёт поперечины и поверхность для бега; при потере одного крепления остаётся один проходимый трос. Не создавать повторное крепление от устаревшего выстрела после следующего выстрела этой пушки. Протокол 111; игровая и сетевая проверка остаются пользователю.
+NetworkCannon отправляет изменения placements каждые 0.05 с; удалённый клиент сглаживает положение, вращение лафета, наклон и поворот механизма каждый кадр между полученными состояниями. Собственное управление и серверная физика сохраняются. Подаваемое ядро также получает промежуточные положения; NetworkLooseCannonball SyncVars настроены на 0.05 с. Буферы очищаются при OnStopClient. Онлайн-проверка двумя клиентами не выполнялась.
 
 - [Assets/Scripts/Cannons/SimpleCannon.cs](<Assets/Scripts/Cannons/SimpleCannon.cs>) — Исходник C#: SimpleCannon.
-- [Assets/Scripts/Cannons/NetworkCannon.cs](<Assets/Scripts/Cannons/NetworkCannon.cs>) — Исходник C#: CannonPlacement, NetworkCannon.
+- [Assets/Scripts/Cannons/NetworkCannon.cs](<Assets/Scripts/Cannons/NetworkCannon.cs>) — Исходник C#: CannonPlacement, NetworkCannon, RemoteCarriagePose.
 - [Assets/Scripts/Cannons/Cannonball.cs](<Assets/Scripts/Cannons/Cannonball.cs>) — Исходник C#: Cannonball.
 - [Assets/Scripts/Cannons/CannonShotDamage.cs](<Assets/Scripts/Cannons/CannonShotDamage.cs>) — Исходник C#: CannonShotDamage.
 - [Assets/Scripts/Cannons/CannonSmokeTrail.cs](<Assets/Scripts/Cannons/CannonSmokeTrail.cs>) — Исходник C#: CannonSmokeTrail.
@@ -156,6 +179,10 @@ CannonSmokeTrail: дым в мировых координатах по прой�
 - [Assets/Scripts/Editor/CannonInventorySetup.cs](<Assets/Scripts/Editor/CannonInventorySetup.cs>) — Исходник C#: CannonInventorySetup.
 - [Assets/Scripts/Cannons/CannonWheelVisual.cs](<Assets/Scripts/Cannons/CannonWheelVisual.cs>) — Исходник C#: CannonWheelVisual.
 - [Assets/Scripts/Editor/LootModelReplacementSetup.cs](<Assets/Scripts/Editor/LootModelReplacementSetup.cs>) — Исходник C#: LootModelReplacementSetup.
+- [Assets/Scripts/Cannons/BoardingShotFlight.cs](<Assets/Scripts/Cannons/BoardingShotFlight.cs>) — Исходник C#: BoardingShotFlight.
+- [Assets/Scripts/Cannons/BoardingWalkSurface.cs](<Assets/Scripts/Cannons/BoardingWalkSurface.cs>) — Исходник C#: BoardingWalkSurface.
+- [Assets/Scripts/Cannons/BoardingHookTarget.cs](<Assets/Scripts/Cannons/BoardingHookTarget.cs>) — Исходник C#: BoardingHookTarget.
+- [Assets/Scripts/Networking/NetworkBoarding.cs](<Assets/Scripts/Networking/NetworkBoarding.cs>) — Исходник C#: BoardingCable, NetworkCannon.
 - [combat-balance.md](<combat-balance.md>) — Документация.
 - [unity.md](<unity.md>) — Документация.
 
@@ -169,6 +196,7 @@ NetworkPlayer использует Tripo/Mixamo Walking.fbx из NewPirate. Ли
 AdvancedPlayerController: новое нажатие пробела у поверхности воды (глубина ног <= 1.4 м) запускает прыжок с высотой jumpHeight над водой; при подъёме персонаж остаётся в воздушной симуляции. В глубине удержание пробела по-прежнему поднимает пловца. Используются существующие сетевые Swimming/VerticalVelocity без новых полей состояния.
 F2 при наличии сетевого ShipV3Features переносит живого локального игрока на RespawnPoint нового корабля в текущей сцене. ServerRpc на NetworkPlayer и ObserversRpc сбрасывают состояние перемещения через Teleport, освобождают механизмы и прикрепляют пассажира к новому кораблю; домашний корабль не меняется.
 Новый корабль использует FollowRopePath у ShipLadder: четыре боковых маршрута к гнёздам и две посадочные сетки, от настоящих нижних вершин мешей до выхода над ограждением. TopSideOffset и TopLean учитывают наклон в двух направлениях; RopeStandOff оставляет пловца снаружи сетки. Для этих маршрутов не создаётся сплошная вертикальная стенка. AdvancedPlayerController использует те же маршруты в существующей сетевой симуляции; прежние лестницы основного корабля сохраняют настройки по умолчанию. После правки проверены только компиляция и edit-mode привязки, игровой онлайн-прогон не выполнялся.
+ShipDeckPassenger учитывает BoardingWalkSurface: перенос по текущей кривой троса между двумя кораблями, обычное управление движением сохранено. При превращении лестницы в одиночную верёвку игрок сохраняет мировое положение; потерявший опору падает. Положение продолжает передаваться существующим состоянием NetworkPlayer относительно корабля пушки.
 
 - [Assets/Scripts/AdvancedPlayerController.cs](<Assets/Scripts/AdvancedPlayerController.cs>) — Исходник C#: AdvancedPlayerController.
 - [Assets/Scripts/AdvancedPlayerController.Spectator.cs](<Assets/Scripts/AdvancedPlayerController.Spectator.cs>) — Исходник C#: AdvancedPlayerController.
@@ -185,6 +213,7 @@ F2 при наличии сетевого ShipV3Features переносит жи
 - [Art/Blender/Characters/NewPirate/README.md](<Art/Blender/Characters/NewPirate/README.md>) — Документация.
 - [Assets/Scripts/Networking/NetworkPlayer.TestShip.cs](<Assets/Scripts/Networking/NetworkPlayer.TestShip.cs>) — Исходник C#: NetworkPlayer.
 - [Assets/Scripts/Ships/ShipV3PlayerInteraction.cs](<Assets/Scripts/Ships/ShipV3PlayerInteraction.cs>) — Исходник C#: ShipV3PlayerInteraction.
+- [Assets/Scripts/Cannons/BoardingWalkSurface.cs](<Assets/Scripts/Cannons/BoardingWalkSurface.cs>) — Исходник C#: BoardingWalkSurface.
 - [animation-review.md](<animation-review.md>) — Документация.
 - [unity.md](<unity.md>) — Документация.
 
@@ -224,6 +253,10 @@ VortexBottle=23 — бутылка с вращающимся вихрем. ЛК�
 FogBottle=24 — бутылка тумана, бросок по ЛКМ через NetworkWeapon.FogBottle и NetworkEquipment. NetworkFogBottle считает попадание на сервере, включая геометрию и первую точку пересечения CPU-поверхности воды. При разбитии создаёт отдельный сетевой FogCloud в мировой точке удара. NetworkFogCloud живёт 15 с, синхронизирует возраст каждые 0.2 с и даёт клиентам плавное время, включая позднее появление. FogCloudVisual/BottleFog.shader рисуют объём эллипсоида радиусом 50 м и высотой 44 м, цвет .23/.28/.29, плотность .18; raymarch с depth clipping работает снаружи и изнутри, независимо от обычного тумана, читов и подзорной трубы. Облако разворачивается за .55 с и исчезает в последние 1.1 с. FogBottleVisual использует тот же эффект внутри стеклянной бутылки с отдельными локальными осями, плотностью 45 и очередью 3000 перед стеклом. FogBottleSetup сохраняет модель/pickup/cloud, иконку, каталог, сетевой реестр, тестовую палубу; ChestLoot.json имеет отдельную настраиваемую строку без изменения прежних настроек. ProtocolVersion=108.
 Огненный череп — пятый морской ивент. NetworkSkullEvent вращает платформу и череп 8°/с; сервер принимает первое фронтальное попадание ядром в увеличенный объём рта 25.2×13.68×20 м, включая зубы и края, через SkullMouthTarget или коллайдер черепа, гасит огонь и фиксирует угол. Через 3 с создаёт наш сундук из ChestLoot.json и запускает дугой 2.5 с на свободную поверхность палубы корабля стрелявшего. TryFindRewardDeckPoint использует коллайдеры палубы, включая секции разрушения; траектория следует за локальной точкой корабля через существующие support/anchor, после посадки сундук остаётся закреплён на корабле. При отсутствии пригодной палубы или потере корабля награда падает в воду. Платформа остаётся потушенной. SkullFireVfx: девять ParticleSystem, три источника света, URP SkullFire; затухание .55 с, late join восстанавливает состояние. SeaLootSpawner, F8 и подсказка подзорной трубы поддерживают ивент. SkullEventSetup сохраняет префаб, каталог и FishNet registry. ProtocolVersion=109; игровая и сетевая приёмка выполняется пользователем. После правки размеры: череп высотой 54 м, платформа шириной 96 м; текущий масштаб ивента ×2 (последний размер уменьшен в 1.5 раза) через RotatingRoot префаба, исходная модель FBX/BLEND сохраняет авторский масштаб; посадка вычислена по контакту нижней поверхности черепа с местной поверхностью платформы. Позиция ивента фиксирована как у острова, Rigidbody FreezeAll. Сокеты, область рта и пространственные параметры огня увеличены ×3; радиус платформы 50 м учитывается при спауне и выбросе сундука. ParticleSystemScalingMode.Hierarchy применяет масштаб иерархии один раз; дальность света и SoftDistance увеличены отдельно. Сундук остаётся обычного размера.
 Заменены модели разобранной пушки, обычного/огненного/ледяного/толкающего ядра, рома, крюка-кошки и святой гранаты: Assets/Models/Loot/Replacement. Обновлены лут, оборудование в руках, снаряды, запас основного корабля и восемь иконок; прежние GUID, сетевые предметы и механики сохранены. ShipV3Test имеет RumShelf на четырёх авторских полках: 12 бутылок общего NetworkShip.RumCount. ExperimentalShipEquipment.SpawnPoints размещает восемь типов на палубе нового корабля; Items задаёт сетевой тип особых ядер до Spawn. Повторный полный импорт ShipV3 сохраняет это размещение через ConfigureImportedShip. Игровая и сетевая приёмка остаются пользователю.
+На новом ShipV3Test обычное ядро исключено из ExperimentalShipEquipment: осталось семь палубных предметов. Обычные ядра выдаёт ShipV3Features.Dispense из маски в трюме, до шести свободных экземпляров с прежним интервалом 4 с. ConfigureDispenserBindings привязывает рот к V15_Cannonball_Spawn со смещением внутрь и зазором по радиусу ядра; MeshCollider модели сохраняет физическую поверхность языка. Основной корабль и его источник ядер не изменены.
+BoardingEquipmentSetup заменяет три модели из Blender/Лутабельные/New: абордажный снаряд, Wine и Spyglass. Прежние игровые префабы, GUID, механики и ссылки инвентаря сохранены. BoardingHookVisual содержит одиночный гарпун; BoardingHarpoonPairVisual — две копии с верёвкой, индекс 5 в Cannonball.AmmoModels. Обновлены три предметные иконки и запасы обоих кораблей. Модели и PBR-материалы находятся в Assets/Models/Loot/Replacement.
+На ShipV3Test к семи прежним предметам добавлены BoardingHook, Wine и Spyglass: всего десять маркеров на настоящей палубе. ExperimentalShipEquipment сохраняет авторитетный серверный спавн и цикл повторного появления; обычные ядра по-прежнему выдаёт маска. BoardingHookAmmo и CannonHands показывают парный снаряд ещё до загрузки в пушку.
+FogBottle и VortexBottle используют пустую Whisky Bottle: дым ограничен внутренним объёмом, вихрь состоит из мягких вращающихся лент. BottleFog сохраняет прежний большой игровой туман отдельной веткой InsideBottle; BottleVortex — шейдер внутреннего вихря. ExperimentalShipEquipment содержит две дополнительные точки на центральной палубе ShipV3Test: (-1.1,4.11,0.35) и (1.1,4.11,0.35). После подбора бутылка восстанавливается на следующем серверном кадре в своей точке; остальные предметы сохраняют интервал 20 секунд.
 
 - [Assets/Scripts/Player/PlayerInventory.cs](<Assets/Scripts/Player/PlayerInventory.cs>) — Исходник C#: PlayerInventory.
 - [Assets/Scripts/Player/PlayerInventory.RaftLockpick.cs](<Assets/Scripts/Player/PlayerInventory.RaftLockpick.cs>) — Исходник C#: PlayerInventory.
@@ -284,6 +317,15 @@ FogBottle=24 — бутылка тумана, бросок по ЛКМ чере�
 - [Assets/Scripts/Networking/ExperimentalShipEquipment.cs](<Assets/Scripts/Networking/ExperimentalShipEquipment.cs>) — Исходник C#: ExperimentalShipEquipment.
 - [Assets/Scripts/Loot/RumShelf.cs](<Assets/Scripts/Loot/RumShelf.cs>) — Исходник C#: RumShelf.
 - [Art/Blender/LootReplacement/LootReplacement.blend](<Art/Blender/LootReplacement/LootReplacement.blend>) — Редактируемая сцена Blender.
+- [Assets/Scripts/Editor/BoardingEquipmentSetup.cs](<Assets/Scripts/Editor/BoardingEquipmentSetup.cs>) — Исходник C#: BoardingEquipmentSetup.
+- [Assets/Models/Loot/Replacement/BoardingHarpoon/BoardingHarpoonVisual.prefab](<Assets/Models/Loot/Replacement/BoardingHarpoon/BoardingHarpoonVisual.prefab>) — Префаб Unity.
+- [Assets/Models/Loot/Replacement/BoardingHarpoon/BoardingHarpoonPairVisual.prefab](<Assets/Models/Loot/Replacement/BoardingHarpoon/BoardingHarpoonPairVisual.prefab>) — Префаб Unity.
+- [Assets/Models/Loot/Replacement/WineBottle/WineBottleVisual.prefab](<Assets/Models/Loot/Replacement/WineBottle/WineBottleVisual.prefab>) — Префаб Unity.
+- [Assets/Models/Loot/Replacement/SpyglassTube/SpyglassTubeVisual.prefab](<Assets/Models/Loot/Replacement/SpyglassTube/SpyglassTubeVisual.prefab>) — Префаб Unity.
+- [Assets/Resources/BoardingHookAmmo.prefab](<Assets/Resources/BoardingHookAmmo.prefab>) — Префаб Unity.
+- [Assets/Scripts/Editor/BottleFishReplacementSetup.cs](<Assets/Scripts/Editor/BottleFishReplacementSetup.cs>) — Исходник C#: BottleFishReplacementSetup.
+- [Assets/Resources/BottleVortex.shader](<Assets/Resources/BottleVortex.shader>) — Шейдер.
+- [Assets/Resources/Ships/ShipV3Test.prefab](<Assets/Resources/Ships/ShipV3Test.prefab>) — Префаб Unity.
 - [rum-loot.md](<rum-loot.md>) — Документация.
 - [combat-balance.md](<combat-balance.md>) — Документация.
 - [Art/Blender/LootReplacement/README.md](<Art/Blender/LootReplacement/README.md>) — Документация.
@@ -294,8 +336,10 @@ FogBottle=24 — бутылка тумана, бросок по ЛКМ чере�
 
 Текущая точка входа ремонта — NetworkHullRepair, а не старый путь Scripts/Repair/ShipRepair.cs.
 Урон, ремонт фрагментов и затопление связаны с секциями корабля. Старое описание накладных досок не считать актуальной архитектурой.
-ShipV3Destruction использует подготовленный граф опор V18 и собственный профиль OrdinaryCannonballsOnly. Разрушение нового тестового корабля работает от обычных ядер, ремонт использует существующую систему. Профиль основного корабля не менялся.
+ShipV3Destruction использует подготовленный граф опор V18 и собственный профиль OrdinaryCannonballsOnly. Разрушение игрового Ship V3 работает от обычных ядер, ремонт использует существующую систему. Профиль архивного старого корабля не менялся.
 LazyFragmentColliders включён только для секций Ship V3: из префаба исключены 6275 MeshCollider скрытых фрагментов. При разрушении точный MeshCollider создаётся из исходного MeshFilter.sharedMesh до включения только оставшихся видимых фрагментов; ссылка добавляется в DamageColliders. После ремонта созданные коллайдеры сохраняются на неактивных фрагментах. В сохранённом префабе 2383 ленивые секции, MeshCollider стало 2386 вместо 8661, первоначальных коллайдеров фрагментов нет. В edit-mode preview повреждение одной секции из трёх фрагментов с маской 1 создало только два коллайдера; ремонт выключил их, другие секции остались ленивыми. Флаг основного корабля false; его прежняя ветка сохранена.
+DamageAdjacentFragments включён только в ShipV3Destruction. Обычный прямой удар дополнительно снимает один ближайший сохранившийся фрагмент каждой соседней секции по графу Structure.Neighbours. Маски передаются существующими событиями и снимками разрушения; ремонт сохраняет прежний путь. Профиль архивного старого корабля не изменён.
+ShipV3CollisionBatch объединяет только неподвижные intact-коллайдеры. CannonShotDamage, ShipDestruction.Resolve и RewardDeckPriority учитывают такие группы; исходные секции, маски соседних фрагментов и механизм ремонта сохранены. ShipDamageSection.VisualChanged уведомляет обе объединённые системы после применения состояния коллайдеров.
 
 - [Assets/Scripts/Networking/NetworkHullRepair.cs](<Assets/Scripts/Networking/NetworkHullRepair.cs>) — Исходник C#: NetworkHullRepair.
 - [Assets/Scripts/ShipDestruction/ShipDestruction.cs](<Assets/Scripts/ShipDestruction/ShipDestruction.cs>) — Исходник C#: ShipSectionSnapshot, ShipDestructionEvent, ShipDestruction.
@@ -339,6 +383,7 @@ CPU-поверхность воды используется игровой ло
 
 FishNet: серверный авторитет. Изменения формата сообщений согласовывать с ProtocolVersion; не повышать его автоматически без изменения протокола.
 IP/Tugboat и Steam — отдельные способы подключения. localhost не подтверждает работу через интернет; позднее подключение и отключение требуют отдельной приёмки.
+MultiplayerSceneSetup.Configure и PromoteShipV3 привязывают ShipV3Test к общему SessionController.ShipPrefab. Отдельный вызов ShipV3TestSpawner из ServerState удалён. ShipComparisonEnabled выключен, ComparisonShips очищен; старый корабль сохранён в проекте и регистрации FishNet без изменения существующих индексов.
 
 - [Assets/Scripts/Networking/SessionController.cs](<Assets/Scripts/Networking/SessionController.cs>) — Исходник C#: SessionController.
 - [Assets/Scripts/Networking/SessionConfig.cs](<Assets/Scripts/Networking/SessionConfig.cs>) — Исходник C#: SessionConfig.
@@ -348,6 +393,7 @@ IP/Tugboat и Steam — отдельные способы подключения
 - [Assets/Scripts/Networking/NetworkShip.cs](<Assets/Scripts/Networking/NetworkShip.cs>) — Исходник C#: NetworkShip.
 - [Assets/Scripts/Networking/SimulationState.cs](<Assets/Scripts/Networking/SimulationState.cs>) — Исходник C#: PlayerCommand, PlayerState, ShipState.
 - [Assets/Settings/Networking/SessionConfig.asset](<Assets/Settings/Networking/SessionConfig.asset>) — Настройки или данные Unity.
+- [Assets/Scripts/Editor/MultiplayerSceneSetup.cs](<Assets/Scripts/Editor/MultiplayerSceneSetup.cs>) — Исходник C#: MultiplayerSceneSetup.
 - [multiplayer-plan.md](<multiplayer-plan.md>) — Документация.
 - [unity.md](<unity.md>) — Документация.
 
@@ -429,6 +475,9 @@ ShipV3RenderBatch сокращает число объектов отрисов�
 ShipV3ChainInstances рисует 145 звеньев цепи одним instanced-вызовом с резервной отрисовкой исходными MeshRenderer; существующее движение звеньев сохранено. ShipV3VisualRig повторно использует список точек цепи. У шести фонарей сохранены интенсивность и мягкие тени; локальный бюджет теней Low/256. ShipV3ImportSetup.OptimizeRuntimeGeometry повторно применяет оптимизацию геометрии и коллайдеров к новому тестовому префабу. Native inspection сохранённого префаба показывает 678 первоначально активных рендереров вместо 3326; при instancing цепи эффективное число равно 534. Это показатели структуры ассета, без замера кадра в игре.
 ShipV3ImportSetup.RepairMechanismBindings обновляет материалы и механизмы сохранённого ShipV3Test без пересоздания основного корабля. ExportFromOpenBlender вызывает update_tag, считывает evaluated-позы и parent_basis, экспортирует 17 положений парусного механизма и 25 положений якорного. Материалы реализованной Geometry Nodes геометрии собираются дополнительно; Base Color выбирается из Albedo/BaseColor, Metallic и Roughness упаковываются в Metal/Smoothness для URP.
 Итоговый Base Color мачт V5/V6 переносится через EMIT-запекание графа V19_Preserve_Original_Metal на временной UV-плоскости: сохраняются исходный цвет обручей и тон дерева, вместо выбора неиспользуемого Game_Albedo. Запечённые FinalBaseColor PNG импортируются как sRGB 2048, CompressedHQ, streaming mipmaps, Read/Write false; рабочая сцена Blender восстанавливается.
+По запросу пользователя дверь Ship V3 исключена из игрового корабля: V16_Hold_Door_Mount неактивен вместе с полотном и коллайдерами, все Door interaction targets удалены, DoorHinge/DoorGrip очищены, DoorAssembly пуст. Рама проёма сохранена. RemoveDoor применяется к сохранённому префабу, полному импорту и ремонту привязок. Исходник Blender не изменён. Игровой запуск и проверка двумя игроками не выполнялись.
+Три дополнительные модели из New импортированы через открытый Blender 5.2.2 LTS. Отдельный исходник BoardingEquipment.blend с упакованными материалами; исходный файл корабля и LootReplacement.blend не перезаписаны. Детализация 1890/1996/1924 треугольника сохранена, игровые размеры и направления нормализованы в Unity по настоящим вершинам. Подготовка и повторный импорт описаны в BoardingEquipment/README.md.
+Whisky Bottle с бесплатной BlenderKit Royalty Free загружена в Art/Blender/Loot/WhiskyBottle; жидкость удалена в открытом Blender, стекло и пробка разделены, экспорт WhiskyBottleEmpty.fbx высотой 0.56 м. Источник и лицензия в Source.md. BottleFishReplacementSetup меняет только визуальные префабы и материалы, сохраняя игровые GUID и сетевые компоненты.
 
 - [Assets/Scripts/Editor/GltfPropImporter.cs](<Assets/Scripts/Editor/GltfPropImporter.cs>) — Исходник C#: GltfPropImporter.
 - [Assets/Scripts/Editor/PirateCharacterImport.cs](<Assets/Scripts/Editor/PirateCharacterImport.cs>) — Исходник C#: PirateCharacterImport.
@@ -442,6 +491,54 @@ ShipV3ImportSetup.RepairMechanismBindings обновляет материалы 
 - [Art/Blender/Ships/ShipV3/ShipV3_Fitted.blend](<Art/Blender/Ships/ShipV3/ShipV3_Fitted.blend>) — Редактируемая сцена Blender.
 - [Assets/Scripts/Editor/ShipV3BindingRepair.cs](<Assets/Scripts/Editor/ShipV3BindingRepair.cs>) — Исходник C#: ShipV3BindingRepair.
 - [Tools/ShipV3/BindingRepairStatus.txt](<Tools/ShipV3/BindingRepairStatus.txt>) — Текстовые данные.
+- [Art/Blender/LootReplacement/BoardingEquipment/BoardingEquipment.blend](<Art/Blender/LootReplacement/BoardingEquipment/BoardingEquipment.blend>) — Редактируемая сцена Blender.
+- [Art/Blender/LootReplacement/BoardingEquipment/README.md](<Art/Blender/LootReplacement/BoardingEquipment/README.md>) — Документация.
+- [Tools/Art/prepare_boarding_equipment.py](<Tools/Art/prepare_boarding_equipment.py>) — Инструмент Python.
+- [Tools/Art/import_boarding_equipment.py](<Tools/Art/import_boarding_equipment.py>) — Инструмент Python.
+- [Art/Blender/Loot/WhiskyBottle/Source.md](<Art/Blender/Loot/WhiskyBottle/Source.md>) — Документация.
+- [Art/Blender/Loot/WhiskyBottle/WhiskyBottle_Empty.blend](<Art/Blender/Loot/WhiskyBottle/WhiskyBottle_Empty.blend>) — Редактируемая сцена Blender.
+- [Art/Blender/Loot/WhiskyBottle/WhiskyBottle_Source.blend](<Art/Blender/Loot/WhiskyBottle/WhiskyBottle_Source.blend>) — Редактируемая сцена Blender.
+- [Art/Blender/Loot/FishReplacement/Fish/tripo_convert_ef7518a4-3de5-4390-add5-a892bae7777b.fbx](<Art/Blender/Loot/FishReplacement/Fish/tripo_convert_ef7518a4-3de5-4390-add5-a892bae7777b.fbx>) — Модель / анимации FBX.
+- [Art/Blender/Loot/FishReplacement/Pufferfish/tripo_convert_c2eec7cc-e554-47b0-b8f9-b6cc0ed1121a.fbx](<Art/Blender/Loot/FishReplacement/Pufferfish/tripo_convert_c2eec7cc-e554-47b0-b8f9-b6cc0ed1121a.fbx>) — Модель / анимации FBX.
+- [Art/Blender/Loot/FishReplacement/Swordfish/tripo_convert_e200e96c-6c0f-4ed8-af3c-3f667a1f367e.fbx](<Art/Blender/Loot/FishReplacement/Swordfish/tripo_convert_e200e96c-6c0f-4ed8-af3c-3f667a1f367e.fbx>) — Модель / анимации FBX.
+- [Art/Blender/Loot/FishReplacement/Fish/tripo_convert_ef7518a4-3de5-4390-add5-a892bae7777b.fbm/Обычная_рыба_basecolor.JPEG](<Art/Blender/Loot/FishReplacement/Fish/tripo_convert_ef7518a4-3de5-4390-add5-a892bae7777b.fbm/Обычная_рыба_basecolor.JPEG>) — Изображение / текстура.
+- [Art/Blender/Loot/FishReplacement/Fish/tripo_convert_ef7518a4-3de5-4390-add5-a892bae7777b.fbm/Обычная_рыба_metallic.JPEG](<Art/Blender/Loot/FishReplacement/Fish/tripo_convert_ef7518a4-3de5-4390-add5-a892bae7777b.fbm/Обычная_рыба_metallic.JPEG>) — Изображение / текстура.
+- [Art/Blender/Loot/FishReplacement/Fish/tripo_convert_ef7518a4-3de5-4390-add5-a892bae7777b.fbm/Обычная_рыба_normal.PNG](<Art/Blender/Loot/FishReplacement/Fish/tripo_convert_ef7518a4-3de5-4390-add5-a892bae7777b.fbm/Обычная_рыба_normal.PNG>) — Изображение / текстура.
+- [Art/Blender/Loot/FishReplacement/Fish/tripo_convert_ef7518a4-3de5-4390-add5-a892bae7777b.fbm/Обычная_рыба_rm.JPEG](<Art/Blender/Loot/FishReplacement/Fish/tripo_convert_ef7518a4-3de5-4390-add5-a892bae7777b.fbm/Обычная_рыба_rm.JPEG>) — Изображение / текстура.
+- [Art/Blender/Loot/FishReplacement/Fish/tripo_convert_ef7518a4-3de5-4390-add5-a892bae7777b.fbm/Обычная_рыба_roughness.JPEG](<Art/Blender/Loot/FishReplacement/Fish/tripo_convert_ef7518a4-3de5-4390-add5-a892bae7777b.fbm/Обычная_рыба_roughness.JPEG>) — Изображение / текстура.
+- [Art/Blender/Loot/FishReplacement/Pufferfish/tripo_convert_c2eec7cc-e554-47b0-b8f9-b6cc0ed1121a.fbm/рыба-фугу_basecolor.JPEG](<Art/Blender/Loot/FishReplacement/Pufferfish/tripo_convert_c2eec7cc-e554-47b0-b8f9-b6cc0ed1121a.fbm/рыба-фугу_basecolor.JPEG>) — Изображение / текстура.
+- [Art/Blender/Loot/FishReplacement/Pufferfish/tripo_convert_c2eec7cc-e554-47b0-b8f9-b6cc0ed1121a.fbm/рыба-фугу_metallic.JPEG](<Art/Blender/Loot/FishReplacement/Pufferfish/tripo_convert_c2eec7cc-e554-47b0-b8f9-b6cc0ed1121a.fbm/рыба-фугу_metallic.JPEG>) — Изображение / текстура.
+- [Art/Blender/Loot/FishReplacement/Pufferfish/tripo_convert_c2eec7cc-e554-47b0-b8f9-b6cc0ed1121a.fbm/рыба-фугу_normal.PNG](<Art/Blender/Loot/FishReplacement/Pufferfish/tripo_convert_c2eec7cc-e554-47b0-b8f9-b6cc0ed1121a.fbm/рыба-фугу_normal.PNG>) — Изображение / текстура.
+- [Art/Blender/Loot/FishReplacement/Pufferfish/tripo_convert_c2eec7cc-e554-47b0-b8f9-b6cc0ed1121a.fbm/рыба-фугу_rm.JPEG](<Art/Blender/Loot/FishReplacement/Pufferfish/tripo_convert_c2eec7cc-e554-47b0-b8f9-b6cc0ed1121a.fbm/рыба-фугу_rm.JPEG>) — Изображение / текстура.
+- [Art/Blender/Loot/FishReplacement/Pufferfish/tripo_convert_c2eec7cc-e554-47b0-b8f9-b6cc0ed1121a.fbm/рыба-фугу_roughness.JPEG](<Art/Blender/Loot/FishReplacement/Pufferfish/tripo_convert_c2eec7cc-e554-47b0-b8f9-b6cc0ed1121a.fbm/рыба-фугу_roughness.JPEG>) — Изображение / текстура.
+- [Art/Blender/Loot/FishReplacement/Swordfish/tripo_convert_e200e96c-6c0f-4ed8-af3c-3f667a1f367e.fbm/Рыба-меч_basecolor.JPEG](<Art/Blender/Loot/FishReplacement/Swordfish/tripo_convert_e200e96c-6c0f-4ed8-af3c-3f667a1f367e.fbm/Рыба-меч_basecolor.JPEG>) — Изображение / текстура.
+- [Art/Blender/Loot/FishReplacement/Swordfish/tripo_convert_e200e96c-6c0f-4ed8-af3c-3f667a1f367e.fbm/Рыба-меч_metallic.JPEG](<Art/Blender/Loot/FishReplacement/Swordfish/tripo_convert_e200e96c-6c0f-4ed8-af3c-3f667a1f367e.fbm/Рыба-меч_metallic.JPEG>) — Изображение / текстура.
+- [Art/Blender/Loot/FishReplacement/Swordfish/tripo_convert_e200e96c-6c0f-4ed8-af3c-3f667a1f367e.fbm/Рыба-меч_normal.PNG](<Art/Blender/Loot/FishReplacement/Swordfish/tripo_convert_e200e96c-6c0f-4ed8-af3c-3f667a1f367e.fbm/Рыба-меч_normal.PNG>) — Изображение / текстура.
+- [Art/Blender/Loot/FishReplacement/Swordfish/tripo_convert_e200e96c-6c0f-4ed8-af3c-3f667a1f367e.fbm/Рыба-меч_rm.JPEG](<Art/Blender/Loot/FishReplacement/Swordfish/tripo_convert_e200e96c-6c0f-4ed8-af3c-3f667a1f367e.fbm/Рыба-меч_rm.JPEG>) — Изображение / текстура.
+- [Art/Blender/Loot/FishReplacement/Swordfish/tripo_convert_e200e96c-6c0f-4ed8-af3c-3f667a1f367e.fbm/Рыба-меч_roughness.JPEG](<Art/Blender/Loot/FishReplacement/Swordfish/tripo_convert_e200e96c-6c0f-4ed8-af3c-3f667a1f367e.fbm/Рыба-меч_roughness.JPEG>) — Изображение / текстура.
+- [Assets/Models/Loot/Replacement/WhiskyBottle/CorkBaseColor.png](<Assets/Models/Loot/Replacement/WhiskyBottle/CorkBaseColor.png>) — Изображение / текстура.
+- [Assets/Models/Loot/Replacement/WhiskyBottle/CorkNormal.png](<Assets/Models/Loot/Replacement/WhiskyBottle/CorkNormal.png>) — Изображение / текстура.
+- [Assets/Models/Loot/Replacement/WhiskyBottle/WhiskyBottleEmpty.fbx](<Assets/Models/Loot/Replacement/WhiskyBottle/WhiskyBottleEmpty.fbx>) — Модель / анимации FBX.
+- [Assets/Models/Loot/Replacement/WhiskyBottle/WhiskyCork.mat](<Assets/Models/Loot/Replacement/WhiskyBottle/WhiskyCork.mat>) — Материал Unity.
+- [Assets/Models/Loot/Replacement/WhiskyBottle/WhiskyGlass.mat](<Assets/Models/Loot/Replacement/WhiskyBottle/WhiskyGlass.mat>) — Материал Unity.
+- [Assets/Models/Loot/Replacement/WhiskyBottle/WhiskySwirl.mat](<Assets/Models/Loot/Replacement/WhiskyBottle/WhiskySwirl.mat>) — Материал Unity.
+- [Assets/Models/Loot/Replacement/Fish/Fish.fbx](<Assets/Models/Loot/Replacement/Fish/Fish.fbx>) — Модель / анимации FBX.
+- [Assets/Models/Loot/Replacement/Fish/Fish.mat](<Assets/Models/Loot/Replacement/Fish/Fish.mat>) — Материал Unity.
+- [Assets/Models/Loot/Replacement/Fish/FishMetalSmooth.png](<Assets/Models/Loot/Replacement/Fish/FishMetalSmooth.png>) — Изображение / текстура.
+- [Assets/Models/Loot/Replacement/Fish/Fish_basecolor.jpeg](<Assets/Models/Loot/Replacement/Fish/Fish_basecolor.jpeg>) — Изображение / текстура.
+- [Assets/Models/Loot/Replacement/Fish/Fish_normal.png](<Assets/Models/Loot/Replacement/Fish/Fish_normal.png>) — Изображение / текстура.
+- [Assets/Models/Loot/Replacement/Pufferfish/Pufferfish.fbx](<Assets/Models/Loot/Replacement/Pufferfish/Pufferfish.fbx>) — Модель / анимации FBX.
+- [Assets/Models/Loot/Replacement/Pufferfish/Pufferfish.mat](<Assets/Models/Loot/Replacement/Pufferfish/Pufferfish.mat>) — Материал Unity.
+- [Assets/Models/Loot/Replacement/Pufferfish/PufferfishMetalSmooth.png](<Assets/Models/Loot/Replacement/Pufferfish/PufferfishMetalSmooth.png>) — Изображение / текстура.
+- [Assets/Models/Loot/Replacement/Pufferfish/Pufferfish_basecolor.jpeg](<Assets/Models/Loot/Replacement/Pufferfish/Pufferfish_basecolor.jpeg>) — Изображение / текстура.
+- [Assets/Models/Loot/Replacement/Pufferfish/Pufferfish_normal.png](<Assets/Models/Loot/Replacement/Pufferfish/Pufferfish_normal.png>) — Изображение / текстура.
+- [Assets/Models/Loot/Replacement/Swordfish/Swordfish.fbx](<Assets/Models/Loot/Replacement/Swordfish/Swordfish.fbx>) — Модель / анимации FBX.
+- [Assets/Models/Loot/Replacement/Swordfish/Swordfish.mat](<Assets/Models/Loot/Replacement/Swordfish/Swordfish.mat>) — Материал Unity.
+- [Assets/Models/Loot/Replacement/Swordfish/SwordfishMetalSmooth.png](<Assets/Models/Loot/Replacement/Swordfish/SwordfishMetalSmooth.png>) — Изображение / текстура.
+- [Assets/Models/Loot/Replacement/Swordfish/Swordfish_basecolor.jpeg](<Assets/Models/Loot/Replacement/Swordfish/Swordfish_basecolor.jpeg>) — Изображение / текстура.
+- [Assets/Models/Loot/Replacement/Swordfish/Swordfish_normal.png](<Assets/Models/Loot/Replacement/Swordfish/Swordfish_normal.png>) — Изображение / текстура.
+- [Assets/Scripts/Editor/BottleFishReplacementSetup.cs](<Assets/Scripts/Editor/BottleFishReplacementSetup.cs>) — Исходник C#: BottleFishReplacementSetup.
+- [Assets/Resources/BottleVortex.shader](<Assets/Resources/BottleVortex.shader>) — Шейдер.
 - [blender.md](<blender.md>) — Документация.
 - [unity.md](<unity.md>) — Документация.
 - [frigate.md](<frigate.md>) — Документация.
@@ -495,6 +592,7 @@ ShipV3ImportSetup.RepairMechanismBindings обновляет материалы 
 SessionController разделён на partial-файлы меню. Различать меню сессии и игровой HUD.
 Сохранённое оформление меню и его runtime-поведение имеют разные точки входа.
 GameTelemetry подключается в SessionController.Awake. Настройки → Игра и интерфейс → Полная телеметрия сохраняют ShowTelemetry (по умолчанию выключено). Локальная панель справа под HUD шторма обновляется раз в 0.5 с: FPS/кадр, доступные CPU/Render/GPU и render counters, Unity/GC память, RTT/тики/роль, загруженные игроки/корабли/сундуки, XYZ и скорость корабля. Недоступные счётчики показаны прочерком; сбор отключён вместе с панелью.
+MenuPresentationSetup.ReplaceShip создаёт фон меню из геометрии Ship V3 без сетевых и физических компонентов. Копируются только активные ветки и включённые рендереры: сохранённые объединённые меши учитываются, их выключенные исходники не дублируются. Старый MenuShip удалён из NetworkMenu; исходный старый префаб сохранён.
 
 - [Assets/Scripts/Networking/SessionMenu.cs](<Assets/Scripts/Networking/SessionMenu.cs>) — Исходник C#: SessionController.
 - [Assets/Scripts/Networking/SessionPartyMenu.cs](<Assets/Scripts/Networking/SessionPartyMenu.cs>) — Исходник C#: SessionController.
@@ -571,6 +669,7 @@ WhaleLootPoint хранит состояния Idle, Agitated, Diving, Cleared �
 Ключевые слова: рыбалка, рыба.
 
 Рыбалка — NetworkFishing; предмет рыбы и его полёт — NetworkFish и NetworkFishProjectile. Использование рыбы как метательного предмета находится в NetworkWeapon.FishThrows.
+Модели обычной рыбы, фугу и рыбы-меча заменены файлами из ../Blender/Лутабельные/Рыба. Исходники в Art/Blender/Loot/FishReplacement, игровые FBX и материалы URP в Assets/Models/Loot/Replacement/Fish, Pufferfish, Swordfish. BottleFishReplacementSetup сохраняет существующие FishVisual, PufferfishVisual и SwordfishVisual GUID и подменяет дочернюю геометрию двух специальных pickup. Коллайдеры, NetworkFish, NetworkFishProjectile, направление головы +Z, подбор, рыбалка, броски, раздувание фугу и втыкание рыбы-меча сохранены. Игровая проверка выполняется пользователем.
 
 - [Assets/Scripts/Networking/NetworkFishing.cs](<Assets/Scripts/Networking/NetworkFishing.cs>) — Исходник C#: NetworkFishing.
 - [Assets/Scripts/Networking/NetworkFish.cs](<Assets/Scripts/Networking/NetworkFish.cs>) — Исходник C#: InventoryItem, NetworkFish.
@@ -578,15 +677,23 @@ WhaleLootPoint хранит состояния Idle, Agitated, Diving, Cleared �
 - [Assets/Scripts/Networking/NetworkWeapon.FishThrows.cs](<Assets/Scripts/Networking/NetworkWeapon.FishThrows.cs>) — Исходник C#: NetworkWeapon.
 - [Assets/Scripts/Player/FishingRodBend.cs](<Assets/Scripts/Player/FishingRodBend.cs>) — Исходник C#: FishingRodBend, Part.
 - [Assets/Scripts/Editor/FishingSetup.cs](<Assets/Scripts/Editor/FishingSetup.cs>) — Исходник C#: FishingSetup.
+- [Assets/Scripts/Editor/BottleFishReplacementSetup.cs](<Assets/Scripts/Editor/BottleFishReplacementSetup.cs>) — Исходник C#: BottleFishReplacementSetup.
+- [Assets/Models/Fishing/FishVisual.prefab](<Assets/Models/Fishing/FishVisual.prefab>) — Префаб Unity.
+- [Assets/Models/FishingWeapons/PufferfishVisual.prefab](<Assets/Models/FishingWeapons/PufferfishVisual.prefab>) — Префаб Unity.
+- [Assets/Models/FishingWeapons/SwordfishVisual.prefab](<Assets/Models/FishingWeapons/SwordfishVisual.prefab>) — Префаб Unity.
+- [Assets/Models/FishingWeapons/PufferfishPickup.prefab](<Assets/Models/FishingWeapons/PufferfishPickup.prefab>) — Префаб Unity.
+- [Assets/Models/FishingWeapons/SwordfishPickup.prefab](<Assets/Models/FishingWeapons/SwordfishPickup.prefab>) — Префаб Unity.
 
 ### Тестовая карта и водоворот (`test-gallery`)
 
 Ключевые слова: тестовая карта, галерея, водоворот, whirlpool.
 
 В NetworkOcean водоворот всегда активен в центре: OceanSurface.CentralWhirlpoolRadius=500 м (вдвое прежнего), CentralWhirlpoolDepth=120 м. StormZone больше не запускает его в финале и не создаёт WhirlpoolVFX. SeabedTerrain формирует локальное углубление радиусом 625 м с запасом под воронкой, CPU и mesh используют одну функцию. WaterGridGenerator больше не создаёт 81 сферу WaterBuoy в меню и удаляет старые объекты по точным именам. SimpleWater исключает небо из depth-пены, проверяет расстояние до контакта геометрии и подавляет береговую пену внутри и у края воронки. В SimpleWater вращающаяся рябь и три разорванные спиральные полосы пены показывают течение внутри воронки по синхронизированному времени; эффект плавно исчезает до края. Нормали учитывают наклон воронки. Старые эффекты каймы и затемнение убраны; bounds воды учитывают глубокую воронку. WhirlpoolTest использует радиус 500 м без частиц, глубину 45 м для отдельной тестовой площадки. Точка входа тестовой карты — EnvironmentTestGallery, подготовка — EnvironmentTestSetup. Водоворот имеет отдельные файлы поведения и визуала; не путать этот режим со старой SampleScene.
-ShipV3TestSpawner создаёт отдельный сетевой ShipV3Test только в режиме тестовой карты, рядом с основными кораблями. Префаб выбирается по имени ShipV3Test из manager.SpawnablePrefabs после инициализации менеджера, до присвоения SyncVar и сетевого Spawn. Используется Assets/Settings/Networking/NetworkPrefabs.asset; отдельный Resources.Load неподготовленного префаба больше не является источником для создания. Старый ShipSkeletonTest удалён. ShipV3Features синхронизирует дверь, фонари, рынду, принадлежность кубиков, физические подвесы и гарпуны; игровой онлайн-прогон не выполнялся.
+Ship V3 используется как основной корабль и в тестовой карте, и в обычной игре, через общий спавн SessionController. ShipV3TestSpawner оставлен как исторический исходник без вызова из сессии; отдельный лишний корабль больше не создаётся. Старый ShipSkeletonTest ранее удалён. ShipV3Features синхронизирует фонари, рынду, принадлежность кубиков, физические подвесы и гарпуны; игровой онлайн-прогон не выполнялся.
 Первое падение пользовательской сборки произошло при Resources.Load ShipV3Test до создания корабля: D3D11 8007000e при выделении текстуры 4096×4096. До ограничения импорта 91 зависимая текстура Ship V3 занимала около 2,20 ГБ по измерению редактора. После переимпорта с пределами 2048 для цвета/эмиссии и 1024 для нормалей/данных, сжатием Standalone, mipmaps и отключённым Read/Write размер по тому же измерению снизился с 2198252896 до 659993344 байт (примерно на 70%); нет текстур выше 2048 и нормалей выше 1024.
 Последующий пользовательский запуск дошёл до отображения нового корабля и завершился native-падением из-за нехватки памяти: Mimalloc fatal error (12), ENOMEM, BeginRenderQueueExtraction → PrepareDrawShadowsCommandStep1 → Submit_Internal. Новая локальная оптимизация Ship V3 уменьшает объекты отрисовки и первоначальную нагрузку коллайдеров, сохраняя модель, UV, текущие текстуры и игровые механизмы. Native inspection сохранённых ассетов подтвердил одну запись Ship V3 в сетевом реестре, отсутствие групп ShipV3RenderBatch и ленивых секций на основном корабле; NetworkMenu на момент проверки не имел несохранённых изменений. Выполнена только edit-mode preview проверка геометрии и одной секции разрушения/ремонта. Сборка, Play Mode и онлайн после оптимизации не запускались; устранение native-падения пока не подтверждено.
+ShipV3GameplayRepair добавляет точку игры в кости непосредственно бочке, поднимает стаканы и кубики на её поверхность и создаёт 18 физических ограничителей по краю. Сервер ограничивает броски радиусом бочки, закрепляет результат относительно корабля и проверяет владельца места. Рында: connectedAnchor язычка совмещён с исходным подвесом, enableCollision включён, ударник соответствует нижней части модели, углы ограничены по расстоянию до внутренних стенок. Звон остаётся от контакта и рассылается существующим BellSound; правило трёх ударов для воскресения сохранено. Сетевой ProtocolVersion повышен до 110; для совместной игры нужны одинаковые новые сборки. Изменения сохранены через Unity MCP, компиляция без ошибок; игровой онлайн-прогон не выполнялся.
+Вход в кости по F доступен в пределах 3.2 м от бочки при прямой видимости; точное наведение на кубик или верхнюю крышку не требуется. ShipV3Features.Active используется для выбора ближайшего стола. Target Dice добавлен всей V17_Dice_Game_Station; CanReachDice одинаково проверяет клиента, JoinDice, ввод и удержание серверного места, игнорируя собственную мебель станции. Локальное движение блокируется сразу при запросе входа, до синхронизации владельца, чтобы F не запускала одновременно другую механику.
 
 - [Assets/Scripts/World/EnvironmentTestGallery.cs](<Assets/Scripts/World/EnvironmentTestGallery.cs>) — Исходник C#: EnvironmentTestGallery.
 - [Assets/Scripts/Editor/EnvironmentTestSetup.cs](<Assets/Scripts/Editor/EnvironmentTestSetup.cs>) — Исходник C#: EnvironmentTestSetup.
@@ -603,6 +710,7 @@ ShipV3TestSpawner создаёт отдельный сетевой ShipV3Test т
 - [Assets/Scripts/Ships/ShipV3BellContact.cs](<Assets/Scripts/Ships/ShipV3BellContact.cs>) — Исходник C#: ShipV3BellContact.
 - [Assets/Scripts/Ships/ShipV3ClothMotion.cs](<Assets/Scripts/Ships/ShipV3ClothMotion.cs>) — Исходник C#: ShipV3ClothMotion.
 - [Assets/Resources/Ships/ShipV3Test.prefab](<Assets/Resources/Ships/ShipV3Test.prefab>) — Префаб Unity.
+- [Assets/Scripts/Editor/ShipV3GameplayRepair.cs](<Assets/Scripts/Editor/ShipV3GameplayRepair.cs>) — Исходник C#: ShipV3GameplayRepair.
 
 ## Источники актуальных настроек
 

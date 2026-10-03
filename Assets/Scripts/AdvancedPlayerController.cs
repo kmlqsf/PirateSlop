@@ -552,7 +552,8 @@ public partial class AdvancedPlayerController : MonoBehaviour
         }
         IsClimbing = true; IsSwimming = false; IsGrounded = false; slideTimer = 0; swimVelocity = Vector3.zero;
         SetHeight(false); passenger?.Attach(ladder.Body);
-        float ladderYaw = Quaternion.LookRotation(-ladder.transform.forward * (ladder.FollowRopePath ? Mathf.Sign(ladder.RopeStandOff) : 1f), Vector3.up).eulerAngles.y;
+        float standOff = ladder.FollowRopePath ? ladder.StandOff(transform.position) : .38f;
+        float ladderYaw = Quaternion.LookRotation(-ladder.transform.forward * (ladder.FollowRopePath ? Mathf.Sign(standOff) : 1f), Vector3.up).eulerAngles.y;
         bodyYaw = ladderYaw;
         transform.rotation = Quaternion.Euler(0, ladderYaw, 0);
         var p = ladder.transform.InverseTransformPoint(transform.position);
@@ -570,9 +571,9 @@ public partial class AdvancedPlayerController : MonoBehaviour
             float height = Mathf.Clamp(p.y + rise * climbSpeed * dt, 0, ladder.Height);
             float sideSign = Vector3.Dot(transform.right, ladder.transform.right) >= 0 ? 1f : -1f;
             float sideways = ladder.RopeSide(height) + Mathf.Clamp(p.x - ladder.RopeSide(p.y) + command.Move.x * (ladder.FollowRopePath ? sideSign : 1f) * ladder.Speed * 0.5f * dt, -ladder.HalfWidth + 0.15f, ladder.HalfWidth - 0.15f);
-            target = ladder.transform.TransformPoint(new Vector3(sideways, height, ladder.RopeDepth(height) + (ladder.FollowRopePath ? ladder.RopeStandOff : .38f)));
+            target = ladder.transform.TransformPoint(new Vector3(sideways, height, ladder.RopeDepth(height) + standOff));
             controller.Move(Vector3.ClampMagnitude(target - transform.position, climbSpeed * 1.5f * dt));
-            if ((height <= 0.15f || controller.isGrounded) && rise < 0) { IsClimbing = false; ladderCooldown = .5f; passenger?.Attach(null); controller.Move(ladder.transform.forward * 0.25f); }
+            if ((height <= 0.15f || controller.isGrounded) && rise < 0) { IsClimbing = false; ladderCooldown = .5f; passenger?.Attach(null); controller.Move(ladder.transform.forward * (standOff < 0f ? -.25f : .25f)); }
         }
         verticalVelocity = 0; PlanarSpeed = Mathf.Abs(rise * climbSpeed); ClimbVelocity = rise * climbSpeed;
         return true;

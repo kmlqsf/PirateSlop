@@ -12,6 +12,9 @@ public class ShipDeckPassenger : MonoBehaviour
     AdvancedPlayerController player;
     Rigidbody ship;
     Rigidbody raft;
+    PirateSlop.BoardingWalkSurface bridge;
+    float bridgeProgress, bridgeLateral;
+    Vector3 bridgeAnchor;
     Vector3 lastPosition;
     Quaternion lastRotation;
     readonly RaycastHit[] supportHits = new RaycastHit[16];
@@ -26,13 +29,35 @@ public class ShipDeckPassenger : MonoBehaviour
         bool isRaft = body != null && body.GetComponent<PirateSlop.Networking.RaftPlatform>() != null;
         raft = isRaft ? body : null;
         ship = isRaft ? null : body;
+        bridge = null;
+        if (ship != null)
+            foreach (var candidate in PirateSlop.BoardingWalkSurface.Active)
+                if (candidate.Body == ship && candidate.Locate(transform.position, out bridgeProgress, out bridgeLateral, out bridgeAnchor))
+                { bridge = candidate; break; }
         ResetAnchor();
     }
-    public void ResetAnchor() { if (Support != null) { lastPosition = Support.transform.position; lastRotation = Support.transform.rotation; } }
+    public void ResetAnchor()
+    {
+        if (Support != null) { lastPosition = Support.transform.position; lastRotation = Support.transform.rotation; }
+        if (bridge != null && bridge.Ready) bridge.Locate(transform.position, out bridgeProgress, out bridgeLateral, out bridgeAnchor);
+    }
+    public void UpdateBoardingSupport(PirateSlop.BoardingWalkSurface surface)
+    {
+        if (bridge != surface) return;
+        if (!surface.Locate(transform.position, out bridgeProgress, out bridgeLateral, out bridgeAnchor)) Attach(null);
+        else ResetAnchor();
+    }
     public void Carry(bool updateLook = false)
     {
         var body = Support;
         if (body == null) return;
+        if (bridge != null)
+        {
+            if (!bridge.Ready) { Attach(null); return; }
+            transform.position += bridge.Point(bridgeProgress, bridgeLateral) - bridgeAnchor;
+            if (!Networked) Physics.SyncTransforms();
+            ResetAnchor(); return;
+        }
         var delta = body.transform.rotation * Quaternion.Inverse(lastRotation);
         var next = body.transform.position + delta * (transform.position - lastPosition);
         float yawDelta = Mathf.DeltaAngle(lastRotation.eulerAngles.y, body.transform.eulerAngles.y);
@@ -48,8 +73,10 @@ public class ShipDeckPassenger : MonoBehaviour
         if (player != null && player.IsSwimming) { if (Support != null) Attach(null); return; }
         if (player != null && player.LocomotionLocked) return;
         Rigidbody nextShip = null;
+        PirateSlop.BoardingWalkSurface nextBridge = null;
         if (Physics.SphereCast(transform.position + Vector3.up * .4f, .2f, Vector3.down, out var hit, .35f, ~0, QueryTriggerInteraction.Ignore) && hit.rigidbody != null &&
-            (hit.rigidbody.GetComponent<ShipController>() != null || hit.rigidbody.GetComponent<PirateSlop.Networking.RaftPlatform>() != null)) nextShip = hit.rigidbody;
+            (hit.rigidbody.GetComponent<ShipController>() != null || hit.rigidbody.GetComponent<PirateSlop.Networking.RaftPlatform>() != null))
+        { nextShip = hit.rigidbody; nextBridge = hit.collider.GetComponentInParent<PirateSlop.BoardingWalkSurface>(); }
         if (nextShip == null && Support != null && player != null)
         {
             int count = Physics.SphereCastNonAlloc(transform.position + Vector3.up * .3f, .2f, Vector3.down,
@@ -58,6 +85,7 @@ public class ShipDeckPassenger : MonoBehaviour
                 if (supportHits[i].rigidbody == Support && supportHits[i].normal.y > .5f) return;
         }
         if (nextShip != Support) Attach(nextShip);
+        if (bridge != nextBridge) { bridge = nextBridge; ResetAnchor(); }
     }
     void Update() { if (!Networked && (player == null || !player.IsDead)) { Carry(true); Detect(); } }
 }

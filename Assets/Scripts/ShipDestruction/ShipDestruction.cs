@@ -125,6 +125,8 @@ namespace PirateSlop
             if (!ready) return null;
             if (collider != null && collider.transform.IsChildOf(transform))
             {
+                var batch = collider.GetComponent<PirateSlop.Ships.ShipV3CollisionBatch>();
+                if (batch != null && batch.Resolve(point) is { } batchedSection) return batchedSection;
                 if (colliders.TryGetValue(collider, out int id)) return sections[id];
                 for (var current = collider.transform; current != null && current != transform; current = current.parent)
                     if (current.TryGetComponent<ShipDamageSection>(out var section) && section.Owner == this) return section;
@@ -170,6 +172,16 @@ namespace PirateSlop
             }
             foreach (var target in affected)
                 ApplyDamage(target.Key, Profile.CannonDamage * target.Value, point, normal, velocity, ammo, attacker, ShipDamageReason.Hit);
+            if (Profile.DamageAdjacentFragments && radius <= 0f)
+                foreach (int id in graph.AdjacentSections(direct.SectionId))
+                {
+                    if (affected.ContainsKey(id) || !sections.TryGetValue(id, out var neighbour) || neighbour.Fragments.Length == 0 || !neighbour.gameObject.activeInHierarchy) continue;
+                    ulong mask = neighbour.BreakSingleNear(point);
+                    if (mask == neighbour.RemovedFragments) continue;
+                    Change(id, neighbour.Health, neighbour.State, point, normal, velocity, ammo, attacker, ShipDamageReason.Hit,
+                        definitions[id].MaxHealth / neighbour.Fragments.Length, mask);
+                    affected[id] = 0f;
+                }
             if (definitions[direct.SectionId].Type == ShipSectionType.Hull)
             {
                 ShipDamageSection deck = null;

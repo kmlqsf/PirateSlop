@@ -4,6 +4,8 @@ namespace PirateSlop
 {
     public sealed class ShipControlHandle : MonoBehaviour
     {
+        static readonly System.Collections.Generic.List<ShipControlHandle> active = new();
+        public static System.Collections.Generic.IReadOnlyList<ShipControlHandle> Active => active;
         public HelmInteraction Helm;
         public SimpleCannon Cannon;
         public SailSystem Sails;
@@ -36,6 +38,7 @@ namespace PirateSlop
                 for (int i = 0; i < saved.Length; i++) targetRenderer.SetPropertyBlock(saved[i], i);
             highlighted = value;
         }
-        void OnDisable() { Highlight(false); }
+        void OnEnable() { active.Add(this); }
+        void OnDisable() { active.Remove(this); Highlight(false); }
     }
 }

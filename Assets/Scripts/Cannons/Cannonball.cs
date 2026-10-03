@@ -15,6 +15,7 @@ namespace PirateSlop
         PirateSlop.Networking.NetworkFish networkFish;
         CannonShotDamage shotDamage;
         static readonly RaycastHit[] castBuffer = new RaycastHit[32];
+        static readonly Collider[] overlapBuffer = new Collider[32];
 
         public Rigidbody Body => body != null ? body : (body = GetComponent<Rigidbody>());
         public PirateSlop.Networking.InventoryItem CurrentAmmo => (networkFish != null ? networkFish : (networkFish = GetComponent<PirateSlop.Networking.NetworkFish>())) is { } item ? item.CurrentItem : Ammo;
@@ -135,7 +136,7 @@ namespace PirateSlop
             transform.SetPositionAndRotation(PlatformBody.transform.TransformPoint(deckLocalPosition), PlatformBody.rotation * deckLocalRotation);
         }
         float Radius => SphereCol.radius * Mathf.Max(transform.lossyScale.x, transform.lossyScale.y, transform.lossyScale.z);
-        bool Cast(Vector3 origin, Vector3 direction, float distance, out RaycastHit nearest)
+        bool Cast(Vector3 origin, Vector3 direction, float distance, out RaycastHit nearest, bool includeBalls = false)
         {
             nearest = default;
             float best = distance + 1f;
@@ -143,7 +144,10 @@ namespace PirateSlop
             for (int i = 0; i < count; i++)
             {
                 var hit = castBuffer[i];
-                if (hit.collider.GetComponentInParent<Networking.NetworkFish>() != null || hit.collider.GetComponentInParent<AdvancedPlayerController>() != null) continue;
+                var otherBall = hit.collider.GetComponentInParent<Cannonball>();
+                if (otherBall != null && (!includeBalls || !CanCollideWith(otherBall))) continue;
+                if (otherBall == null && hit.collider.GetComponentInParent<Networking.NetworkFish>() != null) continue;
+                if (hit.collider.GetComponentInParent<AdvancedPlayerController>() != null) continue;
                 if (hit.collider.attachedRigidbody == Body || hit.collider.transform.IsChildOf(transform) || hit.distance >= best) continue;
                 best = hit.distance; nearest = hit;
             }
@@ -169,17 +173,23 @@ namespace PirateSlop
             }
             Vector3 point = frame.TransformPoint(deckLocalPosition);
             Vector3 velocity = frame.TransformDirection(deckVelocity);
+            ResolveBallOverlaps(ref point, ref velocity);
             float remaining = dt;
             for (int i = 0; i < 4 && remaining > .0001f; i++)
             {
                 float distance = velocity.magnitude * remaining;
                 if (distance < .00001f) break;
-                if (!Cast(point, velocity.normalized, distance + .005f, out var hit)) { point += velocity * remaining; break; }
+                if (!Cast(point, velocity.normalized, distance + .005f, out var hit, true)) { point += velocity * remaining; break; }
                 float travel = Mathf.Max(0, hit.distance - .005f);
                 point += velocity.normalized * travel;
                 remaining *= 1f - Mathf.Clamp01(travel / distance);
-                float normalSpeed = Vector3.Dot(velocity, hit.normal);
-                if (normalSpeed < 0) velocity -= hit.normal * normalSpeed * (normalSpeed < -1f ? 1.25f : 1f);
+                var other = hit.collider.GetComponentInParent<Cannonball>();
+                if (other != null) ResolveBallImpact(other, point, hit.normal, ref velocity);
+                else
+                {
+                    float normalSpeed = Vector3.Dot(velocity, hit.normal);
+                    if (normalSpeed < 0) velocity -= hit.normal * normalSpeed * (normalSpeed < -1f ? 1.25f : 1f);
+                }
                 velocity *= Mathf.Exp(-.25f * dt);
             }
             Vector3 moved = frame.InverseTransformPoint(point) - deckLocalPosition;
@@ -196,6 +206,57 @@ namespace PirateSlop
                 AttachToPlatform(null);
                 Body.isKinematic = false; Body.useGravity = true;
                 Body.linearVelocity = velocity + inherited;
+            }
+        }
+        bool CanCollideWith(Cannonball other) => other != this && !other.Held && !other.Loaded && other.ShotDamage == null;
+        Vector3 PlatformVelocity(Vector3 point)
+        {
+            if (PlatformBody == null) return Vector3.zero;
+            var ship = PlatformBody.GetComponent<ShipController>();
+            return ship != null ? ship.CannonPointVelocity(point) : PlatformBody.GetPointVelocity(point);
+        }
+        Vector3 LoosePosition => rolling && PlatformBody != null ? PlatformBody.transform.TransformPoint(deckLocalPosition) : Body.position;
+        Vector3 LooseVelocity => rolling && PlatformBody != null ? PlatformBody.transform.TransformDirection(deckVelocity) + PlatformVelocity(LoosePosition) : Body.isKinematic ? PlatformVelocity(LoosePosition) : Body.linearVelocity;
+        float InverseLooseMass => rolling || !Body.isKinematic ? 1f / Mathf.Max(.01f, Body.mass) : 0f;
+        void MoveLooseBall(Vector3 offset)
+        {
+            if (rolling && PlatformBody != null)
+            {
+                deckLocalPosition += PlatformBody.transform.InverseTransformVector(offset);
+                Body.position = PlatformBody.transform.TransformPoint(deckLocalPosition);
+            }
+            else if (!Body.isKinematic) Body.position += offset;
+        }
+        void ResolveBallImpact(Cannonball other, Vector3 point, Vector3 normal, ref Vector3 velocity)
+        {
+            float closing = Vector3.Dot(velocity + PlatformVelocity(point) - other.LooseVelocity, normal);
+            if (closing >= 0f) return;
+            float mine = InverseLooseMass, theirs = other.InverseLooseMass;
+            float impulse = -1.25f * closing / (mine + theirs);
+            velocity += normal * (impulse * mine);
+            Vector3 change = -normal * (impulse * theirs);
+            if (other.rolling && other.PlatformBody != null) other.deckVelocity += other.PlatformBody.transform.InverseTransformDirection(change);
+            else if (!other.Body.isKinematic) { other.Body.WakeUp(); other.Body.linearVelocity += change; }
+        }
+        void ResolveBallOverlaps(ref Vector3 point, ref Vector3 velocity)
+        {
+            int count = Physics.OverlapSphereNonAlloc(point + transform.TransformVector(SphereCol.center), Radius, overlapBuffer, ~0, QueryTriggerInteraction.Ignore);
+            for (int i = 0; i < count; i++)
+            {
+                var other = overlapBuffer[i].GetComponentInParent<Cannonball>();
+                if (other == null || !CanCollideWith(other)) continue;
+                Vector3 difference = point + transform.TransformVector(SphereCol.center) - other.LoosePosition - other.transform.TransformVector(other.SphereCol.center);
+                float distance = difference.magnitude, separation = Radius + other.Radius;
+                if (distance >= separation) continue;
+                Vector3 normal = distance > .0001f ? difference / distance : PlatformBody.transform.right;
+                float mine = InverseLooseMass, theirs = other.InverseLooseMass;
+                float share = mine / (mine + theirs);
+                if (other.rolling && other.PlatformBody != null && Mathf.Abs(Vector3.Dot(normal, PlatformBody.transform.up)) > .5f)
+                    share = Vector3.Dot(normal, PlatformBody.transform.up) > 0f ? 1f : 0f;
+                Vector3 correction = normal * (separation - distance + .001f);
+                point += correction * share;
+                other.MoveLooseBall(-correction * (1f - share));
+                ResolveBallImpact(other, point, normal, ref velocity);
             }
         }
         public void Release()

@@ -54,6 +54,7 @@ namespace PirateSlop
         public GameObject SectionsPrefab;
         public bool EnableFlooding;
         public bool OrdinaryCannonballsOnly;
+        public bool DamageAdjacentFragments;
         public Mesh[] SplinterMeshes = Array.Empty<Mesh>();
         public Material SplinterMaterial;
         public int SplintersPerHit = 12;

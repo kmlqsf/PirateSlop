@@ -104,12 +104,125 @@
 | --- | --- |
 | [Art/Blender/Kraken/KrakenTentacle.blend](<../../Art/Blender/Kraken/KrakenTentacle.blend>) | Редактируемая сцена Blender |
 
+## Art/Blender/Loot/FishReplacement/Fish
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/Loot/FishReplacement/Fish/tripo_convert_ef7518a4-3de5-4390-add5-a892bae7777b.fbx](<../../Art/Blender/Loot/FishReplacement/Fish/tripo_convert_ef7518a4-3de5-4390-add5-a892bae7777b.fbx>) | Модель / анимации FBX; Модели и Blender |
+
+## Art/Blender/Loot/FishReplacement/Fish/tripo_convert_ef7518a4-3de5-4390-add5-a892bae7777b.fbm
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/Loot/FishReplacement/Fish/tripo_convert_ef7518a4-3de5-4390-add5-a892bae7777b.fbm/Обычная_рыба_basecolor.JPEG](<../../Art/Blender/Loot/FishReplacement/Fish/tripo_convert_ef7518a4-3de5-4390-add5-a892bae7777b.fbm/Обычная_рыба_basecolor.JPEG>) | Изображение / текстура; Модели и Blender |
+| [Art/Blender/Loot/FishReplacement/Fish/tripo_convert_ef7518a4-3de5-4390-add5-a892bae7777b.fbm/Обычная_рыба_metallic.JPEG](<../../Art/Blender/Loot/FishReplacement/Fish/tripo_convert_ef7518a4-3de5-4390-add5-a892bae7777b.fbm/Обычная_рыба_metallic.JPEG>) | Изображение / текстура; Модели и Blender |
+| [Art/Blender/Loot/FishReplacement/Fish/tripo_convert_ef7518a4-3de5-4390-add5-a892bae7777b.fbm/Обычная_рыба_normal.PNG](<../../Art/Blender/Loot/FishReplacement/Fish/tripo_convert_ef7518a4-3de5-4390-add5-a892bae7777b.fbm/Обычная_рыба_normal.PNG>) | Изображение / текстура; Модели и Blender |
+| [Art/Blender/Loot/FishReplacement/Fish/tripo_convert_ef7518a4-3de5-4390-add5-a892bae7777b.fbm/Обычная_рыба_rm.JPEG](<../../Art/Blender/Loot/FishReplacement/Fish/tripo_convert_ef7518a4-3de5-4390-add5-a892bae7777b.fbm/Обычная_рыба_rm.JPEG>) | Изображение / текстура; Модели и Blender |
+| [Art/Blender/Loot/FishReplacement/Fish/tripo_convert_ef7518a4-3de5-4390-add5-a892bae7777b.fbm/Обычная_рыба_roughness.JPEG](<../../Art/Blender/Loot/FishReplacement/Fish/tripo_convert_ef7518a4-3de5-4390-add5-a892bae7777b.fbm/Обычная_рыба_roughness.JPEG>) | Изображение / текстура; Модели и Blender |
+
+## Art/Blender/Loot/FishReplacement/Pufferfish
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/Loot/FishReplacement/Pufferfish/tripo_convert_c2eec7cc-e554-47b0-b8f9-b6cc0ed1121a.fbx](<../../Art/Blender/Loot/FishReplacement/Pufferfish/tripo_convert_c2eec7cc-e554-47b0-b8f9-b6cc0ed1121a.fbx>) | Модель / анимации FBX; Модели и Blender |
+
+## Art/Blender/Loot/FishReplacement/Pufferfish/tripo_convert_c2eec7cc-e554-47b0-b8f9-b6cc0ed1121a.fbm
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/Loot/FishReplacement/Pufferfish/tripo_convert_c2eec7cc-e554-47b0-b8f9-b6cc0ed1121a.fbm/рыба-фугу_basecolor.JPEG](<../../Art/Blender/Loot/FishReplacement/Pufferfish/tripo_convert_c2eec7cc-e554-47b0-b8f9-b6cc0ed1121a.fbm/рыба-фугу_basecolor.JPEG>) | Изображение / текстура; Модели и Blender |
+| [Art/Blender/Loot/FishReplacement/Pufferfish/tripo_convert_c2eec7cc-e554-47b0-b8f9-b6cc0ed1121a.fbm/рыба-фугу_metallic.JPEG](<../../Art/Blender/Loot/FishReplacement/Pufferfish/tripo_convert_c2eec7cc-e554-47b0-b8f9-b6cc0ed1121a.fbm/рыба-фугу_metallic.JPEG>) | Изображение / текстура; Модели и Blender |
+| [Art/Blender/Loot/FishReplacement/Pufferfish/tripo_convert_c2eec7cc-e554-47b0-b8f9-b6cc0ed1121a.fbm/рыба-фугу_normal.PNG](<../../Art/Blender/Loot/FishReplacement/Pufferfish/tripo_convert_c2eec7cc-e554-47b0-b8f9-b6cc0ed1121a.fbm/рыба-фугу_normal.PNG>) | Изображение / текстура; Модели и Blender |
+| [Art/Blender/Loot/FishReplacement/Pufferfish/tripo_convert_c2eec7cc-e554-47b0-b8f9-b6cc0ed1121a.fbm/рыба-фугу_rm.JPEG](<../../Art/Blender/Loot/FishReplacement/Pufferfish/tripo_convert_c2eec7cc-e554-47b0-b8f9-b6cc0ed1121a.fbm/рыба-фугу_rm.JPEG>) | Изображение / текстура; Модели и Blender |
+| [Art/Blender/Loot/FishReplacement/Pufferfish/tripo_convert_c2eec7cc-e554-47b0-b8f9-b6cc0ed1121a.fbm/рыба-фугу_roughness.JPEG](<../../Art/Blender/Loot/FishReplacement/Pufferfish/tripo_convert_c2eec7cc-e554-47b0-b8f9-b6cc0ed1121a.fbm/рыба-фугу_roughness.JPEG>) | Изображение / текстура; Модели и Blender |
+
+## Art/Blender/Loot/FishReplacement/Swordfish
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/Loot/FishReplacement/Swordfish/tripo_convert_e200e96c-6c0f-4ed8-af3c-3f667a1f367e.fbx](<../../Art/Blender/Loot/FishReplacement/Swordfish/tripo_convert_e200e96c-6c0f-4ed8-af3c-3f667a1f367e.fbx>) | Модель / анимации FBX; Модели и Blender |
+
+## Art/Blender/Loot/FishReplacement/Swordfish/tripo_convert_e200e96c-6c0f-4ed8-af3c-3f667a1f367e.fbm
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/Loot/FishReplacement/Swordfish/tripo_convert_e200e96c-6c0f-4ed8-af3c-3f667a1f367e.fbm/Рыба-меч_basecolor.JPEG](<../../Art/Blender/Loot/FishReplacement/Swordfish/tripo_convert_e200e96c-6c0f-4ed8-af3c-3f667a1f367e.fbm/Рыба-меч_basecolor.JPEG>) | Изображение / текстура; Модели и Blender |
+| [Art/Blender/Loot/FishReplacement/Swordfish/tripo_convert_e200e96c-6c0f-4ed8-af3c-3f667a1f367e.fbm/Рыба-меч_metallic.JPEG](<../../Art/Blender/Loot/FishReplacement/Swordfish/tripo_convert_e200e96c-6c0f-4ed8-af3c-3f667a1f367e.fbm/Рыба-меч_metallic.JPEG>) | Изображение / текстура; Модели и Blender |
+| [Art/Blender/Loot/FishReplacement/Swordfish/tripo_convert_e200e96c-6c0f-4ed8-af3c-3f667a1f367e.fbm/Рыба-меч_normal.PNG](<../../Art/Blender/Loot/FishReplacement/Swordfish/tripo_convert_e200e96c-6c0f-4ed8-af3c-3f667a1f367e.fbm/Рыба-меч_normal.PNG>) | Изображение / текстура; Модели и Blender |
+| [Art/Blender/Loot/FishReplacement/Swordfish/tripo_convert_e200e96c-6c0f-4ed8-af3c-3f667a1f367e.fbm/Рыба-меч_rm.JPEG](<../../Art/Blender/Loot/FishReplacement/Swordfish/tripo_convert_e200e96c-6c0f-4ed8-af3c-3f667a1f367e.fbm/Рыба-меч_rm.JPEG>) | Изображение / текстура; Модели и Blender |
+| [Art/Blender/Loot/FishReplacement/Swordfish/tripo_convert_e200e96c-6c0f-4ed8-af3c-3f667a1f367e.fbm/Рыба-меч_roughness.JPEG](<../../Art/Blender/Loot/FishReplacement/Swordfish/tripo_convert_e200e96c-6c0f-4ed8-af3c-3f667a1f367e.fbm/Рыба-меч_roughness.JPEG>) | Изображение / текстура; Модели и Blender |
+
+## Art/Blender/Loot/WhiskyBottle
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/Loot/WhiskyBottle/Source.md](<../../Art/Blender/Loot/WhiskyBottle/Source.md>) | Документация; Модели и Blender |
+| [Art/Blender/Loot/WhiskyBottle/WhiskyBottle_Empty.blend](<../../Art/Blender/Loot/WhiskyBottle/WhiskyBottle_Empty.blend>) | Редактируемая сцена Blender; Модели и Blender |
+| [Art/Blender/Loot/WhiskyBottle/WhiskyBottle_Source.blend](<../../Art/Blender/Loot/WhiskyBottle/WhiskyBottle_Source.blend>) | Редактируемая сцена Blender; Модели и Blender |
+
 ## Art/Blender/LootReplacement
 
 | Файл | Краткое описание |
 | --- | --- |
 | [Art/Blender/LootReplacement/LootReplacement.blend](<../../Art/Blender/LootReplacement/LootReplacement.blend>) | Редактируемая сцена Blender; Предметы, лут и инвентарь |
 | [Art/Blender/LootReplacement/README.md](<../../Art/Blender/LootReplacement/README.md>) | Документация; Предметы, лут и инвентарь |
+
+## Art/Blender/LootReplacement/BoardingEquipment
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/LootReplacement/BoardingEquipment/BlenderImportReport.json](<../../Art/Blender/LootReplacement/BoardingEquipment/BlenderImportReport.json>) | Конфигурация / данные JSON |
+| [Art/Blender/LootReplacement/BoardingEquipment/BoardingEquipment.blend](<../../Art/Blender/LootReplacement/BoardingEquipment/BoardingEquipment.blend>) | Редактируемая сцена Blender; Модели и Blender |
+| [Art/Blender/LootReplacement/BoardingEquipment/ImportManifest.json](<../../Art/Blender/LootReplacement/BoardingEquipment/ImportManifest.json>) | Конфигурация / данные JSON |
+| [Art/Blender/LootReplacement/BoardingEquipment/README.md](<../../Art/Blender/LootReplacement/BoardingEquipment/README.md>) | Документация; Модели и Blender |
+
+## Art/Blender/LootReplacement/BoardingEquipment/BoardingHarpoon
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/LootReplacement/BoardingEquipment/BoardingHarpoon/tripo_convert_41d283d1-4a1c-4e03-b37f-f9856e6b1907.fbx](<../../Art/Blender/LootReplacement/BoardingEquipment/BoardingHarpoon/tripo_convert_41d283d1-4a1c-4e03-b37f-f9856e6b1907.fbx>) | Модель / анимации FBX |
+
+## Art/Blender/LootReplacement/BoardingEquipment/BoardingHarpoon/tripo_convert_41d283d1-4a1c-4e03-b37f-f9856e6b1907.fbm
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/LootReplacement/BoardingEquipment/BoardingHarpoon/tripo_convert_41d283d1-4a1c-4e03-b37f-f9856e6b1907.fbm/абордажный_снаряд_basecolor.JPEG](<../../Art/Blender/LootReplacement/BoardingEquipment/BoardingHarpoon/tripo_convert_41d283d1-4a1c-4e03-b37f-f9856e6b1907.fbm/абордажный_снаряд_basecolor.JPEG>) | Изображение / текстура |
+| [Art/Blender/LootReplacement/BoardingEquipment/BoardingHarpoon/tripo_convert_41d283d1-4a1c-4e03-b37f-f9856e6b1907.fbm/абордажный_снаряд_metallic.JPEG](<../../Art/Blender/LootReplacement/BoardingEquipment/BoardingHarpoon/tripo_convert_41d283d1-4a1c-4e03-b37f-f9856e6b1907.fbm/абордажный_снаряд_metallic.JPEG>) | Изображение / текстура |
+| [Art/Blender/LootReplacement/BoardingEquipment/BoardingHarpoon/tripo_convert_41d283d1-4a1c-4e03-b37f-f9856e6b1907.fbm/абордажный_снаряд_normal.PNG](<../../Art/Blender/LootReplacement/BoardingEquipment/BoardingHarpoon/tripo_convert_41d283d1-4a1c-4e03-b37f-f9856e6b1907.fbm/абордажный_снаряд_normal.PNG>) | Изображение / текстура |
+| [Art/Blender/LootReplacement/BoardingEquipment/BoardingHarpoon/tripo_convert_41d283d1-4a1c-4e03-b37f-f9856e6b1907.fbm/абордажный_снаряд_rm.JPEG](<../../Art/Blender/LootReplacement/BoardingEquipment/BoardingHarpoon/tripo_convert_41d283d1-4a1c-4e03-b37f-f9856e6b1907.fbm/абордажный_снаряд_rm.JPEG>) | Изображение / текстура |
+| [Art/Blender/LootReplacement/BoardingEquipment/BoardingHarpoon/tripo_convert_41d283d1-4a1c-4e03-b37f-f9856e6b1907.fbm/абордажный_снаряд_roughness.JPEG](<../../Art/Blender/LootReplacement/BoardingEquipment/BoardingHarpoon/tripo_convert_41d283d1-4a1c-4e03-b37f-f9856e6b1907.fbm/абордажный_снаряд_roughness.JPEG>) | Изображение / текстура |
+
+## Art/Blender/LootReplacement/BoardingEquipment/SpyglassTube
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/LootReplacement/BoardingEquipment/SpyglassTube/tripo_convert_9699b402-7bde-4a70-a365-5f275938c3ec.fbx](<../../Art/Blender/LootReplacement/BoardingEquipment/SpyglassTube/tripo_convert_9699b402-7bde-4a70-a365-5f275938c3ec.fbx>) | Модель / анимации FBX |
+
+## Art/Blender/LootReplacement/BoardingEquipment/SpyglassTube/tripo_convert_9699b402-7bde-4a70-a365-5f275938c3ec.fbm
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/LootReplacement/BoardingEquipment/SpyglassTube/tripo_convert_9699b402-7bde-4a70-a365-5f275938c3ec.fbm/Подзорная_труба_basecolor.JPEG](<../../Art/Blender/LootReplacement/BoardingEquipment/SpyglassTube/tripo_convert_9699b402-7bde-4a70-a365-5f275938c3ec.fbm/Подзорная_труба_basecolor.JPEG>) | Изображение / текстура |
+| [Art/Blender/LootReplacement/BoardingEquipment/SpyglassTube/tripo_convert_9699b402-7bde-4a70-a365-5f275938c3ec.fbm/Подзорная_труба_metallic.JPEG](<../../Art/Blender/LootReplacement/BoardingEquipment/SpyglassTube/tripo_convert_9699b402-7bde-4a70-a365-5f275938c3ec.fbm/Подзорная_труба_metallic.JPEG>) | Изображение / текстура |
+| [Art/Blender/LootReplacement/BoardingEquipment/SpyglassTube/tripo_convert_9699b402-7bde-4a70-a365-5f275938c3ec.fbm/Подзорная_труба_normal.PNG](<../../Art/Blender/LootReplacement/BoardingEquipment/SpyglassTube/tripo_convert_9699b402-7bde-4a70-a365-5f275938c3ec.fbm/Подзорная_труба_normal.PNG>) | Изображение / текстура |
+| [Art/Blender/LootReplacement/BoardingEquipment/SpyglassTube/tripo_convert_9699b402-7bde-4a70-a365-5f275938c3ec.fbm/Подзорная_труба_rm.JPEG](<../../Art/Blender/LootReplacement/BoardingEquipment/SpyglassTube/tripo_convert_9699b402-7bde-4a70-a365-5f275938c3ec.fbm/Подзорная_труба_rm.JPEG>) | Изображение / текстура |
+| [Art/Blender/LootReplacement/BoardingEquipment/SpyglassTube/tripo_convert_9699b402-7bde-4a70-a365-5f275938c3ec.fbm/Подзорная_труба_roughness.JPEG](<../../Art/Blender/LootReplacement/BoardingEquipment/SpyglassTube/tripo_convert_9699b402-7bde-4a70-a365-5f275938c3ec.fbm/Подзорная_труба_roughness.JPEG>) | Изображение / текстура |
+
+## Art/Blender/LootReplacement/BoardingEquipment/WineBottle
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/LootReplacement/BoardingEquipment/WineBottle/tripo_convert_30ca6c65-8819-4014-9fb3-401e3bd7f1cb.fbx](<../../Art/Blender/LootReplacement/BoardingEquipment/WineBottle/tripo_convert_30ca6c65-8819-4014-9fb3-401e3bd7f1cb.fbx>) | Модель / анимации FBX |
+
+## Art/Blender/LootReplacement/BoardingEquipment/WineBottle/tripo_convert_30ca6c65-8819-4014-9fb3-401e3bd7f1cb.fbm
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/LootReplacement/BoardingEquipment/WineBottle/tripo_convert_30ca6c65-8819-4014-9fb3-401e3bd7f1cb.fbm/Вино_basecolor.JPEG](<../../Art/Blender/LootReplacement/BoardingEquipment/WineBottle/tripo_convert_30ca6c65-8819-4014-9fb3-401e3bd7f1cb.fbm/Вино_basecolor.JPEG>) | Изображение / текстура |
+| [Art/Blender/LootReplacement/BoardingEquipment/WineBottle/tripo_convert_30ca6c65-8819-4014-9fb3-401e3bd7f1cb.fbm/Вино_metallic.JPEG](<../../Art/Blender/LootReplacement/BoardingEquipment/WineBottle/tripo_convert_30ca6c65-8819-4014-9fb3-401e3bd7f1cb.fbm/Вино_metallic.JPEG>) | Изображение / текстура |
+| [Art/Blender/LootReplacement/BoardingEquipment/WineBottle/tripo_convert_30ca6c65-8819-4014-9fb3-401e3bd7f1cb.fbm/Вино_normal.PNG](<../../Art/Blender/LootReplacement/BoardingEquipment/WineBottle/tripo_convert_30ca6c65-8819-4014-9fb3-401e3bd7f1cb.fbm/Вино_normal.PNG>) | Изображение / текстура |
+| [Art/Blender/LootReplacement/BoardingEquipment/WineBottle/tripo_convert_30ca6c65-8819-4014-9fb3-401e3bd7f1cb.fbm/Вино_rm.JPEG](<../../Art/Blender/LootReplacement/BoardingEquipment/WineBottle/tripo_convert_30ca6c65-8819-4014-9fb3-401e3bd7f1cb.fbm/Вино_rm.JPEG>) | Изображение / текстура |
+| [Art/Blender/LootReplacement/BoardingEquipment/WineBottle/tripo_convert_30ca6c65-8819-4014-9fb3-401e3bd7f1cb.fbm/Вино_roughness.JPEG](<../../Art/Blender/LootReplacement/BoardingEquipment/WineBottle/tripo_convert_30ca6c65-8819-4014-9fb3-401e3bd7f1cb.fbm/Вино_roughness.JPEG>) | Изображение / текстура |
 
 ## Art/Blender/LootReplacement/Sources/CannonBarrel
 

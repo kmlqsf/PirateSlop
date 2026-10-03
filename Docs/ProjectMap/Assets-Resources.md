@@ -10,9 +10,10 @@
 
 | Файл | Краткое описание |
 | --- | --- |
-| [Assets/Resources/BoardingHookAmmo.prefab](<../../Assets/Resources/BoardingHookAmmo.prefab>) | Префаб Unity |
+| [Assets/Resources/BoardingHookAmmo.prefab](<../../Assets/Resources/BoardingHookAmmo.prefab>) | Префаб Unity; Предметы, лут и инвентарь |
 | [Assets/Resources/BoardingHookVisual.prefab](<../../Assets/Resources/BoardingHookVisual.prefab>) | Префаб Unity |
 | [Assets/Resources/BottleFog.shader](<../../Assets/Resources/BottleFog.shader>) | Шейдер; Предметы, лут и инвентарь |
+| [Assets/Resources/BottleVortex.shader](<../../Assets/Resources/BottleVortex.shader>) | Шейдер; Предметы, лут и инвентарь, Модели и Blender |
 | [Assets/Resources/BulletMark.mat](<../../Assets/Resources/BulletMark.mat>) | Материал Unity |
 | [Assets/Resources/BulletMark.shader](<../../Assets/Resources/BulletMark.shader>) | Шейдер |
 | [Assets/Resources/CombatParticles.mat](<../../Assets/Resources/CombatParticles.mat>) | Материал Unity |
@@ -61,7 +62,7 @@
 | --- | --- |
 | [Assets/Resources/Ships/ShipV3HarpoonPort.prefab](<../../Assets/Resources/Ships/ShipV3HarpoonPort.prefab>) | Префаб Unity; Гарпун и корабельное крепление |
 | [Assets/Resources/Ships/ShipV3HarpoonStarboard.prefab](<../../Assets/Resources/Ships/ShipV3HarpoonStarboard.prefab>) | Префаб Unity; Гарпун и корабельное крепление |
-| [Assets/Resources/Ships/ShipV3Test.prefab](<../../Assets/Resources/Ships/ShipV3Test.prefab>) | Префаб Unity; Движение корабля и палуба, Тестовая карта и водоворот |
+| [Assets/Resources/Ships/ShipV3Test.prefab](<../../Assets/Resources/Ships/ShipV3Test.prefab>) | Префаб Unity; Проект и точки входа, Движение корабля и палуба, Предметы, лут и инвентарь, Тестовая карта и водоворот |
 
 ## Assets/Resources/Underwater
 

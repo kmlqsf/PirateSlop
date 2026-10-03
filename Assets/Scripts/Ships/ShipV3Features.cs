@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace PirateSlop.Ships
 {
-    public enum ShipV3TargetKind : byte { Lantern, Door, Bell, Dice }
+    public enum ShipV3TargetKind : byte { Lantern, Door, Bell, Dice, Dispenser }
 
     [Serializable]
     public sealed class ShipV3Lantern
@@ -66,6 +66,9 @@ namespace PirateSlop.Ships
     [DefaultExecutionOrder(-30)]
     public sealed class ShipV3Features : NetworkBehaviour
     {
+        public static readonly List<ShipV3Features> Active = new();
+        void OnEnable() { Active.Add(this); }
+        void OnDisable() { Active.Remove(this); }
         public ShipV3Lantern[] Lanterns;
         public Transform DoorHinge, DoorGrip, BellGrip, DiceTable, DiceView, RespawnPoint, DispenserMouth;
         public Vector3 DoorAxis = Vector3.up;
@@ -77,49 +80,91 @@ namespace PirateSlop.Ships
         public ShipV3Attachment[] Attachments;
         public NetworkFish CannonballPrefab;
         public Vector3 DispenserDirection;
+        public Transform DispenserLever, DispenserGrip;
+        public Vector3 DispenserLeverAxis = Vector3.forward;
+        public float DispenserLeverAngle = -65f;
+        public GameObject DiceSupport;
+        public float DiceRadius = .54f;
         public Transform AnchorTravel;
         public ConfigurableJoint MovingAnchorJoint;
         readonly SyncVar<int> lights = new(63);
         readonly SyncVar<float> door = new();
         readonly SyncVar<int> doorHolder = new(-1), bellHolder = new(-1);
+        readonly SyncVar<int> dispenserHolder = new(-1);
+        readonly SyncVar<float> dispenserPull = new(), dispenserReturnAt = new();
         readonly SyncList<int> diceOwners = new();
         readonly SyncList<string> diceResults = new();
         Quaternion doorRest, clapperRest;
+        Quaternion dispenserRest;
+        Vector3[][] restingDice;
+        Quaternion[][] restingDiceRotation;
         NetworkShip ship;
-        float[] slotHeartbeat, collectionStart, settledFor;
+        float[] slotHeartbeat, collectionStart, settledFor, rollStart;
         Vector3[][] collectionFrom;
         Vector2[] cupPosition;
         byte[] diceMode;
-        float nextPublish, doorHeartbeat, bellHeartbeat, nextRing, nextBall;
+        float nextPublish, doorHeartbeat, bellHeartbeat, nextRing, dispenserHeartbeat;
         Vector2 bellForce;
         float lastBellDrag = float.NegativeInfinity;
         int bellTeam;
         readonly Dictionary<int, int> rescueRings = new();
-        readonly List<NetworkFish> supply = new();
         ShipV3PhysicsPose[] remotePoses;
         uint remoteRevision, serverRevision;
         MaterialPropertyBlock glassBlock;
         readonly List<ShipV3PhysicsPose> frame = new();
+        readonly RaycastHit[] diceObstacles = new RaycastHit[32];
         bool localInteractionReady;
+        int appliedLights = -1;
+        float nextAttachmentCheck;
+        uint attachmentRevision;
         public int LocalDiceSlot(int clientId)
         {
             for (int i = 0; i < diceOwners.Count; i++) if (diceOwners[i] == clientId) return i;
             return -1;
         }
         public string DiceResult(int slot) => slot >= 0 && slot < diceResults.Count ? diceResults[slot] : "";
-        public bool CanUseDice => DiceTable != null && DiceTable.gameObject.activeInHierarchy;
+        public bool CanUseDice => DiceTable != null && DiceTable.gameObject.activeInHierarchy && (DiceSupport == null || DiceSupport.activeInHierarchy);
+        public bool DispenserCooling => dispenserReturnAt.Value > 0f;
+
+        public bool CanReachDice(NetworkPlayer player)
+        {
+            if (!CanUseDice || player == null || player.Motor == null || player.Motor.IsDead || player.Motor.IsSwimming || player.Motor.IsClimbing) return false;
+            Vector3 point = DiceTable.position + transform.up * .12f;
+            if (Vector3.Distance(player.transform.position + Vector3.up, point) > 3.2f) return false;
+            Vector3 origin = player.transform.position + Vector3.up * 1.5f;
+            Vector3 delta = point - origin;
+            int count = Physics.RaycastNonAlloc(origin, delta.normalized, diceObstacles, Mathf.Max(0f, delta.magnitude - .025f), ~0, QueryTriggerInteraction.Ignore);
+            if (count == diceObstacles.Length) return false;
+            for (int i = 0; i < count; i++)
+            {
+                var hit = diceObstacles[i];
+                if (hit.transform.IsChildOf(player.transform) || hit.transform.IsChildOf(DiceTable.parent) ||
+                    hit.collider.GetComponentInParent<AdvancedPlayerController>() != null || hit.collider.GetComponentInParent<Cannonball>() != null) continue;
+                return false;
+            }
+            return true;
+        }
 
         void Awake()
         {
             ship = GetComponent<NetworkShip>();
             doorRest = DoorHinge != null ? DoorHinge.localRotation : Quaternion.identity;
             clapperRest = BellClapper != null ? BellClapper.transform.localRotation : Quaternion.identity;
+            dispenserRest = DispenserLever != null ? DispenserLever.localRotation : Quaternion.identity;
             slotHeartbeat = new float[DiceSlots.Length];
             collectionStart = new float[DiceSlots.Length];
             collectionFrom = new Vector3[DiceSlots.Length][];
             settledFor = new float[DiceSlots.Length];
+            rollStart = new float[DiceSlots.Length];
             cupPosition = new Vector2[DiceSlots.Length];
             diceMode = new byte[DiceSlots.Length];
+            restingDice = new Vector3[DiceSlots.Length][];
+            restingDiceRotation = new Quaternion[DiceSlots.Length][];
+            for (int i = 0; i < DiceSlots.Length; i++)
+            {
+                restingDice[i] = Array.ConvertAll(DiceSlots[i].Dice, die => transform.InverseTransformPoint(die.transform.position));
+                restingDiceRotation[i] = Array.ConvertAll(DiceSlots[i].Dice, die => Quaternion.Inverse(transform.rotation) * die.transform.rotation);
+            }
             glassBlock = new MaterialPropertyBlock();
         }
 
@@ -128,7 +173,7 @@ namespace PirateSlop.Ships
             for (int i = 0; i < DiceSlots.Length; i++) { diceOwners.Add(-1); diceResults.Add(""); }
             foreach (var body in PhysicsBodies) if (body != null) body.isKinematic = false;
             foreach (var slot in DiceSlots) if (slot.Cup != null) slot.Cup.isKinematic = true;
-            nextBall = Time.time + 1f;
+            foreach (var slot in DiceSlots) foreach (var die in slot.Dice) if (die != null) die.isKinematic = true;
         }
 
         public override void OnStartClient()
@@ -200,7 +245,7 @@ namespace PirateSlop.Ships
             bellHolder.Value = sender.ClientId; bellHeartbeat = Time.time; bellTeam = player.TeamId.Value;
             if (delta.sqrMagnitude > .01f)
             {
-                bellForce = Vector2.ClampMagnitude(bellForce + Vector2.ClampMagnitude(delta, 60f) * .75f, 36f);
+                bellForce = Vector2.ClampMagnitude(bellForce + Vector2.ClampMagnitude(delta, 60f) * .55f, 28f);
                 lastBellDrag = Time.time;
                 BellClapper.WakeUp();
             }
@@ -233,10 +278,26 @@ namespace PirateSlop.Ships
         void BellSound(Vector3 point, float volume) => GameAudio.Play(SoundCue.ShipBell, point, volume);
 
         [ServerRpc(RequireOwnership = false)]
+        public void PullDispenser(float delta, bool holding, NetworkConnection sender = null)
+        {
+            if (sender == null) return;
+            if (!holding) { if (dispenserHolder.Value == sender.ClientId) dispenserHolder.Value = -1; return; }
+            if (DispenserCooling || !float.IsFinite(delta) || !Reach(Sender(sender), DispenserGrip) || dispenserHolder.Value >= 0 && dispenserHolder.Value != sender.ClientId) return;
+            float allowed = Mathf.Clamp(Time.time - dispenserHeartbeat, 0f, .15f) * 3f;
+            dispenserHeartbeat = Time.time; dispenserHolder.Value = sender.ClientId;
+            dispenserPull.Value = Mathf.Clamp01(dispenserPull.Value + Mathf.Clamp(delta, -allowed, allowed));
+            if (dispenserPull.Value < .999f) return;
+            Dispense();
+            dispenserHolder.Value = -1;
+            dispenserReturnAt.Value = (float)TimeManager.Tick * (float)TimeManager.TickDelta + 5f;
+        }
+
+        [ServerRpc(RequireOwnership = false)]
         public void JoinDice(NetworkConnection sender = null)
         {
+            if (sender == null) return;
             var player = Sender(sender);
-            if (!Reach(player, DiceTable) || LocalDiceSlot(sender.ClientId) >= 0) return;
+            if (!CanReachDice(player) || LocalDiceSlot(sender.ClientId) >= 0) return;
             for (int i = 0; i < diceOwners.Count; i++)
             {
                 if (diceOwners[i] != -1) continue;
@@ -253,10 +314,10 @@ namespace PirateSlop.Ships
             int index = LocalDiceSlot(sender.ClientId);
             if (index < 0) return;
             var player = Sender(sender);
-            if (leave || !Reach(player, DiceTable)) { ReleaseSlot(index); return; }
+            if (leave || !CanReachDice(player)) { ReleaseSlot(index); return; }
             if (!float.IsFinite(movement.sqrMagnitude)) return;
             slotHeartbeat[index] = Time.time;
-            if (gather && diceMode[index] != 2)
+            if (gather && (diceMode[index] == 0 || diceMode[index] == 5))
             {
                 diceMode[index] = 1; collectionStart[index] = Time.time;
                 collectionFrom[index] = new Vector3[DiceSlots[index].Dice.Length];
@@ -275,7 +336,7 @@ namespace PirateSlop.Ships
             }
             else if (diceMode[index] == 3)
             {
-                diceMode[index] = 4; settledFor[index] = 0f;
+                diceMode[index] = 4; settledFor[index] = 0f; rollStart[index] = Time.time;
                 var cup = DiceSlots[index].Cup;
                 for (int i = 0; i < DiceSlots[index].Dice.Length; i++)
                 {
@@ -295,14 +356,55 @@ namespace PirateSlop.Ships
             var player = SessionController.Instance.GetPlayer(diceOwners[index]);
             if (player != null) player.Motor.ShipActivityLocked = false;
             diceOwners[index] = -1;
-            if (diceMode[index] == 1 || diceMode[index] == 2 || diceMode[index] == 3)
-                foreach (var die in DiceSlots[index].Dice) if (die != null) die.isKinematic = false;
+            if (diceMode[index] == 4) FreezeDice(index);
+            foreach (var die in DiceSlots[index].Dice) if (die != null) die.isKinematic = true;
             diceMode[index] = 0;
+        }
+
+        void KeepDiceOnTable(Rigidbody die)
+        {
+            Vector3 local = transform.InverseTransformPoint(die.position);
+            Vector3 center = transform.InverseTransformPoint(DiceTable.position);
+            var offset = new Vector2(local.x - center.x, local.z - center.z);
+            float limit = Mathf.Max(.1f, DiceRadius - .035f);
+            if (offset.magnitude > limit)
+            {
+                var edge = offset.normalized * limit;
+                local.x = center.x + edge.x; local.z = center.z + edge.y;
+                Vector3 normal = transform.TransformDirection(new Vector3(offset.normalized.x, 0, offset.normalized.y));
+                Vector3 relative = die.linearVelocity - ship.Motor.CannonPointVelocity(die.position);
+                die.linearVelocity -= normal * Mathf.Max(0f, Vector3.Dot(relative, normal)) * 1.25f;
+            }
+            if (local.y < center.y - .04f || local.y > center.y + .75f)
+            {
+                local.y = Mathf.Clamp(local.y, center.y + .03f, center.y + .6f);
+                die.linearVelocity = ship.Motor.CannonPointVelocity(transform.TransformPoint(local));
+            }
+            die.position = transform.TransformPoint(local);
+        }
+
+        void FreezeDice(int index)
+        {
+            for (int i = 0; i < DiceSlots[index].Dice.Length; i++)
+            {
+                var die = DiceSlots[index].Dice[i]; KeepDiceOnTable(die);
+                die.linearVelocity = die.angularVelocity = Vector3.zero;
+                restingDice[index][i] = transform.InverseTransformPoint(die.position);
+                restingDiceRotation[index][i] = Quaternion.Inverse(transform.rotation) * die.rotation;
+                die.isKinematic = true;
+            }
         }
 
         void FixedUpdate()
         {
             if (!IsServerInitialized || !IsSpawned) return;
+            if (DispenserCooling)
+            {
+                float remaining = dispenserReturnAt.Value - (float)TimeManager.Tick * (float)TimeManager.TickDelta;
+                dispenserPull.Value = Mathf.Clamp01(remaining / 5f);
+                if (remaining <= 0f) dispenserReturnAt.Value = 0f;
+            }
+            else if (dispenserHolder.Value >= 0 && Time.time - dispenserHeartbeat > .65f) dispenserHolder.Value = -1;
             if (MovingAnchorJoint != null && AnchorTravel != null)
                 MovingAnchorJoint.connectedAnchor = transform.InverseTransformPoint(AnchorTravel.position);
             for (int i = 0; i < PhysicsBodies.Length; i++)
@@ -311,6 +413,8 @@ namespace PirateSlop.Ships
                 if (body == null || body.isKinematic || i >= Pendulums.Length || !Pendulums[i]) continue;
                 var wind = transform.right * Mathf.Sin((float)TimeManager.Tick * .017f + i) * .03f;
                 body.AddForce(wind - ship.Motor.CannonPointVelocity(body.position) * .004f, ForceMode.Acceleration);
+                if (body.name.Contains("Lamp_Hold"))
+                    body.AddTorque(transform.TransformDirection(new Vector3(Mathf.Sin((float)TimeManager.Tick * .04f + i) * .12f, 0, -ship.Motor.MotionAngularVelocity.z * 1.8f)), ForceMode.Acceleration);
             }
             if (bellHolder.Value >= 0 && BellClapper != null)
             {
@@ -320,16 +424,26 @@ namespace PirateSlop.Ships
                 error.ToAngleAxis(out float angle, out Vector3 axis);
                 if (angle > 180f) angle -= 360f;
                 if (axis.sqrMagnitude > .001f && float.IsFinite(axis.sqrMagnitude))
-                    BellClapper.AddTorque(axis.normalized * (angle * Mathf.Deg2Rad * 120f) - BellClapper.angularVelocity * 12f, ForceMode.Acceleration);
+                    BellClapper.AddTorque(axis.normalized * (angle * Mathf.Deg2Rad * 55f) - BellClapper.angularVelocity * 10f, ForceMode.Acceleration);
             }
             for (int index = 0; index < DiceSlots.Length; index++)
             {
                 var slot = DiceSlots[index];
-                if (diceOwners[index] < 0) continue;
-                Vector3 desired = transform.TransformPoint(slot.RestCup + new Vector3(cupPosition[index].x, diceMode[index] == 3 ? .16f : .02f, cupPosition[index].y));
+                bool owned = diceOwners[index] >= 0;
+                Vector3 desired = transform.TransformPoint(slot.RestCup + new Vector3(owned ? cupPosition[index].x : 0, diceMode[index] == 3 || diceMode[index] == 4 ? .16f : .005f, owned ? cupPosition[index].y : 0));
+                Vector3 cupDelta = Vector3.ProjectOnPlane(desired - DiceTable.position, transform.up);
+                desired -= cupDelta - Vector3.ClampMagnitude(cupDelta, Mathf.Max(.1f, DiceRadius - .09f));
                 slot.Cup.MovePosition(desired);
                 if (diceMode[index] != 4) slot.Cup.MoveRotation(transform.rotation * slot.RestRotation);
-                if (diceMode[index] == 1)
+                if (!owned || diceMode[index] == 0 || diceMode[index] == 5)
+                {
+                    for (int i = 0; i < slot.Dice.Length; i++)
+                    {
+                        slot.Dice[i].MovePosition(transform.TransformPoint(restingDice[index][i]));
+                        slot.Dice[i].MoveRotation(transform.rotation * restingDiceRotation[index][i]);
+                    }
+                }
+                else if (diceMode[index] == 1)
                 {
                     float t = Mathf.Clamp01((Time.time - collectionStart[index]) / .55f);
                     for (int i = 0; i < slot.Dice.Length; i++)
@@ -352,9 +466,12 @@ namespace PirateSlop.Ships
                 {
                     bool settled = true;
                     foreach (var die in slot.Dice)
-                        if (die.linearVelocity.sqrMagnitude > .012f || die.angularVelocity.sqrMagnitude > .08f) settled = false;
+                    {
+                        KeepDiceOnTable(die);
+                        if ((die.linearVelocity - ship.Motor.CannonPointVelocity(die.position)).sqrMagnitude > .012f || (die.angularVelocity - ship.Motor.MotionAngularVelocity).sqrMagnitude > .08f) settled = false;
+                    }
                     settledFor[index] = settled ? settledFor[index] + Time.fixedDeltaTime : 0f;
-                    if (settledFor[index] > .5f)
+                    if (settledFor[index] > .5f || Time.time - rollStart[index] > 6f)
                     {
                         var values = new List<string>();
                         foreach (var die in slot.Dice)
@@ -362,12 +479,13 @@ namespace PirateSlop.Ships
                             int best = 0; float dot = -2f;
                             for (int face = 0; face < slot.FaceNormals.Length; face++)
                             {
-                                float score = Vector3.Dot(die.transform.TransformDirection(slot.FaceNormals[face]), Vector3.up);
+                                float score = Vector3.Dot(die.transform.TransformDirection(slot.FaceNormals[face]), transform.up);
                                 if (score > dot) { dot = score; best = face; }
                             }
                             values.Add(slot.FaceValues[best].ToString());
+                            die.rotation = Quaternion.FromToRotation(die.transform.TransformDirection(slot.FaceNormals[best]), transform.up) * die.rotation;
                         }
-                        diceResults[index] = string.Join(" · ", values); diceMode[index] = 5;
+                        diceResults[index] = string.Join(" · ", values); FreezeDice(index); diceMode[index] = 5;
                     }
                 }
             }
@@ -384,7 +502,9 @@ namespace PirateSlop.Ships
                         localInteractionReady = true;
                     }
             if (DoorHinge != null) DoorHinge.localRotation = doorRest * Quaternion.AngleAxis(door.Value, DoorAxis);
+            if (DispenserLever != null) DispenserLever.localRotation = dispenserRest * Quaternion.AngleAxis(dispenserPull.Value * DispenserLeverAngle, DispenserLeverAxis);
             float time = (float)TimeManager.Tick * (float)TimeManager.TickDelta;
+            bool lampsChanged = appliedLights != lights.Value;
             for (int i = 0; i < Lanterns.Length; i++)
             {
                 bool lit = (lights.Value & (1 << i)) != 0;
@@ -394,20 +514,26 @@ namespace PirateSlop.Ships
                     lamp.Light.enabled = lit;
                     lamp.Light.intensity = .72f + .055f * Mathf.Sin(time * 9.7f + i * 2.1f) + .035f * Mathf.Sin(time * 16.3f + i);
                 }
-                if (lamp.Glass != null)
+                if (lampsChanged && lamp.Glass != null)
                 {
                     lamp.Glass.GetPropertyBlock(glassBlock, lamp.GlassSlot);
                     glassBlock.SetColor("_EmissionColor", lit ? new Color(.65f, .22f, .045f) * 1.1f : Color.black);
                     lamp.Glass.SetPropertyBlock(glassBlock, lamp.GlassSlot);
                 }
             }
-            UpdateAttachments();
+            appliedLights = lights.Value;
+            uint currentRevision = ship.GetComponent<ShipDestruction>().Revision;
+            if (currentRevision != attachmentRevision || Time.unscaledTime >= nextAttachmentCheck)
+            {
+                attachmentRevision = currentRevision;
+                nextAttachmentCheck = Time.unscaledTime + .25f;
+                UpdateAttachments();
+            }
             if (!IsServerInitialized) return;
             if (doorHolder.Value >= 0 && Time.time - doorHeartbeat > .65f) doorHolder.Value = -1;
             if (bellHolder.Value >= 0 && Time.time - bellHeartbeat > .65f) { bellHolder.Value = -1; bellForce = Vector2.zero; }
             for (int i = 0; i < diceOwners.Count; i++)
-                if (diceOwners[i] >= 0 && (Time.time - slotHeartbeat[i] > .9f || SessionController.Instance.GetPlayer(diceOwners[i]) is not { } player || player.Motor.IsDead || !Reach(player, DiceTable))) ReleaseSlot(i);
-            if (Time.time >= nextBall) Dispense();
+                if (diceOwners[i] >= 0 && (Time.time - slotHeartbeat[i] > .9f || SessionController.Instance.GetPlayer(diceOwners[i]) is not { } player || !CanReachDice(player))) ReleaseSlot(i);
             if (Time.unscaledTime >= nextPublish)
             {
                 nextPublish = Time.unscaledTime + .05f;
@@ -452,9 +578,7 @@ namespace PirateSlop.Ships
 
         void Dispense()
         {
-            nextBall = Time.time + 4f;
-            supply.RemoveAll(item => item == null || !item.IsSpawned);
-            if (ship.IsSinking || CannonballPrefab == null || DispenserMouth == null || !DispenserMouth.gameObject.activeInHierarchy || supply.Count >= 6) return;
+            if (ship.IsSinking || CannonballPrefab == null || DispenserMouth == null || !DispenserMouth.gameObject.activeInHierarchy) return;
             var item = Instantiate(CannonballPrefab, DispenserMouth.position, transform.rotation);
             UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene(item.gameObject, gameObject.scene);
             item.SetAmmoItem(InventoryItem.Cannonball);
@@ -466,7 +590,6 @@ namespace PirateSlop.Ships
             ball.Body.isKinematic = false;
             ball.Body.useGravity = true;
             ball.Body.linearVelocity = ship.Motor.CannonPointVelocity(item.transform.position) + transform.TransformDirection(DispenserDirection).normalized * .35f;
-            supply.Add(item);
         }
 
         [ObserversRpc(BufferLast = true)]
@@ -504,8 +627,6 @@ namespace PirateSlop.Ships
         public override void OnStopServer()
         {
             for (int i = 0; i < diceOwners.Count; i++) if (diceOwners[i] >= 0) ReleaseSlot(i);
-            foreach (var item in supply) if (item != null && item.IsSpawned) ServerManager.Despawn(item.NetworkObject);
-            supply.Clear();
         }
     }
 

@@ -9,6 +9,7 @@ namespace PirateSlop.Networking
     {
         public NetworkObject Target;
         public int Cannon;
+        public int Shot, Hook;
         public Vector3 Point, Normal;
         public float Length, Desired;
         public int Hits;
@@ -17,6 +18,11 @@ namespace PirateSlop.Networking
     {
         readonly SyncList<BoardingCable> cables = new();
         readonly System.Collections.Generic.Dictionary<int, BoardingHookTarget> hookViews = new();
+        readonly System.Collections.Generic.Dictionary<int, BoardingWalkSurface> bridges = new();
+        readonly System.Collections.Generic.HashSet<int> liveBridges = new();
+        readonly System.Collections.Generic.List<int> removedBridges = new();
+        readonly System.Collections.Generic.Dictionary<int, int> boardingFlights = new();
+        int nextBoardingShot;
         float nextWinch, nextCableSync;
         public bool HasBoarding(int index)
         {
@@ -38,13 +44,23 @@ namespace PirateSlop.Networking
             }
             return false;
         }
-        public void AttachBoarding(int index, NetworkShip target, Vector3 point, Vector3 normal)
+        public int BeginBoardingShot(int index)
+        {
+            if (!IsServerInitialized || Cannon(index) == null || HasBoarding(index)) return 0;
+            int shot = ++nextBoardingShot; boardingFlights[index] = shot; return shot;
+        }
+        public void AttachBoarding(int index, NetworkShip target, Vector3 point, Vector3 normal, int shot = 0, int hookIndex = 0)
         {
             var cannon=Cannon(index);
-            if (!IsServerInitialized || cannon == null || target == null || !target.IsSpawned || target.gameObject == gameObject || HasBoarding(index)) return;
+            if (!IsServerInitialized || cannon == null || target == null || !target.IsSpawned || target.gameObject == gameObject) return;
+            if (shot > 0 && (!boardingFlights.TryGetValue(index, out int flight) || flight != shot)) return;
+            if (shot <= 0) shot = ++nextBoardingShot;
+            foreach (var existing in cables)
+                if (existing.Cannon == index && existing.Target != null &&
+                    (existing.Shot != shot || existing.Hook == hookIndex || existing.Target != target.NetworkObject)) return;
             float length=Vector3.Distance(cannon.Muzzle.position,point);
             if (length>60 || length<2) return;
-            var cable=new BoardingCable { Target=target.NetworkObject, Cannon=index, Point=target.transform.InverseTransformPoint(point+normal*.18f), Normal=target.transform.InverseTransformDirection(normal), Length=Mathf.Max(4,length+.5f), Desired=Mathf.Max(4,length+.5f) };
+            var cable=new BoardingCable { Target=target.NetworkObject, Cannon=index, Shot=shot, Hook=hookIndex, Point=target.transform.InverseTransformPoint(point+normal*.04f), Normal=target.transform.InverseTransformDirection(normal), Length=Mathf.Max(4,length+.5f), Desired=Mathf.Max(4,length+.5f) };
             for(int i=0;i<cables.Count;i++) if(cables[i].Target==null) { cables[i]=cable; return; }
             cables.Add(cable);
         }
@@ -61,14 +77,15 @@ namespace PirateSlop.Networking
                 var cable=cables[i];
                 if(cable.Cannon!=index || cable.Target==null) continue;
                 cable.Desired=Mathf.Clamp(cable.Desired-Mathf.Clamp(direction,-1,1)*2,4,80);
-                cables[i]=cable; nextWinch=Time.time+.08f; return;
+                cables[i]=cable;
             }
+            nextWinch=Time.time+.08f;
         }
-        public void StrikeBoarding(int slot)
+        public void StrikeBoarding(int slot, int shot = -1)
         {
             if (!IsServerInitialized || slot<0 || slot>=cables.Count) return;
             var cable=cables[slot];
-            if(cable.Target==null) return;
+            if(cable.Target==null || shot >= 0 && cable.Shot != shot) return;
             cable.Hits++;
             if(cable.Hits>=2) cable.Target=null;
             cables[slot]=cable;
@@ -89,19 +106,21 @@ namespace PirateSlop.Networking
                     if(IsServerInitialized && cable.Target!=null) { cable.Target=null; cables[i]=cable; }
                     continue;
                 }
-                Vector3 end=cable.Target.transform.TransformPoint(cable.Point);
+                Vector3 end=BoardingWalkSurface.EndPoint(cable);
                 if(sync)
                 {
                     if(Vector3.Distance(cannon.Muzzle.position,end)>120) { cable.Target=null; cables[i]=cable; continue; }
                     cable.Length=Mathf.MoveTowards(cable.Length,cable.Desired,.125f);
                     cables[i]=cable;
                 }
-                if(!hookViews.TryGetValue(i,out var hook) || hook==null)
+                hookViews.TryGetValue(i, out var hook);
+                if (hook != null && hook.Shot != cable.Shot) { Destroy(hook.gameObject); hook = null; }
+                if(hook==null)
                 {
                     var visual=Instantiate(Resources.Load<GameObject>("BoardingHookVisual"));
                     visual.transform.SetParent(cable.Target.transform,false);
                     hook=visual.AddComponent<BoardingHookTarget>();
-                    hook.Source=this; hook.Slot=i;
+                    hook.Source=this; hook.Slot=i; hook.Shot=cable.Shot;
                     hook.Rope=visual.AddComponent<LineRenderer>();
                     hook.Rope.sharedMaterial=Resources.Load<Material>("HookRope");
                     hook.Rope.widthMultiplier=.055f; hook.Rope.positionCount=25;
@@ -110,15 +129,40 @@ namespace PirateSlop.Networking
                 }
                 if (hook.transform.parent != cable.Target.transform) hook.transform.SetParent(cable.Target.transform, false);
                 hook.transform.localPosition=cable.Point;
-                hook.transform.localRotation=Quaternion.LookRotation(cable.Normal);
-                Vector3 start=cannon.Muzzle.position;
+                hook.transform.localRotation=Quaternion.LookRotation(-cable.Normal);
+                Vector3 start=cannon.Muzzle.position + cannon.Muzzle.right * (cable.Hook == 0 ? -.45f : .45f);
                 float sag=Mathf.Min(8,Mathf.Max(0,cable.Length-Vector3.Distance(start,end))*.35f+.12f);
                 for(int p=0;p<25;p++) { float t=p/24f; hook.Rope.SetPosition(p,Vector3.Lerp(start,end,t)+Vector3.down*(Mathf.Sin(t*Mathf.PI)*sag)); }
             }
+            liveBridges.Clear();
+            for (int i = 0; i < cables.Count; i++)
+            {
+                var first = cables[i];
+                if (first.Target == null || !first.Target.IsSpawned || !liveBridges.Add(first.Shot)) continue;
+                var cannon = Cannon(first.Cannon);
+                if (cannon == null) continue;
+                BoardingCable? second = null;
+                for (int j = i + 1; j < cables.Count; j++)
+                    if (cables[j].Shot == first.Shot && cables[j].Target != null && cables[j].Target.IsSpawned)
+                    { second = cables[j]; break; }
+                if (!bridges.TryGetValue(first.Shot, out var bridge) || bridge == null)
+                {
+                    var root = new GameObject("BoardingWalkway_" + first.Shot);
+                    root.transform.SetParent(transform, false);
+                    bridge = root.AddComponent<BoardingWalkSurface>(); bridges[first.Shot] = bridge;
+                }
+                bridge.Configure(cannon, first, second);
+            }
+            removedBridges.Clear();
+            foreach (var pair in bridges)
+                if (!liveBridges.Contains(pair.Key))
+                { if (pair.Value != null) { pair.Value.gameObject.SetActive(false); Destroy(pair.Value.gameObject); } removedBridges.Add(pair.Key); }
+            foreach (int key in removedBridges) bridges.Remove(key);
         }
         void OnDestroy()
         {
             foreach(var hook in hookViews.Values) if(hook!=null) Destroy(hook.gameObject);
+            foreach(var bridge in bridges.Values) if(bridge!=null) Destroy(bridge.gameObject);
         }
         public static void ConstrainBoarding(ShipController ship, ref Vector3 position, Quaternion rotation)
         {

@@ -11,11 +11,18 @@ namespace PirateSlop
         public bool RopeClimb;
         public bool BoardingAccess;
         public bool FollowRopePath;
+        public bool BothSides;
         public float ExitClearance = 1.35f;
         public float TopLean;
         public float TopSideOffset;
         public float RopeStandOff = .38f;
         public Vector3 ExitPoint;
+        public float StandOff(Vector3 feet)
+        {
+            if (!BothSides) return RopeStandOff;
+            var local = transform.InverseTransformPoint(feet);
+            return (local.z - RopeDepth(local.y) < 0f ? -1f : 1f) * Mathf.Abs(RopeStandOff);
+        }
         public float RopeDepth(float height) => TopLean * Mathf.Clamp01(height / Height);
         public float RopeSide(float height) => FollowRopePath ? TopSideOffset * Mathf.Clamp01(height / Height) : 0f;
         public bool CanGrab(Vector3 feet, float yaw, float pitch)
@@ -56,7 +63,7 @@ namespace PirateSlop
             float margin = climbing ? 1.5f : 0f;
             if (FollowRopePath)
                 return Mathf.Abs(p.x - RopeSide(p.y)) <= HalfWidth + margin && p.y >= -.5f && p.y <= Height + 1.5f &&
-                    Mathf.Abs(p.z - RopeDepth(p.y) - RopeStandOff) <= 1.1f + margin;
+                    Mathf.Abs(p.z - RopeDepth(p.y) - StandOff(feet)) <= 1.1f + margin;
             if (BoardingAccess)
                 return Mathf.Abs(p.x) <= HalfWidth + margin && p.y >= -1f && p.y <= Height + ExitClearance + .5f
                     && p.z <= 2.1f + margin && p.z >= (p.y > Height - 1.5f ? -ExitDepth - .5f : .15f - margin);

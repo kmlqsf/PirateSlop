@@ -11,6 +11,7 @@ Shader "PirateSlop/BottleFog"
         _VolumeAxisZ ("Volume Axis Z", Vector) = (0, 0, 1, 0)
         _CloudAge ("Cloud Age", Float) = 0
         _CloudOpacity ("Cloud Opacity", Range(0,1)) = 0
+        _InsideBottle ("Inside Bottle", Float) = 0
     }
     SubShader
     {
@@ -38,6 +39,7 @@ Shader "PirateSlop/BottleFog"
                 float4 _VolumeAxisZ;
                 float _CloudAge;
                 float _CloudOpacity;
+                float _InsideBottle;
             CBUFFER_END
             struct Attributes { float4 positionOS : POSITION; UNITY_VERTEX_INPUT_INSTANCE_ID };
             struct Varyings { float4 positionCS : SV_POSITION; float3 positionWS : TEXCOORD0; UNITY_VERTEX_OUTPUT_STEREO };
@@ -123,6 +125,13 @@ Shader "PirateSlop/BottleFog"
                     float rolling = Noise(local * 4.25 - drift);
                     float detail = Noise(local * 10.5 + drift * .6);
                     float density = shape * lerp(.48, 1.22, rolling) * lerp(.8, 1.1, detail) * _Density * _CloudOpacity;
+                    if (_InsideBottle > .5)
+                    {
+                        float3 flow = float3(_CloudAge * .035, -_CloudAge * .08, _CloudAge * .025);
+                        rolling = Noise(local * 3.6 - flow);
+                        detail = Noise(local * 9.2 + flow * .45);
+                        density = shape * smoothstep(.24, .76, rolling * .72 + detail * .28) * 1.7 * _Density * _CloudOpacity;
+                    }
                     float opacity = 1.0 - exp(-density * stepLength);
                     float lighting = .86 + .24 * saturate(local.y * .5 + .5) + .09 * rolling;
                     accumulated += transmittance * opacity * _FogColor.rgb * lighting;

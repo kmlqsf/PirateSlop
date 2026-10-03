@@ -172,12 +172,19 @@ namespace PirateSlop
             supply.GetComponent<Collider>().enabled = true;
             supply.AttachToPlatform(supplyPlatform); supply.gameObject.SetActive(true);
         }
-        public void SpawnShot(Vector3 position, Vector3 velocity, bool authoritative, InventoryItem ammo = InventoryItem.Cannonball)
+        public void SpawnShot(Vector3 position, Vector3 velocity, bool authoritative, InventoryItem ammo = InventoryItem.Cannonball, int boardingShot = 0)
         {
             var prefabToUse = cannonballPrefab != null ? cannonballPrefab : supply;
             if (prefabToUse == null) return;
             GameAudio.Play(SoundCue.Cannon, position);
             CombatVfx.Fire(Muzzle.position, velocity.normalized, true);
+            if (ammo == InventoryItem.BoardingHook)
+            {
+                var flight = new GameObject("BoardingHarpoonPair");
+                UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene(flight, gameObject.scene);
+                flight.AddComponent<BoardingShotFlight>().Initialize(this, position, velocity, authoritative, boardingShot);
+                return;
+            }
             var shot = Instantiate(prefabToUse, position, Quaternion.identity);
             shot.Ammo = ammo;
             shot.name = "FiredCannonball"; shot.Network = null; shot.Loaded = shot.Held = false;
@@ -275,12 +282,13 @@ namespace PirateSlop
             Vector3 position = ShotPosition;
             Vector3 velocity = ShotVelocity;
             var ammo = loaded.Ammo;
-            SpawnShot(position, velocity, true, ammo);
+            int boardingShot = ammo == InventoryItem.BoardingHook && Network != null ? Network.BeginBoardingShot(Index) : 0;
+            SpawnShot(position, velocity, true, ammo, boardingShot);
             var motor=GetComponentInParent<ShipController>();
             motor.ApplyCannonImpulse(Muzzle.position,-Muzzle.forward,4.95f);
             GetComponent<CannonCarriage>()?.Recoil();
             ResetSupply();
-            if (Network != null && Network.IsServerInitialized) Network.NotifyFired(Index, position, velocity, ammo);
+            if (Network != null && Network.IsServerInitialized) Network.NotifyFired(Index, position, velocity, ammo, boardingShot);
         }
         void CreateFuse()
         {

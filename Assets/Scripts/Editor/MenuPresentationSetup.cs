@@ -15,29 +15,10 @@ namespace PirateSlop.EditorTools
             if (scene.path != "Assets/Scenes/NetworkMenu.unity" || scene.isDirty)
                 throw new System.InvalidOperationException("Open the saved NetworkMenu scene before refreshing its presentation.");
             var backdrop = Object.FindFirstObjectByType<MenuBackdrop>();
-            var source = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Networking/NetworkShip.prefab");
+            var source = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Resources/Ships/ShipV3Test.prefab");
             var ocean = AssetDatabase.LoadAssetAtPath<Material>("Assets/Materials/Ocean.mat");
             if (backdrop == null || source == null || ocean == null) throw new System.InvalidOperationException("Menu presentation assets are missing.");
-            var replacement = new GameObject("MenuShip");
-            replacement.transform.SetParent(backdrop.Content.transform, false);
-            replacement.layer = 30;
-            foreach (Transform child in source.transform)
-            {
-                if (child.name == "ShipDestructionSections" || child.name == "MainShipCollision") continue;
-                CopyVisual(child, replacement.transform);
-            }
-            if (replacement.GetComponentsInChildren<MeshRenderer>().Length == 0)
-            {
-                Object.DestroyImmediate(replacement);
-                throw new System.InvalidOperationException("The ship has no presentation geometry.");
-            }
-            Object.DestroyImmediate(backdrop.Ship.gameObject);
-            backdrop.Ship = replacement.transform;
-            replacement.transform.localRotation = Quaternion.Euler(0, -24f, 0);
-            var bounds = new Bounds(replacement.transform.position, Vector3.zero);
-            foreach (var renderer in replacement.GetComponentsInChildren<Renderer>()) bounds.Encapsulate(renderer.bounds);
-            backdrop.FocusPoint = backdrop.transform.InverseTransformPoint(bounds.center);
-            backdrop.FramingRadius = Mathf.Max(bounds.extents.y, Mathf.Max(bounds.extents.x, bounds.extents.z));
+            ReplaceShip(backdrop, source);
 
             var water = AssetDatabase.LoadAssetAtPath<Material>("Assets/Materials/MenuSea.mat");
             water.shader = ocean.shader;
@@ -110,6 +91,29 @@ namespace PirateSlop.EditorTools
             EditorSceneManager.SaveScene(scene);
         }
 
+        public static void ReplaceShip(MenuBackdrop backdrop, GameObject source)
+        {
+            var replacement = new GameObject("MenuShip");
+            replacement.transform.SetParent(backdrop.Content.transform, false);
+            replacement.layer = 30;
+            foreach (Transform child in source.transform) CopyVisual(child, replacement.transform);
+            var renderers = replacement.GetComponentsInChildren<Renderer>();
+            if (renderers.Length == 0)
+            {
+                Object.DestroyImmediate(replacement);
+                throw new System.InvalidOperationException("The ship has no presentation geometry.");
+            }
+            if (backdrop.Ship != null) Object.DestroyImmediate(backdrop.Ship.gameObject);
+            backdrop.Ship = replacement.transform;
+            replacement.transform.localRotation = Quaternion.Euler(0, -24f, 0);
+            var bounds = renderers[0].bounds;
+            foreach (var renderer in renderers) bounds.Encapsulate(renderer.bounds);
+            backdrop.FocusPoint = backdrop.transform.InverseTransformPoint(bounds.center);
+            backdrop.FramingRadius = Mathf.Max(bounds.extents.y, Mathf.Max(bounds.extents.x, bounds.extents.z));
+            backdrop.PositionView(0f);
+            EditorUtility.SetDirty(backdrop);
+        }
+
         static void CopyVisual(Transform source, Transform parent)
         {
             if (!source.gameObject.activeSelf) return;
@@ -121,7 +125,7 @@ namespace PirateSlop.EditorTools
             copy.transform.localScale = source.localScale;
             var filter = source.GetComponent<MeshFilter>();
             var renderer = source.GetComponent<MeshRenderer>();
-            if (filter != null && filter.sharedMesh != null && renderer != null)
+            if (filter != null && filter.sharedMesh != null && renderer != null && renderer.enabled && !renderer.forceRenderingOff)
             {
                 copy.AddComponent<MeshFilter>().sharedMesh = filter.sharedMesh;
                 var visual = copy.AddComponent<MeshRenderer>();
@@ -130,6 +134,7 @@ namespace PirateSlop.EditorTools
                 visual.receiveShadows = true;
             }
             foreach (Transform child in source) CopyVisual(child, copy.transform);
+            if (copy.GetComponent<MeshRenderer>() == null && copy.transform.childCount == 0) Object.DestroyImmediate(copy);
         }
 
         static Mesh SeaMesh()

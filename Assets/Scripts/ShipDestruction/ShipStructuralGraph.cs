@@ -5,6 +5,7 @@ namespace PirateSlop
     public sealed class ShipStructuralGraph
     {
         readonly Dictionary<int, List<int>> children = new();
+        readonly Dictionary<int, HashSet<int>> adjacent = new();
         readonly Dictionary<int, ShipSectionDefinition> definitions = new();
         readonly ShipFragmentConnection[] fragments;
         public ShipStructuralGraph(ShipDestructionProfile profile)
@@ -14,6 +15,7 @@ namespace PirateSlop
             {
                 if (!definitions.TryAdd(definition.SectionId, definition)) throw new System.ArgumentException("Duplicate SectionId " + definition.SectionId);
                 children[definition.SectionId] = new List<int>();
+                adjacent[definition.SectionId] = new HashSet<int>();
             }
             foreach (var definition in profile.Sections)
                 foreach (int support in definition.Supports)
@@ -22,6 +24,13 @@ namespace PirateSlop
                     children[support].Add(definition.SectionId);
                 }
             foreach (var id in definitions.Keys) Visit(id, new HashSet<int>(), new HashSet<int>());
+            foreach (var fragment in fragments)
+                foreach (int index in fragment.Neighbours)
+                    if (fragments[index].SectionId != fragment.SectionId)
+                    {
+                        adjacent[fragment.SectionId].Add(fragments[index].SectionId);
+                        adjacent[fragments[index].SectionId].Add(fragment.SectionId);
+                    }
         }
         void Visit(int id, HashSet<int> path, HashSet<int> done)
         {
@@ -31,6 +40,7 @@ namespace PirateSlop
             path.Remove(id); done.Add(id);
         }
         public IEnumerable<int> Dependents(int id) => children[id];
+        public IEnumerable<int> AdjacentSections(int id) => adjacent[id];
         public Dictionary<int, ulong> Unsupported(System.Func<int, ulong> removed)
         {
             var reached = new bool[fragments.Length];

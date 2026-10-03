@@ -44,7 +44,11 @@ namespace PirateSlop
                 fogMaterial = new Material(shader) { name = "BottleFogRuntime", hideFlags = HideFlags.HideAndDontSave };
             }
             if (InsideBottle && bottleMaterial == null)
+            {
                 bottleMaterial = new Material(fogMaterial) { name = "BottleMistRuntime", renderQueue = 3000, hideFlags = HideFlags.HideAndDontSave };
+                bottleMaterial.SetFloat("_InsideBottle", 1f);
+                bottleMaterial.SetColor("_FogColor", new Color(.68f, .77f, .81f, 1f));
+            }
             volumeMesh = new Mesh
             {
                 name = "BottleFogVolume",

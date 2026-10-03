@@ -228,6 +228,7 @@ namespace PirateSlop.EditorTools
                     ReplaceGeometry(bottle, Visual("RumBottle"));
                 }
             if (root.GetComponent<PirateSlop.Ships.ShipV3Features>() != null) ConfigureNewShip(root);
+            BoardingEquipmentSetup.ConfigureImportedShip(root);
         }
 
         public static void RenderIcons()
@@ -275,7 +276,7 @@ namespace PirateSlop.EditorTools
             if (equipment == null) equipment = root.AddComponent<ExperimentalShipEquipment>();
             var player = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Networking/NetworkPlayer.prefab");
             var drops = player.GetComponent<NetworkWeapon>().DropPrefabs;
-            equipment.Items = new[] { InventoryItem.Cannon, InventoryItem.Cannonball, InventoryItem.FireCannonball, InventoryItem.IceCannonball, InventoryItem.PushCannonball, InventoryItem.Rum, InventoryItem.GrapplingHook, InventoryItem.HolyGrenade };
+            equipment.Items = new[] { InventoryItem.Cannon, InventoryItem.FireCannonball, InventoryItem.IceCannonball, InventoryItem.PushCannonball, InventoryItem.Rum, InventoryItem.GrapplingHook, InventoryItem.HolyGrenade };
             equipment.Prefabs = equipment.Items.Select(item => drops[CannonAmmo.IsBall(item) ? (int)InventoryItem.Cannonball : (int)item]).ToArray();
             var oldPoints = root.transform.Find("ReplacementLootPoints");
             if (oldPoints != null) UnityEngine.Object.DestroyImmediate(oldPoints.gameObject);

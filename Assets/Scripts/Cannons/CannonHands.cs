@@ -145,7 +145,7 @@ namespace PirateSlop
                 int prefabIndex = (int)PirateSlop.Networking.InventoryItem.Cannonball;
                 if (network == null || network.DropPrefabs == null || network.DropPrefabs.Length <= prefabIndex || network.DropPrefabs[prefabIndex] == null) return;
                 var template = network.DropPrefabs[prefabIndex].GetComponent<Cannonball>();
-                int index = item == PirateSlop.Networking.InventoryItem.Cannonball ? 0 : (int)item - 7;
+                int index = item == PirateSlop.Networking.InventoryItem.Cannonball ? 0 : item == PirateSlop.Networking.InventoryItem.BoardingHook ? 5 : (int)item - 7;
                 if (template == null || template.AmmoModels == null || index >= template.AmmoModels.Length || template.AmmoModels[index] == null) return;
                 selectedVisual = Instantiate(template.AmmoModels[index]);
                 selectedVisual.name = "SelectedCannonball";

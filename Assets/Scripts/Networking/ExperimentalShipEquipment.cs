@@ -16,13 +16,20 @@ namespace PirateSlop.Networking
             spawned = new NetworkFish[Prefabs.Length];
             SpawnItems();
         }
-        void Update() { if(IsServerInitialized && Enabled && Time.time >= nextSpawn) SpawnItems(); }
-        void SpawnItems()
+        void Update()
         {
-            nextSpawn = Time.time + 20;
+            if (!IsServerInitialized || !Enabled) return;
+            bool restock = Time.time >= nextSpawn;
+            SpawnItems(!restock);
+        }
+        void SpawnItems(bool bottlesOnly = false)
+        {
+            if (!bottlesOnly) nextSpawn = Time.time + 20;
             if (!Enabled) return;
             for(int i=0;i<Prefabs.Length;i++)
             {
+                if (bottlesOnly && (Prefabs[i] == null ||
+                    (Prefabs[i].Item != InventoryItem.FogBottle && Prefabs[i].Item != InventoryItem.VortexBottle))) continue;
                 if(Prefabs[i]==null || (spawned[i]!=null && spawned[i].IsSpawned)) continue;
                 Vector3 point=i<SpawnPoints.Length && SpawnPoints[i]!=null ? SpawnPoints[i].position : transform.TransformPoint(new Vector3(-3.4f+(i%5)*1.7f,4.6f,(i/5)*1.2f));
                 float nearest = 4f;

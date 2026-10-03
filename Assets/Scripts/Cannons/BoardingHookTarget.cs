@@ -7,6 +7,7 @@ namespace PirateSlop
     {
         public NetworkCannon Source;
         public int Slot;
+        public int Shot = -1;
         public LineRenderer Rope;
         protected float struckAt = -10;
         public virtual void Strike(GameObject attacker)
@@ -15,7 +16,7 @@ namespace PirateSlop
             var health=attacker.GetComponent<CombatHealth>();
             if(health==null || health.IsDead || Vector3.Distance(attacker.transform.position,transform.position)>3) return;
             struckAt=Time.time;
-            Source.StrikeBoarding(Slot);
+            Source.StrikeBoarding(Slot, Shot);
             GameAudio.Play(SoundCue.Load,transform.position);
         }
     }

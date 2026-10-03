@@ -190,7 +190,7 @@ namespace PirateSlop.EditorTools
             finally { PrefabUtility.UnloadPrefabContents(prefabRoot); }
         }
 
-        static void ConfigureGeometryBudget(GameObject prefabRoot)
+        public static void ConfigureGeometryBudget(GameObject prefabRoot)
         {
             Directory.CreateDirectory(Folder + "/RuntimeMeshes/Batches");
             AssetDatabase.Refresh();
@@ -211,9 +211,9 @@ namespace PirateSlop.EditorTools
             var rig = prefabRoot.GetComponent<ShipV3VisualRig>();
             var mechanics = prefabRoot.GetComponent<ShipV3Features>();
             var moving = rig.Motions.Select(m => m.Target)
-                .Concat(new[] { rig.Rudder, mechanics.DoorHinge, mechanics.AnchorTravel })
+                .Concat(new[] { rig.Rudder, mechanics.DoorHinge, mechanics.AnchorTravel, mechanics.DispenserLever })
                 .Concat(mechanics.Attachments.Where(a => a.Fall).Select(a => a.Object))
-                .Concat(prefabRoot.GetComponentsInChildren<HelmInteraction>(true).Select(h => h.transform))
+                .Concat(prefabRoot.GetComponentsInChildren<HelmInteraction>(true).SelectMany(h => new[] { h.transform, h.Wheel }))
                 .Where(t => t != null).ToArray();
             var shipBody = prefabRoot.GetComponent<Rigidbody>();
             var dependent = new HashSet<Renderer>(destruction.Sections.SelectMany(s => s.DependentRenderers));
@@ -257,6 +257,7 @@ namespace PirateSlop.EditorTools
             ConfigureChainInstances(prefabRoot, rig);
             foreach (var light in prefabRoot.GetComponentsInChildren<Light>(true)) ConfigureLanternShadowBudget(light);
             File.WriteAllText("Tools/ShipV3/GeometryBudgetStatus.txt", "Batched " + batchedSources + " stationary renderers into " + number + " groups; fragment colliders are lazy; " + rig.ChainLinks.Length + " chain links are instanced.");
+            ShipV3PerformanceSetup.Configure(prefabRoot);
         }
 
         static void ConfigureChainInstances(GameObject prefabRoot, ShipV3VisualRig rig)
@@ -652,14 +653,7 @@ namespace PirateSlop.EditorTools
 
         static void ConfigureDoor()
         {
-            features.DoorHinge = Require("V16_Hold_Door_Hinge");
-            var leaf = Require("V16_Hold_Door_Leaf");
-            features.DoorGrip = Child(leaf, "HoldDoorGrip");
-            features.DoorGrip.position = leaf.TransformPoint(Bounds(leaf).center);
-            features.DoorGrip.rotation = root.transform.rotation;
-            var collider = features.DoorGrip.gameObject.AddComponent<BoxCollider>(); collider.size = new Vector3(.5f, .7f, .12f);
-            Target(features.DoorGrip, ShipV3TargetKind.Door);
-            features.DoorAxis = features.DoorHinge.InverseTransformDirection(Vector3.up);
+            ShipV3BindingRepair.RemoveDoor(root);
         }
 
         static void ConfigureDice()
@@ -874,6 +868,7 @@ namespace PirateSlop.EditorTools
             string path = "Assets/Settings/ShipDestruction/ShipV3Destruction.asset";
             var profile = AssetDatabase.LoadAssetAtPath<ShipDestructionProfile>(path);
             if (profile == null) { profile = ScriptableObject.CreateInstance<ShipDestructionProfile>(); AssetDatabase.CreateAsset(profile, path); }
+            profile.DamageAdjacentFragments = true;
             var definitions = new List<ShipSectionDefinition>();
             var fragmentNodes = new List<ShipFragmentConnection>();
             var fragmentIndexes = new Dictionary<string, int>();
@@ -999,7 +994,7 @@ namespace PirateSlop.EditorTools
             {
                 string name = (string)record["name"];
                 if (!(bool)record["geometry"] || Find(name)?.GetComponent<Renderer>() == null) continue;
-                bool cloth = name.Contains("Flag") && !name.Contains("Pole") || name.Contains("Net") && !name.Contains("Ear") && !name.Contains("Hook");
+                bool cloth = name.Contains("Flag") && name.Contains("Cloth") || name.Contains("Net") && !name.Contains("Ear") && !name.Contains("Hook");
                 if (!cloth) continue;
                 var target = Find(name);
                 var motion = target.gameObject.AddComponent<ShipV3ClothMotion>();

@@ -125,7 +125,8 @@ namespace PirateSlop
                     var candidate = hit.collider.GetComponentInParent<ShipControlHandle>();
                     if (candidate == null || candidate.Cannon != null || hit.distance >= best || !InRange(candidate)) continue;
                     if (nearest.collider != null && nearest.collider.GetComponentInParent<ShipControlHandle>() != candidate && nearest.distance + HoverRadius < hit.distance) continue;
-                    Vector3 target = hit.collider.ClosestPoint(camera.transform.position + camera.transform.forward * (hit.distance + HoverRadius));
+                    Vector3 aimed = camera.transform.position + camera.transform.forward * (hit.distance + HoverRadius);
+                    Vector3 target = hit.collider is MeshCollider ? hit.collider.bounds.ClosestPoint(aimed) : hit.collider.ClosestPoint(aimed);
                     bool blocked = false;
                     Vector3 delta = target - camera.transform.position;
                     int obsCount = Physics.RaycastNonAlloc(camera.transform.position, delta.normalized, obstacleBuffer, delta.magnitude, ~0, QueryTriggerInteraction.Ignore);
@@ -136,6 +137,16 @@ namespace PirateSlop
                     }
                     if (blocked) continue;
                     handle = candidate; best = hit.distance;
+                }
+            }
+            if (handle == null)
+            {
+                float best = float.MaxValue;
+                foreach (var candidate in ShipControlHandle.Active)
+                {
+                    if (candidate == null || candidate.Sails == null || !InRange(candidate)) continue;
+                    if (!ShipGripAim.CanAim(camera.transform, transform, candidate.transform, .38f, out float score) || score >= best) continue;
+                    handle = candidate; best = score;
                 }
             }
             Hover(handle != null && handle.Cannon == null && InRange(handle) ? handle : null);

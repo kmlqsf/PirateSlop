@@ -10,8 +10,10 @@ public class HelmInteraction : MonoBehaviour
     [SerializeField, Min(1f)] float wheelTurnsToFullSteer = 2f;
     [SerializeField, Min(.01f)] float centeringSpeed = .35f;
     [SerializeField] Transform wheelMesh;
+    [SerializeField] bool fixedWheelCenter;
     AdvancedPlayerController player;
     Quaternion wheelRest;
+    Vector3 wheelRestPosition;
     float rudder, lastGrip;
     public bool Networked { get; set; }
     public bool StructurallyAvailable { get; set; } = true;
@@ -22,9 +24,9 @@ public class HelmInteraction : MonoBehaviour
     public AdvancedPlayerController Driver => IsControlling ? player : null;
     public Transform Wheel => wheelMesh;
     public bool IsControlledBy(AdvancedPlayerController candidate) => IsControlling && player == candidate;
-    public void Configure(Transform wheel) { wheelMesh = wheel; if (wheelMesh != null) { wheelRest = wheelMesh.localRotation; } }
+    public void Configure(Transform wheel, bool fixCenter = false) { wheelMesh = wheel; fixedWheelCenter = fixCenter; if (wheelMesh != null) { wheelRest = wheelMesh.localRotation; wheelRestPosition = wheelMesh.localPosition; } }
     public void Bind(AdvancedPlayerController value) { player = value; }
-    void Awake() { if (wheelMesh != null) { wheelRest = wheelMesh.localRotation; } }
+    void Awake() { if (wheelMesh != null) { wheelRest = wheelMesh.localRotation; wheelRestPosition = wheelMesh.localPosition; } }
     public bool InRange(AdvancedPlayerController candidate) => StructurallyAvailable && candidate != null && Vector3.Distance(transform.position, candidate.transform.position + Vector3.up) <= interactionRadius;
     public bool TryTakeControl(AdvancedPlayerController candidate)
     {
@@ -67,6 +69,11 @@ public class HelmInteraction : MonoBehaviour
         ValidateGrip();
         if (!IsControlling) { rudder = Mathf.MoveTowards(rudder, 0f, centeringSpeed * dt); UpdateWheel(); }
     }
-    void UpdateWheel() { if (wheelMesh != null) wheelMesh.localRotation = wheelRest * Quaternion.Euler(0, 0, -rudder * 360f * wheelTurnsToFullSteer); }
+    void UpdateWheel()
+    {
+        if (wheelMesh == null) return;
+        if (fixedWheelCenter) wheelMesh.localPosition = wheelRestPosition;
+        wheelMesh.localRotation = wheelRest * Quaternion.AngleAxis(-rudder * 360f * wheelTurnsToFullSteer, Vector3.forward);
+    }
     void Update() { if (!Networked) Simulate(default, null, Time.deltaTime); }
 }

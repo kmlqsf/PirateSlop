@@ -110,6 +110,13 @@ namespace PirateSlop.Networking
 
         static int RewardDeckPriority(Collider collider)
         {
+            var batch = collider.GetComponent<PirateSlop.Ships.ShipV3CollisionBatch>();
+            if (batch != null)
+            {
+                int priority = 10;
+                foreach (var source in batch.Sources) if (source != null) priority = Mathf.Min(priority, RewardDeckPriority(source));
+                return priority;
+            }
             var section = collider.GetComponentInParent<ShipDamageSection>();
             string name = section != null ? section.name : collider.name;
             if (name.Contains("FloorMid")) return 0;

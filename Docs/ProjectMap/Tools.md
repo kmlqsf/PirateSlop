@@ -12,6 +12,14 @@
 | --- | --- |
 | [Tools/create_whale.py](<../../Tools/create_whale.py>) | Инструмент Python |
 
+## Tools/Art
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Tools/Art/BoardingEquipmentStatus.txt](<../../Tools/Art/BoardingEquipmentStatus.txt>) | Текстовые данные |
+| [Tools/Art/import_boarding_equipment.py](<../../Tools/Art/import_boarding_equipment.py>) | Инструмент Python; Модели и Blender |
+| [Tools/Art/prepare_boarding_equipment.py](<../../Tools/Art/prepare_boarding_equipment.py>) | Инструмент Python; Модели и Blender |
+
 ## Tools/Context
 
 | Файл | Краткое описание |
@@ -28,7 +36,10 @@
 | --- | --- |
 | [Tools/ShipV3/BindingRepairStatus.txt](<../../Tools/ShipV3/BindingRepairStatus.txt>) | Текстовые данные; Модели и Blender |
 | [Tools/ShipV3/ExportFromOpenBlender.py](<../../Tools/ShipV3/ExportFromOpenBlender.py>) | Инструмент Python; Модели и Blender |
+| [Tools/ShipV3/FrameSample.txt](<../../Tools/ShipV3/FrameSample.txt>) | Текстовые данные |
 | [Tools/ShipV3/GeometryBudgetStatus.txt](<../../Tools/ShipV3/GeometryBudgetStatus.txt>) | Текстовые данные |
 | [Tools/ShipV3/ImportResult.txt](<../../Tools/ShipV3/ImportResult.txt>) | Текстовые данные |
 | [Tools/ShipV3/ImportStatus.txt](<../../Tools/ShipV3/ImportStatus.txt>) | Текстовые данные |
+| [Tools/ShipV3/PerformanceStatus.txt](<../../Tools/ShipV3/PerformanceStatus.txt>) | Текстовые данные |
+| [Tools/ShipV3/PresentationStatus.txt](<../../Tools/ShipV3/PresentationStatus.txt>) | Текстовые данные |
 | [Tools/ShipV3/TextureBudgetStatus.txt](<../../Tools/ShipV3/TextureBudgetStatus.txt>) | Текстовые данные |

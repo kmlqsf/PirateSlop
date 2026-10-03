@@ -30,6 +30,10 @@ namespace PirateSlop
         public Collider[] DisabledControls = Array.Empty<Collider>();
         public int[] ControlFragments = Array.Empty<int>();
         public ShipDestruction Owner { get; internal set; }
+        public event Action<ShipDamageSection> VisualChanged;
+        internal PirateSlop.Ships.ShipV3CollisionBatch CollisionBatch;
+        void Awake() => enabled = false;
+        public void NotifyVisualChanged() => VisualChanged?.Invoke(this);
         public ShipSectionState State { get; internal set; }
         public float Health { get; internal set; }
         public ulong AllFragments => Fragments.Length >= 64 ? ulong.MaxValue : (1UL << Fragments.Length) - 1UL;
@@ -73,6 +77,7 @@ namespace PirateSlop
                 for (int i = 0; i < DisabledControls.Length; i++)
                     if (DisabledControls[i] != null) DisabledControls[i].enabled = state != ShipSectionState.Destroyed && (i >= ControlFragments.Length || (removedFragments & (1UL << ControlFragments[i])) == 0);
                 foreach (var renderer in DependentRenderers) if (renderer != null) renderer.enabled = state != ShipSectionState.Destroyed;
+                NotifyVisualChanged();
                 return;
             }
             var visible = state == ShipSectionState.Intact ? Intact : state == ShipSectionState.Damaged ? Damaged : state == ShipSectionState.Critical ? Critical : state == ShipSectionState.Destroyed ? Destroyed : Repaired;
@@ -82,13 +87,14 @@ namespace PirateSlop
             foreach (var renderer in DependentRenderers) if (renderer != null) renderer.enabled = state != ShipSectionState.Destroyed;
             foreach (var collider in DisabledControls) if (collider != null) collider.enabled = state != ShipSectionState.Destroyed;
             if (rebuilt && !SurfaceDamage) RepairReveal.Show(visible);
-            if (!SafeColliderReplacement) return;
+            if (!SafeColliderReplacement) { NotifyVisualChanged(); return; }
             bool damaged = state == ShipSectionState.Damaged && DamagedColliders.Length > 0;
             bool critical = state == ShipSectionState.Critical && CriticalColliders.Length > 0;
             foreach (var collider in ReplacementColliders) if (collider != null) collider.enabled = state == ShipSectionState.Destroyed;
             foreach (var collider in DamagedColliders) if (collider != null) collider.enabled = damaged;
             foreach (var collider in CriticalColliders) if (collider != null) collider.enabled = critical;
             foreach (var collider in GameplayColliders) if (collider != null) collider.enabled = state != ShipSectionState.Destroyed && !damaged && !critical;
+            NotifyVisualChanged();
         }
         void EnsureFragmentCollider(GameObject fragment)
         {
@@ -162,9 +168,23 @@ namespace PirateSlop
             }
             return mask;
         }
+        public ulong BreakSingleNear(Vector3 point)
+        {
+            int closest = -1; float distance = float.MaxValue;
+            for (int i = 0; i < Fragments.Length; i++)
+            {
+                if ((RemovedFragments & (1UL << i)) != 0) continue;
+                var part = Fragments[i].transform;
+                var bounds = part.GetComponent<MeshFilter>().sharedMesh.bounds;
+                var local = part.InverseTransformPoint(point);
+                float score = (part.TransformPoint(bounds.ClosestPoint(local)) - point).sqrMagnitude;
+                if (score < distance) { distance = score; closest = i; }
+            }
+            return closest < 0 ? RemovedFragments : RemovedFragments | (1UL << closest);
+        }
         public float Distance(Vector3 point)
         {
-            float distance = float.MaxValue;
+            float distance = CollisionBatch != null ? CollisionBatch.Distance(this, point) : float.MaxValue;
             foreach (var collider in DamageColliders)
                 if (collider != null && collider.enabled && collider.gameObject.activeInHierarchy) distance = Mathf.Min(distance, Vector3.Distance(collider is MeshCollider mesh && !mesh.convex ? collider.bounds.ClosestPoint(point) : collider.ClosestPoint(point), point));
             return distance;
@@ -244,6 +264,7 @@ namespace PirateSlop
                 surfaceRepairFrom = repairFrom; surfaceRepairTo = vertices;
                 if (surfaceRepairWork == null || surfaceRepairWork.Length != vertices.Length) surfaceRepairWork = new Vector3[vertices.Length];
                 surfaceRepairAt = Time.time; surfaceMesh.vertices = repairFrom;
+                enabled = true;
             }
         }
         void LateUpdate()
@@ -252,7 +273,7 @@ namespace PirateSlop
             float t = Mathf.SmoothStep(0f, 1f, (Time.time - surfaceRepairAt) / .24f);
             for (int i = 0; i < surfaceRepairWork.Length; i++) surfaceRepairWork[i] = Vector3.Lerp(surfaceRepairFrom[i], surfaceRepairTo[i], t);
             surfaceMesh.vertices = surfaceRepairWork;
-            if (t >= 1f) { surfaceRepairFrom = null; surfaceRepairTo = null; }
+            if (t >= 1f) { surfaceRepairFrom = null; surfaceRepairTo = null; enabled = false; }
         }
         void OnDestroy()
         {

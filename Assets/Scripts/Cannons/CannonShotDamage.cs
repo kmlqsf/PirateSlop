@@ -111,7 +111,8 @@ namespace PirateSlop
                     var hit = hits[i];
                     if (!PlayerHitbox.IsTarget(hit.collider)) continue;
                     if (hit.collider.gameObject.layer == LayerMask.NameToLayer("ShipDebris")) continue;
-                    var section = hit.collider.GetComponentInParent<ShipDamageSection>();
+                    if (hit.collider.GetComponentInParent<BoardingWalkSurface>() != null) continue;
+                    var section = PirateSlop.Ships.ShipV3CollisionBatch.ResolveSection(hit.collider, hit.point);
                     if (section != null && hitSections.Contains(section)) continue;
                     if (hit.transform.IsChildOf(transform) || (Source != null && hit.transform.IsChildOf(Source)) ||
                         hit.collider.GetComponentInParent<CannonShotDamage>() != null) continue;
@@ -252,7 +253,7 @@ namespace PirateSlop
                 spent=true; Destroy(gameObject); return;
             }
             var health = collider.GetComponentInParent<CombatHealth>();
-            var damageSection = collider.GetComponentInParent<ShipDamageSection>();
+            var damageSection = PirateSlop.Ships.ShipV3CollisionBatch.ResolveSection(collider, point);
             if (damageSection != null) hitSections.Add(damageSection);
             hitTargets.Add(health != null ? health.transform : collider.transform);
             var directHarpoon = collider.GetComponentInParent<Harpoon.HarpoonGun>();

@@ -14,15 +14,21 @@ namespace PirateSlop.Ships
         public Mesh CachedMesh;
         public Material SharedMaterial;
         public Transform BatchAnchor;
+        public Mesh CachedShadowMesh;
+        public MeshRenderer ShadowProxy;
 
         MeshFilter outputFilter;
         MeshRenderer outputRenderer;
         Mesh runtimeMesh;
         MeshRenderer[] trackedSources;
         bool[] visible;
+        readonly HashSet<ShipDamageSection> trackedSections = new();
+        bool dirty;
+        float nextVisibilityCheck;
 
         void OnEnable()
         {
+            Unsubscribe();
             outputFilter = GetComponent<MeshFilter>();
             outputRenderer = GetComponent<MeshRenderer>();
             if (Application.isPlaying && CachedMesh != null && CachedMesh.isReadable) CachedMesh.UploadMeshData(true);
@@ -42,15 +48,21 @@ namespace PirateSlop.Ships
                 visible[i] = source != null && source.gameObject.activeInHierarchy && !source.forceRenderingOff;
                 allVisible &= visible[i];
                 if (source != null) source.enabled = false;
+                var section = source != null ? source.GetComponentInParent<ShipDamageSection>() : null;
+                if (section != null && trackedSections.Add(section)) section.VisualChanged += Invalidate;
             }
             outputRenderer.sharedMaterial = SharedMaterial;
+            if (ShadowProxy != null) outputRenderer.shadowCastingMode = ShadowCastingMode.Off;
             if (CachedMesh != null && allVisible)
             {
                 ReleaseRuntimeMesh();
                 outputFilter.sharedMesh = CachedMesh;
                 outputRenderer.enabled = CachedMesh.vertexCount != 0;
+                SetShadow(CachedShadowMesh ?? CachedMesh);
             }
             else Rebuild();
+            dirty = false;
+            nextVisibilityCheck = Time.unscaledTime + .5f;
         }
 
         void LateUpdate()
@@ -61,6 +73,9 @@ namespace PirateSlop.Ships
                 OnEnable();
                 return;
             }
+            if (!dirty && Time.unscaledTime < nextVisibilityCheck) return;
+            dirty = false;
+            nextVisibilityCheck = Time.unscaledTime + .5f;
             bool changed = false;
             for (int i = 0; i < trackedSources.Length; i++)
             {
@@ -86,12 +101,14 @@ namespace PirateSlop.Ships
                 {
                     outputFilter.sharedMesh = CachedMesh;
                     outputRenderer.enabled = CachedMesh.vertexCount != 0;
+                    SetShadow(CachedShadowMesh ?? CachedMesh);
                     ReleaseRuntimeMesh();
                     return;
                 }
                 var next = BuildMesh(trackedSources, SharedMaterial, transform, false);
                 outputFilter.sharedMesh = next;
                 outputRenderer.enabled = next.vertexCount != 0;
+                SetShadow(next);
                 ReleaseRuntimeMesh();
                 runtimeMesh = next;
                 if (Application.isPlaying) runtimeMesh.UploadMeshData(true);
@@ -110,6 +127,13 @@ namespace PirateSlop.Ships
                 if (trackedSources[i] != null) trackedSources[i].enabled = true;
         }
 
+        void SetShadow(Mesh mesh)
+        {
+            if (ShadowProxy == null) return;
+            ShadowProxy.GetComponent<MeshFilter>().sharedMesh = mesh;
+            ShadowProxy.enabled = mesh != null && mesh.vertexCount != 0;
+        }
+
         void ReleaseRuntimeMesh()
         {
             if (runtimeMesh == null) return;
@@ -120,13 +144,21 @@ namespace PirateSlop.Ships
 
         void OnDisable()
         {
+            Unsubscribe();
             if (outputRenderer != null) outputRenderer.enabled = false;
+            if (ShadowProxy != null) ShadowProxy.enabled = false;
             if (outputFilter != null) outputFilter.sharedMesh = null;
             RestoreSources();
             ReleaseRuntimeMesh();
         }
 
         void OnDestroy() => OnDisable();
+        void Invalidate(ShipDamageSection section) => dirty = true;
+        void Unsubscribe()
+        {
+            foreach (var section in trackedSections) if (section != null) section.VisualChanged -= Invalidate;
+            trackedSections.Clear();
+        }
 
         public static Mesh BuildMesh(IReadOnlyList<MeshRenderer> sources, Material material, Transform anchor, bool includeInactive)
         {
