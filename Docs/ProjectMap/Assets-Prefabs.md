@@ -142,7 +142,6 @@
 | Файл | Краткое описание |
 | --- | --- |
 | [Assets/Prefabs/Ships/PirateFrigate.prefab](<../../Assets/Prefabs/Ships/PirateFrigate.prefab>) | Префаб Unity |
-| [Assets/Prefabs/Ships/ShipSkeletonTest.prefab](<../../Assets/Prefabs/Ships/ShipSkeletonTest.prefab>) | Префаб Unity; Движение корабля и палуба |
 
 ## Assets/Prefabs/Whale
 

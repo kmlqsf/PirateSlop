@@ -241,6 +241,162 @@
 | --- | --- |
 | [Assets/Models/Loot/Kenney/Textures/colormap.png](<../../Assets/Models/Loot/Kenney/Textures/colormap.png>) | Изображение / текстура |
 
+## Assets/Models/Loot/Replacement/CannonBarrel
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/Loot/Replacement/CannonBarrel/CannonBarrel.fbx](<../../Assets/Models/Loot/Replacement/CannonBarrel/CannonBarrel.fbx>) | Модель / анимации FBX |
+| [Assets/Models/Loot/Replacement/CannonBarrel/CannonBarrel.mat](<../../Assets/Models/Loot/Replacement/CannonBarrel/CannonBarrel.mat>) | Материал Unity |
+| [Assets/Models/Loot/Replacement/CannonBarrel/CannonBarrelBaseColor.jpg](<../../Assets/Models/Loot/Replacement/CannonBarrel/CannonBarrelBaseColor.jpg>) | Изображение / текстура |
+| [Assets/Models/Loot/Replacement/CannonBarrel/CannonBarrelMetalSmooth.png](<../../Assets/Models/Loot/Replacement/CannonBarrel/CannonBarrelMetalSmooth.png>) | Изображение / текстура |
+| [Assets/Models/Loot/Replacement/CannonBarrel/CannonBarrelMetallic.png](<../../Assets/Models/Loot/Replacement/CannonBarrel/CannonBarrelMetallic.png>) | Изображение / текстура |
+| [Assets/Models/Loot/Replacement/CannonBarrel/CannonBarrelNormal.png](<../../Assets/Models/Loot/Replacement/CannonBarrel/CannonBarrelNormal.png>) | Изображение / текстура |
+| [Assets/Models/Loot/Replacement/CannonBarrel/CannonBarrelRoughness.png](<../../Assets/Models/Loot/Replacement/CannonBarrel/CannonBarrelRoughness.png>) | Изображение / текстура |
+| [Assets/Models/Loot/Replacement/CannonBarrel/CannonBarrelVisual.prefab](<../../Assets/Models/Loot/Replacement/CannonBarrel/CannonBarrelVisual.prefab>) | Префаб Unity |
+
+## Assets/Models/Loot/Replacement/CannonBase
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/Loot/Replacement/CannonBase/CannonBase.fbx](<../../Assets/Models/Loot/Replacement/CannonBase/CannonBase.fbx>) | Модель / анимации FBX |
+| [Assets/Models/Loot/Replacement/CannonBase/CannonBase.mat](<../../Assets/Models/Loot/Replacement/CannonBase/CannonBase.mat>) | Материал Unity |
+| [Assets/Models/Loot/Replacement/CannonBase/CannonBaseBaseColor.jpg](<../../Assets/Models/Loot/Replacement/CannonBase/CannonBaseBaseColor.jpg>) | Изображение / текстура |
+| [Assets/Models/Loot/Replacement/CannonBase/CannonBaseMetalSmooth.png](<../../Assets/Models/Loot/Replacement/CannonBase/CannonBaseMetalSmooth.png>) | Изображение / текстура |
+| [Assets/Models/Loot/Replacement/CannonBase/CannonBaseMetallic.png](<../../Assets/Models/Loot/Replacement/CannonBase/CannonBaseMetallic.png>) | Изображение / текстура |
+| [Assets/Models/Loot/Replacement/CannonBase/CannonBaseNormal.png](<../../Assets/Models/Loot/Replacement/CannonBase/CannonBaseNormal.png>) | Изображение / текстура |
+| [Assets/Models/Loot/Replacement/CannonBase/CannonBaseRoughness.png](<../../Assets/Models/Loot/Replacement/CannonBase/CannonBaseRoughness.png>) | Изображение / текстура |
+| [Assets/Models/Loot/Replacement/CannonBase/CannonBaseVisual.prefab](<../../Assets/Models/Loot/Replacement/CannonBase/CannonBaseVisual.prefab>) | Префаб Unity |
+
+## Assets/Models/Loot/Replacement/CannonKit
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/Loot/Replacement/CannonKit/CannonKit.fbx](<../../Assets/Models/Loot/Replacement/CannonKit/CannonKit.fbx>) | Модель / анимации FBX |
+| [Assets/Models/Loot/Replacement/CannonKit/CannonKit.mat](<../../Assets/Models/Loot/Replacement/CannonKit/CannonKit.mat>) | Материал Unity |
+| [Assets/Models/Loot/Replacement/CannonKit/CannonKitBaseColor.jpg](<../../Assets/Models/Loot/Replacement/CannonKit/CannonKitBaseColor.jpg>) | Изображение / текстура |
+| [Assets/Models/Loot/Replacement/CannonKit/CannonKitMetalSmooth.png](<../../Assets/Models/Loot/Replacement/CannonKit/CannonKitMetalSmooth.png>) | Изображение / текстура |
+| [Assets/Models/Loot/Replacement/CannonKit/CannonKitMetallic.png](<../../Assets/Models/Loot/Replacement/CannonKit/CannonKitMetallic.png>) | Изображение / текстура |
+| [Assets/Models/Loot/Replacement/CannonKit/CannonKitNormal.png](<../../Assets/Models/Loot/Replacement/CannonKit/CannonKitNormal.png>) | Изображение / текстура |
+| [Assets/Models/Loot/Replacement/CannonKit/CannonKitRoughness.png](<../../Assets/Models/Loot/Replacement/CannonKit/CannonKitRoughness.png>) | Изображение / текстура |
+| [Assets/Models/Loot/Replacement/CannonKit/CannonKitVisual.prefab](<../../Assets/Models/Loot/Replacement/CannonKit/CannonKitVisual.prefab>) | Префаб Unity |
+
+## Assets/Models/Loot/Replacement/CannonMount
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/Loot/Replacement/CannonMount/CannonMount.fbx](<../../Assets/Models/Loot/Replacement/CannonMount/CannonMount.fbx>) | Модель / анимации FBX |
+| [Assets/Models/Loot/Replacement/CannonMount/CannonMount.mat](<../../Assets/Models/Loot/Replacement/CannonMount/CannonMount.mat>) | Материал Unity |
+| [Assets/Models/Loot/Replacement/CannonMount/CannonMountBaseColor.jpg](<../../Assets/Models/Loot/Replacement/CannonMount/CannonMountBaseColor.jpg>) | Изображение / текстура |
+| [Assets/Models/Loot/Replacement/CannonMount/CannonMountMetalSmooth.png](<../../Assets/Models/Loot/Replacement/CannonMount/CannonMountMetalSmooth.png>) | Изображение / текстура |
+| [Assets/Models/Loot/Replacement/CannonMount/CannonMountMetallic.png](<../../Assets/Models/Loot/Replacement/CannonMount/CannonMountMetallic.png>) | Изображение / текстура |
+| [Assets/Models/Loot/Replacement/CannonMount/CannonMountNormal.png](<../../Assets/Models/Loot/Replacement/CannonMount/CannonMountNormal.png>) | Изображение / текстура |
+| [Assets/Models/Loot/Replacement/CannonMount/CannonMountRoughness.png](<../../Assets/Models/Loot/Replacement/CannonMount/CannonMountRoughness.png>) | Изображение / текстура |
+| [Assets/Models/Loot/Replacement/CannonMount/CannonMountVisual.prefab](<../../Assets/Models/Loot/Replacement/CannonMount/CannonMountVisual.prefab>) | Префаб Unity |
+
+## Assets/Models/Loot/Replacement/CannonWheel
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/Loot/Replacement/CannonWheel/CannonWheel.fbx](<../../Assets/Models/Loot/Replacement/CannonWheel/CannonWheel.fbx>) | Модель / анимации FBX |
+| [Assets/Models/Loot/Replacement/CannonWheel/CannonWheel.mat](<../../Assets/Models/Loot/Replacement/CannonWheel/CannonWheel.mat>) | Материал Unity |
+| [Assets/Models/Loot/Replacement/CannonWheel/CannonWheelBaseColor.jpg](<../../Assets/Models/Loot/Replacement/CannonWheel/CannonWheelBaseColor.jpg>) | Изображение / текстура |
+| [Assets/Models/Loot/Replacement/CannonWheel/CannonWheelMetalSmooth.png](<../../Assets/Models/Loot/Replacement/CannonWheel/CannonWheelMetalSmooth.png>) | Изображение / текстура |
+| [Assets/Models/Loot/Replacement/CannonWheel/CannonWheelMetallic.png](<../../Assets/Models/Loot/Replacement/CannonWheel/CannonWheelMetallic.png>) | Изображение / текстура |
+| [Assets/Models/Loot/Replacement/CannonWheel/CannonWheelNormal.png](<../../Assets/Models/Loot/Replacement/CannonWheel/CannonWheelNormal.png>) | Изображение / текстура |
+| [Assets/Models/Loot/Replacement/CannonWheel/CannonWheelRoughness.png](<../../Assets/Models/Loot/Replacement/CannonWheel/CannonWheelRoughness.png>) | Изображение / текстура |
+| [Assets/Models/Loot/Replacement/CannonWheel/CannonWheelVisual.prefab](<../../Assets/Models/Loot/Replacement/CannonWheel/CannonWheelVisual.prefab>) | Префаб Unity |
+
+## Assets/Models/Loot/Replacement/CannonballFire
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/Loot/Replacement/CannonballFire/CannonballFire.fbx](<../../Assets/Models/Loot/Replacement/CannonballFire/CannonballFire.fbx>) | Модель / анимации FBX |
+| [Assets/Models/Loot/Replacement/CannonballFire/CannonballFire.mat](<../../Assets/Models/Loot/Replacement/CannonballFire/CannonballFire.mat>) | Материал Unity |
+| [Assets/Models/Loot/Replacement/CannonballFire/CannonballFireBaseColor.jpg](<../../Assets/Models/Loot/Replacement/CannonballFire/CannonballFireBaseColor.jpg>) | Изображение / текстура |
+| [Assets/Models/Loot/Replacement/CannonballFire/CannonballFireMetalSmooth.png](<../../Assets/Models/Loot/Replacement/CannonballFire/CannonballFireMetalSmooth.png>) | Изображение / текстура |
+| [Assets/Models/Loot/Replacement/CannonballFire/CannonballFireMetallic.png](<../../Assets/Models/Loot/Replacement/CannonballFire/CannonballFireMetallic.png>) | Изображение / текстура |
+| [Assets/Models/Loot/Replacement/CannonballFire/CannonballFireNormal.png](<../../Assets/Models/Loot/Replacement/CannonballFire/CannonballFireNormal.png>) | Изображение / текстура |
+| [Assets/Models/Loot/Replacement/CannonballFire/CannonballFireRoughness.png](<../../Assets/Models/Loot/Replacement/CannonballFire/CannonballFireRoughness.png>) | Изображение / текстура |
+| [Assets/Models/Loot/Replacement/CannonballFire/CannonballFireVisual.prefab](<../../Assets/Models/Loot/Replacement/CannonballFire/CannonballFireVisual.prefab>) | Префаб Unity |
+
+## Assets/Models/Loot/Replacement/CannonballIce
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/Loot/Replacement/CannonballIce/CannonballIce.fbx](<../../Assets/Models/Loot/Replacement/CannonballIce/CannonballIce.fbx>) | Модель / анимации FBX |
+| [Assets/Models/Loot/Replacement/CannonballIce/CannonballIce.mat](<../../Assets/Models/Loot/Replacement/CannonballIce/CannonballIce.mat>) | Материал Unity |
+| [Assets/Models/Loot/Replacement/CannonballIce/CannonballIceBaseColor.jpg](<../../Assets/Models/Loot/Replacement/CannonballIce/CannonballIceBaseColor.jpg>) | Изображение / текстура |
+| [Assets/Models/Loot/Replacement/CannonballIce/CannonballIceMetalSmooth.png](<../../Assets/Models/Loot/Replacement/CannonballIce/CannonballIceMetalSmooth.png>) | Изображение / текстура |
+| [Assets/Models/Loot/Replacement/CannonballIce/CannonballIceMetallic.png](<../../Assets/Models/Loot/Replacement/CannonballIce/CannonballIceMetallic.png>) | Изображение / текстура |
+| [Assets/Models/Loot/Replacement/CannonballIce/CannonballIceNormal.png](<../../Assets/Models/Loot/Replacement/CannonballIce/CannonballIceNormal.png>) | Изображение / текстура |
+| [Assets/Models/Loot/Replacement/CannonballIce/CannonballIceRoughness.png](<../../Assets/Models/Loot/Replacement/CannonballIce/CannonballIceRoughness.png>) | Изображение / текстура |
+| [Assets/Models/Loot/Replacement/CannonballIce/CannonballIceVisual.prefab](<../../Assets/Models/Loot/Replacement/CannonballIce/CannonballIceVisual.prefab>) | Префаб Unity |
+
+## Assets/Models/Loot/Replacement/CannonballPush
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/Loot/Replacement/CannonballPush/CannonballPush.fbx](<../../Assets/Models/Loot/Replacement/CannonballPush/CannonballPush.fbx>) | Модель / анимации FBX |
+| [Assets/Models/Loot/Replacement/CannonballPush/CannonballPush.mat](<../../Assets/Models/Loot/Replacement/CannonballPush/CannonballPush.mat>) | Материал Unity |
+| [Assets/Models/Loot/Replacement/CannonballPush/CannonballPushBaseColor.jpg](<../../Assets/Models/Loot/Replacement/CannonballPush/CannonballPushBaseColor.jpg>) | Изображение / текстура |
+| [Assets/Models/Loot/Replacement/CannonballPush/CannonballPushMetalSmooth.png](<../../Assets/Models/Loot/Replacement/CannonballPush/CannonballPushMetalSmooth.png>) | Изображение / текстура |
+| [Assets/Models/Loot/Replacement/CannonballPush/CannonballPushMetallic.png](<../../Assets/Models/Loot/Replacement/CannonballPush/CannonballPushMetallic.png>) | Изображение / текстура |
+| [Assets/Models/Loot/Replacement/CannonballPush/CannonballPushNormal.png](<../../Assets/Models/Loot/Replacement/CannonballPush/CannonballPushNormal.png>) | Изображение / текстура |
+| [Assets/Models/Loot/Replacement/CannonballPush/CannonballPushRoughness.png](<../../Assets/Models/Loot/Replacement/CannonballPush/CannonballPushRoughness.png>) | Изображение / текстура |
+| [Assets/Models/Loot/Replacement/CannonballPush/CannonballPushVisual.prefab](<../../Assets/Models/Loot/Replacement/CannonballPush/CannonballPushVisual.prefab>) | Префаб Unity |
+
+## Assets/Models/Loot/Replacement/CannonballStandard
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/Loot/Replacement/CannonballStandard/CannonballStandard.fbx](<../../Assets/Models/Loot/Replacement/CannonballStandard/CannonballStandard.fbx>) | Модель / анимации FBX |
+| [Assets/Models/Loot/Replacement/CannonballStandard/CannonballStandard.mat](<../../Assets/Models/Loot/Replacement/CannonballStandard/CannonballStandard.mat>) | Материал Unity |
+| [Assets/Models/Loot/Replacement/CannonballStandard/CannonballStandardBaseColor.jpg](<../../Assets/Models/Loot/Replacement/CannonballStandard/CannonballStandardBaseColor.jpg>) | Изображение / текстура |
+| [Assets/Models/Loot/Replacement/CannonballStandard/CannonballStandardMetalSmooth.png](<../../Assets/Models/Loot/Replacement/CannonballStandard/CannonballStandardMetalSmooth.png>) | Изображение / текстура |
+| [Assets/Models/Loot/Replacement/CannonballStandard/CannonballStandardMetallic.png](<../../Assets/Models/Loot/Replacement/CannonballStandard/CannonballStandardMetallic.png>) | Изображение / текстура |
+| [Assets/Models/Loot/Replacement/CannonballStandard/CannonballStandardNormal.png](<../../Assets/Models/Loot/Replacement/CannonballStandard/CannonballStandardNormal.png>) | Изображение / текстура |
+| [Assets/Models/Loot/Replacement/CannonballStandard/CannonballStandardRoughness.png](<../../Assets/Models/Loot/Replacement/CannonballStandard/CannonballStandardRoughness.png>) | Изображение / текстура |
+| [Assets/Models/Loot/Replacement/CannonballStandard/CannonballStandardVisual.prefab](<../../Assets/Models/Loot/Replacement/CannonballStandard/CannonballStandardVisual.prefab>) | Префаб Unity |
+
+## Assets/Models/Loot/Replacement/GrappleHook
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/Loot/Replacement/GrappleHook/GrappleHook.fbx](<../../Assets/Models/Loot/Replacement/GrappleHook/GrappleHook.fbx>) | Модель / анимации FBX |
+| [Assets/Models/Loot/Replacement/GrappleHook/GrappleHook.mat](<../../Assets/Models/Loot/Replacement/GrappleHook/GrappleHook.mat>) | Материал Unity |
+| [Assets/Models/Loot/Replacement/GrappleHook/GrappleHookBaseColor.jpg](<../../Assets/Models/Loot/Replacement/GrappleHook/GrappleHookBaseColor.jpg>) | Изображение / текстура |
+| [Assets/Models/Loot/Replacement/GrappleHook/GrappleHookMetalSmooth.png](<../../Assets/Models/Loot/Replacement/GrappleHook/GrappleHookMetalSmooth.png>) | Изображение / текстура |
+| [Assets/Models/Loot/Replacement/GrappleHook/GrappleHookMetallic.png](<../../Assets/Models/Loot/Replacement/GrappleHook/GrappleHookMetallic.png>) | Изображение / текстура |
+| [Assets/Models/Loot/Replacement/GrappleHook/GrappleHookNormal.png](<../../Assets/Models/Loot/Replacement/GrappleHook/GrappleHookNormal.png>) | Изображение / текстура |
+| [Assets/Models/Loot/Replacement/GrappleHook/GrappleHookRoughness.png](<../../Assets/Models/Loot/Replacement/GrappleHook/GrappleHookRoughness.png>) | Изображение / текстура |
+| [Assets/Models/Loot/Replacement/GrappleHook/GrappleHookVisual.prefab](<../../Assets/Models/Loot/Replacement/GrappleHook/GrappleHookVisual.prefab>) | Префаб Unity |
+
+## Assets/Models/Loot/Replacement/HolyGrenade
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/Loot/Replacement/HolyGrenade/HolyGrenade.fbx](<../../Assets/Models/Loot/Replacement/HolyGrenade/HolyGrenade.fbx>) | Модель / анимации FBX |
+| [Assets/Models/Loot/Replacement/HolyGrenade/HolyGrenade.mat](<../../Assets/Models/Loot/Replacement/HolyGrenade/HolyGrenade.mat>) | Материал Unity |
+| [Assets/Models/Loot/Replacement/HolyGrenade/HolyGrenadeBaseColor.jpg](<../../Assets/Models/Loot/Replacement/HolyGrenade/HolyGrenadeBaseColor.jpg>) | Изображение / текстура |
+| [Assets/Models/Loot/Replacement/HolyGrenade/HolyGrenadeMetalSmooth.png](<../../Assets/Models/Loot/Replacement/HolyGrenade/HolyGrenadeMetalSmooth.png>) | Изображение / текстура |
+| [Assets/Models/Loot/Replacement/HolyGrenade/HolyGrenadeMetallic.png](<../../Assets/Models/Loot/Replacement/HolyGrenade/HolyGrenadeMetallic.png>) | Изображение / текстура |
+| [Assets/Models/Loot/Replacement/HolyGrenade/HolyGrenadeNormal.png](<../../Assets/Models/Loot/Replacement/HolyGrenade/HolyGrenadeNormal.png>) | Изображение / текстура |
+| [Assets/Models/Loot/Replacement/HolyGrenade/HolyGrenadeRoughness.png](<../../Assets/Models/Loot/Replacement/HolyGrenade/HolyGrenadeRoughness.png>) | Изображение / текстура |
+| [Assets/Models/Loot/Replacement/HolyGrenade/HolyGrenadeVisual.prefab](<../../Assets/Models/Loot/Replacement/HolyGrenade/HolyGrenadeVisual.prefab>) | Префаб Unity |
+
+## Assets/Models/Loot/Replacement/RumBottle
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/Loot/Replacement/RumBottle/RumBottle.fbx](<../../Assets/Models/Loot/Replacement/RumBottle/RumBottle.fbx>) | Модель / анимации FBX |
+| [Assets/Models/Loot/Replacement/RumBottle/RumBottle.mat](<../../Assets/Models/Loot/Replacement/RumBottle/RumBottle.mat>) | Материал Unity |
+| [Assets/Models/Loot/Replacement/RumBottle/RumBottleBaseColor.jpg](<../../Assets/Models/Loot/Replacement/RumBottle/RumBottleBaseColor.jpg>) | Изображение / текстура |
+| [Assets/Models/Loot/Replacement/RumBottle/RumBottleMetalSmooth.png](<../../Assets/Models/Loot/Replacement/RumBottle/RumBottleMetalSmooth.png>) | Изображение / текстура |
+| [Assets/Models/Loot/Replacement/RumBottle/RumBottleMetallic.png](<../../Assets/Models/Loot/Replacement/RumBottle/RumBottleMetallic.png>) | Изображение / текстура |
+| [Assets/Models/Loot/Replacement/RumBottle/RumBottleNormal.png](<../../Assets/Models/Loot/Replacement/RumBottle/RumBottleNormal.png>) | Изображение / текстура |
+| [Assets/Models/Loot/Replacement/RumBottle/RumBottleRoughness.png](<../../Assets/Models/Loot/Replacement/RumBottle/RumBottleRoughness.png>) | Изображение / текстура |
+| [Assets/Models/Loot/Replacement/RumBottle/RumBottleVisual.prefab](<../../Assets/Models/Loot/Replacement/RumBottle/RumBottleVisual.prefab>) | Префаб Unity |
+
 ## Assets/Models/Loot/VortexBottle
 
 | Файл | Краткое описание |
@@ -911,42 +1067,6 @@
 | [Assets/Models/Ships/ShipSkeleton/Ship_Skeleton.blend](<../../Assets/Models/Ships/ShipSkeleton/Ship_Skeleton.blend>) | Редактируемая сцена Blender |
 | [Assets/Models/Ships/ShipSkeleton/Ship_Skeleton.fbx](<../../Assets/Models/Ships/ShipSkeleton/Ship_Skeleton.fbx>) | Модель / анимации FBX |
 
-## Assets/Models/Ships/ShipSkeleton/Materials
-
-| Файл | Краткое описание |
-| --- | --- |
-| [Assets/Models/Ships/ShipSkeleton/Materials/Deck_Wood_Tone_0.mat](<../../Assets/Models/Ships/ShipSkeleton/Materials/Deck_Wood_Tone_0.mat>) | Материал Unity |
-| [Assets/Models/Ships/ShipSkeleton/Materials/Deck_Wood_Tone_1.mat](<../../Assets/Models/Ships/ShipSkeleton/Materials/Deck_Wood_Tone_1.mat>) | Материал Unity |
-| [Assets/Models/Ships/ShipSkeleton/Materials/Deck_Wood_Tone_2.mat](<../../Assets/Models/Ships/ShipSkeleton/Materials/Deck_Wood_Tone_2.mat>) | Материал Unity |
-| [Assets/Models/Ships/ShipSkeleton/Materials/Deck_Wood_Tone_3.mat](<../../Assets/Models/Ships/ShipSkeleton/Materials/Deck_Wood_Tone_3.mat>) | Материал Unity |
-| [Assets/Models/Ships/ShipSkeleton/Materials/Deck_Wood_Tone_4.mat](<../../Assets/Models/Ships/ShipSkeleton/Materials/Deck_Wood_Tone_4.mat>) | Материал Unity |
-| [Assets/Models/Ships/ShipSkeleton/Materials/Frame_Fair_Wood.mat](<../../Assets/Models/Ships/ShipSkeleton/Materials/Frame_Fair_Wood.mat>) | Материал Unity |
-| [Assets/Models/Ships/ShipSkeleton/Materials/Frame_Timber_Wood.mat](<../../Assets/Models/Ships/ShipSkeleton/Materials/Frame_Timber_Wood.mat>) | Материал Unity |
-| [Assets/Models/Ships/ShipSkeleton/Materials/Hull_Pitched_Seams.mat](<../../Assets/Models/Ships/ShipSkeleton/Materials/Hull_Pitched_Seams.mat>) | Материал Unity |
-| [Assets/Models/Ships/ShipSkeleton/Materials/Hull_Wood_A_1.mat](<../../Assets/Models/Ships/ShipSkeleton/Materials/Hull_Wood_A_1.mat>) | Материал Unity |
-| [Assets/Models/Ships/ShipSkeleton/Materials/Hull_Wood_A_2.mat](<../../Assets/Models/Ships/ShipSkeleton/Materials/Hull_Wood_A_2.mat>) | Материал Unity |
-| [Assets/Models/Ships/ShipSkeleton/Materials/Hull_Wood_A_3.mat](<../../Assets/Models/Ships/ShipSkeleton/Materials/Hull_Wood_A_3.mat>) | Материал Unity |
-| [Assets/Models/Ships/ShipSkeleton/Materials/Hull_Wood_A_4.mat](<../../Assets/Models/Ships/ShipSkeleton/Materials/Hull_Wood_A_4.mat>) | Материал Unity |
-| [Assets/Models/Ships/ShipSkeleton/Materials/Hull_Wood_A_5.mat](<../../Assets/Models/Ships/ShipSkeleton/Materials/Hull_Wood_A_5.mat>) | Материал Unity |
-| [Assets/Models/Ships/ShipSkeleton/Materials/Hull_Wood_B_1.mat](<../../Assets/Models/Ships/ShipSkeleton/Materials/Hull_Wood_B_1.mat>) | Материал Unity |
-| [Assets/Models/Ships/ShipSkeleton/Materials/Hull_Wood_B_2.mat](<../../Assets/Models/Ships/ShipSkeleton/Materials/Hull_Wood_B_2.mat>) | Материал Unity |
-| [Assets/Models/Ships/ShipSkeleton/Materials/Hull_Wood_B_3.mat](<../../Assets/Models/Ships/ShipSkeleton/Materials/Hull_Wood_B_3.mat>) | Материал Unity |
-| [Assets/Models/Ships/ShipSkeleton/Materials/Hull_Wood_B_4.mat](<../../Assets/Models/Ships/ShipSkeleton/Materials/Hull_Wood_B_4.mat>) | Материал Unity |
-| [Assets/Models/Ships/ShipSkeleton/Materials/Hull_Wood_B_5.mat](<../../Assets/Models/Ships/ShipSkeleton/Materials/Hull_Wood_B_5.mat>) | Материал Unity |
-| [Assets/Models/Ships/ShipSkeleton/Materials/Hull_Wood_C_1.mat](<../../Assets/Models/Ships/ShipSkeleton/Materials/Hull_Wood_C_1.mat>) | Материал Unity |
-| [Assets/Models/Ships/ShipSkeleton/Materials/Hull_Wood_C_2.mat](<../../Assets/Models/Ships/ShipSkeleton/Materials/Hull_Wood_C_2.mat>) | Материал Unity |
-| [Assets/Models/Ships/ShipSkeleton/Materials/Hull_Wood_C_3.mat](<../../Assets/Models/Ships/ShipSkeleton/Materials/Hull_Wood_C_3.mat>) | Материал Unity |
-| [Assets/Models/Ships/ShipSkeleton/Materials/Hull_Wood_C_4.mat](<../../Assets/Models/Ships/ShipSkeleton/Materials/Hull_Wood_C_4.mat>) | Материал Unity |
-| [Assets/Models/Ships/ShipSkeleton/Materials/Hull_Wood_C_5.mat](<../../Assets/Models/Ships/ShipSkeleton/Materials/Hull_Wood_C_5.mat>) | Материал Unity |
-| [Assets/Models/Ships/ShipSkeleton/Materials/tripo_mat_2868da2a.001.mat](<../../Assets/Models/Ships/ShipSkeleton/Materials/tripo_mat_2868da2a.001.mat>) | Материал Unity |
-| [Assets/Models/Ships/ShipSkeleton/Materials/tripo_mat_30f26cab.mat](<../../Assets/Models/Ships/ShipSkeleton/Materials/tripo_mat_30f26cab.mat>) | Материал Unity |
-| [Assets/Models/Ships/ShipSkeleton/Materials/tripo_mat_48a3f202.mat](<../../Assets/Models/Ships/ShipSkeleton/Materials/tripo_mat_48a3f202.mat>) | Материал Unity |
-| [Assets/Models/Ships/ShipSkeleton/Materials/tripo_mat_4ba0b6ce.mat](<../../Assets/Models/Ships/ShipSkeleton/Materials/tripo_mat_4ba0b6ce.mat>) | Материал Unity |
-| [Assets/Models/Ships/ShipSkeleton/Materials/tripo_mat_55737ea7.mat](<../../Assets/Models/Ships/ShipSkeleton/Materials/tripo_mat_55737ea7.mat>) | Материал Unity |
-| [Assets/Models/Ships/ShipSkeleton/Materials/tripo_mat_7ef8707e.mat](<../../Assets/Models/Ships/ShipSkeleton/Materials/tripo_mat_7ef8707e.mat>) | Материал Unity |
-| [Assets/Models/Ships/ShipSkeleton/Materials/tripo_mat_863a0ec8.mat](<../../Assets/Models/Ships/ShipSkeleton/Materials/tripo_mat_863a0ec8.mat>) | Материал Unity |
-| [Assets/Models/Ships/ShipSkeleton/Materials/tripo_mat_fcfed6b4.mat](<../../Assets/Models/Ships/ShipSkeleton/Materials/tripo_mat_fcfed6b4.mat>) | Материал Unity |
-
 ## Assets/Models/Ships/ShipSkeleton/Textures
 
 | Файл | Краткое описание |
@@ -1013,6 +1133,401 @@
 | [Assets/Models/Ships/ShipSkeleton/Textures/штурвал_normal.PNG](<../../Assets/Models/Ships/ShipSkeleton/Textures/штурвал_normal.PNG>) | Изображение / текстура |
 | [Assets/Models/Ships/ShipSkeleton/Textures/штурвал_rm.JPEG](<../../Assets/Models/Ships/ShipSkeleton/Textures/штурвал_rm.JPEG>) | Изображение / текстура |
 | [Assets/Models/Ships/ShipSkeleton/Textures/штурвал_roughness.JPEG](<../../Assets/Models/Ships/ShipSkeleton/Textures/штурвал_roughness.JPEG>) | Изображение / текстура |
+
+## Assets/Models/Ships/ShipV3
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/Ships/ShipV3/DiceTablePhysics.asset](<../../Assets/Models/Ships/ShipV3/DiceTablePhysics.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/ShipV3.fbx](<../../Assets/Models/Ships/ShipV3/ShipV3.fbx>) | Модель / анимации FBX; Модели и Blender |
+| [Assets/Models/Ships/ShipV3/ShipV3.json](<../../Assets/Models/Ships/ShipV3/ShipV3.json>) | Конфигурация / данные JSON; Модели и Blender |
+
+## Assets/Models/Ships/ShipV3/Materials
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/Ships/ShipV3/Materials/AnchorChainInstanced.mat](<../../Assets/Models/Ships/ShipV3/Materials/AnchorChainInstanced.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipV3/Materials/Outfit_Canvas_Seams.001.mat](<../../Assets/Models/Ships/ShipV3/Materials/Outfit_Canvas_Seams.001.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipV3/Materials/Outfit_Warm_Canvas.001.mat](<../../Assets/Models/Ships/ShipV3/Materials/Outfit_Warm_Canvas.001.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipV3/Materials/Polish_Lantern_Source_PBR.mat](<../../Assets/Models/Ships/ShipV3/Materials/Polish_Lantern_Source_PBR.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipV3/Materials/Polish_Raven_Source_PBR.mat](<../../Assets/Models/Ships/ShipV3/Materials/Polish_Raven_Source_PBR.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipV3/Materials/Ship_Art_Boarding_Hemp.001.mat](<../../Assets/Models/Ships/ShipV3/Materials/Ship_Art_Boarding_Hemp.001.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipV3/Materials/Ship_Art_Bollards.001.mat](<../../Assets/Models/Ships/ShipV3/Materials/Ship_Art_Bollards.001.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipV3/Materials/Ship_Art_Fracture_Fresh_Wood.mat](<../../Assets/Models/Ships/ShipV3/Materials/Ship_Art_Fracture_Fresh_Wood.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipV3/Materials/Ship_Art_HoldDoorway.001.mat](<../../Assets/Models/Ships/ShipV3/Materials/Ship_Art_HoldDoorway.001.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipV3/Materials/Ship_Hemp_Rope_PBR.001.mat](<../../Assets/Models/Ships/ShipV3/Materials/Ship_Hemp_Rope_PBR.001.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipV3/Materials/Ship_Hemp_Rope_PBR.mat](<../../Assets/Models/Ships/ShipV3/Materials/Ship_Hemp_Rope_PBR.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipV3/Materials/V11_Capstan_Ship_Wood_tripo_mat_de240f86.mat](<../../Assets/Models/Ships/ShipV3/Materials/V11_Capstan_Ship_Wood_tripo_mat_de240f86.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipV3/Materials/V11_Capstan_Ship_Wood_tripo_mat_e931b21e.mat](<../../Assets/Models/Ships/ShipV3/Materials/V11_Capstan_Ship_Wood_tripo_mat_e931b21e.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipV3/Materials/V15_Dispenser_Original_Albedo.mat](<../../Assets/Models/Ships/ShipV3/Materials/V15_Dispenser_Original_Albedo.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipV3/Materials/V15_Hold_Doorway_Original_PBR.mat](<../../Assets/Models/Ships/ShipV3/Materials/V15_Hold_Doorway_Original_PBR.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipV3/Materials/V17_Dice_AgedIvory.mat](<../../Assets/Models/Ships/ShipV3/Materials/V17_Dice_AgedIvory.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipV3/Materials/V17_Dice_DarkInsetPips.mat](<../../Assets/Models/Ships/ShipV3/Materials/V17_Dice_DarkInsetPips.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipV3/Materials/V17_Door_Original_PBR.mat](<../../Assets/Models/Ships/ShipV3/Materials/V17_Door_Original_PBR.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipV3/Materials/V17_Pirate_Flag_Worn_Canvas.mat](<../../Assets/Models/Ships/ShipV3/Materials/V17_Pirate_Flag_Worn_Canvas.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipV3/Materials/V17_Stern_Original_PBR.mat](<../../Assets/Models/Ships/ShipV3/Materials/V17_Stern_Original_PBR.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipV3/Materials/V19_Stern_Lantern_ForgedIron.mat](<../../Assets/Models/Ships/ShipV3/Materials/V19_Stern_Lantern_ForgedIron.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipV3/Materials/V2_Oxidized_Iron.mat](<../../Assets/Models/Ships/ShipV3/Materials/V2_Oxidized_Iron.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipV3/Materials/V3_Lantern_AmberGlass_Emissive.mat](<../../Assets/Models/Ships/ShipV3/Materials/V3_Lantern_AmberGlass_Emissive.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipV3/Materials/V3_Lantern_Bracket_ForgedIron.mat](<../../Assets/Models/Ships/ShipV3/Materials/V3_Lantern_Bracket_ForgedIron.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipV3/Materials/V4_Deck_Ship_Art_Deck_Worn_Oak_V0.mat](<../../Assets/Models/Ships/ShipV3/Materials/V4_Deck_Ship_Art_Deck_Worn_Oak_V0.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipV3/Materials/V4_Deck_Ship_Art_Deck_Worn_Oak_V1.mat](<../../Assets/Models/Ships/ShipV3/Materials/V4_Deck_Ship_Art_Deck_Worn_Oak_V1.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipV3/Materials/V4_Deck_Ship_Art_Deck_Worn_Oak_V2.mat](<../../Assets/Models/Ships/ShipV3/Materials/V4_Deck_Ship_Art_Deck_Worn_Oak_V2.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipV3/Materials/V4_Deck_Ship_Art_Deck_Worn_Oak_V3.mat](<../../Assets/Models/Ships/ShipV3/Materials/V4_Deck_Ship_Art_Deck_Worn_Oak_V3.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipV3/Materials/V4_Frame_Ship_Art_Frame_Warm_Timber.mat](<../../Assets/Models/Ships/ShipV3/Materials/V4_Frame_Ship_Art_Frame_Warm_Timber.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipV3/Materials/V4_Hull_Ship_Art_Hull_Honey_Oak_V0.mat](<../../Assets/Models/Ships/ShipV3/Materials/V4_Hull_Ship_Art_Hull_Honey_Oak_V0.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipV3/Materials/V4_Hull_Ship_Art_Hull_Honey_Oak_V1.mat](<../../Assets/Models/Ships/ShipV3/Materials/V4_Hull_Ship_Art_Hull_Honey_Oak_V1.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipV3/Materials/V4_Hull_Ship_Art_Hull_Honey_Oak_V2.mat](<../../Assets/Models/Ships/ShipV3/Materials/V4_Hull_Ship_Art_Hull_Honey_Oak_V2.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipV3/Materials/V4_Hull_Ship_Art_Hull_Honey_Oak_V3.mat](<../../Assets/Models/Ships/ShipV3/Materials/V4_Hull_Ship_Art_Hull_Honey_Oak_V3.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipV3/Materials/V4_RaisedRib_Ship_Art_Frame_Warm_Timber.mat](<../../Assets/Models/Ships/ShipV3/Materials/V4_RaisedRib_Ship_Art_Frame_Warm_Timber.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipV3/Materials/V5_Ship_Art_Balusters.mat](<../../Assets/Models/Ships/ShipV3/Materials/V5_Ship_Art_Balusters.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipV3/Materials/V5_Ship_Art_Helm_Pedestal.mat](<../../Assets/Models/Ships/ShipV3/Materials/V5_Ship_Art_Helm_Pedestal.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipV3/Materials/V5_Ship_Art_Helm_Wheel.mat](<../../Assets/Models/Ships/ShipV3/Materials/V5_Ship_Art_Helm_Wheel.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipV3/Materials/V5_Ship_Art_Mast_Carved_Base.mat](<../../Assets/Models/Ships/ShipV3/Materials/V5_Ship_Art_Mast_Carved_Base.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipV3/Materials/V5_Ship_Art_Mast_Carved_Shaft.mat](<../../Assets/Models/Ships/ShipV3/Materials/V5_Ship_Art_Mast_Carved_Shaft.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipV3/Materials/V5_Ship_Art_Rail_Continuous_Carving.mat](<../../Assets/Models/Ships/ShipV3/Materials/V5_Ship_Art_Rail_Continuous_Carving.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipV3/Materials/V5_Ship_Art_RiggingBlock.mat](<../../Assets/Models/Ships/ShipV3/Materials/V5_Ship_Art_RiggingBlock.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipV3/Materials/V5_Ship_Art_SailLever.mat](<../../Assets/Models/Ships/ShipV3/Materials/V5_Ship_Art_SailLever.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipV3/Materials/V5_Ship_Art_SailSheave.mat](<../../Assets/Models/Ships/ShipV3/Materials/V5_Ship_Art_SailSheave.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipV3/Materials/V5_Ship_Art_SailStand.mat](<../../Assets/Models/Ships/ShipV3/Materials/V5_Ship_Art_SailStand.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipV3/Materials/V5_Ship_Art_Yards.mat](<../../Assets/Models/Ships/ShipV3/Materials/V5_Ship_Art_Yards.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipV3/Materials/V5_V4_CarvedBow_Polish_Curved_A_Source_PBR.mat](<../../Assets/Models/Ships/ShipV3/Materials/V5_V4_CarvedBow_Polish_Curved_A_Source_PBR.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipV3/Materials/V6_Ship_Art_Mast_Carved_Base.mat](<../../Assets/Models/Ships/ShipV3/Materials/V6_Ship_Art_Mast_Carved_Base.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipV3/Materials/V6_Ship_Art_Mast_Carved_Shaft.mat](<../../Assets/Models/Ships/ShipV3/Materials/V6_Ship_Art_Mast_Carved_Shaft.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipV3/Materials/V6_Ship_Art_Yards_Tiled.mat](<../../Assets/Models/Ships/ShipV3/Materials/V6_Ship_Art_Yards_Tiled.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipV3/Materials/V8_ShipBell_Body.mat](<../../Assets/Models/Ships/ShipV3/Materials/V8_ShipBell_Body.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipV3/Materials/V8_ShipBell_Bracket.mat](<../../Assets/Models/Ships/ShipV3/Materials/V8_ShipBell_Bracket.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipV3/Materials/V8_ShipBell_Clapper.mat](<../../Assets/Models/Ships/ShipV3/Materials/V8_ShipBell_Clapper.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipV3/Materials/V8_ShipBell_PullRope.mat](<../../Assets/Models/Ships/ShipV3/Materials/V8_ShipBell_PullRope.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipV3/Materials/V9_Anchor_Forged_Iron_PBR.mat](<../../Assets/Models/Ships/ShipV3/Materials/V9_Anchor_Forged_Iron_PBR.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipV3/Materials/tripo_mat_1a720f46.mat](<../../Assets/Models/Ships/ShipV3/Materials/tripo_mat_1a720f46.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipV3/Materials/tripo_mat_2868da2a.002.mat](<../../Assets/Models/Ships/ShipV3/Materials/tripo_mat_2868da2a.002.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipV3/Materials/tripo_mat_4c763aa7.mat](<../../Assets/Models/Ships/ShipV3/Materials/tripo_mat_4c763aa7.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipV3/Materials/tripo_mat_53794ee9.mat](<../../Assets/Models/Ships/ShipV3/Materials/tripo_mat_53794ee9.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipV3/Materials/tripo_mat_8ec1e5a4.mat](<../../Assets/Models/Ships/ShipV3/Materials/tripo_mat_8ec1e5a4.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipV3/Materials/tripo_mat_a1e1a2ee.mat](<../../Assets/Models/Ships/ShipV3/Materials/tripo_mat_a1e1a2ee.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipV3/Materials/tripo_mat_c888285e.mat](<../../Assets/Models/Ships/ShipV3/Materials/tripo_mat_c888285e.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipV3/Materials/tripo_mat_c8b65acb.mat](<../../Assets/Models/Ships/ShipV3/Materials/tripo_mat_c8b65acb.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipV3/Materials/tripo_mat_ce3c5380.mat](<../../Assets/Models/Ships/ShipV3/Materials/tripo_mat_ce3c5380.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipV3/Materials/tripo_mat_d9459e62.mat](<../../Assets/Models/Ships/ShipV3/Materials/tripo_mat_d9459e62.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipV3/Materials/tripo_mat_de240f86.mat](<../../Assets/Models/Ships/ShipV3/Materials/tripo_mat_de240f86.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipV3/Materials/tripo_mat_e931b21e.mat](<../../Assets/Models/Ships/ShipV3/Materials/tripo_mat_e931b21e.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipV3/Materials/tripo_mat_f6458781.mat](<../../Assets/Models/Ships/ShipV3/Materials/tripo_mat_f6458781.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipV3/Materials/tripo_node_2dd827db-4583-44f0-a59e-43c01e5a3143_material.001.mat](<../../Assets/Models/Ships/ShipV3/Materials/tripo_node_2dd827db-4583-44f0-a59e-43c01e5a3143_material.001.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipV3/Materials/wooden_barrels_01_barrel01.mat](<../../Assets/Models/Ships/ShipV3/Materials/wooden_barrels_01_barrel01.mat>) | Материал Unity |
+
+## Assets/Models/Ships/ShipV3/RuntimeMeshes
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/AnchorChainLink.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/AnchorChainLink.asset>) | Настройки или данные Unity |
+
+## Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_0.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_0.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_1.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_1.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_10.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_10.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_100.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_100.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_101.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_101.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_102.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_102.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_103.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_103.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_104.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_104.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_105.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_105.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_106.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_106.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_107.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_107.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_108.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_108.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_109.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_109.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_11.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_11.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_12.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_12.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_13.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_13.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_14.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_14.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_15.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_15.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_16.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_16.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_17.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_17.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_18.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_18.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_19.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_19.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_2.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_2.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_20.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_20.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_21.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_21.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_22.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_22.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_23.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_23.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_24.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_24.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_25.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_25.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_26.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_26.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_27.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_27.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_28.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_28.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_29.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_29.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_3.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_3.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_30.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_30.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_31.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_31.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_32.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_32.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_33.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_33.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_34.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_34.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_35.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_35.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_36.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_36.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_37.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_37.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_38.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_38.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_39.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_39.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_4.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_4.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_40.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_40.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_41.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_41.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_42.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_42.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_43.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_43.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_44.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_44.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_45.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_45.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_46.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_46.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_47.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_47.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_48.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_48.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_49.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_49.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_5.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_5.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_50.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_50.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_51.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_51.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_52.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_52.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_53.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_53.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_54.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_54.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_55.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_55.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_56.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_56.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_57.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_57.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_58.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_58.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_59.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_59.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_6.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_6.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_60.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_60.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_61.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_61.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_62.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_62.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_63.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_63.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_64.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_64.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_65.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_65.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_66.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_66.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_67.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_67.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_68.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_68.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_69.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_69.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_7.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_7.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_70.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_70.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_71.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_71.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_72.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_72.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_73.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_73.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_74.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_74.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_75.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_75.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_76.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_76.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_77.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_77.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_78.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_78.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_79.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_79.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_8.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_8.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_80.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_80.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_81.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_81.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_82.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_82.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_83.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_83.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_84.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_84.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_85.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_85.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_86.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_86.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_87.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_87.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_88.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_88.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_89.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_89.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_9.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_9.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_90.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_90.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_91.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_91.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_92.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_92.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_93.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_93.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_94.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_94.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_95.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_95.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_96.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_96.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_97.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_97.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_98.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_98.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_99.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_99.asset>) | Настройки или данные Unity |
+
+## Assets/Models/Ships/ShipV3/Textures
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/Ships/ShipV3/Textures/012b894cc335.png](<../../Assets/Models/Ships/ShipV3/Textures/012b894cc335.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/0394a121c539.png](<../../Assets/Models/Ships/ShipV3/Textures/0394a121c539.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/04e933786caf.png](<../../Assets/Models/Ships/ShipV3/Textures/04e933786caf.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/0528e29b8731.jpeg](<../../Assets/Models/Ships/ShipV3/Textures/0528e29b8731.jpeg>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/0571d51b8d5f.png](<../../Assets/Models/Ships/ShipV3/Textures/0571d51b8d5f.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/05b869bdc7dd.png](<../../Assets/Models/Ships/ShipV3/Textures/05b869bdc7dd.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/06ed88279bb9.jpeg](<../../Assets/Models/Ships/ShipV3/Textures/06ed88279bb9.jpeg>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/0a1d66e5005c.jpeg](<../../Assets/Models/Ships/ShipV3/Textures/0a1d66e5005c.jpeg>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/0a6b42d0e06b.jpeg](<../../Assets/Models/Ships/ShipV3/Textures/0a6b42d0e06b.jpeg>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/0b4c500f730d.png](<../../Assets/Models/Ships/ShipV3/Textures/0b4c500f730d.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/0c72cc5de33b.png](<../../Assets/Models/Ships/ShipV3/Textures/0c72cc5de33b.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/0d0fa36ab4e2.jpeg](<../../Assets/Models/Ships/ShipV3/Textures/0d0fa36ab4e2.jpeg>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/0ec080cf828c.png](<../../Assets/Models/Ships/ShipV3/Textures/0ec080cf828c.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/107be972de36.jpeg](<../../Assets/Models/Ships/ShipV3/Textures/107be972de36.jpeg>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/11d9125e4690.png](<../../Assets/Models/Ships/ShipV3/Textures/11d9125e4690.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/1408c1c7425a.png](<../../Assets/Models/Ships/ShipV3/Textures/1408c1c7425a.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/1564f8233e99.png](<../../Assets/Models/Ships/ShipV3/Textures/1564f8233e99.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/18fe715b57e7.png](<../../Assets/Models/Ships/ShipV3/Textures/18fe715b57e7.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/1cd517e417c4.png](<../../Assets/Models/Ships/ShipV3/Textures/1cd517e417c4.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/1f56fad16450.png](<../../Assets/Models/Ships/ShipV3/Textures/1f56fad16450.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/210d575e982b.png](<../../Assets/Models/Ships/ShipV3/Textures/210d575e982b.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/2305071af6c7.png](<../../Assets/Models/Ships/ShipV3/Textures/2305071af6c7.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/23d04db0c146.png](<../../Assets/Models/Ships/ShipV3/Textures/23d04db0c146.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/246750b7ff37.png](<../../Assets/Models/Ships/ShipV3/Textures/246750b7ff37.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/260d5dca2159.png](<../../Assets/Models/Ships/ShipV3/Textures/260d5dca2159.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/27b0884f8956.png](<../../Assets/Models/Ships/ShipV3/Textures/27b0884f8956.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/283412a6f5c5.png](<../../Assets/Models/Ships/ShipV3/Textures/283412a6f5c5.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/28526a3fa73c.jpeg](<../../Assets/Models/Ships/ShipV3/Textures/28526a3fa73c.jpeg>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/29671678ee94.png](<../../Assets/Models/Ships/ShipV3/Textures/29671678ee94.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/2c6382c31683.jpg](<../../Assets/Models/Ships/ShipV3/Textures/2c6382c31683.jpg>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/2d496f092b06.png](<../../Assets/Models/Ships/ShipV3/Textures/2d496f092b06.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/2e21655b7c2c.png](<../../Assets/Models/Ships/ShipV3/Textures/2e21655b7c2c.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/2e2c7b63e507.png](<../../Assets/Models/Ships/ShipV3/Textures/2e2c7b63e507.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/2e54c0a72c89.jpeg](<../../Assets/Models/Ships/ShipV3/Textures/2e54c0a72c89.jpeg>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/322073c7a6ac.jpeg](<../../Assets/Models/Ships/ShipV3/Textures/322073c7a6ac.jpeg>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/3246744eb478.jpeg](<../../Assets/Models/Ships/ShipV3/Textures/3246744eb478.jpeg>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/3536f8b39804.jpg](<../../Assets/Models/Ships/ShipV3/Textures/3536f8b39804.jpg>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/3572c470b790.jpeg](<../../Assets/Models/Ships/ShipV3/Textures/3572c470b790.jpeg>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/371667b25f87.jpeg](<../../Assets/Models/Ships/ShipV3/Textures/371667b25f87.jpeg>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/3a4fb790d40c.jpeg](<../../Assets/Models/Ships/ShipV3/Textures/3a4fb790d40c.jpeg>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/40081a0d45f7.jpeg](<../../Assets/Models/Ships/ShipV3/Textures/40081a0d45f7.jpeg>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/43c10e1aa608.jpeg](<../../Assets/Models/Ships/ShipV3/Textures/43c10e1aa608.jpeg>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/440d099dad63.jpeg](<../../Assets/Models/Ships/ShipV3/Textures/440d099dad63.jpeg>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/452acaf45f2f.jpeg](<../../Assets/Models/Ships/ShipV3/Textures/452acaf45f2f.jpeg>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/4804748ab384.png](<../../Assets/Models/Ships/ShipV3/Textures/4804748ab384.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/48af0e8a2214.jpeg](<../../Assets/Models/Ships/ShipV3/Textures/48af0e8a2214.jpeg>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/49b469b8f8ef.png](<../../Assets/Models/Ships/ShipV3/Textures/49b469b8f8ef.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/49b7f6a0e3df.png](<../../Assets/Models/Ships/ShipV3/Textures/49b7f6a0e3df.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/4a645f4e9656.png](<../../Assets/Models/Ships/ShipV3/Textures/4a645f4e9656.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/4bf57e1e92be.jpeg](<../../Assets/Models/Ships/ShipV3/Textures/4bf57e1e92be.jpeg>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/4cd7883df729.png](<../../Assets/Models/Ships/ShipV3/Textures/4cd7883df729.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/4ec74d24d134.png](<../../Assets/Models/Ships/ShipV3/Textures/4ec74d24d134.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/4ffc549e59c7.jpeg](<../../Assets/Models/Ships/ShipV3/Textures/4ffc549e59c7.jpeg>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/50001cdc5e54.jpeg](<../../Assets/Models/Ships/ShipV3/Textures/50001cdc5e54.jpeg>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/529e1136d189.png](<../../Assets/Models/Ships/ShipV3/Textures/529e1136d189.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/5366cd19da81.jpeg](<../../Assets/Models/Ships/ShipV3/Textures/5366cd19da81.jpeg>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/53bb58a75068.jpeg](<../../Assets/Models/Ships/ShipV3/Textures/53bb58a75068.jpeg>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/5418ad84681c.png](<../../Assets/Models/Ships/ShipV3/Textures/5418ad84681c.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/544d1ddc3352.png](<../../Assets/Models/Ships/ShipV3/Textures/544d1ddc3352.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/549587f25d41.jpeg](<../../Assets/Models/Ships/ShipV3/Textures/549587f25d41.jpeg>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/54e9f4942890.jpeg](<../../Assets/Models/Ships/ShipV3/Textures/54e9f4942890.jpeg>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/5bb22e528840.png](<../../Assets/Models/Ships/ShipV3/Textures/5bb22e528840.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/5f481015585f.jpeg](<../../Assets/Models/Ships/ShipV3/Textures/5f481015585f.jpeg>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/622fa07c7254.png](<../../Assets/Models/Ships/ShipV3/Textures/622fa07c7254.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/64f9c970ff2e.png](<../../Assets/Models/Ships/ShipV3/Textures/64f9c970ff2e.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/65648fdb6658.png](<../../Assets/Models/Ships/ShipV3/Textures/65648fdb6658.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/6577369c6484.png](<../../Assets/Models/Ships/ShipV3/Textures/6577369c6484.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/685d340704d7.png](<../../Assets/Models/Ships/ShipV3/Textures/685d340704d7.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/68f553d99647.png](<../../Assets/Models/Ships/ShipV3/Textures/68f553d99647.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/69b063589f69.png](<../../Assets/Models/Ships/ShipV3/Textures/69b063589f69.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/6c680cbf06ca.png](<../../Assets/Models/Ships/ShipV3/Textures/6c680cbf06ca.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/6df93d67427f.jpeg](<../../Assets/Models/Ships/ShipV3/Textures/6df93d67427f.jpeg>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/6e2013a45d23.png](<../../Assets/Models/Ships/ShipV3/Textures/6e2013a45d23.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/70538d53dbb4.jpeg](<../../Assets/Models/Ships/ShipV3/Textures/70538d53dbb4.jpeg>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/7213435499ea.jpeg](<../../Assets/Models/Ships/ShipV3/Textures/7213435499ea.jpeg>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/7229cab9ebf7.png](<../../Assets/Models/Ships/ShipV3/Textures/7229cab9ebf7.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/747dd3f5f4d5.jpeg](<../../Assets/Models/Ships/ShipV3/Textures/747dd3f5f4d5.jpeg>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/752af9c125ee.jpeg](<../../Assets/Models/Ships/ShipV3/Textures/752af9c125ee.jpeg>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/766a1a2fb6c7.png](<../../Assets/Models/Ships/ShipV3/Textures/766a1a2fb6c7.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/76c342263a3d.jpeg](<../../Assets/Models/Ships/ShipV3/Textures/76c342263a3d.jpeg>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/78a098f57f8b.jpeg](<../../Assets/Models/Ships/ShipV3/Textures/78a098f57f8b.jpeg>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/79080bb300be.png](<../../Assets/Models/Ships/ShipV3/Textures/79080bb300be.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/791e87b80700.jpeg](<../../Assets/Models/Ships/ShipV3/Textures/791e87b80700.jpeg>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/7945bf6a3bb9.png](<../../Assets/Models/Ships/ShipV3/Textures/7945bf6a3bb9.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/7d3aad972ff0.jpeg](<../../Assets/Models/Ships/ShipV3/Textures/7d3aad972ff0.jpeg>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/7fcca710dcdf.jpeg](<../../Assets/Models/Ships/ShipV3/Textures/7fcca710dcdf.jpeg>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/805264e812d1.jpeg](<../../Assets/Models/Ships/ShipV3/Textures/805264e812d1.jpeg>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/805fb188c207.jpeg](<../../Assets/Models/Ships/ShipV3/Textures/805fb188c207.jpeg>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/83125d17db1c.jpeg](<../../Assets/Models/Ships/ShipV3/Textures/83125d17db1c.jpeg>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/84ce15dc8409.png](<../../Assets/Models/Ships/ShipV3/Textures/84ce15dc8409.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/85dae33e11c3.png](<../../Assets/Models/Ships/ShipV3/Textures/85dae33e11c3.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/85e3d29e8e5d.jpeg](<../../Assets/Models/Ships/ShipV3/Textures/85e3d29e8e5d.jpeg>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/86cd226a77f4.jpeg](<../../Assets/Models/Ships/ShipV3/Textures/86cd226a77f4.jpeg>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/871a24ec9c27.png](<../../Assets/Models/Ships/ShipV3/Textures/871a24ec9c27.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/872652183e20.png](<../../Assets/Models/Ships/ShipV3/Textures/872652183e20.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/8813112b0bb6.jpeg](<../../Assets/Models/Ships/ShipV3/Textures/8813112b0bb6.jpeg>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/88fc0eb78571.jpeg](<../../Assets/Models/Ships/ShipV3/Textures/88fc0eb78571.jpeg>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/89f5c3e6e924.png](<../../Assets/Models/Ships/ShipV3/Textures/89f5c3e6e924.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/89ffe5859fc3.jpeg](<../../Assets/Models/Ships/ShipV3/Textures/89ffe5859fc3.jpeg>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/8a2c33c798ab.png](<../../Assets/Models/Ships/ShipV3/Textures/8a2c33c798ab.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/8bd8a9e752d3.png](<../../Assets/Models/Ships/ShipV3/Textures/8bd8a9e752d3.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/8dd147f2dae5.png](<../../Assets/Models/Ships/ShipV3/Textures/8dd147f2dae5.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/8f1be8ec6fc6.png](<../../Assets/Models/Ships/ShipV3/Textures/8f1be8ec6fc6.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/8f3a2fb1413e.jpeg](<../../Assets/Models/Ships/ShipV3/Textures/8f3a2fb1413e.jpeg>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/8f758eb3e3a0.png](<../../Assets/Models/Ships/ShipV3/Textures/8f758eb3e3a0.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/8f8d6d90adfc.png](<../../Assets/Models/Ships/ShipV3/Textures/8f8d6d90adfc.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/92196f0c5d21.png](<../../Assets/Models/Ships/ShipV3/Textures/92196f0c5d21.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/95ad14cc55a3.png](<../../Assets/Models/Ships/ShipV3/Textures/95ad14cc55a3.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/974838026ab7.png](<../../Assets/Models/Ships/ShipV3/Textures/974838026ab7.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/99222166f9a4.png](<../../Assets/Models/Ships/ShipV3/Textures/99222166f9a4.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/9ab047f71cbc.jpeg](<../../Assets/Models/Ships/ShipV3/Textures/9ab047f71cbc.jpeg>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/9d12429e4c9f.png](<../../Assets/Models/Ships/ShipV3/Textures/9d12429e4c9f.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/9d221f86d4cd.png](<../../Assets/Models/Ships/ShipV3/Textures/9d221f86d4cd.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/9d96f6068932.png](<../../Assets/Models/Ships/ShipV3/Textures/9d96f6068932.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/V11_Capstan_Ship_Wood_tripo_mat_de240f86_MetallicSmoothness.png](<../../Assets/Models/Ships/ShipV3/Textures/V11_Capstan_Ship_Wood_tripo_mat_de240f86_MetallicSmoothness.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/V11_Capstan_Ship_Wood_tripo_mat_e931b21e_MetallicSmoothness.png](<../../Assets/Models/Ships/ShipV3/Textures/V11_Capstan_Ship_Wood_tripo_mat_e931b21e_MetallicSmoothness.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/V15_Hold_Doorway_Original_PBR_MetallicSmoothness.png](<../../Assets/Models/Ships/ShipV3/Textures/V15_Hold_Doorway_Original_PBR_MetallicSmoothness.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/V5_Ship_Art_Mast_Carved_Base_FinalBaseColor.png](<../../Assets/Models/Ships/ShipV3/Textures/V5_Ship_Art_Mast_Carved_Base_FinalBaseColor.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/V5_Ship_Art_Mast_Carved_Base_MetallicSmoothness.png](<../../Assets/Models/Ships/ShipV3/Textures/V5_Ship_Art_Mast_Carved_Base_MetallicSmoothness.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/V5_Ship_Art_Mast_Carved_Shaft_FinalBaseColor.png](<../../Assets/Models/Ships/ShipV3/Textures/V5_Ship_Art_Mast_Carved_Shaft_FinalBaseColor.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/V5_Ship_Art_Mast_Carved_Shaft_MetallicSmoothness.png](<../../Assets/Models/Ships/ShipV3/Textures/V5_Ship_Art_Mast_Carved_Shaft_MetallicSmoothness.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/V6_Ship_Art_Mast_Carved_Base_FinalBaseColor.png](<../../Assets/Models/Ships/ShipV3/Textures/V6_Ship_Art_Mast_Carved_Base_FinalBaseColor.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/V6_Ship_Art_Mast_Carved_Base_MetallicSmoothness.png](<../../Assets/Models/Ships/ShipV3/Textures/V6_Ship_Art_Mast_Carved_Base_MetallicSmoothness.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/V6_Ship_Art_Mast_Carved_Shaft_FinalBaseColor.png](<../../Assets/Models/Ships/ShipV3/Textures/V6_Ship_Art_Mast_Carved_Shaft_FinalBaseColor.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/V6_Ship_Art_Mast_Carved_Shaft_MetallicSmoothness.png](<../../Assets/Models/Ships/ShipV3/Textures/V6_Ship_Art_Mast_Carved_Shaft_MetallicSmoothness.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/a1d3940cb908.png](<../../Assets/Models/Ships/ShipV3/Textures/a1d3940cb908.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/a2968676579a.png](<../../Assets/Models/Ships/ShipV3/Textures/a2968676579a.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/a4768cc744de.png](<../../Assets/Models/Ships/ShipV3/Textures/a4768cc744de.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/a590ab3976fb.jpeg](<../../Assets/Models/Ships/ShipV3/Textures/a590ab3976fb.jpeg>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/a6942e51d0b0.png](<../../Assets/Models/Ships/ShipV3/Textures/a6942e51d0b0.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/a941aaf62aa7.png](<../../Assets/Models/Ships/ShipV3/Textures/a941aaf62aa7.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/aa5b1748c794.png](<../../Assets/Models/Ships/ShipV3/Textures/aa5b1748c794.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/adada0ecd6cc.png](<../../Assets/Models/Ships/ShipV3/Textures/adada0ecd6cc.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/b09c236dd79a.png](<../../Assets/Models/Ships/ShipV3/Textures/b09c236dd79a.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/b28e76d385bd.png](<../../Assets/Models/Ships/ShipV3/Textures/b28e76d385bd.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/b48eef568c5e.png](<../../Assets/Models/Ships/ShipV3/Textures/b48eef568c5e.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/b6b49c0dc767.jpeg](<../../Assets/Models/Ships/ShipV3/Textures/b6b49c0dc767.jpeg>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/b76a2f093af2.jpeg](<../../Assets/Models/Ships/ShipV3/Textures/b76a2f093af2.jpeg>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/bbec8b6132f9.png](<../../Assets/Models/Ships/ShipV3/Textures/bbec8b6132f9.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/bc23fd56a789.png](<../../Assets/Models/Ships/ShipV3/Textures/bc23fd56a789.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/bd71871312f2.png](<../../Assets/Models/Ships/ShipV3/Textures/bd71871312f2.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/be2ef456d784.jpeg](<../../Assets/Models/Ships/ShipV3/Textures/be2ef456d784.jpeg>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/bf87b7065fb2.jpeg](<../../Assets/Models/Ships/ShipV3/Textures/bf87b7065fb2.jpeg>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/c1363c74ba23.png](<../../Assets/Models/Ships/ShipV3/Textures/c1363c74ba23.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/c14d6ef19a75.png](<../../Assets/Models/Ships/ShipV3/Textures/c14d6ef19a75.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/c19010c20532.jpeg](<../../Assets/Models/Ships/ShipV3/Textures/c19010c20532.jpeg>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/c22944cf688d.jpeg](<../../Assets/Models/Ships/ShipV3/Textures/c22944cf688d.jpeg>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/c4f942f2ce75.png](<../../Assets/Models/Ships/ShipV3/Textures/c4f942f2ce75.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/c535f211c8f9.png](<../../Assets/Models/Ships/ShipV3/Textures/c535f211c8f9.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/c626d97eca7d.png](<../../Assets/Models/Ships/ShipV3/Textures/c626d97eca7d.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/c6570c56c0b3.jpeg](<../../Assets/Models/Ships/ShipV3/Textures/c6570c56c0b3.jpeg>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/c808516a0cef.jpeg](<../../Assets/Models/Ships/ShipV3/Textures/c808516a0cef.jpeg>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/c94da9fd0d6b.jpeg](<../../Assets/Models/Ships/ShipV3/Textures/c94da9fd0d6b.jpeg>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/c9859e6df529.png](<../../Assets/Models/Ships/ShipV3/Textures/c9859e6df529.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/ca31da1b7262.png](<../../Assets/Models/Ships/ShipV3/Textures/ca31da1b7262.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/ca48c214c74f.jpeg](<../../Assets/Models/Ships/ShipV3/Textures/ca48c214c74f.jpeg>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/cce2b515ad6e.png](<../../Assets/Models/Ships/ShipV3/Textures/cce2b515ad6e.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/cd14bec886b8.jpeg](<../../Assets/Models/Ships/ShipV3/Textures/cd14bec886b8.jpeg>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/d65eeb051ca2.png](<../../Assets/Models/Ships/ShipV3/Textures/d65eeb051ca2.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/db1edadc19a8.png](<../../Assets/Models/Ships/ShipV3/Textures/db1edadc19a8.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/db7b14c46889.jpeg](<../../Assets/Models/Ships/ShipV3/Textures/db7b14c46889.jpeg>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/dbaf0b4ddf4a.png](<../../Assets/Models/Ships/ShipV3/Textures/dbaf0b4ddf4a.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/dcc40d7c7812.png](<../../Assets/Models/Ships/ShipV3/Textures/dcc40d7c7812.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/dda044bd2cc6.png](<../../Assets/Models/Ships/ShipV3/Textures/dda044bd2cc6.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/e03b911d7557.png](<../../Assets/Models/Ships/ShipV3/Textures/e03b911d7557.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/e127de727a60.jpeg](<../../Assets/Models/Ships/ShipV3/Textures/e127de727a60.jpeg>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/e38f678e8e21.jpeg](<../../Assets/Models/Ships/ShipV3/Textures/e38f678e8e21.jpeg>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/e75da5038e00.png](<../../Assets/Models/Ships/ShipV3/Textures/e75da5038e00.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/e9688a2c57d7.png](<../../Assets/Models/Ships/ShipV3/Textures/e9688a2c57d7.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/e9e53bb54469.png](<../../Assets/Models/Ships/ShipV3/Textures/e9e53bb54469.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/eaa14b9779e1.png](<../../Assets/Models/Ships/ShipV3/Textures/eaa14b9779e1.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/ebbcbfb3c82c.png](<../../Assets/Models/Ships/ShipV3/Textures/ebbcbfb3c82c.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/ec57aa038607.png](<../../Assets/Models/Ships/ShipV3/Textures/ec57aa038607.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/ecf1b6a83191.jpeg](<../../Assets/Models/Ships/ShipV3/Textures/ecf1b6a83191.jpeg>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/ee59de8f1399.png](<../../Assets/Models/Ships/ShipV3/Textures/ee59de8f1399.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/f095427330f1.jpeg](<../../Assets/Models/Ships/ShipV3/Textures/f095427330f1.jpeg>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/f0c81fe9986e.jpeg](<../../Assets/Models/Ships/ShipV3/Textures/f0c81fe9986e.jpeg>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/f1124f63173c.png](<../../Assets/Models/Ships/ShipV3/Textures/f1124f63173c.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/f179aebd7550.jpeg](<../../Assets/Models/Ships/ShipV3/Textures/f179aebd7550.jpeg>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/f34fe0f89431.jpeg](<../../Assets/Models/Ships/ShipV3/Textures/f34fe0f89431.jpeg>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/f662ce3dbba0.png](<../../Assets/Models/Ships/ShipV3/Textures/f662ce3dbba0.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/f7631f8bdd79.jpeg](<../../Assets/Models/Ships/ShipV3/Textures/f7631f8bdd79.jpeg>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/f8f8dbe7fbdc.png](<../../Assets/Models/Ships/ShipV3/Textures/f8f8dbe7fbdc.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/fa326bd93371.png](<../../Assets/Models/Ships/ShipV3/Textures/fa326bd93371.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/fb8d2ae089b0.png](<../../Assets/Models/Ships/ShipV3/Textures/fb8d2ae089b0.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/fe58ba6fd853.png](<../../Assets/Models/Ships/ShipV3/Textures/fe58ba6fd853.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/Textures/tripo_mat_4c763aa7_MetallicSmoothness.png](<../../Assets/Models/Ships/ShipV3/Textures/tripo_mat_4c763aa7_MetallicSmoothness.png>) | Изображение / текстура |
 
 ## Assets/Models/Whale
 

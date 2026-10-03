@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &3073309824184710040
+--- !u!1 &117307838441462341
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,46 +8,46 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 4693864154833581965}
-  - component: {fileID: 8812403742525685217}
-  - component: {fileID: 6685943787119795576}
+  - component: {fileID: 3437755957028334304}
+  - component: {fileID: 3754172795337104048}
+  - component: {fileID: 6221300572425498856}
   m_Layer: 0
-  m_Name: AmmoVisual
+  m_Name: Geometry
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4693864154833581965
+--- !u!4 &3437755957028334304
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3073309824184710040}
+  m_GameObject: {fileID: 117307838441462341}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 833.3334, y: 833.3334, z: 833.3334}
+  m_LocalRotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
+  m_LocalPosition: {x: -0, y: -0.11954082, z: 0.000000014582359}
+  m_LocalScale: {x: 0.24465139, y: 0.24465139, z: 0.24465139}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2683913680063584900}
+  m_Father: {fileID: 5138043690674057776}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &8812403742525685217
+--- !u!33 &3754172795337104048
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3073309824184710040}
-  m_Mesh: {fileID: 2847073847056312789, guid: 44f8100667febbd4a92fc60af0b301ea, type: 3}
---- !u!23 &6685943787119795576
+  m_GameObject: {fileID: 117307838441462341}
+  m_Mesh: {fileID: -6827496559845619525, guid: 5fc5bef9900e52d4fb7a975287f565f2, type: 3}
+--- !u!23 &6221300572425498856
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3073309824184710040}
+  m_GameObject: {fileID: 117307838441462341}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -66,8 +66,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 3fa25febe1a659a4b85655289ba9beab, type: 2}
-  - {fileID: 2100000, guid: 8791b8e30fb334d4d962346d6c5b36d8, type: 2}
+  - {fileID: 2100000, guid: 22a99f78a407a7045b3415b7d01d1e7c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -91,6 +90,38 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &3442488463765111400
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5138043690674057776}
+  m_Layer: 0
+  m_Name: AmmoVisual
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5138043690674057776
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3442488463765111400}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 8.333334, y: 8.333334, z: 8.333334}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 3437755957028334304}
+  m_Father: {fileID: 2683913680063584900}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5316358912498670384
 GameObject:
   m_ObjectHideFlags: 0
@@ -125,7 +156,7 @@ Transform:
   m_LocalScale: {x: 0.24, y: 0.24, z: 0.24}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 4693864154833581965}
+  - {fileID: 5138043690674057776}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &5850197766950333522
@@ -247,9 +278,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.Cannonball
   Ammo: 4
   AmmoModels:
-  - {fileID: 919132149155446097, guid: 44f8100667febbd4a92fc60af0b301ea, type: 3}
-  - {fileID: 919132149155446097, guid: c0f299176ed1b3144b9cd873b7f6f92f, type: 3}
-  - {fileID: 919132149155446097, guid: d0b7ca02e9da59949bb27fdfbf472a50, type: 3}
-  - {fileID: 919132149155446097, guid: ffa60f8c5fdbf504e8436160d2561a49, type: 3}
+  - {fileID: 3270706681203991644, guid: bd574c0d09c1f5440be27f3500d205f7, type: 3}
+  - {fileID: 7332220791173169375, guid: d436a06377522444bb4f9d9b307091b6, type: 3}
+  - {fileID: 9185519940798576978, guid: c4c00bac435ad9040812c459eb7709ef, type: 3}
+  - {fileID: 4560309474764492812, guid: 22ea9f528356de94dbc768d3e2836286, type: 3}
   - {fileID: 919132149155446097, guid: f2bb359e221b9994cbed577952161a66, type: 3}
   FlightTrailMaterial: {fileID: 2100000, guid: 9edf76896be791745a50276eeb0562f2, type: 2}

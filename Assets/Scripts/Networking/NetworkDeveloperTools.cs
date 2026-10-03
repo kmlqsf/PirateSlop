@@ -99,6 +99,22 @@ namespace PirateSlop.Networking
                 }
                 return;
             }
+            if (command == 19)
+            {
+                bool newState = !KrakenEncounterManager.AutoEncounterEnabled;
+                KrakenEncounterManager.AutoEncounterEnabled = newState;
+                SyncKrakenStateObserversRpc(newState);
+                if (!newState)
+                {
+                    foreach (var s in NetworkShip.ActiveShips)
+                    {
+                        if (s != null && s.KrakenManager != null && s.KrakenManager.ActiveEncounter != null)
+                            s.KrakenSink();
+                    }
+                }
+                DeveloperResultTargetRpc(Owner, newState ? "Появление кракена включено." : "Появление кракена отключено.");
+                return;
+            }
             var health = GetComponent<CombatHealth>();
             if (command == 6) { health.Heal(health.MaxHealth); DeveloperResultTargetRpc(Owner, "Здоровье восстановлено."); return; }
             if (command == 12) { health.Damage(10f); DeveloperResultTargetRpc(Owner, "Нанесено 10 урона."); return; }
@@ -240,6 +256,7 @@ namespace PirateSlop.Networking
             DeveloperResultTargetRpc(Owner, "Перед кораблём нет свободной воды для этого ивента. Переместите корабль.");
         }
         [TargetRpc] void DeveloperResultTargetRpc(NetworkConnection connection, string message) => GetComponent<DeveloperMenu>().Report(message);
+        [ObserversRpc(BufferLast = true, RunLocally = true)] void SyncKrakenStateObserversRpc(bool enabled) => KrakenEncounterManager.AutoEncounterEnabled = enabled;
     }
 
 }

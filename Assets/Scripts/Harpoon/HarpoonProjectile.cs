@@ -41,6 +41,14 @@ namespace PirateSlop.Harpoon
         Quaternion hitLocalRot;
 
         public Vector3 KnotPosition => knotTransform != null ? knotTransform.position : transform.position;
+        public void ApplyAuthoritativePose(Vector3 point, Quaternion rotation, int phase, float cable)
+        {
+            if (Gun == null || !Gun.ExternalVisualRig || Gun.NetworkShip == null || Gun.NetworkShip.IsServerInitialized) return;
+            body.isKinematic = true;
+            state = (HarpoonState)phase;
+            currentCableLength = cable;
+            transform.SetPositionAndRotation(Vector3.Lerp(transform.position, point, 1f - Mathf.Exp(-30f * Time.deltaTime)), Quaternion.Slerp(transform.rotation, rotation, 1f - Mathf.Exp(-30f * Time.deltaTime)));
+        }
 
         void Awake()
         {
@@ -68,6 +76,7 @@ namespace PirateSlop.Harpoon
 
         void FixedUpdate()
         {
+            if (Gun != null && Gun.ExternalVisualRig && Gun.NetworkShip != null && !Gun.NetworkShip.IsServerInitialized) return;
             if (state == HarpoonState.Flying)
             {
                 if (Gun != null && Gun.Muzzle != null)
@@ -319,6 +328,7 @@ namespace PirateSlop.Harpoon
 
         void Update()
         {
+            if (Gun != null && Gun.ExternalVisualRig && Gun.NetworkShip != null && !Gun.NetworkShip.IsServerInitialized) return;
             if (state == HarpoonState.Rewinding)
             {
                 if (Gun == null || Gun.Muzzle == null)
@@ -343,6 +353,7 @@ namespace PirateSlop.Harpoon
 
         void OnCollisionEnter(Collision collision)
         {
+            if (Gun != null && Gun.ExternalVisualRig && Gun.NetworkShip != null && !Gun.NetworkShip.IsServerInitialized) return;
             if (state != HarpoonState.Flying) return;
             if (Gun != null && (collision.transform.IsChildOf(Gun.transform) || (shipBody != null && collision.transform.IsChildOf(shipBody.transform))))
                 return;

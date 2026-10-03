@@ -59,7 +59,9 @@
 
 | Файл | Краткое описание |
 | --- | --- |
-| [Assets/Resources/Ships/ShipSkeletonTest.prefab](<../../Assets/Resources/Ships/ShipSkeletonTest.prefab>) | Префаб Unity |
+| [Assets/Resources/Ships/ShipV3HarpoonPort.prefab](<../../Assets/Resources/Ships/ShipV3HarpoonPort.prefab>) | Префаб Unity; Гарпун и корабельное крепление |
+| [Assets/Resources/Ships/ShipV3HarpoonStarboard.prefab](<../../Assets/Resources/Ships/ShipV3HarpoonStarboard.prefab>) | Префаб Unity; Гарпун и корабельное крепление |
+| [Assets/Resources/Ships/ShipV3Test.prefab](<../../Assets/Resources/Ships/ShipV3Test.prefab>) | Префаб Unity; Движение корабля и палуба, Тестовая карта и водоворот |
 
 ## Assets/Resources/Underwater
 

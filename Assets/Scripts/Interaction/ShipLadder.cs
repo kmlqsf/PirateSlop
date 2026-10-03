@@ -10,13 +10,27 @@ namespace PirateSlop
         public float HalfWidth = .7f;
         public bool RopeClimb;
         public bool BoardingAccess;
+        public bool FollowRopePath;
         public float ExitClearance = 1.35f;
         public float TopLean;
+        public float TopSideOffset;
+        public float RopeStandOff = .38f;
         public Vector3 ExitPoint;
         public float RopeDepth(float height) => TopLean * Mathf.Clamp01(height / Height);
+        public float RopeSide(float height) => FollowRopePath ? TopSideOffset * Mathf.Clamp01(height / Height) : 0f;
         public bool CanGrab(Vector3 feet, float yaw, float pitch)
         {
             var p = transform.InverseTransformPoint(feet + Vector3.up * 1.4f);
+            if (FollowRopePath)
+            {
+                float depth = p.z - RopeDepth(p.y);
+                float side = p.x - RopeSide(p.y);
+                if (Mathf.Abs(depth) > 2.2f || Mathf.Abs(side) > HalfWidth + .6f || p.y < -.5f || p.y > Height + 1.4f) return false;
+                var point = transform.TransformPoint(new Vector3(RopeSide(p.y) + Mathf.Clamp(side, -HalfWidth, HalfWidth), Mathf.Clamp(p.y, 0, Height), RopeDepth(p.y)));
+                var direction = point - (feet + Vector3.up * 1.4f);
+                return direction.magnitude <= 2.35f && (direction.sqrMagnitude < .04f ||
+                    Vector3.Dot(Quaternion.Euler(pitch, yaw, 0) * Vector3.forward, direction.normalized) > .3f);
+            }
             if (p.z > 2.0f || p.z < -0.5f || Mathf.Abs(p.x) > HalfWidth + 0.6f || p.y < -1f || p.y > Height + 1f) return false;
             var target = transform.TransformPoint(new Vector3(Mathf.Clamp(p.x, -.6f, .6f), Mathf.Clamp(p.y, 0, Height + 1f), RopeDepth(p.y)));
             var origin = feet + Vector3.up * 1.4f;
@@ -28,6 +42,7 @@ namespace PirateSlop
         void Awake()
         {
             Body = GetComponentInParent<Rigidbody>();
+            if (FollowRopePath) return;
             var col = gameObject.AddComponent<BoxCollider>();
             col.center = new Vector3(0, Height / 2 - 0.6f, 0f);
             col.size = new Vector3(HalfWidth * 2, Height - 1.2f, 0.2f);
@@ -39,6 +54,9 @@ namespace PirateSlop
         {
             var p = transform.InverseTransformPoint(feet);
             float margin = climbing ? 1.5f : 0f;
+            if (FollowRopePath)
+                return Mathf.Abs(p.x - RopeSide(p.y)) <= HalfWidth + margin && p.y >= -.5f && p.y <= Height + 1.5f &&
+                    Mathf.Abs(p.z - RopeDepth(p.y) - RopeStandOff) <= 1.1f + margin;
             if (BoardingAccess)
                 return Mathf.Abs(p.x) <= HalfWidth + margin && p.y >= -1f && p.y <= Height + ExitClearance + .5f
                     && p.z <= 2.1f + margin && p.z >= (p.y > Height - 1.5f ? -ExitDepth - .5f : .15f - margin);

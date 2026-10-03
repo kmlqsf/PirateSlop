@@ -106,6 +106,21 @@ namespace PirateSlop
                     if (GUILayout.Button(lootEventNames[i], GUILayout.Height(27))) { lootEvent = i; lootEventListOpen = false; }
             }
             
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button(KrakenEncounterManager.AutoEncounterEnabled ? "Отключить кракена" : "Включить кракена", GUILayout.Height(29)))
+            {
+                if (network != null) network.DeveloperCommand(19);
+                else
+                {
+                    KrakenEncounterManager.AutoEncounterEnabled = !KrakenEncounterManager.AutoEncounterEnabled;
+                    if (!KrakenEncounterManager.AutoEncounterEnabled)
+                    {
+                        var ship = FindFirstObjectByType<ShipController>();
+                        var mgr = ship != null ? ship.GetComponent<KrakenEncounterManager>() : null;
+                        if (mgr != null && mgr.ActiveEncounter != null) mgr.ActiveEncounter.TriggerSinkLocal();
+                    }
+                }
+            }
             if (GUILayout.Button("Trigger Kraken", GUILayout.Height(29)))
             {
                 if (network != null) network.DeveloperCommand(15);
@@ -115,6 +130,7 @@ namespace PirateSlop
                     ship?.GetComponent<KrakenEncounterManager>()?.TriggerEncounter();
                 }
             }
+            GUILayout.EndHorizontal();
             GUILayout.Space(8);
             GUILayout.Label("Количество при выдаче в инвентарь");
             quantity = GUILayout.Toolbar(quantity, new[] { "1", "5", "20" });

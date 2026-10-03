@@ -7,6 +7,8 @@ namespace PirateSlop.Networking
     {
         public bool Enabled = true;
         public NetworkFish[] Prefabs;
+        public InventoryItem[] Items = System.Array.Empty<InventoryItem>();
+        public Transform[] SpawnPoints = System.Array.Empty<Transform>();
         NetworkFish[] spawned;
         float nextSpawn;
         public override void OnStartServer()
@@ -22,14 +24,16 @@ namespace PirateSlop.Networking
             for(int i=0;i<Prefabs.Length;i++)
             {
                 if(Prefabs[i]==null || (spawned[i]!=null && spawned[i].IsSpawned)) continue;
-                Vector3 point=transform.TransformPoint(new Vector3(-3.4f+(i%5)*1.7f,4.6f,(i/5)*1.2f));
+                Vector3 point=i<SpawnPoints.Length && SpawnPoints[i]!=null ? SpawnPoints[i].position : transform.TransformPoint(new Vector3(-3.4f+(i%5)*1.7f,4.6f,(i/5)*1.2f));
                 float nearest = 4f;
                 foreach(var hit in Physics.RaycastAll(point+transform.up*2,-transform.up,4,~0,QueryTriggerInteraction.Ignore))
                     if(hit.collider.GetComponentInParent<NetworkShip>() == GetComponent<NetworkShip>() && hit.distance < nearest && Vector3.Dot(hit.normal,transform.up)>.7f)
                     { nearest=hit.distance; point=hit.point; }
                 var shape=Prefabs[i].GetComponent<BoxCollider>();
-                point+=transform.up*(shape.size.y*.5f-shape.center.y+.025f);
+                var sphere=Prefabs[i].GetComponent<SphereCollider>();
+                point+=transform.up*((shape!=null ? shape.size.y*.5f-shape.center.y : sphere!=null ? sphere.radius-sphere.center.y : 0f)+.025f);
                 var item=Instantiate(Prefabs[i],point,transform.rotation);
+                if(i<Items.Length && CannonAmmo.IsBall(Items[i])) item.SetAmmoItem(Items[i]);
                 UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene(item.gameObject,gameObject.scene);
                 item.Place(NetworkObject,point,transform.rotation);
                 ServerManager.Spawn(item.NetworkObject); spawned[i]=item;

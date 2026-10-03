@@ -53,6 +53,7 @@ namespace PirateSlop
         public ShipFragmentConnection[] Structure = Array.Empty<ShipFragmentConnection>();
         public GameObject SectionsPrefab;
         public bool EnableFlooding;
+        public bool OrdinaryCannonballsOnly;
         public Mesh[] SplinterMeshes = Array.Empty<Mesh>();
         public Material SplinterMaterial;
         public int SplintersPerHit = 12;

@@ -7,6 +7,7 @@ namespace PirateSlop
     public sealed class CannonballCrate : MonoBehaviour
     {
         public Transform SpawnPoint;
+        public bool DispenserManaged;
         public Transform DeckSupplyPoint;
         public Cannonball Supply;
         public NetworkFish SpecialSupplyPrefab;
@@ -33,6 +34,7 @@ namespace PirateSlop
 
         public void ResetSupply()
         {
+            if (DispenserManaged) return;
             if (supplyInitialized) GameAudio.Play(SoundCue.CannonballDispense, SpawnPoint.position);
             supplyInitialized = true;
             Supply.Loaded = Supply.Held = false;
@@ -68,6 +70,7 @@ namespace PirateSlop
 
         void UpdateSpecialSupply()
         {
+            if (DispenserManaged) return;
             var network = Network;
             if (network == null || !network.IsServerInitialized || !network.IsSpawned || SpecialSupplyPrefab == null) return;
             for (int i = 0; i < specialSupplies.Length; i++)

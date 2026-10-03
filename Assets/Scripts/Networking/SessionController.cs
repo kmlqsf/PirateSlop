@@ -169,6 +169,7 @@ namespace PirateSlop.Networking
             if (args.ConnectionState == LocalConnectionState.Started)
             {
                 Debug.Log($"SESSION_READY id={SessionId} port={transport.GetPort()} capacity={MaxPlayers}");
+                if (EnvironmentTestActive) PirateSlop.Ships.ShipV3TestSpawner.Spawn(manager, ProceduralWorld.Instance.Layout);
                 if (!EnvironmentTestActive) SeaLootSpawner.Spawn(ProceduralWorld.Instance, manager, Config.Loot);
                 InitializeBotRoster();
                 if (steamSession) party.ServerReady();

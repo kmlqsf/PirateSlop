@@ -14,6 +14,7 @@ namespace PirateSlop
         public Collider[] ReplacementColliders = Array.Empty<Collider>();
         public bool SafeColliderReplacement;
         public bool SurfaceDamage;
+        public bool LazyFragmentColliders;
         Mesh surfaceMesh;
         Vector3[] surfaceVertices, surfaceNormals;
         int[][] surfaceTriangles;
@@ -54,7 +55,16 @@ namespace PirateSlop
                 foreach (var collider in DamagedColliders) if (collider != null) collider.enabled = false;
                 foreach (var collider in CriticalColliders) if (collider != null) collider.enabled = false;
                 foreach (var collider in ReplacementColliders) if (collider != null) collider.enabled = false;
-                for (int i = 0; i < Fragments.Length; i++) Fragments[i].SetActive(fractured && state != ShipSectionState.Destroyed && (removedFragments & (1UL << i)) == 0);
+                if (LazyFragmentColliders)
+                {
+                    for (int i = 0; i < Fragments.Length; i++)
+                    {
+                        bool fragmentVisible = fractured && state != ShipSectionState.Destroyed && (removedFragments & (1UL << i)) == 0;
+                        if (fragmentVisible) EnsureFragmentCollider(Fragments[i]);
+                        Fragments[i].SetActive(fragmentVisible);
+                    }
+                }
+                else for (int i = 0; i < Fragments.Length; i++) Fragments[i].SetActive(fractured && state != ShipSectionState.Destroyed && (removedFragments & (1UL << i)) == 0);
                 if (restored != 0 || rebuilt)
                 {
                     if (!fractured) RepairReveal.Show(Intact);
@@ -79,6 +89,24 @@ namespace PirateSlop
             foreach (var collider in DamagedColliders) if (collider != null) collider.enabled = damaged;
             foreach (var collider in CriticalColliders) if (collider != null) collider.enabled = critical;
             foreach (var collider in GameplayColliders) if (collider != null) collider.enabled = state != ShipSectionState.Destroyed && !damaged && !critical;
+        }
+        void EnsureFragmentCollider(GameObject fragment)
+        {
+            var collider = fragment.GetComponent<MeshCollider>();
+            if (collider == null)
+            {
+                var filter = fragment.GetComponent<MeshFilter>();
+                if (filter == null || filter.sharedMesh == null) return;
+                collider = fragment.AddComponent<MeshCollider>();
+                collider.cookingOptions = MeshColliderCookingOptions.CookForFasterSimulation | MeshColliderCookingOptions.EnableMeshCleaning |
+                    MeshColliderCookingOptions.WeldColocatedVertices | MeshColliderCookingOptions.UseFastMidphase;
+                collider.sharedMesh = filter.sharedMesh;
+                collider.convex = false;
+            }
+            if (Array.IndexOf(DamageColliders, collider) >= 0) return;
+            int count = DamageColliders.Length;
+            Array.Resize(ref DamageColliders, count + 1);
+            DamageColliders[count] = collider;
         }
         public ulong BreakNear(Vector3 point, float damage, bool supportLost)
         {

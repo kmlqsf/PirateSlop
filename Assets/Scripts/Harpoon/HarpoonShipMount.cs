@@ -10,6 +10,8 @@ namespace PirateSlop.Harpoon
 
         HarpoonGun gunPort;
         HarpoonGun gunStarboard;
+        public HarpoonGun ExistingPort;
+        public HarpoonGun ExistingStarboard;
 
         public HarpoonGun GunPort => gunPort;
         public HarpoonGun GunStarboard => gunStarboard;
@@ -22,6 +24,12 @@ namespace PirateSlop.Harpoon
 
         public void SpawnHarpoons()
         {
+            if (ExistingPort != null && ExistingStarboard != null)
+            {
+                gunPort = ExistingPort; gunStarboard = ExistingStarboard;
+                gunPort.InitializeMount(this, 0); gunStarboard.InitializeMount(this, 1);
+                return;
+            }
             if (harpoonPrefab == null)
             {
                 harpoonPrefab = Resources.Load<HarpoonGun>("HarpoonGun");

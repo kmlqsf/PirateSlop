@@ -41,6 +41,7 @@
 | Файл | Краткое описание |
 | --- | --- |
 | [Assets/Settings/ShipDestruction/MainShipDestruction.asset](<../../Assets/Settings/ShipDestruction/MainShipDestruction.asset>) | Настройки или данные Unity |
+| [Assets/Settings/ShipDestruction/ShipV3Destruction.asset](<../../Assets/Settings/ShipDestruction/ShipV3Destruction.asset>) | Настройки или данные Unity; Повреждения корпуса, ремонт и затопление |
 
 ## Assets/Settings/Weapons
 

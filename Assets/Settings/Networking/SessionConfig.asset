@@ -35,9 +35,8 @@ MonoBehaviour:
     - {x: 3.8, y: 4.5, z: 5}
     TeleportCooldown: 60
     RecoveryRadius: 2
-  ShipComparisonEnabled: 1
-  ComparisonShips:
-  - {fileID: 495453637347238622, guid: 6c814bb1728be28409028f9f92d03828, type: 3}
+  ShipComparisonEnabled: 0
+  ComparisonShips: []
   Port: 7777
   MaxPlayers: 30
   TickRate: 30

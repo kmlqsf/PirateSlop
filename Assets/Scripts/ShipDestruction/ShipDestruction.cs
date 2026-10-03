@@ -145,6 +145,7 @@ namespace PirateSlop
         }
         public void Damage(Collider collider, Vector3 point, Vector3 normal, Vector3 velocity, InventoryItem ammo, GameObject attacker, float radius = 0f)
         {
+            if (Profile != null && Profile.OrdinaryCannonballsOnly && ammo != InventoryItem.Cannonball) return;
             if (!ready || !IsServerInitialized || ship.IsSinking || !float.IsFinite(point.sqrMagnitude) || !float.IsFinite(velocity.sqrMagnitude)) return;
             var direct = Resolve(collider, point);
             flooding.BeginImpact();
@@ -193,6 +194,7 @@ namespace PirateSlop
         }
         public void Burn(Vector3 point, float seconds, GameObject attacker)
         {
+            if (Profile != null && Profile.OrdinaryCannonballsOnly) return;
             if (!ready || !IsServerInitialized || ship.IsSinking) return;
             ShipDamageSection nearest = null; float distance = 3f;
             foreach (var section in sections.Values)

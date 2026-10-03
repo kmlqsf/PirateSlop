@@ -13,6 +13,10 @@ namespace PirateSlop.Harpoon
         [SerializeField] Transform restingHarpoon;
         [SerializeField] Transform cameraMount;
         [SerializeField] Transform drumAxle;
+        public bool ExternalVisualRig;
+        public Vector3 YawAxis = Vector3.forward;
+        public Vector3 PitchAxis = Vector3.right;
+        Quaternion yawRest, pitchRest;
 
         [Header("Projectile & Rope")]
         [SerializeField] HarpoonProjectile projectilePrefab;
@@ -134,6 +138,8 @@ namespace PirateSlop.Harpoon
             if (cameraMount == null) cameraMount = transform.Find("Visual/Base_Yaw/Barrel_Pitch/CameraMount") ?? transform.Find("CameraMount") ?? transform;
             if (baseYaw == null) baseYaw = transform.Find("Visual/Base_Yaw") ?? transform.Find("Base_Yaw");
             if (barrelPitch == null && baseYaw != null) barrelPitch = baseYaw.Find("Barrel_Pitch");
+            if (baseYaw != null) yawRest = baseYaw.localRotation;
+            if (barrelPitch != null) pitchRest = barrelPitch.localRotation;
             if (winchDrum == null && baseYaw != null) winchDrum = baseYaw.Find("Winch_Drum");
             if (drumAxle == null && baseYaw != null) drumAxle = baseYaw.Find("Winch_Axle");
 
@@ -207,8 +213,7 @@ namespace PirateSlop.Harpoon
             if (operatorPlayer != null && operatorPlayer.IsLocal) return;
             currentYaw = yaw;
             currentPitch = pitch;
-            if (baseYaw != null) baseYaw.localRotation = Quaternion.Euler(0, 0, currentYaw);
-            if (barrelPitch != null) barrelPitch.localRotation = Quaternion.Euler(currentPitch, 0, 0);
+            ApplyAimRotation();
         }
 
         public void ReleaseControl(bool notifyServer = true)
@@ -239,6 +244,12 @@ namespace PirateSlop.Harpoon
             UpdateDrumAndRope();
         }
 
+        void ApplyAimRotation()
+        {
+            if (baseYaw != null) baseYaw.localRotation = ExternalVisualRig ? yawRest * Quaternion.AngleAxis(currentYaw, YawAxis) : Quaternion.Euler(0, 0, currentYaw);
+            if (barrelPitch != null) barrelPitch.localRotation = ExternalVisualRig ? pitchRest * Quaternion.AngleAxis(currentPitch, PitchAxis) : Quaternion.Euler(currentPitch, 0, 0);
+        }
+
         void HandleOperatorInput()
         {
             if (operatorPlayer == null || !operatorPlayer.IsLocal) return;
@@ -259,8 +270,7 @@ namespace PirateSlop.Harpoon
             currentYaw = Mathf.Clamp(currentYaw + delta.x, minYaw, maxYaw);
             currentPitch = Mathf.Clamp(currentPitch + delta.y, minPitch, maxPitch);
 
-            if (baseYaw != null) baseYaw.localRotation = Quaternion.Euler(0, 0, currentYaw);
-            if (barrelPitch != null) barrelPitch.localRotation = Quaternion.Euler(currentPitch, 0, 0);
+            ApplyAimRotation();
 
             if (NetworkShip != null && MountIndex >= 0 && Time.time >= nextAimSync)
             {
@@ -394,6 +404,7 @@ namespace PirateSlop.Harpoon
         void UpdateDrumAndRope()
         {
             SetRestingHarpoonVisible(activeProjectile == null);
+            if (ExternalVisualRig) return;
 
             if (ropeRenderer == null || muzzle == null) return;
 

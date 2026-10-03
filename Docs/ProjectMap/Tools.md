@@ -21,3 +21,14 @@
 | [Tools/Context/inspector.md](<../../Tools/Context/inspector.md>) | Документация; Инспектор объектов Unity |
 | [Tools/Context/topics.json](<../../Tools/Context/topics.json>) | Конфигурация / данные JSON |
 | [Tools/Context/update_project_map.py](<../../Tools/Context/update_project_map.py>) | Инструмент Python |
+
+## Tools/ShipV3
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Tools/ShipV3/BindingRepairStatus.txt](<../../Tools/ShipV3/BindingRepairStatus.txt>) | Текстовые данные; Модели и Blender |
+| [Tools/ShipV3/ExportFromOpenBlender.py](<../../Tools/ShipV3/ExportFromOpenBlender.py>) | Инструмент Python; Модели и Blender |
+| [Tools/ShipV3/GeometryBudgetStatus.txt](<../../Tools/ShipV3/GeometryBudgetStatus.txt>) | Текстовые данные |
+| [Tools/ShipV3/ImportResult.txt](<../../Tools/ShipV3/ImportResult.txt>) | Текстовые данные |
+| [Tools/ShipV3/ImportStatus.txt](<../../Tools/ShipV3/ImportStatus.txt>) | Текстовые данные |
+| [Tools/ShipV3/TextureBudgetStatus.txt](<../../Tools/ShipV3/TextureBudgetStatus.txt>) | Текстовые данные |

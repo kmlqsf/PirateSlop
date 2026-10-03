@@ -4,6 +4,14 @@ namespace PirateSlop
 {
     public sealed class KrakenEncounterManager : MonoBehaviour
     {
+        public static bool AutoEncounterEnabled { get; set; } = true;
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        static void ResetDomain()
+        {
+            AutoEncounterEnabled = true;
+        }
+
         [SerializeField] GameObject encounterPrefab;
         [SerializeField] float checkInterval = 1f;
         [SerializeField] float stationaryRadius = 20f;
@@ -26,6 +34,13 @@ namespace PirateSlop
         {
             var netShip = GetComponent<PirateSlop.Networking.NetworkShip>();
             if (netShip != null && !netShip.IsServerInitialized) return;
+
+            if (!AutoEncounterEnabled)
+            {
+                anchorPosition = transform.position;
+                stationaryTimer = 0f;
+                return;
+            }
 
             if (Time.time < nextCheckTime) return;
             nextCheckTime = Time.time + checkInterval;

@@ -22,6 +22,9 @@ namespace PirateSlop.Networking
         {
             if (IsSinking || isAnchored.Value || (Capstan != null && !Capstan.StructurallyAvailable)) return;
             var dropPt = transform.position + transform.forward * 5f;
+            var fitted = GetComponent<PirateSlop.Ships.ShipV3Features>();
+            if (fitted != null && fitted.AnchorTravel != null)
+                dropPt = new Vector3(fitted.AnchorTravel.position.x, transform.position.y, fitted.AnchorTravel.position.z);
             isAnchored.Value = true;
             anchorProgress.Value = 0f;
             anchorSeabedPoint.Value = dropPt;

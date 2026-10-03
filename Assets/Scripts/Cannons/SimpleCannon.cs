@@ -17,6 +17,7 @@ namespace PirateSlop
         public float LoadSeconds => IsMortar ? 8f : .45f;
         public float ReloadSeconds => IsMortar ? 24f : 6f;
         public Transform BarrelPivot, Breech;
+        public Transform TraversePivot;
         public float MinElevation = -10f, MaxElevation = 25f;
         public float Elevation { get; private set; } = 3f;
         public float MaxTraverse = 15f;
@@ -24,7 +25,7 @@ namespace PirateSlop
         public AdvancedPlayerController Operator { get; private set; }
         float lastControl;
         public float LastHumanControlTime { get; private set; } = -1000f;
-        Quaternion barrelRest;
+        Quaternion barrelRest, traverseRest;
         AdvancedPlayerController grip;
         float lastGrip;
         public NetworkCannon Network { get; set; }
@@ -86,11 +87,17 @@ namespace PirateSlop
         Vector3 fuseBase, fuseTip;
         public bool IsIgnited => ignitionTime >= 0f || visibleFuse >= 0f;
         public float FuseProgress => ignitionTime < 0f ? 0f : Mathf.Clamp01((Time.time - ignitionTime) / Mathf.Max(.1f, fuseDuration));
-        void Awake() { if (BarrelPivot != null) barrelRest = BarrelPivot.localRotation; }
+        void Awake() { if (BarrelPivot != null) barrelRest = BarrelPivot.localRotation; if (TraversePivot != null) traverseRest = TraversePivot.localRotation; }
         public bool InBreechRange(AdvancedPlayerController player) => player != null && !player.IsDead && BarrelPivot != null && Vector3.Distance(player.transform.position + Vector3.up, BarrelPivot.position) <= 4f;
         public void SetElevation(float value)
         {
             Elevation = Mathf.Clamp(value, MinElevation, MaxElevation);
+            if (TraversePivot != null)
+            {
+                TraversePivot.localRotation = Quaternion.AngleAxis(Traverse, TraversePivot.parent.InverseTransformDirection(transform.up)) * traverseRest;
+                if (BarrelPivot != null) BarrelPivot.localRotation = Quaternion.AngleAxis(3f - Elevation, Vector3.right) * barrelRest;
+                return;
+            }
             if (BarrelPivot != null) BarrelPivot.localRotation = Quaternion.AngleAxis(Traverse, BarrelPivot.parent.InverseTransformDirection(transform.up)) * Quaternion.AngleAxis(3f - Elevation, BarrelPivot.parent.InverseTransformDirection(transform.right)) * barrelRest;
         }
         public void SetAim(float elevation, float traverse)

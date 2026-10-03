@@ -12,12 +12,18 @@
 | --- | --- |
 | [Assets/UI/Inventory/Cannon.png](<../../Assets/UI/Inventory/Cannon.png>) | Изображение / текстура |
 | [Assets/UI/Inventory/Cannonball.png](<../../Assets/UI/Inventory/Cannonball.png>) | Изображение / текстура |
+| [Assets/UI/Inventory/FireCannonball.png](<../../Assets/UI/Inventory/FireCannonball.png>) | Изображение / текстура |
 | [Assets/UI/Inventory/Fish.png](<../../Assets/UI/Inventory/Fish.png>) | Изображение / текстура |
+| [Assets/UI/Inventory/GrapplingHook.png](<../../Assets/UI/Inventory/GrapplingHook.png>) | Изображение / текстура |
+| [Assets/UI/Inventory/HolyGrenade.png](<../../Assets/UI/Inventory/HolyGrenade.png>) | Изображение / текстура |
+| [Assets/UI/Inventory/IceCannonball.png](<../../Assets/UI/Inventory/IceCannonball.png>) | Изображение / текстура |
 | [Assets/UI/Inventory/InventoryIcons.asset](<../../Assets/UI/Inventory/InventoryIcons.asset>) | Настройки или данные Unity |
 | [Assets/UI/Inventory/Mallet.png](<../../Assets/UI/Inventory/Mallet.png>) | Изображение / текстура |
 | [Assets/UI/Inventory/Pistol.png](<../../Assets/UI/Inventory/Pistol.png>) | Изображение / текстура |
 | [Assets/UI/Inventory/Plank.png](<../../Assets/UI/Inventory/Plank.png>) | Изображение / текстура |
+| [Assets/UI/Inventory/PushCannonball.png](<../../Assets/UI/Inventory/PushCannonball.png>) | Изображение / текстура |
 | [Assets/UI/Inventory/Rod.png](<../../Assets/UI/Inventory/Rod.png>) | Изображение / текстура |
+| [Assets/UI/Inventory/Rum.png](<../../Assets/UI/Inventory/Rum.png>) | Изображение / текстура |
 | [Assets/UI/Inventory/Spyglass.png](<../../Assets/UI/Inventory/Spyglass.png>) | Изображение / текстура |
 
 ## Assets/UI/Inventory/Custom

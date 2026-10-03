@@ -10,6 +10,7 @@ public class SailSystem : MonoBehaviour
 
     [SerializeField, Range(0f, 1f)] float deployPercentage;
     [SerializeField] Transform[] sailMeshes;
+    public bool ExternalVisualRig;
     public Collider[] MastControls;
     public ShipControlHandle[] RopeHandles;
     public string[] RopeNames;
@@ -168,6 +169,7 @@ public class SailSystem : MonoBehaviour
             visualDeploy[i] = Mathf.MoveTowards(visualDeploy[i], tensions[i], Time.deltaTime * 1.5f);
             var renderer = renderers != null && i < renderers.Length ? renderers[i] : null;
             if (renderer != null) renderer.enabled = Efficiency(i) > 0f;
+            if (ExternalVisualRig) continue;
             var scale = restScale[i]; scale.y *= Mathf.Lerp(.06f, 1f, visualDeploy[i]); sail.localScale = scale;
         }
     }
