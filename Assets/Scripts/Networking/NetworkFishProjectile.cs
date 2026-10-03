@@ -49,7 +49,7 @@ namespace PirateSlop.Networking
             if (visualParts == null)
             {
                 var roots = new System.Collections.Generic.HashSet<Transform>();
-                foreach (var renderer in GetComponentsInChildren<MeshRenderer>(true))
+                foreach (var renderer in GetComponentsInChildren<Renderer>(true))
                 {
                     var part = renderer.transform;
                     while (part.parent != null && part.parent != transform) part = part.parent;
@@ -68,8 +68,8 @@ namespace PirateSlop.Networking
                 if (warning != null) warning.pitch = Mathf.Lerp(.9f, 1.45f, progress);
                 nextWarning = Time.time + Mathf.Lerp(.5f, .12f, progress);
             }
-            float pulse = 1f + progress * .35f + Mathf.Sin((Time.time-visibleFlightAt) * Mathf.Lerp(10f,35f,progress)) * progress * .07f;
-            for (int i=0;i<visualParts.Length;i++) if(visualParts[i]!=null && visualParts[i]!=transform) visualParts[i].localScale=visualScales[i]*pulse;
+            float pulse = 1f + progress * 1.1f + Mathf.Sin((Time.time-visibleFlightAt) * Mathf.Lerp(10f,35f,progress)) * progress * .05f;
+            for (int i=0;i<visualParts.Length;i++) if(visualParts[i]!=null && visualParts[i]!=transform) visualParts[i].localScale=Vector3.Scale(visualScales[i], new Vector3(pulse, pulse, 1f + progress * .28f));
         }
         void Awake() => pickup = GetComponent<NetworkFish>();
         public void Launch(NetworkPlayer source, Vector3 direction)

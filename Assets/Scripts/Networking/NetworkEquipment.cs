@@ -72,6 +72,7 @@ namespace PirateSlop.Networking
         {
             get
             {
+                if (Item == InventoryItem.Swordfish) return new Vector3(-.04f, -.06f, .35f);
                 if (!Firearm) return new Vector3(-.13f, -.06f, .03f);
                 if (action.Value != 1) return new Vector3(0, -.04f, .4f);
                 float phase = Mathf.Clamp01((Time.time-animationAt)/ReloadSeconds);
@@ -79,7 +80,7 @@ namespace PirateSlop.Networking
                 return new Vector3(-.045f,-.04f+reach*.13f,.15f+reach*.5f);
             }
         }
-        public Vector3 GripOffset => Firearm ? new Vector3(0, -.03f, 0) : new Vector3(.03f, .06f, 0);
+        public Vector3 GripOffset => Firearm ? new Vector3(0, -.03f, 0) : Item == InventoryItem.Swordfish ? new Vector3(0, -.045f, .13f) : new Vector3(.03f, .06f, 0);
         int CapacityFor(InventoryItem item) => item==InventoryItem.DoubleBarrel ? handling.Shotgun.Capacity : item==InventoryItem.Musket ? handling.Musket.Capacity : 1;
         public void ResetSlot(int slot, InventoryItem item) { if(IsServerInitialized) ammunition[slot] = CapacityFor(item); }
         public void TransferAmmunitionTo(NetworkEquipment target)
@@ -290,7 +291,7 @@ namespace PirateSlop.Networking
                 if (Item == InventoryItem.Pufferfish || Item == InventoryItem.Swordfish)
                 {
                     visual.localRotation = Quaternion.identity;
-                    visual.localPosition = new Vector3(0, -.05f, Item == InventoryItem.Swordfish ? .4f : .05f);
+                    visual.localPosition = new Vector3(0, -.05f, Item == InventoryItem.Swordfish ? .04f : .05f);
                 }
                 else if (Item == InventoryItem.Spyglass) { visual.localRotation = Quaternion.identity; visual.localPosition = new Vector3(0, -.02f, .18f); }
                 else if (Firearm) { visual.localRotation = Quaternion.Euler(0, 90, 0); visual.localPosition = new Vector3(0, -.04f, .22f); }

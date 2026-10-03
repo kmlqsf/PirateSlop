@@ -13,6 +13,8 @@ namespace PirateSlop.Networking
         public Vector3 Point, Normal;
         public float Length, Desired;
         public int Hits;
+        public int Section;
+        public ulong Fragments;
     }
     public sealed partial class NetworkCannon
     {
@@ -49,7 +51,7 @@ namespace PirateSlop.Networking
             if (!IsServerInitialized || Cannon(index) == null || HasBoarding(index)) return 0;
             int shot = ++nextBoardingShot; boardingFlights[index] = shot; return shot;
         }
-        public void AttachBoarding(int index, NetworkShip target, Vector3 point, Vector3 normal, int shot = 0, int hookIndex = 0)
+        public void AttachBoarding(int index, NetworkShip target, Vector3 point, Vector3 normal, int shot = 0, int hookIndex = 0, Collider support = null)
         {
             var cannon=Cannon(index);
             if (!IsServerInitialized || cannon == null || target == null || !target.IsSpawned || target.gameObject == gameObject) return;
@@ -61,6 +63,24 @@ namespace PirateSlop.Networking
             float length=Vector3.Distance(cannon.Muzzle.position,point);
             if (length>60 || length<2) return;
             var cable=new BoardingCable { Target=target.NetworkObject, Cannon=index, Shot=shot, Hook=hookIndex, Point=target.transform.InverseTransformPoint(point+normal*.04f), Normal=target.transform.InverseTransformDirection(normal), Length=Mathf.Max(4,length+.5f), Desired=Mathf.Max(4,length+.5f) };
+            var destruction = target.GetComponent<ShipDestruction>();
+            var section = destruction != null && support != null ? destruction.Resolve(support, point) : null;
+            if (section != null)
+            {
+                cable.Section = section.SectionId;
+                float nearest = float.MaxValue;
+                for (int i = 0; i < section.Fragments.Length; i++)
+                {
+                    if ((section.RemovedFragments & (1UL << i)) != 0) continue;
+                    var part = section.Fragments[i].transform;
+                    var filter = part.GetComponent<MeshFilter>();
+                    if (filter == null) continue;
+                    var bounds = filter.sharedMesh.bounds;
+                    float distance = (part.TransformPoint(bounds.ClosestPoint(part.InverseTransformPoint(point))) - point).sqrMagnitude;
+                    if (distance >= nearest) continue;
+                    nearest = distance; cable.Fragments = 1UL << i;
+                }
+            }
             for(int i=0;i<cables.Count;i++) if(cables[i].Target==null) { cables[i]=cable; return; }
             cables.Add(cable);
         }
@@ -99,7 +119,13 @@ namespace PirateSlop.Networking
             {
                 var cable=cables[i];
                 var cannon=Cannon(cable.Cannon);
-                bool valid=cable.Target!=null && cable.Target.IsSpawned && cannon!=null;
+                bool valid=cable.Target!=null && cable.Target.IsSpawned && cannon!=null && cannon.gameObject.activeInHierarchy && cannon.Muzzle != null && cannon.Muzzle.gameObject.activeInHierarchy;
+                if (valid && cable.Section != 0)
+                {
+                    var damage = cable.Target.GetComponent<ShipDestruction>();
+                    var section = damage != null ? damage.Section(cable.Section) : null;
+                    valid = section != null && section.gameObject.activeInHierarchy && section.State != ShipSectionState.Destroyed && (section.RemovedFragments & cable.Fragments) == 0;
+                }
                 if(!valid)
                 {
                     if(hookViews.TryGetValue(i,out var old)) { if(old!=null) Destroy(old.gameObject); hookViews.Remove(i); }
@@ -125,12 +151,13 @@ namespace PirateSlop.Networking
                     hook.Rope.sharedMaterial=Resources.Load<Material>("HookRope");
                     hook.Rope.widthMultiplier=.055f; hook.Rope.positionCount=25;
                     hook.Rope.generateLightingData=true; hook.Rope.numCapVertices=3;
+                    visual.AddComponent<RopeTubeVisual>().Line = hook.Rope;
                     hookViews[i]=hook;
                 }
                 if (hook.transform.parent != cable.Target.transform) hook.transform.SetParent(cable.Target.transform, false);
                 hook.transform.localPosition=cable.Point;
                 hook.transform.localRotation=Quaternion.LookRotation(-cable.Normal);
-                Vector3 start=cannon.Muzzle.position + cannon.Muzzle.right * (cable.Hook == 0 ? -.45f : .45f);
+                Vector3 start=cannon.Muzzle.position;
                 float sag=Mathf.Min(8,Mathf.Max(0,cable.Length-Vector3.Distance(start,end))*.35f+.12f);
                 for(int p=0;p<25;p++) { float t=p/24f; hook.Rope.SetPosition(p,Vector3.Lerp(start,end,t)+Vector3.down*(Mathf.Sin(t*Mathf.PI)*sag)); }
             }

@@ -282,12 +282,29 @@ namespace PirateSlop
             }
             current.State = next; current.Health = (ushort)Mathf.RoundToInt(health / definition.MaxHealth * ushort.MaxValue);
             current.Revision = ++revision;
-            if (Profile.EnableFlooding && definition.CanFlood && next != ShipSectionState.Intact && reason == ShipDamageReason.Hit && flooding.CanOpenBreach(point))
+            if (Profile.EnableFlooding && definition.CanFlood && next != ShipSectionState.Intact)
             {
-                if (!current.Breach) current.BreachPoint = transform.InverseTransformPoint(point);
-                current.Breach = true;
-                current.LeakingFragments |= current.RemovedFragments & ~previousFragments;
-                flooding.RegisterImpact(id, fragmentSection != null && fragmentSection.Fragments.Length > 0 ? current.RemovedFragments & ~previousFragments : 1UL);
+                ulong openings = 0;
+                if (fragmentSection != null && fragmentSection.Fragments.Length > 0)
+                {
+                    ulong removed = current.RemovedFragments & ~previousFragments;
+                    for (int i = 0; i < fragmentSection.Fragments.Length; i++)
+                    {
+                        if ((removed & (1UL << i)) == 0) continue;
+                        var part = fragmentSection.Fragments[i].transform;
+                        var filter = part.GetComponent<MeshFilter>();
+                        Vector3 breachPoint = filter != null ? part.TransformPoint(filter.sharedMesh.bounds.center) : point;
+                        if (flooding.CanOpenBreach(breachPoint)) openings |= 1UL << i;
+                    }
+                }
+                else if (flooding.CanOpenBreach(point)) openings = 1UL;
+                if (openings != 0)
+                {
+                    if (!current.Breach) current.BreachPoint = transform.InverseTransformPoint(point);
+                    current.Breach = true;
+                    current.LeakingFragments |= openings;
+                    flooding.RegisterImpact(id, openings);
+                }
             }
             state[id] = current;
             if (sections.TryGetValue(id, out var section))

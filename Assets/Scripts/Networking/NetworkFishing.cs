@@ -258,16 +258,24 @@ namespace PirateSlop.Networking
         public void FinishPickup() { }
         bool CanPickupTarget(NetworkObject target)
         {
-            if (target == null || !target.IsSpawned || Vector3.Distance(transform.position + Vector3.up, target.transform.position) > 3.5f) return false;
+            if (target == null || !target.IsSpawned) return false;
             var item = target.GetComponent<NetworkFish>();
             if (item == null || !item.Available) return false;
             var loose = target.GetComponent<NetworkLooseCannonball>();
             if (loose != null && loose.IsHeld) return false;
             Vector3 origin = transform.position + Vector3.up * 1.5f;
-            Vector3 delta = target.transform.position - origin;
-            foreach (var hit in Physics.RaycastAll(origin, delta.normalized, delta.magnitude, ~0, QueryTriggerInteraction.Ignore))
-                if (!hit.transform.IsChildOf(transform) && !hit.transform.IsChildOf(target.transform)) return false;
-            return true;
+            foreach (var shape in target.GetComponentsInChildren<Collider>())
+            {
+                if (!shape.enabled || shape.isTrigger) continue;
+                Vector3 point = shape.ClosestPoint(origin);
+                if (Vector3.Distance(transform.position + Vector3.up, point) > 3.5f) continue;
+                Vector3 delta = point - origin;
+                bool blocked = false;
+                foreach (var hit in Physics.RaycastAll(origin, delta.normalized, Mathf.Max(0f, delta.magnitude - .025f), ~0, QueryTriggerInteraction.Ignore))
+                    if (!hit.transform.IsChildOf(transform) && !hit.transform.IsChildOf(target.transform)) { blocked = true; break; }
+                if (!blocked) return true;
+            }
+            return false;
         }
         void OnDisable() { if (motor != null) motor.PickupLocked = false; }
         [ServerRpc]
@@ -384,7 +392,7 @@ namespace PirateSlop.Networking
             }
             if (catchVisual == null) return;
             catchVisual.SetActive(visible);
-            catchVisual.transform.SetPositionAndRotation(hand, orientation * Quaternion.Euler(0, 90, 0));
+            catchVisual.transform.SetPositionAndRotation(hand, orientation * Quaternion.Euler(0, shownCatch == InventoryItem.Swordfish || shownCatch == InventoryItem.Pufferfish ? 0 : 90, 0));
             if (IsEating && CarryingCatch) catchVisual.transform.position = fish.transform.position;
         }
         void OnDestroy() { if (bobber != null) Destroy(bobber); if (catchVisual != null) Destroy(catchVisual); }

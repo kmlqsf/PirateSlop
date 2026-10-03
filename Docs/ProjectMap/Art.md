@@ -453,6 +453,26 @@
 | [Art/Branding/Steam/app_icon_184.jpg](<../../Art/Branding/Steam/app_icon_184.jpg>) | Изображение / текстура |
 | [Art/Branding/Steam/shortcut_icon_256.png](<../../Art/Branding/Steam/shortcut_icon_256.png>) | Изображение / текстура |
 
+## Art/External/DiceProps
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/External/DiceProps/WoodenCandlestick.fbx](<../../Art/External/DiceProps/WoodenCandlestick.fbx>) | Модель / анимации FBX |
+| [Art/External/DiceProps/wooden_candlestick_arm_1k.jpg](<../../Art/External/DiceProps/wooden_candlestick_arm_1k.jpg>) | Изображение / текстура |
+| [Art/External/DiceProps/wooden_candlestick_diff_1k.jpg](<../../Art/External/DiceProps/wooden_candlestick_diff_1k.jpg>) | Изображение / текстура |
+| [Art/External/DiceProps/wooden_candlestick_nor_gl_1k.jpg](<../../Art/External/DiceProps/wooden_candlestick_nor_gl_1k.jpg>) | Изображение / текстура |
+
+## Art/External/DiceProps/MedievalPropsPack/MedievalBeerMug
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/External/DiceProps/MedievalPropsPack/MedievalBeerMug/Beer Mug.fbx](<../../Art/External/DiceProps/MedievalPropsPack/MedievalBeerMug/Beer Mug.fbx>) | Модель / анимации FBX |
+| [Art/External/DiceProps/MedievalPropsPack/MedievalBeerMug/Mug_Base_Color.png](<../../Art/External/DiceProps/MedievalPropsPack/MedievalBeerMug/Mug_Base_Color.png>) | Изображение / текстура |
+| [Art/External/DiceProps/MedievalPropsPack/MedievalBeerMug/Mug_Height.png](<../../Art/External/DiceProps/MedievalPropsPack/MedievalBeerMug/Mug_Height.png>) | Изображение / текстура |
+| [Art/External/DiceProps/MedievalPropsPack/MedievalBeerMug/Mug_Metallic.png](<../../Art/External/DiceProps/MedievalPropsPack/MedievalBeerMug/Mug_Metallic.png>) | Изображение / текстура |
+| [Art/External/DiceProps/MedievalPropsPack/MedievalBeerMug/Mug_Normal_DirectX.png](<../../Art/External/DiceProps/MedievalPropsPack/MedievalBeerMug/Mug_Normal_DirectX.png>) | Изображение / текстура |
+| [Art/External/DiceProps/MedievalPropsPack/MedievalBeerMug/Mug_Roughness.png](<../../Art/External/DiceProps/MedievalPropsPack/MedievalBeerMug/Mug_Roughness.png>) | Изображение / текстура |
+
 ## Art/ThirdParty/Hook
 
 | Файл | Краткое описание |

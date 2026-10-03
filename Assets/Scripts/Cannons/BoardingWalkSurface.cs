@@ -50,7 +50,7 @@ namespace PirateSlop
                 foreach (var passenger in ShipDeckPassenger.Active) passenger.UpdateBoardingSupport(this);
         }
 
-        Vector3 StartPoint(BoardingCable cable) => cannon.Muzzle.position + cannon.Muzzle.right * (cable.Hook == 0 ? -.45f : .45f);
+        Vector3 StartPoint(BoardingCable cable) => cannon.Muzzle.position;
         public static Vector3 EndPoint(BoardingCable cable) => cable.Target.transform.TransformPoint(cable.Point) + cable.Target.transform.TransformDirection(cable.Normal).normalized * .64f;
         Vector3 RopePoint(BoardingCable cable, float t)
         {
@@ -65,7 +65,7 @@ namespace PirateSlop
             return Vector3.Cross(Vector3.up, tangent.normalized).normalized;
         }
         public Vector3 Point(float t, float lateral) => Center(t) + Side(t) * lateral;
-        float Width(float t) => HasLadder ? Mathf.Clamp(Vector3.Distance(RopePoint(first, t), RopePoint(second.Value, t)), .65f, 1.5f) : .24f;
+        float Width(float t) => HasLadder ? Mathf.Clamp(Vector3.Distance(RopePoint(first, t), RopePoint(second.Value, t)), .24f, 1.5f) : .24f;
 
         public bool Locate(Vector3 position, out float t, out float lateral, out Vector3 anchor)
         {
@@ -129,7 +129,7 @@ namespace PirateSlop
             Vector3 side = Vector3.Cross(direction, up);
             int offset = vertices.Count;
             for (int end = 0; end < 2; end++)
-                for (int j = 0; j < 6; j++)
+                for (int j = 0; j <= 6; j++)
                 {
                     float angle = j * Mathf.PI / 3f;
                     Vector3 radial = (up * Mathf.Cos(angle) + side * Mathf.Sin(angle)) * .035f;
@@ -138,9 +138,9 @@ namespace PirateSlop
                 }
             for (int j = 0; j < 6; j++)
             {
-                int next = (j + 1) % 6;
-                triangles.Add(offset + j); triangles.Add(offset + next); triangles.Add(offset + j + 6);
-                triangles.Add(offset + next); triangles.Add(offset + next + 6); triangles.Add(offset + j + 6);
+                int next = j + 1;
+                triangles.Add(offset + j); triangles.Add(offset + next); triangles.Add(offset + j + 7);
+                triangles.Add(offset + next); triangles.Add(offset + next + 7); triangles.Add(offset + j + 7);
             }
         }
     }

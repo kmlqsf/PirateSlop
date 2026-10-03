@@ -116,7 +116,7 @@ namespace PirateSlop.EditorTools
                     ClearChildren(root.transform);
                     var model = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(directory + key + ".fbx"), root.transform);
                     model.name = "Geometry";
-                    model.transform.localRotation = Quaternion.Euler(0, 90f, 0);
+                    model.transform.localRotation = Quaternion.Euler(0, key == "Swordfish" ? -90f : 90f, 0) * AssetDatabase.LoadAssetAtPath<GameObject>(directory + key + ".fbx").transform.localRotation;
                     foreach (var renderer in model.GetComponentsInChildren<MeshRenderer>())
                         renderer.sharedMaterials = renderer.sharedMaterials.Select(m => material).ToArray();
                     var bounds = Bounds(root);

@@ -136,7 +136,8 @@ namespace PirateSlop
             }
             if (Physics.Raycast(cameraView.transform.position, cameraView.transform.forward, out var hit, 3f, ~0, QueryTriggerInteraction.Ignore))
                 aimed = hit.collider.GetComponentInParent<ShipSpyglass>();
-            if (aimed == null || aimed.GetComponentInParent<NetworkShip>() != player.Ship || !keys.eKey.wasPressedThisFrame) return;
+            if (aimed != null && aimed.GetComponentInParent<NetworkShip>() == player.Ship) ContextPrompt.Offer("E — смотреть в подзорную трубу", 60);
+            if (aimed == null || aimed.Viewpoint == null || aimed.GetComponentInParent<NetworkShip>() != player.Ship || !keys.eKey.wasPressedThisFrame) return;
             station = aimed; originalFov = cameraView.fieldOfView; angles = Vector2.zero; zoom = 48f;
             engaged = IsViewing = true; nextPreview = 0f;
             viewingStarted = Time.unscaledTime;
@@ -146,7 +147,7 @@ namespace PirateSlop
         {
             if (!player.IsOwner || !engaged) return;
             if (portable) cameraView.transform.rotation = Quaternion.Euler(angles.x, angles.y, 0f);
-            else if (station != null) cameraView.transform.SetPositionAndRotation(station.Viewpoint.position + station.transform.up * viewpointLift, station.transform.rotation * Quaternion.Euler(angles.x, angles.y, 0f));
+            else if (station != null) cameraView.transform.SetPositionAndRotation(station.Viewpoint.position + station.transform.up * station.ViewpointLift, station.Viewpoint.rotation * Quaternion.Euler(angles.x, angles.y, 0f));
             cameraView.fieldOfView = Mathf.Lerp(cameraView.fieldOfView, zoom, 1f - Mathf.Exp(-12f * Time.unscaledDeltaTime));
             UpdateLootHint();
             if (markRequested)

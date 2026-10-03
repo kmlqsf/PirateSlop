@@ -158,6 +158,7 @@ namespace PirateSlop.EditorTools
 
         static void ConfigurePlayer(GameObject player, Material material)
         {
+            if (player.GetComponent<CannonDismantle>() == null) player.AddComponent<CannonDismantle>();
             var inventory = player.GetComponent<PlayerInventory>();
             if (inventory == null) inventory = player.AddComponent<PlayerInventory>();
             inventory.CannonPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(CannonPath).GetComponent<SimpleCannon>();

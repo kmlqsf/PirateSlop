@@ -86,6 +86,11 @@ Shader "PirateSlop/BottleFog"
                     dot(centerDelta, _VolumeAxisY.xyz), dot(centerDelta, _VolumeAxisZ.xyz)) / radii;
                 float3 relativeDirection = float3(dot(direction, _VolumeAxisX.xyz),
                     dot(direction, _VolumeAxisY.xyz), dot(direction, _VolumeAxisZ.xyz)) / radii;
+                if (_InsideBottle > .5)
+                {
+                    relativeOrigin = TransformWorldToObject(origin) * 2.0;
+                    relativeDirection = mul((float3x3)GetWorldToObjectMatrix(), direction) * 2.0;
+                }
                 float a = dot(relativeDirection, relativeDirection);
                 float b = dot(relativeOrigin, relativeDirection);
                 float c = dot(relativeOrigin, relativeOrigin) - 1.0;
@@ -121,20 +126,38 @@ Shader "PirateSlop/BottleFog"
                     float3 positionDelta = position - _VolumeCenter.xyz;
                     float3 local = float3(dot(positionDelta, _VolumeAxisX.xyz),
                         dot(positionDelta, _VolumeAxisY.xyz), dot(positionDelta, _VolumeAxisZ.xyz)) / radii;
+                    if (_InsideBottle > .5) local = relativeOrigin + relativeDirection * distanceAlongRay;
                     float shape = 1.0 - smoothstep(.48, 1.0, length(local));
                     float rolling = Noise(local * 4.25 - drift);
                     float detail = Noise(local * 10.5 + drift * .6);
                     float density = shape * lerp(.48, 1.22, rolling) * lerp(.8, 1.1, detail) * _Density * _CloudOpacity;
+                    float lighting = .86 + .24 * saturate(local.y * .5 + .5) + .09 * rolling;
+                    float3 fogColor = _FogColor.rgb;
                     if (_InsideBottle > .5)
                     {
-                        float3 flow = float3(_CloudAge * .035, -_CloudAge * .08, _CloudAge * .025);
-                        rolling = Noise(local * 3.6 - flow);
-                        detail = Noise(local * 9.2 + flow * .45);
-                        density = shape * smoothstep(.24, .76, rolling * .72 + detail * .28) * 1.7 * _Density * _CloudOpacity;
+                        float3 flow = float3(_CloudAge * .013, _CloudAge * .065, _CloudAge * .009);
+                        float3 coordinates = local * 2.9;
+                        float twist = local.y * .55 + _CloudAge * .045;
+                        float sine = sin(twist);
+                        float cosine = cos(twist);
+                        coordinates.xz = float2(coordinates.x * cosine - coordinates.z * sine,
+                            coordinates.x * sine + coordinates.z * cosine);
+                        coordinates -= flow;
+                        float3 warp = float3(Noise(coordinates * .68), Noise(coordinates * .68 + float3(7.1,3.6,1.4)),
+                            Noise(coordinates * .68 + float3(2.4,8.3,5.7))) - .5;
+                        coordinates += warp * .48;
+                        rolling = Noise(coordinates);
+                        detail = Noise(coordinates * 1.9 + flow * .08);
+                        float fine = Noise(coordinates * 3.3 - flow * .10);
+                        float billow = smoothstep(.18, .82, rolling * .70 + detail * .25 + fine * .05);
+                        float boundary = 1.0 - smoothstep(.68, 1.0, length(local));
+                        density = boundary * lerp(.18, 1.0, billow) * _Density * _CloudOpacity;
+                        float upperDensity = Noise(coordinates + float3(.18,.7,.12));
+                        lighting = .82 + .22 * saturate(local.y * .5 + .5) + .06 * fine - .18 * upperDensity * billow;
+                        fogColor = lerp(_FogColor.rgb, float3(.79,.82,.85), .85);
                     }
                     float opacity = 1.0 - exp(-density * stepLength);
-                    float lighting = .86 + .24 * saturate(local.y * .5 + .5) + .09 * rolling;
-                    accumulated += transmittance * opacity * _FogColor.rgb * lighting;
+                    accumulated += transmittance * opacity * fogColor * lighting;
                     transmittance *= 1.0 - opacity;
                     if (transmittance < .002) break;
                 }

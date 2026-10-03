@@ -37,16 +37,22 @@ namespace PirateSlop
                 tow[i].sharedMaterial = Resources.Load<Material>("HookRope");
                 tow[i].widthMultiplier = .045f; tow[i].positionCount = 24;
                 tow[i].generateLightingData = true; tow[i].numCapVertices = 3;
+                for (int p = 0; p < tow[i].positionCount; p++) tow[i].SetPosition(p, muzzle.position);
+                rope.AddComponent<RopeTubeVisual>().Line = tow[i];
             }
             tie = gameObject.AddComponent<LineRenderer>();
             tie.sharedMaterial = Resources.Load<Material>("HookRope");
             tie.widthMultiplier = .035f; tie.positionCount = 12;
             tie.generateLightingData = true; tie.numCapVertices = 3;
+            for (int p = 0; p < tie.positionCount; p++) tie.SetPosition(p, position);
+            gameObject.AddComponent<RopeTubeVisual>().Line = tie;
             Destroy(gameObject, 20f);
         }
 
         void FixedUpdate()
         {
+            if (muzzle == null || !muzzle.gameObject.activeInHierarchy || source == null || !source.gameObject.activeInHierarchy)
+            { Destroy(gameObject); return; }
             age += Time.fixedDeltaTime;
             Vector3 nextVelocity = CannonShotDamage.StepVelocity(velocity, Time.fixedDeltaTime);
             center += (velocity + nextVelocity) * (.5f * Time.fixedDeltaTime);
@@ -60,7 +66,7 @@ namespace PirateSlop
                 if (MortarTrajectory.Trace(points[i], delta, .075f, source, out var point, out var normal, out var collider))
                 {
                     if (authoritative && network != null && collider != null)
-                        network.AttachBoarding(cannon, collider.GetComponentInParent<NetworkShip>(), point, normal, shot, i);
+                        network.AttachBoarding(cannon, collider.GetComponentInParent<NetworkShip>(), point, normal, shot, i, collider);
                     CombatVfx.Impact(point, normal, true);
                     stopped[i] = true; hooks[i].gameObject.SetActive(false);
                     tow[i].enabled = false;
@@ -72,7 +78,7 @@ namespace PirateSlop
                     hooks[i].SetPositionAndRotation(next, Quaternion.LookRotation(delta.sqrMagnitude > .001f ? delta : velocity));
                     if (muzzle != null)
                     {
-                        Vector3 start = muzzle.position + muzzle.right * (i == 0 ? -.45f : .45f);
+                        Vector3 start = muzzle.position;
                         Vector3 end = next - hooks[i].forward * .64f;
                         for (int p = 0; p < tow[i].positionCount; p++)
                         {

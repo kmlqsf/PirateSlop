@@ -75,7 +75,7 @@ namespace PirateSlop
                 var filter = fragment.GetComponent<MeshFilter>();
                 if (filter == null || filter.sharedMesh == null) continue;
                 var bounds = filter.sharedMesh.bounds;
-                var point = entry.BreachPoint;
+                var point = transform.InverseTransformPoint(fragment.transform.TransformPoint(bounds.center));
                 var size = Vector3.Scale(bounds.size, fragment.transform.lossyScale);
                 float area = Mathf.Clamp(Mathf.Abs(size.y) * Mathf.Max(Mathf.Abs(size.x), Mathf.Abs(size.z)), .02f, 4f);
                 breaches[key] = new ShipBreach { SectionId = entry.SectionId, LocalPoint = point, Area = area };

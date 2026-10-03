@@ -261,7 +261,7 @@ namespace PirateSlop
                 if (keyboard.eKey.wasPressedThisFrame)
                 {
                     InteractionUsed = true;
-                    network.DepositRum(aimedRumShelf.GetComponentInParent<NetworkShip>().NetworkObject);
+                    network.DepositRum(aimedRumShelf.GetComponentInParent<NetworkShip>().NetworkObject, SelectedSlot, nearest.point);
                 }
                 return;
             }

@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace PirateSlop.Ships
 {
-    public enum ShipV3TargetKind : byte { Lantern, Door, Bell, Dice, Dispenser }
+    public enum ShipV3TargetKind : byte { Lantern, Door, Bell, Dice, Dispenser, Candle }
 
     [Serializable]
     public sealed class ShipV3Lantern
@@ -28,6 +28,7 @@ namespace PirateSlop.Ships
         public int[] FaceValues;
         public Vector3 RestCup;
         public Quaternion RestRotation;
+        public float CupHeight = .22f;
     }
 
     public struct ShipV3PhysicsPose
@@ -85,6 +86,10 @@ namespace PirateSlop.Ships
         public float DispenserLeverAngle = -65f;
         public GameObject DiceSupport;
         public float DiceRadius = .54f;
+        public Transform DiceCandle;
+        public Light CandleLight;
+        public ParticleSystem CandleFlame;
+        readonly SyncVar<bool> candleLit = new(true);
         public Transform AnchorTravel;
         public ConfigurableJoint MovingAnchorJoint;
         readonly SyncVar<int> lights = new(63);
@@ -94,6 +99,7 @@ namespace PirateSlop.Ships
         readonly SyncVar<float> dispenserPull = new(), dispenserReturnAt = new();
         readonly SyncList<int> diceOwners = new();
         readonly SyncList<string> diceResults = new();
+        readonly SyncList<byte> dicePhases = new();
         Quaternion doorRest, clapperRest;
         Quaternion dispenserRest;
         Vector3[][] restingDice;
@@ -102,6 +108,8 @@ namespace PirateSlop.Ships
         float[] slotHeartbeat, collectionStart, settledFor, rollStart;
         Vector3[][] collectionFrom;
         Vector2[] cupPosition;
+        Vector2[] lastShake;
+        Quaternion[][] shakenRotation;
         byte[] diceMode;
         float nextPublish, doorHeartbeat, bellHeartbeat, nextRing, dispenserHeartbeat;
         Vector2 bellForce;
@@ -123,8 +131,48 @@ namespace PirateSlop.Ships
             return -1;
         }
         public string DiceResult(int slot) => slot >= 0 && slot < diceResults.Count ? diceResults[slot] : "";
+        public string DiceInstructions(int slot)
+        {
+            byte phase = slot >= 0 && slot < dicePhases.Count ? dicePhases[slot] : (byte)0;
+            return phase == 1 ? "Кости собираются в стакан · F — выйти" :
+                phase == 2 || phase == 3 ? "Удерживать ЛКМ и двигать мышь — трясти кружку · отпустить ЛКМ — бросить · F — выйти" :
+                phase == 4 || phase == 6 ? "Кости бросаются · F — выйти" : "E — насыпать кости в стакан · F — выйти";
+        }
+        public string DiceSummary()
+        {
+            var lines = new List<string>();
+            for (int i = 0; i < diceResults.Count; i++) if (!string.IsNullOrEmpty(diceResults[i])) lines.Add("Стакан " + (i + 1) + ": " + diceResults[i]);
+            return string.Join("\n", lines);
+        }
         public bool CanUseDice => DiceTable != null && DiceTable.gameObject.activeInHierarchy && (DiceSupport == null || DiceSupport.activeInHierarchy);
         public bool DispenserCooling => dispenserReturnAt.Value > 0f;
+        public bool CandleBurning => candleLit.Value;
+
+        public int NearestDiceSlot(Vector3 point)
+        {
+            int nearest = -1; float distance = float.PositiveInfinity;
+            for (int i = 0; i < DiceSlots.Length; i++)
+            {
+                float candidate = Vector3.ProjectOnPlane(transform.TransformPoint(DiceSlots[i].RestCup) - point, transform.up).sqrMagnitude;
+                if (candidate < distance) { distance = candidate; nearest = i; }
+            }
+            return nearest;
+        }
+
+        public void DiceCameraPose(int index, out Vector3 point, out Quaternion rotation)
+        {
+            Vector3 outward = Vector3.ProjectOnPlane(transform.TransformPoint(DiceSlots[index].RestCup) - DiceTable.position, transform.up).normalized;
+            point = DiceTable.position + outward * .92f + transform.up * .95f;
+            rotation = Quaternion.LookRotation(DiceTable.position + outward * .12f - point, transform.up);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void ToggleCandle(NetworkConnection sender = null)
+        {
+            var player = Sender(sender);
+            if (player == null || LocalDiceSlot(sender.ClientId) >= 0 || DiceCandle == null || !CanReachDice(player)) return;
+            candleLit.Value = !candleLit.Value;
+        }
 
         public bool CanReachDice(NetworkPlayer player)
         {
@@ -157,6 +205,8 @@ namespace PirateSlop.Ships
             settledFor = new float[DiceSlots.Length];
             rollStart = new float[DiceSlots.Length];
             cupPosition = new Vector2[DiceSlots.Length];
+            lastShake = new Vector2[DiceSlots.Length];
+            shakenRotation = new Quaternion[DiceSlots.Length][];
             diceMode = new byte[DiceSlots.Length];
             restingDice = new Vector3[DiceSlots.Length][];
             restingDiceRotation = new Quaternion[DiceSlots.Length][];
@@ -164,13 +214,14 @@ namespace PirateSlop.Ships
             {
                 restingDice[i] = Array.ConvertAll(DiceSlots[i].Dice, die => transform.InverseTransformPoint(die.transform.position));
                 restingDiceRotation[i] = Array.ConvertAll(DiceSlots[i].Dice, die => Quaternion.Inverse(transform.rotation) * die.transform.rotation);
+                shakenRotation[i] = (Quaternion[])restingDiceRotation[i].Clone();
             }
             glassBlock = new MaterialPropertyBlock();
         }
 
         public override void OnStartServer()
         {
-            for (int i = 0; i < DiceSlots.Length; i++) { diceOwners.Add(-1); diceResults.Add(""); }
+            for (int i = 0; i < DiceSlots.Length; i++) { diceOwners.Add(-1); diceResults.Add(""); dicePhases.Add(0); }
             foreach (var body in PhysicsBodies) if (body != null) body.isKinematic = false;
             foreach (var slot in DiceSlots) if (slot.Cup != null) slot.Cup.isKinematic = true;
             foreach (var slot in DiceSlots) foreach (var die in slot.Dice) if (die != null) die.isKinematic = true;
@@ -245,7 +296,7 @@ namespace PirateSlop.Ships
             bellHolder.Value = sender.ClientId; bellHeartbeat = Time.time; bellTeam = player.TeamId.Value;
             if (delta.sqrMagnitude > .01f)
             {
-                bellForce = Vector2.ClampMagnitude(bellForce + Vector2.ClampMagnitude(delta, 60f) * .55f, 28f);
+                bellForce = Vector2.ClampMagnitude(bellForce + Vector2.ClampMagnitude(delta, 100f) * 1.8f, 36f);
                 lastBellDrag = Time.time;
                 BellClapper.WakeUp();
             }
@@ -282,7 +333,11 @@ namespace PirateSlop.Ships
         {
             if (sender == null) return;
             if (!holding) { if (dispenserHolder.Value == sender.ClientId) dispenserHolder.Value = -1; return; }
-            if (DispenserCooling || !float.IsFinite(delta) || !Reach(Sender(sender), DispenserGrip) || dispenserHolder.Value >= 0 && dispenserHolder.Value != sender.ClientId) return;
+            var player = Sender(sender);
+            if (DispenserCooling || !float.IsFinite(delta) || player == null || DispenserGrip == null || !DispenserGrip.gameObject.activeInHierarchy ||
+                Vector3.Distance(player.transform.position + Vector3.up, DispenserGrip.position) > 3.2f ||
+                !player.GetComponent<NetworkWeapon>().CanReach(DispenserGrip.position, DispenserLever.parent) ||
+                dispenserHolder.Value >= 0 && dispenserHolder.Value != sender.ClientId) return;
             float allowed = Mathf.Clamp(Time.time - dispenserHeartbeat, 0f, .15f) * 3f;
             dispenserHeartbeat = Time.time; dispenserHolder.Value = sender.ClientId;
             dispenserPull.Value = Mathf.Clamp01(dispenserPull.Value + Mathf.Clamp(delta, -allowed, allowed));
@@ -298,13 +353,11 @@ namespace PirateSlop.Ships
             if (sender == null) return;
             var player = Sender(sender);
             if (!CanReachDice(player) || LocalDiceSlot(sender.ClientId) >= 0) return;
-            for (int i = 0; i < diceOwners.Count; i++)
-            {
-                if (diceOwners[i] != -1) continue;
-                diceOwners[i] = sender.ClientId; slotHeartbeat[i] = Time.time;
-                player.Motor.ShipActivityLocked = true;
-                return;
-            }
+            int index = NearestDiceSlot(player.transform.position);
+            if (index < 0 || diceOwners[index] != -1 || diceMode[index] == 4 || diceMode[index] == 6) return;
+            diceOwners[index] = sender.ClientId; slotHeartbeat[index] = Time.time;
+            cupPosition[index] = Vector2.zero;
+            player.Motor.ShipActivityLocked = true;
         }
 
         [ServerRpc(RequireOwnership = false)]
@@ -317,7 +370,8 @@ namespace PirateSlop.Ships
             if (leave || !CanReachDice(player)) { ReleaseSlot(index); return; }
             if (!float.IsFinite(movement.sqrMagnitude)) return;
             slotHeartbeat[index] = Time.time;
-            if (gather && (diceMode[index] == 0 || diceMode[index] == 5))
+            byte previousMode = diceMode[index];
+            if (gather && (previousMode == 0 || previousMode == 5))
             {
                 diceMode[index] = 1; collectionStart[index] = Time.time;
                 collectionFrom[index] = new Vector3[DiceSlots[index].Dice.Length];
@@ -328,26 +382,23 @@ namespace PirateSlop.Ships
                     die.isKinematic = true;
                 }
                 diceResults[index] = "";
+                lastShake[index] = Vector2.zero;
             }
             if (holding)
             {
-                cupPosition[index] = Vector2.ClampMagnitude(cupPosition[index] + Vector2.ClampMagnitude(movement, .045f), .16f);
+                Vector2 drag = Vector2.ClampMagnitude(movement, .045f);
+                cupPosition[index] = Vector2.ClampMagnitude(cupPosition[index] + drag, .12f);
                 if (diceMode[index] == 2) diceMode[index] = 3;
-            }
-            else if (diceMode[index] == 3)
-            {
-                diceMode[index] = 4; settledFor[index] = 0f; rollStart[index] = Time.time;
-                var cup = DiceSlots[index].Cup;
-                for (int i = 0; i < DiceSlots[index].Dice.Length; i++)
+                if (diceMode[index] == 3 && drag.sqrMagnitude > .0000001f)
                 {
-                    var die = DiceSlots[index].Dice[i];
-                    die.isKinematic = false;
-                    die.linearVelocity = ship.Motor.CannonPointVelocity(die.position) + transform.up * UnityEngine.Random.Range(.6f, 1.1f)
-                        + transform.TransformDirection(new Vector3(UnityEngine.Random.Range(-.45f, .45f), 0, UnityEngine.Random.Range(-.45f, .45f)));
-                    die.angularVelocity = UnityEngine.Random.onUnitSphere * UnityEngine.Random.Range(12f, 25f);
-                    die.WakeUp();
+                    lastShake[index] = drag;
+                    for (int i = 0; i < shakenRotation[index].Length; i++)
+                        shakenRotation[index][i] = Quaternion.Euler(drag.y * 2600f, drag.x * 1900f, (drag.x - drag.y) * (1700f + i * 170f)) * shakenRotation[index][i];
                 }
-                cup.MoveRotation(transform.rotation * Quaternion.Euler(0, 0, -125f) * DiceSlots[index].RestRotation);
+            }
+            if (!holding && diceMode[index] == 3)
+            {
+                diceMode[index] = 6; settledFor[index] = 0f; rollStart[index] = Time.time;
             }
         }
 
@@ -356,22 +407,47 @@ namespace PirateSlop.Ships
             var player = SessionController.Instance.GetPlayer(diceOwners[index]);
             if (player != null) player.Motor.ShipActivityLocked = false;
             diceOwners[index] = -1;
-            if (diceMode[index] == 4) FreezeDice(index);
+            if (diceMode[index] == 4 || diceMode[index] == 6) return;
             foreach (var die in DiceSlots[index].Dice) if (die != null) die.isKinematic = true;
             diceMode[index] = 0;
         }
 
-        void KeepDiceOnTable(Rigidbody die)
+        Vector2 SectorDirection(int index)
+        {
+            Vector3 center = transform.InverseTransformPoint(DiceTable.position);
+            Vector3 delta = DiceSlots[index].RestCup - center;
+            return new Vector2(delta.x, delta.z).normalized;
+        }
+
+        Vector2 ConstrainSector(int index, Vector2 point, float margin)
+        {
+            Vector2 axis = SectorDirection(index);
+            Vector2 side = new Vector2(-axis.y, axis.x);
+            for (int pass = 0; pass < 4; pass++)
+            {
+                foreach (int sign in new[] { -1, 1 })
+                {
+                    Vector2 normal = axis * .8660254f + side * (.5f * sign);
+                    float distance = Vector2.Dot(point, normal);
+                    if (distance < margin) point += normal * (margin - distance);
+                }
+                if (point.magnitude < .105f + margin) point = point.normalized * (.105f + margin);
+                point = Vector2.ClampMagnitude(point, DiceRadius - margin);
+            }
+            return point;
+        }
+
+        void KeepDiceOnTable(int index, Rigidbody die)
         {
             Vector3 local = transform.InverseTransformPoint(die.position);
             Vector3 center = transform.InverseTransformPoint(DiceTable.position);
             var offset = new Vector2(local.x - center.x, local.z - center.z);
-            float limit = Mathf.Max(.1f, DiceRadius - .035f);
-            if (offset.magnitude > limit)
+            Vector2 edge = ConstrainSector(index, offset, .055f);
+            if ((edge - offset).sqrMagnitude > .000001f)
             {
-                var edge = offset.normalized * limit;
                 local.x = center.x + edge.x; local.z = center.z + edge.y;
-                Vector3 normal = transform.TransformDirection(new Vector3(offset.normalized.x, 0, offset.normalized.y));
+                Vector2 outward = (offset - edge).normalized;
+                Vector3 normal = transform.TransformDirection(new Vector3(outward.x, 0, outward.y));
                 Vector3 relative = die.linearVelocity - ship.Motor.CannonPointVelocity(die.position);
                 die.linearVelocity -= normal * Mathf.Max(0f, Vector3.Dot(relative, normal)) * 1.25f;
             }
@@ -387,7 +463,7 @@ namespace PirateSlop.Ships
         {
             for (int i = 0; i < DiceSlots[index].Dice.Length; i++)
             {
-                var die = DiceSlots[index].Dice[i]; KeepDiceOnTable(die);
+                var die = DiceSlots[index].Dice[i]; KeepDiceOnTable(index, die);
                 die.linearVelocity = die.angularVelocity = Vector3.zero;
                 restingDice[index][i] = transform.InverseTransformPoint(die.position);
                 restingDiceRotation[index][i] = Quaternion.Inverse(transform.rotation) * die.rotation;
@@ -424,18 +500,31 @@ namespace PirateSlop.Ships
                 error.ToAngleAxis(out float angle, out Vector3 axis);
                 if (angle > 180f) angle -= 360f;
                 if (axis.sqrMagnitude > .001f && float.IsFinite(axis.sqrMagnitude))
-                    BellClapper.AddTorque(axis.normalized * (angle * Mathf.Deg2Rad * 55f) - BellClapper.angularVelocity * 10f, ForceMode.Acceleration);
+                    BellClapper.AddTorque(axis.normalized * (angle * Mathf.Deg2Rad * 160f) - BellClapper.angularVelocity * 7f, ForceMode.Acceleration);
             }
             for (int index = 0; index < DiceSlots.Length; index++)
             {
                 var slot = DiceSlots[index];
                 bool owned = diceOwners[index] >= 0;
-                Vector3 desired = transform.TransformPoint(slot.RestCup + new Vector3(owned ? cupPosition[index].x : 0, diceMode[index] == 3 || diceMode[index] == 4 ? .16f : .005f, owned ? cupPosition[index].y : 0));
-                Vector3 cupDelta = Vector3.ProjectOnPlane(desired - DiceTable.position, transform.up);
-                desired -= cupDelta - Vector3.ClampMagnitude(cupDelta, Mathf.Max(.1f, DiceRadius - .09f));
+                byte phase = diceMode[index];
+                Vector2 axis = SectorDirection(index);
+                Vector2 side = new Vector2(axis.y, -axis.x);
+                Vector2 drag = owned ? cupPosition[index] : Vector2.zero;
+                Vector2 plane = side * drag.x - axis * drag.y;
+                Vector3 center = transform.InverseTransformPoint(DiceTable.position);
+                Vector2 offset = ConstrainSector(index, new Vector2(slot.RestCup.x - center.x, slot.RestCup.z - center.z) + plane, .105f);
+                float opening = phase == 6 ? Mathf.Clamp01((Time.time - rollStart[index]) / .28f) : 0f;
+                float collect = phase == 1 ? Mathf.Clamp01((Time.time - collectionStart[index]) / .7f) : 1f;
+                float tip = phase == 2 || phase == 3 ? 180f : phase == 1 ? Mathf.SmoothStep(0, 180f, Mathf.Clamp01((collect - .7f) / .3f)) :
+                    phase == 6 ? Mathf.Lerp(180f, 163f, opening) : phase == 4 ? Mathf.Lerp(163f, 0, Mathf.Clamp01((Time.time - rollStart[index] - .5f) / .4f)) : 0f;
+                float lift = phase == 2 || phase == 3 ? slot.CupHeight + .006f : phase == 1 ? slot.CupHeight * Mathf.Sin(tip * Mathf.Deg2Rad * .5f) :
+                    phase == 6 ? slot.CupHeight + .006f + opening * .065f : phase == 4 ? slot.CupHeight * Mathf.Sin(tip * Mathf.Deg2Rad * .5f) + .065f * Mathf.Clamp01(tip / 163f) : 0f;
+                Vector3 desired = transform.TransformPoint(new Vector3(center.x + offset.x, slot.RestCup.y + lift, center.z + offset.y));
                 slot.Cup.MovePosition(desired);
-                if (diceMode[index] != 4) slot.Cup.MoveRotation(transform.rotation * slot.RestRotation);
-                if (!owned || diceMode[index] == 0 || diceMode[index] == 5)
+                Vector3 inward = -transform.TransformDirection(new Vector3(axis.x, 0, axis.y));
+                Quaternion cupRotation = Quaternion.AngleAxis(tip, Vector3.Cross(transform.up, inward)) * transform.rotation * slot.RestRotation;
+                slot.Cup.MoveRotation(cupRotation);
+                if (!owned && phase != 4 && phase != 6 || phase == 0 || phase == 5)
                 {
                     for (int i = 0; i < slot.Dice.Length; i++)
                     {
@@ -443,23 +532,41 @@ namespace PirateSlop.Ships
                         slot.Dice[i].MoveRotation(transform.rotation * restingDiceRotation[index][i]);
                     }
                 }
-                else if (diceMode[index] == 1)
+                else if (phase == 1)
                 {
-                    float t = Mathf.Clamp01((Time.time - collectionStart[index]) / .55f);
+                    float gather = Mathf.Clamp01(collect / .7f);
                     for (int i = 0; i < slot.Dice.Length; i++)
                     {
-                        Vector3 destination = transform.InverseTransformPoint(desired) + new Vector3((i % 2 - .5f) * .034f, .07f + i / 2 * .033f, 0);
-                        slot.Dice[i].MovePosition(transform.TransformPoint(Vector3.Lerp(collectionFrom[index][i], destination, t) + Vector3.up * (.3f * 4 * t * (1 - t))));
+                        Vector3 inside = new Vector3((i % 2 - .5f) * .043f, .035f + i / 2 * .033f, 0);
+                        Vector3 destination = desired + cupRotation * inside;
+                        slot.Dice[i].MovePosition(Vector3.Lerp(transform.TransformPoint(collectionFrom[index][i]), destination, gather) + transform.up * (.25f * 4 * gather * (1 - gather)));
                     }
-                    if (t >= 1) diceMode[index] = 2;
+                    if (collect >= 1) diceMode[index] = 2;
                 }
-                else if (diceMode[index] == 2 || diceMode[index] == 3)
+                else if (phase == 2 || phase == 3 || phase == 6)
                 {
                     for (int i = 0; i < slot.Dice.Length; i++)
                     {
-                        float shake = diceMode[index] == 3 ? Mathf.Sin(Time.time * 32 + i) * .015f : 0f;
-                        slot.Dice[i].MovePosition(desired + transform.TransformDirection(new Vector3((i % 2 - .5f) * .035f + shake, .07f + i / 2 * .033f, shake)));
-                        if (diceMode[index] == 3) slot.Dice[i].MoveRotation(UnityEngine.Random.rotation);
+                        Vector3 inside = new Vector3((i % 2 - .5f) * .043f, slot.CupHeight - .04f - i / 2 * .031f, 0);
+                        slot.Dice[i].MovePosition(desired + cupRotation * inside);
+                        slot.Dice[i].MoveRotation(transform.rotation * shakenRotation[index][i]);
+                    }
+                    if (phase == 6 && opening >= 1f)
+                    {
+                        Vector3 mouth = desired + cupRotation * Vector3.up * slot.CupHeight;
+                        Vector3 lateral = Vector3.Cross(transform.up, inward);
+                        float force = .45f + Mathf.Clamp01(lastShake[index].magnitude / .035f) * 1.1f;
+                        for (int i = 0; i < slot.Dice.Length; i++)
+                        {
+                            var die = slot.Dice[i];
+                            die.isKinematic = false;
+                            die.position = mouth + inward * (.07f + i / 2 * .025f) + lateral * ((i % 2 - .5f) * .045f);
+                            die.linearVelocity = ship.Motor.CannonPointVelocity(die.position) + inward * force + transform.up * .12f;
+                            die.angularVelocity = transform.TransformDirection(new Vector3(lastShake[index].y, lastShake[index].x, lastShake[index].x - lastShake[index].y)) * (320f + i * 35f);
+                            KeepDiceOnTable(index, die);
+                            die.WakeUp();
+                        }
+                        diceMode[index] = 4;
                     }
                 }
                 else if (diceMode[index] == 4)
@@ -467,13 +574,14 @@ namespace PirateSlop.Ships
                     bool settled = true;
                     foreach (var die in slot.Dice)
                     {
-                        KeepDiceOnTable(die);
+                        KeepDiceOnTable(index, die);
                         if ((die.linearVelocity - ship.Motor.CannonPointVelocity(die.position)).sqrMagnitude > .012f || (die.angularVelocity - ship.Motor.MotionAngularVelocity).sqrMagnitude > .08f) settled = false;
                     }
                     settledFor[index] = settled ? settledFor[index] + Time.fixedDeltaTime : 0f;
                     if (settledFor[index] > .5f || Time.time - rollStart[index] > 6f)
                     {
                         var values = new List<string>();
+                        int total = 0;
                         foreach (var die in slot.Dice)
                         {
                             int best = 0; float dot = -2f;
@@ -483,11 +591,13 @@ namespace PirateSlop.Ships
                                 if (score > dot) { dot = score; best = face; }
                             }
                             values.Add(slot.FaceValues[best].ToString());
+                            total += slot.FaceValues[best];
                             die.rotation = Quaternion.FromToRotation(die.transform.TransformDirection(slot.FaceNormals[best]), transform.up) * die.rotation;
                         }
-                        diceResults[index] = string.Join(" · ", values); FreezeDice(index); diceMode[index] = 5;
+                        diceResults[index] = string.Join(" · ", values) + " — сумма: " + total; FreezeDice(index); diceMode[index] = 5;
                     }
                 }
+                if (dicePhases[index] != diceMode[index]) dicePhases[index] = diceMode[index];
             }
         }
 
@@ -504,6 +614,13 @@ namespace PirateSlop.Ships
             if (DoorHinge != null) DoorHinge.localRotation = doorRest * Quaternion.AngleAxis(door.Value, DoorAxis);
             if (DispenserLever != null) DispenserLever.localRotation = dispenserRest * Quaternion.AngleAxis(dispenserPull.Value * DispenserLeverAngle, DispenserLeverAxis);
             float time = (float)TimeManager.Tick * (float)TimeManager.TickDelta;
+            if (CandleLight != null) { CandleLight.enabled = candleLit.Value && CanUseDice; CandleLight.intensity = 1.1f + .035f * Mathf.Sin(time * 6f); }
+            if (CandleFlame != null)
+            {
+                bool burn = candleLit.Value && CanUseDice;
+                if (burn && !CandleFlame.isPlaying) CandleFlame.Play();
+                else if (!burn && CandleFlame.isPlaying) CandleFlame.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+            }
             bool lampsChanged = appliedLights != lights.Value;
             for (int i = 0; i < Lanterns.Length; i++)
             {

@@ -828,7 +828,8 @@ namespace PirateSlop.EditorTools
             var supply = UnityEngine.Object.Instantiate(originalCrate.Supply.gameObject, crate.transform);
             crate.Supply = supply.GetComponent<Cannonball>(); supply.SetActive(false);
             crate.Kit = UnityEngine.Object.Instantiate(originalCrate.Kit, crate.transform);
-            crate.Kit.transform.position = features.DispenserMouth.position - Vector3.up * .5f + Vector3.left * .6f;
+            crate.Kit.SetActive(false);
+            foreach (var pickup in crate.Kit.GetComponentsInChildren<CannonPickup>(true)) pickup.Crate = crate;
             root.AddComponent<NetworkCannon>();
         }
 

@@ -3783,6 +3783,7 @@ GameObject:
   - component: {fileID: 3354481864229631810}
   - component: {fileID: 3965722144531925235}
   - component: {fileID: 3103176091704272209}
+  - component: {fileID: 1780384341566926412}
   m_Layer: 0
   m_Name: NetworkPlayer
   m_TagString: Player
@@ -4425,6 +4426,18 @@ MonoBehaviour:
   ArcMaterial: {fileID: 2100000, guid: 5e26dad1322d51b4387628558ebe106c, type: 2}
   ThrowSpeed: 14
   FuseSeconds: 3
+--- !u!114 &1780384341566926412
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4193507432475942729}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c09e78f309673694f9f4c42009a2bbcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.CannonDismantle
 --- !u!1 &4199649050588610447
 GameObject:
   m_ObjectHideFlags: 0

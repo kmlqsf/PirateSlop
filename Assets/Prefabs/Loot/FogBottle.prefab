@@ -46,6 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.FogBottleVisual
   Mist: {fileID: 8059707424315657792}
+  Density: 22
 --- !u!1 &2645324742145076639
 GameObject:
   m_ObjectHideFlags: 0
@@ -125,7 +126,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.FogCloudVisual
   Radius: 0.09
   Height: 0.3
-  Density: 16
+  Density: 22
   InsideBottle: 1
 --- !u!1001 &3855177433255980469
 PrefabInstance:

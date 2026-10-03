@@ -46,7 +46,7 @@
 | [Assets/Scripts/Cannons/CannonAmmo.cs](<../../Assets/Scripts/Cannons/CannonAmmo.cs>) | Исходник C#: CannonAmmo |
 | [Assets/Scripts/Cannons/CannonAmmoVfx.cs](<../../Assets/Scripts/Cannons/CannonAmmoVfx.cs>) | Исходник C#: CannonAmmoVfx |
 | [Assets/Scripts/Cannons/CannonCarriage.cs](<../../Assets/Scripts/Cannons/CannonCarriage.cs>) | Исходник C#: CannonCarriage; Пушки, ядра и лафеты |
-| [Assets/Scripts/Cannons/CannonDismantle.cs](<../../Assets/Scripts/Cannons/CannonDismantle.cs>) | Исходник C#: CannonDismantle |
+| [Assets/Scripts/Cannons/CannonDismantle.cs](<../../Assets/Scripts/Cannons/CannonDismantle.cs>) | Исходник C#: CannonDismantle; Движение корабля и палуба |
 | [Assets/Scripts/Cannons/CannonHands.cs](<../../Assets/Scripts/Cannons/CannonHands.cs>) | Исходник C#: CannonHands |
 | [Assets/Scripts/Cannons/CannonPickup.cs](<../../Assets/Scripts/Cannons/CannonPickup.cs>) | Исходник C#: CannonPickup |
 | [Assets/Scripts/Cannons/CannonShotDamage.cs](<../../Assets/Scripts/Cannons/CannonShotDamage.cs>) | Исходник C#: CannonShotDamage; Пушки, ядра и лафеты |
@@ -129,6 +129,7 @@
 | [Assets/Scripts/Editor/ShipLodSetup.cs](<../../Assets/Scripts/Editor/ShipLodSetup.cs>) | Исходник C#: ShipLodSetup |
 | [Assets/Scripts/Editor/ShipSurfaceDamageSetup.cs](<../../Assets/Scripts/Editor/ShipSurfaceDamageSetup.cs>) | Исходник C#: ShipSurfaceDamageSetup |
 | [Assets/Scripts/Editor/ShipV3BindingRepair.cs](<../../Assets/Scripts/Editor/ShipV3BindingRepair.cs>) | Исходник C#: ShipV3BindingRepair; Движение корабля и палуба, Модели и Blender |
+| [Assets/Scripts/Editor/ShipV3DiceRepair.cs](<../../Assets/Scripts/Editor/ShipV3DiceRepair.cs>) | Исходник C#: ShipV3DiceRepair; Движение корабля и палуба |
 | [Assets/Scripts/Editor/ShipV3GameplayRepair.cs](<../../Assets/Scripts/Editor/ShipV3GameplayRepair.cs>) | Исходник C#: ShipV3GameplayRepair; Движение корабля и палуба, Тестовая карта и водоворот |
 | [Assets/Scripts/Editor/ShipV3ImportSetup.cs](<../../Assets/Scripts/Editor/ShipV3ImportSetup.cs>) | Исходник C#: ShipV3ImportSetup; Модели и Blender |
 | [Assets/Scripts/Editor/ShipV3PerformanceSetup.cs](<../../Assets/Scripts/Editor/ShipV3PerformanceSetup.cs>) | Исходник C#: ShipV3PerformanceSetup; Движение корабля и палуба |
@@ -165,6 +166,7 @@
 | [Assets/Scripts/Interaction/DirectShipControls.cs](<../../Assets/Scripts/Interaction/DirectShipControls.cs>) | Исходник C#: DirectShipControls; Движение корабля и палуба, Паруса и канаты |
 | [Assets/Scripts/Interaction/InteractionContracts.cs](<../../Assets/Scripts/Interaction/InteractionContracts.cs>) | Исходник C#: InteractionKind, IInteractionAgent, InteractionContext, IInteractable |
 | [Assets/Scripts/Interaction/PlayerInteractor.cs](<../../Assets/Scripts/Interaction/PlayerInteractor.cs>) | Исходник C#: PlayerInteractor |
+| [Assets/Scripts/Interaction/RopeTubeVisual.cs](<../../Assets/Scripts/Interaction/RopeTubeVisual.cs>) | Исходник C#: RopeTubeVisual; Паруса и канаты, Пушки, ядра и лафеты |
 | [Assets/Scripts/Interaction/SailRopeMesh.cs](<../../Assets/Scripts/Interaction/SailRopeMesh.cs>) | Исходник C#: SailRopeMesh; Паруса и канаты |
 | [Assets/Scripts/Interaction/SailRopeVisual.cs](<../../Assets/Scripts/Interaction/SailRopeVisual.cs>) | Исходник C#: SailRopeVisual; Паруса и канаты |
 | [Assets/Scripts/Interaction/ShipControlHandle.cs](<../../Assets/Scripts/Interaction/ShipControlHandle.cs>) | Исходник C#: ShipControlHandle; Паруса и канаты |
@@ -232,7 +234,7 @@
 | [Assets/Scripts/Networking/ExperimentalShipEquipment.cs](<../../Assets/Scripts/Networking/ExperimentalShipEquipment.cs>) | Исходник C#: ExperimentalShipEquipment; Предметы, лут и инвентарь |
 | [Assets/Scripts/Networking/LootPlacement.cs](<../../Assets/Scripts/Networking/LootPlacement.cs>) | Исходник C#: LootPlacement |
 | [Assets/Scripts/Networking/NetworkBoarding.cs](<../../Assets/Scripts/Networking/NetworkBoarding.cs>) | Исходник C#: BoardingCable, NetworkCannon; Пушки, ядра и лафеты |
-| [Assets/Scripts/Networking/NetworkCannonDismantle.cs](<../../Assets/Scripts/Networking/NetworkCannonDismantle.cs>) | Исходник C#: NetworkWeapon |
+| [Assets/Scripts/Networking/NetworkCannonDismantle.cs](<../../Assets/Scripts/Networking/NetworkCannonDismantle.cs>) | Исходник C#: NetworkWeapon; Движение корабля и палуба |
 | [Assets/Scripts/Networking/NetworkCrewBell.cs](<../../Assets/Scripts/Networking/NetworkCrewBell.cs>) | Исходник C#: NetworkCrewBell; Новая система ботов |
 | [Assets/Scripts/Networking/NetworkDeveloperTools.cs](<../../Assets/Scripts/Networking/NetworkDeveloperTools.cs>) | Исходник C#: NetworkWeapon; Предметы, лут и инвентарь |
 | [Assets/Scripts/Networking/NetworkEquipment.cs](<../../Assets/Scripts/Networking/NetworkEquipment.cs>) | Исходник C#: NetworkEquipment |

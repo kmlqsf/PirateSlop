@@ -15,6 +15,13 @@ namespace PirateSlop.EditorTools
             ConfigureDice(root);
             ConfigureBell(root);
             ConfigureLanterns(root);
+            ConfigureSailRopes(root);
+            var crate = root.GetComponentInChildren<CannonballCrate>(true);
+            if (crate != null && crate.DispenserManaged && crate.Kit != null)
+            {
+                crate.Kit.SetActive(false);
+                foreach (var pickup in crate.Kit.GetComponentsInChildren<CannonPickup>(true)) pickup.Crate = crate;
+            }
             ConfigureFlags(root);
             foreach (var ladder in root.GetComponentsInChildren<ShipLadder>(true))
                 if (ladder.FollowRopePath && !ladder.BoardingAccess) ladder.BothSides = true;
@@ -71,7 +78,7 @@ namespace PirateSlop.EditorTools
             Vector3 scale = features.CannonballPrefab.transform.localScale;
             float radius = features.CannonballPrefab.GetComponent<SphereCollider>().radius * Mathf.Max(scale.x, scale.y, scale.z);
             features.DispenserDirection = Vector3.back;
-            features.DispenserMouth.position = marker.position - root.transform.TransformDirection(features.DispenserDirection) * radius + root.transform.up * (radius + .025f);
+            features.DispenserMouth.position = marker.position - root.transform.TransformDirection(features.DispenserDirection) * radius * .8f + root.transform.up * (radius + .006f);
             var source = transforms.Single(t => t.name == "V3_Transfer_Control_Main_Course_Lever");
             var oldLever = transforms.FirstOrDefault(t => t.name == "CannonballDispenserLever");
             if (oldLever != null) UnityEngine.Object.DestroyImmediate(oldLever.gameObject);
@@ -79,11 +86,11 @@ namespace PirateSlop.EditorTools
             Vector3 mount = root.transform.InverseTransformPoint(bounds.center);
             mount.x -= bounds.extents.x - .16f;
             mount.y = root.transform.InverseTransformPoint(features.DispenserMouth.position).y + .1f;
-            mount.z = root.transform.InverseTransformPoint(new Vector3(bounds.center.x, bounds.center.y, bounds.max.z)).z + .015f;
+            mount.z = root.transform.InverseTransformPoint(new Vector3(bounds.center.x, bounds.center.y, bounds.min.z)).z - .035f;
             var sourceMesh = source.GetComponent<MeshFilter>().sharedMesh;
             Vector3 sourceAxis = source.TransformDirection(ThinAxis(sourceMesh));
-            Vector3 sourceTip = sourceMesh.vertices.Select(v => source.TransformVector(v)).OrderByDescending(v => Vector3.ProjectOnPlane(v, sourceAxis).sqrMagnitude).First();
-            Vector3 sourceDirection = Vector3.ProjectOnPlane(sourceTip, sourceAxis).normalized;
+            Vector3 sourceTip = source.TransformVector(new Vector3(sourceMesh.bounds.min.x + sourceMesh.bounds.size.x * .08f, sourceMesh.bounds.center.y, sourceMesh.bounds.center.z));
+            Vector3 sourceDirection = source.TransformDirection(Vector3.left);
             Quaternion sourceFrame = Quaternion.LookRotation(sourceAxis, sourceDirection);
             Quaternion targetFrame = Quaternion.LookRotation(root.transform.right, root.transform.TransformDirection(features.DispenserDirection));
             var pivot = Child(mask.parent, "CannonballDispenserLever", root.transform.TransformPoint(mount), targetFrame);
@@ -135,43 +142,7 @@ namespace PirateSlop.EditorTools
 
         static void ConfigureDice(GameObject root)
         {
-            var features = root.GetComponent<ShipV3Features>();
-            var barrel = root.GetComponentsInChildren<MeshFilter>(true).Single(m => m.name == "V17_Dice_Game_Barrel");
-            var bounds = WorldBounds(barrel);
-            var table = features.DiceTable;
-            table.position = new Vector3(bounds.center.x, bounds.max.y, bounds.center.z);
-            var floor = table.GetComponent<BoxCollider>();
-            floor.center = new Vector3(0, -.025f, 0);
-            features.DiceRadius = Mathf.Min(bounds.extents.x, bounds.extents.z) - .025f;
-            floor.size = new Vector3(features.DiceRadius * 2f, .05f, features.DiceRadius * 2f);
-            features.DiceSupport = barrel.gameObject;
-            Target(barrel.transform, features, ShipV3TargetKind.Dice);
-            Target(table.parent, features, ShipV3TargetKind.Dice);
-            foreach (var child in table.Cast<Transform>().Where(t => t.name.StartsWith("DiceRim_", StringComparison.Ordinal)).ToArray())
-                UnityEngine.Object.DestroyImmediate(child.gameObject);
-            for (int i = 0; i < 18; i++)
-            {
-                float angle = i * Mathf.PI * 2f / 18;
-                var rim = Child(table, "DiceRim_" + i, table.position + root.transform.TransformDirection(new Vector3(Mathf.Cos(angle) * features.DiceRadius, .07f, Mathf.Sin(angle) * features.DiceRadius)), root.transform.rotation * Quaternion.Euler(0, -angle * Mathf.Rad2Deg, 0));
-                rim.gameObject.AddComponent<BoxCollider>().size = new Vector3(.024f, .14f, features.DiceRadius * .37f);
-            }
-            foreach (var slot in features.DiceSlots)
-            {
-                var cupBounds = WorldBounds(slot.Cup.GetComponent<MeshFilter>());
-                var owner = slot.Cup.GetComponentInParent<ShipDamageSection>();
-                (owner != null ? owner.transform : slot.Cup.transform).position += root.transform.up * (bounds.max.y + .006f - cupBounds.min.y);
-                slot.RestCup = root.transform.InverseTransformPoint(slot.Cup.transform.position);
-                slot.RestRotation = Quaternion.Inverse(root.transform.rotation) * slot.Cup.transform.rotation;
-                slot.Cup.isKinematic = true;
-                foreach (var die in slot.Dice)
-                {
-                    var dieBounds = WorldBounds(die.GetComponent<MeshFilter>());
-                    die.transform.position += root.transform.up * (bounds.max.y + .006f - dieBounds.min.y);
-                    die.isKinematic = true;
-                    die.solverIterations = 12; die.solverVelocityIterations = 4;
-                    die.linearDamping = .45f; die.angularDamping = .8f;
-                }
-            }
+            ShipV3DiceRepair.Configure(root);
         }
 
         static void ConfigureBell(GameObject root)
@@ -221,8 +192,12 @@ namespace PirateSlop.EditorTools
             var maskBounds = WorldBounds(mask.GetComponent<MeshFilter>());
             var mount = transforms.Single(t => t.name == "V3_Lamp_Hold_Starboard_Mount");
             var lampMesh = mount.GetComponentsInChildren<MeshFilter>(true).First(m => m.name == "V3_Lamp_Hold_Starboard_Body");
-            float shift = maskBounds.min.z - WorldBounds(lampMesh).max.z - .3f;
-            if (shift < 0f) mount.position += root.transform.forward * shift;
+            var portMesh = transforms.Single(t => t.name == "V3_Lamp_Hold_Port_Body").GetComponent<MeshFilter>();
+            lampMesh.sharedMesh = portMesh.sharedMesh;
+            lampMesh.GetComponent<MeshRenderer>().sharedMaterials = portMesh.GetComponent<MeshRenderer>().sharedMaterials;
+            var lampBounds = WorldBounds(lampMesh);
+            mount.position += root.transform.right * (maskBounds.max.x + .18f - lampBounds.min.x);
+            mount.position += root.transform.forward * (originalPort.z - root.transform.InverseTransformPoint(mount.position).z);
             foreach (var body in root.GetComponent<ShipV3Features>().PhysicsBodies.Where(b => b != null && b.name.Contains("Lamp_Hold")))
             {
                 var joint = body.GetComponent<ConfigurableJoint>();
@@ -243,6 +218,33 @@ namespace PirateSlop.EditorTools
             Vector3 point = joint.transform.TransformPoint(joint.anchor);
             joint.autoConfigureConnectedAnchor = false;
             joint.connectedAnchor = joint.connectedBody != null ? joint.connectedBody.transform.InverseTransformPoint(point) : point;
+        }
+
+        public static void ConfigureSailRopes(GameObject root)
+        {
+            var rig = root.GetComponent<ShipV3VisualRig>();
+            var motions = rig.Motions.ToList();
+            foreach (var rope in rig.RigMeshes.Where(r => r != null && r.name.EndsWith("_RunningRope", StringComparison.Ordinal)))
+            {
+                var tube = rope.GetComponent<RopeTubeVisual>();
+                if (tube == null) tube = rope.gameObject.AddComponent<RopeTubeVisual>();
+                tube.Skin = rope; tube.Radius = .022f; tube.TilesPerMeter = 6f;
+            }
+            string[] tags = { "Main_Course", "Main_Topsail", "Fore_Course", "Fore_Topsail", "Mizzen" };
+            var meshes = root.GetComponentsInChildren<MeshFilter>(true);
+            for (int i = 0; i < tags.Length; i++)
+            {
+                var sheave = meshes.Single(m => m.name == "V3_Transfer_Control_" + tags[i] + "_Sheave");
+                var section = sheave.GetComponentInParent<ShipDamageSection>().transform;
+                Vector3 axis = section.InverseTransformDirection(sheave.transform.TransformDirection(ThinAxis(sheave.sharedMesh)));
+                motions.RemoveAll(m => m.Target == section);
+                var poses = new ShipV3Pose[17];
+                for (int frame = 0; frame < poses.Length; frame++)
+                    poses[frame] = new ShipV3Pose { Position = section.localPosition, Scale = section.localScale,
+                        Rotation = section.localRotation * Quaternion.AngleAxis(frame * 45f, axis) };
+                motions.Add(new ShipV3Motion { Target = section, SailIndex = i, Poses = poses });
+            }
+            rig.Motions = motions.ToArray();
         }
 
         static Transform Child(Transform parent, string name, Vector3 position, Quaternion rotation)

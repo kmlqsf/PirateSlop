@@ -61,6 +61,7 @@ namespace PirateSlop.EditorTools
             }
             RemoveDoor(root);
             ConfigureDispenserBindings(root);
+            ConfigureSpyglass(root);
             var rope = Find("V8_Bell_PullRope");
             var ropeBounds = rope.GetComponent<Renderer>().bounds;
             var grip = names.TryGetValue("BellRopeGrip", out var previous) ? previous : new GameObject("BellRopeGrip").transform;
@@ -123,6 +124,21 @@ namespace PirateSlop.EditorTools
             ShipV3GameplayRepair.ConfigureDispenser(root);
         }
 
+        public static void ConfigureSpyglass(GameObject root)
+        {
+            var tube = root.GetComponentsInChildren<MeshFilter>(true).Single(m => m.name == "V9_Telescope_Tube");
+            var station = tube.GetComponent<ShipSpyglass>();
+            if (station == null) station = tube.gameObject.AddComponent<ShipSpyglass>();
+            var bounds = LocalBounds(root.transform, tube);
+            var viewpoint = tube.transform.Find("SpyglassViewpoint");
+            if (viewpoint == null) { viewpoint = new GameObject("SpyglassViewpoint").transform; viewpoint.SetParent(tube.transform, false); }
+            viewpoint.SetPositionAndRotation(root.transform.TransformPoint(new Vector3(bounds.center.x, bounds.center.y, bounds.min.z - .08f)), root.transform.rotation);
+            station.Viewpoint = viewpoint; station.ViewpointLift = 0;
+            var collider = tube.GetComponent<BoxCollider>();
+            if (collider == null) collider = tube.gameObject.AddComponent<BoxCollider>();
+            collider.center = tube.sharedMesh.bounds.center; collider.size = tube.sharedMesh.bounds.size;
+        }
+
         public static void ConfigureClimbing(GameObject root)
         {
             foreach (var ladder in root.GetComponentsInChildren<ShipLadder>(true)) UnityEngine.Object.DestroyImmediate(ladder.gameObject);
@@ -131,9 +147,6 @@ namespace PirateSlop.EditorTools
             {
                 var platform = meshes.Single(m => m.name == "V3_" + mast + "_MastTop_Platform");
                 var platformBounds = LocalBounds(root.transform, platform);
-                float exitHeight = meshes.Where(m => m.name.StartsWith("V3_" + mast + "_MastTop_Rim", StringComparison.Ordinal) ||
-                    m.name.StartsWith("V3_" + mast + "_MastTop_Post", StringComparison.Ordinal))
-                    .Max(m => LocalBounds(root.transform, m).max.y) + .25f;
                 var ropes = meshes.Where(m => m.name.StartsWith("V3_" + mast + "_Shroud", StringComparison.Ordinal))
                     .Select(m => new { Mesh = m, Bottom = EndBounds(root.transform, m, false) }).ToArray();
                 foreach (int side in new[] { -1, 1 })
@@ -143,8 +156,14 @@ namespace PirateSlop.EditorTools
                     var lower = group[0].Bottom;
                     foreach (var rope in group.Skip(1)) lower.Encapsulate(rope.Bottom);
                     Vector3 bottom = new Vector3(lower.center.x, lower.min.y, lower.center.z);
-                    Vector3 top = new Vector3(side * (platformBounds.extents.x + .2f), exitHeight, platformBounds.center.z);
-                    Vector3 exit = new Vector3(side * (platformBounds.extents.x - .65f), top.y, top.z);
+                    var rungs = meshes.Where(m => m.name.Contains(mast) && m.name.Contains(side < 0 ? "Port_Ratline" : "Starboard_Ratline"))
+                        .Select(m => LocalBounds(root.transform, m)).ToArray();
+                    float lastRung = rungs.Length > 0 ? rungs.Max(b => b.max.y) : platformBounds.max.y;
+                    Vector3 top = new Vector3(side * (platformBounds.extents.x + .2f), Mathf.Min(lastRung, platformBounds.max.y), platformBounds.center.z);
+                    var entry = root.GetComponentsInChildren<Transform>(true).Single(t => t.name == "V5_" + mast + (side < 0 ? "_Port" : "_Starboard") + "_CrowNest_ClimbEntry");
+                    Vector3 exit = root.transform.InverseTransformPoint(entry.position);
+                    exit.x = side * (platformBounds.extents.x - .65f);
+                    exit.y = platformBounds.max.y + .035f;
                     AddClimb(root, group[0].Mesh.transform, "Climb_" + mast + (side < 0 ? "_Port" : "_Starboard"), bottom, top, exit,
                         Mathf.Clamp(lower.extents.z + .35f, .55f, 1.6f), false);
                 }

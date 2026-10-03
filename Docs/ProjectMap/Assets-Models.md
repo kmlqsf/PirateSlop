@@ -1217,6 +1217,42 @@
 | [Assets/Models/Ships/ShipV3/ShipV3.fbx](<../../Assets/Models/Ships/ShipV3/ShipV3.fbx>) | Модель / анимации FBX; Модели и Blender |
 | [Assets/Models/Ships/ShipV3/ShipV3.json](<../../Assets/Models/Ships/ShipV3/ShipV3.json>) | Конфигурация / данные JSON; Модели и Blender |
 
+## Assets/Models/Ships/ShipV3/DiceProps
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/Ships/ShipV3/DiceProps/CandleGeometry.asset](<../../Assets/Models/Ships/ShipV3/DiceProps/CandleGeometry.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/DiceProps/DiceBarrelWithoutHandle.asset](<../../Assets/Models/Ships/ShipV3/DiceProps/DiceBarrelWithoutHandle.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/DiceProps/Flame.mat](<../../Assets/Models/Ships/ShipV3/DiceProps/Flame.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipV3/DiceProps/FlameTexture.asset](<../../Assets/Models/Ships/ShipV3/DiceProps/FlameTexture.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/DiceProps/MugGeometry.asset](<../../Assets/Models/Ships/ShipV3/DiceProps/MugGeometry.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/DiceProps/SOURCES.md](<../../Assets/Models/Ships/ShipV3/DiceProps/SOURCES.md>) | Документация; Движение корабля и палуба |
+| [Assets/Models/Ships/ShipV3/DiceProps/Sector0.asset](<../../Assets/Models/Ships/ShipV3/DiceProps/Sector0.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/DiceProps/Sector1.asset](<../../Assets/Models/Ships/ShipV3/DiceProps/Sector1.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/DiceProps/Sector2.asset](<../../Assets/Models/Ships/ShipV3/DiceProps/Sector2.asset>) | Настройки или данные Unity |
+
+## Assets/Models/Ships/ShipV3/DiceProps/MedievalBeerMug
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/Ships/ShipV3/DiceProps/MedievalBeerMug/MedievalBeerMug.fbx](<../../Assets/Models/Ships/ShipV3/DiceProps/MedievalBeerMug/MedievalBeerMug.fbx>) | Модель / анимации FBX |
+| [Assets/Models/Ships/ShipV3/DiceProps/MedievalBeerMug/Mug.mat](<../../Assets/Models/Ships/ShipV3/DiceProps/MedievalBeerMug/Mug.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipV3/DiceProps/MedievalBeerMug/Mug_Base_Color.png](<../../Assets/Models/Ships/ShipV3/DiceProps/MedievalBeerMug/Mug_Base_Color.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/DiceProps/MedievalBeerMug/Mug_Height.png](<../../Assets/Models/Ships/ShipV3/DiceProps/MedievalBeerMug/Mug_Height.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/DiceProps/MedievalBeerMug/Mug_Metallic.png](<../../Assets/Models/Ships/ShipV3/DiceProps/MedievalBeerMug/Mug_Metallic.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/DiceProps/MedievalBeerMug/Mug_Normal_DirectX.png](<../../Assets/Models/Ships/ShipV3/DiceProps/MedievalBeerMug/Mug_Normal_DirectX.png>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/DiceProps/MedievalBeerMug/Mug_Roughness.png](<../../Assets/Models/Ships/ShipV3/DiceProps/MedievalBeerMug/Mug_Roughness.png>) | Изображение / текстура |
+
+## Assets/Models/Ships/ShipV3/DiceProps/WoodenCandlestick
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/Ships/ShipV3/DiceProps/WoodenCandlestick/Candle.mat](<../../Assets/Models/Ships/ShipV3/DiceProps/WoodenCandlestick/Candle.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipV3/DiceProps/WoodenCandlestick/WoodenCandlestick.fbx](<../../Assets/Models/Ships/ShipV3/DiceProps/WoodenCandlestick/WoodenCandlestick.fbx>) | Модель / анимации FBX |
+| [Assets/Models/Ships/ShipV3/DiceProps/WoodenCandlestick/wooden_candlestick_arm_1k.jpg](<../../Assets/Models/Ships/ShipV3/DiceProps/WoodenCandlestick/wooden_candlestick_arm_1k.jpg>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/DiceProps/WoodenCandlestick/wooden_candlestick_diff_1k.jpg](<../../Assets/Models/Ships/ShipV3/DiceProps/WoodenCandlestick/wooden_candlestick_diff_1k.jpg>) | Изображение / текстура |
+| [Assets/Models/Ships/ShipV3/DiceProps/WoodenCandlestick/wooden_candlestick_nor_gl_1k.jpg](<../../Assets/Models/Ships/ShipV3/DiceProps/WoodenCandlestick/wooden_candlestick_nor_gl_1k.jpg>) | Изображение / текстура |
+
 ## Assets/Models/Ships/ShipV3/Materials
 
 | Файл | Краткое описание |

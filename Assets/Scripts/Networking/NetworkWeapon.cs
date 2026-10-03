@@ -227,7 +227,7 @@ namespace PirateSlop.Networking
             if (chest == null || !chest.IsSpawned || !chest.Available || Vector3.Distance(transform.position, target.transform.position) > 5f) return false;
             Vector3 origin = transform.position + Vector3.up * 1.5f;
             Vector3 delta = target.transform.position + Vector3.up * .4f - origin;
-            foreach (var hit in Physics.RaycastAll(origin, delta.normalized, delta.magnitude, ~0, QueryTriggerInteraction.Ignore))
+            foreach (var hit in Physics.RaycastAll(origin, delta.normalized, Mathf.Max(0f, delta.magnitude - .03f), ~0, QueryTriggerInteraction.Ignore))
                 if (!hit.transform.IsChildOf(transform) && !hit.transform.IsChildOf(target.transform)) return false;
             if (slot < 0)
             {

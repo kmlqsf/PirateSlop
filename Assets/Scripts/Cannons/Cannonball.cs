@@ -9,6 +9,7 @@ namespace PirateSlop
         public Material FlightTrailMaterial;
         GameObject ammoVisual;
         PirateSlop.Networking.InventoryItem visibleAmmo = PirateSlop.Networking.InventoryItem.None;
+        float visualRadius;
 
         Rigidbody body;
         SphereCollider sphereCol;
@@ -26,6 +27,7 @@ namespace PirateSlop
         {
             body = GetComponent<Rigidbody>();
             sphereCol = GetComponent<SphereCollider>();
+            visualRadius = sphereCol.radius;
             networkFish = GetComponent<PirateSlop.Networking.NetworkFish>();
             shotDamage = GetComponent<CannonShotDamage>();
         }
@@ -54,8 +56,24 @@ namespace PirateSlop
             ammoVisual.name = "AmmoVisual";
             ammoVisual.transform.localPosition = Vector3.zero;
             ammoVisual.transform.localRotation = Quaternion.identity;
-            ammoVisual.transform.localScale = AmmoModels[index].transform.localScale * (SphereCol.radius / .12f);
+            if (visualRadius <= 0f) visualRadius = SphereCol.radius;
+            ammoVisual.transform.localScale = AmmoModels[index].transform.localScale * (visualRadius / .12f);
             foreach (var renderer in ammoVisual.GetComponentsInChildren<Renderer>(true)) renderer.enabled = true;
+            SphereCol.radius = visualRadius;
+            if (ammo == PirateSlop.Networking.InventoryItem.BoardingHook)
+            {
+                float lowest = 0f;
+                foreach (var filter in ammoVisual.GetComponentsInChildren<MeshFilter>(true))
+                {
+                    var bounds = filter.sharedMesh.bounds;
+                    for (int corner = 0; corner < 8; corner++)
+                    {
+                        Vector3 point = bounds.center + Vector3.Scale(bounds.extents, new Vector3((corner & 1) == 0 ? -1 : 1, (corner & 2) == 0 ? -1 : 1, (corner & 4) == 0 ? -1 : 1));
+                        lowest = Mathf.Min(lowest, transform.InverseTransformPoint(filter.transform.TransformPoint(point)).y);
+                    }
+                }
+                SphereCol.radius = Mathf.Max(.025f, -lowest);
+            }
             visibleAmmo = ammo;
         }
         public bool Loaded { get; set; }
@@ -64,6 +82,7 @@ namespace PirateSlop
         public Rigidbody PlatformBody { get; set; }
         Vector3 deckVelocity;
         bool rolling;
+        bool RestingHook => CurrentAmmo == PirateSlop.Networking.InventoryItem.BoardingHook;
         Vector3 deckLocalPosition;
         Quaternion deckLocalRotation;
         float nextImpactAudio;
@@ -126,6 +145,20 @@ namespace PirateSlop
             if (Held || Loaded || ShotDamage != null) return;
             if (PlatformBody == null || !Body.isKinematic) return;
             if (rolling) RollOnDeck();
+            else if (RestingHook)
+            {
+                Vector3 point = PlatformBody.transform.TransformPoint(deckLocalPosition);
+                if (!Cast(point + PlatformBody.transform.up * .05f, -PlatformBody.transform.up, .18f, out var floor) ||
+                    floor.collider.GetComponentInParent<ShipController>() != PlatformBody.GetComponent<ShipController>())
+                {
+                    Vector3 inherited = PlatformVelocity(point);
+                    Body.position = point;
+                    AttachToPlatform(null);
+                    Body.isKinematic = false; Body.useGravity = true;
+                    Body.linearVelocity = inherited;
+                    return;
+                }
+            }
             if (PlatformBody == null) return;
             Body.position = PlatformBody.transform.TransformPoint(deckLocalPosition);
             Body.rotation = PlatformBody.rotation * deckLocalRotation;
@@ -155,11 +188,14 @@ namespace PirateSlop
         }
         public void RollOnPlatform(Rigidbody platform)
         {
+            RefreshVisual();
+            if (RestingHook && platform != null && Cast(transform.position + platform.transform.up * .08f, -platform.transform.up, .3f, out var floor))
+                transform.position = floor.point + platform.transform.up * (Radius + .005f);
             transform.SetParent(null, true);
             AttachToPlatform(platform);
-            rolling = PlatformBody != null;
-            Body.isKinematic = rolling;
-            Body.useGravity = !rolling;
+            rolling = PlatformBody != null && !RestingHook;
+            Body.isKinematic = PlatformBody != null;
+            Body.useGravity = PlatformBody == null;
         }
         void RollOnDeck()
         {
@@ -261,13 +297,14 @@ namespace PirateSlop
         }
         public void Release()
         {
+            RefreshVisual();
             transform.SetParent(null, true);
             AttachToPlatform(null);
             Body.isKinematic = false;
             Body.useGravity = true;
             Body.linearVelocity = Vector3.zero;
             Body.angularVelocity = Vector3.zero;
-            if (Cast(transform.position + Vector3.up * .05f, Vector3.down, 4f, out var floor))
+            if (Cast(transform.position + Vector3.up * .05f, Vector3.down, RestingHook ? .18f : 4f, out var floor))
             {
                 var ship = floor.collider.GetComponentInParent<ShipController>();
                 if (ship != null) RollOnPlatform(ship.GetComponent<Rigidbody>());

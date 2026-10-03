@@ -40,7 +40,7 @@ namespace PirateSlop.Ships
                         diceCamera = go.AddComponent<Camera>();
                         diceCamera.CopyFrom(motor.PlayerCamera);
                         diceCamera.depth = motor.PlayerCamera.depth + 1;
-                        diceCamera.fieldOfView = 37f;
+                        diceCamera.fieldOfView = 50f;
                         motor.PlayerCamera.enabled = false;
                     }
                     if (keys.fKey.wasPressedThisFrame || keys.qKey.wasPressedThisFrame || keys.escapeKey.wasPressedThisFrame || !diceShip.CanUseDice)
@@ -52,7 +52,7 @@ namespace PirateSlop.Ships
                         diceShip.DiceInput(pending, mouse.leftButton.isPressed, gather, false);
                         pending = Vector2.zero; nextSend = Time.unscaledTime + .05f;
                     }
-                    ContextPrompt.Offer("ЛКМ — двигать и трясти стакан · E — собрать кости · отпустить ЛКМ — бросить · F — выйти\n" + diceShip.DiceResult(slot), 85);
+                    ContextPrompt.Offer(diceShip.DiceInstructions(slot) + "\n" + diceShip.DiceSummary(), 85);
                 }
                 return;
             }
@@ -86,7 +86,7 @@ namespace PirateSlop.Ships
             }
             if (hovered == null || hovered.Ship == null || !hovered.Ship.IsSpawned)
             {
-                if (nearbyDice != null) ContextPrompt.Offer("F — сыграть в кости", 75);
+                if (nearbyDice != null) ContextPrompt.Offer("F — сыграть в кости\n" + nearbyDice.DiceSummary(), 75);
                 return;
             }
             if (hovered.Kind == ShipV3TargetKind.Lantern)
@@ -96,7 +96,12 @@ namespace PirateSlop.Ships
             }
             else if (hovered.Kind == ShipV3TargetKind.Dice)
             {
-                if (nearbyDice != null) ContextPrompt.Offer("F — сыграть в кости", 75);
+                if (nearbyDice != null) ContextPrompt.Offer("F — сыграть в кости\n" + nearbyDice.DiceSummary(), 75);
+            }
+            else if (hovered.Kind == ShipV3TargetKind.Candle)
+            {
+                ContextPrompt.Offer(hovered.Ship.CandleBurning ? "E — погасить свечу" : "E — зажечь свечу", 75);
+                if (keys.eKey.wasPressedThisFrame) hovered.Ship.ToggleCandle();
             }
             else
             {
@@ -157,8 +162,11 @@ namespace PirateSlop.Ships
         }
         void LateUpdate()
         {
-            if (diceCamera != null && diceShip != null && diceShip.DiceView != null)
-                diceCamera.transform.SetPositionAndRotation(diceShip.DiceView.position, diceShip.DiceView.rotation);
+            if (diceCamera != null && diceShip != null)
+            {
+                int slot = diceShip.LocalDiceSlot(player.Owner.ClientId);
+                if (slot >= 0) { diceShip.DiceCameraPose(slot, out var point, out var rotation); diceCamera.transform.SetPositionAndRotation(point, rotation); }
+            }
         }
         void Release()
         {

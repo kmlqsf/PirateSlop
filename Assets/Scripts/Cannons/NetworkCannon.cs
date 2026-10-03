@@ -140,7 +140,7 @@ namespace PirateSlop.Networking
         void ApplyState()
         {
             if (Crate == null) return;
-            Crate.Kit.SetActive(!kitTaken.Value);
+            Crate.Kit.SetActive(!Crate.DispenserManaged && !kitTaken.Value);
             while (Crate.Cannons.Count < placements.Count)
             {
                 var placement = placements[Crate.Cannons.Count];
