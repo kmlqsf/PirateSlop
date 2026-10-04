@@ -118,6 +118,65 @@
 | [Assets/Models/Equipment/HookAgedBrass.mat](<../../Assets/Models/Equipment/HookAgedBrass.mat>) | Материал Unity |
 | [Assets/Models/Equipment/HookForgedIron.mat](<../../Assets/Models/Equipment/HookForgedIron.mat>) | Материал Unity |
 
+## Assets/Models/Firearms
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/Firearms/Frizzen.mat](<../../Assets/Models/Firearms/Frizzen.mat>) | Материал Unity |
+| [Assets/Models/Firearms/Hammer.mat](<../../Assets/Models/Firearms/Hammer.mat>) | Материал Unity |
+| [Assets/Models/Firearms/Musket.mat](<../../Assets/Models/Firearms/Musket.mat>) | Материал Unity |
+| [Assets/Models/Firearms/MusketAssembly.fbx](<../../Assets/Models/Firearms/MusketAssembly.fbx>) | Модель / анимации FBX |
+| [Assets/Models/Firearms/MusketVisual.prefab](<../../Assets/Models/Firearms/MusketVisual.prefab>) | Префаб Unity; Личное оружие и урон |
+| [Assets/Models/Firearms/Pistol.mat](<../../Assets/Models/Firearms/Pistol.mat>) | Материал Unity |
+| [Assets/Models/Firearms/PistolAssembly.fbx](<../../Assets/Models/Firearms/PistolAssembly.fbx>) | Модель / анимации FBX |
+| [Assets/Models/Firearms/PistolVisual.prefab](<../../Assets/Models/Firearms/PistolVisual.prefab>) | Префаб Unity; Личное оружие и урон |
+| [Assets/Models/Firearms/Shotgun.mat](<../../Assets/Models/Firearms/Shotgun.mat>) | Материал Unity |
+| [Assets/Models/Firearms/ShotgunAssembly.fbx](<../../Assets/Models/Firearms/ShotgunAssembly.fbx>) | Модель / анимации FBX |
+| [Assets/Models/Firearms/ShotgunVisual.prefab](<../../Assets/Models/Firearms/ShotgunVisual.prefab>) | Префаб Unity; Личное оружие и урон |
+| [Assets/Models/Firearms/Trigger.mat](<../../Assets/Models/Firearms/Trigger.mat>) | Материал Unity |
+
+## Assets/Models/Firearms/Meshes
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/Firearms/Meshes/FlintHammerMeshLeft_Shotgun.asset](<../../Assets/Models/Firearms/Meshes/FlintHammerMeshLeft_Shotgun.asset>) | Настройки или данные Unity |
+| [Assets/Models/Firearms/Meshes/FlintHammerMeshRight_Musket.asset](<../../Assets/Models/Firearms/Meshes/FlintHammerMeshRight_Musket.asset>) | Настройки или данные Unity |
+| [Assets/Models/Firearms/Meshes/FlintHammerMeshRight_Pistol.asset](<../../Assets/Models/Firearms/Meshes/FlintHammerMeshRight_Pistol.asset>) | Настройки или данные Unity |
+| [Assets/Models/Firearms/Meshes/FlintHammerMeshRight_Shotgun.asset](<../../Assets/Models/Firearms/Meshes/FlintHammerMeshRight_Shotgun.asset>) | Настройки или данные Unity |
+| [Assets/Models/Firearms/Meshes/FrizzenMeshLeft_Shotgun.asset](<../../Assets/Models/Firearms/Meshes/FrizzenMeshLeft_Shotgun.asset>) | Настройки или данные Unity |
+| [Assets/Models/Firearms/Meshes/FrizzenMeshRight_Musket.asset](<../../Assets/Models/Firearms/Meshes/FrizzenMeshRight_Musket.asset>) | Настройки или данные Unity |
+| [Assets/Models/Firearms/Meshes/FrizzenMeshRight_Pistol.asset](<../../Assets/Models/Firearms/Meshes/FrizzenMeshRight_Pistol.asset>) | Настройки или данные Unity |
+| [Assets/Models/Firearms/Meshes/FrizzenMeshRight_Shotgun.asset](<../../Assets/Models/Firearms/Meshes/FrizzenMeshRight_Shotgun.asset>) | Настройки или данные Unity |
+| [Assets/Models/Firearms/Meshes/MusketBody.asset](<../../Assets/Models/Firearms/Meshes/MusketBody.asset>) | Настройки или данные Unity |
+| [Assets/Models/Firearms/Meshes/PistolBody.asset](<../../Assets/Models/Firearms/Meshes/PistolBody.asset>) | Настройки или данные Unity |
+| [Assets/Models/Firearms/Meshes/ShotgunBody.asset](<../../Assets/Models/Firearms/Meshes/ShotgunBody.asset>) | Настройки или данные Unity |
+| [Assets/Models/Firearms/Meshes/TriggerMesh_Musket.asset](<../../Assets/Models/Firearms/Meshes/TriggerMesh_Musket.asset>) | Настройки или данные Unity |
+| [Assets/Models/Firearms/Meshes/TriggerMesh_Pistol.asset](<../../Assets/Models/Firearms/Meshes/TriggerMesh_Pistol.asset>) | Настройки или данные Unity |
+| [Assets/Models/Firearms/Meshes/TriggerMesh_Shotgun.asset](<../../Assets/Models/Firearms/Meshes/TriggerMesh_Shotgun.asset>) | Настройки или данные Unity |
+
+## Assets/Models/Firearms/Textures
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/Firearms/Textures/FrizzenBaseColor.jpg](<../../Assets/Models/Firearms/Textures/FrizzenBaseColor.jpg>) | Изображение / текстура |
+| [Assets/Models/Firearms/Textures/FrizzenMetalSmooth.png](<../../Assets/Models/Firearms/Textures/FrizzenMetalSmooth.png>) | Изображение / текстура |
+| [Assets/Models/Firearms/Textures/FrizzenNormal.png](<../../Assets/Models/Firearms/Textures/FrizzenNormal.png>) | Изображение / текстура |
+| [Assets/Models/Firearms/Textures/HammerBaseColor.jpg](<../../Assets/Models/Firearms/Textures/HammerBaseColor.jpg>) | Изображение / текстура |
+| [Assets/Models/Firearms/Textures/HammerMetalSmooth.png](<../../Assets/Models/Firearms/Textures/HammerMetalSmooth.png>) | Изображение / текстура |
+| [Assets/Models/Firearms/Textures/HammerNormal.png](<../../Assets/Models/Firearms/Textures/HammerNormal.png>) | Изображение / текстура |
+| [Assets/Models/Firearms/Textures/MusketBaseColor.jpg](<../../Assets/Models/Firearms/Textures/MusketBaseColor.jpg>) | Изображение / текстура |
+| [Assets/Models/Firearms/Textures/MusketMetalSmooth.png](<../../Assets/Models/Firearms/Textures/MusketMetalSmooth.png>) | Изображение / текстура |
+| [Assets/Models/Firearms/Textures/MusketNormal.png](<../../Assets/Models/Firearms/Textures/MusketNormal.png>) | Изображение / текстура |
+| [Assets/Models/Firearms/Textures/PistolBaseColor.jpg](<../../Assets/Models/Firearms/Textures/PistolBaseColor.jpg>) | Изображение / текстура |
+| [Assets/Models/Firearms/Textures/PistolMetalSmooth.png](<../../Assets/Models/Firearms/Textures/PistolMetalSmooth.png>) | Изображение / текстура |
+| [Assets/Models/Firearms/Textures/PistolNormal.png](<../../Assets/Models/Firearms/Textures/PistolNormal.png>) | Изображение / текстура |
+| [Assets/Models/Firearms/Textures/ShotgunBaseColor.jpg](<../../Assets/Models/Firearms/Textures/ShotgunBaseColor.jpg>) | Изображение / текстура |
+| [Assets/Models/Firearms/Textures/ShotgunMetalSmooth.png](<../../Assets/Models/Firearms/Textures/ShotgunMetalSmooth.png>) | Изображение / текстура |
+| [Assets/Models/Firearms/Textures/ShotgunNormal.png](<../../Assets/Models/Firearms/Textures/ShotgunNormal.png>) | Изображение / текстура |
+| [Assets/Models/Firearms/Textures/TriggerBaseColor.jpg](<../../Assets/Models/Firearms/Textures/TriggerBaseColor.jpg>) | Изображение / текстура |
+| [Assets/Models/Firearms/Textures/TriggerMetalSmooth.png](<../../Assets/Models/Firearms/Textures/TriggerMetalSmooth.png>) | Изображение / текстура |
+| [Assets/Models/Firearms/Textures/TriggerNormal.png](<../../Assets/Models/Firearms/Textures/TriggerNormal.png>) | Изображение / текстура |
+
 ## Assets/Models/Fishing
 
 | Файл | Краткое описание |
@@ -459,7 +518,7 @@
 | [Assets/Models/Loot/Replacement/WhiskyBottle/WhiskyBottleEmpty.fbx](<../../Assets/Models/Loot/Replacement/WhiskyBottle/WhiskyBottleEmpty.fbx>) | Модель / анимации FBX; Модели и Blender |
 | [Assets/Models/Loot/Replacement/WhiskyBottle/WhiskyCork.mat](<../../Assets/Models/Loot/Replacement/WhiskyBottle/WhiskyCork.mat>) | Материал Unity; Модели и Blender |
 | [Assets/Models/Loot/Replacement/WhiskyBottle/WhiskyGlass.mat](<../../Assets/Models/Loot/Replacement/WhiskyBottle/WhiskyGlass.mat>) | Материал Unity; Модели и Blender |
-| [Assets/Models/Loot/Replacement/WhiskyBottle/WhiskySwirl.mat](<../../Assets/Models/Loot/Replacement/WhiskyBottle/WhiskySwirl.mat>) | Материал Unity; Модели и Blender |
+| [Assets/Models/Loot/Replacement/WhiskyBottle/WhiskySwirl.mat](<../../Assets/Models/Loot/Replacement/WhiskyBottle/WhiskySwirl.mat>) | Материал Unity; Предметы, лут и инвентарь, Модели и Blender |
 
 ## Assets/Models/Loot/Replacement/WineBottle
 
@@ -597,6 +656,28 @@
 | [Assets/Models/Repair/SM_RepairPlank_1.fbx](<../../Assets/Models/Repair/SM_RepairPlank_1.fbx>) | Модель / анимации FBX |
 | [Assets/Models/Repair/SM_RepairPlank_2.fbx](<../../Assets/Models/Repair/SM_RepairPlank_2.fbx>) | Модель / анимации FBX |
 | [Assets/Models/Repair/SM_RepairPlank_3.fbx](<../../Assets/Models/Repair/SM_RepairPlank_3.fbx>) | Модель / анимации FBX |
+
+## Assets/Models/Sabre
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/Sabre/Sabre.mat](<../../Assets/Models/Sabre/Sabre.mat>) | Материал Unity |
+| [Assets/Models/Sabre/SabreAssembly.fbx](<../../Assets/Models/Sabre/SabreAssembly.fbx>) | Модель / анимации FBX; Личное оружие и урон |
+| [Assets/Models/Sabre/SabreVisual.prefab](<../../Assets/Models/Sabre/SabreVisual.prefab>) | Префаб Unity; Личное оружие и урон |
+
+## Assets/Models/Sabre/Meshes
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/Sabre/Meshes/SabreBody.asset](<../../Assets/Models/Sabre/Meshes/SabreBody.asset>) | Настройки или данные Unity |
+
+## Assets/Models/Sabre/Textures
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/Sabre/Textures/SabreBaseColor.jpg](<../../Assets/Models/Sabre/Textures/SabreBaseColor.jpg>) | Изображение / текстура |
+| [Assets/Models/Sabre/Textures/SabreMetalSmooth.png](<../../Assets/Models/Sabre/Textures/SabreMetalSmooth.png>) | Изображение / текстура |
+| [Assets/Models/Sabre/Textures/SabreNormal.png](<../../Assets/Models/Sabre/Textures/SabreNormal.png>) | Изображение / текстура |
 
 ## Assets/Models/SailRigging
 

@@ -11,6 +11,12 @@ namespace PirateSlop.Networking
             var sphere = prefab.GetComponent<SphereCollider>();
             Vector3 size = box != null ? Vector3.Scale(box.size, prefab.transform.localScale) : Vector3.one * (sphere != null ? sphere.radius * 2f * Mathf.Max(prefab.transform.localScale.x, prefab.transform.localScale.y, prefab.transform.localScale.z) : .25f);
             Vector3 center = box != null ? Vector3.Scale(box.center, prefab.transform.localScale) : Vector3.zero;
+            if (item == InventoryItem.Fish || item == InventoryItem.Pufferfish || item == InventoryItem.Swordfish)
+            {
+                var bounds = VisualBounds(prefab);
+                size = Vector3.Scale(bounds.size, prefab.transform.localScale);
+                center = Vector3.Scale(bounds.center, prefab.transform.localScale);
+            }
             for (int attempt = 0; attempt < (reserved != null ? 45 : 9); attempt++)
             {
                 int column = attempt % 9;
@@ -26,7 +32,7 @@ namespace PirateSlop.Networking
                     if (!hit.transform.IsChildOf(owner) && hit.collider.GetComponentInParent<NetworkFish>() == null && hit.collider.GetComponentInParent<AdvancedPlayerController>() == null && hit.normal.y > .55f && hit.distance < distance)
                     { floor = hit; distance = hit.distance; }
                 if (floor.collider == null) continue;
-                rotation = Quaternion.FromToRotation(Vector3.up, floor.normal) * Quaternion.Euler(0, owner.eulerAngles.y, item == InventoryItem.Fish ? 90f : 0f);
+                rotation = Quaternion.FromToRotation(Vector3.up, floor.normal) * Quaternion.Euler(0, owner.eulerAngles.y, item == InventoryItem.Fish || item == InventoryItem.Pufferfish || item == InventoryItem.Swordfish ? 90f : 0f);
                 float lowest = float.PositiveInfinity;
                 for (int i = 0; i < 8; i++)
                 {
@@ -51,6 +57,26 @@ namespace PirateSlop.Networking
                 return true;
             }
             return false;
+        }
+
+        public static Bounds VisualBounds(NetworkFish fish)
+        {
+            var bounds = new Bounds();
+            bool found = false;
+            foreach (var filter in fish.GetComponentsInChildren<MeshFilter>(true))
+            {
+                if (filter.sharedMesh == null) continue;
+                var mapping = fish.transform.worldToLocalMatrix * filter.transform.localToWorldMatrix;
+                var source = filter.sharedMesh.bounds;
+                for (int i = 0; i < 8; i++)
+                {
+                    var point = mapping.MultiplyPoint3x4(source.center + Vector3.Scale(source.extents,
+                        new Vector3((i & 1) == 0 ? -1f : 1f, (i & 2) == 0 ? -1f : 1f, (i & 4) == 0 ? -1f : 1f)));
+                    if (!found) { bounds = new Bounds(point, Vector3.zero); found = true; }
+                    else bounds.Encapsulate(point);
+                }
+            }
+            return found ? bounds : new Bounds(Vector3.zero, Vector3.one * .25f);
         }
     }
 }

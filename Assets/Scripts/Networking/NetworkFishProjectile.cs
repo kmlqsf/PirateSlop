@@ -134,17 +134,20 @@ namespace PirateSlop.Networking
             var ocean = OceanSurface.Instance;
             if (ocean != null && transform.position.y <= ocean.Height(transform.position))
             {
-                Vector3 splashPoint = transform.position;
-                foreach (var chest in NetworkLootChest.ServerChests)
+                if (pickup.Item == InventoryItem.Pufferfish)
                 {
-                    if (chest != null && chest.IsSpawned && chest.Kind == SeaLootKind.Shark)
-                    {
-                        if (Vector3.Distance(splashPoint, chest.EventPoint) <= 12f)
-                            chest.FeedSharks(pickup != null ? pickup.Item : InventoryItem.Fish, splashPoint);
-                    }
+                    foreach (var chest in NetworkLootChest.ServerChests)
+                        if (chest != null && chest.IsSpawned && chest.Kind == SeaLootKind.Shark &&
+                            Vector3.Distance(transform.position, chest.EventPoint) <= 12f)
+                            chest.FeedSharks(pickup.Item, transform.position);
+                    Burst();
                 }
-                if (pickup.Item == InventoryItem.Pufferfish) Burst();
-                else { SoundObserversRpc(SoundCue.Splash, transform.position, false); flying.Value = false; ServerManager.Despawn(NetworkObject); }
+                else
+                {
+                    flying.Value = false;
+                    stuck.Value = false;
+                    pickup.EnterWater(velocity);
+                }
             }
         }
         void Burst()

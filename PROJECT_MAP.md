@@ -12,17 +12,17 @@
 
 ## Полный каталог
 
-Учтено 4460 файлов без `.meta`. Ещё 4707 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
+Учтено 4578 файлов без `.meta`. Ещё 4782 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
 
 | Раздел | Назначение | Файлов |
 | --- | --- | ---: |
 | [.agents](<Docs/ProjectMap/.agents.md>) | Ресурсы раздела; точный состав — в каталоге | 1 |
 | [.cursor](<Docs/ProjectMap/.cursor.md>) | Ресурсы раздела; точный состав — в каталоге | 1 |
 | [.opencode](<Docs/ProjectMap/.opencode.md>) | Ресурсы раздела; точный состав — в каталоге | 4 |
-| [Art](<Docs/ProjectMap/Art.md>) | Исходники арта и Blender | 167 |
+| [Art](<Docs/ProjectMap/Art.md>) | Исходники арта и Blender | 217 |
 | [Assets](<Docs/ProjectMap/Assets.md>) | Ресурсы раздела; точный состав — в каталоге | 3 |
 | [Assets/Animations](<Docs/ProjectMap/Assets-Animations.md>) | Анимации | 51 |
-| [Assets/Audio](<Docs/ProjectMap/Assets-Audio.md>) | Звуковые ресурсы и лицензии | 202 |
+| [Assets/Audio](<Docs/ProjectMap/Assets-Audio.md>) | Звуковые ресурсы и лицензии | 206 |
 | [Assets/Branding](<Docs/ProjectMap/Assets-Branding.md>) | Оформление проекта | 1 |
 | [Assets/Editor](<Docs/ProjectMap/Assets-Editor.md>) | Редакторские ресурсы | 1 |
 | [Assets/Fog Particles](<Docs/ProjectMap/Assets-Fog Particles.md>) | Ресурсы раздела; точный состав — в каталоге | 17 |
@@ -31,12 +31,12 @@
 | [Assets/JMO Assets](<Docs/ProjectMap/Assets-JMO Assets.md>) | Ресурсы раздела; точный состав — в каталоге | 488 |
 | [Assets/Materials](<Docs/ProjectMap/Assets-Materials.md>) | Материалы | 151 |
 | [Assets/Mirza](<Docs/ProjectMap/Assets-Mirza.md>) | Ресурсы раздела; точный состав — в каталоге | 186 |
-| [Assets/Models](<Docs/ProjectMap/Assets-Models.md>) | Модели и связанные ресурсы | 1368 |
+| [Assets/Models](<Docs/ProjectMap/Assets-Models.md>) | Модели и связанные ресурсы | 1419 |
 | [Assets/Plugins](<Docs/ProjectMap/Assets-Plugins.md>) | Плагины | 5 |
 | [Assets/Prefabs](<Docs/ProjectMap/Assets-Prefabs.md>) | Готовые игровые объекты | 132 |
-| [Assets/Resources](<Docs/ProjectMap/Assets-Resources.md>) | Ресурсы, доступные для загрузки по имени | 43 |
+| [Assets/Resources](<Docs/ProjectMap/Assets-Resources.md>) | Ресурсы, доступные для загрузки по имени | 49 |
 | [Assets/Scenes](<Docs/ProjectMap/Assets-Scenes.md>) | Сохранённые сцены | 4 |
-| [Assets/Scripts](<Docs/ProjectMap/Assets-Scripts.md>) | Игровой код и редакторские инструменты | 353 |
+| [Assets/Scripts](<Docs/ProjectMap/Assets-Scripts.md>) | Игровой код и редакторские инструменты | 360 |
 | [Assets/Settings](<Docs/ProjectMap/Assets-Settings.md>) | Настройки игровых систем и рендеринга | 44 |
 | [Assets/Shaders](<Docs/ProjectMap/Assets-Shaders.md>) | Шейдеры | 7 |
 | [Assets/StreamingAssets](<Docs/ProjectMap/Assets-StreamingAssets.md>) | Ресурсы раздела; точный состав — в каталоге | 2 |
@@ -254,6 +254,10 @@ ShipDeckPassenger учитывает BoardingWalkSurface: перенос по т
 Настройки оружия искать через FirearmDefinition и используемые ссылки; не копировать числовой баланс из истории.
 PistolBullet создаёт мини-дым CannonSmokeTrail по фактическому движению визуальной пули для пистолета, мушкета и каждой дробины двустволки, включая предсказанные и удалённые выстрелы. Масштаб 0.3, шаг 0.12 м, затухание 3.3 с; дым сохраняется при попадании и повторном использовании пула трассеров.
 SabreAnimation использует отдельный хват Mixamo и переносит движение игровой сабли в координаты камеры для первого лица. Слой SabreCombat активен при выбранной сабле; Ready использует New_SabreReady. NewPirateAnimationBatch сохраняет эту стойку при переимпорте.
+Три модели из Blender/Лутабельные/Оружие заменены сборками Art/Blender/Firearms/FirearmAssemblies.blend и Assets/Models/Firearms. Один спуск на оружие; кремнёвые замки справа у пистолета/снайперки и зеркально с обеих сторон дробовика. FirearmMechanism анимирует спуск, удар через 0.065 с, искры FirearmVfx и возврат на -12° до перезарядки. Существующие GUID префабов и баланс сохранены. FirearmModelReplacementSetup подключает модели и палубные точки; ExperimentalShipEquipment повторяет спавн снайперки/дробовика сразу после подбора. Пикапы неподвижны относительно корабля через NetworkFish, без механики качения ядер. Пистолет остаётся в стартовом инвентаре. Play Mode и сетевая приёмка не выполнялись.
+Исправление хвата 2026-10-04: старые MusketReady/ShotgunReady и Reload используют пути PirateRig, игровой персонаж — Mixamo. NetworkPlayer.Models теперь назначает канонические MusketVisual/ShotgunVisual с GripSocket_Firearm и SupportSocket_Firearm. CharacterActions для Mixamo не переносит старый ActionProp; Ready/Aim/Reload используют New_PistolAim, огонь — New_Shooting. WeaponArmRig совмещает ладони с точками хвата, ориентирует кисти и ограничивает положение оружия длиной обеих рук; отдача/перезарядка NetworkEquipment сохранены. NewPirateAnimationBatch сохраняет назначения поз. Сабля центрирована по фактической древесине рукояти, смещение первого лица отодвинуто от камеры. SabreWoodHit использует проверенный camera-eye и направление прицела с физической дальностью 2.4 м и контролем препятствий. Зарубки увеличены до 26–34×3.5–5 см; SabreWoodImpact проецирует сетку13×5 на активный collider той же SectionId и обрезает клетки на краях/разрывах, включая округлые перила. След30+3с и сетевое событие с дедупликацией сохранены. Игровые/визуальные проверки и Play Mode не запускались.
+Уточнение размеров и хвата 2026-10-04: итоговые длины корпуса пистолета 0.324 м, снайперки 1.062 м, дробовика 0.648 м (Visual scale 0.72/0.9/0.9). Подтверждённый хват длинного оружия сохранён; пистолет получил GripSocket_Firearm, наклон кисти по рукояти и позу 20 правых пальцев из New_PistolAim. Сабля уменьшена до 0.735 м и развёрнута на 180° вокруг продольной оси клинка в первом/третьем лице и сброшенном визуале. Сабля разбивает Fog/Vortex через прежний проверенный контакт прицела; огнестрел использует IWeaponTarget. Glass добавлен в конец BulletSurfaceKind; бутылочное попадание не создаёт обычный след/звук пули и не передаёт удаляемый Anchor. Компиляция и сохранённые ссылки проверены; Play Mode и игровые/визуальные проверки не запускались.
+Снайперка имеет ShoulderSocket_Firearm на затыльнике, GripSocket_Firearm на рукояти и SupportSocket_Firearm на цевье. NetworkEquipment передаёт смещение плеча и текущую отдачу/движение. WeaponArmRig в мировой стойке закрепляет приклад на плече текущего скелета; при недостижимом цевье левый хват сдвигается вдоль оружия до доступной длины руки, без переноса приклада и без соседней точки правого хвата. При перезарядке освобождается плечевой контакт. FirearmModelReplacementSetup сохраняет сокеты при повторном импорте; масштаб и баланс не изменены.
 
 - [Assets/Scripts/Player/PirateWeapon.cs](<Assets/Scripts/Player/PirateWeapon.cs>) — Исходник C#: IWeaponTarget, PirateWeapon.
 - [Assets/Scripts/Networking/NetworkWeapon.cs](<Assets/Scripts/Networking/NetworkWeapon.cs>) — Исходник C#: NetworkWeapon.
@@ -266,8 +270,36 @@ SabreAnimation использует отдельный хват Mixamo и пер
 - [Assets/Scripts/Editor/FirearmSetup.cs](<Assets/Scripts/Editor/FirearmSetup.cs>) — Исходник C#: FirearmSetup.
 - [Assets/Scripts/Player/SabreAnimation.cs](<Assets/Scripts/Player/SabreAnimation.cs>) — Исходник C#: SabreAnimation.
 - [Assets/Scripts/Editor/NewPirateAnimationBatch.cs](<Assets/Scripts/Editor/NewPirateAnimationBatch.cs>) — Исходник C#: NewPirateAnimationBatch.
+- [Assets/Scripts/Player/FirearmMechanism.cs](<Assets/Scripts/Player/FirearmMechanism.cs>) — Исходник C#: FirearmMechanism.
+- [Assets/Scripts/Player/FirearmVfx.cs](<Assets/Scripts/Player/FirearmVfx.cs>) — Исходник C#: FirearmVfx.
+- [Assets/Scripts/Editor/FirearmModelReplacementSetup.cs](<Assets/Scripts/Editor/FirearmModelReplacementSetup.cs>) — Исходник C#: FirearmModelReplacementSetup.
+- [Assets/Scripts/Networking/ExperimentalShipEquipment.cs](<Assets/Scripts/Networking/ExperimentalShipEquipment.cs>) — Исходник C#: ExperimentalShipEquipment.
+- [Assets/Models/Firearms/PistolVisual.prefab](<Assets/Models/Firearms/PistolVisual.prefab>) — Префаб Unity.
+- [Assets/Models/Firearms/MusketVisual.prefab](<Assets/Models/Firearms/MusketVisual.prefab>) — Префаб Unity.
+- [Assets/Models/Firearms/ShotgunVisual.prefab](<Assets/Models/Firearms/ShotgunVisual.prefab>) — Префаб Unity.
+- [Assets/Scripts/Player/PirateWeaponAnimation.cs](<Assets/Scripts/Player/PirateWeaponAnimation.cs>) — Исходник C#: PirateWeapon.
+- [Assets/Scripts/Player/SabreWoodHit.cs](<Assets/Scripts/Player/SabreWoodHit.cs>) — Исходник C#: SabreWoodHit, PirateWeapon.
+- [Assets/Scripts/Player/SabreWoodImpact.cs](<Assets/Scripts/Player/SabreWoodImpact.cs>) — Исходник C#: SabreWoodImpact.
+- [Assets/Scripts/Networking/NetworkWeapon.Sabre.cs](<Assets/Scripts/Networking/NetworkWeapon.Sabre.cs>) — Исходник C#: NetworkWeapon.
+- [Assets/Scripts/Editor/SabreModelReplacementSetup.cs](<Assets/Scripts/Editor/SabreModelReplacementSetup.cs>) — Исходник C#: SabreModelReplacementSetup.
+- [Assets/Models/Sabre/SabreVisual.prefab](<Assets/Models/Sabre/SabreVisual.prefab>) — Префаб Unity.
+- [Assets/Models/Sabre/SabreAssembly.fbx](<Assets/Models/Sabre/SabreAssembly.fbx>) — Модель / анимации FBX.
+- [Assets/Prefabs/Networking/DroppedSabre.prefab](<Assets/Prefabs/Networking/DroppedSabre.prefab>) — Префаб Unity.
+- [Assets/Resources/SabreCut.shader](<Assets/Resources/SabreCut.shader>) — Шейдер.
+- [Assets/Resources/SabreWoodChip.shader](<Assets/Resources/SabreWoodChip.shader>) — Шейдер.
+- [Assets/Resources/SabreCut.mat](<Assets/Resources/SabreCut.mat>) — Материал Unity.
+- [Assets/Resources/SabreWoodChip.mat](<Assets/Resources/SabreWoodChip.mat>) — Материал Unity.
+- [Art/Blender/SabreReplacement/ImportSabre.py](<Art/Blender/SabreReplacement/ImportSabre.py>) — Инструмент Python.
+- [Art/Blender/SabreReplacement/SabreAssembly.blend](<Art/Blender/SabreReplacement/SabreAssembly.blend>) — Редактируемая сцена Blender.
+- [Assets/Scripts/Player/CharacterActions.cs](<Assets/Scripts/Player/CharacterActions.cs>) — Исходник C#: CharacterActions.
+- [Assets/Scripts/Player/WeaponArmRig.cs](<Assets/Scripts/Player/WeaponArmRig.cs>) — Исходник C#: WeaponArmRig, Arm.
+- [Assets/Scripts/Networking/NetworkEquipment.cs](<Assets/Scripts/Networking/NetworkEquipment.cs>) — Исходник C#: NetworkEquipment.
+- [Assets/Scripts/Player/BulletSurface.cs](<Assets/Scripts/Player/BulletSurface.cs>) — Исходник C#: BulletSurfaceKind, BulletSurface.
+- [Assets/Scripts/Player/FirearmImpact.cs](<Assets/Scripts/Player/FirearmImpact.cs>) — Исходник C#: FirearmImpact.
 - [firearm-foundation.md](<firearm-foundation.md>) — Документация.
 - [combat-balance.md](<combat-balance.md>) — Документация.
+- [Art/Blender/Firearms/README.md](<Art/Blender/Firearms/README.md>) — Документация.
+- [Art/Blender/SabreReplacement/README.md](<Art/Blender/SabreReplacement/README.md>) — Документация.
 
 ### Предметы, лут и инвентарь (`loot`)
 
@@ -285,9 +317,11 @@ FogBottle=24 — бутылка тумана, бросок по ЛКМ чере�
 На новом ShipV3Test обычное ядро исключено из ExperimentalShipEquipment: осталось семь палубных предметов. Обычные ядра выдаёт ShipV3Features.Dispense из маски в трюме, до шести свободных экземпляров с прежним интервалом 4 с. ConfigureDispenserBindings привязывает рот к V15_Cannonball_Spawn со смещением внутрь и зазором по радиусу ядра; MeshCollider модели сохраняет физическую поверхность языка. Основной корабль и его источник ядер не изменены.
 BoardingEquipmentSetup заменяет три модели из Blender/Лутабельные/New: абордажный снаряд, Wine и Spyglass. Прежние игровые префабы, GUID, механики и ссылки инвентаря сохранены. BoardingHookVisual содержит одиночный гарпун; BoardingHarpoonPairVisual — две копии с верёвкой, индекс 5 в Cannonball.AmmoModels. Обновлены три предметные иконки и запасы обоих кораблей. Модели и PBR-материалы находятся в Assets/Models/Loot/Replacement.
 На ShipV3Test к семи прежним предметам добавлены BoardingHook, Wine и Spyglass: всего десять маркеров на настоящей палубе. ExperimentalShipEquipment сохраняет авторитетный серверный спавн и цикл повторного появления; обычные ядра по-прежнему выдаёт маска. BoardingHookAmmo и CannonHands показывают парный снаряд ещё до загрузки в пушку.
-FogBottle и VortexBottle используют пустую Whisky Bottle: дым ограничен внутренним объёмом, вихрь состоит из мягких вращающихся лент. BottleFog сохраняет прежний большой игровой туман отдельной веткой InsideBottle; BottleVortex — шейдер внутреннего вихря. ExperimentalShipEquipment содержит две дополнительные точки на центральной палубе ShipV3Test: (-1.1,4.11,0.35) и (1.1,4.11,0.35). После подбора бутылка восстанавливается на следующем серверном кадре в своей точке; остальные предметы сохраняют интервал 20 секунд.
+FogBottle и VortexBottle используют пустую Whisky Bottle: дым ограничен внутренним объёмом, вихрь состоит из мягких вращающихся лент. BottleFog сохраняет прежний большой игровой туман отдельной веткой InsideBottle; BottleVortex — шейдер внутреннего вихря. ExperimentalShipEquipment содержит две дополнительные точки на центральной палубе ShipV3Test: (-1.1,4.11,0.35) и (1.1,4.11,0.35). После подбора или разбития бутылка восстанавливается через 5 секунд в своей точке; остальные предметы сохраняют прежние интервалы.
 Исправления 2026-10-04: сервер подбора проверяет доступную поверхность коллайдера предмета, чтобы origin набора пушки под палубой не создавал ложную преграду. VortexBottleVisual рисует локальный объём шести дымчатых потоков с пустым центром и неоднородным движением. BottleFog меняет только InsideBottle: восходящие клубы, domain warp, внутреннее затенение, плотность 10. Игровой FogCloud сохраняет прежнюю ветку; стекло имеет очередь 3010, эффекты — 3000.
 Полка рома принимает точку наведения и слот в одном RPC, с проверкой поверхности и прямой видимости. Бутылочные VFX используют устойчивую базовую плотность и текущий render-transform: Fog Density22, Vortex Density14/Rotation90. Рыба-меч направлена носом +Z, хват перенесён к телу; фугу перед взрывом раздувается поперёк тела до ~2.1x, обрабатываются все Renderer. Игровая проверка остаётся за пользователем.
+FogBottle и VortexBottle на палубе и в полёте разбиваются выстрелом или проверенным контактом сабли через IWeaponTarget/TryBreakFromWeapon. Общий серверный Break защищён от повторов, запускает существующий FogCloud или VortexBoost до Despawn и рассылает один BottleBreakVfx со звуком стекла и осколками. Для палубной бутылки вихря NetworkFish.SupportingShip определяет корабль-носитель; стрелявший корабль не подставляется. Вода сохраняет прежнее поведение. BottleBreakVfx использует пул 16 коротких частиц без Rigidbody и света. Внутренний BottleVortex имеет синий HDR-цвет (0.05,0.38,1,0.85) и EmissionStrength 3.5 без ограничения saturate; плотность 14, форма, глубина и RotationSpeed 90 сохранены. Повторный ConfigureBottles сохраняет новые настройки. Игровая и сетевая приёмка остаются за пользователем.
+ExperimentalShipEquipment отсчитывает индивидуальную серверную задержку 5 секунд для FogBottle и VortexBottle с момента исчезновения предыдущего экземпляра после подбора или разбития. Первый запас появляется сразу; повторный спавн использует прежний SpawnPoint корабля и NetworkFish.Place. Таймер не зависит от общего 20-секундного пополнения; мгновенная выдача снайперки/дробовика сохранена.
 
 - [Assets/Scripts/Player/PlayerInventory.cs](<Assets/Scripts/Player/PlayerInventory.cs>) — Исходник C#: PlayerInventory.
 - [Assets/Scripts/Player/PlayerInventory.RaftLockpick.cs](<Assets/Scripts/Player/PlayerInventory.RaftLockpick.cs>) — Исходник C#: PlayerInventory.
@@ -357,6 +391,11 @@ FogBottle и VortexBottle используют пустую Whisky Bottle: ды�
 - [Assets/Scripts/Editor/BottleFishReplacementSetup.cs](<Assets/Scripts/Editor/BottleFishReplacementSetup.cs>) — Исходник C#: BottleFishReplacementSetup.
 - [Assets/Resources/BottleVortex.shader](<Assets/Resources/BottleVortex.shader>) — Шейдер.
 - [Assets/Resources/Ships/ShipV3Test.prefab](<Assets/Resources/Ships/ShipV3Test.prefab>) — Префаб Unity.
+- [Assets/Scripts/Networking/NetworkFish.cs](<Assets/Scripts/Networking/NetworkFish.cs>) — Исходник C#: InventoryItem, NetworkFish.
+- [Assets/Scripts/Loot/BottleBreakVfx.cs](<Assets/Scripts/Loot/BottleBreakVfx.cs>) — Исходник C#: BottleBreakVfx.
+- [Assets/Resources/BottleGlassShard.shader](<Assets/Resources/BottleGlassShard.shader>) — Шейдер.
+- [Assets/Resources/BottleGlassShard.mat](<Assets/Resources/BottleGlassShard.mat>) — Материал Unity.
+- [Assets/Models/Loot/Replacement/WhiskyBottle/WhiskySwirl.mat](<Assets/Models/Loot/Replacement/WhiskyBottle/WhiskySwirl.mat>) — Материал Unity.
 - [rum-loot.md](<rum-loot.md>) — Документация.
 - [combat-balance.md](<combat-balance.md>) — Документация.
 - [Art/Blender/LootReplacement/README.md](<Art/Blender/LootReplacement/README.md>) — Документация.
@@ -595,6 +634,8 @@ Whisky Bottle с бесплатной BlenderKit Royalty Free загружена
 Голосовой чат — отдельная система от игровых звуков. SessionVoiceMenu переключает сохранённый режим VOIP: удержание V (по умолчанию) или активация микрофона по RMS-порогу -60..-20 дБ (по умолчанию -40), с хвостом 0.3 с. PirateVoiceInputFilter фильтрует исходящие кадры до кодирования; запреты в меню, без фокуса и при смерти сохраняются.
 Взлом плота: шесть Lockpick cues в GameAudioBank. Движение отмычки, вращение и заедание звучат локально с ограничением частоты; начало, поломка и успех подтверждаются сервером и слышны рядом. Короткие CC0-записи и обработка перечислены в Assets/Audio/Lockpick/SOURCE.md; варианты движения/заедания не повторяются подряд.
 ShipV3InteractionAudioSetup импортирует короткие CC0-фрагменты костей на столе, контактов костей, тряски в кружке, зажигания и тушения огня и три новых удара рынды. Новые SoundCue добавлены в конец enum; GameAudio исключает немедленные повторы этих вариантов. Источники и лицензии: Assets/Audio/ShipInteractions/SOURCES.md. Свеча и фонари используют одинаковые FlameLight/FlameExtinguish через серверные события.
+SabreWood добавлен в конец SoundCue без изменения прежних числовых значений. SabreModelReplacementSetup назначает существующий Foley/chop.ogg (громкость 0.6, дистанция 22 м); звук контакта с деревом передаётся вместе с серверным эффектом. Knife остаётся звуком взмаха.
+BottleBreak добавлен последним в SoundCue и назначен через BottleFishReplacementSetup.ConfigureBottleBreakAudio. Три оригинальных процедурных mono PCM16 WAV, 44.1 кГц, 0.725–0.775 с, громкость 0.75, дистанция 24 м; источники описаны в Assets/Audio/BottleBreak/SOURCES.md, генератор — Art/Audio/BottleBreak/GenerateBottleBreak.py. Это отдельный звук разбитого стекла; BottleClose сохраняет звук пробки. Звук и осколки приходят из одного серверного события разбития; общий эффект пули для этих бутылок подавлен. Ссылки и импорт проверены, звучание на слух и Play Mode не проверялись.
 
 - [Assets/Scripts/Audio/GameAudio.cs](<Assets/Scripts/Audio/GameAudio.cs>) — Исходник C#: GameAudio.
 - [Assets/Scripts/Audio/GameAudioBank.cs](<Assets/Scripts/Audio/GameAudioBank.cs>) — Исходник C#: SoundCue, GameAudioBank, Entry.
@@ -619,9 +660,16 @@ ShipV3InteractionAudioSetup импортирует короткие CC0-фраг
 - [Assets/Audio/Lockpick/LockSuccess.wav](<Assets/Audio/Lockpick/LockSuccess.wav>) — Аудио.
 - [Assets/Scripts/Ships/ShipV3DiceContact.cs](<Assets/Scripts/Ships/ShipV3DiceContact.cs>) — Исходник C#: ShipV3DiceContact.
 - [Assets/Scripts/Editor/ShipV3InteractionAudioSetup.cs](<Assets/Scripts/Editor/ShipV3InteractionAudioSetup.cs>) — Исходник C#: ShipV3InteractionAudioSetup.
+- [Assets/Scripts/Loot/BottleBreakVfx.cs](<Assets/Scripts/Loot/BottleBreakVfx.cs>) — Исходник C#: BottleBreakVfx.
+- [Assets/Scripts/Editor/BottleFishReplacementSetup.cs](<Assets/Scripts/Editor/BottleFishReplacementSetup.cs>) — Исходник C#: BottleFishReplacementSetup.
+- [Art/Audio/BottleBreak/GenerateBottleBreak.py](<Art/Audio/BottleBreak/GenerateBottleBreak.py>) — Инструмент Python.
+- [Assets/Audio/BottleBreak/BottleBreak01.wav](<Assets/Audio/BottleBreak/BottleBreak01.wav>) — Аудио.
+- [Assets/Audio/BottleBreak/BottleBreak02.wav](<Assets/Audio/BottleBreak/BottleBreak02.wav>) — Аудио.
+- [Assets/Audio/BottleBreak/BottleBreak03.wav](<Assets/Audio/BottleBreak/BottleBreak03.wav>) — Аудио.
 - [AudioIntegration.md](<AudioIntegration.md>) — Документация.
 - [Assets/Audio/CREDITS.md](<Assets/Audio/CREDITS.md>) — Документация.
 - [Assets/Audio/ShipInteractions/SOURCES.md](<Assets/Audio/ShipInteractions/SOURCES.md>) — Документация.
+- [Assets/Audio/BottleBreak/SOURCES.md](<Assets/Audio/BottleBreak/SOURCES.md>) — Документация.
 
 ### Меню и HUD (`ui`)
 
@@ -708,12 +756,13 @@ WhaleLootPoint хранит состояния Idle, Agitated, Diving, Cleared �
 
 Рыбалка — NetworkFishing; предмет рыбы и его полёт — NetworkFish и NetworkFishProjectile. Использование рыбы как метательного предмета находится в NetworkWeapon.FishThrows.
 Модели обычной рыбы, фугу и рыбы-меча заменены файлами из ../Blender/Лутабельные/Рыба. Исходники в Art/Blender/Loot/FishReplacement, игровые FBX и материалы URP в Assets/Models/Loot/Replacement/Fish, Pufferfish, Swordfish. BottleFishReplacementSetup сохраняет существующие FishVisual, PufferfishVisual и SwordfishVisual GUID и подменяет дочернюю геометрию двух специальных pickup. Коллайдеры, NetworkFish, NetworkFishProjectile, направление головы +Z, подбор, рыбалка, броски, раздувание фугу и втыкание рыбы-меча сохранены. Игровая проверка выполняется пользователем.
-Уточнение заменённых моделей: Swordfish Geometry rotation Y=-90° с сохранением FBX-преобразования Z-up в Y-up; после смены базиса визуал повторно центрируется. Переносимый визуал без дополнительного Y=90°, смещение и хват соответствуют телу. NetworkFishProjectile раздувает поперечные оси фугу до 2.1x и учитывает любой Renderer.
-NetworkFishMotion: обычная рыба, фугу и рыба-меч на палубе извиваются и небольшими серверными прыжками направляются к ближайшей посадочной сетке ShipLadder.BoardingAccess. Прыжки считаются относительно корабля, при выходе за борт наследуется скорость корабля; касание воды удаляет рыбу. Воткнутая рыба-меч имеет NetworkFishProjectile.Stuck и периодически виляет только хвостом. Модели рыб импортируются с Read/Write для деформации отдельных runtime-копий мешей. Игровая и онлайн-проверка выполняется пользователем.
+Уточнение заменённых моделей: Swordfish и Pufferfish Geometry rotation Y=-90° с сохранением FBX-преобразования Z-up в Y-up; после смены базиса визуал повторно центрируется. Переносимый визуал без дополнительного Y=90°, смещение и хват соответствуют телу. NetworkFishProjectile раздувает поперечные оси фугу до 2.1x и учитывает любой Renderer.
+NetworkFishMotion: обычная рыба, фугу и рыба-меч на палубе извиваются и небольшими серверными прыжками направляются к ближайшей посадочной сетке ShipLadder.BoardingAccess. Прыжки считаются относительно корабля, при потере опоры и выходе за борт наследуется скорость корабля. Проверка движения использует габариты визуала, BoxCast и дополнительные лучи опоры, а посадка учитывает центр и нижнюю точку модели. При касании воды слышен всплеск, рыба уплывает вниз с вилянием хвоста и удаляется через 3 секунды; состояние и таймер задаёт сервер. Старое удаление обычной рыбы через 600 секунд на палубе отключено. Воткнутая рыба-меч имеет NetworkFishProjectile.Stuck и периодически виляет только хвостом. Все три рыбы при сбросе сразу укладываются на бок через LootPlacement; коллайдеры подогнаны под реальный визуал. У фугу исправлено направление головы по +Z в общем визуале, включая инвентарь и переносимый улов. Модели рыб импортируются с Read/Write для деформации отдельных runtime-копий мешей. Игровая и онлайн-проверка выполняется пользователем.
 
 - [Assets/Scripts/Networking/NetworkFishing.cs](<Assets/Scripts/Networking/NetworkFishing.cs>) — Исходник C#: NetworkFishing.
 - [Assets/Scripts/Networking/NetworkFish.cs](<Assets/Scripts/Networking/NetworkFish.cs>) — Исходник C#: InventoryItem, NetworkFish.
 - [Assets/Scripts/Networking/NetworkFishMotion.cs](<Assets/Scripts/Networking/NetworkFishMotion.cs>) — Исходник C#: NetworkFish, BodyMesh.
+- [Assets/Scripts/Networking/LootPlacement.cs](<Assets/Scripts/Networking/LootPlacement.cs>) — Исходник C#: LootPlacement.
 - [Assets/Scripts/Networking/NetworkFishProjectile.cs](<Assets/Scripts/Networking/NetworkFishProjectile.cs>) — Исходник C#: NetworkFishProjectile.
 - [Assets/Scripts/Networking/NetworkWeapon.FishThrows.cs](<Assets/Scripts/Networking/NetworkWeapon.FishThrows.cs>) — Исходник C#: NetworkWeapon.
 - [Assets/Scripts/Player/FishingRodBend.cs](<Assets/Scripts/Player/FishingRodBend.cs>) — Исходник C#: FishingRodBend, Part.

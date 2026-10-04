@@ -4,7 +4,7 @@ using PirateSlop.Networking;
 
 namespace PirateSlop
 {
-    public enum BulletSurfaceKind : byte { Stone, Wood, Metal, Sand, Flesh }
+    public enum BulletSurfaceKind : byte { Stone, Wood, Metal, Sand, Flesh, Glass }
     public sealed class BulletSurface : MonoBehaviour
     {
         public BulletSurfaceKind Kind;
@@ -13,6 +13,7 @@ namespace PirateSlop
         {
             var surface=hit.collider.GetComponentInParent<BulletSurface>();
             shot.Surface=surface!=null?surface.Kind:Guess(hit.collider);
+            if (shot.Surface == BulletSurfaceKind.Glass) { shot.LeaveMark = false; shot.Anchor = null; shot.ShipId = 0; return; }
             shot.LeaveMark=shot.Surface!=BulletSurfaceKind.Flesh && (surface==null || surface.Marks);
             var anchor=hit.collider.GetComponentInParent<NetworkObject>();
             if(anchor!=null)
@@ -25,6 +26,7 @@ namespace PirateSlop
         }
         static BulletSurfaceKind Guess(Collider collider)
         {
+            if (collider.GetComponentInParent<NetworkVortexBottle>() != null || collider.GetComponentInParent<NetworkFogBottle>() != null) return BulletSurfaceKind.Glass;
             if(collider.GetComponentInParent<CombatHealth>()!=null) return BulletSurfaceKind.Flesh;
             if(collider.GetComponentInParent<SimpleCannon>()!=null || collider.GetComponentInParent<Cannonball>()!=null) return BulletSurfaceKind.Metal;
             string name=collider.name.ToLowerInvariant();

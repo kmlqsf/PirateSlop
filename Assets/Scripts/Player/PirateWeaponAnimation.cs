@@ -81,9 +81,11 @@ namespace PirateSlop
             foreach (var r in sabreView) r.forceRenderingOff = true;
             foreach (var r in sabreWorld) r.forceRenderingOff = !Equipped || !SabreEquipped;
         }
-        void BeginSabre(Vector3 direction)
+        void BeginSabre(Vector3 direction, Vector3 eyeOffset)
         {
-            attackStarted = Time.time; attackDirection = direction; struck.Clear();
+            attackStarted = Time.time; attackDirection = direction; struck.Clear(); sabreWoodStruck = false;
+            Vector3 safeEye = float.IsFinite(eyeOffset.sqrMagnitude) && eyeOffset.sqrMagnitude <= 49f ? eyeOffset : Vector3.up * (motor.IsCrouched ? .75f : 1.65f);
+            sabreEyeLocal = transform.InverseTransformVector(safeEye);
         }
         void TickSabre()
         {
@@ -91,6 +93,7 @@ namespace PirateSlop
             if (!Equipped || !SabreEquipped || motor.IsDead || motor.LocomotionLocked || (hands != null && hands.HasHeldBall)) { attackStarted = -10; return; }
             if (elapsed < .30f || elapsed > .48f) return;
             Vector3 origin = transform.position + Vector3.up * (motor.IsCrouched ? .7f : 1.4f);
+            StrikeSabreWood(origin);
             foreach (var collider in Physics.OverlapSphere(origin, 2.4f, ~0, QueryTriggerInteraction.Collide))
             {
                 if (!PlayerHitbox.IsTarget(collider)) continue;
@@ -135,6 +138,8 @@ namespace PirateSlop
         public Vector3 ReloadHandOffset { get; private set; }
         public Vector3 ReloadHandPoint => ViewPivot.TransformPoint(ReloadHandOffset);
         float fireStarted = -10;
+        public float ShotAge => Time.time - fireStarted;
+        public float ReloadProgress => reloading ? Mathf.Clamp01((Time.time - reloadVisualStarted) / Firearm.ReloadDuration) : 1;
         float drawBlend;
         bool lastSabre;
         static Vector3 Pose(float time, float[] times, Vector3[] points)

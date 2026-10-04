@@ -8,6 +8,9 @@ namespace PirateSlop
     public sealed class WeaponArmRig : MonoBehaviour
     {
         public Transform ViewArms, BodyRig;
+        public Transform[] PistolFingers = new Transform[0];
+        public Quaternion[] PistolFingerGrip = new Quaternion[0];
+        Transform pistolWorldGrip, pistolViewGrip;
         PirateWeapon weapon;
         AdvancedPlayerController motor;
         Renderer[] renderers;
@@ -23,6 +26,10 @@ namespace PirateSlop
         sealed class Arm
         {
             public Transform Upper, Fore, Hand;
+            public bool Mixamo;
+            public bool Valid => Upper != null && Fore != null && Hand != null;
+            public float Reach => Valid ? Vector3.Distance(Upper.position, Fore.position) + Vector3.Distance(Fore.position, Hand.position) - .005f : 0;
+            public Vector3 Palm => Mixamo ? new Vector3(-.005f, .075f, .025f) : new Vector3(0, .065f, .025f);
             public Quaternion wristRest;
             public Arm(Transform root, string side)
             {
@@ -36,10 +43,11 @@ namespace PirateSlop
                     ?? bones.FirstOrDefault(t => t.name == "mixamorig:" + sideFull + "ForeArm");
                 Hand = bones.FirstOrDefault(t => t.name == prefix + "Hand." + side)
                     ?? bones.FirstOrDefault(t => t.name == "mixamorig:" + sideFull + "Hand");
+                Mixamo = Hand != null && Hand.name.StartsWith("mixamorig:");
                 if (Fore != null && Hand != null)
                     wristRest = Quaternion.Inverse(Fore.rotation) * Hand.rotation;
             }
-            public void Solve(Vector3 point, Quaternion rotation, Vector3 pole, float blend)
+            public void Solve(Vector3 point, Quaternion rotation, Vector3 pole, float blend, bool orientWrist = false)
             {
                 if (Upper == null || Fore == null || Hand == null) return;
                 Vector3 origin = Upper.position;
@@ -47,14 +55,17 @@ namespace PirateSlop
                 Vector3 delta = point - origin;
                 float distance = Mathf.Clamp(delta.magnitude, Mathf.Abs(a - b) + .001f, a + b - .001f);
                 Vector3 forward = delta.normalized;
+                if (forward.sqrMagnitude < .001f) return;
+                if (orientWrist) point = origin + forward * distance;
                 Vector3 bend = Vector3.ProjectOnPlane(pole - origin, forward).normalized;
+                if (bend.sqrMagnitude < .001f) bend = Vector3.Cross(forward, Vector3.up).normalized;
                 float along = (a * a + distance * distance - b * b) / (2 * distance);
                 Vector3 elbow = origin + forward * along + bend * Mathf.Sqrt(Mathf.Max(0, a * a - along * along));
                 Quaternion upper = Quaternion.FromToRotation(Fore.position - origin, elbow - origin) * Upper.rotation;
                 Upper.rotation = Quaternion.Slerp(Upper.rotation, upper, blend);
                 Quaternion fore = Quaternion.FromToRotation(Hand.position - Fore.position, point - Fore.position) * Fore.rotation;
                 Fore.rotation = Quaternion.Slerp(Fore.rotation, fore, blend);
-                Hand.rotation = Quaternion.Slerp(Hand.rotation, Fore.rotation * wristRest, blend);
+                Hand.rotation = Quaternion.Slerp(Hand.rotation, orientWrist ? rotation : Fore.rotation * wristRest, blend);
             }
         }
         void Awake()
@@ -70,6 +81,8 @@ namespace PirateSlop
             equipment = GetComponent<PirateSlop.Networking.NetworkEquipment>();
             triggerFingers = ViewArms.GetComponentsInChildren<Transform>(true).Where(t => t.name == "View_Index1.R" || t.name == "View_Index2.R" || t.name == "View_Index3.R").OrderBy(t => t.name).ToArray();
             triggerRest = triggerFingers.Select(t => t.localRotation).ToArray();
+            pistolWorldGrip = weapon.WorldPivot.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "GripSocket_Firearm");
+            pistolViewGrip = weapon.ViewPivot.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "GripSocket_Firearm");
         }
         void OnEnable() { RenderPipelineManager.beginCameraRendering += Before; RenderPipelineManager.endCameraRendering += After; }
         void OnDisable() { RenderPipelineManager.beginCameraRendering -= Before; RenderPipelineManager.endCameraRendering -= After; }
@@ -108,6 +121,24 @@ namespace PirateSlop
                 triggerFingers[i].localRotation = triggerRest[i] * Quaternion.Euler(inventory.PistolSelected ? (i == 0 ? 30 : i == 1 ? 20 : -10) : 0, 0, 0);
             var view = weapon.ActiveView;
             var world = weapon.ActiveWorld;
+            if (inventory.PistolSelected && pistolWorldGrip != null && pistolViewGrip != null)
+            {
+                for (int i = 0; i < PistolFingers.Length && i < PistolFingerGrip.Length; i++)
+                    if (PistolFingers[i] != null) PistolFingers[i].localRotation = PistolFingerGrip[i];
+                var palmRotation = Quaternion.AngleAxis(32, Vector3.right) * Quaternion.LookRotation(Vector3.left, Vector3.forward);
+                var bodyRotation = transform.rotation * weapon.BodyWeaponRotation;
+                var wristRotation = bodyRotation * palmRotation;
+                var gripPoint = transform.TransformPoint(weapon.BodyWeaponPosition);
+                right.Solve(gripPoint - wristRotation * right.Palm, wristRotation, transform.TransformPoint(new Vector3(.6f, 1.0f, .1f)), weight, true);
+                world.SetPositionAndRotation(right.Hand.TransformPoint(right.Palm), bodyRotation);
+                world.position += right.Hand.TransformPoint(right.Palm) - pistolWorldGrip.position;
+                var viewRotation = view.rotation * palmRotation;
+                viewRight.Solve(pistolViewGrip.position - viewRotation * viewRight.Palm, viewRotation, motor.PlayerCamera.transform.TransformPoint(new Vector3(.55f, -.5f, .15f)), 1, true);
+                Vector3 otherHand = weapon.Reloading ? weapon.ReloadHandPoint : motor.PlayerCamera.transform.TransformPoint(new Vector3(-.25f, -.4f, .32f));
+                viewLeft.Solve(otherHand, motor.PlayerCamera.transform.rotation * gripRotation, motor.PlayerCamera.transform.TransformPoint(new Vector3(-.6f, -.5f, .15f)), 1);
+                if (weapon.Reloading) left.Solve(world.TransformPoint(weapon.ReloadHandOffset), transform.rotation * gripRotation, transform.TransformPoint(new Vector3(-.65f, 1.05f, .1f)), weight);
+                return;
+            }
             Quaternion viewHand = view.rotation * gripRotation;
             viewRight.Solve(view.position - viewHand * Vector3.up * .075f, viewHand, motor.PlayerCamera.transform.TransformPoint(new Vector3(.55f, -.5f, .15f)), 1);
             if (!inventory.PistolSelected) view.position = viewRight.Hand.TransformPoint(new Vector3(0, .065f, .025f));
@@ -126,10 +157,53 @@ namespace PirateSlop
         }
         void SolveEquipment(Transform item, Arm main, Arm support, Transform basis)
         {
+            if (equipment.CanonicalFirearm)
+            {
+                if (!main.Valid || !support.Valid) return;
+                Quaternion mainRotation = item.rotation * Quaternion.LookRotation(Vector3.left, Vector3.forward);
+                Quaternion supportRotation = item.rotation * Quaternion.LookRotation(Vector3.up, equipment.ShoulderSupported ? Vector3.forward : Vector3.right);
+                bool shouldered = item == equipment.World && equipment.ShoulderSupported && !equipment.IsReloading;
+                if (shouldered)
+                {
+                    Vector3 shoulder = main.Upper.position - basis.right * .035f + basis.up * .045f + basis.forward * .015f;
+                    item.position = shoulder + basis.TransformVector(equipment.WorldPoseOffset) - item.rotation * equipment.ShoulderOffset;
+                }
+                else if (item == equipment.World)
+                    for (int i = 0; i < 6; i++)
+                    {
+                        FitGrip(item, main, item.TransformPoint(equipment.GripOffset) - mainRotation * main.Palm);
+                        FitGrip(item, support, item.TransformPoint(equipment.SupportOffset) - supportRotation * support.Palm);
+                    }
+                Vector3 rightPole = main.Upper.position + basis.right * .4f - basis.up * .45f;
+                Vector3 leftPole = support.Upper.position - basis.right * .4f - basis.up * .45f;
+                main.Solve(item.TransformPoint(equipment.GripOffset) - mainRotation * main.Palm, mainRotation, rightPole, 1, true);
+                Vector3 supportPoint = item.TransformPoint(equipment.SupportOffset) - supportRotation * support.Palm;
+                if (shouldered)
+                {
+                    Vector3 start = item.TransformPoint(equipment.GripOffset) - supportRotation * support.Palm;
+                    Vector3 along = supportPoint - start;
+                    Vector3 axis = along.normalized;
+                    Vector3 offset = start - support.Upper.position;
+                    float projection = Vector3.Dot(offset, axis);
+                    float discriminant = projection * projection - offset.sqrMagnitude + support.Reach * support.Reach;
+                    if (discriminant >= 0)
+                    {
+                        float distance = -projection + Mathf.Sqrt(discriminant);
+                        supportPoint = start + axis * Mathf.Clamp(distance, 0, along.magnitude);
+                    }
+                }
+                support.Solve(supportPoint, supportRotation, leftPole, 1, true);
+                return;
+            }
             Vector3 pole = main.Upper.position + basis.right * .5f - basis.up * .4f;
             main.Solve(item.TransformPoint(equipment.GripOffset), item.rotation, pole, 1);
             Vector3 otherPole = support.Upper.position - basis.right * .5f - basis.up * .4f;
             support.Solve(item.TransformPoint(equipment.SupportOffset), item.rotation, otherPole, 1);
+        }
+        static void FitGrip(Transform item, Arm arm, Vector3 point)
+        {
+            Vector3 delta = point - arm.Upper.position;
+            if (delta.magnitude > arm.Reach) item.position += delta.normalized * arm.Reach - delta;
         }
     }
 }

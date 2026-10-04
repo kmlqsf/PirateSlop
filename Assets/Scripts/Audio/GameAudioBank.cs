@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace PirateSlop
 {
-    public enum SoundCue { Pistol, Cannon, Knife, Reload, ReloadReady, DryFire, Footstep, Jump, Land, Slide, Hurt, Death, Respawn, Wheel, Sail, Barrel, Load, Pickup, Place, Select, Impact, ShipHit, ShipDeath, ShipCollision, Splash, Creak, FishingCast, FishingBite, FishingReel, FishingCatch, FishDrop, FishEat, FishingEscape, HitConfirm, Musket, DoubleBarrel, BulletWood, BulletMetal, BulletStone, BulletFlesh, HookThrow, HookTension, HookRelease, FootstepWood, FootstepWoodRun, FootstepStone, ChestOpen, ChestClose, SwordEquip, SwordSheathe, BottleOpen, BottleClose, WaterSplash, PufferThrow, PufferBurst, SwordfishThrow, SwordfishStick, ShipBell, PufferWarning, UnderwaterBubbles, AirWarning, HolyFlash, WheelReverseRope, WheelIdleLeather, CannonFuse, CannonballDispense, CannonballRoll, CannonballDrop, FireCannonballHeld, IceCannonballHeld, PushCannonballHeld, LockpickStart, LockpickMove, LockpickTurn, LockpickJam, LockpickBreak, LockpickSuccess, DiceSlide, DiceImpact, DiceCup, FlameLight, FlameExtinguish }
+    public enum SoundCue { Pistol, Cannon, Knife, Reload, ReloadReady, DryFire, Footstep, Jump, Land, Slide, Hurt, Death, Respawn, Wheel, Sail, Barrel, Load, Pickup, Place, Select, Impact, ShipHit, ShipDeath, ShipCollision, Splash, Creak, FishingCast, FishingBite, FishingReel, FishingCatch, FishDrop, FishEat, FishingEscape, HitConfirm, Musket, DoubleBarrel, BulletWood, BulletMetal, BulletStone, BulletFlesh, HookThrow, HookTension, HookRelease, FootstepWood, FootstepWoodRun, FootstepStone, ChestOpen, ChestClose, SwordEquip, SwordSheathe, BottleOpen, BottleClose, WaterSplash, PufferThrow, PufferBurst, SwordfishThrow, SwordfishStick, ShipBell, PufferWarning, UnderwaterBubbles, AirWarning, HolyFlash, WheelReverseRope, WheelIdleLeather, CannonFuse, CannonballDispense, CannonballRoll, CannonballDrop, FireCannonballHeld, IceCannonballHeld, PushCannonballHeld, LockpickStart, LockpickMove, LockpickTurn, LockpickJam, LockpickBreak, LockpickSuccess, DiceSlide, DiceImpact, DiceCup, FlameLight, FlameExtinguish, SabreWood, BottleBreak }
 
     [CreateAssetMenu(menuName = "PirateSlop/Audio Bank")]
     public sealed class GameAudioBank : ScriptableObject
@@ -25,3 +25,5 @@ namespace PirateSlop
         [Range(0f, 2f)] public float MainMenuMusicLevel = 1f, SailingMusicLevel = 1f, CombatMusicLevel = 1f;
     }
 }
+
+

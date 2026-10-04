@@ -13,6 +13,8 @@
 | [Assets/Resources/BoardingHookAmmo.prefab](<../../Assets/Resources/BoardingHookAmmo.prefab>) | Префаб Unity; Предметы, лут и инвентарь |
 | [Assets/Resources/BoardingHookVisual.prefab](<../../Assets/Resources/BoardingHookVisual.prefab>) | Префаб Unity |
 | [Assets/Resources/BottleFog.shader](<../../Assets/Resources/BottleFog.shader>) | Шейдер; Предметы, лут и инвентарь |
+| [Assets/Resources/BottleGlassShard.mat](<../../Assets/Resources/BottleGlassShard.mat>) | Материал Unity; Предметы, лут и инвентарь |
+| [Assets/Resources/BottleGlassShard.shader](<../../Assets/Resources/BottleGlassShard.shader>) | Шейдер; Предметы, лут и инвентарь |
 | [Assets/Resources/BottleVortex.shader](<../../Assets/Resources/BottleVortex.shader>) | Шейдер; Предметы, лут и инвентарь, Модели и Blender |
 | [Assets/Resources/BulletMark.mat](<../../Assets/Resources/BulletMark.mat>) | Материал Unity |
 | [Assets/Resources/BulletMark.shader](<../../Assets/Resources/BulletMark.shader>) | Шейдер |
@@ -30,6 +32,10 @@
 | [Assets/Resources/KrakenTentacle.prefab](<../../Assets/Resources/KrakenTentacle.prefab>) | Префаб Unity |
 | [Assets/Resources/LootEventBeam.shader](<../../Assets/Resources/LootEventBeam.shader>) | Шейдер; Предметы, лут и инвентарь |
 | [Assets/Resources/ParticleSoft.asset](<../../Assets/Resources/ParticleSoft.asset>) | Настройки или данные Unity |
+| [Assets/Resources/SabreCut.mat](<../../Assets/Resources/SabreCut.mat>) | Материал Unity; Личное оружие и урон |
+| [Assets/Resources/SabreCut.shader](<../../Assets/Resources/SabreCut.shader>) | Шейдер; Личное оружие и урон |
+| [Assets/Resources/SabreWoodChip.mat](<../../Assets/Resources/SabreWoodChip.mat>) | Материал Unity; Личное оружие и урон |
+| [Assets/Resources/SabreWoodChip.shader](<../../Assets/Resources/SabreWoodChip.shader>) | Шейдер; Личное оружие и урон |
 | [Assets/Resources/SailCustom.mat](<../../Assets/Resources/SailCustom.mat>) | Материал Unity |
 | [Assets/Resources/SeaObjective.shader](<../../Assets/Resources/SeaObjective.shader>) | Шейдер |
 | [Assets/Resources/SharkVisual.prefab](<../../Assets/Resources/SharkVisual.prefab>) | Префаб Unity |

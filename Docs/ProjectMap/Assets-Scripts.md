@@ -74,7 +74,7 @@
 | --- | --- |
 | [Assets/Scripts/Editor/AudioBankWindow.cs](<../../Assets/Scripts/Editor/AudioBankWindow.cs>) | Исходник C#: AudioBankWindow, Page; Звуки и голос |
 | [Assets/Scripts/Editor/BoardingEquipmentSetup.cs](<../../Assets/Scripts/Editor/BoardingEquipmentSetup.cs>) | Исходник C#: BoardingEquipmentSetup; Предметы, лут и инвентарь |
-| [Assets/Scripts/Editor/BottleFishReplacementSetup.cs](<../../Assets/Scripts/Editor/BottleFishReplacementSetup.cs>) | Исходник C#: BottleFishReplacementSetup; Предметы, лут и инвентарь, Модели и Blender, Рыбалка и рыба |
+| [Assets/Scripts/Editor/BottleFishReplacementSetup.cs](<../../Assets/Scripts/Editor/BottleFishReplacementSetup.cs>) | Исходник C#: BottleFishReplacementSetup; Предметы, лут и инвентарь, Модели и Blender, Звуки и голос, Рыбалка и рыба |
 | [Assets/Scripts/Editor/CannonFeelSetup.cs](<../../Assets/Scripts/Editor/CannonFeelSetup.cs>) | Исходник C#: CannonFeelSetup |
 | [Assets/Scripts/Editor/CannonInventorySetup.cs](<../../Assets/Scripts/Editor/CannonInventorySetup.cs>) | Исходник C#: CannonInventorySetup; Пушки, ядра и лафеты |
 | [Assets/Scripts/Editor/CharacterActionImport.cs](<../../Assets/Scripts/Editor/CharacterActionImport.cs>) | Исходник C#: CharacterActionImport |
@@ -84,6 +84,7 @@
 | [Assets/Scripts/Editor/DirectShipControlsSetup.cs](<../../Assets/Scripts/Editor/DirectShipControlsSetup.cs>) | Исходник C#: DirectShipControlsSetup |
 | [Assets/Scripts/Editor/EnvironmentTestSetup.cs](<../../Assets/Scripts/Editor/EnvironmentTestSetup.cs>) | Исходник C#: EnvironmentTestSetup; Мир, острова и океан, Тестовая карта и водоворот |
 | [Assets/Scripts/Editor/EquipmentSetup.cs](<../../Assets/Scripts/Editor/EquipmentSetup.cs>) | Исходник C#: EquipmentSetup |
+| [Assets/Scripts/Editor/FirearmModelReplacementSetup.cs](<../../Assets/Scripts/Editor/FirearmModelReplacementSetup.cs>) | Исходник C#: FirearmModelReplacementSetup; Личное оружие и урон |
 | [Assets/Scripts/Editor/FirearmSetup.cs](<../../Assets/Scripts/Editor/FirearmSetup.cs>) | Исходник C#: FirearmSetup; Личное оружие и урон |
 | [Assets/Scripts/Editor/FishingSetup.cs](<../../Assets/Scripts/Editor/FishingSetup.cs>) | Исходник C#: FishingSetup; Рыбалка и рыба |
 | [Assets/Scripts/Editor/FocusedInspector.cs](<../../Assets/Scripts/Editor/FocusedInspector.cs>) | Исходник C#: FocusedInspector, Report; Инспектор объектов Unity |
@@ -118,6 +119,7 @@
 | [Assets/Scripts/Editor/PlayerAnimationSetup.cs](<../../Assets/Scripts/Editor/PlayerAnimationSetup.cs>) | Исходник C#: PlayerAnimationSetup |
 | [Assets/Scripts/Editor/PrototypeTools.cs](<../../Assets/Scripts/Editor/PrototypeTools.cs>) | Исходник C#: PrototypeTools |
 | [Assets/Scripts/Editor/RumLootSetup.cs](<../../Assets/Scripts/Editor/RumLootSetup.cs>) | Исходник C#: RumLootSetup |
+| [Assets/Scripts/Editor/SabreModelReplacementSetup.cs](<../../Assets/Scripts/Editor/SabreModelReplacementSetup.cs>) | Исходник C#: SabreModelReplacementSetup; Личное оружие и урон |
 | [Assets/Scripts/Editor/SailRiggingArtSetup.cs](<../../Assets/Scripts/Editor/SailRiggingArtSetup.cs>) | Исходник C#: SailRiggingArtSetup; Паруса и канаты, Модели и Blender |
 | [Assets/Scripts/Editor/SailRopeSetup.cs](<../../Assets/Scripts/Editor/SailRopeSetup.cs>) | Исходник C#: SailRopeSetup; Паруса и канаты |
 | [Assets/Scripts/Editor/SchoonerSceneSetup.cs](<../../Assets/Scripts/Editor/SchoonerSceneSetup.cs>) | Исходник C#: SchoonerSceneSetup |
@@ -189,6 +191,7 @@
 
 | Файл | Краткое описание |
 | --- | --- |
+| [Assets/Scripts/Loot/BottleBreakVfx.cs](<../../Assets/Scripts/Loot/BottleBreakVfx.cs>) | Исходник C#: BottleBreakVfx; Предметы, лут и инвентарь, Звуки и голос |
 | [Assets/Scripts/Loot/ChestLootTable.cs](<../../Assets/Scripts/Loot/ChestLootTable.cs>) | Исходник C#: ChestLootStack, ChestLootTable, Table, ChestSettings, Entry; Предметы, лут и инвентарь |
 | [Assets/Scripts/Loot/FogBottleVisual.cs](<../../Assets/Scripts/Loot/FogBottleVisual.cs>) | Исходник C#: FogBottleVisual; Предметы, лут и инвентарь |
 | [Assets/Scripts/Loot/FogCloudVisual.cs](<../../Assets/Scripts/Loot/FogCloudVisual.cs>) | Исходник C#: FogCloudVisual; Предметы, лут и инвентарь |
@@ -233,14 +236,14 @@
 | [Assets/Scripts/Networking/BotYieldAction.cs](<../../Assets/Scripts/Networking/BotYieldAction.cs>) | Исходник C#: BotYieldAction; Новая система ботов |
 | [Assets/Scripts/Networking/DeckRoute.cs](<../../Assets/Scripts/Networking/DeckRoute.cs>) | Исходник C#: IBotPathSearch, BotPathScheduler, DeckRoute, Node; Новая система ботов |
 | [Assets/Scripts/Networking/DeveloperTarget.cs](<../../Assets/Scripts/Networking/DeveloperTarget.cs>) | Исходник C#: DeveloperTarget |
-| [Assets/Scripts/Networking/ExperimentalShipEquipment.cs](<../../Assets/Scripts/Networking/ExperimentalShipEquipment.cs>) | Исходник C#: ExperimentalShipEquipment; Предметы, лут и инвентарь |
-| [Assets/Scripts/Networking/LootPlacement.cs](<../../Assets/Scripts/Networking/LootPlacement.cs>) | Исходник C#: LootPlacement |
+| [Assets/Scripts/Networking/ExperimentalShipEquipment.cs](<../../Assets/Scripts/Networking/ExperimentalShipEquipment.cs>) | Исходник C#: ExperimentalShipEquipment; Личное оружие и урон, Предметы, лут и инвентарь |
+| [Assets/Scripts/Networking/LootPlacement.cs](<../../Assets/Scripts/Networking/LootPlacement.cs>) | Исходник C#: LootPlacement; Рыбалка и рыба |
 | [Assets/Scripts/Networking/NetworkBoarding.cs](<../../Assets/Scripts/Networking/NetworkBoarding.cs>) | Исходник C#: BoardingCable, NetworkCannon; Пушки, ядра и лафеты |
 | [Assets/Scripts/Networking/NetworkCannonDismantle.cs](<../../Assets/Scripts/Networking/NetworkCannonDismantle.cs>) | Исходник C#: NetworkWeapon; Движение корабля и палуба |
 | [Assets/Scripts/Networking/NetworkCrewBell.cs](<../../Assets/Scripts/Networking/NetworkCrewBell.cs>) | Исходник C#: NetworkCrewBell; Новая система ботов |
 | [Assets/Scripts/Networking/NetworkDeveloperTools.cs](<../../Assets/Scripts/Networking/NetworkDeveloperTools.cs>) | Исходник C#: NetworkWeapon; Предметы, лут и инвентарь |
-| [Assets/Scripts/Networking/NetworkEquipment.cs](<../../Assets/Scripts/Networking/NetworkEquipment.cs>) | Исходник C#: NetworkEquipment |
-| [Assets/Scripts/Networking/NetworkFish.cs](<../../Assets/Scripts/Networking/NetworkFish.cs>) | Исходник C#: InventoryItem, NetworkFish; Рыбалка и рыба |
+| [Assets/Scripts/Networking/NetworkEquipment.cs](<../../Assets/Scripts/Networking/NetworkEquipment.cs>) | Исходник C#: NetworkEquipment; Личное оружие и урон |
+| [Assets/Scripts/Networking/NetworkFish.cs](<../../Assets/Scripts/Networking/NetworkFish.cs>) | Исходник C#: InventoryItem, NetworkFish; Предметы, лут и инвентарь, Рыбалка и рыба |
 | [Assets/Scripts/Networking/NetworkFishMotion.cs](<../../Assets/Scripts/Networking/NetworkFishMotion.cs>) | Исходник C#: NetworkFish, BodyMesh; Рыбалка и рыба |
 | [Assets/Scripts/Networking/NetworkFishProjectile.cs](<../../Assets/Scripts/Networking/NetworkFishProjectile.cs>) | Исходник C#: NetworkFishProjectile; Рыбалка и рыба |
 | [Assets/Scripts/Networking/NetworkFishing.cs](<../../Assets/Scripts/Networking/NetworkFishing.cs>) | Исходник C#: NetworkFishing; Рыбалка и рыба |
@@ -282,6 +285,7 @@
 | [Assets/Scripts/Networking/NetworkWeapon.FishThrows.cs](<../../Assets/Scripts/Networking/NetworkWeapon.FishThrows.cs>) | Исходник C#: NetworkWeapon; Рыбалка и рыба |
 | [Assets/Scripts/Networking/NetworkWeapon.FogBottle.cs](<../../Assets/Scripts/Networking/NetworkWeapon.FogBottle.cs>) | Исходник C#: NetworkWeapon; Предметы, лут и инвентарь |
 | [Assets/Scripts/Networking/NetworkWeapon.Roster.cs](<../../Assets/Scripts/Networking/NetworkWeapon.Roster.cs>) | Исходник C#: NetworkWeapon; Предметы, лут и инвентарь, Новая система ботов |
+| [Assets/Scripts/Networking/NetworkWeapon.Sabre.cs](<../../Assets/Scripts/Networking/NetworkWeapon.Sabre.cs>) | Исходник C#: NetworkWeapon; Личное оружие и урон |
 | [Assets/Scripts/Networking/NetworkWeapon.SeaLoot.cs](<../../Assets/Scripts/Networking/NetworkWeapon.SeaLoot.cs>) | Исходник C#: NetworkWeapon; Предметы, лут и инвентарь |
 | [Assets/Scripts/Networking/NetworkWeapon.ShipComparison.cs](<../../Assets/Scripts/Networking/NetworkWeapon.ShipComparison.cs>) | Исходник C#: NetworkWeapon |
 | [Assets/Scripts/Networking/NetworkWeapon.VortexBottle.cs](<../../Assets/Scripts/Networking/NetworkWeapon.VortexBottle.cs>) | Исходник C#: NetworkWeapon; Предметы, лут и инвентарь |
@@ -314,8 +318,8 @@
 
 | Файл | Краткое описание |
 | --- | --- |
-| [Assets/Scripts/Player/BulletSurface.cs](<../../Assets/Scripts/Player/BulletSurface.cs>) | Исходник C#: BulletSurfaceKind, BulletSurface |
-| [Assets/Scripts/Player/CharacterActions.cs](<../../Assets/Scripts/Player/CharacterActions.cs>) | Исходник C#: CharacterActions |
+| [Assets/Scripts/Player/BulletSurface.cs](<../../Assets/Scripts/Player/BulletSurface.cs>) | Исходник C#: BulletSurfaceKind, BulletSurface; Личное оружие и урон |
+| [Assets/Scripts/Player/CharacterActions.cs](<../../Assets/Scripts/Player/CharacterActions.cs>) | Исходник C#: CharacterActions; Личное оружие и урон |
 | [Assets/Scripts/Player/CombatHealth.cs](<../../Assets/Scripts/Player/CombatHealth.cs>) | Исходник C#: CombatHealth; Личное оружие и урон |
 | [Assets/Scripts/Player/CorpsePhysicsWorld.cs](<../../Assets/Scripts/Player/CorpsePhysicsWorld.cs>) | Исходник C#: CorpsePhysicsWorld |
 | [Assets/Scripts/Player/CrewBellMotion.cs](<../../Assets/Scripts/Player/CrewBellMotion.cs>) | Исходник C#: CrewBellMotion |
@@ -324,10 +328,11 @@
 | [Assets/Scripts/Player/DeveloperMenu.cs](<../../Assets/Scripts/Player/DeveloperMenu.cs>) | Исходник C#: DeveloperMenu; Предметы, лут и инвентарь, Шторм, зона и объёмный туман |
 | [Assets/Scripts/Player/FirearmDefinition.cs](<../../Assets/Scripts/Player/FirearmDefinition.cs>) | Исходник C#: FirearmDefinition, FirearmCombat; Личное оружие и урон |
 | [Assets/Scripts/Player/FirearmHandling.cs](<../../Assets/Scripts/Player/FirearmHandling.cs>) | Исходник C#: FirearmHandling; Личное оружие и урон |
-| [Assets/Scripts/Player/FirearmImpact.cs](<../../Assets/Scripts/Player/FirearmImpact.cs>) | Исходник C#: FirearmImpact |
+| [Assets/Scripts/Player/FirearmImpact.cs](<../../Assets/Scripts/Player/FirearmImpact.cs>) | Исходник C#: FirearmImpact; Личное оружие и урон |
+| [Assets/Scripts/Player/FirearmMechanism.cs](<../../Assets/Scripts/Player/FirearmMechanism.cs>) | Исходник C#: FirearmMechanism; Личное оружие и урон |
 | [Assets/Scripts/Player/FirearmPrediction.cs](<../../Assets/Scripts/Player/FirearmPrediction.cs>) | Исходник C#: FirearmPrediction |
 | [Assets/Scripts/Player/FirearmTrace.cs](<../../Assets/Scripts/Player/FirearmTrace.cs>) | Исходник C#: FirearmSettings, FirearmShot, FirearmTrace |
-| [Assets/Scripts/Player/FirearmVfx.cs](<../../Assets/Scripts/Player/FirearmVfx.cs>) | Исходник C#: FirearmVfx |
+| [Assets/Scripts/Player/FirearmVfx.cs](<../../Assets/Scripts/Player/FirearmVfx.cs>) | Исходник C#: FirearmVfx; Личное оружие и урон |
 | [Assets/Scripts/Player/FirstPersonFeedback.cs](<../../Assets/Scripts/Player/FirstPersonFeedback.cs>) | Исходник C#: FirstPersonFeedback |
 | [Assets/Scripts/Player/FirstPersonModelVisibility.cs](<../../Assets/Scripts/Player/FirstPersonModelVisibility.cs>) | Исходник C#: FirstPersonModelVisibility; Движение корабля и палуба, Персонаж, камера и анимации |
 | [Assets/Scripts/Player/FirstPersonMotion.cs](<../../Assets/Scripts/Player/FirstPersonMotion.cs>) | Исходник C#: FirstPersonMotion |
@@ -336,7 +341,7 @@
 | [Assets/Scripts/Player/HolyGrenadeFuse.cs](<../../Assets/Scripts/Player/HolyGrenadeFuse.cs>) | Исходник C#: HolyGrenadeFuse |
 | [Assets/Scripts/Player/MenuBackdrop.cs](<../../Assets/Scripts/Player/MenuBackdrop.cs>) | Исходник C#: MenuBackdrop; Меню и HUD |
 | [Assets/Scripts/Player/PirateWeapon.cs](<../../Assets/Scripts/Player/PirateWeapon.cs>) | Исходник C#: IWeaponTarget, PirateWeapon; Личное оружие и урон |
-| [Assets/Scripts/Player/PirateWeaponAnimation.cs](<../../Assets/Scripts/Player/PirateWeaponAnimation.cs>) | Исходник C#: PirateWeapon |
+| [Assets/Scripts/Player/PirateWeaponAnimation.cs](<../../Assets/Scripts/Player/PirateWeaponAnimation.cs>) | Исходник C#: PirateWeapon; Личное оружие и урон |
 | [Assets/Scripts/Player/PistolBullet.cs](<../../Assets/Scripts/Player/PistolBullet.cs>) | Исходник C#: PistolBullet; Личное оружие и урон |
 | [Assets/Scripts/Player/PlayerAnimatorDriver.cs](<../../Assets/Scripts/Player/PlayerAnimatorDriver.cs>) | Исходник C#: PlayerAnimatorDriver; Персонаж, камера и анимации |
 | [Assets/Scripts/Player/PlayerBrain.cs](<../../Assets/Scripts/Player/PlayerBrain.cs>) | Исходник C#: PlayerBrain |
@@ -347,11 +352,13 @@
 | [Assets/Scripts/Player/PlayerMotorConfig.cs](<../../Assets/Scripts/Player/PlayerMotorConfig.cs>) | Исходник C#: PlayerMotorConfig |
 | [Assets/Scripts/Player/PlayerPresentation.cs](<../../Assets/Scripts/Player/PlayerPresentation.cs>) | Исходник C#: PlayerPresentation |
 | [Assets/Scripts/Player/SabreAnimation.cs](<../../Assets/Scripts/Player/SabreAnimation.cs>) | Исходник C#: SabreAnimation; Личное оружие и урон |
+| [Assets/Scripts/Player/SabreWoodHit.cs](<../../Assets/Scripts/Player/SabreWoodHit.cs>) | Исходник C#: SabreWoodHit, PirateWeapon; Личное оружие и урон |
+| [Assets/Scripts/Player/SabreWoodImpact.cs](<../../Assets/Scripts/Player/SabreWoodImpact.cs>) | Исходник C#: SabreWoodImpact; Личное оружие и урон |
 | [Assets/Scripts/Player/ShipSpyglass.cs](<../../Assets/Scripts/Player/ShipSpyglass.cs>) | Исходник C#: ShipSpyglass |
 | [Assets/Scripts/Player/ShipSpyglassView.LootHint.cs](<../../Assets/Scripts/Player/ShipSpyglassView.LootHint.cs>) | Исходник C#: ShipSpyglassView; Предметы, лут и инвентарь |
 | [Assets/Scripts/Player/ShipSpyglassView.cs](<../../Assets/Scripts/Player/ShipSpyglassView.cs>) | Исходник C#: ShipSpyglassView; Предметы, лут и инвентарь |
 | [Assets/Scripts/Player/SwimPresentation.cs](<../../Assets/Scripts/Player/SwimPresentation.cs>) | Исходник C#: SwimPresentation |
-| [Assets/Scripts/Player/WeaponArmRig.cs](<../../Assets/Scripts/Player/WeaponArmRig.cs>) | Исходник C#: WeaponArmRig, Arm |
+| [Assets/Scripts/Player/WeaponArmRig.cs](<../../Assets/Scripts/Player/WeaponArmRig.cs>) | Исходник C#: WeaponArmRig, Arm; Личное оружие и урон |
 
 ## Assets/Scripts/Ship
 

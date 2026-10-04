@@ -114,7 +114,7 @@ namespace PirateSlop
             direction.Normalize();
             if (action == 2)
             {
-                BeginSabre(direction);
+                BeginSabre(direction, eyeOffset);
                 if (Networked && network.IsServerInitialized) network.PublishAttack(action, transform.position);
                 else ShowAttack(action, transform.position);
                 return true;

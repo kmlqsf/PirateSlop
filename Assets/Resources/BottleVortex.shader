@@ -2,7 +2,8 @@ Shader "PirateSlop/BottleVortex"
 {
     Properties
     {
-        _BaseColor ("Color", Color) = (.83, .87, .90, .85)
+        [HDR] _BaseColor ("Color", Color) = (.05, .38, 1, .85)
+        _EmissionStrength ("Emission Strength", Float) = 3.5
         _Density ("Density", Float) = 14
         _SwirlAge ("Swirl Age", Float) = 0
     }
@@ -25,6 +26,7 @@ Shader "PirateSlop/BottleVortex"
             CBUFFER_START(UnityPerMaterial)
                 half4 _BaseColor;
                 float _Density;
+                float _EmissionStrength;
                 float _SwirlAge;
             CBUFFER_END
             struct Attributes { float4 positionOS : POSITION; UNITY_VERTEX_INPUT_INSTANCE_ID };
@@ -123,7 +125,7 @@ Shader "PirateSlop/BottleVortex"
                 float stepLength = (finish - start) / steps;
                 float transmittance = 1.0;
                 float3 accumulated = 0.0;
-                float3 tint = lerp(float3(.83, .87, .90), saturate(_BaseColor.rgb), .55);
+                float3 tint = max(_BaseColor.rgb, 0) * max(_EmissionStrength, 0);
                 [loop]
                 for (int index = 0; index < steps; index++)
                 {

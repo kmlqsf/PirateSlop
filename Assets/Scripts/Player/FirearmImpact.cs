@@ -30,6 +30,7 @@ namespace PirateSlop
             ResolvePoint(ref shot);
             if(shot.Water) { if(detailed) CombatVfx.Splash(shot.End,.18f);return; }
             if(!shot.Hit) return;
+            if (shot.Surface == BulletSurfaceKind.Glass) return;
             var pool=Get();
             if(shot.LeaveMark) pool.Mark(shot);
             if(detailed)

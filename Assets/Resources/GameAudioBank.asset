@@ -500,6 +500,18 @@ MonoBehaviour:
     - {fileID: 8300000, guid: be459619fb6d22c4c8a8eecbae10e072, type: 3}
     Volume: 0.6
     Distance: 12
+  - Cue: 82
+    Clips:
+    - {fileID: 8300000, guid: 7c42631729ae7bd40aaee447336657bc, type: 3}
+    Volume: 0.6
+    Distance: 22
+  - Cue: 83
+    Clips:
+    - {fileID: 8300000, guid: ff805b1150a913f42a620103e6ae5cc3, type: 3}
+    - {fileID: 8300000, guid: 25d8941a1eda7c248a58e49418671ed3, type: 3}
+    - {fileID: 8300000, guid: ff0b6568059266a4aa425f2a955cb8f1, type: 3}
+    Volume: 0.75
+    Distance: 24
   Ocean: {fileID: 8300000, guid: 385ddaa5ad1a27148a313c3f3ac90d8b, type: 3}
   Wind: {fileID: 8300000, guid: 78aafbe2a5d44ac499fd27fe5bdf180f, type: 3}
   DeckCreaks: {fileID: 0}

@@ -5,7 +5,7 @@ using UnityEngine;
 namespace PirateSlop.Networking
 {
     [DefaultExecutionOrder(-5)]
-    public sealed class NetworkVortexBottle : NetworkBehaviour
+    public sealed class NetworkVortexBottle : NetworkBehaviour, IWeaponTarget
     {
         public const float ThrowSpeed = 18f;
         readonly SyncVar<bool> flying = new();
@@ -14,7 +14,14 @@ namespace PirateSlop.Networking
         NetworkPlayer source;
         Vector3 velocity;
         float expires;
+        bool broken;
         void Awake() => pickup = GetComponent<NetworkFish>();
+        public override void OnStartServer() { base.OnStartServer(); broken = false; }
+        public bool TryBreakFromWeapon(Vector3 point) => Break(point, false, pickup.SupportingShip);
+        public void ReceiveWeaponHit(float damage, GameObject attacker)
+        {
+            if (damage > 0) TryBreakFromWeapon(transform.position);
+        }
         public void Launch(NetworkPlayer thrower, Vector3 speed)
         {
             source = thrower;
@@ -45,8 +52,7 @@ namespace PirateSlop.Networking
                 if (nearest.collider != null)
                 {
                     var ship = nearest.collider.GetComponentInParent<NetworkShip>();
-                    if (ship != null) ship.ApplyVortexBoost();
-                    Break(nearest.point, false);
+                    Break(nearest.point, false, ship);
                     return;
                 }
                 Vector3 point = transform.position + delta;
@@ -61,16 +67,19 @@ namespace PirateSlop.Networking
                 remaining -= dt;
             }
         }
-        void Break(Vector3 point, bool water)
+        bool Break(Vector3 point, bool water, NetworkShip ship = null)
         {
+            if (!IsServerInitialized || !IsSpawned || broken) return false;
+            broken = true;
+            if (!water && ship != null) ship.ApplyVortexBoost();
             BreakObserversRpc(point, water);
             ServerManager.Despawn(NetworkObject);
+            return true;
         }
         [ObserversRpc(RunLocally = true)]
         void BreakObserversRpc(Vector3 point, bool water)
         {
-            GameAudio.Play(water ? SoundCue.WaterSplash : SoundCue.BottleClose, point);
-            CombatVfx.Splash(point, .5f);
+            BottleBreakVfx.Present(point, water);
         }
     }
 }

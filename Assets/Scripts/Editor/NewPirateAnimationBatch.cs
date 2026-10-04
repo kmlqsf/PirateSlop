@@ -442,6 +442,9 @@ namespace PirateSlop.EditorTools
             if (controller.layers.Length > 2)
             {
                 var itemSm = controller.layers[2].stateMachine;
+                foreach (var pose in itemSm.states.Select(s => s.state))
+                    if (pose.name.EndsWith("Ready") || pose.name.EndsWith("Reload"))
+                    { pose.motion = pistolAim; EditorUtility.SetDirty(pose); }
                 var musketAim = itemSm.states.FirstOrDefault(s => s.state.name == "MusketAim").state;
                 if (musketAim != null) { musketAim.motion = pistolAim; EditorUtility.SetDirty(musketAim); }
 

@@ -5,7 +5,7 @@ using UnityEngine;
 namespace PirateSlop.Networking
 {
     [DefaultExecutionOrder(-5)]
-    public sealed class NetworkFogBottle : NetworkBehaviour
+    public sealed class NetworkFogBottle : NetworkBehaviour, IWeaponTarget
     {
         public const float ThrowSpeed = 18f;
         public NetworkFogCloud CloudPrefab;
@@ -15,7 +15,14 @@ namespace PirateSlop.Networking
         NetworkPlayer source;
         Vector3 velocity;
         float expires;
+        bool broken;
         void Awake() => pickup = GetComponent<NetworkFish>();
+        public override void OnStartServer() { base.OnStartServer(); broken = false; }
+        public bool TryBreakFromWeapon(Vector3 point) => Break(point, false);
+        public void ReceiveWeaponHit(float damage, GameObject attacker)
+        {
+            if (damage > 0) TryBreakFromWeapon(transform.position);
+        }
         public void Launch(NetworkPlayer thrower, Vector3 speed)
         {
             source = thrower;
@@ -71,20 +78,22 @@ namespace PirateSlop.Networking
                 remaining -= dt;
             }
         }
-        void Break(Vector3 point, bool water)
+        bool Break(Vector3 point, bool water)
         {
+            if (!IsServerInitialized || !IsSpawned || broken || CloudPrefab == null) return false;
+            broken = true;
             var cloud = Instantiate(CloudPrefab, point, Quaternion.identity);
             UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene(cloud.gameObject, gameObject.scene);
             cloud.Initialize();
             ServerManager.Spawn(cloud.NetworkObject);
             BreakObserversRpc(point, water);
             ServerManager.Despawn(NetworkObject);
+            return true;
         }
         [ObserversRpc(RunLocally = true)]
         void BreakObserversRpc(Vector3 point, bool water)
         {
-            GameAudio.Play(water ? SoundCue.WaterSplash : SoundCue.BottleClose, point);
-            CombatVfx.Splash(point, .5f);
+            BottleBreakVfx.Present(point, water);
         }
     }
 }

@@ -6,6 +6,12 @@
 
 Автоматический каталог. Описания обозначают тип файла и известную тему, а не подтверждение использования в игре.
 
+## Art/Audio/BottleBreak
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Audio/BottleBreak/GenerateBottleBreak.py](<../../Art/Audio/BottleBreak/GenerateBottleBreak.py>) | Инструмент Python; Звуки и голос |
+
 ## Art/Blender
 
 | Файл | Краткое описание |
@@ -76,6 +82,111 @@
 | --- | --- |
 | [Art/Blender/Equipment/ButcherHook.blend](<../../Art/Blender/Equipment/ButcherHook.blend>) | Редактируемая сцена Blender |
 | [Art/Blender/Equipment/GrapplingHook.blend](<../../Art/Blender/Equipment/GrapplingHook.blend>) | Редактируемая сцена Blender |
+
+## Art/Blender/Firearms
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/Firearms/AssembleFirearms.py](<../../Art/Blender/Firearms/AssembleFirearms.py>) | Инструмент Python |
+| [Art/Blender/Firearms/FirearmAssemblies.blend](<../../Art/Blender/Firearms/FirearmAssemblies.blend>) | Редактируемая сцена Blender |
+| [Art/Blender/Firearms/README.md](<../../Art/Blender/Firearms/README.md>) | Документация; Личное оружие и урон |
+| [Art/Blender/Firearms/SourceLayout.png](<../../Art/Blender/Firearms/SourceLayout.png>) | Изображение / текстура |
+
+## Art/Blender/Firearms/Sources/Frizzen
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/Firearms/Sources/Frizzen/tripo_convert_70409650-a202-41c6-a74b-fd7c0c9c1508.fbx](<../../Art/Blender/Firearms/Sources/Frizzen/tripo_convert_70409650-a202-41c6-a74b-fd7c0c9c1508.fbx>) | Модель / анимации FBX |
+
+## Art/Blender/Firearms/Sources/Frizzen/tripo_convert_70409650-a202-41c6-a74b-fd7c0c9c1508.fbm
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/Firearms/Sources/Frizzen/tripo_convert_70409650-a202-41c6-a74b-fd7c0c9c1508.fbm/Огниво_basecolor.JPEG](<../../Art/Blender/Firearms/Sources/Frizzen/tripo_convert_70409650-a202-41c6-a74b-fd7c0c9c1508.fbm/Огниво_basecolor.JPEG>) | Изображение / текстура |
+| [Art/Blender/Firearms/Sources/Frizzen/tripo_convert_70409650-a202-41c6-a74b-fd7c0c9c1508.fbm/Огниво_metallic.JPEG](<../../Art/Blender/Firearms/Sources/Frizzen/tripo_convert_70409650-a202-41c6-a74b-fd7c0c9c1508.fbm/Огниво_metallic.JPEG>) | Изображение / текстура |
+| [Art/Blender/Firearms/Sources/Frizzen/tripo_convert_70409650-a202-41c6-a74b-fd7c0c9c1508.fbm/Огниво_normal.PNG](<../../Art/Blender/Firearms/Sources/Frizzen/tripo_convert_70409650-a202-41c6-a74b-fd7c0c9c1508.fbm/Огниво_normal.PNG>) | Изображение / текстура |
+| [Art/Blender/Firearms/Sources/Frizzen/tripo_convert_70409650-a202-41c6-a74b-fd7c0c9c1508.fbm/Огниво_rm.JPEG](<../../Art/Blender/Firearms/Sources/Frizzen/tripo_convert_70409650-a202-41c6-a74b-fd7c0c9c1508.fbm/Огниво_rm.JPEG>) | Изображение / текстура |
+| [Art/Blender/Firearms/Sources/Frizzen/tripo_convert_70409650-a202-41c6-a74b-fd7c0c9c1508.fbm/Огниво_roughness.JPEG](<../../Art/Blender/Firearms/Sources/Frizzen/tripo_convert_70409650-a202-41c6-a74b-fd7c0c9c1508.fbm/Огниво_roughness.JPEG>) | Изображение / текстура |
+
+## Art/Blender/Firearms/Sources/Hammer
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/Firearms/Sources/Hammer/tripo_convert_55215128-ef6c-427e-80cf-de07101f9828.fbx](<../../Art/Blender/Firearms/Sources/Hammer/tripo_convert_55215128-ef6c-427e-80cf-de07101f9828.fbx>) | Модель / анимации FBX |
+
+## Art/Blender/Firearms/Sources/Hammer/tripo_convert_55215128-ef6c-427e-80cf-de07101f9828.fbm
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/Firearms/Sources/Hammer/tripo_convert_55215128-ef6c-427e-80cf-de07101f9828.fbm/Курок_с_кремнем_basecolor.JPEG](<../../Art/Blender/Firearms/Sources/Hammer/tripo_convert_55215128-ef6c-427e-80cf-de07101f9828.fbm/Курок_с_кремнем_basecolor.JPEG>) | Изображение / текстура |
+| [Art/Blender/Firearms/Sources/Hammer/tripo_convert_55215128-ef6c-427e-80cf-de07101f9828.fbm/Курок_с_кремнем_metallic.JPEG](<../../Art/Blender/Firearms/Sources/Hammer/tripo_convert_55215128-ef6c-427e-80cf-de07101f9828.fbm/Курок_с_кремнем_metallic.JPEG>) | Изображение / текстура |
+| [Art/Blender/Firearms/Sources/Hammer/tripo_convert_55215128-ef6c-427e-80cf-de07101f9828.fbm/Курок_с_кремнем_normal.PNG](<../../Art/Blender/Firearms/Sources/Hammer/tripo_convert_55215128-ef6c-427e-80cf-de07101f9828.fbm/Курок_с_кремнем_normal.PNG>) | Изображение / текстура |
+| [Art/Blender/Firearms/Sources/Hammer/tripo_convert_55215128-ef6c-427e-80cf-de07101f9828.fbm/Курок_с_кремнем_rm.JPEG](<../../Art/Blender/Firearms/Sources/Hammer/tripo_convert_55215128-ef6c-427e-80cf-de07101f9828.fbm/Курок_с_кремнем_rm.JPEG>) | Изображение / текстура |
+| [Art/Blender/Firearms/Sources/Hammer/tripo_convert_55215128-ef6c-427e-80cf-de07101f9828.fbm/Курок_с_кремнем_roughness.JPEG](<../../Art/Blender/Firearms/Sources/Hammer/tripo_convert_55215128-ef6c-427e-80cf-de07101f9828.fbm/Курок_с_кремнем_roughness.JPEG>) | Изображение / текстура |
+
+## Art/Blender/Firearms/Sources/Musket
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/Firearms/Sources/Musket/tripo_convert_7fb160ae-2cda-4cc4-a89e-a9f774e65b4d.fbx](<../../Art/Blender/Firearms/Sources/Musket/tripo_convert_7fb160ae-2cda-4cc4-a89e-a9f774e65b4d.fbx>) | Модель / анимации FBX |
+
+## Art/Blender/Firearms/Sources/Musket/tripo_convert_7fb160ae-2cda-4cc4-a89e-a9f774e65b4d.fbm
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/Firearms/Sources/Musket/tripo_convert_7fb160ae-2cda-4cc4-a89e-a9f774e65b4d.fbm/снайперка_basecolor.JPEG](<../../Art/Blender/Firearms/Sources/Musket/tripo_convert_7fb160ae-2cda-4cc4-a89e-a9f774e65b4d.fbm/снайперка_basecolor.JPEG>) | Изображение / текстура |
+| [Art/Blender/Firearms/Sources/Musket/tripo_convert_7fb160ae-2cda-4cc4-a89e-a9f774e65b4d.fbm/снайперка_metallic.JPEG](<../../Art/Blender/Firearms/Sources/Musket/tripo_convert_7fb160ae-2cda-4cc4-a89e-a9f774e65b4d.fbm/снайперка_metallic.JPEG>) | Изображение / текстура |
+| [Art/Blender/Firearms/Sources/Musket/tripo_convert_7fb160ae-2cda-4cc4-a89e-a9f774e65b4d.fbm/снайперка_normal.PNG](<../../Art/Blender/Firearms/Sources/Musket/tripo_convert_7fb160ae-2cda-4cc4-a89e-a9f774e65b4d.fbm/снайперка_normal.PNG>) | Изображение / текстура |
+| [Art/Blender/Firearms/Sources/Musket/tripo_convert_7fb160ae-2cda-4cc4-a89e-a9f774e65b4d.fbm/снайперка_rm.JPEG](<../../Art/Blender/Firearms/Sources/Musket/tripo_convert_7fb160ae-2cda-4cc4-a89e-a9f774e65b4d.fbm/снайперка_rm.JPEG>) | Изображение / текстура |
+| [Art/Blender/Firearms/Sources/Musket/tripo_convert_7fb160ae-2cda-4cc4-a89e-a9f774e65b4d.fbm/снайперка_roughness.JPEG](<../../Art/Blender/Firearms/Sources/Musket/tripo_convert_7fb160ae-2cda-4cc4-a89e-a9f774e65b4d.fbm/снайперка_roughness.JPEG>) | Изображение / текстура |
+
+## Art/Blender/Firearms/Sources/Pistol
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/Firearms/Sources/Pistol/tripo_convert_7e561806-0eb5-41d1-aa9d-8ae4ab9c552f.fbx](<../../Art/Blender/Firearms/Sources/Pistol/tripo_convert_7e561806-0eb5-41d1-aa9d-8ae4ab9c552f.fbx>) | Модель / анимации FBX |
+
+## Art/Blender/Firearms/Sources/Pistol/tripo_convert_7e561806-0eb5-41d1-aa9d-8ae4ab9c552f.fbm
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/Firearms/Sources/Pistol/tripo_convert_7e561806-0eb5-41d1-aa9d-8ae4ab9c552f.fbm/Пистолет_basecolor.JPEG](<../../Art/Blender/Firearms/Sources/Pistol/tripo_convert_7e561806-0eb5-41d1-aa9d-8ae4ab9c552f.fbm/Пистолет_basecolor.JPEG>) | Изображение / текстура |
+| [Art/Blender/Firearms/Sources/Pistol/tripo_convert_7e561806-0eb5-41d1-aa9d-8ae4ab9c552f.fbm/Пистолет_metallic.JPEG](<../../Art/Blender/Firearms/Sources/Pistol/tripo_convert_7e561806-0eb5-41d1-aa9d-8ae4ab9c552f.fbm/Пистолет_metallic.JPEG>) | Изображение / текстура |
+| [Art/Blender/Firearms/Sources/Pistol/tripo_convert_7e561806-0eb5-41d1-aa9d-8ae4ab9c552f.fbm/Пистолет_normal.PNG](<../../Art/Blender/Firearms/Sources/Pistol/tripo_convert_7e561806-0eb5-41d1-aa9d-8ae4ab9c552f.fbm/Пистолет_normal.PNG>) | Изображение / текстура |
+| [Art/Blender/Firearms/Sources/Pistol/tripo_convert_7e561806-0eb5-41d1-aa9d-8ae4ab9c552f.fbm/Пистолет_rm.JPEG](<../../Art/Blender/Firearms/Sources/Pistol/tripo_convert_7e561806-0eb5-41d1-aa9d-8ae4ab9c552f.fbm/Пистолет_rm.JPEG>) | Изображение / текстура |
+| [Art/Blender/Firearms/Sources/Pistol/tripo_convert_7e561806-0eb5-41d1-aa9d-8ae4ab9c552f.fbm/Пистолет_roughness.JPEG](<../../Art/Blender/Firearms/Sources/Pistol/tripo_convert_7e561806-0eb5-41d1-aa9d-8ae4ab9c552f.fbm/Пистолет_roughness.JPEG>) | Изображение / текстура |
+
+## Art/Blender/Firearms/Sources/Shotgun
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/Firearms/Sources/Shotgun/tripo_convert_063b9524-e298-4c82-835d-43570277cf89.fbx](<../../Art/Blender/Firearms/Sources/Shotgun/tripo_convert_063b9524-e298-4c82-835d-43570277cf89.fbx>) | Модель / анимации FBX |
+
+## Art/Blender/Firearms/Sources/Shotgun/tripo_convert_063b9524-e298-4c82-835d-43570277cf89.fbm
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/Firearms/Sources/Shotgun/tripo_convert_063b9524-e298-4c82-835d-43570277cf89.fbm/Дробовик_basecolor.JPEG](<../../Art/Blender/Firearms/Sources/Shotgun/tripo_convert_063b9524-e298-4c82-835d-43570277cf89.fbm/Дробовик_basecolor.JPEG>) | Изображение / текстура |
+| [Art/Blender/Firearms/Sources/Shotgun/tripo_convert_063b9524-e298-4c82-835d-43570277cf89.fbm/Дробовик_metallic.JPEG](<../../Art/Blender/Firearms/Sources/Shotgun/tripo_convert_063b9524-e298-4c82-835d-43570277cf89.fbm/Дробовик_metallic.JPEG>) | Изображение / текстура |
+| [Art/Blender/Firearms/Sources/Shotgun/tripo_convert_063b9524-e298-4c82-835d-43570277cf89.fbm/Дробовик_normal.PNG](<../../Art/Blender/Firearms/Sources/Shotgun/tripo_convert_063b9524-e298-4c82-835d-43570277cf89.fbm/Дробовик_normal.PNG>) | Изображение / текстура |
+| [Art/Blender/Firearms/Sources/Shotgun/tripo_convert_063b9524-e298-4c82-835d-43570277cf89.fbm/Дробовик_rm.JPEG](<../../Art/Blender/Firearms/Sources/Shotgun/tripo_convert_063b9524-e298-4c82-835d-43570277cf89.fbm/Дробовик_rm.JPEG>) | Изображение / текстура |
+| [Art/Blender/Firearms/Sources/Shotgun/tripo_convert_063b9524-e298-4c82-835d-43570277cf89.fbm/Дробовик_roughness.JPEG](<../../Art/Blender/Firearms/Sources/Shotgun/tripo_convert_063b9524-e298-4c82-835d-43570277cf89.fbm/Дробовик_roughness.JPEG>) | Изображение / текстура |
+
+## Art/Blender/Firearms/Sources/Trigger
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/Firearms/Sources/Trigger/tripo_convert_c8b65acb-3381-4ca0-8b13-15dd676bac23.fbx](<../../Art/Blender/Firearms/Sources/Trigger/tripo_convert_c8b65acb-3381-4ca0-8b13-15dd676bac23.fbx>) | Модель / анимации FBX |
+
+## Art/Blender/Firearms/Sources/Trigger/tripo_convert_c8b65acb-3381-4ca0-8b13-15dd676bac23.fbm
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/Firearms/Sources/Trigger/tripo_convert_c8b65acb-3381-4ca0-8b13-15dd676bac23.fbm/курок_basecolor.JPEG](<../../Art/Blender/Firearms/Sources/Trigger/tripo_convert_c8b65acb-3381-4ca0-8b13-15dd676bac23.fbm/курок_basecolor.JPEG>) | Изображение / текстура |
+| [Art/Blender/Firearms/Sources/Trigger/tripo_convert_c8b65acb-3381-4ca0-8b13-15dd676bac23.fbm/курок_metallic.JPEG](<../../Art/Blender/Firearms/Sources/Trigger/tripo_convert_c8b65acb-3381-4ca0-8b13-15dd676bac23.fbm/курок_metallic.JPEG>) | Изображение / текстура |
+| [Art/Blender/Firearms/Sources/Trigger/tripo_convert_c8b65acb-3381-4ca0-8b13-15dd676bac23.fbm/курок_normal.PNG](<../../Art/Blender/Firearms/Sources/Trigger/tripo_convert_c8b65acb-3381-4ca0-8b13-15dd676bac23.fbm/курок_normal.PNG>) | Изображение / текстура |
+| [Art/Blender/Firearms/Sources/Trigger/tripo_convert_c8b65acb-3381-4ca0-8b13-15dd676bac23.fbm/курок_rm.JPEG](<../../Art/Blender/Firearms/Sources/Trigger/tripo_convert_c8b65acb-3381-4ca0-8b13-15dd676bac23.fbm/курок_rm.JPEG>) | Изображение / текстура |
+| [Art/Blender/Firearms/Sources/Trigger/tripo_convert_c8b65acb-3381-4ca0-8b13-15dd676bac23.fbm/курок_roughness.JPEG](<../../Art/Blender/Firearms/Sources/Trigger/tripo_convert_c8b65acb-3381-4ca0-8b13-15dd676bac23.fbm/курок_roughness.JPEG>) | Изображение / текстура |
 
 ## Art/Blender/FishingWeapons
 
@@ -345,6 +456,30 @@
 | Файл | Краткое описание |
 | --- | --- |
 | [Art/Blender/Repair/RepairKit.blend](<../../Art/Blender/Repair/RepairKit.blend>) | Редактируемая сцена Blender |
+
+## Art/Blender/SabreReplacement
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/SabreReplacement/ImportSabre.py](<../../Art/Blender/SabreReplacement/ImportSabre.py>) | Инструмент Python; Личное оружие и урон |
+| [Art/Blender/SabreReplacement/README.md](<../../Art/Blender/SabreReplacement/README.md>) | Документация; Личное оружие и урон |
+| [Art/Blender/SabreReplacement/SabreAssembly.blend](<../../Art/Blender/SabreReplacement/SabreAssembly.blend>) | Редактируемая сцена Blender; Личное оружие и урон |
+
+## Art/Blender/SabreReplacement/Sources
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/SabreReplacement/Sources/tripo_convert_3cee7c99-a8a7-401e-ab80-da6c16d8d950.fbx](<../../Art/Blender/SabreReplacement/Sources/tripo_convert_3cee7c99-a8a7-401e-ab80-da6c16d8d950.fbx>) | Модель / анимации FBX |
+
+## Art/Blender/SabreReplacement/Sources/tripo_convert_3cee7c99-a8a7-401e-ab80-da6c16d8d950.fbm
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/SabreReplacement/Sources/tripo_convert_3cee7c99-a8a7-401e-ab80-da6c16d8d950.fbm/Сабля_basecolor.JPEG](<../../Art/Blender/SabreReplacement/Sources/tripo_convert_3cee7c99-a8a7-401e-ab80-da6c16d8d950.fbm/Сабля_basecolor.JPEG>) | Изображение / текстура |
+| [Art/Blender/SabreReplacement/Sources/tripo_convert_3cee7c99-a8a7-401e-ab80-da6c16d8d950.fbm/Сабля_metallic.JPEG](<../../Art/Blender/SabreReplacement/Sources/tripo_convert_3cee7c99-a8a7-401e-ab80-da6c16d8d950.fbm/Сабля_metallic.JPEG>) | Изображение / текстура |
+| [Art/Blender/SabreReplacement/Sources/tripo_convert_3cee7c99-a8a7-401e-ab80-da6c16d8d950.fbm/Сабля_normal.PNG](<../../Art/Blender/SabreReplacement/Sources/tripo_convert_3cee7c99-a8a7-401e-ab80-da6c16d8d950.fbm/Сабля_normal.PNG>) | Изображение / текстура |
+| [Art/Blender/SabreReplacement/Sources/tripo_convert_3cee7c99-a8a7-401e-ab80-da6c16d8d950.fbm/Сабля_rm.JPEG](<../../Art/Blender/SabreReplacement/Sources/tripo_convert_3cee7c99-a8a7-401e-ab80-da6c16d8d950.fbm/Сабля_rm.JPEG>) | Изображение / текстура |
+| [Art/Blender/SabreReplacement/Sources/tripo_convert_3cee7c99-a8a7-401e-ab80-da6c16d8d950.fbm/Сабля_roughness.JPEG](<../../Art/Blender/SabreReplacement/Sources/tripo_convert_3cee7c99-a8a7-401e-ab80-da6c16d8d950.fbm/Сабля_roughness.JPEG>) | Изображение / текстура |
 
 ## Art/Blender/SabreSlash
 

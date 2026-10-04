@@ -40,7 +40,8 @@ namespace PirateSlop.EditorTools
             cork.EnableKeyword("_NORMALMAP");
             EditorUtility.SetDirty(cork);
             var swirl = Material(directory + "WhiskySwirl.mat", "PirateSlop/BottleVortex");
-            swirl.SetColor("_BaseColor", new Color(.55f, 1.1f, 1.35f, .65f));
+            swirl.SetColor("_BaseColor", new Color(.05f, .38f, 1f, .85f));
+            swirl.SetFloat("_EmissionStrength", 3.5f);
             swirl.renderQueue = 3000;
             EditorUtility.SetDirty(swirl);
             var source = AssetDatabase.LoadAssetAtPath<GameObject>(directory + "WhiskyBottleEmpty.fbx");
@@ -79,9 +80,25 @@ namespace PirateSlop.EditorTools
                     {
                         var visual = bottle.AddComponent<VortexBottleVisual>();
                         visual.SwirlMaterial = swirl;
-                        visual.RotationSpeed = 125f;
+                        visual.RotationSpeed = 90f;
                     }
                 });
+            AssetDatabase.SaveAssets();
+        }
+
+        public static void ConfigureBottleBreakAudio()
+        {
+            var bank = AssetDatabase.LoadAssetAtPath<GameAudioBank>("Assets/Resources/GameAudioBank.asset");
+            var entries = bank.Entries.ToList();
+            var entry = entries.FirstOrDefault(e => e.Cue == SoundCue.BottleBreak);
+            if (entry == null) { entry = new GameAudioBank.Entry { Cue = SoundCue.BottleBreak }; entries.Add(entry); }
+            entry.Clips = Enumerable.Range(1, 3).Select(i => AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Audio/BottleBreak/BottleBreak0" + i + ".wav")).ToArray();
+            entry.Volume = .75f; entry.Distance = 24;
+            bank.Entries = entries.ToArray(); EditorUtility.SetDirty(bank);
+            const string materialPath = "Assets/Resources/BottleGlassShard.mat";
+            var material = AssetDatabase.LoadAssetAtPath<Material>(materialPath);
+            if (material == null) { material = new Material(Shader.Find("PirateSlop/GlassShard")); AssetDatabase.CreateAsset(material, materialPath); }
+            EditorUtility.SetDirty(material);
             AssetDatabase.SaveAssets();
         }
 
@@ -116,7 +133,7 @@ namespace PirateSlop.EditorTools
                     ClearChildren(root.transform);
                     var model = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(directory + key + ".fbx"), root.transform);
                     model.name = "Geometry";
-                    model.transform.localRotation = Quaternion.Euler(0, key == "Swordfish" ? -90f : 90f, 0) * AssetDatabase.LoadAssetAtPath<GameObject>(directory + key + ".fbx").transform.localRotation;
+                    model.transform.localRotation = Quaternion.Euler(0, key == "Fish" ? 90f : -90f, 0) * AssetDatabase.LoadAssetAtPath<GameObject>(directory + key + ".fbx").transform.localRotation;
                     foreach (var renderer in model.GetComponentsInChildren<MeshRenderer>())
                         renderer.sharedMaterials = renderer.sharedMaterials.Select(m => material).ToArray();
                     var bounds = Bounds(root);
@@ -129,9 +146,21 @@ namespace PirateSlop.EditorTools
                     {
                         ClearChildren(root.transform);
                         PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(paths[index]), root.transform);
+                        FitFishCollider(root);
                     });
             }
+            Edit("Assets/Prefabs/Networking/NetworkFish.prefab", FitFishCollider);
             AssetDatabase.SaveAssets();
+        }
+
+        static void FitFishCollider(GameObject root)
+        {
+            var collider = root.GetComponent<BoxCollider>();
+            var fish = root.GetComponent<PirateSlop.Networking.NetworkFish>();
+            if (collider == null || fish == null) return;
+            var bounds = PirateSlop.Networking.LootPlacement.VisualBounds(fish);
+            collider.center = bounds.center;
+            collider.size = bounds.size;
         }
 
         static void RequireEditMode()

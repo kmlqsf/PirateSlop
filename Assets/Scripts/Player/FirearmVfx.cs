@@ -27,7 +27,14 @@ namespace PirateSlop
             var light=go.AddComponent<Light>(); light.color=new Color(1,.63f,.28f); light.intensity=6*power; light.range=4*power; light.shadows=LightShadows.None;
             Object.Destroy(go,.065f);
         }
-        static void Burst(Vector3 point,Vector3 forward,Material material,Color color,int count,float size,float speed,float life,float angle,bool smoke)
+        public static void FlintlockStrike(Vector3 point, Vector3 outward, float scale = 1)
+        {
+            if (!Application.isPlaying || Application.isBatchMode) return;
+            var glow = Resources.Load<Material>("FirearmGlow");
+            Burst(point, outward, glow, new Color(2, 1.25f, .35f, 1), 2, .024f * scale, .12f, .045f, 45, false, .004f, true);
+            Burst(point, outward, glow, new Color(2, 1.25f, .35f, 1), 8, .0045f * scale, 1.3f * scale, .16f, 42, false, .004f, false, 1.3f);
+        }
+        static void Burst(Vector3 point,Vector3 forward,Material material,Color color,int count,float size,float speed,float life,float angle,bool smoke,float radius=.025f,bool billboard=false,float length=2)
         {
             if(material==null) return;
             int index=nextBurst++%bursts.Length;
@@ -39,14 +46,14 @@ namespace PirateSlop
             main.startLifetime=new ParticleSystem.MinMaxCurve(life*.65f,life);main.startSpeed=new ParticleSystem.MinMaxCurve(speed*.4f,speed);
             main.startSize=new ParticleSystem.MinMaxCurve(size*.6f,size);main.startColor=color;main.gravityModifier=smoke ? -.06f : .35f;
             main.stopAction=ParticleSystemStopAction.Disable;
-            var shape=particles.shape;shape.shapeType=ParticleSystemShapeType.Cone;shape.angle=angle;shape.radius=.025f;
+            var shape=particles.shape;shape.shapeType=ParticleSystemShapeType.Cone;shape.angle=angle;shape.radius=radius;
             var emission=particles.emission;emission.rateOverTime=0;emission.SetBursts(new[]{new ParticleSystem.Burst(0,(short)count)});
             var fade=particles.colorOverLifetime;fade.enabled=true;
             var gradient=new Gradient();gradient.SetKeys(new[]{new GradientColorKey(Color.white,0),new GradientColorKey(smoke?Color.white:new Color(1,.3f,.06f),1)},new[]{new GradientAlphaKey(1,0),new GradientAlphaKey(.6f,.3f),new GradientAlphaKey(0,1)});fade.color=gradient;
             var growth=particles.sizeOverLifetime;growth.enabled=true;growth.size=new ParticleSystem.MinMaxCurve(1,AnimationCurve.Linear(0,smoke?.6f:1,1,smoke?2.4f:.1f));
             var renderer=particles.GetComponent<ParticleSystemRenderer>();renderer.sharedMaterial=material;renderer.shadowCastingMode=UnityEngine.Rendering.ShadowCastingMode.Off;
-            renderer.renderMode=smoke?ParticleSystemRenderMode.Billboard:ParticleSystemRenderMode.Stretch;
-            if(!smoke){renderer.renderMode=ParticleSystemRenderMode.Stretch;renderer.lengthScale=2;renderer.velocityScale=.025f;}
+            renderer.renderMode=smoke || billboard?ParticleSystemRenderMode.Billboard:ParticleSystemRenderMode.Stretch;
+            if(!smoke && !billboard){renderer.lengthScale=length;renderer.velocityScale=.025f;}
             particles.Play();
         }
     }

@@ -11,7 +11,7 @@ namespace PirateSlop
         public Quaternion GripRotation = Quaternion.FromToRotation(Vector3.up, Vector3.left);
         public Vector3 MixamoGripPosition = new Vector3(-0.009597f, 0.086534f, 0.021396f);
         public Quaternion MixamoGripRotation = Quaternion.LookRotation(new Vector3(-0.081345f, 0.918127f, 0.387847f), new Vector3(-0.980509f, -0.143544f, 0.134156f));
-        public Vector3 MixamoViewOffset = new Vector3(-0.09f, 0.13f, 0.12f);
+        public Vector3 MixamoViewOffset = new Vector3(-0.04f, 0.10f, 0.28f);
         PirateWeapon weapon;
         PlayerInventory inventory;
         PirateSlop.Networking.NetworkFishing fishing;

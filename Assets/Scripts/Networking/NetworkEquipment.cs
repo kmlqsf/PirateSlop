@@ -3,6 +3,7 @@ using FishNet.Object.Synchronizing;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
+using System.Linq;
 
 namespace PirateSlop.Networking
 {
@@ -34,6 +35,7 @@ namespace PirateSlop.Networking
         public float ScopeFov => scopeFov;
         public int LoadedRounds => pendingShot?0:rounds.Value;
         public bool IsReloading => action.Value==1;
+        public float ReloadProgress => IsReloading ? Mathf.Clamp01((Time.time - animationAt) / ReloadSeconds) : 1;
         public int ServerRounds(int slot) => IsServerInitialized && slot >= 0 && slot < ammunition.Length ? ammunition[slot] : 0;
         public bool TryFirearm(byte request, Vector3 forward, Vector3 eyeOffset, bool aimed)
         {
@@ -68,19 +70,25 @@ namespace PirateSlop.Networking
         public bool Active => IsSpawned && Item >= InventoryItem.Wine && !motor.IsDead && !motor.IsSwimming && !motor.IsClimbing && !motor.LocomotionLocked && !hands.HasHeldBall && !inventory.HandsOccupied;
         public Transform View => view;
         public Transform World => world;
+        public bool CanonicalFirearm { get; private set; }
+        public bool ShoulderSupported { get; private set; }
+        public Vector3 ShoulderOffset { get; private set; }
+        public Vector3 WorldPoseOffset { get; private set; }
+        Vector3 supportGrip;
         public Vector3 SupportOffset
         {
             get
             {
                 if (Item == InventoryItem.Swordfish) return new Vector3(-.04f, -.06f, .35f);
                 if (!Firearm) return new Vector3(-.13f, -.06f, .03f);
-                if (action.Value != 1) return new Vector3(0, -.04f, .4f);
+                if (action.Value != 1) return CanonicalFirearm ? supportGrip : new Vector3(0, -.04f, .4f);
                 float phase = Mathf.Clamp01((Time.time-animationAt)/ReloadSeconds);
                 float reach = Mathf.Sin(phase*Mathf.PI);
+                if (CanonicalFirearm) return supportGrip + new Vector3(-.045f, reach * .10f, reach * .12f);
                 return new Vector3(-.045f,-.04f+reach*.13f,.15f+reach*.5f);
             }
         }
-        public Vector3 GripOffset => Firearm ? new Vector3(0, -.03f, 0) : Item == InventoryItem.Swordfish ? new Vector3(0, -.045f, .13f) : new Vector3(.03f, .06f, 0);
+        public Vector3 GripOffset => Firearm ? CanonicalFirearm ? Vector3.zero : new Vector3(0, -.03f, 0) : Item == InventoryItem.Swordfish ? new Vector3(0, -.045f, .13f) : new Vector3(.03f, .06f, 0);
         int CapacityFor(InventoryItem item) => item==InventoryItem.DoubleBarrel ? handling.Shotgun.Capacity : item==InventoryItem.Musket ? handling.Musket.Capacity : 1;
         public void ResetSlot(int slot, InventoryItem item) { if(IsServerInitialized) ammunition[slot] = CapacityFor(item); }
         public void TransferAmmunitionTo(NetworkEquipment target)
@@ -274,6 +282,8 @@ namespace PirateSlop.Networking
             if (view != null) Destroy(view.gameObject);
             if (world != null) Destroy(world.gameObject);
             shown = Item;
+            CanonicalFirearm = false;
+            ShoulderSupported = false;
             if (shown < InventoryItem.Wine || Models == null || (int)shown - 13 >= Models.Length) return;
             var model = Models[(int)shown - 13];
             if (model == null) return;
@@ -294,7 +304,27 @@ namespace PirateSlop.Networking
                     visual.localPosition = new Vector3(0, -.05f, Item == InventoryItem.Swordfish ? .04f : .05f);
                 }
                 else if (Item == InventoryItem.Spyglass) { visual.localRotation = Quaternion.identity; visual.localPosition = new Vector3(0, -.02f, .18f); }
-                else if (Firearm) { visual.localRotation = Quaternion.Euler(0, 90, 0); visual.localPosition = new Vector3(0, -.04f, .22f); }
+                else if (Firearm)
+                {
+                    var grip = visual.Find("GripSocket_Firearm");
+                    if (grip != null)
+                    {
+                        CanonicalFirearm = true;
+                        visual.localRotation = Quaternion.identity;
+                        visual.localPosition = -Vector3.Scale(grip.localPosition, visual.localScale);
+                        var support = visual.Find("SupportSocket_Firearm");
+                        supportGrip = root.InverseTransformPoint(support.position);
+                        var shoulder = visual.Find("ShoulderSocket_Firearm");
+                        if (shoulder != null && Item == InventoryItem.Musket)
+                        {
+                            ShoulderSupported = true;
+                            ShoulderOffset = root.InverseTransformPoint(shoulder.position);
+                        }
+                        var muzzle = visual.GetComponentsInChildren<Transform>().First(t => t.name.StartsWith("Muzzle_"));
+                        root.Find("Muzzle").SetPositionAndRotation(muzzle.position, muzzle.rotation);
+                    }
+                    else { visual.localRotation = Quaternion.Euler(0, 90, 0); visual.localPosition = new Vector3(0, -.04f, .22f); }
+                }
                 else { visual.localRotation = Quaternion.Euler(0, 180, 0); visual.localPosition = new Vector3(0, Item == InventoryItem.BombParrot ? -.16f : -.09f, 0); visual.localScale *= Item == InventoryItem.BombParrot ? .65f : 1f; }
             }
             viewRenderers = view.GetComponentsInChildren<Renderer>(); worldRenderers = world.GetComponentsInChildren<Renderer>();
@@ -345,6 +375,15 @@ namespace PirateSlop.Networking
             float pitch = Mathf.Asin(Mathf.Clamp(-direction.Value.y,-1,1))*Mathf.Rad2Deg;
             world.localPosition = new Vector3(position.x,1.4f+position.y,position.z);
             world.localRotation = Quaternion.Euler(rotation + new Vector3(aiming.Value ? pitch : 0,0,0));
+            if (CanonicalFirearm)
+            {
+                float blend = IsOwner ? handling.AimBlend : aimBlend;
+                Vector3 shift = position - Vector3.Lerp(definition.HipPosition, definition.AimPosition, blend);
+                WorldPoseOffset = shift;
+                world.localPosition = Vector3.Lerp(new Vector3(.22f, 1.30f, .34f), new Vector3(.19f, 1.40f, .34f), blend) + shift;
+                if (motor.IsCrouched) world.localPosition -= Vector3.up * .45f;
+                world.localRotation = Quaternion.Euler(rotation + new Vector3(aiming.Value ? pitch : 0, Mathf.Lerp(-20, 0, blend), 0));
+            }
             foreach(var wing in wings)
                 wing.Key.localRotation = wing.Value * Quaternion.Euler(0,(wing.Key.name == "WingLeft" ? 1 : -1) * Mathf.Sin(Time.time*(visualAction==3 ? 18 : 3)) * (visualAction==3 ? 60 : 5),0);
         }

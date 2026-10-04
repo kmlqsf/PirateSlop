@@ -9,9 +9,21 @@ namespace PirateSlop.Networking
     {
         public static readonly System.Collections.Generic.List<NetworkFish> ServerItems = new();
         public bool OnShip => platformId.Value != 0;
+        public NetworkShip SupportingShip
+        {
+            get
+            {
+                if (platformId.Value == 0) return null;
+                if (platform.Value != null) return platform.Value.GetComponent<NetworkShip>();
+                foreach (var ship in NetworkShip.ActiveShips)
+                    if (ship != null && ship.ParticipantId.Value == platformId.Value) return ship;
+                return null;
+            }
+        }
         public override void OnStopServer() { ServerItems.Remove(this); base.OnStopServer(); }
         void Awake()
         {
+            if (LivingFish) movementBounds = LootPlacement.VisualBounds(this);
             var body = GetComponent<Rigidbody>();
             if (body != null && GetComponent<NetworkLooseCannonball>() == null) { body.isKinematic = true; body.useGravity = false; }
         }
@@ -38,7 +50,7 @@ namespace PirateSlop.Networking
             motionStarted = -1f;
             RestoreBodyMotion();
         }
-        public bool Available => IsSpawned && !taken && !(GetComponent<NetworkFishProjectile>()?.Flying ?? false) && !(GetComponent<NetworkHolyGrenade>()?.Busy ?? false) && !(GetComponent<NetworkVortexBottle>()?.Flying ?? false) && !(GetComponent<NetworkFogBottle>()?.Flying ?? false);
+        public bool Available => IsSpawned && !taken && !diving.Value && !(GetComponent<NetworkFishProjectile>()?.Flying ?? false) && !(GetComponent<NetworkHolyGrenade>()?.Busy ?? false) && !(GetComponent<NetworkVortexBottle>()?.Flying ?? false) && !(GetComponent<NetworkFogBottle>()?.Flying ?? false);
         float expires;
         float nextFlop;
         bool airborne;
@@ -58,8 +70,8 @@ namespace PirateSlop.Networking
         public override void OnStartServer()
         {
             ServerItems.Add(this);
-            base.OnStartServer(); expires = Item == InventoryItem.Fish ? Time.time + 600f : float.PositiveInfinity;
-            taken = false; airborne = false; escapeNet = null; escapeShip = null;
+            base.OnStartServer(); expires = float.PositiveInfinity;
+            taken = false; airborne = false; escapeNet = null; escapeShip = null; diving.Value = false;
             nextFlop = Time.time + Random.Range(3f, 6f);
         }
         public bool Take()
@@ -97,7 +109,6 @@ namespace PirateSlop.Networking
             if (IsServerInitialized && IsSpawned && Time.time > expires) ServerManager.Despawn(NetworkObject);
         }
         [ObserversRpc(RunLocally = true)]
-        void FlopSoundObserversRpc(SoundCue cue, Vector3 point) => GameAudio.Play(cue, point, .6f);
+        void FlopSoundObserversRpc(SoundCue cue, Vector3 point) => GameAudio.Play(cue, point, cue == SoundCue.Splash ? 1f : .6f);
     }
 }
-

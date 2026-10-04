@@ -20,7 +20,9 @@ namespace PirateSlop
         Vector3 viewShift;
         int layer;
         string state;
-        public bool ControlsEquipment => isActiveAndEnabled && layer >= 0 && equipment != null && equipment.Active && (equipment.Item == InventoryItem.Musket || equipment.Item == InventoryItem.DoubleBarrel);
+        bool mixamoRig;
+        bool LongWeaponActive => isActiveAndEnabled && layer >= 0 && equipment != null && equipment.Active && equipment.Firearm;
+        public bool ControlsEquipment => LongWeaponActive && !mixamoRig;
 
         void Awake()
         {
@@ -32,6 +34,7 @@ namespace PirateSlop
             viewRest = viewRoot.localPosition;
             var views = rig.ViewArms.GetComponentsInChildren<Transform>(true).ToDictionary(t => t.name);
             var allBones = rig.BodyRig.GetComponentsInChildren<Transform>(true);
+            mixamoRig = allBones.Any(t => t.name == "mixamorig:RightHand");
             hips = allBones.FirstOrDefault(t => t.name == "Hips" || t.name == "mixamorig:Hips");
             if (hips != null)
             {
@@ -52,7 +55,7 @@ namespace PirateSlop
         void Update()
         {
             if (layer < 0) return;
-            bool active = ControlsEquipment;
+            bool active = LongWeaponActive;
             Animator.SetLayerWeight(layer, Mathf.MoveTowards(Animator.GetLayerWeight(layer), active ? 1 : 0, Time.deltaTime * 10));
             if (!active) { state = null; return; }
             string prefix = equipment.Item == InventoryItem.DoubleBarrel ? "Shotgun" : "Musket";
@@ -74,6 +77,7 @@ namespace PirateSlop
 
         void LateUpdate()
         {
+            if (mixamoRig) return;
             if (hips == null || chest == null) return;
             var targetShift = ControlsEquipment ? equipment.AnimationAiming && !equipment.IsReloading ? new Vector3(-.18f, -.13f, .25f) : new Vector3(0, -.13f, .12f) : Vector3.zero;
             viewShift = Vector3.Lerp(viewShift, targetShift, 1 - Mathf.Exp(-20 * Time.deltaTime));
