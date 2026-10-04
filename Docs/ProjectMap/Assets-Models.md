@@ -1246,6 +1246,14 @@
 | [Assets/Models/Ships/ShipV3/DiceProps/Sector0.asset](<../../Assets/Models/Ships/ShipV3/DiceProps/Sector0.asset>) | Настройки или данные Unity |
 | [Assets/Models/Ships/ShipV3/DiceProps/Sector1.asset](<../../Assets/Models/Ships/ShipV3/DiceProps/Sector1.asset>) | Настройки или данные Unity |
 | [Assets/Models/Ships/ShipV3/DiceProps/Sector2.asset](<../../Assets/Models/Ships/ShipV3/DiceProps/Sector2.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/DiceProps/ZoneNumber1.asset](<../../Assets/Models/Ships/ShipV3/DiceProps/ZoneNumber1.asset>) | Настройки или данные Unity; Движение корабля и палуба |
+| [Assets/Models/Ships/ShipV3/DiceProps/ZoneNumber2.asset](<../../Assets/Models/Ships/ShipV3/DiceProps/ZoneNumber2.asset>) | Настройки или данные Unity; Движение корабля и палуба |
+| [Assets/Models/Ships/ShipV3/DiceProps/ZoneNumber3.asset](<../../Assets/Models/Ships/ShipV3/DiceProps/ZoneNumber3.asset>) | Настройки или данные Unity; Движение корабля и палуба |
+| [Assets/Models/Ships/ShipV3/DiceProps/ZoneNumberGold.mat](<../../Assets/Models/Ships/ShipV3/DiceProps/ZoneNumberGold.mat>) | Материал Unity; Движение корабля и палуба |
+| [Assets/Models/Ships/ShipV3/DiceProps/ZoneNumberOutline.mat](<../../Assets/Models/Ships/ShipV3/DiceProps/ZoneNumberOutline.mat>) | Материал Unity; Движение корабля и палуба |
+| [Assets/Models/Ships/ShipV3/DiceProps/ZoneNumberOutline1.asset](<../../Assets/Models/Ships/ShipV3/DiceProps/ZoneNumberOutline1.asset>) | Настройки или данные Unity; Движение корабля и палуба |
+| [Assets/Models/Ships/ShipV3/DiceProps/ZoneNumberOutline2.asset](<../../Assets/Models/Ships/ShipV3/DiceProps/ZoneNumberOutline2.asset>) | Настройки или данные Unity; Движение корабля и палуба |
+| [Assets/Models/Ships/ShipV3/DiceProps/ZoneNumberOutline3.asset](<../../Assets/Models/Ships/ShipV3/DiceProps/ZoneNumberOutline3.asset>) | Настройки или данные Unity; Движение корабля и палуба |
 
 ## Assets/Models/Ships/ShipV3/DiceProps/MedievalBeerMug
 
@@ -1348,6 +1356,7 @@
 | Файл | Краткое описание |
 | --- | --- |
 | [Assets/Models/Ships/ShipV3/RuntimeMeshes/AnchorChainLink.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/AnchorChainLink.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/BellShortInnerStem.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/BellShortInnerStem.asset>) | Настройки или данные Unity; Движение корабля и палуба |
 
 ## Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches
 
@@ -1362,7 +1371,7 @@
 | [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_103.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_103.asset>) | Настройки или данные Unity |
 | [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_104.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_104.asset>) | Настройки или данные Unity |
 | [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_105.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_105.asset>) | Настройки или данные Unity |
-| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_106.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_106.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_106.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_106.asset>) | Настройки или данные Unity; Движение корабля и палуба |
 | [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_107.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_107.asset>) | Настройки или данные Unity |
 | [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_108.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_108.asset>) | Настройки или данные Unity |
 | [Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_109.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Batches/ShipV3Batch_109.asset>) | Настройки или данные Unity |

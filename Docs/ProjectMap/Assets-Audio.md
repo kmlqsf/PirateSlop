@@ -242,6 +242,31 @@
 | [Assets/Audio/PiratePackVol1/steps_wood_slow_04.wav](<../../Assets/Audio/PiratePackVol1/steps_wood_slow_04.wav>) | Аудио |
 | [Assets/Audio/PiratePackVol1/steps_wood_slow_05.wav](<../../Assets/Audio/PiratePackVol1/steps_wood_slow_05.wav>) | Аудио |
 
+## Assets/Audio/ShipInteractions
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Audio/ShipInteractions/BellDoubleSource.mp3](<../../Assets/Audio/ShipInteractions/BellDoubleSource.mp3>) | Аудио |
+| [Assets/Audio/ShipInteractions/BellRing1.wav](<../../Assets/Audio/ShipInteractions/BellRing1.wav>) | Аудио |
+| [Assets/Audio/ShipInteractions/BellRing2.wav](<../../Assets/Audio/ShipInteractions/BellRing2.wav>) | Аудио |
+| [Assets/Audio/ShipInteractions/BellRing3.wav](<../../Assets/Audio/ShipInteractions/BellRing3.wav>) | Аудио |
+| [Assets/Audio/ShipInteractions/BellSingleSource.mp3](<../../Assets/Audio/ShipInteractions/BellSingleSource.mp3>) | Аудио |
+| [Assets/Audio/ShipInteractions/CandleSource.mp3](<../../Assets/Audio/ShipInteractions/CandleSource.mp3>) | Аудио |
+| [Assets/Audio/ShipInteractions/DiceCup1.wav](<../../Assets/Audio/ShipInteractions/DiceCup1.wav>) | Аудио |
+| [Assets/Audio/ShipInteractions/DiceCup2.wav](<../../Assets/Audio/ShipInteractions/DiceCup2.wav>) | Аудио |
+| [Assets/Audio/ShipInteractions/DiceCup3.wav](<../../Assets/Audio/ShipInteractions/DiceCup3.wav>) | Аудио |
+| [Assets/Audio/ShipInteractions/DiceCupSource.mp3](<../../Assets/Audio/ShipInteractions/DiceCupSource.mp3>) | Аудио |
+| [Assets/Audio/ShipInteractions/DiceImpact1.wav](<../../Assets/Audio/ShipInteractions/DiceImpact1.wav>) | Аудио |
+| [Assets/Audio/ShipInteractions/DiceImpact2.wav](<../../Assets/Audio/ShipInteractions/DiceImpact2.wav>) | Аудио |
+| [Assets/Audio/ShipInteractions/DiceImpact3.wav](<../../Assets/Audio/ShipInteractions/DiceImpact3.wav>) | Аудио |
+| [Assets/Audio/ShipInteractions/DiceSlide1.wav](<../../Assets/Audio/ShipInteractions/DiceSlide1.wav>) | Аудио |
+| [Assets/Audio/ShipInteractions/DiceSlide2.wav](<../../Assets/Audio/ShipInteractions/DiceSlide2.wav>) | Аудио |
+| [Assets/Audio/ShipInteractions/DiceSlide3.wav](<../../Assets/Audio/ShipInteractions/DiceSlide3.wav>) | Аудио |
+| [Assets/Audio/ShipInteractions/DiceTableSource.mp3](<../../Assets/Audio/ShipInteractions/DiceTableSource.mp3>) | Аудио |
+| [Assets/Audio/ShipInteractions/FlameExtinguish.wav](<../../Assets/Audio/ShipInteractions/FlameExtinguish.wav>) | Аудио |
+| [Assets/Audio/ShipInteractions/FlameLight.wav](<../../Assets/Audio/ShipInteractions/FlameLight.wav>) | Аудио |
+| [Assets/Audio/ShipInteractions/SOURCES.md](<../../Assets/Audio/ShipInteractions/SOURCES.md>) | Документация; Движение корабля и палуба, Звуки и голос |
+
 ## Assets/Audio/Underwater
 
 | Файл | Краткое описание |

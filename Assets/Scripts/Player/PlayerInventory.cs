@@ -194,6 +194,8 @@ namespace PirateSlop
             }
             if (HandleSeaLoot()) return;
             if (!motor.InputActive || motor.LocomotionLocked || (motor.IsSwimming || motor.IsClimbing)) return;
+            var shipInteraction = GetComponent<PirateSlop.Ships.ShipV3PlayerInteraction>();
+            if (shipInteraction != null && shipInteraction.ConsumedInput) { InteractionUsed = true; return; }
             var keyboard = Keyboard.current;
             var mouse = Mouse.current;
             if (keyboard == null || mouse == null) return;

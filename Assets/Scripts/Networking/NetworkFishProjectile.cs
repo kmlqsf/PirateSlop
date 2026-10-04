@@ -10,8 +10,10 @@ namespace PirateSlop.Networking
         public const float SwordfishSpeed = 38f;
         public const float PufferSpeed = 14f, PufferFuse = 2.5f, PufferRadius = 3f, PufferBounce = .4f;
         readonly SyncVar<bool> flying = new();
+        readonly SyncVar<bool> stuck = new();
         readonly SyncVar<float> burstProgress = new();
         public bool Flying => flying.Value;
+        public bool Stuck => stuck.Value;
         NetworkFish pickup;
         NetworkPlayer attacker;
         Vector3 velocity;
@@ -75,6 +77,7 @@ namespace PirateSlop.Networking
         public void Launch(NetworkPlayer source, Vector3 direction)
         {
             attacker = source;
+            stuck.Value = false;
             velocity = direction.normalized * (pickup.Item == InventoryItem.Swordfish ? SwordfishSpeed : PufferSpeed);
             var ship = source.GetComponent<ShipDeckPassenger>()?.Ship;
             if (ship != null) velocity += ship.GetComponent<ShipController>().CannonPointVelocity(transform.position);
@@ -120,6 +123,7 @@ namespace PirateSlop.Networking
                     var ship = nearest.collider.GetComponentInParent<NetworkShip>();
                     pickup.Place(ship != null ? ship.NetworkObject : null, nearest.point - velocity.normalized * .65f, Quaternion.LookRotation(velocity));
                     flying.Value = false;
+                    stuck.Value = true;
                     SoundObserversRpc(SoundCue.SwordfishStick, nearest.point, false);
                     return;
                 }

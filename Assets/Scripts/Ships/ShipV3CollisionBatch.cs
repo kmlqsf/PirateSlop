@@ -90,6 +90,15 @@ namespace PirateSlop.Ships
             return batch != null ? batch.Resolve(point) : collider.GetComponentInParent<ShipDamageSection>();
         }
 
+        public bool ContainsSurface(Transform parent, Vector3 point)
+        {
+            Vector3 local = transform.InverseTransformPoint(point);
+            for (int i = 0; i < Sources.Length; i++)
+                if (Sources[i] != null && Visible(i) && Sources[i].transform.IsChildOf(parent) &&
+                    (SourceBounds[i].ClosestPoint(local) - local).sqrMagnitude < .0064f) return true;
+            return false;
+        }
+
         public static Mesh BuildMesh(IReadOnlyList<MeshCollider> sources, Transform anchor, bool includeInactive)
         {
             var vertices = new List<Vector3>();

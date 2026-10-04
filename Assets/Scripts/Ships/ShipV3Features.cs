@@ -23,7 +23,9 @@ namespace PirateSlop.Ships
     public sealed class ShipV3DiceSlot
     {
         public Rigidbody Cup;
+        public Transform CupVisual;
         public Rigidbody[] Dice;
+        public Transform[] DiceVisuals;
         public Vector3[] FaceNormals;
         public int[] FaceValues;
         public Vector3 RestCup;
@@ -109,8 +111,17 @@ namespace PirateSlop.Ships
         ShipV3RenderBudget renderBudget;
         float[] slotHeartbeat, collectionStart, settledFor, rollStart;
         Vector3[][] collectionFrom;
-        Vector2[] cupPosition;
+        Vector2[] cupPosition, smoothCupPosition, cupSmoothVelocity, releaseVelocity, previewCupPosition;
+        Vector3[] renderedCupPosition;
+        Quaternion[] renderedCupRotation;
+        Vector3[][] renderedDicePosition;
+        Quaternion[][] renderedDiceRotation;
+        int[] cupBodyIndices, bodyDiceSlots, bodyDieIndices;
+        int[][] diceBodyIndices;
+        ShipV3PhysicsPose[] bodyPoses;
+        bool[] previewCup;
         Vector2[] lastShake;
+        float[,] nextDiceAudio;
         Quaternion[][] shakenRotation;
         byte[] diceMode;
         float nextPublish, doorHeartbeat, bellHeartbeat, nextRing, dispenserHeartbeat;
@@ -137,6 +148,7 @@ namespace PirateSlop.Ships
             return -1;
         }
         public string DiceResult(int slot) => slot >= 0 && slot < diceResults.Count ? diceResults[slot] : "";
+        public byte DicePhase(int slot) => slot >= 0 && slot < dicePhases.Count ? dicePhases[slot] : (byte)0;
         public string DiceInstructions(int slot)
         {
             byte phase = slot >= 0 && slot < dicePhases.Count ? dicePhases[slot] : (byte)0;
@@ -147,7 +159,7 @@ namespace PirateSlop.Ships
         public string DiceSummary()
         {
             var lines = new List<string>();
-            for (int i = 0; i < diceResults.Count; i++) if (!string.IsNullOrEmpty(diceResults[i])) lines.Add("Стакан " + (i + 1) + ": " + diceResults[i]);
+            for (int i = 0; i < diceResults.Count; i++) lines.Add((i + 1) + ": " + (string.IsNullOrEmpty(diceResults[i]) ? "—" : diceResults[i]));
             return string.Join("\n", lines);
         }
         public bool CanUseDice => DiceTable != null && DiceTable.gameObject.activeInHierarchy && (DiceSupport == null || DiceSupport.activeInHierarchy);
@@ -178,22 +190,37 @@ namespace PirateSlop.Ships
             var player = Sender(sender);
             if (player == null || LocalDiceSlot(sender.ClientId) >= 0 || DiceCandle == null || !CanReachDice(player)) return;
             candleLit.Value = !candleLit.Value;
+            LightSound(DiceCandle.position, candleLit.Value);
         }
 
         public bool CanReachDice(NetworkPlayer player)
         {
             if (!CanUseDice || player == null || player.Motor == null || player.Motor.IsDead || player.Motor.IsSwimming || player.Motor.IsClimbing) return false;
-            Vector3 point = DiceTable.position + transform.up * .12f;
+            int slot = NearestDiceSlot(player.transform.position);
+            if (slot < 0) return false;
+            Vector3 point = transform.TransformPoint(DiceSlots[slot].RestCup) + transform.up * .2f;
             if (Vector3.Distance(player.transform.position + Vector3.up, point) > 3.2f) return false;
+            return CanSeeDice(player, point);
+        }
+
+        public bool CanSeeDice(NetworkPlayer player, Vector3 point)
+        {
             Vector3 origin = player.transform.position + Vector3.up * 1.5f;
             Vector3 delta = point - origin;
             int count = Physics.RaycastNonAlloc(origin, delta.normalized, diceObstacles, Mathf.Max(0f, delta.magnitude - .025f), ~0, QueryTriggerInteraction.Ignore);
-            if (count == diceObstacles.Length) return false;
+            var hits = count == diceObstacles.Length
+                ? Physics.RaycastAll(origin, delta.normalized, Mathf.Max(0f, delta.magnitude - .025f), ~0, QueryTriggerInteraction.Ignore)
+                : diceObstacles;
+            if (hits != diceObstacles) count = hits.Length;
             for (int i = 0; i < count; i++)
             {
-                var hit = diceObstacles[i];
+                var hit = hits[i];
                 if (hit.transform.IsChildOf(player.transform) || hit.transform.IsChildOf(DiceTable.parent) ||
+                    DiceSupport != null && hit.transform.IsChildOf(DiceSupport.transform) ||
                     hit.collider.GetComponentInParent<AdvancedPlayerController>() != null || hit.collider.GetComponentInParent<Cannonball>() != null) continue;
+                var batch = hit.collider.GetComponent<ShipV3CollisionBatch>();
+                if (batch != null && (batch.ContainsSurface(DiceTable.parent, hit.point) ||
+                    DiceSupport != null && batch.ContainsSurface(DiceSupport.transform, hit.point))) continue;
                 return false;
             }
             return true;
@@ -213,16 +240,60 @@ namespace PirateSlop.Ships
             settledFor = new float[DiceSlots.Length];
             rollStart = new float[DiceSlots.Length];
             cupPosition = new Vector2[DiceSlots.Length];
+            smoothCupPosition = new Vector2[DiceSlots.Length];
+            cupSmoothVelocity = new Vector2[DiceSlots.Length];
+            releaseVelocity = new Vector2[DiceSlots.Length];
+            previewCupPosition = new Vector2[DiceSlots.Length];
+            previewCup = new bool[DiceSlots.Length];
+            renderedCupPosition = new Vector3[DiceSlots.Length];
+            renderedCupRotation = new Quaternion[DiceSlots.Length];
+            renderedDicePosition = new Vector3[DiceSlots.Length][];
+            renderedDiceRotation = new Quaternion[DiceSlots.Length][];
+            cupBodyIndices = new int[DiceSlots.Length];
+            diceBodyIndices = new int[DiceSlots.Length][];
+            bodyDiceSlots = new int[PhysicsBodies.Length];
+            bodyDieIndices = new int[PhysicsBodies.Length];
+            bodyPoses = new ShipV3PhysicsPose[PhysicsBodies.Length];
+            for (int i = 0; i < PhysicsBodies.Length; i++)
+            {
+                bodyDiceSlots[i] = bodyDieIndices[i] = -1;
+                if (PhysicsBodies[i] != null) bodyPoses[i] = new ShipV3PhysicsPose { Index = i,
+                    Position = transform.InverseTransformPoint(PhysicsBodies[i].position), Rotation = Quaternion.Inverse(transform.rotation) * PhysicsBodies[i].rotation };
+            }
             lastShake = new Vector2[DiceSlots.Length];
+            nextDiceAudio = new float[DiceSlots.Length, 3];
             shakenRotation = new Quaternion[DiceSlots.Length][];
             diceMode = new byte[DiceSlots.Length];
             restingDice = new Vector3[DiceSlots.Length][];
             restingDiceRotation = new Quaternion[DiceSlots.Length][];
             for (int i = 0; i < DiceSlots.Length; i++)
             {
+                if (DiceSlots[i].CupVisual != null)
+                {
+                    var original = DiceSlots[i].Cup.GetComponent<MeshRenderer>();
+                    original.enabled = false; original.forceRenderingOff = true;
+                }
+                renderedCupPosition[i] = transform.InverseTransformPoint(DiceSlots[i].Cup.position);
+                renderedCupRotation[i] = Quaternion.Inverse(transform.rotation) * DiceSlots[i].Cup.rotation;
                 restingDice[i] = Array.ConvertAll(DiceSlots[i].Dice, die => transform.InverseTransformPoint(die.transform.position));
                 restingDiceRotation[i] = Array.ConvertAll(DiceSlots[i].Dice, die => Quaternion.Inverse(transform.rotation) * die.transform.rotation);
+                renderedDicePosition[i] = (Vector3[])restingDice[i].Clone();
+                renderedDiceRotation[i] = (Quaternion[])restingDiceRotation[i].Clone();
                 shakenRotation[i] = (Quaternion[])restingDiceRotation[i].Clone();
+                cupBodyIndices[i] = Array.IndexOf(PhysicsBodies, DiceSlots[i].Cup);
+                if (cupBodyIndices[i] >= 0) bodyDiceSlots[cupBodyIndices[i]] = i;
+                diceBodyIndices[i] = new int[DiceSlots[i].Dice.Length];
+                for (int die = 0; die < DiceSlots[i].Dice.Length; die++)
+                {
+                    int body = Array.IndexOf(PhysicsBodies, DiceSlots[i].Dice[die]);
+                    diceBodyIndices[i][die] = body;
+                    if (body >= 0) { bodyDiceSlots[body] = i; bodyDieIndices[body] = die; }
+                    if (DiceSlots[i].DiceVisuals != null && die < DiceSlots[i].DiceVisuals.Length && DiceSlots[i].DiceVisuals[die] != null)
+                    {
+                        var original = DiceSlots[i].Dice[die].GetComponent<MeshRenderer>();
+                        original.enabled = false; original.forceRenderingOff = true;
+                    }
+                }
             }
             glassBlock = new MaterialPropertyBlock();
         }
@@ -232,12 +303,16 @@ namespace PirateSlop.Ships
             for (int i = 0; i < DiceSlots.Length; i++) { diceOwners.Add(-1); diceResults.Add(""); dicePhases.Add(0); }
             foreach (var body in PhysicsBodies) if (body != null) body.isKinematic = false;
             foreach (var slot in DiceSlots) if (slot.Cup != null) slot.Cup.isKinematic = true;
-            foreach (var slot in DiceSlots) foreach (var die in slot.Dice) if (die != null) die.isKinematic = true;
+            foreach (var slot in DiceSlots) foreach (var die in slot.Dice) if (die != null) { die.isKinematic = true; die.interpolation = RigidbodyInterpolation.None; }
         }
 
         public override void OnStartClient()
         {
-            if (!IsServerInitialized) foreach (var body in PhysicsBodies) if (body != null) body.isKinematic = true;
+            if (!IsServerInitialized)
+            {
+                foreach (var body in PhysicsBodies) if (body != null) body.isKinematic = true;
+                foreach (var slot in DiceSlots) foreach (var die in slot.Dice) if (die != null) die.interpolation = RigidbodyInterpolation.None;
+            }
             foreach (var player in NetworkPlayer.Active)
                 if (player.IsOwner && !player.IsBot.Value && player.GetComponent<ShipV3PlayerInteraction>() == null)
                     player.gameObject.AddComponent<ShipV3PlayerInteraction>();
@@ -279,7 +354,11 @@ namespace PirateSlop.Ships
             var player = Sender(sender);
             if (index < 0 || index >= Lanterns.Length || !Reach(player, Lanterns[index].Grip)) return;
             lights.Value ^= 1 << index;
+            LightSound(Lanterns[index].Grip.position, (lights.Value & (1 << index)) != 0);
         }
+
+        [ObserversRpc(RunLocally = true)]
+        void LightSound(Vector3 point, bool lit) => GameAudio.Play(lit ? SoundCue.FlameLight : SoundCue.FlameExtinguish, point);
 
         [ServerRpc(RequireOwnership = false)]
         public void DragDoor(float delta, bool holding, NetworkConnection sender = null)
@@ -304,7 +383,7 @@ namespace PirateSlop.Ships
             bellHolder.Value = sender.ClientId; bellHeartbeat = Time.time; bellTeam = player.TeamId.Value;
             if (delta.sqrMagnitude > .01f)
             {
-                bellForce = Vector2.ClampMagnitude(bellForce + Vector2.ClampMagnitude(delta, 100f) * 1.8f, 36f);
+                bellForce = new Vector2(Mathf.Clamp(bellForce.x + Mathf.Clamp(delta.x, -100f, 100f) * 1.8f, -36f, 36f), 0f);
                 lastBellDrag = Time.time;
                 BellClapper.WakeUp();
             }
@@ -314,7 +393,7 @@ namespace PirateSlop.Ships
         {
             if (!IsServerInitialized || speed < .18f || Time.time < nextRing) return;
             if (bellHolder.Value >= 0 && Time.time - lastBellDrag > 1.2f) return;
-            nextRing = Time.time + .28f;
+            nextRing = Time.time + .12f;
             BellSound(point, Mathf.Clamp(speed * .8f, .2f, .85f));
             if (Time.time - bellHeartbeat > 1.2f) return;
             rescueRings.TryGetValue(bellTeam, out int rings);
@@ -369,14 +448,14 @@ namespace PirateSlop.Ships
         }
 
         [ServerRpc(RequireOwnership = false)]
-        public void DiceInput(Vector2 movement, bool holding, bool gather, bool leave, NetworkConnection sender = null)
+        public void DiceInput(Vector2 position, Vector2 velocity, bool holding, bool gather, bool leave, NetworkConnection sender = null)
         {
             if (sender == null) return;
             int index = LocalDiceSlot(sender.ClientId);
             if (index < 0) return;
             var player = Sender(sender);
             if (leave || !CanReachDice(player)) { ReleaseSlot(index); return; }
-            if (!float.IsFinite(movement.sqrMagnitude)) return;
+            if (!float.IsFinite(position.sqrMagnitude) || !float.IsFinite(velocity.sqrMagnitude)) return;
             slotHeartbeat[index] = Time.time;
             byte previousMode = diceMode[index];
             if (gather && (previousMode == 0 || previousMode == 5))
@@ -389,17 +468,22 @@ namespace PirateSlop.Ships
                     collectionFrom[index][i] = transform.InverseTransformPoint(die.position);
                     die.isKinematic = true;
                 }
-                diceResults[index] = "";
                 lastShake[index] = Vector2.zero;
+                releaseVelocity[index] = Vector2.zero;
+                PlayDiceSound(index, SoundCue.DiceCup, DiceSlots[index].Cup.position, .65f);
             }
-            if (holding)
+            if ((holding || previousMode == 3) && diceMode[index] != 4 && diceMode[index] != 6)
             {
-                Vector2 drag = Vector2.ClampMagnitude(movement, .045f);
-                cupPosition[index] = Vector2.ClampMagnitude(cupPosition[index] + drag, .12f);
-                if (diceMode[index] == 2) diceMode[index] = 3;
+                Vector2 next = Vector2.ClampMagnitude(position, .24f);
+                Vector2 drag = next - cupPosition[index];
+                cupPosition[index] = next;
+                releaseVelocity[index] = Vector2.ClampMagnitude(velocity, 2.8f);
+                if (holding && diceMode[index] == 2) diceMode[index] = 3;
                 if (diceMode[index] == 3 && drag.sqrMagnitude > .0000001f)
                 {
                     lastShake[index] = drag;
+                    PlayDiceSound(index, SoundCue.DiceCup, DiceSlots[index].Cup.position, Mathf.Clamp01(drag.magnitude / .035f));
+                    PlayDiceSound(index, SoundCue.DiceImpact, DiceSlots[index].Cup.position, .35f);
                     for (int i = 0; i < shakenRotation[index].Length; i++)
                         shakenRotation[index][i] = Quaternion.Euler(drag.y * 2600f, drag.x * 1900f, (drag.x - drag.y) * (1700f + i * 170f)) * shakenRotation[index][i];
                 }
@@ -410,6 +494,19 @@ namespace PirateSlop.Ships
             }
         }
 
+        public void PlayDiceSound(int index, SoundCue cue, Vector3 point, float volume)
+        {
+            if (!IsServerInitialized || index < 0 || index >= DiceSlots.Length ||
+                cue != SoundCue.DiceSlide && cue != SoundCue.DiceImpact && cue != SoundCue.DiceCup) return;
+            int channel = cue == SoundCue.DiceSlide ? 0 : cue == SoundCue.DiceImpact ? 1 : 2;
+            if (Time.time < nextDiceAudio[index, channel]) return;
+            nextDiceAudio[index, channel] = Time.time + (channel == 0 ? .22f : .14f);
+            DiceSound(cue, point, Mathf.Clamp01(volume));
+        }
+
+        [ObserversRpc(RunLocally = true)]
+        void DiceSound(SoundCue cue, Vector3 point, float volume) => GameAudio.Play(cue, point, volume);
+
         void ReleaseSlot(int index)
         {
             var player = SessionController.Instance.GetPlayer(diceOwners[index]);
@@ -418,6 +515,31 @@ namespace PirateSlop.Ships
             if (diceMode[index] == 4 || diceMode[index] == 6) return;
             foreach (var die in DiceSlots[index].Dice) if (die != null) die.isKinematic = true;
             diceMode[index] = 0;
+            cupPosition[index] = Vector2.zero;
+        }
+
+        public Vector2 DiceCupOffset(int index, Vector2 position)
+        {
+            Vector3 center = transform.InverseTransformPoint(DiceTable.position);
+            Vector3 rest = DiceSlots[index].RestCup - center;
+            return ConstrainSector(index, new Vector2(rest.x, rest.z) + DiceDragVelocity(index, position), .105f);
+        }
+
+        public Vector2 DiceDragVelocity(int index, Vector2 movement)
+        {
+            Vector2 axis = SectorDirection(index);
+            return new Vector2(-axis.y, axis.x) * movement.x - axis * movement.y;
+        }
+
+        public void PreviewDiceCup(int index, Vector2 position)
+        {
+            previewCup[index] = true;
+            previewCupPosition[index] = position;
+        }
+
+        public void EndDicePreview(int index)
+        {
+            if (index >= 0 && index < previewCup.Length) previewCup[index] = false;
         }
 
         Vector2 SectorDirection(int index)
@@ -451,8 +573,10 @@ namespace PirateSlop.Ships
             Vector3 center = transform.InverseTransformPoint(DiceTable.position);
             var offset = new Vector2(local.x - center.x, local.z - center.z);
             Vector2 edge = ConstrainSector(index, offset, .055f);
+            bool corrected = false;
             if ((edge - offset).sqrMagnitude > .000001f)
             {
+                corrected = true;
                 local.x = center.x + edge.x; local.z = center.z + edge.y;
                 Vector2 outward = (offset - edge).normalized;
                 Vector3 normal = transform.TransformDirection(new Vector3(outward.x, 0, outward.y));
@@ -461,11 +585,14 @@ namespace PirateSlop.Ships
             }
             if (local.y < center.y - .04f || local.y > center.y + .75f)
             {
+                corrected = true;
                 local.y = Mathf.Clamp(local.y, center.y + .03f, center.y + .6f);
                 die.linearVelocity = ship.Motor.CannonPointVelocity(transform.TransformPoint(local));
             }
-            die.position = transform.TransformPoint(local);
+            if (corrected) die.position = transform.TransformPoint(local);
         }
+
+        static Vector3 DiceInsideCup(ShipV3DiceSlot slot, int die) => new((die % 2 - .5f) * .043f, slot.CupHeight - .04f - die / 2 * .044f, 0);
 
         void FreezeDice(int index)
         {
@@ -502,7 +629,7 @@ namespace PirateSlop.Ships
             }
             if (bellHolder.Value >= 0 && BellClapper != null)
             {
-                Quaternion desired = Quaternion.AngleAxis(-bellForce.y, transform.right) * Quaternion.AngleAxis(-bellForce.x, transform.forward)
+                Quaternion desired = Quaternion.AngleAxis(-bellForce.x, transform.forward)
                     * BellClapper.transform.parent.rotation * clapperRest;
                 Quaternion error = desired * Quaternion.Inverse(BellClapper.rotation);
                 error.ToAngleAxis(out float angle, out Vector3 axis);
@@ -516,21 +643,30 @@ namespace PirateSlop.Ships
                 bool owned = diceOwners[index] >= 0;
                 byte phase = diceMode[index];
                 Vector2 axis = SectorDirection(index);
-                Vector2 side = new Vector2(axis.y, -axis.x);
-                Vector2 drag = owned ? cupPosition[index] : Vector2.zero;
-                Vector2 plane = side * drag.x - axis * drag.y;
+                Vector2 target = owned || phase == 4 || phase == 6 ? cupPosition[index] : Vector2.zero;
+                if (phase == 4) target *= 1f - Mathf.Clamp01((Time.time - rollStart[index] - .16f) / .4f);
+                smoothCupPosition[index] = Vector2.SmoothDamp(smoothCupPosition[index], target, ref cupSmoothVelocity[index], .045f, Mathf.Infinity, Time.fixedDeltaTime);
                 Vector3 center = transform.InverseTransformPoint(DiceTable.position);
-                Vector2 offset = ConstrainSector(index, new Vector2(slot.RestCup.x - center.x, slot.RestCup.z - center.z) + plane, .105f);
-                float opening = phase == 6 ? Mathf.Clamp01((Time.time - rollStart[index]) / .28f) : 0f;
+                Vector2 offset = DiceCupOffset(index, smoothCupPosition[index]);
+                Vector3 throwVelocity = transform.TransformDirection(new Vector3(releaseVelocity[index].x, 0, releaseVelocity[index].y));
+                Vector3 inward = -transform.TransformDirection(new Vector3(axis.x, 0, axis.y));
+                Vector3 releaseDirection = throwVelocity.sqrMagnitude > .0025f ? throwVelocity.normalized : inward;
+                float openingDuration = Mathf.Lerp(.16f, .085f, Mathf.Clamp01(throwVelocity.magnitude / 2f));
+                float opening = phase == 6 ? Mathf.SmoothStep(0, 1, Mathf.Clamp01((Time.time - rollStart[index]) / openingDuration)) : 0f;
                 float collect = phase == 1 ? Mathf.Clamp01((Time.time - collectionStart[index]) / .7f) : 1f;
                 float tip = phase == 2 || phase == 3 ? 180f : phase == 1 ? Mathf.SmoothStep(0, 180f, Mathf.Clamp01((collect - .7f) / .3f)) :
-                    phase == 6 ? Mathf.Lerp(180f, 163f, opening) : phase == 4 ? Mathf.Lerp(163f, 0, Mathf.Clamp01((Time.time - rollStart[index] - .5f) / .4f)) : 0f;
+                    phase == 6 || phase == 4 ? 180f : 0f;
                 float lift = phase == 2 || phase == 3 ? slot.CupHeight + .006f : phase == 1 ? slot.CupHeight * Mathf.Sin(tip * Mathf.Deg2Rad * .5f) :
-                    phase == 6 ? slot.CupHeight + .006f + opening * .065f : phase == 4 ? slot.CupHeight * Mathf.Sin(tip * Mathf.Deg2Rad * .5f) + .065f * Mathf.Clamp01(tip / 163f) : 0f;
+                    phase == 6 ? slot.CupHeight + .006f + opening * .035f : phase == 4 ? (slot.CupHeight + .041f) * (1f - Mathf.Clamp01((Time.time - rollStart[index] - openingDuration) / .4f)) : 0f;
                 Vector3 desired = transform.TransformPoint(new Vector3(center.x + offset.x, slot.RestCup.y + lift, center.z + offset.y));
                 slot.Cup.MovePosition(desired);
-                Vector3 inward = -transform.TransformDirection(new Vector3(axis.x, 0, axis.y));
                 Quaternion cupRotation = Quaternion.AngleAxis(tip, Vector3.Cross(transform.up, inward)) * transform.rotation * slot.RestRotation;
+                float releaseTilt = 10f + Mathf.Clamp01(throwVelocity.magnitude / 2f) * 16f;
+                if (phase == 6 || phase == 4)
+                {
+                    cupRotation = Quaternion.AngleAxis(-releaseTilt * (phase == 6 ? opening : 1f), Vector3.Cross(transform.up, releaseDirection)) * cupRotation;
+                    if (phase == 4) cupRotation = Quaternion.Slerp(cupRotation, transform.rotation * slot.RestRotation, Mathf.Clamp01((Time.time - rollStart[index] - openingDuration) / .4f));
+                }
                 slot.Cup.MoveRotation(cupRotation);
                 if (!owned && phase != 4 && phase != 6 || phase == 0 || phase == 5)
                 {
@@ -545,7 +681,7 @@ namespace PirateSlop.Ships
                     float gather = Mathf.Clamp01(collect / .7f);
                     for (int i = 0; i < slot.Dice.Length; i++)
                     {
-                        Vector3 inside = new Vector3((i % 2 - .5f) * .043f, .035f + i / 2 * .033f, 0);
+                        Vector3 inside = DiceInsideCup(slot, i);
                         Vector3 destination = desired + cupRotation * inside;
                         slot.Dice[i].MovePosition(Vector3.Lerp(transform.TransformPoint(collectionFrom[index][i]), destination, gather) + transform.up * (.25f * 4 * gather * (1 - gather)));
                     }
@@ -555,22 +691,25 @@ namespace PirateSlop.Ships
                 {
                     for (int i = 0; i < slot.Dice.Length; i++)
                     {
-                        Vector3 inside = new Vector3((i % 2 - .5f) * .043f, slot.CupHeight - .04f - i / 2 * .031f, 0);
+                        Vector3 inside = DiceInsideCup(slot, i);
                         slot.Dice[i].MovePosition(desired + cupRotation * inside);
                         slot.Dice[i].MoveRotation(transform.rotation * shakenRotation[index][i]);
                     }
                     if (phase == 6 && opening >= 1f)
                     {
                         Vector3 mouth = desired + cupRotation * Vector3.up * slot.CupHeight;
-                        Vector3 lateral = Vector3.Cross(transform.up, inward);
-                        float force = .45f + Mathf.Clamp01(lastShake[index].magnitude / .035f) * 1.1f;
+                        Vector3 launchPoint = transform.InverseTransformPoint(mouth);
+                        Vector2 launchOffset = ConstrainSector(index, new Vector2(launchPoint.x - center.x, launchPoint.z - center.z), .145f);
+                        launchPoint.x = center.x + launchOffset.x; launchPoint.z = center.z + launchOffset.y;
+                        mouth = transform.TransformPoint(launchPoint);
+                        Vector3 lateral = Vector3.Cross(transform.up, releaseDirection);
                         for (int i = 0; i < slot.Dice.Length; i++)
                         {
                             var die = slot.Dice[i];
                             die.isKinematic = false;
-                            die.position = mouth + inward * (.07f + i / 2 * .025f) + lateral * ((i % 2 - .5f) * .045f);
-                            die.linearVelocity = ship.Motor.CannonPointVelocity(die.position) + inward * force + transform.up * .12f;
-                            die.angularVelocity = transform.TransformDirection(new Vector3(lastShake[index].y, lastShake[index].x, lastShake[index].x - lastShake[index].y)) * (320f + i * 35f);
+                            die.position = mouth + transform.up * .029f + releaseDirection * (.02f + (i / 2 - 1) * .056f) + lateral * ((i % 2 - .5f) * .056f);
+                            die.linearVelocity = ship.Motor.CannonPointVelocity(die.position) + throwVelocity - transform.up * .08f;
+                            die.angularVelocity = ship.Motor.MotionAngularVelocity + Vector3.Cross(transform.up, throwVelocity) * (12f + i * 1.1f);
                             KeepDiceOnTable(index, die);
                             die.WakeUp();
                         }
@@ -588,7 +727,6 @@ namespace PirateSlop.Ships
                     settledFor[index] = settled ? settledFor[index] + Time.fixedDeltaTime : 0f;
                     if (settledFor[index] > .5f || Time.time - rollStart[index] > 6f)
                     {
-                        var values = new List<string>();
                         int total = 0;
                         foreach (var die in slot.Dice)
                         {
@@ -598,11 +736,10 @@ namespace PirateSlop.Ships
                                 float score = Vector3.Dot(die.transform.TransformDirection(slot.FaceNormals[face]), transform.up);
                                 if (score > dot) { dot = score; best = face; }
                             }
-                            values.Add(slot.FaceValues[best].ToString());
                             total += slot.FaceValues[best];
                             die.rotation = Quaternion.FromToRotation(die.transform.TransformDirection(slot.FaceNormals[best]), transform.up) * die.rotation;
                         }
-                        diceResults[index] = string.Join(" · ", values) + " — сумма: " + total; FreezeDice(index); diceMode[index] = 5;
+                        diceResults[index] = total.ToString(); FreezeDice(index); diceMode[index] = 5; cupPosition[index] = Vector2.zero;
                     }
                 }
                 if (dicePhases[index] != diceMode[index]) dicePhases[index] = diceMode[index];
@@ -676,7 +813,18 @@ namespace PirateSlop.Ships
                         Velocity = projectile != null ? projectile.GetComponent<Rigidbody>().linearVelocity : Vector3.zero });
                 }
                 for (int i = 0; i < PhysicsBodies.Length; i++)
-                    if (PhysicsBodies[i] != null) frame.Add(new ShipV3PhysicsPose { Index = i, Position = transform.InverseTransformPoint(PhysicsBodies[i].position), Rotation = Quaternion.Inverse(transform.rotation) * PhysicsBodies[i].rotation });
+                {
+                    if (PhysicsBodies[i] == null) continue;
+                    var pose = new ShipV3PhysicsPose { Index = i, Position = transform.InverseTransformPoint(PhysicsBodies[i].position), Rotation = Quaternion.Inverse(transform.rotation) * PhysicsBodies[i].rotation };
+                    int slot = bodyDiceSlots[i], die = bodyDieIndices[i];
+                    if (slot >= 0)
+                    {
+                        pose.Phase = diceMode[slot];
+                        if ((pose.Phase == 0 || pose.Phase == 5) && die >= 0)
+                        { pose.Position = restingDice[slot][die]; pose.Rotation = restingDiceRotation[slot][die]; }
+                    }
+                    frame.Add(pose);
+                }
                 for (int i = 0; i < Attachments.Length; i++)
                     if (Attachments[i].Detached && Attachments[i].Object != null)
                         frame.Add(new ShipV3PhysicsPose { Index = PhysicsBodies.Length + i, Position = transform.InverseTransformPoint(Attachments[i].Object.position), Rotation = Quaternion.Inverse(transform.rotation) * Attachments[i].Object.rotation });
@@ -739,11 +887,14 @@ namespace PirateSlop.Ships
         {
             if (IsServerInitialized || revision < remoteRevision) return;
             remoteRevision = revision; remotePoses = poses;
+            foreach (var pose in poses)
+                if (pose.Index >= 0 && pose.Index < bodyPoses.Length) bodyPoses[pose.Index] = pose;
         }
 
         void LateUpdate()
         {
-            if (IsServerInitialized || remotePoses == null) return;
+            if (!IsSpawned) return;
+            if (IsServerInitialized || remotePoses == null) { RenderDiceCups(); return; }
             float blend = 1f - Mathf.Exp(-30f * Time.deltaTime);
             foreach (var pose in remotePoses)
             {
@@ -764,7 +915,56 @@ namespace PirateSlop.Ships
                 if (target == null) continue;
                 target.SetPositionAndRotation(Vector3.Lerp(target.position, transform.TransformPoint(pose.Position), blend), Quaternion.Slerp(target.rotation, transform.rotation * pose.Rotation, blend));
             }
+            RenderDiceCups();
         }
+
+        void RenderDiceCups()
+        {
+            float blend = 1f - Mathf.Exp(-35f * Time.deltaTime);
+            Vector3 center = transform.InverseTransformPoint(DiceTable.position);
+            for (int i = 0; i < DiceSlots.Length; i++)
+            {
+                var slot = DiceSlots[i];
+                if (slot.Cup == null || slot.CupVisual == null || !slot.Cup.gameObject.activeInHierarchy) continue;
+                var cupPose = DiceBodyPose(cupBodyIndices[i], slot.Cup);
+                int phase = IsServerInitialized ? diceMode[i] : cupPose.Phase;
+                bool resting = phase == 0 || phase == 5;
+                Vector3 point = resting ? slot.RestCup : cupPose.Position;
+                Quaternion rotation = resting ? slot.RestRotation : cupPose.Rotation;
+                if (previewCup[i] && phase != 4 && phase != 5)
+                {
+                    Vector2 offset = DiceCupOffset(i, previewCupPosition[i]);
+                    point.x = center.x + offset.x; point.z = center.z + offset.y;
+                }
+                renderedCupPosition[i] = Vector3.Lerp(renderedCupPosition[i], point, blend);
+                renderedCupRotation[i] = Quaternion.Slerp(renderedCupRotation[i], rotation, blend);
+                slot.CupVisual.SetPositionAndRotation(transform.TransformPoint(renderedCupPosition[i]), transform.rotation * renderedCupRotation[i]);
+                for (int die = 0; die < slot.Dice.Length; die++)
+                {
+                    if (slot.DiceVisuals == null || die >= slot.DiceVisuals.Length || slot.DiceVisuals[die] == null || !slot.Dice[die].gameObject.activeInHierarchy) continue;
+                    var pose = DiceBodyPose(diceBodyIndices[i][die], slot.Dice[die]);
+                    if (phase == 2 || phase == 3 || phase == 6)
+                    {
+                        renderedDicePosition[i][die] = renderedCupPosition[i] + renderedCupRotation[i] * DiceInsideCup(slot, die);
+                        renderedDiceRotation[i][die] = renderedCupRotation[i] * Quaternion.Inverse(cupPose.Rotation) * pose.Rotation;
+                    }
+                    else if (resting)
+                    {
+                        renderedDicePosition[i][die] = IsServerInitialized ? restingDice[i][die] : pose.Position;
+                        renderedDiceRotation[i][die] = IsServerInitialized ? restingDiceRotation[i][die] : pose.Rotation;
+                    }
+                    else
+                    {
+                        renderedDicePosition[i][die] = Vector3.Lerp(renderedDicePosition[i][die], pose.Position, blend);
+                        renderedDiceRotation[i][die] = Quaternion.Slerp(renderedDiceRotation[i][die], pose.Rotation, blend);
+                    }
+                    slot.DiceVisuals[die].SetPositionAndRotation(transform.TransformPoint(renderedDicePosition[i][die]), transform.rotation * renderedDiceRotation[i][die]);
+                }
+            }
+        }
+
+        ShipV3PhysicsPose DiceBodyPose(int index, Rigidbody body) => !IsServerInitialized && index >= 0 ? bodyPoses[index] : new ShipV3PhysicsPose
+        { Position = transform.InverseTransformPoint(body.position), Rotation = Quaternion.Inverse(transform.rotation) * body.rotation };
 
         public override void OnStopServer()
         {

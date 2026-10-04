@@ -7,12 +7,14 @@ namespace PirateSlop
     public sealed class FirstPersonModelVisibility : MonoBehaviour
     {
         [SerializeField] Camera ownerCamera;
+        Camera alternateCamera;
         Renderer[] renderers;
         ShadowCastingMode[] savedModes;
         bool hidden;
         bool firstPerson = true;
         public void SetFirstPerson(bool value) { Restore(); firstPerson = value; }
         public void Configure(Camera camera) => ownerCamera = camera;
+        public void SetAlternateCamera(Camera camera) { Restore(); alternateCamera = camera; }
         void OnEnable()
         {
             renderers = GetComponentsInChildren<Renderer>(true);
@@ -23,7 +25,7 @@ namespace PirateSlop
         void BeforeCamera(ScriptableRenderContext context, Camera camera)
         {
             Restore();
-            if (camera != ownerCamera || !firstPerson || renderers == null) return;
+            if (renderers == null || !(camera == ownerCamera && firstPerson || alternateCamera != null && camera == alternateCamera)) return;
             for (int i = 0; i < renderers.Length; i++)
             {
                 if (renderers[i] == null) continue;

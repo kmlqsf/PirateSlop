@@ -41,6 +41,7 @@ namespace PirateSlop.Editor
                     importer.importCameras = false;
                     importer.importLights = false;
                     importer.addCollider = false;
+                    importer.isReadable = true;
                     importer.meshCompression = ModelImporterMeshCompression.Off;
                     importer.SaveAndReimport();
                     var model = AssetDatabase.LoadAssetAtPath<GameObject>(path);
