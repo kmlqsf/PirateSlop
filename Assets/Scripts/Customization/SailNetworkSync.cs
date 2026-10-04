@@ -14,6 +14,7 @@ namespace PirateSlop.Customization
 
         SailCustomizer customizer;
         string serverCachedConfigJson = "";
+        int customizationClientId = -1;
         readonly Dictionary<int, byte[]> serverCachedImages = new Dictionary<int, byte[]>();
         readonly Dictionary<string, byte[]> serverCachedImagesByHash = new Dictionary<string, byte[]>();
 
@@ -43,24 +44,24 @@ namespace PirateSlop.Customization
 
         IEnumerator CheckInitialApplyRoutine()
         {
-            yield return new WaitForSeconds(0.2f);
-
             var netShip = GetComponent<PirateSlop.Networking.NetworkShip>();
-            bool isOurShip = false;
-
-            if (netShip != null)
+            PirateSlop.Networking.NetworkPlayer localPlayer = null;
+            float timeout = Time.unscaledTime + 10f;
+            while (localPlayer == null && Time.unscaledTime < timeout)
             {
                 foreach (var p in PirateSlop.Networking.NetworkPlayer.Active)
                 {
-                    if (p != null && p.IsOwner && p.TeamId.Value == netShip.TeamId.Value)
+                    if (p != null && p.IsOwner && !p.IsBot.Value)
                     {
-                        isOurShip = true;
+                        localPlayer = p;
                         break;
                     }
                 }
+                if (localPlayer == null) yield return null;
             }
-
-            if (isOurShip || IsServerInitialized)
+            if (!IsClientInitialized) yield break;
+            RequestShipCustomizationServerRpc();
+            if (netShip != null && localPlayer != null && localPlayer.TeamId.Value == netShip.TeamId.Value)
             {
                 if (SailCustomizationStorage.Load(out var savedData, out var savedTextures))
                 {
@@ -70,18 +71,13 @@ namespace PirateSlop.Customization
                     }
                 }
             }
-            else if (IsClientInitialized && !IsServerInitialized)
-            {
-                RequestShipCustomizationServerRpc();
-            }
         }
 
         public void UploadCustomization(ShipCustomizationData data, Texture2D[,] textures)
         {
             if (!IsClientInitialized && !IsServerInitialized) return;
 
-            string json = JsonUtility.ToJson(data);
-            UploadSailConfigServerRpc(json);
+            data.EnsureCapacity();
 
             for (int p = 0; p < SailCustomizer.TotalParts; p++)
             {
@@ -95,11 +91,31 @@ namespace PirateSlop.Customization
                             string hash = SailImageLoader.ComputeHash(bytes);
                             data.sails[p].SetImageHash(l, hash);
                             SailImageLoader.CacheTexture(hash, bytes, textures[p, l]);
-                            StartCoroutine(UploadImageRoutine(p, l, hash, bytes));
                         }
                     }
                 }
             }
+            UploadSailConfigServerRpc(JsonUtility.ToJson(data));
+            for (int p = 0; p < SailCustomizer.TotalParts; p++)
+                for (int l = 0; l < SailCustomizer.TotalLayers; l++)
+                    if (data.sails[p].GetHasDecal(l) && SailImageLoader.TryGetBytesFromCache(data.sails[p].GetImageHash(l), out var bytes))
+                        StartCoroutine(UploadImageRoutine(p, l, data.sails[p].GetImageHash(l), bytes));
+        }
+
+        bool CanCustomize(NetworkConnection sender)
+        {
+            if (sender == null) return false;
+            if (customizationClientId >= 0 && customizationClientId != sender.ClientId) return false;
+            var ship = GetComponent<PirateSlop.Networking.NetworkShip>();
+            foreach (var player in PirateSlop.Networking.NetworkPlayer.Active)
+                if (player != null && !player.IsBot.Value && player.Owner == sender && ship != null && player.TeamId.Value == ship.TeamId.Value)
+                {
+                    foreach (var teammate in PirateSlop.Networking.NetworkPlayer.Active)
+                        if (teammate != null && !teammate.IsBot.Value && teammate.TeamId.Value == player.TeamId.Value && teammate.ParticipantId.Value < player.ParticipantId.Value)
+                            return false;
+                    return true;
+                }
+            return false;
         }
 
         static int PackSlot(int partIndex, int layerIndex) => (partIndex << 2) | (layerIndex & 3);
@@ -131,6 +147,11 @@ namespace PirateSlop.Customization
 
         [ServerRpc(RequireOwnership = false)]
         public void RequestShipCustomizationServerRpc(NetworkConnection sender = null)
+        {
+            SendCustomization(sender);
+        }
+
+        void SendCustomization(NetworkConnection sender)
         {
             if (sender == null) return;
 
@@ -174,8 +195,22 @@ namespace PirateSlop.Customization
         [ServerRpc(RequireOwnership = false)]
         void UploadSailConfigServerRpc(string configJson, NetworkConnection sender = null)
         {
-            serverCachedConfigJson = configJson;
-            SyncSailConfigObserversRpc(configJson);
+            if (!CanCustomize(sender))
+            {
+                if (sender != null) SendCustomization(sender);
+                return;
+            }
+            ShipCustomizationData data;
+            try { data = JsonUtility.FromJson<ShipCustomizationData>(configJson); }
+            catch { return; }
+            if (data == null) return;
+            data.EnsureCapacity();
+            customizationClientId = sender.ClientId;
+            serverCachedConfigJson = JsonUtility.ToJson(data);
+            serverCachedImages.Clear();
+            serverAssemblyBuffers.Clear();
+            ApplyParsedConfig(serverCachedConfigJson);
+            SyncSailConfigObserversRpc(serverCachedConfigJson);
         }
 
         [ObserversRpc(RunLocally = true)]
@@ -208,6 +243,7 @@ namespace PirateSlop.Customization
                         {
                             textures[p, l] = tex;
                         }
+                        else textures[p, l] = null;
                     }
                 }
 
@@ -218,6 +254,7 @@ namespace PirateSlop.Customization
         [ServerRpc(RequireOwnership = false)]
         void StartImageUploadServerRpc(int slot, string hash, int totalBytes, int chunkCount, NetworkConnection sender = null)
         {
+            if (!CanCustomize(sender) || !ValidSlot(slot) || totalBytes <= 0 || totalBytes > 1048576 || chunkCount != Mathf.CeilToInt((float)totalBytes / ChunkSize)) return;
             serverAssemblyBuffers[slot] = new ChunkAssemblyBuffer
             {
                 TotalBytes = totalBytes,
@@ -233,8 +270,10 @@ namespace PirateSlop.Customization
         [ServerRpc(RequireOwnership = false)]
         void UploadImageChunkServerRpc(int slot, int chunkIndex, byte[] chunkData, NetworkConnection sender = null)
         {
+            if (!CanCustomize(sender) || chunkData == null || chunkData.Length > ChunkSize) return;
             if (!serverAssemblyBuffers.TryGetValue(slot, out var buf)) return;
             if (chunkIndex < 0 || chunkIndex >= buf.ChunkCount) return;
+            if (chunkData.Length != Mathf.Min(ChunkSize, buf.TotalBytes - chunkIndex * ChunkSize)) return;
 
             if (buf.Chunks[chunkIndex] == null)
             {
@@ -248,6 +287,7 @@ namespace PirateSlop.Customization
             {
                 byte[] full = ReassembleBuffer(buf);
                 serverCachedImages[slot] = full;
+                ApplyImage(slot, buf.Hash, full);
                 if (!string.IsNullOrEmpty(buf.Hash))
                 {
                     serverCachedImagesByHash[buf.Hash] = full;
@@ -270,6 +310,7 @@ namespace PirateSlop.Customization
 
         void HandleStartDownload(int slot, string hash, int totalBytes, int chunkCount)
         {
+            if (!ValidSlot(slot)) return;
             if (!string.IsNullOrEmpty(hash) && SailImageLoader.TryGetFromCache(hash, out var cachedTex) && customizer != null)
             {
                 UnpackSlot(slot, out int p, out int l);
@@ -316,19 +357,29 @@ namespace PirateSlop.Customization
             if (buf.ReceivedCount >= buf.ChunkCount)
             {
                 byte[] fullBytes = ReassembleBuffer(buf);
-                var tex = new Texture2D(2, 2, TextureFormat.RGBA32, false);
-                if (tex.LoadImage(fullBytes) && customizer != null)
-                {
-                    tex.wrapMode = TextureWrapMode.Clamp;
-                    UnpackSlot(slot, out int p, out int l);
-                    customizer.CurrentTextures[p, l] = tex;
-                    customizer.CurrentData.sails[p].SetHasDecal(l, true);
-                    customizer.CurrentData.sails[p].SetImageHash(l, buf.Hash);
-                    SailImageLoader.CacheTexture(buf.Hash, fullBytes, tex);
-                    customizer.UpdateVisuals();
-                }
+                ApplyImage(slot, buf.Hash, fullBytes);
                 clientAssemblyBuffers.Remove(slot);
             }
+        }
+
+        static bool ValidSlot(int slot)
+        {
+            UnpackSlot(slot, out int p, out int l);
+            return p >= 0 && p < SailCustomizer.TotalParts && l < SailCustomizer.TotalLayers;
+        }
+
+        void ApplyImage(int slot, string hash, byte[] bytes)
+        {
+            if (!ValidSlot(slot) || customizer == null) return;
+            var tex = new Texture2D(2, 2, TextureFormat.RGBA32, false);
+            if (!tex.LoadImage(bytes)) { Destroy(tex); return; }
+            tex.wrapMode = TextureWrapMode.Clamp;
+            UnpackSlot(slot, out int p, out int l);
+            customizer.CurrentTextures[p, l] = tex;
+            customizer.CurrentData.sails[p].SetHasDecal(l, true);
+            customizer.CurrentData.sails[p].SetImageHash(l, hash);
+            SailImageLoader.CacheTexture(hash, bytes, tex);
+            customizer.UpdateVisuals();
         }
 
         byte[] ReassembleBuffer(ChunkAssemblyBuffer buf)

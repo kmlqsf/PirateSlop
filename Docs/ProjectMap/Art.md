@@ -26,6 +26,29 @@
 | [Art/Blender/PirateWeapons.blend](<../../Art/Blender/PirateWeapons.blend>) | Редактируемая сцена Blender |
 | [Art/Blender/ShipCannon.blend](<../../Art/Blender/ShipCannon.blend>) | Редактируемая сцена Blender |
 
+## Art/Blender/Barricade
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/Barricade/Barricade.blend](<../../Art/Blender/Barricade/Barricade.blend>) | Редактируемая сцена Blender; Модели и Blender |
+| [Art/Blender/Barricade/PrepareBarricade.py](<../../Art/Blender/Barricade/PrepareBarricade.py>) | Инструмент Python; Модели и Blender |
+
+## Art/Blender/Barricade/Source
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/Barricade/Source/tripo_convert_b15e68d3-b748-4ef3-8a7f-3a6d42427a7f.fbx](<../../Art/Blender/Barricade/Source/tripo_convert_b15e68d3-b748-4ef3-8a7f-3a6d42427a7f.fbx>) | Модель / анимации FBX |
+
+## Art/Blender/Barricade/Source/tripo_convert_b15e68d3-b748-4ef3-8a7f-3a6d42427a7f.fbm
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/Barricade/Source/tripo_convert_b15e68d3-b748-4ef3-8a7f-3a6d42427a7f.fbm/Баррикада_basecolor.JPEG](<../../Art/Blender/Barricade/Source/tripo_convert_b15e68d3-b748-4ef3-8a7f-3a6d42427a7f.fbm/Баррикада_basecolor.JPEG>) | Изображение / текстура |
+| [Art/Blender/Barricade/Source/tripo_convert_b15e68d3-b748-4ef3-8a7f-3a6d42427a7f.fbm/Баррикада_metallic.JPEG](<../../Art/Blender/Barricade/Source/tripo_convert_b15e68d3-b748-4ef3-8a7f-3a6d42427a7f.fbm/Баррикада_metallic.JPEG>) | Изображение / текстура |
+| [Art/Blender/Barricade/Source/tripo_convert_b15e68d3-b748-4ef3-8a7f-3a6d42427a7f.fbm/Баррикада_normal.PNG](<../../Art/Blender/Barricade/Source/tripo_convert_b15e68d3-b748-4ef3-8a7f-3a6d42427a7f.fbm/Баррикада_normal.PNG>) | Изображение / текстура |
+| [Art/Blender/Barricade/Source/tripo_convert_b15e68d3-b748-4ef3-8a7f-3a6d42427a7f.fbm/Баррикада_rm.JPEG](<../../Art/Blender/Barricade/Source/tripo_convert_b15e68d3-b748-4ef3-8a7f-3a6d42427a7f.fbm/Баррикада_rm.JPEG>) | Изображение / текстура |
+| [Art/Blender/Barricade/Source/tripo_convert_b15e68d3-b748-4ef3-8a7f-3a6d42427a7f.fbm/Баррикада_roughness.JPEG](<../../Art/Blender/Barricade/Source/tripo_convert_b15e68d3-b748-4ef3-8a7f-3a6d42427a7f.fbm/Баррикада_roughness.JPEG>) | Изображение / текстура |
+
 ## Art/Blender/BoardingNet
 
 | Файл | Краткое описание |
@@ -394,7 +417,6 @@
 
 | Файл | Краткое описание |
 | --- | --- |
-| [Art/Blender/LootReplacement/BoardingEquipment/BlenderImportReport.json](<../../Art/Blender/LootReplacement/BoardingEquipment/BlenderImportReport.json>) | Конфигурация / данные JSON |
 | [Art/Blender/LootReplacement/BoardingEquipment/BoardingEquipment.blend](<../../Art/Blender/LootReplacement/BoardingEquipment/BoardingEquipment.blend>) | Редактируемая сцена Blender; Модели и Blender |
 | [Art/Blender/LootReplacement/BoardingEquipment/ImportManifest.json](<../../Art/Blender/LootReplacement/BoardingEquipment/ImportManifest.json>) | Конфигурация / данные JSON |
 | [Art/Blender/LootReplacement/BoardingEquipment/README.md](<../../Art/Blender/LootReplacement/BoardingEquipment/README.md>) | Документация; Модели и Blender |
@@ -531,7 +553,6 @@
 | Файл | Краткое описание |
 | --- | --- |
 | [Art/Blender/PirateEquipment/PirateEquipment.blend](<../../Art/Blender/PirateEquipment/PirateEquipment.blend>) | Редактируемая сцена Blender |
-| [Art/Blender/PirateEquipment/mesh_stats.json](<../../Art/Blender/PirateEquipment/mesh_stats.json>) | Конфигурация / данные JSON |
 
 ## Art/Blender/PirateEquipment/Previews
 
@@ -646,6 +667,14 @@
 | Файл | Краткое описание |
 | --- | --- |
 | [Art/Blender/Ships/MainShip/MainShip.blend](<../../Art/Blender/Ships/MainShip/MainShip.blend>) | Редактируемая сцена Blender |
+
+## Art/Blender/Ships/ShipNameplate
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/Ships/ShipNameplate/ShipNameplate.blend](<../../Art/Blender/Ships/ShipNameplate/ShipNameplate.blend>) | Редактируемая сцена Blender; Модели и Blender |
+| [Art/Blender/Ships/ShipNameplate/ShipNameplatePreview.png](<../../Art/Blender/Ships/ShipNameplate/ShipNameplatePreview.png>) | Изображение / текстура; Модели и Blender |
+| [Art/Blender/Ships/ShipNameplate/create_ship_nameplate.py](<../../Art/Blender/Ships/ShipNameplate/create_ship_nameplate.py>) | Инструмент Python; Модели и Blender |
 
 ## Art/Blender/Ships/ShipV3
 

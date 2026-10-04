@@ -49,7 +49,7 @@ namespace PirateSlop.Networking
         }
         public bool CanAddItem(InventoryItem item)
         {
-            if (!IsServerInitialized || item < InventoryItem.Fish || item > InventoryItem.FogBottle) return false;
+            if (!IsServerInitialized || item < InventoryItem.Fish || item > InventoryItem.Barricade) return false;
             if (item == InventoryItem.Plank) return false;
             if (CannonAmmo.IsBall(item))
                 return ballCounts[PlayerInventory.AmmoSlot] < PlayerInventory.AmmoCapacity && (ballCounts[PlayerInventory.AmmoSlot] == 0 || ballItems[PlayerInventory.AmmoSlot] == item);

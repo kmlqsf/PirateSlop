@@ -17,12 +17,9 @@
 | Файл | Краткое описание |
 | --- | --- |
 | [Assets/Mirza/AERO - Volumetric Fog and Mist/Materials/Camera Blur (Custom Render Texture).mat](<../../Assets/Mirza/AERO - Volumetric Fog and Mist/Materials/Camera Blur (Custom Render Texture).mat>) | Материал Unity |
-| [Assets/Mirza/AERO - Volumetric Fog and Mist/Materials/Depth Blur (Fullscreen).mat](<../../Assets/Mirza/AERO - Volumetric Fog and Mist/Materials/Depth Blur (Fullscreen).mat>) | Материал Unity |
 | [Assets/Mirza/AERO - Volumetric Fog and Mist/Materials/Scrolling Noise Textures.mat](<../../Assets/Mirza/AERO - Volumetric Fog and Mist/Materials/Scrolling Noise Textures.mat>) | Материал Unity |
 | [Assets/Mirza/AERO - Volumetric Fog and Mist/Materials/Volumetric Fog Mobile 2.mat](<../../Assets/Mirza/AERO - Volumetric Fog and Mist/Materials/Volumetric Fog Mobile 2.mat>) | Материал Unity |
-| [Assets/Mirza/AERO - Volumetric Fog and Mist/Materials/Volumetric Fog Mobile.mat](<../../Assets/Mirza/AERO - Volumetric Fog and Mist/Materials/Volumetric Fog Mobile.mat>) | Материал Unity |
 | [Assets/Mirza/AERO - Volumetric Fog and Mist/Materials/Volumetric Fog PC (Gradients) 2.mat](<../../Assets/Mirza/AERO - Volumetric Fog and Mist/Materials/Volumetric Fog PC (Gradients) 2.mat>) | Материал Unity |
-| [Assets/Mirza/AERO - Volumetric Fog and Mist/Materials/Volumetric Fog PC (Gradients).mat](<../../Assets/Mirza/AERO - Volumetric Fog and Mist/Materials/Volumetric Fog PC (Gradients).mat>) | Материал Unity |
 | [Assets/Mirza/AERO - Volumetric Fog and Mist/Materials/Volumetric Fog PC.mat](<../../Assets/Mirza/AERO - Volumetric Fog and Mist/Materials/Volumetric Fog PC.mat>) | Материал Unity |
 
 ## Assets/Mirza/AERO - Volumetric Fog and Mist/Prefabs
@@ -49,9 +46,7 @@
 | [Assets/Mirza/AERO - Volumetric Fog and Mist/Scenes/Aero (Demo)/Aero (Demo) Baking Set.CellSupportData.bytes](<../../Assets/Mirza/AERO - Volumetric Fog and Mist/Scenes/Aero (Demo)/Aero (Demo) Baking Set.CellSupportData.bytes>) | Файл .bytes |
 | [Assets/Mirza/AERO - Volumetric Fog and Mist/Scenes/Aero (Demo)/Aero (Demo) Baking Set.asset](<../../Assets/Mirza/AERO - Volumetric Fog and Mist/Scenes/Aero (Demo)/Aero (Demo) Baking Set.asset>) | Настройки или данные Unity |
 | [Assets/Mirza/AERO - Volumetric Fog and Mist/Scenes/Aero (Demo)/LightingData.asset](<../../Assets/Mirza/AERO - Volumetric Fog and Mist/Scenes/Aero (Demo)/LightingData.asset>) | Настройки или данные Unity |
-| [Assets/Mirza/AERO - Volumetric Fog and Mist/Scenes/Aero (Demo)/Lightmap-0_comp_dir.png](<../../Assets/Mirza/AERO - Volumetric Fog and Mist/Scenes/Aero (Demo)/Lightmap-0_comp_dir.png>) | Изображение / текстура |
 | [Assets/Mirza/AERO - Volumetric Fog and Mist/Scenes/Aero (Demo)/Lightmap-0_comp_light.exr](<../../Assets/Mirza/AERO - Volumetric Fog and Mist/Scenes/Aero (Demo)/Lightmap-0_comp_light.exr>) | HDR-текстура |
-| [Assets/Mirza/AERO - Volumetric Fog and Mist/Scenes/Aero (Demo)/Lightmap-1_comp_dir.png](<../../Assets/Mirza/AERO - Volumetric Fog and Mist/Scenes/Aero (Demo)/Lightmap-1_comp_dir.png>) | Изображение / текстура |
 | [Assets/Mirza/AERO - Volumetric Fog and Mist/Scenes/Aero (Demo)/Lightmap-1_comp_light.exr](<../../Assets/Mirza/AERO - Volumetric Fog and Mist/Scenes/Aero (Demo)/Lightmap-1_comp_light.exr>) | HDR-текстура |
 | [Assets/Mirza/AERO - Volumetric Fog and Mist/Scenes/Aero (Demo)/ReflectionProbe-0.exr](<../../Assets/Mirza/AERO - Volumetric Fog and Mist/Scenes/Aero (Demo)/ReflectionProbe-0.exr>) | HDR-текстура |
 | [Assets/Mirza/AERO - Volumetric Fog and Mist/Scenes/Aero (Demo)/ReflectionProbe-1.exr](<../../Assets/Mirza/AERO - Volumetric Fog and Mist/Scenes/Aero (Demo)/ReflectionProbe-1.exr>) | HDR-текстура |
@@ -96,21 +91,14 @@
 | --- | --- |
 | [Assets/Mirza/_VFXToolkit/_Demo/Materials/Blur Camera Output (Canvas).mat](<../../Assets/Mirza/_VFXToolkit/_Demo/Materials/Blur Camera Output (Canvas).mat>) | Материал Unity |
 | [Assets/Mirza/_VFXToolkit/_Demo/Materials/Blur Camera Output (Unlit).mat](<../../Assets/Mirza/_VFXToolkit/_Demo/Materials/Blur Camera Output (Unlit).mat>) | Материал Unity |
-| [Assets/Mirza/_VFXToolkit/_Demo/Materials/Box Blur (Unlit).mat](<../../Assets/Mirza/_VFXToolkit/_Demo/Materials/Box Blur (Unlit).mat>) | Материал Unity |
 | [Assets/Mirza/_VFXToolkit/_Demo/Materials/Floor 1.mat](<../../Assets/Mirza/_VFXToolkit/_Demo/Materials/Floor 1.mat>) | Материал Unity |
-| [Assets/Mirza/_VFXToolkit/_Demo/Materials/Floor 2.mat](<../../Assets/Mirza/_VFXToolkit/_Demo/Materials/Floor 2.mat>) | Материал Unity |
-| [Assets/Mirza/_VFXToolkit/_Demo/Materials/Noise Blur (Unlit).mat](<../../Assets/Mirza/_VFXToolkit/_Demo/Materials/Noise Blur (Unlit).mat>) | Материал Unity |
 | [Assets/Mirza/_VFXToolkit/_Demo/Materials/ProBuilderDefault (URP Lit).mat](<../../Assets/Mirza/_VFXToolkit/_Demo/Materials/ProBuilderDefault (URP Lit).mat>) | Материал Unity |
 
 ## Assets/Mirza/_VFXToolkit/_Demo/Materials/Emissive
 
 | Файл | Краткое описание |
 | --- | --- |
-| [Assets/Mirza/_VFXToolkit/_Demo/Materials/Emissive/Emissive 1.mat](<../../Assets/Mirza/_VFXToolkit/_Demo/Materials/Emissive/Emissive 1.mat>) | Материал Unity |
-| [Assets/Mirza/_VFXToolkit/_Demo/Materials/Emissive/Emissive 2.mat](<../../Assets/Mirza/_VFXToolkit/_Demo/Materials/Emissive/Emissive 2.mat>) | Материал Unity |
-| [Assets/Mirza/_VFXToolkit/_Demo/Materials/Emissive/Emissive 3.mat](<../../Assets/Mirza/_VFXToolkit/_Demo/Materials/Emissive/Emissive 3.mat>) | Материал Unity |
 | [Assets/Mirza/_VFXToolkit/_Demo/Materials/Emissive/Emissive Blue.mat](<../../Assets/Mirza/_VFXToolkit/_Demo/Materials/Emissive/Emissive Blue.mat>) | Материал Unity |
-| [Assets/Mirza/_VFXToolkit/_Demo/Materials/Emissive/Emissive Cyan.mat](<../../Assets/Mirza/_VFXToolkit/_Demo/Materials/Emissive/Emissive Cyan.mat>) | Материал Unity |
 | [Assets/Mirza/_VFXToolkit/_Demo/Materials/Emissive/Emissive Green.mat](<../../Assets/Mirza/_VFXToolkit/_Demo/Materials/Emissive/Emissive Green.mat>) | Материал Unity |
 | [Assets/Mirza/_VFXToolkit/_Demo/Materials/Emissive/Emissive Orange.mat](<../../Assets/Mirza/_VFXToolkit/_Demo/Materials/Emissive/Emissive Orange.mat>) | Материал Unity |
 | [Assets/Mirza/_VFXToolkit/_Demo/Materials/Emissive/Emissive Purple.mat](<../../Assets/Mirza/_VFXToolkit/_Demo/Materials/Emissive/Emissive Purple.mat>) | Материал Unity |
@@ -129,8 +117,6 @@
 | Файл | Краткое описание |
 | --- | --- |
 | [Assets/Mirza/_VFXToolkit/_Demo/Materials/Post-Processing/Box Blur (Custom Render Texture).mat](<../../Assets/Mirza/_VFXToolkit/_Demo/Materials/Post-Processing/Box Blur (Custom Render Texture).mat>) | Материал Unity |
-| [Assets/Mirza/_VFXToolkit/_Demo/Materials/Post-Processing/Box Blur (Fullscreen).mat](<../../Assets/Mirza/_VFXToolkit/_Demo/Materials/Post-Processing/Box Blur (Fullscreen).mat>) | Материал Unity |
-| [Assets/Mirza/_VFXToolkit/_Demo/Materials/Post-Processing/Noise Circle Blur (Fullscreen).mat](<../../Assets/Mirza/_VFXToolkit/_Demo/Materials/Post-Processing/Noise Circle Blur (Fullscreen).mat>) | Материал Unity |
 
 ## Assets/Mirza/_VFXToolkit/_Demo/Models
 
@@ -207,7 +193,6 @@
 | Файл | Краткое описание |
 | --- | --- |
 | [Assets/Mirza/_VFXToolkit/_Demo/Prefabs/Environment/Environment (Stripped ProBuilder).prefab](<../../Assets/Mirza/_VFXToolkit/_Demo/Prefabs/Environment/Environment (Stripped ProBuilder).prefab>) | Префаб Unity |
-| [Assets/Mirza/_VFXToolkit/_Demo/Prefabs/Environment/Environment.prefab](<../../Assets/Mirza/_VFXToolkit/_Demo/Prefabs/Environment/Environment.prefab>) | Префаб Unity |
 
 ## Assets/Mirza/_VFXToolkit/_Demo/Prefabs/Lights
 
@@ -222,7 +207,6 @@
 | --- | --- |
 | [Assets/Mirza/_VFXToolkit/_Demo/Prefabs/Primitives/1x2.prefab](<../../Assets/Mirza/_VFXToolkit/_Demo/Prefabs/Primitives/1x2.prefab>) | Префаб Unity |
 | [Assets/Mirza/_VFXToolkit/_Demo/Prefabs/Primitives/2x2.prefab](<../../Assets/Mirza/_VFXToolkit/_Demo/Prefabs/Primitives/2x2.prefab>) | Префаб Unity |
-| [Assets/Mirza/_VFXToolkit/_Demo/Prefabs/Primitives/2x2x1.prefab](<../../Assets/Mirza/_VFXToolkit/_Demo/Prefabs/Primitives/2x2x1.prefab>) | Префаб Unity |
 | [Assets/Mirza/_VFXToolkit/_Demo/Prefabs/Primitives/Barrel.prefab](<../../Assets/Mirza/_VFXToolkit/_Demo/Prefabs/Primitives/Barrel.prefab>) | Префаб Unity |
 | [Assets/Mirza/_VFXToolkit/_Demo/Prefabs/Primitives/Donut.prefab](<../../Assets/Mirza/_VFXToolkit/_Demo/Prefabs/Primitives/Donut.prefab>) | Префаб Unity |
 | [Assets/Mirza/_VFXToolkit/_Demo/Prefabs/Primitives/Pipe.prefab](<../../Assets/Mirza/_VFXToolkit/_Demo/Prefabs/Primitives/Pipe.prefab>) | Префаб Unity |
@@ -233,12 +217,6 @@
 | Файл | Краткое описание |
 | --- | --- |
 | [Assets/Mirza/_VFXToolkit/_Demo/Prefabs/UI/Toggle.prefab](<../../Assets/Mirza/_VFXToolkit/_Demo/Prefabs/UI/Toggle.prefab>) | Префаб Unity |
-
-## Assets/Mirza/_VFXToolkit/_Demo/Scenes
-
-| Файл | Краткое описание |
-| --- | --- |
-| [Assets/Mirza/_VFXToolkit/_Demo/Scenes/Template.unity](<../../Assets/Mirza/_VFXToolkit/_Demo/Scenes/Template.unity>) | Сцена Unity |
 
 ## Assets/Mirza/_VFXToolkit/_Demo/Scripts
 
@@ -329,10 +307,7 @@
 | --- | --- |
 | [Assets/Mirza/_VFXToolkit/_Demo/Textures/Blur Camera Custom Render Texture.asset](<../../Assets/Mirza/_VFXToolkit/_Demo/Textures/Blur Camera Custom Render Texture.asset>) | Настройки или данные Unity |
 | [Assets/Mirza/_VFXToolkit/_Demo/Textures/Blur Camera Render Texture.renderTexture](<../../Assets/Mirza/_VFXToolkit/_Demo/Textures/Blur Camera Render Texture.renderTexture>) | Файл .renderTexture |
-| [Assets/Mirza/_VFXToolkit/_Demo/Textures/Checker Grid 64x64 (Alpha from Grayscale).png](<../../Assets/Mirza/_VFXToolkit/_Demo/Textures/Checker Grid 64x64 (Alpha from Grayscale).png>) | Изображение / текстура |
-| [Assets/Mirza/_VFXToolkit/_Demo/Textures/Checker Grid 64x64 (Normal Map).png](<../../Assets/Mirza/_VFXToolkit/_Demo/Textures/Checker Grid 64x64 (Normal Map).png>) | Изображение / текстура |
 | [Assets/Mirza/_VFXToolkit/_Demo/Textures/Checker Grid 64x64.png](<../../Assets/Mirza/_VFXToolkit/_Demo/Textures/Checker Grid 64x64.png>) | Изображение / текстура |
-| [Assets/Mirza/_VFXToolkit/_Demo/Textures/Disk.png](<../../Assets/Mirza/_VFXToolkit/_Demo/Textures/Disk.png>) | Изображение / текстура |
 | [Assets/Mirza/_VFXToolkit/_Demo/Textures/GridBox_Default.png](<../../Assets/Mirza/_VFXToolkit/_Demo/Textures/GridBox_Default.png>) | Изображение / текстура |
 | [Assets/Mirza/_VFXToolkit/_Demo/Textures/Radial Gradient.png](<../../Assets/Mirza/_VFXToolkit/_Demo/Textures/Radial Gradient.png>) | Изображение / текстура |
 
@@ -340,9 +315,5 @@
 
 | Файл | Краткое описание |
 | --- | --- |
-| [Assets/Mirza/_VFXToolkit/_Demo/Textures/Noise/Perlin Noise (Seamless, Seed-26, Freq-4, Oct-3).png](<../../Assets/Mirza/_VFXToolkit/_Demo/Textures/Noise/Perlin Noise (Seamless, Seed-26, Freq-4, Oct-3).png>) | Изображение / текстура |
 | [Assets/Mirza/_VFXToolkit/_Demo/Textures/Noise/Perlin Noise (Seamless, Seed-26, Freq-4, Oct-5).png](<../../Assets/Mirza/_VFXToolkit/_Demo/Textures/Noise/Perlin Noise (Seamless, Seed-26, Freq-4, Oct-5).png>) | Изображение / текстура |
-| [Assets/Mirza/_VFXToolkit/_Demo/Textures/Noise/Perlin Noise (Seamless, Seed-86, Freq-4, Oct-3).png](<../../Assets/Mirza/_VFXToolkit/_Demo/Textures/Noise/Perlin Noise (Seamless, Seed-86, Freq-4, Oct-3).png>) | Изображение / текстура |
 | [Assets/Mirza/_VFXToolkit/_Demo/Textures/Noise/Perlin Noise (Seamless, Seed-86, Freq-4, Oct-5).png](<../../Assets/Mirza/_VFXToolkit/_Demo/Textures/Noise/Perlin Noise (Seamless, Seed-86, Freq-4, Oct-5).png>) | Изображение / текстура |
-| [Assets/Mirza/_VFXToolkit/_Demo/Textures/Noise/Perlin Noise (Seamless, Seed-88, Freq-4, Oct-3).png](<../../Assets/Mirza/_VFXToolkit/_Demo/Textures/Noise/Perlin Noise (Seamless, Seed-88, Freq-4, Oct-3).png>) | Изображение / текстура |
-| [Assets/Mirza/_VFXToolkit/_Demo/Textures/Noise/Perlin Noise (Seamless, Seed-88, Freq-4, Oct-5).png](<../../Assets/Mirza/_VFXToolkit/_Demo/Textures/Noise/Perlin Noise (Seamless, Seed-88, Freq-4, Oct-5).png>) | Изображение / текстура |

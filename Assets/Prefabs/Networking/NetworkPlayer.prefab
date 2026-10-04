@@ -4857,6 +4857,7 @@ MonoBehaviour:
   _addedNetworkObject: {fileID: 8718541801069254893}
   _networkObjectCache: {fileID: 8718541801069254893}
   DeveloperTargetPrefab: {fileID: 5178000782115004735, guid: 3910234f663633144b9f38280f6e42ee, type: 3}
+  BarricadePrefab: {fileID: 7696781419188475533, guid: 29c427ef8d5501449ae0574c6467d582, type: 3}
   DropPrefabs:
   - {fileID: 7154578386564942902, guid: 72facc83af7c1c04dba3889d3f5718af, type: 3}
   - {fileID: 6902406561786354954, guid: 633e4f05c2568b146a18aef78adb5bf2, type: 3}
@@ -4883,6 +4884,7 @@ MonoBehaviour:
   - {fileID: 3439995257933403803, guid: 9e927a72c9fa87c46b44e9cbaa981dc7, type: 3}
   - {fileID: 4026601597403389416, guid: a642282f47a8844449e9b0abcb229def, type: 3}
   - {fileID: 8494819478363084047, guid: aada7a8bef225f446b60e38be98741ce, type: 3}
+  - {fileID: 7659812534704296941, guid: 07ff9fa7e32dad04c8207b3d14201bf3, type: 3}
 --- !u!114 &4694566103855019808
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4925,6 +4927,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 104b928d47569ec4f86aafcecc0c0cd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.PlayerInventory
+  BarricadeVisual: {fileID: 8094292890971653061, guid: a0d222068d577da4394725409c3724f9, type: 3}
+  BarricadeConstructionMaterial: {fileID: 2100000, guid: 8501e683be5cb3547b1a08489749166b, type: 2}
   Icons: {fileID: 11400000, guid: 138143b299d2f364cb5e86e1e193c066, type: 2}
   CannonPrefab: {fileID: 6766262252996742549, guid: a259d1526047caa44936b87a9a2dd31b, type: 3}
   PreviewMaterial: {fileID: 2100000, guid: 73d063623bebc964cb4a2985c85b685f, type: 2}

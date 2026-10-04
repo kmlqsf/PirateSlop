@@ -6,7 +6,7 @@ namespace PirateSlop.Customization
     [DefaultExecutionOrder(-5)]
     public class SailCustomizer : MonoBehaviour
     {
-        public const int TotalParts = ShipCustomizationData.TotalParts; // 7
+        public const int TotalParts = ShipCustomizationData.TotalParts;
         public const int TotalLayers = ShipCustomizationData.TotalLayers; // 2
 
         public static readonly Vector4[] PartUVBoundsFront = new Vector4[]
@@ -39,7 +39,22 @@ namespace PirateSlop.Customization
             "Грот 2 (Главный верхний)",
             "Веселый Роджер (Главный флаг)",
             "Вымпел 1 (Фок-мачта)",
-            "Вымпел 2 (Грот-мачта)"
+            "Архивный вымпел",
+            "Фор-марсель (Передний верхний)"
+        };
+
+        static readonly string[] CurrentPartNames =
+        {
+            "V3_Transfer_Outfit_Sail_Mizzen", "V3_Transfer_Outfit_Sail_Fore_Course",
+            "V3_Transfer_Outfit_Sail_Main_Course", "V3_Transfer_Outfit_Sail_Main_Topsail",
+            "V17_Main_Pirate_Flag_Cloth", "V17_Fore_Pirate_Flag_Cloth", "",
+            "V3_Transfer_Outfit_Sail_Fore_Topsail"
+        };
+
+        static readonly string[] LegacyPartNames =
+        {
+            "F2_SailBack", "F2_SailFront", "F2_SailMid1", "F2_SailMid2",
+            "F2_MainFlag", "F2_Flag1", "F2_Flag2", ""
         };
 
         public static bool StreamerMode
@@ -60,6 +75,8 @@ namespace PirateSlop.Customization
 
         Material[] partMaterials;
         MeshCollider[] partColliders;
+        Mesh[] selectionMeshes;
+        bool currentModel;
         Texture2D[,] currentTextures = new Texture2D[TotalParts, TotalLayers];
         ShipCustomizationData currentData = new ShipCustomizationData();
         int highlightedPart = -1;
@@ -70,6 +87,14 @@ namespace PirateSlop.Customization
         public Renderer[] PartRenderers => partRenderers;
         public MeshCollider[] PartColliders => partColliders;
         public int SelectedPart => selectedPart;
+        public bool HasPart(int index) => partRenderers != null && index >= 0 && index < partRenderers.Length && partRenderers[index] != null;
+        public bool IsFlag(int index) => index >= 4 && index <= 6;
+
+        public string GetPartName(int index)
+        {
+            if (currentModel && index == 5) return "Флаг фок-мачты";
+            return index >= 0 && index < PartDisplayNames.Length ? PartDisplayNames[index] : "";
+        }
 
         public static void RefreshAllInstances()
         {
@@ -86,6 +111,7 @@ namespace PirateSlop.Customization
 
         void OnDisable()
         {
+            SetSelectionEnabled(false);
             ActiveInstances.Remove(this);
         }
 
@@ -97,7 +123,7 @@ namespace PirateSlop.Customization
         void Start()
         {
             InitializeSails();
-            if (SailCustomizationStorage.Load(out var savedData, out var savedTextures))
+            if (GetComponent<SailNetworkSync>() == null && SailCustomizationStorage.Load(out var savedData, out var savedTextures))
             {
                 ApplyCustomization(savedData, savedTextures, false);
             }
@@ -107,38 +133,22 @@ namespace PirateSlop.Customization
         {
             if (partRenderers == null || partRenderers.Length < TotalParts || partRenderers[0] == null)
             {
-                string[] partNames = new string[]
-                {
-                    "F2_SailBack", "F2_SailFront", "F2_SailMid1", "F2_SailMid2",
-                    "F2_MainFlag", "F2_Flag1", "F2_Flag2"
-                };
-
                 partRenderers = new Renderer[TotalParts];
-                var allTransforms = GetComponentsInChildren<Transform>(true);
-
+                var renderers = GetComponentsInChildren<Renderer>(true);
+                currentModel = System.Array.Exists(renderers, renderer => renderer.name == CurrentPartNames[0]);
+                var names = currentModel ? CurrentPartNames : LegacyPartNames;
                 for (int i = 0; i < TotalParts; i++)
                 {
-                    string targetName = partNames[i];
-                    Transform found = null;
-                    for (int tIdx = 0; tIdx < allTransforms.Length; tIdx++)
-                    {
-                        if (allTransforms[tIdx].name == targetName)
-                        {
-                            found = allTransforms[tIdx];
-                            break;
-                        }
-                    }
-                    if (found != null)
-                    {
-                        partRenderers[i] = found.GetComponent<Renderer>();
-                    }
+                    if (names[i].Length > 0) partRenderers[i] = System.Array.Find(renderers, renderer => renderer.name == names[i]);
                 }
             }
+            else currentModel = partRenderers[0].name == CurrentPartNames[0];
 
             if (partMaterials == null || partMaterials.Length != TotalParts || partColliders == null || partColliders.Length != TotalParts)
             {
                 partMaterials = new Material[TotalParts];
                 partColliders = new MeshCollider[TotalParts];
+                selectionMeshes = new Mesh[TotalParts];
 
                 if (sailBaseMaterial == null)
                 {
@@ -159,21 +169,59 @@ namespace PirateSlop.Customization
                         {
                             partMaterials[i] = new Material(sailBaseMaterial != null ? sailBaseMaterial : r.sharedMaterial);
                             partMaterials[i].name = $"PartMat_{r.name}_{i}";
+                            if (currentModel && r.sharedMaterial != null)
+                            {
+                                var source = r.sharedMaterial;
+                                partMaterials[i].SetColor("_FabricTint", source.HasProperty("_BaseColor") ? source.GetColor("_BaseColor") : Color.white);
+                                if (source.HasProperty("_OcclusionMap") && source.GetTexture("_OcclusionMap") != null)
+                                    partMaterials[i].SetTexture("_OcclusionMap", source.GetTexture("_OcclusionMap"));
+                            }
+                            partMaterials[i].SetFloat("_UseFaceOrientation", currentModel ? 1f : 0f);
                         }
                         r.sharedMaterial = partMaterials[i];
-
-                        var mf = r.GetComponent<MeshFilter>();
-                        if (mf != null && mf.sharedMesh != null)
-                        {
-                            var col = r.GetComponent<MeshCollider>();
-                            if (col == null) col = r.gameObject.AddComponent<MeshCollider>();
-                            col.sharedMesh = mf.sharedMesh;
-                            col.enabled = true;
-                            partColliders[i] = col;
-                        }
                     }
                 }
             }
+        }
+
+        public void SetSelectionEnabled(bool enabled)
+        {
+            if (enabled) InitializeSails();
+            if (partColliders == null) return;
+            for (int i = 0; i < TotalParts; i++)
+            {
+                if (enabled && HasPart(i))
+                {
+                    var renderer = partRenderers[i];
+                    var col = partColliders[i];
+                    if (col == null)
+                    {
+                        col = new GameObject("CustomizationSelection").AddComponent<MeshCollider>();
+                        col.transform.SetParent(renderer.transform, false);
+                        col.gameObject.layer = renderer.gameObject.layer;
+                        partColliders[i] = col;
+                    }
+                    if (renderer is SkinnedMeshRenderer skin)
+                    {
+                        selectionMeshes[i] ??= new Mesh { name = "CustomizationSelection_" + i };
+                        skin.BakeMesh(selectionMeshes[i]);
+                        col.sharedMesh = selectionMeshes[i];
+                    }
+                    else
+                    {
+                        var filter = renderer.GetComponent<MeshFilter>();
+                        col.sharedMesh = filter != null ? filter.sharedMesh : null;
+                    }
+                }
+                if (partColliders[i] != null) partColliders[i].enabled = enabled;
+            }
+        }
+
+        void OnDestroy()
+        {
+            ActiveInstances.Remove(this);
+            if (partMaterials != null) foreach (var material in partMaterials) if (material != null) Destroy(material);
+            if (selectionMeshes != null) foreach (var mesh in selectionMeshes) if (mesh != null) Destroy(mesh);
         }
 
         public void ApplyCustomization(ShipCustomizationData data, Texture2D[,] textures, bool syncToNetwork)
@@ -236,6 +284,9 @@ namespace PirateSlop.Customization
             InitializeSails();
             if (partMaterials == null || partRenderers == null) return;
 
+            var nameplate = GetComponent<ShipNameplate>();
+            if (nameplate != null) nameplate.SetName(currentData.shipName);
+
             bool hideDecals = StreamerMode;
 
             for (int i = 0; i < TotalParts; i++)
@@ -253,8 +304,8 @@ namespace PirateSlop.Customization
                 mat.SetFloat("_Weathering", sail.weathering);
                 mat.SetFloat("_Grime", sail.grime);
 
-                var frontBounds = i < PartUVBoundsFront.Length ? PartUVBoundsFront[i] : new Vector4(0, 0, 1, 1);
-                var backBounds = i < PartUVBoundsBack.Length ? PartUVBoundsBack[i] : new Vector4(0, 0, 1, 1);
+                var frontBounds = !currentModel && i < PartUVBoundsFront.Length ? PartUVBoundsFront[i] : new Vector4(0, 0, 1, 1);
+                var backBounds = !currentModel && i < PartUVBoundsBack.Length ? PartUVBoundsBack[i] : new Vector4(0, 0, 1, 1);
                 mat.SetVector("_SailUVBoundsFront", frontBounds);
                 mat.SetVector("_SailUVBoundsBack", backBounds);
                 mat.SetFloat("_MirrorBack", 1f);

@@ -100,9 +100,9 @@ namespace PirateSlop
             ApplySnapshot(Current + amount, false);
             if (network != null) network.Publish(Current);
         }
-        public void Damage(float amount, GameObject attacker = null)
+        public void Damage(float amount, GameObject attacker = null, bool environmental = false)
         {
-            if (attacker != null && attacker != gameObject)
+            if (!environmental && attacker != null && attacker != gameObject)
             {
                 var source = attacker.GetComponent<NetworkPlayer>();
                 var target = GetComponent<NetworkPlayer>();

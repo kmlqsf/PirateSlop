@@ -16,6 +16,22 @@ namespace PirateSlop
         bool wasVisible;
         void Awake()
         {
+            var currentShip = Resources.Load<GameObject>("Ships/ShipV3Menu");
+            if (currentShip != null && Ship != null)
+            {
+                var previous = Ship;
+                var replacement = Instantiate(currentShip, previous.parent).transform;
+                replacement.name = "MenuShip";
+                replacement.localPosition = previous.localPosition;
+                replacement.localRotation = previous.localRotation;
+                replacement.localScale = previous.localScale;
+                foreach (var part in replacement.GetComponentsInChildren<Transform>(true)) part.gameObject.layer = previous.gameObject.layer;
+                previous.gameObject.SetActive(false);
+                previous.name = "LegacyMenuShip";
+                Ship = replacement;
+                FocusPoint = transform.InverseTransformPoint(Ship.TransformPoint(new Vector3(0, 14, 0)));
+                FramingRadius = 29f;
+            }
             shipRest = Ship.localPosition;
             shipRotation = Ship.localRotation;
             if (Water != null)

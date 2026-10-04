@@ -13,12 +13,6 @@
 | [Assets/Houidisoft technology/Simple water/QuickStart.md](<../../Assets/Houidisoft technology/Simple water/QuickStart.md>) | Документация |
 | [Assets/Houidisoft technology/Simple water/Simple Water Shader - Documentation.pdf](<../../Assets/Houidisoft technology/Simple water/Simple Water Shader - Documentation.pdf>) | Файл .pdf |
 
-## Assets/Houidisoft technology/Simple water/Demo
-
-| Файл | Краткое описание |
-| --- | --- |
-| [Assets/Houidisoft technology/Simple water/Demo/Demo.unity](<../../Assets/Houidisoft technology/Simple water/Demo/Demo.unity>) | Сцена Unity |
-
 ## Assets/Houidisoft technology/Simple water/Resources
 
 | Файл | Краткое описание |

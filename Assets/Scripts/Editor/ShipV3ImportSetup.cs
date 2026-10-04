@@ -123,6 +123,7 @@ namespace PirateSlop.EditorTools
                 LootModelReplacementSetup.ConfigureImportedShip(root);
                 ConfigureGeometryBudget(root);
                 ShipMonkeySetup.Configure(root);
+                ShipCustomizationSetup.Configure(root);
                 var prefab = PrefabUtility.SaveAsPrefabAsset(root, PrefabPath);
                 if (prefab == null) throw new InvalidOperationException("ShipV3 prefab was not saved.");
                 RemoveUnusedBatchMeshes(root);

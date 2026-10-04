@@ -10,7 +10,6 @@
 
 | Файл | Краткое описание |
 | --- | --- |
-| [Assets/Fog Particles/Demo.unity](<../../Assets/Fog Particles/Demo.unity>) | Сцена Unity |
 | [Assets/Fog Particles/Fog Particles - Documentation.pdf](<../../Assets/Fog Particles/Fog Particles - Documentation.pdf>) | Файл .pdf |
 
 ## Assets/Fog Particles/Bonus

@@ -31,6 +31,7 @@ namespace PirateSlop.Customization
         bool uniformScale = true;
 
         string currentPresetName = "Слот 1";
+        string nameDraft = "";
         readonly string[] presetSlots = new string[] { "Слот 1", "Слот 2", "Слот 3", "Слот 4", "Слот 5" };
 
         // Gizmo interaction state
@@ -75,7 +76,7 @@ namespace PirateSlop.Customization
 
         void OnDisable()
         {
-            IsOpen = false;
+            if (IsOpen) EndCustomization();
         }
 
         void OnDestroy()
@@ -108,7 +109,10 @@ namespace PirateSlop.Customization
         {
             if (targetCustomizer == null)
             {
-                targetCustomizer = FindAnyObjectByType<SailCustomizer>();
+                var backdrop = FindAnyObjectByType<PirateSlop.MenuBackdrop>(FindObjectsInactive.Include);
+                if (backdrop != null && backdrop.Ship != null)
+                    targetCustomizer = backdrop.Ship.GetComponent<SailCustomizer>();
+                if (targetCustomizer == null) targetCustomizer = FindAnyObjectByType<SailCustomizer>();
                 if (targetCustomizer == null)
                 {
                     var menuShip = GameObject.Find("MenuShip");
@@ -127,6 +131,8 @@ namespace PirateSlop.Customization
                 {
                     customizer.ApplyCustomization(savedData, savedTextures, false);
                 }
+                customizer.SetSelectionEnabled(true);
+                nameDraft = customizer.CurrentData.shipName;
             }
 
             targetCamera = cam != null ? cam : (Camera.main != null ? Camera.main : FindAnyObjectByType<Camera>());
@@ -155,6 +161,8 @@ namespace PirateSlop.Customization
             {
                 SailCustomizationStorage.Save(customizer.CurrentData, customizer.CurrentTextures);
                 customizer.SetHighlight(-1, false);
+                customizer.SetSelectionEnabled(false);
+                customizer.ApplyCustomization(customizer.CurrentData, customizer.CurrentTextures, true);
             }
 
             if (targetCamera != null)
@@ -340,7 +348,7 @@ namespace PirateSlop.Customization
                     if (col != null)
                     {
                         desiredTarget = col.bounds.center;
-                        desiredDistance = selectedPart >= 4 ? 9f : 15f;
+                        desiredDistance = customizer.IsFlag(selectedPart) ? 9f : 24f;
                         return;
                     }
                 }
@@ -429,7 +437,7 @@ namespace PirateSlop.Customization
                         Rect badgeRect = new Rect(labelX, labelY, 170, 26);
                         PirateHudStyle.Fill(badgeRect, new Color(0.05f, 0.05f, 0.05f, 0.88f));
                         PirateHudStyle.Brush(badgeRect, PirateHudStyle.Gold, true);
-                        string shortName = selectedPart < SailCustomizer.PartDisplayNames.Length ? SailCustomizer.PartDisplayNames[selectedPart] : $"Часть {selectedPart + 1}";
+                        string shortName = customizer.GetPartName(selectedPart);
                         GUI.Label(badgeRect, $"▶ {shortName} ◀", labelStyle);
                     }
                 }
@@ -451,6 +459,17 @@ namespace PirateSlop.Customization
             PirateHudStyle.Brush(GUILayoutUtility.GetRect(panelRect.width - 28, 2), PirateHudStyle.Gold, true);
             GUILayout.Space(6);
 
+            GUILayout.Label("Название корабля:", sectionStyle);
+            string nextName = GUILayout.TextField(nameDraft, ShipCustomizationData.MaxNameLength * 2, GUILayout.Height(28));
+            if (nextName != nameDraft)
+            {
+                nameDraft = nextName;
+                customizer.CurrentData.shipName = ShipCustomizationData.NormalizeName(nameDraft);
+                customizer.UpdateVisuals();
+            }
+            GUILayout.Label($"До {ShipCustomizationData.MaxNameLength} знаков; пустое поле убирает надпись.", smallStyle);
+            GUILayout.Space(6);
+
             // Streamer Mode Toggle (Пункт 9)
             GUILayout.BeginHorizontal();
             bool streamerModeNow = SailCustomizer.StreamerMode;
@@ -465,10 +484,13 @@ namespace PirateSlop.Customization
             // Part Selection Tabs: Row 1 (Sails)
             GUILayout.Label("Выбор паруса или флага:", smallStyle);
             GUILayout.BeginHorizontal();
-            for (int pIdx = 0; pIdx < 4; pIdx++)
+            int[] sailParts = { 0, 1, 2, 3, 7 };
+            foreach (int pIdx in sailParts)
             {
+                if (!customizer.HasPart(pIdx)) continue;
                 bool isActive = (selectedPart == pIdx);
-                string tabName = isActive ? $"▶ Парус {pIdx + 1} ◀" : $"Парус {pIdx + 1}";
+                string partLabel = pIdx == 7 ? "Фор-марсель" : pIdx == 0 ? "Бизань" : pIdx == 1 ? "Фок" : pIdx == 2 ? "Грот" : "Грот-марсель";
+                string tabName = isActive ? $"▶ {partLabel} ◀" : partLabel;
                 var oldBg = GUI.backgroundColor;
                 if (isActive) GUI.backgroundColor = PirateHudStyle.Gold;
                 if (GUILayout.Button(tabName, isActive ? activeTabStyle : inactiveTabStyle, GUILayout.Height(28)))
@@ -485,8 +507,10 @@ namespace PirateSlop.Customization
             for (int fIdx = 0; fIdx < 3; fIdx++)
             {
                 int partIndex = 4 + fIdx;
+                if (!customizer.HasPart(partIndex)) continue;
                 bool isActive = (selectedPart == partIndex);
-                string tabName = isActive ? $"▶ {flagLabels[fIdx]} ◀" : flagLabels[fIdx];
+                string flagLabel = partIndex == 5 ? "Флаг фок-мачты" : flagLabels[fIdx];
+                string tabName = isActive ? $"▶ {flagLabel} ◀" : flagLabel;
                 var oldBg = GUI.backgroundColor;
                 if (isActive) GUI.backgroundColor = PirateHudStyle.Gold;
                 if (GUILayout.Button(tabName, isActive ? activeTabStyle : inactiveTabStyle, GUILayout.Height(28)))
@@ -497,7 +521,7 @@ namespace PirateSlop.Customization
             }
             GUILayout.EndHorizontal();
 
-            string currentPartTitle = selectedPart < SailCustomizer.PartDisplayNames.Length ? SailCustomizer.PartDisplayNames[selectedPart] : $"Элемент {selectedPart + 1}";
+            string currentPartTitle = customizer.GetPartName(selectedPart);
             GUILayout.Label($"Выбран: {currentPartTitle}", labelStyle);
             GUILayout.Space(6);
 
@@ -792,6 +816,7 @@ namespace PirateSlop.Customization
                 if (SailCustomizationStorage.LoadPreset(currentPresetName, out var pData, out var pTex))
                 {
                     customizer.ApplyCustomization(pData, pTex, true);
+                    nameDraft = customizer.CurrentData.shipName;
                 }
             }
             GUILayout.EndHorizontal();

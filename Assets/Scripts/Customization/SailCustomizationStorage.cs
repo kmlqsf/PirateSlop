@@ -129,10 +129,33 @@ namespace PirateSlop.Customization
     [System.Serializable]
     public class ShipCustomizationData
     {
-        public const int TotalParts = 7; // 0..3: Sails, 4..6: Flags
+        public const int TotalParts = 8;
         public const int TotalLayers = 2; // 0: Layer 1, 1: Layer 2
 
         public SailData[] sails;
+        public string shipName = "";
+        public const int MaxNameLength = 28;
+
+        public static string NormalizeName(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value)) return "";
+            var builder = new System.Text.StringBuilder();
+            bool space = false;
+            foreach (char character in value.Normalize())
+            {
+                if (char.IsControl(character) || char.IsWhiteSpace(character))
+                {
+                    if (builder.Length > 0) space = true;
+                    continue;
+                }
+                if (space) builder.Append(' ');
+                builder.Append(character);
+                space = false;
+            }
+            string name = builder.ToString();
+            var elements = System.Globalization.StringInfo.ParseCombiningCharacters(name);
+            return elements.Length > MaxNameLength ? name.Substring(0, elements[MaxNameLength]) : name;
+        }
 
         public ShipCustomizationData()
         {
@@ -142,6 +165,7 @@ namespace PirateSlop.Customization
 
         public void EnsureCapacity()
         {
+            shipName = NormalizeName(shipName);
             if (sails == null) sails = new SailData[TotalParts];
             if (sails.Length < TotalParts)
             {
@@ -152,12 +176,14 @@ namespace PirateSlop.Customization
                 }
                 sails = newArr;
             }
+            for (int i = 0; i < sails.Length; i++) sails[i] ??= new SailData();
         }
 
         public ShipCustomizationData Clone()
         {
             var clone = new ShipCustomizationData();
             EnsureCapacity();
+            clone.shipName = shipName;
             for (int i = 0; i < TotalParts; i++)
             {
                 clone.sails[i].CopyFrom(sails[i]);

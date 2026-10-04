@@ -10,8 +10,8 @@
 
 | Файл | Краткое описание |
 | --- | --- |
+| [Assets/Shaders/BarricadeConstruction.shader](<../../Assets/Shaders/BarricadeConstruction.shader>) | Шейдер; Предметы, лут и инвентарь |
 | [Assets/Shaders/IslandTerrain.shader](<../../Assets/Shaders/IslandTerrain.shader>) | Шейдер |
-| [Assets/Shaders/Ocean.shader](<../../Assets/Shaders/Ocean.shader>) | Шейдер; Мир, острова и океан |
 | [Assets/Shaders/OvercastSky.shader](<../../Assets/Shaders/OvercastSky.shader>) | Шейдер |
 | [Assets/Shaders/Sail.shader](<../../Assets/Shaders/Sail.shader>) | Шейдер; Паруса и канаты |
 | [Assets/Shaders/Seabed.shader](<../../Assets/Shaders/Seabed.shader>) | Шейдер |

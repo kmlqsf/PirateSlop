@@ -3,6 +3,8 @@ Shader "PirateSlop/Sail"
     Properties
     {
         _BaseColor ("Sail Color", Color) = (1, 1, 1, 1)
+        _FabricTint ("Fabric Tint", Color) = (1, 1, 1, 1)
+        _UseFaceOrientation ("Use Face Orientation", Float) = 0
         _OcclusionMap ("Ambient Occlusion (Folds)", 2D) = "white" {}
         _OcclusionStrength ("Occlusion Strength", Range(0, 1)) = 0.45
         _Weathering ("Weathering / Wear", Range(0, 1)) = 0.0
@@ -52,6 +54,8 @@ Shader "PirateSlop/Sail"
 
             CBUFFER_START(UnityPerMaterial)
                 half4 _BaseColor;
+                half4 _FabricTint;
+                float _UseFaceOrientation;
                 half4 _DecalColor;
                 float4 _DecalTransform;
                 float _DecalRotation;
@@ -188,14 +192,14 @@ Shader "PirateSlop/Sail"
                 float3 normal = normalize(isFrontFace ? input.normalWS : -input.normalWS);
 
                 half3 ao = SAMPLE_TEXTURE2D(_OcclusionMap, sampler_OcclusionMap, input.uv).rgb;
-                half3 clothColor = _BaseColor.rgb * lerp(half3(1.0, 1.0, 1.0), ao, _OcclusionStrength);
+                half3 clothColor = _BaseColor.rgb * _FabricTint.rgb * lerp(half3(1.0, 1.0, 1.0), ao, _OcclusionStrength);
 
                 float4 uvBounds = input.isBack > 0.5 ? _SailUVBoundsBack : _SailUVBoundsFront;
                 float2 uvSize = uvBounds.zw;
                 if (abs(uvSize.x) < 0.0001) uvSize.x = 1.0;
                 if (abs(uvSize.y) < 0.0001) uvSize.y = 1.0;
                 float2 normUV = (input.uv - uvBounds.xy) / uvSize;
-                bool isBack = input.isBack > 0.5;
+                bool isBack = _UseFaceOrientation > 0.5 ? !isFrontFace : input.isBack > 0.5;
 
                 // Layer 1
                 EvaluateDecal(clothColor, normUV, isBack, _MirrorBack, _DecalTex, sampler_DecalTex, _DecalTransform, _DecalRotation, _DecalColor, _BlendMode, _Weathering, ao);

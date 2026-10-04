@@ -10,6 +10,7 @@
 
 | Файл | Краткое описание |
 | --- | --- |
+| [Assets/UI/Inventory/Barricade.png](<../../Assets/UI/Inventory/Barricade.png>) | Изображение / текстура |
 | [Assets/UI/Inventory/BoardingHook.png](<../../Assets/UI/Inventory/BoardingHook.png>) | Изображение / текстура |
 | [Assets/UI/Inventory/Cannon.png](<../../Assets/UI/Inventory/Cannon.png>) | Изображение / текстура |
 | [Assets/UI/Inventory/Cannonball.png](<../../Assets/UI/Inventory/Cannonball.png>) | Изображение / текстура |

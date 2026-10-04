@@ -37,7 +37,8 @@ namespace PirateSlop.Networking
             {
                 if (bottlesOnly && (Prefabs[i] == null ||
                     (Prefabs[i].Item != InventoryItem.FogBottle && Prefabs[i].Item != InventoryItem.VortexBottle &&
-                     Prefabs[i].Item != InventoryItem.Musket && Prefabs[i].Item != InventoryItem.DoubleBarrel))) continue;
+                     Prefabs[i].Item != InventoryItem.Musket && Prefabs[i].Item != InventoryItem.DoubleBarrel &&
+                     Prefabs[i].Item != InventoryItem.Barricade))) continue;
                 if(Prefabs[i]==null || (spawned[i]!=null && spawned[i].IsSpawned)) continue;
                 bool bottle = Prefabs[i].Item == InventoryItem.FogBottle || Prefabs[i].Item == InventoryItem.VortexBottle;
                 if (bottle)

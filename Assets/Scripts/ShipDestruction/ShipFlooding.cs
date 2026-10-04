@@ -37,6 +37,14 @@ namespace PirateSlop
             }
         }
         public void BeginImpact() => impactId++;
+        public ulong BeginFireImpact() => ++impactId;
+        public void RegisterImpact(ulong eventId, int sectionId, ulong fragments)
+        {
+            if (fragments == 0) return;
+            if (!impacts.TryGetValue(eventId, out var impact)) impacts[eventId] = impact = new Dictionary<int, ulong>();
+            impact.TryGetValue(sectionId, out ulong previous);
+            impact[sectionId] = previous | fragments;
+        }
         public void RegisterImpact(int sectionId, ulong fragments)
         {
             if (fragments == 0) return;

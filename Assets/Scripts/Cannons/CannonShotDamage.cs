@@ -148,6 +148,14 @@ namespace PirateSlop
                     MoveShot(transform.position + delta * fraction);
                     Velocity = Vector3.Lerp(Velocity, nextVelocity, fraction);
                     if (HitSkullMouth(nearest.collider, nearest.point)) return;
+                    var barricade = nearest.collider.GetComponentInParent<NetworkBarricade>();
+                    if (barricade != null && Ammo == InventoryItem.Cannonball)
+                    {
+                        if (Authoritative) barricade.Hit(this, nearest.point);
+                        spent = true;
+                        Destroy(gameObject);
+                        return;
+                    }
                     if (!boomerang && Ammo != InventoryItem.BoardingHook && IsWorldSurface(nearest.collider))
                     {
                         CombatVfx.Impact(nearest.point, nearest.normal, true);
@@ -207,13 +215,16 @@ namespace PirateSlop
                 Source.GetComponent<NetworkCannon>()?.AttachBoarding(SourceCannonIndex, surface.GetComponentInParent<NetworkShip>(), point, normal);
             var damaged = new HashSet<CombatHealth>();
             var ships = new HashSet<NetworkShip>();
-            foreach (var hit in Physics.OverlapSphere(point, CannonAmmo.MortarBlastRadius(Ammo), ~0, QueryTriggerInteraction.Ignore))
+            float blastRadius = Ammo == InventoryItem.FireCannonball ? StandardBlastRadius : CannonAmmo.MortarBlastRadius(Ammo);
+            foreach (var hit in Physics.OverlapSphere(point, blastRadius, ~0, QueryTriggerInteraction.Ignore))
             {
                 if (Source != null && hit.transform.IsChildOf(Source)) continue;
                 var health = hit.GetComponentInParent<CombatHealth>();
                 if (health != null && damaged.Add(health))
                 {
                     health.Damage(Ammo == InventoryItem.Cannonball ? StandardBlastDamage : PlayerDamage, Attacker);
+                    if (Ammo == InventoryItem.FireCannonball) health.GetComponent<NetworkHealth>()?.Ignite(Attacker);
+                    if (Ammo == InventoryItem.IceCannonball) health.GetComponent<NetworkHealth>()?.Extinguish();
                     if (Ammo == InventoryItem.Cannonball || Ammo == InventoryItem.PushCannonball)
                     {
                         Vector3 direction = Vector3.ProjectOnPlane(health.transform.position - point, Vector3.up).normalized;
@@ -229,8 +240,8 @@ namespace PirateSlop
                 {
                     ship.GetComponent<ShipDestruction>()?.Damage(hit, point, normal, Velocity, Ammo, Attacker, CannonAmmo.MortarBlastRadius(Ammo));
                     ship.Motor.ApplyCannonImpulse(point, Velocity.normalized, 1.5f);
-                    if (Ammo == InventoryItem.FireCannonball) ship.Ignite(point, Attacker, CannonAmmo.MortarBlastRadius(Ammo));
-                    if (Ammo == InventoryItem.IceCannonball) ship.FreezeFromShot();
+                    if (Ammo == InventoryItem.FireCannonball) ship.Ignite(point, Attacker, blastRadius, hit, normal);
+                    if (Ammo == InventoryItem.IceCannonball) { ship.FreezeFromShot(); ship.ExtinguishFire(point, CannonAmmo.MortarBlastRadius(Ammo)); }
                     if (Ammo == InventoryItem.PushCannonball) ship.GetComponent<ShipController>()?.ApplyPushImpulse(point, Velocity);
                 }
             }
@@ -271,7 +282,7 @@ namespace PirateSlop
                     if (Ammo == InventoryItem.PushCannonball) ship.ApplyPushImpulse(point, Velocity);
                     if (Ammo == InventoryItem.IceCannonball)
                     {
-                        if (network != null) network.FreezeFromShot(); else ship.Freeze(5f);
+                        if (network != null) { network.FreezeFromShot(); network.ExtinguishFire(point, 3f); } else ship.Freeze(5f);
                     }
                 }
                 if (network != null) network.ImpactVfx(point, normal); else CombatVfx.Impact(point, normal, true, true);
@@ -291,6 +302,7 @@ namespace PirateSlop
                 }
                 if (health != null)
                 {
+                    if (Ammo == InventoryItem.IceCannonball) health.GetComponent<NetworkHealth>()?.Extinguish();
                     if (Ammo == InventoryItem.Cannonball)
                         health.GetComponent<AdvancedPlayerController>()?.ApplyKnockback(Vector3.ProjectOnPlane(Velocity, Vector3.up).normalized * PlayerPushSpeed + Vector3.up * 8f);
                     if (Ammo != InventoryItem.Cannonball) health.Damage(PlayerDamage, Attacker);

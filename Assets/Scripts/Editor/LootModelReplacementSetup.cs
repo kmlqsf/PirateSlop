@@ -230,6 +230,7 @@ namespace PirateSlop.EditorTools
             if (root.GetComponent<PirateSlop.Ships.ShipV3Features>() != null) ConfigureNewShip(root);
             BoardingEquipmentSetup.ConfigureImportedShip(root);
             FirearmModelReplacementSetup.ConfigureImportedShip(root);
+            BarricadeSetup.ConfigureImportedShip(root);
         }
 
         public static void RenderIcons()

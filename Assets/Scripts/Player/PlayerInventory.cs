@@ -63,7 +63,7 @@ namespace PirateSlop
         public InventoryItem ItemAt(int slot) => EquipmentAt(slot) != InventoryItem.None ? EquipmentAt(slot) : HasSabre(slot) ? InventoryItem.Sabre : PistolAt(slot) ? InventoryItem.Pistol : RodAt(slot) ? InventoryItem.Rod : HasCannon(slot) ? InventoryItem.Cannon : FishCount(slot) > 0 ? InventoryItem.Fish : BallCount(slot) > 0 ? BallItem(slot) : HasMallet(slot) ? InventoryItem.Mallet : PlankCount(slot) > 0 ? InventoryItem.Plank : RumCount(slot) > 0 ? InventoryItem.Rum : InventoryItem.None;
         public bool CanFitItem(InventoryItem item)
         {
-            if (item < InventoryItem.Fish || item > InventoryItem.FogBottle || item == InventoryItem.Plank) return false;
+            if (item < InventoryItem.Fish || item > InventoryItem.Barricade || item == InventoryItem.Plank) return false;
             if (CannonAmmo.IsBall(item)) return BallCount(AmmoSlot) < AmmoCapacity && (BallCount(AmmoSlot) == 0 || BallItem(AmmoSlot) == item);
             return StackSlot(item) >= 0;
         }
@@ -84,7 +84,7 @@ namespace PirateSlop
         }
         public bool CanSwapItem(InventoryItem incoming)
         {
-            if (CanFitItem(incoming) || incoming < InventoryItem.Fish || incoming > InventoryItem.FogBottle || incoming == InventoryItem.Plank) return false;
+            if (CanFitItem(incoming) || incoming < InventoryItem.Fish || incoming > InventoryItem.Barricade || incoming == InventoryItem.Plank) return false;
             if (CannonAmmo.IsBall(incoming)) return SelectedSlot == AmmoSlot && BallCount(AmmoSlot) > 0 && BallItem(AmmoSlot) != incoming;
             return SelectedSlot < AmmoSlot && ItemAt(SelectedSlot) != InventoryItem.None;
         }
@@ -132,7 +132,7 @@ namespace PirateSlop
         public bool FishSelected => FishCount(SelectedSlot) > 0;
         public bool RodSelected => RodAt(SelectedSlot);
         public bool PistolSelected => PistolAt(SelectedSlot) && !HandsOccupied;
-        public bool Placing => HasCannon(SelectedSlot);
+        public bool Placing => HasCannon(SelectedSlot) || BarricadeSelected;
         public bool InteractionUsed { get; private set; }
         public bool ControlFocused => GetComponent<DirectShipControls>()?.BlocksPrimary ?? false;
         public bool ControlItemHidden => GetComponent<DirectShipControls>()?.ItemHidden ?? false;
@@ -175,6 +175,7 @@ namespace PirateSlop
 
         void Update()
         {
+            BeginBarricadeFrame();
             placementPending = false;
             InteractionUsed = false; pickup = null; chest = null; aimedBall = null; aimedCannon = null; aimedHarpoon = null; valid = false;
             aimedRumShelf = null;
@@ -229,6 +230,7 @@ namespace PirateSlop
                 pickup = nearest.collider.GetComponentInParent<CannonPickup>();
                 aimedRumShelf = nearest.collider.GetComponentInParent<RumShelf>();
             }
+            if (HandleBarricadeInteraction(nearest)) return;
             if (keyboard.eKey.wasPressedThisFrame && aimedHarpoon != null && motor.ActiveHarpoon == null)
             {
                 InteractionUsed = true;
@@ -304,6 +306,7 @@ namespace PirateSlop
 
         public void PresentPlacement()
         {
+            if (BarricadeSelected) { PresentBarricadePlacement(); return; }
             if (!placementPending || !Placing || !motor.InputActive || motor.LocomotionLocked || motor.IsSwimming || motor.IsClimbing) return;
             var keyboard = Keyboard.current;
             var mouse = Mouse.current;
@@ -420,12 +423,13 @@ namespace PirateSlop
             return false;
         }
 
-        void OnDisable() { CloseLoot(false); if (preview != null) preview.SetActive(false); }
-        void OnDestroy() { if (preview != null) Destroy(preview); if (previewMaterial != null) Destroy(previewMaterial); }
+        void OnDisable() { CloseLoot(false); if (preview != null) preview.SetActive(false); CancelBarricadeWork(); }
+        void OnDestroy() { if (preview != null) Destroy(preview); if (previewMaterial != null) Destroy(previewMaterial); DestroyBarricadePreview(); }
         void OnGUI()
         {
             if (motor == null || motor.PlayerCamera == null || !motor.PlayerCamera.enabled || SessionController.MenuOpen) return;
             if (motor.IsDead || ShipSpyglassView.IsViewing) return;
+            DrawBarricadeWork();
             if (network != null && network.IsOwner && network.WorkingLoot != null && network.WorkingLoot.Kind == SeaLootKind.Raft)
             {
                 DrawRaftLockpick(network.WorkingLoot);
@@ -484,6 +488,7 @@ namespace PirateSlop
             if (Time.unscaledTime - selectionShownAt < 2.5f)
                 PirateHudStyle.Label(new Rect(HudLayout.Width * .5f - 180, HudLayout.Height - slotSize - 56, 360, 26), InventoryIcons.ItemName(ItemAt(SelectedSlot)), PirateHudStyle.Paper);
             string hint = aimedCannon != null && aimedCannon.Network != null && aimedCannon.Network.HasBoarding(aimedCannon.Index) ? "Колесо вверх — натянуть · вниз — ослабить канат" : aimedBall != null && aimedBall.Network != null ? "ЛКМ / E — взять ядра (до 2 в слоте)" : BallSelected && aimedCannon != null && !aimedCannon.AcceptsAmmo(BallItem(SelectedSlot)) ? "Неподходящий боеприпас · E — прицелиться" : BallSelected && aimedCannon != null && !aimedCannon.IsLoaded ? "E — зарядить выбранное ядро" : chest != null ? chest.Hint(this) : pickup != null ? (EmptySlot() >= 0 ? "E — взять разобранную пушку" : "Инвентарь заполнен") : Placing && !cancelled ? "ЛКМ — поставить · R/колесо — поворот · Q/E — наклон\nShift+Q/E — крен · ПКМ — отменить" : "";
+            if (BarricadeSelected) hint = "";
             if (hint.Length > 0) ContextPrompt.Offer(hint, 40);
             if (aimedRumShelf != null) ContextPrompt.Offer(aimedRumShelf.Hint, 40);
             if (aimedHarpoon != null)

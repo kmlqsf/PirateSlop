@@ -6,12 +6,6 @@
 
 Автоматический каталог. Описания обозначают тип файла и известную тему, а не подтверждение использования в игре.
 
-## Docs
-
-| Файл | Краткое описание |
-| --- | --- |
-| [Docs/Reports.zip](<../Reports.zip>) | Архив |
-
 ## Docs/Hotbar
 
 | Файл | Краткое описание |
@@ -48,7 +42,6 @@
 | [Docs/LootModels/Wine.png](<../LootModels/Wine.png>) | Изображение / текстура |
 | [Docs/LootModels/index.html](<../LootModels/index.html>) | Файл .html |
 | [Docs/LootModels/loot-models.md](<../LootModels/loot-models.md>) | Документация |
-| [Docs/LootModels/loot.zip](<../LootModels/loot.zip>) | Архив |
 
 ## Docs/ModelScreenshots
 

@@ -6,86 +6,87 @@ namespace PirateSlop.Networking
 {
     public struct ShipFirePatch
     {
-        public int Id;
-        public Vector3 Position;
-        public Vector3 BlastCenter;
-        public float BlastRadius;
+        public int Id, SectionId, Fragment;
+        public Vector3 Position, Normal;
     }
 
     public sealed partial class NetworkShip
     {
+        sealed class FireExposure
+        {
+            public ShipFireTarget Target;
+            public float Start, Burn, End;
+            public GameObject Attacker;
+            public ulong Impact;
+        }
+
         readonly SyncList<ShipFirePatch> firePatches = new();
         readonly SyncVar<bool> frozen = new();
-        readonly Dictionary<int, float> fireExpiry = new();
-        readonly Dictionary<int, GameObject> fireAttackers = new();
-        readonly Dictionary<int, CannonAmmoVfx> fireVisuals = new();
+        readonly Dictionary<int, FireExposure> fireExposure = new();
+        readonly Dictionary<int, ShipFireVfx> fireVisuals = new();
         readonly HashSet<CombatHealth> burnedPlayers = new();
         readonly List<int> expiredVisuals = new();
+        readonly List<int> pendingFires = new();
+        readonly Dictionary<long, float> wetFragments = new();
         CannonAmmoVfx iceVisual;
+        ShipDestruction fireDestruction;
         int nextFireId;
-        float nextFireDamage;
-        const float FireDuration = 10f, FireDamagePerSecond = 15f;
-        static readonly Vector3 FireHalfExtents = new(2f, 1.5f, 2f);
+        float nextFireContact;
+        const float FireDamagePerSecond = 15f;
 
-        public void Ignite(Vector3 point, GameObject attacker = null, float radius = 0f)
+        public void Ignite(Vector3 point, GameObject attacker = null, float radius = 0f, Collider surface = null, Vector3 normal = default)
         {
-            if (!IsServerInitialized) return;
-            if (radius > 0f)
+            if (!IsServerInitialized || IsSinking) return;
+            fireDestruction ??= GetComponent<ShipDestruction>();
+            if (fireDestruction == null) return;
+            if (normal.sqrMagnitude < .01f) normal = transform.up;
+            var targets = fireDestruction.PlanFire(surface, point, normal);
+            float duration = Random.Range(7f, 9f);
+            ulong impact = fireDestruction.BeginFireImpact();
+            int initial = Mathf.Max(1, Mathf.CeilToInt(targets.Count / 3f));
+            for (int i = 0; i < targets.Count; i++)
             {
-                IgniteArea(point, attacker, radius);
-                return;
+                var target = targets[i];
+                long key = ((long)target.SectionId << 6) | (uint)target.Fragment;
+                if (wetFragments.TryGetValue(key, out float wetUntil) && Time.time < wetUntil) continue;
+                bool present = false;
+                foreach (var exposure in fireExposure.Values)
+                    if (exposure.Target.SectionId == target.SectionId && exposure.Target.Fragment == target.Fragment) { present = true; break; }
+                if (present) continue;
+                if (fireExposure.Count >= 128) break;
+                float spread = i < initial ? 0f : Mathf.Lerp(.65f, 2f, (i - initial) / (float)Mathf.Max(1, targets.Count - initial - 1));
+                fireExposure[++nextFireId] = new FireExposure { Target = target, Attacker = attacker, Impact = impact,
+                    Start = Time.time + spread, Burn = Time.time + duration, End = Time.time + duration };
             }
-            float center = Mathf.Clamp(transform.InverseTransformPoint(point).z, -11f, 11f);
-            for (int row = 0; row < 6; row++)
-                for (int column = 0; column < 3; column++)
-                {
-                    var origin = transform.TransformPoint(new Vector3((column - 1) * 4f, 8.6f, center + (row - 2.5f) * 4f));
-                    RaycastHit deck = default;
-                    float distance = 5f;
-                    foreach (var hit in Physics.RaycastAll(origin, -transform.up, distance, ~0, QueryTriggerInteraction.Ignore))
-                    {
-                        if (hit.collider.attachedRigidbody != Body || Vector3.Dot(hit.normal, transform.up) < .7f) continue;
-                        float height = transform.InverseTransformPoint(hit.point).y;
-                        if (height < 3.8f || height > 7.6f || hit.distance >= distance) continue;
-                        deck = hit; distance = hit.distance;
-                    }
-                    if (deck.collider == null) continue;
-                    AddFirePatch(transform.InverseTransformPoint(deck.point + transform.up * .06f), attacker);
-                }
+            FireImpactObserversRpc(point, normal);
         }
 
-        void IgniteArea(Vector3 point, GameObject attacker, float radius)
+        [FishNet.Object.ObserversRpc(RunLocally = true)]
+        void FireImpactObserversRpc(Vector3 point, Vector3 normal)
         {
-            for (float x = -radius; x <= radius; x += 2f)
-                for (float z = -radius; z <= radius; z += 2f)
-                {
-                    if (x * x + z * z > radius * radius) continue;
-                    Vector3 origin = point + new Vector3(x, radius, z);
-                    RaycastHit nearest = default;
-                    float distance = radius * 2f;
-                    foreach (var hit in Physics.RaycastAll(origin, Vector3.down, distance, ~0, QueryTriggerInteraction.Ignore))
-                    {
-                        if (hit.collider.attachedRigidbody != Body || hit.normal.y < .7f || hit.distance >= distance) continue;
-                        nearest = hit; distance = hit.distance;
-                    }
-                    if (nearest.collider != null && (nearest.point - point).sqrMagnitude <= radius * radius)
-                        AddFirePatch(transform.InverseTransformPoint(nearest.point + Vector3.up * .06f), attacker, transform.InverseTransformPoint(point), radius);
-                }
+            if (IsClientInitialized && !Application.isBatchMode) ShipFireVfx.Impact(point, normal);
         }
 
-        void AddFirePatch(Vector3 position, GameObject attacker, Vector3 blastCenter = default, float blastRadius = 0f)
+        public bool ExtinguishFire(Vector3 point, float radius = 2.5f)
         {
-            if (firePatches.Count >= 54)
+            if (!IsServerInitialized) return false;
+            pendingFires.Clear();
+            foreach (var pair in fireExposure)
             {
-                fireAttackers.Remove(firePatches[0].Id);
-                fireExpiry.Remove(firePatches[0].Id);
-                firePatches.RemoveAt(0);
+                var target = pair.Value.Target;
+                var at = fireDestruction.FireTargetPoint(target.SectionId, target.Fragment, transform.TransformPoint(target.Position));
+                if ((at - point).sqrMagnitude > radius * radius) continue;
+                wetFragments[((long)target.SectionId << 6) | (uint)target.Fragment] = Time.time + 3f;
+                pendingFires.Add(pair.Key);
             }
-            var patch = new ShipFirePatch { Id = ++nextFireId, Position = position, BlastCenter = blastCenter, BlastRadius = blastRadius };
-            firePatches.Add(patch);
-            fireExpiry[patch.Id] = Time.time + FireDuration;
-            fireAttackers[patch.Id] = attacker;
+            bool changed = pendingFires.Count > 0;
+            foreach (int id in pendingFires) RemoveFire(id);
+            foreach (var player in CombatHealth.Active)
+                if (player != null && (player.transform.position - point).sqrMagnitude <= radius * radius)
+                    player.GetComponent<NetworkHealth>()?.Extinguish();
+            return changed;
         }
+
         public void FreezeFromShot()
         {
             if (!IsServerInitialized) return;
@@ -93,41 +94,70 @@ namespace PirateSlop.Networking
             frozen.Value = true;
         }
 
+        void RemoveFire(int id)
+        {
+            fireExposure.Remove(id);
+            for (int i = firePatches.Count - 1; i >= 0; i--)
+                if (firePatches[i].Id == id) { firePatches.RemoveAt(i); break; }
+        }
+
         void UpdateAmmo()
         {
             if (!IsSpawned) return;
-            if (IsServerInitialized)
+            fireDestruction ??= GetComponent<ShipDestruction>();
+            if (IsServerInitialized && fireDestruction != null)
             {
                 frozen.Value = Motor.IsFrozen;
-                for (int i = firePatches.Count - 1; i >= 0; i--)
-                    if (Time.time >= fireExpiry[firePatches[i].Id])
-                    {
-                        fireAttackers.Remove(firePatches[i].Id);
-                        fireExpiry.Remove(firePatches[i].Id);
-                        firePatches.RemoveAt(i);
-                    }
-                if (Time.time >= nextFireDamage)
+                pendingFires.Clear();
+                foreach (var pair in fireExposure)
                 {
-                    nextFireDamage = Time.time + .5f;
+                    var fire = pair.Value;
+                    var target = fire.Target;
+                    var point = fireDestruction.FireTargetPoint(target.SectionId, target.Fragment, transform.TransformPoint(target.Position));
+                    bool submerged = OceanSurface.Instance != null && point.y < OceanSurface.Instance.Height(point) - .05f;
+                    if (!fireDestruction.FireTargetAlive(target.SectionId, target.Fragment) || submerged)
+                    { pendingFires.Add(pair.Key); continue; }
+                    if (Time.time < fire.Start) continue;
+                    bool present = false;
+                    foreach (var patch in firePatches) if (patch.Id == pair.Key) { present = true; break; }
+                    if (!present) firePatches.Add(new ShipFirePatch { Id = pair.Key, SectionId = target.SectionId, Fragment = target.Fragment, Position = target.Position, Normal = target.Normal });
+                    if (Time.time >= fire.Burn)
+                    {
+                        fireDestruction.BurnFragment(target, fire.Attacker, fire.Impact);
+                        fire.Burn = float.PositiveInfinity;
+                    }
+                    if (Time.time >= fire.End) pendingFires.Add(pair.Key);
+                }
+                foreach (int id in pendingFires) RemoveFire(id);
+                if (Time.time >= nextFireContact)
+                {
+                    nextFireContact = Time.time + .25f;
                     burnedPlayers.Clear();
                     foreach (var patch in firePatches)
-                        GetComponent<ShipDestruction>()?.Burn(transform.TransformPoint(patch.Position), .5f, fireAttackers[patch.Id]);
-                    foreach (var patch in firePatches)
-                        foreach (var collider in Physics.OverlapBox(transform.TransformPoint(patch.Position + Vector3.up * 1.5f), FireHalfExtents, transform.rotation, ~0, QueryTriggerInteraction.Ignore))
+                    {
+                        if (!fireExposure.TryGetValue(patch.Id, out var exposure)) continue;
+                        var point = fireDestruction.FireTargetPoint(patch.SectionId, patch.Fragment, transform.TransformPoint(patch.Position));
+                        foreach (var collider in Physics.OverlapCapsule(point + Vector3.up * .15f, point + Vector3.up * 1.25f, .65f, ~0, QueryTriggerInteraction.Ignore))
                         {
-                            if (patch.BlastRadius > 0f && (collider.ClosestPoint(transform.TransformPoint(patch.BlastCenter)) - transform.TransformPoint(patch.BlastCenter)).sqrMagnitude > patch.BlastRadius * patch.BlastRadius) continue;
                             var health = collider.GetComponentInParent<CombatHealth>();
-                            if (health != null && !health.IsDead && burnedPlayers.Add(health))
-                                health.Damage(FireDamagePerSecond * .5f, fireAttackers[patch.Id]);
+                            if (health == null || health.IsDead || !burnedPlayers.Add(health)) continue;
+                            var network = health.GetComponent<NetworkHealth>();
+                            if (network != null) network.Ignite(exposure.Attacker);
+                            else health.Damage(FireDamagePerSecond * .25f, exposure.Attacker);
                         }
+                    }
                 }
             }
             if (!IsClientInitialized || Application.isBatchMode) return;
             if (frozen.Value && iceVisual == null) iceVisual = CannonAmmoVfx.Create(transform, Vector3.up * 3f, true);
             if (!frozen.Value && iceVisual != null) { Destroy(iceVisual.gameObject); iceVisual = null; }
             foreach (var patch in firePatches)
-                if (!fireVisuals.ContainsKey(patch.Id))
-                    fireVisuals[patch.Id] = CannonAmmoVfx.Create(transform, patch.Position, false);
+            {
+                if (!fireVisuals.TryGetValue(patch.Id, out var visual) || visual == null)
+                    fireVisuals[patch.Id] = visual = ShipFireVfx.Create(transform, patch.Position, patch.Normal);
+                if (visual != null && fireDestruction != null)
+                    visual.transform.position = fireDestruction.FireTargetPoint(patch.SectionId, patch.Fragment, transform.TransformPoint(patch.Position));
+            }
             expiredVisuals.Clear();
             foreach (var pair in fireVisuals)
             {
@@ -137,7 +167,7 @@ namespace PirateSlop.Networking
             }
             foreach (int id in expiredVisuals)
             {
-                if (fireVisuals[id] != null) Destroy(fireVisuals[id].gameObject);
+                if (fireVisuals[id] != null) fireVisuals[id].Finish();
                 fireVisuals.Remove(id);
             }
         }
@@ -145,7 +175,8 @@ namespace PirateSlop.Networking
         void ClearAmmo()
         {
             foreach (var visual in fireVisuals.Values) if (visual != null) Destroy(visual.gameObject);
-            fireVisuals.Clear(); fireExpiry.Clear(); fireAttackers.Clear();
+            fireVisuals.Clear(); fireExposure.Clear(); wetFragments.Clear();
+            if (IsServerInitialized) firePatches.Clear();
             if (iceVisual != null) Destroy(iceVisual.gameObject);
             iceVisual = null;
         }

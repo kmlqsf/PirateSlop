@@ -67,7 +67,7 @@ namespace PirateSlop.Networking
         bool sentAim;
         public InventoryItem Item => inventory.EquipmentAt(inventory.SelectedSlot);
         public bool Firearm => Item == InventoryItem.Musket || Item == InventoryItem.DoubleBarrel;
-        public bool Active => IsSpawned && Item >= InventoryItem.Wine && !motor.IsDead && !motor.IsSwimming && !motor.IsClimbing && !motor.LocomotionLocked && !hands.HasHeldBall && !inventory.HandsOccupied;
+        public bool Active => IsSpawned && Item >= InventoryItem.Wine && Item != InventoryItem.Barricade && !motor.IsDead && !motor.IsSwimming && !motor.IsClimbing && !motor.LocomotionLocked && !hands.HasHeldBall && !inventory.HandsOccupied;
         public Transform View => view;
         public Transform World => world;
         public bool CanonicalFirearm { get; private set; }

@@ -31,7 +31,7 @@ namespace PirateSlop
         public ShipDamageReason Reason;
         public ulong RemovedFragments, DetachedFragments;
     }
-    public sealed class ShipDestruction : NetworkBehaviour
+    public sealed partial class ShipDestruction : NetworkBehaviour
     {
         readonly FishNet.Object.Synchronizing.SyncVar<int> openImpacts = new();
         public ShipDestructionProfile Profile;
@@ -259,12 +259,12 @@ namespace PirateSlop
                         branch.Enqueue(child);
                     }
         }
-        void DetachUnsupported(Vector3 point, Vector3 normal, Vector3 velocity, InventoryItem ammo, GameObject attacker)
+        void DetachUnsupported(Vector3 point, Vector3 normal, Vector3 velocity, InventoryItem ammo, GameObject attacker, ulong? floodingImpactId = null)
         {
             foreach (var entry in graph.Unsupported(id => state[id].RemovedFragments))
-                Change(entry.Key, 0f, ShipSectionState.Destroyed, point, normal, velocity, ammo, attacker, ShipDamageReason.SupportLost, 0f, state[entry.Key].RemovedFragments | entry.Value);
+                Change(entry.Key, 0f, ShipSectionState.Destroyed, point, normal, velocity, ammo, attacker, ShipDamageReason.SupportLost, 0f, state[entry.Key].RemovedFragments | entry.Value, floodingImpactId);
         }
-        void Change(int id, float health, ShipSectionState next, Vector3 point, Vector3 normal, Vector3 velocity, InventoryItem ammo, GameObject attacker, ShipDamageReason reason, float damage, ulong? fragmentMask = null)
+        void Change(int id, float health, ShipSectionState next, Vector3 point, Vector3 normal, Vector3 velocity, InventoryItem ammo, GameObject attacker, ShipDamageReason reason, float damage, ulong? fragmentMask = null, ulong? floodingImpactId = null)
         {
             var current = state[id]; var previous = current.State; var definition = definitions[id];
             ulong previousFragments = current.RemovedFragments;
@@ -303,7 +303,8 @@ namespace PirateSlop
                     if (!current.Breach) current.BreachPoint = transform.InverseTransformPoint(point);
                     current.Breach = true;
                     current.LeakingFragments |= openings;
-                    flooding.RegisterImpact(id, openings);
+                    if (floodingImpactId.HasValue) flooding.RegisterImpact(floodingImpactId.Value, id, openings);
+                    else flooding.RegisterImpact(id, openings);
                 }
             }
             state[id] = current;

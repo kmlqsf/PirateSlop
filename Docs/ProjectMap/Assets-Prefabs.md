@@ -13,6 +13,13 @@
 | [Assets/Prefabs/Ocean.prefab](<../../Assets/Prefabs/Ocean.prefab>) | Префаб Unity |
 | [Assets/Prefabs/SM_PirateSloop.prefab](<../../Assets/Prefabs/SM_PirateSloop.prefab>) | Префаб Unity |
 
+## Assets/Prefabs/Barricades
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Prefabs/Barricades/Barricade.prefab](<../../Assets/Prefabs/Barricades/Barricade.prefab>) | Префаб Unity; Предметы, лут и инвентарь |
+| [Assets/Prefabs/Barricades/BarricadePickup.prefab](<../../Assets/Prefabs/Barricades/BarricadePickup.prefab>) | Префаб Unity; Предметы, лут и инвентарь |
+
 ## Assets/Prefabs/Cannons
 
 | Файл | Краткое описание |

@@ -15,6 +15,25 @@
 | [Assets/Models/MenuSeaGrid.asset](<../../Assets/Models/MenuSeaGrid.asset>) | Настройки или данные Unity |
 | [Assets/Models/Whale.blend](<../../Assets/Models/Whale.blend>) | Редактируемая сцена Blender |
 
+## Assets/Models/Barricade
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/Barricade/Barricade.fbx](<../../Assets/Models/Barricade/Barricade.fbx>) | Модель / анимации FBX; Модели и Blender |
+| [Assets/Models/Barricade/Barricade.mat](<../../Assets/Models/Barricade/Barricade.mat>) | Материал Unity |
+| [Assets/Models/Barricade/BarricadeConstruction.mat](<../../Assets/Models/Barricade/BarricadeConstruction.mat>) | Материал Unity; Предметы, лут и инвентарь |
+| [Assets/Models/Barricade/BarricadeFragments.fbx](<../../Assets/Models/Barricade/BarricadeFragments.fbx>) | Модель / анимации FBX; Модели и Blender |
+| [Assets/Models/Barricade/BarricadeFragmentsVisual.prefab](<../../Assets/Models/Barricade/BarricadeFragmentsVisual.prefab>) | Префаб Unity |
+| [Assets/Models/Barricade/BarricadeVisual.prefab](<../../Assets/Models/Barricade/BarricadeVisual.prefab>) | Префаб Unity; Предметы, лут и инвентарь |
+
+## Assets/Models/Barricade/Textures
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/Barricade/Textures/BarricadeBaseColor.jpg](<../../Assets/Models/Barricade/Textures/BarricadeBaseColor.jpg>) | Изображение / текстура |
+| [Assets/Models/Barricade/Textures/BarricadeMetalSmooth.png](<../../Assets/Models/Barricade/Textures/BarricadeMetalSmooth.png>) | Изображение / текстура |
+| [Assets/Models/Barricade/Textures/BarricadeNormal.png](<../../Assets/Models/Barricade/Textures/BarricadeNormal.png>) | Изображение / текстура |
+
 ## Assets/Models/BoardingNet
 
 | Файл | Краткое описание |
@@ -1231,6 +1250,21 @@
 | [Assets/Models/Ships/MainShip/Textures/StylShip_ShipHull_AmbientOcclusion.png](<../../Assets/Models/Ships/MainShip/Textures/StylShip_ShipHull_AmbientOcclusion.png>) | Изображение / текстура |
 | [Assets/Models/Ships/MainShip/Textures/StylShip_ShipHull_BaseColor.png](<../../Assets/Models/Ships/MainShip/Textures/StylShip_ShipHull_BaseColor.png>) | Изображение / текстура |
 | [Assets/Models/Ships/MainShip/Textures/StylShip_ShipHull_NormalOpenGL.png](<../../Assets/Models/Ships/MainShip/Textures/StylShip_ShipHull_NormalOpenGL.png>) | Изображение / текстура |
+
+## Assets/Models/Ships/ShipNameplate
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/Ships/ShipNameplate/ShipNameplate.fbx](<../../Assets/Models/Ships/ShipNameplate/ShipNameplate.fbx>) | Модель / анимации FBX; Паруса и канаты, Модели и Blender |
+
+## Assets/Models/Ships/ShipNameplate/Materials
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/Ships/ShipNameplate/Materials/ShipNameplateBrass.mat](<../../Assets/Models/Ships/ShipNameplate/Materials/ShipNameplateBrass.mat>) | Материал Unity; Модели и Blender |
+| [Assets/Models/Ships/ShipNameplate/Materials/ShipNameplateBrassHighlight.mat](<../../Assets/Models/Ships/ShipNameplate/Materials/ShipNameplateBrassHighlight.mat>) | Материал Unity; Модели и Blender |
+| [Assets/Models/Ships/ShipNameplate/Materials/ShipNameplateWood.mat](<../../Assets/Models/Ships/ShipNameplate/Materials/ShipNameplateWood.mat>) | Материал Unity; Модели и Blender |
+| [Assets/Models/Ships/ShipNameplate/Materials/ShipNameplateWoodEdge.mat](<../../Assets/Models/Ships/ShipNameplate/Materials/ShipNameplateWoodEdge.mat>) | Материал Unity; Модели и Blender |
 
 ## Assets/Models/Ships/ShipSkeleton
 

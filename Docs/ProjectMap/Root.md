@@ -23,8 +23,6 @@
 | [blender.md](<../../blender.md>) | Документация; Паруса и канаты, Модели и Blender |
 | [combat-balance.md](<../../combat-balance.md>) | Документация; Пушки, ядра и лафеты, Личное оружие и урон, Предметы, лут и инвентарь |
 | [firearm-foundation.md](<../../firearm-foundation.md>) | Документация; Личное оружие и урон |
-| [fix_shader_foam.py](<../../fix_shader_foam.py>) | Инструмент Python |
-| [fix_squares.py](<../../fix_squares.py>) | Инструмент Python |
 | [frigate.md](<../../frigate.md>) | Документация; Модели и Blender |
 | [harpoon_generator.py](<../../harpoon_generator.py>) | Инструмент Python |
 | [harpoon_tz.md](<../../harpoon_tz.md>) | Документация |
