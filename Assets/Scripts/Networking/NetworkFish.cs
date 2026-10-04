@@ -5,7 +5,7 @@ using UnityEngine;
 namespace PirateSlop.Networking
 {
     public enum InventoryItem { None = -1, Fish = 0, Pistol = 1, Rod = 2, Cannon = 3, Cannonball = 4, Mallet = 5, Plank = 6, Sabre = 7, FireCannonball = 8, IceCannonball = 9, PushCannonball = 10, BoomerangCannonball = 11, Rum = 12, Wine = 13, Musket = 14, DoubleBarrel = 15, BombParrot = 16, GrapplingHook = 17, BoardingHook = 18, Pufferfish = 19, Swordfish = 20, HolyGrenade = 21, Spyglass = 22, VortexBottle = 23, FogBottle = 24 }
-    public sealed class NetworkFish : NetworkBehaviour
+    public sealed partial class NetworkFish : NetworkBehaviour
     {
         public static readonly System.Collections.Generic.List<NetworkFish> ServerItems = new();
         public bool OnShip => platformId.Value != 0;
@@ -32,7 +32,12 @@ namespace PirateSlop.Networking
         Vector3 visualPosition;
         Quaternion visualRotation;
         NetworkFishProjectile projectile;
-        void OnDisable() => visualReady = false;
+        void OnDisable()
+        {
+            visualReady = false;
+            motionStarted = -1f;
+            RestoreBodyMotion();
+        }
         public bool Available => IsSpawned && !taken && !(GetComponent<NetworkFishProjectile>()?.Flying ?? false) && !(GetComponent<NetworkHolyGrenade>()?.Busy ?? false) && !(GetComponent<NetworkVortexBottle>()?.Flying ?? false) && !(GetComponent<NetworkFogBottle>()?.Flying ?? false);
         float expires;
         float nextFlop;
@@ -54,7 +59,8 @@ namespace PirateSlop.Networking
         {
             ServerItems.Add(this);
             base.OnStartServer(); expires = Item == InventoryItem.Fish ? Time.time + 600f : float.PositiveInfinity;
-            nextFlop = Time.time + Random.Range(10f, 30f);
+            taken = false; airborne = false; escapeNet = null; escapeShip = null;
+            nextFlop = Time.time + Random.Range(3f, 6f);
         }
         public bool Take()
         {
@@ -86,63 +92,9 @@ namespace PirateSlop.Networking
             visualReady = true; visualSupport = support; visualPlatformId = platformId.Value;
             transform.SetPositionAndRotation(support != null ? support.TransformPoint(visualPosition) : visualPosition,
                 support != null ? support.rotation * visualRotation : visualRotation);
-            if (IsServerInitialized && Item == InventoryItem.Fish) SimulateFlop(Time.deltaTime);
+            if (IsServerInitialized && LivingFish) SimulateFlop(Time.deltaTime);
+            if (IsSpawned && IsClientInitialized && LivingFish) AnimateBody();
             if (IsServerInitialized && IsSpawned && Time.time > expires) ServerManager.Despawn(NetworkObject);
-        }
-        void SimulateFlop(float dt)
-        {
-            if (!airborne)
-            {
-                if (Time.time < nextFlop) return;
-                Vector2 sideways = Random.insideUnitCircle.normalized * Random.Range(.5f, 1.3f);
-                velocity = new Vector3(sideways.x, Random.Range(3.2f, 4.8f), sideways.y);
-                if (resolvedPlatform != null)
-                    velocity += Vector3.ProjectOnPlane(resolvedPlatform.transform.forward, Vector3.up).normalized * resolvedPlatform.Motor.Speed;
-                Vector3 start = transform.position; Quaternion facing = transform.rotation;
-                resolvedPlatform = null; Place(null, start, facing); airborne = true;
-                FlopSoundObserversRpc(SoundCue.FishDrop, start);
-            }
-            int steps = Mathf.Max(1, Mathf.CeilToInt(dt / .02f));
-            float step = dt / steps;
-            for (int i = 0; i < steps; i++)
-            {
-                velocity += Vector3.down * (9.81f * step);
-                Vector3 delta = velocity * step;
-                RaycastHit nearest = default; float distance = delta.magnitude;
-                foreach (var hit in Physics.SphereCastAll(transform.position, .075f, delta.normalized, distance, ~0, QueryTriggerInteraction.Ignore))
-                    if (!hit.transform.IsChildOf(transform) && hit.collider.GetComponentInParent<NetworkFish>() == null && hit.distance <= distance)
-                    { nearest = hit; distance = hit.distance; }
-                if (nearest.collider != null)
-                {
-                    if (velocity.y <= 0f && nearest.normal.y > .5f)
-                    {
-                        var ship = nearest.collider.GetComponentInParent<NetworkShip>();
-                        Place(ship != null ? ship.NetworkObject : null, nearest.point + nearest.normal * .12f, Quaternion.FromToRotation(Vector3.up, nearest.normal) * Quaternion.Euler(0, Random.Range(0, 360), 90));
-                        airborne = false; nextFlop = Time.time + Random.Range(10f, 30f);
-                        FlopSoundObserversRpc(SoundCue.FishDrop, transform.position);
-                        return;
-                    }
-                    delta = delta.normalized * Mathf.Max(0, distance - .01f);
-                    velocity = Vector3.Reflect(velocity, nearest.normal) * .4f;
-                }
-                position.Value = transform.position + delta;
-                worldPosition.Value = position.Value; transform.position = position.Value;
-                var ocean = OceanSurface.Instance;
-                if (ocean != null && transform.position.y <= ocean.Height(transform.position))
-                {
-                    Vector3 splashPoint = transform.position;
-                    foreach (var chest in NetworkLootChest.ServerChests)
-                    {
-                        if (chest != null && chest.IsSpawned && chest.Kind == SeaLootKind.Shark)
-                        {
-                            if (Vector3.Distance(splashPoint, chest.EventPoint) <= 12f)
-                                chest.FeedSharks(Item, splashPoint);
-                        }
-                    }
-                    FlopSoundObserversRpc(SoundCue.Splash, transform.position);
-                    ServerManager.Despawn(NetworkObject); return;
-                }
-            }
         }
         [ObserversRpc(RunLocally = true)]
         void FlopSoundObserversRpc(SoundCue cue, Vector3 point) => GameAudio.Play(cue, point, .6f);

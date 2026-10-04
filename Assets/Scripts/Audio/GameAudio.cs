@@ -131,7 +131,7 @@ namespace PirateSlop
             source.volume = Mathf.Clamp01(entry.Volume * scale * audio.bank.Master * (ui && !feedback ? audio.bank.Interface : audio.bank.Effects));
             source.pitch = ui ? 1f : gunshot ? Random.Range(.975f,1.025f) : Random.Range(.94f, 1.06f);
             int clipIndex = Random.Range(0, entry.Clips.Length);
-            if ((cue == SoundCue.Creak || cue == SoundCue.Wheel || cue == SoundCue.WheelReverseRope || cue == SoundCue.CannonballRoll || cue == SoundCue.LockpickMove || cue == SoundCue.LockpickJam) && entry.Clips.Length > 1)
+            if ((cue == SoundCue.ShipBell || cue == SoundCue.DiceSlide || cue == SoundCue.DiceImpact || cue == SoundCue.DiceCup || cue == SoundCue.Creak || cue == SoundCue.Wheel || cue == SoundCue.WheelReverseRope || cue == SoundCue.CannonballRoll || cue == SoundCue.LockpickMove || cue == SoundCue.LockpickJam) && entry.Clips.Length > 1)
             {
                 if (audio.lastVariants.TryGetValue(cue, out int lastVariant))
                 {

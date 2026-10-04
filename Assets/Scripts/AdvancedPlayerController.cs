@@ -76,6 +76,7 @@ public partial class AdvancedPlayerController : MonoBehaviour
     PlayerInventory inventory;
     PirateSlop.Networking.NetworkEquipment equipment;
     DirectShipControls shipControls;
+    PirateSlop.Ships.ShipV3PlayerInteraction shipV3Interaction;
     public bool IsDead => health != null && health.IsDead;
     bool locomotionLocked;
     public SimpleCannon ActiveCannon { get; set; }
@@ -103,6 +104,7 @@ public partial class AdvancedPlayerController : MonoBehaviour
         inventory = GetComponent<PlayerInventory>();
         equipment = GetComponent<PirateSlop.Networking.NetworkEquipment>();
         shipControls = GetComponent<DirectShipControls>();
+        shipV3Interaction = GetComponent<PirateSlop.Ships.ShipV3PlayerInteraction>();
         controller = GetComponent<CharacterController>(); playerCamera = GetComponentInChildren<Camera>(true);
         ConfigureDistanceCulling();
         if (GetComponent<ContextPrompt>() == null) gameObject.AddComponent<ContextPrompt>();
@@ -240,7 +242,9 @@ public partial class AdvancedPlayerController : MonoBehaviour
         pending.Crouch = InputActive && (kb.cKey.isPressed || kb.leftCtrlKey.isPressed);
         pending.Slide |= InputActive && kb.cKey.wasPressedThisFrame;
         pending.Jump |= InputActive && kb.spaceKey.wasPressedThisFrame;
-        pending.Use |= InputActive && (kb.eKey.wasPressedThisFrame || kb.fKey.wasPressedThisFrame) && (IsSwimming || LocomotionLocked || inventory == null || !inventory.AimingAtPickup());
+        if (shipV3Interaction == null) shipV3Interaction = GetComponent<PirateSlop.Ships.ShipV3PlayerInteraction>();
+        if (shipV3Interaction != null && shipV3Interaction.ConsumedInput) pending.Use = false;
+        else pending.Use |= InputActive && (kb.eKey.wasPressedThisFrame || kb.fKey.wasPressedThisFrame) && (IsSwimming || LocomotionLocked || inventory == null || !inventory.AimingAtPickup());
         pending.Release |= kb.qKey.wasPressedThisFrame || !InputActive;
         if (!networked) Simulate(ConsumeCommand(), Time.deltaTime);
     }

@@ -19,20 +19,7 @@ namespace PirateSlop.EditorTools
             var wood = barrel.GetComponent<MeshRenderer>().sharedMaterials[0];
             var mapping = root.transform.worldToLocalMatrix * barrel.transform.localToWorldMatrix;
             var points = barrel.sharedMesh.vertices.Select(mapping.MultiplyPoint3x4).ToArray();
-            var surfaces = new System.Collections.Generic.Dictionary<int, float>();
-            for (int sub = 0; sub < barrel.sharedMesh.subMeshCount; sub++)
-            {
-                var faces = barrel.sharedMesh.GetTriangles(sub);
-                for (int triangle = 0; triangle < faces.Length; triangle += 3)
-                {
-                    Vector3 a = points[faces[triangle]], b = points[faces[triangle + 1]], c = points[faces[triangle + 2]];
-                    Vector3 normal = Vector3.Cross(b - a, c - a);
-                    if (normal.normalized.y < .8f) continue;
-                    int key = Mathf.RoundToInt((a.y + b.y + c.y) / 3f * 1000f);
-                    surfaces.TryGetValue(key, out float area); surfaces[key] = area + normal.magnitude;
-                }
-            }
-            float lidHeight = surfaces.Where(s => s.Key / 1000f > points.Min(v => v.y) + .5f).OrderByDescending(s => s.Value).First().Key / 1000f;
+            float lidHeight = BarrelLidHeight(root, barrel);
             var barrelMesh = UnityEngine.Object.Instantiate(barrel.sharedMesh);
             for (int sub = 0; sub < barrelMesh.subMeshCount; sub++)
             {
@@ -43,7 +30,8 @@ namespace PirateSlop.EditorTools
                 barrelMesh.SetTriangles(kept, sub);
             }
             barrel.sharedMesh = SaveMesh(barrelMesh, Folder + "DiceBarrelWithoutHandle.asset");
-            Vector3 tablePoint = root.transform.InverseTransformPoint(table.position); tablePoint.y = lidHeight + .018f; table.position = root.transform.TransformPoint(tablePoint);
+            foreach (var collider in barrel.GetComponents<MeshCollider>()) collider.sharedMesh = barrel.sharedMesh;
+            Vector3 tablePoint = root.transform.InverseTransformPoint(table.position); tablePoint.y = lidHeight - .003f; table.position = root.transform.TransformPoint(tablePoint);
             var floor = table.GetComponent<BoxCollider>(); floor.center = new Vector3(0,-.025f,0); floor.size = new Vector3(features.DiceRadius * 2f,.05f,features.DiceRadius * 2f);
             foreach (var child in table.Cast<Transform>().Where(t => t.name.StartsWith("DiceRim_", StringComparison.Ordinal) || t.name.StartsWith("DiceSector", StringComparison.Ordinal) || t.name == "DiceCandle").ToArray())
                 UnityEngine.Object.DestroyImmediate(child.gameObject);
@@ -58,7 +46,7 @@ namespace PirateSlop.EditorTools
                 var slot = features.DiceSlots[index];
                 foreach (var child in slot.Cup.transform.Cast<Transform>().Where(t => t.name == "CupBottom" || t.name.StartsWith("CupWall_", StringComparison.Ordinal)).ToArray()) UnityEngine.Object.DestroyImmediate(child.gameObject);
                 Vector3 axis = slot.RestCup - center; axis.y = 0; axis.Normalize();
-                slot.Cup.transform.SetPositionAndRotation(table.position + root.transform.TransformDirection(axis * .37f + Vector3.up * .012f), root.transform.rotation * Quaternion.LookRotation(axis, Vector3.up));
+                slot.Cup.transform.SetPositionAndRotation(table.position + root.transform.TransformDirection(axis * .37f + Vector3.up * .004f), root.transform.rotation * Quaternion.LookRotation(axis, Vector3.up));
                 slot.Cup.transform.localScale = Vector3.one;
                 var parentScale = slot.Cup.transform.parent.lossyScale;
                 slot.Cup.transform.localScale = new Vector3(1f / parentScale.x, 1f / parentScale.y, 1f / parentScale.z);
@@ -74,6 +62,9 @@ namespace PirateSlop.EditorTools
                 for (int i = 0; i < slot.Dice.Length; i++)
                 {
                     var die = slot.Dice[i];
+                    var contact = die.GetComponent<ShipV3DiceContact>();
+                    if (contact == null) contact = die.gameObject.AddComponent<ShipV3DiceContact>();
+                    contact.Ship = features; contact.Slot = index;
                     die.transform.position = table.position + root.transform.TransformDirection(axis * (.21f + i / 2 * .055f) + sideways * ((i % 2 - .5f) * .055f) + Vector3.up * .035f);
                     die.isKinematic = true; die.solverIterations = 12; die.solverVelocityIterations = 4; die.linearDamping = .6f; die.angularDamping = .8f;
                 }
@@ -93,7 +84,8 @@ namespace PirateSlop.EditorTools
                 sector = SaveMesh(sector, Folder + "Sector" + index + ".asset");
                 top.AddComponent<MeshFilter>().sharedMesh = sector; top.AddComponent<MeshRenderer>().sharedMaterial = wood;
                 Vector3 radial = new Vector3(Mathf.Cos(angle + Mathf.PI / 3f), 0, Mathf.Sin(angle + Mathf.PI / 3f));
-                Cube(table, "DiceSectorDivider_" + index, radial * (radius * .5f) + Vector3.up * .055f, Quaternion.LookRotation(radial), new Vector3(.027f, .11f, radius), wood);
+                float centerGap = .105f;
+                Cube(table, "DiceSectorDivider_" + index, radial * ((radius + centerGap) * .5f) + Vector3.up * .055f, Quaternion.LookRotation(radial), new Vector3(.027f, .11f, radius - centerGap), wood);
             }
             for (int index = 0; index < 24; index++)
             {
@@ -102,6 +94,165 @@ namespace PirateSlop.EditorTools
                 Cube(table, "DiceRim_" + index, radial * radius + Vector3.up * .055f, Quaternion.LookRotation(radial), new Vector3(radius * .267f, .11f, .025f), wood);
             }
             ConfigureCandle(features, table);
+            ConfigurePresentation(root);
+            SeatTable(root);
+        }
+
+        public static void ConfigurePresentation(GameObject root)
+        {
+            var features = root.GetComponent<ShipV3Features>();
+            foreach (var slot in features.DiceSlots)
+            {
+                slot.CupVisual = ConfigureVisual(slot.Cup, "DiceCupVisual");
+                slot.Cup.interpolation = RigidbodyInterpolation.None;
+                slot.DiceVisuals = new Transform[slot.Dice.Length];
+                for (int i = 0; i < slot.Dice.Length; i++)
+                {
+                    slot.Dice[i].interpolation = RigidbodyInterpolation.None;
+                    slot.DiceVisuals[i] = ConfigureVisual(slot.Dice[i], "DiceVisual");
+                }
+            }
+            var table = features.DiceTable;
+            foreach (var child in table.Cast<Transform>().Where(t => t.name.StartsWith("DiceZoneNumber_", StringComparison.Ordinal)).ToArray()) UnityEngine.Object.DestroyImmediate(child.gameObject);
+            var gold = ZoneMaterial("ZoneNumberGold", new Color(.66f, .43f, .16f), .65f, .32f);
+            var outline = ZoneMaterial("ZoneNumberOutline", new Color(.055f, .025f, .012f), 0, .16f);
+            var paths = new[]
+            {
+                new[] {
+                    new[] { new Vector2(-.022f,.031f), new Vector2(0,.047f), new Vector2(0,-.047f) },
+                    new[] { new Vector2(-.027f,-.047f), new Vector2(.027f,-.047f) } },
+                new[] {
+                    new[] { new Vector2(-.03f,.026f), new Vector2(-.027f,.039f), new Vector2(-.013f,.047f), new Vector2(.009f,.047f), new Vector2(.026f,.037f), new Vector2(.03f,.022f), new Vector2(.025f,.008f), new Vector2(-.029f,-.043f), new Vector2(-.029f,-.047f), new Vector2(.029f,-.047f), new Vector2(.029f,-.035f) } },
+                new[] {
+                    new[] { new Vector2(-.029f,.036f), new Vector2(-.015f,.047f), new Vector2(.008f,.047f), new Vector2(.026f,.036f), new Vector2(.029f,.022f), new Vector2(.021f,.007f), new Vector2(0,0), new Vector2(.022f,-.006f), new Vector2(.031f,-.024f), new Vector2(.026f,-.039f), new Vector2(.009f,-.049f), new Vector2(-.015f,-.047f), new Vector2(-.031f,-.035f) } }
+            };
+            Vector3 center = root.transform.InverseTransformPoint(table.position);
+            for (int i = 0; i < features.DiceSlots.Length; i++)
+            {
+                Vector3 axis = features.DiceSlots[i].RestCup - center; axis.y = 0; axis.Normalize();
+                var mark = new GameObject("DiceZoneNumber_" + (i + 1)); mark.transform.SetParent(table, false);
+                mark.transform.localPosition = axis * (features.DiceRadius * .55f) + Vector3.up * .0055f;
+                mark.transform.localRotation = Quaternion.LookRotation(-axis, Vector3.up);
+                var shadow = mark.AddComponent<MeshFilter>(); shadow.sharedMesh = SaveMesh(NumberMesh(paths[i], .016f), Folder + "ZoneNumberOutline" + (i + 1) + ".asset");
+                var shadowRenderer = mark.AddComponent<MeshRenderer>(); shadowRenderer.sharedMaterial = outline; shadowRenderer.shadowCastingMode = ShadowCastingMode.Off;
+                var face = new GameObject("GoldInlay"); face.transform.SetParent(mark.transform, false); face.transform.localPosition = Vector3.up * .0007f;
+                face.AddComponent<MeshFilter>().sharedMesh = SaveMesh(NumberMesh(paths[i], .01f), Folder + "ZoneNumber" + (i + 1) + ".asset");
+                var faceRenderer = face.AddComponent<MeshRenderer>(); faceRenderer.sharedMaterial = gold; faceRenderer.shadowCastingMode = ShadowCastingMode.Off;
+            }
+        }
+
+        static Transform ConfigureVisual(Rigidbody body, string name)
+        {
+            var visual = body.transform.Find(name);
+            if (visual == null)
+            {
+                var go = new GameObject(name); visual = go.transform; visual.SetParent(body.transform, false);
+                go.AddComponent<MeshFilter>(); go.AddComponent<MeshRenderer>();
+            }
+            visual.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity); visual.localScale = Vector3.one;
+            var source = body.GetComponent<MeshRenderer>();
+            visual.GetComponent<MeshFilter>().sharedMesh = body.GetComponent<MeshFilter>().sharedMesh;
+            var renderer = visual.GetComponent<MeshRenderer>();
+            renderer.sharedMaterials = source.sharedMaterials; renderer.shadowCastingMode = source.shadowCastingMode;
+            renderer.receiveShadows = source.receiveShadows; renderer.enabled = true;
+            source.enabled = false; source.forceRenderingOff = true;
+            return visual;
+        }
+
+        static float BarrelLidHeight(GameObject root, MeshFilter barrel)
+        {
+            var mapping = root.transform.worldToLocalMatrix * barrel.transform.localToWorldMatrix;
+            var points = barrel.sharedMesh.vertices.Select(mapping.MultiplyPoint3x4).ToArray();
+            var surfaces = new System.Collections.Generic.Dictionary<int, float>();
+            for (int sub = 0; sub < barrel.sharedMesh.subMeshCount; sub++)
+            {
+                var faces = barrel.sharedMesh.GetTriangles(sub);
+                for (int triangle = 0; triangle < faces.Length; triangle += 3)
+                {
+                    Vector3 a = points[faces[triangle]], b = points[faces[triangle + 1]], c = points[faces[triangle + 2]];
+                    Vector3 normal = Vector3.Cross(b - a, c - a);
+                    if (normal.normalized.y < .8f) continue;
+                    int key = Mathf.RoundToInt((a.y + b.y + c.y) / 3f * 1000f);
+                    surfaces.TryGetValue(key, out float area); surfaces[key] = area + normal.magnitude;
+                }
+            }
+            return surfaces.Where(s => s.Key / 1000f > points.Min(v => v.y) + .5f).OrderByDescending(s => s.Value).First().Key / 1000f;
+        }
+
+        public static void SeatTable(GameObject root)
+        {
+            var features = root.GetComponent<ShipV3Features>();
+            var barrel = root.GetComponentsInChildren<MeshFilter>(true).Single(m => m.name == "V17_Dice_Game_Barrel");
+            var table = features.DiceTable;
+            Vector3 point = root.transform.InverseTransformPoint(table.position);
+            point.y = BarrelLidHeight(root, barrel) - .003f;
+            Vector3 desired = root.transform.TransformPoint(point), delta = desired - table.position;
+            table.position = desired;
+            foreach (var slot in features.DiceSlots)
+            {
+                slot.Cup.transform.position += delta;
+                var cupPoint = root.transform.InverseTransformPoint(slot.Cup.transform.position);
+                cupPoint.y = point.y + .004f;
+                slot.Cup.transform.position = root.transform.TransformPoint(cupPoint);
+                slot.RestCup = cupPoint;
+                foreach (var die in slot.Dice)
+                {
+                    die.transform.position += delta;
+                    var collider = die.GetComponent<BoxCollider>();
+                    var bottom = Enumerable.Range(0, 8).Select(i => root.transform.InverseTransformPoint(die.transform.TransformPoint(collider.center + Vector3.Scale(collider.size * .5f, new Vector3((i & 1) == 0 ? -1 : 1, (i & 2) == 0 ? -1 : 1, (i & 4) == 0 ? -1 : 1)))).y).Min();
+                    die.transform.position += root.transform.TransformVector(Vector3.up * (point.y + .004f - bottom));
+                }
+            }
+            foreach (var batch in root.GetComponentsInChildren<ShipV3RenderBatch>(true).Where(b => b.Sources.Any(s => s != null && s.transform.IsChildOf(table))))
+            {
+                var mesh = ShipV3RenderBatch.BuildMesh(batch.Sources, batch.SharedMaterial, batch.BatchAnchor, true);
+                batch.CachedMesh = SaveMesh(mesh, AssetDatabase.GetAssetPath(batch.CachedMesh));
+                batch.GetComponent<MeshFilter>().sharedMesh = batch.CachedMesh;
+                if (batch.CachedShadowMesh != null)
+                {
+                    batch.CachedShadowMesh = SaveMesh(UnityEngine.Object.Instantiate(batch.CachedMesh), AssetDatabase.GetAssetPath(batch.CachedShadowMesh));
+                    if (batch.ShadowProxy != null) batch.ShadowProxy.GetComponent<MeshFilter>().sharedMesh = batch.CachedShadowMesh;
+                }
+            }
+        }
+
+        static Material ZoneMaterial(string name, Color color, float metallic, float smoothness)
+        {
+            string path = Folder + name + ".mat";
+            var material = AssetDatabase.LoadAssetAtPath<Material>(path);
+            if (material == null) { material = new Material(Shader.Find("Universal Render Pipeline/Lit")); AssetDatabase.CreateAsset(material, path); }
+            material.SetColor("_BaseColor", color); material.SetFloat("_Metallic", metallic); material.SetFloat("_Smoothness", smoothness);
+            material.enableInstancing = true; EditorUtility.SetDirty(material);
+            return material;
+        }
+
+        static Mesh NumberMesh(Vector2[][] paths, float width)
+        {
+            var vertices = new System.Collections.Generic.List<Vector3>();
+            var triangles = new System.Collections.Generic.List<int>();
+            foreach (var path in paths)
+            {
+                for (int i = 0; i + 1 < path.Length; i++)
+                {
+                    Vector2 direction = (path[i + 1] - path[i]).normalized;
+                    Vector2 normal = new Vector2(-direction.y, direction.x) * width * .5f;
+                    int start = vertices.Count;
+                    foreach (var point in new[] { path[i] + normal, path[i + 1] + normal, path[i + 1] - normal, path[i] - normal }) vertices.Add(new Vector3(point.x, 0, point.y));
+                    triangles.AddRange(new[] { start, start + 1, start + 2, start, start + 2, start + 3 });
+                }
+                foreach (var point in path)
+                {
+                    int start = vertices.Count; vertices.Add(new Vector3(point.x, 0, point.y));
+                    for (int i = 0; i <= 10; i++)
+                    {
+                        float angle = i * Mathf.PI * .2f;
+                        vertices.Add(new Vector3(point.x + Mathf.Cos(angle) * width * .5f, 0, point.y + Mathf.Sin(angle) * width * .5f));
+                        if (i < 10) triangles.AddRange(new[] { start, start + i + 2, start + i + 1 });
+                    }
+                }
+            }
+            var mesh = new Mesh { name = "DiceZoneNumber" }; mesh.SetVertices(vertices); mesh.SetTriangles(triangles, 0); mesh.RecalculateNormals(); mesh.RecalculateBounds();
+            return mesh;
         }
 
         static void Cube(Transform parent, string name, Vector3 position, Quaternion rotation, Vector3 scale, Material material)
@@ -137,7 +288,7 @@ namespace PirateSlop.EditorTools
         {
             var existing = AssetDatabase.LoadAssetAtPath<Mesh>(path);
             if (existing == null) { AssetDatabase.CreateAsset(mesh, path); return mesh; }
-            EditorUtility.CopySerialized(mesh, existing); UnityEngine.Object.DestroyImmediate(mesh); return existing;
+            EditorUtility.CopySerialized(mesh, existing); EditorUtility.SetDirty(existing); UnityEngine.Object.DestroyImmediate(mesh); return existing;
         }
 
         static Material Material(string path, string albedo, string normal, float smoothness)

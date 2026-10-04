@@ -173,8 +173,9 @@ namespace PirateSlop.EditorTools
                 var mesh = meshes.Single(m => m.name == "V3_Transfer_Boarding_Net_" + sideName);
                 var low = EndBounds(root.transform, mesh, false); var high = EndBounds(root.transform, mesh, true);
                 Vector3 bottom = low.center; bottom.y = low.min.y;
-                Vector3 top = high.center; top.y = high.max.y + 1.1f;
+                Vector3 top = high.center; top.y = high.max.y;
                 var exit = top - Vector3.right * Mathf.Sign(bottom.x) * 1.2f;
+                exit.y = DeckHeight(root, exit) + .035f;
                 AddClimb(root, mesh.transform, "Climb_Boarding_" + sideName, bottom, top, exit, LocalBounds(root.transform, mesh).extents.z, true);
             }
         }
@@ -194,6 +195,34 @@ namespace PirateSlop.EditorTools
             var endpoint = access.InverseTransformPoint(root.transform.TransformPoint(top));
             ladder.Height = endpoint.y; ladder.TopLean = endpoint.z; ladder.TopSideOffset = endpoint.x;
             ladder.ExitPoint = access.InverseTransformPoint(root.transform.TransformPoint(exit));
+        }
+
+        static float DeckHeight(GameObject root, Vector3 point)
+        {
+            float height = float.NegativeInfinity;
+            foreach (var collider in root.GetComponentsInChildren<MeshCollider>(true))
+            {
+                var mesh = collider.sharedMesh;
+                if (mesh == null || !mesh.isReadable || collider.isTrigger || !collider.enabled) continue;
+                var mapping = root.transform.worldToLocalMatrix * collider.transform.localToWorldMatrix;
+                var vertices = mesh.vertices;
+                var triangles = mesh.triangles;
+                for (int i = 0; i < triangles.Length; i += 3)
+                {
+                    var a = mapping.MultiplyPoint3x4(vertices[triangles[i]]);
+                    var b = mapping.MultiplyPoint3x4(vertices[triangles[i + 1]]);
+                    var c = mapping.MultiplyPoint3x4(vertices[triangles[i + 2]]);
+                    if (Vector3.Cross(b - a, c - a).normalized.y < .5f) continue;
+                    float determinant = (b.z - c.z) * (a.x - c.x) + (c.x - b.x) * (a.z - c.z);
+                    if (Mathf.Abs(determinant) < .00001f) continue;
+                    float u = ((b.z - c.z) * (point.x - c.x) + (c.x - b.x) * (point.z - c.z)) / determinant;
+                    float v = ((c.z - a.z) * (point.x - c.x) + (a.x - c.x) * (point.z - c.z)) / determinant;
+                    if (u < 0f || v < 0f || u + v > 1f) continue;
+                    float y = u * a.y + v * b.y + (1f - u - v) * c.y;
+                    if (y <= point.y + .05f) height = Mathf.Max(height, y);
+                }
+            }
+            return float.IsFinite(height) ? height : point.y;
         }
 
         static Bounds LocalBounds(Transform root, MeshFilter mesh)

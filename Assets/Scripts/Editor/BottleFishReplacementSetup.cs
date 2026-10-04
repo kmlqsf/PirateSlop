@@ -96,7 +96,7 @@ namespace PirateSlop.EditorTools
             {
                 string key = keys[i];
                 string directory = Folder + key + "/";
-                ImportModel(directory + key + ".fbx");
+                ImportModel(directory + key + ".fbx", true);
                 ImportTexture(directory + key + "_basecolor.jpeg", false, true, 2048);
                 ImportTexture(directory + key + "_normal.png", true, false, 1024);
                 ImportTexture(directory + key + "MetalSmooth.png", false, false, 1024);
@@ -139,14 +139,14 @@ namespace PirateSlop.EditorTools
             if (EditorApplication.isPlaying) throw new InvalidOperationException("Exit Play Mode first.");
         }
 
-        static void ImportModel(string path)
+        static void ImportModel(string path, bool readable = false)
         {
             var importer = (ModelImporter)AssetImporter.GetAtPath(path);
             importer.importAnimation = false;
             importer.importCameras = false;
             importer.importLights = false;
             importer.materialImportMode = ModelImporterMaterialImportMode.None;
-            importer.isReadable = false;
+            importer.isReadable = readable;
             importer.SaveAndReimport();
         }
 

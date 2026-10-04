@@ -345,6 +345,9 @@ MonoBehaviour:
   - Cue: 57
     Clips:
     - {fileID: 8300000, guid: 303c85838923c09458cef77d39561511, type: 3}
+    - {fileID: 8300000, guid: 026c19b68736b644f877d744ff875ccd, type: 3}
+    - {fileID: 8300000, guid: 54c140ad0b22ef54abdbf5b93fd798ba, type: 3}
+    - {fileID: 8300000, guid: b857d0661b4d82c46a9c77910f6b34bf, type: 3}
     Volume: 0.8
     Distance: 90
   - Cue: 58
@@ -466,6 +469,37 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 44afce00c53a6f14ea4d121b6a8e540a, type: 3}
     Volume: 0.55
     Distance: 20
+  - Cue: 80
+    Clips:
+    - {fileID: 8300000, guid: e4e6a93dd303ba743ae0cfec566b86c9, type: 3}
+    Volume: 0.5
+    Distance: 12
+  - Cue: 81
+    Clips:
+    - {fileID: 8300000, guid: e0bfb00f4b777ba49b2b10f9011a72c0, type: 3}
+    Volume: 0.6
+    Distance: 12
+  - Cue: 77
+    Clips:
+    - {fileID: 8300000, guid: f7c44bfb96412f746a80229802e7fd34, type: 3}
+    - {fileID: 8300000, guid: 18a07283cc793c74f9b408a006b76cc1, type: 3}
+    - {fileID: 8300000, guid: bb224b2fc48e5a143b3d21fe0d39ba98, type: 3}
+    Volume: 0.6
+    Distance: 12
+  - Cue: 78
+    Clips:
+    - {fileID: 8300000, guid: b5ee2771ab231da4180a54f8d07cb518, type: 3}
+    - {fileID: 8300000, guid: ff00ef62fe7b1064696dcb20d839ba2f, type: 3}
+    - {fileID: 8300000, guid: f234280637c23a64ba4eae5d41e5af4d, type: 3}
+    Volume: 0.55
+    Distance: 12
+  - Cue: 79
+    Clips:
+    - {fileID: 8300000, guid: ede6386eaae050f439b2189798f6aaef, type: 3}
+    - {fileID: 8300000, guid: 1f7305ad427c4754c9c2a4126d3e0a2e, type: 3}
+    - {fileID: 8300000, guid: be459619fb6d22c4c8a8eecbae10e072, type: 3}
+    Volume: 0.6
+    Distance: 12
   Ocean: {fileID: 8300000, guid: 385ddaa5ad1a27148a313c3f3ac90d8b, type: 3}
   Wind: {fileID: 8300000, guid: 78aafbe2a5d44ac499fd27fe5bdf180f, type: 3}
   DeckCreaks: {fileID: 0}

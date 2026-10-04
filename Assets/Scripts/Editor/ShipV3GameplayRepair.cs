@@ -36,7 +36,11 @@ namespace PirateSlop.EditorTools
             var wheel = transforms.Single(t => t.name == "V3_Transfer_S029_Helm_P0554_Intact");
             var section = wheel.GetComponentInParent<ShipDamageSection>(true);
             var helm = root.GetComponentInChildren<HelmInteraction>(true);
-            Vector3 center = wheel.position;
+            Vector3 sourceCenter = CircularCenter(wheel.GetComponent<MeshFilter>(), wheel.position, .43f, .53f);
+            var stand = transforms.Single(t => t.name == "V3_Transfer_S029_Helm_P0553_Intact");
+            Vector3 center = ColumnBearingCenter(stand.GetComponent<MeshFilter>());
+            center.z = sourceCenter.z;
+            Vector3 offset = center - sourceCenter;
             Vector3 axis = wheel.TransformDirection(ThinAxis(wheel.GetComponent<MeshFilter>().sharedMesh));
             if (Vector3.Dot(axis, root.transform.forward) < 0f) axis = -axis;
             var children = section.transform.Cast<Transform>().ToArray();
@@ -53,10 +57,15 @@ namespace PirateSlop.EditorTools
             }
             var rotor = transforms.FirstOrDefault(t => t.name == "HelmWheelRotor");
             if (rotor == null) rotor = Child(section.transform, "HelmWheelRotor", center, Quaternion.LookRotation(axis, root.transform.up));
+            var parts = new[] { section.Intact, section.Damaged, section.Critical, section.Destroyed, section.Repaired }.Concat(section.Fragments).Where(p => p != null).Distinct().ToArray();
+            var partPoints = parts.Select(p => p.transform.position + offset).ToArray();
+            var partRotations = parts.Select(p => p.transform.rotation).ToArray();
             rotor.SetPositionAndRotation(center, Quaternion.LookRotation(axis, root.transform.up));
-            foreach (var part in new[] { section.Intact, section.Damaged, section.Critical, section.Destroyed, section.Repaired }.Concat(section.Fragments).Where(p => p != null).Distinct())
-                part.transform.SetParent(rotor, true);
-            wheel.localPosition = Vector3.zero;
+            for (int i = 0; i < parts.Length; i++)
+            {
+                parts[i].transform.SetParent(rotor, true);
+                parts[i].transform.SetPositionAndRotation(partPoints[i], partRotations[i]);
+            }
             helm.transform.position = center;
             helm.Configure(rotor, true);
         }
@@ -78,7 +87,7 @@ namespace PirateSlop.EditorTools
             Vector3 scale = features.CannonballPrefab.transform.localScale;
             float radius = features.CannonballPrefab.GetComponent<SphereCollider>().radius * Mathf.Max(scale.x, scale.y, scale.z);
             features.DispenserDirection = Vector3.back;
-            features.DispenserMouth.position = marker.position - root.transform.TransformDirection(features.DispenserDirection) * radius * .8f + root.transform.up * (radius + .006f);
+            features.DispenserMouth.position = marker.position - root.transform.TransformDirection(features.DispenserDirection) * radius * 2.5f + root.transform.up * (radius + .006f);
             var source = transforms.Single(t => t.name == "V3_Transfer_Control_Main_Course_Lever");
             var oldLever = transforms.FirstOrDefault(t => t.name == "CannonballDispenserLever");
             if (oldLever != null) UnityEngine.Object.DestroyImmediate(oldLever.gameObject);
@@ -86,7 +95,10 @@ namespace PirateSlop.EditorTools
             Vector3 mount = root.transform.InverseTransformPoint(bounds.center);
             mount.x -= bounds.extents.x - .16f;
             mount.y = root.transform.InverseTransformPoint(features.DispenserMouth.position).y + .1f;
-            mount.z = root.transform.InverseTransformPoint(new Vector3(bounds.center.x, bounds.center.y, bounds.min.z)).z - .035f;
+            var support = features.Attachments.First(a => a.Object == mask);
+            var wall = support.Supports.SelectMany(s => s.Sections).Where(s => s != null).Distinct()
+                .Select(s => WorldBounds(s.Intact.GetComponent<MeshFilter>())).OrderBy(b => Mathf.Abs(b.center.y - root.transform.TransformPoint(mount).y)).First();
+            mount.z = root.transform.InverseTransformPoint(new Vector3(wall.center.x, wall.center.y, wall.min.z)).z + .012f;
             var sourceMesh = source.GetComponent<MeshFilter>().sharedMesh;
             Vector3 sourceAxis = source.TransformDirection(ThinAxis(sourceMesh));
             Vector3 sourceTip = source.TransformVector(new Vector3(sourceMesh.bounds.min.x + sourceMesh.bounds.size.x * .08f, sourceMesh.bounds.center.y, sourceMesh.bounds.center.z));
@@ -145,7 +157,7 @@ namespace PirateSlop.EditorTools
             ShipV3DiceRepair.Configure(root);
         }
 
-        static void ConfigureBell(GameObject root)
+        public static void ConfigureBell(GameObject root)
         {
             var features = root.GetComponent<ShipV3Features>();
             var clapper = features.BellClapper;
@@ -164,7 +176,9 @@ namespace PirateSlop.EditorTools
             float limit = Mathf.Clamp(Mathf.Asin(Mathf.Clamp01((innerRadius - striker.radius) / length)) * Mathf.Rad2Deg + 5f, 20f, 36f);
             joint.lowAngularXLimit = new SoftJointLimit { limit = -limit };
             joint.highAngularXLimit = new SoftJointLimit { limit = limit };
+            joint.angularXMotion = ConfigurableJointMotion.Locked;
             joint.angularYMotion = ConfigurableJointMotion.Locked;
+            joint.angularZMotion = ConfigurableJointMotion.Limited;
             joint.angularZLimit = new SoftJointLimit { limit = limit };
             joint.projectionMode = JointProjectionMode.PositionAndRotation;
             joint.projectionDistance = .005f; joint.projectionAngle = 1f;
@@ -172,6 +186,66 @@ namespace PirateSlop.EditorTools
             clapper.solverIterations = 16; clapper.solverVelocityIterations = 8;
             clapper.maxAngularVelocity = 6f; clapper.angularDamping = .65f;
             Anchor(joint.connectedBody.GetComponent<ConfigurableJoint>());
+            var bell = root.GetComponentsInChildren<MeshFilter>(true).Single(m => m.name == "V8_Bell_Body");
+            var bellBounds = WorldBounds(bell);
+            var shortened = UnityEngine.Object.Instantiate(bell.sharedMesh);
+            var vertices = shortened.vertices;
+            float cap = bellBounds.max.y - .15f;
+            for (int i = 0; i < vertices.Length; i++)
+            {
+                Vector3 point = bell.transform.TransformPoint(vertices[i]);
+                Vector3 radial = Vector3.ProjectOnPlane(point - bellBounds.center, root.transform.up);
+                if (radial.magnitude < .13f && point.y < cap)
+                {
+                    point.y = cap + (point.y - bellBounds.min.y) * .04f;
+                    vertices[i] = bell.transform.InverseTransformPoint(point);
+                }
+            }
+            shortened.vertices = vertices; shortened.RecalculateBounds(); shortened.RecalculateNormals();
+            const string bellPath = "Assets/Models/Ships/ShipV3/RuntimeMeshes/BellShortInnerStem.asset";
+            var saved = AssetDatabase.LoadAssetAtPath<Mesh>(bellPath);
+            if (saved == null) { AssetDatabase.CreateAsset(shortened, bellPath); saved = shortened; }
+            else { EditorUtility.CopySerialized(shortened, saved); UnityEngine.Object.DestroyImmediate(shortened); }
+            bell.sharedMesh = saved;
+        }
+
+        public static Vector3 CircularCenter(MeshFilter filter, Vector3 guess, float minRadius, float maxRadius)
+        {
+            var points = filter.sharedMesh.vertices.Select(v => filter.transform.TransformPoint(v))
+                .Where(p => Vector2.Distance(new Vector2(p.x, p.y), new Vector2(guess.x, guess.y)) < maxRadius + .12f)
+                .ToArray();
+            var random = new System.Random(29);
+            Vector2 best = new Vector2(guess.x, guess.y);
+            int most = 0;
+            for (int sample = 0; sample < 600; sample++)
+            {
+                Vector3 pa = points[random.Next(points.Length)], pb = points[random.Next(points.Length)], pc = points[random.Next(points.Length)];
+                Vector2 a = new Vector2(pa.x, pa.y), b = new Vector2(pb.x, pb.y), c = new Vector2(pc.x, pc.y);
+                float determinant = 2f * (a.x * (b.y - c.y) + b.x * (c.y - a.y) + c.x * (a.y - b.y));
+                if (Mathf.Abs(determinant) < .005f) continue;
+                float aa = a.sqrMagnitude, bb = b.sqrMagnitude, cc = c.sqrMagnitude;
+                Vector2 center = new Vector2((aa * (b.y - c.y) + bb * (c.y - a.y) + cc * (a.y - b.y)) / determinant,
+                    (aa * (c.x - b.x) + bb * (a.x - c.x) + cc * (b.x - a.x)) / determinant);
+                float radius = Vector2.Distance(center, a);
+                if (radius < minRadius || radius > maxRadius || Vector2.Distance(center, new Vector2(guess.x, guess.y)) > .11f) continue;
+                int score = 0;
+                foreach (var point in points)
+                    if (Mathf.Abs(Vector2.Distance(center, new Vector2(point.x, point.y)) - radius) < .004f) score++;
+                if (score <= most) continue;
+                most = score; best = center;
+            }
+            if (most < 30) throw new InvalidOperationException("Circular wheel profile not found: " + filter.name);
+            return new Vector3(best.x, best.y, filter.transform.position.z);
+        }
+
+        public static Vector3 ColumnBearingCenter(MeshFilter filter)
+        {
+            var points = filter.sharedMesh.vertices.Select(v => filter.transform.TransformPoint(v)).ToArray();
+            float front = points.Min(p => p.z);
+            float depth = points.Max(p => p.z) - front;
+            var face = points.Where(p => p.z <= front + depth * .08f).ToArray();
+            return new Vector3((face.Min(p => p.x) + face.Max(p => p.x)) * .5f,
+                (face.Min(p => p.y) + face.Max(p => p.y)) * .5f, front);
         }
 
         static void ConfigureLanterns(GameObject root)

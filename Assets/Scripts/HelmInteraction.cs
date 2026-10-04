@@ -14,7 +14,7 @@ public class HelmInteraction : MonoBehaviour
     AdvancedPlayerController player;
     Quaternion wheelRest;
     Vector3 wheelRestPosition;
-    float rudder, lastGrip;
+    float rudder, lastGrip, visualRudder;
     public bool Networked { get; set; }
     public bool StructurallyAvailable { get; set; } = true;
     public float CurrentRudderNormalized => rudder;
@@ -52,12 +52,11 @@ public class HelmInteraction : MonoBehaviour
         if (!holding) { if (IsControlledBy(candidate)) ReleaseControl(); return; }
         if (!float.IsFinite(degrees) || !TryTakeControl(candidate)) return;
         rudder = Mathf.Clamp(rudder - Mathf.Clamp(degrees, -180f, 180f) / (360f * wheelTurnsToFullSteer), -1f, 1f);
-        UpdateWheel();
     }
     public void ReleaseControl() { IsControlling = false; player = null; }
     public void Restore(float value, bool controlling, AdvancedPlayerController driver)
     {
-        rudder = value; player = driver; IsControlling = controlling; UpdateWheel();
+        rudder = value; player = driver; IsControlling = controlling;
     }
     public void ValidateGrip()
     {
@@ -67,13 +66,18 @@ public class HelmInteraction : MonoBehaviour
     public void Simulate(PlayerCommand command, AdvancedPlayerController candidate, float dt)
     {
         ValidateGrip();
-        if (!IsControlling) { rudder = Mathf.MoveTowards(rudder, 0f, centeringSpeed * dt); UpdateWheel(); }
+        if (!IsControlling) rudder = Mathf.MoveTowards(rudder, 0f, centeringSpeed * dt);
     }
     void UpdateWheel()
     {
         if (wheelMesh == null) return;
         if (fixedWheelCenter) wheelMesh.localPosition = wheelRestPosition;
-        wheelMesh.localRotation = wheelRest * Quaternion.AngleAxis(-rudder * 360f * wheelTurnsToFullSteer, Vector3.forward);
+        wheelMesh.localRotation = wheelRest * Quaternion.AngleAxis(-visualRudder * 360f * wheelTurnsToFullSteer, Vector3.forward);
     }
     void Update() { if (!Networked) Simulate(default, null, Time.deltaTime); }
+    void LateUpdate()
+    {
+        visualRudder = Mathf.Lerp(visualRudder, rudder, 1f - Mathf.Exp(-22f * Time.deltaTime));
+        UpdateWheel();
+    }
 }
