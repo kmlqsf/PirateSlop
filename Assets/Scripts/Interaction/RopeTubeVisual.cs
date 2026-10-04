@@ -14,7 +14,21 @@ namespace PirateSlop
         Mesh mesh, baked;
         MeshRenderer output;
         int[][] rings;
-        Vector3[] centers, vertices, normals, sourceVertices;
+        Vector3[] centers, vertices, normals;
+        readonly List<Vector3> sourceVertices = new();
+        sealed class Centerline
+        {
+            public Vector3[] Rest;
+            public Vector3[][] Deltas;
+            public float[] FrameWeights;
+        }
+        static readonly Dictionary<Mesh, Centerline> centerlines = new();
+        Centerline centerline;
+        bool topologyReady;
+        static readonly Unity.Profiling.ProfilerMarker marker = new("Ships.RopeTubes");
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        static void ResetCache() => centerlines.Clear();
         Vector2[] uv;
         int[] triangles;
         float[] weights;
@@ -45,13 +59,39 @@ namespace PirateSlop
             rings = new int[groups.Count][];
             int index = 0;
             foreach (var group in groups.Values) rings[index++] = group.ToArray();
-            baked = new Mesh { name = "RopeCenterline" };
             weights = new float[Skin.sharedMesh.blendShapeCount];
             for (int i = 0; i < weights.Length; i++) weights[i] = float.NaN;
+            var source = Skin.sharedMesh;
+            bool simple = Skin.bones.Length == 0 && source.bindposes.Length == 0;
+            for (int i = 0; i < weights.Length; i++)
+                simple &= source.GetBlendShapeFrameCount(i) == 1 && source.GetBlendShapeFrameWeight(i, 0) > 0f;
+            if (!simple) { baked = new Mesh { name = "RopeCenterline" }; return; }
+            if (centerlines.TryGetValue(source, out centerline)) return;
+            centerline = new Centerline { Rest = AverageRings(source.vertices), Deltas = new Vector3[weights.Length][], FrameWeights = new float[weights.Length] };
+            var delta = new Vector3[source.vertexCount];
+            for (int i = 0; i < weights.Length; i++)
+            {
+                source.GetBlendShapeFrameVertices(i, 0, delta, null, null);
+                centerline.Deltas[i] = AverageRings(delta);
+                centerline.FrameWeights[i] = source.GetBlendShapeFrameWeight(i, 0);
+            }
+            centerlines.Add(source, centerline);
+        }
+
+        Vector3[] AverageRings(IReadOnlyList<Vector3> values)
+        {
+            var result = new Vector3[rings.Length];
+            for (int i = 0; i < rings.Length; i++)
+            {
+                foreach (int vertex in rings[i]) result[i] += values[vertex];
+                result[i] /= rings[i].Length;
+            }
+            return result;
         }
 
         void LateUpdate()
         {
+            using var sample = marker.Auto();
             if (Line == null && Skin == null) { output.enabled = false; return; }
             bool visible = Line != null ? Line.enabled : Skin.enabled;
             output.enabled = visible;
@@ -77,14 +117,23 @@ namespace PirateSlop
                     weights[i] = weight;
                 }
                 if (!changed) return;
-                Skin.BakeMesh(baked, false);
-                sourceVertices = baked.vertices;
                 if (centers == null) centers = new Vector3[rings.Length];
+                if (centerline == null) { Skin.BakeMesh(baked, false); baked.GetVertices(sourceVertices); }
+                var world = Skin.transform.localToWorldMatrix;
                 for (int i = 0; i < rings.Length; i++)
                 {
                     Vector3 center = Vector3.zero;
-                    foreach (int vertex in rings[i]) center += sourceVertices[vertex];
-                    centers[i] = Skin.transform.TransformPoint(center / rings[i].Length);
+                    if (centerline != null)
+                    {
+                        center = centerline.Rest[i];
+                        for (int shape = 0; shape < weights.Length; shape++) center += centerline.Deltas[shape][i] * (weights[shape] / centerline.FrameWeights[shape]);
+                    }
+                    else
+                    {
+                        foreach (int vertex in rings[i]) center += sourceVertices[vertex];
+                        center /= rings[i].Length;
+                    }
+                    centers[i] = world.MultiplyPoint3x4(center);
                 }
             }
             if (centers.Length < 2) { output.enabled = false; return; }
@@ -94,6 +143,7 @@ namespace PirateSlop
             {
                 vertices = new Vector3[count]; normals = new Vector3[count]; uv = new Vector2[count];
                 triangles = new int[(centers.Length - 1) * sides * 6];
+                topologyReady = false;
                 int at = 0;
                 for (int i = 0; i < centers.Length - 1; i++)
                     for (int side = 0; side < sides; side++)
@@ -104,6 +154,8 @@ namespace PirateSlop
                     }
             }
             float distance = 0f;
+            var local = transform.worldToLocalMatrix;
+            var rotation = Quaternion.Inverse(transform.rotation);
             Vector3 across = Vector3.right;
             for (int i = 0; i < centers.Length; i++)
             {
@@ -117,12 +169,14 @@ namespace PirateSlop
                     float angle = side * Mathf.PI * 2f / sides;
                     Vector3 radial = across * Mathf.Cos(angle) + other * Mathf.Sin(angle);
                     int index = i * (sides + 1) + side;
-                    vertices[index] = transform.InverseTransformPoint(centers[i] + radial * Radius);
-                    normals[index] = transform.InverseTransformDirection(radial);
+                    vertices[index] = local.MultiplyPoint3x4(centers[i] + radial * Radius);
+                    normals[index] = rotation * radial;
                     uv[index] = new Vector2(distance * TilesPerMeter, (float)side / sides);
                 }
             }
-            mesh.Clear(); mesh.vertices = vertices; mesh.normals = normals; mesh.uv = uv; mesh.triangles = triangles;
+            if (!topologyReady) mesh.Clear();
+            mesh.vertices = vertices; mesh.normals = normals; mesh.uv = uv;
+            if (!topologyReady) { mesh.triangles = triangles; topologyReady = true; }
             mesh.RecalculateBounds();
         }
 

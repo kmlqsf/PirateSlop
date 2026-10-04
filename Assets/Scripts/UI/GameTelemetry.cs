@@ -138,7 +138,13 @@ namespace PirateSlop
                 if (player.IsBot.Value) bots++;
                 if (player.IsOwner && !player.IsBot.Value) local = player;
             }
-            report.AppendLine($"Загружено: игроков {NetworkPlayer.Active.Count} (ботов {bots})");
+            bool loadTest = SessionController.Instance != null && SessionController.Instance.LoadTestActive;
+            report.AppendLine($"Загружено: игроков {NetworkPlayer.Active.Count} ({(loadTest ? "без AI" : "ботов")} {bots})");
+            if (SessionController.Instance != null && SessionController.Instance.LoadTestActive)
+            {
+                report.AppendLine($"Тест без AI · движение {(SessionController.Instance.LoadTestMoving ? "вкл" : "выкл")} · F7");
+                report.AppendLine(SessionController.Instance.LoadTestPopulationStatus);
+            }
             int chests = server ? NetworkLootChest.ServerChests.Count : NetworkLootChest.ClientChests.Count;
             report.AppendLine($"Кораблей {NetworkShip.ActiveShips.Count} · сундуков {chests}");
             if (local != null)

@@ -6,12 +6,6 @@
 
 Автоматический каталог. Описания обозначают тип файла и известную тему, а не подтверждение использования в игре.
 
-## Docs
-
-| Файл | Краткое описание |
-| --- | --- |
-| [Docs/Reports.zip](<../Reports.zip>) | Архив |
-
 ## Docs/Hotbar
 
 | Файл | Краткое описание |
@@ -61,3 +55,9 @@
 | [Docs/ModelScreenshots/5_cannonball_crate.png](<../ModelScreenshots/5_cannonball_crate.png>) | Изображение / текстура |
 | [Docs/ModelScreenshots/6_boarding_net.png](<../ModelScreenshots/6_boarding_net.png>) | Изображение / текстура |
 | [Docs/ModelScreenshots/7_rum_bottle.png](<../ModelScreenshots/7_rum_bottle.png>) | Изображение / текстура |
+
+## Docs/Performance
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Docs/Performance/NetworkLoadTest.md](<../Performance/NetworkLoadTest.md>) | Документация; Производительность и тест нагрузки без AI |

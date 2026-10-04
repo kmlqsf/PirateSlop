@@ -105,6 +105,8 @@ namespace PirateSlop.Ships
         Vector3[][] restingDice;
         Quaternion[][] restingDiceRotation;
         NetworkShip ship;
+        ShipDestruction destruction;
+        ShipV3RenderBudget renderBudget;
         float[] slotHeartbeat, collectionStart, settledFor, rollStart;
         Vector3[][] collectionFrom;
         Vector2[] cupPosition;
@@ -120,6 +122,10 @@ namespace PirateSlop.Ships
         uint remoteRevision, serverRevision;
         MaterialPropertyBlock glassBlock;
         readonly List<ShipV3PhysicsPose> frame = new();
+        ShipV3PhysicsPose[] publishedFrame;
+        float nextPhysicsHeartbeat;
+        static readonly Unity.Profiling.ProfilerMarker attachmentMarker = new("Ships.Attachments");
+        static readonly Unity.Profiling.ProfilerMarker physicsPublishMarker = new("Ships.PhysicsPublish");
         readonly RaycastHit[] diceObstacles = new RaycastHit[32];
         bool localInteractionReady;
         int appliedLights = -1;
@@ -196,6 +202,8 @@ namespace PirateSlop.Ships
         void Awake()
         {
             ship = GetComponent<NetworkShip>();
+            destruction = GetComponent<ShipDestruction>();
+            renderBudget = GetComponent<ShipV3RenderBudget>();
             doorRest = DoorHinge != null ? DoorHinge.localRotation : Quaternion.identity;
             clapperRest = BellClapper != null ? BellClapper.transform.localRotation : Quaternion.identity;
             dispenserRest = DispenserLever != null ? DispenserLever.localRotation : Quaternion.identity;
@@ -614,7 +622,8 @@ namespace PirateSlop.Ships
             if (DoorHinge != null) DoorHinge.localRotation = doorRest * Quaternion.AngleAxis(door.Value, DoorAxis);
             if (DispenserLever != null) DispenserLever.localRotation = dispenserRest * Quaternion.AngleAxis(dispenserPull.Value * DispenserLeverAngle, DispenserLeverAxis);
             float time = (float)TimeManager.Tick * (float)TimeManager.TickDelta;
-            if (CandleLight != null) { CandleLight.enabled = candleLit.Value && CanUseDice; CandleLight.intensity = 1.1f + .035f * Mathf.Sin(time * 6f); }
+            bool lightsVisible = renderBudget == null || renderBudget.LocalLightsVisible;
+            if (CandleLight != null) { CandleLight.enabled = candleLit.Value && CanUseDice && lightsVisible; CandleLight.intensity = 1.1f + .035f * Mathf.Sin(time * 6f); }
             if (CandleFlame != null)
             {
                 bool burn = candleLit.Value && CanUseDice;
@@ -628,7 +637,7 @@ namespace PirateSlop.Ships
                 var lamp = Lanterns[i];
                 if (lamp.Light != null)
                 {
-                    lamp.Light.enabled = lit;
+                    lamp.Light.enabled = lit && lightsVisible;
                     lamp.Light.intensity = .72f + .055f * Mathf.Sin(time * 9.7f + i * 2.1f) + .035f * Mathf.Sin(time * 16.3f + i);
                 }
                 if (lampsChanged && lamp.Glass != null)
@@ -639,11 +648,11 @@ namespace PirateSlop.Ships
                 }
             }
             appliedLights = lights.Value;
-            uint currentRevision = ship.GetComponent<ShipDestruction>().Revision;
+            uint currentRevision = destruction != null ? destruction.Revision : 0;
             if (currentRevision != attachmentRevision || Time.unscaledTime >= nextAttachmentCheck)
             {
                 attachmentRevision = currentRevision;
-                nextAttachmentCheck = Time.unscaledTime + .25f;
+                nextAttachmentCheck = Time.unscaledTime + 1f;
                 UpdateAttachments();
             }
             if (!IsServerInitialized) return;
@@ -653,6 +662,7 @@ namespace PirateSlop.Ships
                 if (diceOwners[i] >= 0 && (Time.time - slotHeartbeat[i] > .9f || SessionController.Instance.GetPlayer(diceOwners[i]) is not { } player || !CanReachDice(player))) ReleaseSlot(i);
             if (Time.unscaledTime >= nextPublish)
             {
+                using var sample = physicsPublishMarker.Auto();
                 nextPublish = Time.unscaledTime + .05f;
                 frame.Clear();
                 for (int gunIndex = 0; gunIndex < 2; gunIndex++)
@@ -670,12 +680,27 @@ namespace PirateSlop.Ships
                 for (int i = 0; i < Attachments.Length; i++)
                     if (Attachments[i].Detached && Attachments[i].Object != null)
                         frame.Add(new ShipV3PhysicsPose { Index = PhysicsBodies.Length + i, Position = transform.InverseTransformPoint(Attachments[i].Object.position), Rotation = Quaternion.Inverse(transform.rotation) * Attachments[i].Object.rotation });
-                ReceivePhysics(++serverRevision, frame.ToArray());
+                bool changed = publishedFrame == null || publishedFrame.Length != frame.Count;
+                if (changed) publishedFrame = new ShipV3PhysicsPose[frame.Count];
+                for (int i = 0; i < frame.Count && !changed; i++)
+                {
+                    var current = frame[i]; var previous = publishedFrame[i];
+                    changed = current.Index != previous.Index || current.Phase != previous.Phase ||
+                        (current.Position - previous.Position).sqrMagnitude > .000001f || Quaternion.Angle(current.Rotation, previous.Rotation) > .1f ||
+                        Mathf.Abs(current.Cable - previous.Cable) > .001f || (current.Velocity - previous.Velocity).sqrMagnitude > .000001f;
+                }
+                if (changed || Time.unscaledTime >= nextPhysicsHeartbeat)
+                {
+                    frame.CopyTo(publishedFrame);
+                    nextPhysicsHeartbeat = Time.unscaledTime + .5f;
+                    ReceivePhysics(++serverRevision, publishedFrame);
+                }
             }
         }
 
         void UpdateAttachments()
         {
+            using var sample = attachmentMarker.Auto();
             foreach (var item in Attachments)
             {
                 if (item.Object == null || item.Detached) continue;

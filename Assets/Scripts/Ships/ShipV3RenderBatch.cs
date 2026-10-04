@@ -25,6 +25,7 @@ namespace PirateSlop.Ships
         readonly HashSet<ShipDamageSection> trackedSections = new();
         bool dirty;
         float nextVisibilityCheck;
+        static readonly Unity.Profiling.ProfilerMarker marker = new("Ships.RenderBatchVisibility");
 
         void OnEnable()
         {
@@ -62,7 +63,7 @@ namespace PirateSlop.Ships
             }
             else Rebuild();
             dirty = false;
-            nextVisibilityCheck = Time.unscaledTime + .5f;
+            nextVisibilityCheck = Time.unscaledTime + .5f + (GetEntityId().GetHashCode() & 255) / 128f;
         }
 
         void LateUpdate()
@@ -74,8 +75,9 @@ namespace PirateSlop.Ships
                 return;
             }
             if (!dirty && Time.unscaledTime < nextVisibilityCheck) return;
+            using var sample = marker.Auto();
             dirty = false;
-            nextVisibilityCheck = Time.unscaledTime + .5f;
+            nextVisibilityCheck = Time.unscaledTime + 2f;
             bool changed = false;
             for (int i = 0; i < trackedSources.Length; i++)
             {

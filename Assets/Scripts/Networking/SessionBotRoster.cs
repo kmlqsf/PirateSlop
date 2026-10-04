@@ -29,22 +29,30 @@ namespace PirateSlop.Networking
                 else
                 {
                     team = nextTeam++;
-                    if (!TrySpawnShip(team, false, out ship, out slot)) break;
+                    if (!TrySpawnShip(team, LoadTestActive, out ship, out slot)) break;
                 }
                 var bot = Instantiate(PlayerPrefab, CrewSpawn(ship), ship.transform.rotation).GetComponent<NetworkPlayer>();
                 bot.ParticipantId.Value = nextParticipant++;
                 bot.IsBot.Value = true;
+                bot.IsLoadTestParticipant = LoadTestActive;
+                bot.IsTrainingDummy = LoadTestActive;
                 bot.TeamId.Value = team;
                 bot.ShipObject.Value = ship.NetworkObject;
                 bot.HomeShipId.Value = ship.ParticipantId.Value;
-                bot.name = "Bot_" + bot.BotNumber;
+                bot.name = (LoadTestActive ? "LoadParticipant_" : "Bot_") + bot.BotNumber;
                 int key = nextBotKey--;
                 players.Add(key, bot);
                 slots.Add(key, slot);
                 manager.ServerManager.Spawn(bot.NetworkObject);
             }
             if (created > 0 && !stormRunning) StartStorm();
+            if (LoadTestActive) { stormPaused = true; stormPausedAt = stormStarted; }
             if (requested > 0) BroadcastPopulation();
+            if (LoadTestActive)
+            {
+                loadTestFillFinished = true;
+                CheckLoadTestPopulation();
+            }
             if (created < requested) Debug.LogWarning($"BOT_INITIAL_FILL requested={requested} created={created}; no automatic retry");
         }
 

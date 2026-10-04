@@ -29,7 +29,6 @@
 | [harpoon_generator.py](<../../harpoon_generator.py>) | Инструмент Python |
 | [harpoon_tz.md](<../../harpoon_tz.md>) | Документация |
 | [harpoon_unity_tz.md](<../../harpoon_unity_tz.md>) | Документация |
-| [import_anim.log](<../../import_anim.log>) | Файл .log |
 | [lessons.md](<../../lessons.md>) | Документация |
 | [multiplayer-plan.md](<../../multiplayer-plan.md>) | Документация; Движение корабля и палуба, Сеть, сессия и Steam |
 | [procedural-world.md](<../../procedural-world.md>) | Документация; Мир, острова и океан |

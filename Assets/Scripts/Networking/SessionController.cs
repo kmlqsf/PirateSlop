@@ -85,7 +85,8 @@ namespace PirateSlop.Networking
             if (float.TryParse(Value(args, "-duration"), out var duration)) quitAt = Time.realtimeSinceStartup + duration;
             string port = Value(args, "-port") ?? Config.Port.ToString();
             seedInput = Value(args, "-seed") ?? "";
-            if (dedicated || Has(args, "-host")) Begin(true, "127.0.0.1:" + port);
+            if (LoadTestOnStart || Has(args, "-loadtest")) BeginLoadTest();
+            else if (dedicated || Has(args, "-host")) Begin(true, "127.0.0.1:" + port);
             else if (Has(args, "-connect")) Begin(false, Value(args, "-connect"));
             else AdvancedPlayerController.SetCursor(false);
             if (dedicated || Automated) { Application.targetFrameRate = Config.TickRate; if (MenuCamera != null) MenuCamera.gameObject.SetActive(false); }
@@ -291,17 +292,17 @@ namespace PirateSlop.Networking
         }
         bool FindNearbySpawn(ref Vector3 position, ref float yaw)
         {
-            var anchor = players.Values.FirstOrDefault(p => p != null && !p.IsBot.Value && p.Ship != null);
+            var anchor = players.Values.FirstOrDefault(p => p != null && (LoadTestActive || !p.IsBot.Value) && p.Ship != null);
             if (anchor == null) return true;
             yaw = anchor.Ship.transform.eulerAngles.y;
-            float spacing = Mathf.Max(52f, Config.SpawnSpacing);
+            float spacing = Mathf.Max(53f, Config.SpawnSpacing);
             for (int ring = 1; ring <= 8; ring++)
                 for (int i = 0; i < ring * 8; i++)
                 {
                     float angle = i * Mathf.PI * 2f / (ring * 8);
                     Vector3 candidate = anchor.Ship.transform.position + Quaternion.Euler(0, yaw, 0) * new Vector3(Mathf.Cos(angle), 0, Mathf.Sin(angle)) * (spacing * ring);
                     if (!ProceduralWorld.Instance.CanSail(candidate, yaw)) continue;
-                    if (players.Values.Any(p => p != null && p.Ship != null && Vector3.Distance(p.Ship.transform.position, candidate) < spacing - .1f)) continue;
+                    if (!ShipSpawnClear(candidate, spacing - .1f)) continue;
                     position = candidate; return true;
                 }
             return false;
@@ -355,6 +356,7 @@ namespace PirateSlop.Networking
             playing = connecting = false; hostRequested = false;
             if (worldLoading != null) { StopCoroutine(worldLoading); worldLoading = null; }
             manager.ClientManager.StopConnection(); if (manager.ServerManager.Started) manager.ServerManager.StopConnection(true);
+            EndLoadTest();
             if (steamSession) party?.LeaveSession();
             steamSession = false;
             AdvancedPlayerController.SetCursor(false); status = "Отключено";
@@ -365,9 +367,13 @@ namespace PirateSlop.Networking
             if (steamSession && !SessionBusy && !string.IsNullOrEmpty(error)) { party?.LeaveSession(); steamSession = false; }
             TickStorm();
             TickCrewElimination();
-            TickBotDiagnostics();
-            TickBotTasks();
-            if (manager != null && manager.ServerManager.Started) BotPaths.Tick(Config.BotMotion.PathNodesPerFrame, Config.BotMotion.PathMillisecondsPerFrame);
+            TickLoadTest();
+            if (!LoadTestActive)
+            {
+                TickBotDiagnostics();
+                TickBotTasks();
+                if (manager != null && manager.ServerManager.Started) BotPaths.Tick(Config.BotMotion.PathNodesPerFrame, Config.BotMotion.PathMillisecondsPerFrame);
+            }
             if (manager != null && manager.ServerManager.Started && awaitingWorld.Count > 0)
             {
                 expiredAwaitingKeys.Clear();
@@ -458,7 +464,11 @@ namespace PirateSlop.Networking
             if (overlap < depth) { depth=overlap; normal=distance<0f ? -axis : axis; }
             return true;
         }
-        void OnGUI() => DrawSessionMenu();
+        void OnGUI()
+        {
+            DrawSessionMenu();
+            DrawLoadTestWarning();
+        }
     }
 }
 

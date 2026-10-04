@@ -18,12 +18,15 @@ namespace PirateSlop.Ships
         Renderer visual;
         uint windTick;
         float tickTime;
+        ShipV3RenderBudget budget;
+        float nextVisualUpdate;
         void Awake()
         {
             var filter = GetComponent<MeshFilter>();
             skin = GetComponent<SkinnedMeshRenderer>();
             visual = GetComponent<Renderer>();
             ship = GetComponentInParent<NetworkShip>();
+            budget = GetComponentInParent<ShipV3RenderBudget>();
             var source = skin != null ? skin.sharedMesh : filter != null ? filter.sharedMesh : null;
             if (source == null || !source.isReadable) return;
             mesh = Instantiate(source);
@@ -68,6 +71,8 @@ namespace PirateSlop.Ships
         {
             if (ship == null || !ship.IsSpawned) return;
             if (visual != null && !visual.isVisible) return;
+            if (Time.unscaledTime < nextVisualUpdate) return;
+            nextVisualUpdate = Time.unscaledTime + (budget != null ? budget.VisualInterval : 0f);
             uint tick = ship.TimeManager.Tick;
             if (tick != windTick) { windTick = tick; tickTime = Time.unscaledTime; }
             float time = (float)tick * (float)ship.TimeManager.TickDelta + Mathf.Min(Time.unscaledTime - tickTime, (float)ship.TimeManager.TickDelta);

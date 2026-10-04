@@ -10,6 +10,12 @@ namespace PirateSlop.Ships
         static float nextShadowSelection;
         Light[] lights;
         Camera view;
+        public float DistanceSquared { get; private set; }
+        public float VisualInterval => DistanceSquared < 6400f ? 0f : DistanceSquared < 40000f ? .1f : .25f;
+        public bool LocalLightsVisible => DistanceSquared < 10000f;
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        static void ResetState() { active.Clear(); shadowLight = null; nextShadowSelection = 0f; }
 
         void Awake() => lights = GetComponentsInChildren<Light>(true);
         void OnEnable() => active.Add(this);
@@ -31,12 +37,15 @@ namespace PirateSlop.Ships
             Light nearest = null;
             float best = 64f;
             foreach (var budget in active)
+            {
+                budget.DistanceSquared = (budget.transform.position - view.transform.position).sqrMagnitude;
                 foreach (var lamp in budget.lights)
                 {
                     if (lamp == null || !lamp.isActiveAndEnabled) continue;
                     float score = (lamp.transform.position - view.transform.position).sqrMagnitude;
                     if (score < best) { best = score; nearest = lamp; }
                 }
+            }
             if (shadowLight == nearest) return;
             if (shadowLight != null) shadowLight.shadows = LightShadows.None;
             shadowLight = nearest;

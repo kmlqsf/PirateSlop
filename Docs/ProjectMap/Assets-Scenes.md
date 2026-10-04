@@ -10,6 +10,7 @@
 
 | Файл | Краткое описание |
 | --- | --- |
+| [Assets/Scenes/NetworkLoadTest.unity](<../../Assets/Scenes/NetworkLoadTest.unity>) | Сцена Unity; Производительность и тест нагрузки без AI |
 | [Assets/Scenes/NetworkMenu.unity](<../../Assets/Scenes/NetworkMenu.unity>) | Сцена Unity; Проект и точки входа |
 | [Assets/Scenes/NetworkOcean.unity](<../../Assets/Scenes/NetworkOcean.unity>) | Сцена Unity; Проект и точки входа, Мир, острова и океан |
 | [Assets/Scenes/SampleScene.unity](<../../Assets/Scenes/SampleScene.unity>) | Сцена Unity |

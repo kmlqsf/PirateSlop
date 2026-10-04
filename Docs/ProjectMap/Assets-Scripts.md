@@ -106,6 +106,7 @@
 | [Assets/Scripts/Editor/MultiplayerSceneSetup.cs](<../../Assets/Scripts/Editor/MultiplayerSceneSetup.cs>) | Исходник C#: MultiplayerSceneSetup; Сеть, сессия и Steam |
 | [Assets/Scripts/Editor/MultiplayerStartup.cs](<../../Assets/Scripts/Editor/MultiplayerStartup.cs>) | Исходник C#: MultiplayerStartup |
 | [Assets/Scripts/Editor/MultiplayerWorkBridge.cs](<../../Assets/Scripts/Editor/MultiplayerWorkBridge.cs>) | Исходник C#: MultiplayerWorkBridge |
+| [Assets/Scripts/Editor/NetworkLoadTestSetup.cs](<../../Assets/Scripts/Editor/NetworkLoadTestSetup.cs>) | Исходник C#: NetworkLoadTestSetup; Производительность и тест нагрузки без AI |
 | [Assets/Scripts/Editor/NewPirateAnimationBatch.cs](<../../Assets/Scripts/Editor/NewPirateAnimationBatch.cs>) | Исходник C#: NewPirateAnimationBatch; Личное оружие и урон |
 | [Assets/Scripts/Editor/NewPirateSabrePoses.cs](<../../Assets/Scripts/Editor/NewPirateSabrePoses.cs>) | Исходник C#: NewPirateSabrePoses |
 | [Assets/Scripts/Editor/OceanSetup.cs](<../../Assets/Scripts/Editor/OceanSetup.cs>) | Исходник C#: OceanSetup; Мир, острова и океан |
@@ -166,7 +167,7 @@
 | [Assets/Scripts/Interaction/DirectShipControls.cs](<../../Assets/Scripts/Interaction/DirectShipControls.cs>) | Исходник C#: DirectShipControls; Движение корабля и палуба, Паруса и канаты |
 | [Assets/Scripts/Interaction/InteractionContracts.cs](<../../Assets/Scripts/Interaction/InteractionContracts.cs>) | Исходник C#: InteractionKind, IInteractionAgent, InteractionContext, IInteractable |
 | [Assets/Scripts/Interaction/PlayerInteractor.cs](<../../Assets/Scripts/Interaction/PlayerInteractor.cs>) | Исходник C#: PlayerInteractor |
-| [Assets/Scripts/Interaction/RopeTubeVisual.cs](<../../Assets/Scripts/Interaction/RopeTubeVisual.cs>) | Исходник C#: RopeTubeVisual; Паруса и канаты, Пушки, ядра и лафеты |
+| [Assets/Scripts/Interaction/RopeTubeVisual.cs](<../../Assets/Scripts/Interaction/RopeTubeVisual.cs>) | Исходник C#: RopeTubeVisual, Centerline; Паруса и канаты, Пушки, ядра и лафеты, Производительность и тест нагрузки без AI |
 | [Assets/Scripts/Interaction/SailRopeMesh.cs](<../../Assets/Scripts/Interaction/SailRopeMesh.cs>) | Исходник C#: SailRopeMesh; Паруса и канаты |
 | [Assets/Scripts/Interaction/SailRopeVisual.cs](<../../Assets/Scripts/Interaction/SailRopeVisual.cs>) | Исходник C#: SailRopeVisual; Паруса и канаты |
 | [Assets/Scripts/Interaction/ShipControlHandle.cs](<../../Assets/Scripts/Interaction/ShipControlHandle.cs>) | Исходник C#: ShipControlHandle; Паруса и канаты |
@@ -263,14 +264,14 @@
 | [Assets/Scripts/Networking/NetworkPlayer.TargetMarks.cs](<../../Assets/Scripts/Networking/NetworkPlayer.TargetMarks.cs>) | Исходник C#: TargetMarkState, NetworkPlayer |
 | [Assets/Scripts/Networking/NetworkPlayer.TestShip.cs](<../../Assets/Scripts/Networking/NetworkPlayer.TestShip.cs>) | Исходник C#: NetworkPlayer; Персонаж, камера и анимации |
 | [Assets/Scripts/Networking/NetworkPlayer.Voice.cs](<../../Assets/Scripts/Networking/NetworkPlayer.Voice.cs>) | Исходник C#: NetworkPlayer; Звуки и голос |
-| [Assets/Scripts/Networking/NetworkPlayer.cs](<../../Assets/Scripts/Networking/NetworkPlayer.cs>) | Исходник C#: CaptainInput, CaptainState, NetworkPlayer; Персонаж, камера и анимации, Предметы, лут и инвентарь, Сеть, сессия и Steam, Новая система ботов |
+| [Assets/Scripts/Networking/NetworkPlayer.cs](<../../Assets/Scripts/Networking/NetworkPlayer.cs>) | Исходник C#: CaptainInput, CaptainState, NetworkPlayer; Персонаж, камера и анимации, Предметы, лут и инвентарь, Сеть, сессия и Steam, Новая система ботов, Производительность и тест нагрузки без AI |
 | [Assets/Scripts/Networking/NetworkRum.cs](<../../Assets/Scripts/Networking/NetworkRum.cs>) | Исходник C#: NetworkWeapon |
 | [Assets/Scripts/Networking/NetworkShip.Anchor.cs](<../../Assets/Scripts/Networking/NetworkShip.Anchor.cs>) | Исходник C#: NetworkShip; Движение корабля и палуба |
 | [Assets/Scripts/Networking/NetworkShip.Harpoon.cs](<../../Assets/Scripts/Networking/NetworkShip.Harpoon.cs>) | Исходник C#: NetworkShip; Гарпун и корабельное крепление |
 | [Assets/Scripts/Networking/NetworkShip.Kraken.cs](<../../Assets/Scripts/Networking/NetworkShip.Kraken.cs>) | Исходник C#: NetworkShip; Кракен и щупальца |
 | [Assets/Scripts/Networking/NetworkShip.TargetMarks.cs](<../../Assets/Scripts/Networking/NetworkShip.TargetMarks.cs>) | Исходник C#: NetworkShip, TargetMark |
 | [Assets/Scripts/Networking/NetworkShip.VortexBoost.cs](<../../Assets/Scripts/Networking/NetworkShip.VortexBoost.cs>) | Исходник C#: NetworkShip; Предметы, лут и инвентарь |
-| [Assets/Scripts/Networking/NetworkShip.cs](<../../Assets/Scripts/Networking/NetworkShip.cs>) | Исходник C#: NetworkShip; Движение корабля и палуба, Паруса и канаты, Сеть, сессия и Steam |
+| [Assets/Scripts/Networking/NetworkShip.cs](<../../Assets/Scripts/Networking/NetworkShip.cs>) | Исходник C#: NetworkShip; Движение корабля и палуба, Паруса и канаты, Сеть, сессия и Steam, Производительность и тест нагрузки без AI |
 | [Assets/Scripts/Networking/NetworkShipAmmo.cs](<../../Assets/Scripts/Networking/NetworkShipAmmo.cs>) | Исходник C#: ShipFirePatch, NetworkShip |
 | [Assets/Scripts/Networking/NetworkShipPush.cs](<../../Assets/Scripts/Networking/NetworkShipPush.cs>) | Исходник C#: NetworkShipPush |
 | [Assets/Scripts/Networking/NetworkShipRum.cs](<../../Assets/Scripts/Networking/NetworkShipRum.cs>) | Исходник C#: NetworkShip |
@@ -292,6 +293,7 @@
 | [Assets/Scripts/Networking/SessionConfig.cs](<../../Assets/Scripts/Networking/SessionConfig.cs>) | Исходник C#: SessionConfig; Проект и точки входа, Сеть, сессия и Steam |
 | [Assets/Scripts/Networking/SessionController.cs](<../../Assets/Scripts/Networking/SessionController.cs>) | Исходник C#: SessionController; Проект и точки входа, Сеть, сессия и Steam, Новая система ботов |
 | [Assets/Scripts/Networking/SessionCrew.cs](<../../Assets/Scripts/Networking/SessionCrew.cs>) | Исходник C#: SessionController; Новая система ботов |
+| [Assets/Scripts/Networking/SessionLoadTest.cs](<../../Assets/Scripts/Networking/SessionLoadTest.cs>) | Исходник C#: SessionController; Производительность и тест нагрузки без AI |
 | [Assets/Scripts/Networking/SessionMenu.cs](<../../Assets/Scripts/Networking/SessionMenu.cs>) | Исходник C#: SessionController; Меню и HUD |
 | [Assets/Scripts/Networking/SessionMetrics.cs](<../../Assets/Scripts/Networking/SessionMetrics.cs>) | Исходник C#: SessionMetrics |
 | [Assets/Scripts/Networking/SessionPartyMenu.cs](<../../Assets/Scripts/Networking/SessionPartyMenu.cs>) | Исходник C#: SessionController; Меню и HUD |
@@ -378,14 +380,14 @@
 | [Assets/Scripts/Ships/ShipV3ChainInstances.cs](<../../Assets/Scripts/Ships/ShipV3ChainInstances.cs>) | Исходник C#: ShipV3ChainInstances; Движение корабля и палуба |
 | [Assets/Scripts/Ships/ShipV3ClothMotion.cs](<../../Assets/Scripts/Ships/ShipV3ClothMotion.cs>) | Исходник C#: ShipV3ClothMotion; Тестовая карта и водоворот |
 | [Assets/Scripts/Ships/ShipV3CollisionBatch.cs](<../../Assets/Scripts/Ships/ShipV3CollisionBatch.cs>) | Исходник C#: ShipV3CollisionBatch; Движение корабля и палуба |
-| [Assets/Scripts/Ships/ShipV3Features.cs](<../../Assets/Scripts/Ships/ShipV3Features.cs>) | Исходник C#: ShipV3TargetKind, ShipV3Lantern, ShipV3DiceSlot, ShipV3PhysicsPose, ShipV3Support, ShipV3Attachment, ShipV3Features; Движение корабля и палуба, Повреждения корпуса, ремонт и затопление |
+| [Assets/Scripts/Ships/ShipV3Features.cs](<../../Assets/Scripts/Ships/ShipV3Features.cs>) | Исходник C#: ShipV3TargetKind, ShipV3Lantern, ShipV3DiceSlot, ShipV3PhysicsPose, ShipV3Support, ShipV3Attachment, ShipV3Features; Движение корабля и палуба, Повреждения корпуса, ремонт и затопление, Производительность и тест нагрузки без AI |
 | [Assets/Scripts/Ships/ShipV3HarpoonVisual.cs](<../../Assets/Scripts/Ships/ShipV3HarpoonVisual.cs>) | Исходник C#: ShipV3HarpoonVisual; Гарпун и корабельное крепление |
 | [Assets/Scripts/Ships/ShipV3InteractionTarget.cs](<../../Assets/Scripts/Ships/ShipV3InteractionTarget.cs>) | Исходник C#: ShipV3InteractionTarget; Тестовая карта и водоворот |
 | [Assets/Scripts/Ships/ShipV3PlayerInteraction.cs](<../../Assets/Scripts/Ships/ShipV3PlayerInteraction.cs>) | Исходник C#: ShipV3PlayerInteraction; Движение корабля и палуба, Персонаж, камера и анимации, Тестовая карта и водоворот |
-| [Assets/Scripts/Ships/ShipV3RenderBatch.cs](<../../Assets/Scripts/Ships/ShipV3RenderBatch.cs>) | Исходник C#: ShipV3RenderBatch; Движение корабля и палуба |
-| [Assets/Scripts/Ships/ShipV3RenderBudget.cs](<../../Assets/Scripts/Ships/ShipV3RenderBudget.cs>) | Исходник C#: ShipV3RenderBudget; Движение корабля и палуба |
+| [Assets/Scripts/Ships/ShipV3RenderBatch.cs](<../../Assets/Scripts/Ships/ShipV3RenderBatch.cs>) | Исходник C#: ShipV3RenderBatch; Движение корабля и палуба, Производительность и тест нагрузки без AI |
+| [Assets/Scripts/Ships/ShipV3RenderBudget.cs](<../../Assets/Scripts/Ships/ShipV3RenderBudget.cs>) | Исходник C#: ShipV3RenderBudget; Движение корабля и палуба, Производительность и тест нагрузки без AI |
 | [Assets/Scripts/Ships/ShipV3TestSpawner.cs](<../../Assets/Scripts/Ships/ShipV3TestSpawner.cs>) | Исходник C#: ShipV3TestSpawner; Тестовая карта и водоворот |
-| [Assets/Scripts/Ships/ShipV3VisualRig.cs](<../../Assets/Scripts/Ships/ShipV3VisualRig.cs>) | Исходник C#: ShipV3Pose, ShipV3Motion, ShipV3VisualRig; Движение корабля и палуба, Паруса и канаты |
+| [Assets/Scripts/Ships/ShipV3VisualRig.cs](<../../Assets/Scripts/Ships/ShipV3VisualRig.cs>) | Исходник C#: ShipV3Pose, ShipV3Motion, ShipV3VisualRig; Движение корабля и палуба, Паруса и канаты, Производительность и тест нагрузки без AI |
 
 ## Assets/Scripts/Stations
 
@@ -405,7 +407,7 @@
 | [Assets/Scripts/UI/CannonRangeHud.cs](<../../Assets/Scripts/UI/CannonRangeHud.cs>) | Исходник C#: CannonRangeHud |
 | [Assets/Scripts/UI/ContextPrompt.cs](<../../Assets/Scripts/UI/ContextPrompt.cs>) | Исходник C#: ContextPrompt |
 | [Assets/Scripts/UI/CrewPresentation.cs](<../../Assets/Scripts/UI/CrewPresentation.cs>) | Исходник C#: CrewPresentation; Новая система ботов |
-| [Assets/Scripts/UI/GameTelemetry.cs](<../../Assets/Scripts/UI/GameTelemetry.cs>) | Исходник C#: GameTelemetry; Меню и HUD |
+| [Assets/Scripts/UI/GameTelemetry.cs](<../../Assets/Scripts/UI/GameTelemetry.cs>) | Исходник C#: GameTelemetry; Меню и HUD, Производительность и тест нагрузки без AI |
 | [Assets/Scripts/UI/GameVersionOverlay.cs](<../../Assets/Scripts/UI/GameVersionOverlay.cs>) | Исходник C#: GameVersionOverlay |
 | [Assets/Scripts/UI/HudLayout.cs](<../../Assets/Scripts/UI/HudLayout.cs>) | Исходник C#: HudLayout, Scope; Меню и HUD |
 | [Assets/Scripts/UI/InteractionHud.cs](<../../Assets/Scripts/UI/InteractionHud.cs>) | Исходник C#: InteractionHud |

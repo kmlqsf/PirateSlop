@@ -12,25 +12,38 @@ namespace PirateSlop.Networking
         int nextTeam = 1, botPopulation, teamPopulation;
         float nextCrewCheck;
         readonly HashSet<int> eliminatedTeams = new();
+        readonly List<int> eliminatedBotKeys = new();
         public bool TeamEliminated(int team) => eliminatedTeams.Contains(team);
         void TickCrewElimination()
         {
             if (manager == null || !manager.ServerManager.Started || Time.time < nextCrewCheck) return;
             nextCrewCheck = Time.time + .5f;
-            foreach (var ship in NetworkShip.ActiveShips.ToArray())
+            for (int shipIndex = NetworkShip.ActiveShips.Count - 1; shipIndex >= 0; shipIndex--)
             {
+                var ship = NetworkShip.ActiveShips[shipIndex];
                 if (ship == null || !ship.IsSpawned || ship.IsSinking || ship.TeamId.Value <= 0) continue;
-                var crew = players.Values.Where(p => p != null && p.HomeShipId.Value == ship.ParticipantId.Value).ToArray();
-                if (crew.Length == 0 || crew.Any(p => !p.Motor.IsDead)) continue;
-                eliminatedTeams.Add(ship.TeamId.Value);
-                foreach (var member in crew) member.Eliminated.Value = true;
-                ship.BeginSinking();
-                foreach (var entry in players.Where(e => e.Value != null && e.Value.IsBot.Value && e.Value.TeamId.Value == ship.TeamId.Value).ToArray())
+                bool hasCrew = false, hasSurvivor = false;
+                foreach (var member in players.Values)
                 {
-                    entry.Value.ReleaseServerInteractions();
-                    EndBotDiagnostics(entry.Value.BotNumber, "Экипаж выбыл из матча");
-                    manager.ServerManager.Despawn(entry.Value.NetworkObject);
-                    players.Remove(entry.Key); slots.Remove(entry.Key);
+                    if (member == null || member.HomeShipId.Value != ship.ParticipantId.Value) continue;
+                    hasCrew = true;
+                    if (!member.Motor.IsDead) { hasSurvivor = true; break; }
+                }
+                if (!hasCrew || hasSurvivor) continue;
+                eliminatedTeams.Add(ship.TeamId.Value);
+                foreach (var member in players.Values)
+                    if (member != null && member.HomeShipId.Value == ship.ParticipantId.Value) member.Eliminated.Value = true;
+                ship.BeginSinking();
+                eliminatedBotKeys.Clear();
+                foreach (var entry in players)
+                    if (entry.Value != null && entry.Value.IsBot.Value && entry.Value.TeamId.Value == ship.TeamId.Value) eliminatedBotKeys.Add(entry.Key);
+                foreach (int key in eliminatedBotKeys)
+                {
+                    var member = players[key];
+                    member.ReleaseServerInteractions();
+                    EndBotDiagnostics(member.BotNumber, "Экипаж выбыл из матча");
+                    manager.ServerManager.Despawn(member.NetworkObject);
+                    players.Remove(key); slots.Remove(key);
                 }
                 BroadcastPopulation();
             }
@@ -88,6 +101,7 @@ namespace PirateSlop.Networking
             botPopulation = teamPopulation = 0;
 
             stormRunning = false;
+            EndLoadTest();
         }
 
         bool TrySpawnShip(int team, bool clustered, out NetworkShip ship, out int slot)
@@ -100,9 +114,14 @@ namespace PirateSlop.Networking
                 if (slots.ContainsValue(i)) continue;
                 Vector3 position = spawns[i].Position;
                 float yaw = spawns[i].Yaw;
-                if (clustered && !FindNearbySpawn(ref position, ref yaw)) continue;
+                if (clustered && !FindNearbySpawn(ref position, ref yaw))
+                {
+                    if (!LoadTestActive) continue;
+                    position = spawns[i].Position;
+                    yaw = spawns[i].Yaw;
+                }
                 if (!world.CanSail(position, yaw)) continue;
-                if (NetworkShip.ActiveShips.Any(s => s != null && Vector3.Distance(s.transform.position, position) < 52f)) continue;
+                if (!ShipSpawnClear(position, 52f)) continue;
                 ship = Instantiate(ShipPrefab, position, Quaternion.Euler(0, yaw, 0)).GetComponent<NetworkShip>();
                 ship.ParticipantId.Value = nextParticipant++;
                 ship.TeamId.Value = team;
@@ -111,6 +130,14 @@ namespace PirateSlop.Networking
                 return true;
             }
             return false;
+        }
+
+        bool ShipSpawnClear(Vector3 position, float clearance)
+        {
+            float distanceSquared = clearance * clearance;
+            foreach (var existing in NetworkShip.ActiveShips)
+                if (existing != null && (existing.transform.position - position).sqrMagnitude < distanceSquared) return false;
+            return true;
         }
 
     }

@@ -259,6 +259,8 @@ namespace PirateSlop.Networking
                 if(MenuAction(x,y+232,panelWidth,"Настройки")) menuPage=7;
                 if(MenuAction(x,y+290,panelWidth,"Выйти из игры")) Application.Quit();
                 if(!playing && MenuAction(x,y+348,panelWidth,"Тестовая карта")) Begin(true,"127.0.0.1:"+Config.Port,true);
+                if(!playing && MenuAction(x,y+406,panelWidth,"Тест нагрузки · без AI")) BeginLoadTest();
+                if(playing && LoadTestActive && MenuAction(x,y+406,panelWidth,"Движение нагрузки · F7")) ToggleLoadTestMotion();
             }
             if(!string.IsNullOrEmpty(error))
             {

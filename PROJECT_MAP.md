@@ -12,14 +12,14 @@
 
 ## Полный каталог
 
-Учтено 4433 файлов без `.meta`. Ещё 4681 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
+Учтено 4435 файлов без `.meta`. Ещё 4677 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
 
 | Раздел | Назначение | Файлов |
 | --- | --- | ---: |
 | [.agents](<Docs/ProjectMap/.agents.md>) | Ресурсы раздела; точный состав — в каталоге | 1 |
 | [.cursor](<Docs/ProjectMap/.cursor.md>) | Ресурсы раздела; точный состав — в каталоге | 1 |
-| [.opencode](<Docs/ProjectMap/.opencode.md>) | Ресурсы раздела; точный состав — в каталоге | 4 |
-| [Art](<Docs/ProjectMap/Art.md>) | Исходники арта и Blender | 167 |
+| [.opencode](<Docs/ProjectMap/.opencode.md>) | Ресурсы раздела; точный состав — в каталоге | 1 |
+| [Art](<Docs/ProjectMap/Art.md>) | Исходники арта и Blender | 176 |
 | [Assets](<Docs/ProjectMap/Assets.md>) | Ресурсы раздела; точный состав — в каталоге | 3 |
 | [Assets/Animations](<Docs/ProjectMap/Assets-Animations.md>) | Анимации | 51 |
 | [Assets/Audio](<Docs/ProjectMap/Assets-Audio.md>) | Звуковые ресурсы и лицензии | 182 |
@@ -28,15 +28,15 @@
 | [Assets/Fog Particles](<Docs/ProjectMap/Assets-Fog Particles.md>) | Ресурсы раздела; точный состав — в каталоге | 17 |
 | [Assets/Game](<Docs/ProjectMap/Assets-Game.md>) | Игровые подсистемы и эффекты | 79 |
 | [Assets/Houidisoft technology](<Docs/ProjectMap/Assets-Houidisoft technology.md>) | Ресурсы раздела; точный состав — в каталоге | 15 |
-| [Assets/JMO Assets](<Docs/ProjectMap/Assets-JMO Assets.md>) | Ресурсы раздела; точный состав — в каталоге | 488 |
+| [Assets/JMO Assets](<Docs/ProjectMap/Assets-JMO Assets.md>) | Ресурсы раздела; точный состав — в каталоге | 489 |
 | [Assets/Materials](<Docs/ProjectMap/Assets-Materials.md>) | Материалы | 151 |
 | [Assets/Mirza](<Docs/ProjectMap/Assets-Mirza.md>) | Ресурсы раздела; точный состав — в каталоге | 186 |
 | [Assets/Models](<Docs/ProjectMap/Assets-Models.md>) | Модели и связанные ресурсы | 1359 |
 | [Assets/Plugins](<Docs/ProjectMap/Assets-Plugins.md>) | Плагины | 5 |
 | [Assets/Prefabs](<Docs/ProjectMap/Assets-Prefabs.md>) | Готовые игровые объекты | 132 |
 | [Assets/Resources](<Docs/ProjectMap/Assets-Resources.md>) | Ресурсы, доступные для загрузки по имени | 43 |
-| [Assets/Scenes](<Docs/ProjectMap/Assets-Scenes.md>) | Сохранённые сцены | 3 |
-| [Assets/Scripts](<Docs/ProjectMap/Assets-Scripts.md>) | Игровой код и редакторские инструменты | 348 |
+| [Assets/Scenes](<Docs/ProjectMap/Assets-Scenes.md>) | Сохранённые сцены | 4 |
+| [Assets/Scripts](<Docs/ProjectMap/Assets-Scripts.md>) | Игровой код и редакторские инструменты | 350 |
 | [Assets/Settings](<Docs/ProjectMap/Assets-Settings.md>) | Настройки игровых систем и рендеринга | 44 |
 | [Assets/Shaders](<Docs/ProjectMap/Assets-Shaders.md>) | Шейдеры | 7 |
 | [Assets/StreamingAssets](<Docs/ProjectMap/Assets-StreamingAssets.md>) | Ресурсы раздела; точный состав — в каталоге | 2 |
@@ -44,11 +44,10 @@
 | [Assets/ThirdParty](<Docs/ProjectMap/Assets-ThirdParty.md>) | Сторонние ресурсы | 27 |
 | [Assets/TutorialInfo](<Docs/ProjectMap/Assets-TutorialInfo.md>) | Ресурсы раздела; точный состав — в каталоге | 7 |
 | [Assets/UI](<Docs/ProjectMap/Assets-UI.md>) | Ресурсы интерфейса | 40 |
-| [Assets/_Recovery](<Docs/ProjectMap/Assets-_Recovery.md>) | Сохранённые восстановленные данные | 9 |
 | [Docs](<Docs/ProjectMap/Docs.md>) | Документы и сохранённые отчёты | 36 |
-| [Packages](<Docs/ProjectMap/Packages.md>) | Манифест, lock-файл и встроенные пакеты | 916 |
+| [Packages](<Docs/ProjectMap/Packages.md>) | Манифест, lock-файл и встроенные пакеты | 918 |
 | [ProjectSettings](<Docs/ProjectMap/ProjectSettings.md>) | Настройки Unity | 28 |
-| [Root](<Docs/ProjectMap/Root.md>) | Корневые инструкции, планы и служебные файлы | 29 |
+| [Root](<Docs/ProjectMap/Root.md>) | Корневые инструкции, планы и служебные файлы | 28 |
 | [ThirdParty](<Docs/ProjectMap/ThirdParty.md>) | Сторонние ресурсы | 2 |
 | [Tools](<Docs/ProjectMap/Tools.md>) | Инструменты разработки и загрузчик контекста | 18 |
 
@@ -73,6 +72,7 @@
 
 Windows, URP, FishNet; подключения по IP и Steam имеют отдельные ветки. Пакет file: в manifest — путь зависимости, а не её версия.
 Запуск через NetworkMenu, игровой мир NetworkOcean; корабль и игрок — сетевые префабы. Старые записи о SampleScene исторические.
+Очистка 2026-10-04: удалены старые визуальные отчёты Docs/StormCloudBakeoff, Docs/StormFinal, Docs/StormV2, Docs/StormV3 и Docs/Reports.zip; сцены Assets/_Recovery, изображения Assets/Screenshots и пять резервных .blend1 с сохранением основных .blend. Игровые модели, код, префабы, Resources и сетевой реестр не изменялись.
 Ship V3 теперь единственный игровой корабль: SessionController.ShipPrefab в NetworkMenu указывает на Assets/Resources/Ships/ShipV3Test.prefab. Старый NetworkShip.prefab сохранён как архивный ассет и не создаётся в игре. Историческое имя ShipV3Test сохранено вместе с GUID и регистрацией FishNet.
 
 - [Assets/Scripts/Networking/SessionController.cs](<Assets/Scripts/Networking/SessionController.cs>) — Исходник C#: SessionController.
@@ -158,7 +158,7 @@ Ship V3: RopeTubeVisual восстанавливает постоянное кр
 - [Assets/Shaders/Sail.shader](<Assets/Shaders/Sail.shader>) — Шейдер.
 - [Assets/Scripts/Ships/ShipV3VisualRig.cs](<Assets/Scripts/Ships/ShipV3VisualRig.cs>) — Исходник C#: ShipV3Pose, ShipV3Motion, ShipV3VisualRig.
 - [Assets/Scripts/Interaction/ShipGripAim.cs](<Assets/Scripts/Interaction/ShipGripAim.cs>) — Исходник C#: ShipGripAim.
-- [Assets/Scripts/Interaction/RopeTubeVisual.cs](<Assets/Scripts/Interaction/RopeTubeVisual.cs>) — Исходник C#: RopeTubeVisual.
+- [Assets/Scripts/Interaction/RopeTubeVisual.cs](<Assets/Scripts/Interaction/RopeTubeVisual.cs>) — Исходник C#: RopeTubeVisual, Centerline.
 - [unity.md](<unity.md>) — Документация.
 - [blender.md](<blender.md>) — Документация.
 
@@ -192,7 +192,7 @@ NetworkCannon отправляет изменения placements каждые 0.
 - [Assets/Scripts/Cannons/BoardingWalkSurface.cs](<Assets/Scripts/Cannons/BoardingWalkSurface.cs>) — Исходник C#: BoardingWalkSurface.
 - [Assets/Scripts/Cannons/BoardingHookTarget.cs](<Assets/Scripts/Cannons/BoardingHookTarget.cs>) — Исходник C#: BoardingHookTarget.
 - [Assets/Scripts/Networking/NetworkBoarding.cs](<Assets/Scripts/Networking/NetworkBoarding.cs>) — Исходник C#: BoardingCable, NetworkCannon.
-- [Assets/Scripts/Interaction/RopeTubeVisual.cs](<Assets/Scripts/Interaction/RopeTubeVisual.cs>) — Исходник C#: RopeTubeVisual.
+- [Assets/Scripts/Interaction/RopeTubeVisual.cs](<Assets/Scripts/Interaction/RopeTubeVisual.cs>) — Исходник C#: RopeTubeVisual, Centerline.
 - [combat-balance.md](<combat-balance.md>) — Документация.
 - [unity.md](<unity.md>) — Документация.
 
@@ -496,7 +496,7 @@ Whisky Bottle с бесплатной BlenderKit Royalty Free загружена
 - [Assets/Scripts/Editor/PirateCharacterImport.cs](<Assets/Scripts/Editor/PirateCharacterImport.cs>) — Исходник C#: PirateCharacterImport.
 - [Assets/Scripts/Editor/SailRiggingArtSetup.cs](<Assets/Scripts/Editor/SailRiggingArtSetup.cs>) — Исходник C#: SailRiggingArtSetup.
 - [Assets/Scripts/Editor/MainShipSetup.cs](<Assets/Scripts/Editor/MainShipSetup.cs>) — Исходник C#: MainShipSetup.
-- [../NewShip/Ship_V3_Fitted.blend](<../NewShip/Ship_V3_Fitted.blend>) — Редактируемая сцена Blender.
+- `../NewShip/Ship_V3_Fitted.blend` — отсутствует в текущем снимке; не использовать как готовый путь.
 - [Assets/Scripts/Editor/ShipV3ImportSetup.cs](<Assets/Scripts/Editor/ShipV3ImportSetup.cs>) — Исходник C#: ShipV3ImportSetup.
 - [Tools/ShipV3/ExportFromOpenBlender.py](<Tools/ShipV3/ExportFromOpenBlender.py>) — Инструмент Python.
 - [Assets/Models/Ships/ShipV3/ShipV3.fbx](<Assets/Models/Ships/ShipV3/ShipV3.fbx>) — Модель / анимации FBX.
@@ -555,16 +555,16 @@ Whisky Bottle с бесплатной BlenderKit Royalty Free загружена
 - [blender.md](<blender.md>) — Документация.
 - [unity.md](<unity.md>) — Документация.
 - [frigate.md](<frigate.md>) — Документация.
-- [../NewShip/V3Preparation/TelescopeAndAnchorControls.md](<../NewShip/V3Preparation/TelescopeAndAnchorControls.md>) — Документация.
-- [../NewShip/External/AnchorNikdane12/SOURCES.md](<../NewShip/External/AnchorNikdane12/SOURCES.md>) — Документация.
-- [../NewShip/V3Preparation/HarpoonControls.md](<../NewShip/V3Preparation/HarpoonControls.md>) — Документация.
-- [../NewShip/V3Preparation/BowTextureRestoreReport.json](<../NewShip/V3Preparation/BowTextureRestoreReport.json>) — Конфигурация / данные JSON.
-- [../NewShip/V3Preparation/HoldDispenserControls.md](<../NewShip/V3Preparation/HoldDispenserControls.md>) — Документация.
-- [../NewShip/V3Preparation/ShipDetailsControls.md](<../NewShip/V3Preparation/ShipDetailsControls.md>) — Документация.
-- [../NewShip/FreeAssets/CREDITS.md](<../NewShip/FreeAssets/CREDITS.md>) — Документация.
-- [../NewShip/V3Preparation/OptimizationAndDestructionControls.md](<../NewShip/V3Preparation/OptimizationAndDestructionControls.md>) — Документация.
-- [../NewShip/V3Preparation/V18Validation.json](<../NewShip/V3Preparation/V18Validation.json>) — Конфигурация / данные JSON.
-- [../NewShip/V3Preparation/V19Validation.json](<../NewShip/V3Preparation/V19Validation.json>) — Конфигурация / данные JSON.
+- `../NewShip/V3Preparation/TelescopeAndAnchorControls.md` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `../NewShip/External/AnchorNikdane12/SOURCES.md` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `../NewShip/V3Preparation/HarpoonControls.md` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `../NewShip/V3Preparation/BowTextureRestoreReport.json` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `../NewShip/V3Preparation/HoldDispenserControls.md` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `../NewShip/V3Preparation/ShipDetailsControls.md` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `../NewShip/FreeAssets/CREDITS.md` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `../NewShip/V3Preparation/OptimizationAndDestructionControls.md` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `../NewShip/V3Preparation/V18Validation.json` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `../NewShip/V3Preparation/V19Validation.json` — отсутствует в текущем снимке; не использовать как готовый путь.
 
 ### Звуки и голос (`audio`)
 
@@ -651,7 +651,7 @@ MenuPresentationSetup.ReplaceShip создаёт фон меню из геоме
 - [Assets/Scripts/Ships/ShipV3HarpoonVisual.cs](<Assets/Scripts/Ships/ShipV3HarpoonVisual.cs>) — Исходник C#: ShipV3HarpoonVisual.
 - [Assets/Resources/Ships/ShipV3HarpoonPort.prefab](<Assets/Resources/Ships/ShipV3HarpoonPort.prefab>) — Префаб Unity.
 - [Assets/Resources/Ships/ShipV3HarpoonStarboard.prefab](<Assets/Resources/Ships/ShipV3HarpoonStarboard.prefab>) — Префаб Unity.
-- [../NewShip/V3Preparation/HarpoonControls.md](<../NewShip/V3Preparation/HarpoonControls.md>) — Документация.
+- `../NewShip/V3Preparation/HarpoonControls.md` — отсутствует в текущем снимке; не использовать как готовый путь.
 
 ### Кракен и щупальца (`kraken`)
 
@@ -725,6 +725,26 @@ ShipV3GameplayRepair добавляет точку игры в кости неп
 - [Assets/Scripts/Ships/ShipV3ClothMotion.cs](<Assets/Scripts/Ships/ShipV3ClothMotion.cs>) — Исходник C#: ShipV3ClothMotion.
 - [Assets/Resources/Ships/ShipV3Test.prefab](<Assets/Resources/Ships/ShipV3Test.prefab>) — Префаб Unity.
 - [Assets/Scripts/Editor/ShipV3GameplayRepair.cs](<Assets/Scripts/Editor/ShipV3GameplayRepair.cs>) — Исходник C#: ShipV3GameplayRepair.
+
+### Производительность и тест нагрузки без AI (`performance`)
+
+Ключевые слова: оптимизация, FPS, профайлер, NetworkLoadTest.
+
+NetworkLoadTest запускается из меню Тест нагрузки · без AI, отдельной сцены или аргумента -loadtest. Использует текущий MaxPlayers, реальные корабли и персонажей, seed 41719, близкие спавны, простые движения без принятия решений и поиска пути; F7 переключает движение. Локальный человек заменяет одного синтетического участника. Зона не сужается. Это нагрузка локального хоста, а не эмуляция 30 сетевых соединений.
+Общие оптимизации: активный реестр кораблей вместо поиска всей сцены в снимках персонажей; кэш blend shapes и неизменных поз; центры канатов вместо BakeMesh для простых blend shapes; визуальный такт 10/4 Гц дальше 80/200 м; локальные фонари до 100 м; повторное использование сетевых массивов; проверки визуала по событиям с редким распределённым fallback. Формат RPC и ProtocolVersion сохранены. Компиляция и сохранение сцены не доказывают FPS и мультиплеер.
+
+- [Assets/Scripts/Networking/SessionLoadTest.cs](<Assets/Scripts/Networking/SessionLoadTest.cs>) — Исходник C#: SessionController.
+- [Assets/Scripts/Editor/NetworkLoadTestSetup.cs](<Assets/Scripts/Editor/NetworkLoadTestSetup.cs>) — Исходник C#: NetworkLoadTestSetup.
+- [Assets/Scenes/NetworkLoadTest.unity](<Assets/Scenes/NetworkLoadTest.unity>) — Сцена Unity.
+- [Assets/Scripts/Networking/NetworkPlayer.cs](<Assets/Scripts/Networking/NetworkPlayer.cs>) — Исходник C#: CaptainInput, CaptainState, NetworkPlayer.
+- [Assets/Scripts/Networking/NetworkShip.cs](<Assets/Scripts/Networking/NetworkShip.cs>) — Исходник C#: NetworkShip.
+- [Assets/Scripts/Ships/ShipV3VisualRig.cs](<Assets/Scripts/Ships/ShipV3VisualRig.cs>) — Исходник C#: ShipV3Pose, ShipV3Motion, ShipV3VisualRig.
+- [Assets/Scripts/Interaction/RopeTubeVisual.cs](<Assets/Scripts/Interaction/RopeTubeVisual.cs>) — Исходник C#: RopeTubeVisual, Centerline.
+- [Assets/Scripts/Ships/ShipV3RenderBudget.cs](<Assets/Scripts/Ships/ShipV3RenderBudget.cs>) — Исходник C#: ShipV3RenderBudget.
+- [Assets/Scripts/Ships/ShipV3Features.cs](<Assets/Scripts/Ships/ShipV3Features.cs>) — Исходник C#: ShipV3TargetKind, ShipV3Lantern, ShipV3DiceSlot, ShipV3PhysicsPose, ShipV3Support, ShipV3Attachment, ShipV3Features.
+- [Assets/Scripts/Ships/ShipV3RenderBatch.cs](<Assets/Scripts/Ships/ShipV3RenderBatch.cs>) — Исходник C#: ShipV3RenderBatch.
+- [Assets/Scripts/UI/GameTelemetry.cs](<Assets/Scripts/UI/GameTelemetry.cs>) — Исходник C#: GameTelemetry.
+- [Docs/Performance/NetworkLoadTest.md](<Docs/Performance/NetworkLoadTest.md>) — Документация.
 
 ## Источники актуальных настроек
 

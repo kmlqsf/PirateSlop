@@ -43,6 +43,7 @@
       "notes": [
         "Windows, URP, FishNet; подключения по IP и Steam имеют отдельные ветки. Пакет file: в manifest — путь зависимости, а не её версия.",
         "Запуск через NetworkMenu, игровой мир NetworkOcean; корабль и игрок — сетевые префабы. Старые записи о SampleScene исторические.",
+        "Очистка 2026-10-04: удалены старые визуальные отчёты Docs/StormCloudBakeoff, Docs/StormFinal, Docs/StormV2, Docs/StormV3 и Docs/Reports.zip; сцены Assets/_Recovery, изображения Assets/Screenshots и пять резервных .blend1 с сохранением основных .blend. Игровые модели, код, префабы, Resources и сетевой реестр не изменялись.",
         "Ship V3 теперь единственный игровой корабль: SessionController.ShipPrefab в NetworkMenu указывает на Assets/Resources/Ships/ShipV3Test.prefab. Старый NetworkShip.prefab сохранён как архивный ассет и не создаётся в игре. Историческое имя ShipV3Test сохранено вместе с GUID и регистрацией FishNet."
       ],
       "files": [
@@ -876,6 +877,36 @@
         "Assets/Scripts/Editor/ShipV3GameplayRepair.cs"
       ],
       "docs": []
+    },
+    {
+      "id": "performance",
+      "title": "Производительность и тест нагрузки без AI",
+      "aliases": [
+        "оптимизация",
+        "FPS",
+        "профайлер",
+        "NetworkLoadTest"
+      ],
+      "notes": [
+        "NetworkLoadTest запускается из меню Тест нагрузки · без AI, отдельной сцены или аргумента -loadtest. Использует текущий MaxPlayers, реальные корабли и персонажей, seed 41719, близкие спавны, простые движения без принятия решений и поиска пути; F7 переключает движение. Локальный человек заменяет одного синтетического участника. Зона не сужается. Это нагрузка локального хоста, а не эмуляция 30 сетевых соединений.",
+        "Общие оптимизации: активный реестр кораблей вместо поиска всей сцены в снимках персонажей; кэш blend shapes и неизменных поз; центры канатов вместо BakeMesh для простых blend shapes; визуальный такт 10/4 Гц дальше 80/200 м; локальные фонари до 100 м; повторное использование сетевых массивов; проверки визуала по событиям с редким распределённым fallback. Формат RPC и ProtocolVersion сохранены. Компиляция и сохранение сцены не доказывают FPS и мультиплеер."
+      ],
+      "files": [
+        "Assets/Scripts/Networking/SessionLoadTest.cs",
+        "Assets/Scripts/Editor/NetworkLoadTestSetup.cs",
+        "Assets/Scenes/NetworkLoadTest.unity",
+        "Assets/Scripts/Networking/NetworkPlayer.cs",
+        "Assets/Scripts/Networking/NetworkShip.cs",
+        "Assets/Scripts/Ships/ShipV3VisualRig.cs",
+        "Assets/Scripts/Interaction/RopeTubeVisual.cs",
+        "Assets/Scripts/Ships/ShipV3RenderBudget.cs",
+        "Assets/Scripts/Ships/ShipV3Features.cs",
+        "Assets/Scripts/Ships/ShipV3RenderBatch.cs",
+        "Assets/Scripts/UI/GameTelemetry.cs"
+      ],
+      "docs": [
+        "Docs/Performance/NetworkLoadTest.md"
+      ]
     }
   ]
 }

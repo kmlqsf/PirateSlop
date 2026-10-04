@@ -131,6 +131,14 @@ public class SailSystem : MonoBehaviour
     }
     public float[] CaptureTensions() { Initialize(); return (float[])tensions.Clone(); }
     public int[] CaptureOwners() { Initialize(); return (int[])owners.Clone(); }
+    public void CaptureRopes(ref float[] values, ref int[] holders)
+    {
+        Initialize();
+        if (values == null || values.Length != tensions.Length) values = new float[tensions.Length];
+        if (holders == null || holders.Length != owners.Length) holders = new int[owners.Length];
+        System.Array.Copy(tensions, values, tensions.Length);
+        System.Array.Copy(owners, holders, owners.Length);
+    }
     public void ApplyRopes(float[] values, int[] holders)
     {
         Initialize();

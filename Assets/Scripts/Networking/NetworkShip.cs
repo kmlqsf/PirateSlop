@@ -40,10 +40,14 @@ namespace PirateSlop.Networking
             GetComponent<SailSystem>()?.StopAll();
         }
         int remoteDriver;
+        SailSystem sails;
+        float[] publishedTensions;
+        int[] publishedOwners;
         void Awake()
         {
             if (GetComponent<ShipSinkingVfx>() == null) gameObject.AddComponent<ShipSinkingVfx>();
             Motor = GetComponent<ShipController>(); Motor.Networked = true;
+            sails = GetComponent<SailSystem>();
             Helm = GetComponentInChildren<HelmInteraction>(); Helm.Networked = true;
             Body = GetComponent<Rigidbody>(); Body.interpolation = RigidbodyInterpolation.None;
             float radius = 1f;
@@ -99,9 +103,9 @@ namespace PirateSlop.Networking
                 var player = Helm.Driver.GetComponent<NetworkPlayer>();
                 if (player != null) driver = player.ParticipantId.Value;
             }
-            var sails = GetComponent<SailSystem>();
             sails.ValidateGrips();
-            ReceiveState(Motor.Capture(), driver, sails.CaptureTensions(), sails.CaptureOwners());
+            sails.CaptureRopes(ref publishedTensions, ref publishedOwners);
+            ReceiveState(Motor.Capture(), driver, publishedTensions, publishedOwners);
         }
         public void DragWheel(float degrees, bool holding) => DragWheelServerRpc(degrees, holding);
         public void CollisionAudio(float strength, Vector3 point, bool showEffect) { if (IsServerInitialized) CollisionAudioObserversRpc(strength, point, showEffect); }

@@ -43,6 +43,8 @@ namespace PirateSlop.Networking
         BotActionExecutor botActions;
         public float NextBotRecovery { get; set; }
         public bool IsTrainingDummy { get; set; }
+        public bool IsLoadTestParticipant { get; set; }
+        Vector3 loadTestOrigin;
         public string BotStatus => !IsBot.Value ? "Human controlled" : botActions?.Status ?? "Ожидание задачи";
         AdvancedPlayerController motor;
         ShipDeckPassenger passenger;
@@ -70,14 +72,19 @@ namespace PirateSlop.Networking
         {
             get
             {
-                if (ShipObject.Value != null) return ShipObject.Value.GetComponent<NetworkShip>();
+                if (ShipObject.Value != null)
+                {
+                    if (resolvedShip == null || resolvedShip.NetworkObject != ShipObject.Value)
+                        resolvedShip = ShipObject.Value.GetComponent<NetworkShip>();
+                    return resolvedShip;
+                }
                 if (resolvedShip != null) return resolvedShip;
                 // A late observer can receive the player before its ship spawn.
                 // FishNet resolves that initial object reference to null; it does
                 // not resend an unchanged SyncVar after the ship becomes visible.
                 if (ParticipantId.Value <= 0) return null;
-                foreach (var candidate in FindObjectsByType<NetworkShip>(FindObjectsSortMode.None))
-                    if (candidate.ParticipantId.Value == HomeShipId.Value) return resolvedShip = candidate;
+                foreach (var candidate in NetworkShip.ActiveShips)
+                    if (candidate != null && candidate.ParticipantId.Value == HomeShipId.Value) return resolvedShip = candidate;
                 return null;
             }
         }
@@ -85,7 +92,7 @@ namespace PirateSlop.Networking
         {
             get
             {
-                foreach (var candidate in FindObjectsByType<NetworkShip>(FindObjectsSortMode.None))
+                foreach (var candidate in NetworkShip.ActiveShips)
                     if (candidate != null && candidate.Helm != null && candidate.Helm.IsControlledBy(motor)) return candidate;
                 return Ship;
             }
@@ -118,6 +125,11 @@ namespace PirateSlop.Networking
         public override void OnStartServer()
         {
             if (!voicePlayers.Contains(this)) voicePlayers.Add(this);
+            if (IsLoadTestParticipant)
+            {
+                loadTestOrigin = Ship != null ? Ship.transform.InverseTransformPoint(transform.position) : Vector3.zero;
+                return;
+            }
             if (IsBot.Value) SessionController.Instance.RegisterBotDiagnostics(this);
             if (IsBot.Value) botActions = new BotActionExecutor(this);
             if (IsBot.Value)
@@ -177,7 +189,7 @@ namespace PirateSlop.Networking
             if (!TryBind()) return;
             if (IsTrainingDummy && IsServerInitialized)
             {
-                SimulateCommand(new PlayerCommand { Yaw = motor.transform.eulerAngles.y });
+                SimulateCommand(IsLoadTestParticipant ? LoadTestCommand() : new PlayerCommand { Yaw = motor.transform.eulerAngles.y });
                 return;
             }
             if (IsBot.Value)
@@ -197,6 +209,21 @@ namespace PirateSlop.Networking
                 if (SessionController.Instance.Automated) input.Command = AutomatedCommand();
             }
             Move(input);
+        }
+        PlayerCommand LoadTestCommand()
+        {
+            var command = new PlayerCommand { Yaw = motor.transform.eulerAngles.y };
+            var session = SessionController.Instance;
+            var platform = Ship;
+            if (session == null || !session.LoadTestMoving || platform == null || motor.IsDead || motor.IsSwimming) return command;
+            float time = (float)TimeManager.Tick * (float)TimeManager.TickDelta + ParticipantId.Value * 1.7f;
+            Vector3 target = loadTestOrigin + new Vector3(Mathf.Sin(time * .7f) * .55f, 0f, Mathf.Cos(time * .7f) * .55f);
+            Vector3 local = platform.transform.InverseTransformPoint(transform.position);
+            Vector3 direction = target - local;
+            command.Yaw = platform.transform.eulerAngles.y;
+            command.Move = Vector2.ClampMagnitude(new Vector2(direction.x, direction.z), .3f);
+            command.Crouch = Mathf.Repeat(time, 18f) < 3f;
+            return command;
         }
         PlayerCommand AutomatedCommand()
         {
