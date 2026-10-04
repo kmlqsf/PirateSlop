@@ -76,6 +76,118 @@
 | [Art/Blender/ClimbingRigging/ClimbingRigging.blend](<../../Art/Blender/ClimbingRigging/ClimbingRigging.blend>) | Редактируемая сцена Blender |
 | [Art/Blender/ClimbingRigging/build_rigging.py](<../../Art/Blender/ClimbingRigging/build_rigging.py>) | Инструмент Python |
 
+## Art/Blender/Creatures/ShipMonkey
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/Creatures/ShipMonkey/README.md](<../../Art/Blender/Creatures/ShipMonkey/README.md>) | Документация; Корабельная обезьянка |
+| [Art/Blender/Creatures/ShipMonkey/ShipMonkey.blend](<../../Art/Blender/Creatures/ShipMonkey/ShipMonkey.blend>) | Редактируемая сцена Blender; Корабельная обезьянка |
+| [Art/Blender/Creatures/ShipMonkey/monkey_activities.py](<../../Art/Blender/Creatures/ShipMonkey/monkey_activities.py>) | Инструмент Python; Корабельная обезьянка |
+| [Art/Blender/Creatures/ShipMonkey/monkey_animation.py](<../../Art/Blender/Creatures/ShipMonkey/monkey_animation.py>) | Инструмент Python; Корабельная обезьянка |
+| [Art/Blender/Creatures/ShipMonkey/monkey_export.py](<../../Art/Blender/Creatures/ShipMonkey/monkey_export.py>) | Инструмент Python; Корабельная обезьянка |
+| [Art/Blender/Creatures/ShipMonkey/monkey_eyes.py](<../../Art/Blender/Creatures/ShipMonkey/monkey_eyes.py>) | Инструмент Python; Корабельная обезьянка |
+| [Art/Blender/Creatures/ShipMonkey/monkey_jump.py](<../../Art/Blender/Creatures/ShipMonkey/monkey_jump.py>) | Инструмент Python; Корабельная обезьянка |
+| [Art/Blender/Creatures/ShipMonkey/monkey_legacy.py](<../../Art/Blender/Creatures/ShipMonkey/monkey_legacy.py>) | Инструмент Python; Корабельная обезьянка |
+| [Art/Blender/Creatures/ShipMonkey/monkey_repair.py](<../../Art/Blender/Creatures/ShipMonkey/monkey_repair.py>) | Инструмент Python; Корабельная обезьянка |
+| [Art/Blender/Creatures/ShipMonkey/monkey_rig.py](<../../Art/Blender/Creatures/ShipMonkey/monkey_rig.py>) | Инструмент Python; Корабельная обезьянка |
+| [Art/Blender/Creatures/ShipMonkey/monkey_skin_v3.py](<../../Art/Blender/Creatures/ShipMonkey/monkey_skin_v3.py>) | Инструмент Python; Корабельная обезьянка |
+| [Art/Blender/Creatures/ShipMonkey/monkey_weights.py](<../../Art/Blender/Creatures/ShipMonkey/monkey_weights.py>) | Инструмент Python; Корабельная обезьянка |
+
+## Art/Blender/Creatures/ShipMonkey/Versions
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/Creatures/ShipMonkey/Versions/README.md](<../../Art/Blender/Creatures/ShipMonkey/Versions/README.md>) | Документация; Корабельная обезьянка |
+
+## Art/Blender/Creatures/ShipMonkey/Versions/V1-Recovered-2026-10-04
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/Creatures/ShipMonkey/Versions/V1-Recovered-2026-10-04/ShipMonkeyOriginal.blend](<../../Art/Blender/Creatures/ShipMonkey/Versions/V1-Recovered-2026-10-04/ShipMonkeyOriginal.blend>) | Редактируемая сцена Blender; Корабельная обезьянка |
+
+## Art/Blender/Creatures/ShipMonkey/Versions/V2-Rejected-2026-10-04/Art/Blender/Creatures/ShipMonkey
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/Creatures/ShipMonkey/Versions/V2-Rejected-2026-10-04/Art/Blender/Creatures/ShipMonkey/ShipMonkey.blend](<../../Art/Blender/Creatures/ShipMonkey/Versions/V2-Rejected-2026-10-04/Art/Blender/Creatures/ShipMonkey/ShipMonkey.blend>) | Редактируемая сцена Blender |
+| [Art/Blender/Creatures/ShipMonkey/Versions/V2-Rejected-2026-10-04/Art/Blender/Creatures/ShipMonkey/monkey_animation.py](<../../Art/Blender/Creatures/ShipMonkey/Versions/V2-Rejected-2026-10-04/Art/Blender/Creatures/ShipMonkey/monkey_animation.py>) | Инструмент Python |
+| [Art/Blender/Creatures/ShipMonkey/Versions/V2-Rejected-2026-10-04/Art/Blender/Creatures/ShipMonkey/monkey_export.py](<../../Art/Blender/Creatures/ShipMonkey/Versions/V2-Rejected-2026-10-04/Art/Blender/Creatures/ShipMonkey/monkey_export.py>) | Инструмент Python |
+| [Art/Blender/Creatures/ShipMonkey/Versions/V2-Rejected-2026-10-04/Art/Blender/Creatures/ShipMonkey/monkey_eyes.py](<../../Art/Blender/Creatures/ShipMonkey/Versions/V2-Rejected-2026-10-04/Art/Blender/Creatures/ShipMonkey/monkey_eyes.py>) | Инструмент Python |
+
+## Art/Blender/Creatures/ShipMonkey/Versions/V2-Rejected-2026-10-04/Assets/Animations/ShipMonkey
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/Creatures/ShipMonkey/Versions/V2-Rejected-2026-10-04/Assets/Animations/ShipMonkey/ShipMonkey.controller](<../../Art/Blender/Creatures/ShipMonkey/Versions/V2-Rejected-2026-10-04/Assets/Animations/ShipMonkey/ShipMonkey.controller>) | Контроллер анимации |
+
+## Art/Blender/Creatures/ShipMonkey/Versions/V2-Rejected-2026-10-04/Assets/Models/Creatures/ShipMonkey
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/Creatures/ShipMonkey/Versions/V2-Rejected-2026-10-04/Assets/Models/Creatures/ShipMonkey/ShipMonkeyRigged.fbx](<../../Art/Blender/Creatures/ShipMonkey/Versions/V2-Rejected-2026-10-04/Assets/Models/Creatures/ShipMonkey/ShipMonkeyRigged.fbx>) | Модель / анимации FBX |
+
+## Art/Blender/Creatures/ShipMonkey/Versions/V2-Rejected-2026-10-04/Assets/Prefabs/Creatures
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/Creatures/ShipMonkey/Versions/V2-Rejected-2026-10-04/Assets/Prefabs/Creatures/ShipMonkey.prefab](<../../Art/Blender/Creatures/ShipMonkey/Versions/V2-Rejected-2026-10-04/Assets/Prefabs/Creatures/ShipMonkey.prefab>) | Префаб Unity |
+
+## Art/Blender/Creatures/ShipMonkey/Versions/V2-Rejected-2026-10-04/Assets/Scripts/Editor
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/Creatures/ShipMonkey/Versions/V2-Rejected-2026-10-04/Assets/Scripts/Editor/ShipMonkeySetup.cs](<../../Art/Blender/Creatures/ShipMonkey/Versions/V2-Rejected-2026-10-04/Assets/Scripts/Editor/ShipMonkeySetup.cs>) | Исходник C#: ShipMonkeySetup, RouteBuilder |
+
+## Art/Blender/Creatures/ShipMonkey/Versions/V2-Rejected-2026-10-04/Assets/Scripts/Ships
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/Creatures/ShipMonkey/Versions/V2-Rejected-2026-10-04/Assets/Scripts/Ships/ShipMonkey.Look.cs](<../../Art/Blender/Creatures/ShipMonkey/Versions/V2-Rejected-2026-10-04/Assets/Scripts/Ships/ShipMonkey.Look.cs>) | Исходник C#: ShipMonkey |
+| [Art/Blender/Creatures/ShipMonkey/Versions/V2-Rejected-2026-10-04/Assets/Scripts/Ships/ShipMonkey.cs](<../../Art/Blender/Creatures/ShipMonkey/Versions/V2-Rejected-2026-10-04/Assets/Scripts/Ships/ShipMonkey.cs>) | Исходник C#: ShipMonkeySurface, ShipMonkeyMotion, ShipMonkeyNode, ShipMonkeyLink, ShipMonkeyPose, ShipMonkey |
+
+## Art/Blender/Creatures/ShipMonkey/Versions/V3-BeforeJump-2026-10-04
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/Creatures/ShipMonkey/Versions/V3-BeforeJump-2026-10-04/ShipMonkey.blend](<../../Art/Blender/Creatures/ShipMonkey/Versions/V3-BeforeJump-2026-10-04/ShipMonkey.blend>) | Редактируемая сцена Blender |
+| [Art/Blender/Creatures/ShipMonkey/Versions/V3-BeforeJump-2026-10-04/ShipMonkeyRigged.fbx](<../../Art/Blender/Creatures/ShipMonkey/Versions/V3-BeforeJump-2026-10-04/ShipMonkeyRigged.fbx>) | Модель / анимации FBX |
+| [Art/Blender/Creatures/ShipMonkey/Versions/V3-BeforeJump-2026-10-04/monkey_animation.py](<../../Art/Blender/Creatures/ShipMonkey/Versions/V3-BeforeJump-2026-10-04/monkey_animation.py>) | Инструмент Python |
+| [Art/Blender/Creatures/ShipMonkey/Versions/V3-BeforeJump-2026-10-04/monkey_export.py](<../../Art/Blender/Creatures/ShipMonkey/Versions/V3-BeforeJump-2026-10-04/monkey_export.py>) | Инструмент Python |
+
+## Art/Blender/Creatures/ShipMonkey/Versions/V4-QuadrupedJump-2026-10-04
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/Creatures/ShipMonkey/Versions/V4-QuadrupedJump-2026-10-04/ShipMonkey.blend](<../../Art/Blender/Creatures/ShipMonkey/Versions/V4-QuadrupedJump-2026-10-04/ShipMonkey.blend>) | Редактируемая сцена Blender |
+| [Art/Blender/Creatures/ShipMonkey/Versions/V4-QuadrupedJump-2026-10-04/ShipMonkey.controller](<../../Art/Blender/Creatures/ShipMonkey/Versions/V4-QuadrupedJump-2026-10-04/ShipMonkey.controller>) | Контроллер анимации |
+| [Art/Blender/Creatures/ShipMonkey/Versions/V4-QuadrupedJump-2026-10-04/ShipMonkey.cs](<../../Art/Blender/Creatures/ShipMonkey/Versions/V4-QuadrupedJump-2026-10-04/ShipMonkey.cs>) | Исходник C#: ShipMonkeySurface, ShipMonkeyMotion, ShipMonkeyNode, ShipMonkeyLink, ShipMonkeyPose, ShipMonkey |
+| [Art/Blender/Creatures/ShipMonkey/Versions/V4-QuadrupedJump-2026-10-04/ShipMonkeyRigged.fbx](<../../Art/Blender/Creatures/ShipMonkey/Versions/V4-QuadrupedJump-2026-10-04/ShipMonkeyRigged.fbx>) | Модель / анимации FBX |
+| [Art/Blender/Creatures/ShipMonkey/Versions/V4-QuadrupedJump-2026-10-04/ShipMonkeySetup.cs](<../../Art/Blender/Creatures/ShipMonkey/Versions/V4-QuadrupedJump-2026-10-04/ShipMonkeySetup.cs>) | Исходник C#: ShipMonkeySetup, RouteBuilder |
+| [Art/Blender/Creatures/ShipMonkey/Versions/V4-QuadrupedJump-2026-10-04/monkey_animation.py](<../../Art/Blender/Creatures/ShipMonkey/Versions/V4-QuadrupedJump-2026-10-04/monkey_animation.py>) | Инструмент Python |
+| [Art/Blender/Creatures/ShipMonkey/Versions/V4-QuadrupedJump-2026-10-04/monkey_export.py](<../../Art/Blender/Creatures/ShipMonkey/Versions/V4-QuadrupedJump-2026-10-04/monkey_export.py>) | Инструмент Python |
+| [Art/Blender/Creatures/ShipMonkey/Versions/V4-QuadrupedJump-2026-10-04/monkey_jump.py](<../../Art/Blender/Creatures/ShipMonkey/Versions/V4-QuadrupedJump-2026-10-04/monkey_jump.py>) | Инструмент Python |
+
+## Art/Blender/Creatures/ShipMonkey/Versions/V5-BipedBeforeActivities-2026-10-04
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/Creatures/ShipMonkey/Versions/V5-BipedBeforeActivities-2026-10-04/ShipMonkey.blend](<../../Art/Blender/Creatures/ShipMonkey/Versions/V5-BipedBeforeActivities-2026-10-04/ShipMonkey.blend>) | Редактируемая сцена Blender |
+| [Art/Blender/Creatures/ShipMonkey/Versions/V5-BipedBeforeActivities-2026-10-04/ShipMonkeyRigged.fbx](<../../Art/Blender/Creatures/ShipMonkey/Versions/V5-BipedBeforeActivities-2026-10-04/ShipMonkeyRigged.fbx>) | Модель / анимации FBX |
+| [Art/Blender/Creatures/ShipMonkey/Versions/V5-BipedBeforeActivities-2026-10-04/monkey_animation.py](<../../Art/Blender/Creatures/ShipMonkey/Versions/V5-BipedBeforeActivities-2026-10-04/monkey_animation.py>) | Инструмент Python |
+| [Art/Blender/Creatures/ShipMonkey/Versions/V5-BipedBeforeActivities-2026-10-04/monkey_export.py](<../../Art/Blender/Creatures/ShipMonkey/Versions/V5-BipedBeforeActivities-2026-10-04/monkey_export.py>) | Инструмент Python |
+| [Art/Blender/Creatures/ShipMonkey/Versions/V5-BipedBeforeActivities-2026-10-04/monkey_jump.py](<../../Art/Blender/Creatures/ShipMonkey/Versions/V5-BipedBeforeActivities-2026-10-04/monkey_jump.py>) | Инструмент Python |
+
+## Art/Blender/Creatures/ShipMonkey/Versions/V6-BeforeRepair-2026-10-04
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/Creatures/ShipMonkey/Versions/V6-BeforeRepair-2026-10-04/ShipMonkey.blend](<../../Art/Blender/Creatures/ShipMonkey/Versions/V6-BeforeRepair-2026-10-04/ShipMonkey.blend>) | Редактируемая сцена Blender |
+| [Art/Blender/Creatures/ShipMonkey/Versions/V6-BeforeRepair-2026-10-04/ShipMonkeyRigged.fbx](<../../Art/Blender/Creatures/ShipMonkey/Versions/V6-BeforeRepair-2026-10-04/ShipMonkeyRigged.fbx>) | Модель / анимации FBX |
+| [Art/Blender/Creatures/ShipMonkey/Versions/V6-BeforeRepair-2026-10-04/monkey_activities.py](<../../Art/Blender/Creatures/ShipMonkey/Versions/V6-BeforeRepair-2026-10-04/monkey_activities.py>) | Инструмент Python |
+| [Art/Blender/Creatures/ShipMonkey/Versions/V6-BeforeRepair-2026-10-04/monkey_animation.py](<../../Art/Blender/Creatures/ShipMonkey/Versions/V6-BeforeRepair-2026-10-04/monkey_animation.py>) | Инструмент Python |
+| [Art/Blender/Creatures/ShipMonkey/Versions/V6-BeforeRepair-2026-10-04/monkey_export.py](<../../Art/Blender/Creatures/ShipMonkey/Versions/V6-BeforeRepair-2026-10-04/monkey_export.py>) | Инструмент Python |
+| [Art/Blender/Creatures/ShipMonkey/Versions/V6-BeforeRepair-2026-10-04/monkey_jump.py](<../../Art/Blender/Creatures/ShipMonkey/Versions/V6-BeforeRepair-2026-10-04/monkey_jump.py>) | Инструмент Python |
+
 ## Art/Blender/Equipment
 
 | Файл | Краткое описание |

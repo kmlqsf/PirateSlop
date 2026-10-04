@@ -34,6 +34,12 @@
 | --- | --- |
 | [Assets/Prefabs/Characters/PirateCharacter.prefab](<../../Assets/Prefabs/Characters/PirateCharacter.prefab>) | Префаб Unity |
 
+## Assets/Prefabs/Creatures
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Prefabs/Creatures/ShipMonkey.prefab](<../../Assets/Prefabs/Creatures/ShipMonkey.prefab>) | Префаб Unity; Корабельная обезьянка |
+
 ## Assets/Prefabs/Environment
 
 | Файл | Краткое описание |

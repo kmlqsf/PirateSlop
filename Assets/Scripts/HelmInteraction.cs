@@ -14,7 +14,7 @@ public class HelmInteraction : MonoBehaviour
     AdvancedPlayerController player;
     Quaternion wheelRest;
     Vector3 wheelRestPosition;
-    float rudder, lastGrip, visualRudder;
+    float rudder, lastGrip, monkeyGripUntil, visualRudder;
     public bool Networked { get; set; }
     public bool StructurallyAvailable { get; set; } = true;
     public float CurrentRudderNormalized => rudder;
@@ -54,6 +54,14 @@ public class HelmInteraction : MonoBehaviour
         rudder = Mathf.Clamp(rudder - Mathf.Clamp(degrees, -180f, 180f) / (360f * wheelTurnsToFullSteer), -1f, 1f);
     }
     public void ReleaseControl() { IsControlling = false; player = null; }
+    public bool MonkeyAdjust(float delta)
+    {
+        var ship = GetComponentInParent<PirateSlop.Networking.NetworkShip>();
+        if (ship == null || !ship.IsServerInitialized || ship.IsSinking || IsControlling || !StructurallyAvailable || !float.IsFinite(delta)) return false;
+        rudder = Mathf.Clamp(rudder + Mathf.Clamp(delta, -.1f, .1f), -1f, 1f);
+        monkeyGripUntil = Time.time + .2f;
+        UpdateWheel(); return true;
+    }
     public void Restore(float value, bool controlling, AdvancedPlayerController driver)
     {
         rudder = value; player = driver; IsControlling = controlling;
@@ -66,7 +74,7 @@ public class HelmInteraction : MonoBehaviour
     public void Simulate(PlayerCommand command, AdvancedPlayerController candidate, float dt)
     {
         ValidateGrip();
-        if (!IsControlling) rudder = Mathf.MoveTowards(rudder, 0f, centeringSpeed * dt);
+        if (!IsControlling && Time.time >= monkeyGripUntil) rudder = Mathf.MoveTowards(rudder, 0f, centeringSpeed * dt);
     }
     void UpdateWheel()
     {

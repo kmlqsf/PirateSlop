@@ -106,6 +106,7 @@ namespace PirateSlop.EditorTools
             }
             typeof(ShipV3VisualRig).GetMethod("UpdateChain", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).Invoke(rig, null);
             ShipV3GameplayRepair.Configure(root);
+            if (root.GetComponent<ShipMonkey>() != null) ShipMonkeySetup.Configure(root);
         }
 
         public static void RemoveDoor(GameObject root)

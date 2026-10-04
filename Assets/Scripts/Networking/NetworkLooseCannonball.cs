@@ -51,6 +51,7 @@ namespace PirateSlop.Networking
         {
             var player = Player(sender);
             if (sender == null) return;
+            if (GetComponent<NetworkFish>().MonkeyCarried) { RejectTargetRpc(sender); return; }
             if (holder.Value >= 0 && holder.Value != sender.ClientId) { RejectTargetRpc(sender); return; }
             if (!holding)
             {
@@ -125,7 +126,7 @@ namespace PirateSlop.Networking
         }
         void LateUpdate()
         {
-            if (!IsSpawned || IsServerInitialized || localHolding) return;
+            if (!IsSpawned || IsServerInitialized || localHolding || GetComponent<NetworkFish>().MonkeyCarried) return;
             ball.Held = IsHeld; ball.GetComponent<Collider>().enabled = !IsHeld;
             if (platform.Value != null && !IsHeld)
             {

@@ -7,6 +7,8 @@ namespace PirateSlop.Networking
 {
     public sealed class NetworkHullRepair : NetworkBehaviour
     {
+        public const float StrikeInterval = .5f;
+        public const int FragmentStrikes = 3, MastStrikes = 10;
         public GameObject MalletModel;
         PlayerInventory inventory;
         AdvancedPlayerController motor;
@@ -180,8 +182,8 @@ namespace PirateSlop.Networking
                 if (Vector3.Distance(hitPoint, basePoint) > 1.3f || !Reachable(hitPoint)) return false;
                 if (target != lastShip || sectionId != lastSection || Time.time - lastStrikeAt > 3f) strikes = 0;
                 lastShip = target; lastSection = sectionId; lastFragment = -1;
-                nextStrike = Time.time + .5f; lastStrikeAt = Time.time;
-                if (++strikes >= 10) { destruction.RepairMast(sectionId); strikes = 0; }
+                nextStrike = Time.time + StrikeInterval; lastStrikeAt = Time.time;
+                if (++strikes >= MastStrikes) { destruction.RepairMast(sectionId); strikes = 0; }
                 StrikeObserversRpc(hitPoint);
                 return true;
             }
@@ -191,9 +193,9 @@ namespace PirateSlop.Networking
             if (fragment == null || section.RepairBounds(fragmentId).SqrDistance(fragment.transform.InverseTransformPoint(point)) > .025f || !Reachable(point)) return false;
             if (target != lastShip || sectionId != lastSection || fragmentId != lastFragment || Time.time - lastStrikeAt > 3f) strikes = 0;
             lastShip = target; lastSection = sectionId; lastFragment = fragmentId;
-            nextStrike = Time.time + .5f; lastStrikeAt = Time.time;
+            nextStrike = Time.time + StrikeInterval; lastStrikeAt = Time.time;
             strikes++;
-            if (strikes >= 3) { destruction.RepairNearby(sectionId, fragmentId, point); strikes = 0; }
+            if (strikes >= FragmentStrikes) { destruction.RepairNearby(sectionId, fragmentId, point); strikes = 0; }
             StrikeObserversRpc(point);
             return true;
         }

@@ -68,7 +68,7 @@
 | --- | --- |
 | [Assets/Resources/Ships/ShipV3HarpoonPort.prefab](<../../Assets/Resources/Ships/ShipV3HarpoonPort.prefab>) | Префаб Unity; Гарпун и корабельное крепление |
 | [Assets/Resources/Ships/ShipV3HarpoonStarboard.prefab](<../../Assets/Resources/Ships/ShipV3HarpoonStarboard.prefab>) | Префаб Unity; Гарпун и корабельное крепление |
-| [Assets/Resources/Ships/ShipV3Test.prefab](<../../Assets/Resources/Ships/ShipV3Test.prefab>) | Префаб Unity; Проект и точки входа, Движение корабля и палуба, Предметы, лут и инвентарь, Тестовая карта и водоворот |
+| [Assets/Resources/Ships/ShipV3Test.prefab](<../../Assets/Resources/Ships/ShipV3Test.prefab>) | Префаб Unity; Проект и точки входа, Движение корабля и палуба, Предметы, лут и инвентарь, Тестовая карта и водоворот, Корабельная обезьянка |
 
 ## Assets/Resources/Underwater
 

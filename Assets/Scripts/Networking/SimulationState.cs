@@ -21,7 +21,7 @@ namespace PirateSlop
         public Vector3 SwimVelocity;
         public float Breath;
         public bool Climbing, LadderExiting;
-        public float LadderCooldown, KnockbackTime, JumpBuffer, GroundGrace;
+        public float LadderCooldown, KnockbackTime, KnockdownTime, JumpBuffer, GroundGrace;
     }
     [System.Serializable]
     public struct ShipState

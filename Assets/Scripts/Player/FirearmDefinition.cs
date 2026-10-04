@@ -45,6 +45,7 @@ namespace PirateSlop
         {
             int count=Mathf.Clamp(definition.Pellets,1,32);
             var shots=new FirearmShot[count];
+            var monkeyHits=new System.Collections.Generic.HashSet<PirateSlop.Ships.ShipMonkey>();
             var totals=new System.Collections.Generic.Dictionary<CombatHealth,float>();
             var others=new System.Collections.Generic.Dictionary<IWeaponTarget,float>();
             var motor=shooter.GetComponent<AdvancedPlayerController>();
@@ -57,6 +58,8 @@ namespace PirateSlop
                 Vector3 barrel=muzzle+(count>1 ? Quaternion.LookRotation(direction)*Vector3.right*(i<count/2 ? -.049f:.049f):Vector3.zero);
                 shots[i]=FirearmTrace.Resolve(shooter,eye,barrel,ray,settings.Range,out var hit);
                 if(!damage || hit.collider==null) continue;
+                var monkey = hit.collider.GetComponent<PirateSlop.Ships.ShipMonkeyHitbox>();
+                if (monkey != null && monkey.Monkey != null) { monkeyHits.Add(monkey.Monkey); continue; }
                 float distance=Vector3.Distance(eye,hit.point);
                 float falloff=Mathf.InverseLerp(settings.FalloffStart,settings.FalloffEnd,distance);
                 var health=hit.collider.GetComponentInParent<CombatHealth>();
@@ -71,6 +74,7 @@ namespace PirateSlop
                     if(component is IWeaponTarget target)
                     {others.TryGetValue(target,out float previous);others[target]=previous+Mathf.Lerp(settings.NearDamage,settings.FarDamage,falloff);break;}
             }
+            foreach(var monkey in monkeyHits) monkey.ReceiveFirearmShot(shooter);
             foreach(var hit in totals) hit.Key.Damage(Mathf.Min(definition.DamageCap,hit.Value),shooter);
             foreach(var hit in others) hit.Key.ReceiveWeaponHit(Mathf.Min(definition.DamageCap,hit.Value),shooter);
             return shots;

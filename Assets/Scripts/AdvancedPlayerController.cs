@@ -14,7 +14,23 @@ public partial class AdvancedPlayerController : MonoBehaviour
     [SerializeField] float swimSpeed = 3f, fastSwimSpeed = 4.5f, swimAcceleration = 6f, breathSeconds = 25f;
     Vector3 swimVelocity;
     Vector3 knockbackVelocity;
-    float knockbackTime;
+    float knockbackTime, knockdownTime;
+    public bool IsDowned => knockdownTime > 0f;
+    public float KnockdownTime => knockdownTime;
+    public Vector3 KnockdownVelocity => knockbackVelocity + Vector3.up * verticalVelocity;
+    public void ClearKnockdown() => knockdownTime = 0f;
+    public void ApplyKnockdown(Vector3 velocity, float duration)
+    {
+        if (IsDead || !float.IsFinite(duration) || !float.IsFinite(velocity.sqrMagnitude)) return;
+        ActiveCannon?.ReleaseControl();
+        ActiveHarpoon?.ReleaseControl();
+        lootNetwork?.CancelLootWork();
+        lootNetwork?.ReleaseGrapple();
+        BellPullLocked = ShipActivityLocked = SailPullLocked = PickupLocked = false;
+        ApplyKnockback(velocity);
+        knockdownTime = Mathf.Clamp(duration, 1f, 5f);
+        knockbackTime = ladderCooldown = knockdownTime;
+    }
     public bool IsKnockedBack => knockbackTime > 0f;
     public void ApplyKnockback(Vector3 velocity)
     {
@@ -95,11 +111,12 @@ public partial class AdvancedPlayerController : MonoBehaviour
     float crouchBlend;
     public float CrouchBlend => crouchBlend;
     public float PlanarSpeed { get; private set; }
-    public bool InputActive => ActiveParrot == null && !BellPullLocked && !ShipActivityLocked && !DeveloperMenu.IsOpen && !BotDebugPanel.ConsumedInput && !ShipSpyglassView.IsViewing && local && !IsDead && Cursor.lockState == CursorLockMode.Locked;
+    public bool InputActive => ActiveParrot == null && !BellPullLocked && !ShipActivityLocked && !DeveloperMenu.IsOpen && !BotDebugPanel.ConsumedInput && !ShipSpyglassView.IsViewing && local && !IsDead && !IsDowned && Cursor.lockState == CursorLockMode.Locked;
     public Camera PlayerCamera => playerCamera;
     void Awake()
     {
         health = GetComponent<CombatHealth>();
+        if (GetComponent<PlayerKnockdown>() == null) gameObject.AddComponent<PlayerKnockdown>();
         lootNetwork = GetComponent<PirateSlop.Networking.NetworkWeapon>();
         inventory = GetComponent<PlayerInventory>();
         equipment = GetComponent<PirateSlop.Networking.NetworkEquipment>();
@@ -283,8 +300,10 @@ public partial class AdvancedPlayerController : MonoBehaviour
             playerCamera.transform.SetPositionAndRotation(origin - cannon.Muzzle.forward * .35f + cannon.Muzzle.up * .42f, cannon.Muzzle.rotation);
             return;
         }
-        playerCamera.transform.rotation = Quaternion.Euler(AimEuler);
-        cameraHeight = Mathf.Lerp(cameraHeight, (crouched ? crouchHeight : standingHeight) - .15f, 1f - Mathf.Exp(-16f * Time.deltaTime));
+        var cameraAim = AimEuler;
+        cameraAim.z = IsDowned ? 58f * Mathf.Clamp01(knockdownTime / .45f) : 0f;
+        playerCamera.transform.rotation = Quaternion.Euler(cameraAim);
+        cameraHeight = Mathf.Lerp(cameraHeight, IsDowned ? Mathf.Lerp(standingHeight - .15f, .38f, Mathf.Clamp01(knockdownTime / .45f)) : (crouched ? crouchHeight : standingHeight) - .15f, 1f - Mathf.Exp(-16f * Time.deltaTime));
         var pivot = playerCamera.transform.parent.TransformPoint(Vector3.up * cameraHeight);
         if (IsThirdPerson)
         {
@@ -313,15 +332,18 @@ public partial class AdvancedPlayerController : MonoBehaviour
     {
         if (IsDead) { jumpBuffer = groundGrace = 0f; return; }
         if (!command.IsValid) command = default;
+        bool downed = IsDowned;
+        if (downed) command = new PlayerCommand { Yaw = transform.eulerAngles.y, Release = true };
+        knockdownTime = Mathf.Max(0f, knockdownTime - dt);
         transform.rotation = Quaternion.Euler(0, command.Yaw, 0);
         cooldown = Mathf.Max(0, cooldown - dt);
         jumpBuffer = command.Jump ? .12f : Mathf.Max(0f, jumpBuffer - dt);
         groundGrace = Mathf.Max(0f, groundGrace - dt);
-        if (LocomotionLocked && !(GetComponent<PirateSlop.Networking.NetworkWeapon>()?.BeingHooked ?? false)) { PlanarSpeed = 0f; verticalVelocity = 0f; slideTimer = 0f; jumpBuffer = groundGrace = 0f; return; }
+        if (!downed && LocomotionLocked && !(GetComponent<PirateSlop.Networking.NetworkWeapon>()?.BeingHooked ?? false)) { PlanarSpeed = 0f; verticalVelocity = 0f; slideTimer = 0f; jumpBuffer = groundGrace = 0f; return; }
         ladderCooldown = Mathf.Max(0, ladderCooldown - dt);
         knockbackTime = Mathf.Max(0f, knockbackTime - dt);
-        knockbackVelocity *= Mathf.Exp(-(IsSwimming ? 3f : .65f) * dt);
-        if (SimulateGrapple(command, dt)) { jumpBuffer = groundGrace = 0f; return; }
+        knockbackVelocity *= Mathf.Exp(-(IsSwimming ? 3f : downed && IsGrounded ? 4f : .65f) * dt);
+        if (!downed && SimulateGrapple(command, dt)) { jumpBuffer = groundGrace = 0f; return; }
         if (!IsKnockedBack && SimulateLadder(command, dt)) { jumpBuffer = groundGrace = 0f; return; }
         var ocean = OceanSurface.Instance;
         float water = ocean != null ? ocean.Height(transform.position) : float.NegativeInfinity;
@@ -349,7 +371,7 @@ public partial class AdvancedPlayerController : MonoBehaviour
         if (grounded && !IsKnockedBack) groundGrace = .10f;
         if (command.Slide && command.Sprint && direction.sqrMagnitude > .1f && grounded && !crouched && cooldown <= 0) { slideTimer = slideDuration; cooldown = slideDuration + slideCooldown; slideDirection = direction.normalized; }
         if (IsSliding) { slideTimer = Mathf.Max(0, slideTimer - dt); if (!grounded) slideTimer = 0; }
-        bool wantCrouch = command.Crouch || IsSliding;
+        bool wantCrouch = downed || command.Crouch || IsSliding;
         if (!wantCrouch && crouched && !CanStand()) wantCrouch = true;
         SetHeight(wantCrouch);
         crouchBlend = Mathf.MoveTowards(crouchBlend, crouched ? 1f : 0f, dt * 6f);
@@ -588,7 +610,7 @@ public partial class AdvancedPlayerController : MonoBehaviour
         verticalVelocity = 0; PlanarSpeed = ladderExiting ? climbSpeed : Mathf.Abs(rise * climbSpeed); ClimbVelocity = ladderExiting ? 0f : rise * climbSpeed;
         return true;
     }
-    public PlayerState Capture() => new PlayerState { Position = transform.position, Yaw = transform.eulerAngles.y, VerticalVelocity = verticalVelocity, SlideDirection = slideDirection, SlideTimer = slideTimer, Cooldown = cooldown, Crouched = crouched, CrouchBlend = crouchBlend, Locked = locomotionLocked, PlanarSpeed = PlanarSpeed, Grounded = IsGrounded, Swimming = IsSwimming, SwimVelocity = swimVelocity, Breath = Breath, Climbing = IsClimbing, LadderCooldown = ladderCooldown, KnockbackVelocity = knockbackVelocity, KnockbackTime = knockbackTime, JumpBuffer = jumpBuffer, GroundGrace = groundGrace, LadderExiting = ladderExiting };
+    public PlayerState Capture() => new PlayerState { Position = transform.position, Yaw = transform.eulerAngles.y, VerticalVelocity = verticalVelocity, SlideDirection = slideDirection, SlideTimer = slideTimer, Cooldown = cooldown, Crouched = crouched, CrouchBlend = crouchBlend, Locked = locomotionLocked, PlanarSpeed = PlanarSpeed, Grounded = IsGrounded, Swimming = IsSwimming, SwimVelocity = swimVelocity, Breath = Breath, Climbing = IsClimbing, LadderCooldown = ladderCooldown, KnockbackVelocity = knockbackVelocity, KnockbackTime = knockbackTime, KnockdownTime = knockdownTime, JumpBuffer = jumpBuffer, GroundGrace = groundGrace, LadderExiting = ladderExiting };
     public void Restore(PlayerState s)
     {
         controller.enabled = false; transform.SetPositionAndRotation(s.Position, Quaternion.Euler(0, s.Yaw, 0)); controller.enabled = !IsDead;
@@ -600,7 +622,7 @@ public partial class AdvancedPlayerController : MonoBehaviour
         PlanarSpeed = s.PlanarSpeed; IsGrounded = s.Grounded; verticalVelocity = s.VerticalVelocity;
         IsSwimming = s.Swimming; swimVelocity = s.SwimVelocity; Breath = s.Swimming ? s.Breath : breathSeconds;
         IsClimbing = s.Climbing; ladderCooldown = s.LadderCooldown; ladderExiting = s.LadderExiting;
-        knockbackVelocity = s.KnockbackVelocity; knockbackTime = s.KnockbackTime;
+        knockbackVelocity = s.KnockbackVelocity; knockbackTime = s.KnockbackTime; knockdownTime = s.KnockdownTime;
         slideTimer = s.SlideTimer; locomotionLocked = s.Locked; SetHeight(s.Crouched);
         crouchBlend = Mathf.Clamp01(s.CrouchBlend);
     }

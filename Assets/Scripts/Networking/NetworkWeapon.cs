@@ -331,6 +331,11 @@ namespace PirateSlop.Networking
         public bool TryAct(byte action, Vector3 direction, Vector3 eyeOffset, bool aimed = false, int seed = -1)
         {
             if (!IsServerInitialized) return false;
+            if (GetComponent<AdvancedPlayerController>().IsDowned)
+            {
+                if (action == 0 && Owner != null && Owner.IsActive) RejectShotTargetRpc(Owner);
+                return false;
+            }
             weapon.TickAuthority();
             bool accepted = weapon.Act(action, direction, eyeOffset,aimed,seed);
             if (action == 0 && !accepted && Owner != null && Owner.IsActive) RejectShotTargetRpc(Owner);
