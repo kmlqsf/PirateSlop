@@ -62,12 +62,14 @@ namespace PirateSlop.Networking
         public override void OnStartNetwork()
         {
             if (!ActiveShips.Contains(this)) ActiveShips.Add(this);
+            BeginMonkey();
             Body.interpolation = RigidbodyInterpolation.None;
             TimeManager.OnTick += Tick;
             TimeManager.OnPostTick += Publish;
         }
         public override void OnStopNetwork()
         {
+            if (monkey != null) monkey.End();
             targetMarks.Clear();
             ActiveShips.Remove(this);
             ClearAmmo();
@@ -154,6 +156,7 @@ namespace PirateSlop.Networking
         }
         void Update()
         {
+            UpdateMonkey();
             UpdateAmmo();
             if (IsServerInitialized || !hasRemoteState) return;
             AdvancedPlayerController driver = null;

@@ -157,6 +157,17 @@ public class SailSystem : MonoBehaviour
         structuralEfficiency.Clear();
         foreach (var entry in values) structuralEfficiency[entry.Key] = entry.Value;
     }
+    public bool CanMonkeyAdjust(int index)
+    {
+        Initialize();
+        return index >= 0 && index < RopeCount && index < tensions.Length && owners[index] == 0 && Efficiency(index) > 0f && RopeHandles[index] != null && RopeHandles[index].gameObject.activeInHierarchy;
+    }
+    public bool MonkeyAdjust(int index, float delta)
+    {
+        if (network == null || !network.IsServerInitialized || network.IsSinking || !float.IsFinite(delta) || !CanMonkeyAdjust(index)) return false;
+        tensions[index] = Mathf.Clamp01(tensions[index] + Mathf.Clamp(delta, -.1f, .1f));
+        Aggregate(); return true;
+    }
     public void AdjustSail(float delta) { if (RopeCount == 0) SetDeploy(deployPercentage + delta); }
     public void SetDeploy(float value)
     {

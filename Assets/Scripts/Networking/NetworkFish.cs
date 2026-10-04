@@ -5,7 +5,8 @@ using UnityEngine;
 namespace PirateSlop.Networking
 {
     public enum InventoryItem { None = -1, Fish = 0, Pistol = 1, Rod = 2, Cannon = 3, Cannonball = 4, Mallet = 5, Plank = 6, Sabre = 7, FireCannonball = 8, IceCannonball = 9, PushCannonball = 10, BoomerangCannonball = 11, Rum = 12, Wine = 13, Musket = 14, DoubleBarrel = 15, BombParrot = 16, GrapplingHook = 17, BoardingHook = 18, Pufferfish = 19, Swordfish = 20, HolyGrenade = 21, Spyglass = 22, VortexBottle = 23, FogBottle = 24 }
-    public sealed class NetworkFish : NetworkBehaviour
+    [DefaultExecutionOrder(80)]
+    public sealed partial class NetworkFish : NetworkBehaviour
     {
         public static readonly System.Collections.Generic.List<NetworkFish> ServerItems = new();
         public bool OnShip => platformId.Value != 0;
@@ -59,12 +60,14 @@ namespace PirateSlop.Networking
         public bool Take()
         {
             if (!IsServerInitialized || !Available) return false;
+            monkeyCarrier.Value = null;
             taken = true;
             ServerManager.Despawn(NetworkObject);
             return true;
         }
         void LateUpdate()
         {
+            if (PresentMonkeyCarry()) return;
             if (!IsSpawned || (Item == InventoryItem.Cannonball && GetComponent<NetworkLooseCannonball>() != null)) return;
             if (platformId.Value == 0) resolvedPlatform = null;
             if (platform.Value != null) resolvedPlatform = platform.Value.GetComponent<NetworkShip>();

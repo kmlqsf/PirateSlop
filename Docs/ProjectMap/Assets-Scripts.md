@@ -16,9 +16,9 @@
 | [Assets/Scripts/CombatVfx.cs](<../../Assets/Scripts/CombatVfx.cs>) | Исходник C#: CombatVfx |
 | [Assets/Scripts/GpuWaterSpray.cs](<../../Assets/Scripts/GpuWaterSpray.cs>) | Исходник C#: GpuWaterSpray |
 | [Assets/Scripts/HelmCenterMark.cs](<../../Assets/Scripts/HelmCenterMark.cs>) | Исходник C#: HelmCenterMark |
-| [Assets/Scripts/HelmInteraction.cs](<../../Assets/Scripts/HelmInteraction.cs>) | Исходник C#: HelmInteraction; Движение корабля и палуба |
+| [Assets/Scripts/HelmInteraction.cs](<../../Assets/Scripts/HelmInteraction.cs>) | Исходник C#: HelmInteraction; Движение корабля и палуба, Корабельная обезьянка |
 | [Assets/Scripts/OceanSurface.cs](<../../Assets/Scripts/OceanSurface.cs>) | Исходник C#: OceanSurface; Мир, острова и океан, Шторм, зона и объёмный туман, Тестовая карта и водоворот |
-| [Assets/Scripts/SailSystem.cs](<../../Assets/Scripts/SailSystem.cs>) | Исходник C#: SailSystem; Паруса и канаты |
+| [Assets/Scripts/SailSystem.cs](<../../Assets/Scripts/SailSystem.cs>) | Исходник C#: SailSystem; Паруса и канаты, Корабельная обезьянка |
 | [Assets/Scripts/ShipController.cs](<../../Assets/Scripts/ShipController.cs>) | Исходник C#: ShipController; Движение корабля и палуба |
 | [Assets/Scripts/ShipDeckPassenger.cs](<../../Assets/Scripts/ShipDeckPassenger.cs>) | Исходник C#: ShipDeckPassenger; Движение корабля и палуба, Персонаж, камера и анимации, Предметы, лут и инвентарь |
 | [Assets/Scripts/VfxPool.cs](<../../Assets/Scripts/VfxPool.cs>) | Исходник C#: VfxPool, Entry |
@@ -128,6 +128,7 @@
 | [Assets/Scripts/Editor/ShipLadderSetup.cs](<../../Assets/Scripts/Editor/ShipLadderSetup.cs>) | Исходник C#: ShipLadderSetup |
 | [Assets/Scripts/Editor/ShipLibreFractureAdapter.cs](<../../Assets/Scripts/Editor/ShipLibreFractureAdapter.cs>) | Исходник C#: ShipLibreFractureAdapter |
 | [Assets/Scripts/Editor/ShipLodSetup.cs](<../../Assets/Scripts/Editor/ShipLodSetup.cs>) | Исходник C#: ShipLodSetup |
+| [Assets/Scripts/Editor/ShipMonkeySetup.cs](<../../Assets/Scripts/Editor/ShipMonkeySetup.cs>) | Исходник C#: ShipMonkeySetup, RouteBuilder; Корабельная обезьянка |
 | [Assets/Scripts/Editor/ShipSurfaceDamageSetup.cs](<../../Assets/Scripts/Editor/ShipSurfaceDamageSetup.cs>) | Исходник C#: ShipSurfaceDamageSetup |
 | [Assets/Scripts/Editor/ShipV3BindingRepair.cs](<../../Assets/Scripts/Editor/ShipV3BindingRepair.cs>) | Исходник C#: ShipV3BindingRepair; Движение корабля и палуба, Модели и Blender |
 | [Assets/Scripts/Editor/ShipV3DiceRepair.cs](<../../Assets/Scripts/Editor/ShipV3DiceRepair.cs>) | Исходник C#: ShipV3DiceRepair; Движение корабля и палуба |
@@ -239,17 +240,18 @@
 | [Assets/Scripts/Networking/NetworkCrewBell.cs](<../../Assets/Scripts/Networking/NetworkCrewBell.cs>) | Исходник C#: NetworkCrewBell; Новая система ботов |
 | [Assets/Scripts/Networking/NetworkDeveloperTools.cs](<../../Assets/Scripts/Networking/NetworkDeveloperTools.cs>) | Исходник C#: NetworkWeapon; Предметы, лут и инвентарь |
 | [Assets/Scripts/Networking/NetworkEquipment.cs](<../../Assets/Scripts/Networking/NetworkEquipment.cs>) | Исходник C#: NetworkEquipment |
-| [Assets/Scripts/Networking/NetworkFish.cs](<../../Assets/Scripts/Networking/NetworkFish.cs>) | Исходник C#: InventoryItem, NetworkFish; Рыбалка и рыба |
+| [Assets/Scripts/Networking/NetworkFish.Monkey.cs](<../../Assets/Scripts/Networking/NetworkFish.Monkey.cs>) | Исходник C#: NetworkFish; Корабельная обезьянка |
+| [Assets/Scripts/Networking/NetworkFish.cs](<../../Assets/Scripts/Networking/NetworkFish.cs>) | Исходник C#: InventoryItem, NetworkFish; Рыбалка и рыба, Корабельная обезьянка |
 | [Assets/Scripts/Networking/NetworkFishProjectile.cs](<../../Assets/Scripts/Networking/NetworkFishProjectile.cs>) | Исходник C#: NetworkFishProjectile; Рыбалка и рыба |
-| [Assets/Scripts/Networking/NetworkFishing.cs](<../../Assets/Scripts/Networking/NetworkFishing.cs>) | Исходник C#: NetworkFishing; Рыбалка и рыба |
+| [Assets/Scripts/Networking/NetworkFishing.cs](<../../Assets/Scripts/Networking/NetworkFishing.cs>) | Исходник C#: NetworkFishing; Рыбалка и рыба, Корабельная обезьянка |
 | [Assets/Scripts/Networking/NetworkFogBottle.cs](<../../Assets/Scripts/Networking/NetworkFogBottle.cs>) | Исходник C#: NetworkFogBottle; Предметы, лут и инвентарь |
 | [Assets/Scripts/Networking/NetworkFogCloud.cs](<../../Assets/Scripts/Networking/NetworkFogCloud.cs>) | Исходник C#: NetworkFogCloud; Предметы, лут и инвентарь |
 | [Assets/Scripts/Networking/NetworkGrapple.cs](<../../Assets/Scripts/Networking/NetworkGrapple.cs>) | Исходник C#: NetworkWeapon |
 | [Assets/Scripts/Networking/NetworkHealth.cs](<../../Assets/Scripts/Networking/NetworkHealth.cs>) | Исходник C#: NetworkHealth; Личное оружие и урон |
 | [Assets/Scripts/Networking/NetworkHolyGrenade.cs](<../../Assets/Scripts/Networking/NetworkHolyGrenade.cs>) | Исходник C#: NetworkHolyGrenade |
 | [Assets/Scripts/Networking/NetworkHolyGrenadeHands.cs](<../../Assets/Scripts/Networking/NetworkHolyGrenadeHands.cs>) | Исходник C#: NetworkHolyGrenadeHands |
-| [Assets/Scripts/Networking/NetworkHullRepair.cs](<../../Assets/Scripts/Networking/NetworkHullRepair.cs>) | Исходник C#: NetworkHullRepair; Повреждения корпуса, ремонт и затопление |
-| [Assets/Scripts/Networking/NetworkLooseCannonball.cs](<../../Assets/Scripts/Networking/NetworkLooseCannonball.cs>) | Исходник C#: NetworkLooseCannonball; Пушки, ядра и лафеты |
+| [Assets/Scripts/Networking/NetworkHullRepair.cs](<../../Assets/Scripts/Networking/NetworkHullRepair.cs>) | Исходник C#: NetworkHullRepair; Повреждения корпуса, ремонт и затопление, Корабельная обезьянка |
+| [Assets/Scripts/Networking/NetworkLooseCannonball.cs](<../../Assets/Scripts/Networking/NetworkLooseCannonball.cs>) | Исходник C#: NetworkLooseCannonball; Пушки, ядра и лафеты, Корабельная обезьянка |
 | [Assets/Scripts/Networking/NetworkLootChest.ObjectivePresentation.cs](<../../Assets/Scripts/Networking/NetworkLootChest.ObjectivePresentation.cs>) | Исходник C#: NetworkLootChest; Предметы, лут и инвентарь |
 | [Assets/Scripts/Networking/NetworkLootChest.Ocean.cs](<../../Assets/Scripts/Networking/NetworkLootChest.Ocean.cs>) | Исходник C#: SeaLootKind, SeaLootState, NetworkLootChest; Предметы, лут и инвентарь, Новая система ботов |
 | [Assets/Scripts/Networking/NetworkLootChest.OceanVisual.cs](<../../Assets/Scripts/Networking/NetworkLootChest.OceanVisual.cs>) | Исходник C#: NetworkLootChest; Предметы, лут и инвентарь |
@@ -261,6 +263,7 @@
 | [Assets/Scripts/Networking/NetworkParrotDrone.cs](<../../Assets/Scripts/Networking/NetworkParrotDrone.cs>) | Исходник C#: NetworkParrotDrone |
 | [Assets/Scripts/Networking/NetworkPlayer.BotDiagnostics.cs](<../../Assets/Scripts/Networking/NetworkPlayer.BotDiagnostics.cs>) | Исходник C#: NetworkPlayer; Новая система ботов |
 | [Assets/Scripts/Networking/NetworkPlayer.BotTasks.cs](<../../Assets/Scripts/Networking/NetworkPlayer.BotTasks.cs>) | Исходник C#: NetworkPlayer; Новая система ботов |
+| [Assets/Scripts/Networking/NetworkPlayer.Knockdown.cs](<../../Assets/Scripts/Networking/NetworkPlayer.Knockdown.cs>) | Исходник C#: NetworkPlayer; Корабельная обезьянка |
 | [Assets/Scripts/Networking/NetworkPlayer.TargetMarks.cs](<../../Assets/Scripts/Networking/NetworkPlayer.TargetMarks.cs>) | Исходник C#: TargetMarkState, NetworkPlayer |
 | [Assets/Scripts/Networking/NetworkPlayer.TestShip.cs](<../../Assets/Scripts/Networking/NetworkPlayer.TestShip.cs>) | Исходник C#: NetworkPlayer; Персонаж, камера и анимации |
 | [Assets/Scripts/Networking/NetworkPlayer.Voice.cs](<../../Assets/Scripts/Networking/NetworkPlayer.Voice.cs>) | Исходник C#: NetworkPlayer; Звуки и голос |
@@ -269,6 +272,7 @@
 | [Assets/Scripts/Networking/NetworkShip.Anchor.cs](<../../Assets/Scripts/Networking/NetworkShip.Anchor.cs>) | Исходник C#: NetworkShip; Движение корабля и палуба |
 | [Assets/Scripts/Networking/NetworkShip.Harpoon.cs](<../../Assets/Scripts/Networking/NetworkShip.Harpoon.cs>) | Исходник C#: NetworkShip; Гарпун и корабельное крепление |
 | [Assets/Scripts/Networking/NetworkShip.Kraken.cs](<../../Assets/Scripts/Networking/NetworkShip.Kraken.cs>) | Исходник C#: NetworkShip; Кракен и щупальца |
+| [Assets/Scripts/Networking/NetworkShip.Monkey.cs](<../../Assets/Scripts/Networking/NetworkShip.Monkey.cs>) | Исходник C#: NetworkShip; Корабельная обезьянка |
 | [Assets/Scripts/Networking/NetworkShip.TargetMarks.cs](<../../Assets/Scripts/Networking/NetworkShip.TargetMarks.cs>) | Исходник C#: NetworkShip, TargetMark |
 | [Assets/Scripts/Networking/NetworkShip.VortexBoost.cs](<../../Assets/Scripts/Networking/NetworkShip.VortexBoost.cs>) | Исходник C#: NetworkShip; Предметы, лут и инвентарь |
 | [Assets/Scripts/Networking/NetworkShip.cs](<../../Assets/Scripts/Networking/NetworkShip.cs>) | Исходник C#: NetworkShip; Движение корабля и палуба, Паруса и канаты, Сеть, сессия и Steam, Производительность и тест нагрузки без AI |
@@ -341,6 +345,7 @@
 | [Assets/Scripts/Player/PlayerHitbox.cs](<../../Assets/Scripts/Player/PlayerHitbox.cs>) | Исходник C#: PlayerHitbox |
 | [Assets/Scripts/Player/PlayerInventory.RaftLockpick.cs](<../../Assets/Scripts/Player/PlayerInventory.RaftLockpick.cs>) | Исходник C#: PlayerInventory; Предметы, лут и инвентарь, Звуки и голос |
 | [Assets/Scripts/Player/PlayerInventory.cs](<../../Assets/Scripts/Player/PlayerInventory.cs>) | Исходник C#: PlayerInventory; Предметы, лут и инвентарь |
+| [Assets/Scripts/Player/PlayerKnockdown.cs](<../../Assets/Scripts/Player/PlayerKnockdown.cs>) | Исходник C#: PlayerKnockdown; Корабельная обезьянка |
 | [Assets/Scripts/Player/PlayerMotor.cs](<../../Assets/Scripts/Player/PlayerMotor.cs>) | Исходник C#: PlayerMotor |
 | [Assets/Scripts/Player/PlayerMotorConfig.cs](<../../Assets/Scripts/Player/PlayerMotorConfig.cs>) | Исходник C#: PlayerMotorConfig |
 | [Assets/Scripts/Player/PlayerPresentation.cs](<../../Assets/Scripts/Player/PlayerPresentation.cs>) | Исходник C#: PlayerPresentation |
@@ -376,6 +381,12 @@
 
 | Файл | Краткое описание |
 | --- | --- |
+| [Assets/Scripts/Ships/ShipMonkey.Activities.cs](<../../Assets/Scripts/Ships/ShipMonkey.Activities.cs>) | Исходник C#: ShipMonkey, TaskKind; Корабельная обезьянка |
+| [Assets/Scripts/Ships/ShipMonkey.Jump.cs](<../../Assets/Scripts/Ships/ShipMonkey.Jump.cs>) | Исходник C#: ShipMonkey; Корабельная обезьянка |
+| [Assets/Scripts/Ships/ShipMonkey.Look.cs](<../../Assets/Scripts/Ships/ShipMonkey.Look.cs>) | Исходник C#: ShipMonkey; Корабельная обезьянка |
+| [Assets/Scripts/Ships/ShipMonkey.Repair.cs](<../../Assets/Scripts/Ships/ShipMonkey.Repair.cs>) | Исходник C#: ShipMonkey; Повреждения корпуса, ремонт и затопление, Корабельная обезьянка |
+| [Assets/Scripts/Ships/ShipMonkey.cs](<../../Assets/Scripts/Ships/ShipMonkey.cs>) | Исходник C#: ShipMonkeySurface, ShipMonkeyMotion, ShipMonkeyNode, ShipMonkeyLink, ShipMonkeyPose, ShipMonkey; Корабельная обезьянка |
+| [Assets/Scripts/Ships/ShipMonkeyHitbox.cs](<../../Assets/Scripts/Ships/ShipMonkeyHitbox.cs>) | Исходник C#: ShipMonkeyHitbox; Корабельная обезьянка |
 | [Assets/Scripts/Ships/ShipV3BellContact.cs](<../../Assets/Scripts/Ships/ShipV3BellContact.cs>) | Исходник C#: ShipV3BellContact; Тестовая карта и водоворот |
 | [Assets/Scripts/Ships/ShipV3ChainInstances.cs](<../../Assets/Scripts/Ships/ShipV3ChainInstances.cs>) | Исходник C#: ShipV3ChainInstances; Движение корабля и палуба |
 | [Assets/Scripts/Ships/ShipV3ClothMotion.cs](<../../Assets/Scripts/Ships/ShipV3ClothMotion.cs>) | Исходник C#: ShipV3ClothMotion; Тестовая карта и водоворот |

@@ -12,16 +12,16 @@
 
 ## Полный каталог
 
-Учтено 4435 файлов без `.meta`. Ещё 4677 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
+Учтено 4504 файлов без `.meta`. Ещё 4704 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
 
 | Раздел | Назначение | Файлов |
 | --- | --- | ---: |
 | [.agents](<Docs/ProjectMap/.agents.md>) | Ресурсы раздела; точный состав — в каталоге | 1 |
 | [.cursor](<Docs/ProjectMap/.cursor.md>) | Ресурсы раздела; точный состав — в каталоге | 1 |
 | [.opencode](<Docs/ProjectMap/.opencode.md>) | Ресурсы раздела; точный состав — в каталоге | 1 |
-| [Art](<Docs/ProjectMap/Art.md>) | Исходники арта и Blender | 176 |
+| [Art](<Docs/ProjectMap/Art.md>) | Исходники арта и Blender | 224 |
 | [Assets](<Docs/ProjectMap/Assets.md>) | Ресурсы раздела; точный состав — в каталоге | 3 |
-| [Assets/Animations](<Docs/ProjectMap/Assets-Animations.md>) | Анимации | 51 |
+| [Assets/Animations](<Docs/ProjectMap/Assets-Animations.md>) | Анимации | 52 |
 | [Assets/Audio](<Docs/ProjectMap/Assets-Audio.md>) | Звуковые ресурсы и лицензии | 182 |
 | [Assets/Branding](<Docs/ProjectMap/Assets-Branding.md>) | Оформление проекта | 1 |
 | [Assets/Editor](<Docs/ProjectMap/Assets-Editor.md>) | Редакторские ресурсы | 1 |
@@ -29,14 +29,14 @@
 | [Assets/Game](<Docs/ProjectMap/Assets-Game.md>) | Игровые подсистемы и эффекты | 79 |
 | [Assets/Houidisoft technology](<Docs/ProjectMap/Assets-Houidisoft technology.md>) | Ресурсы раздела; точный состав — в каталоге | 15 |
 | [Assets/JMO Assets](<Docs/ProjectMap/Assets-JMO Assets.md>) | Ресурсы раздела; точный состав — в каталоге | 489 |
-| [Assets/Materials](<Docs/ProjectMap/Assets-Materials.md>) | Материалы | 151 |
+| [Assets/Materials](<Docs/ProjectMap/Assets-Materials.md>) | Материалы | 152 |
 | [Assets/Mirza](<Docs/ProjectMap/Assets-Mirza.md>) | Ресурсы раздела; точный состав — в каталоге | 186 |
-| [Assets/Models](<Docs/ProjectMap/Assets-Models.md>) | Модели и связанные ресурсы | 1359 |
+| [Assets/Models](<Docs/ProjectMap/Assets-Models.md>) | Модели и связанные ресурсы | 1365 |
 | [Assets/Plugins](<Docs/ProjectMap/Assets-Plugins.md>) | Плагины | 5 |
-| [Assets/Prefabs](<Docs/ProjectMap/Assets-Prefabs.md>) | Готовые игровые объекты | 132 |
+| [Assets/Prefabs](<Docs/ProjectMap/Assets-Prefabs.md>) | Готовые игровые объекты | 133 |
 | [Assets/Resources](<Docs/ProjectMap/Assets-Resources.md>) | Ресурсы, доступные для загрузки по имени | 43 |
 | [Assets/Scenes](<Docs/ProjectMap/Assets-Scenes.md>) | Сохранённые сцены | 4 |
-| [Assets/Scripts](<Docs/ProjectMap/Assets-Scripts.md>) | Игровой код и редакторские инструменты | 350 |
+| [Assets/Scripts](<Docs/ProjectMap/Assets-Scripts.md>) | Игровой код и редакторские инструменты | 361 |
 | [Assets/Settings](<Docs/ProjectMap/Assets-Settings.md>) | Настройки игровых систем и рендеринга | 44 |
 | [Assets/Shaders](<Docs/ProjectMap/Assets-Shaders.md>) | Шейдеры | 7 |
 | [Assets/StreamingAssets](<Docs/ProjectMap/Assets-StreamingAssets.md>) | Ресурсы раздела; точный состав — в каталоге | 2 |
@@ -44,7 +44,7 @@
 | [Assets/ThirdParty](<Docs/ProjectMap/Assets-ThirdParty.md>) | Сторонние ресурсы | 27 |
 | [Assets/TutorialInfo](<Docs/ProjectMap/Assets-TutorialInfo.md>) | Ресурсы раздела; точный состав — в каталоге | 7 |
 | [Assets/UI](<Docs/ProjectMap/Assets-UI.md>) | Ресурсы интерфейса | 40 |
-| [Docs](<Docs/ProjectMap/Docs.md>) | Документы и сохранённые отчёты | 36 |
+| [Docs](<Docs/ProjectMap/Docs.md>) | Документы и сохранённые отчёты | 37 |
 | [Packages](<Docs/ProjectMap/Packages.md>) | Манифест, lock-файл и встроенные пакеты | 918 |
 | [ProjectSettings](<Docs/ProjectMap/ProjectSettings.md>) | Настройки Unity | 28 |
 | [Root](<Docs/ProjectMap/Root.md>) | Корневые инструкции, планы и служебные файлы | 28 |
@@ -353,6 +353,7 @@ LazyFragmentColliders включён только для секций Ship V3: �
 DamageAdjacentFragments включён только в ShipV3Destruction. Обычный прямой удар дополнительно снимает один ближайший сохранившийся фрагмент каждой соседней секции по графу Structure.Neighbours. Маски передаются существующими событиями и снимками разрушения; ремонт сохраняет прежний путь. Профиль архивного старого корабля не изменён.
 ShipV3CollisionBatch объединяет только неподвижные intact-коллайдеры. CannonShotDamage, ShipDestruction.Resolve и RewardDeckPriority учитывают такие группы; исходные секции, маски соседних фрагментов и механизм ремонта сохранены. ShipDamageSection.VisualChanged уведомляет обе объединённые системы после применения состояния коллайдеров.
 Затопление сохраняет серверную механику 60/40/20/10 с по числу незаделанных попаданий и осушение за 30 с. Новые разрушенные фрагменты корпуса проверяются у воды по собственным центрам, включая потерю опоры; исходная высота попадания больше не исключает нижние пробоины. Ремонт очищает маски прежним способом.
+Обезьянка использует существующие серверные RepairNearby/RepairMast и общие константы ударов NetworkHullRepair. Темп 15% от игрока; ShipMonkey.Repair.cs выбирает доступные точки своего корабля.
 
 - [Assets/Scripts/Networking/NetworkHullRepair.cs](<Assets/Scripts/Networking/NetworkHullRepair.cs>) — Исходник C#: NetworkHullRepair.
 - [Assets/Scripts/ShipDestruction/ShipDestruction.cs](<Assets/Scripts/ShipDestruction/ShipDestruction.cs>) — Исходник C#: ShipSectionSnapshot, ShipDestructionEvent, ShipDestruction.
@@ -363,6 +364,7 @@ ShipV3CollisionBatch объединяет только неподвижные in
 - [Assets/Scripts/Editor/ShipDestructionSetup.cs](<Assets/Scripts/Editor/ShipDestructionSetup.cs>) — Исходник C#: ShipDestructionSetup, Manifest, Record.
 - [Assets/Settings/ShipDestruction/ShipV3Destruction.asset](<Assets/Settings/ShipDestruction/ShipV3Destruction.asset>) — Настройки или данные Unity.
 - [Assets/Scripts/Ships/ShipV3Features.cs](<Assets/Scripts/Ships/ShipV3Features.cs>) — Исходник C#: ShipV3TargetKind, ShipV3Lantern, ShipV3DiceSlot, ShipV3PhysicsPose, ShipV3Support, ShipV3Attachment, ShipV3Features.
+- [Assets/Scripts/Ships/ShipMonkey.Repair.cs](<Assets/Scripts/Ships/ShipMonkey.Repair.cs>) — Исходник C#: ShipMonkey.
 - [ship-destruction.md](<ship-destruction.md>) — Документация.
 - [unity.md](<unity.md>) — Документация.
 
@@ -745,6 +747,54 @@ NetworkLoadTest запускается из меню Тест нагрузки �
 - [Assets/Scripts/Ships/ShipV3RenderBatch.cs](<Assets/Scripts/Ships/ShipV3RenderBatch.cs>) — Исходник C#: ShipV3RenderBatch.
 - [Assets/Scripts/UI/GameTelemetry.cs](<Assets/Scripts/UI/GameTelemetry.cs>) — Исходник C#: GameTelemetry.
 - [Docs/Performance/NetworkLoadTest.md](<Docs/Performance/NetworkLoadTest.md>) — Документация.
+
+### Корабельная обезьянка (`ship-monkey`)
+
+Ключевые слова: обезьяна, обезьянка, миньон, monkey.
+
+Текущая локомоция двуногая: Idle/Walk/RailWalk/ClimbUp/ClimbDown точно копируют первоначальные Legacy actions, Run ускоряет LegacyWalk. Балансирование на бортах восстановлено. Четвероногие клипы и прежний прыжок убраны из игрового FBX и сохранены в Versions/V4-QuadrupedJump-2026-10-04. Меню четвероногой локомоции удалено.
+Сидение, отдых у моря и редкие взгляды сохранены. Переходы посадки/подъёма и три прыжковых клипа переделаны под вертикальную стойку. Веса глаз/лица исходные, взгляд только головой/шеей с пределами 30°/15°. 29 action/состояние Animator.
+Маршруты: 1310 узлов, 3550 связей, семь предметных опор (якорь, край колокола, четыре фонаря, стол для костей). Серверный ответ на союзный выстрел: преследование, прыжок и отбрасывание с временным ragdoll 2.8 с без уменьшения здоровья. Протокол 120. Импорт/компиляция и исходные кривые проверены; Play Mode и второй клиент не запускались.
+Серверные занятия: реальные предметы с пола в руках, E для забора; лечебная рыба ближайшему раненому, фактически на корабле; рыбалка с удочкой игрока и рыбой на палубе; свободный парус изменяется максимум на 0.1, руль вращается 10–15 с туда-сюда на 30–50%. FishingInterval/MischiefInterval 120 с ±15%; семь новых activity-клипов; архив до изменения V5-BipedBeforeActivities-2026-10-04. Play Mode и второй клиент не проверены.
+ShipMonkey.Repair.cs: ремонт своего корабля по доступным палубным маршрутам; модель молотка игрока, Repair-клип, темп строго 15% от NetworkHullRepair.StrikeInterval, общие FragmentStrikes/MastStrikes. Серверный RepairNearby/RepairMast сохраняет сетевые маски, восстановление механизмов и затопление. Ремонт выше рыбалки и шалостей по приоритету. Предыдущие 28 actions сохранены, архив V6-BeforeRepair-2026-10-04; Play Mode не запускался.
+Доставка лечебной рыбы проверяется каждые 0.5 с и прерывает прочие занятия, включая ремонт и шалости. Подбор/доставка бегом по палубе; выбор доступных игрока/рыбы и допуск 2 с на штатный прыжок рыбы. Руль: 10–15 с с плавными поворотами ±30–50% и циклом 5 с; паруса ±10%. Повторный игровой тест оставлен пользователю.
+
+- [Assets/Scripts/Ships/ShipMonkey.cs](<Assets/Scripts/Ships/ShipMonkey.cs>) — Исходник C#: ShipMonkeySurface, ShipMonkeyMotion, ShipMonkeyNode, ShipMonkeyLink, ShipMonkeyPose, ShipMonkey.
+- [Assets/Scripts/Networking/NetworkShip.Monkey.cs](<Assets/Scripts/Networking/NetworkShip.Monkey.cs>) — Исходник C#: NetworkShip.
+- [Assets/Scripts/Editor/ShipMonkeySetup.cs](<Assets/Scripts/Editor/ShipMonkeySetup.cs>) — Исходник C#: ShipMonkeySetup, RouteBuilder.
+- [Assets/Prefabs/Creatures/ShipMonkey.prefab](<Assets/Prefabs/Creatures/ShipMonkey.prefab>) — Префаб Unity.
+- [Assets/Models/Creatures/ShipMonkey/ShipMonkeyRigged.fbx](<Assets/Models/Creatures/ShipMonkey/ShipMonkeyRigged.fbx>) — Модель / анимации FBX.
+- [Assets/Animations/ShipMonkey/ShipMonkey.controller](<Assets/Animations/ShipMonkey/ShipMonkey.controller>) — Контроллер анимации.
+- [Assets/Materials/Creatures/ShipMonkey.mat](<Assets/Materials/Creatures/ShipMonkey.mat>) — Материал Unity.
+- [Assets/Resources/Ships/ShipV3Test.prefab](<Assets/Resources/Ships/ShipV3Test.prefab>) — Префаб Unity.
+- [Art/Blender/Creatures/ShipMonkey/ShipMonkey.blend](<Art/Blender/Creatures/ShipMonkey/ShipMonkey.blend>) — Редактируемая сцена Blender.
+- [Art/Blender/Creatures/ShipMonkey/monkey_rig.py](<Art/Blender/Creatures/ShipMonkey/monkey_rig.py>) — Инструмент Python.
+- [Art/Blender/Creatures/ShipMonkey/monkey_weights.py](<Art/Blender/Creatures/ShipMonkey/monkey_weights.py>) — Инструмент Python.
+- [Art/Blender/Creatures/ShipMonkey/monkey_animation.py](<Art/Blender/Creatures/ShipMonkey/monkey_animation.py>) — Инструмент Python.
+- [Art/Blender/Creatures/ShipMonkey/monkey_export.py](<Art/Blender/Creatures/ShipMonkey/monkey_export.py>) — Инструмент Python.
+- [Assets/Scripts/Ships/ShipMonkey.Look.cs](<Assets/Scripts/Ships/ShipMonkey.Look.cs>) — Исходник C#: ShipMonkey.
+- [Art/Blender/Creatures/ShipMonkey/monkey_eyes.py](<Art/Blender/Creatures/ShipMonkey/monkey_eyes.py>) — Инструмент Python.
+- [Art/Blender/Creatures/ShipMonkey/monkey_legacy.py](<Art/Blender/Creatures/ShipMonkey/monkey_legacy.py>) — Инструмент Python.
+- [Art/Blender/Creatures/ShipMonkey/monkey_skin_v3.py](<Art/Blender/Creatures/ShipMonkey/monkey_skin_v3.py>) — Инструмент Python.
+- [Art/Blender/Creatures/ShipMonkey/Versions/V1-Recovered-2026-10-04/ShipMonkeyOriginal.blend](<Art/Blender/Creatures/ShipMonkey/Versions/V1-Recovered-2026-10-04/ShipMonkeyOriginal.blend>) — Редактируемая сцена Blender.
+- [Assets/Scripts/Ships/ShipMonkey.Jump.cs](<Assets/Scripts/Ships/ShipMonkey.Jump.cs>) — Исходник C#: ShipMonkey.
+- [Assets/Scripts/Ships/ShipMonkeyHitbox.cs](<Assets/Scripts/Ships/ShipMonkeyHitbox.cs>) — Исходник C#: ShipMonkeyHitbox.
+- [Assets/Scripts/Networking/NetworkPlayer.Knockdown.cs](<Assets/Scripts/Networking/NetworkPlayer.Knockdown.cs>) — Исходник C#: NetworkPlayer.
+- [Assets/Scripts/Player/PlayerKnockdown.cs](<Assets/Scripts/Player/PlayerKnockdown.cs>) — Исходник C#: PlayerKnockdown.
+- [Art/Blender/Creatures/ShipMonkey/monkey_jump.py](<Art/Blender/Creatures/ShipMonkey/monkey_jump.py>) — Инструмент Python.
+- [Assets/Scripts/Ships/ShipMonkey.Activities.cs](<Assets/Scripts/Ships/ShipMonkey.Activities.cs>) — Исходник C#: ShipMonkey, TaskKind.
+- [Assets/Scripts/Networking/NetworkFish.Monkey.cs](<Assets/Scripts/Networking/NetworkFish.Monkey.cs>) — Исходник C#: NetworkFish.
+- [Assets/Scripts/Networking/NetworkFish.cs](<Assets/Scripts/Networking/NetworkFish.cs>) — Исходник C#: InventoryItem, NetworkFish.
+- [Assets/Scripts/Networking/NetworkFishing.cs](<Assets/Scripts/Networking/NetworkFishing.cs>) — Исходник C#: NetworkFishing.
+- [Assets/Scripts/Networking/NetworkLooseCannonball.cs](<Assets/Scripts/Networking/NetworkLooseCannonball.cs>) — Исходник C#: NetworkLooseCannonball.
+- [Assets/Scripts/HelmInteraction.cs](<Assets/Scripts/HelmInteraction.cs>) — Исходник C#: HelmInteraction.
+- [Assets/Scripts/SailSystem.cs](<Assets/Scripts/SailSystem.cs>) — Исходник C#: SailSystem.
+- [Art/Blender/Creatures/ShipMonkey/monkey_activities.py](<Art/Blender/Creatures/ShipMonkey/monkey_activities.py>) — Инструмент Python.
+- [Assets/Scripts/Ships/ShipMonkey.Repair.cs](<Assets/Scripts/Ships/ShipMonkey.Repair.cs>) — Исходник C#: ShipMonkey.
+- [Assets/Scripts/Networking/NetworkHullRepair.cs](<Assets/Scripts/Networking/NetworkHullRepair.cs>) — Исходник C#: NetworkHullRepair.
+- [Art/Blender/Creatures/ShipMonkey/monkey_repair.py](<Art/Blender/Creatures/ShipMonkey/monkey_repair.py>) — Инструмент Python.
+- [Art/Blender/Creatures/ShipMonkey/README.md](<Art/Blender/Creatures/ShipMonkey/README.md>) — Документация.
+- [Art/Blender/Creatures/ShipMonkey/Versions/README.md](<Art/Blender/Creatures/ShipMonkey/Versions/README.md>) — Документация.
 
 ## Источники актуальных настроек
 

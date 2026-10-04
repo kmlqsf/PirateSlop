@@ -61,6 +61,12 @@
 | [Assets/Animations/Player/Swim.anim](<../../Assets/Animations/Player/Swim.anim>) | Клип анимации |
 | [Assets/Animations/Player/TreadWater.anim](<../../Assets/Animations/Player/TreadWater.anim>) | Клип анимации |
 
+## Assets/Animations/ShipMonkey
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Animations/ShipMonkey/ShipMonkey.controller](<../../Assets/Animations/ShipMonkey/ShipMonkey.controller>) | Контроллер анимации; Корабельная обезьянка |
+
 ## Assets/Animations/Whale
 
 | Файл | Краткое описание |

@@ -49,6 +49,8 @@ namespace PirateSlop
             if (wasDead == IsDead) return;
             if (IsDead)
             {
+                GetComponent<PlayerKnockdown>()?.Stop();
+                GetComponent<AdvancedPlayerController>()?.ClearKnockdown();
                 respawnAt = Time.time + RespawnDelay;
                 var motor = GetComponent<AdvancedPlayerController>();
                 foreach (var helm in HelmInteraction.Active)

@@ -395,7 +395,8 @@
         "LazyFragmentColliders включён только для секций Ship V3: из префаба исключены 6275 MeshCollider скрытых фрагментов. При разрушении точный MeshCollider создаётся из исходного MeshFilter.sharedMesh до включения только оставшихся видимых фрагментов; ссылка добавляется в DamageColliders. После ремонта созданные коллайдеры сохраняются на неактивных фрагментах. В сохранённом префабе 2383 ленивые секции, MeshCollider стало 2386 вместо 8661, первоначальных коллайдеров фрагментов нет. В edit-mode preview повреждение одной секции из трёх фрагментов с маской 1 создало только два коллайдера; ремонт выключил их, другие секции остались ленивыми. Флаг основного корабля false; его прежняя ветка сохранена.",
         "DamageAdjacentFragments включён только в ShipV3Destruction. Обычный прямой удар дополнительно снимает один ближайший сохранившийся фрагмент каждой соседней секции по графу Structure.Neighbours. Маски передаются существующими событиями и снимками разрушения; ремонт сохраняет прежний путь. Профиль архивного старого корабля не изменён.",
         "ShipV3CollisionBatch объединяет только неподвижные intact-коллайдеры. CannonShotDamage, ShipDestruction.Resolve и RewardDeckPriority учитывают такие группы; исходные секции, маски соседних фрагментов и механизм ремонта сохранены. ShipDamageSection.VisualChanged уведомляет обе объединённые системы после применения состояния коллайдеров.",
-        "Затопление сохраняет серверную механику 60/40/20/10 с по числу незаделанных попаданий и осушение за 30 с. Новые разрушенные фрагменты корпуса проверяются у воды по собственным центрам, включая потерю опоры; исходная высота попадания больше не исключает нижние пробоины. Ремонт очищает маски прежним способом."
+        "Затопление сохраняет серверную механику 60/40/20/10 с по числу незаделанных попаданий и осушение за 30 с. Новые разрушенные фрагменты корпуса проверяются у воды по собственным центрам, включая потерю опоры; исходная высота попадания больше не исключает нижние пробоины. Ремонт очищает маски прежним способом.",
+        "Обезьянка использует существующие серверные RepairNearby/RepairMast и общие константы ударов NetworkHullRepair. Темп 15% от игрока; ShipMonkey.Repair.cs выбирает доступные точки своего корабля."
       ],
       "files": [
         "Assets/Scripts/Networking/NetworkHullRepair.cs",
@@ -406,7 +407,8 @@
         "Assets/Scripts/ShipDestruction/ShipStructuralGraph.cs",
         "Assets/Scripts/Editor/ShipDestructionSetup.cs",
         "Assets/Settings/ShipDestruction/ShipV3Destruction.asset",
-        "Assets/Scripts/Ships/ShipV3Features.cs"
+        "Assets/Scripts/Ships/ShipV3Features.cs",
+        "Assets/Scripts/Ships/ShipMonkey.Repair.cs"
       ],
       "docs": [
         "ship-destruction.md",
@@ -906,6 +908,64 @@
       ],
       "docs": [
         "Docs/Performance/NetworkLoadTest.md"
+      ]
+    },
+    {
+      "id": "ship-monkey",
+      "title": "Корабельная обезьянка",
+      "aliases": [
+        "обезьяна",
+        "обезьянка",
+        "миньон",
+        "monkey"
+      ],
+      "notes": [
+        "Текущая локомоция двуногая: Idle/Walk/RailWalk/ClimbUp/ClimbDown точно копируют первоначальные Legacy actions, Run ускоряет LegacyWalk. Балансирование на бортах восстановлено. Четвероногие клипы и прежний прыжок убраны из игрового FBX и сохранены в Versions/V4-QuadrupedJump-2026-10-04. Меню четвероногой локомоции удалено.",
+        "Сидение, отдых у моря и редкие взгляды сохранены. Переходы посадки/подъёма и три прыжковых клипа переделаны под вертикальную стойку. Веса глаз/лица исходные, взгляд только головой/шеей с пределами 30°/15°. 29 action/состояние Animator.",
+        "Маршруты: 1310 узлов, 3550 связей, семь предметных опор (якорь, край колокола, четыре фонаря, стол для костей). Серверный ответ на союзный выстрел: преследование, прыжок и отбрасывание с временным ragdoll 2.8 с без уменьшения здоровья. Протокол 120. Импорт/компиляция и исходные кривые проверены; Play Mode и второй клиент не запускались.",
+        "Серверные занятия: реальные предметы с пола в руках, E для забора; лечебная рыба ближайшему раненому, фактически на корабле; рыбалка с удочкой игрока и рыбой на палубе; свободный парус изменяется максимум на 0.1, руль вращается 10–15 с туда-сюда на 30–50%. FishingInterval/MischiefInterval 120 с ±15%; семь новых activity-клипов; архив до изменения V5-BipedBeforeActivities-2026-10-04. Play Mode и второй клиент не проверены.",
+        "ShipMonkey.Repair.cs: ремонт своего корабля по доступным палубным маршрутам; модель молотка игрока, Repair-клип, темп строго 15% от NetworkHullRepair.StrikeInterval, общие FragmentStrikes/MastStrikes. Серверный RepairNearby/RepairMast сохраняет сетевые маски, восстановление механизмов и затопление. Ремонт выше рыбалки и шалостей по приоритету. Предыдущие 28 actions сохранены, архив V6-BeforeRepair-2026-10-04; Play Mode не запускался.",
+        "Доставка лечебной рыбы проверяется каждые 0.5 с и прерывает прочие занятия, включая ремонт и шалости. Подбор/доставка бегом по палубе; выбор доступных игрока/рыбы и допуск 2 с на штатный прыжок рыбы. Руль: 10–15 с с плавными поворотами ±30–50% и циклом 5 с; паруса ±10%. Повторный игровой тест оставлен пользователю."
+      ],
+      "files": [
+        "Assets/Scripts/Ships/ShipMonkey.cs",
+        "Assets/Scripts/Networking/NetworkShip.Monkey.cs",
+        "Assets/Scripts/Editor/ShipMonkeySetup.cs",
+        "Assets/Prefabs/Creatures/ShipMonkey.prefab",
+        "Assets/Models/Creatures/ShipMonkey/ShipMonkeyRigged.fbx",
+        "Assets/Animations/ShipMonkey/ShipMonkey.controller",
+        "Assets/Materials/Creatures/ShipMonkey.mat",
+        "Assets/Resources/Ships/ShipV3Test.prefab",
+        "Art/Blender/Creatures/ShipMonkey/ShipMonkey.blend",
+        "Art/Blender/Creatures/ShipMonkey/monkey_rig.py",
+        "Art/Blender/Creatures/ShipMonkey/monkey_weights.py",
+        "Art/Blender/Creatures/ShipMonkey/monkey_animation.py",
+        "Art/Blender/Creatures/ShipMonkey/monkey_export.py",
+        "Assets/Scripts/Ships/ShipMonkey.Look.cs",
+        "Art/Blender/Creatures/ShipMonkey/monkey_eyes.py",
+        "Art/Blender/Creatures/ShipMonkey/monkey_legacy.py",
+        "Art/Blender/Creatures/ShipMonkey/monkey_skin_v3.py",
+        "Art/Blender/Creatures/ShipMonkey/Versions/V1-Recovered-2026-10-04/ShipMonkeyOriginal.blend",
+        "Assets/Scripts/Ships/ShipMonkey.Jump.cs",
+        "Assets/Scripts/Ships/ShipMonkeyHitbox.cs",
+        "Assets/Scripts/Networking/NetworkPlayer.Knockdown.cs",
+        "Assets/Scripts/Player/PlayerKnockdown.cs",
+        "Art/Blender/Creatures/ShipMonkey/monkey_jump.py",
+        "Assets/Scripts/Ships/ShipMonkey.Activities.cs",
+        "Assets/Scripts/Networking/NetworkFish.Monkey.cs",
+        "Assets/Scripts/Networking/NetworkFish.cs",
+        "Assets/Scripts/Networking/NetworkFishing.cs",
+        "Assets/Scripts/Networking/NetworkLooseCannonball.cs",
+        "Assets/Scripts/HelmInteraction.cs",
+        "Assets/Scripts/SailSystem.cs",
+        "Art/Blender/Creatures/ShipMonkey/monkey_activities.py",
+        "Assets/Scripts/Ships/ShipMonkey.Repair.cs",
+        "Assets/Scripts/Networking/NetworkHullRepair.cs",
+        "Art/Blender/Creatures/ShipMonkey/monkey_repair.py"
+      ],
+      "docs": [
+        "Art/Blender/Creatures/ShipMonkey/README.md",
+        "Art/Blender/Creatures/ShipMonkey/Versions/README.md"
       ]
     }
   ]

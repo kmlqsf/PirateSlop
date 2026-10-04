@@ -8,13 +8,16 @@ namespace PirateSlop
     public static class DeathRagdoll
     {
         public static void Spawn(Transform player, Vector3 position, Vector3 velocity, Vector3 spin)
+            => Create(player, position, velocity, spin);
+
+        public static GameObject Create(Transform player, Vector3 position, Vector3 velocity, Vector3 spin, float lifetime = 8f)
         {
-            if (Application.isBatchMode || !Application.isPlaying) return;
+            if (Application.isBatchMode || !Application.isPlaying) return null;
             var source = player.Find("PlayerGraphics");
-            if (source == null) return;
+            if (source == null) return null;
             var viewArms = player.GetComponent<WeaponArmRig>()?.ViewArms;
             var bodyHips = source.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "Hips" && (viewArms == null || !t.IsChildOf(viewArms)));
-            if (bodyHips == null) return;
+            if (bodyHips == null) return null;
             var map = new Dictionary<Transform, Transform>();
             Transform Copy(Transform original, Transform parent)
             {
@@ -66,7 +69,7 @@ namespace PirateSlop
             }
             Transform Bone(string name) => map.Values.FirstOrDefault(t => t.name == name);
             var hips = Bone("Hips");
-            if (hips == null) { Object.Destroy(root.gameObject); return; }
+            if (hips == null) { Object.Destroy(root.gameObject); return null; }
             CorpsePhysicsWorld.Add(root.gameObject, position);
             var bodies = new List<Rigidbody>();
             var colliders = new List<Collider>();
@@ -121,7 +124,8 @@ namespace PirateSlop
                 bodies[i].linearVelocity = velocity;
                 bodies[i].angularVelocity = spin * (i == 0 ? 1f : .35f + .55f * Mathf.Sin(i * 2.4f + spin.x));
             }
-            Object.Destroy(root.gameObject, 8f);
+            Object.Destroy(root.gameObject, lifetime);
+            return root.gameObject;
         }
     }
 }

@@ -91,6 +91,12 @@
 | [Assets/Materials/Characters/Pirate/Pirate_Teal.mat](<../../Assets/Materials/Characters/Pirate/Pirate_Teal.mat>) | Материал Unity |
 | [Assets/Materials/Characters/Pirate/Pirate_TealLight.mat](<../../Assets/Materials/Characters/Pirate/Pirate_TealLight.mat>) | Материал Unity |
 
+## Assets/Materials/Creatures
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Materials/Creatures/ShipMonkey.mat](<../../Assets/Materials/Creatures/ShipMonkey.mat>) | Материал Unity; Корабельная обезьянка |
+
 ## Assets/Materials/Environment
 
 | Файл | Краткое описание |

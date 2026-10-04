@@ -97,6 +97,22 @@
 | [Assets/Models/Characters/Pirate/ShotgunReady.fbx](<../../Assets/Models/Characters/Pirate/ShotgunReady.fbx>) | Модель / анимации FBX |
 | [Assets/Models/Characters/Pirate/ShotgunReload.fbx](<../../Assets/Models/Characters/Pirate/ShotgunReload.fbx>) | Модель / анимации FBX |
 
+## Assets/Models/Creatures/ShipMonkey
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/Creatures/ShipMonkey/ShipMonkey.fbx](<../../Assets/Models/Creatures/ShipMonkey/ShipMonkey.fbx>) | Модель / анимации FBX |
+| [Assets/Models/Creatures/ShipMonkey/ShipMonkeyRigged.fbx](<../../Assets/Models/Creatures/ShipMonkey/ShipMonkeyRigged.fbx>) | Модель / анимации FBX; Корабельная обезьянка |
+
+## Assets/Models/Creatures/ShipMonkey/ShipMonkey.fbm
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/Creatures/ShipMonkey/ShipMonkey.fbm/tripo_node_c3aea421-7210-49e7-99dd-690e22972b8e_BaseColor.png](<../../Assets/Models/Creatures/ShipMonkey/ShipMonkey.fbm/tripo_node_c3aea421-7210-49e7-99dd-690e22972b8e_BaseColor.png>) | Изображение / текстура |
+| [Assets/Models/Creatures/ShipMonkey/ShipMonkey.fbm/tripo_node_c3aea421-7210-49e7-99dd-690e22972b8e_Normal_Bake.png](<../../Assets/Models/Creatures/ShipMonkey/ShipMonkey.fbm/tripo_node_c3aea421-7210-49e7-99dd-690e22972b8e_Normal_Bake.png>) | Изображение / текстура |
+| [Assets/Models/Creatures/ShipMonkey/ShipMonkey.fbm/бибизян_metallic.PNG](<../../Assets/Models/Creatures/ShipMonkey/ShipMonkey.fbm/бибизян_metallic.PNG>) | Изображение / текстура |
+| [Assets/Models/Creatures/ShipMonkey/ShipMonkey.fbm/бибизян_roughness.PNG](<../../Assets/Models/Creatures/ShipMonkey/ShipMonkey.fbm/бибизян_roughness.PNG>) | Изображение / текстура |
+
 ## Assets/Models/DisassembledCannon
 
 | Файл | Краткое описание |
