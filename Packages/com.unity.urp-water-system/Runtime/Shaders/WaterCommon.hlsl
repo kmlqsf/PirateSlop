@@ -8,6 +8,7 @@
 #include "GerstnerWaves.hlsl"
 #include "WaterLighting.hlsl"
 #include "Assets/Shaders/WaterShipFoam.hlsl"
+#include "Packages/com.jiaozi158.unity-physically-based-sky-urp/Shaders/AtmosphericScattering.hlsl"
 
 #if defined(_STATIC_SHADER)
     #define WATER_TIME 0.0
@@ -286,7 +287,9 @@ Varyings WaveVertexOperations(Varyings input)
 	SampleWaves(input.positionWS, opacity, wave);
 	input.normalWS = wave.normal;
     input.positionWS += wave.position;
-    input.positionWS.y += WhirlpoolHeight(input.positionWS);
+    input.positionWS.y += WhirlpoolHeight(input.positionWS) + WaterBowHeight(input.positionWS);
+    input.normalWS.xz -= WaterBowGradient(input.positionWS) * input.normalWS.y;
+    input.normalWS = normalize(input.normalWS);
 
 #ifdef SHADER_API_PS4
 	input.positionWS.y -= 0.5;
@@ -378,13 +381,16 @@ void InitializeSurfaceData(inout WaterInputData input, out WaterSurfaceData surf
 	surfaceData.scattering = 0;
 
 	// Foam
+	float2 shipFoam = WaterShipFoamMask(input.positionWS);
 	half depthEdge = saturate(input.depth.y * 0.5);
 	half foamShoreRamp = SAMPLE_TEXTURE2D(_BoatAttack_RampTexture, sampler_BoatAttack_Linear_Clamp_RampTexture,  1-depthEdge).r;
 	if (_BoatAttack_Whirlpool.x > 0) foamShoreRamp *= smoothstep(.95, 1.15, WhirlpoolRatio(input.positionWS));
+    foamShoreRamp *= 1 - shipFoam.y;
 	half foamWaveRamp = SAMPLE_TEXTURE2D(_BoatAttack_RampTexture, sampler_BoatAttack_Linear_Clamp_RampTexture,  additionalData.w).g;
 	
 	half foamBlendMask = max(foamWaveRamp, foamShoreRamp) + input.waterBufferA.r;// + edgeFoam + input.waterBufferA.r;// max(max(waveFoam, edgeFoam), input.waterFX.r * 2);
 	foamBlendMask += (-1 + _BoatAttack_water_FoamIntensity) * 0.5;
+    foamBlendMask = max(foamBlendMask, saturate(shipFoam.x * 1.8));
 	
 	half4 mask = half4(0, 0, 0, 0);
 	mask.r = saturate(foamBlendMask * 3 - 2);
@@ -411,13 +417,53 @@ void InitializeSurfaceData(inout WaterInputData input, out WaterSurfaceData surf
     }
 
 
-	float shipNoise = SAMPLE_TEXTURE2D(_FoamMap, sampler_FoamMap, input.positionWS.xz * .12 + WATER_TIME * .01).g;
-    surfaceData.foamMask = max(surfaceData.foamMask, WaterShipFoamMask(input.positionWS, shipNoise));
 	surfaceData.foam = 1;//saturate(length(foamMap * foamBlend) * 1.5 - 0.1);
 }
 
-half3 WaterShading(WaterInputData input, WaterSurfaceData surfaceData, float4 additionalData, float2 screenUV)
+half3 WaterUnderwaterShading(WaterInputData input, WaterSurfaceData surfaceData, float2 screenUV)
 {
+    float3 view = SafeNormalize(GetCameraPositionWS() - input.positionWS);
+    float3 normal = normalize(input.normalWS);
+    normal = dot(normal, view) < 0 ? -normal : normal;
+    float cosine = saturate(dot(normal, view));
+    float eta = 1.333333;
+    float sineSquared = eta * eta * (1 - cosine * cosine);
+    float transmittedCosine = sqrt(max(0, 1 - sineSquared));
+    float rs = (eta * cosine - transmittedCosine) / max(eta * cosine + transmittedCosine, .0001);
+    float rp = (cosine - eta * transmittedCosine) / max(cosine + eta * transmittedCosine, .0001);
+    float tirWidth = max(fwidth(sineSquared), .0001);
+    float tir = smoothstep(1 - tirWidth, 1 + tirWidth, sineSquared);
+    float fresnel = lerp(saturate((rs * rs + rp * rp) * .5), 1, tir);
+    float path = distance(GetCameraPositionWS(), input.positionWS);
+    half3 transmission = Absorption(path);
+    Light mainLight = GetMainLight(TransformWorldToShadowCoord(input.positionWS), input.positionWS, 1);
+    half3 gi = max(SampleSH(float3(0, 1, 0)), 0);
+    half3 sun = mainLight.color * saturate(dot(normalize(input.normalWS), mainLight.direction)) * mainLight.shadowAttenuation;
+    half3 scattered = _ScatteringColor * _BoatAttack_Lighting.z * (.08 + gi * .30 + sun * .25);
+    float2 uv = saturate(screenUV + TransformWorldToViewDir(normal).xy * .015 * saturate(path * .25));
+    half3 above = SAMPLE_TEXTURE2D(_CameraOpaqueTexture, sampler_ScreenTextures_linear_clamp, uv).rgb;
+    #if defined(_REFLECTION_CUBEMAP)
+    float rawDepth = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, sampler_ScreenTextures_point_clamp, uv);
+    #if UNITY_REVERSED_Z
+    bool sky = rawDepth <= .000001;
+    #else
+    bool sky = rawDepth >= .999999;
+    #endif
+    if (sky && sineSquared < 1)
+    {
+        float3 refracted = refract(-view, normal, eta);
+        above = SAMPLE_TEXTURECUBE_LOD(_CubemapTexture, sampler_CubemapTexture, refracted, 0).rgb * _BoatAttack_Lighting.x;
+    }
+    #endif
+    half3 surface = lerp(above, scattered, fresnel);
+    half3 foam = half3(.08, .18, .20) * (.15 + gi * .5 + sun * .18) * _BoatAttack_Lighting.y;
+    surface = lerp(surface, foam, saturate(surfaceData.foamMask) * .35);
+    return _BoatAttack_UnderwaterPass > .5 ? surface : surface * transmission + scattered * (1 - transmission);
+}
+
+half3 WaterShading(WaterInputData input, WaterSurfaceData surfaceData, float4 additionalData, float2 screenUV, bool underwater)
+{
+    if (underwater) return WaterUnderwaterShading(input, surfaceData, screenUV);
 	// extra inputs
 	half edgeFade = saturate(input.depth.y * 5);
 
@@ -433,7 +479,7 @@ half3 WaterShading(WaterInputData input, WaterSurfaceData surfaceData, float4 ad
     half3 directLighting = F_Schlick(0.2, dot(mainLight.direction, input.normalWS)) * mainLight.color;
     directLighting += saturate(pow(dot(input.viewDirectionWS.xyz, -mainLight.direction) * additionalData.z, 3)) * Absorption(1) * mainLight.color * 2;
 	half3 sss = directLighting * volumeShadow + GI;
-	sss *= Scattering(input.depth.x);
+	sss *= Scattering(input.depth.x) * _BoatAttack_Lighting.z;
 
 	// Specular
 	half NdotL = saturate(dot(input.normalWS, mainLight.direction));
@@ -448,7 +494,7 @@ half3 WaterShading(WaterInputData input, WaterSurfaceData surfaceData, float4 ad
 	spec *= 1 - saturate(surfaceData.foamMask * 2);
 
 	// Foam
-	surfaceData.foam *= (GI + directLighting * mainLight.shadowAttenuation) * 3 * saturate(surfaceData.foamMask);
+	surfaceData.foam *= (GI + directLighting * mainLight.shadowAttenuation) * 3 * saturate(surfaceData.foamMask) * _BoatAttack_Lighting.y;
 	
 	// Reflections
 	half3 reflection = SampleReflections(input.normalWS, input.positionWS, input.viewDirectionWS, screenUV);
@@ -462,6 +508,17 @@ half3 WaterShading(WaterInputData input, WaterSurfaceData surfaceData, float4 ad
 	half3 compB = compA * saturate(1-surfaceData.foamMask) + surfaceData.foam;
 	// final
 	half3 output = MixFog(compB, input.fogCoord);
+    if (_BoatAttack_Lighting.w > .5)
+    {
+        PositionInputs atmosphere = (PositionInputs)0;
+        atmosphere.positionWS = input.positionWS;
+        atmosphere.positionNDC = screenUV;
+        atmosphere.deviceDepth = TransformWorldToHClip(input.positionWS).z / TransformWorldToHClip(input.positionWS).w;
+        atmosphere.linearDepth = -TransformWorldToView(input.positionWS).z;
+        half3 fogColor, fogOpacity;
+        EvaluateAtmosphericScattering(atmosphere, normalize(GetCameraPositionWS() - input.positionWS), fogColor, fogOpacity);
+        output = compB * (1 - fogOpacity) + fogColor;
+    }
 			
 	// Debug block
 	#if defined(BOAT_ATTACK_WATER_DEBUG_DISPLAY)
@@ -541,7 +598,7 @@ Varyings WaterVertex(Attributes v)
 // Fragment for water
 
 
-half4 WaterFragment(Varyings IN) : SV_Target
+half4 WaterFragment(Varyings IN, FRONT_FACE_TYPE face : FRONT_FACE_SEMANTIC) : SV_Target
 {
 	UNITY_SETUP_INSTANCE_ID(IN);
 	float2 screenUV = IN.screenPosition.xy / IN.screenPosition.w; // screen UVs
@@ -553,8 +610,10 @@ half4 WaterFragment(Varyings IN) : SV_Target
     InitializeSurfaceData(inputData, surfaceData, IN.additionalData);
 
     half4 output;
-    output.a = WaterNearFade(IN, inputData);
-    output.rgb = WaterShading(inputData, surfaceData, IN.additionalData, screenUV);
+    bool underwater = _BoatAttack_CameraWater.w > .5 ? _BoatAttack_CameraWater.x > .5 : IS_FRONT_VFACE(face, false, true);
+    half distanceFade = 1 - saturate((distance(IN.positionWS.xz, GetCameraPositionWS().xz) - (_BoatAttack_Water_DistanceBlend * .45)) * .05);
+    output.a = underwater ? distanceFade : WaterNearFade(IN, inputData);
+    output.rgb = WaterShading(inputData, surfaceData, IN.additionalData, screenUV, underwater);
 
 	
     return output;

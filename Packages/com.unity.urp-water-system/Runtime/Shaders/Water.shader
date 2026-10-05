@@ -2,8 +2,11 @@ Shader "Boat Attack/Water"
 {
     Properties
     {
+        [HideInInspector] _BoatAttack_WaveControls ("Wave controls", Vector) = (1, 1, 0, 0)
+        [HideInInspector] _BoatAttack_Lighting ("Sky lighting", Vector) = (1, 1, 1, 0)
         [HideInInspector] _WaterShipCount ("Water ship count", Integer) = 0
-        [HideInInspector] _WaterShipFoamParams ("Water ship foam", Vector) = (.9, .55, 2.5, .9)
+        [HideInInspector] _WaterShipFoamAtlas ("Ship foam history", 2D) = "black" {}
+        [HideInInspector] _WaterShipFoamMapping ("Ship foam mapping", Vector) = (0, 0, 0, 0)
         [HideInInspector] _BoatAttack_TileLod ("Water Tile LOD", Vector) = (0, .15, 128, 0)
         [HideInInspector] _BoatAttack_RampTexture ("Water Ramp", 2D) = "white" {}
         [Toggle(_STATIC_SHADER)] _Static ("Static", Float) = 0

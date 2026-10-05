@@ -40,6 +40,7 @@ namespace PirateSlop
             go.layer = LayerMask.NameToLayer(owner.Profile.DebrisLayer);
             var chunk = new Chunk { Object = go, Mesh = go.AddComponent<MeshFilter>(), Renderer = go.AddComponent<MeshRenderer>(), Collider = go.AddComponent<BoxCollider>(), Body = go.AddComponent<Rigidbody>() };
             chunk.Body.isKinematic = true;
+            WaterImpactBody.Ensure(go);
             return chunk;
         }
         IEnumerator Prewarm()
@@ -168,7 +169,7 @@ namespace PirateSlop
                 if (!chunk.Splashed && ocean != null && point.y <= ocean.Height(point))
                 {
                     chunk.Splashed = true; point.y = ocean.Height(point);
-                    CombatVfx.Splash(point); GameAudio.Play(SoundCue.Splash, point);
+                    WaterImpactPhysics.Report(point, chunk.Body.linearVelocity, chunk.Body.mass, Mathf.Sqrt(chunk.Collider.bounds.extents.x * chunk.Collider.bounds.extents.z), WaterImpactKind.Object, chunk.Object); GameAudio.Play(SoundCue.Splash, point);
                     chunk.Body.linearDamping = 2f;
                 }
             }

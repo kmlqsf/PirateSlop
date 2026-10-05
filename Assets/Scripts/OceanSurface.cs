@@ -104,6 +104,7 @@ namespace PirateSlop
         void Awake()
         {
             Instance = this;
+            if (Application.isPlaying) WaterImpactPhysics.Ensure(gameObject);
             if (gameObject.scene.name == "NetworkOcean")
             {
                 WhirlpoolCenter = Vector3.zero;

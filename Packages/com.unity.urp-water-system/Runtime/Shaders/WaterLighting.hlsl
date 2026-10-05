@@ -29,7 +29,7 @@
 
 half CalculateFresnelTerm(half3 normalWS, half3 viewDirectionWS, float distance)
 {
-    const half fresnel = F_Schlick(0.02, dot(normalWS, viewDirectionWS));
+    const half fresnel = F_Schlick(0.02, saturate(dot(normalWS, viewDirectionWS)));
     return fresnel * (1 - saturate((half)distance * 0.005) * 0.5);
 }
 
@@ -189,7 +189,7 @@ half3 SampleReflections(float3 normalWS, float3 positionWS, float3 viewDirection
     
 #if _REFLECTION_CUBEMAP
     half3 reflectVector = reflect(-viewDirectionWS, normalWS);
-    reflection = SAMPLE_TEXTURECUBE_LOD(_CubemapTexture, sampler_CubemapTexture, reflectVector, 0).rgb;
+    reflection = SAMPLE_TEXTURECUBE_LOD(_CubemapTexture, sampler_CubemapTexture, reflectVector, 0).rgb * _BoatAttack_Lighting.x;
 #elif _REFLECTION_PROBE
     reflection = CubemapReflection(viewDirectionWS, positionWS, normalWS);
 #elif _REFLECTION_PLANARREFLECTION

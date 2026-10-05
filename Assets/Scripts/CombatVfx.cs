@@ -93,6 +93,7 @@ namespace PirateSlop
         public static void Splash(Vector3 position, float scale = 1)
         {
             if (!Available) return;
+            if (WaterImpactPhysics.Report(position, Vector3.down * (5f * Mathf.Sqrt(Mathf.Max(.1f, scale))), 20f * scale, .3f * scale)) return;
             if (!GpuWaterSpray.Spawn(position, scale))
                 Burst(position, Vector3.up, new Color(.65f, .85f, .9f, .6f), 24, .18f * scale, 6 * scale, 1, 1);
             Burst(position, Vector3.up, new Color(.85f, .95f, 1, .3f), 10, .6f * scale, .8f, 1.5f);

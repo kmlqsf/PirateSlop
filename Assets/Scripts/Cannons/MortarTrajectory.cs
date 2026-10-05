@@ -150,19 +150,11 @@ namespace PirateSlop
                 point = hit.point; normal = hit.normal; collider = hit.collider; distance = hit.distance; found = true;
             }
             var ocean = OceanSurface.Instance;
-            if (ocean != null && (position + delta).y - radius <= ocean.Height(position + delta))
+            if (WaterImpactPhysics.Cross(ocean, position, position + delta, radius, out var waterPoint, out float high))
             {
-                float low = 0f, high = 1f;
-                for (int i = 0; i < 8; i++)
-                {
-                    float t = (low + high) * .5f;
-                    Vector3 sample = position + delta * t;
-                    if (sample.y - radius > ocean.Height(sample)) low = t; else high = t;
-                }
                 if (!found || delta.magnitude * high < distance)
                 {
-                    point = position + delta * high;
-                    point.y = ocean.Height(point);
+                    point = waterPoint;
                     normal = Vector3.up; collider = null; found = true;
                 }
             }

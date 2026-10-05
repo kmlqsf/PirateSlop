@@ -49,6 +49,7 @@ namespace PirateSlop.Networking
         bool reeling;
         byte shownStage;
         NetworkFish aimed;
+        public bool PickupFocused => aimed != null && aimed.Available && !IsFishing && !CarryingCatch;
         public bool CarryingCatch => stage.Value == 5;
         public bool HasFish => (CarryingCatch && catchItem.Value == InventoryItem.Fish) || (inventory != null && inventory.FishSelected);
         public bool IsFishing => stage.Value > 0 && stage.Value < 5;
@@ -251,8 +252,13 @@ namespace PirateSlop.Networking
             if (!GetComponent<NetworkWeapon>().CanAddItem(kind) && (!swap || inventory.SelectedSlot != slot || inventory.ItemAt(slot) != expected || inventory.ItemCount(slot) != expectedCount || !inventory.CanSwapItem(kind))) return false;
             var equipment = GetComponent<NetworkWeapon>();
             if (!equipment.CanAddItem(kind) && (!swap || !equipment.PrepareSwap(kind, slot, expected, expectedCount))) return false;
+            int destination = inventory.StackSlot(kind);
+            bool lanternLit = kind == InventoryItem.Lantern && (target.GetComponent<NetworkLantern>()?.Lit ?? false);
             if (equipment.CanAddItem(kind) && target.GetComponent<NetworkFish>().Take() && equipment.AddItem(kind))
-            { SoundObserversRpc(SoundCue.Pickup, transform.position); return true; }
+            {
+                if (kind == InventoryItem.Lantern) GetComponent<NetworkEquipment>().SetLanternLit(destination, lanternLit);
+                SoundObserversRpc(SoundCue.Pickup, transform.position); return true;
+            }
             return false;
         }
         public void FinishPickup() { }

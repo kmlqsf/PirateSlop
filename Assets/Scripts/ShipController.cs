@@ -83,6 +83,9 @@ public class ShipController : MonoBehaviour
     }
     [SerializeField] float buoyancyResponse = 2.5f, floatLength = 8f, floatWidth = 3f;
     float pitch, waveRoll;
+    ShipBuoyancy buoyancy;
+    OceanSurface buoyancyOcean;
+    System.Func<Vector3, float> sampleWaterHeight;
     [SerializeField] float cannonRockStrength=20f, cannonRockSpring=9f, cannonRockDamping=3.5f;
     Vector2 cannonTilt, cannonTiltVelocity;
     Vector3 cannonShove, motionVelocity, motionAngularVelocity;
@@ -159,8 +162,15 @@ public class ShipController : MonoBehaviour
         rb = GetComponent<Rigidbody>(); rb.isKinematic = true; rb.useGravity = false; rb.constraints = RigidbodyConstraints.None;
         rb.interpolation = Networked ? RigidbodyInterpolation.None : RigidbodyInterpolation.Interpolate; rb.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
         yaw = transform.eulerAngles.y; waterHeight = transform.position.y;
+        buoyancy = new ShipBuoyancy(floatLength, floatWidth, HullFootprint);
         if (sailSystem == null) sailSystem = GetComponent<SailSystem>();
         if (helm == null) helm = GetComponentInChildren<HelmInteraction>();
+    }
+    float SampleWaterForBuoyancy(Vector3 position)
+    {
+        float height = buoyancyOcean.Height(position);
+        var foam = PirateSlop.WaterShipFoam.Instance;
+        return foam != null && buoyancyOcean.HeightSource is PirateSlop.BoatAttackOcean ? height - foam.BowHeight(position) + foam.BowHeight(position, this) : height;
     }
     void FixedUpdate() { if (!Networked) Simulate(Time.fixedDeltaTime); }
     public void Simulate(float dt)
@@ -236,15 +246,17 @@ public class ShipController : MonoBehaviour
         var ocean = OceanSurface.Instance;
         if (ocean != null)
         {
-            var forward = Quaternion.Euler(0, yaw, 0) * Vector3.forward * floatLength;
-            var right = Quaternion.Euler(0, yaw, 0) * Vector3.right * floatWidth;
-            float bow = ocean.Height(next + forward), stern = ocean.Height(next - forward);
-            float starboard = ocean.Height(next + right), port = ocean.Height(next - right);
+            if (buoyancyOcean != ocean)
+            {
+                buoyancyOcean = ocean;
+                sampleWaterHeight = SampleWaterForBuoyancy;
+            }
+            var support = buoyancy.Evaluate(next, yaw, sampleWaterHeight);
             float blend = 1f - Mathf.Exp(-buoyancyResponse * dt);
             float draftHeight = Mathf.Lerp(waterHeight, ocean.SeaLevel - fullWaterline, floodLevel);
-            next.y = Mathf.Lerp(rb.position.y, draftHeight + (bow + stern + starboard + port) * .25f - ocean.SeaLevel, blend);
-            pitch = Mathf.Lerp(pitch, Mathf.Clamp(-Mathf.Atan2(bow - stern, floatLength * 2) * Mathf.Rad2Deg, -12, 12) + fullBowPitch * floodLevel, blend);
-            waveRoll = Mathf.Lerp(waveRoll, Mathf.Clamp(Mathf.Atan2(starboard - port, floatWidth * 2) * Mathf.Rad2Deg, -15, 15), blend);
+            next.y = Mathf.Lerp(rb.position.y, draftHeight + support.x - ocean.SeaLevel, blend);
+            pitch = Mathf.Lerp(pitch, Mathf.Clamp(support.y, -12, 12) + fullBowPitch * floodLevel, blend);
+            waveRoll = Mathf.Lerp(waveRoll, Mathf.Clamp(support.z, -15, 15), blend);
         }
         var rotation = Quaternion.Euler(pitch + cannonTilt.x, yaw, bank + waveRoll + cannonTilt.y);
         PirateSlop.Networking.NetworkCannon.ConstrainBoarding(this, ref next, rotation);

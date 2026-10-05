@@ -24,6 +24,13 @@ float4 _BoatAttack_Whirlpool;
 float _BoatAttack_WaveTime;
 float _BoatAttack_UseWaveTime;
 float _BoatAttack_UniformWaves;
+float4 _BoatAttack_WaveControls;
+float4 _BoatAttack_Lighting;
+#ifndef PIRATESLOP_CAMERA_WATER_DEFINED
+#define PIRATESLOP_CAMERA_WATER_DEFINED
+float4 _BoatAttack_CameraWater;
+#endif
+float _BoatAttack_UnderwaterPass;
 
 #define SSR_STEP_SIZE _SSR_Settings.x
 #define SSR_THICKNESS _SSR_Settings.y

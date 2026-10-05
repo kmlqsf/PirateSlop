@@ -7,11 +7,11 @@ namespace PirateSlop
     {
         static readonly ParticleSystem[] bursts = new ParticleSystem[16];
         static int next;
-        public static void Present(Vector3 point, bool water)
+        public static void Present(Vector3 point, bool water, Vector3 incoming = default, GameObject owner = null)
         {
             if (!Application.isPlaying || Application.isBatchMode) return;
             GameAudio.Play(SoundCue.BottleBreak, point);
-            if (water) { GameAudio.Play(SoundCue.WaterSplash, point, .6f); CombatVfx.Splash(point, .5f); }
+            if (water) { GameAudio.Play(SoundCue.WaterSplash, point, .6f); WaterImpactPhysics.Report(point, incoming, .7f, .12f, WaterImpactKind.Object, owner); }
             var material = Resources.Load<Material>("BottleGlassShard");
             if (material == null) return;
             int index = next++ % bursts.Length;

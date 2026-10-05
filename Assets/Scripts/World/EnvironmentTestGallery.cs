@@ -19,10 +19,10 @@ namespace PirateSlop.World
         {
             var gallery = Resources.Load<EnvironmentTestGallery>(ResourcePath);
             if (gallery == null) throw new InvalidOperationException("Rebuild the environment gallery from PirateSlop > Prepare Environment Test.");
-            var layout = new WorldLayout { Seed = 1, Resolution = 32, Radius = gallery.Radius, Depth = 80f, SeaLevel = seaLevel, CatalogHash = WorldGenerator.CatalogHash(profile) };
+            var layout = new WorldLayout { Seed = 1, Resolution = 32, Radius = Mathf.Max(gallery.Radius, 2000f), Depth = 200f, SeaLevel = seaLevel, CatalogHash = WorldGenerator.CatalogHash(profile) };
             layout.Points.Add(new WorldPoint { Id = Marker + "/" + gallery.Revision, Tag = Marker, Position = Vector3.up * seaLevel, Rule = -1 });
             for (int i = 0; i < 10; i++)
-                layout.Points.Add(new WorldPoint { Id = "test_ship_" + i, Tag = "ship_spawn", Position = gallery.Spawn + new Vector3(i * 65f, seaLevel, 0), Yaw = 90f, Rule = -1 });
+                layout.Points.Add(new WorldPoint { Id = "test_ship_" + i, Tag = "ship_spawn", Position = gallery.Spawn + new Vector3(-i * 65f, seaLevel, 0f), Yaw = 180f, Rule = -1 });
             return layout;
         }
 
@@ -32,9 +32,12 @@ namespace PirateSlop.World
             if (gallery == null || !layout.Points.Exists(p => p.Id == Marker + "/" + gallery.Revision))
                 throw new InvalidOperationException("Environment gallery differs from the host. Update the game assets.");
             var instance = Instantiate(gallery, parent);
+            var ocean = Resources.Load<GameObject>("EnvironmentTest/Ocean");
+            if (ocean == null) throw new InvalidOperationException("The environment test ocean is missing.");
+            Instantiate(ocean, parent);
             var sky = Resources.Load<GameObject>("EnvironmentTest/SkyDayNight");
             if (sky != null) Instantiate(sky, parent);
-            instance.transform.localPosition = Vector3.up * layout.SeaLevel; var wp = instance.gameObject.AddComponent<WhirlpoolTest>(); wp.Center = gallery.Spawn + new Vector3(200f, 0, -400f);
+            instance.transform.localPosition = Vector3.up * layout.SeaLevel; var wp = instance.gameObject.AddComponent<WhirlpoolTest>(); wp.Center = gallery.Spawn + new Vector3(0f, 0f, -550f); wp.Depth = OceanSurface.CentralWhirlpoolDepth;
             var whalePrefab = Resources.Load<GameObject>("Whale/WhaleLootPOI");
             if (whalePrefab != null)
             {

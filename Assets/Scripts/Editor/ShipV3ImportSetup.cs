@@ -122,6 +122,8 @@ namespace PirateSlop.EditorTools
                 ShipV3BindingRepair.Configure(root, document);
                 LootModelReplacementSetup.ConfigureImportedShip(root);
                 ConfigureGeometryBudget(root);
+                ConfigureLanternLighting(root);
+                HandLanternSetup.ConfigureImportedShip(root);
                 ShipMonkeySetup.Configure(root);
                 ShipCustomizationSetup.Configure(root);
                 var prefab = PrefabUtility.SaveAsPrefabAsset(root, PrefabPath);
@@ -167,6 +169,8 @@ namespace PirateSlop.EditorTools
                     renderer.sharedMaterials = renderer.sharedMaterials.Select(m => m != null && materials.TryGetValue(m.name, out var replacement) ? replacement : m).ToArray();
                 ShipV3BindingRepair.Configure(prefabRoot, document);
                 ConfigureGeometryBudget(prefabRoot);
+                ConfigureLanternLighting(prefabRoot);
+                HandLanternSetup.ConfigureImportedShip(prefabRoot);
                 PrefabUtility.SaveAsPrefabAsset(prefabRoot, PrefabPath);
                 RemoveUnusedBatchMeshes(prefabRoot);
                 RegisterNetworkPrefab();
@@ -308,6 +312,63 @@ namespace PirateSlop.EditorTools
             serialized.ApplyModifiedPropertiesWithoutUndo();
         }
 
+        [MenuItem("PirateSlop/Repair Ship V3 Lantern Lighting")]
+        public static void RepairLanternLighting()
+        {
+            if (EditorApplication.isPlaying) throw new InvalidOperationException("Exit Play Mode before repair.");
+            var prefabRoot = PrefabUtility.LoadPrefabContents(PrefabPath);
+            try
+            {
+                ConfigureLanternLighting(prefabRoot);
+                PrefabUtility.SaveAsPrefabAsset(prefabRoot, PrefabPath);
+                AssetDatabase.SaveAssets();
+            }
+            finally { PrefabUtility.UnloadPrefabContents(prefabRoot); }
+        }
+
+        static void ConfigureLanternLighting(GameObject prefabRoot)
+        {
+            var lamps = prefabRoot.GetComponent<ShipV3Features>().Lanterns;
+            foreach (var lamp in lamps)
+            {
+                HandLanternSetup.RepairPaneMesh(lamp);
+                if (lamp.Light != null)
+                {
+                    var light = lamp.Light;
+                    light.color = new Color(1f, .57f, .24f);
+                    light.intensity = ShipV3Features.LanternIntensity;
+                    light.range = ShipV3Features.LanternRange;
+                    ConfigureLanternShadowBudget(light);
+                    light.shadows = LightShadows.None;
+                    light.shadowStrength = .65f;
+                    light.shadowNearPlane = .06f;
+                    light.shadowBias = .025f;
+                    light.shadowNormalBias = .08f;
+                }
+                if (lamp.Glass != null && lamp.GlassSlot >= 0 && lamp.GlassSlot < lamp.Glass.sharedMaterials.Length)
+                    ConfigureLanternGlass(lamp.Glass.sharedMaterials[lamp.GlassSlot]);
+            }
+        }
+
+        static void ConfigureLanternGlass(Material material)
+        {
+            if (material == null || material.name != "V3_Lantern_AmberGlass_Emissive") return;
+            material.SetFloat("_Surface", 1f);
+            material.SetFloat("_Blend", 0f);
+            material.SetFloat("_BlendModePreserveSpecular", 0f);
+            material.SetFloat("_AlphaClip", 0f);
+            material.SetFloat("_Cull", 0f);
+            material.SetFloat("_Metallic", 0f);
+            material.SetFloat("_Smoothness", .45f);
+            material.SetColor("_BaseColor", new Color(1f, .92f, .8f, .22f));
+            material.SetColor("_EmissionColor", ShipV3Features.LanternEmission);
+            material.globalIlluminationFlags = MaterialGlobalIlluminationFlags.BakedEmissive;
+            BaseShaderGUI.SetMaterialKeywords(material);
+            material.EnableKeyword("_EMISSION");
+            material.SetShaderPassEnabled("ShadowCaster", false);
+            EditorUtility.SetDirty(material);
+        }
+
         static Vector3 Vector(JToken value) => new((float)value[0], (float)value[1], (float)value[2]);
         static Vector3 Point(JToken value) => basis.MultiplyPoint3x4(Vector(value));
         static Transform Find(string name) => objects.TryGetValue(name, out var value) ? value : null;
@@ -423,6 +484,7 @@ namespace PirateSlop.EditorTools
                 {
                     material.EnableKeyword("_EMISSION"); material.SetColor("_EmissionColor", new Color(.65f, .22f, .045f));
                 }
+                ConfigureLanternGlass(material);
                 materials.Add(name, material); EditorUtility.SetDirty(material);
             }
             AssetDatabase.SaveAssets();

@@ -67,6 +67,7 @@
 | [Assets/Prefabs/Networking/DroppedPistol.prefab](<../../Assets/Prefabs/Networking/DroppedPistol.prefab>) | Префаб Unity |
 | [Assets/Prefabs/Networking/DroppedRod.prefab](<../../Assets/Prefabs/Networking/DroppedRod.prefab>) | Префаб Unity |
 | [Assets/Prefabs/Networking/DroppedSabre.prefab](<../../Assets/Prefabs/Networking/DroppedSabre.prefab>) | Префаб Unity; Личное оружие и урон |
+| [Assets/Prefabs/Networking/LanternPickup.prefab](<../../Assets/Prefabs/Networking/LanternPickup.prefab>) | Префаб Unity; Предметы, лут и инвентарь |
 | [Assets/Prefabs/Networking/NetworkFish.prefab](<../../Assets/Prefabs/Networking/NetworkFish.prefab>) | Префаб Unity |
 | [Assets/Prefabs/Networking/NetworkLootChest.prefab](<../../Assets/Prefabs/Networking/NetworkLootChest.prefab>) | Префаб Unity |
 | [Assets/Prefabs/Networking/NetworkPlayer.prefab](<../../Assets/Prefabs/Networking/NetworkPlayer.prefab>) | Префаб Unity; Проект и точки входа, Персонаж, камера и анимации |

@@ -72,14 +72,14 @@ namespace PirateSlop.Networking
             if (!IsServerInitialized || !IsSpawned || broken) return false;
             broken = true;
             if (!water && ship != null) ship.ApplyVortexBoost();
-            BreakObserversRpc(point, water);
+            BreakObserversRpc(point, water, velocity);
             ServerManager.Despawn(NetworkObject);
             return true;
         }
         [ObserversRpc(RunLocally = true)]
-        void BreakObserversRpc(Vector3 point, bool water)
+        void BreakObserversRpc(Vector3 point, bool water, Vector3 incoming)
         {
-            BottleBreakVfx.Present(point, water);
+            BottleBreakVfx.Present(point, water, incoming, gameObject);
         }
     }
 }

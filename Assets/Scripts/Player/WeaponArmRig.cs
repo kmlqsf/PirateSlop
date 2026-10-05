@@ -197,6 +197,7 @@ namespace PirateSlop
             }
             Vector3 pole = main.Upper.position + basis.right * .5f - basis.up * .4f;
             main.Solve(item.TransformPoint(equipment.GripOffset), item.rotation, pole, 1);
+            if (equipment.Item == PirateSlop.Networking.InventoryItem.Lantern) return;
             Vector3 otherPole = support.Upper.position - basis.right * .5f - basis.up * .4f;
             support.Solve(item.TransformPoint(equipment.SupportOffset), item.rotation, otherPole, 1);
         }

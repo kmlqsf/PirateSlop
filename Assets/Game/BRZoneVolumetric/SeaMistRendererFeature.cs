@@ -50,6 +50,8 @@ namespace PirateSlop
 
         public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData)
         {
+            var medium = Shader.GetGlobalVector("_BoatAttack_CameraWater");
+            if (medium.w > .5f && medium.x > .5f) return;
             if (renderingData.cameraData.cameraType != CameraType.Game || renderingData.cameraData.renderType != CameraRenderType.Base || OceanSurface.Instance == null || OceanSurface.Instance.gameObject.scene.name != "NetworkOcean" || passMaterial == null) return;
             passMaterial.SetFloat("_SeaLevel", OceanSurface.Instance.SeaLevel);
             passMaterial.SetFloat("_DensityMultiplier", Mathf.Clamp(DensityMultiplier, 0f, 3f) * ShipSpyglassView.FogMultiplier(renderingData.cameraData.camera));

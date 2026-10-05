@@ -227,7 +227,16 @@ namespace PirateSlop.Networking
             diving.Value = true;
             swimUntil = Time.time + 3f;
             expires = float.PositiveInfinity;
-            FlopSoundObserversRpc(SoundCue.Splash, splash);
+            WaterEntryObserversRpc(splash, incomingVelocity);
+        }
+
+        [ObserversRpc(RunLocally = true)]
+        void WaterEntryObserversRpc(Vector3 point, Vector3 incoming)
+        {
+            var impactBody = WaterImpactBody.Ensure(gameObject);
+            float radius = Mathf.Clamp(Mathf.Sqrt(movementBounds.extents.x * movementBounds.extents.z), .06f, 1.5f);
+            WaterImpactPhysics.Report(point, incoming, impactBody.Mass, radius, WaterImpactKind.Object, gameObject);
+            GameAudio.Play(SoundCue.Splash, point);
         }
 
         [ObserversRpc(RunLocally = true)]

@@ -43,6 +43,8 @@ MonoBehaviour:
   - {fileID: 3439995257933403803, guid: 9e927a72c9fa87c46b44e9cbaa981dc7, type: 3}
   - {fileID: 4026601597403389416, guid: a642282f47a8844449e9b0abcb229def, type: 3}
   - {fileID: 8494819478363084047, guid: aada7a8bef225f446b60e38be98741ce, type: 3}
+  - {fileID: 0}
+  - {fileID: 9077003972062055808, guid: a9670d6a7775e9845a5e41b84221e9af, type: 3}
   LooseItemsPerIsland: {x: 2, y: 4}
   ChestsPerIsland: {x: 1, y: 3}
   SeaEventsPerType: 3
@@ -104,3 +106,6 @@ MonoBehaviour:
   - Item: 24
     Name: "\u0411\u0443\u0442\u044B\u043B\u043A\u0430 \u0442\u0443\u043C\u0430\u043D\u0430"
     Weight: 3
+  - Item: 26
+    Name: "\u0420\u0443\u0447\u043D\u043E\u0439 \u0444\u043E\u043D\u0430\u0440\u044C"
+    Weight: 0

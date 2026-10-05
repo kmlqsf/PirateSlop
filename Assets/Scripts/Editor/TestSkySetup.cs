@@ -85,6 +85,7 @@ namespace PirateSlop.Editor
             clouds.numPrimarySteps.Override(48);
             clouds.numLightSteps.Override(4);
             clouds.shadows.Override(false);
+            ConfigureLook(profile, pipeline, renderer);
             EditorUtility.SetDirty(profile);
             foreach (var component in profile.components) EditorUtility.SetDirty(component);
             EditorUtility.SetDirty(skyFeature);
@@ -112,6 +113,62 @@ namespace PirateSlop.Editor
             finally { UnityEngine.Object.DestroyImmediate(root); }
             AssetDatabase.SaveAssets();
             Debug.Log("Test sky prepared for the ordinary environment test: F8 day / sunset / moonlit night.");
+        }
+
+        public static void ConfigureLook(VolumeProfile profile, UniversalRenderPipelineAsset pipeline, UniversalRendererData renderer)
+        {
+            var globalSettings = AssetDatabase.LoadMainAssetAtPath("Assets/Settings/UniversalRenderPipelineGlobalSettings.asset");
+            var globalProperties = new SerializedObject(globalSettings);
+            var iterator = globalProperties.GetIterator();
+            string includePath = null, labelPath = null;
+            while (iterator.Next(true))
+            {
+                if (iterator.name == "m_IncludeAssetsByLabel") includePath = iterator.propertyPath;
+                if (iterator.name == "m_LabelToInclude") labelPath = iterator.propertyPath;
+            }
+            if (includePath == null || labelPath == null) throw new InvalidOperationException("Runtime render pipeline inclusion settings are missing.");
+            globalProperties.FindProperty(includePath).boolValue = true;
+            globalProperties.FindProperty(labelPath).stringValue = "PirateSlopRuntimePipeline";
+            globalProperties.ApplyModifiedPropertiesWithoutUndo();
+            EditorUtility.SetDirty(globalSettings);
+            var labels = new System.Collections.Generic.List<string>(AssetDatabase.GetLabels(pipeline));
+            if (!labels.Contains("PirateSlopRuntimePipeline")) labels.Add("PirateSlopRuntimePipeline");
+            AssetDatabase.SetLabels(pipeline, labels.ToArray());
+            pipeline.colorGradingMode = ColorGradingMode.HighDynamicRange;
+            pipeline.colorGradingLutSize = 32;
+            var tone = Component<Tonemapping>(profile);
+            tone.mode.Override(TonemappingMode.Neutral);
+            var color = Component<ColorAdjustments>(profile);
+            color.postExposure.Override(0f);
+            color.contrast.Override(6f);
+            color.saturation.Override(-4f);
+            color.hueShift.Override(0f);
+            color.colorFilter.Override(Color.white);
+            var balance = Component<WhiteBalance>(profile);
+            balance.temperature.Override(0f);
+            balance.tint.Override(0f);
+            var bloom = Component<Bloom>(profile);
+            bloom.threshold.Override(1.2f);
+            bloom.intensity.Override(.15f);
+            bloom.scatter.Override(.55f);
+            bloom.clamp.Override(8f);
+            bloom.tint.Override(Color.white);
+            bloom.highQualityFiltering.Override(true);
+            bloom.downscale.Override(BloomDownscaleMode.Half);
+            bloom.maxIterations.Override(5);
+            foreach (var feature in renderer.rendererFeatures)
+            {
+                if (feature == null || feature.GetType().Name != "ScreenSpaceAmbientOcclusion") continue;
+                var settings = new SerializedObject(feature);
+                settings.FindProperty("m_Settings.DirectLightingStrength").floatValue = .15f;
+                settings.ApplyModifiedPropertiesWithoutUndo();
+                EditorUtility.SetDirty(feature);
+            }
+            foreach (var component in profile.components) EditorUtility.SetDirty(component);
+            EditorUtility.SetDirty(profile);
+            EditorUtility.SetDirty(pipeline);
+            EditorUtility.SetDirty(renderer);
+            renderer.SetDirty();
         }
 
         static T Component<T>(VolumeProfile profile) where T : VolumeComponent
