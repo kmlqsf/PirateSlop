@@ -32,6 +32,8 @@ namespace PirateSlop.World
             if (gallery == null || !layout.Points.Exists(p => p.Id == Marker + "/" + gallery.Revision))
                 throw new InvalidOperationException("Environment gallery differs from the host. Update the game assets.");
             var instance = Instantiate(gallery, parent);
+            var sky = Resources.Load<GameObject>("EnvironmentTest/SkyDayNight");
+            if (sky != null) Instantiate(sky, parent);
             instance.transform.localPosition = Vector3.up * layout.SeaLevel; var wp = instance.gameObject.AddComponent<WhirlpoolTest>(); wp.Center = gallery.Spawn + new Vector3(200f, 0, -400f);
             var whalePrefab = Resources.Load<GameObject>("Whale/WhaleLootPOI");
             if (whalePrefab != null)

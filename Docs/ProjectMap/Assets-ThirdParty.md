@@ -75,3 +75,86 @@
 | [Assets/ThirdParty/MetaVoiceChat/Utils/FixedLengthArrayPool.cs](<../../Assets/ThirdParty/MetaVoiceChat/Utils/FixedLengthArrayPool.cs>) | Исходник C#: FixedLengthArrayPool |
 | [Assets/ThirdParty/MetaVoiceChat/Utils/FrameStopwatch.cs](<../../Assets/ThirdParty/MetaVoiceChat/Utils/FrameStopwatch.cs>) | Исходник C#: FrameStopwatch |
 | [Assets/ThirdParty/MetaVoiceChat/Utils/MetaSerializableReactiveProperty.cs](<../../Assets/ThirdParty/MetaVoiceChat/Utils/MetaSerializableReactiveProperty.cs>) | Исходник C#: MetaSerializableReactiveProperty |
+
+## Assets/ThirdParty/Oceana
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/ThirdParty/Oceana/LICENSE.txt](<../../Assets/ThirdParty/Oceana/LICENSE.txt>) | Текстовые данные; Мир, острова и океан, Тестовая карта и водоворот |
+| [Assets/ThirdParty/Oceana/NOTICE.txt](<../../Assets/ThirdParty/Oceana/NOTICE.txt>) | Текстовые данные; Мир, острова и океан, Тестовая карта и водоворот |
+
+## Assets/ThirdParty/Oceana/Editor
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/ThirdParty/Oceana/Editor/ArrayPacker.cs](<../../Assets/ThirdParty/Oceana/Editor/ArrayPacker.cs>) | Исходник C#: ArrayPacker |
+| [Assets/ThirdParty/Oceana/Editor/MapPacker.cs](<../../Assets/ThirdParty/Oceana/Editor/MapPacker.cs>) | Исходник C#: MapPacker |
+| [Assets/ThirdParty/Oceana/Editor/SurfaceGenerator.cs](<../../Assets/ThirdParty/Oceana/Editor/SurfaceGenerator.cs>) | Исходник C#: SurfaceGenerator |
+
+## Assets/ThirdParty/Oceana/Precomputed
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/ThirdParty/Oceana/Precomputed/Ocean_Plane.fbx](<../../Assets/ThirdParty/Oceana/Precomputed/Ocean_Plane.fbx>) | Модель / анимации FBX |
+| [Assets/ThirdParty/Oceana/Precomputed/PackArray.asset](<../../Assets/ThirdParty/Oceana/Precomputed/PackArray.asset>) | Настройки или данные Unity |
+
+## Assets/ThirdParty/Oceana/Precomputed/Maps
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/ThirdParty/Oceana/Precomputed/Maps/Foam_0.jpg](<../../Assets/ThirdParty/Oceana/Precomputed/Maps/Foam_0.jpg>) | Изображение / текстура |
+| [Assets/ThirdParty/Oceana/Precomputed/Maps/PackMap_Scroll_0.png](<../../Assets/ThirdParty/Oceana/Precomputed/Maps/PackMap_Scroll_0.png>) | Изображение / текстура |
+| [Assets/ThirdParty/Oceana/Precomputed/Maps/PackMap_Scroll_1.png](<../../Assets/ThirdParty/Oceana/Precomputed/Maps/PackMap_Scroll_1.png>) | Изображение / текстура |
+| [Assets/ThirdParty/Oceana/Precomputed/Maps/PackMap_Scroll_2.png](<../../Assets/ThirdParty/Oceana/Precomputed/Maps/PackMap_Scroll_2.png>) | Изображение / текстура |
+| [Assets/ThirdParty/Oceana/Precomputed/Maps/PackMap_Scroll_3.png](<../../Assets/ThirdParty/Oceana/Precomputed/Maps/PackMap_Scroll_3.png>) | Изображение / текстура |
+| [Assets/ThirdParty/Oceana/Precomputed/Maps/PackMap_Scroll_4.png](<../../Assets/ThirdParty/Oceana/Precomputed/Maps/PackMap_Scroll_4.png>) | Изображение / текстура |
+| [Assets/ThirdParty/Oceana/Precomputed/Maps/PackMap_Scroll_5.png](<../../Assets/ThirdParty/Oceana/Precomputed/Maps/PackMap_Scroll_5.png>) | Изображение / текстура |
+| [Assets/ThirdParty/Oceana/Precomputed/Maps/PackMap_Scroll_6.png](<../../Assets/ThirdParty/Oceana/Precomputed/Maps/PackMap_Scroll_6.png>) | Изображение / текстура |
+| [Assets/ThirdParty/Oceana/Precomputed/Maps/PackMap_Scroll_7.png](<../../Assets/ThirdParty/Oceana/Precomputed/Maps/PackMap_Scroll_7.png>) | Изображение / текстура |
+| [Assets/ThirdParty/Oceana/Precomputed/Maps/PackMaps.preset](<../../Assets/ThirdParty/Oceana/Precomputed/Maps/PackMaps.preset>) | Файл .preset |
+
+## Assets/ThirdParty/Oceana/Precomputed/Utilis
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/ThirdParty/Oceana/Precomputed/Utilis/ArrayPacker.asset](<../../Assets/ThirdParty/Oceana/Precomputed/Utilis/ArrayPacker.asset>) | Настройки или данные Unity |
+| [Assets/ThirdParty/Oceana/Precomputed/Utilis/MapPacker.asset](<../../Assets/ThirdParty/Oceana/Precomputed/Utilis/MapPacker.asset>) | Настройки или данные Unity |
+
+## Assets/ThirdParty/Oceana/Scripts
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/ThirdParty/Oceana/Scripts/OceanaRenderFeature.cs](<../../Assets/ThirdParty/Oceana/Scripts/OceanaRenderFeature.cs>) | Исходник C#: OceanaRenderFeature; Мир, острова и океан, Тестовая карта и водоворот |
+| [Assets/ThirdParty/Oceana/Scripts/OceanaSettings.cs](<../../Assets/ThirdParty/Oceana/Scripts/OceanaSettings.cs>) | Исходник C#: OceanaSettings, MapResolution |
+
+## Assets/ThirdParty/Oceana/Scripts/RenderPass
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/ThirdParty/Oceana/Scripts/RenderPass/OceanaScrollPass.cs](<../../Assets/ThirdParty/Oceana/Scripts/RenderPass/OceanaScrollPass.cs>) | Исходник C#: OceanaScrollPass, ScrollGlobalData, ScrollPassData; Мир, острова и океан, Тестовая карта и водоворот |
+| [Assets/ThirdParty/Oceana/Scripts/RenderPass/OceanaSurfacePass.cs](<../../Assets/ThirdParty/Oceana/Scripts/RenderPass/OceanaSurfacePass.cs>) | Исходник C#: ScreenCopyPassData, OceanaSurfacePass, PassData; Мир, острова и океан, Тестовая карта и водоворот |
+| [Assets/ThirdParty/Oceana/Scripts/RenderPass/OceanaUnderwaterPass.cs](<../../Assets/ThirdParty/Oceana/Scripts/RenderPass/OceanaUnderwaterPass.cs>) | Исходник C#: OceanaUnderwaterPass, UnderwaterPassData |
+
+## Assets/ThirdParty/Oceana/Settings
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/ThirdParty/Oceana/Settings/OceanaSettings.asset](<../../Assets/ThirdParty/Oceana/Settings/OceanaSettings.asset>) | Настройки или данные Unity |
+| [Assets/ThirdParty/Oceana/Settings/Oceana_Surface.mat](<../../Assets/ThirdParty/Oceana/Settings/Oceana_Surface.mat>) | Материал Unity |
+| [Assets/ThirdParty/Oceana/Settings/Oceana_Underwater.mat](<../../Assets/ThirdParty/Oceana/Settings/Oceana_Underwater.mat>) | Материал Unity |
+
+## Assets/ThirdParty/Oceana/Shaders
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/ThirdParty/Oceana/Shaders/MapPacker.compute](<../../Assets/ThirdParty/Oceana/Shaders/MapPacker.compute>) | Вычислительный шейдер |
+| [Assets/ThirdParty/Oceana/Shaders/ScrollRenderer.compute](<../../Assets/ThirdParty/Oceana/Shaders/ScrollRenderer.compute>) | Вычислительный шейдер; Мир, острова и океан, Тестовая карта и водоворот |
+| [Assets/ThirdParty/Oceana/Shaders/WaterSurface.shader](<../../Assets/ThirdParty/Oceana/Shaders/WaterSurface.shader>) | Шейдер; Мир, острова и океан, Тестовая карта и водоворот |
+| [Assets/ThirdParty/Oceana/Shaders/WaterUnderwater.shader](<../../Assets/ThirdParty/Oceana/Shaders/WaterUnderwater.shader>) | Шейдер |
+
+## Assets/ThirdParty/Oceana/Shaders/include
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/ThirdParty/Oceana/Shaders/include/MapPacking.hlsl](<../../Assets/ThirdParty/Oceana/Shaders/include/MapPacking.hlsl>) | Код шейдера; Мир, острова и океан, Тестовая карта и водоворот |
+| [Assets/ThirdParty/Oceana/Shaders/include/ScreenSpaceFunctions.hlsl](<../../Assets/ThirdParty/Oceana/Shaders/include/ScreenSpaceFunctions.hlsl>) | Код шейдера |

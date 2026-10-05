@@ -12,7 +12,7 @@
 
 ## Полный каталог
 
-Учтено 3326 файлов без `.meta`. Ещё 3405 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
+Учтено 3516 файлов без `.meta`. Ещё 3624 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
 
 | Раздел | Назначение | Файлов |
 | --- | --- | ---: |
@@ -34,18 +34,18 @@
 | [Assets/Models](<Docs/ProjectMap/Assets-Models.md>) | Модели и связанные ресурсы | 1099 |
 | [Assets/Plugins](<Docs/ProjectMap/Assets-Plugins.md>) | Плагины | 5 |
 | [Assets/Prefabs](<Docs/ProjectMap/Assets-Prefabs.md>) | Готовые игровые объекты | 113 |
-| [Assets/Resources](<Docs/ProjectMap/Assets-Resources.md>) | Ресурсы, доступные для загрузки по имени | 56 |
-| [Assets/Scenes](<Docs/ProjectMap/Assets-Scenes.md>) | Сохранённые сцены | 3 |
-| [Assets/Scripts](<Docs/ProjectMap/Assets-Scripts.md>) | Игровой код и редакторские инструменты | 368 |
-| [Assets/Settings](<Docs/ProjectMap/Assets-Settings.md>) | Настройки игровых систем и рендеринга | 41 |
-| [Assets/Shaders](<Docs/ProjectMap/Assets-Shaders.md>) | Шейдеры | 7 |
+| [Assets/Resources](<Docs/ProjectMap/Assets-Resources.md>) | Ресурсы, доступные для загрузки по имени | 58 |
+| [Assets/Scenes](<Docs/ProjectMap/Assets-Scenes.md>) | Сохранённые сцены | 5 |
+| [Assets/Scripts](<Docs/ProjectMap/Assets-Scripts.md>) | Игровой код и редакторские инструменты | 379 |
+| [Assets/Settings](<Docs/ProjectMap/Assets-Settings.md>) | Настройки игровых систем и рендеринга | 50 |
+| [Assets/Shaders](<Docs/ProjectMap/Assets-Shaders.md>) | Шейдеры | 8 |
 | [Assets/StreamingAssets](<Docs/ProjectMap/Assets-StreamingAssets.md>) | Ресурсы раздела; точный состав — в каталоге | 2 |
 | [Assets/Tests](<Docs/ProjectMap/Assets-Tests.md>) | Исходники проверок | 19 |
-| [Assets/ThirdParty](<Docs/ProjectMap/Assets-ThirdParty.md>) | Сторонние ресурсы | 20 |
+| [Assets/ThirdParty](<Docs/ProjectMap/Assets-ThirdParty.md>) | Сторонние ресурсы | 53 |
 | [Assets/TutorialInfo](<Docs/ProjectMap/Assets-TutorialInfo.md>) | Ресурсы раздела; точный состав — в каталоге | 2 |
 | [Assets/UI](<Docs/ProjectMap/Assets-UI.md>) | Ресурсы интерфейса | 28 |
-| [Docs](<Docs/ProjectMap/Docs.md>) | Документы и сохранённые отчёты | 28 |
-| [Packages](<Docs/ProjectMap/Packages.md>) | Манифест, lock-файл и встроенные пакеты | 793 |
+| [Docs](<Docs/ProjectMap/Docs.md>) | Документы и сохранённые отчёты | 31 |
+| [Packages](<Docs/ProjectMap/Packages.md>) | Манифест, lock-файл и встроенные пакеты | 922 |
 | [ProjectSettings](<Docs/ProjectMap/ProjectSettings.md>) | Настройки Unity | 28 |
 | [Root](<Docs/ProjectMap/Root.md>) | Корневые инструкции, планы и служебные файлы | 27 |
 | [ThirdParty](<Docs/ProjectMap/ThirdParty.md>) | Сторонние ресурсы | 2 |
@@ -465,6 +465,19 @@ ShipV3CollisionBatch объединяет только неподвижные in
 Согласовывать генерацию карты и её состояние между участниками; seed и профиль брать из используемых ассетов.
 CPU-поверхность воды используется игровой логикой: визуальные волны нельзя менять независимо от OceanSurface без проверки связи. OceanSurface добавляет длинные волны 180/120 м; по StormProgress плавно подключаются 90/64 м. Амплитуды всех четырёх длинных волн удвоены (1.1/0.56/0.36/0.24 м);, высота растёт до FinalSwellMultiplier=2.5 и усиливается мелкое волнение. SwellStrength задаёт базовую высоту. Одинаковые параметры _SwellWaves и время используются CPU и активным SimpleWaterURP; ShipController продолжает брать высоту в четырёх точках корпуса. SessionStorm больше не меняет неиспользуемый активным SimpleWater параметр WaveScale. Старый неиспользуемый Assets/Shaders/Ocean.shader удалён при очистке 2026-10-05.
 WorldStructureCollision ревизии 2 учитывает соседний authored _COL, не добавляет дублирующие MeshCollider к визуальным LOD. Для нечитаемого меша без коллайдера используется BoxCollider по bounds. Семь FBX в Assets/Game/Environment импортированы с Read/Write; EnvironmentTestSetup сохраняет этот режим. Ошибки CollisionMeshData у Reef_Moai_A/Reef_Spires_B/C/SeaArch_Huge_A/Reef_ShallowField_A относятся к окружению, не к старому кораблю.
+В отдельной BoatAttackWaterTest используется бесплатный embedded Boat Attack Water 3.0.0 (rendergraph-U6) с сохранённой Unity Companion License и локальными исправлениями для Unity 6000.6 / URP 17.6. OceanSurface.HeightSource делегирует волны адаптеру BoatAttackOcean; существующие физика корабля, плавание и камера читают ту же поверхность. Обычная вода NetworkOcean сохраняет прежнюю реализацию.
+Boat Attack Water: SystemInitializer повторно включает существующие скрытые компоненты после очистки реестра, с Cleanup перед Init; runtime-сброс работает также в Editor. WaterManager восстанавливает уникальную регистрацию океанов и единственную подписку камеры. Исправляет полностью отсутствовавшую воду при загрузке второй тестовой сцены после запуска из меню.
+WaterPhysics: NativeArrayDispose освобождает четыре поля по ref с default после Dispose; Cleanup сбрасывает JobHandle и managed-кеши. Устраняет чтение уже освобождённого _waterBodyData на первом кадре после повторной инициализации Boat Attack.
+Boat Attack: screen UV напрямую World→Clip; глубина поверхности вычисляется из позиции пикселя, без обратной LOD-матрицы. Сине-зелёные absorption(.10,.46,.42)/scattering(.008,.12,.105), шесть волн amplitude2.2/wavelength32м; пена от.60 до.90 с максимумом.70, foamIntensity.40, рябь.32. R500/D120/центр550 сохранены.
+Boat Attack передаёт LOD отдельным NativeArray<float4>/instanced MaterialPropertyBlock; матрицы обычные, батчи по256 с фактическим count. A/B в Play выявил остаточные разрывы от lighting probe/lightmap instancing и cullDistance1000 у камеры: Water.shader использует nolightprobe nolightmap assumeuniformscaling/target4.5; корень воды на слое4, DrawMeshSurface поднимает только его layerCullDistances до farClipPlane. Новый запуск из меню: вода5000м, остальные слои1000м; палуба, море и чаша без дыр на проверенных кадрах.
+Тестовая сцена3 — OceanaWaterTest, бесплатная Oceana-URP Apache2.0 с сохранёнными LICENSE/NOTICE. Нативные сетка/8карт волн/пена, отдельные тестовые settings/material и линейный Texture2DArray. OceanaOcean повторяет CPU/GPU время и обе стадии фильтрации; GPU readback40точек: max0.009259м. _CameraAboveWater берётся по общей высоте под камерой, нормаль ориентируется к взгляду; это убирает плоские бирюзовые участки. Гребневая пена.60/.66*.9, три рукава и геометрическая воронка R500/D120/центр550. В обеих тестовых сценах fogDensity.0005.
+Oceana Test Ocean добавлен в PC_Renderer; RenderGraph читает Scroll/Color/Depth и пишет activeColor/activeDepth. TextureHandle связывается в render function; Scroll RT сохраняется и освобождается. Проходы работают только при соответствующем OceanaOcean, обычная вода и Boat Attack их не запускают. Самостоятельная проверка в Play из меню, камера игрока/низкий ракурс/чаша сверху: разрывов не видно, пена и волны читаются; итог VFX [APPROVED], Console0errors; ShaderUtil Oceana0messages, Boat Attack без ошибок (остались предупреждения исходного пакета). Сборка/отдельный сетевой клиент не проверялись.
+Исправление сборки2026-10-05: прежний Builds/Windows exe имел только2сцены при5в EditorBuildSettings. SteamTestBuild/BuildPlayerProcessor валидирует фактический BuildPlayerOptions.scenes: NetworkMenu требует обе водные сцены. Begin проверяет CanStreamedLevelBeLoaded до starting/connecting. Проверены неполные/полные входные списки. Новый Builds/WindowsWaterTests/PirateSlop.exe собран Succeeded, BuildReport.packedAssets содержит все5сцен. Exe не запускался; отрисовка проверялась ранее в Editor Play.
+Водные тесты2026-10-05: Boat Attack использует сериализованный instanced BoatAttackWater.mat, чтобы сохранить shader variants в Player. OceanaWorldMesh формирует непрерывную мировую сетку с шагом≤6м всей чаши и2м у камеры/кораблей вместо растянутого camera-relative FBX. WaterShipFoam передаёт обеим системам измеренный контур ватерлинии и кильватерный след. WaterTestCapture включается только флагом -watercapture вместе с -watertest2/3 и сохраняет прямые offscreen кадры через SingleCameraRequest. Предыдущая Editor-приёмка не подтверждает исправление exe.
+Дополнительное исправление Player: _WaterShipCount — ShaderLab Integer + SetInteger в Material/MPB. Oceana breakup использует linear-noise(.04,.26) и более крупный масштаб; контактная пена без постоянной белой обводки. У Boat Attack поле Water.Settings.cubemapTexture исправлено с Texture2D на Cubemap, режим качества Cubemap с OceanSkyReflection; ближний и дальний материалы получают настоящий куб. GPU preview показал объёмные волны/отражения, три дробных рукава и V-шлейф; окончательная приёмка требует кадры свежего exe.
+Обычный PirateSlop/Multiplayer/Build Windows исправлен: MultiplayerSceneSetup.GetBuildScenePaths включает NetworkMenu первым, NetworkOcean, NetworkLoadTest, BoatAttackWaterTest и OceanaWaterTest, сохраняет остальные включённые сцены и проверяет существование SceneAsset. Configure Scenes использует тот же список и больше не сбрасывает его до двух сцен. Проверена сборка непосредственно через этот пункт: Builds/Windows/PirateSlop.exe, Succeeded, 0 ошибок, 143.737 с, 1374626987 байт; packedAssets содержит все пять сцен и BoatAttackWater.mat. Обе сцены запущены в этом exe: по восемь GPU-кадров, WATER_CAPTURE_COMPLETE, exit 0, исключений и ошибок загрузки нет. Движение следа задано диагностическим RestoreState speed8/Sail1; проверка управления штурвалом не выполнялась. Окончательная повторная приёмка записана ниже.
+Дополнительная коррекция Boat Attack после проверки exe: Gerstner peak=2 создавал отрицательный горизонтальный якобиан (на реальных шести волнах det min−.455, 2.20% перевёрнутых точек). В GerstnerWaves.hlsl, GerstnerWaves.cs и BoatAttackOcean.CacheWaves согласованно установлен peak=.85; вертикальная амплитуда сохранена. J=I−(peak/N)Σsin(phase)d dᵀ, поэтому λmin≥.15 для любых направлений/фаз, для текущего спектра≥.28376. Повторная сборка и приёмка завершены, результат ниже.
+Окончательная приёмка 2026-10-05: обычный PirateSlop/Multiplayer/Build Windows создал Builds/Windows/PirateSlop.exe (файл18:16:42 по Москве), Succeeded,0 ошибок,326.651781с,1374627003байт; packedAssets содержит все5сцен. Обе тестовые сцены повторно запущены из этого exe: StandaloneMenuBoatNoFoldFinal/StandaloneMenuOceanaNoFoldFinal по8 GPU-кадров, WATER_CAPTURE_COMPLETE,exit0,без исключений. vfx_specialist дал APPROVED по всем16кадрам: вода с палубы, непрерывные глубокие чаши/спирали, контакт и V-след, отсутствие самопересечений после peak=.85. Ручное управление, HUD и онлайн со вторым клиентом этой VFX-приёмкой не проверялись.
 
 - [Assets/Scripts/World/ProceduralWorld.cs](<Assets/Scripts/World/ProceduralWorld.cs>) — Исходник C#: ProceduralWorld.
 - [Assets/Scripts/World/WorldProfile.cs](<Assets/Scripts/World/WorldProfile.cs>) — Исходник C#: WorldDecoration, WorldProfile.
@@ -480,8 +493,50 @@ WorldStructureCollision ревизии 2 учитывает соседний aut
 - [Assets/Scripts/Editor/EnvironmentTestSetup.cs](<Assets/Scripts/Editor/EnvironmentTestSetup.cs>) — Исходник C#: EnvironmentTestSetup.
 - [Assets/Scenes/NetworkOcean.unity](<Assets/Scenes/NetworkOcean.unity>) — Сцена Unity.
 - [Assets/Scripts/World/WorldStructureCollision.cs](<Assets/Scripts/World/WorldStructureCollision.cs>) — Исходник C#: WorldStructureCollision.
+- [Assets/Scripts/World/OceanHeightSource.cs](<Assets/Scripts/World/OceanHeightSource.cs>) — Исходник C#: OceanHeightSource.
+- [Assets/Scripts/World/BoatAttackOcean.cs](<Assets/Scripts/World/BoatAttackOcean.cs>) — Исходник C#: BoatAttackOcean, SpectralWave.
+- [Assets/Scripts/World/BoatAttackWaterTest.cs](<Assets/Scripts/World/BoatAttackWaterTest.cs>) — Исходник C#: BoatAttackWaterTest.
+- [Assets/Scenes/BoatAttackWaterTest.unity](<Assets/Scenes/BoatAttackWaterTest.unity>) — Сцена Unity.
+- [Assets/Resources/WaterSystemSettings.asset](<Assets/Resources/WaterSystemSettings.asset>) — Настройки или данные Unity.
+- [Assets/Settings/WaterTests/BoatAttackWaterTile.asset](<Assets/Settings/WaterTests/BoatAttackWaterTile.asset>) — Настройки или данные Unity.
+- [Packages/com.unity.urp-water-system/Runtime/Bodies/Water.cs](<Packages/com.unity.urp-water-system/Runtime/Bodies/Water.cs>) — Исходник C#: Water, Settings, TempData.
+- [Packages/com.unity.urp-water-system/Runtime/Shaders/WaterCommon.hlsl](<Packages/com.unity.urp-water-system/Runtime/Shaders/WaterCommon.hlsl>) — Код шейдера.
+- [Packages/com.unity.urp-water-system/Runtime/Shaders/Water.shader](<Packages/com.unity.urp-water-system/Runtime/Shaders/Water.shader>) — Шейдер.
+- [Packages/com.unity.urp-water-system/Runtime/Shaders/InfiniteWater.shader](<Packages/com.unity.urp-water-system/Runtime/Shaders/InfiniteWater.shader>) — Шейдер.
+- [Packages/com.unity.urp-water-system/Runtime/System/SystemInitializer.cs](<Packages/com.unity.urp-water-system/Runtime/System/SystemInitializer.cs>) — Исходник C#: SystemInitializer.
+- [Packages/com.unity.urp-water-system/Runtime/System/WaterManager.cs](<Packages/com.unity.urp-water-system/Runtime/System/WaterManager.cs>) — Исходник C#: WaterManager.
+- [Packages/com.unity.urp-water-system/Runtime/Physics/WaterPhysics.cs](<Packages/com.unity.urp-water-system/Runtime/Physics/WaterPhysics.cs>) — Исходник C#: WaterPhysics, BoundingBoxCheck, WaterSurfacePrep, WaterBodyLookup, public, WaterBodyData.
+- [Packages/com.unity.urp-water-system/Runtime/Rendering/MeshSurface.cs](<Packages/com.unity.urp-water-system/Runtime/Rendering/MeshSurface.cs>) — Исходник C#: MeshSurface, BaseLayout, SubdivideTiles, MatrixJob, WaterTile, WaterMeshSettings.
+- [Packages/com.unity.urp-water-system/Runtime/Shaders/WaterInput.hlsl](<Packages/com.unity.urp-water-system/Runtime/Shaders/WaterInput.hlsl>) — Код шейдера.
+- [Packages/com.unity.urp-water-system/Runtime/Shaders/CommonUtilities.hlsl](<Packages/com.unity.urp-water-system/Runtime/Shaders/CommonUtilities.hlsl>) — Код шейдера.
+- [Assets/Scripts/World/OceanaOcean.cs](<Assets/Scripts/World/OceanaOcean.cs>) — Исходник C#: OceanaOcean.
+- [Assets/Scripts/World/OceanaWaterTest.cs](<Assets/Scripts/World/OceanaWaterTest.cs>) — Исходник C#: OceanaWaterTest.
+- [Assets/Scenes/OceanaWaterTest.unity](<Assets/Scenes/OceanaWaterTest.unity>) — Сцена Unity.
+- [Assets/Settings/WaterTests/OceanaSettings.asset](<Assets/Settings/WaterTests/OceanaSettings.asset>) — Настройки или данные Unity.
+- [Assets/Settings/WaterTests/OceanaWater.mat](<Assets/Settings/WaterTests/OceanaWater.mat>) — Материал Unity.
+- [Assets/Settings/WaterTests/OceanaLinearWaveData.asset](<Assets/Settings/WaterTests/OceanaLinearWaveData.asset>) — Настройки или данные Unity.
+- [Assets/Settings/PC_Renderer.asset](<Assets/Settings/PC_Renderer.asset>) — Настройки или данные Unity.
+- [Assets/ThirdParty/Oceana/Scripts/OceanaRenderFeature.cs](<Assets/ThirdParty/Oceana/Scripts/OceanaRenderFeature.cs>) — Исходник C#: OceanaRenderFeature.
+- [Assets/ThirdParty/Oceana/Scripts/RenderPass/OceanaScrollPass.cs](<Assets/ThirdParty/Oceana/Scripts/RenderPass/OceanaScrollPass.cs>) — Исходник C#: OceanaScrollPass, ScrollGlobalData, ScrollPassData.
+- [Assets/ThirdParty/Oceana/Scripts/RenderPass/OceanaSurfacePass.cs](<Assets/ThirdParty/Oceana/Scripts/RenderPass/OceanaSurfacePass.cs>) — Исходник C#: ScreenCopyPassData, OceanaSurfacePass, PassData.
+- [Assets/ThirdParty/Oceana/Shaders/WaterSurface.shader](<Assets/ThirdParty/Oceana/Shaders/WaterSurface.shader>) — Шейдер.
+- [Assets/ThirdParty/Oceana/Shaders/ScrollRenderer.compute](<Assets/ThirdParty/Oceana/Shaders/ScrollRenderer.compute>) — Вычислительный шейдер.
+- [Assets/ThirdParty/Oceana/Shaders/include/MapPacking.hlsl](<Assets/ThirdParty/Oceana/Shaders/include/MapPacking.hlsl>) — Код шейдера.
+- [Assets/ThirdParty/Oceana/LICENSE.txt](<Assets/ThirdParty/Oceana/LICENSE.txt>) — Текстовые данные.
+- [Assets/ThirdParty/Oceana/NOTICE.txt](<Assets/ThirdParty/Oceana/NOTICE.txt>) — Текстовые данные.
+- [Assets/Scripts/Editor/SteamTestBuild.cs](<Assets/Scripts/Editor/SteamTestBuild.cs>) — Исходник C#: SteamTestBuild.
+- [Assets/Scripts/World/OceanaWorldMesh.cs](<Assets/Scripts/World/OceanaWorldMesh.cs>) — Исходник C#: OceanaWorldMesh.
+- [Assets/Scripts/World/WaterShipFoam.cs](<Assets/Scripts/World/WaterShipFoam.cs>) — Исходник C#: WaterShipFoam.
+- [Assets/Shaders/WaterShipFoam.hlsl](<Assets/Shaders/WaterShipFoam.hlsl>) — Код шейдера.
+- [Assets/Scripts/World/WaterTestCapture.cs](<Assets/Scripts/World/WaterTestCapture.cs>) — Исходник C#: WaterTestCapture.
+- [Assets/Settings/WaterTests/BoatAttackWater.mat](<Assets/Settings/WaterTests/BoatAttackWater.mat>) — Материал Unity.
+- [Assets/Scripts/Editor/MultiplayerSceneSetup.cs](<Assets/Scripts/Editor/MultiplayerSceneSetup.cs>) — Исходник C#: MultiplayerSceneSetup.
+- [Packages/com.unity.urp-water-system/Runtime/Shaders/GerstnerWaves.hlsl](<Packages/com.unity.urp-water-system/Runtime/Shaders/GerstnerWaves.hlsl>) — Код шейдера.
+- [Packages/com.unity.urp-water-system/Runtime/Modifiers/GerstnerWaves.cs](<Packages/com.unity.urp-water-system/Runtime/Modifiers/GerstnerWaves.cs>) — Исходник C#: GerstnerWaves, HeightJob, Data, WaveType, JobData, BasicWaves, Wave, WaveDescriptor.
 - [procedural-world.md](<procedural-world.md>) — Документация.
 - [unity.md](<unity.md>) — Документация.
+- [Docs/BoatAttackWaterTest.md](<Docs/BoatAttackWaterTest.md>) — Документация.
+- [Docs/OceanaWaterTest.md](<Docs/OceanaWaterTest.md>) — Документация.
 
 ### Сеть, сессия и Steam (`networking`)
 
@@ -491,6 +546,10 @@ FishNet: серверный авторитет. Изменения формат�
 IP/Tugboat и Steam — отдельные способы подключения. localhost не подтверждает работу через интернет; позднее подключение и отключение требуют отдельной приёмки.
 MultiplayerSceneSetup.Configure и PromoteShipV3 привязывают ShipV3Test к общему SessionController.ShipPrefab. Отдельный вызов ShipV3TestSpawner из ServerState удалён. ShipComparisonEnabled выключен, ComparisonShips очищен; старый корабль сохранён в проекте и регистрации FishNet без изменения существующих индексов.
 Кастомизация Ship V3 и сетевое горение: ProtocolVersion=123; игровая проверка и проверка двумя клиентами не запускались.
+SessionWaterTest выбирает BoatAttackWaterTest/OceanaWaterTest по режиму или маркеру boat_attack_water_test/oceana_water_test и выгружает альтернативную игровую сцену. Формат WorldLayout/сообщений и ProtocolVersion сохранены. Пункты Тестовая сцена2/3 запускают стандартный локальный хост без ботов, шторма и морского лута. Локальные входы проверены в Play; отдельный клиент не проверен.
+Исправление сборки2026-10-05: прежний Builds/Windows exe имел только2сцены при5в EditorBuildSettings. SteamTestBuild/BuildPlayerProcessor валидирует фактический BuildPlayerOptions.scenes: NetworkMenu требует обе водные сцены. Begin проверяет CanStreamedLevelBeLoaded до starting/connecting. Проверены неполные/полные входные списки. Новый Builds/WindowsWaterTests/PirateSlop.exe собран Succeeded, BuildReport.packedAssets содержит все5сцен. Exe не запускался; отрисовка проверялась ранее в Editor Play.
+Обычный PirateSlop/Multiplayer/Build Windows исправлен: MultiplayerSceneSetup.GetBuildScenePaths включает NetworkMenu первым, NetworkOcean, NetworkLoadTest, BoatAttackWaterTest и OceanaWaterTest, сохраняет остальные включённые сцены и проверяет существование SceneAsset. Configure Scenes использует тот же список и больше не сбрасывает его до двух сцен. Проверена сборка непосредственно через этот пункт: Builds/Windows/PirateSlop.exe, Succeeded, 0 ошибок, 143.737 с, 1374626987 байт; packedAssets содержит все пять сцен и BoatAttackWater.mat. Обе сцены запущены в этом exe: по восемь GPU-кадров, WATER_CAPTURE_COMPLETE, exit 0, исключений и ошибок загрузки нет. Движение следа задано диагностическим RestoreState speed8/Sail1; проверка управления штурвалом не выполнялась. Окончательная повторная приёмка записана ниже.
+Окончательная приёмка 2026-10-05: обычный PirateSlop/Multiplayer/Build Windows создал Builds/Windows/PirateSlop.exe (файл18:16:42 по Москве), Succeeded,0 ошибок,326.651781с,1374627003байт; packedAssets содержит все5сцен. Обе тестовые сцены повторно запущены из этого exe: StandaloneMenuBoatNoFoldFinal/StandaloneMenuOceanaNoFoldFinal по8 GPU-кадров, WATER_CAPTURE_COMPLETE,exit0,без исключений. vfx_specialist дал APPROVED по всем16кадрам: вода с палубы, непрерывные глубокие чаши/спирали, контакт и V-след, отсутствие самопересечений после peak=.85. Ручное управление, HUD и онлайн со вторым клиентом этой VFX-приёмкой не проверялись.
 
 - [Assets/Scripts/Networking/SessionController.cs](<Assets/Scripts/Networking/SessionController.cs>) — Исходник C#: SessionController.
 - [Assets/Scripts/Networking/SessionConfig.cs](<Assets/Scripts/Networking/SessionConfig.cs>) — Исходник C#: SessionConfig.
@@ -501,6 +560,9 @@ MultiplayerSceneSetup.Configure и PromoteShipV3 привязывают ShipV3Te
 - [Assets/Scripts/Networking/SimulationState.cs](<Assets/Scripts/Networking/SimulationState.cs>) — Исходник C#: PlayerCommand, PlayerState, ShipState.
 - [Assets/Settings/Networking/SessionConfig.asset](<Assets/Settings/Networking/SessionConfig.asset>) — Настройки или данные Unity.
 - [Assets/Scripts/Editor/MultiplayerSceneSetup.cs](<Assets/Scripts/Editor/MultiplayerSceneSetup.cs>) — Исходник C#: MultiplayerSceneSetup.
+- [Assets/Scripts/Networking/SessionWaterTest.cs](<Assets/Scripts/Networking/SessionWaterTest.cs>) — Исходник C#: SessionController.
+- [Assets/Scripts/Networking/SessionMenu.cs](<Assets/Scripts/Networking/SessionMenu.cs>) — Исходник C#: SessionController.
+- [Assets/Scripts/Editor/SteamTestBuild.cs](<Assets/Scripts/Editor/SteamTestBuild.cs>) — Исходник C#: SteamTestBuild.
 - [multiplayer-plan.md](<multiplayer-plan.md>) — Документация.
 - [unity.md](<unity.md>) — Документация.
 
@@ -738,6 +800,7 @@ GameTelemetry подключается в SessionController.Awake. Настро�
 MenuPresentationSetup.ReplaceShip создаёт фон меню из геометрии Ship V3 без сетевых и физических компонентов. Копируются только активные ветки и включённые рендереры: сохранённые объединённые меши учитываются, их выключенные исходники не дублируются. Старый MenuShip удалён из NetworkMenu; исходный старый префаб сохранён.
 MenuBackdrop заменяет фон корабля при Awake на Resources/Ships/ShipV3Menu: текущие паруса и кормовая доска без сетевых/физических компонентов. Меню кастомизации использует этот корабль и добавляет поле названия, сохранённого с парусами. Сцену NetworkMenu с несохранёнными изменениями при настройке не сохраняли.
 В кастомизации кнопка «Название» открывает отдельный ввод имени и плавно переводит камеру к кормовой доске. Буквы появляются и удаляются сразу; доска размещается в свободной части экрана слева от панели. Возврат через «Паруса и флаги»/«Вид на корабль». Runtime-буквы объединены в меш и не используют экранный TextMesh.
+SessionMenu: Тестовая сцена3 запускает OceanaWaterTest через Begin(...false,false,true), рядом со второй водной сценой; пункт нагрузки сдвинут ниже. Сцена включена в EditorBuildSettings.
 
 - [Assets/Scripts/Networking/SessionMenu.cs](<Assets/Scripts/Networking/SessionMenu.cs>) — Исходник C#: SessionController.
 - [Assets/Scripts/Networking/SessionPartyMenu.cs](<Assets/Scripts/Networking/SessionPartyMenu.cs>) — Исходник C#: SessionController.
@@ -849,6 +912,14 @@ Ship V3 используется как основной корабль и в т
 ShipV3GameplayRepair добавляет точку игры в кости непосредственно бочке, поднимает стаканы и кубики на её поверхность и создаёт 18 физических ограничителей по краю. Сервер ограничивает броски радиусом бочки, закрепляет результат относительно корабля и проверяет владельца места. Рында: connectedAnchor язычка совмещён с исходным подвесом, enableCollision включён, ударник соответствует нижней части модели, углы ограничены по расстоянию до внутренних стенок. Звон остаётся от контакта и рассылается существующим BellSound; правило трёх ударов для воскресения сохранено. Сетевой ProtocolVersion повышен до 110; для совместной игры нужны одинаковые новые сборки. Изменения сохранены через Unity MCP, компиляция без ошибок; игровой онлайн-прогон не выполнялся.
 Вход в кости по F доступен в пределах 3.2 м от бочки при прямой видимости; точное наведение на кубик или верхнюю крышку не требуется. ShipV3Features.Active используется для выбора ближайшего стола. Target Dice добавлен всей V17_Dice_Game_Station; CanReachDice одинаково проверяет клиента, JoinDice, ввод и удержание серверного места, игнорируя собственную мебель станции. Локальное движение блокируется сразу при запросе входа, до синхронизации владельца, чтобы F не запускала одновременно другую механику.
 Неподключённые WhirlpoolVFX.cs и ShipV3TestSpawner.cs удалены по Git-аудиту 2026-10-05; действующие Resources/EnvironmentTest/Gallery.prefab, Resources/Ships/ShipV3Test.prefab и игровая загрузка тестовой карты сохранены.
+Тестовые сцены2/3 — BoatAttackWaterTest/OceanaWaterTest, входы в меню, обычные ShipV3/персонаж/плавание. Старт(0,0,0),yaw0, центр воронки(0,0,550), R500/D120/Twist2; ближний край50м. CPU/GPU волн и чаши согласованы. По запросу пользователя выполнены свежие локальные Play-запуски: палуба, низкий ракурс и воронка сверху; на итоговых кадрах нет разрывов, видны волны и пена, VFX [APPROVED]. Сборка и отдельный клиент не запускались.
+Исправление сборки2026-10-05: прежний Builds/Windows exe имел только2сцены при5в EditorBuildSettings. SteamTestBuild/BuildPlayerProcessor валидирует фактический BuildPlayerOptions.scenes: NetworkMenu требует обе водные сцены. Begin проверяет CanStreamedLevelBeLoaded до starting/connecting. Проверены неполные/полные входные списки. Новый Builds/WindowsWaterTests/PirateSlop.exe собран Succeeded, BuildReport.packedAssets содержит все5сцен. Exe не запускался; отрисовка проверялась ранее в Editor Play.
+Обычная тестовая карта: TestSkyDayNight через EnvironmentTestGallery создаёт солнечный день, закат и мягкую лунную ночь; F8 управляет плавным переходом 0..1. Отдельные TestSkyPipeline/Renderer/Volume и копия материала облаков. PBSky 1.0.4 embedded под MIT адаптирован для Unity6000.6; облака из CandidateA. Исправление ночи: Moon intensity .55, видимый азимут125°, высота24°, exposure-.35, ambient(.34,.40,.52). Порог лунного диска .9° и направление просмотра используют float. SimpleWater runtime отражает динамический PBSky cubemap; ночные базовые цвета/пена18%, alpha сохраняется. PBSky Fog учитывает прежний ползунок тумана. Все параметры восстанавливаются при выходе. Обычная игра и отдельные водные тесты не подключены; визуальная приёмка пользователем.
+Водные тесты2026-10-05: Boat Attack использует сериализованный instanced BoatAttackWater.mat, чтобы сохранить shader variants в Player. OceanaWorldMesh формирует непрерывную мировую сетку с шагом≤6м всей чаши и2м у камеры/кораблей вместо растянутого camera-relative FBX. WaterShipFoam передаёт обеим системам измеренный контур ватерлинии и кильватерный след. WaterTestCapture включается только флагом -watercapture вместе с -watertest2/3 и сохраняет прямые offscreen кадры через SingleCameraRequest. Предыдущая Editor-приёмка не подтверждает исправление exe.
+Дополнительное исправление Player: _WaterShipCount — ShaderLab Integer + SetInteger в Material/MPB. Oceana breakup использует linear-noise(.04,.26) и более крупный масштаб; контактная пена без постоянной белой обводки. У Boat Attack поле Water.Settings.cubemapTexture исправлено с Texture2D на Cubemap, режим качества Cubemap с OceanSkyReflection; ближний и дальний материалы получают настоящий куб. GPU preview показал объёмные волны/отражения, три дробных рукава и V-шлейф; окончательная приёмка требует кадры свежего exe.
+Обычный PirateSlop/Multiplayer/Build Windows исправлен: MultiplayerSceneSetup.GetBuildScenePaths включает NetworkMenu первым, NetworkOcean, NetworkLoadTest, BoatAttackWaterTest и OceanaWaterTest, сохраняет остальные включённые сцены и проверяет существование SceneAsset. Configure Scenes использует тот же список и больше не сбрасывает его до двух сцен. Проверена сборка непосредственно через этот пункт: Builds/Windows/PirateSlop.exe, Succeeded, 0 ошибок, 143.737 с, 1374626987 байт; packedAssets содержит все пять сцен и BoatAttackWater.mat. Обе сцены запущены в этом exe: по восемь GPU-кадров, WATER_CAPTURE_COMPLETE, exit 0, исключений и ошибок загрузки нет. Движение следа задано диагностическим RestoreState speed8/Sail1; проверка управления штурвалом не выполнялась. Окончательная повторная приёмка записана ниже.
+Дополнительная коррекция Boat Attack после проверки exe: Gerstner peak=2 создавал отрицательный горизонтальный якобиан (на реальных шести волнах det min−.455, 2.20% перевёрнутых точек). В GerstnerWaves.hlsl, GerstnerWaves.cs и BoatAttackOcean.CacheWaves согласованно установлен peak=.85; вертикальная амплитуда сохранена. J=I−(peak/N)Σsin(phase)d dᵀ, поэтому λmin≥.15 для любых направлений/фаз, для текущего спектра≥.28376. Повторная сборка и приёмка завершены, результат ниже.
+Окончательная приёмка 2026-10-05: обычный PirateSlop/Multiplayer/Build Windows создал Builds/Windows/PirateSlop.exe (файл18:16:42 по Москве), Succeeded,0 ошибок,326.651781с,1374627003байт; packedAssets содержит все5сцен. Обе тестовые сцены повторно запущены из этого exe: StandaloneMenuBoatNoFoldFinal/StandaloneMenuOceanaNoFoldFinal по8 GPU-кадров, WATER_CAPTURE_COMPLETE,exit0,без исключений. vfx_specialist дал APPROVED по всем16кадрам: вода с палубы, непрерывные глубокие чаши/спирали, контакт и V-след, отсутствие самопересечений после peak=.85. Ручное управление, HUD и онлайн со вторым клиентом этой VFX-приёмкой не проверялись.
 
 - [Assets/Scripts/World/EnvironmentTestGallery.cs](<Assets/Scripts/World/EnvironmentTestGallery.cs>) — Исходник C#: EnvironmentTestGallery.
 - [Assets/Scripts/Editor/EnvironmentTestSetup.cs](<Assets/Scripts/Editor/EnvironmentTestSetup.cs>) — Исходник C#: EnvironmentTestSetup.
@@ -864,6 +935,50 @@ ShipV3GameplayRepair добавляет точку игры в кости неп
 - [Assets/Scripts/Ships/ShipV3ClothMotion.cs](<Assets/Scripts/Ships/ShipV3ClothMotion.cs>) — Исходник C#: ShipV3ClothMotion.
 - [Assets/Resources/Ships/ShipV3Test.prefab](<Assets/Resources/Ships/ShipV3Test.prefab>) — Префаб Unity.
 - [Assets/Scripts/Editor/ShipV3GameplayRepair.cs](<Assets/Scripts/Editor/ShipV3GameplayRepair.cs>) — Исходник C#: ShipV3GameplayRepair.
+- [Assets/Scenes/BoatAttackWaterTest.unity](<Assets/Scenes/BoatAttackWaterTest.unity>) — Сцена Unity.
+- [Assets/Scripts/World/BoatAttackWaterTest.cs](<Assets/Scripts/World/BoatAttackWaterTest.cs>) — Исходник C#: BoatAttackWaterTest.
+- [Assets/Scripts/World/BoatAttackOcean.cs](<Assets/Scripts/World/BoatAttackOcean.cs>) — Исходник C#: BoatAttackOcean, SpectralWave.
+- [Assets/Scripts/World/OceanHeightSource.cs](<Assets/Scripts/World/OceanHeightSource.cs>) — Исходник C#: OceanHeightSource.
+- [Assets/Scripts/World/OceanaOcean.cs](<Assets/Scripts/World/OceanaOcean.cs>) — Исходник C#: OceanaOcean.
+- [Assets/Scripts/World/OceanaWaterTest.cs](<Assets/Scripts/World/OceanaWaterTest.cs>) — Исходник C#: OceanaWaterTest.
+- [Assets/Scenes/OceanaWaterTest.unity](<Assets/Scenes/OceanaWaterTest.unity>) — Сцена Unity.
+- [Assets/Settings/WaterTests/OceanaSettings.asset](<Assets/Settings/WaterTests/OceanaSettings.asset>) — Настройки или данные Unity.
+- [Assets/Settings/WaterTests/OceanaWater.mat](<Assets/Settings/WaterTests/OceanaWater.mat>) — Материал Unity.
+- [Assets/Settings/WaterTests/OceanaLinearWaveData.asset](<Assets/Settings/WaterTests/OceanaLinearWaveData.asset>) — Настройки или данные Unity.
+- [Assets/Settings/PC_Renderer.asset](<Assets/Settings/PC_Renderer.asset>) — Настройки или данные Unity.
+- [Assets/ThirdParty/Oceana/Scripts/OceanaRenderFeature.cs](<Assets/ThirdParty/Oceana/Scripts/OceanaRenderFeature.cs>) — Исходник C#: OceanaRenderFeature.
+- [Assets/ThirdParty/Oceana/Scripts/RenderPass/OceanaScrollPass.cs](<Assets/ThirdParty/Oceana/Scripts/RenderPass/OceanaScrollPass.cs>) — Исходник C#: OceanaScrollPass, ScrollGlobalData, ScrollPassData.
+- [Assets/ThirdParty/Oceana/Scripts/RenderPass/OceanaSurfacePass.cs](<Assets/ThirdParty/Oceana/Scripts/RenderPass/OceanaSurfacePass.cs>) — Исходник C#: ScreenCopyPassData, OceanaSurfacePass, PassData.
+- [Assets/ThirdParty/Oceana/Shaders/WaterSurface.shader](<Assets/ThirdParty/Oceana/Shaders/WaterSurface.shader>) — Шейдер.
+- [Assets/ThirdParty/Oceana/Shaders/ScrollRenderer.compute](<Assets/ThirdParty/Oceana/Shaders/ScrollRenderer.compute>) — Вычислительный шейдер.
+- [Assets/ThirdParty/Oceana/Shaders/include/MapPacking.hlsl](<Assets/ThirdParty/Oceana/Shaders/include/MapPacking.hlsl>) — Код шейдера.
+- [Assets/ThirdParty/Oceana/LICENSE.txt](<Assets/ThirdParty/Oceana/LICENSE.txt>) — Текстовые данные.
+- [Assets/ThirdParty/Oceana/NOTICE.txt](<Assets/ThirdParty/Oceana/NOTICE.txt>) — Текстовые данные.
+- [Assets/Scripts/World/TestSkyDayNight.cs](<Assets/Scripts/World/TestSkyDayNight.cs>) — Исходник C#: TestSkyDayNight.
+- [Assets/Scripts/Editor/TestSkySetup.cs](<Assets/Scripts/Editor/TestSkySetup.cs>) — Исходник C#: TestSkySetup.
+- [Assets/Scripts/Player/DeveloperMenu.cs](<Assets/Scripts/Player/DeveloperMenu.cs>) — Исходник C#: DeveloperMenu.
+- [Assets/Resources/EnvironmentTest/SkyDayNight.prefab](<Assets/Resources/EnvironmentTest/SkyDayNight.prefab>) — Префаб Unity.
+- [Assets/Settings/TestSky/TestSkyRenderer.asset](<Assets/Settings/TestSky/TestSkyRenderer.asset>) — Настройки или данные Unity.
+- [Assets/Settings/TestSky/TestSkyPipeline.asset](<Assets/Settings/TestSky/TestSkyPipeline.asset>) — Настройки или данные Unity.
+- [Assets/Settings/TestSky/TestSkyVolume.asset](<Assets/Settings/TestSky/TestSkyVolume.asset>) — Настройки или данные Unity.
+- [Assets/Settings/TestSky/TestSkyClouds.mat](<Assets/Settings/TestSky/TestSkyClouds.mat>) — Материал Unity.
+- [Packages/com.jiaozi158.unity-physically-based-sky-urp/Runtime/PhysicallyBasedSkyURP.cs](<Packages/com.jiaozi158.unity-physically-based-sky-urp/Runtime/PhysicallyBasedSkyURP.cs>) — Исходник C#: PhysicallyBasedSkyURP, PrecomputationQualityMode, CelestialBodyData, PBSkyPrePass, PassData, SkyViewLUTPass, AtmosphericScatteringPass, PBSkyPostPass, AmbientProbePass.
+- [Packages/com.jiaozi158.unity-physically-based-sky-urp/Runtime/PhysicallyBasedSkyVolume.cs](<Packages/com.jiaozi158.unity-physically-based-sky-urp/Runtime/PhysicallyBasedSkyVolume.cs>) — Исходник C#: PhysicallyBasedSky, PhysicallyBasedSkyModel, EnvironmentUpdateMode, SkyIntensityMode, SkyIntensityParameter, EnvUpdateParameter, PhysicallyBasedSkyModelParameter.
+- [Packages/com.jiaozi158.unity-physically-based-sky-urp/LICENSE.md](<Packages/com.jiaozi158.unity-physically-based-sky-urp/LICENSE.md>) — Документация.
+- [Assets/Scripts/Editor/SteamTestBuild.cs](<Assets/Scripts/Editor/SteamTestBuild.cs>) — Исходник C#: SteamTestBuild.
+- [Packages/com.jiaozi158.unity-physically-based-sky-urp/Shaders/PhysicallyBasedSky.shader](<Packages/com.jiaozi158.unity-physically-based-sky-urp/Shaders/PhysicallyBasedSky.shader>) — Шейдер.
+- [Packages/com.jiaozi158.unity-physically-based-sky-urp/Shaders/PhysicallyBasedSkyRendering.hlsl](<Packages/com.jiaozi158.unity-physically-based-sky-urp/Shaders/PhysicallyBasedSkyRendering.hlsl>) — Код шейдера.
+- [Assets/Scripts/World/OceanaWorldMesh.cs](<Assets/Scripts/World/OceanaWorldMesh.cs>) — Исходник C#: OceanaWorldMesh.
+- [Assets/Scripts/World/WaterShipFoam.cs](<Assets/Scripts/World/WaterShipFoam.cs>) — Исходник C#: WaterShipFoam.
+- [Assets/Shaders/WaterShipFoam.hlsl](<Assets/Shaders/WaterShipFoam.hlsl>) — Код шейдера.
+- [Assets/Scripts/World/WaterTestCapture.cs](<Assets/Scripts/World/WaterTestCapture.cs>) — Исходник C#: WaterTestCapture.
+- [Assets/Settings/WaterTests/BoatAttackWater.mat](<Assets/Settings/WaterTests/BoatAttackWater.mat>) — Материал Unity.
+- [Assets/Scripts/Editor/MultiplayerSceneSetup.cs](<Assets/Scripts/Editor/MultiplayerSceneSetup.cs>) — Исходник C#: MultiplayerSceneSetup.
+- [Packages/com.unity.urp-water-system/Runtime/Shaders/GerstnerWaves.hlsl](<Packages/com.unity.urp-water-system/Runtime/Shaders/GerstnerWaves.hlsl>) — Код шейдера.
+- [Packages/com.unity.urp-water-system/Runtime/Modifiers/GerstnerWaves.cs](<Packages/com.unity.urp-water-system/Runtime/Modifiers/GerstnerWaves.cs>) — Исходник C#: GerstnerWaves, HeightJob, Data, WaveType, JobData, BasicWaves, Wave, WaveDescriptor.
+- [Docs/BoatAttackWaterTest.md](<Docs/BoatAttackWaterTest.md>) — Документация.
+- [Docs/OceanaWaterTest.md](<Docs/OceanaWaterTest.md>) — Документация.
+- [Docs/TestSkyDayNight.md](<Docs/TestSkyDayNight.md>) — Документация.
 
 ### Производительность и тест нагрузки без AI (`performance`)
 

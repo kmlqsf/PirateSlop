@@ -17,3 +17,4 @@
 | [Assets/Shaders/Seabed.shader](<../../Assets/Shaders/Seabed.shader>) | Шейдер |
 | [Assets/Shaders/StormWall.shader](<../../Assets/Shaders/StormWall.shader>) | Шейдер |
 | [Assets/Shaders/UnderwaterParticles.shader](<../../Assets/Shaders/UnderwaterParticles.shader>) | Шейдер |
+| [Assets/Shaders/WaterShipFoam.hlsl](<../../Assets/Shaders/WaterShipFoam.hlsl>) | Код шейдера; Мир, острова и океан, Тестовая карта и водоворот |

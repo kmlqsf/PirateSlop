@@ -61,6 +61,21 @@ namespace PirateSlop
             GUILayout.Space(25);
             scroll = GUILayout.BeginScrollView(scroll);
             if (network.IsServerInitialized) AllowRemote = GUILayout.Toggle(AllowRemote, "Разрешить команды другим игрокам");
+            var testSky = World.TestSkyDayNight.Active;
+            if (testSky != null)
+            {
+                GUILayout.Label("Небо: день → закат → лунная ночь");
+                GUILayout.BeginHorizontal();
+                GUILayout.Label("День", GUILayout.Width(45));
+                testSky.TargetBlend = GUILayout.HorizontalSlider(testSky.TargetBlend, 0f, 1f);
+                GUILayout.Label("Ночь", GUILayout.Width(45));
+                GUILayout.EndHorizontal();
+                GUILayout.BeginHorizontal();
+                if (GUILayout.Button("Солнечный день", GUILayout.Height(29))) testSky.TargetBlend = 0f;
+                if (GUILayout.Button("Лунная ночь", GUILayout.Height(29))) testSky.TargetBlend = 1f;
+                GUILayout.EndHorizontal();
+                GUILayout.Space(8);
+            }
             GUILayout.Label("Персонаж и испытания");
             Button(SessionController.Instance != null && SessionController.Instance.StormPaused ? "Продолжить зону" : "Остановить зону (сужение и урон)", 14);
             Button("Восстановить здоровье", 6);

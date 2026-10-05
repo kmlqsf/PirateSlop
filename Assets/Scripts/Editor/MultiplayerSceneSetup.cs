@@ -43,7 +43,7 @@ namespace PirateSlop.EditorTools
                 config.ShipComparisonEnabled = false;
                 EditorUtility.SetDirty(config);
                 EditorSceneManager.MarkSceneDirty(menu); EditorSceneManager.SaveScene(menu);
-                EditorBuildSettings.scenes = new[] { new EditorBuildSettingsScene(MenuPath, true), new EditorBuildSettingsScene(OceanPath, true) };
+                EditorBuildSettings.scenes = System.Array.ConvertAll(GetBuildScenePaths(), path => new EditorBuildSettingsScene(path, true));
                 AssetDatabase.SaveAssets();
             }
             finally { EditorSceneManager.RestoreSceneManagerSetup(previous); }
@@ -84,12 +84,30 @@ namespace PirateSlop.EditorTools
         {
             var no = go.AddComponent<NetworkObserver>(); var so = new SerializedObject(no); var list = so.FindProperty("_observerConditions"); list.arraySize = 1; list.GetArrayElementAtIndex(0).objectReferenceValue = condition; so.ApplyModifiedPropertiesWithoutUndo();
         }
+
+        static string[] GetBuildScenePaths()
+        {
+            var paths = new System.Collections.Generic.List<string>
+            {
+                MenuPath,
+                OceanPath,
+                "Assets/Scenes/NetworkLoadTest.unity",
+                "Assets/Scenes/BoatAttackWaterTest.unity",
+                "Assets/Scenes/OceanaWaterTest.unity"
+            };
+            foreach (var scene in EditorBuildSettings.scenes)
+                if (scene.enabled && !paths.Contains(scene.path)) paths.Add(scene.path);
+            foreach (var path in paths)
+                if (AssetDatabase.LoadAssetAtPath<SceneAsset>(path) == null)
+                    throw new InvalidOperationException("Build scene is missing: " + path);
+            return paths.ToArray();
+        }
         [MenuItem("PirateSlop/Multiplayer/Build Windows")]
         public static void Build()
         {
             if (!File.Exists(MenuPath)) throw new InvalidOperationException("Configure multiplayer scenes first.");
             Directory.CreateDirectory("Builds/Windows");
-            var report = BuildPipeline.BuildPlayer(new BuildPlayerOptions { scenes = new[] { MenuPath, OceanPath }, locationPathName = "Builds/Windows/PirateSlop.exe", target = BuildTarget.StandaloneWindows64, options = BuildOptions.Development | BuildOptions.StrictMode | BuildOptions.CleanBuildCache });
+            var report = BuildPipeline.BuildPlayer(new BuildPlayerOptions { scenes = GetBuildScenePaths(), locationPathName = "Builds/Windows/PirateSlop.exe", target = BuildTarget.StandaloneWindows64, options = BuildOptions.Development | BuildOptions.StrictMode | BuildOptions.CleanBuildCache | BuildOptions.DetailedBuildReport });
             File.WriteAllText("Temp/multiplayer-build-result.txt", report.summary.result + " errors=" + report.summary.totalErrors + " size=" + report.summary.totalSize);
             if (report.summary.result != UnityEditor.Build.Reporting.BuildResult.Succeeded) throw new InvalidOperationException("Multiplayer build failed.");
             Debug.Log("MULTIPLAYER_BUILD_OK");

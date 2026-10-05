@@ -44,6 +44,7 @@
 | [Assets/Resources/StormRain.shader](<../../Assets/Resources/StormRain.shader>) | Шейдер |
 | [Assets/Resources/StormWall.mat](<../../Assets/Resources/StormWall.mat>) | Материал Unity |
 | [Assets/Resources/StormWeather.shader](<../../Assets/Resources/StormWeather.shader>) | Шейдер |
+| [Assets/Resources/WaterSystemSettings.asset](<../../Assets/Resources/WaterSystemSettings.asset>) | Настройки или данные Unity; Мир, острова и океан |
 
 ## Assets/Resources/CombatVfx
 
@@ -68,6 +69,7 @@
 | Файл | Краткое описание |
 | --- | --- |
 | [Assets/Resources/EnvironmentTest/Gallery.prefab](<../../Assets/Resources/EnvironmentTest/Gallery.prefab>) | Префаб Unity |
+| [Assets/Resources/EnvironmentTest/SkyDayNight.prefab](<../../Assets/Resources/EnvironmentTest/SkyDayNight.prefab>) | Префаб Unity; Тестовая карта и водоворот |
 
 ## Assets/Resources/Ships
 

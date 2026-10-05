@@ -1493,3 +1493,272 @@
 | [Packages/com.firstgeargames.fishysteamworks/Core/CommonSocket.cs](<../../Packages/com.firstgeargames.fishysteamworks/Core/CommonSocket.cs>) | Исходник C#: CommonSocket |
 | [Packages/com.firstgeargames.fishysteamworks/Core/LocalPacket.cs](<../../Packages/com.firstgeargames.fishysteamworks/Core/LocalPacket.cs>) | Исходник C#: LocalPacket |
 | [Packages/com.firstgeargames.fishysteamworks/Core/ServerSocket.cs](<../../Packages/com.firstgeargames.fishysteamworks/Core/ServerSocket.cs>) | Исходник C#: ServerSocket, ConnectionChange |
+
+## Packages/com.jiaozi158.unity-physically-based-sky-urp
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Packages/com.jiaozi158.unity-physically-based-sky-urp/.gitattributes](<../../Packages/com.jiaozi158.unity-physically-based-sky-urp/.gitattributes>) | Файл без расширения |
+| [Packages/com.jiaozi158.unity-physically-based-sky-urp/.gitignore](<../../Packages/com.jiaozi158.unity-physically-based-sky-urp/.gitignore>) | Файл без расширения |
+| [Packages/com.jiaozi158.unity-physically-based-sky-urp/CHANGELOG.md](<../../Packages/com.jiaozi158.unity-physically-based-sky-urp/CHANGELOG.md>) | Документация |
+| [Packages/com.jiaozi158.unity-physically-based-sky-urp/LICENSE.md](<../../Packages/com.jiaozi158.unity-physically-based-sky-urp/LICENSE.md>) | Документация; Тестовая карта и водоворот |
+| [Packages/com.jiaozi158.unity-physically-based-sky-urp/README.md](<../../Packages/com.jiaozi158.unity-physically-based-sky-urp/README.md>) | Документация |
+| [Packages/com.jiaozi158.unity-physically-based-sky-urp/package.json](<../../Packages/com.jiaozi158.unity-physically-based-sky-urp/package.json>) | Конфигурация / данные JSON |
+
+## Packages/com.jiaozi158.unity-physically-based-sky-urp/Documentation~
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Packages/com.jiaozi158.unity-physically-based-sky-urp/Documentation~/Documentation.md](<../../Packages/com.jiaozi158.unity-physically-based-sky-urp/Documentation~/Documentation.md>) | Документация |
+
+## Packages/com.jiaozi158.unity-physically-based-sky-urp/Documentation~/Images/PhysicallyBasedSky
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Packages/com.jiaozi158.unity-physically-based-sky-urp/Documentation~/Images/PhysicallyBasedSky/Header_PBR_Sky.jpg](<../../Packages/com.jiaozi158.unity-physically-based-sky-urp/Documentation~/Images/PhysicallyBasedSky/Header_PBR_Sky.jpg>) | Изображение / текстура |
+
+## Packages/com.jiaozi158.unity-physically-based-sky-urp/Editor
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Packages/com.jiaozi158.unity-physically-based-sky-urp/Editor/FogVolumeEditor.cs](<../../Packages/com.jiaozi158.unity-physically-based-sky-urp/Editor/FogVolumeEditor.cs>) | Исходник C#: FogEditor |
+| [Packages/com.jiaozi158.unity-physically-based-sky-urp/Editor/PBSkyURP.Editor.asmdef](<../../Packages/com.jiaozi158.unity-physically-based-sky-urp/Editor/PBSkyURP.Editor.asmdef>) | Описание сборки Unity |
+| [Packages/com.jiaozi158.unity-physically-based-sky-urp/Editor/PhysicallyBasedSkyEditor.cs](<../../Packages/com.jiaozi158.unity-physically-based-sky-urp/Editor/PhysicallyBasedSkyEditor.cs>) | Исходник C#: PhysicallyBasedSkyEditor, SkySettingsUIElement |
+| [Packages/com.jiaozi158.unity-physically-based-sky-urp/Editor/VisualEnvironmentVolumeEditor.cs](<../../Packages/com.jiaozi158.unity-physically-based-sky-urp/Editor/VisualEnvironmentVolumeEditor.cs>) | Исходник C#: VisualEnvironmentEditor, name |
+
+## Packages/com.jiaozi158.unity-physically-based-sky-urp/Runtime
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Packages/com.jiaozi158.unity-physically-based-sky-urp/Runtime/FogVolume.cs](<../../Packages/com.jiaozi158.unity-physically-based-sky-urp/Runtime/FogVolume.cs>) | Исходник C#: Fog, FogColorMode, FogColorParameter |
+| [Packages/com.jiaozi158.unity-physically-based-sky-urp/Runtime/PBSkyURP.asmdef](<../../Packages/com.jiaozi158.unity-physically-based-sky-urp/Runtime/PBSkyURP.asmdef>) | Описание сборки Unity |
+| [Packages/com.jiaozi158.unity-physically-based-sky-urp/Runtime/PhysicallyBasedSkyURP.cs](<../../Packages/com.jiaozi158.unity-physically-based-sky-urp/Runtime/PhysicallyBasedSkyURP.cs>) | Исходник C#: PhysicallyBasedSkyURP, PrecomputationQualityMode, CelestialBodyData, PBSkyPrePass, PassData, SkyViewLUTPass, AtmosphericScatteringPass, PBSkyPostPass, AmbientProbePass; Тестовая карта и водоворот |
+| [Packages/com.jiaozi158.unity-physically-based-sky-urp/Runtime/PhysicallyBasedSkyVolume.cs](<../../Packages/com.jiaozi158.unity-physically-based-sky-urp/Runtime/PhysicallyBasedSkyVolume.cs>) | Исходник C#: PhysicallyBasedSky, PhysicallyBasedSkyModel, EnvironmentUpdateMode, SkyIntensityMode, SkyIntensityParameter, EnvUpdateParameter, PhysicallyBasedSkyModelParameter; Тестовая карта и водоворот |
+| [Packages/com.jiaozi158.unity-physically-based-sky-urp/Runtime/VisualEnvironmentVolume.cs](<../../Packages/com.jiaozi158.unity-physically-based-sky-urp/Runtime/VisualEnvironmentVolume.cs>) | Исходник C#: VisualEnvironment, PlanetMode, RenderingSpace, SkyResolution, SkyType, CloudType, SkyAmbientMode, SkyAmbientModeParameter, PlanetModeParameter, RenderingSpaceParameter |
+
+## Packages/com.jiaozi158.unity-physically-based-sky-urp/Shaders
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Packages/com.jiaozi158.unity-physically-based-sky-urp/Shaders/AtmosphericScattering.hlsl](<../../Packages/com.jiaozi158.unity-physically-based-sky-urp/Shaders/AtmosphericScattering.hlsl>) | Код шейдера |
+| [Packages/com.jiaozi158.unity-physically-based-sky-urp/Shaders/PhysicallyBasedSky.shader](<../../Packages/com.jiaozi158.unity-physically-based-sky-urp/Shaders/PhysicallyBasedSky.shader>) | Шейдер; Тестовая карта и водоворот |
+| [Packages/com.jiaozi158.unity-physically-based-sky-urp/Shaders/PhysicallyBasedSkyCommon.hlsl](<../../Packages/com.jiaozi158.unity-physically-based-sky-urp/Shaders/PhysicallyBasedSkyCommon.hlsl>) | Код шейдера |
+| [Packages/com.jiaozi158.unity-physically-based-sky-urp/Shaders/PhysicallyBasedSkyDefs.hlsl](<../../Packages/com.jiaozi158.unity-physically-based-sky-urp/Shaders/PhysicallyBasedSkyDefs.hlsl>) | Код шейдера |
+| [Packages/com.jiaozi158.unity-physically-based-sky-urp/Shaders/PhysicallyBasedSkyEvaluation.hlsl](<../../Packages/com.jiaozi158.unity-physically-based-sky-urp/Shaders/PhysicallyBasedSkyEvaluation.hlsl>) | Код шейдера |
+| [Packages/com.jiaozi158.unity-physically-based-sky-urp/Shaders/PhysicallyBasedSkyPrecomputation.shader](<../../Packages/com.jiaozi158.unity-physically-based-sky-urp/Shaders/PhysicallyBasedSkyPrecomputation.shader>) | Шейдер |
+| [Packages/com.jiaozi158.unity-physically-based-sky-urp/Shaders/PhysicallyBasedSkyRendering.hlsl](<../../Packages/com.jiaozi158.unity-physically-based-sky-urp/Shaders/PhysicallyBasedSkyRendering.hlsl>) | Код шейдера; Тестовая карта и водоворот |
+| [Packages/com.jiaozi158.unity-physically-based-sky-urp/Shaders/Procedural Sky.mat](<../../Packages/com.jiaozi158.unity-physically-based-sky-urp/Shaders/Procedural Sky.mat>) | Материал Unity |
+
+## Packages/com.unity.urp-water-system
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Packages/com.unity.urp-water-system/LICENSE.md](<../../Packages/com.unity.urp-water-system/LICENSE.md>) | Документация |
+| [Packages/com.unity.urp-water-system/README.md](<../../Packages/com.unity.urp-water-system/README.md>) | Документация |
+| [Packages/com.unity.urp-water-system/catalog-info.yaml](<../../Packages/com.unity.urp-water-system/catalog-info.yaml>) | Файл .yaml |
+| [Packages/com.unity.urp-water-system/package.json](<../../Packages/com.unity.urp-water-system/package.json>) | Конфигурация / данные JSON |
+
+## Packages/com.unity.urp-water-system/Editor
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Packages/com.unity.urp-water-system/Editor/BuoyancyDebugWindow.cs](<../../Packages/com.unity.urp-water-system/Editor/BuoyancyDebugWindow.cs>) | Исходник C#: BuoyancyDebugWindow |
+| [Packages/com.unity.urp-water-system/Editor/CommonEditor.cs](<../../Packages/com.unity.urp-water-system/Editor/CommonEditor.cs>) | Исходник C#: CommonEditor, Styles, Tooltips |
+| [Packages/com.unity.urp-water-system/Editor/ShaderPreprocessor.cs](<../../Packages/com.unity.urp-water-system/Editor/ShaderPreprocessor.cs>) | Исходник C#: ShaderPreprocessor, ValidKeywordPair |
+| [Packages/com.unity.urp-water-system/Editor/WaterProjectSettingsEditor.cs](<../../Packages/com.unity.urp-water-system/Editor/WaterProjectSettingsEditor.cs>) | Исходник C#: WaterSettingsGUI |
+| [Packages/com.unity.urp-water-system/Editor/WaterSystem.editor.asmdef](<../../Packages/com.unity.urp-water-system/Editor/WaterSystem.editor.asmdef>) | Описание сборки Unity |
+
+## Packages/com.unity.urp-water-system/Editor/Icons
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Packages/com.unity.urp-water-system/Editor/Icons/icon_ocean.png](<../../Packages/com.unity.urp-water-system/Editor/Icons/icon_ocean.png>) | Изображение / текстура |
+
+## Packages/com.unity.urp-water-system/Editor/PropertyDrawers
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Packages/com.unity.urp-water-system/Editor/PropertyDrawers/PlanarSettingsDrawer.cs](<../../Packages/com.unity.urp-water-system/Editor/PropertyDrawers/PlanarSettingsDrawer.cs>) | Исходник C#: PlanarSettingsDrawer |
+| [Packages/com.unity.urp-water-system/Editor/PropertyDrawers/PropertyDrawers.cs](<../../Packages/com.unity.urp-water-system/Editor/PropertyDrawers/PropertyDrawers.cs>) | Исходник C#: BasicWavesEditor, WaterQualitySettingsDrawer, WaterResourcesDrawer |
+| [Packages/com.unity.urp-water-system/Editor/PropertyDrawers/ReflectionSettingsDrawer.cs](<../../Packages/com.unity.urp-water-system/Editor/PropertyDrawers/ReflectionSettingsDrawer.cs>) | Исходник C#: ReflectionSettingsDrawer |
+| [Packages/com.unity.urp-water-system/Editor/PropertyDrawers/WaterQualitySettingsDrawer.cs](<../../Packages/com.unity.urp-water-system/Editor/PropertyDrawers/WaterQualitySettingsDrawer.cs>) | Исходник C#: WaterQualitySettingsDrawer |
+
+## Packages/com.unity.urp-water-system/Runtime
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Packages/com.unity.urp-water-system/Runtime/AssemblyInfo.cs](<../../Packages/com.unity.urp-water-system/Runtime/AssemblyInfo.cs>) | Исходник C# |
+| [Packages/com.unity.urp-water-system/Runtime/WaterSystem.Runtime.asmdef](<../../Packages/com.unity.urp-water-system/Runtime/WaterSystem.Runtime.asmdef>) | Описание сборки Unity |
+
+## Packages/com.unity.urp-water-system/Runtime/Bodies
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Packages/com.unity.urp-water-system/Runtime/Bodies/Water.cs](<../../Packages/com.unity.urp-water-system/Runtime/Bodies/Water.cs>) | Исходник C#: Water, Settings, TempData; Мир, острова и океан |
+| [Packages/com.unity.urp-water-system/Runtime/Bodies/WaterBody.cs](<../../Packages/com.unity.urp-water-system/Runtime/Bodies/WaterBody.cs>) | Исходник C#: for, WaterBody, WaterShape, WaterShapeType |
+
+## Packages/com.unity.urp-water-system/Runtime/Data
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Packages/com.unity.urp-water-system/Runtime/Data/Data.cs](<../../Packages/com.unity.urp-water-system/Runtime/Data/Data.cs>) | Исходник C#: Data, GeometryType, GeometrySettings, ReflectionSettings, Type, SsrSettings, Steps, LightingSettings, LightingMode, VolumeSample, RefractionSettings, RefractionMode, CausticSettings, CausticMode, that, WaterSample, WaterSurface, DebugShading |
+| [Packages/com.unity.urp-water-system/Runtime/Data/ProjectSettings.cs](<../../Packages/com.unity.urp-water-system/Runtime/Data/ProjectSettings.cs>) | Исходник C#: ProjectSettings, SettingsConsts |
+| [Packages/com.unity.urp-water-system/Runtime/Data/Quality.cs](<../../Packages/com.unity.urp-water-system/Runtime/Data/Quality.cs>) | Исходник C#: Quality |
+| [Packages/com.unity.urp-water-system/Runtime/Data/Resources.cs](<../../Packages/com.unity.urp-water-system/Runtime/Data/Resources.cs>) | Исходник C#: Resources, AssetInfo, BuiltinAssets, public |
+
+## Packages/com.unity.urp-water-system/Runtime/Materials
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Packages/com.unity.urp-water-system/Runtime/Materials/Boat Attack_Water_WaterBuffer_WaterDepthOnly.mat](<../../Packages/com.unity.urp-water-system/Runtime/Materials/Boat Attack_Water_WaterBuffer_WaterDepthOnly.mat>) | Материал Unity |
+| [Packages/com.unity.urp-water-system/Runtime/Materials/Caustics.mat](<../../Packages/com.unity.urp-water-system/Runtime/Materials/Caustics.mat>) | Материал Unity |
+| [Packages/com.unity.urp-water-system/Runtime/Materials/InfiniteWater.mat](<../../Packages/com.unity.urp-water-system/Runtime/Materials/InfiniteWater.mat>) | Материал Unity |
+| [Packages/com.unity.urp-water-system/Runtime/Materials/Sea.mat](<../../Packages/com.unity.urp-water-system/Runtime/Materials/Sea.mat>) | Материал Unity |
+| [Packages/com.unity.urp-water-system/Runtime/Materials/UnlitDebug.mat](<../../Packages/com.unity.urp-water-system/Runtime/Materials/UnlitDebug.mat>) | Материал Unity |
+| [Packages/com.unity.urp-water-system/Runtime/Materials/Unlit_WaterFXFoamOnly.mat](<../../Packages/com.unity.urp-water-system/Runtime/Materials/Unlit_WaterFXFoamOnly.mat>) | Материал Unity |
+| [Packages/com.unity.urp-water-system/Runtime/Materials/WaterBufferDebug.mat](<../../Packages/com.unity.urp-water-system/Runtime/Materials/WaterBufferDebug.mat>) | Материал Unity |
+
+## Packages/com.unity.urp-water-system/Runtime/Meshes
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Packages/com.unity.urp-water-system/Runtime/Meshes/InfiniteSea.fbx](<../../Packages/com.unity.urp-water-system/Runtime/Meshes/InfiniteSea.fbx>) | Модель / анимации FBX |
+| [Packages/com.unity.urp-water-system/Runtime/Meshes/SeaVertDisp.fbx](<../../Packages/com.unity.urp-water-system/Runtime/Meshes/SeaVertDisp.fbx>) | Модель / анимации FBX |
+| [Packages/com.unity.urp-water-system/Runtime/Meshes/Water.fbx](<../../Packages/com.unity.urp-water-system/Runtime/Meshes/Water.fbx>) | Модель / анимации FBX |
+| [Packages/com.unity.urp-water-system/Runtime/Meshes/WaterTile.fbx](<../../Packages/com.unity.urp-water-system/Runtime/Meshes/WaterTile.fbx>) | Модель / анимации FBX |
+
+## Packages/com.unity.urp-water-system/Runtime/Modifiers
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Packages/com.unity.urp-water-system/Runtime/Modifiers/Depth.cs](<../../Packages/com.unity.urp-water-system/Runtime/Modifiers/Depth.cs>) | Исходник C#: Depth, DepthData, JobData, MapData |
+| [Packages/com.unity.urp-water-system/Runtime/Modifiers/DepthBaking.cs](<../../Packages/com.unity.urp-water-system/Runtime/Modifiers/DepthBaking.cs>) | Исходник C#: DepthSave, PassData, DepthBaking |
+| [Packages/com.unity.urp-water-system/Runtime/Modifiers/DepthGenerator.cs](<../../Packages/com.unity.urp-water-system/Runtime/Modifiers/DepthGenerator.cs>) | Исходник C#: DepthGenerator, WaterDepth, DepthData |
+| [Packages/com.unity.urp-water-system/Runtime/Modifiers/Flow.cs](<../../Packages/com.unity.urp-water-system/Runtime/Modifiers/Flow.cs>) | Исходник C#: Flow, FlowJob, FlowData, FlowDataStruct |
+| [Packages/com.unity.urp-water-system/Runtime/Modifiers/GerstnerWaves.cs](<../../Packages/com.unity.urp-water-system/Runtime/Modifiers/GerstnerWaves.cs>) | Исходник C#: GerstnerWaves, HeightJob, Data, WaveType, JobData, BasicWaves, Wave, WaveDescriptor; Мир, острова и океан, Тестовая карта и водоворот |
+| [Packages/com.unity.urp-water-system/Runtime/Modifiers/WaterModifier.cs](<../../Packages/com.unity.urp-water-system/Runtime/Modifiers/WaterModifier.cs>) | Исходник C#: that, IWaterModifier, WaterModifier, DataHashSet, IModifierData, IJobData |
+
+## Packages/com.unity.urp-water-system/Runtime/Physics
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Packages/com.unity.urp-water-system/Runtime/Physics/Utilities.cs](<../../Packages/com.unity.urp-water-system/Runtime/Physics/Utilities.cs>) | Исходник C#: Utilities, PhysicsForce |
+| [Packages/com.unity.urp-water-system/Runtime/Physics/WaterPhysics.cs](<../../Packages/com.unity.urp-water-system/Runtime/Physics/WaterPhysics.cs>) | Исходник C#: WaterPhysics, BoundingBoxCheck, WaterSurfacePrep, WaterBodyLookup, public, WaterBodyData; Мир, острова и океан |
+
+## Packages/com.unity.urp-water-system/Runtime/Queries
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Packages/com.unity.urp-water-system/Runtime/Queries/DebugWaterCPU.cs](<../../Packages/com.unity.urp-water-system/Runtime/Queries/DebugWaterCPU.cs>) | Исходник C#: DebugWaterCPU |
+| [Packages/com.unity.urp-water-system/Runtime/Queries/SimpleBuoyantObject.cs](<../../Packages/com.unity.urp-water-system/Runtime/Queries/SimpleBuoyantObject.cs>) | Исходник C#: SimpleBuoyantObject |
+| [Packages/com.unity.urp-water-system/Runtime/Queries/VoxelBuoyantObject.cs](<../../Packages/com.unity.urp-water-system/Runtime/Queries/VoxelBuoyantObject.cs>) | Исходник C#: VoxelBuoyantObject |
+| [Packages/com.unity.urp-water-system/Runtime/Queries/WaterQuery.cs](<../../Packages/com.unity.urp-water-system/Runtime/Queries/WaterQuery.cs>) | Исходник C#: WaterQuery, IWaterQuery |
+
+## Packages/com.unity.urp-water-system/Runtime/Rendering
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Packages/com.unity.urp-water-system/Runtime/Rendering/Caustics.cs](<../../Packages/com.unity.urp-water-system/Runtime/Rendering/Caustics.cs>) | Исходник C#: WaterCaustics, PassData, Data |
+| [Packages/com.unity.urp-water-system/Runtime/Rendering/DebugTooling.cs](<../../Packages/com.unity.urp-water-system/Runtime/Rendering/DebugTooling.cs>) | Исходник C#: DebugTooling, Styles |
+| [Packages/com.unity.urp-water-system/Runtime/Rendering/InfiniteWaterPlane.cs](<../../Packages/com.unity.urp-water-system/Runtime/Rendering/InfiniteWaterPlane.cs>) | Исходник C#: InfiniteWaterPlane, PassData |
+| [Packages/com.unity.urp-water-system/Runtime/Rendering/MeshSurface.cs](<../../Packages/com.unity.urp-water-system/Runtime/Rendering/MeshSurface.cs>) | Исходник C#: MeshSurface, BaseLayout, SubdivideTiles, MatrixJob, WaterTile, WaterMeshSettings; Мир, острова и океан |
+| [Packages/com.unity.urp-water-system/Runtime/Rendering/PlanarReflections.cs](<../../Packages/com.unity.urp-water-system/Runtime/Rendering/PlanarReflections.cs>) | Исходник C#: PlanarReflections, ResolutionModes, RendererMode, PlanarReflectionSettings, PlanarReflectionObjects, PlanarReflectionSettingData |
+| [Packages/com.unity.urp-water-system/Runtime/Rendering/Utilities.cs](<../../Packages/com.unity.urp-water-system/Runtime/Rendering/Utilities.cs>) | Исходник C#: Utilities, ShaderKeywords, ShaderIDs, WaterResourceData, WaterSystemSettings, DebugMode, PassData, DummyResourcePass |
+| [Packages/com.unity.urp-water-system/Runtime/Rendering/WaterFXBuffers.cs](<../../Packages/com.unity.urp-water-system/Runtime/Rendering/WaterFXBuffers.cs>) | Исходник C#: WaterBuffers, PassData |
+
+## Packages/com.unity.urp-water-system/Runtime/Shaders
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Packages/com.unity.urp-water-system/Runtime/Shaders/Caustics.shader](<../../Packages/com.unity.urp-water-system/Runtime/Shaders/Caustics.shader>) | Шейдер |
+| [Packages/com.unity.urp-water-system/Runtime/Shaders/CommonUtilities.hlsl](<../../Packages/com.unity.urp-water-system/Runtime/Shaders/CommonUtilities.hlsl>) | Код шейдера; Мир, острова и океан |
+| [Packages/com.unity.urp-water-system/Runtime/Shaders/GerstnerWaves.hlsl](<../../Packages/com.unity.urp-water-system/Runtime/Shaders/GerstnerWaves.hlsl>) | Код шейдера; Мир, острова и океан, Тестовая карта и водоворот |
+| [Packages/com.unity.urp-water-system/Runtime/Shaders/InfiniteWater.hlsl](<../../Packages/com.unity.urp-water-system/Runtime/Shaders/InfiniteWater.hlsl>) | Код шейдера |
+| [Packages/com.unity.urp-water-system/Runtime/Shaders/InfiniteWater.shader](<../../Packages/com.unity.urp-water-system/Runtime/Shaders/InfiniteWater.shader>) | Шейдер; Мир, острова и океан |
+| [Packages/com.unity.urp-water-system/Runtime/Shaders/Water.shader](<../../Packages/com.unity.urp-water-system/Runtime/Shaders/Water.shader>) | Шейдер; Мир, острова и океан |
+| [Packages/com.unity.urp-water-system/Runtime/Shaders/WaterCommon.hlsl](<../../Packages/com.unity.urp-water-system/Runtime/Shaders/WaterCommon.hlsl>) | Код шейдера; Мир, острова и океан |
+| [Packages/com.unity.urp-water-system/Runtime/Shaders/WaterFXFoamOnly.shader](<../../Packages/com.unity.urp-water-system/Runtime/Shaders/WaterFXFoamOnly.shader>) | Шейдер |
+| [Packages/com.unity.urp-water-system/Runtime/Shaders/WaterFXShader.shader](<../../Packages/com.unity.urp-water-system/Runtime/Shaders/WaterFXShader.shader>) | Шейдер |
+| [Packages/com.unity.urp-water-system/Runtime/Shaders/WaterInput.hlsl](<../../Packages/com.unity.urp-water-system/Runtime/Shaders/WaterInput.hlsl>) | Код шейдера; Мир, острова и океан |
+| [Packages/com.unity.urp-water-system/Runtime/Shaders/WaterLighting.hlsl](<../../Packages/com.unity.urp-water-system/Runtime/Shaders/WaterLighting.hlsl>) | Код шейдера |
+| [Packages/com.unity.urp-water-system/Runtime/Shaders/WaterTessellated.shader](<../../Packages/com.unity.urp-water-system/Runtime/Shaders/WaterTessellated.shader>) | Шейдер |
+| [Packages/com.unity.urp-water-system/Runtime/Shaders/WaterTessellation.hlsl](<../../Packages/com.unity.urp-water-system/Runtime/Shaders/WaterTessellation.hlsl>) | Код шейдера |
+
+## Packages/com.unity.urp-water-system/Runtime/Shaders/Graphs
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Packages/com.unity.urp-water-system/Runtime/Shaders/Graphs/Direction.shadersubgraph](<../../Packages/com.unity.urp-water-system/Runtime/Shaders/Graphs/Direction.shadersubgraph>) | Файл .shadersubgraph |
+| [Packages/com.unity.urp-water-system/Runtime/Shaders/Graphs/GestnerWaves.shadersubgraph](<../../Packages/com.unity.urp-water-system/Runtime/Shaders/Graphs/GestnerWaves.shadersubgraph>) | Файл .shadersubgraph |
+
+## Packages/com.unity.urp-water-system/Runtime/Shaders/Utility
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Packages/com.unity.urp-water-system/Runtime/Shaders/Utility/SceneDepth.shader](<../../Packages/com.unity.urp-water-system/Runtime/Shaders/Utility/SceneDepth.shader>) | Шейдер |
+| [Packages/com.unity.urp-water-system/Runtime/Shaders/Utility/SceneDepth.shadergraph](<../../Packages/com.unity.urp-water-system/Runtime/Shaders/Utility/SceneDepth.shadergraph>) | Граф шейдера |
+| [Packages/com.unity.urp-water-system/Runtime/Shaders/Utility/Unlit_SceneDepth.mat](<../../Packages/com.unity.urp-water-system/Runtime/Shaders/Utility/Unlit_SceneDepth.mat>) | Материал Unity |
+| [Packages/com.unity.urp-water-system/Runtime/Shaders/Utility/WaterDepthDebug.shadergraph](<../../Packages/com.unity.urp-water-system/Runtime/Shaders/Utility/WaterDepthDebug.shadergraph>) | Граф шейдера |
+
+## Packages/com.unity.urp-water-system/Runtime/Shaders/WaterBufferShaders
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Packages/com.unity.urp-water-system/Runtime/Shaders/WaterBufferShaders/BufferDebug.shader](<../../Packages/com.unity.urp-water-system/Runtime/Shaders/WaterBufferShaders/BufferDebug.shader>) | Шейдер |
+| [Packages/com.unity.urp-water-system/Runtime/Shaders/WaterBufferShaders/WaterDepthOnly.shader](<../../Packages/com.unity.urp-water-system/Runtime/Shaders/WaterBufferShaders/WaterDepthOnly.shader>) | Шейдер |
+
+## Packages/com.unity.urp-water-system/Runtime/System
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Packages/com.unity.urp-water-system/Runtime/System/BaseSystem.cs](<../../Packages/com.unity.urp-water-system/Runtime/System/BaseSystem.cs>) | Исходник C#: BaseSystem, State |
+| [Packages/com.unity.urp-water-system/Runtime/System/SystemInitializer.cs](<../../Packages/com.unity.urp-water-system/Runtime/System/SystemInitializer.cs>) | Исходник C#: SystemInitializer; Мир, острова и океан |
+| [Packages/com.unity.urp-water-system/Runtime/System/WaterManager.cs](<../../Packages/com.unity.urp-water-system/Runtime/System/WaterManager.cs>) | Исходник C#: WaterManager; Мир, острова и океан |
+
+## Packages/com.unity.urp-water-system/Runtime/Textures
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Packages/com.unity.urp-water-system/Runtime/Textures/DefaultFoamRamp.tif](<../../Packages/com.unity.urp-water-system/Runtime/Textures/DefaultFoamRamp.tif>) | Файл .tif |
+| [Packages/com.unity.urp-water-system/Runtime/Textures/DefaultWaterFX.tif](<../../Packages/com.unity.urp-water-system/Runtime/Textures/DefaultWaterFX.tif>) | Файл .tif |
+| [Packages/com.unity.urp-water-system/Runtime/Textures/DepthBakeBuffer.renderTexture](<../../Packages/com.unity.urp-water-system/Runtime/Textures/DepthBakeBuffer.renderTexture>) | Файл .renderTexture |
+| [Packages/com.unity.urp-water-system/Runtime/Textures/PeakMap.tif](<../../Packages/com.unity.urp-water-system/Runtime/Textures/PeakMap.tif>) | Файл .tif |
+| [Packages/com.unity.urp-water-system/Runtime/Textures/WaterFoam.png](<../../Packages/com.unity.urp-water-system/Runtime/Textures/WaterFoam.png>) | Изображение / текстура |
+| [Packages/com.unity.urp-water-system/Runtime/Textures/WaterNormals.tif](<../../Packages/com.unity.urp-water-system/Runtime/Textures/WaterNormals.tif>) | Файл .tif |
+| [Packages/com.unity.urp-water-system/Runtime/Textures/WaterSurface.asset](<../../Packages/com.unity.urp-water-system/Runtime/Textures/WaterSurface.asset>) | Настройки или данные Unity |
+| [Packages/com.unity.urp-water-system/Runtime/Textures/WaterSurface_atlas.tif](<../../Packages/com.unity.urp-water-system/Runtime/Textures/WaterSurface_atlas.tif>) | Файл .tif |
+| [Packages/com.unity.urp-water-system/Runtime/Textures/WaterSurface_single.tif](<../../Packages/com.unity.urp-water-system/Runtime/Textures/WaterSurface_single.tif>) | Файл .tif |
+| [Packages/com.unity.urp-water-system/Runtime/Textures/normalNoise.png](<../../Packages/com.unity.urp-water-system/Runtime/Textures/normalNoise.png>) | Изображение / текстура |
+
+## Packages/com.unity.urp-water-system/Runtime/Textures/Samples
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Packages/com.unity.urp-water-system/Runtime/Textures/Samples/basicFoam.png](<../../Packages/com.unity.urp-water-system/Runtime/Textures/Samples/basicFoam.png>) | Изображение / текстура |
+
+## Packages/com.unity.urp-water-system/Runtime/Textures/SurfaceSequence
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Packages/com.unity.urp-water-system/Runtime/Textures/SurfaceSequence/water_Final Color Output0001.png](<../../Packages/com.unity.urp-water-system/Runtime/Textures/SurfaceSequence/water_Final Color Output0001.png>) | Изображение / текстура |
+| [Packages/com.unity.urp-water-system/Runtime/Textures/SurfaceSequence/water_Final Color Output0002.png](<../../Packages/com.unity.urp-water-system/Runtime/Textures/SurfaceSequence/water_Final Color Output0002.png>) | Изображение / текстура |
+| [Packages/com.unity.urp-water-system/Runtime/Textures/SurfaceSequence/water_Final Color Output0003.png](<../../Packages/com.unity.urp-water-system/Runtime/Textures/SurfaceSequence/water_Final Color Output0003.png>) | Изображение / текстура |
+| [Packages/com.unity.urp-water-system/Runtime/Textures/SurfaceSequence/water_Final Color Output0004.png](<../../Packages/com.unity.urp-water-system/Runtime/Textures/SurfaceSequence/water_Final Color Output0004.png>) | Изображение / текстура |
+| [Packages/com.unity.urp-water-system/Runtime/Textures/SurfaceSequence/water_Final Color Output0005.png](<../../Packages/com.unity.urp-water-system/Runtime/Textures/SurfaceSequence/water_Final Color Output0005.png>) | Изображение / текстура |
+| [Packages/com.unity.urp-water-system/Runtime/Textures/SurfaceSequence/water_Final Color Output0006.png](<../../Packages/com.unity.urp-water-system/Runtime/Textures/SurfaceSequence/water_Final Color Output0006.png>) | Изображение / текстура |
+| [Packages/com.unity.urp-water-system/Runtime/Textures/SurfaceSequence/water_Final Color Output0007.png](<../../Packages/com.unity.urp-water-system/Runtime/Textures/SurfaceSequence/water_Final Color Output0007.png>) | Изображение / текстура |
+| [Packages/com.unity.urp-water-system/Runtime/Textures/SurfaceSequence/water_Final Color Output0008.png](<../../Packages/com.unity.urp-water-system/Runtime/Textures/SurfaceSequence/water_Final Color Output0008.png>) | Изображение / текстура |
+| [Packages/com.unity.urp-water-system/Runtime/Textures/SurfaceSequence/water_Final Color Output0009.png](<../../Packages/com.unity.urp-water-system/Runtime/Textures/SurfaceSequence/water_Final Color Output0009.png>) | Изображение / текстура |
+| [Packages/com.unity.urp-water-system/Runtime/Textures/SurfaceSequence/water_Final Color Output0010.png](<../../Packages/com.unity.urp-water-system/Runtime/Textures/SurfaceSequence/water_Final Color Output0010.png>) | Изображение / текстура |
+| [Packages/com.unity.urp-water-system/Runtime/Textures/SurfaceSequence/water_Final Color Output0011.png](<../../Packages/com.unity.urp-water-system/Runtime/Textures/SurfaceSequence/water_Final Color Output0011.png>) | Изображение / текстура |
+| [Packages/com.unity.urp-water-system/Runtime/Textures/SurfaceSequence/water_Final Color Output0012.png](<../../Packages/com.unity.urp-water-system/Runtime/Textures/SurfaceSequence/water_Final Color Output0012.png>) | Изображение / текстура |
+| [Packages/com.unity.urp-water-system/Runtime/Textures/SurfaceSequence/water_Final Color Output0013.png](<../../Packages/com.unity.urp-water-system/Runtime/Textures/SurfaceSequence/water_Final Color Output0013.png>) | Изображение / текстура |
+| [Packages/com.unity.urp-water-system/Runtime/Textures/SurfaceSequence/water_Final Color Output0014.png](<../../Packages/com.unity.urp-water-system/Runtime/Textures/SurfaceSequence/water_Final Color Output0014.png>) | Изображение / текстура |
+| [Packages/com.unity.urp-water-system/Runtime/Textures/SurfaceSequence/water_Final Color Output0015.png](<../../Packages/com.unity.urp-water-system/Runtime/Textures/SurfaceSequence/water_Final Color Output0015.png>) | Изображение / текстура |
+| [Packages/com.unity.urp-water-system/Runtime/Textures/SurfaceSequence/water_Final Color Output0016.png](<../../Packages/com.unity.urp-water-system/Runtime/Textures/SurfaceSequence/water_Final Color Output0016.png>) | Изображение / текстура |
+
+## Packages/com.unity.urp-water-system/Samples~/Water Effects Buffers
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Packages/com.unity.urp-water-system/Samples~/Water Effects Buffers/WaterEffectBuffers.unity](<../../Packages/com.unity.urp-water-system/Samples~/Water Effects Buffers/WaterEffectBuffers.unity>) | Сцена Unity |

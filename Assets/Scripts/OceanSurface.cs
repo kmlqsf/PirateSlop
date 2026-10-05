@@ -47,6 +47,7 @@ namespace PirateSlop
         public float WhirlpoolDepth;
         public float WhirlpoolTwist;
         public Material WaterMaterial;
+        public OceanHeightSource HeightSource;
         static readonly Vector4[] Waves = {
             new Vector4(.94f, .342f, .65f, 42f),
             new Vector4(-.4f, .916515f, .32f, 23f),
@@ -83,6 +84,7 @@ namespace PirateSlop
 
         public float Height(Vector3 position)
         {
+            if (HeightSource != null) return SeaLevel + HeightSource.HeightOffset(position, WaveTime) + GetWhirlpoolHeight(position);
             float wHeight = GetWhirlpoolHeight(position) + SwellHeight(position);
             if (simpleWater)
             {
@@ -110,6 +112,7 @@ namespace PirateSlop
                 WhirlpoolTwist = 2f;
             }
             if (gameObject.scene.name == "NetworkOcean") SeaMistRendererFeature.InitializeGlobalFog();
+            if (HeightSource != null) return;
             if (WaterMaterial != null)
             {
                 runtimeMaterial = Instantiate(WaterMaterial);
@@ -139,6 +142,7 @@ namespace PirateSlop
         }
         void LateUpdate()
         {
+            if (HeightSource != null) return;
             var camera = Camera.main;
             if (camera != null) transform.position = new Vector3(Mathf.Floor(camera.transform.position.x / 8) * 8, SeaLevel, Mathf.Floor(camera.transform.position.z / 8) * 8);
             if (WaterMaterial == null) return;

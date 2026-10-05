@@ -1,0 +1,137 @@
+#ifndef GERSTNER_WAVES_INCLUDED
+#define GERSTNER_WAVES_INCLUDED
+#define PIRATESLOP_MODIFIED_GERSTNER_PEAK 0.85
+
+uniform uint 	_WaveCount; // how many waves, set via the water component
+
+struct Wave
+{
+	float amplitude;
+	float direction;
+	float wavelength;
+	float2 origin;
+	float omni;
+};
+
+#if defined(USE_STRUCTURED_BUFFER)
+StructuredBuffer<Wave> _WaveDataBuffer;
+#else
+half4 waveData[20]; // 0-9 amplitude, direction, wavelength, omni, 10-19 origin.xy
+#endif
+
+struct WaveStruct
+{
+	float3 position;
+	float3 normal;
+	float foam;
+};
+
+WaveStruct GerstnerWave(float2 pos, float waveCountMulti, float amplitude, float2 direction, float wavelength, float omni, float2 omniPos)
+{
+	WaveStruct waveOut;
+#if defined(_STATIC_SHADER)
+	float time = 0;
+#else
+	float time = lerp(_Time.y, _BoatAttack_WaveTime, _BoatAttack_UseWaveTime);
+#endif
+
+	////////////////////////////////wave value calculations//////////////////////////
+	float3 wave = 0; // wave vector
+	float w = 6.28318 / wavelength; // 2pi over wavelength(hardcoded)
+	float wSpeed = sqrt(9.8 * w); // frequency of the wave based off wavelength
+	float peak = PIRATESLOP_MODIFIED_GERSTNER_PEAK;
+	float qi = peak / (amplitude * w * _WaveCount);
+	
+	float2 windDir = direction; // calculate wind direction
+	float dir = dot(windDir, pos - (omniPos * omni)); // calculate a gradient along the wind direction
+
+	////////////////////////////position output calculations/////////////////////////
+	float calc = dir * w + -time * wSpeed; // the wave calculation
+	float cosCalc = cos(calc); // cosine version(used for horizontal undulation)
+	float sinCalc = sin(calc); // sin version(used for vertical undulation)
+
+	// foam height raw
+	half a = (sinCalc + 1) * 0.5;
+	
+	// calculate the offsets for the current point
+	wave.xz = qi * amplitude * windDir.xy * cosCalc;
+	wave.y = sinCalc * amplitude * waveCountMulti;// the height is divided by the number of waves
+
+	////////////////////////////normal output calculations/////////////////////////
+	half wa = w * amplitude;
+	// normal vector
+	half3 n = half3(-(windDir.xy * wa * cosCalc),
+					1-qi * wa * sinCalc);
+
+	////////////////////////////////assign to output///////////////////////////////
+	waveOut.position = wave * saturate(amplitude * 10000);
+	waveOut.normal = (n.xzy * waveCountMulti);
+	half b = dot(n.xy * 2, -windDir);
+	waveOut.foam = saturate(a + b);
+
+	return waveOut;
+}
+
+WaveStruct GerstnerWave(float2 pos, float waveCountMulti, float amplitude, float direction, float wavelength, float omni, float2 omniPos)
+{
+	direction = radians(direction); // convert the incoming degrees to radians, for directional waves
+	float2 dirWaveInput = float2(sin(direction), cos(direction)) * (1 - omni);
+	float2 omniWaveInput = (pos - omniPos) * omni;
+
+	float2 windDir = normalize(dirWaveInput + omniWaveInput); // calculate wind direction
+	return GerstnerWave(pos, waveCountMulti, amplitude, windDir, wavelength, omni, omniPos);
+}
+
+inline void SampleWaves(float3 position, half opacity, out WaveStruct waveOut)
+{
+	waveOut = (WaveStruct)0;
+	float2 pos = position.xz;
+	float waveCountMulti = 1.0 / _WaveCount;
+	opacity = saturate(opacity);
+
+	UNITY_LOOP
+	for(uint i = 0; i < _WaveCount; i++)
+	{
+#if defined(USE_STRUCTURED_BUFFER)
+		Wave w = _WaveDataBuffer[i];
+#else
+		Wave w;
+		w.amplitude = waveData[i].x;
+		w.direction = waveData[i].y;
+		w.wavelength = waveData[i].z;
+		w.omni = waveData[i].w;
+		w.origin = waveData[i + 10].xy;
+#endif
+		WaveStruct wave = GerstnerWave(pos,
+								waveCountMulti,
+								w.amplitude,
+								w.direction,
+								w.wavelength,
+								w.omni,
+								w.origin); // calculate the wave
+
+		waveOut.position += wave.position; // add the position
+		waveOut.normal += wave.normal; // add the normal
+		waveOut.foam += wave.foam;
+	}
+	waveOut.position *= opacity;// opacityMask;
+	waveOut.normal *= float3(opacity, 1, opacity);
+	waveOut.foam *= waveCountMulti * opacity;
+}
+
+void Gerstner_SG_test_half(float2 pos, half amp, half2 dir, half length, out float3 position, out float3 normal)
+{
+	
+	WaveStruct wave = GerstnerWave(pos,
+		1,
+		amp,
+		dir,
+		length,
+		0,
+		0
+		);
+	position = wave.position;
+	normal = wave.normal;
+}
+
+#endif // GERSTNER_WAVES_INCLUDED

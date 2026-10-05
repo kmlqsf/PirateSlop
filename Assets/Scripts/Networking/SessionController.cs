@@ -86,6 +86,8 @@ namespace PirateSlop.Networking
             string port = Value(args, "-port") ?? Config.Port.ToString();
             seedInput = Value(args, "-seed") ?? "";
             if (LoadTestOnStart || Has(args, "-loadtest")) BeginLoadTest();
+            else if (Value(args, "-watertest") == "2") Begin(true, "127.0.0.1:" + port, false, true);
+            else if (Value(args, "-watertest") == "3") Begin(true, "127.0.0.1:" + port, false, false, true);
             else if (dedicated || Has(args, "-host")) Begin(true, "127.0.0.1:" + port);
             else if (Has(args, "-connect")) Begin(false, Value(args, "-connect"));
             else AdvancedPlayerController.SetCursor(false);
@@ -102,26 +104,37 @@ namespace PirateSlop.Networking
             host = ip.ToString(); return true;
         }
         bool environmentTestRequested;
-        bool EnvironmentTestActive => EnvironmentTestGallery.IsTest(ProceduralWorld.Instance != null ? ProceduralWorld.Instance.Layout : null);
-        public void Begin(bool host, string endpoint, bool environmentTest = false)
+        bool EnvironmentTestActive => EnvironmentTestGallery.IsTest(ProceduralWorld.Instance != null ? ProceduralWorld.Instance.Layout : null) || BoatAttackWaterTest.IsTest(ProceduralWorld.Instance != null ? ProceduralWorld.Instance.Layout : null) || OceanaWaterTest.IsTest(ProceduralWorld.Instance != null ? ProceduralWorld.Instance.Layout : null);
+        public void Begin(bool host, string endpoint, bool environmentTest = false, bool boatAttackTest = false, bool oceanaTest = false)
         {
             if (starting || connecting || playing || manager.ServerManager.Started) return;
-            if (host && !environmentTest && !string.IsNullOrWhiteSpace(seedInput) && !int.TryParse(seedInput, out _)) { SetError("Seed должен быть целым числом."); return; }
+            if (host && !environmentTest && !boatAttackTest && !oceanaTest && !string.IsNullOrWhiteSpace(seedInput) && !int.TryParse(seedInput, out _)) { SetError("Seed должен быть целым числом."); return; }
             if (!ParseEndpoint(endpoint, out var ip, out var port)) { SetError("Введите IPv4:порт, например 192.168.1.10:7777"); return; }
+            if (host && (boatAttackTest || oceanaTest))
+            {
+                string sceneName = oceanaTest ? OceanaWaterTest.SceneName : BoatAttackWaterTest.SceneName;
+                if (!Application.CanStreamedLevelBeLoaded(sceneName))
+                {
+                    SetError("Эта сборка не содержит сцену " + sceneName + ". Пересоберите игру со всеми включёнными сценами из Build Profiles.");
+                    return;
+                }
+            }
             environmentTestRequested = host && environmentTest;
-            observerSession = !environmentTestRequested && host && fillWithBots && observerSelected && !dedicated && !Automated;
+            boatAttackTestRequested = host && boatAttackTest;
+            oceanaTestRequested = host && oceanaTest;
+            bool testRequested = environmentTestRequested || boatAttackTestRequested || oceanaTestRequested;
+            observerSession = !testRequested && host && fillWithBots && observerSelected && !dedicated && !Automated;
             error = ""; address = endpoint; startedAt = Time.realtimeSinceStartup; connecting = true; starting = true; hostRequested = host;
             status = host ? "Создание сессии…" : "Подключение…";
-            botRosterPolicy = host ? new InitialFillBotRosterPolicy(fillWithBots && !environmentTestRequested) : null;
+            botRosterPolicy = host ? new InitialFillBotRosterPolicy(fillWithBots && !testRequested) : null;
             StartCoroutine(StartSession(host, ip, port));
         }
         IEnumerator StartSession(bool host, string ip, ushort port)
         {
-            if (!SceneManager.GetSceneByName(Config.GameScene).isLoaded) yield return SceneManager.LoadSceneAsync(Config.GameScene, LoadSceneMode.Additive);
+            yield return LoadWaterScene(oceanaTestRequested ? OceanaWaterTest.SceneName : boatAttackTestRequested ? BoatAttackWaterTest.SceneName : Config.GameScene);
             if (!connecting) { starting = false; yield break; }
-            SceneManager.SetActiveScene(SceneManager.GetSceneByName(Config.GameScene));
             var world = ProceduralWorld.Instance;
-            if (world == null) { starting = false; connecting = false; SetError("В NetworkOcean отсутствует ProceduralWorld."); yield break; }
+            if (world == null) { starting = false; connecting = false; SetError("В игровой сцене отсутствует ProceduralWorld."); yield break; }
             stormRunning = stormPaused = false;
             if (storm != null) Destroy(storm.gameObject);
             if (OceanSurface.Instance != null) OceanSurface.Instance.WaveScale = .06f;
@@ -132,7 +145,7 @@ namespace PirateSlop.Networking
                 {
                     int seed = int.TryParse(seedInput, out var requestedSeed) ? requestedSeed : world.Profile.RandomSeed ? BitConverter.ToInt32(Guid.NewGuid().ToByteArray(), 0) : world.Profile.Seed;
                     float seaLevel = OceanSurface.Instance != null ? OceanSurface.Instance.SeaLevel : 0;
-                    layout = environmentTestRequested ? EnvironmentTestGallery.CreateLayout(world.Profile, seaLevel) : WorldGenerator.Generate(world.Profile, seed, MaxPlayers, seaLevel);
+                    layout = oceanaTestRequested ? OceanaWaterTest.CreateLayout(world.Profile, seaLevel) : boatAttackTestRequested ? BoatAttackWaterTest.CreateLayout(world.Profile, seaLevel) : environmentTestRequested ? EnvironmentTestGallery.CreateLayout(world.Profile, seaLevel) : WorldGenerator.Generate(world.Profile, seed, MaxPlayers, seaLevel);
                 }
                 catch (Exception ex) { SetError("Генерация карты: " + ex.Message); }
                 if (layout == null) { starting = connecting = false; yield break; }
@@ -229,6 +242,10 @@ namespace PirateSlop.Networking
         IEnumerator ReceiveWorld(WorldLayout layout, string checksum)
         {
             yield return null;
+            if (!manager.ServerManager.Started && OceanaWaterTest.IsTest(layout))
+                yield return LoadWaterScene(OceanaWaterTest.SceneName);
+            else if (!manager.ServerManager.Started && BoatAttackWaterTest.IsTest(layout))
+                yield return LoadWaterScene(BoatAttackWaterTest.SceneName);
             var world = ProceduralWorld.Instance;
             if (!manager.ServerManager.Started) yield return GenerateWorld(world, layout);
             if (world == null || !world.Ready || world.Checksum != checksum)

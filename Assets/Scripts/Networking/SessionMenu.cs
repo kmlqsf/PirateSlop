@@ -101,7 +101,7 @@ namespace PirateSlop.Networking
             MenuText(new Rect(x,45,panelWidth,25),"М О Р Е   /   П О Р О Х   /   С В О Б О Д А",true);
             GUI.Label(new Rect(x-4,75,610,80),"PIRATE SLOP",menuTitle);
             MenuText(new Rect(x,165,panelWidth,35),playing ? "Ваше приключение продолжается" : "Открытый океан · Подними паруса",true);
-            MenuVerticalRail(x+12,220,500);
+            MenuVerticalRail(x+12,220,560);
             float y=225;
             if(connecting)
             {
@@ -259,7 +259,9 @@ namespace PirateSlop.Networking
                 if(MenuAction(x,y+232,panelWidth,"Настройки")) menuPage=7;
                 if(MenuAction(x,y+290,panelWidth,"Выйти из игры")) Application.Quit();
                 if(!playing && MenuAction(x,y+348,panelWidth,"Тестовая карта")) Begin(true,"127.0.0.1:"+Config.Port,true);
-                if(!playing && MenuAction(x,y+406,panelWidth,"Тест нагрузки · без AI")) BeginLoadTest();
+                if(!playing && MenuAction(x,y+406,panelWidth,"Тестовая сцена 2")) Begin(true,"127.0.0.1:"+Config.Port,false,true);
+                if(!playing && MenuAction(x,y+464,panelWidth,"Тестовая сцена 3")) Begin(true,"127.0.0.1:"+Config.Port,false,false,true);
+                if(!playing && MenuAction(x,y+522,panelWidth,"Тест нагрузки · без AI")) BeginLoadTest();
                 if(playing && LoadTestActive && MenuAction(x,y+406,panelWidth,"Движение нагрузки · F7")) ToggleLoadTestMotion();
             }
             if(!string.IsNullOrEmpty(error))

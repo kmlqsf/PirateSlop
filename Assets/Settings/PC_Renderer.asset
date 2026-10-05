@@ -89,6 +89,7 @@ MonoBehaviour:
   - {fileID: -4144231278053079073}
   - {fileID: 2630250939822329195}
   - {fileID: -3461419656797274781}
+  - {fileID: 1045614702906500501}
   m_RendererFeatureMap: ad6b866f10d7b46cl
   xrSystemData: {fileID: 0}
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
@@ -118,6 +119,20 @@ MonoBehaviour:
   m_AccurateGbufferNormals: 0
   m_IntermediateTextureMode: 0
   m_TileOnlyMode: 0
+--- !u!114 &1045614702906500501
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68017217a8404634aa1a51d6a870099f, type: 3}
+  m_Name: Oceana Test Ocean
+  m_EditorClassIdentifier: Assembly-CSharp::Oceana.OceanaRenderFeature
+  m_Active: 1
+  m_Settings: {fileID: 11400000, guid: ca19df2710a742244ae272cf65b1586a, type: 2}
 --- !u!114 &2630250939822329195
 MonoBehaviour:
   m_ObjectHideFlags: 1
