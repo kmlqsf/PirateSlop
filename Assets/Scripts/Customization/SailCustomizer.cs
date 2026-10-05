@@ -76,6 +76,8 @@ namespace PirateSlop.Customization
         Material[] partMaterials;
         MeshCollider[] partColliders;
         Mesh[] selectionMeshes;
+        Mesh mizzenSourceMesh, mizzenDecalMesh;
+        Vector4[] decalCanvasScales;
         bool currentModel;
         Texture2D[,] currentTextures = new Texture2D[TotalParts, TotalLayers];
         ShipCustomizationData currentData = new ShipCustomizationData();
@@ -149,6 +151,7 @@ namespace PirateSlop.Customization
                 partMaterials = new Material[TotalParts];
                 partColliders = new MeshCollider[TotalParts];
                 selectionMeshes = new Mesh[TotalParts];
+                decalCanvasScales = new Vector4[TotalParts];
 
                 if (sailBaseMaterial == null)
                 {
@@ -177,11 +180,50 @@ namespace PirateSlop.Customization
                                     partMaterials[i].SetTexture("_OcclusionMap", source.GetTexture("_OcclusionMap"));
                             }
                             partMaterials[i].SetFloat("_UseFaceOrientation", currentModel ? 1f : 0f);
+                            partMaterials[i].SetFloat("_PreserveDecalColor", currentModel ? 1f : 0f);
+                            decalCanvasScales[i] = currentModel ? PrepareDecalCoordinates(r, i == 0) : new Vector4(1f, 1f, 0f, 0f);
+                            partMaterials[i].SetFloat("_UseDecalUV2", currentModel && i == 0 && mizzenDecalMesh != null ? 1f : 0f);
+                            partMaterials[i].SetVector("_DecalCanvasScale", decalCanvasScales[i]);
                         }
                         r.sharedMaterial = partMaterials[i];
                     }
                 }
             }
+        }
+
+        Vector4 PrepareDecalCoordinates(Renderer renderer, bool mizzen)
+        {
+            var skin = renderer as SkinnedMeshRenderer;
+            var filter = renderer.GetComponent<MeshFilter>();
+            var source = skin != null ? skin.sharedMesh : filter != null ? filter.sharedMesh : null;
+            if (source == null || !source.isReadable) return new Vector4(1f, 1f, 0f, 0f);
+            var vertices = source.vertices;
+            var matrix = transform.worldToLocalMatrix * renderer.transform.localToWorldMatrix;
+            var positions = new Vector3[vertices.Length];
+            var minimum = new Vector3(float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity);
+            var maximum = new Vector3(float.NegativeInfinity, float.NegativeInfinity, float.NegativeInfinity);
+            for (int i = 0; i < vertices.Length; i++)
+            {
+                positions[i] = matrix.MultiplyPoint3x4(vertices[i]);
+                minimum = Vector3.Min(minimum, positions[i]);
+                maximum = Vector3.Max(maximum, positions[i]);
+            }
+            var dimensions = maximum - minimum;
+            float width = Mathf.Max(dimensions.x, dimensions.z);
+            float height = dimensions.y;
+            float extent = Mathf.Max(width, height, .0001f);
+            if (!mizzen) return new Vector4(width / extent, height / extent, 0f, 0f);
+            var center = (maximum + minimum) * .5f;
+            var decalUV = new Vector2[positions.Length];
+            for (int i = 0; i < positions.Length; i++)
+                decalUV[i] = new Vector2((positions[i].z - center.z) / extent + .5f, (positions[i].y - center.y) / extent + .5f);
+            mizzenSourceMesh = source;
+            mizzenDecalMesh = Instantiate(source);
+            mizzenDecalMesh.name = source.name + "_CustomizationUV";
+            mizzenDecalMesh.uv2 = decalUV;
+            if (skin != null) skin.sharedMesh = mizzenDecalMesh;
+            else if (filter != null) filter.sharedMesh = mizzenDecalMesh;
+            return new Vector4(1f, 1f, 0f, 0f);
         }
 
         public void SetSelectionEnabled(bool enabled)
@@ -222,6 +264,17 @@ namespace PirateSlop.Customization
             ActiveInstances.Remove(this);
             if (partMaterials != null) foreach (var material in partMaterials) if (material != null) Destroy(material);
             if (selectionMeshes != null) foreach (var mesh in selectionMeshes) if (mesh != null) Destroy(mesh);
+            if (mizzenDecalMesh != null)
+            {
+                if (HasPart(0))
+                {
+                    var skin = partRenderers[0] as SkinnedMeshRenderer;
+                    var filter = partRenderers[0].GetComponent<MeshFilter>();
+                    if (skin != null && skin.sharedMesh == mizzenDecalMesh) skin.sharedMesh = mizzenSourceMesh;
+                    else if (filter != null && filter.sharedMesh == mizzenDecalMesh) filter.sharedMesh = mizzenSourceMesh;
+                }
+                Destroy(mizzenDecalMesh);
+            }
         }
 
         public void ApplyCustomization(ShipCustomizationData data, Texture2D[,] textures, bool syncToNetwork)
@@ -316,6 +369,7 @@ namespace PirateSlop.Customization
                 {
                     currentTextures[i, 0].wrapMode = TextureWrapMode.Clamp;
                     mat.SetTexture("_DecalTex", currentTextures[i, 0]);
+                    mat.SetVector("_DecalImageScale", ImageScale(currentTextures[i, 0]));
                     mat.SetVector("_DecalTransform", new Vector4(sail.scale.x, sail.scale.y, sail.offset.x, sail.offset.y));
                     mat.SetFloat("_DecalRotation", sail.rotation);
                     mat.SetColor("_DecalColor", sail.decalColor);
@@ -332,6 +386,7 @@ namespace PirateSlop.Customization
                 {
                     currentTextures[i, 1].wrapMode = TextureWrapMode.Clamp;
                     mat.SetTexture("_DecalTex2", currentTextures[i, 1]);
+                    mat.SetVector("_DecalImageScale2", ImageScale(currentTextures[i, 1]));
                     mat.SetVector("_DecalTransform2", new Vector4(sail.scale2.x, sail.scale2.y, sail.offset2.x, sail.offset2.y));
                     mat.SetFloat("_DecalRotation2", sail.rotation2);
                     mat.SetColor("_DecalColor2", sail.decalColor2);
@@ -349,6 +404,13 @@ namespace PirateSlop.Customization
                 }
                 mat.SetColor("_HighlightColor", highlight);
             }
+        }
+
+        Vector4 ImageScale(Texture2D texture)
+        {
+            if (!currentModel) return new Vector4(1f, 1f, 0f, 0f);
+            float extent = Mathf.Max(texture.width, texture.height);
+            return new Vector4(texture.width / extent, texture.height / extent, 0f, 0f);
         }
     }
 }

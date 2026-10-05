@@ -43,18 +43,6 @@
 | [Docs/LootModels/index.html](<../LootModels/index.html>) | Файл .html |
 | [Docs/LootModels/loot-models.md](<../LootModels/loot-models.md>) | Документация |
 
-## Docs/ModelScreenshots
-
-| Файл | Краткое описание |
-| --- | --- |
-| [Docs/ModelScreenshots/1_capstan.png](<../ModelScreenshots/1_capstan.png>) | Изображение / текстура |
-| [Docs/ModelScreenshots/2_harpoon_gun.png](<../ModelScreenshots/2_harpoon_gun.png>) | Изображение / текстура |
-| [Docs/ModelScreenshots/3_crew_bell.png](<../ModelScreenshots/3_crew_bell.png>) | Изображение / текстура |
-| [Docs/ModelScreenshots/4_spyglass.png](<../ModelScreenshots/4_spyglass.png>) | Изображение / текстура |
-| [Docs/ModelScreenshots/5_cannonball_crate.png](<../ModelScreenshots/5_cannonball_crate.png>) | Изображение / текстура |
-| [Docs/ModelScreenshots/6_boarding_net.png](<../ModelScreenshots/6_boarding_net.png>) | Изображение / текстура |
-| [Docs/ModelScreenshots/7_rum_bottle.png](<../ModelScreenshots/7_rum_bottle.png>) | Изображение / текстура |
-
 ## Docs/Performance
 
 | Файл | Краткое описание |

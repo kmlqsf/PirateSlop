@@ -57,6 +57,12 @@
 | [Assets/Resources/CombatVfx/WoodChip.asset](<../../Assets/Resources/CombatVfx/WoodChip.asset>) | Настройки или данные Unity |
 | [Assets/Resources/CombatVfx/WoodChip.mat](<../../Assets/Resources/CombatVfx/WoodChip.mat>) | Материал Unity |
 
+## Assets/Resources/Customization
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Resources/Customization/ShipNameGlyphs.asset](<../../Assets/Resources/Customization/ShipNameGlyphs.asset>) | Настройки или данные Unity; Паруса и канаты |
+
 ## Assets/Resources/EnvironmentTest
 
 | Файл | Краткое описание |

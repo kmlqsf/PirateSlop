@@ -10,15 +10,7 @@
 
 | Файл | Краткое описание |
 | --- | --- |
-| [Assets/Tests/StormCloudBakeoff/BakeoffPipeline.asset](<../../Assets/Tests/StormCloudBakeoff/BakeoffPipeline.asset>) | Настройки или данные Unity |
-| [Assets/Tests/StormCloudBakeoff/BakeoffRenderer.asset](<../../Assets/Tests/StormCloudBakeoff/BakeoffRenderer.asset>) | Настройки или данные Unity |
 | [Assets/Tests/StormCloudBakeoff/BakeoffSession.cs](<../../Assets/Tests/StormCloudBakeoff/BakeoffSession.cs>) | Исходник C#: BakeoffSession, Candidate |
-| [Assets/Tests/StormCloudBakeoff/BakeoffSphereField.cs](<../../Assets/Tests/StormCloudBakeoff/BakeoffSphereField.cs>) | Исходник C#: BakeoffSphereField |
-| [Assets/Tests/StormCloudBakeoff/CandidateAProfile.asset](<../../Assets/Tests/StormCloudBakeoff/CandidateAProfile.asset>) | Настройки или данные Unity |
-| [Assets/Tests/StormCloudBakeoff/CandidateB.mat](<../../Assets/Tests/StormCloudBakeoff/CandidateB.mat>) | Материал Unity |
-| [Assets/Tests/StormCloudBakeoff/CandidateCProfile.asset](<../../Assets/Tests/StormCloudBakeoff/CandidateCProfile.asset>) | Настройки или данные Unity |
-| [Assets/Tests/StormCloudBakeoff/Ocean.mat](<../../Assets/Tests/StormCloudBakeoff/Ocean.mat>) | Материал Unity |
-| [Assets/Tests/StormCloudBakeoff/StormCloudBakeoff.unity](<../../Assets/Tests/StormCloudBakeoff/StormCloudBakeoff.unity>) | Сцена Unity |
 
 ## Assets/Tests/StormCloudBakeoff/CandidateA
 
@@ -48,13 +40,6 @@
 | [Assets/Tests/StormCloudBakeoff/CandidateA/VolumetricClouds/Editor/VolumetricCloudsURP.Editor.asmdef](<../../Assets/Tests/StormCloudBakeoff/CandidateA/VolumetricClouds/Editor/VolumetricCloudsURP.Editor.asmdef>) | Описание сборки Unity |
 | [Assets/Tests/StormCloudBakeoff/CandidateA/VolumetricClouds/Editor/VolumetricCloudsVolumeEditor.cs](<../../Assets/Tests/StormCloudBakeoff/CandidateA/VolumetricClouds/Editor/VolumetricCloudsVolumeEditor.cs>) | Исходник C#: VolumetricCloudsEditor |
 
-## Assets/Tests/StormCloudBakeoff/CandidateA/VolumetricClouds/Nodes
-
-| Файл | Краткое описание |
-| --- | --- |
-| [Assets/Tests/StormCloudBakeoff/CandidateA/VolumetricClouds/Nodes/Apply Transparent Volumetric Clouds.shadersubgraph](<../../Assets/Tests/StormCloudBakeoff/CandidateA/VolumetricClouds/Nodes/Apply Transparent Volumetric Clouds.shadersubgraph>) | Файл .shadersubgraph |
-| [Assets/Tests/StormCloudBakeoff/CandidateA/VolumetricClouds/Nodes/TransparentVolumetricCloudsUtilities.hlsl](<../../Assets/Tests/StormCloudBakeoff/CandidateA/VolumetricClouds/Nodes/TransparentVolumetricCloudsUtilities.hlsl>) | Код шейдера |
-
 ## Assets/Tests/StormCloudBakeoff/CandidateA/VolumetricClouds/Textures
 
 | Файл | Краткое описание |
@@ -62,13 +47,11 @@
 | [Assets/Tests/StormCloudBakeoff/CandidateA/VolumetricClouds/Textures/CloudLutRainAO.png](<../../Assets/Tests/StormCloudBakeoff/CandidateA/VolumetricClouds/Textures/CloudLutRainAO.png>) | Изображение / текстура |
 | [Assets/Tests/StormCloudBakeoff/CandidateA/VolumetricClouds/Textures/PerlinNoise32RGB.png](<../../Assets/Tests/StormCloudBakeoff/CandidateA/VolumetricClouds/Textures/PerlinNoise32RGB.png>) | Изображение / текстура |
 | [Assets/Tests/StormCloudBakeoff/CandidateA/VolumetricClouds/Textures/WorleyNoise128RGBA.png](<../../Assets/Tests/StormCloudBakeoff/CandidateA/VolumetricClouds/Textures/WorleyNoise128RGBA.png>) | Изображение / текстура |
-| [Assets/Tests/StormCloudBakeoff/CandidateA/VolumetricClouds/Textures/WorleyNoise32RGB.png](<../../Assets/Tests/StormCloudBakeoff/CandidateA/VolumetricClouds/Textures/WorleyNoise32RGB.png>) | Изображение / текстура |
 
 ## Assets/Tests/StormCloudBakeoff/CandidateB
 
 | Файл | Краткое описание |
 | --- | --- |
-| [Assets/Tests/StormCloudBakeoff/CandidateB/Clouds.shader](<../../Assets/Tests/StormCloudBakeoff/CandidateB/Clouds.shader>) | Шейдер |
 | [Assets/Tests/StormCloudBakeoff/CandidateB/LICENSE.txt](<../../Assets/Tests/StormCloudBakeoff/CandidateB/LICENSE.txt>) | Текстовые данные |
 
 ## Assets/Tests/StormCloudBakeoff/Editor

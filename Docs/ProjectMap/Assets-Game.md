@@ -10,10 +10,8 @@
 
 | Файл | Краткое описание |
 | --- | --- |
-| [Assets/Game/BRZoneFinal/README.md](<../../Assets/Game/BRZoneFinal/README.md>) | Документация |
 | [Assets/Game/BRZoneFinal/StormCrown.cs](<../../Assets/Game/BRZoneFinal/StormCrown.cs>) | Исходник C#: StormCrown |
 | [Assets/Game/BRZoneFinal/StormCrown.shader](<../../Assets/Game/BRZoneFinal/StormCrown.shader>) | Шейдер |
-| [Assets/Game/BRZoneFinal/StormCrownDebug.cs](<../../Assets/Game/BRZoneFinal/StormCrownDebug.cs>) | Исходник C#: StormCrownDebug |
 
 ## Assets/Game/BRZoneFinal/Materials
 
@@ -30,12 +28,6 @@
 | Файл | Краткое описание |
 | --- | --- |
 | [Assets/Game/BRZoneFinal/Resources/StormCrown.prefab](<../../Assets/Game/BRZoneFinal/Resources/StormCrown.prefab>) | Префаб Unity |
-
-## Assets/Game/BRZoneV2
-
-| Файл | Краткое описание |
-| --- | --- |
-| [Assets/Game/BRZoneV2/README.md](<../../Assets/Game/BRZoneV2/README.md>) | Документация |
 
 ## Assets/Game/BRZoneV2/Resources
 
@@ -54,7 +46,6 @@
 
 | Файл | Краткое описание |
 | --- | --- |
-| [Assets/Game/BRZoneV2/Runtime/BRZoneGeometryDebug.cs](<../../Assets/Game/BRZoneV2/Runtime/BRZoneGeometryDebug.cs>) | Исходник C#: BRZoneGeometryDebug |
 | [Assets/Game/BRZoneV2/Runtime/BRZoneVisual.cs](<../../Assets/Game/BRZoneV2/Runtime/BRZoneVisual.cs>) | Исходник C#: BRZoneVisual |
 
 ## Assets/Game/BRZoneV2/Shaders
@@ -64,33 +55,10 @@
 | [Assets/Game/BRZoneV2/Shaders/GeometryDebug.shader](<../../Assets/Game/BRZoneV2/Shaders/GeometryDebug.shader>) | Шейдер |
 | [Assets/Game/BRZoneV2/Shaders/StormCurtain.shader](<../../Assets/Game/BRZoneV2/Shaders/StormCurtain.shader>) | Шейдер |
 
-## Assets/Game/BRZoneV2/Source
-
-| Файл | Краткое описание |
-| --- | --- |
-| [Assets/Game/BRZoneV2/Source/CODEX_PROMPT.md](<../../Assets/Game/BRZoneV2/Source/CODEX_PROMPT.md>) | Документация |
-
-## Assets/Game/BRZoneV2/Source/Docs
-
-| Файл | Краткое описание |
-| --- | --- |
-| [Assets/Game/BRZoneV2/Source/Docs/ImplementationSpec.md](<../../Assets/Game/BRZoneV2/Source/Docs/ImplementationSpec.md>) | Документация |
-| [Assets/Game/BRZoneV2/Source/Docs/ZoneTuning.json](<../../Assets/Game/BRZoneV2/Source/Docs/ZoneTuning.json>) | Конфигурация / данные JSON |
-
-## Assets/Game/BRZoneV2/Source/References
-
-| Файл | Краткое описание |
-| --- | --- |
-| [Assets/Game/BRZoneV2/Source/References/Current_Storm_Baseline.png](<../../Assets/Game/BRZoneV2/Source/References/Current_Storm_Baseline.png>) | Изображение / текстура |
-| [Assets/Game/BRZoneV2/Source/References/Reference_Annotated.png](<../../Assets/Game/BRZoneV2/Source/References/Reference_Annotated.png>) | Изображение / текстура |
-| [Assets/Game/BRZoneV2/Source/References/Reference_CrossSection.png](<../../Assets/Game/BRZoneV2/Source/References/Reference_CrossSection.png>) | Изображение / текстура |
-| [Assets/Game/BRZoneV2/Source/References/Reference_Palette.png](<../../Assets/Game/BRZoneV2/Source/References/Reference_Palette.png>) | Изображение / текстура |
-
 ## Assets/Game/BRZoneV2/Textures
 
 | Файл | Краткое описание |
 | --- | --- |
-| [Assets/Game/BRZoneV2/Textures/OutsideZone_VignetteMask.png](<../../Assets/Game/BRZoneV2/Textures/OutsideZone_VignetteMask.png>) | Изображение / текстура |
 | [Assets/Game/BRZoneV2/Textures/SeaContact_FoamMask.png](<../../Assets/Game/BRZoneV2/Textures/SeaContact_FoamMask.png>) | Изображение / текстура |
 | [Assets/Game/BRZoneV2/Textures/StormNoise_Detail.png](<../../Assets/Game/BRZoneV2/Textures/StormNoise_Detail.png>) | Изображение / текстура |
 | [Assets/Game/BRZoneV2/Textures/StormNoise_Fine.png](<../../Assets/Game/BRZoneV2/Textures/StormNoise_Fine.png>) | Изображение / текстура |
@@ -127,7 +95,6 @@
 | [Assets/Game/BRZoneVolumetric/SeaMist.mat](<../../Assets/Game/BRZoneVolumetric/SeaMist.mat>) | Материал Unity; Шторм, зона и объёмный туман |
 | [Assets/Game/BRZoneVolumetric/SeaMistRendererFeature.cs](<../../Assets/Game/BRZoneVolumetric/SeaMistRendererFeature.cs>) | Исходник C#: SeaMistRendererFeature; Шторм, зона и объёмный туман |
 | [Assets/Game/BRZoneVolumetric/StormLightning.mat](<../../Assets/Game/BRZoneVolumetric/StormLightning.mat>) | Материал Unity |
-| [Assets/Game/BRZoneVolumetric/StormRain.mat](<../../Assets/Game/BRZoneVolumetric/StormRain.mat>) | Материал Unity |
 | [Assets/Game/BRZoneVolumetric/StormSpray.mat](<../../Assets/Game/BRZoneVolumetric/StormSpray.mat>) | Материал Unity |
 | [Assets/Game/BRZoneVolumetric/StormVolumeController.cs](<../../Assets/Game/BRZoneVolumetric/StormVolumeController.cs>) | Исходник C#: StormVolumeController; Шторм, зона и объёмный туман |
 | [Assets/Game/BRZoneVolumetric/StormVolumeRendererFeature.cs](<../../Assets/Game/BRZoneVolumetric/StormVolumeRendererFeature.cs>) | Исходник C#: StormVolumeRendererFeature |

@@ -1,0 +1,443 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 128edeee555f407409f1e12f207382c0, type: 3}
+  m_Name: ShipNameGlyphs
+  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.Customization.ShipNameGlyphLibrary
+  Glyphs:
+  - Codepoint: 65
+    Mesh: {fileID: 5714002063714164956, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 1.0944328
+  - Codepoint: 66
+    Mesh: {fileID: -4182989548060030051, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 1.0930234
+  - Codepoint: 67
+    Mesh: {fileID: -7957298505495627668, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 1.0324173
+  - Codepoint: 68
+    Mesh: {fileID: -4452363358973318034, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 1.2036647
+  - Codepoint: 69
+    Mesh: {fileID: 8636625045485493483, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 1.040874
+  - Codepoint: 70
+    Mesh: {fileID: -7237511773633687368, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 0.96899235
+  - Codepoint: 71
+    Mesh: {fileID: 5027663276460465343, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 1.164905
+  - Codepoint: 72
+    Mesh: {fileID: -7024665788947814297, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 1.3178296
+  - Codepoint: 73
+    Mesh: {fileID: -7043146344788422623, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 0.6434109
+  - Codepoint: 74
+    Mesh: {fileID: -3525065515759804766, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 0.85905576
+  - Codepoint: 75
+    Mesh: {fileID: 8571012682148863235, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 1.1789994
+  - Codepoint: 76
+    Mesh: {fileID: -2752246982093924785, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 0.9894293
+  - Codepoint: 77
+    Mesh: {fileID: 6141199771403624216, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 1.4770967
+  - Codepoint: 78
+    Mesh: {fileID: 6560657007006807686, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 1.2114166
+  - Codepoint: 79
+    Mesh: {fileID: 5069594737829015548, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 1.1832278
+  - Codepoint: 80
+    Mesh: {fileID: 2259355649486249883, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 1.0119804
+  - Codepoint: 81
+    Mesh: {fileID: -384519979467393041, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 1.1832278
+  - Codepoint: 82
+    Mesh: {fileID: -7866142839777284239, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 1.1508106
+  - Codepoint: 83
+    Mesh: {fileID: -1150126147485289748, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 0.9365752
+  - Codepoint: 84
+    Mesh: {fileID: 4637388920976252651, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 0.9873151
+  - Codepoint: 85
+    Mesh: {fileID: -6401942814063697874, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 1.20296
+  - Codepoint: 86
+    Mesh: {fileID: 7454207920477001813, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 1.1000706
+  - Codepoint: 87
+    Mesh: {fileID: 312230342609492736, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 1.625793
+  - Codepoint: 88
+    Mesh: {fileID: -3389131451691231456, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 1.1670191
+  - Codepoint: 89
+    Mesh: {fileID: -538674912147671526, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 1.0563779
+  - Codepoint: 90
+    Mesh: {fileID: -8532586156772145490, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 0.99506706
+  - Codepoint: 97
+    Mesh: {fileID: 4016493495714413392, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 0.8597605
+  - Codepoint: 98
+    Mesh: {fileID: -4197117965840638586, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 0.9316421
+  - Codepoint: 99
+    Mesh: {fileID: -2905507276726812718, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 0.7667372
+  - Codepoint: 100
+    Mesh: {fileID: 1578111604228466313, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 0.9570121
+  - Codepoint: 101
+    Mesh: {fileID: 7905570788576570732, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 0.8252291
+  - Codepoint: 102
+    Mesh: {fileID: 365051149735379623, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 0.567301
+  - Codepoint: 103
+    Mesh: {fileID: -6950352657429675171, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 0.83227634
+  - Codepoint: 104
+    Mesh: {fileID: -2687257078647980357, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 0.98097265
+  - Codepoint: 105
+    Mesh: {fileID: 5275613704143224922, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 0.5102185
+  - Codepoint: 106
+    Mesh: {fileID: 3234958375286437334, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 0.4996477
+  - Codepoint: 107
+    Mesh: {fileID: 6328514431577293155, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 0.9119099
+  - Codepoint: 108
+    Mesh: {fileID: 9114397474868967197, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 0.49682882
+  - Codepoint: 109
+    Mesh: {fileID: 8997306927239581237, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 1.4658211
+  - Codepoint: 110
+    Mesh: {fileID: 4910096692024265269, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 0.99577177
+  - Codepoint: 111
+    Mesh: {fileID: 5607814426649342991, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 0.9175477
+  - Codepoint: 112
+    Mesh: {fileID: 8080117089097968819, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 0.9492602
+  - Codepoint: 113
+    Mesh: {fileID: 1816309607660886465, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 0.93587047
+  - Codepoint: 114
+    Mesh: {fileID: -6227551674682871167, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 0.75052863
+  - Codepoint: 115
+    Mesh: {fileID: 5679772271843926307, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 0.7399578
+  - Codepoint: 116
+    Mesh: {fileID: -3316817641631563682, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 0.5736435
+  - Codepoint: 117
+    Mesh: {fileID: -1211668718402036150, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 0.9767443
+  - Codepoint: 118
+    Mesh: {fileID: 1940502708266819560, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 0.81818193
+  - Codepoint: 119
+    Mesh: {fileID: 3055693359308010968, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 1.245948
+  - Codepoint: 120
+    Mesh: {fileID: 2245043620222317599, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 0.84848493
+  - Codepoint: 121
+    Mesh: {fileID: -8263139820368996767, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 0.8111347
+  - Codepoint: 122
+    Mesh: {fileID: 6028518355461550961, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 0.7582806
+  - Codepoint: 48
+    Mesh: {fileID: 3196054920256542300, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 1.0119804
+  - Codepoint: 49
+    Mesh: {fileID: 3300445340100689692, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 0.70683587
+  - Codepoint: 50
+    Mesh: {fileID: 3054173289243342449, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 0.904158
+  - Codepoint: 51
+    Mesh: {fileID: -8992459785796768607, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 0.90133905
+  - Codepoint: 52
+    Mesh: {fileID: 8228178017542359343, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 0.9372799
+  - Codepoint: 53
+    Mesh: {fileID: -281630328331426445, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 0.8646935
+  - Codepoint: 54
+    Mesh: {fileID: 7271573025098404683, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 0.9351657
+  - Codepoint: 55
+    Mesh: {fileID: 5095344801253747999, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 0.79985917
+  - Codepoint: 56
+    Mesh: {fileID: 6803012943283179136, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 0.9760396
+  - Codepoint: 57
+    Mesh: {fileID: -7076830764435611790, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 0.9351657
+  - Codepoint: 1040
+    Mesh: {fileID: -3997668271607691727, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 1.0944328
+  - Codepoint: 1041
+    Mesh: {fileID: 1388311405963626902, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 1.078929
+  - Codepoint: 1042
+    Mesh: {fileID: 8163482062459985098, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 1.0930234
+  - Codepoint: 1043
+    Mesh: {fileID: 964530195859610952, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 0.9492602
+  - Codepoint: 1044
+    Mesh: {fileID: 547642724254220270, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 1.1557436
+  - Codepoint: 1045
+    Mesh: {fileID: 7281345641305603858, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 1.040874
+  - Codepoint: 1046
+    Mesh: {fileID: -6493590512380799960, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 1.6300213
+  - Codepoint: 1047
+    Mesh: {fileID: 7344332351083768268, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 0.9767443
+  - Codepoint: 1048
+    Mesh: {fileID: -3306834859214877577, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 1.3298099
+  - Codepoint: 1049
+    Mesh: {fileID: -3189171707224440837, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 1.3298099
+  - Codepoint: 1050
+    Mesh: {fileID: -7663742012886752068, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 1.1536294
+  - Codepoint: 1051
+    Mesh: {fileID: 5936311607532688390, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 1.2050742
+  - Codepoint: 1052
+    Mesh: {fileID: 7676842459735262589, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 1.4770967
+  - Codepoint: 1053
+    Mesh: {fileID: 8180526609282472400, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 1.3178296
+  - Codepoint: 1054
+    Mesh: {fileID: 8478495726299189663, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 1.1832278
+  - Codepoint: 1055
+    Mesh: {fileID: 8262643794906114670, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 1.2995069
+  - Codepoint: 1056
+    Mesh: {fileID: 7595185309255083466, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 1.0119804
+  - Codepoint: 1057
+    Mesh: {fileID: 2537694596698622292, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 1.0324173
+  - Codepoint: 1058
+    Mesh: {fileID: -8847736481954497241, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 0.9873151
+  - Codepoint: 1059
+    Mesh: {fileID: 6332029876518067911, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 1.0500354
+  - Codepoint: 1060
+    Mesh: {fileID: 7609948523848795987, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 1.3157154
+  - Codepoint: 1061
+    Mesh: {fileID: -212779941406161785, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 1.1670191
+  - Codepoint: 1062
+    Mesh: {fileID: -677532119213263733, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 1.3009163
+  - Codepoint: 1063
+    Mesh: {fileID: 8563749552346846771, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 1.2008458
+  - Codepoint: 1064
+    Mesh: {fileID: -3883345676054785136, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 1.8597606
+  - Codepoint: 1065
+    Mesh: {fileID: -4037159484924126109, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 1.8597606
+  - Codepoint: 1066
+    Mesh: {fileID: -4670057317340539846, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 1.2466527
+  - Codepoint: 1067
+    Mesh: {fileID: -6289808505293015731, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 1.592671
+  - Codepoint: 1068
+    Mesh: {fileID: 5009102760814695288, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 1.0591967
+  - Codepoint: 1069
+    Mesh: {fileID: -2164622682026208699, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 1.053559
+  - Codepoint: 1070
+    Mesh: {fileID: 8575097212456392431, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 1.7047218
+  - Codepoint: 1071
+    Mesh: {fileID: -8840601158055035531, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 1.1437633
+  - Codepoint: 1072
+    Mesh: {fileID: 4719575419817864796, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 0.8597605
+  - Codepoint: 1073
+    Mesh: {fileID: -5486305159519103136, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 0.9020438
+  - Codepoint: 1074
+    Mesh: {fileID: -3292428049494084822, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 0.8935871
+  - Codepoint: 1075
+    Mesh: {fileID: 6605166268744473295, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 0.71811146
+  - Codepoint: 1076
+    Mesh: {fileID: 1458500497872045533, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 0.88794935
+  - Codepoint: 1077
+    Mesh: {fileID: -4870101499593557080, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 0.8252291
+  - Codepoint: 1078
+    Mesh: {fileID: -5230842072899501000, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 1.2861172
+  - Codepoint: 1079
+    Mesh: {fileID: 5662704960143963265, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 0.7787175
+  - Codepoint: 1080
+    Mesh: {fileID: -404348264045094723, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 1.0352362
+  - Codepoint: 1081
+    Mesh: {fileID: 1500864817159974075, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 1.0352362
+  - Codepoint: 1082
+    Mesh: {fileID: 936612031085385669, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 0.9238902
+  - Codepoint: 1083
+    Mesh: {fileID: -517677061851654891, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 0.9478507
+  - Codepoint: 1084
+    Mesh: {fileID: 7738480970988881971, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 1.1585625
+  - Codepoint: 1085
+    Mesh: {fileID: -6969348990851780459, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 1.0246654
+  - Codepoint: 1086
+    Mesh: {fileID: -1875798364012064508, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 0.9175477
+  - Codepoint: 1087
+    Mesh: {fileID: 5294410071634653451, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 1.0091615
+  - Codepoint: 1088
+    Mesh: {fileID: -3536377010232935065, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 0.9492602
+  - Codepoint: 1089
+    Mesh: {fileID: -6740580185075631738, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 0.7667372
+  - Codepoint: 1090
+    Mesh: {fileID: -6769286624046648469, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 0.7878789
+  - Codepoint: 1091
+    Mesh: {fileID: 156001182406805959, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 0.8111347
+  - Codepoint: 1092
+    Mesh: {fileID: 5076938915994190775, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 1.2628614
+  - Codepoint: 1093
+    Mesh: {fileID: -1786234984022705213, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 0.84848493
+  - Codepoint: 1094
+    Mesh: {fileID: -6649219138796646081, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 1.0133898
+  - Codepoint: 1095
+    Mesh: {fileID: -1755850572842607701, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 0.9619452
+  - Codepoint: 1096
+    Mesh: {fileID: 706602057583917963, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 1.4277662
+  - Codepoint: 1097
+    Mesh: {fileID: 4181099677319606587, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 1.4319946
+  - Codepoint: 1098
+    Mesh: {fileID: -6705003409801396263, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 0.98238206
+  - Codepoint: 1099
+    Mesh: {fileID: -7463799961178025276, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 1.3206486
+  - Codepoint: 1100
+    Mesh: {fileID: -5051229965726839203, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 0.85553217
+  - Codepoint: 1101
+    Mesh: {fileID: 8031862121921678283, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 0.7885836
+  - Codepoint: 1102
+    Mesh: {fileID: 2975716423594161245, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 1.352361
+  - Codepoint: 1103
+    Mesh: {fileID: -8355720443947597883, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 0.9224807
+  - Codepoint: 1025
+    Mesh: {fileID: -8837299189360077730, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 1.040874
+  - Codepoint: 1105
+    Mesh: {fileID: -1402249216224905164, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 0.8252291
+  - Codepoint: 45
+    Mesh: {fileID: 3399534091513844324, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 0.54686403
+  - Codepoint: 39
+    Mesh: {fileID: 3283906042483223268, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 0.38830167
+  - Codepoint: 46
+    Mesh: {fileID: 7338626722196149018, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 0.473573
+  - Codepoint: 40
+    Mesh: {fileID: 8373962148296170699, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 0.6448204
+  - Codepoint: 41
+    Mesh: {fileID: -1305004849531232521, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 0.6448204
+  - Codepoint: 33
+    Mesh: {fileID: 7878180997615189730, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 0.54334044
+  - Codepoint: 63
+    Mesh: {fileID: -4283109230275439917, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 0.7914025
+  - Codepoint: 95
+    Mesh: {fileID: 2741833523119826548, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 1.0147992
+  - Codepoint: 58
+    Mesh: {fileID: 3132750881475374283, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 0.52995074
+  - Codepoint: 44
+    Mesh: {fileID: -7994177190476178431, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 0.473573
+  - Codepoint: 34
+    Mesh: {fileID: 6327664161336618990, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 0.73572946
+  - Codepoint: 38
+    Mesh: {fileID: -7312659832050293519, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 1.1536294
+  - Codepoint: 43
+    Mesh: {fileID: 2769968029481912733, guid: 1245ecd5e6b3f2d48b5658e4defd4e9d, type: 3}
+    Advance: 1.0147992
+  Pairs: []
+  Materials:
+  - {fileID: 2100000, guid: 41ab6f1af2f7c1941bbfe11efc92dab3, type: 2}
+  - {fileID: 2100000, guid: 065f4139e3d532843a1bf612a0c9dc66, type: 2}
+  SpaceAdvance: 0.3664553

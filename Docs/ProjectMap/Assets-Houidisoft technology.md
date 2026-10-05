@@ -6,13 +6,6 @@
 
 Автоматический каталог. Описания обозначают тип файла и известную тему, а не подтверждение использования в игре.
 
-## Assets/Houidisoft technology/Simple water
-
-| Файл | Краткое описание |
-| --- | --- |
-| [Assets/Houidisoft technology/Simple water/QuickStart.md](<../../Assets/Houidisoft technology/Simple water/QuickStart.md>) | Документация |
-| [Assets/Houidisoft technology/Simple water/Simple Water Shader - Documentation.pdf](<../../Assets/Houidisoft technology/Simple water/Simple Water Shader - Documentation.pdf>) | Файл .pdf |
-
 ## Assets/Houidisoft technology/Simple water/Resources
 
 | Файл | Краткое описание |

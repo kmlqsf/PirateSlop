@@ -11,6 +11,101 @@ namespace PirateSlop.EditorTools
         const string ShipPath = "Assets/Resources/Ships/ShipV3Test.prefab";
         const string MenuPath = "Assets/Resources/Ships/ShipV3Menu.prefab";
 
+        [Serializable]
+        sealed class GlyphMetadata
+        {
+            public int codepoint;
+            public string meshName;
+            public float advance;
+        }
+
+        [Serializable]
+        sealed class KerningMetadata
+        {
+            public int left, right;
+            public float offset;
+        }
+
+        [Serializable]
+        sealed class GlyphMetadataSet
+        {
+            public float spaceAdvance;
+            public GlyphMetadata[] glyphs;
+            public KerningMetadata[] kerning;
+        }
+
+        static ShipNameGlyphLibrary ConfigureGlyphs(Material brass)
+        {
+            const string folder = "Assets/Models/Ships/ShipNameplate";
+            const string libraryPath = "Assets/Resources/Customization/ShipNameGlyphs.asset";
+            var data = AssetDatabase.LoadAssetAtPath<TextAsset>(folder + "/ShipNameGlyphs.json");
+            if (data == null) throw new InvalidOperationException("Ship name glyph metadata is missing.");
+            var metadata = JsonUtility.FromJson<GlyphMetadataSet>(data.text);
+            var shader = Shader.Find("Universal Render Pipeline/Lit");
+            string facePath = folder + "/Materials/ShipNameGlyphFace.mat";
+            var face = AssetDatabase.LoadAssetAtPath<Material>(facePath);
+            if (face == null)
+            {
+                face = new Material(shader) { name = "ShipNameGlyphFace" };
+                AssetDatabase.CreateAsset(face, facePath);
+            }
+            face.SetColor("_BaseColor", new Color(.82f, .64f, .32f));
+            face.SetFloat("_Metallic", .15f);
+            face.SetFloat("_Smoothness", .25f);
+            face.SetFloat("_Surface", 0f);
+            face.SetFloat("_ZWrite", 1f);
+            face.SetFloat("_Cull", 2f);
+            face.renderQueue = -1;
+            EditorUtility.SetDirty(face);
+            string rimPath = folder + "/Materials/ShipNameGlyphRim.mat";
+            var rim = AssetDatabase.LoadAssetAtPath<Material>(rimPath);
+            if (rim == null)
+            {
+                rim = new Material(brass) { name = "ShipNameGlyphRim" };
+                AssetDatabase.CreateAsset(rim, rimPath);
+            }
+            rim.SetColor("_BaseColor", new Color(.95f, .74f, .35f));
+            rim.SetFloat("_Metallic", .35f);
+            rim.SetFloat("_Smoothness", .32f);
+            rim.SetFloat("_Surface", 0f);
+            rim.SetFloat("_ZWrite", 1f);
+            rim.SetFloat("_Cull", 2f);
+            rim.renderQueue = -1;
+            EditorUtility.SetDirty(rim);
+            var importer = (ModelImporter)AssetImporter.GetAtPath(folder + "/ShipNameGlyphs.fbx");
+            if (importer == null) throw new InvalidOperationException("Ship name glyph model is missing.");
+            importer.isReadable = true;
+            importer.importAnimation = false;
+            importer.AddRemap(new AssetImporter.SourceAssetIdentifier(typeof(Material), "ShipNameGlyphFace"), face);
+            importer.AddRemap(new AssetImporter.SourceAssetIdentifier(typeof(Material), "ShipNameplateBrass"), rim);
+            importer.SaveAndReimport();
+            var model = AssetDatabase.LoadAssetAtPath<GameObject>(folder + "/ShipNameGlyphs.fbx");
+            var filters = model.GetComponentsInChildren<MeshFilter>(true);
+            var glyphs = new System.Collections.Generic.List<ShipNameGlyphLibrary.Glyph>();
+            foreach (var glyph in metadata.glyphs)
+            {
+                if (glyph.codepoint == ' ') continue;
+                var filter = Array.Find(filters, item => item.name == glyph.meshName);
+                if (filter == null) throw new InvalidOperationException("Missing glyph " + glyph.meshName);
+                glyphs.Add(new ShipNameGlyphLibrary.Glyph { Codepoint = glyph.codepoint, Advance = glyph.advance, Mesh = filter.sharedMesh });
+            }
+            if (!AssetDatabase.IsValidFolder("Assets/Resources/Customization")) AssetDatabase.CreateFolder("Assets/Resources", "Customization");
+            var library = AssetDatabase.LoadAssetAtPath<ShipNameGlyphLibrary>(libraryPath);
+            if (library == null)
+            {
+                library = ScriptableObject.CreateInstance<ShipNameGlyphLibrary>();
+                AssetDatabase.CreateAsset(library, libraryPath);
+            }
+            library.Glyphs = glyphs.ToArray();
+            library.Pairs = metadata.kerning == null ? Array.Empty<ShipNameGlyphLibrary.Kerning>() : Array.ConvertAll(metadata.kerning,
+                pair => new ShipNameGlyphLibrary.Kerning { Left = pair.left, Right = pair.right, Offset = pair.offset });
+            library.SpaceAdvance = metadata.spaceAdvance;
+            library.Materials = new[] { face, rim };
+            EditorUtility.SetDirty(library);
+            AssetDatabase.SaveAssetIfDirty(library);
+            return library;
+        }
+
         public static void Configure(GameObject root)
         {
             if (root.GetComponent<SailCustomizer>() == null) root.AddComponent<SailCustomizer>();
@@ -69,30 +164,24 @@ namespace PirateSlop.EditorTools
                 geometry.transform.SetParent(board, false);
             }
             board.localPosition = new Vector3(0, 6.44f, -20.2f);
-            board.localRotation = Quaternion.identity;
+            board.localRotation = Quaternion.Euler(0f, 180f, 0f);
             board.localScale = Vector3.one;
             foreach (var collider in board.GetComponentsInChildren<Collider>(true)) UnityEngine.Object.DestroyImmediate(collider);
-            var label = board.Find("ShipNameLabel");
-            if (label == null) { label = new GameObject("ShipNameLabel").transform; label.SetParent(board, false); }
-            label.localPosition = new Vector3(0, 0, -.04f);
-            label.localRotation = Quaternion.identity;
-            var text = label.GetComponent<TextMesh>();
-            if (text == null) text = label.gameObject.AddComponent<TextMesh>();
-            text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-            text.fontSize = 128;
-            text.characterSize = .08f;
-            text.color = new Color(.94f, .84f, .57f);
-            text.anchor = TextAnchor.MiddleCenter;
-            text.alignment = TextAlignment.Center;
-            text.richText = false;
-            text.text = "";
-            var renderer = text.GetComponent<MeshRenderer>();
-            renderer.sharedMaterial = text.font.material;
-            renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            var oldLabel = board.Find("ShipNameLabel");
+            if (oldLabel != null) UnityEngine.Object.DestroyImmediate(oldLabel.gameObject);
+            var label = board.Find("ShipNameLetters");
+            if (label == null) { label = new GameObject("ShipNameLetters").transform; label.SetParent(board, false); }
+            var field = Array.Find(board.GetComponentsInChildren<MeshFilter>(true), filter => filter.name == "ShipNameplateNameField");
+            var bounds = field.sharedMesh.bounds;
+            var surface = board.InverseTransformPoint(field.transform.TransformPoint(new Vector3(bounds.center.x, bounds.center.y, bounds.max.z)));
+            label.localPosition = surface + Vector3.forward * .0006f;
+            label.localRotation = Quaternion.Euler(0f, 180f, 0f);
+            label.localScale = Vector3.one;
             var nameplate = root.GetComponent<ShipNameplate>();
-            nameplate.Label = text;
-            nameplate.TextWidth = 4.1f;
-            nameplate.TextHeight = .5f;
+            nameplate.NameAnchor = label;
+            nameplate.GlyphLibrary = ConfigureGlyphs(materials["ShipNameplateBrass"]);
+            nameplate.TextWidth = 4.2f;
+            nameplate.TextHeight = .48f;
         }
 
         [MenuItem("PirateSlop/Restore Ship V3 Customization")]
@@ -119,6 +208,11 @@ namespace PirateSlop.EditorTools
                 root = (GameObject)PrefabUtility.InstantiatePrefab(source, scene);
                 root.SetActive(false);
                 PrefabUtility.UnpackPrefabInstance(root, PrefabUnpackMode.Completely, InteractionMode.AutomatedAction);
+                var sourceNameplate = root.GetComponent<ShipNameplate>();
+                var nameAnchor = sourceNameplate.NameAnchor;
+                var glyphLibrary = sourceNameplate.GlyphLibrary;
+                float textWidth = sourceNameplate.TextWidth;
+                float textHeight = sourceNameplate.TextHeight;
                 var scripts = root.GetComponentsInChildren<MonoBehaviour>(true);
                 for (int i = scripts.Length - 1; i >= 0; i--) UnityEngine.Object.DestroyImmediate(scripts[i]);
                 foreach (var joint in root.GetComponentsInChildren<Joint>(true)) UnityEngine.Object.DestroyImmediate(joint);
@@ -128,8 +222,10 @@ namespace PirateSlop.EditorTools
                 root.name = "ShipV3Menu";
                 root.AddComponent<SailCustomizer>();
                 var nameplate = root.AddComponent<ShipNameplate>();
-                var text = Array.Find(root.GetComponentsInChildren<TextMesh>(true), label => label.name == "ShipNameLabel");
-                nameplate.Label = text;
+                nameplate.NameAnchor = nameAnchor;
+                nameplate.GlyphLibrary = glyphLibrary;
+                nameplate.TextWidth = textWidth;
+                nameplate.TextHeight = textHeight;
                 root.SetActive(true);
                 PrefabUtility.SaveAsPrefabAsset(root, MenuPath);
             }

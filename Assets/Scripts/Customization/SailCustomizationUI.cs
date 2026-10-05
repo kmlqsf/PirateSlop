@@ -32,6 +32,11 @@ namespace PirateSlop.Customization
 
         string currentPresetName = "Слот 1";
         string nameDraft = "";
+        bool editingName;
+        bool focusNameInput;
+        Vector3 nameViewStart;
+        Quaternion nameRotationStart;
+        float nameViewStarted;
         readonly string[] presetSlots = new string[] { "Слот 1", "Слот 2", "Слот 3", "Слот 4", "Слот 5" };
 
         // Gizmo interaction state
@@ -107,6 +112,7 @@ namespace PirateSlop.Customization
 
         void StartCustomization(SailCustomizer targetCustomizer, Camera cam)
         {
+            editingName = false;
             if (targetCustomizer == null)
             {
                 var backdrop = FindAnyObjectByType<PirateSlop.MenuBackdrop>(FindObjectsInactive.Include);
@@ -190,6 +196,12 @@ namespace PirateSlop.Customization
             Vector2 mousePos = Input.mousePosition;
             Vector2 mouseGuiPos = new Vector2(mousePos.x, Screen.height - mousePos.y);
             bool isOverUI = panelRect.Contains(mouseGuiPos);
+
+            if (editingName)
+            {
+                UpdateNameView();
+                return;
+            }
 
             // Handle Gizmo Dragging
             if (activeGizmoDrag != GizmoMode.None)
@@ -326,16 +338,62 @@ namespace PirateSlop.Customization
                 }
             }
 
-            currentTarget = Vector3.Lerp(currentTarget, desiredTarget, Time.deltaTime * 6f);
-            currentDistance = Mathf.Lerp(currentDistance, desiredDistance, Time.deltaTime * 6f);
+            float blend = 1f - Mathf.Exp(-Time.unscaledDeltaTime * 6f);
+            currentTarget = Vector3.Lerp(currentTarget, desiredTarget, blend);
+            currentDistance = Mathf.Lerp(currentDistance, desiredDistance, blend);
 
             Quaternion rot = Quaternion.Euler(pitch, yaw, 0f);
-            targetCamera.transform.position = currentTarget + rot * (Vector3.back * currentDistance);
-            targetCamera.transform.LookAt(currentTarget);
+            var position = currentTarget + rot * (Vector3.back * currentDistance);
+            targetCamera.transform.position = Vector3.Lerp(targetCamera.transform.position, position, blend);
+            targetCamera.transform.rotation = Quaternion.Slerp(targetCamera.transform.rotation, Quaternion.LookRotation(currentTarget - position), blend);
+        }
+
+        void SelectName()
+        {
+            if (!editingName && targetCamera != null)
+            {
+                nameViewStart = targetCamera.transform.position;
+                nameRotationStart = targetCamera.transform.rotation;
+                nameViewStarted = Time.unscaledTime;
+            }
+            editingName = true;
+            focusNameInput = true;
+            activeGizmoDrag = GizmoMode.None;
+            hoveredPart = -1;
+            customizer.SetHighlight(-1, false);
+            GUI.FocusControl(null);
+        }
+
+        void UpdateNameView()
+        {
+            var plate = customizer.GetComponent<ShipNameplate>();
+            if (plate == null || plate.NameAnchor == null) return;
+            var anchor = plate.NameAnchor;
+            float panelFraction = Mathf.Clamp((panelRect.width + 40f) / Screen.width, .2f, .48f);
+            float tangent = Mathf.Tan(targetCamera.fieldOfView * Mathf.Deg2Rad * .5f);
+            float distance = Mathf.Max(6f, 5.9f / (2f * tangent * targetCamera.aspect * (1f - panelFraction) * .84f));
+            Vector3 offset = anchor.right * (distance * tangent * targetCamera.aspect * panelFraction);
+            Vector3 position = anchor.position - anchor.forward * distance + offset;
+            Quaternion rotation = Quaternion.LookRotation(anchor.forward, anchor.up);
+            float blend = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01((Time.unscaledTime - nameViewStarted) / 1.15f));
+            Vector3 start = customizer.transform.InverseTransformPoint(nameViewStart);
+            Vector3 end = customizer.transform.InverseTransformPoint(position);
+            float startRadius = new Vector2(start.x, start.z).magnitude;
+            float endRadius = new Vector2(end.x, end.z).magnitude;
+            float startAngle = Mathf.Atan2(start.x, start.z) * Mathf.Rad2Deg;
+            float endAngle = Mathf.Atan2(end.x, end.z) * Mathf.Rad2Deg;
+            float angle = Mathf.LerpAngle(startAngle, endAngle, blend) * Mathf.Deg2Rad;
+            float radius = Mathf.Lerp(startRadius, endRadius, blend) + Mathf.Sin(blend * Mathf.PI) * Mathf.Max(0f, 28f - Mathf.Min(startRadius, endRadius));
+            var local = new Vector3(Mathf.Sin(angle) * radius, Mathf.Lerp(start.y, end.y, blend), Mathf.Cos(angle) * radius);
+            targetCamera.transform.position = customizer.transform.TransformPoint(local);
+            targetCamera.transform.rotation = Quaternion.Slerp(nameRotationStart, rotation, blend);
+            currentTarget = anchor.position;
+            currentDistance = distance;
         }
 
         void SelectPart(int index)
         {
+            editingName = false;
             selectedPart = Mathf.Clamp(index, 0, SailCustomizer.TotalParts - 1);
             if (customizer != null)
             {
@@ -359,6 +417,7 @@ namespace PirateSlop.Customization
 
         void ResetFocus()
         {
+            editingName = false;
             desiredTarget = shipCenter + Vector3.up * 8f;
             desiredDistance = 34f;
         }
@@ -424,7 +483,7 @@ namespace PirateSlop.Customization
             PrepareStyles();
 
             // 1. Draw 3D In-World Label over Selected Part
-            if (customizer.PartColliders != null && selectedPart < customizer.PartColliders.Length)
+            if (!editingName && customizer.PartColliders != null && selectedPart < customizer.PartColliders.Length)
             {
                 var col = customizer.PartColliders[selectedPart];
                 if (col != null && targetCamera != null)
@@ -459,16 +518,40 @@ namespace PirateSlop.Customization
             PirateHudStyle.Brush(GUILayoutUtility.GetRect(panelRect.width - 28, 2), PirateHudStyle.Gold, true);
             GUILayout.Space(6);
 
-            GUILayout.Label("Название корабля:", sectionStyle);
-            string nextName = GUILayout.TextField(nameDraft, ShipCustomizationData.MaxNameLength * 2, GUILayout.Height(28));
-            if (nextName != nameDraft)
+            var nameButtonColor = GUI.backgroundColor;
+            if (editingName) GUI.backgroundColor = PirateHudStyle.Gold;
+            if (GUILayout.Button("Название", editingName ? activeTabStyle : buttonStyle, GUILayout.Height(32)))
             {
-                nameDraft = nextName;
-                customizer.CurrentData.shipName = ShipCustomizationData.NormalizeName(nameDraft);
-                customizer.UpdateVisuals();
+                SelectName();
+                GUIUtility.ExitGUI();
             }
-            GUILayout.Label($"До {ShipCustomizationData.MaxNameLength} знаков; пустое поле убирает надпись.", smallStyle);
+            GUI.backgroundColor = nameButtonColor;
             GUILayout.Space(6);
+            if (editingName)
+            {
+                GUILayout.Label("Название корабля", sectionStyle);
+                GUI.SetNextControlName("ShipNameInput");
+                string nextName = GUILayout.TextField(nameDraft, ShipCustomizationData.MaxNameLength * 2, GUILayout.Height(32));
+                var nameElements = System.Globalization.StringInfo.ParseCombiningCharacters(nextName);
+                if (nameElements.Length > ShipCustomizationData.MaxNameLength) nextName = nextName.Substring(0, nameElements[ShipCustomizationData.MaxNameLength]);
+                if (focusNameInput && Event.current.type == EventType.Repaint)
+                {
+                    GUI.FocusControl("ShipNameInput");
+                    focusNameInput = false;
+                }
+                if (nextName != nameDraft)
+                {
+                    nameDraft = nextName;
+                    customizer.CurrentData.shipName = ShipCustomizationData.NormalizeName(nameDraft);
+                    customizer.UpdateVisuals();
+                }
+                GUILayout.Label($"До {ShipCustomizationData.MaxNameLength} знаков. Пустое поле убирает название.", smallStyle);
+                GUILayout.FlexibleSpace();
+                if (GUILayout.Button("Паруса и флаги", buttonStyle, GUILayout.Height(32))) SelectPart(selectedPart);
+                DrawBottomControls();
+                GUILayout.EndArea();
+                return;
+            }
 
             // Streamer Mode Toggle (Пункт 9)
             GUILayout.BeginHorizontal();
@@ -834,23 +917,7 @@ namespace PirateSlop.Customization
 
             GUILayout.EndScrollView();
 
-            GUILayout.Space(8);
-
-            // Bottom controls
-            GUILayout.BeginHorizontal();
-            if (GUILayout.Button("Вид на корабль", buttonStyle, GUILayout.Height(36)))
-            {
-                ResetFocus();
-            }
-
-            var finishBg = GUI.backgroundColor;
-            GUI.backgroundColor = PirateHudStyle.Gold;
-            if (GUILayout.Button("Готово", buttonStyle, GUILayout.Height(36)))
-            {
-                Close();
-            }
-            GUI.backgroundColor = finishBg;
-            GUILayout.EndHorizontal();
+            DrawBottomControls();
 
             GUILayout.EndArea();
 
@@ -861,9 +928,21 @@ namespace PirateSlop.Customization
             GUI.Label(hintRect, " Вращение камеры: зажать ЛКМ / ПКМ · Зум: колесико · Интерактивный Gizmo: тяните за маркеры на парусе", smallStyle);
         }
 
+        void DrawBottomControls()
+        {
+            GUILayout.Space(8);
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button("Вид на корабль", buttonStyle, GUILayout.Height(36))) ResetFocus();
+            var finishBg = GUI.backgroundColor;
+            GUI.backgroundColor = PirateHudStyle.Gold;
+            if (GUILayout.Button("Готово", buttonStyle, GUILayout.Height(36))) Close();
+            GUI.backgroundColor = finishBg;
+            GUILayout.EndHorizontal();
+        }
+
         void DrawDecalGizmo()
         {
-            if (customizer == null || targetCamera == null || customizer.PartColliders == null) return;
+            if (editingName || customizer == null || targetCamera == null || customizer.PartColliders == null) return;
             if (selectedPart >= customizer.PartColliders.Length) return;
 
             var col = customizer.PartColliders[selectedPart];

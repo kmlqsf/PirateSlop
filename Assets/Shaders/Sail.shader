@@ -5,6 +5,9 @@ Shader "PirateSlop/Sail"
         _BaseColor ("Sail Color", Color) = (1, 1, 1, 1)
         _FabricTint ("Fabric Tint", Color) = (1, 1, 1, 1)
         _UseFaceOrientation ("Use Face Orientation", Float) = 0
+        _UseDecalUV2 ("Use Decal UV2", Float) = 0
+        _DecalCanvasScale ("Decal Canvas Proportions", Vector) = (1, 1, 0, 0)
+        _PreserveDecalColor ("Preserve Decal Color", Float) = 0
         _OcclusionMap ("Ambient Occlusion (Folds)", 2D) = "white" {}
         _OcclusionStrength ("Occlusion Strength", Range(0, 1)) = 0.45
         _Weathering ("Weathering / Wear", Range(0, 1)) = 0.0
@@ -14,12 +17,14 @@ Shader "PirateSlop/Sail"
         _DecalColor ("Decal Color Tint 1", Color) = (1, 1, 1, 1)
         _DecalTransform ("Decal Scale 1 (XY) and Offset (ZW)", Vector) = (1, 1, 0, 0)
         _DecalRotation ("Decal Rotation 1 (Degrees)", Float) = 0
+        _DecalImageScale ("Decal Image Proportions 1", Vector) = (1, 1, 0, 0)
         _BlendMode ("Blend Mode 1", Float) = 0.0
 
         _DecalTex2 ("Decal Texture 2", 2D) = "black" {}
         _DecalColor2 ("Decal Color Tint 2", Color) = (1, 1, 1, 1)
         _DecalTransform2 ("Decal Scale 2 (XY) and Offset (ZW)", Vector) = (1, 1, 0, 0)
         _DecalRotation2 ("Decal Rotation 2 (Degrees)", Float) = 0
+        _DecalImageScale2 ("Decal Image Proportions 2", Vector) = (1, 1, 0, 0)
         _BlendMode2 ("Blend Mode 2", Float) = 0.0
 
         _SailUVBoundsFront ("Front Sail UV Bounds (Min XY, Size ZW)", Vector) = (0, 0, 1, 1)
@@ -56,14 +61,19 @@ Shader "PirateSlop/Sail"
                 half4 _BaseColor;
                 half4 _FabricTint;
                 float _UseFaceOrientation;
+                float _UseDecalUV2;
+                float4 _DecalCanvasScale;
+                float _PreserveDecalColor;
                 half4 _DecalColor;
                 float4 _DecalTransform;
                 float _DecalRotation;
+                float4 _DecalImageScale;
                 float _BlendMode;
 
                 half4 _DecalColor2;
                 float4 _DecalTransform2;
                 float _DecalRotation2;
+                float4 _DecalImageScale2;
                 float _BlendMode2;
 
                 float4 _SailUVBoundsFront;
@@ -80,6 +90,7 @@ Shader "PirateSlop/Sail"
                 float4 positionOS : POSITION;
                 float3 normalOS : NORMAL;
                 float2 uv : TEXCOORD0;
+                float2 decalUV : TEXCOORD1;
             };
 
             struct Varyings
@@ -90,6 +101,7 @@ Shader "PirateSlop/Sail"
                 float2 uv : TEXCOORD2;
                 float fog : TEXCOORD3;
                 float isBack : TEXCOORD4;
+                float2 decalUV : TEXCOORD5;
             };
 
             Varyings Vert(Attributes input)
@@ -99,6 +111,7 @@ Shader "PirateSlop/Sail"
                 output.positionCS = TransformWorldToHClip(output.worldPos);
                 output.normalWS = TransformObjectToWorldNormal(input.normalOS);
                 output.uv = input.uv;
+                output.decalUV = input.decalUV;
                 output.fog = ComputeFogFactor(output.positionCS.z);
                 float dominantNormal = abs(input.normalOS.z) >= abs(input.normalOS.x) ? input.normalOS.z : input.normalOS.x;
                 output.isBack = dominantNormal < 0.0 ? 1.0 : 0.0;
@@ -107,12 +120,14 @@ Shader "PirateSlop/Sail"
 
             void EvaluateDecal(
                 inout half3 colorAccum,
+                inout half preservedCoverage,
                 float2 normUV,
                 bool isBack,
                 float mirrorBack,
                 Texture2D dTex,
                 SamplerState dSampler,
                 float4 dTransform,
+                float2 imageScale,
                 float dRotation,
                 half4 dColor,
                 float dBlendMode,
@@ -121,7 +136,7 @@ Shader "PirateSlop/Sail"
             {
                 if (dColor.a <= 0.001) return;
 
-                float2 centered = normUV - 0.5;
+                float2 centered = (normUV - 0.5) * _DecalCanvasScale.xy;
                 if (isBack && mirrorBack > 0.5) centered.x = -centered.x;
 
                 float rad = dRotation * (3.14159265359 / 180.0);
@@ -131,7 +146,7 @@ Shader "PirateSlop/Sail"
                 float s = sin(rad);
                 float2 rotated = float2(c * centered.x - s * centered.y, s * centered.x + c * centered.y);
 
-                float2 scale = max(dTransform.xy, float2(0.0001, 0.0001));
+                float2 scale = max(dTransform.xy * imageScale, float2(0.0001, 0.0001));
                 float2 offset = dTransform.zw;
                 if (isBack && mirrorBack > 0.5) offset.x = -offset.x;
 
@@ -171,16 +186,19 @@ Shader "PirateSlop/Sail"
 
                         if (dBlendMode > 0.5 && dBlendMode < 1.5)
                         {
+                            preservedCoverage *= 1.0 - effectiveAlpha;
                             half3 mult = colorAccum * tinted;
                             colorAccum = lerp(colorAccum, mult, effectiveAlpha);
                         }
                         else if (dBlendMode > 1.5 && dBlendMode < 2.5)
                         {
+                            preservedCoverage *= 1.0 - effectiveAlpha;
                             half3 scr = 1.0 - (1.0 - colorAccum) * (1.0 - tinted);
                             colorAccum = lerp(colorAccum, scr, effectiveAlpha);
                         }
                         else
                         {
+                            preservedCoverage = lerp(preservedCoverage, 1.0, effectiveAlpha);
                             colorAccum = lerp(colorAccum, tinted, effectiveAlpha);
                         }
                     }
@@ -199,13 +217,15 @@ Shader "PirateSlop/Sail"
                 if (abs(uvSize.x) < 0.0001) uvSize.x = 1.0;
                 if (abs(uvSize.y) < 0.0001) uvSize.y = 1.0;
                 float2 normUV = (input.uv - uvBounds.xy) / uvSize;
+                if (_UseDecalUV2 > 0.5) normUV = input.decalUV;
                 bool isBack = _UseFaceOrientation > 0.5 ? !isFrontFace : input.isBack > 0.5;
+                half preservedCoverage = 0.0;
 
                 // Layer 1
-                EvaluateDecal(clothColor, normUV, isBack, _MirrorBack, _DecalTex, sampler_DecalTex, _DecalTransform, _DecalRotation, _DecalColor, _BlendMode, _Weathering, ao);
+                EvaluateDecal(clothColor, preservedCoverage, normUV, isBack, _MirrorBack, _DecalTex, sampler_DecalTex, _DecalTransform, _DecalImageScale.xy, _DecalRotation, _DecalColor, _BlendMode, _Weathering, ao);
 
                 // Layer 2
-                EvaluateDecal(clothColor, normUV, isBack, _MirrorBack, _DecalTex2, sampler_DecalTex2, _DecalTransform2, _DecalRotation2, _DecalColor2, _BlendMode2, _Weathering, ao);
+                EvaluateDecal(clothColor, preservedCoverage, normUV, isBack, _MirrorBack, _DecalTex2, sampler_DecalTex2, _DecalTransform2, _DecalImageScale2.xy, _DecalRotation2, _DecalColor2, _BlendMode2, _Weathering, ao);
 
                 // Grime & Dirt
                 if (_Grime > 0.005)
@@ -220,7 +240,10 @@ Shader "PirateSlop/Sail"
                 half3 diffuse = mainLight.color * (NdotL * mainLight.shadowAttenuation);
                 half3 ambient = SampleSH(normal) * 1.2;
 
-                half3 shaded = clothColor * (diffuse + ambient) + _HighlightColor.rgb * 1.5;
+                half3 lighting = diffuse + ambient;
+                half brightness = dot(lighting, half3(0.2126, 0.7152, 0.0722));
+                half decalBrightness = clamp(brightness, 0.82, 1.0);
+                half3 shaded = lerp(clothColor * lighting, clothColor * decalBrightness, preservedCoverage * _PreserveDecalColor) + _HighlightColor.rgb * 1.5;
                 return half4(MixFog(shaded, input.fog), 1.0);
             }
             ENDHLSL

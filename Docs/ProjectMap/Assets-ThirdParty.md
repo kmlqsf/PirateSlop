@@ -12,8 +12,6 @@
 | --- | --- |
 | [Assets/ThirdParty/MetaVoiceChat/LICENSE](<../../Assets/ThirdParty/MetaVoiceChat/LICENSE>) | Файл без расширения |
 | [Assets/ThirdParty/MetaVoiceChat/MetaVc.cs](<../../Assets/ThirdParty/MetaVoiceChat/MetaVc.cs>) | Исходник C#: MetaVc |
-| [Assets/ThirdParty/MetaVoiceChat/UPSTREAM.md](<../../Assets/ThirdParty/MetaVoiceChat/UPSTREAM.md>) | Документация |
-| [Assets/ThirdParty/MetaVoiceChat/VERSION.txt](<../../Assets/ThirdParty/MetaVoiceChat/VERSION.txt>) | Текстовые данные |
 | [Assets/ThirdParty/MetaVoiceChat/VcConfig.cs](<../../Assets/ThirdParty/MetaVoiceChat/VcConfig.cs>) | Исходник C#: VcConfig |
 
 ## Assets/ThirdParty/MetaVoiceChat/Concentus.2.2.2
@@ -27,7 +25,6 @@
 | Файл | Краткое описание |
 | --- | --- |
 | [Assets/ThirdParty/MetaVoiceChat/Concentus.2.2.2/lib/netstandard2.0/Concentus.dll](<../../Assets/ThirdParty/MetaVoiceChat/Concentus.2.2.2/lib/netstandard2.0/Concentus.dll>) | Скомпилированная библиотека |
-| [Assets/ThirdParty/MetaVoiceChat/Concentus.2.2.2/lib/netstandard2.0/Concentus.xml](<../../Assets/ThirdParty/MetaVoiceChat/Concentus.2.2.2/lib/netstandard2.0/Concentus.xml>) | Файл .xml |
 
 ## Assets/ThirdParty/MetaVoiceChat/Input
 
@@ -71,12 +68,6 @@
 | [Assets/ThirdParty/MetaVoiceChat/Output/AudioSource/VcAudioClip.cs](<../../Assets/ThirdParty/MetaVoiceChat/Output/AudioSource/VcAudioClip.cs>) | Исходник C#: VcAudioClip |
 | [Assets/ThirdParty/MetaVoiceChat/Output/AudioSource/VcAudioSourceOutput.cs](<../../Assets/ThirdParty/MetaVoiceChat/Output/AudioSource/VcAudioSourceOutput.cs>) | Исходник C#: VcAudioSourceOutput |
 
-## Assets/ThirdParty/MetaVoiceChat/Output/Multicast
-
-| Файл | Краткое описание |
-| --- | --- |
-| [Assets/ThirdParty/MetaVoiceChat/Output/Multicast/MulticastVcAudioOutput.cs](<../../Assets/ThirdParty/MetaVoiceChat/Output/Multicast/MulticastVcAudioOutput.cs>) | Исходник C#: MulticastVcAudioOutput |
-
 ## Assets/ThirdParty/MetaVoiceChat/Utils
 
 | Файл | Краткое описание |
@@ -84,6 +75,3 @@
 | [Assets/ThirdParty/MetaVoiceChat/Utils/FixedLengthArrayPool.cs](<../../Assets/ThirdParty/MetaVoiceChat/Utils/FixedLengthArrayPool.cs>) | Исходник C#: FixedLengthArrayPool |
 | [Assets/ThirdParty/MetaVoiceChat/Utils/FrameStopwatch.cs](<../../Assets/ThirdParty/MetaVoiceChat/Utils/FrameStopwatch.cs>) | Исходник C#: FrameStopwatch |
 | [Assets/ThirdParty/MetaVoiceChat/Utils/MetaSerializableReactiveProperty.cs](<../../Assets/ThirdParty/MetaVoiceChat/Utils/MetaSerializableReactiveProperty.cs>) | Исходник C#: MetaSerializableReactiveProperty |
-| [Assets/ThirdParty/MetaVoiceChat/Utils/MicrophoneDevicesListener.cs](<../../Assets/ThirdParty/MetaVoiceChat/Utils/MicrophoneDevicesListener.cs>) | Исходник C#: MicrophoneDevicesListener |
-| [Assets/ThirdParty/MetaVoiceChat/Utils/OneWayResampler.cs](<../../Assets/ThirdParty/MetaVoiceChat/Utils/OneWayResampler.cs>) | Исходник C#: OneWayResampler |
-| [Assets/ThirdParty/MetaVoiceChat/Utils/UnmanagedFloatArray.cs](<../../Assets/ThirdParty/MetaVoiceChat/Utils/UnmanagedFloatArray.cs>) | Исходник C#: UnmanagedFloatArray |

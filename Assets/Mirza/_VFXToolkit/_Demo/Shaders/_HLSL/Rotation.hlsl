@@ -1,8 +1,0 @@
-﻿
-#ifndef VFXTOOLKIT_DEMO_ROTATION_HLSL
-#define VFXTOOLKIT_DEMO_ROTATION_HLSL
-
-// ...
-
-
-#endif

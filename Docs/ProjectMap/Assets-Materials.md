@@ -13,7 +13,6 @@
 | [Assets/Materials/FirearmTracer.mat](<../../Assets/Materials/FirearmTracer.mat>) | Материал Unity |
 | [Assets/Materials/HoleBlackInner.mat](<../../Assets/Materials/HoleBlackInner.mat>) | Материал Unity |
 | [Assets/Materials/HoleWoodFrame.mat](<../../Assets/Materials/HoleWoodFrame.mat>) | Материал Unity |
-| [Assets/Materials/LadderWood.mat](<../../Assets/Materials/LadderWood.mat>) | Материал Unity |
 | [Assets/Materials/MaritimeSky.mat](<../../Assets/Materials/MaritimeSky.mat>) | Материал Unity |
 | [Assets/Materials/MenuSea.mat](<../../Assets/Materials/MenuSea.mat>) | Материал Unity |
 | [Assets/Materials/Ocean.mat](<../../Assets/Materials/Ocean.mat>) | Материал Unity |
@@ -26,30 +25,17 @@
 | Файл | Краткое описание |
 | --- | --- |
 | [Assets/Materials/CannonAmmo/AmmoBrass.mat](<../../Assets/Materials/CannonAmmo/AmmoBrass.mat>) | Материал Unity |
-| [Assets/Materials/CannonAmmo/AmmoEmber.mat](<../../Assets/Materials/CannonAmmo/AmmoEmber.mat>) | Материал Unity |
-| [Assets/Materials/CannonAmmo/AmmoForce.mat](<../../Assets/Materials/CannonAmmo/AmmoForce.mat>) | Материал Unity |
-| [Assets/Materials/CannonAmmo/AmmoFrost.mat](<../../Assets/Materials/CannonAmmo/AmmoFrost.mat>) | Материал Unity |
-| [Assets/Materials/CannonAmmo/AmmoIce.mat](<../../Assets/Materials/CannonAmmo/AmmoIce.mat>) | Материал Unity |
 | [Assets/Materials/CannonAmmo/AmmoIron.mat](<../../Assets/Materials/CannonAmmo/AmmoIron.mat>) | Материал Unity |
 | [Assets/Materials/CannonAmmo/AmmoSteel.mat](<../../Assets/Materials/CannonAmmo/AmmoSteel.mat>) | Материал Unity |
-| [Assets/Materials/CannonAmmo/CannonAmmoParticles.mat](<../../Assets/Materials/CannonAmmo/CannonAmmoParticles.mat>) | Материал Unity |
 
 ## Assets/Materials/Cannons
 
 | Файл | Краткое описание |
 | --- | --- |
-| [Assets/Materials/Cannons/Cannon_Bore.001.mat](<../../Assets/Materials/Cannons/Cannon_Bore.001.mat>) | Материал Unity |
 | [Assets/Materials/Cannons/Cannon_Bore.mat](<../../Assets/Materials/Cannons/Cannon_Bore.mat>) | Материал Unity |
-| [Assets/Materials/Cannons/Cannon_Brass.001.mat](<../../Assets/Materials/Cannons/Cannon_Brass.001.mat>) | Материал Unity |
-| [Assets/Materials/Cannons/Cannon_Brass.mat](<../../Assets/Materials/Cannons/Cannon_Brass.mat>) | Материал Unity |
 | [Assets/Materials/Cannons/Cannon_Iron.001.mat](<../../Assets/Materials/Cannons/Cannon_Iron.001.mat>) | Материал Unity |
-| [Assets/Materials/Cannons/Cannon_Iron.002.mat](<../../Assets/Materials/Cannons/Cannon_Iron.002.mat>) | Материал Unity |
-| [Assets/Materials/Cannons/Cannon_IronBands.001.mat](<../../Assets/Materials/Cannons/Cannon_IronBands.001.mat>) | Материал Unity |
 | [Assets/Materials/Cannons/Cannon_IronBands.mat](<../../Assets/Materials/Cannons/Cannon_IronBands.mat>) | Материал Unity |
-| [Assets/Materials/Cannons/Cannon_Oak.001.mat](<../../Assets/Materials/Cannons/Cannon_Oak.001.mat>) | Материал Unity |
 | [Assets/Materials/Cannons/Cannon_Oak.mat](<../../Assets/Materials/Cannons/Cannon_Oak.mat>) | Материал Unity |
-| [Assets/Materials/Cannons/Cannon_OakEnd.001.mat](<../../Assets/Materials/Cannons/Cannon_OakEnd.001.mat>) | Материал Unity |
-| [Assets/Materials/Cannons/Cannon_OakEnd.mat](<../../Assets/Materials/Cannons/Cannon_OakEnd.mat>) | Материал Unity |
 | [Assets/Materials/Cannons/Cannon_Oak_Dark.mat](<../../Assets/Materials/Cannons/Cannon_Oak_Dark.mat>) | Материал Unity |
 | [Assets/Materials/Cannons/CannonballBlack.mat](<../../Assets/Materials/Cannons/CannonballBlack.mat>) | Материал Unity |
 | [Assets/Materials/Cannons/Cannonball_Iron.mat](<../../Assets/Materials/Cannons/Cannonball_Iron.mat>) | Материал Unity |
@@ -111,61 +97,10 @@
 | [Assets/Materials/Environment/SeaArch_Huge_A_Mat_SeaArch_Huge_A.mat](<../../Assets/Materials/Environment/SeaArch_Huge_A_Mat_SeaArch_Huge_A.mat>) | Материал Unity |
 | [Assets/Materials/Environment/Sea_Lagoon_Cave_Mat_Sea_Lagoon_Cave.mat](<../../Assets/Materials/Environment/Sea_Lagoon_Cave_Mat_Sea_Lagoon_Cave.mat>) | Материал Unity |
 
-## Assets/Materials/PiratePistol
-
-| Файл | Краткое описание |
-| --- | --- |
-| [Assets/Materials/PiratePistol/Cutlass_AgedBrass.mat](<../../Assets/Materials/PiratePistol/Cutlass_AgedBrass.mat>) | Материал Unity |
-| [Assets/Materials/PiratePistol/Cutlass_DarkLeather.mat](<../../Assets/Materials/PiratePistol/Cutlass_DarkLeather.mat>) | Материал Unity |
-| [Assets/Materials/PiratePistol/Cutlass_Edge.mat](<../../Assets/Materials/PiratePistol/Cutlass_Edge.mat>) | Материал Unity |
-| [Assets/Materials/PiratePistol/Cutlass_LeatherWrap.mat](<../../Assets/Materials/PiratePistol/Cutlass_LeatherWrap.mat>) | Материал Unity |
-| [Assets/Materials/PiratePistol/Cutlass_Steel.mat](<../../Assets/Materials/PiratePistol/Cutlass_Steel.mat>) | Материал Unity |
-| [Assets/Materials/PiratePistol/Pistol_AgedBrass.mat](<../../Assets/Materials/PiratePistol/Pistol_AgedBrass.mat>) | Материал Unity |
-| [Assets/Materials/PiratePistol/Pistol_BladeEdge.mat](<../../Assets/Materials/PiratePistol/Pistol_BladeEdge.mat>) | Материал Unity |
-| [Assets/Materials/PiratePistol/Pistol_BluedSteel.mat](<../../Assets/Materials/PiratePistol/Pistol_BluedSteel.mat>) | Материал Unity |
-| [Assets/Materials/PiratePistol/Pistol_Bore.mat](<../../Assets/Materials/PiratePistol/Pistol_Bore.mat>) | Материал Unity |
-| [Assets/Materials/PiratePistol/Pistol_Ivory.mat](<../../Assets/Materials/PiratePistol/Pistol_Ivory.mat>) | Материал Unity |
-| [Assets/Materials/PiratePistol/Pistol_Walnut.001.mat](<../../Assets/Materials/PiratePistol/Pistol_Walnut.001.mat>) | Материал Unity |
-| [Assets/Materials/PiratePistol/Tracer.mat](<../../Assets/Materials/PiratePistol/Tracer.mat>) | Материал Unity |
-
-## Assets/Materials/PirateSchooner
-
-| Файл | Краткое описание |
-| --- | --- |
-| [Assets/Materials/PirateSchooner/ShipV3_Brass.mat](<../../Assets/Materials/PirateSchooner/ShipV3_Brass.mat>) | Материал Unity |
-| [Assets/Materials/PirateSchooner/ShipV3_Burgundy.mat](<../../Assets/Materials/PirateSchooner/ShipV3_Burgundy.mat>) | Материал Unity |
-| [Assets/Materials/PirateSchooner/ShipV3_Canvas.mat](<../../Assets/Materials/PirateSchooner/ShipV3_Canvas.mat>) | Материал Unity |
-| [Assets/Materials/PirateSchooner/ShipV3_Deck0.mat](<../../Assets/Materials/PirateSchooner/ShipV3_Deck0.mat>) | Материал Unity |
-| [Assets/Materials/PirateSchooner/ShipV3_Deck1.mat](<../../Assets/Materials/PirateSchooner/ShipV3_Deck1.mat>) | Материал Unity |
-| [Assets/Materials/PirateSchooner/ShipV3_Deck2.mat](<../../Assets/Materials/PirateSchooner/ShipV3_Deck2.mat>) | Материал Unity |
-| [Assets/Materials/PirateSchooner/ShipV3_Deck3.mat](<../../Assets/Materials/PirateSchooner/ShipV3_Deck3.mat>) | Материал Unity |
-| [Assets/Materials/PirateSchooner/ShipV3_Deck4.mat](<../../Assets/Materials/PirateSchooner/ShipV3_Deck4.mat>) | Материал Unity |
-| [Assets/Materials/PirateSchooner/ShipV3_Deck5.mat](<../../Assets/Materials/PirateSchooner/ShipV3_Deck5.mat>) | Материал Unity |
-| [Assets/Materials/PirateSchooner/ShipV3_DeepTeal.mat](<../../Assets/Materials/PirateSchooner/ShipV3_DeepTeal.mat>) | Материал Unity |
-| [Assets/Materials/PirateSchooner/ShipV3_OchreTrim.mat](<../../Assets/Materials/PirateSchooner/ShipV3_OchreTrim.mat>) | Материал Unity |
-| [Assets/Materials/PirateSchooner/ShipV3_Rope.mat](<../../Assets/Materials/PirateSchooner/ShipV3_Rope.mat>) | Материал Unity |
-| [Assets/Materials/PirateSchooner/ShipV3_Seams.mat](<../../Assets/Materials/PirateSchooner/ShipV3_Seams.mat>) | Материал Unity |
-| [Assets/Materials/PirateSchooner/ShipV3_Walnut.mat](<../../Assets/Materials/PirateSchooner/ShipV3_Walnut.mat>) | Материал Unity |
-| [Assets/Materials/PirateSchooner/ShipV3_Windows.mat](<../../Assets/Materials/PirateSchooner/ShipV3_Windows.mat>) | Материал Unity |
-
-## Assets/Materials/PirateSloop
-
-| Файл | Краткое описание |
-| --- | --- |
-| [Assets/Materials/PirateSloop/Accent_Red.mat](<../../Assets/Materials/PirateSloop/Accent_Red.mat>) | Материал Unity |
-| [Assets/Materials/PirateSloop/Metal_Brass.mat](<../../Assets/Materials/PirateSloop/Metal_Brass.mat>) | Материал Unity |
-| [Assets/Materials/PirateSloop/Metal_Iron.mat](<../../Assets/Materials/PirateSloop/Metal_Iron.mat>) | Материал Unity |
-| [Assets/Materials/PirateSloop/Rope_Tan.mat](<../../Assets/Materials/PirateSloop/Rope_Tan.mat>) | Материал Unity |
-| [Assets/Materials/PirateSloop/Sail_Cream.mat](<../../Assets/Materials/PirateSloop/Sail_Cream.mat>) | Материал Unity |
-| [Assets/Materials/PirateSloop/Wood_Deck_Light.mat](<../../Assets/Materials/PirateSloop/Wood_Deck_Light.mat>) | Материал Unity |
-| [Assets/Materials/PirateSloop/Wood_Hull_Dark.mat](<../../Assets/Materials/PirateSloop/Wood_Hull_Dark.mat>) | Материал Unity |
-| [Assets/Materials/PirateSloop/Wood_Trim.mat](<../../Assets/Materials/PirateSloop/Wood_Trim.mat>) | Материал Unity |
-
 ## Assets/Materials/Repair
 
 | Файл | Краткое описание |
 | --- | --- |
-| [Assets/Materials/Repair/RepairBreach.mat](<../../Assets/Materials/Repair/RepairBreach.mat>) | Материал Unity |
 | [Assets/Materials/Repair/RepairEndgrain.mat](<../../Assets/Materials/Repair/RepairEndgrain.mat>) | Материал Unity |
 | [Assets/Materials/Repair/RepairGrain.mat](<../../Assets/Materials/Repair/RepairGrain.mat>) | Материал Unity |
 | [Assets/Materials/Repair/RepairHemp.mat](<../../Assets/Materials/Repair/RepairHemp.mat>) | Материал Unity |
@@ -182,8 +117,6 @@
 | [Assets/Materials/SailRigging/Rigging_IronEdges.mat](<../../Assets/Materials/SailRigging/Rigging_IronEdges.mat>) | Материал Unity |
 | [Assets/Materials/SailRigging/Rigging_OldBrass.mat](<../../Assets/Materials/SailRigging/Rigging_OldBrass.mat>) | Материал Unity |
 | [Assets/Materials/SailRigging/Rigging_Recess.mat](<../../Assets/Materials/SailRigging/Rigging_Recess.mat>) | Материал Unity |
-| [Assets/Materials/SailRigging/SailRackBrass.mat](<../../Assets/Materials/SailRigging/SailRackBrass.mat>) | Материал Unity |
-| [Assets/Materials/SailRigging/SailRackWood.mat](<../../Assets/Materials/SailRigging/SailRackWood.mat>) | Материал Unity |
 | [Assets/Materials/SailRigging/SailRopeHemp.mat](<../../Assets/Materials/SailRigging/SailRopeHemp.mat>) | Материал Unity |
 
 ## Assets/Materials/SeaEvents

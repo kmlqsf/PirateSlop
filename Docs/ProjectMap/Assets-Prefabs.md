@@ -6,13 +6,6 @@
 
 Автоматический каталог. Описания обозначают тип файла и известную тему, а не подтверждение использования в игре.
 
-## Assets/Prefabs
-
-| Файл | Краткое описание |
-| --- | --- |
-| [Assets/Prefabs/Ocean.prefab](<../../Assets/Prefabs/Ocean.prefab>) | Префаб Unity |
-| [Assets/Prefabs/SM_PirateSloop.prefab](<../../Assets/Prefabs/SM_PirateSloop.prefab>) | Префаб Unity |
-
 ## Assets/Prefabs/Barricades
 
 | Файл | Краткое описание |
@@ -26,7 +19,6 @@
 | --- | --- |
 | [Assets/Prefabs/Cannons/BowMortar.prefab](<../../Assets/Prefabs/Cannons/BowMortar.prefab>) | Префаб Unity |
 | [Assets/Prefabs/Cannons/CannonFuse.prefab](<../../Assets/Prefabs/Cannons/CannonFuse.prefab>) | Префаб Unity |
-| [Assets/Prefabs/Cannons/CannonStation.prefab](<../../Assets/Prefabs/Cannons/CannonStation.prefab>) | Префаб Unity |
 | [Assets/Prefabs/Cannons/Cannonball.prefab](<../../Assets/Prefabs/Cannons/Cannonball.prefab>) | Префаб Unity |
 | [Assets/Prefabs/Cannons/CannonballCrate.prefab](<../../Assets/Prefabs/Cannons/CannonballCrate.prefab>) | Префаб Unity |
 | [Assets/Prefabs/Cannons/DeployableCannon.prefab](<../../Assets/Prefabs/Cannons/DeployableCannon.prefab>) | Префаб Unity |
@@ -34,12 +26,6 @@
 | [Assets/Prefabs/Cannons/FiredCannonball.prefab](<../../Assets/Prefabs/Cannons/FiredCannonball.prefab>) | Префаб Unity |
 | [Assets/Prefabs/Cannons/HarpoonGun.prefab](<../../Assets/Prefabs/Cannons/HarpoonGun.prefab>) | Префаб Unity |
 | [Assets/Prefabs/Cannons/HarpoonProjectile.prefab](<../../Assets/Prefabs/Cannons/HarpoonProjectile.prefab>) | Префаб Unity |
-
-## Assets/Prefabs/Characters
-
-| Файл | Краткое описание |
-| --- | --- |
-| [Assets/Prefabs/Characters/PirateCharacter.prefab](<../../Assets/Prefabs/Characters/PirateCharacter.prefab>) | Префаб Unity |
 
 ## Assets/Prefabs/Creatures
 
@@ -58,13 +44,6 @@
 | [Assets/Prefabs/Environment/Reef_Spires_C.prefab](<../../Assets/Prefabs/Environment/Reef_Spires_C.prefab>) | Префаб Unity |
 | [Assets/Prefabs/Environment/SeaArch_Huge_A.prefab](<../../Assets/Prefabs/Environment/SeaArch_Huge_A.prefab>) | Префаб Unity |
 | [Assets/Prefabs/Environment/Sea_Lagoon_Cave.prefab](<../../Assets/Prefabs/Environment/Sea_Lagoon_Cave.prefab>) | Префаб Unity |
-
-## Assets/Prefabs/Kraken
-
-| Файл | Краткое описание |
-| --- | --- |
-| [Assets/Prefabs/Kraken/KrakenEncounter.prefab](<../../Assets/Prefabs/Kraken/KrakenEncounter.prefab>) | Префаб Unity |
-| [Assets/Prefabs/Kraken/KrakenTentacle.prefab](<../../Assets/Prefabs/Kraken/KrakenTentacle.prefab>) | Префаб Unity |
 
 ## Assets/Prefabs/Loot
 
@@ -111,12 +90,8 @@
 | [Assets/Prefabs/Props/PirateEquipment/HolyGrenadePickup.prefab](<../../Assets/Prefabs/Props/PirateEquipment/HolyGrenadePickup.prefab>) | Префаб Unity |
 | [Assets/Prefabs/Props/PirateEquipment/JesusWhine.prefab](<../../Assets/Prefabs/Props/PirateEquipment/JesusWhine.prefab>) | Префаб Unity |
 | [Assets/Prefabs/Props/PirateEquipment/JesusWhinePickup.prefab](<../../Assets/Prefabs/Props/PirateEquipment/JesusWhinePickup.prefab>) | Префаб Unity |
-| [Assets/Prefabs/Props/PirateEquipment/MusketActionModel.prefab](<../../Assets/Prefabs/Props/PirateEquipment/MusketActionModel.prefab>) | Префаб Unity |
 | [Assets/Prefabs/Props/PirateEquipment/ParrotDrone.prefab](<../../Assets/Prefabs/Props/PirateEquipment/ParrotDrone.prefab>) | Префаб Unity |
-| [Assets/Prefabs/Props/PirateEquipment/PirateDoubleBarrel.prefab](<../../Assets/Prefabs/Props/PirateEquipment/PirateDoubleBarrel.prefab>) | Префаб Unity |
 | [Assets/Prefabs/Props/PirateEquipment/PirateDoubleBarrelPickup.prefab](<../../Assets/Prefabs/Props/PirateEquipment/PirateDoubleBarrelPickup.prefab>) | Префаб Unity |
-| [Assets/Prefabs/Props/PirateEquipment/ShotgunActionModel.prefab](<../../Assets/Prefabs/Props/PirateEquipment/ShotgunActionModel.prefab>) | Префаб Unity |
-| [Assets/Prefabs/Props/PirateEquipment/SniperMusket.prefab](<../../Assets/Prefabs/Props/PirateEquipment/SniperMusket.prefab>) | Префаб Unity |
 | [Assets/Prefabs/Props/PirateEquipment/SniperMusketPickup.prefab](<../../Assets/Prefabs/Props/PirateEquipment/SniperMusketPickup.prefab>) | Префаб Unity |
 | [Assets/Prefabs/Props/PirateEquipment/Spyglass.prefab](<../../Assets/Prefabs/Props/PirateEquipment/Spyglass.prefab>) | Префаб Unity |
 | [Assets/Prefabs/Props/PirateEquipment/SpyglassPickup.prefab](<../../Assets/Prefabs/Props/PirateEquipment/SpyglassPickup.prefab>) | Префаб Unity |
@@ -129,7 +104,6 @@
 | [Assets/Prefabs/Repair/DroppedPlank1.prefab](<../../Assets/Prefabs/Repair/DroppedPlank1.prefab>) | Префаб Unity |
 | [Assets/Prefabs/Repair/DroppedPlank2.prefab](<../../Assets/Prefabs/Repair/DroppedPlank2.prefab>) | Префаб Unity |
 | [Assets/Prefabs/Repair/DroppedPlank3.prefab](<../../Assets/Prefabs/Repair/DroppedPlank3.prefab>) | Префаб Unity |
-| [Assets/Prefabs/Repair/SM_HullBreach.prefab](<../../Assets/Prefabs/Repair/SM_HullBreach.prefab>) | Префаб Unity |
 | [Assets/Prefabs/Repair/SM_RepairMallet.prefab](<../../Assets/Prefabs/Repair/SM_RepairMallet.prefab>) | Префаб Unity |
 | [Assets/Prefabs/Repair/SM_RepairPlank_1.prefab](<../../Assets/Prefabs/Repair/SM_RepairPlank_1.prefab>) | Префаб Unity |
 | [Assets/Prefabs/Repair/SM_RepairPlank_2.prefab](<../../Assets/Prefabs/Repair/SM_RepairPlank_2.prefab>) | Префаб Unity |
@@ -141,27 +115,6 @@
 | --- | --- |
 | [Assets/Prefabs/ShipDestruction/MainShipSections.prefab](<../../Assets/Prefabs/ShipDestruction/MainShipSections.prefab>) | Префаб Unity |
 
-## Assets/Prefabs/ShipDestruction/LibreHull
-
-| Файл | Краткое описание |
-| --- | --- |
-| [Assets/Prefabs/ShipDestruction/LibreHull/Chunk0.asset](<../../Assets/Prefabs/ShipDestruction/LibreHull/Chunk0.asset>) | Настройки или данные Unity |
-| [Assets/Prefabs/ShipDestruction/LibreHull/Chunk1.asset](<../../Assets/Prefabs/ShipDestruction/LibreHull/Chunk1.asset>) | Настройки или данные Unity |
-| [Assets/Prefabs/ShipDestruction/LibreHull/Chunk2.asset](<../../Assets/Prefabs/ShipDestruction/LibreHull/Chunk2.asset>) | Настройки или данные Unity |
-| [Assets/Prefabs/ShipDestruction/LibreHull/LibreHullPrototype.prefab](<../../Assets/Prefabs/ShipDestruction/LibreHull/LibreHullPrototype.prefab>) | Префаб Unity |
-
-## Assets/Prefabs/Ships
-
-| Файл | Краткое описание |
-| --- | --- |
-| [Assets/Prefabs/Ships/PirateFrigate.prefab](<../../Assets/Prefabs/Ships/PirateFrigate.prefab>) | Префаб Unity |
-
-## Assets/Prefabs/Whale
-
-| Файл | Краткое описание |
-| --- | --- |
-| [Assets/Prefabs/Whale/WhaleLootPOI.prefab](<../../Assets/Prefabs/Whale/WhaleLootPOI.prefab>) | Префаб Unity |
-
 ## Assets/Prefabs/World/LocationExpansion
 
 | Файл | Краткое описание |
@@ -169,14 +122,12 @@
 | [Assets/Prefabs/World/LocationExpansion/BeaconTower.prefab](<../../Assets/Prefabs/World/LocationExpansion/BeaconTower.prefab>) | Префаб Unity |
 | [Assets/Prefabs/World/LocationExpansion/BranchCoral.prefab](<../../Assets/Prefabs/World/LocationExpansion/BranchCoral.prefab>) | Префаб Unity |
 | [Assets/Prefabs/World/LocationExpansion/BrokenWall.prefab](<../../Assets/Prefabs/World/LocationExpansion/BrokenWall.prefab>) | Префаб Unity |
-| [Assets/Prefabs/World/LocationExpansion/DockCorner.prefab](<../../Assets/Prefabs/World/LocationExpansion/DockCorner.prefab>) | Префаб Unity |
 | [Assets/Prefabs/World/LocationExpansion/FanCoral.prefab](<../../Assets/Prefabs/World/LocationExpansion/FanCoral.prefab>) | Префаб Unity |
 | [Assets/Prefabs/World/LocationExpansion/Railing.prefab](<../../Assets/Prefabs/World/LocationExpansion/Railing.prefab>) | Префаб Unity |
 | [Assets/Prefabs/World/LocationExpansion/Rubble.prefab](<../../Assets/Prefabs/World/LocationExpansion/Rubble.prefab>) | Префаб Unity |
 | [Assets/Prefabs/World/LocationExpansion/Seaweed.prefab](<../../Assets/Prefabs/World/LocationExpansion/Seaweed.prefab>) | Префаб Unity |
 | [Assets/Prefabs/World/LocationExpansion/Shutter.prefab](<../../Assets/Prefabs/World/LocationExpansion/Shutter.prefab>) | Префаб Unity |
 | [Assets/Prefabs/World/LocationExpansion/StoneArch.prefab](<../../Assets/Prefabs/World/LocationExpansion/StoneArch.prefab>) | Префаб Unity |
-| [Assets/Prefabs/World/LocationExpansion/StoneCorner.prefab](<../../Assets/Prefabs/World/LocationExpansion/StoneCorner.prefab>) | Префаб Unity |
 | [Assets/Prefabs/World/LocationExpansion/StoneFloor.prefab](<../../Assets/Prefabs/World/LocationExpansion/StoneFloor.prefab>) | Префаб Unity |
 | [Assets/Prefabs/World/LocationExpansion/StonePillar.prefab](<../../Assets/Prefabs/World/LocationExpansion/StonePillar.prefab>) | Префаб Unity |
 | [Assets/Prefabs/World/LocationExpansion/StoneStairs.prefab](<../../Assets/Prefabs/World/LocationExpansion/StoneStairs.prefab>) | Префаб Unity |
@@ -223,10 +174,7 @@
 | [Assets/Prefabs/World/StarterIsland/RockMedium.prefab](<../../Assets/Prefabs/World/StarterIsland/RockMedium.prefab>) | Префаб Unity |
 | [Assets/Prefabs/World/StarterIsland/RoofSlope.prefab](<../../Assets/Prefabs/World/StarterIsland/RoofSlope.prefab>) | Префаб Unity |
 | [Assets/Prefabs/World/StarterIsland/RopeCoil.prefab](<../../Assets/Prefabs/World/StarterIsland/RopeCoil.prefab>) | Префаб Unity |
-| [Assets/Prefabs/World/StarterIsland/StarterSupplyCamp.prefab](<../../Assets/Prefabs/World/StarterIsland/StarterSupplyCamp.prefab>) | Префаб Unity |
 | [Assets/Prefabs/World/StarterIsland/StarterSupplyCampProcedural.prefab](<../../Assets/Prefabs/World/StarterIsland/StarterSupplyCampProcedural.prefab>) | Префаб Unity |
-| [Assets/Prefabs/World/StarterIsland/SupplyCamp2Piers.prefab](<../../Assets/Prefabs/World/StarterIsland/SupplyCamp2Piers.prefab>) | Префаб Unity |
 | [Assets/Prefabs/World/StarterIsland/SupplyCamp2PiersProcedural.prefab](<../../Assets/Prefabs/World/StarterIsland/SupplyCamp2PiersProcedural.prefab>) | Префаб Unity |
-| [Assets/Prefabs/World/StarterIsland/SupplyCamp3Piers.prefab](<../../Assets/Prefabs/World/StarterIsland/SupplyCamp3Piers.prefab>) | Префаб Unity |
 | [Assets/Prefabs/World/StarterIsland/SupplyCamp3PiersProcedural.prefab](<../../Assets/Prefabs/World/StarterIsland/SupplyCamp3PiersProcedural.prefab>) | Префаб Unity |
 | [Assets/Prefabs/World/StarterIsland/Wall.prefab](<../../Assets/Prefabs/World/StarterIsland/Wall.prefab>) | Префаб Unity |
