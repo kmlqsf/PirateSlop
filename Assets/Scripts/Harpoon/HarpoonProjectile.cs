@@ -53,6 +53,7 @@ namespace PirateSlop.Harpoon
         void Awake()
         {
             body = GetComponent<Rigidbody>();
+            WaterImpactBody.Ensure(gameObject);
             col = GetComponent<Collider>();
             hookTarget = GetComponent<HarpoonHookTarget>();
             if (hookTarget == null) hookTarget = gameObject.AddComponent<HarpoonHookTarget>();

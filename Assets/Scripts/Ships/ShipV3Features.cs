@@ -69,6 +69,9 @@ namespace PirateSlop.Ships
     [DefaultExecutionOrder(-30)]
     public sealed class ShipV3Features : NetworkBehaviour
     {
+        public const float LanternIntensity = 1.05f;
+        public const float LanternRange = 7.2f;
+        public static readonly Color LanternEmission = new Color(1f, .42f, .10f) * .6f;
         public static readonly List<ShipV3Features> Active = new();
         void OnEnable() { Active.Add(this); }
         void OnDisable() { Active.Remove(this); }
@@ -775,12 +778,12 @@ namespace PirateSlop.Ships
                 if (lamp.Light != null)
                 {
                     lamp.Light.enabled = lit && lightsVisible;
-                    lamp.Light.intensity = .72f + .055f * Mathf.Sin(time * 9.7f + i * 2.1f) + .035f * Mathf.Sin(time * 16.3f + i);
+                    lamp.Light.intensity = LanternIntensity + .035f * Mathf.Sin(time * 4.7f + i * 2.1f) + .025f * Mathf.Sin(time * 7.3f + i);
                 }
                 if (lampsChanged && lamp.Glass != null)
                 {
                     lamp.Glass.GetPropertyBlock(glassBlock, lamp.GlassSlot);
-                    glassBlock.SetColor("_EmissionColor", lit ? new Color(.65f, .22f, .045f) * 1.1f : Color.black);
+                    glassBlock.SetColor("_EmissionColor", lit ? LanternEmission : Color.black);
                     lamp.Glass.SetPropertyBlock(glassBlock, lamp.GlassSlot);
                 }
             }

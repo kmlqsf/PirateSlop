@@ -115,6 +115,7 @@ public partial class AdvancedPlayerController : MonoBehaviour
     public Camera PlayerCamera => playerCamera;
     void Awake()
     {
+        WaterImpactBody.Ensure(gameObject);
         health = GetComponent<CombatHealth>();
         if (GetComponent<PlayerKnockdown>() == null) gameObject.AddComponent<PlayerKnockdown>();
         lootNetwork = GetComponent<PirateSlop.Networking.NetworkWeapon>();

@@ -76,6 +76,50 @@ namespace PirateSlop
                 GUILayout.EndHorizontal();
                 GUILayout.Space(8);
             }
+
+            var ocean = OceanSurface.Instance != null ? OceanSurface.Instance.HeightSource as BoatAttackOcean : null;
+            if (ocean != null)
+            {
+                GUILayout.Label("Океан");
+                bool canAdjustOcean = SessionController.Instance != null && SessionController.Instance.CanAdjustTestOcean;
+                GUI.enabled = canAdjustOcean;
+                GUILayout.BeginHorizontal();
+                GUILayout.Label($"Сила волн: {ocean.WaveStrength * 100f:0}%", GUILayout.Width(180));
+                float strength = GUILayout.HorizontalSlider(ocean.WaveStrength, 0f, 2f);
+                GUILayout.EndHorizontal();
+                GUILayout.BeginHorizontal();
+                GUILayout.Label($"Крутизна волн: {ocean.WaveSteepness * 100f:0}%", GUILayout.Width(180));
+                float steepness = GUILayout.HorizontalSlider(ocean.WaveSteepness, 0f, 1f);
+                GUILayout.EndHorizontal();
+                GUILayout.BeginHorizontal();
+                GUILayout.Label($"Скорость волн: {ocean.WaveSpeed:0.00}x", GUILayout.Width(180));
+                float waveSpeed = GUILayout.HorizontalSlider(ocean.WaveSpeed, .25f, 2f);
+                GUILayout.EndHorizontal();
+                if (canAdjustOcean) SessionController.Instance.SetTestOcean(strength, steepness, waveSpeed);
+                if (GUILayout.Button("Вернуть настройки океана", GUILayout.Height(29)))
+                    SessionController.Instance.SetTestOcean(1f, 1f, 1f);
+                GUI.enabled = true;
+                if (!canAdjustOcean) GUILayout.Label("Настройки волн меняет хост");
+                var foam = WaterShipFoam.Instance;
+                if (foam != null)
+                {
+                    GUILayout.Label("Взаимодействие с кораблём");
+                    GUILayout.BeginHorizontal();
+                    GUILayout.Label($"Носовая волна: {foam.BowWaveStrength * 100f:0}%", GUILayout.Width(180));
+                    foam.BowWaveStrength = GUILayout.HorizontalSlider(foam.BowWaveStrength, 0f, 2f);
+                    GUILayout.EndHorizontal();
+                    GUILayout.BeginHorizontal();
+                    GUILayout.Label($"Высота носовой волны: {foam.BowWaveHeight * 100f:0} см", GUILayout.Width(230));
+                    foam.BowWaveHeight = GUILayout.HorizontalSlider(foam.BowWaveHeight, 0f, .22f);
+                    GUILayout.EndHorizontal();
+                    GUILayout.BeginHorizontal();
+                    GUILayout.Label($"Брызги от ударов: {foam.SprayStrength * 100f:0}%", GUILayout.Width(180));
+                    foam.SprayStrength = GUILayout.HorizontalSlider(foam.SprayStrength, 0f, 2f);
+                    GUILayout.EndHorizontal();
+                    if (GUILayout.Button("Вернуть настройки пены и брызг", GUILayout.Height(29))) { foam.BowWaveStrength = foam.SprayStrength = 1f; foam.BowWaveHeight = .22f; }
+                }
+                GUILayout.Space(8);
+            }
             GUILayout.Label("Персонаж и испытания");
             Button(SessionController.Instance != null && SessionController.Instance.StormPaused ? "Продолжить зону" : "Остановить зону (сужение и урон)", 14);
             Button("Восстановить здоровье", 6);

@@ -11,8 +11,8 @@ namespace PirateSlop.Networking
         public static readonly System.Collections.Generic.List<NetworkLootChest> ClientChests = new();
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         static void ResetClientChests() => ClientChests.Clear();
-        public override void OnStartClient() { base.OnStartClient(); if (!ClientChests.Contains(this)) ClientChests.Add(this); }
-        public override void OnStartServer() { base.OnStartServer(); ServerChests.Add(this); }
+        public override void OnStartClient() { base.OnStartClient(); WaterImpactBody.Ensure(gameObject); if (!ClientChests.Contains(this)) ClientChests.Add(this); }
+        public override void OnStartServer() { base.OnStartServer(); WaterImpactBody.Ensure(gameObject); ServerChests.Add(this); }
         public LootCatalog Catalog;
         public Transform Lid;
         readonly SyncVar<bool> opened = new();

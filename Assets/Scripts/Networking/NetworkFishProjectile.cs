@@ -140,6 +140,7 @@ namespace PirateSlop.Networking
                         if (chest != null && chest.IsSpawned && chest.Kind == SeaLootKind.Shark &&
                             Vector3.Distance(transform.position, chest.EventPoint) <= 12f)
                             chest.FeedSharks(pickup.Item, transform.position);
+                    WaterEntryObserversRpc(transform.position, velocity);
                     Burst();
                 }
                 else
@@ -165,6 +166,12 @@ namespace PirateSlop.Networking
             flying.Value = false;
             ServerManager.Despawn(NetworkObject);
         }
+        [ObserversRpc(RunLocally = true)]
+        void WaterEntryObserversRpc(Vector3 point, Vector3 incoming)
+        {
+            WaterImpactPhysics.Report(point, incoming, 2f, .3f, WaterImpactKind.Object, gameObject);
+        }
+
         [ObserversRpc(RunLocally = true)]
         void SoundObserversRpc(SoundCue cue, Vector3 point, bool burst)
         {

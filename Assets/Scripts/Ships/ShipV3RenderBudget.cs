@@ -46,6 +46,13 @@ namespace PirateSlop.Ships
                     if (score < best) { best = score; nearest = lamp; }
                 }
             }
+            foreach (var lantern in HandLanternVisual.Active)
+            {
+                var lamp = lantern.Light;
+                if (lamp == null || !lamp.isActiveAndEnabled) continue;
+                float score = (lamp.transform.position - view.transform.position).sqrMagnitude;
+                if (score < best) { best = score; nearest = lamp; }
+            }
             if (shadowLight == nearest) return;
             if (shadowLight != null) shadowLight.shadows = LightShadows.None;
             shadowLight = nearest;

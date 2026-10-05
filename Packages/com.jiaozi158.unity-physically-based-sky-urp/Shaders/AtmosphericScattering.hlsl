@@ -1,5 +1,9 @@
 #ifndef URP_ATMOSPHERIC_SCATTERING_INCLUDED
 #define URP_ATMOSPHERIC_SCATTERING_INCLUDED
+#ifndef PIRATESLOP_CAMERA_WATER_DEFINED
+#define PIRATESLOP_CAMERA_WATER_DEFINED
+float4 _BoatAttack_CameraWater;
+#endif
 
 #ifndef SHADERGRAPH_PREVIEW
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
@@ -297,6 +301,7 @@ void EvaluateAtmosphericScattering(half3 V, float2 positionNDC, float tFrag, out
 bool EvaluateAtmosphericScattering(PositionInputs posInput, half3 V, out half3 color, out half3 opacity)
 {
     color = opacity = 0;
+    if (_BoatAttack_CameraWater.w > .5 && _BoatAttack_CameraWater.x > .5) return false;
 
 #ifdef DEBUG_DISPLAY
     half4 debugColor = 0;
@@ -415,6 +420,7 @@ bool EvaluateAtmosphericScattering(PositionInputs posInput, half3 V, out half3 c
 void TransparentAtmosphericScattering_half(float4 ScreenPositionRaw, half3 ViewDirectionWS, half3 Emission, half Alpha, out half3 FinalEmission, out half FinalAlpha)
 {
 #ifndef SHADERGRAPH_PREVIEW
+    if (_BoatAttack_CameraWater.w > .5 && _BoatAttack_CameraWater.x > .5) { FinalEmission = Emission; FinalAlpha = Alpha; return; }
     float2 screenUV = ScreenPositionRaw.xy;
     float deviceDepth = ScreenPositionRaw.z;
 

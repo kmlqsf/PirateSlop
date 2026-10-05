@@ -50,9 +50,16 @@ namespace PirateSlop.Networking
             {
                 float step = Mathf.Min(Step, dt);
                 Vector3 point = transform.position;
+                Vector3 incoming = velocity + Physics.gravity * step;
                 bool hit = Advance(source != null ? source.transform : null, transform, ref point, ref velocity, step, out var support);
                 pickup.Place(hit && support != null ? support.NetworkObject : null, point, transform.rotation);
-                if (hit) { flying.Value = false; break; }
+                if (hit)
+                {
+                    var ocean = OceanSurface.Instance;
+                    if (support == null && ocean != null && Mathf.Abs(point.y - ocean.Height(point)) < .08f)
+                        WaterEntryObserversRpc(point, incoming);
+                    flying.Value = false; break;
+                }
                 dt -= step;
             }
         }
@@ -102,6 +109,12 @@ namespace PirateSlop.Networking
             }
             if (thrower != null) thrower.BurstSound(point);
         }
+        [ObserversRpc(RunLocally = true)]
+        void WaterEntryObserversRpc(Vector3 point, Vector3 incoming)
+        {
+            WaterImpactPhysics.Report(point, incoming, 1.5f, .13f, WaterImpactKind.Object, gameObject);
+        }
+
         [ObserversRpc(RunLocally = true)]
         void SoundObserversRpc(Vector3 point)
         {

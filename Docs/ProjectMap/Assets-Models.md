@@ -297,6 +297,13 @@
 | [Assets/Models/Loot/FogBottle/FogBottleIcon.asset](<../../Assets/Models/Loot/FogBottle/FogBottleIcon.asset>) | Настройки или данные Unity |
 | [Assets/Models/Loot/FogBottle/FogGlass.mat](<../../Assets/Models/Loot/FogBottle/FogGlass.mat>) | Материал Unity |
 
+## Assets/Models/Loot/HandLantern
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/Loot/HandLantern/HandLanternBody.asset](<../../Assets/Models/Loot/HandLantern/HandLanternBody.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |
+| [Assets/Models/Loot/HandLantern/HandLanternVisual.prefab](<../../Assets/Models/Loot/HandLantern/HandLanternVisual.prefab>) | Префаб Unity; Предметы, лут и инвентарь |
+
 ## Assets/Models/Loot/Kenney
 
 | Файл | Краткое описание |
@@ -1239,6 +1246,12 @@
 | [Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_7.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_7.asset>) | Настройки или данные Unity |
 | [Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_8.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_8.asset>) | Настройки или данные Unity |
 | [Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_9.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_9.asset>) | Настройки или данные Unity |
+
+## Assets/Models/Ships/ShipV3/RuntimeMeshes/Lanterns
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Lanterns/ShipLanternClearPanes.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Lanterns/ShipLanternClearPanes.asset>) | Настройки или данные Unity; Движение корабля и палуба |
 
 ## Assets/Models/Ships/ShipV3/RuntimeMeshes/Shadows
 

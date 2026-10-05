@@ -21,7 +21,7 @@ namespace PirateSlop
         bool Underwater => OceanSurface.Instance != null && motor.PlayerCamera != null && motor.PlayerCamera.transform.position.y < OceanSurface.Instance.Height(motor.PlayerCamera.transform.position) - .08f;
         void BeginCamera(ScriptableRenderContext context, Camera camera)
         {
-            if (camera != motor.PlayerCamera || !camera.enabled || !Underwater) return;
+            if (camera != motor.PlayerCamera || !camera.enabled || !Underwater || OceanSurface.Instance.HeightSource is BoatAttackOcean) return;
             previousFog = RenderSettings.fog; previousColor = RenderSettings.fogColor;
             previousMode = RenderSettings.fogMode; previousDensity = RenderSettings.fogDensity;
             RenderSettings.fog = true; RenderSettings.fogMode = FogMode.ExponentialSquared;
@@ -48,7 +48,7 @@ namespace PirateSlop
             if (Event.current.type != EventType.Repaint) return;
             if (motor.PlayerCamera == null || !motor.PlayerCamera.enabled || motor.IsDead) return;
             Color old = GUI.color;
-            if (Underwater)
+            if (Underwater && !(OceanSurface.Instance.HeightSource is BoatAttackOcean))
             {
                 GUI.color = new Color(.015f, .22f, .28f, .22f);
                 GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), Texture2D.whiteTexture);

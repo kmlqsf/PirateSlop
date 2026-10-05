@@ -49,7 +49,7 @@ namespace PirateSlop.Networking
         }
         public bool CanAddItem(InventoryItem item)
         {
-            if (!IsServerInitialized || item < InventoryItem.Fish || item > InventoryItem.Barricade) return false;
+            if (!IsServerInitialized || item < InventoryItem.Fish || item > InventoryItem.Lantern) return false;
             if (item == InventoryItem.Plank) return false;
             if (CannonAmmo.IsBall(item))
                 return ballCounts[PlayerInventory.AmmoSlot] < PlayerInventory.AmmoCapacity && (ballCounts[PlayerInventory.AmmoSlot] == 0 || ballItems[PlayerInventory.AmmoSlot] == item);
@@ -168,6 +168,7 @@ namespace PirateSlop.Networking
                     var dropped = Instantiate(prefab, placement.point, placement.rotation);
                     spawned.Add(dropped);
                     if (CannonAmmo.IsBall(item)) dropped.SetAmmoItem(item);
+                    if (item == InventoryItem.Lantern) dropped.GetComponent<NetworkLantern>()?.SetLit(GetComponent<NetworkEquipment>().LanternLit(slot));
                     UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene(dropped.gameObject, gameObject.scene);
                     dropped.Place(placement.support != null ? placement.support.NetworkObject : null, placement.point, placement.rotation);
                     ServerManager.Spawn(dropped.NetworkObject);

@@ -1542,7 +1542,7 @@
 
 | Файл | Краткое описание |
 | --- | --- |
-| [Packages/com.jiaozi158.unity-physically-based-sky-urp/Shaders/AtmosphericScattering.hlsl](<../../Packages/com.jiaozi158.unity-physically-based-sky-urp/Shaders/AtmosphericScattering.hlsl>) | Код шейдера |
+| [Packages/com.jiaozi158.unity-physically-based-sky-urp/Shaders/AtmosphericScattering.hlsl](<../../Packages/com.jiaozi158.unity-physically-based-sky-urp/Shaders/AtmosphericScattering.hlsl>) | Код шейдера; Мир, острова и океан, Тестовая карта и водоворот |
 | [Packages/com.jiaozi158.unity-physically-based-sky-urp/Shaders/PhysicallyBasedSky.shader](<../../Packages/com.jiaozi158.unity-physically-based-sky-urp/Shaders/PhysicallyBasedSky.shader>) | Шейдер; Тестовая карта и водоворот |
 | [Packages/com.jiaozi158.unity-physically-based-sky-urp/Shaders/PhysicallyBasedSkyCommon.hlsl](<../../Packages/com.jiaozi158.unity-physically-based-sky-urp/Shaders/PhysicallyBasedSkyCommon.hlsl>) | Код шейдера |
 | [Packages/com.jiaozi158.unity-physically-based-sky-urp/Shaders/PhysicallyBasedSkyDefs.hlsl](<../../Packages/com.jiaozi158.unity-physically-based-sky-urp/Shaders/PhysicallyBasedSkyDefs.hlsl>) | Код шейдера |
@@ -1682,7 +1682,7 @@
 | [Packages/com.unity.urp-water-system/Runtime/Shaders/WaterFXFoamOnly.shader](<../../Packages/com.unity.urp-water-system/Runtime/Shaders/WaterFXFoamOnly.shader>) | Шейдер |
 | [Packages/com.unity.urp-water-system/Runtime/Shaders/WaterFXShader.shader](<../../Packages/com.unity.urp-water-system/Runtime/Shaders/WaterFXShader.shader>) | Шейдер |
 | [Packages/com.unity.urp-water-system/Runtime/Shaders/WaterInput.hlsl](<../../Packages/com.unity.urp-water-system/Runtime/Shaders/WaterInput.hlsl>) | Код шейдера; Мир, острова и океан |
-| [Packages/com.unity.urp-water-system/Runtime/Shaders/WaterLighting.hlsl](<../../Packages/com.unity.urp-water-system/Runtime/Shaders/WaterLighting.hlsl>) | Код шейдера |
+| [Packages/com.unity.urp-water-system/Runtime/Shaders/WaterLighting.hlsl](<../../Packages/com.unity.urp-water-system/Runtime/Shaders/WaterLighting.hlsl>) | Код шейдера; Мир, острова и океан, Тестовая карта и водоворот |
 | [Packages/com.unity.urp-water-system/Runtime/Shaders/WaterTessellated.shader](<../../Packages/com.unity.urp-water-system/Runtime/Shaders/WaterTessellated.shader>) | Шейдер |
 | [Packages/com.unity.urp-water-system/Runtime/Shaders/WaterTessellation.hlsl](<../../Packages/com.unity.urp-water-system/Runtime/Shaders/WaterTessellation.hlsl>) | Код шейдера |
 

@@ -33,6 +33,7 @@ namespace WaterSystem
         private Material _waterMaterial;
         public Material surfaceMaterial;
         public Material RuntimeMaterial => _waterMaterial;
+        public Material RuntimeInfiniteMaterial => _infiniteWaterPlanePass?.Material;
         
         // Passes
         private InfiniteWaterPlane _infiniteWaterPlanePass;
@@ -43,6 +44,8 @@ namespace WaterSystem
         public float whirlpoolRadius, whirlpoolDepth, whirlpoolTwist;
         public float waveTime = -1f;
         public bool uniformWaveDepth;
+        [NonSerialized] public bool dynamicSkyReflection;
+        [NonSerialized] public float waveStrength = 1f, waveSteepness = 1f, foamLightingMultiplier = 1f, scatteringLightingMultiplier = 1f;
         //public Depth.DepthData depthData = new(); // TODO - add back once work done here for better depth setup.
 
         #endregion
@@ -187,14 +190,19 @@ namespace WaterSystem
             _waterMaterial.SetFloat(Utilities.ShaderIDs.BoatAttackWaterFoamIntensity, settings.foamIntensity);
             infiniteMat?.SetFloat(Utilities.ShaderIDs.BoatAttackWaterFoamIntensity, settings.foamIntensity);
             
-            _waterMaterial.SetTexture(Utilities.ShaderIDs.CubemapTexture, settings.cubemapTexture);
-            infiniteMat?.SetTexture(Utilities.ShaderIDs.CubemapTexture, settings.cubemapTexture);
+            var reflection = dynamicSkyReflection && RenderSettings.defaultReflectionMode == DefaultReflectionMode.Custom && RenderSettings.customReflectionTexture != null && RenderSettings.customReflectionTexture.dimension == TextureDimension.Cube ? RenderSettings.customReflectionTexture : settings.cubemapTexture;
+            _waterMaterial.SetTexture(Utilities.ShaderIDs.CubemapTexture, reflection);
+            infiniteMat?.SetTexture(Utilities.ShaderIDs.CubemapTexture, reflection);
+            var lighting = new Vector4(dynamicSkyReflection ? RenderSettings.reflectionIntensity : 1f, foamLightingMultiplier, scatteringLightingMultiplier, dynamicSkyReflection ? 1f : 0f);
+            _waterMaterial.SetVector("_BoatAttack_Lighting", lighting);
+            infiniteMat?.SetVector("_BoatAttack_Lighting", lighting);
+            _waterMaterial.SetVector("_BoatAttack_WaveControls", new Vector4(waveStrength, waveSteepness, 0f, 0f));
             _waterMaterial.SetInt(Utilities.ShaderIDs.WaveCount, gerstnerData.GetWaveCount());
             
             //gerstner wave setup
             gerstnerData.SetShaderProperties(ref _waterMaterial, gerstnerData);
             _waterMaterial.SetFloat("_WaveHeight", transform.position.y);
-            _waterMaterial.SetFloat("_MaxWaveHeight", Mathf.Max(.01f, gerstnerData.basicWaves.amplitude * 2f));
+            _waterMaterial.SetFloat("_MaxWaveHeight", Mathf.Max(.01f, gerstnerData.basicWaves.amplitude * 2f * waveStrength));
             _waterMaterial.SetVector("_BoatAttack_WhirlpoolCenter", whirlpoolCenter);
             _waterMaterial.SetVector("_BoatAttack_Whirlpool", new Vector4(whirlpoolRadius, whirlpoolDepth, whirlpoolTwist, 0));
             _waterMaterial.SetFloat("_BoatAttack_WaveTime", waveTime);

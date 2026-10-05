@@ -2,6 +2,10 @@ Shader "Boat Attack/Water/InfiniteWater"
 {
 	Properties
 	{
+        [HideInInspector] _WaterShipCount ("Water ship count", Integer) = 0
+        [HideInInspector] _WaterShipFoamAtlas ("Ship foam history", 2D) = "black" {}
+        [HideInInspector] _WaterShipFoamMapping ("Ship foam mapping", Vector) = (0, 0, 0, 0)
+		[HideInInspector] _BoatAttack_Lighting ("Sky lighting", Vector) = (1, 1, 1, 0)
 		_Size ("size", float) = 3.0
 		[HideInInspector] _BoatAttack_RampTexture ("Water Ramp", 2D) = "white" {}
         [Toggle(_STATIC_SHADER)] _Static ("Static", Float) = 0
@@ -114,7 +118,7 @@ Shader "Boat Attack/Water/InfiniteWater"
 
                 half4 color;
                 color.a = 1;
-                color.rgb = WaterShading(inputData, surfaceData, additionalData, screenUV.xy);
+                color.rgb = WaterShading(inputData, surfaceData, additionalData, screenUV.xy, _BoatAttack_CameraWater.w > .5 ? _BoatAttack_CameraWater.x > .5 : GetCameraPositionWS().y < plane.positionWS.y);
 
             	Output output;
             	output.color = color;

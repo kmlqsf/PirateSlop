@@ -133,7 +133,11 @@ namespace PirateSlop.Networking
             if (!IsClientInitialized) return;
             if (supportId.Value == 0)
             {
-                CombatVfx.Splash(point);
+                float duration = Mathf.Max(.5f, rewardDuration.Value);
+                Vector3 destination = RewardDestination();
+                float height = Mathf.Clamp(Vector3.Distance(rewardStart.Value, destination) * .12f, 3f, 12f);
+                Vector3 incoming = (destination - rewardStart.Value) / duration - Vector3.up * (4f * height / duration);
+                WaterImpactPhysics.Report(point, incoming, 45f, .65f, WaterImpactKind.Object, gameObject);
                 GameAudio.Play(SoundCue.WaterSplash, point);
             }
             else GameAudio.Play(SoundCue.Impact, point);

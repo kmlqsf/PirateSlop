@@ -69,7 +69,12 @@
 | Файл | Краткое описание |
 | --- | --- |
 | [Assets/Resources/EnvironmentTest/Gallery.prefab](<../../Assets/Resources/EnvironmentTest/Gallery.prefab>) | Префаб Unity |
+| [Assets/Resources/EnvironmentTest/Ocean.prefab](<../../Assets/Resources/EnvironmentTest/Ocean.prefab>) | Префаб Unity; Мир, острова и океан, Тестовая карта и водоворот |
+| [Assets/Resources/EnvironmentTest/ShipFoamAtlas.shader](<../../Assets/Resources/EnvironmentTest/ShipFoamAtlas.shader>) | Шейдер; Мир, острова и океан, Тестовая карта и водоворот |
 | [Assets/Resources/EnvironmentTest/SkyDayNight.prefab](<../../Assets/Resources/EnvironmentTest/SkyDayNight.prefab>) | Префаб Unity; Тестовая карта и водоворот |
+| [Assets/Resources/EnvironmentTest/UnderwaterImmersion.shader](<../../Assets/Resources/EnvironmentTest/UnderwaterImmersion.shader>) | Шейдер; Мир, острова и океан, Тестовая карта и водоворот |
+| [Assets/Resources/EnvironmentTest/UnderwaterSuspension.shader](<../../Assets/Resources/EnvironmentTest/UnderwaterSuspension.shader>) | Шейдер; Мир, острова и океан, Тестовая карта и водоворот |
+| [Assets/Resources/EnvironmentTest/WaterBowSpray.shader](<../../Assets/Resources/EnvironmentTest/WaterBowSpray.shader>) | Шейдер; Мир, острова и океан, Тестовая карта и водоворот |
 
 ## Assets/Resources/Ships
 

@@ -8,7 +8,7 @@ using System.Linq;
 namespace PirateSlop.Networking
 {
     [DefaultExecutionOrder(45)]
-    public sealed class NetworkEquipment : NetworkBehaviour
+    public sealed partial class NetworkEquipment : NetworkBehaviour
     {
         public GameObject[] Models;
         public NetworkParrotDrone ParrotPrefab;
@@ -88,14 +88,21 @@ namespace PirateSlop.Networking
                 return new Vector3(-.045f,-.04f+reach*.13f,.15f+reach*.5f);
             }
         }
-        public Vector3 GripOffset => Firearm ? CanonicalFirearm ? Vector3.zero : new Vector3(0, -.03f, 0) : Item == InventoryItem.Swordfish ? new Vector3(0, -.045f, .13f) : new Vector3(.03f, .06f, 0);
+        public Vector3 GripOffset => Item == InventoryItem.Lantern ? Vector3.zero : Firearm ? CanonicalFirearm ? Vector3.zero : new Vector3(0, -.03f, 0) : Item == InventoryItem.Swordfish ? new Vector3(0, -.045f, .13f) : new Vector3(.03f, .06f, 0);
         int CapacityFor(InventoryItem item) => item==InventoryItem.DoubleBarrel ? handling.Shotgun.Capacity : item==InventoryItem.Musket ? handling.Musket.Capacity : 1;
-        public void ResetSlot(int slot, InventoryItem item) { if(IsServerInitialized) ammunition[slot] = CapacityFor(item); }
+        public void ResetSlot(int slot, InventoryItem item)
+        {
+            if (!IsServerInitialized) return;
+            ammunition[slot] = CapacityFor(item);
+            lanternLitSlots.Value &= ~(1 << slot);
+        }
         public void TransferAmmunitionTo(NetworkEquipment target)
         {
             if (!IsServerInitialized || target == null || !target.IsServerInitialized || target == this)
                 throw new System.InvalidOperationException("Ammunition replacement requires two server players.");
             System.Array.Copy(ammunition, target.ammunition, ammunition.Length);
+            target.lanternLitSlots.Value = lanternLitSlots.Value;
+            lanternLitSlots.Value = 0;
             target.nextShot = nextShot;
             target.rounds.Value = target.ammunition[target.inventory.SelectedSlot];
             System.Array.Clear(ammunition, 0, ammunition.Length);
@@ -144,6 +151,7 @@ namespace PirateSlop.Networking
                 AimServerRpc(aim, motor.AimDirection);
             }
             if (!can || mouse == null) { if (action.Value == 2) CancelServerRpc(); return; }
+            if (Item == InventoryItem.Lantern) { ReadLanternInput(keyboard); return; }
             if (Item == InventoryItem.HolyGrenade || Item == InventoryItem.Spyglass) return;
             Vector3 eyeOffset = motor.PlayerCamera.transform.position-transform.position;
             if (keyboard != null && keyboard.rKey.wasPressedThisFrame && Firearm) UseServerRpc(1, motor.AimDirection, eyeOffset,++localSequence,aim);
@@ -279,6 +287,7 @@ namespace PirateSlop.Networking
         void CreateVisuals()
         {
             wings.Clear();
+            viewLantern = worldLantern = null;
             if (view != null) Destroy(view.gameObject);
             if (world != null) Destroy(world.gameObject);
             shown = Item;
@@ -302,6 +311,13 @@ namespace PirateSlop.Networking
                 {
                     visual.localRotation = Quaternion.identity;
                     visual.localPosition = new Vector3(0, -.05f, Item == InventoryItem.Swordfish ? .04f : .05f);
+                }
+                else if (Item == InventoryItem.Lantern)
+                {
+                    visual.localPosition = Vector3.zero; visual.localRotation = Quaternion.identity;
+                    var lantern = visual.GetComponent<HandLanternVisual>();
+                    lantern.Held = true;
+                    if (root == view) viewLantern = lantern; else worldLantern = lantern;
                 }
                 else if (Item == InventoryItem.Spyglass) { visual.localRotation = Quaternion.identity; visual.localPosition = new Vector3(0, -.02f, .18f); }
                 else if (Firearm)
@@ -350,6 +366,7 @@ namespace PirateSlop.Networking
             float recoil = Mathf.Exp(-(Time.time - recoilAt) * 15);
             var definition=Firearm && handling!=null?handling.Definition:null;
             Vector3 position = definition!=null ? Vector3.Lerp(definition.HipPosition,definition.AimPosition,IsOwner?handling.AimBlend:aimBlend) : new Vector3(.22f,-.25f,.45f);
+            if (Item == InventoryItem.Lantern) position = new Vector3(.32f, .16f, .62f);
             Vector3 rotation = new Vector3(-recoil * (Item == InventoryItem.DoubleBarrel ? 20 : 15), recoil*1.5f, -recoil*2);
             if(!IsOwner) position.z -= recoil * .13f;
             if(IsOwner && definition!=null) { rotation=handling.PoseRotation;position+=handling.PosePosition; }
@@ -375,6 +392,7 @@ namespace PirateSlop.Networking
             float pitch = Mathf.Asin(Mathf.Clamp(-direction.Value.y,-1,1))*Mathf.Rad2Deg;
             world.localPosition = new Vector3(position.x,1.4f+position.y,position.z);
             world.localRotation = Quaternion.Euler(rotation + new Vector3(aiming.Value ? pitch : 0,0,0));
+            if (Item == InventoryItem.Lantern) world.localPosition = new Vector3(.34f, motor.IsCrouched ? .97f : 1.42f, .40f);
             if (CanonicalFirearm)
             {
                 float blend = IsOwner ? handling.AimBlend : aimBlend;
@@ -384,6 +402,7 @@ namespace PirateSlop.Networking
                 if (motor.IsCrouched) world.localPosition -= Vector3.up * .45f;
                 world.localRotation = Quaternion.Euler(rotation + new Vector3(aiming.Value ? pitch : 0, Mathf.Lerp(-20, 0, blend), 0));
             }
+            PresentLantern();
             foreach(var wing in wings)
                 wing.Key.localRotation = wing.Value * Quaternion.Euler(0,(wing.Key.name == "WingLeft" ? 1 : -1) * Mathf.Sin(Time.time*(visualAction==3 ? 18 : 3)) * (visualAction==3 ? 60 : 5),0);
         }
@@ -401,6 +420,7 @@ namespace PirateSlop.Networking
             if(IsOwner && WaterRunning) PirateHudStyle.Label(new Rect(28,140,270,30),"Хождение по воде: "+waterRunRemaining.Value+" с",PirateHudStyle.Paper);
             if (!IsOwner || !Active || !motor.InputActive) return;
             if(Scoped) DrawScope();
+            if (Item == InventoryItem.Lantern) { ContextPrompt.Offer("РУЧНОЙ ФОНАРЬ · E — " + (LanternLit(inventory.SelectedSlot) ? "погасить" : "зажечь") + " · G — положить", 20); return; }
             if (Item == InventoryItem.VortexBottle) { ContextPrompt.Offer("БУТЫЛКА ВИХРЯ · ЛКМ — бросить · попадание в корабль: скорость 500% на 10 с", 20); return; }
             if (Item == InventoryItem.FogBottle) { ContextPrompt.Offer("БУТЫЛКА ТУМАНА · ЛКМ — бросить · густое облако на 15 с, включая удар о воду", 20); return; }
             if (Item == InventoryItem.Spyglass) { ContextPrompt.Offer("ПОДЗОРНАЯ ТРУБА · удерживать ПКМ — смотреть · колесо — зум", 20); return; }

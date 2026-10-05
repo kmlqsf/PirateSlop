@@ -101,6 +101,23 @@ MonoBehaviour:
   m_Active: 0
   downsampleDepthShader: {fileID: 4800000, guid: cffeaeec0396a2c4dad475266cc8dfeb, type: 3}
   volumetricFogShader: {fileID: 4800000, guid: 08f816187f9af0244a95556ee0cab83f, type: 3}
+--- !u!114 &-2530209969063171053
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89d69c6b239946d44957ae26f9f69e09, type: 3}
+  m_Name: Underwater Immersion
+  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.UnderwaterRendererFeature
+  m_Active: 1
+  Template: {fileID: 2100000, guid: a2206b883db658f4ca5d773c2a99571b, type: 2}
+  DepthCopyShader: {fileID: 4800000, guid: d6dae50ee9e1bfa4db75f19f99355220, type: 3}
+  Extinction: {x: 0.028, y: 0.014, z: 0.017}
+  FogTint: {r: 0.007, g: 0.055, b: 0.065, a: 1}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -131,10 +148,10 @@ MonoBehaviour:
   - {fileID: -4144231278053079073}
   - {fileID: 2630250939822329195}
   - {fileID: -3461419656797274781}
-  - {fileID: 1045614702906500501}
   - {fileID: -3920808745478757785}
   - {fileID: -3897197848061504586}
-  m_RendererFeatureMap: ad6b866f10d7b46cl
+  - {fileID: -2530209969063171053}
+  m_RendererFeatureMap: ad6b866f10d7b46cafb674d42de29156df4795149cbb7cc66b4d3f4a4b878024633d0b5a2991f6cf67627e25387d96c9b693e096345feac9136cd65270e3e2dcl
   xrSystemData: {fileID: 0}
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   m_AssetVersion: 3
@@ -163,20 +180,6 @@ MonoBehaviour:
   m_AccurateGbufferNormals: 0
   m_IntermediateTextureMode: 0
   m_TileOnlyMode: 0
---- !u!114 &1045614702906500501
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 68017217a8404634aa1a51d6a870099f, type: 3}
-  m_Name: Oceana Test Ocean
-  m_EditorClassIdentifier: Assembly-CSharp::Oceana.OceanaRenderFeature
-  m_Active: 1
-  m_Settings: {fileID: 11400000, guid: ca19df2710a742244ae272cf65b1586a, type: 2}
 --- !u!114 &2630250939822329195
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -232,7 +235,7 @@ MonoBehaviour:
     Source: 1
     NormalSamples: 1
     Intensity: 0.4
-    DirectLightingStrength: 0.25
+    DirectLightingStrength: 0.15
     Radius: 0.3
     Samples: 1
     BlurQuality: 0

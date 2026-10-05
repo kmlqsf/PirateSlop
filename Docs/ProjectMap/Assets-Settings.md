@@ -18,7 +18,7 @@
 | [Assets/Settings/PC_RPAsset.asset](<../../Assets/Settings/PC_RPAsset.asset>) | Настройки или данные Unity |
 | [Assets/Settings/PC_Renderer.asset](<../../Assets/Settings/PC_Renderer.asset>) | Настройки или данные Unity; Мир, острова и океан, Тестовая карта и водоворот |
 | [Assets/Settings/SampleSceneProfile.asset](<../../Assets/Settings/SampleSceneProfile.asset>) | Настройки или данные Unity |
-| [Assets/Settings/UniversalRenderPipelineGlobalSettings.asset](<../../Assets/Settings/UniversalRenderPipelineGlobalSettings.asset>) | Настройки или данные Unity |
+| [Assets/Settings/UniversalRenderPipelineGlobalSettings.asset](<../../Assets/Settings/UniversalRenderPipelineGlobalSettings.asset>) | Настройки или данные Unity; Мир, острова и океан, Тестовая карта и водоворот |
 
 ## Assets/Settings/Loot
 
@@ -49,6 +49,7 @@
 | [Assets/Settings/TestSky/TestSkyPipeline.asset](<../../Assets/Settings/TestSky/TestSkyPipeline.asset>) | Настройки или данные Unity; Тестовая карта и водоворот |
 | [Assets/Settings/TestSky/TestSkyRenderer.asset](<../../Assets/Settings/TestSky/TestSkyRenderer.asset>) | Настройки или данные Unity; Тестовая карта и водоворот |
 | [Assets/Settings/TestSky/TestSkyVolume.asset](<../../Assets/Settings/TestSky/TestSkyVolume.asset>) | Настройки или данные Unity; Тестовая карта и водоворот |
+| [Assets/Settings/TestSky/Underwater.mat](<../../Assets/Settings/TestSky/Underwater.mat>) | Материал Unity; Мир, острова и океан, Тестовая карта и водоворот |
 
 ## Assets/Settings/WaterTests
 
@@ -56,9 +57,6 @@
 | --- | --- |
 | [Assets/Settings/WaterTests/BoatAttackWater.mat](<../../Assets/Settings/WaterTests/BoatAttackWater.mat>) | Материал Unity; Мир, острова и океан, Тестовая карта и водоворот |
 | [Assets/Settings/WaterTests/BoatAttackWaterTile.asset](<../../Assets/Settings/WaterTests/BoatAttackWaterTile.asset>) | Настройки или данные Unity; Мир, острова и океан |
-| [Assets/Settings/WaterTests/OceanaLinearWaveData.asset](<../../Assets/Settings/WaterTests/OceanaLinearWaveData.asset>) | Настройки или данные Unity; Мир, острова и океан, Тестовая карта и водоворот |
-| [Assets/Settings/WaterTests/OceanaSettings.asset](<../../Assets/Settings/WaterTests/OceanaSettings.asset>) | Настройки или данные Unity; Мир, острова и океан, Тестовая карта и водоворот |
-| [Assets/Settings/WaterTests/OceanaWater.mat](<../../Assets/Settings/WaterTests/OceanaWater.mat>) | Материал Unity; Мир, острова и океан, Тестовая карта и водоворот |
 
 ## Assets/Settings/Weapons
 

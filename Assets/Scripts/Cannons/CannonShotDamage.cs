@@ -122,21 +122,14 @@ namespace PirateSlop
                     if (hit.distance <= distance) { nearest = hit; distance = hit.distance; }
                 }
                 var ocean = OceanSurface.Instance;
-                if (ocean != null && (transform.position + delta).y - Radius <= ocean.Height(transform.position + delta))
+                if (WaterImpactPhysics.Cross(ocean, transform.position, transform.position + delta, Radius, out var waterPoint, out float high))
                 {
-                    float low = 0f, high = 1f;
-                    for (int i = 0; i < 8; i++)
-                    {
-                        float t = (low + high) * .5f;
-                        var sample = transform.position + delta * t;
-                        if (sample.y - Radius > ocean.Height(sample)) low = t; else high = t;
-                    }
                     if (nearest.collider == null || delta.magnitude * high < nearest.distance)
                     {
-                        var point = transform.position + delta * high;
-                        MoveShot(point);
-                        point.y = ocean.Height(point);
-                        CombatVfx.Splash(point); GameAudio.Play(SoundCue.Splash, point);
+                        var point = waterPoint;
+                        var incoming = Vector3.Lerp(Velocity, nextVelocity, high);
+                        MoveShot(point + Vector3.up * Radius);
+                        WaterImpactPhysics.Report(point, incoming, 8f, Radius, WaterImpactKind.Projectile, gameObject); GameAudio.Play(SoundCue.Splash, point);
                         if (boomerang && !returning) BeginReturn(point + Vector3.up * (Radius + .05f), Vector3.up);
                         else { spent = true; Destroy(gameObject); }
                         return;
@@ -209,7 +202,7 @@ namespace PirateSlop
         void ExplodeArea(Vector3 point, Vector3 normal, Collider surface)
         {
             CombatVfx.Impact(point, normal, true);
-            if (surface == null) { CombatVfx.Splash(point); GameAudio.Play(SoundCue.Splash, point); }
+            if (surface == null) { WaterImpactPhysics.Report(point, Velocity, 8f, Radius, WaterImpactKind.Projectile, gameObject); GameAudio.Play(SoundCue.Splash, point); }
             if (!Authoritative) return;
             if (Ammo == InventoryItem.BoardingHook && surface != null && Source != null)
                 Source.GetComponent<NetworkCannon>()?.AttachBoarding(SourceCannonIndex, surface.GetComponentInParent<NetworkShip>(), point, normal);

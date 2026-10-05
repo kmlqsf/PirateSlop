@@ -19,6 +19,7 @@
 | [Assets/UI/Inventory/HolyGrenade.png](<../../Assets/UI/Inventory/HolyGrenade.png>) | Изображение / текстура |
 | [Assets/UI/Inventory/IceCannonball.png](<../../Assets/UI/Inventory/IceCannonball.png>) | Изображение / текстура |
 | [Assets/UI/Inventory/InventoryIcons.asset](<../../Assets/UI/Inventory/InventoryIcons.asset>) | Настройки или данные Unity |
+| [Assets/UI/Inventory/Lantern.png](<../../Assets/UI/Inventory/Lantern.png>) | Изображение / текстура; Предметы, лут и инвентарь, Меню и HUD |
 | [Assets/UI/Inventory/Mallet.png](<../../Assets/UI/Inventory/Mallet.png>) | Изображение / текстура |
 | [Assets/UI/Inventory/Plank.png](<../../Assets/UI/Inventory/Plank.png>) | Изображение / текстура |
 | [Assets/UI/Inventory/PushCannonball.png](<../../Assets/UI/Inventory/PushCannonball.png>) | Изображение / текстура |

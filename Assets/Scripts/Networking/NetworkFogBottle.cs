@@ -86,14 +86,14 @@ namespace PirateSlop.Networking
             UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene(cloud.gameObject, gameObject.scene);
             cloud.Initialize();
             ServerManager.Spawn(cloud.NetworkObject);
-            BreakObserversRpc(point, water);
+            BreakObserversRpc(point, water, velocity);
             ServerManager.Despawn(NetworkObject);
             return true;
         }
         [ObserversRpc(RunLocally = true)]
-        void BreakObserversRpc(Vector3 point, bool water)
+        void BreakObserversRpc(Vector3 point, bool water, Vector3 incoming)
         {
-            BottleBreakVfx.Present(point, water);
+            BottleBreakVfx.Present(point, water, incoming, gameObject);
         }
     }
 }

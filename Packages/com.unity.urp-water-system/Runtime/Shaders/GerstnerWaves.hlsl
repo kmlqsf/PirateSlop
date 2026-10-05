@@ -39,8 +39,9 @@ WaveStruct GerstnerWave(float2 pos, float waveCountMulti, float amplitude, float
 	float3 wave = 0; // wave vector
 	float w = 6.28318 / wavelength; // 2pi over wavelength(hardcoded)
 	float wSpeed = sqrt(9.8 * w); // frequency of the wave based off wavelength
-	float peak = PIRATESLOP_MODIFIED_GERSTNER_PEAK;
-	float qi = peak / (amplitude * w * _WaveCount);
+	float peak = PIRATESLOP_MODIFIED_GERSTNER_PEAK * saturate(_BoatAttack_WaveControls.x) * saturate(_BoatAttack_WaveControls.y);
+    amplitude *= max(0.0, _BoatAttack_WaveControls.x);
+	float qi = amplitude > 0.00001 ? peak / (amplitude * w * max(_WaveCount, 1u)) : 0.0;
 	
 	float2 windDir = direction; // calculate wind direction
 	float dir = dot(windDir, pos - (omniPos * omni)); // calculate a gradient along the wind direction
@@ -67,7 +68,7 @@ WaveStruct GerstnerWave(float2 pos, float waveCountMulti, float amplitude, float
 	waveOut.position = wave * saturate(amplitude * 10000);
 	waveOut.normal = (n.xzy * waveCountMulti);
 	half b = dot(n.xy * 2, -windDir);
-	waveOut.foam = saturate(a + b);
+	waveOut.foam = saturate(a + b) * saturate(_BoatAttack_WaveControls.x);
 
 	return waveOut;
 }
