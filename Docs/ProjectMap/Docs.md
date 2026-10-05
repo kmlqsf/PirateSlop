@@ -12,6 +12,7 @@
 | --- | --- |
 | [Docs/BoatAttackWaterTest.md](<../BoatAttackWaterTest.md>) | Документация; Мир, острова и океан, Тестовая карта и водоворот |
 | [Docs/OceanaWaterTest.md](<../OceanaWaterTest.md>) | Документация; Мир, острова и океан, Тестовая карта и водоворот |
+| [Docs/RoguelikeApprovedUpgrades.md](<../RoguelikeApprovedUpgrades.md>) | Документация; Улучшения рогалика из сундуков |
 | [Docs/TestSkyDayNight.md](<../TestSkyDayNight.md>) | Документация; Тестовая карта и водоворот |
 
 ## Docs/Hotbar

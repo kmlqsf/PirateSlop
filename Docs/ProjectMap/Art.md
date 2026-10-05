@@ -92,6 +92,23 @@
 | --- | --- |
 | [Art/Blender/Characters/PirateCaptain/Pirate_Captain.blend](<../../Art/Blender/Characters/PirateCaptain/Pirate_Captain.blend>) | Редактируемая сцена Blender |
 
+## Art/Blender/Characters/Review
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/Characters/Review/screenshot-20260910-011704.png](<../../Art/Blender/Characters/Review/screenshot-20260910-011704.png>) | Изображение / текстура |
+| [Art/Blender/Characters/Review/screenshot-20260910-011712.png](<../../Art/Blender/Characters/Review/screenshot-20260910-011712.png>) | Изображение / текстура |
+| [Art/Blender/Characters/Review/screenshot-20260910-011730.png](<../../Art/Blender/Characters/Review/screenshot-20260910-011730.png>) | Изображение / текстура |
+| [Art/Blender/Characters/Review/screenshot-20260910-011811.png](<../../Art/Blender/Characters/Review/screenshot-20260910-011811.png>) | Изображение / текстура |
+| [Art/Blender/Characters/Review/screenshot-20260910-011838.png](<../../Art/Blender/Characters/Review/screenshot-20260910-011838.png>) | Изображение / текстура |
+| [Art/Blender/Characters/Review/screenshot-20260910-115013.png](<../../Art/Blender/Characters/Review/screenshot-20260910-115013.png>) | Изображение / текстура |
+| [Art/Blender/Characters/Review/screenshot-20260910-115037.png](<../../Art/Blender/Characters/Review/screenshot-20260910-115037.png>) | Изображение / текстура |
+| [Art/Blender/Characters/Review/screenshot-20260910-115128.png](<../../Art/Blender/Characters/Review/screenshot-20260910-115128.png>) | Изображение / текстура |
+| [Art/Blender/Characters/Review/screenshot-20260910-115159.png](<../../Art/Blender/Characters/Review/screenshot-20260910-115159.png>) | Изображение / текстура |
+| [Art/Blender/Characters/Review/screenshot-20260910-115719.png](<../../Art/Blender/Characters/Review/screenshot-20260910-115719.png>) | Изображение / текстура |
+| [Art/Blender/Characters/Review/screenshot-20260910-115758.png](<../../Art/Blender/Characters/Review/screenshot-20260910-115758.png>) | Изображение / текстура |
+| [Art/Blender/Characters/Review/screenshot-20260910-115817.png](<../../Art/Blender/Characters/Review/screenshot-20260910-115817.png>) | Изображение / текстура |
+
 ## Art/Blender/ClimbingRigging
 
 | Файл | Краткое описание |
@@ -105,6 +122,7 @@
 | --- | --- |
 | [Art/Blender/Creatures/ShipMonkey/README.md](<../../Art/Blender/Creatures/ShipMonkey/README.md>) | Документация; Корабельная обезьянка |
 | [Art/Blender/Creatures/ShipMonkey/ShipMonkey.blend](<../../Art/Blender/Creatures/ShipMonkey/ShipMonkey.blend>) | Редактируемая сцена Blender; Корабельная обезьянка |
+| [Art/Blender/Creatures/ShipMonkey/ShipMonkey.blend1](<../../Art/Blender/Creatures/ShipMonkey/ShipMonkey.blend1>) | Файл .blend1 |
 | [Art/Blender/Creatures/ShipMonkey/monkey_activities.py](<../../Art/Blender/Creatures/ShipMonkey/monkey_activities.py>) | Инструмент Python; Корабельная обезьянка |
 | [Art/Blender/Creatures/ShipMonkey/monkey_animation.py](<../../Art/Blender/Creatures/ShipMonkey/monkey_animation.py>) | Инструмент Python; Корабельная обезьянка |
 | [Art/Blender/Creatures/ShipMonkey/monkey_export.py](<../../Art/Blender/Creatures/ShipMonkey/monkey_export.py>) | Инструмент Python; Корабельная обезьянка |
@@ -470,10 +488,8 @@
 | --- | --- |
 | [Art/Blender/PirateLocomotion/Corsair_BindPose.fbx](<../../Art/Blender/PirateLocomotion/Corsair_BindPose.fbx>) | Модель / анимации FBX |
 | [Art/Blender/PirateLocomotion/Corsair_Locomotion.blend](<../../Art/Blender/PirateLocomotion/Corsair_Locomotion.blend>) | Редактируемая сцена Blender |
-| [Art/Blender/PirateLocomotion/Corsair_Locomotion.blend1](<../../Art/Blender/PirateLocomotion/Corsair_Locomotion.blend1>) | Файл .blend1 |
 | [Art/Blender/PirateLocomotion/Corsair_Run.fbx](<../../Art/Blender/PirateLocomotion/Corsair_Run.fbx>) | Модель / анимации FBX |
 | [Art/Blender/PirateLocomotion/Corsair_Sabre.blend](<../../Art/Blender/PirateLocomotion/Corsair_Sabre.blend>) | Редактируемая сцена Blender |
-| [Art/Blender/PirateLocomotion/Corsair_Sabre.blend1](<../../Art/Blender/PirateLocomotion/Corsair_Sabre.blend1>) | Файл .blend1 |
 | [Art/Blender/PirateLocomotion/Corsair_Sabre_Combo.fbx](<../../Art/Blender/PirateLocomotion/Corsair_Sabre_Combo.fbx>) | Модель / анимации FBX |
 | [Art/Blender/PirateLocomotion/Corsair_Walk.fbx](<../../Art/Blender/PirateLocomotion/Corsair_Walk.fbx>) | Модель / анимации FBX |
 | [Art/Blender/PirateLocomotion/README.txt](<../../Art/Blender/PirateLocomotion/README.txt>) | Текстовые данные |
@@ -598,7 +614,6 @@
 | Файл | Краткое описание |
 | --- | --- |
 | [Art/Blender/Whale/HarpoonConcepts/HarpoonConcepts.blend](<../../Art/Blender/Whale/HarpoonConcepts/HarpoonConcepts.blend>) | Редактируемая сцена Blender |
-| [Art/Blender/Whale/HarpoonConcepts/HarpoonConcepts.blend1](<../../Art/Blender/Whale/HarpoonConcepts/HarpoonConcepts.blend1>) | Файл .blend1 |
 | [Art/Blender/Whale/HarpoonConcepts/build_harpoon_concepts.py](<../../Art/Blender/Whale/HarpoonConcepts/build_harpoon_concepts.py>) | Инструмент Python |
 
 ## Art/Blender/Whale/Harpoon_Broken
