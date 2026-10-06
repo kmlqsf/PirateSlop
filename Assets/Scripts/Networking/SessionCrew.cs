@@ -27,7 +27,7 @@ namespace PirateSlop.Networking
                 {
                     if (member == null || member.HomeShipId.Value != ship.ParticipantId.Value) continue;
                     hasCrew = true;
-                    if (!member.Motor.IsDead) { hasSurvivor = true; break; }
+                    if (!member.Motor.IsDead || member.HasPendingSeaPact) { hasSurvivor = true; break; }
                 }
                 if (!hasCrew || hasSurvivor) continue;
                 eliminatedTeams.Add(ship.TeamId.Value);
@@ -126,6 +126,7 @@ namespace PirateSlop.Networking
                 ship.ParticipantId.Value = nextParticipant++;
                 ship.TeamId.Value = team;
                 manager.ServerManager.Spawn(ship.NetworkObject);
+                if (EnvironmentTestActive) StartCoroutine(SpawnTestUpgradeChest(ship));
                 slot = i;
                 return true;
             }

@@ -35,7 +35,7 @@ namespace PirateSlop.Networking
         void BuildBarricadeServerRpc(NetworkObject target, int slot, Vector3 point, Quaternion rotation, Vector3 eyeOffset, Vector3 forward, bool holding)
         {
             var ship = target != null ? target.GetComponent<NetworkShip>() : null;
-            bool valid = holding && BarricadePrefab != null && BarricadeHandsFree && slot >= 0 && slot < PlayerInventory.AmmoSlot &&
+            bool valid = holding && BarricadePrefab != null && BarricadeHandsFree && inventory.IsNormalSlot(slot) &&
                 selectedSlot.Value == slot && inventory.EquipmentAt(slot) == InventoryItem.Barricade && ship != null && ship.IsSpawned &&
                 PlayerInventory.CanPlaceBarricade(ship, point, rotation, GetComponent<AdvancedPlayerController>()) &&
                 BarricadeLook(eyeOffset, forward, out var aimed) && aimed.collider.GetComponentInParent<NetworkShip>() == ship &&

@@ -16,6 +16,16 @@ namespace PirateSlop
         public float Radius = .12f, Drag = .015f;
         public static Vector3 StepVelocity(Vector3 velocity, float dt, float drag = .015f) => (velocity + Physics.gravity * dt) * Mathf.Exp(-drag * dt);
         public float PlayerDamage = 45f, PlayerPushSpeed = 22f;
+        void PushPlayer(CombatHealth health, Vector3 velocity)
+        {
+            var player = health.GetComponent<NetworkPlayer>();
+            if (player == null || health.IsDead) return;
+            var shooter = Attacker != null ? Attacker.GetComponent<NetworkPlayer>() : null;
+            if (shooter != null && shooter.TeamId.Value == player.TeamId.Value) return;
+            if (Ammo == InventoryItem.Cannonball)
+                player.KnockDown(velocity, 2.8f * (shooter != null && shooter.HasUpgrade(UpgradeEffect.HeavyCannonball) ? RoguelikeTuning.Current.knockdownMultiplier : 1f));
+            else player.PushByUpgrade(velocity);
+        }
         public float StandardBlastRadius = .8f, StandardBlastDamage = 30f;
         public float WorldRestitution = .55f, WorldTangentialRetention = .82f;
         public const float DefaultBoomerangDuration = 6f, DefaultBoomerangWidth = 16f, DefaultBoomerangHeight = 8f, DefaultBoomerangOutboundTime = 2f;
@@ -221,7 +231,7 @@ namespace PirateSlop
                     if (Ammo == InventoryItem.Cannonball || Ammo == InventoryItem.PushCannonball)
                     {
                         Vector3 direction = Vector3.ProjectOnPlane(health.transform.position - point, Vector3.up).normalized;
-                        health.GetComponent<AdvancedPlayerController>()?.ApplyKnockback(direction * PlayerPushSpeed + Vector3.up * 8f);
+                        PushPlayer(health, direction * PlayerPushSpeed + Vector3.up * 8f);
                     }
                 }
                 var harpoon = hit.GetComponentInParent<Harpoon.HarpoonGun>();
@@ -297,7 +307,7 @@ namespace PirateSlop
                 {
                     if (Ammo == InventoryItem.IceCannonball) health.GetComponent<NetworkHealth>()?.Extinguish();
                     if (Ammo == InventoryItem.Cannonball)
-                        health.GetComponent<AdvancedPlayerController>()?.ApplyKnockback(Vector3.ProjectOnPlane(Velocity, Vector3.up).normalized * PlayerPushSpeed + Vector3.up * 8f);
+                        PushPlayer(health, Vector3.ProjectOnPlane(Velocity, Vector3.up).normalized * PlayerPushSpeed + Vector3.up * 8f);
                     if (Ammo != InventoryItem.Cannonball) health.Damage(PlayerDamage, Attacker);
                 }
             }

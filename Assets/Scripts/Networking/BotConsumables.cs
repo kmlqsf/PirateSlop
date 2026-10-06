@@ -93,7 +93,7 @@ namespace PirateSlop.Networking
                 var health = player.GetComponent<CombatHealth>();
                 var fishing = player.GetComponent<NetworkFishing>();
                 int fish = -1, rum = -1;
-                for (int i = 0; i < 6; i++)
+                for (int i = 0; i < PlayerInventory.NormalSlotStorage; i++)
                 {
                     if (inventory.FishCount(i) > 0) fish = i;
                     if (inventory.RumCount(i) > 0) rum = i;

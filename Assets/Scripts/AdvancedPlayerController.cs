@@ -38,6 +38,7 @@ public partial class AdvancedPlayerController : MonoBehaviour
         foreach (var helm in HelmInteraction.Active)
             if (helm.IsControlledBy(this)) helm.ReleaseControl();
         SetLocomotionLocked(false);
+        velocity *= Upgrade(UpgradeEffect.LeadResolve) ? RoguelikeTuning.Current.knockbackMultiplier : 1f;
         var passenger = GetComponent<ShipDeckPassenger>();
         var ship = passenger != null && passenger.Ship != null ? passenger.Ship.GetComponent<ShipController>() : null;
         Vector3 inherited = ship != null ? ship.CannonPointVelocity(transform.position) : Vector3.zero;
@@ -111,7 +112,7 @@ public partial class AdvancedPlayerController : MonoBehaviour
     float crouchBlend;
     public float CrouchBlend => crouchBlend;
     public float PlanarSpeed { get; private set; }
-    public bool InputActive => ActiveParrot == null && !BellPullLocked && !ShipActivityLocked && !DeveloperMenu.IsOpen && !BotDebugPanel.ConsumedInput && !ShipSpyglassView.IsViewing && local && !IsDead && !IsDowned && Cursor.lockState == CursorLockMode.Locked;
+    public bool InputActive => !RoguelikeUpgradeUI.BlocksInput && ActiveParrot == null && !BellPullLocked && !ShipActivityLocked && !DeveloperMenu.IsOpen && !BotDebugPanel.ConsumedInput && !ShipSpyglassView.IsViewing && local && !IsDead && !IsDowned && Cursor.lockState == CursorLockMode.Locked;
     public Camera PlayerCamera => playerCamera;
     void Awake()
     {
@@ -207,6 +208,11 @@ public partial class AdvancedPlayerController : MonoBehaviour
     void Update()
     {
         if (!local) return;
+        if (RoguelikeUpgradeUI.BlocksInput)
+        {
+            pending = new PlayerCommand { Yaw = lookYaw, Pitch = pitch, Release = true };
+            return;
+        }
         if (IsDead)
         {
             UpdateDeathSpectator();
@@ -348,14 +354,16 @@ public partial class AdvancedPlayerController : MonoBehaviour
         if (!IsKnockedBack && SimulateLadder(command, dt)) { jumpBuffer = groundGrace = 0f; return; }
         var ocean = OceanSurface.Instance;
         float water = ocean != null ? ocean.Height(transform.position) : float.NegativeInfinity;
-        bool waterSupport = ocean != null && equipment != null && equipment.WaterRunning && transform.position.y >= water-1.2f;
+        bool solidGround = verticalVelocity <= 0 && HasGround() && !IsSwimming;
+        bool upgradeWater = SimulateUpgradeWater(dt, solidGround);
+        bool waterSupport = ocean != null && ((equipment != null && equipment.WaterRunning) || upgradeWater) && transform.position.y >= water-1.2f;
         bool wasSwimming = IsSwimming;
         bool risingFromWater = !wasSwimming && verticalVelocity > 0f;
         IsSwimming = !risingFromWater && !waterSupport && ocean != null && water - transform.position.y > (wasSwimming ? .65f : 1.1f);
         if (IsSwimming && jumpBuffer > 0f && !command.Crouch && !IsKnockedBack && water - transform.position.y <= 1.4f && CanStand())
         {
             GetComponent<ShipDeckPassenger>()?.Attach(null);
-            verticalVelocity = Mathf.Sqrt((Mathf.Max(0f, water - transform.position.y) + jumpHeight) * -2f * gravity);
+            verticalVelocity = Mathf.Sqrt((Mathf.Max(0f, water - transform.position.y) + jumpHeight * (Upgrade(UpgradeEffect.DeckAcrobat) ? RoguelikeTuning.Current.jumpHeightMultiplier : 1f)) * -2f * gravity);
             IsSwimming = IsGrounded = false;
             slideTimer = jumpBuffer = groundGrace = 0f;
         }
@@ -378,10 +386,14 @@ public partial class AdvancedPlayerController : MonoBehaviour
         crouchBlend = Mathf.MoveTowards(crouchBlend, crouched ? 1f : 0f, dt * 6f);
         float slideProgress = 1f - slideTimer / Mathf.Max(.01f, slideDuration);
         var planar = IsSliding ? slideDirection * Mathf.Lerp(slideSpeed, crouchSpeed, slideProgress * slideProgress) : direction * Mathf.Lerp(command.Sprint ? sprintSpeed : walkSpeed, crouchSpeed, crouchBlend);
+        if (command.Sprint && !crouched && !IsSliding && Upgrade(UpgradeEffect.LightBoots)) planar *= RoguelikeTuning.Current.runMultiplier;
         PlanarSpeed = planar.magnitude;
+        if (solidGround) airJumpUsed = false;
         if (grounded && verticalVelocity < 0) verticalVelocity = -2;
         if (jumpBuffer > 0f && groundGrace > 0f && !crouched && !IsKnockedBack)
-        { verticalVelocity = Mathf.Sqrt(jumpHeight * -2 * gravity); jumpBuffer = groundGrace = 0f; grounded = false; }
+        { verticalVelocity = Mathf.Sqrt(jumpHeight * (Upgrade(UpgradeEffect.DeckAcrobat) ? RoguelikeTuning.Current.jumpHeightMultiplier : 1f) * -2 * gravity); jumpBuffer = groundGrace = 0f; grounded = false; }
+        else if (command.Jump && !grounded && !airJumpUsed && !crouched && !IsKnockedBack && Upgrade(UpgradeEffect.DoubleJump))
+        { verticalVelocity = Mathf.Sqrt(jumpHeight * -2 * gravity); airJumpUsed = true; jumpBuffer = groundGrace = 0f; }
         verticalVelocity += gravity * dt;
         controller.stepOffset = grounded ? Mathf.Min(.32f, controller.height * .4f) : 0f;
         cannonPushDirection=planar; cannonPushDelta=grounded ? dt : 0; pushedCannons.Clear();
@@ -414,7 +426,7 @@ public partial class AdvancedPlayerController : MonoBehaviour
             direction = transform.right * command.Move.x + transform.forward * (command.Move.y * Mathf.Cos(angle));
             vertical = -Mathf.Sin(angle) * command.Move.y;
         }
-        var target = Vector3.ClampMagnitude(direction + Vector3.up * vertical, 1) * (command.Sprint ? fastSwimSpeed : swimSpeed);
+        var target = Vector3.ClampMagnitude(direction + Vector3.up * vertical, 1) * UpgradeSwimSpeed(submerged, command.Sprint);
         if (!command.Crouch && !submerged && !command.Rise) target.y = Mathf.Clamp((water - 1.25f - transform.position.y) * 5f, -2f, 2f);
         else if (command.Rise && transform.position.y > water - 1.2f) target.y = 0;
         else if (submerged && Mathf.Abs(vertical) < .05f) target.y = .35f;
@@ -586,7 +598,8 @@ public partial class AdvancedPlayerController : MonoBehaviour
         transform.rotation = Quaternion.Euler(0, ladderYaw, 0);
         var p = ladder.transform.InverseTransformPoint(transform.position);
         float rise = command.Crouch ? -Mathf.Abs(command.Move.y) : command.Move.y;
-        float climbSpeed = rise < 0 ? ladder.Speed * 0.5f : ladder.Speed * 0.75f;
+        float ropeSpeed = ladder.Speed * (Upgrade(UpgradeEffect.RopeSprinter) ? RoguelikeTuning.Current.ropeMultiplier : 1f);
+        float climbSpeed = rise < 0 ? ropeSpeed * 0.5f : ropeSpeed * 0.75f;
         Vector3 target;
         if (ladderExiting || p.y >= ladder.Height - .05f && rise > 0)
         {
@@ -603,7 +616,7 @@ public partial class AdvancedPlayerController : MonoBehaviour
         {
             float height = Mathf.Clamp(p.y + rise * climbSpeed * dt, 0, ladder.Height);
             float sideSign = Vector3.Dot(transform.right, ladder.transform.right) >= 0 ? 1f : -1f;
-            float sideways = ladder.RopeSide(height) + Mathf.Clamp(p.x - ladder.RopeSide(p.y) + command.Move.x * (ladder.FollowRopePath ? sideSign : 1f) * ladder.Speed * 0.5f * dt, -ladder.HalfWidth + 0.15f, ladder.HalfWidth - 0.15f);
+            float sideways = ladder.RopeSide(height) + Mathf.Clamp(p.x - ladder.RopeSide(p.y) + command.Move.x * (ladder.FollowRopePath ? sideSign : 1f) * ropeSpeed * 0.5f * dt, -ladder.HalfWidth + 0.15f, ladder.HalfWidth - 0.15f);
             target = ladder.transform.TransformPoint(new Vector3(sideways, height, ladder.RopeDepth(height) + standOff));
             controller.Move(Vector3.ClampMagnitude(target - transform.position, climbSpeed * 1.5f * dt));
             if ((height <= 0.15f || controller.isGrounded) && rise < 0) { IsClimbing = false; ladderCooldown = .5f; passenger?.Attach(null); controller.Move(ladder.transform.forward * (standOff < 0f ? -.25f : .25f)); }
@@ -611,11 +624,12 @@ public partial class AdvancedPlayerController : MonoBehaviour
         verticalVelocity = 0; PlanarSpeed = ladderExiting ? climbSpeed : Mathf.Abs(rise * climbSpeed); ClimbVelocity = ladderExiting ? 0f : rise * climbSpeed;
         return true;
     }
-    public PlayerState Capture() => new PlayerState { Position = transform.position, Yaw = transform.eulerAngles.y, VerticalVelocity = verticalVelocity, SlideDirection = slideDirection, SlideTimer = slideTimer, Cooldown = cooldown, Crouched = crouched, CrouchBlend = crouchBlend, Locked = locomotionLocked, PlanarSpeed = PlanarSpeed, Grounded = IsGrounded, Swimming = IsSwimming, SwimVelocity = swimVelocity, Breath = Breath, Climbing = IsClimbing, LadderCooldown = ladderCooldown, KnockbackVelocity = knockbackVelocity, KnockbackTime = knockbackTime, KnockdownTime = knockdownTime, JumpBuffer = jumpBuffer, GroundGrace = groundGrace, LadderExiting = ladderExiting };
+    public PlayerState Capture() => new PlayerState { Position = transform.position, Yaw = transform.eulerAngles.y, VerticalVelocity = verticalVelocity, SlideDirection = slideDirection, SlideTimer = slideTimer, Cooldown = cooldown, Crouched = crouched, CrouchBlend = crouchBlend, Locked = locomotionLocked, PlanarSpeed = PlanarSpeed, Grounded = IsGrounded, Swimming = IsSwimming, SwimVelocity = swimVelocity, Breath = Breath, Climbing = IsClimbing, LadderCooldown = ladderCooldown, KnockbackVelocity = knockbackVelocity, KnockbackTime = knockbackTime, KnockdownTime = knockdownTime, JumpBuffer = jumpBuffer, GroundGrace = groundGrace, LadderExiting = ladderExiting, AirJumpUsed = airJumpUsed, WaterReady = waterReady, WaterWasSolid = waterWasSolid, WaterRunRemaining = waterRunRemaining, WaterRecharge = waterRecharge };
     public void Restore(PlayerState s)
     {
         controller.enabled = false; transform.SetPositionAndRotation(s.Position, Quaternion.Euler(0, s.Yaw, 0)); controller.enabled = !IsDead;
         jumpBuffer = s.JumpBuffer; groundGrace = s.GroundGrace;
+        airJumpUsed = s.AirJumpUsed; waterReady = s.WaterReady; waterWasSolid = s.WaterWasSolid; waterRunRemaining = s.WaterRunRemaining; waterRecharge = s.WaterRecharge;
         verticalVelocity = s.VerticalVelocity; slideTimer = s.SlideTimer; cooldown = s.Cooldown; slideDirection = s.SlideDirection; ApplyAnimationState(s);
     }
     public void ApplyAnimationState(PlayerState s)

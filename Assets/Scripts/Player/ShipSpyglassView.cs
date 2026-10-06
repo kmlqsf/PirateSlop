@@ -34,7 +34,7 @@ namespace PirateSlop
         PlayerInventory inventory;
         NetworkEquipment equipment;
         bool markRequested;
-        float originalFov, zoom = 48f, nextPreview;
+        float originalFov, zoom = 48f, nextPreview, nextUpgradeLootHint, nextUpgradeObservation;
         Vector2 angles;
         readonly List<LineRenderer> lines = new();
         Texture2D mask;
@@ -145,11 +145,18 @@ namespace PirateSlop
         }
         void LateUpdate()
         {
-            if (!player.IsOwner || !engaged) return;
+            if (!player.IsOwner) return;
+            if (!engaged)
+            {
+                if (player.HasUpgrade(UpgradeEffect.Seeker) && Time.unscaledTime >= nextUpgradeLootHint) { nextUpgradeLootHint = Time.unscaledTime + .25f; UpdateLootHint(); }
+                return;
+            }
             if (portable) cameraView.transform.rotation = Quaternion.Euler(angles.x, angles.y, 0f);
             else if (station != null) cameraView.transform.SetPositionAndRotation(station.Viewpoint.position + station.transform.up * station.ViewpointLift, station.Viewpoint.rotation * Quaternion.Euler(angles.x, angles.y, 0f));
             cameraView.fieldOfView = Mathf.Lerp(cameraView.fieldOfView, zoom, 1f - Mathf.Exp(-12f * Time.unscaledDeltaTime));
             UpdateLootHint();
+            if (player.HasUpgrade(UpgradeEffect.SharpEye) && Time.unscaledTime >= nextUpgradeObservation)
+            { nextUpgradeObservation = Time.unscaledTime + .1f; player.ObserveUpgradeSpyglass(cameraView.transform.forward, portable); }
             if (markRequested)
             {
                 markRequested = false;

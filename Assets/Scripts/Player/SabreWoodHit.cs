@@ -24,8 +24,8 @@ namespace PirateSlop
             if (FirearmTrace.Cast(gameObject, bodyEye, eye, out var eyeBlock))
                 eye = eyeBlock.point + (bodyEye - eye).normalized * .02f;
             Vector3 direction = attackDirection.normalized;
-            if (!FirearmTrace.Cast(gameObject, eye, eye + direction * (Vector3.Distance(eye, origin) + 2.4f), out var contact)) return;
-            if (Vector3.Distance(origin, contact.point) > 2.4f) return;
+            if (!FirearmTrace.Cast(gameObject, eye, eye + direction * (Vector3.Distance(eye, origin) + 2.4f * SabreSpeed), out var contact)) return;
+            if (Vector3.Distance(origin, contact.point) > 2.4f * SabreSpeed) return;
             if (FirearmTrace.Cast(gameObject, bodyEye, contact.point - contact.normal * .005f, out var obstruction) && (obstruction.point - contact.point).sqrMagnitude > .0025f) return;
             var vortex = contact.collider.GetComponentInParent<NetworkVortexBottle>();
             if (vortex != null) { sabreWoodStruck = vortex.TryBreakFromWeapon(contact.point); return; }

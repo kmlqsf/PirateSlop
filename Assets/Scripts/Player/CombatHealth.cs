@@ -78,9 +78,9 @@ namespace PirateSlop
             else Respawn(position, yaw);
             return true;
         }
-        public void Respawn(Vector3 position, float yaw)
+        public void Respawn(Vector3 position, float yaw, float healthFraction = 1f)
         {
-            ApplySnapshot(MaxHealth);
+            ApplySnapshot(MaxHealth * Mathf.Clamp(healthFraction, .01f, 1f));
             var state = new PlayerState { Position = position, Yaw = yaw };
             var player = GetComponent<NetworkPlayer>();
             if (player != null) player.Teleport(state);
@@ -92,6 +92,14 @@ namespace PirateSlop
             GameAudio.Play(SoundCue.Respawn, position);
             if (player == null || (player.IsClientInitialized && !player.IsOwner))
                 CombatVfx.Respawn(position, player != null && player.Ship != null ? player.Ship.transform : null);
+        }
+        public void SetMaximum(float maximum)
+        {
+            float difference = maximum - MaxHealth;
+            MaxHealth = Mathf.Max(1f, maximum);
+            if (!IsDead) ApplySnapshot(Current + Mathf.Max(0, difference), false);
+            network?.PublishMaximum(MaxHealth);
+            network?.Publish(Current);
         }
         public void Heal(float amount)
         {
@@ -110,6 +118,8 @@ namespace PirateSlop
             }
             if (network != null && !network.IsServerInitialized) return;
             if (IsDead || amount <= 0 || float.IsNaN(amount) || float.IsInfinity(amount)) return;
+            amount = GetComponent<NetworkPlayer>()?.FilterUpgradeDamage(amount) ?? amount;
+            if (amount <= 0f) return;
             float dealt = Mathf.Min(Current, amount);
             GetComponent<NetworkWeapon>()?.CancelLootWork();
             if (amount >= Current && controller != null)

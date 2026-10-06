@@ -16,6 +16,7 @@ namespace PirateSlop.Networking
         public LootCatalog Catalog;
         public Transform Lid;
         readonly SyncVar<bool> opened = new();
+        bool upgradeRewardEligible, upgradeRewardClaimed;
         public bool Opened => opened.Value;
         readonly SyncList<ChestLootStack> contents = new();
         public int SlotCount => contents.Count;
@@ -27,12 +28,22 @@ namespace PirateSlop.Networking
             var rolled = ChestLootTable.RollContents(ref random);
             contents.Clear(); opened.Value = false;
             foreach (var stack in rolled) contents.Add(stack);
+            upgradeRewardEligible = true;
         }
-        public void Open()
+        public void Open(NetworkWeapon opener = null)
         {
             if (!IsServerInitialized || !IsSpawned || !Available) return;
             if (contents.Count == 0) { ServerManager.Despawn(NetworkObject); return; }
             opened.Value = true;
+            if (!upgradeRewardEligible || upgradeRewardClaimed || opener == null) return;
+            var player = opener.GetComponent<NetworkPlayer>();
+            if (player == null || player.TeamId.Value <= 0) return;
+            bool hasLoot = false;
+            for (int i = 0; i < contents.Count; i++) if (contents[i].Count > 0) { hasLoot = true; break; }
+            if (!hasLoot) return;
+            upgradeRewardClaimed = true;
+            if (player.HasUpgrade(UpgradeEffect.FishSupply)) contents.Add(new ChestLootStack { Item = InventoryItem.Fish, Count = RoguelikeTuning.Current.fishSupplyCount });
+            SessionController.Instance?.AwardChestUpgrade(player);
         }
         public void Take(NetworkWeapon player, int slot, bool swap = false, int selected = -1, InventoryItem expected = InventoryItem.None, int expectedCount = 0)
         {

@@ -569,8 +569,8 @@ namespace PirateSlop.Networking
                 float score = (player.transform.position - point).sqrMagnitude;
                 if (!repair && key >= 2000 && key < 60000)
                 {
-                    bool carrying = inventory.BallCount(PlayerInventory.AmmoSlot) > 0;
-                    var ammo = carrying ? inventory.BallItem(PlayerInventory.AmmoSlot) : InventoryItem.Cannonball;
+                    bool carrying = inventory.BallCount(inventory.ReadyAmmoSlot) > 0;
+                    var ammo = carrying ? inventory.BallItem(inventory.ReadyAmmoSlot) : InventoryItem.Cannonball;
                     if (!BotCannonAmmoPolicy.Supported(ammo) || ammo == InventoryItem.BoardingHook && !BotBoardingAdvantage(crew.Ship, crew.Pilot.CombatTarget)) continue;
                     if (ammo != InventoryItem.Cannonball && crew.Pilot.CombatTarget == null) continue;
                     if (crew.Pilot.CombatTarget != null)

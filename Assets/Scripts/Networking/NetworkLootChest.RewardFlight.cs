@@ -11,6 +11,13 @@ namespace PirateSlop.Networking
         readonly SyncVar<float> rewardAge = new();
         float rewardStarted, receivedRewardAge = -1f, receivedRewardAt;
 
+        public void PlaceOnDeck(NetworkShip targetShip, Vector3 point)
+        {
+            if (targetShip == null) return;
+            LaunchReward(point, point, .5f, targetShip.transform.rotation, targetShip);
+            phase.Value = SeaLootState.Ready;
+        }
+
         public void LaunchReward(Vector3 start, Vector3 end, float duration, Quaternion rotation, NetworkShip targetShip = null)
         {
             kind.Value = SeaLootKind.FloatingReward;

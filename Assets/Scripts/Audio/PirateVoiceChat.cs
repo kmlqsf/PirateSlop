@@ -25,7 +25,7 @@ namespace PirateSlop
         public bool Transmitting { get; private set; }
         public bool SpeechDetected => !IsMuted && Time.unscaledTime - lastSpeech < .25f;
         public string DisplayName => "Пират " + player.ParticipantId.Value;
-        public string Status => !VoiceEnabled ? "Голос отключён" : input.Mic == null || !input.Mic.IsRecording ? "Микрофон недоступен" : VoiceActivation ? "Активация голосом · рядом" : "V — говорить рядом";
+        public string Status => !VoiceEnabled ? "Голос отключён" : input.Mic == null || !input.Mic.IsRecording ? "Микрофон недоступен" : VoiceActivation ? "Активация голосом · рядом" : "B — говорить рядом";
         internal bool CanTransmit => IsSelf && VoiceEnabled && Application.isFocused && !player.Motor.IsDead && !SessionController.MenuOpen && !DeveloperMenu.IsOpen && !PlayerInventory.LootWindowOpen && Cursor.lockState == CursorLockMode.Locked;
         internal void SetTransmitting(bool value) => Transmitting = value;
         public IReadOnlyList<PirateVoiceChat> Participants
@@ -90,7 +90,7 @@ namespace PirateSlop
         void Update()
         {
             if (!started) return;
-            bool talk = CanTransmit && (VoiceActivation || (Keyboard.current != null && Keyboard.current.vKey.isPressed));
+            bool talk = CanTransmit && (VoiceActivation || (Keyboard.current != null && Keyboard.current.bKey.isPressed));
             bool recording = input.Mic != null && input.Mic.IsRecording;
             if (!talk || !recording) Transmitting = false;
             else if (!VoiceActivation) Transmitting = true;

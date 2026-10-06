@@ -18,9 +18,10 @@ namespace PirateSlop.Networking
         readonly List<TargetMark> targetMarks = new();
         int nextMarkId;
 
-        public void AddTargetMark(RaycastHit hit)
+        public void AddTargetMark(RaycastHit hit, float lifetime = 0f)
         {
             if (!IsServerInitialized || hit.collider == null) return;
+            if (lifetime <= 0f) lifetime = targetMarkLifetime;
             PruneTargetMarks();
             var networkTarget = hit.collider.GetComponentInParent<NetworkObject>();
             Transform target = networkTarget != null ? networkTarget.transform : hit.collider.transform;
@@ -29,11 +30,11 @@ namespace PirateSlop.Networking
             {
                 if (mark.Target != target || (networkTarget == null && Vector3.Distance(mark.LocalPoint, localPoint) > 5f)) continue;
                 mark.LocalPoint = localPoint;
-                mark.Expires = Time.time + targetMarkLifetime;
+                mark.Expires = Mathf.Max(mark.Expires, Time.time + lifetime);
                 return;
             }
             if (targetMarks.Count >= maxTargetMarks) targetMarks.RemoveAt(0);
-            targetMarks.Add(new TargetMark { Id = ++nextMarkId, Target = target, LocalPoint = localPoint, Expires = Time.time + targetMarkLifetime });
+            targetMarks.Add(new TargetMark { Id = ++nextMarkId, Target = target, LocalPoint = localPoint, Expires = Time.time + lifetime });
         }
 
         void PruneTargetMarks() => targetMarks.RemoveAll(mark => mark.Target == null || !mark.Target.gameObject.activeInHierarchy || Time.time >= mark.Expires);

@@ -88,7 +88,7 @@ namespace PirateSlop.Networking
         int Slot(bool sabre)
         {
             if (!sabre) return weapons.RangedSlot(Vector3.Distance(player.transform.position, aim));
-            for (int i = 0; i < 6; i++) if (inventory.HasSabre(i)) return i;
+            for (int i = 0; i < PlayerInventory.NormalSlotStorage; i++) if (inventory.HasSabre(i)) return i;
             return -1;
         }
         public bool Begin(out string reason)

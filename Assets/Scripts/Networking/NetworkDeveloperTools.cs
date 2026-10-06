@@ -30,6 +30,11 @@ namespace PirateSlop.Networking
             if (Time.time < nextDeveloperCommand) return;
             nextDeveloperCommand = Time.time + .3f;
             var session = SessionController.Instance;
+            if (command == 22)
+            {
+                DeveloperResultTargetRpc(Owner, session != null ? session.GrantDeveloperUpgrade(GetComponent<NetworkPlayer>(), count) : "Сессия не готова.");
+                return;
+            }
             if (command == 14)
             {
                 bool changed = session != null && session.ToggleStormPause();
@@ -133,7 +138,12 @@ namespace PirateSlop.Networking
             }
             developerObjects.RemoveAll(o => o == null || !o.IsSpawned);
             if (developerObjects.Count >= 20) { DeveloperResultTargetRpc(Owner, "Удалите тестовые объекты: достигнут лимит 20."); return; }
-            if (command == 19)
+            if (command == 21)
+            {
+                SpawnDeveloperChest();
+                return;
+            }
+            if (command == 23)
             {
                 SpawnDeveloperLootEvent((SeaLootKind)count);
                 return;
@@ -186,6 +196,56 @@ namespace PirateSlop.Networking
             if (target != null) target.Place(support, position);
             ServerManager.Spawn(obj); developerObjects.Add(obj);
             DeveloperResultTargetRpc(Owner, "Объект создан.");
+        }
+        void SpawnDeveloperChest()
+        {
+            var session = SessionController.Instance;
+            var catalog = session != null && session.Config != null ? session.Config.Loot : null;
+            if (catalog == null || catalog.ChestPrefab == null)
+            { DeveloperResultTargetRpc(Owner, "Префаб сундука не назначен."); return; }
+            Vector3 forward = Vector3.ProjectOnPlane(transform.forward, Vector3.up).normalized;
+            var origin = transform.position + forward * 3f + Vector3.up * 3f;
+            RaycastHit floor = default;
+            float distance = 8f;
+            foreach (var hit in Physics.RaycastAll(origin, Vector3.down, distance, ~0, QueryTriggerInteraction.Ignore))
+            {
+                if (hit.transform.IsChildOf(transform) || hit.normal.y < .7f || hit.point.y > transform.position.y + .5f || hit.distance >= distance) continue;
+                floor = hit;
+                distance = hit.distance;
+            }
+            if (floor.collider == null)
+            { DeveloperResultTargetRpc(Owner, "Перед вами нет палубы или земли для сундука."); return; }
+            var ship = floor.collider.GetComponentInParent<NetworkShip>();
+            var rotation = ship != null ? ship.transform.rotation : Quaternion.LookRotation(forward, Vector3.up);
+            var up = rotation * Vector3.up;
+            var prefab = catalog.ChestPrefab;
+            var box = prefab.GetComponent<BoxCollider>();
+            var halfSize = box != null ? Vector3.Scale(box.size, prefab.transform.localScale) * .5f : new Vector3(.6f, .4f, .4f);
+            var center = box != null ? Vector3.Scale(box.center, prefab.transform.localScale) : Vector3.up * .4f;
+            var position = floor.point + up * (halfSize.y - center.y + .03f);
+            foreach (var obstacle in Physics.OverlapBox(position + rotation * center, halfSize * .95f, rotation, ~0, QueryTriggerInteraction.Ignore))
+            {
+                if (obstacle == floor.collider) continue;
+                DeveloperResultTargetRpc(Owner, "Перед вами недостаточно места для сундука.");
+                return;
+            }
+            var chest = Instantiate(prefab, position, rotation);
+            UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene(chest.gameObject, gameObject.scene);
+            chest.Catalog = catalog;
+            try
+            {
+                var random = new PirateSlop.World.MapRandom(unchecked((uint)Random.Range(1, int.MaxValue)));
+                chest.Fill(ref random);
+                if (ship != null) chest.PlaceOnDeck(ship, position);
+                ServerManager.Spawn(chest.NetworkObject);
+                developerObjects.Add(chest.NetworkObject);
+                DeveloperResultTargetRpc(Owner, "Наполненный сундук создан перед вами.");
+            }
+            catch (System.InvalidOperationException error)
+            {
+                Destroy(chest.gameObject);
+                DeveloperResultTargetRpc(Owner, "Не удалось наполнить сундук: " + error.Message);
+            }
         }
         void SpawnDeveloperLootEvent(SeaLootKind kind)
         {

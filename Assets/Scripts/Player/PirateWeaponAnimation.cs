@@ -81,20 +81,25 @@ namespace PirateSlop
             foreach (var r in sabreView) r.forceRenderingOff = true;
             foreach (var r in sabreWorld) r.forceRenderingOff = !Equipped || !SabreEquipped;
         }
+        int upgradeSwingCount;
+        bool pendingGhostWave;
         void BeginSabre(Vector3 direction, Vector3 eyeOffset)
         {
-            attackStarted = Time.time; attackDirection = direction; struck.Clear(); sabreWoodStruck = false;
+            attackStarted = Time.time; attackDirection = direction;
+            pendingGhostWave = network != null && network.IsServerInitialized && UpgradeOwner.HasUpgrade(UpgradeEffect.GhostSabre) && ++upgradeSwingCount % RoguelikeTuning.Current.ghostSwingInterval == 0;
+            struck.Clear(); sabreWoodStruck = false;
             Vector3 safeEye = float.IsFinite(eyeOffset.sqrMagnitude) && eyeOffset.sqrMagnitude <= 49f ? eyeOffset : Vector3.up * (motor.IsCrouched ? .75f : 1.65f);
             sabreEyeLocal = transform.InverseTransformVector(safeEye);
         }
         void TickSabre()
         {
-            float elapsed = Time.time - attackStarted;
-            if (!Equipped || !SabreEquipped || motor.IsDead || motor.LocomotionLocked || (hands != null && hands.HasHeldBall)) { attackStarted = -10; return; }
+            float elapsed = (Time.time - attackStarted) * SabreSpeed;
+            if (!Equipped || !SabreEquipped || motor.IsDead || motor.LocomotionLocked || (hands != null && hands.HasHeldBall)) { attackStarted = -10; pendingGhostWave = false; return; }
             if (elapsed < .30f || elapsed > .48f) return;
             Vector3 origin = transform.position + Vector3.up * (motor.IsCrouched ? .7f : 1.4f);
+            if (pendingGhostWave) { pendingGhostWave = false; network.LaunchUpgradeSabreWave(origin, attackDirection, 25f * SabreSpeed); }
             StrikeSabreWood(origin);
-            foreach (var collider in Physics.OverlapSphere(origin, 2.4f, ~0, QueryTriggerInteraction.Collide))
+            foreach (var collider in Physics.OverlapSphere(origin, 2.4f * SabreSpeed, ~0, QueryTriggerInteraction.Collide))
             {
                 if (!PlayerHitbox.IsTarget(collider)) continue;
                 if (collider.transform.IsChildOf(transform)) continue;
@@ -115,7 +120,7 @@ namespace PirateSlop
                     Vector3 deltaGun = collider.ClosestPoint(origin + attackDirection) - origin;
                     if (Vector3.Angle(attackDirection, deltaGun) <= 75f)
                     {
-                        harpoonGun.TakeDamage(25f, gameObject);
+                        harpoonGun.TakeDamage(25f * SabreSpeed, gameObject);
                         CombatVfx.Impact(collider.ClosestPoint(origin + attackDirection), Vector3.up, false, true);
                     }
                     continue;
@@ -127,7 +132,7 @@ namespace PirateSlop
                 bool blocked = false;
                 foreach (var hit in Physics.RaycastAll(origin, delta.normalized, delta.magnitude, ~0, QueryTriggerInteraction.Ignore))
                     if (!hit.transform.IsChildOf(transform) && hit.collider.GetComponentInParent<CombatHealth>() != health) { blocked = true; break; }
-                if (!blocked) { struck.Add(health); health.ReceiveWeaponHit(25, gameObject); }
+                if (!blocked) { struck.Add(health); float before = health.Current; health.ReceiveWeaponHit(25 * SabreSpeed, gameObject); UpgradeCombat.AfterHit(health, before, gameObject, false, attackDirection); }
             }
         }
         public bool AnimationEquipped => Equipped && !motor.LocomotionLocked && (hands == null || !hands.HasHeldBall);
@@ -139,7 +144,7 @@ namespace PirateSlop
         public Vector3 ReloadHandPoint => ViewPivot.TransformPoint(ReloadHandOffset);
         float fireStarted = -10;
         public float ShotAge => Time.time - fireStarted;
-        public float ReloadProgress => reloading ? Mathf.Clamp01((Time.time - reloadVisualStarted) / Firearm.ReloadDuration) : 1;
+        public float ReloadProgress => reloading ? Mathf.Clamp01((Time.time - reloadVisualStarted) / (Firearm.ReloadDuration * ReloadSpeed)) : 1;
         float drawBlend;
         bool lastSabre;
         static Vector3 Pose(float time, float[] times, Vector3[] points)
@@ -162,7 +167,7 @@ namespace PirateSlop
             lastSabre = SabreEquipped;
             wasReloading = reloading;
             drawBlend = Mathf.MoveTowards(drawBlend, AnimationEquipped ? 1 : 0, Time.deltaTime * 5);
-            float reloadTime = reloading ? Mathf.Clamp((Time.time - reloadVisualStarted)*3/Firearm.ReloadDuration, 0, 3) : 3;
+            float reloadTime = reloading ? Mathf.Clamp((Time.time - reloadVisualStarted)*3/(Firearm.ReloadDuration * ReloadSpeed), 0, 3) : 3;
             float shot = Time.time - fireStarted;
             float kick = shot < .025f ? Mathf.SmoothStep(0, 1, shot / .025f) : 1 - Mathf.SmoothStep(0, 1, (shot - .025f) / .20f);
             Vector3 angles = Pose(reloadTime, reloadTimes, reloadAngles) + new Vector3(-15, 1.5f, -3) * kick;
@@ -188,7 +193,7 @@ namespace PirateSlop
             BodyWeaponPosition = new Vector3(.22f, 1.38f, .38f) + position;
             BodyWeaponRotation = Quaternion.Euler(angles);
             if (SabreViewPivot == null || GetComponent<SabreAnimation>() != null) return;
-            float slash = Time.time - visualAttackStarted;
+            float slash = (Time.time - visualAttackStarted) * SabreSpeed;
             Vector3 slashAngle = SabreEquipped ? Pose(slash, slashTimes, slashAngles) : Vector3.zero;
             Vector3 slashPosition = SabreEquipped ? Pose(slash, slashTimes, slashPositions) : Vector3.zero;
             SabreViewPivot.localRotation = sabreViewRest * Quaternion.Euler(slashAngle);

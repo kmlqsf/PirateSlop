@@ -28,7 +28,7 @@ namespace PirateSlop.Ships
 
         public void ReceiveFirearmShot(GameObject shooter)
         {
-            var ship = GetComponent<NetworkShip>();
+            var ship = GetComponentInParent<NetworkShip>();
             var player = shooter != null ? shooter.GetComponent<NetworkPlayer>() : null;
             if (!initialized || ship == null || !ship.IsServerInitialized || ship.IsSinking || player == null || !player.IsSpawned || player.Motor == null || player.Motor.IsDead || player.Motor.IsDowned || player.Eliminated.Value) return;
             if (ship.TeamId.Value <= 0 || player.TeamId.Value != ship.TeamId.Value || Time.time < retaliationCooldown || attacker != null || jumpPhase != 0) return;
@@ -40,7 +40,7 @@ namespace PirateSlop.Ships
             else if (path.Count > pathIndex + 1) path.RemoveRange(pathIndex + 1, path.Count - pathIndex - 1);
         }
 
-        bool Attackable() => attacker != null && attacker.IsSpawned && !attacker.Eliminated.Value && attacker.Motor != null && !attacker.Motor.IsDead && !attacker.Motor.IsDowned && attacker.TeamId.Value == GetComponent<NetworkShip>().TeamId.Value && Time.time < aggressionUntil;
+        bool Attackable() => attacker != null && attacker.IsSpawned && !attacker.Eliminated.Value && attacker.Motor != null && !attacker.Motor.IsDead && !attacker.Motor.IsDowned && attacker.TeamId.Value == GetComponentInParent<NetworkShip>().TeamId.Value && Time.time < aggressionUntil;
 
         bool ClearJump(Vector3 from, Vector3 to, Transform ignore = null)
         {

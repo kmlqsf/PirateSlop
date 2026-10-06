@@ -49,6 +49,7 @@ namespace PirateSlop.World
 
         void OnGUI()
         {
+            if (RoguelikeUpgradeUI.WindowOpen) return;
             var camera = Camera.main;
             if (camera == null) return;
             labelStyle ??= new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleCenter, fontSize = 20, fontStyle = FontStyle.Bold, normal = { textColor = new Color(1f, .9f, .62f) } };

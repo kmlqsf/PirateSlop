@@ -450,7 +450,10 @@ namespace PirateSlop.Ships
             player.Motor.ShipActivityLocked = true;
         }
 
+        readonly bool[] upgradeLuckyRoll = new bool[3];
+
         [ServerRpc(RequireOwnership = false)]
+
         public void DiceInput(Vector2 position, Vector2 velocity, bool holding, bool gather, bool leave, NetworkConnection sender = null)
         {
             if (sender == null) return;
@@ -493,6 +496,7 @@ namespace PirateSlop.Ships
             }
             if (!holding && diceMode[index] == 3)
             {
+                upgradeLuckyRoll[index] = player.HasUpgrade(UpgradeEffect.LuckyDie);
                 diceMode[index] = 6; settledFor[index] = 0f; rollStart[index] = Time.time;
             }
         }
@@ -739,6 +743,8 @@ namespace PirateSlop.Ships
                                 float score = Vector3.Dot(die.transform.TransformDirection(slot.FaceNormals[face]), transform.up);
                                 if (score > dot) { dot = score; best = face; }
                             }
+                            if (upgradeLuckyRoll[index] && die == slot.Dice[0])
+                                for (int face = 0; face < slot.FaceValues.Length; face++) if (slot.FaceValues[face] == 6) { best = face; break; }
                             total += slot.FaceValues[best];
                             die.rotation = Quaternion.FromToRotation(die.transform.TransformDirection(slot.FaceNormals[best]), transform.up) * die.rotation;
                         }

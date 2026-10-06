@@ -10,7 +10,7 @@ namespace PirateSlop.Networking
             MenuText(new Rect(x, y, width, 32), "ГОЛОС РЯДОМ");
             PirateVoiceChat.VoiceEnabled = MenuToggle(x, y + 48, width, PirateVoiceChat.VoiceEnabled, "Включить голосовой чат");
             PirateVoiceChat.Volume = MenuVolume(x, y + 100, width, "Громкость голосов", PirateVoiceChat.Volume, "VoiceVolume");
-            if (MenuAction(x, y + 155, width, PirateVoiceChat.VoiceActivation ? "Режим: активация голосом" : "Режим: по кнопке V"))
+            if (MenuAction(x, y + 155, width, PirateVoiceChat.VoiceActivation ? "Режим: активация голосом" : "Режим: по кнопке B"))
             {
                 PirateVoiceChat.VoiceActivation = !PirateVoiceChat.VoiceActivation;
                 PlayerPrefs.Save();
@@ -23,7 +23,7 @@ namespace PirateSlop.Networking
             }
             var voice = PirateVoiceChat.Instance;
             MenuText(new Rect(x, y + 305, width, 55), voice != null ? voice.Status : "Войдите в сессию, чтобы подключить голос.", true);
-            string instruction = PirateVoiceChat.VoiceActivation ? "Говорите — микрофон включается автоматически." : "Удерживайте V, чтобы говорить.";
+            string instruction = PirateVoiceChat.VoiceActivation ? "Говорите — микрофон включается автоматически." : "Удерживайте B, чтобы говорить.";
             MenuText(new Rect(x, y + 365, width, 85), instruction + "\nГолос слышен до 60 м и затихает с расстоянием.\nВ меню и при потере фокуса микрофон выключен.", true);
             if (voice != null && MenuAction(x, y + 455, width, "Перезапустить микрофон")) voice.Retry();
             if (MenuAction(x, y + 515, width, "Назад")) { PlayerPrefs.Save(); menuPage = 3; }

@@ -20,6 +20,8 @@ namespace PirateSlop
         bool mixamoBody, wasActive;
         int slashFrame = -1;
         int layer;
+        static readonly int slashSpeed = Animator.StringToHash("SabreSpeed");
+        bool supportsSlashSpeed;
         public bool Active => weapon != null && inventory != null && inventory.SabreSelected && weapon.AnimationEquipped && (fishing == null || !fishing.IsPickingUp);
 
         void Awake()
@@ -28,6 +30,7 @@ namespace PirateSlop
             inventory = GetComponent<PlayerInventory>();
             fishing = GetComponent<PirateSlop.Networking.NetworkFishing>();
             layer = BodyAnimator != null ? BodyAnimator.GetLayerIndex("SabreCombat") : -1;
+            supportsSlashSpeed = BodyAnimator != null && BodyAnimator.parameters.Any(parameter => parameter.nameHash == slashSpeed && parameter.type == AnimatorControllerParameterType.Float);
             var rig = GetComponent<WeaponArmRig>();
             if (rig != null && rig.BodyRig != null && rig.ViewArms != null)
             {
@@ -75,6 +78,7 @@ namespace PirateSlop
         void Update()
         {
             if (layer < 0) return;
+            if (supportsSlashSpeed) BodyAnimator.SetFloat(slashSpeed, weapon != null ? weapon.SabreSpeed : 1f);
             bool active = Active;
             if (active && !wasActive && slashFrame != Time.frameCount)
                 BodyAnimator.CrossFadeInFixedTime("SabreCombat.Ready", 0.12f, layer, 0f);
@@ -92,7 +96,9 @@ namespace PirateSlop
             if (layer < 0) return;
             if (Time.time - lastSlashTime > 1.4f) comboStep = 0;
             string state = comboStep == 0 ? "SabreCombat.Slash" : "SabreCombat.Slash2";
-            BodyAnimator.CrossFadeInFixedTime(state, 0.12f, layer, 0f);
+            float speed = weapon != null ? weapon.SabreSpeed : 1f;
+            if (supportsSlashSpeed) BodyAnimator.SetFloat(slashSpeed, speed);
+            BodyAnimator.CrossFadeInFixedTime(state, 0.12f / speed, layer, 0f);
             comboStep = (comboStep + 1) % 2;
             lastSlashTime = Time.time;
             slashFrame = Time.frameCount;

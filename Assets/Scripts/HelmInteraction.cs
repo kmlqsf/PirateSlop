@@ -19,7 +19,8 @@ public class HelmInteraction : MonoBehaviour
     public bool StructurallyAvailable { get; set; } = true;
     public float CurrentRudderNormalized => rudder;
     public float LastHumanControlTime { get; private set; } = float.NegativeInfinity;
-    public float DragToRudder(float target) => (rudder - Mathf.Clamp(target, -1f, 1f)) * 360f * wheelTurnsToFullSteer;
+    float UpgradeResponse => player != null && player.GetComponent<PirateSlop.Networking.NetworkPlayer>() is { } owner && owner.HasUpgrade(UpgradeEffect.Helmsman) ? RoguelikeTuning.Current.helmMultiplier : 1f;
+    public float DragToRudder(float target) => (rudder - Mathf.Clamp(target, -1f, 1f)) * 360f * wheelTurnsToFullSteer / UpgradeResponse;
     public bool IsControlling { get; private set; }
     public AdvancedPlayerController Driver => IsControlling ? player : null;
     public Transform Wheel => wheelMesh;
@@ -51,7 +52,7 @@ public class HelmInteraction : MonoBehaviour
     {
         if (!holding) { if (IsControlledBy(candidate)) ReleaseControl(); return; }
         if (!float.IsFinite(degrees) || !TryTakeControl(candidate)) return;
-        rudder = Mathf.Clamp(rudder - Mathf.Clamp(degrees, -180f, 180f) / (360f * wheelTurnsToFullSteer), -1f, 1f);
+        rudder = Mathf.Clamp(rudder - Mathf.Clamp(degrees, -180f, 180f) * UpgradeResponse / (360f * wheelTurnsToFullSteer), -1f, 1f);
     }
     public void ReleaseControl() { IsControlling = false; player = null; }
     public bool MonkeyAdjust(float delta)

@@ -7,19 +7,19 @@ namespace PirateSlop
     [DefaultExecutionOrder(10)]
     public sealed partial class PlayerInventory : MonoBehaviour
     {
-        public const int AmmoSlot = 6, SlotCount = 7, AmmoCapacity = 2;
-        readonly int[] stackCounts = new int[6];
+        public const int AmmoSlot = 6, SlotCount = 9, AmmoCapacity = 2;
+        readonly int[] stackCounts = new int[NormalSlotStorage];
         public void SetStackCount(int slot, int count) => stackCounts[slot] = count;
         public int StackSlot(InventoryItem item)
         {
             if (item == InventoryItem.Lantern) return EmptySlot();
-            for (int i = 0; i < AmmoSlot; i++)
-                if (ItemAt(i) == item && ItemCount(i) < int.MaxValue) return i;
+            for (int i = 0; i < NormalSlotStorage; i++)
+                if (IsNormalSlot(i) && ItemAt(i) == item && ItemCount(i) < int.MaxValue) return i;
             return EmptySlot();
         }
         public InventoryIcons Icons;
         public int SabreSlots { get; set; } = 1 << 2;
-        public bool HasSabre(int slot) => slot >= 0 && slot < 6 && (SabreSlots & (1 << slot)) != 0;
+        public bool HasSabre(int slot) => IsNormalSlot(slot) && (SabreSlots & (1 << slot)) != 0;
         public bool SabreSelected => HasSabre(SelectedSlot) && !HandsOccupied;
         static PlayerInventory lootOwner;
         public static bool LootWindowOpen => lootOwner != null && lootOwner.lootWindow;
@@ -44,20 +44,20 @@ namespace PirateSlop
         readonly int[] ballCounts = new int[SlotCount];
         readonly InventoryItem[] ballItems = new InventoryItem[SlotCount];
         public InventoryItem BallItem(int slot) => BallCount(slot) > 0 ? ballItems[slot] : InventoryItem.Cannonball;
-        public int BallCount(int slot) => slot == AmmoSlot ? ballCounts[slot] : 0;
+        public int BallCount(int slot) => IsAmmoSlot(slot) ? ballCounts[slot] : 0;
         public void SetBallCount(int slot, int count, InventoryItem item = InventoryItem.Cannonball) { ballCounts[slot] = count; ballItems[slot] = item; }
         public bool BallSelected => BallCount(SelectedSlot) > 0;
-        readonly int[] plankCounts = new int[6];
-        readonly int[] rumCounts = new int[6];
-        readonly InventoryItem[] equipment = { InventoryItem.None, InventoryItem.None, InventoryItem.None, InventoryItem.None, InventoryItem.None, InventoryItem.None };
-        public InventoryItem EquipmentAt(int slot) => slot >= 0 && slot < 6 ? equipment[slot] : InventoryItem.None;
+        readonly int[] plankCounts = new int[NormalSlotStorage];
+        readonly int[] rumCounts = new int[NormalSlotStorage];
+        readonly InventoryItem[] equipment = System.Linq.Enumerable.ToArray(System.Linq.Enumerable.Repeat(InventoryItem.None, NormalSlotStorage));
+        public InventoryItem EquipmentAt(int slot) => IsNormalSlot(slot) ? equipment[slot] : InventoryItem.None;
         public void SetEquipment(int slot, InventoryItem item) => equipment[slot] = item;
         RumShelf aimedRumShelf;
-        public int RumCount(int slot) => slot >= 0 && slot < 6 ? rumCounts[slot] : 0;
+        public int RumCount(int slot) => IsNormalSlot(slot) ? rumCounts[slot] : 0;
         public void SetRumCount(int slot, int count) => rumCounts[slot] = count;
         int malletSlots;
-        public int PlankCount(int slot) => slot >= 0 && slot < 6 ? plankCounts[slot] : 0;
-        public bool HasMallet(int slot) => slot >= 0 && slot < 6 && (malletSlots & (1 << slot)) != 0;
+        public int PlankCount(int slot) => IsNormalSlot(slot) ? plankCounts[slot] : 0;
+        public bool HasMallet(int slot) => IsNormalSlot(slot) && (malletSlots & (1 << slot)) != 0;
         public bool MalletSelected => HasMallet(SelectedSlot);
         public int TotalPlanks { get { int total = 0; foreach (int count in plankCounts) total += count; return total; } }
         public void SetRepairItems(int mallets, int slot, int count) { malletSlots = mallets; plankCounts[slot] = count; }
@@ -65,7 +65,7 @@ namespace PirateSlop
         public bool CanFitItem(InventoryItem item)
         {
             if (item < InventoryItem.Fish || item > InventoryItem.Lantern || item == InventoryItem.Plank) return false;
-            if (CannonAmmo.IsBall(item)) return BallCount(AmmoSlot) < AmmoCapacity && (BallCount(AmmoSlot) == 0 || BallItem(AmmoSlot) == item);
+            if (CannonAmmo.IsBall(item)) return FindAmmoSlot(item) >= 0;
             return StackSlot(item) >= 0;
         }
         public string FullInventoryHint
@@ -81,13 +81,13 @@ namespace PirateSlop
         public string CannotFitHint(InventoryItem item)
         {
             if (!CannonAmmo.IsBall(item)) return FullInventoryHint;
-            return "СЛОТ ЯДЕР " + BallCount(AmmoSlot) + "/2 · " + (BallCount(AmmoSlot) >= AmmoCapacity ? "Нет места" : "Уже хранится другой тип") + ": " + InventoryIcons.ItemName(BallItem(AmmoSlot)) + " · 7 — выбрать ядра · G — положить выбранное ядро";
+            return SlotUpgrade(UpgradeEffect.ExtraAmmoSlot) ? "СЛОТЫ ЯДЕР: 7 и 9 · оба заполнены или содержат другой тип · G — положить выбранное ядро" : "СЛОТ ЯДЕР " + BallCount(AmmoSlot) + "/2 · " + (BallCount(AmmoSlot) >= AmmoCapacity ? "Нет места" : "Уже хранится другой тип") + ": " + InventoryIcons.ItemName(BallItem(AmmoSlot)) + " · 7 — выбрать ядра · G — положить выбранное ядро";
         }
         public bool CanSwapItem(InventoryItem incoming)
         {
             if (CanFitItem(incoming) || incoming < InventoryItem.Fish || incoming > InventoryItem.Lantern || incoming == InventoryItem.Plank) return false;
-            if (CannonAmmo.IsBall(incoming)) return SelectedSlot == AmmoSlot && BallCount(AmmoSlot) > 0 && BallItem(AmmoSlot) != incoming;
-            return SelectedSlot < AmmoSlot && ItemAt(SelectedSlot) != InventoryItem.None;
+            if (CannonAmmo.IsBall(incoming)) return IsAmmoSlot(SelectedSlot) && BallCount(SelectedSlot) > 0 && BallItem(SelectedSlot) != incoming;
+            return IsNormalSlot(SelectedSlot) && ItemAt(SelectedSlot) != InventoryItem.None;
         }
         public int ItemCount(int slot)
         {
@@ -115,6 +115,7 @@ namespace PirateSlop
             if (lootOwner == this) lootOwner = null;
             if (restoreCursor) AdvancedPlayerController.SetCursor(true);
         }
+        public void CloseLootForUpgrades() => CloseLoot(false);
         public SimpleCannon CannonPrefab;
         public Material PreviewMaterial;
         public int SelectedSlot { get; private set; }
@@ -125,10 +126,10 @@ namespace PirateSlop
         public int RodSlots { get; set; } = 2;
         public bool HasPistol => PistolSlots != 0;
         public bool HasRod => RodSlots != 0;
-        public bool PistolAt(int slot) => slot >= 0 && slot < 6 && (PistolSlots & (1 << slot)) != 0;
-        public bool RodAt(int slot) => slot >= 0 && slot < 6 && (RodSlots & (1 << slot)) != 0;
-        readonly int[] fishCounts = new int[6];
-        public int FishCount(int slot) => slot >= 0 && slot < 6 ? fishCounts[slot] : 0;
+        public bool PistolAt(int slot) => IsNormalSlot(slot) && (PistolSlots & (1 << slot)) != 0;
+        public bool RodAt(int slot) => IsNormalSlot(slot) && (RodSlots & (1 << slot)) != 0;
+        readonly int[] fishCounts = new int[NormalSlotStorage];
+        public int FishCount(int slot) => IsNormalSlot(slot) ? fishCounts[slot] : 0;
         public void SetFishCount(int slot, int count) => fishCounts[slot] = count;
         public bool FishSelected => FishCount(SelectedSlot) > 0;
         public bool RodSelected => RodAt(SelectedSlot);
@@ -149,10 +150,10 @@ namespace PirateSlop
         bool valid;
         bool placementPending;
         bool Networked => network != null && (network.IsClientInitialized || network.IsServerInitialized);
-        public bool HasCannon(int slot) => slot >= 0 && slot < 6 && (CannonSlots & (1 << slot)) != 0;
-        public int EmptySlot() { for (int i = 0; i < 6; i++) if (ItemAt(i) == InventoryItem.None) return i; return -1; }
+        public bool HasCannon(int slot) => IsNormalSlot(slot) && (CannonSlots & (1 << slot)) != 0;
+        public int EmptySlot() { for (int i = 0; i < NormalSlotStorage; i++) if (IsNormalSlot(i) && ItemAt(i) == InventoryItem.None) return i; return -1; }
         public void SetContents(int mask) => CannonSlots = mask;
-        public void SetSelection(int slot) { SelectedSlot = Mathf.Clamp(slot, 0, AmmoSlot); cancelled = false; selectionShownAt = Time.unscaledTime; }
+        public void SetSelection(int slot) { if (!SlotAvailable(slot)) return; SelectedSlot = slot; cancelled = false; selectionShownAt = Time.unscaledTime; }
         public bool AimingAtPickup()
         {
             if (motor == null || motor.PlayerCamera == null) return false;
@@ -181,6 +182,7 @@ namespace PirateSlop
             InteractionUsed = false; pickup = null; chest = null; aimedBall = null; aimedCannon = null; aimedHarpoon = null; valid = false;
             aimedRumShelf = null;
             if (preview != null) preview.SetActive(false);
+            if (RoguelikeUpgradeUI.BlocksInput) { InteractionUsed = true; return; }
             if (harpoonExitFrame == Time.frameCount)
             {
                 InteractionUsed = true;
@@ -202,7 +204,7 @@ namespace PirateSlop
             var mouse = Mouse.current;
             if (keyboard == null || mouse == null) return;
             for (int i = 0; i < SlotCount; i++)
-                if (keyboard[(Key)((int)Key.Digit1 + i)].wasPressedThisFrame)
+                if (SlotAvailable(i) && keyboard[(Key)((int)Key.Digit1 + i)].wasPressedThisFrame)
                 {
                     SetSelection(i); rotation = tilt = roll = 0;
                     if (Networked) network.SelectSlot(i);
@@ -446,15 +448,19 @@ namespace PirateSlop
                 ContextPrompt.Offer("Несёте ящик · G — положить", 40);
             using var layout = new HudLayout.Scope(true);
             Color old = GUI.color;
-            float width = Mathf.Min(76f, (HudLayout.Width - 48f) / SlotCount);
-            float hotbarScale = Mathf.Min(1.6f, (HudLayout.Width - 32f) / (56f * SlotCount + 6f * (SlotCount - 1) + 30f));
+            int visibleSlots = 0;
+            for (int i = 0; i < SlotCount; i++) if (SlotAvailable(i)) visibleSlots++;
+            float width = Mathf.Min(76f, (HudLayout.Width - 48f) / visibleSlots);
+            float hotbarScale = Mathf.Min(1.6f, (HudLayout.Width - 32f) / (56f * visibleSlots + 6f * (visibleSlots - 1) + 30f));
             float slotSize = 56f * hotbarScale, slotGap = 6f * hotbarScale;
             float ammoGap = 30f * hotbarScale;
-            float hotbarWidth = slotSize * SlotCount + slotGap * (SlotCount - 1) + ammoGap;
+            float hotbarWidth = slotSize * visibleSlots + slotGap * (visibleSlots - 1) + ammoGap;
+            int visualSlot = 0;
             for (int i = 0; i < SlotCount; i++)
             {
+                if (!SlotAvailable(i)) continue;
                 GUI.color = Color.white;
-                var rect = new Rect((HudLayout.Width - hotbarWidth) * .5f + (slotSize + slotGap) * i + (i >= AmmoSlot ? ammoGap : 0f), HudLayout.Height - slotSize - 24f, slotSize, slotSize);
+                var rect = new Rect((HudLayout.Width - hotbarWidth) * .5f + (slotSize + slotGap) * visualSlot++ + (i >= AmmoSlot ? ammoGap : 0f), HudLayout.Height - slotSize - 24f, slotSize, slotSize);
                 if (Icons != null) Icons.DrawHotbarSlot(rect, ItemAt(i), ItemCount(i), (i + 1).ToString(), i == SelectedSlot);
                 else PirateHudStyle.Panel(rect, (i + 1) + "\n" + InventoryIcons.ItemName(ItemAt(i)));
             }

@@ -384,7 +384,7 @@ namespace PirateSlop
             Publish();
             return true;
         }
-        public void RepairNearby(int id, int fragment, Vector3 point)
+        public void RepairNearby(int id, int fragment, Vector3 point, float areaMultiplier = 1f)
         {
             if (!RepairFragment(id, fragment)) return;
             var candidates = new List<(int Id, int Fragment, float Distance)>();
@@ -396,7 +396,7 @@ namespace PirateSlop
                     var anchor = section.RepairTransform(i);
                     var closest = anchor.TransformPoint(section.RepairBounds(i).ClosestPoint(anchor.InverseTransformPoint(point)));
                     float distance = Vector3.Distance(point, closest);
-                    if (distance <= 1.5f) candidates.Add((section.SectionId, i, distance));
+                    if (distance <= 1.5f * Mathf.Max(1f, areaMultiplier)) candidates.Add((section.SectionId, i, distance));
                 }
             }
             candidates.Sort((a, b) => a.Distance.CompareTo(b.Distance));

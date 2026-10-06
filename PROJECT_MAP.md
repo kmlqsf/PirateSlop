@@ -12,7 +12,7 @@
 
 ## Полный каталог
 
-Учтено 3496 файлов без `.meta`. Ещё 3597 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
+Учтено 3532 файлов без `.meta`. Ещё 3625 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
 
 | Раздел | Назначение | Файлов |
 | --- | --- | ---: |
@@ -34,18 +34,18 @@
 | [Assets/Models](<Docs/ProjectMap/Assets-Models.md>) | Модели и связанные ресурсы | 1102 |
 | [Assets/Plugins](<Docs/ProjectMap/Assets-Plugins.md>) | Плагины | 5 |
 | [Assets/Prefabs](<Docs/ProjectMap/Assets-Prefabs.md>) | Готовые игровые объекты | 114 |
-| [Assets/Resources](<Docs/ProjectMap/Assets-Resources.md>) | Ресурсы, доступные для загрузки по имени | 63 |
+| [Assets/Resources](<Docs/ProjectMap/Assets-Resources.md>) | Ресурсы, доступные для загрузки по имени | 66 |
 | [Assets/Scenes](<Docs/ProjectMap/Assets-Scenes.md>) | Сохранённые сцены | 3 |
-| [Assets/Scripts](<Docs/ProjectMap/Assets-Scripts.md>) | Игровой код и редакторские инструменты | 387 |
+| [Assets/Scripts](<Docs/ProjectMap/Assets-Scripts.md>) | Игровой код и редакторские инструменты | 404 |
 | [Assets/Settings](<Docs/ProjectMap/Assets-Settings.md>) | Настройки игровых систем и рендеринга | 48 |
 | [Assets/Shaders](<Docs/ProjectMap/Assets-Shaders.md>) | Шейдеры | 8 |
-| [Assets/StreamingAssets](<Docs/ProjectMap/Assets-StreamingAssets.md>) | Ресурсы раздела; точный состав — в каталоге | 2 |
+| [Assets/StreamingAssets](<Docs/ProjectMap/Assets-StreamingAssets.md>) | Ресурсы раздела; точный состав — в каталоге | 5 |
 | [Assets/Tests](<Docs/ProjectMap/Assets-Tests.md>) | Исходники проверок | 19 |
 | [Assets/ThirdParty](<Docs/ProjectMap/Assets-ThirdParty.md>) | Сторонние ресурсы | 20 |
 | [Assets/TutorialInfo](<Docs/ProjectMap/Assets-TutorialInfo.md>) | Ресурсы раздела; точный состав — в каталоге | 2 |
 | [Assets/UI](<Docs/ProjectMap/Assets-UI.md>) | Ресурсы интерфейса | 29 |
-| [Docs](<Docs/ProjectMap/Docs.md>) | Документы и сохранённые отчёты | 30 |
-| [Packages](<Docs/ProjectMap/Packages.md>) | Манифест, lock-файл и встроенные пакеты | 922 |
+| [Docs](<Docs/ProjectMap/Docs.md>) | Документы и сохранённые отчёты | 34 |
+| [Packages](<Docs/ProjectMap/Packages.md>) | Манифест, lock-файл и встроенные пакеты | 924 |
 | [ProjectSettings](<Docs/ProjectMap/ProjectSettings.md>) | Настройки Unity | 28 |
 | [Root](<Docs/ProjectMap/Root.md>) | Корневые инструкции, планы и служебные файлы | 26 |
 | [ThirdParty](<Docs/ProjectMap/ThirdParty.md>) | Сторонние ресурсы | 2 |
@@ -59,9 +59,40 @@
 
 Ключевые слова: рогалик, улучшения.
 
-Утверждённый список из 33 личных улучшений: Common 11, Rare 10, Epic 7, Legendary 5. Документ проектирования; наличие списка не означает реализацию механики.
+Основа рогалика: первое открытие наполненного сундука начисляет очко каждому участнику команды; V открывает три личные карты с названием, описанием и редкостью. Очередь наград, выбор и исключение повторов принадлежат серверу; шансы фиксируются при начислении. Переподключение восстанавливает состояние по серверному токену в текущем матче. Все 41 эффекта подключены к выбору: серверные боевые эффекты, предсказываемые модификаторы движения, два бонусных слота, корабельные выдачи, рыбалка, подзорная труба и рероллы. UpgradeEffects.json хранит параметры и передаётся сервером клиентам. Монета и договор расходуются один раз за матч; ром и обезьянка не повторяются при reconnect. Common 14, Rare 12, Epic 9, Legendary 6. Шансы и каталог — JSON в StreamingAssets/Roguelike, загрузка при запуске матча. В Тестовой карте каждый новый корабль получает один наполненный TestUpgradeChest рядом с PlayerLocalSpawn через серверный спаун и поиск поверхности по активным коллайдерам; сундук закреплён на корабле и сразу доступен. Обычные матчи не меняются. Голос перенесён с V на B; ProtocolVersion 127. Компиляция и логика каталога проверены через Unity MCP; Play Mode, сборка и второй клиент не запускались.
+UI рогалика построен на uGUI Canvas с CanvasScaler Expand: три физические игральные карты с бумажной фактурой, гравюрами, мастями и зеркальными мастями. При наведении карта поднимается и выпрямляется; клик по карте/кнопке или Enter выбирает её. Очки привлекают внимание плавным золотым сигналом с периодом 1,6 с до траты; пульсация отключается и настройка сохраняется. Коллекция — миниатюры карт с фильтрами, прокруткой и полным описанием при наведении. Resources/RoguelikeUI хранит два новых изображения, созданных imagegen; ссылки на референсы и гайдлайны в Docs/RoguelikeUIStyle.md. EnvironmentTestGallery скрывает подписи при открытом окне. Визуальная проверка — отдельная preview-сцена через Unity MCP, без Play Mode.
+Повторная проверка: основная анимация сабли использует SabreSpeed для Slash/Slash2; эхо сохраняет seed и разброс первоначального выстрела; PendingPact восстанавливает смерть до сетевого спауна; автоматическая отметка не сокращает более долгую ручную.
+Свечение выбора Rare/Epic/Legendary использует RarityGlow.shader: тонкая светлая кромка, узкий ореол с шумовым рассеиванием, редкие искры Epic/Legendary; alpha CardFace защищает бумагу. Resources включает shader в сборку, отдельные материалы уничтожаются вместе с UI. Common и коллекция без эффекта. Проверены только Unity preview 1080p/720p и hover, не игровой матч. Угловые цифры удалены, зеркальные масти сохранены. Glow не перехватывает мышь, не требует камерного Bloom и усиливается при выделении.
 
+- [Assets/Scripts/Loot/RoguelikeCatalog.cs](<Assets/Scripts/Loot/RoguelikeCatalog.cs>) — Исходник C#: UpgradeRarity, UpgradeCard, RoguelikeCatalog, CardFile, ChanceFile, Milestone.
+- [Assets/Scripts/Networking/NetworkPlayer.Roguelike.cs](<Assets/Scripts/Networking/NetworkPlayer.Roguelike.cs>) — Исходник C#: UpgradeReward, PlayerUpgradeState, UpgradeSnapshot, NetworkPlayer.
+- [Assets/Scripts/Networking/SessionRoguelike.cs](<Assets/Scripts/Networking/SessionRoguelike.cs>) — Исходник C#: UpgradeIdentityMessage, SessionController.
+- [Assets/Scripts/UI/RoguelikeUpgradeUI.cs](<Assets/Scripts/UI/RoguelikeUpgradeUI.cs>) — Исходник C#: RoguelikeUpgradeUI.
+- [Assets/Scripts/UI/RoguelikeUpgradeUI.Presentation.cs](<Assets/Scripts/UI/RoguelikeUpgradeUI.Presentation.cs>) — Исходник C#: RoguelikeUpgradeUI.
+- [Assets/Scripts/UI/RoguelikeUpgradeView.cs](<Assets/Scripts/UI/RoguelikeUpgradeView.cs>) — Исходник C#: RoguelikeUpgradeView, CardSlot, UpgradeCardPointer.
+- [Assets/Resources/RoguelikeUI/RarityGlow.shader](<Assets/Resources/RoguelikeUI/RarityGlow.shader>) — Шейдер.
+- [Assets/Resources/RoguelikeUI/CardFace.png](<Assets/Resources/RoguelikeUI/CardFace.png>) — Изображение / текстура.
+- [Assets/Resources/RoguelikeUI/CardArt.png](<Assets/Resources/RoguelikeUI/CardArt.png>) — Изображение / текстура.
+- [Assets/Scripts/UI/UpgradeCardPresentation.cs](<Assets/Scripts/UI/UpgradeCardPresentation.cs>) — Исходник C#: UpgradeCardPresentation.
+- [Assets/StreamingAssets/Roguelike/UpgradeChances.json](<Assets/StreamingAssets/Roguelike/UpgradeChances.json>) — Конфигурация / данные JSON.
+- [Assets/StreamingAssets/Roguelike/UpgradeCatalog.json](<Assets/StreamingAssets/Roguelike/UpgradeCatalog.json>) — Конфигурация / данные JSON.
+- [Assets/Scripts/Loot/RoguelikeTuning.cs](<Assets/Scripts/Loot/RoguelikeTuning.cs>) — Исходник C#: UpgradeEffect, RoguelikeTuning.
+- [Assets/Scripts/Networking/NetworkPlayer.UpgradeEffects.cs](<Assets/Scripts/Networking/NetworkPlayer.UpgradeEffects.cs>) — Исходник C#: NetworkPlayer.
+- [Assets/Scripts/AdvancedPlayerController.Upgrades.cs](<Assets/Scripts/AdvancedPlayerController.Upgrades.cs>) — Исходник C#: AdvancedPlayerController.
+- [Assets/Scripts/Player/PlayerInventory.Upgrades.cs](<Assets/Scripts/Player/PlayerInventory.Upgrades.cs>) — Исходник C#: PlayerInventory.
+- [Assets/Scripts/Networking/NetworkShip.UpgradeMonkeys.cs](<Assets/Scripts/Networking/NetworkShip.UpgradeMonkeys.cs>) — Исходник C#: NetworkShip.
+- [Assets/Scripts/Player/UpgradeCombat.cs](<Assets/Scripts/Player/UpgradeCombat.cs>) — Исходник C#: UpgradeCombat.
+- [Assets/Scripts/Networking/NetworkWeapon.UpgradeCombat.cs](<Assets/Scripts/Networking/NetworkWeapon.UpgradeCombat.cs>) — Исходник C#: NetworkWeapon.
+- [Assets/Scripts/Player/GhostSabreWave.cs](<Assets/Scripts/Player/GhostSabreWave.cs>) — Исходник C#: GhostSabreWave.
+- [Assets/Scripts/Player/GunnersEyeView.cs](<Assets/Scripts/Player/GunnersEyeView.cs>) — Исходник C#: GunnersEyeView.
+- [Assets/Scripts/Networking/NetworkPlayer.UpgradeSpyglass.cs](<Assets/Scripts/Networking/NetworkPlayer.UpgradeSpyglass.cs>) — Исходник C#: NetworkPlayer.
+- [Assets/StreamingAssets/Roguelike/UpgradeEffects.json](<Assets/StreamingAssets/Roguelike/UpgradeEffects.json>) — Конфигурация / данные JSON.
+- [Assets/Scripts/Player/SabreAnimation.cs](<Assets/Scripts/Player/SabreAnimation.cs>) — Исходник C#: SabreAnimation.
+- [Assets/Animations/Player/PiratePlayer.controller](<Assets/Animations/Player/PiratePlayer.controller>) — Контроллер анимации.
 - [Docs/RoguelikeApprovedUpgrades.md](<Docs/RoguelikeApprovedUpgrades.md>) — Документация.
+- [Docs/RoguelikeMechanic.md](<Docs/RoguelikeMechanic.md>) — Документация.
+- [Docs/RoguelikeUIStyle.md](<Docs/RoguelikeUIStyle.md>) — Документация.
+- [Docs/RoguelikeEffects.md](<Docs/RoguelikeEffects.md>) — Документация.
 
 ### Инспектор объектов Unity (`inspector`)
 
@@ -342,7 +373,7 @@ NetworkHealth синхронизирует горение экипажа и сч
 
 Ключевые слова: лут, предметы, инвентарь, inventory.
 
-Подбор и расход предметов подтверждает сервер. Сверять идентификаторы предметов, иконки и каталог. Одинаковые предметы складываются в стак без игрового лимита количества; ядра сохраняют отдельный слот на 2 ядра одного типа. NetworkWeapon.stackCounts хранит количество оружия/снаряжения; рыба и ром используют прежние счётчики без лимитов 20/6. Расход, сброс, установка пушек и TransferInventoryTo сохраняют остаток стака. DeveloperMenu содержит ползунок скорости корабля 100–500%: команда 20 применяет к текущему кораблю под игроком либо его собственному. Сервер меняет NetworkShip.DeveloperSpeedMultiplier (SyncVar); ShipController масштабирует максимальную скорость и разгон/торможение, сохраняя ограничения якоря, повреждений, затопления и буксировки. DeveloperMenu содержит выпадающий список пяти морских ивентов и спаун перед текущим/собственным кораблём через команду 19 NetworkDeveloperTools. Сервер проверяет свободную воду, наполняет сундук из ChestLoot.json и учитывает его при удалении тестовых объектов. Надписи морских лутовых ивентов скрыты по умолчанию; локальный переключатель DeveloperMenu показывает все доступные клиенту ивенты без ограничения расстояния.
+Подбор и расход предметов подтверждает сервер. Сверять идентификаторы предметов, иконки и каталог. Одинаковые предметы складываются в стак без игрового лимита количества; ядра сохраняют отдельный слот на 2 ядра одного типа. NetworkWeapon.stackCounts хранит количество оружия/снаряжения; рыба и ром используют прежние счётчики без лимитов 20/6. Расход, сброс, установка пушек и TransferInventoryTo сохраняют остаток стака. DeveloperMenu содержит ползунок скорости корабля 100–500%: команда 20 применяет к текущему кораблю под игроком либо его собственному. Сервер меняет NetworkShip.DeveloperSpeedMultiplier (SyncVar); ShipController масштабирует максимальную скорость и разгон/торможение, сохраняя ограничения якоря, повреждений, затопления и буксировки. DeveloperMenu содержит выпадающий список пяти морских ивентов и спаун перед текущим/собственным кораблём через команду 23 NetworkDeveloperTools. Сервер проверяет свободную воду, наполняет сундук из ChestLoot.json и учитывает его при удалении тестовых объектов. Надписи морских лутовых ивентов скрыты по умолчанию; локальный переключатель DeveloperMenu показывает все доступные клиенту ивенты без ограничения расстояния. Чит-окно F8 разделено на вкладки Игрок, Лут, Корабль и Мир; выдача предметов, все улучшения и морские ивенты выбираются компактными выпадающими списками с текстовым поиском. Каталог улучшений кэшируется при первом открытии окна. Команда 21 создаёт наполненный сундук в 3 м перед игроком на свободной земле или палубе, закрепляя его на корабле; команда 22 выдаёт выбранное улучшение через серверное состояние и штатные эффекты, без расходования очков и повторной выдачи уже полученного. Оба спауна учитывают лимит и удаление тестовых объектов. Команда 19 оставлена переключателю кракена.
 NetworkWeapon имеет отдельные partial-файлы; для морского лута начать с NetworkWeapon.SeaLoot.cs.
 Состав сундуков и число разных типов (до 10) задаёт Assets/StreamingAssets/Loot/ChestLoot.json; любой новый лут сундуков обязательно подключать туда. Сервер перечитывает таблицу при наполнении; инструкция рядом в ChestLoot.README.md.
 Плот движется на сервере со скоростью 20% MaxSpeed корабля, поворачивает внутрь за 150 м от границы зоны; ограничение радиуса оставляет 108 м от центра плота до границы при сужении. RaftPlatform и ShipDeckPassenger переносят игрока, сетевой Platform ссылается на сундук. ShipSpyglassView.LootHint создаёт один полупрозрачный золотистый столб света с сечением 1×1 м и высотой 300 м над ближайшим активным морским ивентом из ClientChests. Выбор по расстоянию от игрока не зависит от направления взгляда; переносимые, пустые и закреплённые на корабле сундуки исключаются. LootEventBeam.shader использует мягкие края, затухание к вершине и depth test. Render callbacks показывают столб только камере подзорной трубы, на выходе скрывают. Экранное пятно удалено. В обеих подзорных трубах туман сохраняется первую секунду, затем за 3 с SmoothStep ослабляет его плотность до 1% исходной. ShipSpyglassView.FogMultiplier применяется к обычному и SeaMist туману только камеры трубы; выход восстанавливает значения. Экранный взлом: мышь/A/D задают угол, ЛКМ/пробел вращают замок, три отмычки на попытку; секретный угол и успех проверяет сервер.
@@ -774,7 +805,7 @@ Whisky Bottle с бесплатной BlenderKit Royalty Free загружена
 Ключевые слова: звук, звуки, голос, voice.
 
 Назначения звуков хранить в существующем GameAudioBank. Источники и лицензии проверять в CREDITS.
-Голосовой чат — отдельная система от игровых звуков. SessionVoiceMenu переключает сохранённый режим VOIP: удержание V (по умолчанию) или активация микрофона по RMS-порогу -60..-20 дБ (по умолчанию -40), с хвостом 0.3 с. PirateVoiceInputFilter фильтрует исходящие кадры до кодирования; запреты в меню, без фокуса и при смерти сохраняются.
+Голосовой чат — отдельная система от игровых звуков. SessionVoiceMenu переключает сохранённый режим VOIP: удержание B (по умолчанию; V отведена под улучшения) или активация микрофона по RMS-порогу -60..-20 дБ (по умолчанию -40), с хвостом 0.3 с. PirateVoiceInputFilter фильтрует исходящие кадры до кодирования; запреты в меню, без фокуса и при смерти сохраняются.
 Взлом плота: шесть Lockpick cues в GameAudioBank. Движение отмычки, вращение и заедание звучат локально с ограничением частоты; начало, поломка и успех подтверждаются сервером и слышны рядом. Короткие CC0-записи и обработка перечислены в Assets/Audio/Lockpick/SOURCE.md; варианты движения/заедания не повторяются подряд.
 ShipV3InteractionAudioSetup импортирует короткие CC0-фрагменты костей на столе, контактов костей, тряски в кружке, зажигания и тушения огня и три новых удара рынды. Новые SoundCue добавлены в конец enum; GameAudio исключает немедленные повторы этих вариантов. Источники и лицензии: Assets/Audio/ShipInteractions/SOURCES.md. Свеча и фонари используют одинаковые FlameLight/FlameExtinguish через серверные события.
 SabreWood добавлен в конец SoundCue без изменения прежних числовых значений. SabreModelReplacementSetup назначает существующий Foley/chop.ogg (громкость 0.6, дистанция 22 м); звук контакта с деревом передаётся вместе с серверным эффектом. Knife остаётся звуком взмаха.

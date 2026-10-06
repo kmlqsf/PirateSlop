@@ -51,7 +51,7 @@ namespace PirateSlop.Ships
 
         void BeginActivities()
         {
-            activityShip = GetComponent<NetworkShip>(); activitySails = GetComponent<SailSystem>();
+            activityShip = GetComponentInParent<NetworkShip>(); activitySails = GetComponentInParent<SailSystem>();
             activityHelm = activityShip != null ? activityShip.Helm : null;
             task = TaskKind.None; activityGoal = -1; fishingPhase = 0;
             nextFishing = Time.time + Interval(FishingInterval);
@@ -79,7 +79,7 @@ namespace PirateSlop.Ships
         {
             if (player == null || !player.IsSpawned || player.Eliminated.Value || player.Motor == null || player.Motor.IsDead) return false;
             var passenger = player.GetComponent<ShipDeckPassenger>();
-            if (passenger != null && passenger.Ship == GetComponent<Rigidbody>()) return true;
+            if (passenger != null && passenger.Ship == GetComponentInParent<Rigidbody>()) return true;
             foreach (var hit in Physics.RaycastAll(player.transform.position + Vector3.up * .2f, Vector3.down, 2f, ~0, QueryTriggerInteraction.Ignore).OrderBy(h => h.distance))
                 if (!hit.transform.IsChildOf(player.transform) && hit.collider.GetComponentInParent<NetworkFish>() == null) return hit.collider.GetComponentInParent<NetworkShip>() == activityShip;
             return false;

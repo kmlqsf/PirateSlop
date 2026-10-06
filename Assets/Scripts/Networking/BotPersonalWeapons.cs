@@ -27,7 +27,7 @@ namespace PirateSlop.Networking
         {
             if (Reloading && Selected != null) return inventory.SelectedSlot;
             int best = -1; float score = float.NegativeInfinity;
-            for (int i = 0; i < 6; i++)
+            for (int i = 0; i < PlayerInventory.NormalSlotStorage; i++)
             {
                 var definition = Definition(i);
                 if (definition == null) continue;
