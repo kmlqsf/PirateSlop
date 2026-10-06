@@ -90,8 +90,7 @@ namespace PirateSlop.EditorTools
             var paths = new System.Collections.Generic.List<string>
             {
                 MenuPath,
-                OceanPath,
-                "Assets/Scenes/NetworkLoadTest.unity"
+                OceanPath
             };
             foreach (var scene in EditorBuildSettings.scenes)
                 if (scene.enabled && !paths.Contains(scene.path)) paths.Add(scene.path);
