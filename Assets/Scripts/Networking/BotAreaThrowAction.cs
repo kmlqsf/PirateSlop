@@ -21,7 +21,7 @@ namespace PirateSlop.Networking
         public static int Slot(NetworkPlayer player)
         {
             var inventory = player.GetComponent<PlayerInventory>();
-            for (int i = 0; i < 6; i++)
+            for (int i = 0; i < PlayerInventory.NormalSlotStorage; i++)
                 if (inventory.EquipmentAt(i) == InventoryItem.Pufferfish || inventory.EquipmentAt(i) == InventoryItem.HolyGrenade) return i;
             return -1;
         }

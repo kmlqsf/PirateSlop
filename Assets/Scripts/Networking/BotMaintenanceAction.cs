@@ -39,7 +39,7 @@ namespace PirateSlop.Networking
         public bool Begin(out string reason)
         {
             previousSlot = inventory.SelectedSlot;
-            supplying = cannon != null && inventory.BallCount(PlayerInventory.AmmoSlot) == 0;
+            supplying = cannon != null && inventory.BallCount(inventory.ReadyAmmoSlot) == 0;
             return StartStep(out reason);
         }
         bool StartStep(out string reason)
@@ -135,7 +135,7 @@ namespace PirateSlop.Networking
                     acquired = true; lastProgress = Time.time; Work(player, 0); return true;
                 }
                 done = supply ? job.weapon.TryStoreBall(Network.NetworkObject) :
-                    job.weapon.SelectServerSlot(PlayerInventory.AmmoSlot) && job.weapon.TryLoadBall(Network.NetworkObject, job.cannon.Index);
+                    job.weapon.SelectServerSlot(job.inventory.ReadyAmmoSlot) && job.weapon.TryLoadBall(Network.NetworkObject, job.cannon.Index);
                 acquired = done; lastProgress = Time.time; return done;
             }
             public void Work(NetworkPlayer player, float delta)

@@ -82,7 +82,7 @@ namespace PirateSlop
 
         void ShowLootBeam(Camera camera)
         {
-            if (lootBeamRenderer != null) lootBeamRenderer.enabled = engaged && camera == cameraView &&
+            if (lootBeamRenderer != null) lootBeamRenderer.enabled = player.IsOwner && !player.Motor.IsDead && !RoguelikeUpgradeUI.BlocksInput && (engaged || player.HasUpgrade(UpgradeEffect.Seeker)) && camera == player.Motor.PlayerCamera &&
                 ((lootHint != null && lootHint.LootHintEligible) || (skullHint != null && skullHint.LootHintEligible));
         }
 

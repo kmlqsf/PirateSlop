@@ -1,0 +1,292 @@
+{
+  "schemaVersion": 1,
+  "cards": [
+    {
+      "id": "SeaLegs",
+      "name": "Морские ноги",
+      "description": "Скорость плавания под водой равна максимальной скорости корабля при множителе скорости 100%.",
+      "rarity": "Common",
+      "supersedes": ""
+    },
+    {
+      "id": "DoubleJump",
+      "name": "Двойной прыжок",
+      "description": "Один дополнительный прыжок в воздухе; восстанавливается после приземления.",
+      "rarity": "Common",
+      "supersedes": ""
+    },
+    {
+      "id": "LightBoots",
+      "name": "Лёгкие сапоги",
+      "description": "Скорость бега +30%.",
+      "rarity": "Common",
+      "supersedes": ""
+    },
+    {
+      "id": "DeckAcrobat",
+      "name": "Палубный акробат",
+      "description": "Высота обычного прыжка +50%.",
+      "rarity": "Common",
+      "supersedes": ""
+    },
+    {
+      "id": "ToughPirate",
+      "name": "Живучий пират",
+      "description": "Максимальное здоровье ×2.",
+      "rarity": "Epic",
+      "supersedes": ""
+    },
+    {
+      "id": "LeadResolve",
+      "name": "Свинцовая выдержка",
+      "description": "Получаемое отбрасывание −40%. Идею доработать позднее.",
+      "rarity": "Common",
+      "supersedes": ""
+    },
+    {
+      "id": "SecondWind",
+      "name": "Второе дыхание",
+      "description": "После 12 секунд без получения урона восстанавливает 2% максимального HP в секунду, до половины здоровья.",
+      "rarity": "Rare",
+      "supersedes": ""
+    },
+    {
+      "id": "CharmedCoin",
+      "name": "Заговорённая монета",
+      "description": "Смертельный удар оставляет 1 HP и даёт 2 секунды неуязвимости. Один раз за бой.",
+      "rarity": "Epic",
+      "supersedes": ""
+    },
+    {
+      "id": "SeaPact",
+      "name": "Договор с морем",
+      "description": "Один раз за бой возрождает через некоторое время на месте смерти с 50% HP. Задержку ещё определить.",
+      "rarity": "Legendary",
+      "supersedes": ""
+    },
+    {
+      "id": "SabreMaster",
+      "name": "Мастер сабли",
+      "description": "Урон сабли +20%, скорость атак +20%, дальность попадания +20%.",
+      "rarity": "Epic",
+      "supersedes": ""
+    },
+    {
+      "id": "Bloodletter",
+      "name": "Кровопускатель",
+      "description": "Урон от сабли и огнестрельного оружия вызывает кровотечение: ещё 25% урона попадания за 4 секунды. Повторное попадание обновляет эффект.",
+      "rarity": "Rare",
+      "supersedes": ""
+    },
+    {
+      "id": "GhostSabre",
+      "name": "Призрачная сабля",
+      "description": "Каждый четвёртый взмах выпускает режущую волну на 8 м; она не проходит сквозь стены и корпус.",
+      "rarity": "Legendary",
+      "supersedes": ""
+    },
+    {
+      "id": "DryPowder",
+      "name": "Сухой порох",
+      "description": "Урон личного огнестрельного оружия +15%.",
+      "rarity": "Common",
+      "supersedes": ""
+    },
+    {
+      "id": "QuickHands",
+      "name": "Быстрые руки",
+      "description": "Время перезарядки личного огнестрельного оружия −20%.",
+      "rarity": "Common",
+      "supersedes": ""
+    },
+    {
+      "id": "Sharpshooter",
+      "name": "Меткий стрелок",
+      "description": "Урон попаданий в голову +50%.",
+      "rarity": "Rare",
+      "supersedes": ""
+    },
+    {
+      "id": "Ricochet",
+      "name": "Рикошет",
+      "description": "После попадания пуля отскакивает в ближайшего другого врага в радиусе 10 м, нанося ему 60% урона.",
+      "rarity": "Epic",
+      "supersedes": ""
+    },
+    {
+      "id": "ShotEcho",
+      "name": "Эхо выстрела",
+      "description": "Первый выстрел после полной перезарядки повторяется через 0,3 секунды в том же направлении с 50% урона, без расхода патрона.",
+      "rarity": "Epic",
+      "supersedes": ""
+    },
+    {
+      "id": "LongRangeCharge",
+      "name": "Дальнобойный заряд",
+      "description": "Начальная скорость выпущенного ядра +30%.",
+      "rarity": "Rare",
+      "supersedes": ""
+    },
+    {
+      "id": "GunnersEye",
+      "name": "Глаз канонира",
+      "description": "Показывает траекторию ядра и прогноз первой точки столкновения с учётом текущего движения корабля.",
+      "rarity": "Legendary",
+      "supersedes": ""
+    },
+    {
+      "id": "HeavyCannonball",
+      "name": "Тяжёлое ядро",
+      "description": "Сбитые твоим обычным ядром игроки лежат на 30% дольше.",
+      "rarity": "Rare",
+      "supersedes": ""
+    },
+    {
+      "id": "FastCarpenterCommon",
+      "name": "Быстрый плотник I",
+      "description": "Скорость ремонтных ударов и область ремонта +25%.",
+      "rarity": "Common",
+      "supersedes": ""
+    },
+    {
+      "id": "FastCarpenterRare",
+      "name": "Быстрый плотник II",
+      "description": "Скорость ремонтных ударов и область ремонта +50%.",
+      "rarity": "Rare",
+      "supersedes": "FastCarpenterCommon"
+    },
+    {
+      "id": "Helmsman",
+      "name": "Рулевой",
+      "description": "При твоём управлении корабль на 25% быстрее реагирует на штурвал.",
+      "rarity": "Rare",
+      "supersedes": ""
+    },
+    {
+      "id": "HeartyCatch",
+      "name": "Сытный улов",
+      "description": "Съеденная рыба восстанавливает на 30% больше здоровья.",
+      "rarity": "Common",
+      "supersedes": ""
+    },
+    {
+      "id": "LuckyBaitCommon",
+      "name": "Удачная наживка I",
+      "description": "Ускорение рыбалки на 25%.",
+      "rarity": "Common",
+      "supersedes": ""
+    },
+    {
+      "id": "LuckyBaitRare",
+      "name": "Удачная наживка II",
+      "description": "Ускорение рыбалки на 50%.",
+      "rarity": "Rare",
+      "supersedes": "LuckyBaitCommon"
+    },
+    {
+      "id": "UnusualCatch",
+      "name": "Необычный улов",
+      "description": "Шанс получить дополнительные предметы с рыбалки — рыбу-меч, рыбу-фугу или случайный предмет — увеличивается на 50%.",
+      "rarity": "Rare",
+      "supersedes": ""
+    },
+    {
+      "id": "FishSupply",
+      "name": "Рыбный запас",
+      "description": "В каждом открытом тобой сундуке гарантированно появляется пакет из 8 рыб.",
+      "rarity": "Epic",
+      "supersedes": ""
+    },
+    {
+      "id": "PirateFeast",
+      "name": "Пиратский пир",
+      "description": "Съеденная тобой рыба также лечит весь экипаж на 50% от величины твоего лечения.",
+      "rarity": "Legendary",
+      "supersedes": ""
+    },
+    {
+      "id": "Seeker",
+      "name": "Искатель",
+      "description": "Показывает добычу по тому же принципу, который сейчас используется в подзорной трубе, без отдельного ограничения радиусом 12 м.",
+      "rarity": "Rare",
+      "supersedes": ""
+    },
+    {
+      "id": "SharpEye",
+      "name": "Острый глаз",
+      "description": "Наблюдение врага через подзорную трубу в течение 2 секунд отмечает его для экипажа на 15 секунд.",
+      "rarity": "Epic",
+      "supersedes": ""
+    },
+    {
+      "id": "LuckyCoin",
+      "name": "Счастливая монета",
+      "description": "На каждом третьем сундуке позволяет дважды перебросить предложенные три улучшения.",
+      "rarity": "Common",
+      "supersedes": ""
+    },
+    {
+      "id": "SplitVolley",
+      "name": "Раздвоенный залп",
+      "description": "Вместо одного ядра выпускает два: одно с отклонением влево на 10°, второе вправо на 10° относительно направления прицеливания.",
+      "rarity": "Legendary",
+      "supersedes": ""
+    },
+    {
+      "id": "WaterRun",
+      "name": "Бег по воде",
+      "description": "После выхода с твёрдой поверхности можешь 4 секунды бежать по воде. Затем проваливаешься; восстановление после 10 секунд на суше или палубе.",
+      "rarity": "Epic",
+      "supersedes": ""
+    },
+    {
+      "id": "PushingBullets",
+      "name": "Толкающие пули",
+      "description": "Пули немного отталкивают врагов назад. Силу отталкивания определить позднее.",
+      "rarity": "Common",
+      "supersedes": ""
+    },
+    {
+      "id": "ExtraPocket",
+      "name": "Дополнительный карман",
+      "description": "+1 обычный слот инвентаря.",
+      "rarity": "Rare",
+      "supersedes": ""
+    },
+    {
+      "id": "ExtraAmmoSlot",
+      "name": "Запас для канонира",
+      "description": "+1 слот для ядер.",
+      "rarity": "Epic",
+      "supersedes": ""
+    },
+    {
+      "id": "RopeSprinter",
+      "name": "Канатный спринтер",
+      "description": "Лазание по канатам в 3 раза быстрее.",
+      "rarity": "Common",
+      "supersedes": ""
+    },
+    {
+      "id": "RumSupply",
+      "name": "Ромовый запас",
+      "description": "На полку корабля добавляется +1 ром.",
+      "rarity": "Rare",
+      "supersedes": ""
+    },
+    {
+      "id": "LuckyDie",
+      "name": "Счастливый кубик",
+      "description": "При твоём броске костей один кубик гарантированно выпадает на 6.",
+      "rarity": "Common",
+      "supersedes": ""
+    },
+    {
+      "id": "ExtraMonkey",
+      "name": "Обезьянья команда",
+      "description": "+1 обезьянка на корабль.",
+      "rarity": "Legendary",
+      "supersedes": ""
+    }
+  ]
+}

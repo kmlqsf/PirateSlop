@@ -22,7 +22,7 @@ namespace PirateSlop.Ships
 
         void BeginRepair()
         {
-            repairOwner = GetComponent<ShipDestruction>();
+            repairOwner = GetComponentInParent<ShipDestruction>();
             repairSection = null; repairStrikes = 0; repairWork = 0f;
             nextRepairScan = Time.time + 3f; blockedRepairs.Clear();
             repairReachable = new bool[Nodes.Length];

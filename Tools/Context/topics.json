@@ -22,11 +22,43 @@
         "улучшения"
       ],
       "notes": [
-        "Утверждённый список из 33 личных улучшений: Common 11, Rare 10, Epic 7, Legendary 5. Документ проектирования; наличие списка не означает реализацию механики."
+        "Основа рогалика: первое открытие наполненного сундука начисляет очко каждому участнику команды; V открывает три личные карты с названием, описанием и редкостью. Очередь наград, выбор и исключение повторов принадлежат серверу; шансы фиксируются при начислении. Переподключение восстанавливает состояние по серверному токену в текущем матче. Все 41 эффекта подключены к выбору: серверные боевые эффекты, предсказываемые модификаторы движения, два бонусных слота, корабельные выдачи, рыбалка, подзорная труба и рероллы. UpgradeEffects.json хранит параметры и передаётся сервером клиентам. Монета и договор расходуются один раз за матч; ром и обезьянка не повторяются при reconnect. Common 14, Rare 12, Epic 9, Legendary 6. Шансы и каталог — JSON в StreamingAssets/Roguelike, загрузка при запуске матча. В Тестовой карте каждый новый корабль получает один наполненный TestUpgradeChest рядом с PlayerLocalSpawn через серверный спаун и поиск поверхности по активным коллайдерам; сундук закреплён на корабле и сразу доступен. Обычные матчи не меняются. Голос перенесён с V на B; ProtocolVersion 127. Компиляция и логика каталога проверены через Unity MCP; Play Mode, сборка и второй клиент не запускались.",
+        "UI рогалика построен на uGUI Canvas с CanvasScaler Expand: три физические игральные карты с бумажной фактурой, гравюрами, мастями и зеркальными мастями. При наведении карта поднимается и выпрямляется; клик по карте/кнопке или Enter выбирает её. Очки привлекают внимание плавным золотым сигналом с периодом 1,6 с до траты; пульсация отключается и настройка сохраняется. Коллекция — миниатюры карт с фильтрами, прокруткой и полным описанием при наведении. Resources/RoguelikeUI хранит два новых изображения, созданных imagegen; ссылки на референсы и гайдлайны в Docs/RoguelikeUIStyle.md. EnvironmentTestGallery скрывает подписи при открытом окне. Визуальная проверка — отдельная preview-сцена через Unity MCP, без Play Mode.",
+        "Повторная проверка: основная анимация сабли использует SabreSpeed для Slash/Slash2; эхо сохраняет seed и разброс первоначального выстрела; PendingPact восстанавливает смерть до сетевого спауна; автоматическая отметка не сокращает более долгую ручную.",
+        "Свечение выбора Rare/Epic/Legendary использует RarityGlow.shader: тонкая светлая кромка, узкий ореол с шумовым рассеиванием, редкие искры Epic/Legendary; alpha CardFace защищает бумагу. Resources включает shader в сборку, отдельные материалы уничтожаются вместе с UI. Common и коллекция без эффекта. Проверены только Unity preview 1080p/720p и hover, не игровой матч. Угловые цифры удалены, зеркальные масти сохранены. Glow не перехватывает мышь, не требует камерного Bloom и усиливается при выделении."
       ],
-      "files": [],
+      "files": [
+        "Assets/Scripts/Loot/RoguelikeCatalog.cs",
+        "Assets/Scripts/Networking/NetworkPlayer.Roguelike.cs",
+        "Assets/Scripts/Networking/SessionRoguelike.cs",
+        "Assets/Scripts/UI/RoguelikeUpgradeUI.cs",
+        "Assets/Scripts/UI/RoguelikeUpgradeUI.Presentation.cs",
+        "Assets/Scripts/UI/RoguelikeUpgradeView.cs",
+        "Assets/Resources/RoguelikeUI/RarityGlow.shader",
+        "Assets/Resources/RoguelikeUI/CardFace.png",
+        "Assets/Resources/RoguelikeUI/CardArt.png",
+        "Assets/Scripts/UI/UpgradeCardPresentation.cs",
+        "Assets/StreamingAssets/Roguelike/UpgradeChances.json",
+        "Assets/StreamingAssets/Roguelike/UpgradeCatalog.json",
+        "Assets/Scripts/Loot/RoguelikeTuning.cs",
+        "Assets/Scripts/Networking/NetworkPlayer.UpgradeEffects.cs",
+        "Assets/Scripts/AdvancedPlayerController.Upgrades.cs",
+        "Assets/Scripts/Player/PlayerInventory.Upgrades.cs",
+        "Assets/Scripts/Networking/NetworkShip.UpgradeMonkeys.cs",
+        "Assets/Scripts/Player/UpgradeCombat.cs",
+        "Assets/Scripts/Networking/NetworkWeapon.UpgradeCombat.cs",
+        "Assets/Scripts/Player/GhostSabreWave.cs",
+        "Assets/Scripts/Player/GunnersEyeView.cs",
+        "Assets/Scripts/Networking/NetworkPlayer.UpgradeSpyglass.cs",
+        "Assets/StreamingAssets/Roguelike/UpgradeEffects.json",
+        "Assets/Scripts/Player/SabreAnimation.cs",
+        "Assets/Animations/Player/PiratePlayer.controller"
+      ],
       "docs": [
-        "Docs/RoguelikeApprovedUpgrades.md"
+        "Docs/RoguelikeApprovedUpgrades.md",
+        "Docs/RoguelikeMechanic.md",
+        "Docs/RoguelikeUIStyle.md",
+        "Docs/RoguelikeEffects.md"
       ]
     },
     {
@@ -409,7 +441,7 @@
         "inventory"
       ],
       "notes": [
-        "Подбор и расход предметов подтверждает сервер. Сверять идентификаторы предметов, иконки и каталог. Одинаковые предметы складываются в стак без игрового лимита количества; ядра сохраняют отдельный слот на 2 ядра одного типа. NetworkWeapon.stackCounts хранит количество оружия/снаряжения; рыба и ром используют прежние счётчики без лимитов 20/6. Расход, сброс, установка пушек и TransferInventoryTo сохраняют остаток стака. DeveloperMenu содержит ползунок скорости корабля 100–500%: команда 20 применяет к текущему кораблю под игроком либо его собственному. Сервер меняет NetworkShip.DeveloperSpeedMultiplier (SyncVar); ShipController масштабирует максимальную скорость и разгон/торможение, сохраняя ограничения якоря, повреждений, затопления и буксировки. DeveloperMenu содержит выпадающий список пяти морских ивентов и спаун перед текущим/собственным кораблём через команду 19 NetworkDeveloperTools. Сервер проверяет свободную воду, наполняет сундук из ChestLoot.json и учитывает его при удалении тестовых объектов. Надписи морских лутовых ивентов скрыты по умолчанию; локальный переключатель DeveloperMenu показывает все доступные клиенту ивенты без ограничения расстояния.",
+        "Подбор и расход предметов подтверждает сервер. Сверять идентификаторы предметов, иконки и каталог. Одинаковые предметы складываются в стак без игрового лимита количества; ядра сохраняют отдельный слот на 2 ядра одного типа. NetworkWeapon.stackCounts хранит количество оружия/снаряжения; рыба и ром используют прежние счётчики без лимитов 20/6. Расход, сброс, установка пушек и TransferInventoryTo сохраняют остаток стака. DeveloperMenu содержит ползунок скорости корабля 100–500%: команда 20 применяет к текущему кораблю под игроком либо его собственному. Сервер меняет NetworkShip.DeveloperSpeedMultiplier (SyncVar); ShipController масштабирует максимальную скорость и разгон/торможение, сохраняя ограничения якоря, повреждений, затопления и буксировки. DeveloperMenu содержит выпадающий список пяти морских ивентов и спаун перед текущим/собственным кораблём через команду 23 NetworkDeveloperTools. Сервер проверяет свободную воду, наполняет сундук из ChestLoot.json и учитывает его при удалении тестовых объектов. Надписи морских лутовых ивентов скрыты по умолчанию; локальный переключатель DeveloperMenu показывает все доступные клиенту ивенты без ограничения расстояния. Чит-окно F8 разделено на вкладки Игрок, Лут, Корабль и Мир; выдача предметов, все улучшения и морские ивенты выбираются компактными выпадающими списками с текстовым поиском. Каталог улучшений кэшируется при первом открытии окна. Команда 21 создаёт наполненный сундук в 3 м перед игроком на свободной земле или палубе, закрепляя его на корабле; команда 22 выдаёт выбранное улучшение через серверное состояние и штатные эффекты, без расходования очков и повторной выдачи уже полученного. Оба спауна учитывают лимит и удаление тестовых объектов. Команда 19 оставлена переключателю кракена.",
         "NetworkWeapon имеет отдельные partial-файлы; для морского лута начать с NetworkWeapon.SeaLoot.cs.",
         "Состав сундуков и число разных типов (до 10) задаёт Assets/StreamingAssets/Loot/ChestLoot.json; любой новый лут сундуков обязательно подключать туда. Сервер перечитывает таблицу при наполнении; инструкция рядом в ChestLoot.README.md.",
         "Плот движется на сервере со скоростью 20% MaxSpeed корабля, поворачивает внутрь за 150 м от границы зоны; ограничение радиуса оставляет 108 м от центра плота до границы при сужении. RaftPlatform и ShipDeckPassenger переносят игрока, сетевой Platform ссылается на сундук. ShipSpyglassView.LootHint создаёт один полупрозрачный золотистый столб света с сечением 1×1 м и высотой 300 м над ближайшим активным морским ивентом из ClientChests. Выбор по расстоянию от игрока не зависит от направления взгляда; переносимые, пустые и закреплённые на корабле сундуки исключаются. LootEventBeam.shader использует мягкие края, затухание к вершине и depth test. Render callbacks показывают столб только камере подзорной трубы, на выходе скрывают. Экранное пятно удалено. В обеих подзорных трубах туман сохраняется первую секунду, затем за 3 с SmoothStep ослабляет его плотность до 1% исходной. ShipSpyglassView.FogMultiplier применяется к обычному и SeaMist туману только камеры трубы; выход восстанавливает значения. Экранный взлом: мышь/A/D задают угол, ЛКМ/пробел вращают замок, три отмычки на попытку; секретный угол и успех проверяет сервер.",
@@ -984,13 +1016,15 @@
       ],
       "notes": [
         "Назначения звуков хранить в существующем GameAudioBank. Источники и лицензии проверять в CREDITS.",
-        "Голосовой чат — отдельная система от игровых звуков. SessionVoiceMenu переключает сохранённый режим VOIP: удержание V (по умолчанию) или активация микрофона по RMS-порогу -60..-20 дБ (по умолчанию -40), с хвостом 0.3 с. PirateVoiceInputFilter фильтрует исходящие кадры до кодирования; запреты в меню, без фокуса и при смерти сохраняются.",
+        "Голосовой чат — отдельная система от игровых звуков. SessionVoiceMenu переключает сохранённый режим VOIP: удержание B (по умолчанию; V отведена под улучшения) или активация микрофона по RMS-порогу -60..-20 дБ (по умолчанию -40), с хвостом 0.3 с. PirateVoiceInputFilter фильтрует исходящие кадры до кодирования; запреты в меню, без фокуса и при смерти сохраняются.",
         "Взлом плота: шесть Lockpick cues в GameAudioBank. Движение отмычки, вращение и заедание звучат локально с ограничением частоты; начало, поломка и успех подтверждаются сервером и слышны рядом. Короткие CC0-записи и обработка перечислены в Assets/Audio/Lockpick/SOURCE.md; варианты движения/заедания не повторяются подряд.",
         "ShipV3InteractionAudioSetup импортирует короткие CC0-фрагменты костей на столе, контактов костей, тряски в кружке, зажигания и тушения огня и три новых удара рынды. Новые SoundCue добавлены в конец enum; GameAudio исключает немедленные повторы этих вариантов. Источники и лицензии: Assets/Audio/ShipInteractions/SOURCES.md. Свеча и фонари используют одинаковые FlameLight/FlameExtinguish через серверные события.",
         "SabreWood добавлен в конец SoundCue без изменения прежних числовых значений. SabreModelReplacementSetup назначает существующий Foley/chop.ogg (громкость 0.6, дистанция 22 м); звук контакта с деревом передаётся вместе с серверным эффектом. Knife остаётся звуком взмаха.",
         "BottleBreak добавлен последним в SoundCue и назначен через BottleFishReplacementSetup.ConfigureBottleBreakAudio. Три оригинальных процедурных mono PCM16 WAV, 44.1 кГц, 0.725–0.775 с, громкость 0.75, дистанция 24 м; источники описаны в Assets/Audio/BottleBreak/SOURCES.md, генератор — Art/Audio/BottleBreak/GenerateBottleBreak.py. Это отдельный звук разбитого стекла; BottleClose сохраняет звук пробки. Звук и осколки приходят из одного серверного события разбития; общий эффект пули для этих бутылок подавлен. Ссылки и импорт проверены, звучание на слух и Play Mode не проверялись.",
         "BarricadeBreak добавлен последним без изменения прежних значений SoundCue. Использует существующий Naval/cannon_hit_ship_short.ogg с громкостью 0.7 и дистанцией 55 м; вызывается вместе с серверным разрушением баррикады.",
-        "Старый неподключённый StormWeather.cs удалён по Git-аудиту 2026-10-05; действующие системы шторма и все звуковые клипы сохранены."
+        "Старый неподключённый StormWeather.cs удалён по Git-аудиту 2026-10-05; действующие системы шторма и все звуковые клипы сохранены.",
+        "SelectedReview: выбор звуков revision 132 (80 файлов, 55 событий) импортирован в GameAudioBank; 173 WAV и 9 прежних ссылок после нарезки. GameAudio.Selected управляет LowHealth/Whirlpool/Vortex; DistanceShotAudio разделяет ближние и дальние выстрелы, для DoubleBarrel дальний слой фильтруется в игре. Редкости Rare/Epic/Legendary и BulletNearbyImpact разделены. Источники, интервалы и комментарии сохранены в SelectionManifest.json/SOURCES.md. Новые cues добавлены в конец enum; сетевой протокол 128 из-за новых аудио RPC и причины drowning в DamageFeedback. Play Mode и мультиплеер проверяет пользователь.",
+        "Настройка после ручной проверки 2026-10-06: Pistol усилен на 50% в пределах 5 м с плавным возвратом до 15 м. Редкость проигрывается при открытии V по максимуму текущих offers (с ожиданием первой сетевой руки), подтверждение выбора использует Select. KnockdownBody вызывается при ApplyKnockdown независимо от ragdoll, для локального игрока 2D Effects. WaterRunSteps учитывает вино и улучшение, реальную водную опору и имеет приоритет перед палубой. У водоворота Ocean/Wind плавно снижаются до 30%, оба слоя WhirlpoolNear усилены вдвое. Настройки требуют проверки звучания в игре."
       ],
       "files": [
         "Assets/Scripts/Audio/GameAudio.cs",
@@ -1021,13 +1055,17 @@
         "Assets/Audio/BottleBreak/BottleBreak01.wav",
         "Assets/Audio/BottleBreak/BottleBreak02.wav",
         "Assets/Audio/BottleBreak/BottleBreak03.wav",
-        "Assets/Scripts/Loot/BarricadeBreakAnimation.cs"
+        "Assets/Scripts/Loot/BarricadeBreakAnimation.cs",
+        "Assets/Scripts/Audio/GameAudio.Selected.cs",
+        "Assets/Scripts/Audio/DistanceShotAudio.cs",
+        "Assets/Audio/SelectedReview/SelectionManifest.json"
       ],
       "docs": [
         "AudioIntegration.md",
         "Assets/Audio/CREDITS.md",
         "Assets/Audio/ShipInteractions/SOURCES.md",
-        "Assets/Audio/BottleBreak/SOURCES.md"
+        "Assets/Audio/BottleBreak/SOURCES.md",
+        "Assets/Audio/SelectedReview/SOURCES.md"
       ]
     },
     {

@@ -24,7 +24,10 @@ namespace PirateSlop
         readonly FirearmPrediction prediction=new();
         DirectShipControls controls;
         bool Equipped => (motor == null || !(motor.IsSwimming || motor.IsClimbing || motor.IsDead)) && (inventory == null || inventory.PistolSelected || inventory.SabreSelected);
-        bool loaded = true, reloading;
+        bool loaded = true, reloading, echoPrimed;
+        NetworkPlayer UpgradeOwner => GetComponent<NetworkPlayer>();
+        public float SabreSpeed => UpgradeOwner != null ? UpgradeOwner.SabreUpgradeMultiplier : 1f;
+        float ReloadSpeed => UpgradeOwner != null ? UpgradeOwner.ReloadUpgradeMultiplier : 1f;
         float reloadUntil, nextAttack, recoil, stab, lift;
         Quaternion worldRest, viewRest;
         Vector3 worldPosition, viewPosition;
@@ -97,7 +100,7 @@ namespace PirateSlop
         {
             TickSabre();
             if (reloading && (!Equipped || SabreEquipped || motor.LocomotionLocked || (hands != null && hands.HasHeldBall))) reloading = false;
-            if (reloading && Time.time >= reloadUntil) { reloading = false; loaded = true; }
+            if (reloading && Time.time >= reloadUntil) { reloading = false; loaded = true; echoPrimed = true; }
         }
         public bool Act(byte action, Vector3 direction, Vector3 eyeOffset,bool aimed=false,int seed=-1)
         {
@@ -106,11 +109,11 @@ namespace PirateSlop
             if (action == 1)
             {
                 if (loaded || reloading || Time.time < nextAttack) return false;
-                reloading = true; reloadUntil = Time.time + Firearm.ReloadDuration; return true;
+                reloading = true; reloadUntil = Time.time + Firearm.ReloadDuration * ReloadSpeed; return true;
             }
             if (action > 2 || Time.time < nextAttack || (action == 0 && (!loaded || reloading))) return false;
             if (action == 0) { loaded = false; nextAttack = Time.time + Firearm.ShotInterval; }
-            else { reloading = false; nextAttack = Time.time + .9f; }
+            else { reloading = false; nextAttack = Time.time + .9f / SabreSpeed; }
             direction.Normalize();
             if (action == 2)
             {
@@ -127,7 +130,10 @@ namespace PirateSlop
                 eye = eyeBlock.point + (bodyEye - eye).normalized * .02f;
             var definition=handling.Pistol;
             Vector3 muzzle = definition.MuzzlePoint(eye,direction,aimed);
-            var shot=FirearmCombat.Resolve(gameObject,definition,eye,muzzle,direction,aimed,seed<0?++shotSequence:seed,true)[0];
+            bool echo = echoPrimed; echoPrimed = false;
+            int resolvedSeed = seed < 0 ? ++shotSequence : seed;
+            if (echo && network != null) network.ScheduleUpgradeEcho(definition, eye, muzzle, direction, aimed, resolvedSeed);
+            var shot=FirearmCombat.Resolve(gameObject,definition,eye,muzzle,direction,aimed,resolvedSeed,true)[0];
             ShowShot(shot);
             if (Networked && network.IsServerInitialized) network.PublishShot(shot);
             return true;

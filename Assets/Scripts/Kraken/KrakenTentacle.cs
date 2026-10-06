@@ -25,7 +25,10 @@ namespace PirateSlop
         public void Attack(Vector3 targetPosition, Action onImpact)
         {
             if (animator != null)
+            {
+                if (!animator.IsAttacking) GameAudio.Play(SoundCue.KrakenThreat, TipPosition);
                 animator.TriggerAttack(targetPosition, onImpact);
+            }
         }
 
         public void ReceiveWeaponHit(float damage, GameObject attacker) => TakeDamage(damage, attacker);

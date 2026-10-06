@@ -16,6 +16,7 @@ namespace PirateSlop
         DirectShipControls controls;
         float lastShot=-10, aim, baselineFov, nextReady, bloom;
         bool heldAim;
+        float nextAimSound;
         InventoryItem previous=InventoryItem.None;
         public FirearmDefinition Definition => inventory.PistolSelected ? Pistol : inventory.ItemAt(inventory.SelectedSlot)==InventoryItem.Musket ? Musket : inventory.ItemAt(inventory.SelectedSlot)==InventoryItem.DoubleBarrel ? Shotgun : null;
         public bool Local => player==null || player.IsOwner;
@@ -36,7 +37,13 @@ namespace PirateSlop
             var selected=inventory.ItemAt(inventory.SelectedSlot);
             if(selected!=previous){previous=selected;nextReady=Time.time+.18f;aim=0;heldAim=false;}
             bool reload=inventory.PistolSelected ? weapon.Reloading : equipment!=null && equipment.IsBusy;
+            bool previousAim = heldAim;
             heldAim=Available && !reload && motor.InputActive && Mouse.current!=null && Mouse.current.rightButton.isPressed;
+            if (heldAim != previousAim && Available && Time.unscaledTime >= nextAimSound)
+            {
+                GameAudio.Play(SoundCue.FirearmAim, transform.position, .35f, true);
+                nextAimSound = Time.unscaledTime + .25f;
+            }
             if(heldAim && motor.IsThirdPerson) motor.SetThirdPerson(false);
             aim=Mathf.MoveTowards(aim,heldAim?1:0,Time.deltaTime/Mathf.Max(.08f,Definition!=null?Definition.AimSeconds:.18f));
             bloom=Mathf.MoveTowards(bloom,0,Time.deltaTime*5);

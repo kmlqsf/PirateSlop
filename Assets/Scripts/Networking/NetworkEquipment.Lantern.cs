@@ -11,11 +11,11 @@ namespace PirateSlop.Networking
         HandLanternVisual viewLantern, worldLantern;
         float nextLanternToggle;
 
-        public bool LanternLit(int slot) => slot >= 0 && slot < PlayerInventory.AmmoSlot && (lanternLitSlots.Value & (1 << slot)) != 0;
+        public bool LanternLit(int slot) => inventory.IsNormalSlot(slot) && (lanternLitSlots.Value & (1 << slot)) != 0;
 
         public void SetLanternLit(int slot, bool lit)
         {
-            if (!IsServerInitialized || slot < 0 || slot >= PlayerInventory.AmmoSlot || inventory.EquipmentAt(slot) != InventoryItem.Lantern) return;
+            if (!IsServerInitialized || !inventory.IsNormalSlot(slot) || inventory.EquipmentAt(slot) != InventoryItem.Lantern) return;
             int bit = 1 << slot;
             lanternLitSlots.Value = lit ? lanternLitSlots.Value | bit : lanternLitSlots.Value & ~bit;
         }

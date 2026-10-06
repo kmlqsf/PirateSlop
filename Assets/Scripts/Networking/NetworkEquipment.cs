@@ -22,7 +22,8 @@ namespace PirateSlop.Networking
         readonly SyncVar<byte> action = new();
         readonly SyncVar<int> rounds = new(1);
         readonly SyncVar<Vector3> direction = new(Vector3.forward);
-        readonly int[] ammunition = { 1, 1, 1, 1, 1, 1 };
+        readonly int[] ammunition = { 1, 1, 1, 1, 1, 1, 1, 1 };
+        readonly bool[] echoPrimedSlots = new bool[PlayerInventory.NormalSlotStorage];
         PlayerInventory inventory;
         AdvancedPlayerController motor;
         NetworkWeapon network;
@@ -55,7 +56,7 @@ namespace PirateSlop.Networking
         public float ShotAge => Time.time - recoilAt;
         public bool AnimationAiming => IsOwner ? sentAim : aiming.Value;
         public Vector3 AnimationDirection => direction.Value;
-        float ReloadSeconds => Firearm && handling!=null && handling.Definition!=null ? handling.Definition.Ballistics.ReloadDuration : 3.2f;
+        float ReloadSeconds => (Firearm && handling!=null && handling.Definition!=null ? handling.Definition.Ballistics.ReloadDuration : 3.2f) * GetComponent<NetworkPlayer>().ReloadUpgradeMultiplier;
         CannonHands hands;
         Transform view, world;
         Renderer[] viewRenderers, worldRenderers;
@@ -104,7 +105,7 @@ namespace PirateSlop.Networking
             target.lanternLitSlots.Value = lanternLitSlots.Value;
             lanternLitSlots.Value = 0;
             target.nextShot = nextShot;
-            target.rounds.Value = target.ammunition[target.inventory.SelectedSlot];
+            target.rounds.Value = target.inventory.SelectedSlot < target.ammunition.Length ? target.ammunition[target.inventory.SelectedSlot] : 0;
             System.Array.Clear(ammunition, 0, ammunition.Length);
         }
         void Awake()
@@ -130,8 +131,8 @@ namespace PirateSlop.Networking
                 if (!CanUse || (action.Value != 0 && actionSlot != inventory.SelectedSlot)) { action.Value = 0; aiming.Value = false; }
                 if (action.Value != 0 && Time.time >= until)
                 {
-                    if (action.Value == 1) { ammunition[actionSlot] = CapacityFor(Item); rounds.Value = ammunition[actionSlot]; }
-                    if (action.Value == 2 && network.ConsumeEquipment(actionSlot, InventoryItem.Wine)) { waterRunUntil = Time.time+60; waterRunRemaining.Value = 60; }
+                    if (action.Value == 1) { ammunition[actionSlot] = CapacityFor(Item); rounds.Value = ammunition[actionSlot]; echoPrimedSlots[actionSlot] = true; }
+                    if (action.Value == 2 && network.ConsumeEquipment(actionSlot, InventoryItem.Wine)) { waterRunUntil = Time.time+60; waterRunRemaining.Value = 60; WineDrinkObserversRpc(); }
                     if (action.Value == 4) network.ThrowFish(Item, direction.Value);
                     action.Value = 0;
                 }
@@ -238,7 +239,7 @@ namespace PirateSlop.Networking
             int capacity = definition.Capacity;
             if (request == 1)
             {
-                if (ammunition[slot] < capacity) BeginAction(1, definition.Ballistics.ReloadDuration, slot);
+                if (ammunition[slot] < capacity) BeginAction(1, definition.Ballistics.ReloadDuration * GetComponent<NetworkPlayer>().ReloadUpgradeMultiplier, slot);
                 return;
             }
             if (request != 0) return;
@@ -252,11 +253,13 @@ namespace PirateSlop.Networking
                 if(!FirearmTrace.Cast(gameObject,eye,cameraEye,out var block)) eye=cameraEye;
             }
             Vector3 muzzle = definition.MuzzlePoint(eye,forward,aimed);
+            if (echoPrimedSlots[slot]) { echoPrimedSlots[slot] = false; network.ScheduleUpgradeEcho(definition, eye, muzzle, forward, aimed, sequence); }
             var shots=FirearmCombat.Resolve(gameObject,definition,eye,muzzle,forward,aimed,sequence,true);
             if(definition.ShooterKnockback>0) motor.ApplyKnockback(-Vector3.ProjectOnPlane(forward,Vector3.up).normalized*definition.ShooterKnockback+Vector3.up*.8f);
             ShotObserversRpc(shots,sequence,Item);
         }
         void BeginAction(byte value, float duration, int slot) { actionSlot = slot; until = Time.time + duration; action.Value = value; aiming.Value = false; }
+        [ObserversRpc(RunLocally = true)] void WineDrinkObserversRpc() => GameAudio.Play(SoundCue.WineDrink, transform.position);
         [TargetRpc] void EmptyTargetRpc(FishNet.Connection.NetworkConnection connection) => GameAudio.Play(SoundCue.DryFire, transform.position);
         Transform MuzzleForView()
         {

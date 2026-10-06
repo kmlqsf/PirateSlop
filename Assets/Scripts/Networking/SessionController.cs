@@ -16,7 +16,7 @@ namespace PirateSlop.Networking
     public sealed partial class SessionController : MonoBehaviour
     {
         public static SessionController Instance { get; private set; }
-        public static bool MenuOpen => Instance != null && (!Instance.playing || (Cursor.lockState != CursorLockMode.Locked && !PlayerInventory.LootWindowOpen));
+        public static bool MenuOpen => Instance != null && (!Instance.playing || (Cursor.lockState != CursorLockMode.Locked && !PlayerInventory.LootWindowOpen && !RoguelikeUpgradeUI.WindowOpen));
         public SessionConfig Config;
         public NetworkObject ShipPrefab, PlayerPrefab;
         public Camera MenuCamera;
@@ -72,6 +72,7 @@ namespace PirateSlop.Networking
             manager.ClientManager.OnClientConnectionState += ClientState;
             manager.ClientManager.RegisterBroadcast<PopulationMessage>(Population);
             manager.ClientManager.RegisterBroadcast<WorldManifestMessage>(WorldManifest);
+            manager.ClientManager.RegisterBroadcast<UpgradeIdentityMessage>(ReceiveUpgradeIdentity);
             manager.ClientManager.RegisterBroadcast<StormMessage>(ReceiveStorm);
             manager.ClientManager.RegisterBroadcast<TestOceanMessage>(ReceiveTestOcean);
             manager.ServerManager.RegisterBroadcast<WorldReadyMessage>(WorldReady);
@@ -171,6 +172,8 @@ namespace PirateSlop.Networking
         {
             if (args.ConnectionState == LocalConnectionState.Started)
             {
+                ResetUpgrades();
+                upgradeCatalog = RoguelikeCatalog.Load();
                 Debug.Log($"SESSION_READY id={SessionId} port={transport.GetPort()} capacity={MaxPlayers}");
                 if (!EnvironmentTestActive) SeaLootSpawner.Spawn(ProceduralWorld.Instance, manager, Config.Loot);
                 InitializeBotRoster();
@@ -182,6 +185,7 @@ namespace PirateSlop.Networking
             {
                 if (connecting && error == "") SetError("Сервер не запущен: порт занят или недоступен");
                 players.Clear(); slots.Clear(); awaitingWorld.Clear(); population = 0;
+                ResetUpgrades();
                 ResetRoster();
             }
         }
@@ -237,7 +241,7 @@ namespace PirateSlop.Networking
             {
                 worldLoading = null; Disconnect(); SetError("Карта не совпадает с сервером. Обновите обе игры."); yield break;
             }
-            manager.ClientManager.Broadcast(new WorldReadyMessage { Checksum = checksum });
+            manager.ClientManager.Broadcast(new WorldReadyMessage { Checksum = checksum, UpgradeToken = UpgradeResumeToken });
             startedAt = Time.realtimeSinceStartup; worldLoading = null;
         }
         void WorldReady(NetworkConnection conn, WorldReadyMessage message, Channel channel)
@@ -247,13 +251,15 @@ namespace PirateSlop.Networking
             if (observerSession && manager.ClientManager.Connection != null && conn.ClientId == manager.ClientManager.Connection.ClientId)
             { StartObserver(); return; }
             SendTestOcean(conn);
-            SpawnPlayer(conn);
+            SpawnPlayer(conn, message.UpgradeToken);
         }
-        void SpawnPlayer(NetworkConnection conn)
+        void SpawnPlayer(NetworkConnection conn, string upgradeToken = null)
         {
             int crew = SteamTeam(conn);
             if (steamSession && crew <= 0) { conn.Disconnect(true); return; }
-            int team = HumanTeam(crew);
+            var resume = ResumeUpgrades(upgradeToken, crew);
+            if (resume != null && (resume.Player != null && resume.Player.IsSpawned || TeamEliminated(resume.Team))) { conn.Disconnect(true); return; }
+            int team = resume != null ? resume.Team : HumanTeam(crew);
             if (team <= 0) { conn.Disconnect(true); return; }
             var replacement = FindReplacementBot(team);
             int teamCount = players.Values.Count(p => p != null && p.TeamId.Value == team);
@@ -277,8 +283,11 @@ namespace PirateSlop.Networking
             player.ParticipantId.Value = id; player.ShipObject.Value = ship.NetworkObject;
             player.HomeShipId.Value = ship.ParticipantId.Value;
             player.TeamId.Value = team;
+            AttachUpgrades(player, resume ?? replacement?.UpgradeState, crew);
             players.Add(conn.ClientId, player);
             manager.ServerManager.Spawn(player.NetworkObject, conn);
+            manager.ServerManager.Broadcast(conn, new UpgradeIdentityMessage { Token = player.UpgradeState.Token });
+            player.SendUpgrades();
             if (replacement != null)
             {
                 replacement.GetComponent<NetworkWeapon>().TransferInventoryTo(player.GetComponent<NetworkWeapon>());

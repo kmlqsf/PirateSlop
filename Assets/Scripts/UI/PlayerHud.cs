@@ -106,7 +106,7 @@ namespace PirateSlop
                 bool eliminated = network != null && network.Eliminated.Value;
                 PirateHudStyle.Label(new Rect(deathX + 15, deathY + 5, 490, 30), eliminated ? "ЭКИПАЖ ВЫБЫЛ" : "ВЫ ПАЛИ В БОЮ", PirateHudStyle.Gold, true);
                 bool hasRum = network == null || (network.Ship != null && network.Ship.RumCount > 0);
-                PirateHudStyle.Label(new Rect(deathX + 15, deathY + 35, 490, 25), eliminated ? "Корабль потерян. Возрождение недоступно." : hasRum ? "Ждите звонка колокола в рубке • −1 ром" : "Нет рома — экипаж должен пополнить полку", PirateHudStyle.Paper);
+                PirateHudStyle.Label(new Rect(deathX + 15, deathY + 35, 490, 25), eliminated ? "Корабль потерян. Возрождение недоступно." : network != null && network.PactSeconds > 0f ? $"Договор с морем: возрождение через {network.PactSeconds:0.0} с" : hasRum ? "Ждите звонка колокола в рубке • −1 ром" : "Нет рома — экипаж должен пополнить полку", PirateHudStyle.Paper);
                 
                 if (motor.SpectatorTarget != null && motor.SpectatorTarget.Motor != null && !motor.SpectatorTarget.Motor.IsDead)
                 {

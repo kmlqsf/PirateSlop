@@ -19,6 +19,7 @@ namespace PirateSlop.Networking
         NetworkShip homeShip;
         float launched, nextInput, yaw, pitch;
         bool exploded;
+        AudioSource flightAudio;
         public bool BotSteer(NetworkPlayer player, Vector3 forward)
         {
             if (!IsServerInitialized || player != shooter || !player.IsBot.Value || exploded || !float.IsFinite(forward.sqrMagnitude) || forward.sqrMagnitude < .5f) return false;
@@ -45,6 +46,7 @@ namespace PirateSlop.Networking
         }
         void OnDisable()
         {
+            GameAudio.StopLoop(flightAudio);
             RenderPipelineManager.beginCameraRendering -= BeforeCamera;
             RenderPipelineManager.endCameraRendering -= AfterCamera;
             EndView();
@@ -62,6 +64,13 @@ namespace PirateSlop.Networking
         {
             foreach (var child in GetComponentsInChildren<Transform>())
                 if (child.name == "WingLeft" || child.name == "WingRight") wings[child] = child.localRotation;
+        }
+        public override void OnStartClient()
+        {
+            base.OnStartClient();
+            if (remaining.Value > FlightSeconds - .5f) GameAudio.Play(SoundCue.ParrotLaunch, transform.position);
+            GameAudio.Attached(ref flightAudio, SoundCue.ParrotWings, transform);
+            if (flightAudio != null && flightAudio.clip != null) flightAudio.time = Mathf.Min(flightAudio.clip.length - .01f, Mathf.Max(0f, FlightSeconds - remaining.Value));
         }
         bool Enemy(NetworkPlayer player)
         {
@@ -178,9 +187,10 @@ namespace PirateSlop.Networking
         [ObserversRpc(RunLocally = true)]
         void ExplosionObserversRpc(Vector3 point)
         {
+            GameAudio.StopLoop(flightAudio);
             EndView();
             CombatVfx.Fire(point, Vector3.up, true); CombatVfx.Impact(point, Vector3.up, true);
-            GameAudio.Play(SoundCue.Cannon, point);
+            GameAudio.Play(GameAudio.ResolveCue(SoundCue.ParrotExplosion, SoundCue.Cannon), point);
         }
         void OnGUI()
         {

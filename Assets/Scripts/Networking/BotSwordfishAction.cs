@@ -19,7 +19,7 @@ namespace PirateSlop.Networking
         public static int Slot(NetworkPlayer player)
         {
             var inventory = player.GetComponent<PlayerInventory>();
-            for (int i = 0; i < 6; i++) if (inventory.EquipmentAt(i) == InventoryItem.Swordfish) return i;
+            for (int i = 0; i < PlayerInventory.NormalSlotStorage; i++) if (inventory.EquipmentAt(i) == InventoryItem.Swordfish) return i;
             return -1;
         }
         public BotSwordfishAction(NetworkPlayer player, NetworkPlayer target, int slot)

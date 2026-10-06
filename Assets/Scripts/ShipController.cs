@@ -149,6 +149,7 @@ public class ShipController : MonoBehaviour
     public float DeveloperSpeedMultiplier => networkShip != null ? Mathf.Clamp(networkShip.DeveloperSpeedMultiplier.Value, 1f, 5f) : 1f;
     public bool VortexBoosted => networkShip != null && networkShip.VortexBoostActive.Value;
     public float SpeedMultiplier => Mathf.Max(DeveloperSpeedMultiplier, VortexBoosted ? PirateSlop.Networking.NetworkShip.VortexSpeedMultiplier : 1f);
+    public float BaseMaxSpeed => maxSpeed;
     public float MaxSpeed => maxSpeed * SpeedMultiplier;
     public void FinishVortexBoost()
     {

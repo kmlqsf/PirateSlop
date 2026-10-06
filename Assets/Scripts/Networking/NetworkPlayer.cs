@@ -100,11 +100,14 @@ namespace PirateSlop.Networking
         void Awake()
         {
             motor = GetComponent<AdvancedPlayerController>(); motor.ConfigureNetwork(false);
+            InitializeUpgradeEffects();
+            if (GetComponent<GunnersEyeView>() == null) gameObject.AddComponent<GunnersEyeView>();
             passenger = GetComponent<ShipDeckPassenger>(); passenger.Networked = true;
             graphicsRoot = transform.Find("PlayerGraphics");
             if (GetComponent<CrewPresentation>() == null) gameObject.AddComponent<CrewPresentation>();
             if (GetComponent<BotDebugPanel>() == null) gameObject.AddComponent<BotDebugPanel>();
             if (GetComponent<FirstPersonFeedback>() == null) gameObject.AddComponent<FirstPersonFeedback>();
+            if (GetComponent<RoguelikeUpgradeUI>() == null) gameObject.AddComponent<RoguelikeUpgradeUI>();
         }
         public override void OnStartNetwork()
         {
@@ -114,6 +117,7 @@ namespace PirateSlop.Networking
         }
         public override void OnStartClient()
         {
+            if (!string.IsNullOrEmpty(effectConfig.Value)) RoguelikeTuning.Receive(effectConfig.Value);
             motor.ConfigureNetwork(IsOwner && !SessionController.Instance.Automated);
             if (IsOwner)
             {
@@ -312,6 +316,7 @@ namespace PirateSlop.Networking
         }
         void Update()
         {
+            TickUpgradeEffects();
             if (diagnostics && Time.unscaledTime >= nextDiagnostic)
             {
                 nextDiagnostic = Time.unscaledTime + 2f;

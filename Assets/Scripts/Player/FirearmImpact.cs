@@ -12,7 +12,7 @@ namespace PirateSlop
         MaterialPropertyBlock block;
         Material material;
         int next;
-        float nextAudio;
+        float nextAudio, nextNearbyAudio;
         void Awake()
         {
             block=new MaterialPropertyBlock();
@@ -32,6 +32,9 @@ namespace PirateSlop
             if(!shot.Hit) return;
             if (shot.Surface == BulletSurfaceKind.Glass) return;
             var pool=Get();
+            var listener = SpatialAudioTone.FindListener();
+            if (detailed && listener != null && (listener.transform.position - shot.Start).sqrMagnitude > 16f && (listener.transform.position - shot.End).sqrMagnitude < 16f && Time.unscaledTime >= pool.nextNearbyAudio)
+            { GameAudio.Play(SoundCue.BulletNearbyImpact, shot.End); pool.nextNearbyAudio = Time.unscaledTime + .08f; }
             if(shot.LeaveMark) pool.Mark(shot);
             if(detailed)
             {

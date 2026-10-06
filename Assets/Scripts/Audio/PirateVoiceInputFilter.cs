@@ -25,7 +25,7 @@ namespace PirateSlop
                 if (rms >= threshold) speechUntil = Time.unscaledTime + .3f;
                 transmit = Time.unscaledTime < speechUntil;
             }
-            else if (transmit) transmit = Keyboard.current != null && Keyboard.current.vKey.isPressed;
+            else if (transmit) transmit = Keyboard.current != null && Keyboard.current.bKey.isPressed;
             else speechUntil = 0f;
             if (Voice != null) Voice.SetTransmitting(transmit);
             if (!transmit) samples = null;

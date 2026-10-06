@@ -33,7 +33,13 @@ namespace PirateSlop
         public int Index { get; set; }
         public const float LoadRadius = 3f;
         public Vector3 ShotPosition => Muzzle.position + Muzzle.forward * .35f;
-        public Vector3 ShotVelocity => Muzzle.forward * (LaunchSpeed * 1.15f) + GetComponentInParent<ShipController>().CannonPointVelocity(Muzzle.position);
+        public Vector3 ShotVelocity => UpgradeShotVelocity(Operator != null ? Operator.GetComponent<NetworkPlayer>() : null);
+        public Vector3 UpgradeShotVelocity(NetworkPlayer player, float angle = 0f)
+        {
+            float multiplier = player != null && player.HasUpgrade(UpgradeEffect.LongRangeCharge) ? RoguelikeTuning.Current.cannonSpeedMultiplier : 1f;
+            Vector3 forward = Quaternion.AngleAxis(angle, transform.up) * Muzzle.forward;
+            return forward * (LaunchSpeed * 1.15f * multiplier) + GetComponentInParent<ShipController>().CannonPointVelocity(Muzzle.position);
+        }
         Cannonball loaded;
         float loadStarted = -1f;
         Vector3 loadStart;
@@ -280,15 +286,23 @@ namespace PirateSlop
             nextFireTime = Time.time + ReloadSeconds;
             InitializeSupply(loaded);
             Vector3 position = ShotPosition;
-            Vector3 velocity = ShotVelocity;
+            var shooter = firingPlayer != null ? firingPlayer.GetComponent<NetworkPlayer>() : null;
+            bool split = shooter != null && shooter.HasUpgrade(UpgradeEffect.SplitVolley) && loaded.Ammo != InventoryItem.BoardingHook;
+            Vector3 velocity = UpgradeShotVelocity(shooter, split ? -RoguelikeTuning.Current.splitAngle : 0f);
+            Vector3 secondVelocity = split ? UpgradeShotVelocity(shooter, RoguelikeTuning.Current.splitAngle) : Vector3.zero;
             var ammo = loaded.Ammo;
             int boardingShot = ammo == InventoryItem.BoardingHook && Network != null ? Network.BeginBoardingShot(Index) : 0;
             SpawnShot(position, velocity, true, ammo, boardingShot);
+            if (split) SpawnShot(position, secondVelocity, true, ammo);
             var motor=GetComponentInParent<ShipController>();
             motor.ApplyCannonImpulse(Muzzle.position,-Muzzle.forward,4.95f);
             GetComponent<CannonCarriage>()?.Recoil();
             ResetSupply();
-            if (Network != null && Network.IsServerInitialized) Network.NotifyFired(Index, position, velocity, ammo, boardingShot);
+            if (Network != null && Network.IsServerInitialized)
+            {
+                Network.NotifyFired(Index, position, velocity, ammo, boardingShot);
+                if (split) Network.NotifyFired(Index, position, secondVelocity, ammo);
+            }
         }
         void CreateFuse()
         {

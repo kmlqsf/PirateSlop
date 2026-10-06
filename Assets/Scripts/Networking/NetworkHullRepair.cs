@@ -9,6 +9,7 @@ namespace PirateSlop.Networking
     {
         public const float StrikeInterval = .5f;
         public const int FragmentStrikes = 3, MastStrikes = 10;
+        float UpgradeRepair => GetComponent<NetworkPlayer>().RepairUpgradeMultiplier;
         public GameObject MalletModel;
         PlayerInventory inventory;
         AdvancedPlayerController motor;
@@ -79,7 +80,7 @@ namespace PirateSlop.Networking
             }
             var camera = motor.PlayerCamera;
             var ray = new Ray(camera.transform.position, camera.transform.forward);
-            float nearest = 3.5f;
+            float nearest = 3.5f * UpgradeRepair;
             foreach (var ship in NetworkShip.ActiveShips)
             {
                 if (ship == null || ship.IsSinking || Vector3.Distance(ship.transform.position, transform.position) > 70f) continue;
@@ -130,7 +131,7 @@ namespace PirateSlop.Networking
             }
             if (aimed == null)
             {
-                foreach (var hit in Physics.RaycastAll(ray, 3.5f, ~0, QueryTriggerInteraction.Ignore))
+                foreach (var hit in Physics.RaycastAll(ray, 3.5f * UpgradeRepair, ~0, QueryTriggerInteraction.Ignore))
                 {
                     if (hit.transform.IsChildOf(transform)) continue;
                     var gun = hit.collider.GetComponentInParent<Harpoon.HarpoonGun>();
@@ -147,7 +148,7 @@ namespace PirateSlop.Networking
         {
             Vector3 origin = transform.position + Vector3.up * (motor.IsCrouched ? .8f : 1.5f);
             Vector3 delta = point - origin;
-            return delta.magnitude <= 3.5f && !FirearmTrace.Cast(gameObject, origin, point - delta.normalized * .08f, out _);
+            return delta.magnitude <= 3.5f * UpgradeRepair && !FirearmTrace.Cast(gameObject, origin, point - delta.normalized * .08f, out _);
         }
         [ServerRpc]
         void RepairServerRpc(NetworkObject target, int sectionId, int fragmentId, Vector3 localPoint) => TryRepair(target, sectionId, fragmentId, localPoint);
@@ -158,9 +159,9 @@ namespace PirateSlop.Networking
             var guns = target.GetComponentsInChildren<Harpoon.HarpoonGun>();
             foreach (var gun in guns)
             {
-                if (gun != null && gun.IsBroken && Vector3.Distance(gun.transform.position, point) <= 3.8f)
+                if (gun != null && gun.IsBroken && Vector3.Distance(gun.transform.position, point) <= 3.8f && Reachable(point))
                 {
-                    nextStrike = Time.time + .45f;
+                    nextStrike = Time.time + .45f / UpgradeRepair;
                     gun.RepairStrike(gameObject);
                     var ship = target.GetComponent<NetworkShip>();
                     if (ship != null && gun.MountIndex >= 0)
@@ -184,7 +185,7 @@ namespace PirateSlop.Networking
                 if (Vector3.Distance(hitPoint, basePoint) > 1.3f || !Reachable(hitPoint)) return false;
                 if (target != lastShip || destruction.MastGroupKey(sectionId) != destruction.MastGroupKey(lastSection) || lastFragment != -1 || Time.time - lastStrikeAt > 3f) strikes = 0;
                 lastShip = target; lastSection = sectionId; lastFragment = -1;
-                nextStrike = Time.time + StrikeInterval; lastStrikeAt = Time.time;
+                nextStrike = Time.time + StrikeInterval / UpgradeRepair; lastStrikeAt = Time.time;
                 int required = destruction.IsMastCollapsed(sectionId) ? MastStrikes : FragmentStrikes;
                 if (++strikes >= required) { destruction.RepairMast(sectionId); strikes = 0; }
                 StrikeObserversRpc(hitPoint);
@@ -196,9 +197,9 @@ namespace PirateSlop.Networking
             if (fragment == null || section.RepairBounds(fragmentId).SqrDistance(fragment.transform.InverseTransformPoint(point)) > .025f || !Reachable(point)) return false;
             if (target != lastShip || sectionId != lastSection || fragmentId != lastFragment || Time.time - lastStrikeAt > 3f) strikes = 0;
             lastShip = target; lastSection = sectionId; lastFragment = fragmentId;
-            nextStrike = Time.time + StrikeInterval; lastStrikeAt = Time.time;
+            nextStrike = Time.time + StrikeInterval / UpgradeRepair; lastStrikeAt = Time.time;
             strikes++;
-            if (strikes >= FragmentStrikes) { destruction.RepairNearby(sectionId, fragmentId, point); strikes = 0; }
+            if (strikes >= FragmentStrikes) { destruction.RepairNearby(sectionId, fragmentId, point, UpgradeRepair); strikes = 0; }
             StrikeObserversRpc(point);
             return true;
         }

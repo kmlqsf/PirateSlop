@@ -21,6 +21,8 @@ namespace PirateSlop
         public Vector3 SwimVelocity;
         public float Breath;
         public bool Climbing, LadderExiting;
+        public bool AirJumpUsed, WaterReady, WaterWasSolid;
+        public float WaterRunRemaining, WaterRecharge;
         public float LadderCooldown, KnockbackTime, KnockdownTime, JumpBuffer, GroundGrace;
     }
     [System.Serializable]

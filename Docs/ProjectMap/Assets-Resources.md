@@ -77,6 +77,14 @@
 | [Assets/Resources/EnvironmentTest/WaterBowSpray.shader](<../../Assets/Resources/EnvironmentTest/WaterBowSpray.shader>) | Шейдер; Мир, острова и океан, Тестовая карта и водоворот |
 | [Assets/Resources/EnvironmentTest/WaterWetMark.shader](<../../Assets/Resources/EnvironmentTest/WaterWetMark.shader>) | Шейдер; Мир, острова и океан, Тестовая карта и водоворот |
 
+## Assets/Resources/RoguelikeUI
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Resources/RoguelikeUI/CardArt.png](<../../Assets/Resources/RoguelikeUI/CardArt.png>) | Изображение / текстура; Улучшения рогалика из сундуков |
+| [Assets/Resources/RoguelikeUI/CardFace.png](<../../Assets/Resources/RoguelikeUI/CardFace.png>) | Изображение / текстура; Улучшения рогалика из сундуков |
+| [Assets/Resources/RoguelikeUI/RarityGlow.shader](<../../Assets/Resources/RoguelikeUI/RarityGlow.shader>) | Шейдер; Улучшения рогалика из сундуков |
+
 ## Assets/Resources/Ships
 
 | Файл | Краткое описание |

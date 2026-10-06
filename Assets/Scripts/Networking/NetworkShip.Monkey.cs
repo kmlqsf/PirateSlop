@@ -27,6 +27,7 @@ namespace PirateSlop.Networking
 
         void UpdateMonkey()
         {
+            TickUpgradeMonkeys();
             if (monkey == null || !IsServerInitialized && !IsClientInitialized) return;
             if (IsServerInitialized)
             {

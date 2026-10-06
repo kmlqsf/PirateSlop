@@ -6,7 +6,7 @@ namespace PirateSlop
     public sealed class SwimPresentation : MonoBehaviour
     {
         AdvancedPlayerController motor;
-        bool swimming, changedFog, previousFog;
+        bool swimming, changedFog, previousFog, submerged, audioReady;
         Color previousColor;
         FogMode previousMode;
         float previousDensity;
@@ -36,9 +36,12 @@ namespace PirateSlop
         }
         void LateUpdate()
         {
-            if (motor.IsSwimming && !swimming) GameAudio.Play(SoundCue.Splash, transform.position, .5f);
+            bool below = Underwater;
+            if (audioReady && below && !submerged && !motor.IsDead) GameAudio.Play(SoundCue.DiveEntry, transform.position);
+            submerged = below; audioReady = true;
+            if (motor.IsSwimming && !swimming && !GameAudio.HasCue(SoundCue.DiveEntry)) GameAudio.Play(SoundCue.Splash, transform.position, .5f);
             if (motor.IsSwimming && !motor.IsDead && motor.PlanarSpeed > .4f && Time.time >= strokeAt)
-            { GameAudio.Play(SoundCue.Splash, transform.position, .1f); strokeAt = Time.time + 1.2f; }
+            { GameAudio.Play(GameAudio.ResolveCue(SoundCue.SwimStroke, SoundCue.Splash), transform.position, GameAudio.HasCue(SoundCue.SwimStroke) ? .65f : .1f); strokeAt = Time.time + 1.2f; }
             swimming = motor.IsSwimming;
             if (motor.PlayerCamera != null && motor.PlayerCamera.enabled && !motor.IsDead && Underwater && motor.BreathFraction < .25f && Time.time >= breathWarningAt)
             { GameAudio.Play(SoundCue.AirWarning, transform.position, 1f, true); breathWarningAt = Time.time + Mathf.Lerp(.8f, 2.5f, motor.BreathFraction / .25f); }

@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace PirateSlop
 {
-    public sealed class GameAudio : MonoBehaviour
+    public sealed partial class GameAudio : MonoBehaviour
     {
         static GameAudio instance;
         GameAudioBank bank;
@@ -116,19 +116,25 @@ namespace PirateSlop
             var audio = Get(); if (audio == null) return;
             audio.entryMap.TryGetValue(cue, out var entry);
             if(firearm!=null && firearm.ShotClips!=null && firearm.ShotClips.Length>0)
-                entry=new GameAudioBank.Entry { Cue=cue,Clips=firearm.ShotClips,Volume=firearm.ShotVolume,Distance=firearm.AudibleDistance };
+                entry=new GameAudioBank.Entry { Cue=cue,Clips=firearm.ShotClips,DistantClips=entry?.DistantClips,DistantStart=entry?.DistantStart ?? 25f,DistantEnd=entry?.DistantEnd ?? 65f,DistantVolume=entry?.DistantVolume ?? .65f,Volume=firearm.ShotVolume,Distance=firearm.AudibleDistance };
             if (entry == null || entry.Clips == null || entry.Clips.Length == 0) return;
-            bool feedback = cue == SoundCue.Hurt || cue == SoundCue.Death || cue == SoundCue.HitConfirm || cue == SoundCue.AirWarning;
+            bool feedback = cue == SoundCue.Hurt || cue == SoundCue.Death || cue == SoundCue.HitConfirm || cue == SoundCue.AirWarning || cue == SoundCue.DrownDamage || cue == SoundCue.KnockdownBody;
             bool gunshot = firearm!=null || cue == SoundCue.Pistol || cue == SoundCue.Musket || cue == SoundCue.DoubleBarrel;
             var source = gunshot ? audio.shotVoices[audio.nextShot] : feedback ? audio.feedbackVoices[audio.nextFeedback] : audio.voices[audio.nextVoice];
             if (gunshot) audio.nextShot = (audio.nextShot + 1) % audio.shotVoices.Length;
             else if (feedback) audio.nextFeedback = (audio.nextFeedback + 1) % audio.feedbackVoices.Length;
             else audio.nextVoice = (audio.nextVoice + 1) % audio.voices.Length;
+            source.GetComponent<DistanceShotAudio>()?.ResetPlayback();
             source.Stop(); source.transform.position = position;
             source.spatialBlend = ui ? 0f : 1f;
             source.minDistance = cue == SoundCue.Cannon ? 8f : gunshot ? 5f : 2f; source.maxDistance = entry.Distance;
             source.priority = gunshot ? 40 : feedback ? 32 : 128;
-            source.volume = Mathf.Clamp01(entry.Volume * scale * audio.bank.Master * (ui && !feedback ? audio.bank.Interface : audio.bank.Effects));
+            if (cue == SoundCue.Pistol)
+            {
+                var shotListener = SpatialAudioTone.FindListener();
+                if (shotListener != null) scale *= Mathf.Lerp(1.5f, 1f, Mathf.InverseLerp(5f, 15f, Vector3.Distance(position, shotListener.transform.position)));
+            }
+            source.volume = Mathf.Clamp01(entry.Volume * scale * audio.bank.Master * (cue == SoundCue.MatchDefeat ? audio.bank.Music : ui && !feedback ? audio.bank.Interface : audio.bank.Effects));
             source.pitch = ui ? 1f : gunshot ? Random.Range(.975f,1.025f) : Random.Range(.94f, 1.06f);
             int clipIndex = Random.Range(0, entry.Clips.Length);
             if ((cue == SoundCue.ShipBell || cue == SoundCue.DiceSlide || cue == SoundCue.DiceImpact || cue == SoundCue.DiceCup || cue == SoundCue.Creak || cue == SoundCue.Wheel || cue == SoundCue.WheelReverseRope || cue == SoundCue.CannonballRoll || cue == SoundCue.LockpickMove || cue == SoundCue.LockpickJam) && entry.Clips.Length > 1)
@@ -141,6 +147,12 @@ namespace PirateSlop
                 audio.lastVariants[cue] = clipIndex;
             }
             source.clip = entry.Clips[clipIndex]; source.Play();
+            if (gunshot && (entry.DistantClips != null && entry.DistantClips.Length > 0 || cue == SoundCue.DoubleBarrel))
+            {
+                var distanceAudio = source.GetComponent<DistanceShotAudio>();
+                if (distanceAudio == null) distanceAudio = source.gameObject.AddComponent<DistanceShotAudio>();
+                distanceAudio.Configure(source, entry, clipIndex);
+            }
         }
         public static void Attached(ref AudioSource source, SoundCue cue, Transform parent)
         {
@@ -191,6 +203,7 @@ namespace PirateSlop
             else if (audio.underwaterBlend <= .005f) audio.underwater.Stop();
             if (onShip && !audio.deck.isPlaying && audio.deck.clip != null) audio.deck.Play();
             else if (!onShip) audio.deck.Stop();
+            audio.UpdateSelectedAmbience();
             audio.lastAmbience = Time.unscaledTime;
         }
         public static float StormProximity(StormVolumeController weather, Vector3 position)
@@ -235,6 +248,7 @@ namespace PirateSlop
             UpdateMusic();
             if (Time.unscaledTime - lastAmbience < .3f) return;
             ocean.Stop(); wind.Stop(); deck.Stop(); underwater.Stop(); flooding.Stop(); storm.Stop(); stormBlend = 0;
+            StopLoop(lowHealthAudio); StopLoop(whirlpoolRumble); StopLoop(whirlpoolWater);
         }
         void UpdateMusic()
         {

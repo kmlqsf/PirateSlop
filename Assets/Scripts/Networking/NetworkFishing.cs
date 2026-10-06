@@ -167,7 +167,7 @@ namespace PirateSlop.Networking
             if (!Available || !inventory.RodSelected || Vector3.Distance(transform.position, CastPosition) > 30f) { ResetFishing(); return; }
             if (stage.Value == 1 && Time.time >= deadline)
             {
-                stage.Value = 2; deadline = Time.time + Random.Range(BiteDelay.x, BiteDelay.y);
+                stage.Value = 2; deadline = Time.time + Random.Range(BiteDelay.x, BiteDelay.y) / GetComponent<NetworkPlayer>().FishingUpgradeMultiplier;
                 SoundObserversRpc(SoundCue.Splash, CastPosition);
             }
             else if (stage.Value == 2 && Time.time >= deadline)
@@ -180,7 +180,7 @@ namespace PirateSlop.Networking
             {
                 if (Time.time >= deadline) { ResetFishing(); return; }
                 bool pulling = reeling && Time.time - lastReel < .35f;
-                progress.Value = Mathf.Clamp01(progress.Value + Time.deltaTime * (pulling ? 1f / ReelDuration : -.12f));
+                progress.Value = Mathf.Clamp01(progress.Value + Time.deltaTime * (pulling ? GetComponent<NetworkPlayer>().FishingUpgradeMultiplier / ReelDuration : -.12f));
                 if (pulling && Time.time >= nextReelSound) { nextReelSound = Time.time + .4f; SoundObserversRpc(SoundCue.FishingReel, transform.position); }
                 if (progress.Value >= 1f) { stage.Value = GetComponent<NetworkWeapon>().AddItem(catchItem.Value) ? (byte)0 : (byte)5; SoundObserversRpc(SoundCue.FishingCatch, transform.position); }
             }
@@ -204,6 +204,7 @@ namespace PirateSlop.Networking
         InventoryItem RollCatch()
         {
             float roll = Random.value;
+            if (GetComponent<NetworkPlayer>().HasUpgrade(UpgradeEffect.UnusualCatch)) roll = 1f - (1f - roll) / RoguelikeTuning.Current.unusualCatchMultiplier;
             if (roll < .8f) return InventoryItem.Fish;
             if (roll < .875f) return InventoryItem.Pufferfish;
             if (roll < .95f) return InventoryItem.Swordfish;
@@ -301,7 +302,7 @@ namespace PirateSlop.Networking
             { eating.Value = false; return; }
             eatProgress.Value = Mathf.Clamp01(1f - (eatUntil - Time.time) / 3f);
             if (Time.time < eatUntil) return;
-            if (eatCatch) { stage.Value = 0; GetComponent<CombatHealth>().Heal(HealAmount); }
+            if (eatCatch) { stage.Value = 0; GetComponent<NetworkPlayer>().HealFromFish(HealAmount); }
             else GetComponent<NetworkWeapon>().EatSelectedFish(HealAmount);
             eating.Value = false;
         }

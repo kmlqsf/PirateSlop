@@ -11,6 +11,9 @@
 | Файл | Краткое описание |
 | --- | --- |
 | [Docs/RoguelikeApprovedUpgrades.md](<../RoguelikeApprovedUpgrades.md>) | Документация; Улучшения рогалика из сундуков |
+| [Docs/RoguelikeEffects.md](<../RoguelikeEffects.md>) | Документация; Улучшения рогалика из сундуков |
+| [Docs/RoguelikeMechanic.md](<../RoguelikeMechanic.md>) | Документация; Улучшения рогалика из сундуков |
+| [Docs/RoguelikeUIStyle.md](<../RoguelikeUIStyle.md>) | Документация; Улучшения рогалика из сундуков |
 | [Docs/TestOcean.md](<../TestOcean.md>) | Документация; Мир, острова и океан, Тестовая карта и водоворот |
 | [Docs/TestSkyDayNight.md](<../TestSkyDayNight.md>) | Документация; Тестовая карта и водоворот |
 

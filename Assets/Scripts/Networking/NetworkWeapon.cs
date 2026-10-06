@@ -27,39 +27,39 @@ namespace PirateSlop.Networking
         public override void OnStartServer()
         {
             base.OnStartServer();
-            if (fishCounts.Count == 0) for (int i = 0; i < 6; i++) fishCounts.Add(0);
+            if (fishCounts.Count == 0) for (int i = 0; i < PlayerInventory.NormalSlotStorage; i++) fishCounts.Add(0);
             if (ballItems.Count == 0) for (int i = 0; i < PlayerInventory.SlotCount; i++) ballItems.Add(InventoryItem.Cannonball);
             if (ballCounts.Count == 0) for (int i = 0; i < PlayerInventory.SlotCount; i++) ballCounts.Add(0);
-            if (plankCounts.Count == 0) for (int i = 0; i < 6; i++) plankCounts.Add(0);
-            if (rumCounts.Count == 0) for (int i = 0; i < 6; i++) rumCounts.Add(0);
-            if (equipmentItems.Count == 0) for (int i = 0; i < 6; i++) equipmentItems.Add(InventoryItem.None);
-            if (stackCounts.Count == 0) for (int i = 0; i < 6; i++) stackCounts.Add(i < 4 ? 1 : 0);
+            if (plankCounts.Count == 0) for (int i = 0; i < PlayerInventory.NormalSlotStorage; i++) plankCounts.Add(0);
+            if (rumCounts.Count == 0) for (int i = 0; i < PlayerInventory.NormalSlotStorage; i++) rumCounts.Add(0);
+            if (equipmentItems.Count == 0) for (int i = 0; i < PlayerInventory.NormalSlotStorage; i++) equipmentItems.Add(InventoryItem.None);
+            if (stackCounts.Count == 0) for (int i = 0; i < PlayerInventory.NormalSlotStorage; i++) stackCounts.Add(i < 4 ? 1 : 0);
             ApplyInventory();
         }
         void ApplyInventory()
         {
-            for (int i = 0; i < 6; i++) inventory.SetEquipment(i, i < equipmentItems.Count ? equipmentItems[i] : InventoryItem.None);
+            for (int i = 0; i < PlayerInventory.NormalSlotStorage; i++) inventory.SetEquipment(i, i < equipmentItems.Count ? equipmentItems[i] : InventoryItem.None);
             inventory.SabreSlots = sabreSlots.Value;
-            for (int i = 0; i < 6; i++) inventory.SetRumCount(i, i < rumCounts.Count ? rumCounts[i] : 0);
-            for (int i = 0; i < 6; i++) inventory.SetRepairItems(malletSlots.Value, i, i < plankCounts.Count ? plankCounts[i] : 0);
+            for (int i = 0; i < PlayerInventory.NormalSlotStorage; i++) inventory.SetRumCount(i, i < rumCounts.Count ? rumCounts[i] : 0);
+            for (int i = 0; i < PlayerInventory.NormalSlotStorage; i++) inventory.SetRepairItems(malletSlots.Value, i, i < plankCounts.Count ? plankCounts[i] : 0);
             inventory.SetContents(cannonSlots.Value); inventory.PistolSlots = pistolSlots.Value; inventory.RodSlots = rodSlots.Value;
-            for (int i = 0; i < 6; i++) inventory.SetFishCount(i, i < fishCounts.Count ? fishCounts[i] : 0);
+            for (int i = 0; i < PlayerInventory.NormalSlotStorage; i++) inventory.SetFishCount(i, i < fishCounts.Count ? fishCounts[i] : 0);
             for (int i = 0; i < PlayerInventory.SlotCount; i++) inventory.SetBallCount(i, i < ballCounts.Count ? ballCounts[i] : 0, i < ballItems.Count ? ballItems[i] : InventoryItem.Cannonball);
-            for (int i = 0; i < 6; i++) inventory.SetStackCount(i, i < stackCounts.Count ? stackCounts[i] : 0);
+            for (int i = 0; i < PlayerInventory.NormalSlotStorage; i++) inventory.SetStackCount(i, i < stackCounts.Count ? stackCounts[i] : 0);
         }
         public bool CanAddItem(InventoryItem item)
         {
             if (!IsServerInitialized || item < InventoryItem.Fish || item > InventoryItem.Lantern) return false;
             if (item == InventoryItem.Plank) return false;
             if (CannonAmmo.IsBall(item))
-                return ballCounts[PlayerInventory.AmmoSlot] < PlayerInventory.AmmoCapacity && (ballCounts[PlayerInventory.AmmoSlot] == 0 || ballItems[PlayerInventory.AmmoSlot] == item);
+                return inventory.FindAmmoSlot(item) >= 0;
             return inventory.CanFitItem(item);
         }
         public bool AddItem(InventoryItem item)
         {
             if (!CanAddItem(item)) return false;
             {
-                int slot = CannonAmmo.IsBall(item) ? PlayerInventory.AmmoSlot : inventory.StackSlot(item);
+                int slot = CannonAmmo.IsBall(item) ? inventory.FindAmmoSlot(item) : inventory.StackSlot(item);
                 bool fresh = inventory.ItemAt(slot) == InventoryItem.None;
                 if (!CannonAmmo.IsBall(item) && item != InventoryItem.Fish && item != InventoryItem.Rum && item != InventoryItem.Plank)
                     stackCounts[slot] = fresh ? 1 : inventory.ItemCount(slot) + 1;
@@ -76,7 +76,7 @@ namespace PirateSlop.Networking
                 }
                 else if (CannonAmmo.IsBall(item))
                 {
-                    slot = PlayerInventory.AmmoSlot;
+                    slot = inventory.FindAmmoSlot(item);
                     ballItems[slot] = item; ballCounts[slot]++;
                 }
                 else if (item == InventoryItem.Plank)
@@ -95,12 +95,12 @@ namespace PirateSlop.Networking
             int slot = selectedSlot.Value;
             var health = GetComponent<CombatHealth>();
             if (slot >= fishCounts.Count || fishCounts[slot] <= 0 || health.IsDead) return false;
-            fishCounts[slot]--; ApplyInventory(); health.Heal(healing); return true;
+            fishCounts[slot]--; ApplyInventory(); GetComponent<NetworkPlayer>().HealFromFish(healing); return true;
         }
         public bool AddSupplyBalls(InventoryItem item, int count)
         {
             if (!IsServerInitialized || count < 1 || !CanAddItem(item) || !CannonAmmo.IsBall(item)) return false;
-            int slot = PlayerInventory.AmmoSlot;
+            int slot = inventory.FindAmmoSlot(item);
             count = Mathf.Min(count, PlayerInventory.AmmoCapacity - ballCounts[slot]);
             ballItems[slot] = item; ballCounts[slot] += count;
             selectedSlot.Value = slot; inventory.SetSelection(slot);
@@ -212,7 +212,7 @@ namespace PirateSlop.Networking
         [ServerRpc]
         void SelectSlotServerRpc(int slot)
         {
-            if (inventory == null || GetComponent<AdvancedPlayerController>().IsFrozen || slot < 0 || slot >= PlayerInventory.SlotCount) return;
+            if (inventory == null || GetComponent<AdvancedPlayerController>().IsFrozen || !inventory.SlotAvailable(slot)) return;
             selectedSlot.Value = slot; inventory.SetSelection(slot);
         }
         public void UseChest(NetworkObject target, int slot = -1, bool swap = false) => UseChestServerRpc(target, slot, swap, inventory.SelectedSlot, inventory.ItemAt(inventory.SelectedSlot), inventory.ItemCount(inventory.SelectedSlot));
@@ -233,7 +233,7 @@ namespace PirateSlop.Networking
                 if (!hit.transform.IsChildOf(transform) && !hit.transform.IsChildOf(target.transform)) return false;
             if (slot < 0)
             {
-                chest.Open();
+                chest.Open(this);
                 if (chest.IsSpawned && Owner != null && Owner.IsActive) OpenChestTargetRpc(Owner, target);
                 return true;
             }
@@ -325,7 +325,7 @@ namespace PirateSlop.Networking
         }
         public bool SelectServerSlot(int slot)
         {
-            if (!IsServerInitialized || inventory == null || GetComponent<AdvancedPlayerController>().IsFrozen || slot < 0 || slot >= PlayerInventory.SlotCount) return false;
+            if (!IsServerInitialized || inventory == null || GetComponent<AdvancedPlayerController>().IsFrozen || !inventory.SlotAvailable(slot)) return false;
             selectedSlot.Value = slot; inventory.SetSelection(slot); return true;
         }
         public void Request(byte action, Vector3 direction, Vector3 eyeOffset,bool aimed=false,int seed=0) => ActionServerRpc(action,direction,eyeOffset,aimed,seed);
@@ -359,6 +359,8 @@ namespace PirateSlop.Networking
             if (IsServerInitialized) { weapon.TickAuthority(); loaded.Value = weapon.Loaded; reloading.Value = weapon.Reloading; }
             else if (IsClientInitialized) weapon.SetState(loaded.Value,reloading.Value);
         }
+        public void PublishSabreFlesh(Vector3 point) { if (IsServerInitialized) SabreFleshObserversRpc(point); }
+        [ObserversRpc(RunLocally = true)] void SabreFleshObserversRpc(Vector3 point) => GameAudio.Play(SoundCue.SabreFlesh, point);
         public void PublishAttack(byte action,Vector3 end) => AttackObserversRpc(action,end);
         public void PublishShot(FirearmShot shot) => ShotObserversRpc(shot);
         public void PublishWaterImpact(FirearmShot shot) => WaterImpactObserversRpc(shot);

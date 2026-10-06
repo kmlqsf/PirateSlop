@@ -5,6 +5,7 @@ namespace PirateSlop.Networking
 {
     public sealed class NetworkHealth : NetworkBehaviour
     {
+        readonly SyncVar<float> maximumHealth = new(100f);
         readonly SyncVar<float> health = new(-1f);
         readonly SyncVar<bool> burning = new();
         readonly SyncVar<uint> frozenUntil = new();
@@ -15,12 +16,18 @@ namespace PirateSlop.Networking
         CombatHealth target;
         public float FrozenSeconds => frozenUntil.Value == 0 || TimeManager == null ? 0f : Mathf.Max(0, unchecked((int)(frozenUntil.Value - TimeManager.Tick))) * (float)TimeManager.TickDelta;
         public bool IsFrozen => FrozenSeconds > 0f;
-        void Awake() { target = GetComponent<CombatHealth>(); health.OnChange += HealthChanged; frozenUntil.OnChange += FreezeChanged; }
-        public override void OnStartServer() { base.OnStartServer(); Publish(target.Current); }
+        void Awake()
+        {
+            target = GetComponent<CombatHealth>();
+            health.OnChange += HealthChanged;
+            frozenUntil.OnChange += FreezeChanged;
+            maximumHealth.OnChange += (_, next, asServer) => { if (!asServer && !IsServerInitialized) { target.MaxHealth = next; if (health.Value >= 0) target.ApplySnapshot(health.Value, false); } };
+        }
+        public override void OnStartServer() { base.OnStartServer(); PublishMaximum(target.MaxHealth); Publish(target.Current); }
         public override void OnStartClient()
         {
             base.OnStartClient();
-            if (!IsServerInitialized && health.Value >= 0) target.ApplySnapshot(health.Value, false);
+            if (!IsServerInitialized) { target.MaxHealth = maximumHealth.Value; if (health.Value >= 0) target.ApplySnapshot(health.Value, false); }
             if (IsFrozen) GetComponent<AdvancedPlayerController>()?.BeginFreeze();
         }
         public void Freeze(float seconds = 1f)
@@ -33,6 +40,7 @@ namespace PirateSlop.Networking
         {
             if (IsFrozen) GetComponent<AdvancedPlayerController>()?.BeginFreeze();
         }
+        public void PublishMaximum(float value) { if (IsServerInitialized) maximumHealth.Value = value; }
         public void Publish(float value) { if (IsServerInitialized) health.Value = value; }
 
         public void Ignite(GameObject attacker = null)
@@ -95,30 +103,30 @@ namespace PirateSlop.Networking
         {
             if (IsClientInitialized) DeathRagdoll.Spawn(transform, position, velocity, spin);
         }
-        public void DamageFeedback(float amount, bool dead)
+        public void DamageFeedback(float amount, bool dead, bool drowning = false)
         {
-            if (IsServerInitialized && Owner != null && Owner.IsActive) DamageFeedbackTargetRpc(Owner, amount, dead);
+            if (IsServerInitialized && Owner != null && Owner.IsActive) DamageFeedbackTargetRpc(Owner, amount, dead, drowning);
         }
         public void ConfirmHit()
         {
             if (IsServerInitialized && Owner != null && Owner.IsActive) HitFeedbackTargetRpc(Owner);
         }
         [TargetRpc]
-        void DamageFeedbackTargetRpc(FishNet.Connection.NetworkConnection connection, float amount, bool dead)
-            => GetComponent<PirateSlop.DamageFeedback>()?.ReceiveDamage(amount, dead);
+        void DamageFeedbackTargetRpc(FishNet.Connection.NetworkConnection connection, float amount, bool dead, bool drowning)
+            => GetComponent<PirateSlop.DamageFeedback>()?.ReceiveDamage(amount, dead, drowning);
         [TargetRpc]
         void HitFeedbackTargetRpc(FishNet.Connection.NetworkConnection connection)
             => GetComponent<PirateSlop.DamageFeedback>()?.ConfirmHit();
-        public void Respawn(Vector3 position, float yaw)
+        public void Respawn(Vector3 position, float yaw, float healthFraction = 1f)
         {
             if (!IsServerInitialized) return;
             Extinguish();
             frozenUntil.Value = 0;
-            RespawnObserversRpc(position, yaw);
+            RespawnObserversRpc(position, yaw, healthFraction);
             Publish(target.Current);
         }
         [ObserversRpc(RunLocally = true)]
-        void RespawnObserversRpc(Vector3 position, float yaw) => target.Respawn(position, yaw);
+        void RespawnObserversRpc(Vector3 position, float yaw, float healthFraction) => target.Respawn(position, yaw, healthFraction);
         void HealthChanged(float previous, float next, bool asServer)
         {
             if (!asServer && !IsServerInitialized && next >= 0) target.ApplySnapshot(next, false);

@@ -103,6 +103,7 @@ namespace PirateSlop.Networking
                         target.EndHook(); target.hookCaptor.Value = NetworkObject;
                         hookVictim.Value = victim.NetworkObject; hookAnchor.Value = victim.NetworkObject;
                         hookPoint.Value = Vector3.up;
+                        HookSoundObserversRpc(SoundCue.HookHitFlesh, closest.point);
                         victim.Motor.ApplyKnockback(Vector3.zero);
                     }
                     else

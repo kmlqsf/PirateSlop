@@ -51,8 +51,10 @@ namespace PirateSlop
         FirearmShot shot;
         Vector3 start, waterHead, waterVelocity;
         LineRenderer tracer, glow;
+        Material material;
         float age, duration, waterAge;
-        bool impacted, impactEffects, underwater;
+        bool impacted, impactEffects, underwater, passbyPlayed;
+        static float nextPassbyAudio;
         float width;
         CannonSmokeTrail smoke;
         UnderwaterProjectileTrail waterTrail;
@@ -64,7 +66,7 @@ namespace PirateSlop
             FinishSmoke();
             FinishWater();
             age = waterAge = 0f;
-            impacted = underwater = false;
+            impacted = underwater = passbyPlayed = false;
             authoritative = true;
             Generation++;
             gameObject.SetActive(true);
@@ -112,6 +114,19 @@ namespace PirateSlop
         {
             FirearmImpact.ResolvePoint(ref shot);
             float head = duration > .00001f ? Mathf.Clamp01(time / duration) : 1f;
+            var listener = SpatialAudioTone.FindListener();
+            if (!passbyPlayed && listener != null && (listener.transform.position - start).sqrMagnitude > 16f)
+            {
+                Vector3 segment = shot.End - start;
+                float closest = Mathf.Clamp01(Vector3.Dot(listener.transform.position - start, segment) / Mathf.Max(.001f, segment.sqrMagnitude));
+                Vector3 point = start + segment * closest;
+                if (closest > .01f && head >= closest)
+                {
+                    passbyPlayed = true;
+                    if ((point - listener.transform.position).sqrMagnitude < 16f && Time.unscaledTime >= nextPassbyAudio)
+                    { GameAudio.Play(SoundCue.BulletPassby, point); nextPassbyAudio = Time.unscaledTime + .08f; }
+                }
+            }
             if (smoke != null && head > smokeProgress)
             {
                 Vector3 position = Vector3.Lerp(start, shot.End, head);

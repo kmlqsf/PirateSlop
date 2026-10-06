@@ -87,7 +87,7 @@ namespace PirateSlop
             else
             {
                 GameAudio.Play(SoundCue.Splash, strikePoint);
-                GameAudio.Play(SoundCue.ShipCollision, strikePoint);
+                GameAudio.Play(GameAudio.ResolveCue(SoundCue.KrakenSlam, SoundCue.ShipCollision), strikePoint);
                 CombatVfx.Splash(strikePoint);
                 CombatVfx.Impact(strikePoint, Vector3.up, true, true);
             }

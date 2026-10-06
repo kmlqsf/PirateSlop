@@ -31,7 +31,7 @@
 | [Assets/Animations/Player/New_TreadWater.anim](<../../Assets/Animations/Player/New_TreadWater.anim>) | Клип анимации |
 | [Assets/Animations/Player/New_Walking.anim](<../../Assets/Animations/Player/New_Walking.anim>) | Клип анимации |
 | [Assets/Animations/Player/Pickup_From_Ground.anim](<../../Assets/Animations/Player/Pickup_From_Ground.anim>) | Клип анимации |
-| [Assets/Animations/Player/PiratePlayer.controller](<../../Assets/Animations/Player/PiratePlayer.controller>) | Контроллер анимации |
+| [Assets/Animations/Player/PiratePlayer.controller](<../../Assets/Animations/Player/PiratePlayer.controller>) | Контроллер анимации; Улучшения рогалика из сундуков |
 | [Assets/Animations/Player/Running.anim](<../../Assets/Animations/Player/Running.anim>) | Клип анимации |
 | [Assets/Animations/Player/RunningSlide.anim](<../../Assets/Animations/Player/RunningSlide.anim>) | Клип анимации |
 | [Assets/Animations/Player/SabreUpperBody.mask](<../../Assets/Animations/Player/SabreUpperBody.mask>) | Файл .mask |

@@ -415,7 +415,7 @@ namespace PirateSlop
             Publish();
             return true;
         }
-        public void RepairNearby(int id, int fragment, Vector3 point)
+        public void RepairNearby(int id, int fragment, Vector3 point, float areaMultiplier = 1f)
         {
             if (!ready || !IsServerInitialized || !definitions.TryGetValue(id, out var repaired)) return;
             var candidates = graph.RepairCluster(id, fragment, (candidateId, candidateFragment) =>
@@ -425,7 +425,7 @@ namespace PirateSlop
                 if (candidateId == id && candidateFragment == fragment) return true;
                 var anchor = section.RepairTransform(candidateFragment);
                 var closest = anchor.TransformPoint(section.RepairBounds(candidateFragment).ClosestPoint(anchor.InverseTransformPoint(point)));
-                return (closest - point).sqrMagnitude <= 2.25f;
+                return (closest - point).sqrMagnitude <= 2.25f * Mathf.Max(1f, areaMultiplier) * Mathf.Max(1f, areaMultiplier);
             });
             if (candidates.Count == 0) { RepairFragment(id, fragment); return; }
             foreach (var candidate in candidates) RepairFragment(candidate.SectionId, candidate.Fragment);
