@@ -13,7 +13,7 @@ namespace PirateSlop
 
         void Awake() { motor = GetComponent<AdvancedPlayerController>(); player = GetComponent<PirateSlop.Networking.NetworkPlayer>(); }
 
-        public void ReceiveDamage(float amount, bool dead)
+        public void ReceiveDamage(float amount, bool dead, bool drowning = false)
         {
             if (!Local) return;
             GameAudio.LastDamageTime = Time.time;
@@ -21,8 +21,10 @@ namespace PirateSlop
             flash = Mathf.Clamp01(flash + Mathf.Lerp(.35f, 1f, Mathf.Clamp01(amount / 50f)));
             if (dead || Time.unscaledTime >= nextHurtSound)
             {
-                nextHurtSound = Time.unscaledTime + .15f;
-                GameAudio.Play(dead ? SoundCue.Death : SoundCue.Hurt, transform.position, 1.5f, true);
+                drowning &= !dead;
+                nextHurtSound = Time.unscaledTime + (drowning ? .8f : .15f);
+                var cue = dead ? SoundCue.Death : drowning ? GameAudio.ResolveCue(SoundCue.DrownDamage, SoundCue.Hurt) : SoundCue.Hurt;
+                GameAudio.Play(cue, transform.position, drowning ? .6f : 1.5f, true);
             }
         }
 

@@ -132,7 +132,7 @@ namespace PirateSlop
                 bool blocked = false;
                 foreach (var hit in Physics.RaycastAll(origin, delta.normalized, delta.magnitude, ~0, QueryTriggerInteraction.Ignore))
                     if (!hit.transform.IsChildOf(transform) && hit.collider.GetComponentInParent<CombatHealth>() != health) { blocked = true; break; }
-                if (!blocked) { struck.Add(health); float before = health.Current; health.ReceiveWeaponHit(25 * SabreSpeed, gameObject); UpgradeCombat.AfterHit(health, before, gameObject, false, attackDirection); }
+                if (!blocked) { struck.Add(health); float before = health.Current; health.ReceiveWeaponHit(25 * SabreSpeed, gameObject); UpgradeCombat.AfterHit(health, before, gameObject, false, attackDirection); if (health.Current < before) { if (Networked) network.PublishSabreFlesh(point); else GameAudio.Play(SoundCue.SabreFlesh, point); } }
             }
         }
         public bool AnimationEquipped => Equipped && !motor.LocomotionLocked && (hands == null || !hands.HasHeldBall);

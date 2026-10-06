@@ -94,6 +94,7 @@ namespace PirateSlop.Networking
         void BreakObserversRpc(Vector3 point, bool water, Vector3 incoming)
         {
             BottleBreakVfx.Present(point, water, incoming, gameObject);
+            GameAudio.Play(SoundCue.FogRelease, point);
         }
     }
 }

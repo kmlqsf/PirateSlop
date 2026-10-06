@@ -12,7 +12,7 @@
 
 ## Полный каталог
 
-Учтено 3532 файлов без `.meta`. Ещё 3625 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
+Учтено 3715 файлов без `.meta`. Ещё 3865 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
 
 | Раздел | Назначение | Файлов |
 | --- | --- | ---: |
@@ -22,7 +22,7 @@
 | [Art](<Docs/ProjectMap/Art.md>) | Исходники арта и Blender | 243 |
 | [Assets](<Docs/ProjectMap/Assets.md>) | Ресурсы раздела; точный состав — в каталоге | 2 |
 | [Assets/Animations](<Docs/ProjectMap/Assets-Animations.md>) | Анимации | 27 |
-| [Assets/Audio](<Docs/ProjectMap/Assets-Audio.md>) | Звуковые ресурсы и лицензии | 206 |
+| [Assets/Audio](<Docs/ProjectMap/Assets-Audio.md>) | Звуковые ресурсы и лицензии | 387 |
 | [Assets/Branding](<Docs/ProjectMap/Assets-Branding.md>) | Оформление проекта | 1 |
 | [Assets/Editor](<Docs/ProjectMap/Assets-Editor.md>) | Редакторские ресурсы | 1 |
 | [Assets/Fog Particles](<Docs/ProjectMap/Assets-Fog Particles.md>) | Ресурсы раздела; точный состав — в каталоге | 3 |
@@ -36,7 +36,7 @@
 | [Assets/Prefabs](<Docs/ProjectMap/Assets-Prefabs.md>) | Готовые игровые объекты | 114 |
 | [Assets/Resources](<Docs/ProjectMap/Assets-Resources.md>) | Ресурсы, доступные для загрузки по имени | 66 |
 | [Assets/Scenes](<Docs/ProjectMap/Assets-Scenes.md>) | Сохранённые сцены | 3 |
-| [Assets/Scripts](<Docs/ProjectMap/Assets-Scripts.md>) | Игровой код и редакторские инструменты | 404 |
+| [Assets/Scripts](<Docs/ProjectMap/Assets-Scripts.md>) | Игровой код и редакторские инструменты | 406 |
 | [Assets/Settings](<Docs/ProjectMap/Assets-Settings.md>) | Настройки игровых систем и рендеринга | 48 |
 | [Assets/Shaders](<Docs/ProjectMap/Assets-Shaders.md>) | Шейдеры | 8 |
 | [Assets/StreamingAssets](<Docs/ProjectMap/Assets-StreamingAssets.md>) | Ресурсы раздела; точный состав — в каталоге | 5 |
@@ -812,6 +812,8 @@ SabreWood добавлен в конец SoundCue без изменения пр
 BottleBreak добавлен последним в SoundCue и назначен через BottleFishReplacementSetup.ConfigureBottleBreakAudio. Три оригинальных процедурных mono PCM16 WAV, 44.1 кГц, 0.725–0.775 с, громкость 0.75, дистанция 24 м; источники описаны в Assets/Audio/BottleBreak/SOURCES.md, генератор — Art/Audio/BottleBreak/GenerateBottleBreak.py. Это отдельный звук разбитого стекла; BottleClose сохраняет звук пробки. Звук и осколки приходят из одного серверного события разбития; общий эффект пули для этих бутылок подавлен. Ссылки и импорт проверены, звучание на слух и Play Mode не проверялись.
 BarricadeBreak добавлен последним без изменения прежних значений SoundCue. Использует существующий Naval/cannon_hit_ship_short.ogg с громкостью 0.7 и дистанцией 55 м; вызывается вместе с серверным разрушением баррикады.
 Старый неподключённый StormWeather.cs удалён по Git-аудиту 2026-10-05; действующие системы шторма и все звуковые клипы сохранены.
+SelectedReview: выбор звуков revision 132 (80 файлов, 55 событий) импортирован в GameAudioBank; 173 WAV и 9 прежних ссылок после нарезки. GameAudio.Selected управляет LowHealth/Whirlpool/Vortex; DistanceShotAudio разделяет ближние и дальние выстрелы, для DoubleBarrel дальний слой фильтруется в игре. Редкости Rare/Epic/Legendary и BulletNearbyImpact разделены. Источники, интервалы и комментарии сохранены в SelectionManifest.json/SOURCES.md. Новые cues добавлены в конец enum; сетевой протокол 128 из-за новых аудио RPC и причины drowning в DamageFeedback. Play Mode и мультиплеер проверяет пользователь.
+Настройка после ручной проверки 2026-10-06: Pistol усилен на 50% в пределах 5 м с плавным возвратом до 15 м. Редкость проигрывается при открытии V по максимуму текущих offers (с ожиданием первой сетевой руки), подтверждение выбора использует Select. KnockdownBody вызывается при ApplyKnockdown независимо от ragdoll, для локального игрока 2D Effects. WaterRunSteps учитывает вино и улучшение, реальную водную опору и имеет приоритет перед палубой. У водоворота Ocean/Wind плавно снижаются до 30%, оба слоя WhirlpoolNear усилены вдвое. Настройки требуют проверки звучания в игре.
 
 - [Assets/Scripts/Audio/GameAudio.cs](<Assets/Scripts/Audio/GameAudio.cs>) — Исходник C#: GameAudio.
 - [Assets/Scripts/Audio/GameAudioBank.cs](<Assets/Scripts/Audio/GameAudioBank.cs>) — Исходник C#: SoundCue, GameAudioBank, Entry.
@@ -842,10 +844,14 @@ BarricadeBreak добавлен последним без изменения п�
 - [Assets/Audio/BottleBreak/BottleBreak02.wav](<Assets/Audio/BottleBreak/BottleBreak02.wav>) — Аудио.
 - [Assets/Audio/BottleBreak/BottleBreak03.wav](<Assets/Audio/BottleBreak/BottleBreak03.wav>) — Аудио.
 - [Assets/Scripts/Loot/BarricadeBreakAnimation.cs](<Assets/Scripts/Loot/BarricadeBreakAnimation.cs>) — Исходник C#: BarricadeBreakAnimation.
+- [Assets/Scripts/Audio/GameAudio.Selected.cs](<Assets/Scripts/Audio/GameAudio.Selected.cs>) — Исходник C#: GameAudio.
+- [Assets/Scripts/Audio/DistanceShotAudio.cs](<Assets/Scripts/Audio/DistanceShotAudio.cs>) — Исходник C#: DistanceShotAudio.
+- [Assets/Audio/SelectedReview/SelectionManifest.json](<Assets/Audio/SelectedReview/SelectionManifest.json>) — Конфигурация / данные JSON.
 - [AudioIntegration.md](<AudioIntegration.md>) — Документация.
 - [Assets/Audio/CREDITS.md](<Assets/Audio/CREDITS.md>) — Документация.
 - [Assets/Audio/ShipInteractions/SOURCES.md](<Assets/Audio/ShipInteractions/SOURCES.md>) — Документация.
 - [Assets/Audio/BottleBreak/SOURCES.md](<Assets/Audio/BottleBreak/SOURCES.md>) — Документация.
+- [Assets/Audio/SelectedReview/SOURCES.md](<Assets/Audio/SelectedReview/SOURCES.md>) — Документация.
 
 ### Меню и HUD (`ui`)
 

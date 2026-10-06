@@ -82,17 +82,17 @@ namespace PirateSlop.Networking
         {
             if (IsClientInitialized) DeathRagdoll.Spawn(transform, position, velocity, spin);
         }
-        public void DamageFeedback(float amount, bool dead)
+        public void DamageFeedback(float amount, bool dead, bool drowning = false)
         {
-            if (IsServerInitialized && Owner != null && Owner.IsActive) DamageFeedbackTargetRpc(Owner, amount, dead);
+            if (IsServerInitialized && Owner != null && Owner.IsActive) DamageFeedbackTargetRpc(Owner, amount, dead, drowning);
         }
         public void ConfirmHit()
         {
             if (IsServerInitialized && Owner != null && Owner.IsActive) HitFeedbackTargetRpc(Owner);
         }
         [TargetRpc]
-        void DamageFeedbackTargetRpc(FishNet.Connection.NetworkConnection connection, float amount, bool dead)
-            => GetComponent<PirateSlop.DamageFeedback>()?.ReceiveDamage(amount, dead);
+        void DamageFeedbackTargetRpc(FishNet.Connection.NetworkConnection connection, float amount, bool dead, bool drowning)
+            => GetComponent<PirateSlop.DamageFeedback>()?.ReceiveDamage(amount, dead, drowning);
         [TargetRpc]
         void HitFeedbackTargetRpc(FishNet.Connection.NetworkConnection connection)
             => GetComponent<PirateSlop.DamageFeedback>()?.ConfirmHit();

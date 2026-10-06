@@ -29,6 +29,8 @@
 
 | Файл | Краткое описание |
 | --- | --- |
+| [Assets/Scripts/Audio/DistanceShotAudio.cs](<../../Assets/Scripts/Audio/DistanceShotAudio.cs>) | Исходник C#: DistanceShotAudio; Звуки и голос |
+| [Assets/Scripts/Audio/GameAudio.Selected.cs](<../../Assets/Scripts/Audio/GameAudio.Selected.cs>) | Исходник C#: GameAudio; Звуки и голос |
 | [Assets/Scripts/Audio/GameAudio.cs](<../../Assets/Scripts/Audio/GameAudio.cs>) | Исходник C#: GameAudio; Звуки и голос |
 | [Assets/Scripts/Audio/GameAudioBank.cs](<../../Assets/Scripts/Audio/GameAudioBank.cs>) | Исходник C#: SoundCue, GameAudioBank, Entry; Звуки и голос |
 | [Assets/Scripts/Audio/GameplayAudio.cs](<../../Assets/Scripts/Audio/GameplayAudio.cs>) | Исходник C#: GameplayAudio; Звуки и голос |

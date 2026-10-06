@@ -911,7 +911,9 @@
         "SabreWood добавлен в конец SoundCue без изменения прежних числовых значений. SabreModelReplacementSetup назначает существующий Foley/chop.ogg (громкость 0.6, дистанция 22 м); звук контакта с деревом передаётся вместе с серверным эффектом. Knife остаётся звуком взмаха.",
         "BottleBreak добавлен последним в SoundCue и назначен через BottleFishReplacementSetup.ConfigureBottleBreakAudio. Три оригинальных процедурных mono PCM16 WAV, 44.1 кГц, 0.725–0.775 с, громкость 0.75, дистанция 24 м; источники описаны в Assets/Audio/BottleBreak/SOURCES.md, генератор — Art/Audio/BottleBreak/GenerateBottleBreak.py. Это отдельный звук разбитого стекла; BottleClose сохраняет звук пробки. Звук и осколки приходят из одного серверного события разбития; общий эффект пули для этих бутылок подавлен. Ссылки и импорт проверены, звучание на слух и Play Mode не проверялись.",
         "BarricadeBreak добавлен последним без изменения прежних значений SoundCue. Использует существующий Naval/cannon_hit_ship_short.ogg с громкостью 0.7 и дистанцией 55 м; вызывается вместе с серверным разрушением баррикады.",
-        "Старый неподключённый StormWeather.cs удалён по Git-аудиту 2026-10-05; действующие системы шторма и все звуковые клипы сохранены."
+        "Старый неподключённый StormWeather.cs удалён по Git-аудиту 2026-10-05; действующие системы шторма и все звуковые клипы сохранены.",
+        "SelectedReview: выбор звуков revision 132 (80 файлов, 55 событий) импортирован в GameAudioBank; 173 WAV и 9 прежних ссылок после нарезки. GameAudio.Selected управляет LowHealth/Whirlpool/Vortex; DistanceShotAudio разделяет ближние и дальние выстрелы, для DoubleBarrel дальний слой фильтруется в игре. Редкости Rare/Epic/Legendary и BulletNearbyImpact разделены. Источники, интервалы и комментарии сохранены в SelectionManifest.json/SOURCES.md. Новые cues добавлены в конец enum; сетевой протокол 128 из-за новых аудио RPC и причины drowning в DamageFeedback. Play Mode и мультиплеер проверяет пользователь.",
+        "Настройка после ручной проверки 2026-10-06: Pistol усилен на 50% в пределах 5 м с плавным возвратом до 15 м. Редкость проигрывается при открытии V по максимуму текущих offers (с ожиданием первой сетевой руки), подтверждение выбора использует Select. KnockdownBody вызывается при ApplyKnockdown независимо от ragdoll, для локального игрока 2D Effects. WaterRunSteps учитывает вино и улучшение, реальную водную опору и имеет приоритет перед палубой. У водоворота Ocean/Wind плавно снижаются до 30%, оба слоя WhirlpoolNear усилены вдвое. Настройки требуют проверки звучания в игре."
       ],
       "files": [
         "Assets/Scripts/Audio/GameAudio.cs",
@@ -942,13 +944,17 @@
         "Assets/Audio/BottleBreak/BottleBreak01.wav",
         "Assets/Audio/BottleBreak/BottleBreak02.wav",
         "Assets/Audio/BottleBreak/BottleBreak03.wav",
-        "Assets/Scripts/Loot/BarricadeBreakAnimation.cs"
+        "Assets/Scripts/Loot/BarricadeBreakAnimation.cs",
+        "Assets/Scripts/Audio/GameAudio.Selected.cs",
+        "Assets/Scripts/Audio/DistanceShotAudio.cs",
+        "Assets/Audio/SelectedReview/SelectionManifest.json"
       ],
       "docs": [
         "AudioIntegration.md",
         "Assets/Audio/CREDITS.md",
         "Assets/Audio/ShipInteractions/SOURCES.md",
-        "Assets/Audio/BottleBreak/SOURCES.md"
+        "Assets/Audio/BottleBreak/SOURCES.md",
+        "Assets/Audio/SelectedReview/SOURCES.md"
       ]
     },
     {

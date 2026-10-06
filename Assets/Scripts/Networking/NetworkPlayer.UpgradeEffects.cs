@@ -64,6 +64,7 @@ namespace PirateSlop.Networking
             {
                 UpgradeState.CoinUsed = true;
                 upgradeInvulnerableUntil = Time.time + RoguelikeTuning.Current.coinInvulnerability;
+                UpgradeAudioObserversRpc(SoundCue.CoinSave, transform.position);
                 return Mathf.Max(0f, health.Current - 1f);
             }
             if (amount >= health.Current && HasUpgrade(UpgradeEffect.SeaPact) && !UpgradeState.PactUsed)
@@ -83,6 +84,9 @@ namespace PirateSlop.Networking
             }
             return amount;
         }
+
+        [ObserversRpc(RunLocally = true)]
+        void UpgradeAudioObserversRpc(SoundCue cue, Vector3 point) => GameAudio.Play(cue, point);
 
         public void StartUpgradeBleed(float hitDamage, GameObject source)
         {
@@ -115,6 +119,7 @@ namespace PirateSlop.Networking
                     Vector3 point = state.PactPlatform != null ? state.PactPlatform.TransformPoint(state.PactPosition) : state.PactWorldPosition;
                     float yaw = state.PactPlatform != null ? state.PactPlatform.eulerAngles.y + state.PactYaw : state.PactYaw;
                     GetComponent<NetworkHealth>().Respawn(point, yaw, RoguelikeTuning.Current.pactHealth);
+                    UpgradeAudioObserversRpc(SoundCue.PactRevive, point);
                 }
             }
             if (health.IsDead) { bleedRemaining = 0; return; }

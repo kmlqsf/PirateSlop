@@ -31,7 +31,8 @@ namespace PirateSlop
         Material material;
         float age, duration;
         bool impacted;
-        bool impactEffects;
+        bool impactEffects, passbyPlayed;
+        static float nextPassbyAudio;
         float width;
         CannonSmokeTrail smoke;
         Vector3 smokeHead;
@@ -40,7 +41,7 @@ namespace PirateSlop
         public void Initialize(Vector3 visibleStart, FirearmShot result, Material template, float thickness=.022f, bool showImpact=true, float speed=450)
         {
             FinishSmoke();
-            age=0;impacted=false;authoritative=true;Generation++;gameObject.SetActive(true);
+            age=0;impacted=false;authoritative=true;passbyPlayed=false;Generation++;gameObject.SetActive(true);
             start = visibleStart; shot = result;
             smokeHead = start; smokeProgress = 0f;
             smoke = CannonSmokeTrail.Create(start, .3f);
@@ -67,6 +68,19 @@ namespace PirateSlop
         {
             FirearmImpact.ResolvePoint(ref shot);
             float head = Mathf.Clamp01(time / duration);
+            var listener = SpatialAudioTone.FindListener();
+            if (!passbyPlayed && listener != null && (listener.transform.position - start).sqrMagnitude > 16f)
+            {
+                Vector3 segment = shot.End - start;
+                float closest = Mathf.Clamp01(Vector3.Dot(listener.transform.position - start, segment) / Mathf.Max(.001f, segment.sqrMagnitude));
+                Vector3 point = start + segment * closest;
+                if (closest > .01f && head >= closest)
+                {
+                    passbyPlayed = true;
+                    if ((point - listener.transform.position).sqrMagnitude < 16f && Time.unscaledTime >= nextPassbyAudio)
+                    { GameAudio.Play(SoundCue.BulletPassby, point); nextPassbyAudio = Time.unscaledTime + .08f; }
+                }
+            }
             if (smoke != null && head > smokeProgress)
             {
                 Vector3 position = Vector3.Lerp(start, shot.End, head);

@@ -21,7 +21,7 @@ namespace PirateSlop
         string notificationLead = "Получено";
         int pendingRevision;
         bool choiceResync, pendingReroll;
-        bool receivedInitial;
+        bool receivedInitial, pendingOfferAudio;
         int previousPoints, focusedCard, rarityFilter;
         Color notificationColor;
         UpgradeCard[] displayedOwned = System.Array.Empty<UpgradeCard>();
@@ -54,7 +54,7 @@ namespace PirateSlop
                 notificationLead = "Получено";
                 notificationColor = RarityColor(card.rarity);
                 notificationUntil = Time.unscaledTime + 3f;
-                GameAudio.Play(SoundCue.Select, Vector3.zero, 1f, true);
+                GameAudio.Play(SoundCue.Select, Vector3.zero, .6f, true);
                 break;
             }
             if (confirmed)
@@ -74,11 +74,12 @@ namespace PirateSlop
             }
             if (receivedInitial && player.Upgrades.points > previousPoints)
             {
-                if (!open) GameAudio.Play(SoundCue.Select, Vector3.zero, .6f, true);
+                GameAudio.Play(GameAudio.ResolveCue(SoundCue.UpgradeAward, SoundCue.Select), Vector3.zero, .6f, true);
             }
             receivedInitial = true;
             previousPoints = player.Upgrades.points;
             RefreshOwned();
+            if (pendingOfferAudio && open && !showOwned && player.Upgrades.offers.Length > 0) PlayOfferAudio();
             if (!confirmed) return;
             focusedCard = 0;
             if (player.Upgrades.points == 0) Close(true);
@@ -127,7 +128,9 @@ namespace PirateSlop
             GetComponent<PlayerInventory>()?.CloseLootForUpgrades();
             showOwned = player.Upgrades.points == 0;
             focusedCard = 0;
-            GameAudio.Play(SoundCue.Select, Vector3.zero, .6f, true);
+            pendingOfferAudio = !showOwned && player.Upgrades.offers.Length == 0;
+            if (!showOwned && !pendingOfferAudio) PlayOfferAudio();
+            else if (showOwned) GameAudio.Play(SoundCue.Select, Vector3.zero, .6f, true);
             AdvancedPlayerController.SetCursor(false);
             if (Time.unscaledTime >= nextRequest)
             {
@@ -136,10 +139,20 @@ namespace PirateSlop
             }
         }
 
+        void PlayOfferAudio()
+        {
+            pendingOfferAudio = false;
+            string rarest = "Common";
+            foreach (var offered in player.Upgrades.offers)
+                if (offered != null && UpgradeCardPresentation.Rank(offered.rarity) > UpgradeCardPresentation.Rank(rarest)) rarest = offered.rarity;
+            GameAudio.PlayRarity(rarest);
+        }
+
         void Close(bool restore)
         {
             if (!open) return;
             open = false;
+            pendingOfferAudio = false;
             consumedFrame = Time.frameCount;
             if (active == this) active = null;
             if (restore && restoreCursor) AdvancedPlayerController.SetCursor(true);

@@ -132,7 +132,7 @@ namespace PirateSlop.Networking
                 if (action.Value != 0 && Time.time >= until)
                 {
                     if (action.Value == 1) { ammunition[actionSlot] = CapacityFor(Item); rounds.Value = ammunition[actionSlot]; echoPrimedSlots[actionSlot] = true; }
-                    if (action.Value == 2 && network.ConsumeEquipment(actionSlot, InventoryItem.Wine)) { waterRunUntil = Time.time+60; waterRunRemaining.Value = 60; }
+                    if (action.Value == 2 && network.ConsumeEquipment(actionSlot, InventoryItem.Wine)) { waterRunUntil = Time.time+60; waterRunRemaining.Value = 60; WineDrinkObserversRpc(); }
                     if (action.Value == 4) network.ThrowFish(Item, direction.Value);
                     action.Value = 0;
                 }
@@ -259,6 +259,7 @@ namespace PirateSlop.Networking
             ShotObserversRpc(shots,sequence,Item);
         }
         void BeginAction(byte value, float duration, int slot) { actionSlot = slot; until = Time.time + duration; action.Value = value; aiming.Value = false; }
+        [ObserversRpc(RunLocally = true)] void WineDrinkObserversRpc() => GameAudio.Play(SoundCue.WineDrink, transform.position);
         [TargetRpc] void EmptyTargetRpc(FishNet.Connection.NetworkConnection connection) => GameAudio.Play(SoundCue.DryFire, transform.position);
         Transform MuzzleForView()
         {

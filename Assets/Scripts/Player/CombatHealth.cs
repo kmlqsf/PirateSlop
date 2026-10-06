@@ -108,7 +108,7 @@ namespace PirateSlop
             ApplySnapshot(Current + amount, false);
             if (network != null) network.Publish(Current);
         }
-        public void Damage(float amount, GameObject attacker = null, bool environmental = false)
+        public void Damage(float amount, GameObject attacker = null, bool environmental = false, bool drowning = false)
         {
             if (!environmental && attacker != null && attacker != gameObject)
             {
@@ -142,8 +142,8 @@ namespace PirateSlop
                 else DeathRagdoll.Spawn(transform, transform.position, velocity, spin);
             }
             ApplySnapshot(Current - amount, false);
-            if (network != null) network.DamageFeedback(dealt, IsDead);
-            else GetComponent<DamageFeedback>()?.ReceiveDamage(dealt, IsDead);
+            if (network != null) network.DamageFeedback(dealt, IsDead, drowning);
+            else GetComponent<DamageFeedback>()?.ReceiveDamage(dealt, IsDead, drowning);
             if (attacker != null && attacker != gameObject)
             {
                 var source = attacker.GetComponent<NetworkHealth>();

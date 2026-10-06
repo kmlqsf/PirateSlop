@@ -15,9 +15,20 @@ MonoBehaviour:
   Entries:
   - Cue: 0
     Clips:
-    - {fileID: 8300000, guid: bebbf3b764a50134ea67f2cd0b94bcee, type: 3}
-    - {fileID: 8300000, guid: ec67b765e9a860e47abe5c3be03c7238, type: 3}
-    - {fileID: 8300000, guid: 42c689d82b1d08a4ba41dd1af49597e3, type: 3}
+    - {fileID: 8300000, guid: 9ce98048c13898d4a8551d050d309280, type: 3}
+    - {fileID: 8300000, guid: da9d714433044d449acfd5331d6b021f, type: 3}
+    - {fileID: 8300000, guid: b5f858a3e96dc7a4d94eb827d736cb91, type: 3}
+    - {fileID: 8300000, guid: 84bf203dfc57cb0408a72e2a5c1f6814, type: 3}
+    - {fileID: 8300000, guid: 56d7d6fb29fb9cd4db372c5aaf59dc0a, type: 3}
+    DistantClips:
+    - {fileID: 8300000, guid: 993ab9a80b686f346a6e8d215ef382aa, type: 3}
+    - {fileID: 8300000, guid: 9a3981a22cf9bbe459f650940824be3b, type: 3}
+    - {fileID: 8300000, guid: 422ec08bb133c6941b72e54326e74ff1, type: 3}
+    - {fileID: 8300000, guid: d178d1767bbb5d34c9cfaa256b26a381, type: 3}
+    - {fileID: 8300000, guid: 6afc700c878905244a401a6a2ffe072d, type: 3}
+    DistantStart: 15
+    DistantEnd: 45
+    DistantVolume: 0.65
     Volume: 0.8
     Distance: 120
   - Cue: 1
@@ -25,6 +36,10 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 864fcfb877e90d443b5babae79552a11, type: 3}
     - {fileID: 8300000, guid: 09f4cdaa181dbb246bec6ac32b183c30, type: 3}
     - {fileID: 8300000, guid: 9ae45916f54b5554fa9520eb057259d4, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.9
     Distance: 230
   - Cue: 2
@@ -32,21 +47,37 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 981b0f065baabc14d9d2f3dea315da8b, type: 3}
     - {fileID: 8300000, guid: 3e2d95b5523cdb94f9368eb21600ccfa, type: 3}
     - {fileID: 8300000, guid: d50a388c0bc10d0478ccf2c259b7444f, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.5
     Distance: 16
   - Cue: 3
     Clips:
     - {fileID: 8300000, guid: af64931c7b0cce44eb002beaa82df811, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.4
     Distance: 12
   - Cue: 4
     Clips:
     - {fileID: 8300000, guid: 6ba5ddc02da48f24396db58b1a27e7f7, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.4
     Distance: 12
   - Cue: 5
     Clips:
     - {fileID: 8300000, guid: 6ba5ddc02da48f24396db58b1a27e7f7, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.4
     Distance: 8
   - Cue: 6
@@ -57,39 +88,70 @@ MonoBehaviour:
     - {fileID: 8300000, guid: eee6941a055f25c4582f7f1362d84dd1, type: 3}
     - {fileID: 8300000, guid: fd208422ea015684287869ed17782f9e, type: 3}
     - {fileID: 8300000, guid: cf51d19e1ba1bb541a2ac5564716efe3, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.35
     Distance: 20
   - Cue: 7
     Clips:
     - {fileID: 8300000, guid: d38aac898b9584b46b4cb293f9469cb3, type: 3}
     - {fileID: 8300000, guid: e8009dfca01d9c840892cbc70a135eb5, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.35
     Distance: 15
   - Cue: 8
     Clips:
     - {fileID: 8300000, guid: 94b6d8de922cfb849882a23733022ecb, type: 3}
     - {fileID: 8300000, guid: a585ea9129fd0aa4299ba3d6331e1552, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.6
     Distance: 22
   - Cue: 9
     Clips:
-    - {fileID: 8300000, guid: 0996c434e6aa80f49b267246fdf45f5c, type: 3}
-    - {fileID: 8300000, guid: 75cd6d611dff98c448fc632a0ca566ed, type: 3}
+    - {fileID: 8300000, guid: bff57e648331b694ead61d61cde87430, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.4
     Distance: 20
   - Cue: 10
     Clips:
-    - {fileID: 8300000, guid: 7c42631729ae7bd40aaee447336657bc, type: 3}
+    - {fileID: 8300000, guid: f09a9060dc3bd61438500ab9358af1c1, type: 3}
+    - {fileID: 8300000, guid: 794bf04ed90717941b4042bff09fe906, type: 3}
+    - {fileID: 8300000, guid: 869006a73a0c475489d4074b8521cc5d, type: 3}
+    - {fileID: 8300000, guid: c38b68d0573ed51449fb9a60760e77a3, type: 3}
+    - {fileID: 8300000, guid: 0354fe882bdfa344ba513ce509c8af3d, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 1
     Distance: 25
   - Cue: 11
     Clips:
-    - {fileID: 8300000, guid: cb7a9d04b04b5f443a23d1182d624186, type: 3}
+    - {fileID: 8300000, guid: 523540cd7c9d7b442a753e3929b3ba28, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.6
     Distance: 30
   - Cue: 12
     Clips:
-    - {fileID: 8300000, guid: 9bcb88c4193f91b4d9c807dc928a5b28, type: 3}
+    - {fileID: 8300000, guid: b605b5a089085b942834481ba771a826, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.45
     Distance: 15
   - Cue: 13
@@ -98,17 +160,29 @@ MonoBehaviour:
     - {fileID: 8300000, guid: f8cc04c83249eae49862075f85390ac3, type: 3}
     - {fileID: 8300000, guid: 9e11f6ee13dfd8641bbda0ed95c848f5, type: 3}
     - {fileID: 8300000, guid: 745fe02fa8a4c7d45b2878e2897f5a60, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.604
     Distance: 18
   - Cue: 14
     Clips:
     - {fileID: 8300000, guid: 00d8d07c1e23b0742a96faaeeac378c1, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.3
     Distance: 30
   - Cue: 15
     Clips:
     - {fileID: 8300000, guid: 0978c69aea6b3b14e8e2b4d6965486a1, type: 3}
     - {fileID: 8300000, guid: af64931c7b0cce44eb002beaa82df811, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.3
     Distance: 18
   - Cue: 16
@@ -116,49 +190,87 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 6b128f94b18d1354192b2a630aebdba1, type: 3}
     - {fileID: 8300000, guid: 9432d013e71fa2247a519ea1655cca72, type: 3}
     - {fileID: 8300000, guid: 1bc79418f5f5e4649819c88414415b57, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.4
     Distance: 20
   - Cue: 17
     Clips:
     - {fileID: 8300000, guid: 5e84535a3cda9e844a82c08fbc222796, type: 3}
     - {fileID: 8300000, guid: d00983396284dad4e8d533cbc02698a0, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.4
     Distance: 10
   - Cue: 18
     Clips:
     - {fileID: 8300000, guid: 9edc03fb916b1e741aa3a51b04934222, type: 3}
     - {fileID: 8300000, guid: f950fa16a2f2d0d40a9c18fd13c04429, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.5
     Distance: 25
   - Cue: 19
     Clips:
+    - {fileID: 8300000, guid: 0eb671bc17deca34d92f95d7605248b5, type: 3}
+    - {fileID: 8300000, guid: 4096437fa35f6c74c93bd812142b946e, type: 3}
     - {fileID: 8300000, guid: 90445c17f08b90b47bbffc9b3073b13f, type: 3}
-    - {fileID: 8300000, guid: f06c957c74821324ba4dde76b49a99cf, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.35
     Distance: 5
   - Cue: 20
     Clips:
     - {fileID: 8300000, guid: 7c42631729ae7bd40aaee447336657bc, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.35
     Distance: 25
   - Cue: 21
     Clips:
     - {fileID: 8300000, guid: 772f026ee154e394cb90f1d419d961cd, type: 3}
+    - {fileID: 8300000, guid: a40f0e6f775714642948c58f5c98da81, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.9
     Distance: 200
   - Cue: 22
     Clips:
     - {fileID: 8300000, guid: bf36bf2f16a0fee4cb298fd341908ddb, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.85
     Distance: 200
   - Cue: 23
     Clips:
     - {fileID: 8300000, guid: f615f281cb06f0b4eb543bec62d61367, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.65
     Distance: 100
   - Cue: 24
     Clips:
     - {fileID: 8300000, guid: 806fd3873b84a494daa1cf3e926e8318, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.6
     Distance: 100
   - Cue: 25
@@ -167,61 +279,127 @@ MonoBehaviour:
     - {fileID: 8300000, guid: c38c161ad5ba7df4d8c41d68be968723, type: 3}
     - {fileID: 8300000, guid: e87a42e7faae1b44a8d1203d5f749311, type: 3}
     - {fileID: 8300000, guid: de6f3554e4ff6b44d98df9e1bf9bd2a6, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.3
     Distance: 35
   - Cue: 26
     Clips:
     - {fileID: 8300000, guid: b3274ac4a0a37d44c84d7c4ae2633ce8, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.65
     Distance: 30
   - Cue: 27
     Clips:
     - {fileID: 8300000, guid: fab7a0d7a34012045ae41e7977d5471f, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.9
     Distance: 30
   - Cue: 28
     Clips:
     - {fileID: 8300000, guid: d19ff64f670b10446b731f03bbbca119, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.65
     Distance: 30
   - Cue: 29
     Clips:
     - {fileID: 8300000, guid: 460794135975f164a965a54fd9c2d7bb, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.65
     Distance: 30
   - Cue: 30
     Clips:
     - {fileID: 8300000, guid: 22668c6c781e92c4db3041314feb86af, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.65
     Distance: 30
   - Cue: 31
     Clips:
     - {fileID: 8300000, guid: 34d654a6ce0977c4bab7e1d1dc4e5f12, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.65
     Distance: 30
   - Cue: 32
     Clips:
     - {fileID: 8300000, guid: db5dc91f47e98eb4298202dd1d89f67c, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.65
     Distance: 30
   - Cue: 33
     Clips:
-    - {fileID: 8300000, guid: 3bea45d2bf770934e812e7b2ad6f4aba, type: 3}
+    - {fileID: 8300000, guid: f3eb8beb9c7cbef4f9440b083b3e57de, type: 3}
+    - {fileID: 8300000, guid: f2e73edaf4ba44e45a1d9d473941c7ef, type: 3}
+    - {fileID: 8300000, guid: 414c9346bbc57ea4ea5d6e3a3f3bb998, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.85
     Distance: 1
   - Cue: 34
     Clips:
-    - {fileID: 8300000, guid: b6e8d06f139ea8940b69b6257bd0ebd0, type: 3}
+    - {fileID: 8300000, guid: ddd82814f4e44874f910e79a2e8de9c6, type: 3}
+    DistantClips:
+    - {fileID: 8300000, guid: a287b509a4480e3409ab8a81d354bbb1, type: 3}
+    - {fileID: 8300000, guid: b4cf7bbfd00757c48aa48af56fd8a34b, type: 3}
+    - {fileID: 8300000, guid: cb37c1f668bdc7d4cb2c44ae8287e3a8, type: 3}
+    - {fileID: 8300000, guid: d494b6e6191703745998f3a1ff0b9612, type: 3}
+    - {fileID: 8300000, guid: 15918ef93402e8642aed6fe55647dba3, type: 3}
+    - {fileID: 8300000, guid: f2dc613a2e2f15f41b83d260e777366b, type: 3}
+    - {fileID: 8300000, guid: 6acc50368291eed408e694e49d1f907e, type: 3}
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 1
     Distance: 180
   - Cue: 35
     Clips:
-    - {fileID: 8300000, guid: 07f7f0c37429e36488a324dca1271115, type: 3}
+    - {fileID: 8300000, guid: 0f8a5315aefaaa14b84584bcbee5f5b2, type: 3}
+    - {fileID: 8300000, guid: 325d072a10940044c9af244aeb41575f, type: 3}
+    - {fileID: 8300000, guid: 05dc5788d87662e43a66e4f65b6ff75e, type: 3}
+    - {fileID: 8300000, guid: fd724524876ad11418e574432c1bcca2, type: 3}
+    - {fileID: 8300000, guid: b4d7316f7565356468f499d9455baf00, type: 3}
+    - {fileID: 8300000, guid: fd9312edc5b517445958ea96e14360a1, type: 3}
+    - {fileID: 8300000, guid: 17fbe198b1a68d24c89f72c64699a610, type: 3}
+    - {fileID: 8300000, guid: 44af65715f9b0354b9dad713efe92b1f, type: 3}
+    - {fileID: 8300000, guid: 4aca8135b0bc87448ab99b05690bbeac, type: 3}
+    - {fileID: 8300000, guid: 54646cd69b743fe42b17563ce4b7bf61, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 1
     Distance: 180
   - Cue: 36
     Clips:
-    - {fileID: 8300000, guid: 7c42631729ae7bd40aaee447336657bc, type: 3}
+    - {fileID: 8300000, guid: e47612d594ecafa41b94ce303b47e595, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.65
     Distance: 35
   - Cue: 37
@@ -229,22 +407,38 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 6b128f94b18d1354192b2a630aebdba1, type: 3}
     - {fileID: 8300000, guid: 9432d013e71fa2247a519ea1655cca72, type: 3}
     - {fileID: 8300000, guid: 1bc79418f5f5e4649819c88414415b57, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.55
     Distance: 35
   - Cue: 38
     Clips:
     - {fileID: 8300000, guid: 94b6d8de922cfb849882a23733022ecb, type: 3}
     - {fileID: 8300000, guid: a585ea9129fd0aa4299ba3d6331e1552, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.4
     Distance: 35
   - Cue: 39
     Clips:
-    - {fileID: 8300000, guid: 7c42631729ae7bd40aaee447336657bc, type: 3}
+    - {fileID: 8300000, guid: 531e16d2bc0c2464c987981e2ef20113, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.4
     Distance: 35
   - Cue: 40
     Clips:
     - {fileID: 8300000, guid: cb999b9ab2862e7448ea505b1cf3d090, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.7
     Distance: 35
   - Cue: 41
@@ -252,11 +446,19 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 37450f446c656c242884b2e6d3f6d26c, type: 3}
     - {fileID: 8300000, guid: fc74ad660983442419edf4437db7662e, type: 3}
     - {fileID: 8300000, guid: 00d8d07c1e23b0742a96faaeeac378c1, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.45
     Distance: 25
   - Cue: 42
     Clips:
     - {fileID: 8300000, guid: 00d8d07c1e23b0742a96faaeeac378c1, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.2
     Distance: 18
   - Cue: 43
@@ -266,6 +468,10 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 72c287c753cf9a340b9a0ec590367af8, type: 3}
     - {fileID: 8300000, guid: 736bdeffa2ca63b4e8a073d3fde16182, type: 3}
     - {fileID: 8300000, guid: da60ce46ab5a632428f04545637ddee3, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.35
     Distance: 20
   - Cue: 44
@@ -275,6 +481,10 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 52ab1212b4fd9f64b981ca862cb2b222, type: 3}
     - {fileID: 8300000, guid: c5a6c020cc3f5a94e9b8368c1a82b883, type: 3}
     - {fileID: 8300000, guid: 3a7c0beee8d82bf4f9616e47e20886f4, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.45
     Distance: 24
   - Cue: 45
@@ -284,62 +494,113 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 0d0ef94236c5a9240acb53b92fca7bf2, type: 3}
     - {fileID: 8300000, guid: d110a5edb9391ff4cac3021a73520948, type: 3}
     - {fileID: 8300000, guid: 4442dadd6dfb9be42ae4e4ec1c73a9be, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.35
     Distance: 20
   - Cue: 46
     Clips:
     - {fileID: 8300000, guid: a3a607823c4f195438a56a9bfa70049a, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.5
     Distance: 12
   - Cue: 47
     Clips:
     - {fileID: 8300000, guid: 2096b8fe443bea34595444491de56d63, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.45
     Distance: 12
   - Cue: 48
     Clips:
-    - {fileID: 8300000, guid: 25617889eeb32b84fba6e468ab75331c, type: 3}
+    - {fileID: 8300000, guid: a38f482efa4e88d42b7df0a14442f046, type: 3}
+    - {fileID: 8300000, guid: 122322e5c3c282248a632035a8ac5931, type: 3}
+    - {fileID: 8300000, guid: f6021006d53efce468715b0feeb5973a, type: 3}
+    - {fileID: 8300000, guid: 528a1d1e52ade3640ab8c50fcb9934a6, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.45
     Distance: 10
   - Cue: 49
     Clips:
     - {fileID: 8300000, guid: 55265bc5cf86d324da132b628bca78d8, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.4
     Distance: 10
   - Cue: 50
     Clips:
     - {fileID: 8300000, guid: 0570d1ffe4aa6214ea5375baca7d8113, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.45
     Distance: 10
   - Cue: 51
     Clips:
     - {fileID: 8300000, guid: aaa242e361b36f4459db08687a31a637, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.35
     Distance: 10
   - Cue: 52
     Clips:
     - {fileID: 8300000, guid: 8c6ed5b425dd56946b42ef0e9de9d1b7, type: 3}
     - {fileID: 8300000, guid: 000aedbd1149d1e4b8a6a25b71147b87, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.55
     Distance: 30
   - Cue: 53
     Clips:
     - {fileID: 8300000, guid: 1cec13d1f5b18b244b909d5e80cebcd5, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.8
     Distance: 30
   - Cue: 54
     Clips:
     - {fileID: 8300000, guid: b0e870ed58fe8c14c82c97926127ed36, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.8
     Distance: 30
   - Cue: 55
     Clips:
     - {fileID: 8300000, guid: bc493e0812e859642a158acf57f26a6e, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.8
     Distance: 30
   - Cue: 56
     Clips:
     - {fileID: 8300000, guid: 4d460eafaa532d346803ed5031d3ca1e, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.8
     Distance: 30
   - Cue: 57
@@ -348,26 +609,46 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 026c19b68736b644f877d744ff875ccd, type: 3}
     - {fileID: 8300000, guid: 54c140ad0b22ef54abdbf5b93fd798ba, type: 3}
     - {fileID: 8300000, guid: b857d0661b4d82c46a9c77910f6b34bf, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.8
     Distance: 90
   - Cue: 58
     Clips:
     - {fileID: 8300000, guid: 8fd2362634a534d42a39a821d915356c, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.65
     Distance: 22
   - Cue: 59
     Clips:
     - {fileID: 8300000, guid: f44f41b87362d87428aa6366e37e426e, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.7
     Distance: 12
   - Cue: 60
     Clips:
-    - {fileID: 8300000, guid: 38608c8cd7028cf449e3d4f613f4ab01, type: 3}
+    - {fileID: 8300000, guid: d67226b1f1bdeaa4e943a6f99ce7d2c0, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.75
     Distance: 12
   - Cue: 61
     Clips:
     - {fileID: 8300000, guid: 532a4187db6d00e49b98f3b1e61ed9b4, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.8
     Distance: 40
   - Cue: 62
@@ -382,101 +663,171 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 47928c37e3d44da4a951c06edba9bb1e, type: 3}
     - {fileID: 8300000, guid: 2a5c8579a232a564c926b762319f96f0, type: 3}
     - {fileID: 8300000, guid: 0945d0ac3241286449050c8663bbcc18, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.18
     Distance: 20
   - Cue: 63
     Clips:
     - {fileID: 8300000, guid: e87a42e7faae1b44a8d1203d5f749311, type: 3}
     - {fileID: 8300000, guid: de6f3554e4ff6b44d98df9e1bf9bd2a6, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.777
     Distance: 18
   - Cue: 64
     Clips:
     - {fileID: 8300000, guid: ec8d27f106ccf7848aa88b59334eb8c3, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.4
     Distance: 35
   - Cue: 65
     Clips:
     - {fileID: 8300000, guid: b973fec5d7be79243886f7c9bd770ad3, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.5
     Distance: 25
   - Cue: 66
     Clips:
     - {fileID: 8300000, guid: e180869159b71c447997349a791adb3c, type: 3}
-    - {fileID: 8300000, guid: d49f17e8e856f4446a084ddf30e4ecbb, type: 3}
-    - {fileID: 8300000, guid: 68cee0f3a4e82ad4c8ff31b68d85c854, type: 3}
-    - {fileID: 8300000, guid: 4505b00cbe2e8d647bd4687a6a27a040, type: 3}
-    - {fileID: 8300000, guid: b18ef2d86594fe64cb6b4cfbcef94cdb, type: 3}
-    - {fileID: 8300000, guid: eaa69e23d00326b42bf4aff67540c702, type: 3}
-    - {fileID: 8300000, guid: f7cbf02ff64fb2549896a97edc193517, type: 3}
-    - {fileID: 8300000, guid: bd936285505b9b047bdbc3e4237f4f09, type: 3}
-    - {fileID: 8300000, guid: de88b386ea1ad65449cee0062a804f68, type: 3}
-    - {fileID: 8300000, guid: 97255d7ad5c3a6841b9f79fe27a586d8, type: 3}
-    - {fileID: 8300000, guid: 0b5f0e9e3da54054daebf2994fc73e11, type: 3}
-    - {fileID: 8300000, guid: 89a78033746745d46bbed7066e8314f7, type: 3}
+    - {fileID: 8300000, guid: 46a55ff7acf080b43920466d35515ea7, type: 3}
+    - {fileID: 8300000, guid: 0fea926a5a671c64db250d4cb4f775a1, type: 3}
+    - {fileID: 8300000, guid: b2cd560169d3d5241b04a287c3e2fa43, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.3
     Distance: 25
   - Cue: 67
     Clips:
     - {fileID: 8300000, guid: 96c3adb425f2c2c4992403ff426ca9b6, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.13
     Distance: 30
   - Cue: 68
     Clips:
-    - {fileID: 8300000, guid: 913ab5c6e5f6d104e82cec4f3456307f, type: 3}
+    - {fileID: 8300000, guid: 3952a8ddd1632104eb29f3637dc422fd, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.24
     Distance: 6
   - Cue: 69
     Clips:
     - {fileID: 8300000, guid: b726fdaf559ed974284283fe3450f43c, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.24
     Distance: 6
   - Cue: 70
     Clips:
     - {fileID: 8300000, guid: 0e824abd63429414d96d302323b756b5, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.24
     Distance: 6
   - Cue: 71
     Clips:
     - {fileID: 8300000, guid: af64931c7b0cce44eb002beaa82df811, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.32
     Distance: 10
   - Cue: 72
     Clips:
-    - {fileID: 8300000, guid: 1762b3c74d5e8ab47aafc14b7a2e4eab, type: 3}
-    - {fileID: 8300000, guid: 2fd10b746acc8174ab5940bf2827ecc1, type: 3}
-    - {fileID: 8300000, guid: 84ef71381dc15d2438795195238cf191, type: 3}
+    - {fileID: 8300000, guid: 85a60f3c040430d47821d1e2fea7c769, type: 3}
+    - {fileID: 8300000, guid: 20652a10283067f4d944ea437412b5d3, type: 3}
+    - {fileID: 8300000, guid: 9d43aff277f58604eb5fede6e16f3148, type: 3}
+    - {fileID: 8300000, guid: 199a41961bce60e41b4af1086ae5826b, type: 3}
+    - {fileID: 8300000, guid: 4918afe750524a845b878c00bd36087d, type: 3}
+    - {fileID: 8300000, guid: 554b8aac9a334f242bae735d8cd05a8a, type: 3}
+    - {fileID: 8300000, guid: a734a2e2138043c44a120e1450c8ff4a, type: 3}
+    - {fileID: 8300000, guid: a1798d907ce39c042a63c144316a78fb, type: 3}
+    - {fileID: 8300000, guid: 4ecd013ce7210654899a354553d7db66, type: 3}
+    - {fileID: 8300000, guid: 1da54668a8c7bbc4d817516ff1750ac6, type: 3}
+    - {fileID: 8300000, guid: df86f880edadf5844b7de67c1cef0fde, type: 3}
+    - {fileID: 8300000, guid: 854546e934a8e2741b95d85c9d51a167, type: 3}
+    - {fileID: 8300000, guid: b041a0acd7d1cbc48a950322f2ffbf4f, type: 3}
+    - {fileID: 8300000, guid: 1c2accab755c4b642acda2f879ad8fa9, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.36
     Distance: 10
   - Cue: 73
     Clips:
     - {fileID: 8300000, guid: 94aedea0604034041928579359a538be, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.42
     Distance: 10
   - Cue: 74
     Clips:
     - {fileID: 8300000, guid: 7b529726a2482604795377689bf258dd, type: 3}
-    - {fileID: 8300000, guid: d97cef4a3dcccb0448a3d7a0327378bf, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.45
     Distance: 10
   - Cue: 75
     Clips:
     - {fileID: 8300000, guid: e8fc34921f2b8664b88a1e55651043da, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.65
     Distance: 20
   - Cue: 76
     Clips:
     - {fileID: 8300000, guid: 44afce00c53a6f14ea4d121b6a8e540a, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.55
     Distance: 20
   - Cue: 80
     Clips:
     - {fileID: 8300000, guid: e4e6a93dd303ba743ae0cfec566b86c9, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.5
     Distance: 12
   - Cue: 81
     Clips:
     - {fileID: 8300000, guid: e0bfb00f4b777ba49b2b10f9011a72c0, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.6
     Distance: 12
   - Cue: 77
@@ -484,6 +835,10 @@ MonoBehaviour:
     - {fileID: 8300000, guid: f7c44bfb96412f746a80229802e7fd34, type: 3}
     - {fileID: 8300000, guid: 18a07283cc793c74f9b408a006b76cc1, type: 3}
     - {fileID: 8300000, guid: bb224b2fc48e5a143b3d21fe0d39ba98, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.6
     Distance: 12
   - Cue: 78
@@ -491,32 +846,416 @@ MonoBehaviour:
     - {fileID: 8300000, guid: b5ee2771ab231da4180a54f8d07cb518, type: 3}
     - {fileID: 8300000, guid: ff00ef62fe7b1064696dcb20d839ba2f, type: 3}
     - {fileID: 8300000, guid: f234280637c23a64ba4eae5d41e5af4d, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.55
     Distance: 12
   - Cue: 79
     Clips:
-    - {fileID: 8300000, guid: ede6386eaae050f439b2189798f6aaef, type: 3}
-    - {fileID: 8300000, guid: 1f7305ad427c4754c9c2a4126d3e0a2e, type: 3}
-    - {fileID: 8300000, guid: be459619fb6d22c4c8a8eecbae10e072, type: 3}
+    - {fileID: 8300000, guid: 41b32266d5f5f1b4b9f1e0a416f777ff, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.6
     Distance: 12
   - Cue: 82
     Clips:
     - {fileID: 8300000, guid: 7c42631729ae7bd40aaee447336657bc, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.6
     Distance: 22
   - Cue: 83
     Clips:
-    - {fileID: 8300000, guid: ff805b1150a913f42a620103e6ae5cc3, type: 3}
-    - {fileID: 8300000, guid: 25d8941a1eda7c248a58e49418671ed3, type: 3}
-    - {fileID: 8300000, guid: ff0b6568059266a4aa425f2a955cb8f1, type: 3}
+    - {fileID: 8300000, guid: 5c1e696db2916c544a8daafd8dca4d96, type: 3}
+    - {fileID: 8300000, guid: bb3dfd5d60e524848a48df352a662a9d, type: 3}
+    - {fileID: 8300000, guid: 2aaf1cf04a9227847b6dfb3b99636765, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.75
     Distance: 24
   - Cue: 84
     Clips:
     - {fileID: 8300000, guid: 772f026ee154e394cb90f1d419d961cd, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
     Volume: 0.7
     Distance: 55
+  - Cue: 85
+    Clips:
+    - {fileID: 8300000, guid: 32752b8030972a7458c61436574f62d9, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
+    Volume: 0.25
+    Distance: 18
+  - Cue: 86
+    Clips:
+    - {fileID: 8300000, guid: 14b8ace13a7c8a54a8f74d3fea1a068a, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
+    Volume: 0.5
+    Distance: 30
+  - Cue: 87
+    Clips:
+    - {fileID: 8300000, guid: b1cb540a0e496ba4297a69c562b3abed, type: 3}
+    - {fileID: 8300000, guid: 94ba070e1e024944e8cf7744f90e1444, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
+    Volume: 0.5
+    Distance: 28
+  - Cue: 88
+    Clips:
+    - {fileID: 8300000, guid: 270b6a9182f163b4cb6c4ca56950d320, type: 3}
+    - {fileID: 8300000, guid: 102f9f01c5b88f549a387014a5f5640d, type: 3}
+    - {fileID: 8300000, guid: 3bf85bde24fe59047823880590d2168d, type: 3}
+    - {fileID: 8300000, guid: 5bcc01df4420a1942aa503589009a3b1, type: 3}
+    - {fileID: 8300000, guid: 08ed3ec893671624fa6dc072b2cc4e7a, type: 3}
+    - {fileID: 8300000, guid: 69c9cc07d13f7ba4abe90f037c547c92, type: 3}
+    - {fileID: 8300000, guid: 77c4a0b37b4739b46961cf16eddc0374, type: 3}
+    - {fileID: 8300000, guid: c26d1d6673953fe409aa59d9966ceefb, type: 3}
+    - {fileID: 8300000, guid: cff7f6f105ffece4eb38ddce78161c5e, type: 3}
+    - {fileID: 8300000, guid: fb72f18caa60e0b4e8e14c9137a93310, type: 3}
+    - {fileID: 8300000, guid: c0d1f1545d913f143a3d6031280d54d9, type: 3}
+    - {fileID: 8300000, guid: 7c6c9a56ef7c3924c890748e2b572bd5, type: 3}
+    - {fileID: 8300000, guid: ca76e1e192564574cbaf4c0ef4dc6275, type: 3}
+    - {fileID: 8300000, guid: c4672b02c445c5b43b86866b03279279, type: 3}
+    - {fileID: 8300000, guid: eeea70911a9618f40b097dcbac642d32, type: 3}
+    - {fileID: 8300000, guid: 41296d594460e774393c35b62779582b, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
+    Volume: 0.35
+    Distance: 20
+  - Cue: 89
+    Clips:
+    - {fileID: 8300000, guid: 88cb7a04d959bbd458f747907e659e09, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
+    Volume: 0.3
+    Distance: 18
+  - Cue: 90
+    Clips:
+    - {fileID: 8300000, guid: 6a5cbedf121e65d49a448a1557f114c9, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
+    Volume: 0.3
+    Distance: 1
+  - Cue: 91
+    Clips:
+    - {fileID: 8300000, guid: 68939ad826ed9fe40bce8cd81c60ac23, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
+    Volume: 0.35
+    Distance: 1
+  - Cue: 92
+    Clips:
+    - {fileID: 8300000, guid: 0b2500109ef014b4d92e62fa1f1a3be4, type: 3}
+    - {fileID: 8300000, guid: 76d3921a35f66a04cae8d55ecde4d841, type: 3}
+    - {fileID: 8300000, guid: b1ff219e2d847da408f37a4eeb790953, type: 3}
+    - {fileID: 8300000, guid: 3a529770efc264347b326b9b52f6f67f, type: 3}
+    - {fileID: 8300000, guid: 9bc1d9a38a148f94cb8b8b374e34a1f6, type: 3}
+    - {fileID: 8300000, guid: cb39b0eef3bab844693b4d3cd48090f7, type: 3}
+    - {fileID: 8300000, guid: d9178f53897bbbc4588f156c69eb9951, type: 3}
+    - {fileID: 8300000, guid: 922f6e6c8d77da14d8fc649923cd53ee, type: 3}
+    - {fileID: 8300000, guid: 31f00a1b57460154885218b12f415865, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
+    Volume: 0.3
+    Distance: 10
+  - Cue: 93
+    Clips:
+    - {fileID: 8300000, guid: d39a18e9131b2b349854bdd6750a86ce, type: 3}
+    - {fileID: 8300000, guid: e410863a284ba96488aac06140d07688, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
+    Volume: 0.3
+    Distance: 12
+  - Cue: 94
+    Clips:
+    - {fileID: 8300000, guid: b3b6dbe319e8aa34a814aad7775c19aa, type: 3}
+    - {fileID: 8300000, guid: 032ec64d6965ea946ae6531783444ffd, type: 3}
+    - {fileID: 8300000, guid: 3f8c4adc68a43ec4bafc8c6fa95e31f1, type: 3}
+    - {fileID: 8300000, guid: 156af0f6d1bf8eb4d991b11105992c63, type: 3}
+    - {fileID: 8300000, guid: 9e963a52fec0cd54ab9f87d0a3883328, type: 3}
+    - {fileID: 8300000, guid: 84cf27b6f4d2e084a9fe9678dddc3e54, type: 3}
+    - {fileID: 8300000, guid: fb0b2fd67a4e8f44389d5d625ef4773f, type: 3}
+    - {fileID: 8300000, guid: 54738fced41ce7f4185da2068af4f34e, type: 3}
+    - {fileID: 8300000, guid: 141985f93c3e83d44a2028dea318c6cb, type: 3}
+    - {fileID: 8300000, guid: 3fd7e39b130a9594ca032809d07d397e, type: 3}
+    - {fileID: 8300000, guid: 729041dace3be8244a7d49cf1e841adc, type: 3}
+    - {fileID: 8300000, guid: afd2d1845ddebcb4ab109a1da7261a37, type: 3}
+    - {fileID: 8300000, guid: 2656a780a63dbb846a8628b42d50162d, type: 3}
+    - {fileID: 8300000, guid: aff4e0f44387e6e4181b76aadf0db16d, type: 3}
+    - {fileID: 8300000, guid: 1b5b14c8b8cf597449117fa77dd5ca54, type: 3}
+    - {fileID: 8300000, guid: f297d9656ffacde4292e9d04fb177a05, type: 3}
+    - {fileID: 8300000, guid: fbf989b36cc0bde419b908ff6e38e4b0, type: 3}
+    - {fileID: 8300000, guid: 2b612a98d828b1d4ab2e5cd7c617afa5, type: 3}
+    - {fileID: 8300000, guid: adccaa4e374f42b49a21cf6344f9f46c, type: 3}
+    - {fileID: 8300000, guid: 50660d2e8c75f4e408030fe95522866f, type: 3}
+    - {fileID: 8300000, guid: 42b892bb62709f049a4870c686dbea7a, type: 3}
+    - {fileID: 8300000, guid: b5d03d05eddb9a345b16408c5602816a, type: 3}
+    - {fileID: 8300000, guid: eeca2abd2311580428d7b601df251b44, type: 3}
+    - {fileID: 8300000, guid: d2d0bbfc21bb5c343b153e45f92fc3ac, type: 3}
+    - {fileID: 8300000, guid: 5b499f98c139a164cb90dd7f9cfc4ec4, type: 3}
+    - {fileID: 8300000, guid: 0b086a2945f6b794aa57b61e4d773b02, type: 3}
+    - {fileID: 8300000, guid: 7b8f91407e335544fa69c8be86826a04, type: 3}
+    - {fileID: 8300000, guid: cdfacda5eacd6284895886e8b488556e, type: 3}
+    - {fileID: 8300000, guid: 73a42d561f81cff469e5f9ca607359bd, type: 3}
+    - {fileID: 8300000, guid: d822950e17b34fc448bc0e8f6979b73d, type: 3}
+    - {fileID: 8300000, guid: fb7579002c2297445a72f9413d6e4c05, type: 3}
+    - {fileID: 8300000, guid: 1d244e2e5d5729f449d10aaaa6d8c48f, type: 3}
+    - {fileID: 8300000, guid: a47027cb1bfd2ad468d34009e130dd13, type: 3}
+    - {fileID: 8300000, guid: 5202a7977a4c82d4e92e31e87d729cea, type: 3}
+    - {fileID: 8300000, guid: b508060b5d64c954a9b6277e34b71392, type: 3}
+    - {fileID: 8300000, guid: c6f71bd044b849e4490c5bd79e404811, type: 3}
+    - {fileID: 8300000, guid: cedb415b7c8e6dd4cb9339ed5d4e47a3, type: 3}
+    - {fileID: 8300000, guid: 430f1442a0437184d8f1f7a024010a82, type: 3}
+    - {fileID: 8300000, guid: 401fd543db4bc894f8c64ef4e342abc1, type: 3}
+    - {fileID: 8300000, guid: d38a8cf946ca46d4ca692fb5304114f1, type: 3}
+    - {fileID: 8300000, guid: d62d57f5fbd391f4b891fdd32ffecafd, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
+    Volume: 0.2
+    Distance: 8
+  - Cue: 95
+    Clips:
+    - {fileID: 8300000, guid: 413a288f100698d46b612ab7580ca3d5, type: 3}
+    - {fileID: 8300000, guid: 95599d4b2b32ff7468955c87d7a4e2ab, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
+    Volume: 0.5
+    Distance: 12
+  - Cue: 97
+    Clips:
+    - {fileID: 8300000, guid: 9a1aba4752cdb514db50641db25fbedb, type: 3}
+    - {fileID: 8300000, guid: 43b68074b45489843865561e6bca5fde, type: 3}
+    - {fileID: 8300000, guid: b5f300fb6c09b7e489c81f417f1b0a8c, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
+    Volume: 0.5
+    Distance: 25
+  - Cue: 98
+    Clips:
+    - {fileID: 8300000, guid: b539d236cff1b07458dd4a9050fa1590, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
+    Volume: 0.45
+    Distance: 25
+  - Cue: 99
+    Clips:
+    - {fileID: 8300000, guid: 03711331a4196474cb70cf7aaf6e7257, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
+    Volume: 0.4
+    Distance: 24
+  - Cue: 100
+    Clips:
+    - {fileID: 8300000, guid: a1c3001e76557dd458e864a6bd35e8fe, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
+    Volume: 0.25
+    Distance: 90
+  - Cue: 101
+    Clips:
+    - {fileID: 8300000, guid: 157b685c0eec6c848abeaadba76cf234, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
+    Volume: 0.45
+    Distance: 35
+  - Cue: 102
+    Clips:
+    - {fileID: 8300000, guid: 358ed5bf405f6ec4baf6d789afb3df1c, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
+    Volume: 0.22
+    Distance: 40
+  - Cue: 103
+    Clips:
+    - {fileID: 8300000, guid: f5c3a9ff67440ec4195d69cc54a85095, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
+    Volume: 0.75
+    Distance: 100
+  - Cue: 104
+    Clips:
+    - {fileID: 8300000, guid: 6577f7a31d113e6409343fae8a8051bf, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
+    Volume: 0.6
+    Distance: 180
+  - Cue: 105
+    Clips:
+    - {fileID: 8300000, guid: 8199ab1fd3018a847ad1e33ee9b0a408, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
+    Volume: 0.55
+    Distance: 120
+  - Cue: 106
+    Clips:
+    - {fileID: 8300000, guid: 9fe77b09fd8b1144fad8dd2c235241f9, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
+    Volume: 0.7
+    Distance: 160
+  - Cue: 107
+    Clips:
+    - {fileID: 8300000, guid: 8d528c8dcbdce7144b857e2601c40d06, type: 3}
+    - {fileID: 8300000, guid: 4bde3943af1a2a340a0a03307154a6e9, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
+    Volume: 0.55
+    Distance: 600
+  - Cue: 108
+    Clips:
+    - {fileID: 8300000, guid: e9980d91bac4148449ac6dc934c44605, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
+    Volume: 0.3
+    Distance: 1
+  - Cue: 109
+    Clips:
+    - {fileID: 8300000, guid: 281743e76140aed4cace3bfd918f86bf, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
+    Volume: 0.55
+    Distance: 1
+  - Cue: 110
+    Clips:
+    - {fileID: 8300000, guid: ab5e2b13b35dedf4c800d5c1e3b815be, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
+    Volume: 0.3
+    Distance: 1
+  - Cue: 111
+    Clips:
+    - {fileID: 8300000, guid: 454ccc9a17d218a4a829b53fd4f08d5f, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
+    Volume: 0.6
+    Distance: 1
+  - Cue: 114
+    Clips:
+    - {fileID: 8300000, guid: 22298c98253961045b379b58c4fce755, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
+    Volume: 0.6
+    Distance: 35
+  - Cue: 115
+    Clips:
+    - {fileID: 8300000, guid: c29bae5dfd948594aa28cbd3772a48a5, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
+    Volume: 0.5
+    Distance: 35
+  - Cue: 116
+    Clips:
+    - {fileID: 8300000, guid: e1e3ca4c3ba95fb4484e46b4ee777faa, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
+    Volume: 0.45
+    Distance: 35
+  - Cue: 117
+    Clips:
+    - {fileID: 8300000, guid: 48f42b6c2c4307042b1078d0bb3540b0, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
+    Volume: 0.6
+    Distance: 1
+  - Cue: 96
+    Clips:
+    - {fileID: 8300000, guid: c72f9b4b0a848fd459aed7d994794aee, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
+    Volume: 0.4
+    Distance: 12
+  - Cue: 112
+    Clips:
+    - {fileID: 8300000, guid: a709983296e273c498912e40c6be13c4, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
+    Volume: 0.5
+    Distance: 1
+  - Cue: 113
+    Clips:
+    - {fileID: 8300000, guid: 574539fb25ea1f04eabb63dceeadd540, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
+    Volume: 0.4
+    Distance: 1
   Ocean: {fileID: 8300000, guid: 385ddaa5ad1a27148a313c3f3ac90d8b, type: 3}
   Wind: {fileID: 8300000, guid: 78aafbe2a5d44ac499fd27fe5bdf180f, type: 3}
   DeckCreaks: {fileID: 0}

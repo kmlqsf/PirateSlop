@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace PirateSlop
 {
-    public enum SoundCue { Pistol, Cannon, Knife, Reload, ReloadReady, DryFire, Footstep, Jump, Land, Slide, Hurt, Death, Respawn, Wheel, Sail, Barrel, Load, Pickup, Place, Select, Impact, ShipHit, ShipDeath, ShipCollision, Splash, Creak, FishingCast, FishingBite, FishingReel, FishingCatch, FishDrop, FishEat, FishingEscape, HitConfirm, Musket, DoubleBarrel, BulletWood, BulletMetal, BulletStone, BulletFlesh, HookThrow, HookTension, HookRelease, FootstepWood, FootstepWoodRun, FootstepStone, ChestOpen, ChestClose, SwordEquip, SwordSheathe, BottleOpen, BottleClose, WaterSplash, PufferThrow, PufferBurst, SwordfishThrow, SwordfishStick, ShipBell, PufferWarning, UnderwaterBubbles, AirWarning, HolyFlash, WheelReverseRope, WheelIdleLeather, CannonFuse, CannonballDispense, CannonballRoll, CannonballDrop, FireCannonballHeld, IceCannonballHeld, PushCannonballHeld, LockpickStart, LockpickMove, LockpickTurn, LockpickJam, LockpickBreak, LockpickSuccess, DiceSlide, DiceImpact, DiceCup, FlameLight, FlameExtinguish, SabreWood, BottleBreak, BarricadeBreak }
+    public enum SoundCue { Pistol, Cannon, Knife, Reload, ReloadReady, DryFire, Footstep, Jump, Land, Slide, Hurt, Death, Respawn, Wheel, Sail, Barrel, Load, Pickup, Place, Select, Impact, ShipHit, ShipDeath, ShipCollision, Splash, Creak, FishingCast, FishingBite, FishingReel, FishingCatch, FishDrop, FishEat, FishingEscape, HitConfirm, Musket, DoubleBarrel, BulletWood, BulletMetal, BulletStone, BulletFlesh, HookThrow, HookTension, HookRelease, FootstepWood, FootstepWoodRun, FootstepStone, ChestOpen, ChestClose, SwordEquip, SwordSheathe, BottleOpen, BottleClose, WaterSplash, PufferThrow, PufferBurst, SwordfishThrow, SwordfishStick, ShipBell, PufferWarning, UnderwaterBubbles, AirWarning, HolyFlash, WheelReverseRope, WheelIdleLeather, CannonFuse, CannonballDispense, CannonballRoll, CannonballDrop, FireCannonballHeld, IceCannonballHeld, PushCannonballHeld, LockpickStart, LockpickMove, LockpickTurn, LockpickJam, LockpickBreak, LockpickSuccess, DiceSlide, DiceImpact, DiceCup, FlameLight, FlameExtinguish, SabreWood, BottleBreak, BarricadeBreak, SwimStroke, DiveEntry, KnockdownBody, WaterRunSteps, AirJump, LowHealth, DrownDamage, WineDrink, FirearmDraw, FirearmAim, BulletPassby, BulletNearbyImpact, SabreFlesh, HookHitFlesh, FogRelease, VortexLoop, ParrotLaunch, ParrotWings, ParrotExplosion, KrakenAppear, KrakenThreat, KrakenSlam, WhirlpoolNear, UISlider, UpgradeAward, UpgradeHover, UpgradeLegendary, UpgradeEpic, UpgradeRare, CoinSave, PactRevive, GhostWave, MatchDefeat }
 
     [CreateAssetMenu(menuName = "PirateSlop/Audio Bank")]
     public sealed class GameAudioBank : ScriptableObject
@@ -12,6 +12,9 @@ namespace PirateSlop
         {
             public SoundCue Cue;
             public AudioClip[] Clips;
+            public AudioClip[] DistantClips;
+            public float DistantStart = 25f, DistantEnd = 65f;
+            [Range(0f, 1f)] public float DistantVolume = .65f;
             [Range(0f, 1f)] public float Volume = .5f;
             public float Distance = 25f;
         }

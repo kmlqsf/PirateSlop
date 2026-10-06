@@ -5,6 +5,16 @@ using UnityEngine;
 public partial class AdvancedPlayerController
 {
     NetworkPlayer upgradePlayer;
+    float airJumpAudioAt;
+    public bool IsRunningOnWater
+    {
+        get
+        {
+            if (!IsGrounded || IsSwimming || IsKnockedBack || !((equipment != null && equipment.WaterRunning) || waterRunRemaining > 0f)) return false;
+            var sea = OceanSurface.Instance;
+            return sea != null && Mathf.Abs(transform.position.y - sea.Height(transform.position)) < .4f && !HasGround();
+        }
+    }
     bool airJumpUsed, waterReady = true, waterWasSolid, waterUpgradeInitialized;
     float waterRunRemaining, waterRecharge;
     bool Upgrade(UpgradeEffect effect)

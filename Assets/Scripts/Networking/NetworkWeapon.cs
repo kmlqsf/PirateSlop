@@ -357,6 +357,8 @@ namespace PirateSlop.Networking
             if (IsServerInitialized) { weapon.TickAuthority(); loaded.Value = weapon.Loaded; reloading.Value = weapon.Reloading; }
             else if (IsClientInitialized) weapon.SetState(loaded.Value,reloading.Value);
         }
+        public void PublishSabreFlesh(Vector3 point) { if (IsServerInitialized) SabreFleshObserversRpc(point); }
+        [ObserversRpc(RunLocally = true)] void SabreFleshObserversRpc(Vector3 point) => GameAudio.Play(SoundCue.SabreFlesh, point);
         public void PublishAttack(byte action,Vector3 end) => AttackObserversRpc(action,end);
         public void PublishShot(FirearmShot shot) => ShotObserversRpc(shot);
         [ObserversRpc] void ShotObserversRpc(FirearmShot shot)

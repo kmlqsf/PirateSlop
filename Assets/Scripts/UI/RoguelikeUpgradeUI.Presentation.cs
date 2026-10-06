@@ -10,6 +10,7 @@ namespace PirateSlop
         RoguelikeUpgradeView view;
         GameObject ownEventSystem;
         bool pulseEnabled;
+        float nextUpgradeHoverSound;
 
         void EnsurePresentation()
         {
@@ -18,7 +19,12 @@ namespace PirateSlop
             view = new RoguelikeUpgradeView();
             view.Picked = SubmitChoice;
             view.Rerolled = SubmitReroll;
-            view.Hovered = index => { if (!awaiting) focusedCard = index; };
+            view.Hovered = index =>
+            {
+                if (!awaiting) focusedCard = index;
+                if (Time.unscaledTime >= nextUpgradeHoverSound)
+                { GameAudio.Play(SoundCue.UpgradeHover, Vector3.zero, .45f, true); nextUpgradeHoverSound = Time.unscaledTime + .12f; }
+            };
             view.Closed = () => Close(true);
             view.TabChanged = owned =>
             {

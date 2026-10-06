@@ -22,6 +22,7 @@ public partial class AdvancedPlayerController : MonoBehaviour
     public void ApplyKnockdown(Vector3 velocity, float duration)
     {
         if (IsDead || !float.IsFinite(duration) || !float.IsFinite(velocity.sqrMagnitude)) return;
+        bool starting = !IsDowned;
         ActiveCannon?.ReleaseControl();
         ActiveHarpoon?.ReleaseControl();
         lootNetwork?.CancelLootWork();
@@ -30,6 +31,7 @@ public partial class AdvancedPlayerController : MonoBehaviour
         ApplyKnockback(velocity);
         knockdownTime = Mathf.Clamp(duration, 1f, 5f);
         knockbackTime = ladderCooldown = knockdownTime;
+        if (starting) GameAudio.Play(SoundCue.KnockdownBody, transform.position + Vector3.up, 1.5f, IsLocal);
     }
     public bool IsKnockedBack => knockbackTime > 0f;
     public void ApplyKnockback(Vector3 velocity)
@@ -393,7 +395,7 @@ public partial class AdvancedPlayerController : MonoBehaviour
         if (jumpBuffer > 0f && groundGrace > 0f && !crouched && !IsKnockedBack)
         { verticalVelocity = Mathf.Sqrt(jumpHeight * (Upgrade(UpgradeEffect.DeckAcrobat) ? RoguelikeTuning.Current.jumpHeightMultiplier : 1f) * -2 * gravity); jumpBuffer = groundGrace = 0f; grounded = false; }
         else if (command.Jump && !grounded && !airJumpUsed && !crouched && !IsKnockedBack && Upgrade(UpgradeEffect.DoubleJump))
-        { verticalVelocity = Mathf.Sqrt(jumpHeight * -2 * gravity); airJumpUsed = true; jumpBuffer = groundGrace = 0f; }
+        { verticalVelocity = Mathf.Sqrt(jumpHeight * -2 * gravity); airJumpUsed = true; jumpBuffer = groundGrace = 0f; if (IsLocal && Time.unscaledTime >= airJumpAudioAt) { GameAudio.Play(SoundCue.AirJump, transform.position); airJumpAudioAt = Time.unscaledTime + .25f; } }
         verticalVelocity += gravity * dt;
         controller.stepOffset = grounded ? Mathf.Min(.32f, controller.height * .4f) : 0f;
         cannonPushDirection=planar; cannonPushDelta=grounded ? dt : 0; pushedCannons.Clear();
@@ -417,7 +419,7 @@ public partial class AdvancedPlayerController : MonoBehaviour
         float depth = water - (transform.position.y + standingHeight - .15f);
         bool submerged = depth > .1f;
         Breath = Mathf.Clamp(Breath + dt * (submerged ? -1 : 8), 0, breathSeconds);
-        if (Breath <= 0 && health != null && (!networked || GetComponent<PirateSlop.Networking.NetworkPlayer>().IsServerInitialized)) health.Damage(12f * dt);
+        if (Breath <= 0 && health != null && (!networked || GetComponent<PirateSlop.Networking.NetworkPlayer>().IsServerInitialized)) health.Damage(12f * dt, drowning: true);
         var direction = transform.right * command.Move.x + transform.forward * command.Move.y;
         float vertical = command.Rise ? 1f : command.Crouch ? -1f : 0f;
         if (submerged && vertical == 0 && command.Move.y != 0)

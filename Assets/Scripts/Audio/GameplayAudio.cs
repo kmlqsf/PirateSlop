@@ -15,7 +15,9 @@ namespace PirateSlop
         float stepAt, motionAt, creakAt, rudder, sail, elevation;
         bool swimming, grounded, sliding, reloading, loaded, holding, cannonLoaded;
         int selected, slots, lastStepPhase = -1;
-        bool ready, centerArmed;
+        bool ready, centerArmed, eliminated;
+        AudioSource vortexAudio;
+        PirateSlop.Networking.NetworkPlayer networkPlayer;
         float centerRudder;
         float wheelAt, ropeAt, wheelLastMotion, wheelIdleSwitchAt;
         int wheelDirection, wheelIdleVoice = -1;
@@ -25,6 +27,7 @@ namespace PirateSlop
         readonly AudioSource[] wheelIdleSources = new AudioSource[2];
         void Awake()
         {
+            networkPlayer = GetComponent<PirateSlop.Networking.NetworkPlayer>();
             player = GetComponent<AdvancedPlayerController>(); weapon = GetComponent<PirateWeapon>();
             inventory = GetComponent<PlayerInventory>(); hands = GetComponent<CannonHands>();
             ship = GetComponent<ShipController>(); helm = GetComponentInChildren<HelmInteraction>();
@@ -60,6 +63,7 @@ namespace PirateSlop
 
         SoundCue StepCue()
         {
+            if (player != null && player.IsRunningOnWater) return GameAudio.ResolveCue(SoundCue.WaterRunSteps, SoundCue.Footstep);
             var passenger = GetComponent<ShipDeckPassenger>();
             if (passenger != null && passenger.Ship != null)
                 return player.PlanarSpeed > 5f ? SoundCue.FootstepWoodRun : SoundCue.FootstepWood;
@@ -87,6 +91,8 @@ namespace PirateSlop
                     var flooding = platform != null ? platform.GetComponent<ShipFlooding>() : null;
                     GameAudio.Ambience(platform != null ? platform.Speed / Mathf.Max(.01f, platform.MaxSpeed) : 0f, platform != null, flooding != null ? flooding.Level : 0f);
                 }
+                if (ready && player.IsLocal && networkPlayer != null && networkPlayer.Eliminated.Value && !eliminated) GameAudio.Play(SoundCue.MatchDefeat, Vector3.zero, 1f, true);
+                if (networkPlayer != null) eliminated = networkPlayer.Eliminated.Value;
                 if (ready && !player.IsDead)
                 {
                     if (player.IsSwimming && !swimming) GameAudio.Play(SoundCue.WaterSplash, transform.position);
@@ -110,8 +116,9 @@ namespace PirateSlop
                     {
                         if (selected != inventory.SelectedSlot)
                         {
-                            var cue = inventory.HasSabre(inventory.SelectedSlot) ? SoundCue.SwordEquip : inventory.HasSabre(selected) ? SoundCue.SwordSheathe : SoundCue.Select;
+                            var cue = inventory.HasSabre(inventory.SelectedSlot) ? SoundCue.SwordEquip : inventory.HasSabre(selected) ? SoundCue.SwordSheathe : GetComponent<FirearmHandling>()?.Definition != null ? GameAudio.ResolveCue(SoundCue.FirearmDraw, SoundCue.Select) : SoundCue.Select;
                             GameAudio.Play(cue, transform.position, 1f, true);
+                            if (cue == SoundCue.SwordSheathe && GetComponent<FirearmHandling>()?.Definition != null) GameAudio.Play(SoundCue.FirearmDraw, transform.position, 1f, true);
                         }
                         if ((inventory.CannonSlots & ~slots) != 0) GameAudio.Play(SoundCue.Pickup, transform.position, 1f, true);
                     }
@@ -122,6 +129,12 @@ namespace PirateSlop
                 if (weapon != null) { loaded = weapon.Loaded; reloading = weapon.Reloading; }
                 if (inventory != null) { selected = inventory.SelectedSlot; slots = inventory.CannonSlots; }
                 if (hands != null) holding = hands.HasHeldBall;
+            }
+            if (ship != null)
+            {
+                var networkShip = ship.GetComponent<PirateSlop.Networking.NetworkShip>();
+                float vortex = networkShip != null && networkShip.VortexBoostActive.Value && !networkShip.IsSinking ? Mathf.Lerp(.35f, 1f, Mathf.Clamp01(ship.Speed / Mathf.Max(1f, ship.MaxSpeed))) : 0f;
+                GameAudio.Loop(ref vortexAudio, SoundCue.VortexLoop, transform, vortex);
             }
             if (ship != null && helm != null && sails != null && ready)
             {
@@ -224,6 +237,7 @@ namespace PirateSlop
 
         void OnDisable()
         {
+            GameAudio.StopLoop(vortexAudio);
             foreach (var source in wheelIdleSources) if (source != null) source.Stop();
             wheelIdleVoice = -1;
             wheelHeld = false;

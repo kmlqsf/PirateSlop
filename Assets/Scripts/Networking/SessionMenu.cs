@@ -325,12 +325,17 @@ namespace PirateSlop.Networking
                 PirateHudStyle.Fill(new Rect(point.x-1.5f,point.y-1.5f,3,3),GUI.enabled?PirateHudStyle.Paper:PirateHudStyle.Muted);
             }
         }
+        float nextSliderAudio;
         float MenuVolume(float x,float y,float width,string label,float value,string key)
         {
             MenuText(new Rect(x,y,width,28),label+"  "+Mathf.RoundToInt(value*100)+"%",true);
             PirateHudStyle.Brush(new Rect(x,y+42,width*value,3),menuGold,true);
             float next=GUI.HorizontalSlider(new Rect(x,y+35,width,22),value,0f,1f,menuSlider,menuThumb);
-            if(!Mathf.Approximately(value,next)) PlayerPrefs.SetFloat(key,next);
+            if(!Mathf.Approximately(value,next))
+            {
+                PlayerPrefs.SetFloat(key,next);
+                if (Time.unscaledTime >= nextSliderAudio) { GameAudio.Play(SoundCue.UISlider, Vector3.zero, .35f, true); nextSliderAudio = Time.unscaledTime + .1f; }
+            }
             return next;
         }
         void ReleaseMenu()

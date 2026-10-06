@@ -20,6 +20,7 @@ namespace PirateSlop
             remaining = RoguelikeTuning.Current.ghostRange;
             transform.position = origin;
             if (Application.isBatchMode) return;
+            GameAudio.Play(SoundCue.GhostWave, origin);
             material = new Material(Resources.Load<Material>("FirearmGlow"));
             arc = gameObject.AddComponent<LineRenderer>();
             arc.sharedMaterial = material; arc.useWorldSpace = true; arc.positionCount = 17;

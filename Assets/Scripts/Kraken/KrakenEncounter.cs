@@ -35,6 +35,7 @@ namespace PirateSlop
 
             SpawnTentacles();
             attackSystem.Initialize(targetShip, tentacles);
+            GameAudio.Play(SoundCue.KrakenAppear, ship.position);
         }
 
         void SpawnTentacles()
