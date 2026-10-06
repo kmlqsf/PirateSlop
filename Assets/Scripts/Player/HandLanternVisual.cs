@@ -45,7 +45,12 @@ namespace PirateSlop
 
         public void SetLit(bool lit, bool emitLight)
         {
-            if (Light != null) Light.enabled = lit && emitLight && isActiveAndEnabled;
+            if (Light != null)
+            {
+                Light.enabled = lit && emitLight && isActiveAndEnabled;
+                Light.renderMode = LightRenderMode.ForcePixel;
+            }
+            if (Held && Glass != null) Glass.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
             if (applied && lastLit == lit) return;
             applied = true;
             lastLit = lit;
@@ -59,7 +64,7 @@ namespace PirateSlop
         void LateUpdate()
         {
             if (Light != null && Light.enabled)
-                Light.intensity = ShipV3Features.LanternIntensity + .035f * Mathf.Sin(Time.time * 4.7f) + .025f * Mathf.Sin(Time.time * 7.3f);
+                Light.intensity = ShipV3Features.LanternIntensity + .01f * Mathf.Sin(Time.time * 2.1f) + .008f * Mathf.Sin(Time.time * 3.3f);
             if (Swing == null || !Held) return;
             float dt = Mathf.Clamp(Time.deltaTime, .001f, .05f);
             Vector3 point = transform.position;

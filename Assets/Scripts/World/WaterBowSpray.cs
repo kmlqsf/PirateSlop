@@ -6,8 +6,8 @@ namespace PirateSlop
     [DefaultExecutionOrder(1060), DisallowMultipleComponent]
     public sealed class WaterBowSpray : MonoBehaviour
     {
-        const int MaximumParticles = 1200, ReturnBudget = 128;
-        const float EmissionRate = 600f, MaximumDistance = 140f, ReturnInterval = .1f;
+        const int MaximumParticles = 4800, ReturnBudget = 256;
+        const float EmissionRate = 2400f, MaximumDistance = 140f, ReturnInterval = .1f;
         public static WaterBowSpray Instance { get; private set; }
         public int ActiveCount => particles != null ? particles.particleCount : 0;
         public int BurstCount { get; private set; }
@@ -19,6 +19,7 @@ namespace PirateSlop
         Material sprayMaterial;
         OceanSurface ocean;
         Camera focusCamera;
+        WaterSplashContacts contacts;
         readonly ParticleSystem.Particle[] returned = new ParticleSystem.Particle[MaximumParticles];
         float available, budgetAt, burstAt, returnAt;
         int windowBursts, returnCursor;
@@ -49,7 +50,7 @@ namespace PirateSlop
             }
             Instance = this;
             ocean = OceanSurface.Instance;
-            available = 112f;
+            available = 720f;
             budgetAt = burstAt = returnAt = Time.time;
             windowBursts = returnCursor = BurstCount = BowBurstCount = 0;
             reflection = null;
@@ -77,7 +78,7 @@ namespace PirateSlop
             drag.limit = 100f;
             drag.dampen = 0f;
             drag.drag = .25f;
-            drag.multiplyDragByParticleVelocity = true;
+            drag.multiplyDragByParticleVelocity = false;
             drag.multiplyDragByParticleSize = false;
             var fade = new Gradient();
             fade.SetKeys(
@@ -105,6 +106,9 @@ namespace PirateSlop
                 ParticleSystemVertexStream.Position, ParticleSystemVertexStream.Color, ParticleSystemVertexStream.UV });
             UpdateReflection();
             particles.Play(false);
+            contacts = GetComponent<WaterSplashContacts>();
+            if (contacts == null) contacts = gameObject.AddComponent<WaterSplashContacts>();
+            contacts.enabled = true;
         }
 
         public void EmitImpact(Vector3 position, Vector3 waterVelocity, Vector3 relativeHullVelocity, Vector3 outward, float impact, float strength)
@@ -124,7 +128,7 @@ namespace PirateSlop
                 distanceFade = 1f - Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(85f, MaximumDistance, distance));
             }
             float now = Time.time;
-            available = Mathf.Min(112f, available + Mathf.Max(0f, now - budgetAt) * EmissionRate);
+            available = Mathf.Min(720f, available + Mathf.Max(0f, now - budgetAt) * EmissionRate);
             budgetAt = now;
             if (now - burstAt >= .1f)
             {
@@ -176,33 +180,40 @@ namespace PirateSlop
             if (distance >= MaximumDistance) return;
             float fade = 1f - Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(85f, MaximumDistance, distance));
             float now = Time.time;
-            available = Mathf.Min(180f, available + Mathf.Max(0f, now - budgetAt) * EmissionRate);
+            available = Mathf.Min(720f, available + Mathf.Max(0f, now - budgetAt) * EmissionRate);
             budgetAt = now;
             if (now - burstAt >= .1f) { burstAt = now; windowBursts = 0; }
-            if (windowBursts >= 2) return;
+            if (windowBursts >= 4) return;
             int count = Mathf.Min(Mathf.CeilToInt(impact.Drops * fade), Mathf.FloorToInt(available), MaximumParticles - particles.particleCount);
             if (count <= 0) return;
+            bool projectile = impact.Kind == WaterImpactKind.Projectile;
             Vector3 normal = impact.Normal;
+            Vector3 liftDirection = projectile ? Vector3.Lerp(Vector3.up, normal, .3f).normalized : normal;
             Vector3 forward = impact.Tangent.sqrMagnitude > .001f ? impact.Tangent.normalized : Vector3.ProjectOnPlane(Vector3.forward, normal).normalized;
             Vector3 side = Vector3.Cross(normal, forward).normalized;
             float footprint = Mathf.Clamp(impact.Radius, .06f, 1.6f);
             for (int i = 0; i < count; i++)
             {
+                bool plume = projectile && i % 3 == 0;
                 float angle = Next() * Mathf.PI * 2f;
                 Vector3 radial = forward * Mathf.Cos(angle) + side * Mathf.Sin(angle);
-                float crown = Mathf.Lerp(.8f, 2.5f, Mathf.Clamp01(impact.Strength));
-                Vector3 velocity = impact.WaterVelocity + normal * impact.Lift * Mathf.Lerp(.65f, 1.2f, Next())
-                    + forward * impact.Drift * Mathf.Lerp(.55f, 1.15f, Next()) + radial * crown;
-                float size = Mathf.Lerp(.018f, .055f, Next()) * Mathf.Lerp(.8f, 1.25f, Mathf.Clamp01(impact.Radius));
+                float crown = Mathf.Lerp(projectile ? 3f : 1.5f, projectile ? 9f : 4f, Mathf.Clamp01(impact.Strength));
+                Vector3 velocity = impact.WaterVelocity + liftDirection * impact.Lift * Mathf.Lerp(plume ? .9f : .65f, 1.2f, Next())
+                    + forward * impact.Drift * Mathf.Lerp(.55f, 1.15f, Next()) * (plume ? .35f : 1f) + radial * crown * (plume ? .3f : 1f);
+                if (projectile) velocity.y = Mathf.Max(impact.Lift * .85f, velocity.y);
+                float size = projectile ? (plume ? Mathf.Lerp(.09f, .16f, Next()) : Mathf.Lerp(.035f, .075f, Next()))
+                    : Mathf.Lerp(.018f, .055f, Next()) * Mathf.Lerp(.8f, 1.25f, Mathf.Clamp01(impact.Radius));
                 var emit = new ParticleSystem.EmitParams {
-                    position = impact.Position + normal * .065f + radial * footprint * Mathf.Lerp(.12f, .55f, Next()),
-                    velocity = Vector3.ClampMagnitude(velocity, 14f),
+                    position = impact.Position + normal * .065f + Vector3.up * (projectile ? .08f : 0f) + radial * footprint * Mathf.Lerp(.12f, .55f, Next()),
+                    velocity = Vector3.ClampMagnitude(velocity, 26f),
                     startLifetime = impact.Life * Mathf.Lerp(.75f, 1.1f, Next()),
                     startSize = size,
-                    startColor = new Color(.82f, .98f, 1f, Mathf.Lerp(.35f, .65f, Next())),
+                    startColor = plume ? new Color(.98f, 1f, 1f, 1f) : new Color(.82f, .98f, 1f, Mathf.Lerp(projectile ? .45f : .35f, .65f, Next())),
                     randomSeed = randomState == 0 ? 1u : randomState
                 };
                 particles.Emit(emit, 1);
+                if (contacts != null && i % Mathf.Max(1, Mathf.CeilToInt(count / 64f)) == 0)
+                    contacts.Track(emit.position, emit.velocity, emit.startLifetime, emit.startSize, emit.randomSeed);
             }
             available -= count;
             windowBursts++;
@@ -213,16 +224,18 @@ namespace PirateSlop
         {
             if (particles == null) return;
             UpdateReflection();
+            int count = particles.GetParticles(returned);
+            bool changed = contacts != null && contacts.Sample(returned, count);
+            if (changed) particles.SetParticles(returned, count);
             float now = Time.time;
             if (now - returnAt < ReturnInterval) return;
             returnAt = now;
             if (ocean == null || !ocean.isActiveAndEnabled) ocean = OceanSurface.Instance;
             if (ocean == null) return;
             UpdateFocus();
-            int count = particles.GetParticles(returned);
             if (count == 0) { returnCursor = 0; return; }
             int checkedSurface = 0, visited = 0;
-            bool changed = false;
+            changed = false;
             while (visited < count && checkedSurface < ReturnBudget)
             {
                 int index = (returnCursor + visited) % count;
@@ -289,6 +302,7 @@ namespace PirateSlop
             reflection = null;
             ocean = null;
             focusCamera = null;
+            if (contacts != null) contacts.enabled = false;
         }
 
         static void Release(Object value)

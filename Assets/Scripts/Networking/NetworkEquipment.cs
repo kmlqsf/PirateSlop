@@ -431,12 +431,15 @@ namespace PirateSlop.Networking
         }
         void DrawScope()
         {
+            if (Event.current.type != EventType.Repaint) return;
             if(scopeMask==null)
             {
                 scopeMask=new Texture2D(256,256,TextureFormat.RGBA32,false);
+                var pixels = new Color32[256 * 256];
                 for(int y=0;y<256;y++) for(int x=0;x<256;x++)
-                { float radius=Vector2.Distance(new Vector2(x+.5f,y+.5f),new Vector2(128,128))/128; scopeMask.SetPixel(x,y,new Color(0,0,0,Mathf.SmoothStep(0,1,Mathf.InverseLerp(.94f,1,radius)))); }
-                scopeMask.Apply();
+                { float radius=Vector2.Distance(new Vector2(x+.5f,y+.5f),new Vector2(128,128))/128; pixels[y * 256 + x] = new Color32(0, 0, 0, (byte)Mathf.RoundToInt(255f * Mathf.SmoothStep(0,1,Mathf.InverseLerp(.94f,1,radius)))); }
+                scopeMask.SetPixels32(pixels);
+                scopeMask.Apply(false, true);
             }
             int depth=GUI.depth; GUI.depth=-50;
             Color color=GUI.color; GUI.color=Color.black;

@@ -12,8 +12,10 @@ Material:
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
+  - _CLOUDS_MICRO_EROSION
   - _OUTPUT_CLOUDS_DEPTH
   - _PERCEPTUAL_BLENDING
+  - _PIRATESLOP_CLEAR_CLOUDS
   m_InvalidKeywords:
   - _SUNDISK_HIGH_QUALITY
   m_LightmapFlags: 4
@@ -117,6 +119,13 @@ Material:
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
     - _BumpScale: 1
+    - _ClearCloudCellSize: 7000
+    - _ClearCloudCoverageEnd: 0.76
+    - _ClearCloudCoverageStart: 0.54
+    - _ClearCloudFarFadeEnd: 28000
+    - _ClearCloudFarFadeStart: 12000
+    - _ClearCloudSeed: 19
+    - _ClearClouds: 1
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
     - _CloudNearPlane: 2794.211
@@ -179,6 +188,7 @@ Material:
     - _ZWrite: 1
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
+    - _ClearCloudWorldOffset: {r: 0, g: 0, b: 0, a: 0}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _GroundColor: {r: 0.36899996, g: 0.34899998, b: 0.34099993, a: 1}

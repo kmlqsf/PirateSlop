@@ -41,6 +41,14 @@ Shader "Hidden/Sky/VolumetricClouds"
         [HideInInspector] _NormalizationFactor("Normalization Factor", Float) = 0.7854
         [HideInInspector] _AccumulationFactor("Accumulation Factor", Float) = 0.95
         [HideInInspector] _CloudNearPlane("Cloud Near Plane", Float) = 0.3
+        [Toggle(_PIRATESLOP_CLEAR_CLOUDS)] _ClearClouds("Clear Tropical Clouds", Float) = 0
+        _ClearCloudCellSize("Cloud Group Spacing", Float) = 7000
+        _ClearCloudSeed("Cloud Group Seed", Float) = 19
+        _ClearCloudCoverageStart("Cloud Weather Threshold", Range(0, 1)) = 0.54
+        _ClearCloudCoverageEnd("Cloud Weather Full Coverage", Range(0, 1)) = 0.76
+        _ClearCloudFarFadeStart("Cloud Horizon Fade Start", Float) = 12000
+        _ClearCloudFarFadeEnd("Cloud Horizon Fade End", Float) = 28000
+        [HideInInspector] _ClearCloudWorldOffset("Cloud World Offset", Vector) = (0, 0, 0, 0)
     }
 
     SubShader
@@ -94,6 +102,7 @@ Shader "Hidden/Sky/VolumetricClouds"
             #pragma multi_compile_local_fragment _ _PHYSICALLY_BASED_SUN
             #pragma multi_compile_local_fragment _ _PERCEPTUAL_BLENDING
 
+            #pragma multi_compile_local_fragment _ _PIRATESLOP_CLEAR_CLOUDS
             #include "./VolumetricClouds.hlsl"
 
             #define RAW_FAR_CLIP_THRESHOLD 1e-6
@@ -435,6 +444,7 @@ Shader "Hidden/Sky/VolumetricClouds"
             float4 _BlitTexture_TexelSize;
         #endif
 
+            #pragma multi_compile_local_fragment _ _PIRATESLOP_CLEAR_CLOUDS
             #include "./VolumetricCloudsShadows.hlsl"
             ENDHLSL
         }
@@ -477,6 +487,7 @@ Shader "Hidden/Sky/VolumetricClouds"
             float4 _BlitTexture_TexelSize;
         #endif
 
+            #pragma multi_compile_local_fragment _ _PIRATESLOP_CLEAR_CLOUDS
             #include "./VolumetricCloudsShadows.hlsl"
             ENDHLSL
         }
@@ -676,6 +687,7 @@ Shader "Hidden/Sky/VolumetricClouds"
 
             #define OPAQUE_FOG_PASS
 
+            #pragma multi_compile_local_fragment _ _PIRATESLOP_CLEAR_CLOUDS
             #include "./VolumetricClouds.hlsl"
 
         #ifdef PHYSICALLY_BASED_SKY

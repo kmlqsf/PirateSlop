@@ -176,7 +176,7 @@ namespace PirateSlop.Harpoon
 
         public bool InRange(AdvancedPlayerController player)
         {
-            if (player == null || player.IsDead) return false;
+            if (player == null || player.IsDead || player.IsFrozen) return false;
             return Vector3.Distance(player.transform.position, transform.position) <= 3.8f;
         }
 

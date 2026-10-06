@@ -11,10 +11,25 @@ namespace PirateSlop.Networking
         public static readonly System.Collections.Generic.List<NetworkLootChest> ClientChests = new();
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         static void ResetClientChests() => ClientChests.Clear();
-        public override void OnStartClient() { base.OnStartClient(); WaterImpactBody.Ensure(gameObject); if (!ClientChests.Contains(this)) ClientChests.Add(this); }
+        public override void OnStartClient()
+        {
+            base.OnStartClient();
+            WaterImpactBody.Ensure(gameObject);
+            if (!ClientChests.Contains(this)) ClientChests.Add(this);
+            lidProgress = opened.Value ? 1f : 0f;
+            lidOpened = opened.Value;
+            ApplyLidRotation();
+        }
         public override void OnStartServer() { base.OnStartServer(); WaterImpactBody.Ensure(gameObject); ServerChests.Add(this); }
         public LootCatalog Catalog;
         public Transform Lid;
+        [Min(.05f)] public float LidOpenSeconds = 1.1f;
+        public float LidOpenAngle = 105f;
+        Quaternion lidClosedRotation;
+        float lidProgress;
+        bool lidOpened;
+        AudioSource lidSound;
+        void Awake() { if (Lid != null) lidClosedRotation = Lid.localRotation; }
         readonly SyncVar<bool> opened = new();
         public bool Opened => opened.Value;
         readonly SyncList<ChestLootStack> contents = new();
@@ -53,7 +68,18 @@ namespace PirateSlop.Networking
         void LateUpdate()
         {
             UpdateOceanLoot();
-            if (Lid != null) Lid.localRotation = Quaternion.Euler(opened.Value ? 105f : 0f, 0f, 0f);
+            if (Lid == null) return;
+            if (opened.Value != lidOpened)
+            {
+                lidOpened = opened.Value;
+                if (lidOpened && IsClientInitialized) GameAudio.Attached(ref lidSound, SoundCue.ChestLidCreak, Lid);
+            }
+            lidProgress = Mathf.MoveTowards(lidProgress, lidOpened ? 1f : 0f, Time.deltaTime / Mathf.Max(.05f, LidOpenSeconds));
+            ApplyLidRotation();
+        }
+        void ApplyLidRotation()
+        {
+            if (Lid != null) Lid.localRotation = lidClosedRotation * Quaternion.Euler(LidOpenAngle * Mathf.SmoothStep(0f, 1f, lidProgress), 0f, 0f);
         }
     }
 }

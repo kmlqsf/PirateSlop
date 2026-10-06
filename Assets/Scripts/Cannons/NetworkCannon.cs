@@ -306,7 +306,7 @@ namespace PirateSlop.Networking
         public bool TryFire(NetworkPlayer player, int index)
         {
             var cannon = Cannon(index);
-            if (!IsServerInitialized || cannon == null || player == null || player.Motor.IsDead || player.Motor.IsSwimming ||
+            if (!IsServerInitialized || cannon == null || player == null || player.Motor.IsDead || player.Motor.IsFrozen || player.Motor.IsSwimming ||
                 player.Motor.IsClimbing || cannon.Operator != player.Motor || !cannon.InBreechRange(player.Motor)) return false;
             cannon.Fire(player.gameObject);
             return cannon.IsIgnited || cannon.IsFireQueued;

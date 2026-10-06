@@ -36,6 +36,11 @@ namespace PirateSlop.Ships
             nextShadowSelection = Time.unscaledTime + .2f;
             Light nearest = null;
             float best = 64f;
+            if (shadowLight != null && shadowLight.isActiveAndEnabled)
+            {
+                float distance = (shadowLight.transform.position - view.transform.position).sqrMagnitude;
+                if (distance < 64f) { nearest = shadowLight; best = distance * .7f; }
+            }
             foreach (var budget in active)
             {
                 budget.DistanceSquared = (budget.transform.position - view.transform.position).sqrMagnitude;

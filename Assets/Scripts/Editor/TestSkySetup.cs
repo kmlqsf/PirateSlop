@@ -70,21 +70,23 @@ namespace PirateSlop.Editor
             sky.updatePeriod.Override(.25f);
             var fog = Component<Fog>(profile);
             fog.enabled.Override(true);
-            fog.meanFreePath.Override(4500f);
-            fog.maximumHeight.Override(120f);
+            fog.meanFreePath.Override(2800f);
+            fog.maximumHeight.Override(100f);
+            fog.colorMode.Override(Fog.FogColorMode.SkyColor);
+            fog.tint.Override(new Color(.94f, .98f, 1f));
             var clouds = Component<VolumetricClouds>(profile);
             clouds.cloudPreset = VolumetricClouds.CloudPresets.Sparse;
             clouds.cloudPreset = VolumetricClouds.CloudPresets.Custom;
             clouds.state.Override(true);
             clouds.localClouds.Override(false);
-            clouds.densityMultiplier.Override(.38f);
+            clouds.densityMultiplier.Override(.34f);
             clouds.bottomAltitude.Override(2800f);
             clouds.altitudeRange.Override(1200f);
             clouds.globalSpeed.Override(10f);
             clouds.globalOrientation.Override(35f);
             clouds.numPrimarySteps.Override(48);
             clouds.numLightSteps.Override(4);
-            clouds.shadows.Override(false);
+            ConfigureClearWeather(profile);
             ConfigureLook(profile, pipeline, renderer);
             EditorUtility.SetDirty(profile);
             foreach (var component in profile.components) EditorUtility.SetDirty(component);
@@ -113,6 +115,52 @@ namespace PirateSlop.Editor
             finally { UnityEngine.Object.DestroyImmediate(root); }
             AssetDatabase.SaveAssets();
             Debug.Log("Test sky prepared for the ordinary environment test: F8 day / sunset / moonlit night.");
+        }
+
+        public static void ConfigureClearWeather(VolumeProfile profile)
+        {
+            var fog = Component<Fog>(profile);
+            fog.enabled.Override(true);
+            fog.colorMode.Override(Fog.FogColorMode.SkyColor);
+            fog.tint.Override(new Color(.94f, .98f, 1f));
+            fog.meanFreePath.Override(2800f);
+            fog.baseHeight.Override(0f);
+            fog.maximumHeight.Override(100f);
+            var clouds = Component<VolumetricClouds>(profile);
+            clouds.cloudPreset = VolumetricClouds.CloudPresets.Custom;
+            clouds.densityMultiplier.Override(.34f);
+            clouds.shapeScale.Override(6f);
+            clouds.shapeFactor.Override(.75f);
+            clouds.erosionScale.Override(90f);
+            clouds.erosionFactor.Override(.5f);
+            clouds.microErosion.Override(true);
+            clouds.microErosionFactor.Override(.28f);
+            clouds.microErosionScale.Override(200f);
+            clouds.numPrimarySteps.Override(64);
+            clouds.numLightSteps.Override(6);
+            clouds.bottomAltitude.Override(2800f);
+            clouds.altitudeRange.Override(1200f);
+            clouds.shadows.Override(true);
+            clouds.shadowResolution.Override(VolumetricClouds.CloudShadowResolution.Medium256);
+            clouds.shadowOpacity.Override(.25f);
+            clouds.shadowOpacityFallback.Override(0f);
+            clouds.shadowDistance.Override(7000f);
+            var material = AssetDatabase.LoadAssetAtPath<Material>(SettingsPath + "/TestSkyClouds.mat");
+            if (material != null)
+            {
+                material.SetFloat("_ClearClouds", 1f);
+                material.SetFloat("_ClearCloudCellSize", 7000f);
+                material.SetFloat("_ClearCloudSeed", 19f);
+                material.SetFloat("_ClearCloudCoverageStart", .54f);
+                material.SetFloat("_ClearCloudCoverageEnd", .76f);
+                material.SetFloat("_ClearCloudFarFadeStart", 12000f);
+                material.SetFloat("_ClearCloudFarFadeEnd", 28000f);
+                material.EnableKeyword("_PIRATESLOP_CLEAR_CLOUDS");
+                material.EnableKeyword("_CLOUDS_MICRO_EROSION");
+                EditorUtility.SetDirty(material);
+            }
+            foreach (var component in profile.components) EditorUtility.SetDirty(component);
+            EditorUtility.SetDirty(profile);
         }
 
         public static void ConfigureLook(VolumeProfile profile, UniversalRenderPipelineAsset pipeline, UniversalRendererData renderer)

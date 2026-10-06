@@ -75,6 +75,7 @@
 | [Assets/Resources/EnvironmentTest/UnderwaterImmersion.shader](<../../Assets/Resources/EnvironmentTest/UnderwaterImmersion.shader>) | Шейдер; Мир, острова и океан, Тестовая карта и водоворот |
 | [Assets/Resources/EnvironmentTest/UnderwaterSuspension.shader](<../../Assets/Resources/EnvironmentTest/UnderwaterSuspension.shader>) | Шейдер; Мир, острова и океан, Тестовая карта и водоворот |
 | [Assets/Resources/EnvironmentTest/WaterBowSpray.shader](<../../Assets/Resources/EnvironmentTest/WaterBowSpray.shader>) | Шейдер; Мир, острова и океан, Тестовая карта и водоворот |
+| [Assets/Resources/EnvironmentTest/WaterWetMark.shader](<../../Assets/Resources/EnvironmentTest/WaterWetMark.shader>) | Шейдер; Мир, острова и океан, Тестовая карта и водоворот |
 
 ## Assets/Resources/Ships
 
@@ -89,7 +90,7 @@
 
 | Файл | Краткое описание |
 | --- | --- |
-| [Assets/Resources/Underwater/Bubbles.mat](<../../Assets/Resources/Underwater/Bubbles.mat>) | Материал Unity |
+| [Assets/Resources/Underwater/Bubbles.mat](<../../Assets/Resources/Underwater/Bubbles.mat>) | Материал Unity; Мир, острова и океан |
 | [Assets/Resources/Underwater/Fish.prefab](<../../Assets/Resources/Underwater/Fish.prefab>) | Префаб Unity |
 | [Assets/Resources/Underwater/Seabed.mat](<../../Assets/Resources/Underwater/Seabed.mat>) | Материал Unity |
 | [Assets/Resources/Underwater/Silt.mat](<../../Assets/Resources/Underwater/Silt.mat>) | Материал Unity |
@@ -98,10 +99,16 @@
 
 | Файл | Краткое описание |
 | --- | --- |
+| [Assets/Resources/VFX/PlayerFreezeScreen.mat](<../../Assets/Resources/VFX/PlayerFreezeScreen.mat>) | Материал Unity; Пушки, ядра и лафеты |
+| [Assets/Resources/VFX/PlayerFreezeScreen.shader](<../../Assets/Resources/VFX/PlayerFreezeScreen.shader>) | Шейдер; Пушки, ядра и лафеты |
 | [Assets/Resources/VFX/ShipFireEmber.mat](<../../Assets/Resources/VFX/ShipFireEmber.mat>) | Материал Unity; Пушки, ядра и лафеты |
 | [Assets/Resources/VFX/ShipFireFlame.mat](<../../Assets/Resources/VFX/ShipFireFlame.mat>) | Материал Unity; Пушки, ядра и лафеты |
 | [Assets/Resources/VFX/ShipFireSmoke.mat](<../../Assets/Resources/VFX/ShipFireSmoke.mat>) | Материал Unity; Пушки, ядра и лафеты |
 | [Assets/Resources/VFX/ShipFireVfx.prefab](<../../Assets/Resources/VFX/ShipFireVfx.prefab>) | Префаб Unity; Пушки, ядра и лафеты |
+| [Assets/Resources/VFX/ShipIce.shader](<../../Assets/Resources/VFX/ShipIce.shader>) | Шейдер; Пушки, ядра и лафеты |
+| [Assets/Resources/VFX/ShipIceCrystal.mat](<../../Assets/Resources/VFX/ShipIceCrystal.mat>) | Материал Unity; Пушки, ядра и лафеты |
+| [Assets/Resources/VFX/ShipIceCrystalMesh.asset](<../../Assets/Resources/VFX/ShipIceCrystalMesh.asset>) | Настройки или данные Unity; Пушки, ядра и лафеты |
+| [Assets/Resources/VFX/ShipIceShell.mat](<../../Assets/Resources/VFX/ShipIceShell.mat>) | Материал Unity; Пушки, ядра и лафеты |
 
 ## Assets/Resources/Whale
 

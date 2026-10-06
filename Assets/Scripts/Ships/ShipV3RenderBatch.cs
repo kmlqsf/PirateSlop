@@ -43,13 +43,14 @@ namespace PirateSlop.Ships
             trackedSources = Sources;
             visible = new bool[trackedSources.Length];
             bool allVisible = true;
+            var owner = GetComponentInParent<ShipDestruction>();
             for (int i = 0; i < trackedSources.Length; i++)
             {
                 var source = trackedSources[i];
                 visible[i] = source != null && source.gameObject.activeInHierarchy && !source.forceRenderingOff;
                 allVisible &= visible[i];
                 if (source != null) source.enabled = false;
-                var section = source != null ? source.GetComponentInParent<ShipDamageSection>() : null;
+                var section = source != null ? owner != null ? owner.SectionFor(source) : source.GetComponentInParent<ShipDamageSection>() : null;
                 if (section != null && trackedSections.Add(section)) section.VisualChanged += Invalidate;
             }
             outputRenderer.sharedMaterial = SharedMaterial;

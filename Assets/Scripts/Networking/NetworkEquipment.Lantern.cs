@@ -45,8 +45,9 @@ namespace PirateSlop.Networking
         {
             if (Item != InventoryItem.Lantern) return;
             bool lit = LanternLit(inventory.SelectedSlot);
-            if (viewLantern != null) viewLantern.SetLit(lit, false);
-            if (worldLantern != null) worldLantern.SetLit(lit, Active);
+            bool first = IsOwner && !motor.IsThirdPerson;
+            if (viewLantern != null) viewLantern.SetLit(lit, Active && first);
+            if (worldLantern != null) worldLantern.SetLit(lit, Active && !first);
         }
     }
 }

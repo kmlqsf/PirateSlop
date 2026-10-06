@@ -7,17 +7,31 @@ namespace PirateSlop.Networking
     {
         readonly SyncVar<float> health = new(-1f);
         readonly SyncVar<bool> burning = new();
+        readonly SyncVar<uint> frozenUntil = new();
         float burnUntil, nextBurnDamage, wetUntil;
         GameObject fireAttacker;
         ShipFireVfx fireVisual;
         public bool IsBurning => burning.Value;
         CombatHealth target;
-        void Awake() { target = GetComponent<CombatHealth>(); health.OnChange += HealthChanged; }
+        public float FrozenSeconds => frozenUntil.Value == 0 || TimeManager == null ? 0f : Mathf.Max(0, unchecked((int)(frozenUntil.Value - TimeManager.Tick))) * (float)TimeManager.TickDelta;
+        public bool IsFrozen => FrozenSeconds > 0f;
+        void Awake() { target = GetComponent<CombatHealth>(); health.OnChange += HealthChanged; frozenUntil.OnChange += FreezeChanged; }
         public override void OnStartServer() { base.OnStartServer(); Publish(target.Current); }
         public override void OnStartClient()
         {
             base.OnStartClient();
             if (!IsServerInitialized && health.Value >= 0) target.ApplySnapshot(health.Value, false);
+            if (IsFrozen) GetComponent<AdvancedPlayerController>()?.BeginFreeze();
+        }
+        public void Freeze(float seconds = 1f)
+        {
+            if (!IsServerInitialized || target == null || target.IsDead || !float.IsFinite(seconds) || seconds <= 0f) return;
+            frozenUntil.Value = TimeManager.Tick + (uint)Mathf.CeilToInt(seconds / (float)TimeManager.TickDelta);
+            GetComponent<AdvancedPlayerController>()?.BeginFreeze();
+        }
+        void FreezeChanged(uint previous, uint next, bool asServer)
+        {
+            if (IsFrozen) GetComponent<AdvancedPlayerController>()?.BeginFreeze();
         }
         public void Publish(float value) { if (IsServerInitialized) health.Value = value; }
 
@@ -43,6 +57,7 @@ namespace PirateSlop.Networking
         void Update()
         {
             if (!IsSpawned) return;
+            if (IsServerInitialized && frozenUntil.Value != 0 && (!IsFrozen || target.IsDead)) frozenUntil.Value = 0;
             if (IsServerInitialized && burning.Value)
             {
                 var motor = GetComponent<AdvancedPlayerController>();
@@ -67,6 +82,7 @@ namespace PirateSlop.Networking
             if (fireVisual != null) Destroy(fireVisual.gameObject);
             fireVisual = null;
             fireAttacker = null;
+            if (IsServerInitialized) frozenUntil.Value = 0;
             if (IsServerInitialized) burning.Value = false;
             base.OnStopNetwork();
         }
@@ -97,6 +113,7 @@ namespace PirateSlop.Networking
         {
             if (!IsServerInitialized) return;
             Extinguish();
+            frozenUntil.Value = 0;
             RespawnObserversRpc(position, yaw);
             Publish(target.Current);
         }

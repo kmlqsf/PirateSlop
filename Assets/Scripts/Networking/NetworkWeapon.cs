@@ -132,6 +132,7 @@ namespace PirateSlop.Networking
         }
         bool DropSelectedAuthority(bool wholeSlot = false)
         {
+            if (GetComponent<AdvancedPlayerController>().IsFrozen) return false;
             var grenade = GetComponent<NetworkHolyGrenadeHands>();
             if (grenade != null && grenade.Primed) return grenade.DropPrimed();
             var motor = GetComponent<AdvancedPlayerController>();
@@ -211,7 +212,7 @@ namespace PirateSlop.Networking
         [ServerRpc]
         void SelectSlotServerRpc(int slot)
         {
-            if (inventory == null || slot < 0 || slot >= PlayerInventory.SlotCount) return;
+            if (inventory == null || GetComponent<AdvancedPlayerController>().IsFrozen || slot < 0 || slot >= PlayerInventory.SlotCount) return;
             selectedSlot.Value = slot; inventory.SetSelection(slot);
         }
         public void UseChest(NetworkObject target, int slot = -1, bool swap = false) => UseChestServerRpc(target, slot, swap, inventory.SelectedSlot, inventory.ItemAt(inventory.SelectedSlot), inventory.ItemCount(inventory.SelectedSlot));
@@ -276,6 +277,7 @@ namespace PirateSlop.Networking
         }
         public bool CanReach(Vector3 point, Transform target)
         {
+            if (GetComponent<AdvancedPlayerController>().IsFrozen) return false;
             if (Vector3.Distance(transform.position, point) > 5f) return false;
             Vector3 origin = transform.position + Vector3.up * 1.5f, delta = point - origin;
             foreach (var hit in Physics.RaycastAll(origin, delta.normalized, delta.magnitude, ~0, QueryTriggerInteraction.Ignore))
@@ -323,7 +325,7 @@ namespace PirateSlop.Networking
         }
         public bool SelectServerSlot(int slot)
         {
-            if (!IsServerInitialized || inventory == null || slot < 0 || slot >= PlayerInventory.SlotCount) return false;
+            if (!IsServerInitialized || inventory == null || GetComponent<AdvancedPlayerController>().IsFrozen || slot < 0 || slot >= PlayerInventory.SlotCount) return false;
             selectedSlot.Value = slot; inventory.SetSelection(slot); return true;
         }
         public void Request(byte action, Vector3 direction, Vector3 eyeOffset,bool aimed=false,int seed=0) => ActionServerRpc(action,direction,eyeOffset,aimed,seed);
@@ -359,6 +361,9 @@ namespace PirateSlop.Networking
         }
         public void PublishAttack(byte action,Vector3 end) => AttackObserversRpc(action,end);
         public void PublishShot(FirearmShot shot) => ShotObserversRpc(shot);
+        public void PublishWaterImpact(FirearmShot shot) => WaterImpactObserversRpc(shot);
+        [ObserversRpc] void WaterImpactObserversRpc(FirearmShot shot)
+        { if (!IsServerInitialized) PistolBullet.ResolveWaterImpact(shot); }
         [ObserversRpc] void ShotObserversRpc(FirearmShot shot)
         { if(!IsServerInitialized)weapon.ShowShot(shot); }
         [ObserversRpc] void AttackObserversRpc(byte action,Vector3 end) => weapon.ShowAttack(action,end);

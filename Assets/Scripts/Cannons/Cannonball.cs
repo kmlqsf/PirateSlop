@@ -10,6 +10,8 @@ namespace PirateSlop
         GameObject ammoVisual;
         PirateSlop.Networking.InventoryItem visibleAmmo = PirateSlop.Networking.InventoryItem.None;
         float visualRadius;
+        Collider ejectionHousing;
+        float ejectionUntil;
 
         Rigidbody body;
         SphereCollider sphereCol;
@@ -36,6 +38,11 @@ namespace PirateSlop
         {
             RefreshVisual();
             UpdateManualDropAudio();
+            if (ejectionHousing != null && Time.time >= ejectionUntil)
+            {
+                Physics.IgnoreCollision(SphereCol, ejectionHousing, false);
+                ejectionHousing = null;
+            }
         }
         public void RefreshVisual()
         {
@@ -115,7 +122,7 @@ namespace PirateSlop
         {
             if (Held || Loaded || ShotDamage != null) return;
             var ship = collision.collider.GetComponentInParent<ShipController>();
-            if (ship != null && !Body.isKinematic && collision.contactCount > 0 && collision.GetContact(0).normal.y > .5f)
+            if (ship != null && Time.time >= ejectionUntil && !Body.isKinematic && collision.contactCount > 0 && collision.GetContact(0).normal.y > .5f)
             {
                 Vector3 relative = Body.linearVelocity - ship.CannonPointVelocity(transform.position);
                 RollOnPlatform(ship.GetComponent<Rigidbody>());
@@ -295,7 +302,22 @@ namespace PirateSlop
                 ResolveBallImpact(other, point, normal, ref velocity);
             }
         }
-        public void Release()
+        public void Eject(Collider housing, Vector3 velocity)
+        {
+            Release(false);
+            ejectionUntil = Time.time + .4f;
+            ejectionHousing = housing;
+            if (housing != null) Physics.IgnoreCollision(SphereCol, housing, true);
+            Body.linearVelocity = velocity;
+            Body.WakeUp();
+        }
+        void OnDisable()
+        {
+            if (ejectionHousing != null && SphereCol != null) Physics.IgnoreCollision(SphereCol, ejectionHousing, false);
+            ejectionHousing = null;
+            ejectionUntil = 0f;
+        }
+        public void Release(bool snapToDeck = true)
         {
             RefreshVisual();
             transform.SetParent(null, true);
@@ -304,7 +326,7 @@ namespace PirateSlop
             Body.useGravity = true;
             Body.linearVelocity = Vector3.zero;
             Body.angularVelocity = Vector3.zero;
-            if (Cast(transform.position + Vector3.up * .05f, Vector3.down, RestingHook ? .18f : 4f, out var floor))
+            if (snapToDeck && Cast(transform.position + Vector3.up * .05f, Vector3.down, RestingHook ? .18f : 4f, out var floor))
             {
                 var ship = floor.collider.GetComponentInParent<ShipController>();
                 if (ship != null) RollOnPlatform(ship.GetComponent<Rigidbody>());

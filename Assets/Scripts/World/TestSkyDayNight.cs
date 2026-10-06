@@ -14,6 +14,7 @@ namespace PirateSlop.World
         public Light Sun;
         public Light Moon;
         [Range(0f, 1f)] public float TargetBlend;
+        public float DayHazeDistance = 2800f, DuskHazeDistance = 4200f;
         public float CurrentBlend { get; private set; }
         float velocity;
         VolumeProfile runtimeProfile;
@@ -138,7 +139,7 @@ namespace PirateSlop.World
             {
                 float fogScale = SeaMistRendererFeature.DensityMultiplier / SeaMistRendererFeature.DefaultDensityMultiplier;
                 skyFog.enabled.Override(fogScale > .001f);
-                skyFog.meanFreePath.Override(Mathf.Lerp(4500f, 6000f, dusk) / Mathf.Max(.001f, fogScale));
+                skyFog.meanFreePath.Override(Mathf.Lerp(DayHazeDistance, DuskHazeDistance, dusk) / Mathf.Max(.001f, fogScale));
             }
         }
 

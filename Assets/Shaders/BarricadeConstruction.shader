@@ -43,6 +43,7 @@ Shader "PirateSlop/Barricade Construction"
             #define REQUIRES_WORLD_SPACE_POS_INTERPOLATOR
             #define _SURFACE_TYPE_TRANSPARENT 1
             #include "Packages/com.unity.render-pipelines.universal/Shaders/LitForwardPass.hlsl"
+            #include "BarricadeWood.hlsl"
             float4x4 _ConstructionWorldToLocal;
             half4 _ConstructionTint;
             float _ConstructionProgress;
@@ -50,7 +51,7 @@ Shader "PirateSlop/Barricade Construction"
             float _ConstructionFeather;
             void ConstructionFragment(Varyings input, out half4 color : SV_Target0)
             {
-                LitPassFragment(input, color);
+                color = BarricadeWoodFragment(input);
                 float height = mul(_ConstructionWorldToLocal, float4(input.positionWS, 1)).y;
                 float edge = lerp(-_ConstructionFeather, _ConstructionHeight + _ConstructionFeather, saturate(_ConstructionProgress));
                 half restored = 1 - smoothstep(edge - _ConstructionFeather, edge + _ConstructionFeather, height);

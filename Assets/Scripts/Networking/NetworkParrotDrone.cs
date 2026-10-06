@@ -72,7 +72,7 @@ namespace PirateSlop.Networking
         {
             if (!IsSpawned) return;
             if (shooter == null && pilot.Value != null) shooter = pilot.Value.GetComponent<NetworkPlayer>();
-            if (shooter != null && shooter.IsOwner && !shooter.Motor.IsDead)
+            if (shooter != null && shooter.IsOwner && !shooter.Motor.IsDead && !shooter.Motor.IsFrozen)
             {
                 if (flightCamera == null) BeginView();
                 if (!SessionController.MenuOpen && !DeveloperMenu.IsOpen && Cursor.lockState == CursorLockMode.Locked && Mouse.current != null)
@@ -132,7 +132,7 @@ namespace PirateSlop.Networking
         [ServerRpc(RequireOwnership = false)]
         void SteerServerRpc(Vector3 forward, FishNet.Connection.NetworkConnection sender = null)
         {
-            if (shooter == null || sender != shooter.Owner || exploded || !float.IsFinite(forward.sqrMagnitude) || forward.sqrMagnitude < .5f) return;
+            if (shooter == null || shooter.Motor.IsFrozen || sender != shooter.Owner || exploded || !float.IsFinite(forward.sqrMagnitude) || forward.sqrMagnitude < .5f) return;
             steering = forward.normalized;
         }
         bool Ignored(Collider hit) => hit.transform.IsChildOf(transform) || (shooter != null && Time.time - launched < .2f && hit.transform.IsChildOf(shooter.transform));

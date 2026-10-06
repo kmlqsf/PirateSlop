@@ -77,6 +77,7 @@ namespace PirateSlop.Networking
         [ServerRpc]
         void DropLootServerRpc()
         {
+            if (GetComponent<AdvancedPlayerController>().IsFrozen) return;
             if (CarriedLoot != null) CarriedLoot.Drop();
         }
     }

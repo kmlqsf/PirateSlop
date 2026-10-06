@@ -357,11 +357,59 @@ struct CloudCoverageData
     half cloudType;
     // Maximal cloud height
     half maxCloudHeight;
+    half minCloudHeight;
 };
+
+#if defined(_PIRATESLOP_CLEAR_CLOUDS)
+float3 PirateCloudHash(float2 cell)
+{
+    float3 value = frac(float3(cell.xyx) * float3(0.1031, 0.1030, 0.0973));
+    value += dot(value, value.yxz + 33.33);
+    return frac((value.xxy + value.yzz) * value.zyx);
+}
+
+float2 PirateCloudNoise2(float2 position)
+{
+    float2 cell = floor(position);
+    float2 blend = frac(position);
+    blend = blend * blend * (3.0 - 2.0 * blend);
+    return lerp(lerp(PirateCloudHash(cell).xy, PirateCloudHash(cell + float2(1, 0)).xy, blend.x),
+                lerp(PirateCloudHash(cell + float2(0, 1)).xy, PirateCloudHash(cell + float2(1, 1)).xy, blend.x), blend.y);
+}
+
+void PirateCloudCoverage(float3 positionPS, out CloudCoverageData data)
+{
+    ZERO_INITIALIZE(CloudCoverageData, data);
+    float cellSize = max(_ClearCloudCellSize, 1000.0);
+    float2 position = AnimateShapeNoisePosition(positionPS).xz / cellSize;
+    position += float2(0.2381, 0.4044);
+    float2 warp = PirateCloudNoise2(position * 0.18 + float2(_ClearCloudSeed, _ClearCloudSeed + 46.2));
+    position += (warp - 0.5) * 1.8;
+    float2 weather = PirateCloudNoise2(position + float2(_ClearCloudSeed + 83.1, _ClearCloudSeed + 29.7));
+    float coverageStart = clamp(_ClearCloudCoverageStart, 0.0, 0.95);
+    float coverageEnd = clamp(_ClearCloudCoverageEnd, coverageStart + 0.01, 1.0);
+    float coverage = smoothstep(coverageStart, coverageEnd, weather.x);
+    if (coverage <= CLOUD_DENSITY_TRESHOLD)
+        return;
+    float baseHeight = lerp(0.02, 0.16, warp.y);
+    float cloudHeight = lerp(0.58, 0.82, weather.y);
+    float horizontalDistance = length(positionPS.xz - _ClearCloudWorldOffset.xy);
+    float fadeStart = max(_ClearCloudFarFadeStart, 1000.0);
+    float fadeEnd = max(_ClearCloudFarFadeEnd, fadeStart + 1000.0);
+    data.coverage = coverage * (1.0 - smoothstep(fadeStart, fadeEnd, horizontalDistance)) * 0.94;
+    data.rainClouds = 0.0;
+    data.cloudType = 0.25;
+    data.minCloudHeight = baseHeight;
+    data.maxCloudHeight = baseHeight + cloudHeight;
+}
+#endif
 
 // Function that evaluates the coverage data for a given point in planet space
 void GetCloudCoverageData(float3 positionPS, out CloudCoverageData data)
 {
+#if defined(_PIRATESLOP_CLEAR_CLOUDS)
+    PirateCloudCoverage(positionPS, data);
+#else
     // Convert the position into dome space and center the texture is centered above (0, 0, 0)
     //float2 normalizedPosition = AnimateCloudMapPosition(positionPS).xz / _NormalizationFactor * _CloudMapTiling.xy + _CloudMapTiling.zw - 0.5;
 //#if defined(CLOUDS_SIMPLE_PRESET)
@@ -373,6 +421,8 @@ void GetCloudCoverageData(float3 positionPS, out CloudCoverageData data)
     data.rainClouds = cloudMapData.y;
     data.cloudType = cloudMapData.z;
     data.maxCloudHeight = cloudMapData.w;
+    data.minCloudHeight = 0.0;
+#endif
 }
 
 // Density remapping function
@@ -414,8 +464,20 @@ void EvaluateCloudProperties(float3 positionPS, float noiseMipOffset, float eros
     properties.height = EvaluateNormalizedCloudHeight(positionPS);
 
     // When rendering in camera space, we still want horizontal scrolling
-#ifndef _LOCAL_VOLUMETRIC_CLOUDS
+#if defined(_PIRATESLOP_CLEAR_CLOUDS)
+    positionPS.xz += _ClearCloudWorldOffset.xy;
+#elif !defined(_LOCAL_VOLUMETRIC_CLOUDS)
     positionPS.xz += _WorldSpaceCameraPos.xz;
+#endif
+
+    CloudCoverageData cloudCoverageData;
+    GetCloudCoverageData(positionPS, cloudCoverageData);
+    if (cloudCoverageData.coverage <= CLOUD_DENSITY_TRESHOLD || properties.height > cloudCoverageData.maxCloudHeight)
+        return;
+#if defined(_PIRATESLOP_CLEAR_CLOUDS)
+    if (properties.height < cloudCoverageData.minCloudHeight)
+        return;
+    properties.height = saturate((properties.height - cloudCoverageData.minCloudHeight) / max(cloudCoverageData.maxCloudHeight - cloudCoverageData.minCloudHeight, 0.01));
 #endif
 
     // Evaluate the generic sampling coordinates
@@ -425,16 +487,26 @@ void EvaluateCloudProperties(float3 positionPS, float noiseMipOffset, float eros
     baseNoiseSamplingCoordinates += properties.height * float3(_WindDirection.x, _WindDirection.y, 0.0f) * _AltitudeDistortion;
 
     // Read the low frequency Perlin-Worley and Worley noises
+#if defined(_PIRATESLOP_CLEAR_CLOUDS)
+    noiseMipOffset = min(noiseMipOffset, 2.0);
+#endif
     half lowFrequencyNoise = SAMPLE_TEXTURE3D_LOD(_Worley128RGBA, s_trilinear_repeat_sampler, baseNoiseSamplingCoordinates.xyz, noiseMipOffset).r;
 
-    // Evaluate the cloud coverage data for this position
-    CloudCoverageData cloudCoverageData;
-    GetCloudCoverageData(positionPS, cloudCoverageData);
-
-    // If this region of space has no cloud coverage, exit right away
-    if (cloudCoverageData.coverage.x <= CLOUD_DENSITY_TRESHOLD || cloudCoverageData.maxCloudHeight < properties.height)
-        return;
-
+#if defined(_PIRATESLOP_CLEAR_CLOUDS)
+    half shapeFactor = saturate(_ShapeFactor);
+    half erosionFactor = _ErosionFactor * lerp(0.65, 1.0, properties.height);
+    float3 secondaryCoords = baseNoiseSamplingCoordinates.zxy * 2.07 + float3(0.173, 0.419, 0.731);
+    half secondaryNoise = SAMPLE_TEXTURE3D_LOD(_Worley128RGBA, s_trilinear_repeat_sampler, secondaryCoords, noiseMipOffset).r;
+    half shapeNoise = lerp(lowFrequencyNoise, secondaryNoise, lerp(0.18, 0.38, shapeFactor));
+    half heightGradient = smoothstep(0.02, 0.14, properties.height) * (1.0 - smoothstep(0.55, 0.98, properties.height));
+    half threshold = lerp(1.0, lerp(0.48, 0.64, shapeFactor), cloudCoverageData.coverage * heightGradient);
+    half base_cloud = saturate((shapeNoise - threshold) / max(1.0 - threshold, 0.001));
+    properties.ambientOcclusion = lerp(0.68, 1.0, smoothstep(0.05, 0.85, properties.height));
+    properties.sigmaT = 0.04;
+#if defined(_CLOUDS_MICRO_EROSION)
+    half microDetailFactor = _MicroErosionFactor;
+#endif
+#else
     // Read from the LUT
 //#if defined(CLOUDS_SIMPLE_PRESET)
     half3 densityErosionAO = SAMPLE_TEXTURE2D_LOD(_CloudCurveTexture, s_linear_repeat_sampler, half2(0.0, properties.height), 0).xyz;
@@ -463,11 +535,15 @@ void EvaluateCloudProperties(float3 positionPS, float noiseMipOffset, float eros
     // The ambient occlusion value that is baked is less relevant if there is shaping or erosion, small hack to compensate that
     half ambientOcclusionBlend = saturate(1.0 - max(erosionFactor, shapeFactor) * 0.5);
     properties.ambientOcclusion = lerp(1.0, properties.ambientOcclusion, ambientOcclusionBlend);
+#endif
 
     // Apply the erosion for nicer details
     if (!cheapVersion)
     {
         float3 erosionCoords = AnimateErosionNoisePosition(positionPS) / NOISE_TEXTURE_NORMALIZATION_FACTOR * _ErosionScale;
+#if defined(_PIRATESLOP_CLEAR_CLOUDS)
+        erosionMipOffset = min(erosionMipOffset, 1.0);
+#endif
         half erosionNoise = 1.0 - SAMPLE_TEXTURE3D_LOD(_ErosionNoise, s_linear_repeat_sampler, erosionCoords, CLOUD_DETAIL_MIP_OFFSET + erosionMipOffset).x;
         erosionNoise = lerp(0.0, erosionNoise, erosionFactor * 0.75 * cloudCoverageData.coverage.x);
         properties.ambientOcclusion = saturate(properties.ambientOcclusion - sqrt(erosionNoise * _ErosionOcclusion));
@@ -495,6 +571,9 @@ void EvaluateCloudProperties(float3 positionPS, float noiseMipOffset, float eros
 
     // Attenuate everything by the density multiplier
     properties.density = base_cloud * _DensityMultiplier;
+#if defined(_PIRATESLOP_CLEAR_CLOUDS)
+    properties.density *= cloudCoverageData.coverage;
+#endif
 }
 
 // Function that evaluates the transmittance to the sun at a given cloud position

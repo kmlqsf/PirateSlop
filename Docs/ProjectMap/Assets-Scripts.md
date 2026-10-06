@@ -56,6 +56,7 @@
 | [Assets/Scripts/Cannons/MortarTrajectory.cs](<../../Assets/Scripts/Cannons/MortarTrajectory.cs>) | Исходник C#: MortarTrajectory; Пушки, ядра и лафеты |
 | [Assets/Scripts/Cannons/NetworkCannon.cs](<../../Assets/Scripts/Cannons/NetworkCannon.cs>) | Исходник C#: CannonPlacement, NetworkCannon, RemoteCarriagePose; Пушки, ядра и лафеты |
 | [Assets/Scripts/Cannons/ShipFireVfx.cs](<../../Assets/Scripts/Cannons/ShipFireVfx.cs>) | Исходник C#: ShipFireVfx; Пушки, ядра и лафеты |
+| [Assets/Scripts/Cannons/ShipFreezeVfx.cs](<../../Assets/Scripts/Cannons/ShipFreezeVfx.cs>) | Исходник C#: ShipFreezeVfx, IceSeed, Surface; Пушки, ядра и лафеты |
 | [Assets/Scripts/Cannons/SimpleCannon.cs](<../../Assets/Scripts/Cannons/SimpleCannon.cs>) | Исходник C#: SimpleCannon; Пушки, ядра и лафеты |
 
 ## Assets/Scripts/Customization
@@ -75,6 +76,7 @@
 | Файл | Краткое описание |
 | --- | --- |
 | [Assets/Scripts/Editor/AudioBankWindow.cs](<../../Assets/Scripts/Editor/AudioBankWindow.cs>) | Исходник C#: AudioBankWindow, Page; Звуки и голос |
+| [Assets/Scripts/Editor/BarricadeAtlasSetup.cs](<../../Assets/Scripts/Editor/BarricadeAtlasSetup.cs>) | Исходник C#: BarricadeAtlasSetup; Предметы, лут и инвентарь |
 | [Assets/Scripts/Editor/BarricadeSetup.cs](<../../Assets/Scripts/Editor/BarricadeSetup.cs>) | Исходник C#: BarricadeSetup; Предметы, лут и инвентарь |
 | [Assets/Scripts/Editor/BoardingEquipmentSetup.cs](<../../Assets/Scripts/Editor/BoardingEquipmentSetup.cs>) | Исходник C#: BoardingEquipmentSetup; Предметы, лут и инвентарь |
 | [Assets/Scripts/Editor/BottleFishReplacementSetup.cs](<../../Assets/Scripts/Editor/BottleFishReplacementSetup.cs>) | Исходник C#: BottleFishReplacementSetup; Предметы, лут и инвентарь, Модели и Blender, Звуки и голос, Рыбалка и рыба |
@@ -82,7 +84,9 @@
 | [Assets/Scripts/Editor/CannonInventorySetup.cs](<../../Assets/Scripts/Editor/CannonInventorySetup.cs>) | Исходник C#: CannonInventorySetup; Пушки, ядра и лафеты |
 | [Assets/Scripts/Editor/CharacterActionImport.cs](<../../Assets/Scripts/Editor/CharacterActionImport.cs>) | Исходник C#: CharacterActionImport |
 | [Assets/Scripts/Editor/CharacterActionsSetup.cs](<../../Assets/Scripts/Editor/CharacterActionsSetup.cs>) | Исходник C#: CharacterActionsSetup |
+| [Assets/Scripts/Editor/ChestModelSetup.cs](<../../Assets/Scripts/Editor/ChestModelSetup.cs>) | Исходник C#: ChestModelSetup; Предметы, лут и инвентарь |
 | [Assets/Scripts/Editor/ClimbingAnimationSetup.cs](<../../Assets/Scripts/Editor/ClimbingAnimationSetup.cs>) | Исходник C#: ClimbingAnimationSetup |
+| [Assets/Scripts/Editor/CoastalEnvironmentSetup.cs](<../../Assets/Scripts/Editor/CoastalEnvironmentSetup.cs>) | Исходник C#: CoastalEnvironmentSetup; Мир, острова и океан |
 | [Assets/Scripts/Editor/CombatEquipmentSetup.cs](<../../Assets/Scripts/Editor/CombatEquipmentSetup.cs>) | Исходник C#: CombatEquipmentSetup |
 | [Assets/Scripts/Editor/DirectShipControlsSetup.cs](<../../Assets/Scripts/Editor/DirectShipControlsSetup.cs>) | Исходник C#: DirectShipControlsSetup |
 | [Assets/Scripts/Editor/EnvironmentTestSetup.cs](<../../Assets/Scripts/Editor/EnvironmentTestSetup.cs>) | Исходник C#: EnvironmentTestSetup; Мир, острова и океан, Тестовая карта и водоворот |
@@ -106,6 +110,7 @@
 | [Assets/Scripts/Editor/LootModelReplacementSetup.cs](<../../Assets/Scripts/Editor/LootModelReplacementSetup.cs>) | Исходник C#: LootModelReplacementSetup; Пушки, ядра и лафеты, Предметы, лут и инвентарь |
 | [Assets/Scripts/Editor/LootSetup.cs](<../../Assets/Scripts/Editor/LootSetup.cs>) | Исходник C#: LootSetup; Предметы, лут и инвентарь |
 | [Assets/Scripts/Editor/MainShipSetup.cs](<../../Assets/Scripts/Editor/MainShipSetup.cs>) | Исходник C#: MainShipSetup; Модели и Blender |
+| [Assets/Scripts/Editor/MastFragmentSetup.cs](<../../Assets/Scripts/Editor/MastFragmentSetup.cs>) | Исходник C#: MastFragmentSetup, Vertex, Polygon, Replacement; Повреждения корпуса, ремонт и затопление |
 | [Assets/Scripts/Editor/MenuPresentationSetup.cs](<../../Assets/Scripts/Editor/MenuPresentationSetup.cs>) | Исходник C#: MenuPresentationSetup; Меню и HUD |
 | [Assets/Scripts/Editor/MortarSetup.cs](<../../Assets/Scripts/Editor/MortarSetup.cs>) | Исходник C#: MortarSetup |
 | [Assets/Scripts/Editor/MultiplayerSceneSetup.cs](<../../Assets/Scripts/Editor/MultiplayerSceneSetup.cs>) | Исходник C#: MultiplayerSceneSetup; Мир, острова и океан, Сеть, сессия и Steam, Тестовая карта и водоворот |
@@ -133,6 +138,7 @@
 | [Assets/Scripts/Editor/ShipFireVfxSetup.cs](<../../Assets/Scripts/Editor/ShipFireVfxSetup.cs>) | Исходник C#: ShipFireVfxSetup; Пушки, ядра и лафеты |
 | [Assets/Scripts/Editor/ShipFloodingSetup.cs](<../../Assets/Scripts/Editor/ShipFloodingSetup.cs>) | Исходник C#: ShipFloodingSetup |
 | [Assets/Scripts/Editor/ShipFragmentPacking.cs](<../../Assets/Scripts/Editor/ShipFragmentPacking.cs>) | Исходник C#: ShipFragmentPacking |
+| [Assets/Scripts/Editor/ShipFreezeVfxSetup.cs](<../../Assets/Scripts/Editor/ShipFreezeVfxSetup.cs>) | Исходник C#: ShipFreezeVfxSetup, Candidate; Пушки, ядра и лафеты |
 | [Assets/Scripts/Editor/ShipLadderSetup.cs](<../../Assets/Scripts/Editor/ShipLadderSetup.cs>) | Исходник C#: ShipLadderSetup |
 | [Assets/Scripts/Editor/ShipLibreFractureAdapter.cs](<../../Assets/Scripts/Editor/ShipLibreFractureAdapter.cs>) | Исходник C#: ShipLibreFractureAdapter |
 | [Assets/Scripts/Editor/ShipLodSetup.cs](<../../Assets/Scripts/Editor/ShipLodSetup.cs>) | Исходник C#: ShipLodSetup |
@@ -261,7 +267,7 @@
 | [Assets/Scripts/Networking/NetworkFogBottle.cs](<../../Assets/Scripts/Networking/NetworkFogBottle.cs>) | Исходник C#: NetworkFogBottle; Предметы, лут и инвентарь |
 | [Assets/Scripts/Networking/NetworkFogCloud.cs](<../../Assets/Scripts/Networking/NetworkFogCloud.cs>) | Исходник C#: NetworkFogCloud; Предметы, лут и инвентарь |
 | [Assets/Scripts/Networking/NetworkGrapple.cs](<../../Assets/Scripts/Networking/NetworkGrapple.cs>) | Исходник C#: NetworkWeapon |
-| [Assets/Scripts/Networking/NetworkHealth.cs](<../../Assets/Scripts/Networking/NetworkHealth.cs>) | Исходник C#: NetworkHealth; Личное оружие и урон |
+| [Assets/Scripts/Networking/NetworkHealth.cs](<../../Assets/Scripts/Networking/NetworkHealth.cs>) | Исходник C#: NetworkHealth; Пушки, ядра и лафеты, Персонаж, камера и анимации, Личное оружие и урон |
 | [Assets/Scripts/Networking/NetworkHolyGrenade.cs](<../../Assets/Scripts/Networking/NetworkHolyGrenade.cs>) | Исходник C#: NetworkHolyGrenade |
 | [Assets/Scripts/Networking/NetworkHolyGrenadeHands.cs](<../../Assets/Scripts/Networking/NetworkHolyGrenadeHands.cs>) | Исходник C#: NetworkHolyGrenadeHands |
 | [Assets/Scripts/Networking/NetworkHullRepair.cs](<../../Assets/Scripts/Networking/NetworkHullRepair.cs>) | Исходник C#: NetworkHullRepair; Повреждения корпуса, ремонт и затопление, Корабельная обезьянка |
@@ -291,7 +297,7 @@
 | [Assets/Scripts/Networking/NetworkShip.TargetMarks.cs](<../../Assets/Scripts/Networking/NetworkShip.TargetMarks.cs>) | Исходник C#: NetworkShip, TargetMark |
 | [Assets/Scripts/Networking/NetworkShip.VortexBoost.cs](<../../Assets/Scripts/Networking/NetworkShip.VortexBoost.cs>) | Исходник C#: NetworkShip; Предметы, лут и инвентарь |
 | [Assets/Scripts/Networking/NetworkShip.cs](<../../Assets/Scripts/Networking/NetworkShip.cs>) | Исходник C#: NetworkShip; Движение корабля и палуба, Паруса и канаты, Сеть, сессия и Steam, Производительность и тест нагрузки без AI |
-| [Assets/Scripts/Networking/NetworkShipAmmo.cs](<../../Assets/Scripts/Networking/NetworkShipAmmo.cs>) | Исходник C#: ShipFirePatch, NetworkShip, FireExposure; Пушки, ядра и лафеты, Повреждения корпуса, ремонт и затопление |
+| [Assets/Scripts/Networking/NetworkShipAmmo.cs](<../../Assets/Scripts/Networking/NetworkShipAmmo.cs>) | Исходник C#: ShipFirePatch, ShipFreezeState, NetworkShip, FireExposure; Пушки, ядра и лафеты, Повреждения корпуса, ремонт и затопление |
 | [Assets/Scripts/Networking/NetworkShipPush.cs](<../../Assets/Scripts/Networking/NetworkShipPush.cs>) | Исходник C#: NetworkShipPush |
 | [Assets/Scripts/Networking/NetworkShipRum.cs](<../../Assets/Scripts/Networking/NetworkShipRum.cs>) | Исходник C#: NetworkShip |
 | [Assets/Scripts/Networking/NetworkSkullEvent.cs](<../../Assets/Scripts/Networking/NetworkSkullEvent.cs>) | Исходник C#: NetworkSkullEvent; Предметы, лут и инвентарь |
@@ -347,8 +353,8 @@
 | [Assets/Scripts/Player/FirearmHandling.cs](<../../Assets/Scripts/Player/FirearmHandling.cs>) | Исходник C#: FirearmHandling; Личное оружие и урон |
 | [Assets/Scripts/Player/FirearmImpact.cs](<../../Assets/Scripts/Player/FirearmImpact.cs>) | Исходник C#: FirearmImpact; Личное оружие и урон |
 | [Assets/Scripts/Player/FirearmMechanism.cs](<../../Assets/Scripts/Player/FirearmMechanism.cs>) | Исходник C#: FirearmMechanism; Личное оружие и урон |
-| [Assets/Scripts/Player/FirearmPrediction.cs](<../../Assets/Scripts/Player/FirearmPrediction.cs>) | Исходник C#: FirearmPrediction |
-| [Assets/Scripts/Player/FirearmTrace.cs](<../../Assets/Scripts/Player/FirearmTrace.cs>) | Исходник C#: FirearmSettings, FirearmShot, FirearmTrace |
+| [Assets/Scripts/Player/FirearmPrediction.cs](<../../Assets/Scripts/Player/FirearmPrediction.cs>) | Исходник C#: FirearmPrediction; Личное оружие и урон |
+| [Assets/Scripts/Player/FirearmTrace.cs](<../../Assets/Scripts/Player/FirearmTrace.cs>) | Исходник C#: FirearmSettings, FirearmShot, FirearmTrace; Личное оружие и урон |
 | [Assets/Scripts/Player/FirearmVfx.cs](<../../Assets/Scripts/Player/FirearmVfx.cs>) | Исходник C#: FirearmVfx; Личное оружие и урон |
 | [Assets/Scripts/Player/FirstPersonFeedback.cs](<../../Assets/Scripts/Player/FirstPersonFeedback.cs>) | Исходник C#: FirstPersonFeedback |
 | [Assets/Scripts/Player/FirstPersonModelVisibility.cs](<../../Assets/Scripts/Player/FirstPersonModelVisibility.cs>) | Исходник C#: FirstPersonModelVisibility; Движение корабля и палуба, Персонаж, камера и анимации |
@@ -361,6 +367,7 @@
 | [Assets/Scripts/Player/PirateWeaponAnimation.cs](<../../Assets/Scripts/Player/PirateWeaponAnimation.cs>) | Исходник C#: PirateWeapon; Личное оружие и урон |
 | [Assets/Scripts/Player/PistolBullet.cs](<../../Assets/Scripts/Player/PistolBullet.cs>) | Исходник C#: PistolBullet; Личное оружие и урон |
 | [Assets/Scripts/Player/PlayerAnimatorDriver.cs](<../../Assets/Scripts/Player/PlayerAnimatorDriver.cs>) | Исходник C#: PlayerAnimatorDriver; Персонаж, камера и анимации |
+| [Assets/Scripts/Player/PlayerFreezeScreen.cs](<../../Assets/Scripts/Player/PlayerFreezeScreen.cs>) | Исходник C#: PlayerFreezeScreen; Пушки, ядра и лафеты, Персонаж, камера и анимации |
 | [Assets/Scripts/Player/PlayerHitbox.cs](<../../Assets/Scripts/Player/PlayerHitbox.cs>) | Исходник C#: PlayerHitbox |
 | [Assets/Scripts/Player/PlayerInventory.Barricade.cs](<../../Assets/Scripts/Player/PlayerInventory.Barricade.cs>) | Исходник C#: PlayerInventory; Предметы, лут и инвентарь |
 | [Assets/Scripts/Player/PlayerInventory.RaftLockpick.cs](<../../Assets/Scripts/Player/PlayerInventory.RaftLockpick.cs>) | Исходник C#: PlayerInventory; Предметы, лут и инвентарь, Звуки и голос |
@@ -374,6 +381,7 @@
 | [Assets/Scripts/Player/ShipSpyglassView.LootHint.cs](<../../Assets/Scripts/Player/ShipSpyglassView.LootHint.cs>) | Исходник C#: ShipSpyglassView; Предметы, лут и инвентарь |
 | [Assets/Scripts/Player/ShipSpyglassView.cs](<../../Assets/Scripts/Player/ShipSpyglassView.cs>) | Исходник C#: ShipSpyglassView; Предметы, лут и инвентарь |
 | [Assets/Scripts/Player/SwimPresentation.cs](<../../Assets/Scripts/Player/SwimPresentation.cs>) | Исходник C#: SwimPresentation |
+| [Assets/Scripts/Player/UnderwaterFirearmProjectile.cs](<../../Assets/Scripts/Player/UnderwaterFirearmProjectile.cs>) | Исходник C#: FirearmDamageBatch, UnderwaterFirearmProjectile; Личное оружие и урон |
 | [Assets/Scripts/Player/WeaponArmRig.cs](<../../Assets/Scripts/Player/WeaponArmRig.cs>) | Исходник C#: WeaponArmRig, Arm; Личное оружие и урон |
 
 ## Assets/Scripts/Ship
@@ -387,10 +395,11 @@
 
 | Файл | Краткое описание |
 | --- | --- |
-| [Assets/Scripts/ShipDestruction/RepairReveal.cs](<../../Assets/Scripts/ShipDestruction/RepairReveal.cs>) | Исходник C#: RepairReveal |
+| [Assets/Scripts/ShipDestruction/RepairReveal.cs](<../../Assets/Scripts/ShipDestruction/RepairReveal.cs>) | Исходник C#: RepairReveal; Повреждения корпуса, ремонт и затопление |
 | [Assets/Scripts/ShipDestruction/ShipDamageSection.cs](<../../Assets/Scripts/ShipDestruction/ShipDamageSection.cs>) | Исходник C#: ShipDamageSection; Повреждения корпуса, ремонт и затопление |
 | [Assets/Scripts/ShipDestruction/ShipDebrisPool.cs](<../../Assets/Scripts/ShipDestruction/ShipDebrisPool.cs>) | Исходник C#: ShipDebrisPool, Chunk |
-| [Assets/Scripts/ShipDestruction/ShipDestruction.Fire.cs](<../../Assets/Scripts/ShipDestruction/ShipDestruction.Fire.cs>) | Исходник C#: ShipFireTarget, ShipDestruction; Повреждения корпуса, ремонт и затопление |
+| [Assets/Scripts/ShipDestruction/ShipDestruction.Fire.cs](<../../Assets/Scripts/ShipDestruction/ShipDestruction.Fire.cs>) | Исходник C#: ShipFireTarget, ShipDestruction, FireSurface; Повреждения корпуса, ремонт и затопление |
+| [Assets/Scripts/ShipDestruction/ShipDestruction.Masts.cs](<../../Assets/Scripts/ShipDestruction/ShipDestruction.Masts.cs>) | Исходник C#: ShipDestruction, MastAssembly; Повреждения корпуса, ремонт и затопление |
 | [Assets/Scripts/ShipDestruction/ShipDestruction.cs](<../../Assets/Scripts/ShipDestruction/ShipDestruction.cs>) | Исходник C#: ShipSectionSnapshot, ShipDestructionEvent, ShipDestruction; Повреждения корпуса, ремонт и затопление |
 | [Assets/Scripts/ShipDestruction/ShipDestructionProfile.cs](<../../Assets/Scripts/ShipDestruction/ShipDestructionProfile.cs>) | Исходник C#: ShipSectionState, ShipSectionType, ShipDamageReason, ShipAmmoMultiplier, ShipSectionDefinition, ShipDestructionProfile, ShipFragmentConnection; Повреждения корпуса, ремонт и затопление |
 | [Assets/Scripts/ShipDestruction/ShipDestructionVisuals.cs](<../../Assets/Scripts/ShipDestruction/ShipDestructionVisuals.cs>) | Исходник C#: ShipDestructionVisuals |
@@ -410,13 +419,13 @@
 | [Assets/Scripts/Ships/ShipV3BellContact.cs](<../../Assets/Scripts/Ships/ShipV3BellContact.cs>) | Исходник C#: ShipV3BellContact; Тестовая карта и водоворот |
 | [Assets/Scripts/Ships/ShipV3ChainInstances.cs](<../../Assets/Scripts/Ships/ShipV3ChainInstances.cs>) | Исходник C#: ShipV3ChainInstances; Движение корабля и палуба |
 | [Assets/Scripts/Ships/ShipV3ClothMotion.cs](<../../Assets/Scripts/Ships/ShipV3ClothMotion.cs>) | Исходник C#: ShipV3ClothMotion; Тестовая карта и водоворот |
-| [Assets/Scripts/Ships/ShipV3CollisionBatch.cs](<../../Assets/Scripts/Ships/ShipV3CollisionBatch.cs>) | Исходник C#: ShipV3CollisionBatch; Движение корабля и палуба |
+| [Assets/Scripts/Ships/ShipV3CollisionBatch.cs](<../../Assets/Scripts/Ships/ShipV3CollisionBatch.cs>) | Исходник C#: ShipV3CollisionBatch; Движение корабля и палуба, Повреждения корпуса, ремонт и затопление |
 | [Assets/Scripts/Ships/ShipV3DiceContact.cs](<../../Assets/Scripts/Ships/ShipV3DiceContact.cs>) | Исходник C#: ShipV3DiceContact; Движение корабля и палуба, Звуки и голос |
 | [Assets/Scripts/Ships/ShipV3Features.cs](<../../Assets/Scripts/Ships/ShipV3Features.cs>) | Исходник C#: ShipV3TargetKind, ShipV3Lantern, ShipV3DiceSlot, ShipV3PhysicsPose, ShipV3Support, ShipV3Attachment, ShipV3Features; Движение корабля и палуба, Повреждения корпуса, ремонт и затопление, Производительность и тест нагрузки без AI |
 | [Assets/Scripts/Ships/ShipV3HarpoonVisual.cs](<../../Assets/Scripts/Ships/ShipV3HarpoonVisual.cs>) | Исходник C#: ShipV3HarpoonVisual; Гарпун и корабельное крепление |
 | [Assets/Scripts/Ships/ShipV3InteractionTarget.cs](<../../Assets/Scripts/Ships/ShipV3InteractionTarget.cs>) | Исходник C#: ShipV3InteractionTarget; Тестовая карта и водоворот |
 | [Assets/Scripts/Ships/ShipV3PlayerInteraction.cs](<../../Assets/Scripts/Ships/ShipV3PlayerInteraction.cs>) | Исходник C#: ShipV3PlayerInteraction; Движение корабля и палуба, Персонаж, камера и анимации, Тестовая карта и водоворот |
-| [Assets/Scripts/Ships/ShipV3RenderBatch.cs](<../../Assets/Scripts/Ships/ShipV3RenderBatch.cs>) | Исходник C#: ShipV3RenderBatch; Движение корабля и палуба, Производительность и тест нагрузки без AI |
+| [Assets/Scripts/Ships/ShipV3RenderBatch.cs](<../../Assets/Scripts/Ships/ShipV3RenderBatch.cs>) | Исходник C#: ShipV3RenderBatch; Движение корабля и палуба, Повреждения корпуса, ремонт и затопление, Производительность и тест нагрузки без AI |
 | [Assets/Scripts/Ships/ShipV3RenderBudget.cs](<../../Assets/Scripts/Ships/ShipV3RenderBudget.cs>) | Исходник C#: ShipV3RenderBudget; Движение корабля и палуба, Производительность и тест нагрузки без AI |
 | [Assets/Scripts/Ships/ShipV3VisualRig.cs](<../../Assets/Scripts/Ships/ShipV3VisualRig.cs>) | Исходник C#: ShipV3Pose, ShipV3Motion, ShipV3VisualRig; Движение корабля и палуба, Паруса и канаты, Производительность и тест нагрузки без AI |
 
@@ -459,10 +468,13 @@
 | --- | --- |
 | [Assets/Scripts/World/BalancedWorldGenerator.cs](<../../Assets/Scripts/World/BalancedWorldGenerator.cs>) | Исходник C#: BalancedWorldGenerator; Мир, острова и океан |
 | [Assets/Scripts/World/BoatAttackOcean.cs](<../../Assets/Scripts/World/BoatAttackOcean.cs>) | Исходник C#: BoatAttackOcean, SpectralWave; Мир, острова и океан, Тестовая карта и водоворот |
+| [Assets/Scripts/World/CoastalRockVisual.cs](<../../Assets/Scripts/World/CoastalRockVisual.cs>) | Исходник C#: CoastalShoreContour, CoastalRockVisual; Мир, острова и океан |
+| [Assets/Scripts/World/CoastalShoreFoamVfx.cs](<../../Assets/Scripts/World/CoastalShoreFoamVfx.cs>) | Исходник C#: CoastalShoreFoamVfx, Source, Probe, Contact; Мир, острова и океан |
 | [Assets/Scripts/World/EnvironmentTestGallery.cs](<../../Assets/Scripts/World/EnvironmentTestGallery.cs>) | Исходник C#: EnvironmentTestGallery; Мир, острова и океан, Тестовая карта и водоворот |
 | [Assets/Scripts/World/LocationDefinition.cs](<../../Assets/Scripts/World/LocationDefinition.cs>) | Исходник C#: Landform, LocationSettings, LocationPointRule, LocationDefinition |
 | [Assets/Scripts/World/OceanHeightSource.cs](<../../Assets/Scripts/World/OceanHeightSource.cs>) | Исходник C#: OceanHeightSource; Мир, острова и океан, Тестовая карта и водоворот |
 | [Assets/Scripts/World/ProceduralWorld.cs](<../../Assets/Scripts/World/ProceduralWorld.cs>) | Исходник C#: ProceduralWorld; Мир, острова и океан |
+| [Assets/Scripts/World/ProjectileWaterFlight.cs](<../../Assets/Scripts/World/ProjectileWaterFlight.cs>) | Исходник C#: ProjectileWaterFlight; Пушки, ядра и лафеты, Личное оружие и урон, Мир, острова и океан |
 | [Assets/Scripts/World/SeaLootSpawner.cs](<../../Assets/Scripts/World/SeaLootSpawner.cs>) | Исходник C#: SeaLootSpawner; Предметы, лут и инвентарь |
 | [Assets/Scripts/World/SeabedTerrain.cs](<../../Assets/Scripts/World/SeabedTerrain.cs>) | Исходник C#: SeabedTerrain; Тестовая карта и водоворот |
 | [Assets/Scripts/World/ShipComparison.cs](<../../Assets/Scripts/World/ShipComparison.cs>) | Исходник C#: ShipComparison |
@@ -472,11 +484,13 @@
 | [Assets/Scripts/World/TestSkyDayNight.cs](<../../Assets/Scripts/World/TestSkyDayNight.cs>) | Исходник C#: TestSkyDayNight; Тестовая карта и водоворот |
 | [Assets/Scripts/World/UnderwaterEnvironment.cs](<../../Assets/Scripts/World/UnderwaterEnvironment.cs>) | Исходник C#: UnderwaterEnvironment; Мир, острова и океан, Тестовая карта и водоворот |
 | [Assets/Scripts/World/UnderwaterLife.cs](<../../Assets/Scripts/World/UnderwaterLife.cs>) | Исходник C#: UnderwaterLife |
+| [Assets/Scripts/World/UnderwaterProjectileTrail.cs](<../../Assets/Scripts/World/UnderwaterProjectileTrail.cs>) | Исходник C#: UnderwaterProjectileTrail; Пушки, ядра и лафеты, Личное оружие и урон, Мир, острова и океан |
 | [Assets/Scripts/World/UnderwaterRendererFeature.cs](<../../Assets/Scripts/World/UnderwaterRendererFeature.cs>) | Исходник C#: UnderwaterRendererFeature, ImmersionPass, FogData, SuspensionData; Мир, острова и океан, Тестовая карта и водоворот |
 | [Assets/Scripts/World/WaterBowSpray.cs](<../../Assets/Scripts/World/WaterBowSpray.cs>) | Исходник C#: WaterBowSpray; Мир, острова и океан, Тестовая карта и водоворот |
 | [Assets/Scripts/World/WaterImpactBody.cs](<../../Assets/Scripts/World/WaterImpactBody.cs>) | Исходник C#: WaterImpactBody; Пушки, ядра и лафеты, Персонаж, камера и анимации, Предметы, лут и инвентарь, Мир, острова и океан, Тестовая карта и водоворот |
 | [Assets/Scripts/World/WaterImpactPhysics.cs](<../../Assets/Scripts/World/WaterImpactPhysics.cs>) | Исходник C#: WaterImpactKind, WaterImpactEvent, WaterImpactPhysics; Пушки, ядра и лафеты, Персонаж, камера и анимации, Предметы, лут и инвентарь, Мир, острова и океан, Тестовая карта и водоворот |
 | [Assets/Scripts/World/WaterShipFoam.cs](<../../Assets/Scripts/World/WaterShipFoam.cs>) | Исходник C#: WaterShipFoam, HullState, Packet, Hit, SurfaceImpact; Мир, острова и океан, Тестовая карта и водоворот |
+| [Assets/Scripts/World/WaterSplashContacts.cs](<../../Assets/Scripts/World/WaterSplashContacts.cs>) | Исходник C#: WaterSplashContacts; Мир, острова и океан, Тестовая карта и водоворот |
 | [Assets/Scripts/World/WaterTestCapture.cs](<../../Assets/Scripts/World/WaterTestCapture.cs>) | Исходник C#: WaterTestCapture; Мир, острова и океан, Тестовая карта и водоворот |
 | [Assets/Scripts/World/WhirlpoolTest.cs](<../../Assets/Scripts/World/WhirlpoolTest.cs>) | Исходник C#: WhirlpoolTest; Тестовая карта и водоворот |
 | [Assets/Scripts/World/WorldDecorationPlacer.cs](<../../Assets/Scripts/World/WorldDecorationPlacer.cs>) | Исходник C#: WorldDecorationPlacer; Мир, острова и океан |

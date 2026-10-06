@@ -25,6 +25,9 @@ namespace PirateSlop
         Vector3 launchPoint, launchLocal, forward, right, returnStart, returnControl;
         Vector3 launchVelocity;
         CannonSmokeTrail smoke;
+        UnderwaterProjectileTrail waterTrail;
+        bool waterEntered, launchedAboveWater;
+        float underwaterAge, lifetimeAge;
         int worldBounces;
         public float BoomerangOutboundTime = DefaultBoomerangOutboundTime;
         public static Vector3 ReturnCurve(Vector3 start, Vector3 control, Vector3 target, Vector3 right, float width, float height, float t)
@@ -44,18 +47,21 @@ namespace PirateSlop
             if (forward.sqrMagnitude < .01f) forward = Vector3.forward;
             right = Vector3.Cross(Vector3.up, forward);
             launchVelocity = Velocity;
-            smoke = CannonSmokeTrail.Create(transform.position);
+            launchedAboveWater = !ProjectileWaterFlight.IsSubmerged(transform.position, Radius);
+            if (launchedAboveWater) smoke = CannonSmokeTrail.Create(transform.position);
         }
 
         void MoveShot(Vector3 position)
         {
             if (smoke != null) smoke.Segment(transform.position, position);
+            if (waterTrail != null) waterTrail.Segment(transform.position, position);
             transform.position = position;
         }
 
         void OnDestroy()
         {
             if (smoke != null) smoke.Finish();
+            if (waterTrail != null) waterTrail.Finish();
         }
 
         Vector3 ReturnPoint => Source != null ? Source.TransformPoint(launchLocal) : launchPoint;
@@ -79,61 +85,65 @@ namespace PirateSlop
         {
             if (spent) return;
             float dt = Time.fixedDeltaTime;
-            bool boomerang = !MortarShot && Ammo == InventoryItem.BoomerangCannonball;
-            Vector3 nextVelocity = StepVelocity(Velocity, dt, Drag);
-            Vector3 delta = boomerang ? BoomerangStep(dt) - transform.position : (Velocity + nextVelocity) * (.5f * dt);
-            if (MortarShot || Ammo == InventoryItem.FireCannonball)
+            lifetimeAge += dt;
+            if (!waterEntered && lifetimeAge >= 20f) { spent = true; Destroy(gameObject); return; }
+            if (waterEntered)
             {
-                if (MortarTrajectory.Trace(transform.position, delta, Radius, Source, out var point, out var normal, out var collider))
-                {
-                    MoveShot(point + normal * Radius);
-                    if (HitSkullMouth(collider, point)) return;
-                    ExplodeArea(point, normal, collider);
-                    spent = true;
-                    Destroy(gameObject);
-                }
-                else { MoveShot(transform.position + delta); Velocity = nextVelocity; }
-                return;
+                underwaterAge += dt;
+                if (underwaterAge >= ProjectileWaterFlight.CannonLifetime) { spent = true; Destroy(gameObject); return; }
             }
-            if (boomerang)
-            {
-                nextVelocity = Velocity = delta / dt;
-                transform.Rotate(Vector3.up, 900f * dt, Space.Self);
-            }
+            else if (ProjectileWaterFlight.IsSubmerged(transform.position, Radius)) EnterWater(launchedAboveWater);
+            bool boomerang = !waterEntered && !MortarShot && Ammo == InventoryItem.BoomerangCannonball;
+            bool explosive = MortarShot || Ammo == InventoryItem.FireCannonball;
             float remaining = dt;
-            for (int contact = 0; contact < 4 && !spent; contact++)
+            Vector3 boomerangDelta = boomerang ? BoomerangStep(dt) - transform.position : Vector3.zero;
+            for (int contact = 0; contact < 6 && !spent && remaining > .0001f; contact++)
             {
+                bool submerged = ProjectileWaterFlight.IsSubmerged(transform.position, Radius);
+                Vector3 nextVelocity = Velocity;
+                Vector3 delta;
+                if (boomerang)
+                {
+                    delta = boomerangDelta;
+                    nextVelocity = delta / remaining;
+                    transform.Rotate(Vector3.up, 900f * remaining, Space.Self);
+                }
+                else if (submerged) delta = ProjectileWaterFlight.Step(ref nextVelocity, remaining, ProjectileWaterFlight.CannonDrag);
+                else
+                {
+                    nextVelocity = StepVelocity(Velocity, remaining, Drag);
+                    delta = (Velocity + nextVelocity) * (.5f * remaining);
+                }
                 RaycastHit nearest = default;
                 float distance = delta.magnitude;
                 var hits = MortarTrajectory.CastHits(transform.position, delta, Radius, out int count);
                 for (int i = 0; i < count; i++)
                 {
                     var hit = hits[i];
-                    if (!PlayerHitbox.IsTarget(hit.collider)) continue;
+                    if (!PlayerHitbox.IsTarget(hit.collider) || hit.collider.gameObject.layer == LayerMask.NameToLayer("Water")) continue;
                     if (hit.collider.gameObject.layer == LayerMask.NameToLayer("ShipDebris")) continue;
                     if (hit.collider.GetComponentInParent<BoardingWalkSurface>() != null) continue;
-                    var section = PirateSlop.Ships.ShipV3CollisionBatch.ResolveSection(hit.collider, hit.point);
-                    if (section != null && hitSections.Contains(section)) continue;
                     if (hit.transform.IsChildOf(transform) || (Source != null && hit.transform.IsChildOf(Source)) ||
                         hit.collider.GetComponentInParent<CannonShotDamage>() != null) continue;
+                    var section = PirateSlop.Ships.ShipV3CollisionBatch.ResolveSection(hit.collider, hit.point);
+                    if (section != null && hitSections.Contains(section)) continue;
                     var health = hit.collider.GetComponentInParent<CombatHealth>();
                     var target = health != null ? health.transform : hit.collider.transform;
                     if (hitTargets.Contains(target)) continue;
                     if (hit.distance <= distance) { nearest = hit; distance = hit.distance; }
                 }
-                var ocean = OceanSurface.Instance;
-                if (WaterImpactPhysics.Cross(ocean, transform.position, transform.position + delta, Radius, out var waterPoint, out float high))
+                if (!waterEntered && WaterImpactPhysics.Cross(OceanSurface.Instance, transform.position, transform.position + delta, Radius, out var waterPoint, out float waterFraction) &&
+                    (nearest.collider == null || delta.magnitude * waterFraction < nearest.distance))
                 {
-                    if (nearest.collider == null || delta.magnitude * high < nearest.distance)
-                    {
-                        var point = waterPoint;
-                        var incoming = Vector3.Lerp(Velocity, nextVelocity, high);
-                        MoveShot(point + Vector3.up * Radius);
-                        WaterImpactPhysics.Report(point, incoming, 8f, Radius, WaterImpactKind.Projectile, gameObject); GameAudio.Play(SoundCue.Splash, point);
-                        if (boomerang && !returning) BeginReturn(point + Vector3.up * (Radius + .05f), Vector3.up);
-                        else { spent = true; Destroy(gameObject); }
-                        return;
-                    }
+                    Vector3 incoming = Vector3.Lerp(Velocity, nextVelocity, waterFraction);
+                    MoveShot(Vector3.Lerp(transform.position, transform.position + delta, waterFraction) - Vector3.up * .001f);
+                    Velocity = incoming;
+                    WaterImpactPhysics.Report(waterPoint, incoming, 8f, Radius, WaterImpactKind.Projectile, gameObject);
+                    GameAudio.Play(SoundCue.Splash, waterPoint);
+                    EnterWater();
+                    boomerang = false;
+                    remaining *= 1f - waterFraction;
+                    continue;
                 }
                 if (nearest.collider != null)
                 {
@@ -141,6 +151,13 @@ namespace PirateSlop
                     MoveShot(transform.position + delta * fraction);
                     Velocity = Vector3.Lerp(Velocity, nextVelocity, fraction);
                     if (HitSkullMouth(nearest.collider, nearest.point)) return;
+                    if (explosive)
+                    {
+                        ExplodeArea(nearest.point, nearest.normal, nearest.collider);
+                        spent = true;
+                        Destroy(gameObject);
+                        return;
+                    }
                     var barricade = nearest.collider.GetComponentInParent<NetworkBarricade>();
                     if (barricade != null && Ammo == InventoryItem.Cannonball)
                     {
@@ -158,20 +175,20 @@ namespace PirateSlop
                         MoveShot(transform.position + nearest.normal * .02f);
                         if (++worldBounces >= 8 || Velocity.sqrMagnitude < 16f)
                         {
-                            spent = true; Destroy(gameObject); return;
+                            spent = true;
+                            Destroy(gameObject);
+                            return;
                         }
                         remaining *= 1f - fraction;
-                        if (remaining <= .0001f) return;
-                        nextVelocity = StepVelocity(Velocity, remaining, Drag);
-                        delta = (Velocity + nextVelocity) * (.5f * remaining);
                         continue;
                     }
                     Impact(nearest.collider, nearest.point, nearest.normal);
                     if (boomerang && !returning) BeginReturn(nearest.point + nearest.normal * (Radius + .05f), nearest.normal);
-                    else if (boomerang) MoveShot(transform.position + delta * (1f - fraction));
+                    else if (Ammo == InventoryItem.BoomerangCannonball) MoveShot(transform.position + delta * (1f - fraction));
                     return;
                 }
-                MoveShot(transform.position + delta); Velocity = nextVelocity;
+                MoveShot(transform.position + delta);
+                Velocity = nextVelocity;
                 break;
             }
             if (boomerang && (returning ? returnAge >= BoomerangDuration * .5f : age >= BoomerangDuration))
@@ -180,6 +197,22 @@ namespace PirateSlop
                 Destroy(gameObject);
             }
         }
+        void EnterWater(bool reportImpact = false)
+        {
+            if (waterEntered) return;
+            if (reportImpact)
+            {
+                Vector3 point = transform.position;
+                if (OceanSurface.Instance != null) point.y = OceanSurface.Instance.Height(point);
+                WaterImpactPhysics.Report(point, Velocity, 8f, Radius, WaterImpactKind.Projectile, gameObject);
+                GameAudio.Play(SoundCue.Splash, point);
+            }
+            waterEntered = true;
+            underwaterAge = 0f;
+            if (smoke != null) { smoke.Finish(); smoke = null; }
+            waterTrail = UnderwaterProjectileTrail.Create(transform.position, Radius);
+        }
+
 
         bool HitSkullMouth(Collider collider, Vector3 point)
         {
@@ -234,7 +267,7 @@ namespace PirateSlop
                     ship.GetComponent<ShipDestruction>()?.Damage(hit, point, normal, Velocity, Ammo, Attacker, CannonAmmo.MortarBlastRadius(Ammo));
                     ship.Motor.ApplyCannonImpulse(point, Velocity.normalized, 1.5f);
                     if (Ammo == InventoryItem.FireCannonball) ship.Ignite(point, Attacker, blastRadius, hit, normal);
-                    if (Ammo == InventoryItem.IceCannonball) { ship.FreezeFromShot(); ship.ExtinguishFire(point, CannonAmmo.MortarBlastRadius(Ammo)); }
+                    if (Ammo == InventoryItem.IceCannonball) ship.FreezeFromShot(point);
                     if (Ammo == InventoryItem.PushCannonball) ship.GetComponent<ShipController>()?.ApplyPushImpulse(point, Velocity);
                 }
             }
@@ -275,7 +308,7 @@ namespace PirateSlop
                     if (Ammo == InventoryItem.PushCannonball) ship.ApplyPushImpulse(point, Velocity);
                     if (Ammo == InventoryItem.IceCannonball)
                     {
-                        if (network != null) { network.FreezeFromShot(); network.ExtinguishFire(point, 3f); } else ship.Freeze(5f);
+                        if (network != null) network.FreezeFromShot(point); else ship.Freeze(5f);
                     }
                 }
                 if (network != null) network.ImpactVfx(point, normal); else CombatVfx.Impact(point, normal, true, true);

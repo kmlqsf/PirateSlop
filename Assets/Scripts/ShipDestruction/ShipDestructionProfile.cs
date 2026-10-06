@@ -62,6 +62,8 @@ namespace PirateSlop
         public float DebrisScatterSpeed = 7f, SplinterScatterSpeed = 10f;
         public int FallbackSectionId;
         public float CannonDamage = 65f, FireDamagePerSecond = 4f;
+        public int MinimumFireFragments = 16, MaximumFireFragments = 64;
+        public float FireSurfaceGap = 1.5f;
         public float FloodCoefficient = .0015f, MaximumDepth = 8f;
         public float MediumWater = .3f, HighWater = .65f, CriticalWater = .95f;
         public float FloodSpeed = .45f, FloodAcceleration = .35f, FloodRudder = .35f, FloodHeel = 7f;

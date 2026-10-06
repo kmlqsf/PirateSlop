@@ -88,18 +88,20 @@ namespace PirateSlop.Networking
                 var mastGroups = new System.Collections.Generic.HashSet<string>();
                 foreach (var section in destruction.Sections)
                 {
-                    if (section != null && destruction.Definition(section.SectionId).Type == ShipSectionType.Mast)
+                    if (section != null && destruction.Definition(section.SectionId).Type == ShipSectionType.Mast && destruction.MastRepairPoint(section.SectionId, out var basePoint))
                     {
-                        string group = destruction.Definition(section.SectionId).SourceGroup;
-                        if (!mastGroups.Add(group) || !destruction.MastRepairPoint(section.SectionId, out var basePoint)) continue;
-                        Graphics.DrawMesh(surfaceHighlight, Matrix4x4.TRS(basePoint, ship.transform.rotation * Quaternion.Euler(90,0,0), Vector3.one * 1.3f), highlight, 0, camera, 0, null, ShadowCastingMode.Off, false);
-                        var bounds = new Bounds(basePoint, Vector3.one * 1.4f);
-                        if (bounds.IntersectRay(ray, out float distance) && distance < nearest)
+                        string group = destruction.MastGroupKey(section.SectionId);
+                        if (mastGroups.Add(group))
                         {
-                            var point = ray.GetPoint(distance);
-                            if (Reachable(point)) { nearest = distance; aimed = section; aimedFragment = -1; aimedPoint = point; }
+                            Graphics.DrawMesh(surfaceHighlight, Matrix4x4.TRS(basePoint, ship.transform.rotation * Quaternion.Euler(90,0,0), Vector3.one * 1.3f), highlight, 0, camera, 0, null, ShadowCastingMode.Off, false);
+                            var bounds = new Bounds(basePoint, Vector3.one * 1.4f);
+                            if (bounds.IntersectRay(ray, out float distance) && distance < nearest)
+                            {
+                                var point = ray.GetPoint(distance);
+                                if (Reachable(point)) { nearest = distance; aimed = section; aimedFragment = -1; aimedPoint = point; }
+                            }
                         }
-                        continue;
+                        if (destruction.IsMastCollapsed(section.SectionId)) continue;
                     }
                     if (section == null || section.RemovedFragments == 0) continue;
                     for (int i = 0; i < section.RepairCount; i++)
@@ -180,10 +182,11 @@ namespace PirateSlop.Networking
                 if (!destruction.MastRepairPoint(sectionId, out var basePoint)) return false;
                 Vector3 hitPoint = target.transform.TransformPoint(localPoint);
                 if (Vector3.Distance(hitPoint, basePoint) > 1.3f || !Reachable(hitPoint)) return false;
-                if (target != lastShip || sectionId != lastSection || Time.time - lastStrikeAt > 3f) strikes = 0;
+                if (target != lastShip || destruction.MastGroupKey(sectionId) != destruction.MastGroupKey(lastSection) || lastFragment != -1 || Time.time - lastStrikeAt > 3f) strikes = 0;
                 lastShip = target; lastSection = sectionId; lastFragment = -1;
                 nextStrike = Time.time + StrikeInterval; lastStrikeAt = Time.time;
-                if (++strikes >= MastStrikes) { destruction.RepairMast(sectionId); strikes = 0; }
+                int required = destruction.IsMastCollapsed(sectionId) ? MastStrikes : FragmentStrikes;
+                if (++strikes >= required) { destruction.RepairMast(sectionId); strikes = 0; }
                 StrikeObserversRpc(hitPoint);
                 return true;
             }
@@ -208,7 +211,7 @@ namespace PirateSlop.Networking
                 if (aimedHarpoon != null)
                     ContextPrompt.Offer($"ЛКМ — починить гарпунную пушку ({3 - aimedHarpoon.RepairStrikes} удара)", 50);
                 else
-                    ContextPrompt.Offer(aimed != null ? aimedFragment == -1 ? "ЛКМ — восстановить мачту целиком (10 ударов)" : "ЛКМ — починить до 3 осколков (3 удара)" : "Наведитесь на подсвеченную повреждённую часть", aimed != null ? 50 : 5);
+                    ContextPrompt.Offer(aimed != null ? aimedFragment == -1 ? aimed.Owner.IsMastCollapsed(aimed.SectionId) ? "ЛКМ — восстановить мачту целиком (10 ударов)" : "ЛКМ — починить повреждение мачты (3 удара)" : "ЛКМ — починить до 3 соседних частей (3 удара)" : "Наведитесь на подсвеченную повреждённую часть", aimed != null ? 50 : 5);
             }
         }
         void OnDestroy() { if (model != null) Destroy(model); if (highlight != null) Destroy(highlight); if (surfaceHighlight != null) Destroy(surfaceHighlight); }

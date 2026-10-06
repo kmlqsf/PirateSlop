@@ -104,7 +104,7 @@ namespace PirateSlop
             if (keys == null) return;
             if (engaged)
             {
-                if (player.Motor.IsDead || player.Motor.IsSwimming || player.Motor.IsClimbing || Cursor.lockState != CursorLockMode.Locked ||
+                if (player.Motor.IsDead || player.Motor.IsFrozen || player.Motor.IsSwimming || player.Motor.IsClimbing || Cursor.lockState != CursorLockMode.Locked ||
                     (portable ? equipment == null || !equipment.Active || inventory.ItemAt(inventory.SelectedSlot) != InventoryItem.Spyglass || Mouse.current == null || !Mouse.current.rightButton.isPressed : Vector3.Distance(transform.position, station.transform.position) > 3.5f) || keys.eKey.wasPressedThisFrame || keys.escapeKey.wasPressedThisFrame)
                 { Exit(); return; }
                 if (Mouse.current != null)

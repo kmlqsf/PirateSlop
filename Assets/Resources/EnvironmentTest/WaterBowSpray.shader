@@ -83,11 +83,12 @@ Shader "Hidden/PirateSlop/WaterBowSpray"
                 float opaqueDepth = LinearEyeDepth(SampleSceneDepth(screenUV), _ZBufferParams);
                 float particleDepth = -TransformWorldToView(input.positionWS).z;
                 float soft = saturate((opaqueDepth - particleDepth) / max(_SoftDistance, .01));
-                float nearFade = smoothstep(.18, .6, distance(GetCameraPositionWS(), input.positionWS));
+                float nearFade = smoothstep(.04, .22, distance(GetCameraPositionWS(), input.positionWS));
                 float pixels = 2 / max(length(ddx(input.uv)) + length(ddy(input.uv)), .001);
                 float pixelFade = smoothstep(.35, 1.15, pixels);
                 float rim = pow(1 - saturate(dot(normal, view)), 2);
-                half alpha = min(.45, saturate(input.color.a * _Tint.a * coverage * soft * nearFade * pixelFade * (.28 + rim * .5)));
+                float plume = smoothstep(.7, .9, input.color.a);
+                half alpha = min(lerp(.45, .7, plume), saturate(input.color.a * _Tint.a * coverage * soft * nearFade * pixelFade * lerp(.28 + rim * .5, .75 + rim * .2, plume)));
                 clip(alpha - .002);
                 Light light = GetMainLight(TransformWorldToShadowCoord(input.positionWS));
                 half3 ambient = max(SampleSH(normal), 0);

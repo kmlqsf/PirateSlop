@@ -102,7 +102,7 @@ namespace PirateSlop
         public string SwapHint(InventoryItem incoming) => "ВЗЯТЬ: " + InventoryIcons.ItemName(incoming) + " ×1 · НА ПАЛУБУ: " + InventoryIcons.ItemName(ItemAt(SelectedSlot)) + " ×" + ItemCount(SelectedSlot) + " · Shift+E — обменять весь выбранный слот";
         public void OpenLoot(NetworkLootChest target)
         {
-            if (target == null || !target.Available || !network.IsOwner || motor.IsDead || network.LootHandsBusy || Vector3.Distance(transform.position, target.transform.position) > 5f) return;
+            if (target == null || !target.Available || !network.IsOwner || motor.IsDead || motor.IsFrozen || network.LootHandsBusy || Vector3.Distance(transform.position, target.transform.position) > 5f) return;
             if (!lootWindow) GameAudio.Play(SoundCue.ChestOpen, target.transform.position);
             openChest = target; lootWindow = true; lootOwner = this;
             AdvancedPlayerController.SetCursor(false);
@@ -134,6 +134,7 @@ namespace PirateSlop
         public bool RodSelected => RodAt(SelectedSlot);
         public bool PistolSelected => PistolAt(SelectedSlot) && !HandsOccupied;
         public bool Placing => HasCannon(SelectedSlot) || BarricadeSelected;
+        public bool PlacementActive => Placing && !cancelled && !HandsOccupied && !ControlFocused && !lootWindow;
         public bool InteractionUsed { get; private set; }
         public bool ControlFocused => GetComponent<DirectShipControls>()?.BlocksPrimary ?? false;
         public bool ControlItemHidden => GetComponent<DirectShipControls>()?.ItemHidden ?? false;
@@ -189,7 +190,7 @@ namespace PirateSlop
             if (lootWindow)
             {
                 InteractionUsed = true;
-                if (openChest == null || !openChest.Available || motor.IsDead || !Networked || network.LootHandsBusy || Vector3.Distance(transform.position, openChest.transform.position) > 5f)
+                if (openChest == null || !openChest.Available || motor.IsDead || motor.IsFrozen || !Networked || network.LootHandsBusy || Vector3.Distance(transform.position, openChest.transform.position) > 5f)
                     CloseLoot(Networked && network.IsOwner && !motor.IsDead);
                 else if (Keyboard.current != null && (Keyboard.current.escapeKey.wasPressedThisFrame || Keyboard.current.eKey.wasPressedThisFrame)) CloseLoot(true);
                 return;
@@ -305,6 +306,18 @@ namespace PirateSlop
             placementPending = Placing && aimedCannon == null;
         }
 
+        void RotatePlacement(Mouse mouse)
+        {
+            float scroll = mouse.scroll.ReadValue().y;
+            if (InputSystem.settings.scrollDeltaBehavior == InputSettings.ScrollDeltaBehavior.KeepPlatformSpecificInputRange)
+            {
+#if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
+                scroll /= 120f;
+#endif
+            }
+            rotation = Mathf.Repeat(rotation + scroll * 5f, 360f);
+        }
+
         public void PresentPlacement()
         {
             if (BarricadeSelected) { PresentBarricadePlacement(); return; }
@@ -320,8 +333,7 @@ namespace PirateSlop
             if (nearest.collider != null && nearest.collider.GetComponentInParent<SimpleCannon>() != null) return;
             if (mouse.rightButton.wasPressedThisFrame) cancelled = true;
             if (cancelled) return;
-            rotation += mouse.scroll.ReadValue().y * .125f;
-            if (keyboard.rKey.wasPressedThisFrame) rotation += 15f;
+            RotatePlacement(mouse);
             float lean = ((keyboard.eKey.isPressed ? 1f : 0f) - (keyboard.qKey.isPressed ? 1f : 0f)) * 60f * Time.deltaTime;
             if (keyboard.leftShiftKey.isPressed || keyboard.rightShiftKey.isPressed) roll += lean;
             else tilt += lean;
@@ -488,7 +500,7 @@ namespace PirateSlop
             }
             if (Time.unscaledTime - selectionShownAt < 2.5f)
                 PirateHudStyle.Label(new Rect(HudLayout.Width * .5f - 180, HudLayout.Height - slotSize - 56, 360, 26), InventoryIcons.ItemName(ItemAt(SelectedSlot)), PirateHudStyle.Paper);
-            string hint = aimedCannon != null && aimedCannon.Network != null && aimedCannon.Network.HasBoarding(aimedCannon.Index) ? "Колесо вверх — натянуть · вниз — ослабить канат" : aimedBall != null && aimedBall.Network != null ? "ЛКМ / E — взять ядра (до 2 в слоте)" : BallSelected && aimedCannon != null && !aimedCannon.AcceptsAmmo(BallItem(SelectedSlot)) ? "Неподходящий боеприпас · E — прицелиться" : BallSelected && aimedCannon != null && !aimedCannon.IsLoaded ? "E — зарядить выбранное ядро" : chest != null ? chest.Hint(this) : pickup != null ? (EmptySlot() >= 0 ? "E — взять разобранную пушку" : "Инвентарь заполнен") : Placing && !cancelled ? "ЛКМ — поставить · R/колесо — поворот · Q/E — наклон\nShift+Q/E — крен · ПКМ — отменить" : "";
+            string hint = aimedCannon != null && aimedCannon.Network != null && aimedCannon.Network.HasBoarding(aimedCannon.Index) ? "Колесо вверх — натянуть · вниз — ослабить канат" : aimedBall != null && aimedBall.Network != null ? "ЛКМ / E — взять ядра (до 2 в слоте)" : BallSelected && aimedCannon != null && !aimedCannon.AcceptsAmmo(BallItem(SelectedSlot)) ? "Неподходящий боеприпас · E — прицелиться" : BallSelected && aimedCannon != null && !aimedCannon.IsLoaded ? "E — зарядить выбранное ядро" : chest != null ? chest.Hint(this) : pickup != null ? (EmptySlot() >= 0 ? "E — взять разобранную пушку" : "Инвентарь заполнен") : Placing && !cancelled ? "ЛКМ — поставить · Колёсико ↕ — поворот · Q/E — наклон\nShift+Q/E — крен · ПКМ — отменить" : "";
             if (BarricadeSelected) hint = "";
             if (hint.Length > 0) ContextPrompt.Offer(hint, 40);
             if (aimedRumShelf != null) ContextPrompt.Offer(aimedRumShelf.Hint, 40);

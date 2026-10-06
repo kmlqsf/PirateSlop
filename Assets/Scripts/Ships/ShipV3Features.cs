@@ -198,7 +198,7 @@ namespace PirateSlop.Ships
 
         public bool CanReachDice(NetworkPlayer player)
         {
-            if (!CanUseDice || player == null || player.Motor == null || player.Motor.IsDead || player.Motor.IsSwimming || player.Motor.IsClimbing) return false;
+            if (!CanUseDice || player == null || player.Motor == null || player.Motor.IsDead || player.Motor.IsFrozen || player.Motor.IsSwimming || player.Motor.IsClimbing) return false;
             int slot = NearestDiceSlot(player.transform.position);
             if (slot < 0) return false;
             Vector3 point = transform.TransformPoint(DiceSlots[slot].RestCup) + transform.up * .2f;
@@ -325,7 +325,7 @@ namespace PirateSlop.Ships
         {
             if (sender == null || !sender.IsActive || ship.IsSinking) return null;
             var player = SessionController.Instance.GetPlayer(sender.ClientId);
-            return player != null && !player.Motor.IsDead && !player.Motor.IsSwimming && !player.Motor.IsClimbing ? player : null;
+            return player != null && !player.Motor.IsDead && !player.Motor.IsFrozen && !player.Motor.IsSwimming && !player.Motor.IsClimbing ? player : null;
         }
 
         bool Reach(NetworkPlayer player, Transform target)
@@ -878,11 +878,10 @@ namespace PirateSlop.Ships
             item.Place(NetworkObject, item.transform.position, item.transform.rotation);
             ServerManager.Spawn(item.NetworkObject);
             var ball = item.GetComponent<Cannonball>();
-            ball.Release();
-            ball.AttachToPlatform(null);
-            ball.Body.isKinematic = false;
-            ball.Body.useGravity = true;
-            ball.Body.linearVelocity = ship.Motor.CannonPointVelocity(item.transform.position) + transform.TransformDirection(DispenserDirection).normalized * .35f;
+            Collider housing = null;
+            foreach (var candidate in GetComponentsInChildren<Collider>(true))
+                if (candidate.name == "V15_Hold_Cannonball_Dispenser") { housing = candidate; break; }
+            ball.Eject(housing, ship.Motor.CannonPointVelocity(item.transform.position) + transform.TransformDirection(DispenserDirection).normalized * 3f);
         }
 
         [ObserversRpc(BufferLast = true)]

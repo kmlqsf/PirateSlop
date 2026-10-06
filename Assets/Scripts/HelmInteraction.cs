@@ -31,7 +31,7 @@ public class HelmInteraction : MonoBehaviour
     public bool TryTakeControl(AdvancedPlayerController candidate)
     {
         ValidateGrip();
-        if (candidate != null && !candidate.IsDead && InRange(candidate) && IsControlling && player != candidate)
+        if (candidate != null && !candidate.IsDead && !candidate.IsFrozen && InRange(candidate) && IsControlling && player != candidate)
         {
             var incoming = candidate.GetComponent<PirateSlop.Networking.NetworkPlayer>();
             var current = player.GetComponent<PirateSlop.Networking.NetworkPlayer>();
@@ -41,7 +41,7 @@ public class HelmInteraction : MonoBehaviour
                 ReleaseControl();
             }
         }
-        if (candidate == null || candidate.IsDead || !InRange(candidate) || (IsControlling && player != candidate)) return false;
+        if (candidate == null || candidate.IsDead || candidate.IsFrozen || !InRange(candidate) || (IsControlling && player != candidate)) return false;
         player = candidate; IsControlling = true; lastGrip = Time.time;
         var participant = candidate.GetComponent<PirateSlop.Networking.NetworkPlayer>();
         if (participant != null && participant.IsServerInitialized && !participant.IsBot.Value) LastHumanControlTime = Time.time;
@@ -68,7 +68,7 @@ public class HelmInteraction : MonoBehaviour
     }
     public void ValidateGrip()
     {
-        if (IsControlling && (player == null || player.IsDead || !InRange(player) || Time.time - lastGrip > .75f)) ReleaseControl();
+        if (IsControlling && (player == null || player.IsDead || player.IsFrozen || !InRange(player) || Time.time - lastGrip > .75f)) ReleaseControl();
     }
     void OnDisable() { Active.Remove(this); ReleaseControl(); }
     public void Simulate(PlayerCommand command, AdvancedPlayerController candidate, float dt)

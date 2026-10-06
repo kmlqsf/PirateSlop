@@ -144,6 +144,7 @@ namespace PirateSlop.World
             go.AddComponent<MeshFilter>().sharedMesh = mesh;
             var renderer = go.AddComponent<MeshRenderer>(); renderer.sharedMaterial = Profile.TerrainMaterial;
             go.AddComponent<MeshCollider>().sharedMesh = mesh;
+            go.AddComponent<CoastalRockVisual>().SetTerrainContour(mesh);
             if (Profile.TerrainLOD) AddTerrainLOD(go, mesh, n, renderer);
         }
         void AddTerrainLOD(GameObject terrain, Mesh source, int resolution, Renderer full)

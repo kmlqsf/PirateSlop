@@ -92,23 +92,6 @@
 | --- | --- |
 | [Art/Blender/Characters/PirateCaptain/Pirate_Captain.blend](<../../Art/Blender/Characters/PirateCaptain/Pirate_Captain.blend>) | Редактируемая сцена Blender |
 
-## Art/Blender/Characters/Review
-
-| Файл | Краткое описание |
-| --- | --- |
-| [Art/Blender/Characters/Review/screenshot-20260910-011704.png](<../../Art/Blender/Characters/Review/screenshot-20260910-011704.png>) | Изображение / текстура |
-| [Art/Blender/Characters/Review/screenshot-20260910-011712.png](<../../Art/Blender/Characters/Review/screenshot-20260910-011712.png>) | Изображение / текстура |
-| [Art/Blender/Characters/Review/screenshot-20260910-011730.png](<../../Art/Blender/Characters/Review/screenshot-20260910-011730.png>) | Изображение / текстура |
-| [Art/Blender/Characters/Review/screenshot-20260910-011811.png](<../../Art/Blender/Characters/Review/screenshot-20260910-011811.png>) | Изображение / текстура |
-| [Art/Blender/Characters/Review/screenshot-20260910-011838.png](<../../Art/Blender/Characters/Review/screenshot-20260910-011838.png>) | Изображение / текстура |
-| [Art/Blender/Characters/Review/screenshot-20260910-115013.png](<../../Art/Blender/Characters/Review/screenshot-20260910-115013.png>) | Изображение / текстура |
-| [Art/Blender/Characters/Review/screenshot-20260910-115037.png](<../../Art/Blender/Characters/Review/screenshot-20260910-115037.png>) | Изображение / текстура |
-| [Art/Blender/Characters/Review/screenshot-20260910-115128.png](<../../Art/Blender/Characters/Review/screenshot-20260910-115128.png>) | Изображение / текстура |
-| [Art/Blender/Characters/Review/screenshot-20260910-115159.png](<../../Art/Blender/Characters/Review/screenshot-20260910-115159.png>) | Изображение / текстура |
-| [Art/Blender/Characters/Review/screenshot-20260910-115719.png](<../../Art/Blender/Characters/Review/screenshot-20260910-115719.png>) | Изображение / текстура |
-| [Art/Blender/Characters/Review/screenshot-20260910-115758.png](<../../Art/Blender/Characters/Review/screenshot-20260910-115758.png>) | Изображение / текстура |
-| [Art/Blender/Characters/Review/screenshot-20260910-115817.png](<../../Art/Blender/Characters/Review/screenshot-20260910-115817.png>) | Изображение / текстура |
-
 ## Art/Blender/ClimbingRigging
 
 | Файл | Краткое описание |
@@ -122,7 +105,6 @@
 | --- | --- |
 | [Art/Blender/Creatures/ShipMonkey/README.md](<../../Art/Blender/Creatures/ShipMonkey/README.md>) | Документация; Корабельная обезьянка |
 | [Art/Blender/Creatures/ShipMonkey/ShipMonkey.blend](<../../Art/Blender/Creatures/ShipMonkey/ShipMonkey.blend>) | Редактируемая сцена Blender; Корабельная обезьянка |
-| [Art/Blender/Creatures/ShipMonkey/ShipMonkey.blend1](<../../Art/Blender/Creatures/ShipMonkey/ShipMonkey.blend1>) | Файл .blend1 |
 | [Art/Blender/Creatures/ShipMonkey/monkey_activities.py](<../../Art/Blender/Creatures/ShipMonkey/monkey_activities.py>) | Инструмент Python; Корабельная обезьянка |
 | [Art/Blender/Creatures/ShipMonkey/monkey_animation.py](<../../Art/Blender/Creatures/ShipMonkey/monkey_animation.py>) | Инструмент Python; Корабельная обезьянка |
 | [Art/Blender/Creatures/ShipMonkey/monkey_export.py](<../../Art/Blender/Creatures/ShipMonkey/monkey_export.py>) | Инструмент Python; Корабельная обезьянка |
@@ -488,8 +470,10 @@
 | --- | --- |
 | [Art/Blender/PirateLocomotion/Corsair_BindPose.fbx](<../../Art/Blender/PirateLocomotion/Corsair_BindPose.fbx>) | Модель / анимации FBX |
 | [Art/Blender/PirateLocomotion/Corsair_Locomotion.blend](<../../Art/Blender/PirateLocomotion/Corsair_Locomotion.blend>) | Редактируемая сцена Blender |
+| [Art/Blender/PirateLocomotion/Corsair_Locomotion.blend1](<../../Art/Blender/PirateLocomotion/Corsair_Locomotion.blend1>) | Файл .blend1 |
 | [Art/Blender/PirateLocomotion/Corsair_Run.fbx](<../../Art/Blender/PirateLocomotion/Corsair_Run.fbx>) | Модель / анимации FBX |
 | [Art/Blender/PirateLocomotion/Corsair_Sabre.blend](<../../Art/Blender/PirateLocomotion/Corsair_Sabre.blend>) | Редактируемая сцена Blender |
+| [Art/Blender/PirateLocomotion/Corsair_Sabre.blend1](<../../Art/Blender/PirateLocomotion/Corsair_Sabre.blend1>) | Файл .blend1 |
 | [Art/Blender/PirateLocomotion/Corsair_Sabre_Combo.fbx](<../../Art/Blender/PirateLocomotion/Corsair_Sabre_Combo.fbx>) | Модель / анимации FBX |
 | [Art/Blender/PirateLocomotion/Corsair_Walk.fbx](<../../Art/Blender/PirateLocomotion/Corsair_Walk.fbx>) | Модель / анимации FBX |
 | [Art/Blender/PirateLocomotion/README.txt](<../../Art/Blender/PirateLocomotion/README.txt>) | Текстовые данные |
@@ -614,6 +598,7 @@
 | Файл | Краткое описание |
 | --- | --- |
 | [Art/Blender/Whale/HarpoonConcepts/HarpoonConcepts.blend](<../../Art/Blender/Whale/HarpoonConcepts/HarpoonConcepts.blend>) | Редактируемая сцена Blender |
+| [Art/Blender/Whale/HarpoonConcepts/HarpoonConcepts.blend1](<../../Art/Blender/Whale/HarpoonConcepts/HarpoonConcepts.blend1>) | Файл .blend1 |
 | [Art/Blender/Whale/HarpoonConcepts/build_harpoon_concepts.py](<../../Art/Blender/Whale/HarpoonConcepts/build_harpoon_concepts.py>) | Инструмент Python |
 
 ## Art/Blender/Whale/Harpoon_Broken
@@ -629,6 +614,47 @@
 | [Art/Blender/World/LocationExpansion.blend](<../../Art/Blender/World/LocationExpansion.blend>) | Редактируемая сцена Blender |
 | [Art/Blender/World/StarterIsland.blend](<../../Art/Blender/World/StarterIsland.blend>) | Редактируемая сцена Blender |
 | [Art/Blender/World/StarterIslandV2.blend](<../../Art/Blender/World/StarterIslandV2.blend>) | Редактируемая сцена Blender |
+
+## Art/Blender/World/CoastalEnvironment
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/World/CoastalEnvironment/CoastalEnvironment.blend](<../../Art/Blender/World/CoastalEnvironment/CoastalEnvironment.blend>) | Редактируемая сцена Blender; Мир, острова и океан |
+| [Art/Blender/World/CoastalEnvironment/CoastalSourceModuleQC.blend](<../../Art/Blender/World/CoastalEnvironment/CoastalSourceModuleQC.blend>) | Редактируемая сцена Blender; Мир, острова и океан |
+| [Art/Blender/World/CoastalEnvironment/CoastalTripoCollection.blend](<../../Art/Blender/World/CoastalEnvironment/CoastalTripoCollection.blend>) | Редактируемая сцена Blender; Мир, острова и океан |
+| [Art/Blender/World/CoastalEnvironment/README_TRIPO_ARCH.md](<../../Art/Blender/World/CoastalEnvironment/README_TRIPO_ARCH.md>) | Документация; Мир, острова и океан |
+| [Art/Blender/World/CoastalEnvironment/README_TRIPO_COLLECTION.md](<../../Art/Blender/World/CoastalEnvironment/README_TRIPO_COLLECTION.md>) | Документация; Мир, острова и океан |
+| [Art/Blender/World/CoastalEnvironment/SeaArch_Huge_A_CReview.blend](<../../Art/Blender/World/CoastalEnvironment/SeaArch_Huge_A_CReview.blend>) | Редактируемая сцена Blender; Мир, острова и океан |
+| [Art/Blender/World/CoastalEnvironment/SeaArch_Huge_A_NativeModules.blend](<../../Art/Blender/World/CoastalEnvironment/SeaArch_Huge_A_NativeModules.blend>) | Редактируемая сцена Blender; Мир, острова и океан |
+| [Art/Blender/World/CoastalEnvironment/SeaArch_Huge_A_Tripo.blend](<../../Art/Blender/World/CoastalEnvironment/SeaArch_Huge_A_Tripo.blend>) | Редактируемая сцена Blender; Мир, острова и океан |
+| [Art/Blender/World/CoastalEnvironment/SeaArch_UserCheckpoint_20261007_003744.blend](<../../Art/Blender/World/CoastalEnvironment/SeaArch_UserCheckpoint_20261007_003744.blend>) | Редактируемая сцена Blender |
+| [Art/Blender/World/CoastalEnvironment/add_tripo_arch_footstones.py](<../../Art/Blender/World/CoastalEnvironment/add_tripo_arch_footstones.py>) | Инструмент Python; Мир, острова и океан |
+| [Art/Blender/World/CoastalEnvironment/add_tripo_arch_plants.py](<../../Art/Blender/World/CoastalEnvironment/add_tripo_arch_plants.py>) | Инструмент Python; Мир, острова и океан |
+| [Art/Blender/World/CoastalEnvironment/assemble_cc0_arch.py](<../../Art/Blender/World/CoastalEnvironment/assemble_cc0_arch.py>) | Инструмент Python; Мир, острова и океан |
+| [Art/Blender/World/CoastalEnvironment/assemble_tripo_arch.py](<../../Art/Blender/World/CoastalEnvironment/assemble_tripo_arch.py>) | Инструмент Python; Мир, острова и океан |
+| [Art/Blender/World/CoastalEnvironment/assemble_tripo_collection.py](<../../Art/Blender/World/CoastalEnvironment/assemble_tripo_collection.py>) | Инструмент Python; Мир, острова и океан |
+| [Art/Blender/World/CoastalEnvironment/build_coastal_c.py](<../../Art/Blender/World/CoastalEnvironment/build_coastal_c.py>) | Инструмент Python; Мир, острова и океан |
+| [Art/Blender/World/CoastalEnvironment/clear_arch_screen_fragment.py](<../../Art/Blender/World/CoastalEnvironment/clear_arch_screen_fragment.py>) | Инструмент Python |
+| [Art/Blender/World/CoastalEnvironment/export_tripo_collection.py](<../../Art/Blender/World/CoastalEnvironment/export_tripo_collection.py>) | Инструмент Python; Мир, острова и океан |
+| [Art/Blender/World/CoastalEnvironment/finalize_arch_c.py](<../../Art/Blender/World/CoastalEnvironment/finalize_arch_c.py>) | Инструмент Python |
+| [Art/Blender/World/CoastalEnvironment/finish_arch_review.py](<../../Art/Blender/World/CoastalEnvironment/finish_arch_review.py>) | Инструмент Python |
+| [Art/Blender/World/CoastalEnvironment/finish_cc0_arch_layout.py](<../../Art/Blender/World/CoastalEnvironment/finish_cc0_arch_layout.py>) | Инструмент Python |
+| [Art/Blender/World/CoastalEnvironment/generate_coastal.py](<../../Art/Blender/World/CoastalEnvironment/generate_coastal.py>) | Инструмент Python; Мир, острова и океан |
+| [Art/Blender/World/CoastalEnvironment/import_tripo_arch_sources.py](<../../Art/Blender/World/CoastalEnvironment/import_tripo_arch_sources.py>) | Инструмент Python; Мир, острова и океан |
+| [Art/Blender/World/CoastalEnvironment/inspect_source_modules.py](<../../Art/Blender/World/CoastalEnvironment/inspect_source_modules.py>) | Инструмент Python |
+| [Art/Blender/World/CoastalEnvironment/physical-baseline.json](<../../Art/Blender/World/CoastalEnvironment/physical-baseline.json>) | Конфигурация / данные JSON; Мир, острова и океан |
+| [Art/Blender/World/CoastalEnvironment/prepare_cc0_arch_modules.py](<../../Art/Blender/World/CoastalEnvironment/prepare_cc0_arch_modules.py>) | Инструмент Python |
+| [Art/Blender/World/CoastalEnvironment/refine_cc0_arch_placement.py](<../../Art/Blender/World/CoastalEnvironment/refine_cc0_arch_placement.py>) | Инструмент Python |
+| [Art/Blender/World/CoastalEnvironment/refine_cliffwall_b_base.py](<../../Art/Blender/World/CoastalEnvironment/refine_cliffwall_b_base.py>) | Инструмент Python; Мир, острова и океан |
+| [Art/Blender/World/CoastalEnvironment/refine_collection.py](<../../Art/Blender/World/CoastalEnvironment/refine_collection.py>) | Инструмент Python; Мир, острова и океан |
+| [Art/Blender/World/CoastalEnvironment/refine_tripo_arch_vault.py](<../../Art/Blender/World/CoastalEnvironment/refine_tripo_arch_vault.py>) | Инструмент Python; Мир, острова и океан |
+| [Art/Blender/World/CoastalEnvironment/render_cc0_arch.py](<../../Art/Blender/World/CoastalEnvironment/render_cc0_arch.py>) | Инструмент Python |
+| [Art/Blender/World/CoastalEnvironment/render_cliffwall_b_base.py](<../../Art/Blender/World/CoastalEnvironment/render_cliffwall_b_base.py>) | Инструмент Python; Мир, острова и океан |
+| [Art/Blender/World/CoastalEnvironment/render_source_module_qc.py](<../../Art/Blender/World/CoastalEnvironment/render_source_module_qc.py>) | Инструмент Python |
+| [Art/Blender/World/CoastalEnvironment/render_tripo_arch.py](<../../Art/Blender/World/CoastalEnvironment/render_tripo_arch.py>) | Инструмент Python; Мир, острова и океан |
+| [Art/Blender/World/CoastalEnvironment/render_tripo_collection.py](<../../Art/Blender/World/CoastalEnvironment/render_tripo_collection.py>) | Инструмент Python; Мир, острова и океан |
+| [Art/Blender/World/CoastalEnvironment/render_tripo_source_contact.py](<../../Art/Blender/World/CoastalEnvironment/render_tripo_source_contact.py>) | Инструмент Python; Мир, острова и океан |
+| [Art/Blender/World/CoastalEnvironment/revise_tripo_arch_placement.py](<../../Art/Blender/World/CoastalEnvironment/revise_tripo_arch_placement.py>) | Инструмент Python |
 
 ## Art/Branding
 
@@ -663,6 +689,204 @@
 | [Art/External/DiceProps/MedievalPropsPack/MedievalBeerMug/Mug_Metallic.png](<../../Art/External/DiceProps/MedievalPropsPack/MedievalBeerMug/Mug_Metallic.png>) | Изображение / текстура |
 | [Art/External/DiceProps/MedievalPropsPack/MedievalBeerMug/Mug_Normal_DirectX.png](<../../Art/External/DiceProps/MedievalPropsPack/MedievalBeerMug/Mug_Normal_DirectX.png>) | Изображение / текстура |
 | [Art/External/DiceProps/MedievalPropsPack/MedievalBeerMug/Mug_Roughness.png](<../../Art/External/DiceProps/MedievalPropsPack/MedievalBeerMug/Mug_Roughness.png>) | Изображение / текстура |
+
+## Art/Sources/CoastalEnvironment
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Sources/CoastalEnvironment/PolyHaven-license.html](<../../Art/Sources/CoastalEnvironment/PolyHaven-license.html>) | Файл .html |
+| [Art/Sources/CoastalEnvironment/SOURCES.md](<../../Art/Sources/CoastalEnvironment/SOURCES.md>) | Документация; Мир, острова и океан |
+| [Art/Sources/CoastalEnvironment/TRIPO_MODULAR_ROCK_BRIEF.md](<../../Art/Sources/CoastalEnvironment/TRIPO_MODULAR_ROCK_BRIEF.md>) | Документация; Мир, острова и океан |
+| [Art/Sources/CoastalEnvironment/sources.json](<../../Art/Sources/CoastalEnvironment/sources.json>) | Конфигурация / данные JSON |
+
+## Art/Sources/CoastalEnvironment/coastal_cliff_02
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Sources/CoastalEnvironment/coastal_cliff_02/coastal_cliff_02_2k.fbx](<../../Art/Sources/CoastalEnvironment/coastal_cliff_02/coastal_cliff_02_2k.fbx>) | Модель / анимации FBX |
+| [Art/Sources/CoastalEnvironment/coastal_cliff_02/files.json](<../../Art/Sources/CoastalEnvironment/coastal_cliff_02/files.json>) | Конфигурация / данные JSON |
+| [Art/Sources/CoastalEnvironment/coastal_cliff_02/info.json](<../../Art/Sources/CoastalEnvironment/coastal_cliff_02/info.json>) | Конфигурация / данные JSON |
+
+## Art/Sources/CoastalEnvironment/coastal_cliff_02/textures
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Sources/CoastalEnvironment/coastal_cliff_02/textures/coastal_cliff_02_ao_2k.png](<../../Art/Sources/CoastalEnvironment/coastal_cliff_02/textures/coastal_cliff_02_ao_2k.png>) | Изображение / текстура |
+| [Art/Sources/CoastalEnvironment/coastal_cliff_02/textures/coastal_cliff_02_arm_2k.png](<../../Art/Sources/CoastalEnvironment/coastal_cliff_02/textures/coastal_cliff_02_arm_2k.png>) | Изображение / текстура |
+| [Art/Sources/CoastalEnvironment/coastal_cliff_02/textures/coastal_cliff_02_diff_2k.jpg](<../../Art/Sources/CoastalEnvironment/coastal_cliff_02/textures/coastal_cliff_02_diff_2k.jpg>) | Изображение / текстура |
+| [Art/Sources/CoastalEnvironment/coastal_cliff_02/textures/coastal_cliff_02_diff_2k.png](<../../Art/Sources/CoastalEnvironment/coastal_cliff_02/textures/coastal_cliff_02_diff_2k.png>) | Изображение / текстура |
+| [Art/Sources/CoastalEnvironment/coastal_cliff_02/textures/coastal_cliff_02_nor_dx_2k.png](<../../Art/Sources/CoastalEnvironment/coastal_cliff_02/textures/coastal_cliff_02_nor_dx_2k.png>) | Изображение / текстура |
+| [Art/Sources/CoastalEnvironment/coastal_cliff_02/textures/coastal_cliff_02_nor_gl_2k.exr](<../../Art/Sources/CoastalEnvironment/coastal_cliff_02/textures/coastal_cliff_02_nor_gl_2k.exr>) | HDR-текстура |
+| [Art/Sources/CoastalEnvironment/coastal_cliff_02/textures/coastal_cliff_02_nor_gl_2k.png](<../../Art/Sources/CoastalEnvironment/coastal_cliff_02/textures/coastal_cliff_02_nor_gl_2k.png>) | Изображение / текстура |
+| [Art/Sources/CoastalEnvironment/coastal_cliff_02/textures/coastal_cliff_02_rough_2k.exr](<../../Art/Sources/CoastalEnvironment/coastal_cliff_02/textures/coastal_cliff_02_rough_2k.exr>) | HDR-текстура |
+| [Art/Sources/CoastalEnvironment/coastal_cliff_02/textures/coastal_cliff_02_rough_2k.png](<../../Art/Sources/CoastalEnvironment/coastal_cliff_02/textures/coastal_cliff_02_rough_2k.png>) | Изображение / текстура |
+
+## Art/Sources/CoastalEnvironment/fern_02
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Sources/CoastalEnvironment/fern_02/fern_02_2k.fbx](<../../Art/Sources/CoastalEnvironment/fern_02/fern_02_2k.fbx>) | Модель / анимации FBX |
+| [Art/Sources/CoastalEnvironment/fern_02/files.json](<../../Art/Sources/CoastalEnvironment/fern_02/files.json>) | Конфигурация / данные JSON |
+| [Art/Sources/CoastalEnvironment/fern_02/info.json](<../../Art/Sources/CoastalEnvironment/fern_02/info.json>) | Конфигурация / данные JSON |
+
+## Art/Sources/CoastalEnvironment/fern_02/textures
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Sources/CoastalEnvironment/fern_02/textures/fern_02_alpha_2k.png](<../../Art/Sources/CoastalEnvironment/fern_02/textures/fern_02_alpha_2k.png>) | Изображение / текстура |
+| [Art/Sources/CoastalEnvironment/fern_02/textures/fern_02_ao_2k.png](<../../Art/Sources/CoastalEnvironment/fern_02/textures/fern_02_ao_2k.png>) | Изображение / текстура |
+| [Art/Sources/CoastalEnvironment/fern_02/textures/fern_02_arm_2k.png](<../../Art/Sources/CoastalEnvironment/fern_02/textures/fern_02_arm_2k.png>) | Изображение / текстура |
+| [Art/Sources/CoastalEnvironment/fern_02/textures/fern_02_diff_2k.jpg](<../../Art/Sources/CoastalEnvironment/fern_02/textures/fern_02_diff_2k.jpg>) | Изображение / текстура |
+| [Art/Sources/CoastalEnvironment/fern_02/textures/fern_02_diff_2k.png](<../../Art/Sources/CoastalEnvironment/fern_02/textures/fern_02_diff_2k.png>) | Изображение / текстура |
+| [Art/Sources/CoastalEnvironment/fern_02/textures/fern_02_disp_2k.png](<../../Art/Sources/CoastalEnvironment/fern_02/textures/fern_02_disp_2k.png>) | Изображение / текстура |
+| [Art/Sources/CoastalEnvironment/fern_02/textures/fern_02_nor_dx_2k.png](<../../Art/Sources/CoastalEnvironment/fern_02/textures/fern_02_nor_dx_2k.png>) | Изображение / текстура |
+| [Art/Sources/CoastalEnvironment/fern_02/textures/fern_02_nor_gl_2k.exr](<../../Art/Sources/CoastalEnvironment/fern_02/textures/fern_02_nor_gl_2k.exr>) | HDR-текстура |
+| [Art/Sources/CoastalEnvironment/fern_02/textures/fern_02_nor_gl_2k.png](<../../Art/Sources/CoastalEnvironment/fern_02/textures/fern_02_nor_gl_2k.png>) | Изображение / текстура |
+| [Art/Sources/CoastalEnvironment/fern_02/textures/fern_02_rough_2k.exr](<../../Art/Sources/CoastalEnvironment/fern_02/textures/fern_02_rough_2k.exr>) | HDR-текстура |
+| [Art/Sources/CoastalEnvironment/fern_02/textures/fern_02_rough_2k.png](<../../Art/Sources/CoastalEnvironment/fern_02/textures/fern_02_rough_2k.png>) | Изображение / текстура |
+
+## Art/Sources/CoastalEnvironment/grass_bermuda_01
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Sources/CoastalEnvironment/grass_bermuda_01/files.json](<../../Art/Sources/CoastalEnvironment/grass_bermuda_01/files.json>) | Конфигурация / данные JSON |
+| [Art/Sources/CoastalEnvironment/grass_bermuda_01/grass_bermuda_01_2k.fbx](<../../Art/Sources/CoastalEnvironment/grass_bermuda_01/grass_bermuda_01_2k.fbx>) | Модель / анимации FBX |
+| [Art/Sources/CoastalEnvironment/grass_bermuda_01/info.json](<../../Art/Sources/CoastalEnvironment/grass_bermuda_01/info.json>) | Конфигурация / данные JSON |
+
+## Art/Sources/CoastalEnvironment/grass_bermuda_01/textures
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Sources/CoastalEnvironment/grass_bermuda_01/textures/grass_bermuda_01_alpha_2k.png](<../../Art/Sources/CoastalEnvironment/grass_bermuda_01/textures/grass_bermuda_01_alpha_2k.png>) | Изображение / текстура |
+| [Art/Sources/CoastalEnvironment/grass_bermuda_01/textures/grass_bermuda_01_ao_2k.png](<../../Art/Sources/CoastalEnvironment/grass_bermuda_01/textures/grass_bermuda_01_ao_2k.png>) | Изображение / текстура |
+| [Art/Sources/CoastalEnvironment/grass_bermuda_01/textures/grass_bermuda_01_arm_2k.png](<../../Art/Sources/CoastalEnvironment/grass_bermuda_01/textures/grass_bermuda_01_arm_2k.png>) | Изображение / текстура |
+| [Art/Sources/CoastalEnvironment/grass_bermuda_01/textures/grass_bermuda_01_diff_2k.jpg](<../../Art/Sources/CoastalEnvironment/grass_bermuda_01/textures/grass_bermuda_01_diff_2k.jpg>) | Изображение / текстура |
+| [Art/Sources/CoastalEnvironment/grass_bermuda_01/textures/grass_bermuda_01_diff_2k.png](<../../Art/Sources/CoastalEnvironment/grass_bermuda_01/textures/grass_bermuda_01_diff_2k.png>) | Изображение / текстура |
+| [Art/Sources/CoastalEnvironment/grass_bermuda_01/textures/grass_bermuda_01_nor_dx_2k.png](<../../Art/Sources/CoastalEnvironment/grass_bermuda_01/textures/grass_bermuda_01_nor_dx_2k.png>) | Изображение / текстура |
+| [Art/Sources/CoastalEnvironment/grass_bermuda_01/textures/grass_bermuda_01_nor_gl_2k.exr](<../../Art/Sources/CoastalEnvironment/grass_bermuda_01/textures/grass_bermuda_01_nor_gl_2k.exr>) | HDR-текстура |
+| [Art/Sources/CoastalEnvironment/grass_bermuda_01/textures/grass_bermuda_01_nor_gl_2k.png](<../../Art/Sources/CoastalEnvironment/grass_bermuda_01/textures/grass_bermuda_01_nor_gl_2k.png>) | Изображение / текстура |
+| [Art/Sources/CoastalEnvironment/grass_bermuda_01/textures/grass_bermuda_01_rough_2k.exr](<../../Art/Sources/CoastalEnvironment/grass_bermuda_01/textures/grass_bermuda_01_rough_2k.exr>) | HDR-текстура |
+| [Art/Sources/CoastalEnvironment/grass_bermuda_01/textures/grass_bermuda_01_rough_2k.png](<../../Art/Sources/CoastalEnvironment/grass_bermuda_01/textures/grass_bermuda_01_rough_2k.png>) | Изображение / текстура |
+
+## Art/Sources/CoastalEnvironment/island_tree_02
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Sources/CoastalEnvironment/island_tree_02/files.json](<../../Art/Sources/CoastalEnvironment/island_tree_02/files.json>) | Конфигурация / данные JSON |
+| [Art/Sources/CoastalEnvironment/island_tree_02/info.json](<../../Art/Sources/CoastalEnvironment/island_tree_02/info.json>) | Конфигурация / данные JSON |
+| [Art/Sources/CoastalEnvironment/island_tree_02/island_tree_02_2k.fbx](<../../Art/Sources/CoastalEnvironment/island_tree_02/island_tree_02_2k.fbx>) | Модель / анимации FBX |
+
+## Art/Sources/CoastalEnvironment/island_tree_02/textures
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Sources/CoastalEnvironment/island_tree_02/textures/island_tree_02_ao_2k.png](<../../Art/Sources/CoastalEnvironment/island_tree_02/textures/island_tree_02_ao_2k.png>) | Изображение / текстура |
+| [Art/Sources/CoastalEnvironment/island_tree_02/textures/island_tree_02_arm_2k.png](<../../Art/Sources/CoastalEnvironment/island_tree_02/textures/island_tree_02_arm_2k.png>) | Изображение / текстура |
+| [Art/Sources/CoastalEnvironment/island_tree_02/textures/island_tree_02_branches_ao_2k.png](<../../Art/Sources/CoastalEnvironment/island_tree_02/textures/island_tree_02_branches_ao_2k.png>) | Изображение / текстура |
+| [Art/Sources/CoastalEnvironment/island_tree_02/textures/island_tree_02_branches_arm_2k.png](<../../Art/Sources/CoastalEnvironment/island_tree_02/textures/island_tree_02_branches_arm_2k.png>) | Изображение / текстура |
+| [Art/Sources/CoastalEnvironment/island_tree_02/textures/island_tree_02_branches_diff_2k.png](<../../Art/Sources/CoastalEnvironment/island_tree_02/textures/island_tree_02_branches_diff_2k.png>) | Изображение / текстура |
+| [Art/Sources/CoastalEnvironment/island_tree_02/textures/island_tree_02_branches_disp_2k.png](<../../Art/Sources/CoastalEnvironment/island_tree_02/textures/island_tree_02_branches_disp_2k.png>) | Изображение / текстура |
+| [Art/Sources/CoastalEnvironment/island_tree_02/textures/island_tree_02_branches_nor_dx_2k.png](<../../Art/Sources/CoastalEnvironment/island_tree_02/textures/island_tree_02_branches_nor_dx_2k.png>) | Изображение / текстура |
+| [Art/Sources/CoastalEnvironment/island_tree_02/textures/island_tree_02_branches_nor_gl_2k.png](<../../Art/Sources/CoastalEnvironment/island_tree_02/textures/island_tree_02_branches_nor_gl_2k.png>) | Изображение / текстура |
+| [Art/Sources/CoastalEnvironment/island_tree_02/textures/island_tree_02_branches_rough_2k.png](<../../Art/Sources/CoastalEnvironment/island_tree_02/textures/island_tree_02_branches_rough_2k.png>) | Изображение / текстура |
+| [Art/Sources/CoastalEnvironment/island_tree_02/textures/island_tree_02_diff_2k.jpg](<../../Art/Sources/CoastalEnvironment/island_tree_02/textures/island_tree_02_diff_2k.jpg>) | Изображение / текстура |
+| [Art/Sources/CoastalEnvironment/island_tree_02/textures/island_tree_02_diff_2k.png](<../../Art/Sources/CoastalEnvironment/island_tree_02/textures/island_tree_02_diff_2k.png>) | Изображение / текстура |
+| [Art/Sources/CoastalEnvironment/island_tree_02/textures/island_tree_02_disp_2k.png](<../../Art/Sources/CoastalEnvironment/island_tree_02/textures/island_tree_02_disp_2k.png>) | Изображение / текстура |
+| [Art/Sources/CoastalEnvironment/island_tree_02/textures/island_tree_02_leaves_alpha_2k.png](<../../Art/Sources/CoastalEnvironment/island_tree_02/textures/island_tree_02_leaves_alpha_2k.png>) | Изображение / текстура |
+| [Art/Sources/CoastalEnvironment/island_tree_02/textures/island_tree_02_leaves_ao_2k.png](<../../Art/Sources/CoastalEnvironment/island_tree_02/textures/island_tree_02_leaves_ao_2k.png>) | Изображение / текстура |
+| [Art/Sources/CoastalEnvironment/island_tree_02/textures/island_tree_02_leaves_arm_2k.png](<../../Art/Sources/CoastalEnvironment/island_tree_02/textures/island_tree_02_leaves_arm_2k.png>) | Изображение / текстура |
+| [Art/Sources/CoastalEnvironment/island_tree_02/textures/island_tree_02_leaves_diff_2k.png](<../../Art/Sources/CoastalEnvironment/island_tree_02/textures/island_tree_02_leaves_diff_2k.png>) | Изображение / текстура |
+| [Art/Sources/CoastalEnvironment/island_tree_02/textures/island_tree_02_leaves_disp_2k.png](<../../Art/Sources/CoastalEnvironment/island_tree_02/textures/island_tree_02_leaves_disp_2k.png>) | Изображение / текстура |
+| [Art/Sources/CoastalEnvironment/island_tree_02/textures/island_tree_02_leaves_nor_dx_2k.png](<../../Art/Sources/CoastalEnvironment/island_tree_02/textures/island_tree_02_leaves_nor_dx_2k.png>) | Изображение / текстура |
+| [Art/Sources/CoastalEnvironment/island_tree_02/textures/island_tree_02_leaves_nor_gl_2k.png](<../../Art/Sources/CoastalEnvironment/island_tree_02/textures/island_tree_02_leaves_nor_gl_2k.png>) | Изображение / текстура |
+| [Art/Sources/CoastalEnvironment/island_tree_02/textures/island_tree_02_leaves_rough_2k.png](<../../Art/Sources/CoastalEnvironment/island_tree_02/textures/island_tree_02_leaves_rough_2k.png>) | Изображение / текстура |
+| [Art/Sources/CoastalEnvironment/island_tree_02/textures/island_tree_02_nor_dx_2k.png](<../../Art/Sources/CoastalEnvironment/island_tree_02/textures/island_tree_02_nor_dx_2k.png>) | Изображение / текстура |
+| [Art/Sources/CoastalEnvironment/island_tree_02/textures/island_tree_02_nor_gl_2k.exr](<../../Art/Sources/CoastalEnvironment/island_tree_02/textures/island_tree_02_nor_gl_2k.exr>) | HDR-текстура |
+| [Art/Sources/CoastalEnvironment/island_tree_02/textures/island_tree_02_nor_gl_2k.png](<../../Art/Sources/CoastalEnvironment/island_tree_02/textures/island_tree_02_nor_gl_2k.png>) | Изображение / текстура |
+| [Art/Sources/CoastalEnvironment/island_tree_02/textures/island_tree_02_rough_2k.exr](<../../Art/Sources/CoastalEnvironment/island_tree_02/textures/island_tree_02_rough_2k.exr>) | HDR-текстура |
+| [Art/Sources/CoastalEnvironment/island_tree_02/textures/island_tree_02_rough_2k.png](<../../Art/Sources/CoastalEnvironment/island_tree_02/textures/island_tree_02_rough_2k.png>) | Изображение / текстура |
+
+## Art/Sources/CoastalEnvironment/rock_face_02
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Sources/CoastalEnvironment/rock_face_02/files.json](<../../Art/Sources/CoastalEnvironment/rock_face_02/files.json>) | Конфигурация / данные JSON |
+| [Art/Sources/CoastalEnvironment/rock_face_02/info.json](<../../Art/Sources/CoastalEnvironment/rock_face_02/info.json>) | Конфигурация / данные JSON |
+| [Art/Sources/CoastalEnvironment/rock_face_02/rock_face_02_2k.fbx](<../../Art/Sources/CoastalEnvironment/rock_face_02/rock_face_02_2k.fbx>) | Модель / анимации FBX |
+
+## Art/Sources/CoastalEnvironment/rock_face_02/textures
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Sources/CoastalEnvironment/rock_face_02/textures/rock_face_02_ao_2k.png](<../../Art/Sources/CoastalEnvironment/rock_face_02/textures/rock_face_02_ao_2k.png>) | Изображение / текстура |
+| [Art/Sources/CoastalEnvironment/rock_face_02/textures/rock_face_02_arm_2k.png](<../../Art/Sources/CoastalEnvironment/rock_face_02/textures/rock_face_02_arm_2k.png>) | Изображение / текстура |
+| [Art/Sources/CoastalEnvironment/rock_face_02/textures/rock_face_02_diff_2k.jpg](<../../Art/Sources/CoastalEnvironment/rock_face_02/textures/rock_face_02_diff_2k.jpg>) | Изображение / текстура |
+| [Art/Sources/CoastalEnvironment/rock_face_02/textures/rock_face_02_diff_2k.png](<../../Art/Sources/CoastalEnvironment/rock_face_02/textures/rock_face_02_diff_2k.png>) | Изображение / текстура |
+| [Art/Sources/CoastalEnvironment/rock_face_02/textures/rock_face_02_nor_dx_2k.png](<../../Art/Sources/CoastalEnvironment/rock_face_02/textures/rock_face_02_nor_dx_2k.png>) | Изображение / текстура |
+| [Art/Sources/CoastalEnvironment/rock_face_02/textures/rock_face_02_nor_gl_2k.exr](<../../Art/Sources/CoastalEnvironment/rock_face_02/textures/rock_face_02_nor_gl_2k.exr>) | HDR-текстура |
+| [Art/Sources/CoastalEnvironment/rock_face_02/textures/rock_face_02_nor_gl_2k.png](<../../Art/Sources/CoastalEnvironment/rock_face_02/textures/rock_face_02_nor_gl_2k.png>) | Изображение / текстура |
+| [Art/Sources/CoastalEnvironment/rock_face_02/textures/rock_face_02_rough_2k.exr](<../../Art/Sources/CoastalEnvironment/rock_face_02/textures/rock_face_02_rough_2k.exr>) | HDR-текстура |
+| [Art/Sources/CoastalEnvironment/rock_face_02/textures/rock_face_02_rough_2k.png](<../../Art/Sources/CoastalEnvironment/rock_face_02/textures/rock_face_02_rough_2k.png>) | Изображение / текстура |
+
+## Art/Sources/CoastalEnvironment/rock_moss_set_01
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Sources/CoastalEnvironment/rock_moss_set_01/files.json](<../../Art/Sources/CoastalEnvironment/rock_moss_set_01/files.json>) | Конфигурация / данные JSON |
+| [Art/Sources/CoastalEnvironment/rock_moss_set_01/info.json](<../../Art/Sources/CoastalEnvironment/rock_moss_set_01/info.json>) | Конфигурация / данные JSON |
+| [Art/Sources/CoastalEnvironment/rock_moss_set_01/rock_moss_set_01_2k.fbx](<../../Art/Sources/CoastalEnvironment/rock_moss_set_01/rock_moss_set_01_2k.fbx>) | Модель / анимации FBX |
+
+## Art/Sources/CoastalEnvironment/rock_moss_set_01/textures
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Sources/CoastalEnvironment/rock_moss_set_01/textures/rock_moss_set_01_ao_2k.png](<../../Art/Sources/CoastalEnvironment/rock_moss_set_01/textures/rock_moss_set_01_ao_2k.png>) | Изображение / текстура |
+| [Art/Sources/CoastalEnvironment/rock_moss_set_01/textures/rock_moss_set_01_arm_2k.png](<../../Art/Sources/CoastalEnvironment/rock_moss_set_01/textures/rock_moss_set_01_arm_2k.png>) | Изображение / текстура |
+| [Art/Sources/CoastalEnvironment/rock_moss_set_01/textures/rock_moss_set_01_diff_2k.jpg](<../../Art/Sources/CoastalEnvironment/rock_moss_set_01/textures/rock_moss_set_01_diff_2k.jpg>) | Изображение / текстура |
+| [Art/Sources/CoastalEnvironment/rock_moss_set_01/textures/rock_moss_set_01_diff_2k.png](<../../Art/Sources/CoastalEnvironment/rock_moss_set_01/textures/rock_moss_set_01_diff_2k.png>) | Изображение / текстура |
+| [Art/Sources/CoastalEnvironment/rock_moss_set_01/textures/rock_moss_set_01_nor_dx_2k.png](<../../Art/Sources/CoastalEnvironment/rock_moss_set_01/textures/rock_moss_set_01_nor_dx_2k.png>) | Изображение / текстура |
+| [Art/Sources/CoastalEnvironment/rock_moss_set_01/textures/rock_moss_set_01_nor_gl_2k.exr](<../../Art/Sources/CoastalEnvironment/rock_moss_set_01/textures/rock_moss_set_01_nor_gl_2k.exr>) | HDR-текстура |
+| [Art/Sources/CoastalEnvironment/rock_moss_set_01/textures/rock_moss_set_01_nor_gl_2k.png](<../../Art/Sources/CoastalEnvironment/rock_moss_set_01/textures/rock_moss_set_01_nor_gl_2k.png>) | Изображение / текстура |
+| [Art/Sources/CoastalEnvironment/rock_moss_set_01/textures/rock_moss_set_01_rough_2k.jpg](<../../Art/Sources/CoastalEnvironment/rock_moss_set_01/textures/rock_moss_set_01_rough_2k.jpg>) | Изображение / текстура |
+| [Art/Sources/CoastalEnvironment/rock_moss_set_01/textures/rock_moss_set_01_rough_2k.png](<../../Art/Sources/CoastalEnvironment/rock_moss_set_01/textures/rock_moss_set_01_rough_2k.png>) | Изображение / текстура |
+
+## Art/Sources/CoastalEnvironment/rock_surface
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Sources/CoastalEnvironment/rock_surface/files.json](<../../Art/Sources/CoastalEnvironment/rock_surface/files.json>) | Конфигурация / данные JSON |
+| [Art/Sources/CoastalEnvironment/rock_surface/rock_surface_diff_2k.png](<../../Art/Sources/CoastalEnvironment/rock_surface/rock_surface_diff_2k.png>) | Изображение / текстура |
+| [Art/Sources/CoastalEnvironment/rock_surface/rock_surface_nor_gl_2k.png](<../../Art/Sources/CoastalEnvironment/rock_surface/rock_surface_nor_gl_2k.png>) | Изображение / текстура |
+
+## Art/Sources/CoastalEnvironment/rock_wall_02
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Sources/CoastalEnvironment/rock_wall_02/files.json](<../../Art/Sources/CoastalEnvironment/rock_wall_02/files.json>) | Конфигурация / данные JSON |
+| [Art/Sources/CoastalEnvironment/rock_wall_02/rock_wall_02_diff_2k.png](<../../Art/Sources/CoastalEnvironment/rock_wall_02/rock_wall_02_diff_2k.png>) | Изображение / текстура |
+| [Art/Sources/CoastalEnvironment/rock_wall_02/rock_wall_02_nor_gl_2k.png](<../../Art/Sources/CoastalEnvironment/rock_wall_02/rock_wall_02_nor_gl_2k.png>) | Изображение / текстура |
+
+## Art/Sources/CoastalEnvironment/yughues_palms
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Sources/CoastalEnvironment/yughues_palms/PACK_V3.7z](<../../Art/Sources/CoastalEnvironment/yughues_palms/PACK_V3.7z>) | Файл .7z |
+| [Art/Sources/CoastalEnvironment/yughues_palms/diffuse.tga](<../../Art/Sources/CoastalEnvironment/yughues_palms/diffuse.tga>) | Текстура |
+| [Art/Sources/CoastalEnvironment/yughues_palms/normal.tga](<../../Art/Sources/CoastalEnvironment/yughues_palms/normal.tga>) | Текстура |
+| [Art/Sources/CoastalEnvironment/yughues_palms/palm_bend.FBX](<../../Art/Sources/CoastalEnvironment/yughues_palms/palm_bend.FBX>) | Модель / анимации FBX |
+| [Art/Sources/CoastalEnvironment/yughues_palms/palm_bend.obj](<../../Art/Sources/CoastalEnvironment/yughues_palms/palm_bend.obj>) | Модель OBJ |
+| [Art/Sources/CoastalEnvironment/yughues_palms/palm_dual.FBX](<../../Art/Sources/CoastalEnvironment/yughues_palms/palm_dual.FBX>) | Модель / анимации FBX |
+| [Art/Sources/CoastalEnvironment/yughues_palms/palm_dual.obj](<../../Art/Sources/CoastalEnvironment/yughues_palms/palm_dual.obj>) | Модель OBJ |
+| [Art/Sources/CoastalEnvironment/yughues_palms/palm_dual_bend.FBX](<../../Art/Sources/CoastalEnvironment/yughues_palms/palm_dual_bend.FBX>) | Модель / анимации FBX |
+| [Art/Sources/CoastalEnvironment/yughues_palms/palm_dual_bend.obj](<../../Art/Sources/CoastalEnvironment/yughues_palms/palm_dual_bend.obj>) | Модель OBJ |
+| [Art/Sources/CoastalEnvironment/yughues_palms/palm_straight.FBX](<../../Art/Sources/CoastalEnvironment/yughues_palms/palm_straight.FBX>) | Модель / анимации FBX |
+| [Art/Sources/CoastalEnvironment/yughues_palms/palm_straight.obj](<../../Art/Sources/CoastalEnvironment/yughues_palms/palm_straight.obj>) | Модель OBJ |
+| [Art/Sources/CoastalEnvironment/yughues_palms/palm_trio.FBX](<../../Art/Sources/CoastalEnvironment/yughues_palms/palm_trio.FBX>) | Модель / анимации FBX |
+| [Art/Sources/CoastalEnvironment/yughues_palms/palm_trio.obj](<../../Art/Sources/CoastalEnvironment/yughues_palms/palm_trio.obj>) | Модель OBJ |
+| [Art/Sources/CoastalEnvironment/yughues_palms/preview.jpg](<../../Art/Sources/CoastalEnvironment/yughues_palms/preview.jpg>) | Изображение / текстура |
+| [Art/Sources/CoastalEnvironment/yughues_palms/readme.txt](<../../Art/Sources/CoastalEnvironment/yughues_palms/readme.txt>) | Текстовые данные |
+| [Art/Sources/CoastalEnvironment/yughues_palms/specular.tga](<../../Art/Sources/CoastalEnvironment/yughues_palms/specular.tga>) | Текстура |
+| [Art/Sources/CoastalEnvironment/yughues_palms/translucency.tga](<../../Art/Sources/CoastalEnvironment/yughues_palms/translucency.tga>) | Текстура |
 
 ## Art/ThirdParty/Hook
 

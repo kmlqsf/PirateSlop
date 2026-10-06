@@ -43,6 +43,7 @@ namespace PirateSlop.Networking
         public PlayerCommand Tick(float delta)
         {
             using var sample = marker.Auto();
+            if (player.Motor.IsFrozen) return new PlayerCommand { Yaw = player.transform.eulerAngles.y };
             if (yielding != null)
             {
                 if (yielding.State == BotActionState.Running) return yielding.Tick(delta);

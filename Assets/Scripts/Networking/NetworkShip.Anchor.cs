@@ -20,6 +20,7 @@ namespace PirateSlop.Networking
         [ServerRpc(RequireOwnership = false)]
         public void DropAnchorServerRpc(FishNet.Connection.NetworkConnection sender = null)
         {
+            if (sender != null && SessionController.Instance.GetPlayer(sender.ClientId)?.Motor.IsFrozen == true) return;
             if (IsSinking || isAnchored.Value || (Capstan != null && !Capstan.StructurallyAvailable)) return;
             var dropPt = transform.position + transform.forward * 5f;
             var fitted = GetComponent<PirateSlop.Ships.ShipV3Features>();
@@ -43,6 +44,7 @@ namespace PirateSlop.Networking
         [ServerRpc(RequireOwnership = false)]
         public void RaiseAnchorDeltaServerRpc(float deltaDegrees, FishNet.Connection.NetworkConnection sender = null)
         {
+            if (sender != null && SessionController.Instance.GetPlayer(sender.ClientId)?.Motor.IsFrozen == true) return;
             if (IsSinking || !float.IsFinite(deltaDegrees) || deltaDegrees <= 0f || (Capstan != null && !Capstan.StructurallyAvailable)) return;
             if (!isAnchored.Value && anchorProgress.Value >= 1f) return;
 

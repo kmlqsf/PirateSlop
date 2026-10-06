@@ -24,7 +24,7 @@ MonoBehaviour:
     m_Value: 4
   densityMultiplier:
     m_OverrideState: 1
-    m_Value: 0.38
+    m_Value: 0.34
   densityCurve:
     m_OverrideState: 1
     m_Value:
@@ -71,16 +71,16 @@ MonoBehaviour:
       m_RotationOrder: 4
   shapeFactor:
     m_OverrideState: 1
-    m_Value: 0.95
+    m_Value: 0.75
   shapeScale:
     m_OverrideState: 1
-    m_Value: 5
+    m_Value: 6
   erosionFactor:
     m_OverrideState: 1
-    m_Value: 0.8
+    m_Value: 0.5
   erosionScale:
     m_OverrideState: 1
-    m_Value: 107
+    m_Value: 90
   erosionCurve:
     m_OverrideState: 1
     m_Value:
@@ -153,10 +153,10 @@ MonoBehaviour:
       m_RotationOrder: 4
   microErosion:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 1
   microErosionFactor:
     m_OverrideState: 1
-    m_Value: 0.5
+    m_Value: 0.28
   microErosionScale:
     m_OverrideState: 1
     m_Value: 200
@@ -213,16 +213,16 @@ MonoBehaviour:
     m_Value: 0.5
   shadows:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 1
   shadowResolution:
     m_OverrideState: 1
     m_Value: 256
   shadowDistance:
     m_OverrideState: 1
-    m_Value: 8000
+    m_Value: 7000
   shadowOpacity:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 0.25
   shadowOpacityFallback:
     m_OverrideState: 1
     m_Value: 0
@@ -234,10 +234,10 @@ MonoBehaviour:
     m_Value: 1
   numPrimarySteps:
     m_OverrideState: 1
-    m_Value: 48
+    m_Value: 64
   numLightSteps:
     m_OverrideState: 1
-    m_Value: 4
+    m_Value: 6
   fadeInMode:
     m_OverrideState: 1
     m_Value: 0
@@ -565,7 +565,7 @@ MonoBehaviour:
     m_Value: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   tint:
     m_OverrideState: 1
-    m_Value: {r: 1, g: 1, b: 1, a: 1}
+    m_Value: {r: 0.94, g: 0.98, b: 1, a: 1}
   maxFogDistance:
     m_OverrideState: 1
     m_Value: 5000
@@ -589,10 +589,10 @@ MonoBehaviour:
     m_Value: 0
   maximumHeight:
     m_OverrideState: 1
-    m_Value: 120
+    m_Value: 100
   meanFreePath:
     m_OverrideState: 1
-    m_Value: 4500
+    m_Value: 2800
 --- !u!114 &7038762295414742273
 MonoBehaviour:
   m_ObjectHideFlags: 3

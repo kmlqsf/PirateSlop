@@ -21,7 +21,7 @@ public partial class AdvancedPlayerController : MonoBehaviour
     public void ClearKnockdown() => knockdownTime = 0f;
     public void ApplyKnockdown(Vector3 velocity, float duration)
     {
-        if (IsDead || !float.IsFinite(duration) || !float.IsFinite(velocity.sqrMagnitude)) return;
+        if (IsDead || IsFrozen || !float.IsFinite(duration) || !float.IsFinite(velocity.sqrMagnitude)) return;
         ActiveCannon?.ReleaseControl();
         ActiveHarpoon?.ReleaseControl();
         lootNetwork?.CancelLootWork();
@@ -34,7 +34,7 @@ public partial class AdvancedPlayerController : MonoBehaviour
     public bool IsKnockedBack => knockbackTime > 0f;
     public void ApplyKnockback(Vector3 velocity)
     {
-        if (IsDead || !float.IsFinite(velocity.sqrMagnitude)) return;
+        if (IsDead || IsFrozen || !float.IsFinite(velocity.sqrMagnitude)) return;
         foreach (var helm in HelmInteraction.Active)
             if (helm.IsControlledBy(this)) helm.ReleaseControl();
         SetLocomotionLocked(false);
@@ -89,6 +89,8 @@ public partial class AdvancedPlayerController : MonoBehaviour
     public bool IsLocal => local;
     PlayerCommand pending;
     CombatHealth health;
+    PirateSlop.Networking.NetworkHealth networkHealth;
+    public bool IsFrozen => networkHealth != null && networkHealth.IsFrozen;
     PlayerInventory inventory;
     PirateSlop.Networking.NetworkEquipment equipment;
     DirectShipControls shipControls;
@@ -103,7 +105,7 @@ public partial class AdvancedPlayerController : MonoBehaviour
     public bool ShipActivityLocked { get; set; }
     public bool SailPullLocked { get; set; }
     public float LookSensitivity => mouseSensitivity;
-    public bool OtherLocomotionLocked => ActiveParrot != null || BellPullLocked || ShipActivityLocked || locomotionLocked || PickupLocked || ActiveCannon != null || ActiveHarpoon != null || (lootNetwork != null && lootNetwork.LootWorkLocked);
+    public bool OtherLocomotionLocked => IsFrozen || ActiveParrot != null || BellPullLocked || ShipActivityLocked || locomotionLocked || PickupLocked || ActiveCannon != null || ActiveHarpoon != null || (lootNetwork != null && lootNetwork.LootWorkLocked);
     public bool LocomotionLocked => SailPullLocked || OtherLocomotionLocked;
     PirateSlop.Networking.NetworkWeapon lootNetwork;
     public bool IsSliding => slideTimer > 0f;
@@ -111,12 +113,14 @@ public partial class AdvancedPlayerController : MonoBehaviour
     float crouchBlend;
     public float CrouchBlend => crouchBlend;
     public float PlanarSpeed { get; private set; }
-    public bool InputActive => ActiveParrot == null && !BellPullLocked && !ShipActivityLocked && !DeveloperMenu.IsOpen && !BotDebugPanel.ConsumedInput && !ShipSpyglassView.IsViewing && local && !IsDead && !IsDowned && Cursor.lockState == CursorLockMode.Locked;
+    public bool InputActive => !IsFrozen && ActiveParrot == null && !BellPullLocked && !ShipActivityLocked && !DeveloperMenu.IsOpen && !BotDebugPanel.ConsumedInput && !ShipSpyglassView.IsViewing && local && !IsDead && !IsDowned && Cursor.lockState == CursorLockMode.Locked;
     public Camera PlayerCamera => playerCamera;
     void Awake()
     {
         WaterImpactBody.Ensure(gameObject);
         health = GetComponent<CombatHealth>();
+        networkHealth = GetComponent<PirateSlop.Networking.NetworkHealth>();
+        if (GetComponent<PlayerFreezeScreen>() == null) gameObject.AddComponent<PlayerFreezeScreen>();
         if (GetComponent<PlayerKnockdown>() == null) gameObject.AddComponent<PlayerKnockdown>();
         lootNetwork = GetComponent<PirateSlop.Networking.NetworkWeapon>();
         inventory = GetComponent<PlayerInventory>();
@@ -222,7 +226,7 @@ public partial class AdvancedPlayerController : MonoBehaviour
         if (kb.escapeKey.wasPressedThisFrame) { pending.Release = true; SetCursor(false); }
         if (mouse != null && mouse.leftButton.wasPressedThisFrame && !PlayerInventory.LootWindowOpen && !PirateSlop.Networking.SessionController.MenuOpen) SetCursor(true);
         if (InputActive && ActiveCannon == null && ActiveHarpoon == null && mouse != null && (lootNetwork == null || !lootNetwork.LootWorkLocked) && (shipControls == null || !shipControls.IsDragging)) { var d = mouse.delta.ReadValue() * mouseSensitivity * AimSensitivityScale; lookYaw = Mathf.Repeat(lookYaw + d.x, 360f); pitch = Mathf.Clamp(pitch - d.y, -85f, 85f); }
-        if (IsThirdPerson && mouse != null)
+        if (IsThirdPerson && mouse != null && (inventory == null || !inventory.PlacementActive))
         {
             float scroll = mouse.scroll.ReadValue().y;
             if (Mathf.Abs(scroll) > 0.01f) thirdPersonDistance = Mathf.Clamp(thirdPersonDistance - Mathf.Sign(scroll) * 0.5f, 1.2f, 6f);
@@ -328,10 +332,31 @@ public partial class AdvancedPlayerController : MonoBehaviour
     {
         var result = pending; pending.Jump = pending.Slide = pending.Use = pending.Release = false; return result;
     }
+    public void BeginFreeze()
+    {
+        ClearFrozenMotion();
+        pending = new PlayerCommand { Yaw = transform.eulerAngles.y };
+        foreach (var helm in HelmInteraction.Active) if (helm.IsControlledBy(this)) helm.ReleaseControl();
+        ActiveCannon?.ReleaseControl();
+        ActiveHarpoon?.ReleaseControl();
+        lootNetwork?.CancelLootWork();
+        lootNetwork?.ReleaseGrapple();
+        var participant = GetComponent<PirateSlop.Networking.NetworkPlayer>();
+        if (participant != null && participant.IsServerInitialized)
+            foreach (var ship in PirateSlop.Networking.NetworkShip.ActiveShips) if (ship != null) ship.GetComponent<SailSystem>()?.ReleasePlayer(this);
+        locomotionLocked = PickupLocked = BellPullLocked = SailPullLocked = false;
+    }
+    void ClearFrozenMotion()
+    {
+        PlanarSpeed = verticalVelocity = slideTimer = jumpBuffer = groundGrace = knockbackTime = 0f;
+        swimVelocity = knockbackVelocity = Vector3.zero;
+        ClimbVelocity = 0f;
+    }
     public void AddPlatformYaw(float delta) { if (local) { lookYaw = Mathf.Repeat(lookYaw + delta, 360); bodyYaw = Mathf.Repeat(bodyYaw + delta, 360); } }
     public void Simulate(PlayerCommand command, float dt)
     {
-        if (IsDead) { jumpBuffer = groundGrace = 0f; return; }
+        if (IsDead || controller == null || !controller.enabled || !float.IsFinite(dt) || dt <= 0f) { jumpBuffer = groundGrace = 0f; return; }
+        if (IsFrozen) { ClearFrozenMotion(); return; }
         if (!command.IsValid) command = default;
         bool downed = IsDowned;
         if (downed) command = new PlayerCommand { Yaw = transform.eulerAngles.y, Release = true };

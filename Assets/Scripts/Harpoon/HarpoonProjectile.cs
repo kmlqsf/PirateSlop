@@ -28,6 +28,10 @@ namespace PirateSlop.Harpoon
         [SerializeField] float rewindSpeed = 32f;
 
         Rigidbody body;
+        UnderwaterProjectileTrail waterTrail;
+        bool waterEntered;
+        float underwaterAge;
+        Vector3 previousWaterPosition;
         Collider col;
         HarpoonHookTarget hookTarget;
         HarpoonState state = HarpoonState.Flying;
@@ -47,7 +51,14 @@ namespace PirateSlop.Harpoon
             body.isKinematic = true;
             state = (HarpoonState)phase;
             currentCableLength = cable;
-            transform.SetPositionAndRotation(Vector3.Lerp(transform.position, point, 1f - Mathf.Exp(-30f * Time.deltaTime)), Quaternion.Slerp(transform.rotation, rotation, 1f - Mathf.Exp(-30f * Time.deltaTime)));
+            Vector3 previous = transform.position;
+            transform.SetPositionAndRotation(Vector3.Lerp(previous, point, 1f - Mathf.Exp(-30f * Time.deltaTime)), Quaternion.Slerp(transform.rotation, rotation, 1f - Mathf.Exp(-30f * Time.deltaTime)));
+            if (state == HarpoonState.Flying && ProjectileWaterFlight.IsSubmerged(transform.position))
+            {
+                if (waterTrail == null) waterTrail = UnderwaterProjectileTrail.Create(transform.position, .08f);
+                if (waterTrail != null) waterTrail.Segment(previous, transform.position);
+            }
+            else FinishWater();
         }
 
         void Awake()
@@ -55,6 +66,8 @@ namespace PirateSlop.Harpoon
             body = GetComponent<Rigidbody>();
             WaterImpactBody.Ensure(gameObject);
             col = GetComponent<Collider>();
+            int waterLayer = LayerMask.NameToLayer("Water");
+            if (col != null && waterLayer >= 0) col.excludeLayers |= 1 << waterLayer;
             hookTarget = GetComponent<HarpoonHookTarget>();
             if (hookTarget == null) hookTarget = gameObject.AddComponent<HarpoonHookTarget>();
             hookTarget.Projectile = this;
@@ -65,6 +78,10 @@ namespace PirateSlop.Harpoon
         {
             Gun = launcher;
             state = HarpoonState.Flying;
+            waterEntered = false;
+            underwaterAge = 0f;
+            previousWaterPosition = transform.position;
+            FinishWater();
             body.isKinematic = false;
             body.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
             body.linearVelocity = initialVelocity;
@@ -80,10 +97,29 @@ namespace PirateSlop.Harpoon
             if (Gun != null && Gun.ExternalVisualRig && Gun.NetworkShip != null && !Gun.NetworkShip.IsServerInitialized) return;
             if (state == HarpoonState.Flying)
             {
+                bool submerged = ProjectileWaterFlight.IsSubmerged(transform.position);
+                if (submerged)
+                {
+                    if (!waterEntered)
+                    {
+                        waterEntered = true;
+                        waterTrail = UnderwaterProjectileTrail.Create(transform.position, .08f);
+                    }
+                    body.useGravity = false;
+                    body.linearVelocity = ProjectileWaterFlight.StepVelocity(body.linearVelocity, Time.fixedDeltaTime, ProjectileWaterFlight.HarpoonDrag);
+                    if (waterTrail != null) waterTrail.Segment(previousWaterPosition, transform.position);
+                }
+                else body.useGravity = true;
+                previousWaterPosition = transform.position;
+                if (waterEntered)
+                {
+                    underwaterAge += Time.fixedDeltaTime;
+                    if (underwaterAge >= ProjectileWaterFlight.HarpoonLifetime) { DetachAndRewind(); return; }
+                }
                 if (Gun != null && Gun.Muzzle != null)
                 {
                     float dist = Vector3.Distance(Gun.Muzzle.position, transform.position);
-                    if (dist > maxRange || transform.position.y <= 0.05f)
+                    if (dist > maxRange)
                     {
                         DetachAndRewind();
                         return;
@@ -359,11 +395,7 @@ namespace PirateSlop.Harpoon
             if (Gun != null && (collision.transform.IsChildOf(Gun.transform) || (shipBody != null && collision.transform.IsChildOf(shipBody.transform))))
                 return;
 
-            if (collision.gameObject.layer == 4)
-            {
-                DetachAndRewind();
-                return;
-            }
+            if (collision.gameObject.layer == LayerMask.NameToLayer("Water")) return;
 
             bool isShip = collision.collider.GetComponentInParent<ShipController>() != null
                           || collision.collider.GetComponentInParent<PirateSlop.Networking.NetworkShip>() != null
@@ -384,6 +416,7 @@ namespace PirateSlop.Harpoon
 
         void Attach(Collision collision, bool isShip)
         {
+            FinishWater();
             state = HarpoonState.Attached;
             body.isKinematic = true;
             body.collisionDetectionMode = CollisionDetectionMode.Discrete;
@@ -432,6 +465,7 @@ namespace PirateSlop.Harpoon
 
         public void AttachFromNetwork(bool isShip, FishNet.Object.NetworkObject targetNetObj, Vector3 localHitPos, Quaternion localHitRot, float cableLength)
         {
+            FinishWater();
             state = HarpoonState.Attached;
             body.isKinematic = true;
             body.collisionDetectionMode = CollisionDetectionMode.Discrete;
@@ -472,6 +506,7 @@ namespace PirateSlop.Harpoon
         public void DetachAndRewind()
         {
             if (state == HarpoonState.Rewinding) return;
+            FinishWater();
             state = HarpoonState.Rewinding;
             ActiveAttached.Remove(this);
             hitParent = null;
@@ -481,8 +516,15 @@ namespace PirateSlop.Harpoon
             if (Gun != null) Gun.OnProjectileRewinding(this);
         }
 
+        void FinishWater()
+        {
+            if (waterTrail == null) return;
+            waterTrail.Finish();
+            waterTrail = null;
+        }
         void OnDestroy()
         {
+            FinishWater();
             ActiveAttached.Remove(this);
         }
     }

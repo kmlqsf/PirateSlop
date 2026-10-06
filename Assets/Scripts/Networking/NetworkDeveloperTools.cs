@@ -133,6 +133,11 @@ namespace PirateSlop.Networking
             }
             developerObjects.RemoveAll(o => o == null || !o.IsSpawned);
             if (developerObjects.Count >= 20) { DeveloperResultTargetRpc(Owner, "Удалите тестовые объекты: достигнут лимит 20."); return; }
+            if (command == 21)
+            {
+                SpawnDeveloperBowChest();
+                return;
+            }
             if (command == 19)
             {
                 SpawnDeveloperLootEvent((SeaLootKind)count);
@@ -186,6 +191,37 @@ namespace PirateSlop.Networking
             if (target != null) target.Place(support, position);
             ServerManager.Spawn(obj); developerObjects.Add(obj);
             DeveloperResultTargetRpc(Owner, "Объект создан.");
+        }
+        void SpawnDeveloperBowChest()
+        {
+            var player = GetComponent<NetworkPlayer>();
+            var deck = player != null && player.Passenger != null ? player.Passenger.Ship : null;
+            var ship = deck != null ? deck.GetComponent<NetworkShip>() : player != null ? player.Ship : null;
+            var session = SessionController.Instance;
+            var catalog = session != null && session.Config != null ? session.Config.Loot : null;
+            if (ship == null || !ship.IsSpawned || ship.IsSinking)
+            { DeveloperResultTargetRpc(Owner, "Корабль игрока не найден."); return; }
+            if (catalog == null || catalog.ChestPrefab == null)
+            { DeveloperResultTargetRpc(Owner, "Каталог сундуков ещё не готов."); return; }
+            if (!NetworkLootChest.TryFindBowDeckPoint(ship, catalog.ChestPrefab, out var point))
+            { DeveloperResultTargetRpc(Owner, "На носовой палубе нет свободного места для сундука."); return; }
+            var chest = Instantiate(catalog.ChestPrefab, point, ship.transform.rotation);
+            UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene(chest.gameObject, ship.gameObject.scene);
+            chest.Catalog = catalog;
+            try
+            {
+                var random = new PirateSlop.World.MapRandom(unchecked((uint)Random.Range(1, int.MaxValue)));
+                chest.Fill(ref random);
+                chest.PlaceOnDeck(ship, point, ship.transform.rotation);
+                ServerManager.Spawn(chest.NetworkObject);
+                developerObjects.Add(chest.NetworkObject);
+                DeveloperResultTargetRpc(Owner, "Сундук с обычным лутом создан на носу корабля.");
+            }
+            catch (System.InvalidOperationException error)
+            {
+                Destroy(chest.gameObject);
+                DeveloperResultTargetRpc(Owner, "Не удалось наполнить сундук: " + error.Message);
+            }
         }
         void SpawnDeveloperLootEvent(SeaLootKind kind)
         {

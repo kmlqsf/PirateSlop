@@ -15,6 +15,8 @@ MonoBehaviour:
   Settings:
     Id: SeaStack
     Shape: 5
+    PierCount: 1
+    LayoutVariant: 0
     Weight: 1
     Radius: {x: 15, y: 28}
     Height: {x: 25, y: 45}
@@ -29,6 +31,9 @@ MonoBehaviour:
     MaxSlope: 20
     Spacing: 15
     StaticPrefab: {fileID: 0}
+    AtLocationOrigin: 0
+    AtSeaLevel: 0
+    LocalOffset: {x: 0, y: 0, z: 0}
     PrefabVersion: 1
   - Tag: loot
     Count: 5
@@ -36,6 +41,9 @@ MonoBehaviour:
     MaxSlope: 30
     Spacing: 8
     StaticPrefab: {fileID: 0}
+    AtLocationOrigin: 0
+    AtSeaLevel: 0
+    LocalOffset: {x: 0, y: 0, z: 0}
     PrefabVersion: 1
   - Tag: landmark
     Count: 1
@@ -43,4 +51,7 @@ MonoBehaviour:
     MaxSlope: 30
     Spacing: 8
     StaticPrefab: {fileID: 0}
+    AtLocationOrigin: 0
+    AtSeaLevel: 0
+    LocalOffset: {x: 0, y: 0, z: 0}
     PrefabVersion: 1

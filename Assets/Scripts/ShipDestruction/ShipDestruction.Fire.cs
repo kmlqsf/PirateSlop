@@ -12,6 +12,48 @@ namespace PirateSlop
 
     public sealed partial class ShipDestruction
     {
+        sealed class FireSurface
+        {
+            public int Index;
+            public Transform Anchor;
+            public Matrix4x4 LocalToWorld, WorldToLocal;
+            public Bounds Bounds;
+            public Vector3 Point;
+            public float Distance;
+            public Vector3 Closest(Vector3 point) => LocalToWorld.MultiplyPoint3x4(Bounds.ClosestPoint(WorldToLocal.MultiplyPoint3x4(point)));
+        }
+
+        static bool FireGapClear(Vector3 own, Vector3 other, List<FireSurface> missing)
+        {
+            Vector3 delta = other - own;
+            if (delta.magnitude <= .06f) return true;
+            Vector3 start = own + delta.normalized * .03f, end = other - delta.normalized * .03f;
+            foreach (var surface in missing)
+            {
+                Vector3 localStart = surface.WorldToLocal.MultiplyPoint3x4(start);
+                Vector3 localDelta = surface.WorldToLocal.MultiplyPoint3x4(end) - localStart;
+                if (surface.Bounds.IntersectRay(new Ray(localStart, localDelta.normalized), out float distance) && distance <= localDelta.magnitude) return false;
+            }
+            return true;
+        }
+
+        Vector3 FireSurfaceNormal(ShipFragmentConnection node, FireSurface surface, Vector3 point, Vector3 fallback)
+        {
+            if (definitions[node.SectionId].Type == ShipSectionType.Deck) return transform.up;
+            Vector3 local = surface.Anchor.InverseTransformPoint(point);
+            var bounds = surface.Bounds;
+            Vector3 axis = Vector3.right;
+            float nearest = float.MaxValue;
+            for (int i = 0; i < 3; i++)
+            {
+                float low = Mathf.Abs(local[i] - bounds.min[i]), high = Mathf.Abs(local[i] - bounds.max[i]);
+                if (Mathf.Min(low, high) >= nearest) continue;
+                nearest = Mathf.Min(low, high); axis = Vector3.zero; axis[i] = low < high ? -1f : 1f;
+            }
+            Vector3 normal = surface.Anchor.worldToLocalMatrix.transpose.MultiplyVector(axis).normalized;
+            return normal.sqrMagnitude > .01f ? normal : fallback;
+        }
+
         public ulong BeginFireImpact() => flooding != null ? flooding.BeginFireImpact() : 0;
 
         public bool FireTargetAlive(int id, int fragment)
@@ -73,46 +115,99 @@ namespace PirateSlop
                 }
                 if (deck != null) ordinary += CountBits(deck.BreakNear(deckPoint, Profile.CannonDamage * Profile.HullDeckDamageFraction * definitions[deck.SectionId].DamageMultiplier(InventoryItem.Cannonball), false) & ~deck.RemovedFragments);
             }
-            int budget = Mathf.Max(1, Mathf.CeilToInt(ordinary * 1.5f));
+            int minimum = Mathf.Clamp(Profile.MinimumFireFragments, 1, 64);
+            int budget = Mathf.Clamp(Mathf.Max(minimum, Mathf.CeilToInt(ordinary * 1.5f) * 2), minimum, Mathf.Clamp(Profile.MaximumFireFragments, minimum, 64));
             var connections = Profile.Structure;
-            var candidates = new List<(int Index, float Distance)>();
+            var candidates = new List<FireSurface>();
+            var missing = new List<FireSurface>();
+            var surfaces = new Dictionary<int, FireSurface>();
+            FireSurface start = null;
             for (int i = 0; i < connections.Length; i++)
             {
                 var node = connections[i];
-                if (!FireTargetAlive(node.SectionId, node.Fragment)) continue;
-                var at = FireTargetPoint(node.SectionId, node.Fragment, point);
-                candidates.Add((i, (at - point).sqrMagnitude));
+                if (!sections.TryGetValue(node.SectionId, out var section) || node.Fragment < 0 || node.Fragment >= section.RepairCount) continue;
+                var anchor = section.RepairTransform(node.Fragment);
+                var candidate = new FireSurface { Index = i, Anchor = anchor, LocalToWorld = anchor.localToWorldMatrix, WorldToLocal = anchor.worldToLocalMatrix, Bounds = section.RepairBounds(node.Fragment) };
+                candidate.Point = candidate.Closest(point);
+                float distance = (candidate.Point - point).sqrMagnitude;
+                if (distance > 72f) continue;
+                candidate.Distance = distance;
+                if (!FireTargetAlive(node.SectionId, node.Fragment)) { missing.Add(candidate); continue; }
+                candidates.Add(candidate); surfaces[i] = candidate;
+                if (node.SectionId == direct.SectionId && (start == null || distance < start.Distance)) start = candidate;
             }
             candidates.Sort((a, b) => a.Distance.CompareTo(b.Distance));
             if (candidates.Count == 0) return result;
+            start ??= candidates[0];
             var queue = new Queue<int>();
             var visited = new HashSet<int>();
-            queue.Enqueue(candidates[0].Index); visited.Add(candidates[0].Index);
+            queue.Enqueue(start.Index); visited.Add(start.Index);
+            float gapSquared = Mathf.Pow(Mathf.Max(.05f, Profile.FireSurfaceGap), 2f);
             while (queue.Count > 0 && result.Count < budget)
             {
                 int index = queue.Dequeue();
                 var node = connections[index];
                 if (!FireTargetAlive(node.SectionId, node.Fragment)) continue;
-                var at = FireTargetPoint(node.SectionId, node.Fragment, point);
-                if ((at - point).sqrMagnitude > 36f) continue;
+                var surface = surfaces[index];
+                var at = surface.Point;
+                Vector3 surfaceNormal = FireSurfaceNormal(node, surface, at, normal);
                 result.Add(new ShipFireTarget { SectionId = node.SectionId, Fragment = node.Fragment,
-                    Position = transform.InverseTransformPoint(at + normal * .04f), Normal = transform.InverseTransformDirection(normal) });
-                var neighbours = new List<(int Index, float Distance)>();
+                    Position = transform.InverseTransformPoint(at + surfaceNormal * .04f), Normal = transform.InverseTransformDirection(surfaceNormal) });
+                var neighbours = new List<FireSurface>();
+                var added = new HashSet<int>();
                 foreach (int next in node.Neighbours)
                 {
-                    if (next < 0 || next >= connections.Length || !visited.Add(next)) continue;
-                    var target = connections[next];
-                    neighbours.Add((next, (FireTargetPoint(target.SectionId, target.Fragment, point) - point).sqrMagnitude));
+                    if (visited.Contains(next) || !surfaces.TryGetValue(next, out var neighbour)) continue;
+                    neighbours.Add(neighbour); added.Add(next);
                 }
-                neighbours.Sort((a, b) => a.Distance.CompareTo(b.Distance));
-                foreach (var neighbour in neighbours) queue.Enqueue(neighbour.Index);
+                var spatial = new List<(FireSurface Surface, float Gap, Vector3 Own, Vector3 Other)>();
+                foreach (var candidate in candidates)
+                {
+                    if (visited.Contains(candidate.Index) || added.Contains(candidate.Index)) continue;
+                    Vector3 other = candidate.Closest(surface.Point);
+                    Vector3 own = surface.Closest(other);
+                    other = candidate.Closest(own);
+                    if ((own - point).sqrMagnitude > 72f || (other - point).sqrMagnitude > 72f) continue;
+                    float gap = (own - other).sqrMagnitude;
+                    if (gap <= gapSquared) spatial.Add((candidate, gap, own, other));
+                }
+                spatial.Sort((a, b) =>
+                {
+                    if (definitions[node.SectionId].Type == ShipSectionType.Railing)
+                    {
+                        bool deckA = definitions[connections[a.Surface.Index].SectionId].Type == ShipSectionType.Deck;
+                        bool deckB = definitions[connections[b.Surface.Index].SectionId].Type == ShipSectionType.Deck;
+                        if (deckA != deckB) return deckA ? -1 : 1;
+                    }
+                    int gapOrder = a.Gap.CompareTo(b.Gap);
+                    return gapOrder != 0 ? gapOrder : a.Surface.Distance.CompareTo(b.Surface.Distance);
+                });
+                int spatialCount = 0;
+                foreach (var candidate in spatial)
+                {
+                    if (!FireGapClear(candidate.Own, candidate.Other, missing)) continue;
+                    neighbours.Add(candidate.Surface);
+                    if (++spatialCount >= 6) break;
+                }
+                neighbours.Sort((a, b) =>
+                {
+                    if (definitions[node.SectionId].Type == ShipSectionType.Railing)
+                    {
+                        bool deckA = definitions[connections[a.Index].SectionId].Type == ShipSectionType.Deck;
+                        bool deckB = definitions[connections[b.Index].SectionId].Type == ShipSectionType.Deck;
+                        if (deckA != deckB) return deckA ? -1 : 1;
+                    }
+                    return a.Distance.CompareTo(b.Distance);
+                });
+                foreach (var neighbour in neighbours)
+                    if (visited.Add(neighbour.Index)) queue.Enqueue(neighbour.Index);
             }
             var masts = new HashSet<string>();
             foreach (var target in result)
             {
                 var definition = definitions[target.SectionId];
                 if (definition.Type != ShipSectionType.Mast) continue;
-                string key = string.IsNullOrEmpty(definition.SourceGroup) ? definition.Name : definition.SourceGroup;
+                string key = MastGroupKey(target.SectionId);
                 if (masts.Add(key)) { mastHits.TryGetValue(key, out int hits); mastHits[key] = hits + 1; }
             }
             return result;
@@ -124,8 +219,16 @@ namespace PirateSlop
             var definition = definitions[target.SectionId];
             if (definition.Type == ShipSectionType.Mast)
             {
-                string key = string.IsNullOrEmpty(definition.SourceGroup) ? definition.Name : definition.SourceGroup;
-                if (!mastHits.TryGetValue(key, out int hits) || hits < 2) return;
+                if (!mastParts.TryGetValue(target.SectionId, out var mast)) return;
+                if (mastHits.TryGetValue(mast.Key, out int hits) && hits >= 2)
+                {
+                    CollapseMast(mast, transform.TransformPoint(target.Position), transform.TransformDirection(target.Normal), Vector3.zero, InventoryItem.FireCannonball, attacker, ShipDamageReason.Fire, impactId);
+                    DetachUnsupported(transform.TransformPoint(target.Position), transform.up, Vector3.zero, InventoryItem.FireCannonball, attacker, impactId);
+                    if (attacker != null) SessionController.Instance?.NotifyCombatDamage(ship, attacker);
+                    Publish();
+                    return;
+                }
+                if (MastHasDamage(mast)) return;
             }
             var section = sections[target.SectionId];
             ulong mask = section.RemovedFragments | (1UL << target.Fragment);

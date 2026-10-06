@@ -77,6 +77,37 @@
 | [Assets/Materials/Characters/Pirate/Pirate_Teal.mat](<../../Assets/Materials/Characters/Pirate/Pirate_Teal.mat>) | Материал Unity |
 | [Assets/Materials/Characters/Pirate/Pirate_TealLight.mat](<../../Assets/Materials/Characters/Pirate/Pirate_TealLight.mat>) | Материал Unity |
 
+## Assets/Materials/CoastalEnvironment
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Materials/CoastalEnvironment/CoastalBark.mat](<../../Assets/Materials/CoastalEnvironment/CoastalBark.mat>) | Материал Unity |
+| [Assets/Materials/CoastalEnvironment/CoastalFern.mat](<../../Assets/Materials/CoastalEnvironment/CoastalFern.mat>) | Материал Unity |
+| [Assets/Materials/CoastalEnvironment/CoastalLeaf.mat](<../../Assets/Materials/CoastalEnvironment/CoastalLeaf.mat>) | Материал Unity |
+| [Assets/Materials/CoastalEnvironment/CoastalLeafLight.mat](<../../Assets/Materials/CoastalEnvironment/CoastalLeafLight.mat>) | Материал Unity |
+| [Assets/Materials/CoastalEnvironment/CoastalMoss.mat](<../../Assets/Materials/CoastalEnvironment/CoastalMoss.mat>) | Материал Unity |
+| [Assets/Materials/CoastalEnvironment/CoastalPalm.mat](<../../Assets/Materials/CoastalEnvironment/CoastalPalm.mat>) | Материал Unity |
+| [Assets/Materials/CoastalEnvironment/CoastalRock.mat](<../../Assets/Materials/CoastalEnvironment/CoastalRock.mat>) | Материал Unity |
+| [Assets/Materials/CoastalEnvironment/CoastalRockDark.mat](<../../Assets/Materials/CoastalEnvironment/CoastalRockDark.mat>) | Материал Unity |
+| [Assets/Materials/CoastalEnvironment/CoastalRockLight.mat](<../../Assets/Materials/CoastalEnvironment/CoastalRockLight.mat>) | Материал Unity |
+| [Assets/Materials/CoastalEnvironment/CoastalRockWarm.mat](<../../Assets/Materials/CoastalEnvironment/CoastalRockWarm.mat>) | Материал Unity |
+| [Assets/Materials/CoastalEnvironment/CoastalTerrain.mat](<../../Assets/Materials/CoastalEnvironment/CoastalTerrain.mat>) | Материал Unity |
+| [Assets/Materials/CoastalEnvironment/TripoNative_01_RockMass_A.mat](<../../Assets/Materials/CoastalEnvironment/TripoNative_01_RockMass_A.mat>) | Материал Unity |
+| [Assets/Materials/CoastalEnvironment/TripoNative_02_RockMass_B.mat](<../../Assets/Materials/CoastalEnvironment/TripoNative_02_RockMass_B.mat>) | Материал Unity |
+| [Assets/Materials/CoastalEnvironment/TripoNative_03_RockMass_C.mat](<../../Assets/Materials/CoastalEnvironment/TripoNative_03_RockMass_C.mat>) | Материал Unity |
+| [Assets/Materials/CoastalEnvironment/TripoNative_04_RockMonolith_A.mat](<../../Assets/Materials/CoastalEnvironment/TripoNative_04_RockMonolith_A.mat>) | Материал Unity |
+| [Assets/Materials/CoastalEnvironment/TripoNative_05_RockMonolith_B.mat](<../../Assets/Materials/CoastalEnvironment/TripoNative_05_RockMonolith_B.mat>) | Материал Unity |
+| [Assets/Materials/CoastalEnvironment/TripoNative_06_RockMonolith_C.mat](<../../Assets/Materials/CoastalEnvironment/TripoNative_06_RockMonolith_C.mat>) | Материал Unity |
+| [Assets/Materials/CoastalEnvironment/TripoNative_07_RockTerrace_A.mat](<../../Assets/Materials/CoastalEnvironment/TripoNative_07_RockTerrace_A.mat>) | Материал Unity |
+| [Assets/Materials/CoastalEnvironment/TripoNative_08_RockTerrace_B.mat](<../../Assets/Materials/CoastalEnvironment/TripoNative_08_RockTerrace_B.mat>) | Материал Unity |
+| [Assets/Materials/CoastalEnvironment/TripoNative_09_RockWedge_A.mat](<../../Assets/Materials/CoastalEnvironment/TripoNative_09_RockWedge_A.mat>) | Материал Unity |
+| [Assets/Materials/CoastalEnvironment/TripoNative_10_RockWedge_B.mat](<../../Assets/Materials/CoastalEnvironment/TripoNative_10_RockWedge_B.mat>) | Материал Unity |
+| [Assets/Materials/CoastalEnvironment/TripoNative_11_RockElongated_A.mat](<../../Assets/Materials/CoastalEnvironment/TripoNative_11_RockElongated_A.mat>) | Материал Unity |
+| [Assets/Materials/CoastalEnvironment/TripoNative_12_RockElongated_B.mat](<../../Assets/Materials/CoastalEnvironment/TripoNative_12_RockElongated_B.mat>) | Материал Unity |
+| [Assets/Materials/CoastalEnvironment/TripoNative_13_RockBoulder_A.mat](<../../Assets/Materials/CoastalEnvironment/TripoNative_13_RockBoulder_A.mat>) | Материал Unity |
+| [Assets/Materials/CoastalEnvironment/TripoNative_14_RockFragment_A.mat](<../../Assets/Materials/CoastalEnvironment/TripoNative_14_RockFragment_A.mat>) | Материал Unity |
+| [Assets/Materials/CoastalEnvironment/TripoNative_15_RockFragment_B.mat](<../../Assets/Materials/CoastalEnvironment/TripoNative_15_RockFragment_B.mat>) | Материал Unity |
+
 ## Assets/Materials/Creatures
 
 | Файл | Краткое описание |

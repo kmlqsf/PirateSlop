@@ -128,14 +128,16 @@ namespace PirateSlop
             float area = Mathf.PI * radius * radius;
             float coupledMass = Mathf.Min(mass, 1000f * area * Mathf.Min(radius * 2f, .65f));
             float energy = .5f * coupledMass * (closing * closing + tangent.sqrMagnitude * .12f);
-            float intensity = Mathf.Clamp(Mathf.Sqrt(closing / 6f) * Mathf.Pow(mass / 20f, .12f), 0f, 1.8f);
-            int drops = closing >= .65f ? Mathf.Clamp(Mathf.RoundToInt((10f + 12f * Mathf.Sqrt(area) + 16f * Mathf.Log10(1f + energy / 20f)) * Mathf.Min(1.4f, intensity)), 3, 150) : 0;
-            float lift = Mathf.Clamp(1.2f + Mathf.Sqrt(closing) * 1.2f, 1.5f, 7f);
+            float effectiveSpeed = kind == WaterImpactKind.Projectile ? Mathf.Sqrt(closing * closing + tangent.sqrMagnitude * .15f) : closing;
+            float intensity = Mathf.Clamp(Mathf.Sqrt(effectiveSpeed / 6f) * Mathf.Pow(mass / 20f, .12f), 0f, 1.8f);
+            bool splash = closing >= .65f || kind == WaterImpactKind.Projectile && relative.sqrMagnitude >= 16f && energy >= 100f;
+            int drops = splash ? Mathf.Clamp(Mathf.RoundToInt((10f + 12f * Mathf.Sqrt(area) + 16f * Mathf.Log10(1f + energy / 20f)) * Mathf.Min(1.4f, intensity)) * 4, 12, 600) : 0;
+            float lift = kind == WaterImpactKind.Projectile ? Mathf.Clamp(10f + Mathf.Sqrt(effectiveSpeed) * 2f, 14f, 20f) : Mathf.Clamp(2f + Mathf.Sqrt(closing) * 1.8f, 2f, 11f);
             float drift = kind == WaterImpactKind.Person ? Mathf.Min(tangent.magnitude * .04f, .6f) : Mathf.Min(tangent.magnitude * .16f, 7f);
             return new WaterImpactEvent {
                 Position = position, Normal = normal, WaterVelocity = waterVelocity, Tangent = tangent,
                 Mass = mass, Radius = radius, NormalSpeed = closing, Energy = energy, Strength = intensity,
-                Lift = lift, Drift = drift, Life = Mathf.Clamp(.6f + lift * .14f, .7f, 1.6f), Drops = drops, Kind = kind
+                Lift = lift, Drift = drift, Life = kind == WaterImpactKind.Projectile ? Mathf.Clamp(.9f + lift * .16f, 2.8f, 4f) : Mathf.Clamp(.8f + lift * .16f, 1f, 3.4f), Drops = drops, Kind = kind
             };
         }
 
@@ -146,7 +148,7 @@ namespace PirateSlop
             var instance = Ensure(ocean.gameObject);
             point.y = ocean.Height(point);
             var impact = Solve(point, incomingVelocity, SurfaceVelocity(ocean, point), SurfaceNormal(ocean, point), mass, radius, kind);
-            if (impact.NormalSpeed < .1f) return false;
+            if (impact.NormalSpeed < .1f && impact.Drops == 0) return false;
             if (owner != null && !WaterImpactBody.Ensure(owner).ConsumeImpact()) return false;
             instance.LastImpact = impact;
             instance.ImpactCount++;

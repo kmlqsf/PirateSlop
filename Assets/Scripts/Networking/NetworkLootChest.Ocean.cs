@@ -116,6 +116,19 @@ namespace PirateSlop.Networking
             if (value == SeaLootKind.Sunken) InitializeSunkenRope();
         }
 
+        public void PlaceOnDeck(NetworkShip ship, Vector3 point, Quaternion rotation)
+        {
+            kind.Value = SeaLootKind.FloatingReward;
+            phase.Value = SeaLootState.Ready;
+            eventPoint.Value = point;
+            deck = ship;
+            support.Value = ship.NetworkObject;
+            supportId.Value = ship.ParticipantId.Value;
+            anchor.Value = ship.transform.InverseTransformPoint(point);
+            facing.Value = Quaternion.Inverse(ship.transform.rotation) * rotation;
+            transform.SetPositionAndRotation(point, rotation);
+        }
+
         public void FeedSharks(InventoryItem fishType, Vector3 dropPoint)
         {
             if (!IsServerInitialized || Kind != SeaLootKind.Shark) return;

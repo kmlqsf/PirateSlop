@@ -20,12 +20,14 @@ namespace PirateSlop.Ships
         void OnEnable()
         {
             output = GetComponent<MeshCollider>();
+            output.cookingOptions &= ~MeshColliderCookingOptions.UseFastMidphase;
             sections = new ShipDamageSection[Sources.Length];
+            var owner = GetComponentInParent<ShipDestruction>();
             for (int i = 0; i < Sources.Length; i++)
             {
                 if (Sources[i] == null) continue;
                 Sources[i].enabled = false;
-                sections[i] = Sources[i].GetComponentInParent<ShipDamageSection>();
+                sections[i] = owner != null ? owner.SectionFor(Sources[i]) : Sources[i].GetComponentInParent<ShipDamageSection>();
                 if (sections[i] == null) continue;
                 sections[i].CollisionBatch = this;
                 sections[i].VisualChanged += Invalidate;
@@ -87,7 +89,9 @@ namespace PirateSlop.Ships
         {
             if (collider == null) return null;
             var batch = collider.GetComponent<ShipV3CollisionBatch>();
-            return batch != null ? batch.Resolve(point) : collider.GetComponentInParent<ShipDamageSection>();
+            if (batch != null) return batch.Resolve(point);
+            var owner = collider.GetComponentInParent<ShipDestruction>();
+            return owner != null ? owner.SectionFor(collider) : collider.GetComponentInParent<ShipDamageSection>();
         }
 
         public bool ContainsSurface(Transform parent, Vector3 point)

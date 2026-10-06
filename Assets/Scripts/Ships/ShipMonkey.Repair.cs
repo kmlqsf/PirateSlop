@@ -87,9 +87,9 @@ namespace PirateSlop.Ships
             {
                 if (section == null || section.RemovedFragments == 0) continue;
                 var definition = repairOwner.Definition(section.SectionId);
-                if (definition.Type == ShipSectionType.Mast)
+                if (definition.Type == ShipSectionType.Mast && repairOwner.MastRepairPoint(section.SectionId, out var center))
                 {
-                    if (mastGroups.Add(definition.SourceGroup) && repairOwner.MastRepairPoint(section.SectionId, out var center))
+                    if (mastGroups.Add(repairOwner.MastGroupKey(section.SectionId)))
                         candidates.Add((section, -1, (center - actor).sqrMagnitude));
                     continue;
                 }
@@ -141,7 +141,7 @@ namespace PirateSlop.Ships
             motionTime = 0f; shownState = -1;
             ActivitySound(SoundCue.BulletWood, point);
             repairStrikes++;
-            int required = repairFragment < 0 ? NetworkHullRepair.MastStrikes : NetworkHullRepair.FragmentStrikes;
+            int required = repairFragment < 0 && repairOwner.IsMastCollapsed(repairSection.SectionId) ? NetworkHullRepair.MastStrikes : NetworkHullRepair.FragmentStrikes;
             if (repairStrikes < required) return true;
             if (repairFragment < 0) repairOwner.RepairMast(repairSection.SectionId);
             else repairOwner.RepairNearby(repairSection.SectionId, repairFragment, point);

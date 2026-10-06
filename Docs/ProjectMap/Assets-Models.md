@@ -18,7 +18,8 @@
 | Файл | Краткое описание |
 | --- | --- |
 | [Assets/Models/Barricade/Barricade.fbx](<../../Assets/Models/Barricade/Barricade.fbx>) | Модель / анимации FBX; Модели и Blender |
-| [Assets/Models/Barricade/Barricade.mat](<../../Assets/Models/Barricade/Barricade.mat>) | Материал Unity |
+| [Assets/Models/Barricade/Barricade.mat](<../../Assets/Models/Barricade/Barricade.mat>) | Материал Unity; Предметы, лут и инвентарь |
+| [Assets/Models/Barricade/BarricadeAtlas.asset](<../../Assets/Models/Barricade/BarricadeAtlas.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |
 | [Assets/Models/Barricade/BarricadeConstruction.mat](<../../Assets/Models/Barricade/BarricadeConstruction.mat>) | Материал Unity; Предметы, лут и инвентарь |
 | [Assets/Models/Barricade/BarricadeFragments.fbx](<../../Assets/Models/Barricade/BarricadeFragments.fbx>) | Модель / анимации FBX; Модели и Blender |
 | [Assets/Models/Barricade/BarricadeFragmentsVisual.prefab](<../../Assets/Models/Barricade/BarricadeFragmentsVisual.prefab>) | Префаб Unity |
@@ -289,6 +290,49 @@
 | --- | --- |
 | [Assets/Models/Hooks/Anchor.mat](<../../Assets/Models/Hooks/Anchor.mat>) | Материал Unity |
 | [Assets/Models/Hooks/AnchorAtlas.png](<../../Assets/Models/Hooks/AnchorAtlas.png>) | Изображение / текстура |
+
+## Assets/Models/Loot/Chest
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/Loot/Chest/ChestBase.zip](<../../Assets/Models/Loot/Chest/ChestBase.zip>) | Архив |
+| [Assets/Models/Loot/Chest/ChestLid.zip](<../../Assets/Models/Loot/Chest/ChestLid.zip>) | Архив |
+
+## Assets/Models/Loot/Chest/ChestBase
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/Loot/Chest/ChestBase/ChestBase.mat](<../../Assets/Models/Loot/Chest/ChestBase/ChestBase.mat>) | Материал Unity; Предметы, лут и инвентарь |
+| [Assets/Models/Loot/Chest/ChestBase/ChestBaseMetalSmooth.png](<../../Assets/Models/Loot/Chest/ChestBase/ChestBaseMetalSmooth.png>) | Изображение / текстура |
+| [Assets/Models/Loot/Chest/ChestBase/tripo_convert_f24c7824-0801-40ca-a4a6-5177deaa3702.fbx](<../../Assets/Models/Loot/Chest/ChestBase/tripo_convert_f24c7824-0801-40ca-a4a6-5177deaa3702.fbx>) | Модель / анимации FBX; Предметы, лут и инвентарь |
+
+## Assets/Models/Loot/Chest/ChestBase/tripo_convert_f24c7824-0801-40ca-a4a6-5177deaa3702.fbm
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/Loot/Chest/ChestBase/tripo_convert_f24c7824-0801-40ca-a4a6-5177deaa3702.fbm/основа_сундука_basecolor.JPEG](<../../Assets/Models/Loot/Chest/ChestBase/tripo_convert_f24c7824-0801-40ca-a4a6-5177deaa3702.fbm/основа_сундука_basecolor.JPEG>) | Изображение / текстура |
+| [Assets/Models/Loot/Chest/ChestBase/tripo_convert_f24c7824-0801-40ca-a4a6-5177deaa3702.fbm/основа_сундука_metallic.JPEG](<../../Assets/Models/Loot/Chest/ChestBase/tripo_convert_f24c7824-0801-40ca-a4a6-5177deaa3702.fbm/основа_сундука_metallic.JPEG>) | Изображение / текстура |
+| [Assets/Models/Loot/Chest/ChestBase/tripo_convert_f24c7824-0801-40ca-a4a6-5177deaa3702.fbm/основа_сундука_normal.PNG](<../../Assets/Models/Loot/Chest/ChestBase/tripo_convert_f24c7824-0801-40ca-a4a6-5177deaa3702.fbm/основа_сундука_normal.PNG>) | Изображение / текстура |
+| [Assets/Models/Loot/Chest/ChestBase/tripo_convert_f24c7824-0801-40ca-a4a6-5177deaa3702.fbm/основа_сундука_rm.JPEG](<../../Assets/Models/Loot/Chest/ChestBase/tripo_convert_f24c7824-0801-40ca-a4a6-5177deaa3702.fbm/основа_сундука_rm.JPEG>) | Изображение / текстура |
+| [Assets/Models/Loot/Chest/ChestBase/tripo_convert_f24c7824-0801-40ca-a4a6-5177deaa3702.fbm/основа_сундука_roughness.JPEG](<../../Assets/Models/Loot/Chest/ChestBase/tripo_convert_f24c7824-0801-40ca-a4a6-5177deaa3702.fbm/основа_сундука_roughness.JPEG>) | Изображение / текстура |
+
+## Assets/Models/Loot/Chest/ChestLid
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/Loot/Chest/ChestLid/ChestLid.mat](<../../Assets/Models/Loot/Chest/ChestLid/ChestLid.mat>) | Материал Unity; Предметы, лут и инвентарь |
+| [Assets/Models/Loot/Chest/ChestLid/ChestLidMetalSmooth.png](<../../Assets/Models/Loot/Chest/ChestLid/ChestLidMetalSmooth.png>) | Изображение / текстура |
+| [Assets/Models/Loot/Chest/ChestLid/tripo_convert_fc547d5f-a403-4e58-9507-d859a80e5520.fbx](<../../Assets/Models/Loot/Chest/ChestLid/tripo_convert_fc547d5f-a403-4e58-9507-d859a80e5520.fbx>) | Модель / анимации FBX; Предметы, лут и инвентарь |
+
+## Assets/Models/Loot/Chest/ChestLid/tripo_convert_fc547d5f-a403-4e58-9507-d859a80e5520.fbm
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/Loot/Chest/ChestLid/tripo_convert_fc547d5f-a403-4e58-9507-d859a80e5520.fbm/крышка_сундука_basecolor.JPEG](<../../Assets/Models/Loot/Chest/ChestLid/tripo_convert_fc547d5f-a403-4e58-9507-d859a80e5520.fbm/крышка_сундука_basecolor.JPEG>) | Изображение / текстура |
+| [Assets/Models/Loot/Chest/ChestLid/tripo_convert_fc547d5f-a403-4e58-9507-d859a80e5520.fbm/крышка_сундука_metallic.JPEG](<../../Assets/Models/Loot/Chest/ChestLid/tripo_convert_fc547d5f-a403-4e58-9507-d859a80e5520.fbm/крышка_сундука_metallic.JPEG>) | Изображение / текстура |
+| [Assets/Models/Loot/Chest/ChestLid/tripo_convert_fc547d5f-a403-4e58-9507-d859a80e5520.fbm/крышка_сундука_normal.PNG](<../../Assets/Models/Loot/Chest/ChestLid/tripo_convert_fc547d5f-a403-4e58-9507-d859a80e5520.fbm/крышка_сундука_normal.PNG>) | Изображение / текстура |
+| [Assets/Models/Loot/Chest/ChestLid/tripo_convert_fc547d5f-a403-4e58-9507-d859a80e5520.fbm/крышка_сундука_rm.JPEG](<../../Assets/Models/Loot/Chest/ChestLid/tripo_convert_fc547d5f-a403-4e58-9507-d859a80e5520.fbm/крышка_сундука_rm.JPEG>) | Изображение / текстура |
+| [Assets/Models/Loot/Chest/ChestLid/tripo_convert_fc547d5f-a403-4e58-9507-d859a80e5520.fbm/крышка_сундука_roughness.JPEG](<../../Assets/Models/Loot/Chest/ChestLid/tripo_convert_fc547d5f-a403-4e58-9507-d859a80e5520.fbm/крышка_сундука_roughness.JPEG>) | Изображение / текстура |
 
 ## Assets/Models/Loot/FogBottle
 
@@ -670,6 +714,14 @@
 | --- | --- |
 | [Assets/Models/Shark/Shark.controller](<../../Assets/Models/Shark/Shark.controller>) | Контроллер анимации |
 | [Assets/Models/Shark/Shark.fbx](<../../Assets/Models/Shark/Shark.fbx>) | Модель / анимации FBX |
+
+## Assets/Models/ShipV3/MastChips
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/ShipV3/MastChips/V3_Mast_Fore.asset](<../../Assets/Models/ShipV3/MastChips/V3_Mast_Fore.asset>) | Настройки или данные Unity; Повреждения корпуса, ремонт и затопление |
+| [Assets/Models/ShipV3/MastChips/V3_Mast_Main.asset](<../../Assets/Models/ShipV3/MastChips/V3_Mast_Main.asset>) | Настройки или данные Unity; Повреждения корпуса, ремонт и затопление |
+| [Assets/Models/ShipV3/MastChips/V3_Mast_Mizzen.asset](<../../Assets/Models/ShipV3/MastChips/V3_Mast_Mizzen.asset>) | Настройки или данные Unity; Повреждения корпуса, ремонт и затопление |
 
 ## Assets/Models/Ships/Capstan
 
@@ -1471,6 +1523,129 @@
 | Файл | Краткое описание |
 | --- | --- |
 | [Assets/Models/Whale/Materials/M_Whale.mat](<../../Assets/Models/Whale/Materials/M_Whale.mat>) | Материал Unity |
+
+## Assets/Models/World/CoastalEnvironment
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/World/CoastalEnvironment/Bush_LOD0.fbx](<../../Assets/Models/World/CoastalEnvironment/Bush_LOD0.fbx>) | Модель / анимации FBX |
+| [Assets/Models/World/CoastalEnvironment/Bush_LOD1.fbx](<../../Assets/Models/World/CoastalEnvironment/Bush_LOD1.fbx>) | Модель / анимации FBX |
+| [Assets/Models/World/CoastalEnvironment/Bush_LOD2.fbx](<../../Assets/Models/World/CoastalEnvironment/Bush_LOD2.fbx>) | Модель / анимации FBX |
+| [Assets/Models/World/CoastalEnvironment/CliffWallA_LOD0.fbx](<../../Assets/Models/World/CoastalEnvironment/CliffWallA_LOD0.fbx>) | Модель / анимации FBX |
+| [Assets/Models/World/CoastalEnvironment/CliffWallA_LOD1.fbx](<../../Assets/Models/World/CoastalEnvironment/CliffWallA_LOD1.fbx>) | Модель / анимации FBX |
+| [Assets/Models/World/CoastalEnvironment/CliffWallA_LOD2.fbx](<../../Assets/Models/World/CoastalEnvironment/CliffWallA_LOD2.fbx>) | Модель / анимации FBX |
+| [Assets/Models/World/CoastalEnvironment/CliffWallB_LOD0.fbx](<../../Assets/Models/World/CoastalEnvironment/CliffWallB_LOD0.fbx>) | Модель / анимации FBX |
+| [Assets/Models/World/CoastalEnvironment/CliffWallB_LOD1.fbx](<../../Assets/Models/World/CoastalEnvironment/CliffWallB_LOD1.fbx>) | Модель / анимации FBX |
+| [Assets/Models/World/CoastalEnvironment/CliffWallB_LOD2.fbx](<../../Assets/Models/World/CoastalEnvironment/CliffWallB_LOD2.fbx>) | Модель / анимации FBX |
+| [Assets/Models/World/CoastalEnvironment/CliffWallC_LOD0.fbx](<../../Assets/Models/World/CoastalEnvironment/CliffWallC_LOD0.fbx>) | Модель / анимации FBX |
+| [Assets/Models/World/CoastalEnvironment/CliffWallC_LOD1.fbx](<../../Assets/Models/World/CoastalEnvironment/CliffWallC_LOD1.fbx>) | Модель / анимации FBX |
+| [Assets/Models/World/CoastalEnvironment/CliffWallC_LOD2.fbx](<../../Assets/Models/World/CoastalEnvironment/CliffWallC_LOD2.fbx>) | Модель / анимации FBX |
+| [Assets/Models/World/CoastalEnvironment/Fern_LOD0.fbx](<../../Assets/Models/World/CoastalEnvironment/Fern_LOD0.fbx>) | Модель / анимации FBX |
+| [Assets/Models/World/CoastalEnvironment/Fern_LOD1.fbx](<../../Assets/Models/World/CoastalEnvironment/Fern_LOD1.fbx>) | Модель / анимации FBX |
+| [Assets/Models/World/CoastalEnvironment/Fern_LOD2.fbx](<../../Assets/Models/World/CoastalEnvironment/Fern_LOD2.fbx>) | Модель / анимации FBX |
+| [Assets/Models/World/CoastalEnvironment/PalmBent_LOD0.fbx](<../../Assets/Models/World/CoastalEnvironment/PalmBent_LOD0.fbx>) | Модель / анимации FBX |
+| [Assets/Models/World/CoastalEnvironment/PalmBent_LOD1.fbx](<../../Assets/Models/World/CoastalEnvironment/PalmBent_LOD1.fbx>) | Модель / анимации FBX |
+| [Assets/Models/World/CoastalEnvironment/PalmBent_LOD2.fbx](<../../Assets/Models/World/CoastalEnvironment/PalmBent_LOD2.fbx>) | Модель / анимации FBX |
+| [Assets/Models/World/CoastalEnvironment/PalmYoung_LOD0.fbx](<../../Assets/Models/World/CoastalEnvironment/PalmYoung_LOD0.fbx>) | Модель / анимации FBX |
+| [Assets/Models/World/CoastalEnvironment/PalmYoung_LOD1.fbx](<../../Assets/Models/World/CoastalEnvironment/PalmYoung_LOD1.fbx>) | Модель / анимации FBX |
+| [Assets/Models/World/CoastalEnvironment/PalmYoung_LOD2.fbx](<../../Assets/Models/World/CoastalEnvironment/PalmYoung_LOD2.fbx>) | Модель / анимации FBX |
+| [Assets/Models/World/CoastalEnvironment/Palm_LOD0.fbx](<../../Assets/Models/World/CoastalEnvironment/Palm_LOD0.fbx>) | Модель / анимации FBX |
+| [Assets/Models/World/CoastalEnvironment/Palm_LOD1.fbx](<../../Assets/Models/World/CoastalEnvironment/Palm_LOD1.fbx>) | Модель / анимации FBX |
+| [Assets/Models/World/CoastalEnvironment/Palm_LOD2.fbx](<../../Assets/Models/World/CoastalEnvironment/Palm_LOD2.fbx>) | Модель / анимации FBX |
+| [Assets/Models/World/CoastalEnvironment/Reef_Moai_A_LOD0.fbx](<../../Assets/Models/World/CoastalEnvironment/Reef_Moai_A_LOD0.fbx>) | Модель / анимации FBX |
+| [Assets/Models/World/CoastalEnvironment/Reef_Moai_A_LOD1.fbx](<../../Assets/Models/World/CoastalEnvironment/Reef_Moai_A_LOD1.fbx>) | Модель / анимации FBX |
+| [Assets/Models/World/CoastalEnvironment/Reef_Moai_A_LOD2.fbx](<../../Assets/Models/World/CoastalEnvironment/Reef_Moai_A_LOD2.fbx>) | Модель / анимации FBX |
+| [Assets/Models/World/CoastalEnvironment/Reef_ShallowField_A_LOD0.fbx](<../../Assets/Models/World/CoastalEnvironment/Reef_ShallowField_A_LOD0.fbx>) | Модель / анимации FBX |
+| [Assets/Models/World/CoastalEnvironment/Reef_ShallowField_A_LOD1.fbx](<../../Assets/Models/World/CoastalEnvironment/Reef_ShallowField_A_LOD1.fbx>) | Модель / анимации FBX |
+| [Assets/Models/World/CoastalEnvironment/Reef_ShallowField_A_LOD2.fbx](<../../Assets/Models/World/CoastalEnvironment/Reef_ShallowField_A_LOD2.fbx>) | Модель / анимации FBX |
+| [Assets/Models/World/CoastalEnvironment/Reef_Spires_A_LOD0.fbx](<../../Assets/Models/World/CoastalEnvironment/Reef_Spires_A_LOD0.fbx>) | Модель / анимации FBX |
+| [Assets/Models/World/CoastalEnvironment/Reef_Spires_A_LOD1.fbx](<../../Assets/Models/World/CoastalEnvironment/Reef_Spires_A_LOD1.fbx>) | Модель / анимации FBX |
+| [Assets/Models/World/CoastalEnvironment/Reef_Spires_A_LOD2.fbx](<../../Assets/Models/World/CoastalEnvironment/Reef_Spires_A_LOD2.fbx>) | Модель / анимации FBX |
+| [Assets/Models/World/CoastalEnvironment/Reef_Spires_B_LOD0.fbx](<../../Assets/Models/World/CoastalEnvironment/Reef_Spires_B_LOD0.fbx>) | Модель / анимации FBX |
+| [Assets/Models/World/CoastalEnvironment/Reef_Spires_B_LOD1.fbx](<../../Assets/Models/World/CoastalEnvironment/Reef_Spires_B_LOD1.fbx>) | Модель / анимации FBX |
+| [Assets/Models/World/CoastalEnvironment/Reef_Spires_B_LOD2.fbx](<../../Assets/Models/World/CoastalEnvironment/Reef_Spires_B_LOD2.fbx>) | Модель / анимации FBX |
+| [Assets/Models/World/CoastalEnvironment/Reef_Spires_C_LOD0.fbx](<../../Assets/Models/World/CoastalEnvironment/Reef_Spires_C_LOD0.fbx>) | Модель / анимации FBX |
+| [Assets/Models/World/CoastalEnvironment/Reef_Spires_C_LOD1.fbx](<../../Assets/Models/World/CoastalEnvironment/Reef_Spires_C_LOD1.fbx>) | Модель / анимации FBX |
+| [Assets/Models/World/CoastalEnvironment/Reef_Spires_C_LOD2.fbx](<../../Assets/Models/World/CoastalEnvironment/Reef_Spires_C_LOD2.fbx>) | Модель / анимации FBX |
+| [Assets/Models/World/CoastalEnvironment/RockLarge_LOD0.fbx](<../../Assets/Models/World/CoastalEnvironment/RockLarge_LOD0.fbx>) | Модель / анимации FBX |
+| [Assets/Models/World/CoastalEnvironment/RockLarge_LOD1.fbx](<../../Assets/Models/World/CoastalEnvironment/RockLarge_LOD1.fbx>) | Модель / анимации FBX |
+| [Assets/Models/World/CoastalEnvironment/RockLarge_LOD2.fbx](<../../Assets/Models/World/CoastalEnvironment/RockLarge_LOD2.fbx>) | Модель / анимации FBX |
+| [Assets/Models/World/CoastalEnvironment/RockMedium_LOD0.fbx](<../../Assets/Models/World/CoastalEnvironment/RockMedium_LOD0.fbx>) | Модель / анимации FBX |
+| [Assets/Models/World/CoastalEnvironment/RockMedium_LOD1.fbx](<../../Assets/Models/World/CoastalEnvironment/RockMedium_LOD1.fbx>) | Модель / анимации FBX |
+| [Assets/Models/World/CoastalEnvironment/RockMedium_LOD2.fbx](<../../Assets/Models/World/CoastalEnvironment/RockMedium_LOD2.fbx>) | Модель / анимации FBX |
+| [Assets/Models/World/CoastalEnvironment/SeaArch_Huge_A_LOD0.fbx](<../../Assets/Models/World/CoastalEnvironment/SeaArch_Huge_A_LOD0.fbx>) | Модель / анимации FBX |
+| [Assets/Models/World/CoastalEnvironment/SeaArch_Huge_A_LOD1.fbx](<../../Assets/Models/World/CoastalEnvironment/SeaArch_Huge_A_LOD1.fbx>) | Модель / анимации FBX |
+| [Assets/Models/World/CoastalEnvironment/SeaArch_Huge_A_LOD2.fbx](<../../Assets/Models/World/CoastalEnvironment/SeaArch_Huge_A_LOD2.fbx>) | Модель / анимации FBX |
+| [Assets/Models/World/CoastalEnvironment/Sea_Lagoon_Cave_LOD0.fbx](<../../Assets/Models/World/CoastalEnvironment/Sea_Lagoon_Cave_LOD0.fbx>) | Модель / анимации FBX |
+| [Assets/Models/World/CoastalEnvironment/Sea_Lagoon_Cave_LOD1.fbx](<../../Assets/Models/World/CoastalEnvironment/Sea_Lagoon_Cave_LOD1.fbx>) | Модель / анимации FBX |
+| [Assets/Models/World/CoastalEnvironment/Sea_Lagoon_Cave_LOD2.fbx](<../../Assets/Models/World/CoastalEnvironment/Sea_Lagoon_Cave_LOD2.fbx>) | Модель / анимации FBX |
+
+## Assets/Models/World/CoastalEnvironment/Textures
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/World/CoastalEnvironment/Textures/FernAlpha.png](<../../Assets/Models/World/CoastalEnvironment/Textures/FernAlpha.png>) | Изображение / текстура |
+| [Assets/Models/World/CoastalEnvironment/Textures/FernColour.png](<../../Assets/Models/World/CoastalEnvironment/Textures/FernColour.png>) | Изображение / текстура |
+| [Assets/Models/World/CoastalEnvironment/Textures/FernNormal.png](<../../Assets/Models/World/CoastalEnvironment/Textures/FernNormal.png>) | Изображение / текстура |
+| [Assets/Models/World/CoastalEnvironment/Textures/PalmColour.tga](<../../Assets/Models/World/CoastalEnvironment/Textures/PalmColour.tga>) | Текстура |
+| [Assets/Models/World/CoastalEnvironment/Textures/PalmNormal.tga](<../../Assets/Models/World/CoastalEnvironment/Textures/PalmNormal.tga>) | Текстура |
+| [Assets/Models/World/CoastalEnvironment/Textures/RockColour.png](<../../Assets/Models/World/CoastalEnvironment/Textures/RockColour.png>) | Изображение / текстура |
+| [Assets/Models/World/CoastalEnvironment/Textures/RockNormal.png](<../../Assets/Models/World/CoastalEnvironment/Textures/RockNormal.png>) | Изображение / текстура |
+
+## Assets/Models/World/CoastalEnvironment/Textures/Tripo
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/World/CoastalEnvironment/Textures/Tripo/01_RockMass_A_basecolor.jpg](<../../Assets/Models/World/CoastalEnvironment/Textures/Tripo/01_RockMass_A_basecolor.jpg>) | Изображение / текстура |
+| [Assets/Models/World/CoastalEnvironment/Textures/Tripo/01_RockMass_A_normal.png](<../../Assets/Models/World/CoastalEnvironment/Textures/Tripo/01_RockMass_A_normal.png>) | Изображение / текстура |
+| [Assets/Models/World/CoastalEnvironment/Textures/Tripo/01_RockMass_A_rm.jpg](<../../Assets/Models/World/CoastalEnvironment/Textures/Tripo/01_RockMass_A_rm.jpg>) | Изображение / текстура |
+| [Assets/Models/World/CoastalEnvironment/Textures/Tripo/02_RockMass_B_basecolor.jpg](<../../Assets/Models/World/CoastalEnvironment/Textures/Tripo/02_RockMass_B_basecolor.jpg>) | Изображение / текстура |
+| [Assets/Models/World/CoastalEnvironment/Textures/Tripo/02_RockMass_B_normal.png](<../../Assets/Models/World/CoastalEnvironment/Textures/Tripo/02_RockMass_B_normal.png>) | Изображение / текстура |
+| [Assets/Models/World/CoastalEnvironment/Textures/Tripo/02_RockMass_B_rm.jpg](<../../Assets/Models/World/CoastalEnvironment/Textures/Tripo/02_RockMass_B_rm.jpg>) | Изображение / текстура |
+| [Assets/Models/World/CoastalEnvironment/Textures/Tripo/03_RockMass_C_basecolor.jpg](<../../Assets/Models/World/CoastalEnvironment/Textures/Tripo/03_RockMass_C_basecolor.jpg>) | Изображение / текстура |
+| [Assets/Models/World/CoastalEnvironment/Textures/Tripo/03_RockMass_C_normal.png](<../../Assets/Models/World/CoastalEnvironment/Textures/Tripo/03_RockMass_C_normal.png>) | Изображение / текстура |
+| [Assets/Models/World/CoastalEnvironment/Textures/Tripo/03_RockMass_C_rm.jpg](<../../Assets/Models/World/CoastalEnvironment/Textures/Tripo/03_RockMass_C_rm.jpg>) | Изображение / текстура |
+| [Assets/Models/World/CoastalEnvironment/Textures/Tripo/04_RockMonolith_A_basecolor.jpg](<../../Assets/Models/World/CoastalEnvironment/Textures/Tripo/04_RockMonolith_A_basecolor.jpg>) | Изображение / текстура |
+| [Assets/Models/World/CoastalEnvironment/Textures/Tripo/04_RockMonolith_A_normal.png](<../../Assets/Models/World/CoastalEnvironment/Textures/Tripo/04_RockMonolith_A_normal.png>) | Изображение / текстура |
+| [Assets/Models/World/CoastalEnvironment/Textures/Tripo/04_RockMonolith_A_rm.jpg](<../../Assets/Models/World/CoastalEnvironment/Textures/Tripo/04_RockMonolith_A_rm.jpg>) | Изображение / текстура |
+| [Assets/Models/World/CoastalEnvironment/Textures/Tripo/05_RockMonolith_B_basecolor.jpg](<../../Assets/Models/World/CoastalEnvironment/Textures/Tripo/05_RockMonolith_B_basecolor.jpg>) | Изображение / текстура |
+| [Assets/Models/World/CoastalEnvironment/Textures/Tripo/05_RockMonolith_B_normal.png](<../../Assets/Models/World/CoastalEnvironment/Textures/Tripo/05_RockMonolith_B_normal.png>) | Изображение / текстура |
+| [Assets/Models/World/CoastalEnvironment/Textures/Tripo/05_RockMonolith_B_rm.jpg](<../../Assets/Models/World/CoastalEnvironment/Textures/Tripo/05_RockMonolith_B_rm.jpg>) | Изображение / текстура |
+| [Assets/Models/World/CoastalEnvironment/Textures/Tripo/06_RockMonolith_C_basecolor.jpg](<../../Assets/Models/World/CoastalEnvironment/Textures/Tripo/06_RockMonolith_C_basecolor.jpg>) | Изображение / текстура |
+| [Assets/Models/World/CoastalEnvironment/Textures/Tripo/06_RockMonolith_C_normal.png](<../../Assets/Models/World/CoastalEnvironment/Textures/Tripo/06_RockMonolith_C_normal.png>) | Изображение / текстура |
+| [Assets/Models/World/CoastalEnvironment/Textures/Tripo/06_RockMonolith_C_rm.jpg](<../../Assets/Models/World/CoastalEnvironment/Textures/Tripo/06_RockMonolith_C_rm.jpg>) | Изображение / текстура |
+| [Assets/Models/World/CoastalEnvironment/Textures/Tripo/07_RockTerrace_A_basecolor.jpg](<../../Assets/Models/World/CoastalEnvironment/Textures/Tripo/07_RockTerrace_A_basecolor.jpg>) | Изображение / текстура |
+| [Assets/Models/World/CoastalEnvironment/Textures/Tripo/07_RockTerrace_A_normal.png](<../../Assets/Models/World/CoastalEnvironment/Textures/Tripo/07_RockTerrace_A_normal.png>) | Изображение / текстура |
+| [Assets/Models/World/CoastalEnvironment/Textures/Tripo/07_RockTerrace_A_rm.jpg](<../../Assets/Models/World/CoastalEnvironment/Textures/Tripo/07_RockTerrace_A_rm.jpg>) | Изображение / текстура |
+| [Assets/Models/World/CoastalEnvironment/Textures/Tripo/08_RockTerrace_B_basecolor.jpg](<../../Assets/Models/World/CoastalEnvironment/Textures/Tripo/08_RockTerrace_B_basecolor.jpg>) | Изображение / текстура |
+| [Assets/Models/World/CoastalEnvironment/Textures/Tripo/08_RockTerrace_B_normal.png](<../../Assets/Models/World/CoastalEnvironment/Textures/Tripo/08_RockTerrace_B_normal.png>) | Изображение / текстура |
+| [Assets/Models/World/CoastalEnvironment/Textures/Tripo/08_RockTerrace_B_rm.jpg](<../../Assets/Models/World/CoastalEnvironment/Textures/Tripo/08_RockTerrace_B_rm.jpg>) | Изображение / текстура |
+| [Assets/Models/World/CoastalEnvironment/Textures/Tripo/09_RockWedge_A_basecolor.jpg](<../../Assets/Models/World/CoastalEnvironment/Textures/Tripo/09_RockWedge_A_basecolor.jpg>) | Изображение / текстура |
+| [Assets/Models/World/CoastalEnvironment/Textures/Tripo/09_RockWedge_A_normal.png](<../../Assets/Models/World/CoastalEnvironment/Textures/Tripo/09_RockWedge_A_normal.png>) | Изображение / текстура |
+| [Assets/Models/World/CoastalEnvironment/Textures/Tripo/09_RockWedge_A_rm.jpg](<../../Assets/Models/World/CoastalEnvironment/Textures/Tripo/09_RockWedge_A_rm.jpg>) | Изображение / текстура |
+| [Assets/Models/World/CoastalEnvironment/Textures/Tripo/10_RockWedge_B_basecolor.jpg](<../../Assets/Models/World/CoastalEnvironment/Textures/Tripo/10_RockWedge_B_basecolor.jpg>) | Изображение / текстура |
+| [Assets/Models/World/CoastalEnvironment/Textures/Tripo/10_RockWedge_B_normal.png](<../../Assets/Models/World/CoastalEnvironment/Textures/Tripo/10_RockWedge_B_normal.png>) | Изображение / текстура |
+| [Assets/Models/World/CoastalEnvironment/Textures/Tripo/10_RockWedge_B_rm.jpg](<../../Assets/Models/World/CoastalEnvironment/Textures/Tripo/10_RockWedge_B_rm.jpg>) | Изображение / текстура |
+| [Assets/Models/World/CoastalEnvironment/Textures/Tripo/11_RockElongated_A_basecolor.jpg](<../../Assets/Models/World/CoastalEnvironment/Textures/Tripo/11_RockElongated_A_basecolor.jpg>) | Изображение / текстура |
+| [Assets/Models/World/CoastalEnvironment/Textures/Tripo/11_RockElongated_A_normal.png](<../../Assets/Models/World/CoastalEnvironment/Textures/Tripo/11_RockElongated_A_normal.png>) | Изображение / текстура |
+| [Assets/Models/World/CoastalEnvironment/Textures/Tripo/11_RockElongated_A_rm.jpg](<../../Assets/Models/World/CoastalEnvironment/Textures/Tripo/11_RockElongated_A_rm.jpg>) | Изображение / текстура |
+| [Assets/Models/World/CoastalEnvironment/Textures/Tripo/12_RockElongated_B_basecolor.jpg](<../../Assets/Models/World/CoastalEnvironment/Textures/Tripo/12_RockElongated_B_basecolor.jpg>) | Изображение / текстура |
+| [Assets/Models/World/CoastalEnvironment/Textures/Tripo/12_RockElongated_B_normal.png](<../../Assets/Models/World/CoastalEnvironment/Textures/Tripo/12_RockElongated_B_normal.png>) | Изображение / текстура |
+| [Assets/Models/World/CoastalEnvironment/Textures/Tripo/12_RockElongated_B_rm.jpg](<../../Assets/Models/World/CoastalEnvironment/Textures/Tripo/12_RockElongated_B_rm.jpg>) | Изображение / текстура |
+| [Assets/Models/World/CoastalEnvironment/Textures/Tripo/13_RockBoulder_A_basecolor.jpg](<../../Assets/Models/World/CoastalEnvironment/Textures/Tripo/13_RockBoulder_A_basecolor.jpg>) | Изображение / текстура |
+| [Assets/Models/World/CoastalEnvironment/Textures/Tripo/13_RockBoulder_A_normal.png](<../../Assets/Models/World/CoastalEnvironment/Textures/Tripo/13_RockBoulder_A_normal.png>) | Изображение / текстура |
+| [Assets/Models/World/CoastalEnvironment/Textures/Tripo/13_RockBoulder_A_rm.jpg](<../../Assets/Models/World/CoastalEnvironment/Textures/Tripo/13_RockBoulder_A_rm.jpg>) | Изображение / текстура |
+| [Assets/Models/World/CoastalEnvironment/Textures/Tripo/14_RockFragment_A_basecolor.jpg](<../../Assets/Models/World/CoastalEnvironment/Textures/Tripo/14_RockFragment_A_basecolor.jpg>) | Изображение / текстура |
+| [Assets/Models/World/CoastalEnvironment/Textures/Tripo/14_RockFragment_A_normal.png](<../../Assets/Models/World/CoastalEnvironment/Textures/Tripo/14_RockFragment_A_normal.png>) | Изображение / текстура |
+| [Assets/Models/World/CoastalEnvironment/Textures/Tripo/14_RockFragment_A_rm.jpg](<../../Assets/Models/World/CoastalEnvironment/Textures/Tripo/14_RockFragment_A_rm.jpg>) | Изображение / текстура |
+| [Assets/Models/World/CoastalEnvironment/Textures/Tripo/15_RockFragment_B_basecolor.jpg](<../../Assets/Models/World/CoastalEnvironment/Textures/Tripo/15_RockFragment_B_basecolor.jpg>) | Изображение / текстура |
+| [Assets/Models/World/CoastalEnvironment/Textures/Tripo/15_RockFragment_B_normal.png](<../../Assets/Models/World/CoastalEnvironment/Textures/Tripo/15_RockFragment_B_normal.png>) | Изображение / текстура |
+| [Assets/Models/World/CoastalEnvironment/Textures/Tripo/15_RockFragment_B_rm.jpg](<../../Assets/Models/World/CoastalEnvironment/Textures/Tripo/15_RockFragment_B_rm.jpg>) | Изображение / текстура |
+| [Assets/Models/World/CoastalEnvironment/Textures/Tripo/diffuse.tga](<../../Assets/Models/World/CoastalEnvironment/Textures/Tripo/diffuse.tga>) | Текстура |
+| [Assets/Models/World/CoastalEnvironment/Textures/Tripo/fern_02_alpha_2k.png](<../../Assets/Models/World/CoastalEnvironment/Textures/Tripo/fern_02_alpha_2k.png>) | Изображение / текстура |
+| [Assets/Models/World/CoastalEnvironment/Textures/Tripo/fern_02_diff_2k.png](<../../Assets/Models/World/CoastalEnvironment/Textures/Tripo/fern_02_diff_2k.png>) | Изображение / текстура |
+| [Assets/Models/World/CoastalEnvironment/Textures/Tripo/fern_02_nor_gl_2k.png](<../../Assets/Models/World/CoastalEnvironment/Textures/Tripo/fern_02_nor_gl_2k.png>) | Изображение / текстура |
+| [Assets/Models/World/CoastalEnvironment/Textures/Tripo/normal.tga](<../../Assets/Models/World/CoastalEnvironment/Textures/Tripo/normal.tga>) | Текстура |
 
 ## Assets/Models/World/LocationExpansion
 

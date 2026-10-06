@@ -88,7 +88,7 @@ namespace PirateSlop
         public bool IsIgnited => ignitionTime >= 0f || visibleFuse >= 0f;
         public float FuseProgress => ignitionTime < 0f ? 0f : Mathf.Clamp01((Time.time - ignitionTime) / Mathf.Max(.1f, fuseDuration));
         void Awake() { if (BarrelPivot != null) barrelRest = BarrelPivot.localRotation; if (TraversePivot != null) traverseRest = TraversePivot.localRotation; }
-        public bool InBreechRange(AdvancedPlayerController player) => player != null && !player.IsDead && BarrelPivot != null && Vector3.Distance(player.transform.position + Vector3.up, BarrelPivot.position) <= 4f;
+        public bool InBreechRange(AdvancedPlayerController player) => player != null && !player.IsDead && !player.IsFrozen && BarrelPivot != null && Vector3.Distance(player.transform.position + Vector3.up, BarrelPivot.position) <= 4f;
         public void SetElevation(float value)
         {
             Elevation = Mathf.Clamp(value, MinElevation, MaxElevation);
@@ -204,7 +204,7 @@ namespace PirateSlop
             projectile.Radius = shot.GetComponent<SphereCollider>().radius * Mathf.Max(shot.transform.lossyScale.x, shot.transform.lossyScale.y, shot.transform.lossyScale.z);
             var trail = shot.GetComponent<TrailRenderer>();
             if (trail != null) trail.enabled = false;
-            Destroy(shot.gameObject, 20f);
+
         }
         public bool IsLoaded => loaded != null;
         public InventoryItem LoadedAmmo => loaded != null ? loaded.Ammo : InventoryItem.Cannonball;

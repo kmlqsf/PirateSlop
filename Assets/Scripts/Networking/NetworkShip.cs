@@ -144,7 +144,7 @@ namespace PirateSlop.Networking
         {
             var player = sender != null ? SessionController.Instance.GetPlayer(sender.ClientId) : null;
             var sails = GetComponent<SailSystem>();
-            if (player != null && !IsSinking && sails.InRange(player.Motor) && float.IsFinite(amount)) sails.AdjustSail(Mathf.Clamp(amount, -.2f, .2f));
+            if (player != null && !player.Motor.IsFrozen && !IsSinking && sails.InRange(player.Motor) && float.IsFinite(amount)) sails.AdjustSail(Mathf.Clamp(amount, -.2f, .2f));
         }
         [ObserversRpc(BufferLast = true)]
         void ReceiveState(ShipState state, int driver, float[] ropes, int[] holders)

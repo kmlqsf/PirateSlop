@@ -11,6 +11,7 @@ namespace PirateSlop.World
             foreach (var filter in root.GetComponentsInChildren<MeshFilter>(true))
             {
                 if (filter.sharedMesh == null || filter.GetComponent<MeshRenderer>() == null ||
+                    filter.GetComponentInParent<CoastalRockVisual>() != null ||
                     filter.GetComponentInParent<ShipController>() != null || filter.GetComponentInParent<NetworkShip>() != null ||
                     filter.GetComponentInParent<CombatHealth>() != null || filter.GetComponentInParent<Rigidbody>() != null) continue;
                 bool covered = false;

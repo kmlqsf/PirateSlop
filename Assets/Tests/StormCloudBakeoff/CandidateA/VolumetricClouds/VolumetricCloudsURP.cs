@@ -422,6 +422,7 @@ public class VolumetricCloudsURP : ScriptableRendererFeature
         private static readonly int lowestCloudAltitude = Shader.PropertyToID("_LowestCloudAltitude");
         private static readonly int shapeNoiseOffset = Shader.PropertyToID("_ShapeNoiseOffset");
         private static readonly int verticalShapeNoiseOffset = Shader.PropertyToID("_VerticalShapeNoiseOffset");
+        private static readonly int clearCloudWorldOffset = Shader.PropertyToID("_ClearCloudWorldOffset");
         private static readonly int globalOrientation = Shader.PropertyToID("_WindDirection");
         private static readonly int globalSpeed = Shader.PropertyToID("_WindVector");
         private static readonly int verticalShapeDisplacement = Shader.PropertyToID("_VerticalShapeWindDisplacement");
@@ -544,7 +545,7 @@ public class VolumetricCloudsURP : ScriptableRendererFeature
 
             cloudsMaterial.SetFloat(numPrimarySteps, cloudsVolume.numPrimarySteps.value);
             cloudsMaterial.SetFloat(numLightSteps, cloudsVolume.numLightSteps.value);
-            cloudsMaterial.SetFloat(maxStepSize, cloudsVolume.altitudeRange.value / 8.0f);
+            cloudsMaterial.SetFloat(maxStepSize, cloudsVolume.altitudeRange.value / (cloudsMaterial.IsKeywordEnabled("_PIRATESLOP_CLEAR_CLOUDS") ? 12f : 8f));
 
         #if URP_PBSKY
             float4 planetCenterRad = visualEnvVolume.GetPlanetCenterRadius(camera.transform.position);
@@ -552,11 +553,14 @@ public class VolumetricCloudsURP : ScriptableRendererFeature
             planetCenterRad = visualEnvVolume.renderingSpace.value == VisualEnvironment.RenderingSpace.World ? planetCenterRad : float4(0.0f, -actualEarthRad, 0.0f, actualEarthRad);
 
             cloudsMaterial.SetVector(planetCenterRadius, planetCenterRad);
+            var coverageOffset = cloudsMaterial.IsKeywordEnabled(localClouds) ? new Vector2(planetCenterRad.x, planetCenterRad.z) : new Vector2(camera.transform.position.x, camera.transform.position.z);
         #else
             float actualEarthRad = Mathf.Lerp(1.0f, 0.025f, cloudsVolume.earthCurvature.value) * earthRad;
 
             cloudsMaterial.SetVector(planetCenterRadius, float4(0.0f, -actualEarthRad, 0.0f, actualEarthRad));
+            var coverageOffset = cloudsMaterial.IsKeywordEnabled(localClouds) ? Vector2.zero : new Vector2(camera.transform.position.x, camera.transform.position.z);
         #endif
+            cloudsMaterial.SetVector(clearCloudWorldOffset, new Vector4(coverageOffset.x, coverageOffset.y, 0f, 0f));
 
             float bottomAltitude = cloudsVolume.bottomAltitude.value + actualEarthRad;
             float highestAltitude = bottomAltitude + cloudsVolume.altitudeRange.value;
@@ -1690,6 +1694,7 @@ public class VolumetricCloudsURP : ScriptableRendererFeature
                 // Apply light cookie settings
                 targetLight.cookie = null;
                 UniversalAdditionalLightData additonal = targetLight.GetComponent<UniversalAdditionalLightData>();
+                if (additonal == null) additonal = targetLight.gameObject.AddComponent<UniversalAdditionalLightData>();
                 additonal.lightCookieSize = Vector2.one;
                 additonal.lightCookieOffset = Vector2.zero;
 
@@ -1903,6 +1908,7 @@ public class VolumetricCloudsURP : ScriptableRendererFeature
                 // Apply light cookie settings
                 targetLight.cookie = null;
                 UniversalAdditionalLightData additonal = targetLight.GetComponent<UniversalAdditionalLightData>();
+                if (additonal == null) additonal = targetLight.gameObject.AddComponent<UniversalAdditionalLightData>();
                 additonal.lightCookieSize = Vector2.one;
                 additonal.lightCookieOffset = Vector2.zero;
 

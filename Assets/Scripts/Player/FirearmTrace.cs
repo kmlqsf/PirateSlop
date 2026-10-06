@@ -13,7 +13,8 @@ namespace PirateSlop
 
     public struct FirearmShot
     {
-        public Vector3 Start, End, Normal;
+        public Vector3 Start, End, Normal, WaterVelocity;
+        public int ProjectileId;
         public bool Hit, Water;
         public BulletSurfaceKind Surface;
         public bool LeaveMark;
@@ -32,14 +33,14 @@ namespace PirateSlop
             if (distance < .0001f) return false;
             foreach (var hit in Physics.RaycastAll(origin, delta / distance, distance, ~0, QueryTriggerInteraction.Collide))
             {
-                if (!PlayerHitbox.IsTarget(hit.collider)) continue;
+                if (!PlayerHitbox.IsTarget(hit.collider) || hit.collider.gameObject.layer == LayerMask.NameToLayer("Water")) continue;
                 if (shooter != null && hit.transform.IsChildOf(shooter.transform)) continue;
                 if (hit.distance <= distance) { nearest = hit; distance = hit.distance; }
             }
             return nearest.collider != null;
         }
 
-        public static FirearmShot Resolve(GameObject shooter, Vector3 eye, Vector3 muzzle, Vector3 direction, float range, out RaycastHit hit)
+        public static FirearmShot Resolve(GameObject shooter, Vector3 eye, Vector3 muzzle, Vector3 direction, float range, out RaycastHit hit, float speed = 450f)
         {
             direction.Normalize();
             Vector3 target = eye + direction * Mathf.Max(1f, range);
@@ -60,35 +61,27 @@ namespace PirateSlop
                 cameraHit = true;
             }
             var shot = new FirearmShot { Start = start, End = target, Normal = cameraHit ? hit.normal : -direction, Hit = cameraHit };
-            var ocean = OceanSurface.Instance;
-            if (ocean != null)
+            Vector3 flightDirection = (target - start).sqrMagnitude > .000001f ? (target - start).normalized : direction;
+            if (ProjectileWaterFlight.IsSubmerged(start))
             {
-                Vector3 delta = shot.End - shot.Start;
-                int steps = Mathf.Max(1, Mathf.CeilToInt(delta.magnitude / .5f));
-                float previous = 0f;
-                for (int i = 1; i <= steps; i++)
-                {
-                    float t = i / (float)steps;
-                    Vector3 point = shot.Start + delta * t;
-                    if (point.y <= ocean.Height(point))
-                    {
-                        float low = previous, high = t;
-                        for (int j = 0; j < 8; j++)
-                        {
-                            float middle = (low + high) * .5f;
-                            Vector3 sample = shot.Start + delta * middle;
-                            if (sample.y > ocean.Height(sample)) low = middle; else high = middle;
-                        }
-                        shot.End = shot.Start + delta * high;
-                        shot.Normal = Vector3.up; shot.Hit = false; shot.Water = true;
-                        hit = default;
-                        break;
-                    }
-                    previous = t;
-                }
+                shot.End = start;
+                shot.Normal = Vector3.up;
+                shot.Hit = false;
+                shot.Water = true;
+                hit = default;
             }
-            if(hit.collider!=null && !shot.Water) BulletSurface.Describe(hit,ref shot);
+            else if (WaterImpactPhysics.Cross(OceanSurface.Instance, start, target, 0f, out var waterPoint, out _))
+            {
+                shot.End = waterPoint;
+                shot.Normal = Vector3.up;
+                shot.Hit = false;
+                shot.Water = true;
+                hit = default;
+            }
+            if (shot.Water) shot.WaterVelocity = flightDirection * Mathf.Max(50f, speed);
+            else if (hit.collider != null) BulletSurface.Describe(hit, ref shot);
             return shot;
         }
+
     }
 }

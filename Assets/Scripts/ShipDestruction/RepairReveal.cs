@@ -20,7 +20,7 @@ namespace PirateSlop
                 effect.target = renderer; effect.mesh = filter.sharedMesh; effect.materials = renderer.sharedMaterials;
                 effect.hiddenBefore = renderer.forceRenderingOff; effect.started = Time.time;
                 renderer.forceRenderingOff = true;
-                renderer.GetComponentInParent<ShipDamageSection>()?.NotifyVisualChanged();
+                effect.NotifySection();
             }
         }
         void LateUpdate()
@@ -33,7 +33,13 @@ namespace PirateSlop
             for (int i=0;i<Mathf.Min(mesh.subMeshCount,materials.Length);i++)
                 Graphics.DrawMesh(mesh,matrix,materials[i],gameObject.layer,null,i,null,UnityEngine.Rendering.ShadowCastingMode.Off,false);
         }
-        void OnDisable() { if (target != null) { target.forceRenderingOff = hiddenBefore; target.GetComponentInParent<ShipDamageSection>()?.NotifyVisualChanged(); } }
-        void OnDestroy() { if (target != null) { target.forceRenderingOff = hiddenBefore; target.GetComponentInParent<ShipDamageSection>()?.NotifyVisualChanged(); } }
+        void NotifySection()
+        {
+            var owner = GetComponentInParent<ShipDestruction>();
+            var section = owner != null ? owner.SectionFor(target) : GetComponentInParent<ShipDamageSection>();
+            section?.NotifyVisualChanged();
+        }
+        void OnDisable() { if (target != null) { target.forceRenderingOff = hiddenBefore; NotifySection(); } }
+        void OnDestroy() { if (target != null) { target.forceRenderingOff = hiddenBefore; NotifySection(); } }
     }
 }

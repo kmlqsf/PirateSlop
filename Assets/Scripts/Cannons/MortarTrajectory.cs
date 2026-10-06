@@ -72,27 +72,53 @@ namespace PirateSlop
             var source = cannon.GetComponentInParent<ShipController>().transform;
             int count = 1;
             points[0] = position;
-            bool impact = false;
-            float dt = Time.fixedDeltaTime;
-            for (float t = 0f; t < 19f && count < points.Length; t += dt)
+            bool impact = false, waterEntered = ProjectileWaterFlight.IsSubmerged(position, cannon.ProjectileRadius);
+            float waterAge = 0f, dt = Time.fixedDeltaTime;
+            for (float t = 0f; t < 20f && count < points.Length - 2; t += dt)
             {
-                Vector3 next = CannonShotDamage.StepVelocity(velocity, dt);
-                Vector3 delta = (velocity + next) * (.5f * dt);
-                if (Trace(position, delta, cannon.ProjectileRadius, source, out var hit, out _, out _))
+                if (waterEntered && (waterAge += dt) >= ProjectileWaterFlight.CannonLifetime) break;
+                float remaining = dt;
+                for (int part = 0; part < 3 && remaining > .0001f; part++)
                 {
-                    position = hit;
+                    Vector3 next = velocity;
+                    Vector3 delta;
+                    if (ProjectileWaterFlight.IsSubmerged(position, cannon.ProjectileRadius))
+                        delta = ProjectileWaterFlight.Step(ref next, remaining, ProjectileWaterFlight.CannonDrag);
+                    else
+                    {
+                        next = CannonShotDamage.StepVelocity(velocity, remaining);
+                        delta = (velocity + next) * (.5f * remaining);
+                    }
+                    bool found = Trace(position, delta, cannon.ProjectileRadius, source, out var hit, out _, out _, false);
+                    if (WaterImpactPhysics.Cross(OceanSurface.Instance, position, position + delta, cannon.ProjectileRadius, out _, out float fraction) &&
+                        (!found || delta.magnitude * fraction < Vector3.Distance(position, hit)))
+                    {
+                        position += delta * fraction - Vector3.up * .001f;
+                        velocity = Vector3.Lerp(velocity, next, fraction);
+                        waterEntered = true;
+                        points[count++] = position;
+                        remaining *= 1f - fraction;
+                        continue;
+                    }
+                    if (found)
+                    {
+                        position = hit;
+                        points[count++] = position;
+                        impact = true;
+                        break;
+                    }
+                    position += delta;
+                    velocity = next;
                     points[count++] = position;
-                    impact = true;
                     break;
                 }
-                position += delta;
-                velocity = next;
-                points[count++] = position;
+                if (impact) break;
             }
             previewCount = count;
             previewImpact = impact;
             DrawPreview();
         }
+
         void DrawPreview()
         {
             if (visualFrame == Time.frameCount || previewCount == 0) return;
@@ -132,7 +158,7 @@ namespace PirateSlop
             count = hits.Length;
             return hits;
         }
-        public static bool Trace(Vector3 position, Vector3 delta, float radius, Transform source, out Vector3 point, out Vector3 normal, out Collider collider)
+        public static bool Trace(Vector3 position, Vector3 delta, float radius, Transform source, out Vector3 point, out Vector3 normal, out Collider collider, bool includeWater = true)
         {
             point = position + delta;
             normal = Vector3.up;
@@ -143,14 +169,14 @@ namespace PirateSlop
             for (int i = 0; i < count; i++)
             {
                 var hit = hits[i];
-                if (!PlayerHitbox.IsTarget(hit.collider)) continue;
+                if (!PlayerHitbox.IsTarget(hit.collider) || hit.collider.gameObject.layer == LayerMask.NameToLayer("Water")) continue;
                 if (hit.collider.gameObject.layer == LayerMask.NameToLayer("ShipDebris")) continue;
                 if (hit.collider.GetComponentInParent<BoardingWalkSurface>() != null) continue;
                 if ((source != null && hit.transform.IsChildOf(source)) || hit.collider.GetComponentInParent<CannonShotDamage>() != null || hit.distance > distance) continue;
                 point = hit.point; normal = hit.normal; collider = hit.collider; distance = hit.distance; found = true;
             }
             var ocean = OceanSurface.Instance;
-            if (WaterImpactPhysics.Cross(ocean, position, position + delta, radius, out var waterPoint, out float high))
+            if (includeWater && WaterImpactPhysics.Cross(ocean, position, position + delta, radius, out var waterPoint, out float high))
             {
                 if (!found || delta.magnitude * high < distance)
                 {

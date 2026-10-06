@@ -89,6 +89,7 @@ Shader "Custom/SimpleWaterURP"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareDepthTexture.hlsl"
             #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/EntityLighting.hlsl"
+            #include "Assets/Shaders/CoastalShoreFoam.hlsl"
 
             struct Attributes
             {
@@ -284,6 +285,9 @@ Shader "Custom/SimpleWaterURP"
                 float whirlpoolFoamMask = 1.0 - (1.0 - smoothstep(0.95, 1.15, whirlpoolDistance)) * step(0.01, _WhirlpoolDepth);
                 float foamEdge = (1.0 - smoothstep(0.0, _FoamDistance, contactDepth)) * hasSceneGeometry * whirlpoolFoamMask;
                 float foamLine = foamEdge * smoothstep(.22, .68, foamBreakup + foamEdge * .25) * foamNoise;
+                float2 coastalFoam = CoastalShoreMask(IN.positionWS);
+                foamLine *= 1 - coastalFoam.r;
+                foamLine = max(foamLine, coastalFoam.g * coastalFoam.r * smoothstep(.2, .72, foamNoise + foamBreakup * .3) * whirlpoolFoamMask);
                 float vortexAngle = atan2(vortexDelta.y, vortexDelta.x + .00001);
                 float spiralPhase = vortexAngle * 3.0 - vortexT * _WhirlpoolTwist * 6.283185 + oceanTime * .48;
                 float spiralStripe = smoothstep(.80, .98, sin(spiralPhase));

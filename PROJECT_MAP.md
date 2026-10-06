@@ -1,6 +1,6 @@
 # PirateSlop — карта проекта
 
-Снимок файлов: 2026-10-06. Корень: `C:\Users\K\Project`.
+Снимок файлов: 2026-10-07. Корень: `C:\Users\K\Project`.
 
 ## Как пользоваться
 
@@ -12,14 +12,14 @@
 
 ## Полный каталог
 
-Учтено 3496 файлов без `.meta`. Ещё 3597 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
+Учтено 3834 файлов без `.meta`. Ещё 3791 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
 
 | Раздел | Назначение | Файлов |
 | --- | --- | ---: |
 | [.agents](<Docs/ProjectMap/.agents.md>) | Ресурсы раздела; точный состав — в каталоге | 1 |
 | [.cursor](<Docs/ProjectMap/.cursor.md>) | Ресурсы раздела; точный состав — в каталоге | 1 |
-| [.opencode](<Docs/ProjectMap/.opencode.md>) | Ресурсы раздела; точный состав — в каталоге | 1 |
-| [Art](<Docs/ProjectMap/Art.md>) | Исходники арта и Blender | 243 |
+| [.opencode](<Docs/ProjectMap/.opencode.md>) | Ресурсы раздела; точный состав — в каталоге | 4 |
+| [Art](<Docs/ProjectMap/Art.md>) | Исходники арта и Blender | 387 |
 | [Assets](<Docs/ProjectMap/Assets.md>) | Ресурсы раздела; точный состав — в каталоге | 2 |
 | [Assets/Animations](<Docs/ProjectMap/Assets-Animations.md>) | Анимации | 27 |
 | [Assets/Audio](<Docs/ProjectMap/Assets-Audio.md>) | Звуковые ресурсы и лицензии | 206 |
@@ -28,26 +28,26 @@
 | [Assets/Fog Particles](<Docs/ProjectMap/Assets-Fog Particles.md>) | Ресурсы раздела; точный состав — в каталоге | 3 |
 | [Assets/Game](<Docs/ProjectMap/Assets-Game.md>) | Игровые подсистемы и эффекты | 66 |
 | [Assets/Houidisoft technology](<Docs/ProjectMap/Assets-Houidisoft technology.md>) | Ресурсы раздела; точный состав — в каталоге | 12 |
-| [Assets/JMO Assets](<Docs/ProjectMap/Assets-JMO Assets.md>) | Ресурсы раздела; точный состав — в каталоге | 19 |
-| [Assets/Materials](<Docs/ProjectMap/Assets-Materials.md>) | Материалы | 100 |
+| [Assets/JMO Assets](<Docs/ProjectMap/Assets-JMO Assets.md>) | Ресурсы раздела; точный состав — в каталоге | 18 |
+| [Assets/Materials](<Docs/ProjectMap/Assets-Materials.md>) | Материалы | 126 |
 | [Assets/Mirza](<Docs/ProjectMap/Assets-Mirza.md>) | Ресурсы раздела; точный состав — в каталоге | 1 |
-| [Assets/Models](<Docs/ProjectMap/Assets-Models.md>) | Модели и связанные ресурсы | 1102 |
+| [Assets/Models](<Docs/ProjectMap/Assets-Models.md>) | Модели и связанные ресурсы | 1232 |
 | [Assets/Plugins](<Docs/ProjectMap/Assets-Plugins.md>) | Плагины | 5 |
 | [Assets/Prefabs](<Docs/ProjectMap/Assets-Prefabs.md>) | Готовые игровые объекты | 114 |
-| [Assets/Resources](<Docs/ProjectMap/Assets-Resources.md>) | Ресурсы, доступные для загрузки по имени | 63 |
+| [Assets/Resources](<Docs/ProjectMap/Assets-Resources.md>) | Ресурсы, доступные для загрузки по имени | 70 |
 | [Assets/Scenes](<Docs/ProjectMap/Assets-Scenes.md>) | Сохранённые сцены | 3 |
-| [Assets/Scripts](<Docs/ProjectMap/Assets-Scripts.md>) | Игровой код и редакторские инструменты | 387 |
+| [Assets/Scripts](<Docs/ProjectMap/Assets-Scripts.md>) | Игровой код и редакторские инструменты | 401 |
 | [Assets/Settings](<Docs/ProjectMap/Assets-Settings.md>) | Настройки игровых систем и рендеринга | 48 |
-| [Assets/Shaders](<Docs/ProjectMap/Assets-Shaders.md>) | Шейдеры | 8 |
+| [Assets/Shaders](<Docs/ProjectMap/Assets-Shaders.md>) | Шейдеры | 14 |
 | [Assets/StreamingAssets](<Docs/ProjectMap/Assets-StreamingAssets.md>) | Ресурсы раздела; точный состав — в каталоге | 2 |
 | [Assets/Tests](<Docs/ProjectMap/Assets-Tests.md>) | Исходники проверок | 19 |
 | [Assets/ThirdParty](<Docs/ProjectMap/Assets-ThirdParty.md>) | Сторонние ресурсы | 20 |
 | [Assets/TutorialInfo](<Docs/ProjectMap/Assets-TutorialInfo.md>) | Ресурсы раздела; точный состав — в каталоге | 2 |
 | [Assets/UI](<Docs/ProjectMap/Assets-UI.md>) | Ресурсы интерфейса | 29 |
-| [Docs](<Docs/ProjectMap/Docs.md>) | Документы и сохранённые отчёты | 30 |
+| [Docs](<Docs/ProjectMap/Docs.md>) | Документы и сохранённые отчёты | 31 |
 | [Packages](<Docs/ProjectMap/Packages.md>) | Манифест, lock-файл и встроенные пакеты | 922 |
 | [ProjectSettings](<Docs/ProjectMap/ProjectSettings.md>) | Настройки Unity | 28 |
-| [Root](<Docs/ProjectMap/Root.md>) | Корневые инструкции, планы и служебные файлы | 26 |
+| [Root](<Docs/ProjectMap/Root.md>) | Корневые инструкции, планы и служебные файлы | 27 |
 | [ThirdParty](<Docs/ProjectMap/ThirdParty.md>) | Сторонние ресурсы | 2 |
 | [Tools](<Docs/ProjectMap/Tools.md>) | Инструменты разработки и загрузчик контекста | 9 |
 
@@ -121,6 +121,7 @@ ConfigureDispenser разворачивает поперечный захват 
 Кости: правая ось кружки совпадает с камерой ближайшего места. DiceInput передаёт абсолютное смещение и скорость в плоскости стола; локальная кружка предсказывается каждый кадр, физическая позиция сглаживается в FixedUpdate, CupVisual сглаживается в LateUpdate отдельно от Rigidbody. Кубики наследуют скорость кружки при отпускании; наклон, длительность приоткрывания и вращение зависят от жеста. При покое нет постоянного горизонтального толчка. UI показывает только номер зоны и сумму; прежняя сумма сохраняется до завершения повторного броска этого места. ConfigurePresentation сохраняет отдельные визуалы кружек и золотые номера 1–3 с тёмным контуром в центрах секторов. ProtocolVersion 115 для нового DiceInput; игровой прогон не выполнялся.
 Коррекции рассинхрона костей: отдельные DiceVisuals следуют за общей позой CupVisual в фазах загрузки, тряски и приоткрывания; кубики в покое рисуются в точных локальных координатах корабля без интерполяции Rigidbody. Клиенты получают фазу вместе с локальными физическими позами через существующее поле ShipV3PhysicsPose.Phase. Последнее движение мыши сохраняет скорость 0.1 с до отпускания, включая ограничение позиции у края; смена направления сразу меняет импульс. Выходные позиции разнесены на 0.056 м, KeepDiceOnTable переставляет тело только при фактическом выходе за границы. FirstPersonModelVisibility скрывает своего пирата для отдельной DiceTableCamera и восстанавливает видимость при выходе. SeatTable привязывает сборку к фактическим треугольникам крышки с перекрытием 0.003 м, ставит кружки и кубики на поверхность и пересохраняет затронутый ShipV3Batch_106. Сохранены 3 CupVisual и 15 DiceVisuals в ShipV3Test.prefab. Формат RPC и ProtocolVersion=115 сохранены; игровой прогон не выполнялся.
 Качка ShipController использует ShipBuoyancy:9 продольных сечений×3 поперечных точки, weighted plane-fit по площади измеренного корпуса. Высота берётся из intercept плоскости в центре корабля с учётом смещённого weighted meanZ; pitch/roll из её уклонов. Четыре края±18/±5.5 раньше давали spatial alias на волне32м и могли менять знак наклона. Сохранены сглаживаниеexp, clamps12/15deg, Flooding/Cannon и сетевой ShipState. Проверены16 аналитических плоскостей при yaw0/90/180/270: height error<7.2e−7, normal dot≥.99999994. Дляsin(2πz/32) oldPitch+1.218deg, new−3.528deg.
+Исправления 2026-10-06: Dispense вызывает Cannonball.Eject без привязки к палубе. Толчок наружу 3 м/с плюс скорость корабля; коллизия с маской и прикрепление к лотку подавлены 0.4 с, затем обычная физика. ShipV3CollisionBatch отключает UseFastMidphase как обход native-сбоя CharacterController.Move из Player.log; устранение игрового краша не подтверждено.
 
 - [Assets/Scripts/ShipController.cs](<Assets/Scripts/ShipController.cs>) — Исходник C#: ShipController.
 - [Assets/Scripts/ShipDeckPassenger.cs](<Assets/Scripts/ShipDeckPassenger.cs>) — Исходник C#: ShipDeckPassenger.
@@ -218,6 +219,11 @@ CannonSmokeTrail: дым в мировых координатах по прой�
 NetworkCannon отправляет изменения placements каждые 0.05 с; удалённый клиент сглаживает положение, вращение лафета, наклон и поворот механизма каждый кадр между полученными состояниями. Собственное управление и серверная физика сохраняются. Подаваемое ядро также получает промежуточные положения; NetworkLooseCannonball SyncVars настроены на 0.05 с. Буферы очищаются при OnStopClient. Онлайн-проверка двумя клиентами не выполнялась.
 Абордажные ядра лежат без качения относительно корабля; короткая проверка опоры включает падение при разрушении палубы. Оба троса выстрела идут из центра дула и расширяются к гарпунам. Крепление хранит точную секцию и ближайший фрагмент; его разрушение снимает трос и поперечины. RopeTubeVisual рисует круглые тросы с UV по длине. HookRope использует цветовую и нормальную карты пенькового каната Ship V3.
 Огненное ядро использует ограниченное распространение по связным фрагментам Ship V3. Бюджет очагов ceil(число первично повреждаемых обычным ядром фрагментов × 1.5), с учётом оставшейся геометрии. Очаги горят 5–9 с, прогоревшие фрагменты удаляются штатными масками разрушения и потерей опор. Огонь поджигает проходящий экипаж на 5–9 с, урон 15 здоровья/с; море и ледяные попадания тушат огонь, мокрые цели защищены 3 с. ShipFireVfx: анимированное пламя, мировой дым, искры, пар и один общий ближайший свет без теней. Отдельный ShipFire shader выбирает red-маску для пламени/искр и alpha для дыма/пара.
+Огненное ядро 2026-10-06: прежний округлённый бюджет очагов удвоен, максимальный квадрат дистанции распространения увеличен 36→72 м². Остальные время горения, урон и тушение сохранены.
+Морозное ядро: NetworkShip.FreezeFromShot останавливает корабль на 5 с и очищает все fireExposure/firePatches, включая ожидающее распространение. Живые игроки с фактической опорой ShipDeckPassenger.Ship==Body замораживаются на 1 с через NetworkHealth.frozenUntil (синхронизированный серверный Tick). Урон сохраняется; движение, отдача, оружие и взаимодействия запрещены, текущие механизмы/работы освобождаются. Повторный удар обновляет сроки; огненное попадание немедленно снимает заморозку корабля и начинает обычное горение. Протокол 126.
+ShipFreezeVfx: дополнительная освещённая островковая оболочка по текущим meshes без копирования и замены базовых материалов, трещины и 256 instanced кристаллов. Source renderers из ShipV3RenderBatch исключены; батчи/штурвал/мачты имеют приоритет, максимум 144 shell draw. V3 seeds: 64/64 борта, 40 основная палуба, 20 бак, 20 квартердек, 40 мачты, 8 штурвал; Section/RemovedFragments и renderer visibility не позволяют оставлять лёд в пустотах. Рост ~0.4 с, таяние последние 0.5 с. Короткий ледяной burst +18 холодных пылинок, дымовой атлас 2×2. PlayerFreezeScreen показывает морозные края на 1 с, центр остаётся видимым. Ресурсы/привязки проверены native Unity MCP; компиляция без ошибок, игровой внешний вид/сетевая проверка не выполнялись.
+Огонь против льда: Ignite снимает Motor.freezeRemaining и синхронизированный frozen до расчёта очагов; защита shipWetUntil удалена. Обычные wetFragments от тушения водой сохраняются. ShipFreezeVfx захватывает текущие age/origin/fade и плавно убирает оболочку и уменьшает кристаллы за 0.25 с; повторные Present(0) не продлевают таяние, новый мороз отменяет таяние, ClearAmmo выключает эффект сразу. Заморозка игроков на 1 с не изменяется. VFX review APPROVED по коду и native Unity данным; игра не запускалась.
+Подводные снаряды 2026-10-06: все типы ядер, включая мортиру и огненные/ледяные/толкающие/бумеранг/абордажные, проходят поверхность OceanSurface, тормозятся квадратичным сопротивлением и сохраняют попадания. Подводный срок 6 с; бумеранг после погружения переходит на баллистику. MortarTrajectory показывает продолжение в воде, взрыв только при контакте с целью. Runtime ProjectileWaterFlight и UnderwaterProjectileTrail используют общий пузырьковый материал Underwater/Bubbles. Компиляция проверена; игра и второй клиент не запускались.
 
 - [Assets/Scripts/Cannons/SimpleCannon.cs](<Assets/Scripts/Cannons/SimpleCannon.cs>) — Исходник C#: SimpleCannon.
 - [Assets/Scripts/Cannons/NetworkCannon.cs](<Assets/Scripts/Cannons/NetworkCannon.cs>) — Исходник C#: CannonPlacement, NetworkCannon, RemoteCarriagePose.
@@ -238,7 +244,7 @@ NetworkCannon отправляет изменения placements каждые 0.
 - [Assets/Scripts/Interaction/RopeTubeVisual.cs](<Assets/Scripts/Interaction/RopeTubeVisual.cs>) — Исходник C#: RopeTubeVisual, Centerline.
 - [Assets/Scripts/Cannons/ShipFireVfx.cs](<Assets/Scripts/Cannons/ShipFireVfx.cs>) — Исходник C#: ShipFireVfx.
 - [Assets/Scripts/Editor/ShipFireVfxSetup.cs](<Assets/Scripts/Editor/ShipFireVfxSetup.cs>) — Исходник C#: ShipFireVfxSetup.
-- [Assets/Scripts/Networking/NetworkShipAmmo.cs](<Assets/Scripts/Networking/NetworkShipAmmo.cs>) — Исходник C#: ShipFirePatch, NetworkShip, FireExposure.
+- [Assets/Scripts/Networking/NetworkShipAmmo.cs](<Assets/Scripts/Networking/NetworkShipAmmo.cs>) — Исходник C#: ShipFirePatch, ShipFreezeState, NetworkShip, FireExposure.
 - [Assets/Resources/VFX/ShipFireVfx.prefab](<Assets/Resources/VFX/ShipFireVfx.prefab>) — Префаб Unity.
 - [Assets/Resources/VFX/ShipFireFlame.mat](<Assets/Resources/VFX/ShipFireFlame.mat>) — Материал Unity.
 - [Assets/Resources/VFX/ShipFireSmoke.mat](<Assets/Resources/VFX/ShipFireSmoke.mat>) — Материал Unity.
@@ -246,6 +252,18 @@ NetworkCannon отправляет изменения placements каждые 0.
 - [Assets/Resources/ShipFire.shader](<Assets/Resources/ShipFire.shader>) — Шейдер.
 - [Assets/Scripts/World/WaterImpactPhysics.cs](<Assets/Scripts/World/WaterImpactPhysics.cs>) — Исходник C#: WaterImpactKind, WaterImpactEvent, WaterImpactPhysics.
 - [Assets/Scripts/World/WaterImpactBody.cs](<Assets/Scripts/World/WaterImpactBody.cs>) — Исходник C#: WaterImpactBody.
+- [Assets/Scripts/Cannons/ShipFreezeVfx.cs](<Assets/Scripts/Cannons/ShipFreezeVfx.cs>) — Исходник C#: ShipFreezeVfx, IceSeed, Surface.
+- [Assets/Scripts/Player/PlayerFreezeScreen.cs](<Assets/Scripts/Player/PlayerFreezeScreen.cs>) — Исходник C#: PlayerFreezeScreen.
+- [Assets/Scripts/Editor/ShipFreezeVfxSetup.cs](<Assets/Scripts/Editor/ShipFreezeVfxSetup.cs>) — Исходник C#: ShipFreezeVfxSetup, Candidate.
+- [Assets/Scripts/Networking/NetworkHealth.cs](<Assets/Scripts/Networking/NetworkHealth.cs>) — Исходник C#: NetworkHealth.
+- [Assets/Resources/VFX/ShipIce.shader](<Assets/Resources/VFX/ShipIce.shader>) — Шейдер.
+- [Assets/Resources/VFX/ShipIceShell.mat](<Assets/Resources/VFX/ShipIceShell.mat>) — Материал Unity.
+- [Assets/Resources/VFX/ShipIceCrystal.mat](<Assets/Resources/VFX/ShipIceCrystal.mat>) — Материал Unity.
+- [Assets/Resources/VFX/ShipIceCrystalMesh.asset](<Assets/Resources/VFX/ShipIceCrystalMesh.asset>) — Настройки или данные Unity.
+- [Assets/Resources/VFX/PlayerFreezeScreen.shader](<Assets/Resources/VFX/PlayerFreezeScreen.shader>) — Шейдер.
+- [Assets/Resources/VFX/PlayerFreezeScreen.mat](<Assets/Resources/VFX/PlayerFreezeScreen.mat>) — Материал Unity.
+- [Assets/Scripts/World/ProjectileWaterFlight.cs](<Assets/Scripts/World/ProjectileWaterFlight.cs>) — Исходник C#: ProjectileWaterFlight.
+- [Assets/Scripts/World/UnderwaterProjectileTrail.cs](<Assets/Scripts/World/UnderwaterProjectileTrail.cs>) — Исходник C#: UnderwaterProjectileTrail.
 - [combat-balance.md](<combat-balance.md>) — Документация.
 - [unity.md](<unity.md>) — Документация.
 
@@ -260,6 +278,7 @@ AdvancedPlayerController: новое нажатие пробела у повер
 F2 при наличии сетевого ShipV3Features переносит живого локального игрока на RespawnPoint нового корабля в текущей сцене. ServerRpc на NetworkPlayer и ObserversRpc сбрасывают состояние перемещения через Teleport, освобождают механизмы и прикрепляют пассажира к новому кораблю; домашний корабль не меняется.
 Новый корабль использует FollowRopePath у ShipLadder: четыре боковых маршрута к гнёздам и две посадочные сетки, от настоящих нижних вершин мешей до выхода над ограждением. TopSideOffset и TopLean учитывают наклон в двух направлениях; RopeStandOff оставляет пловца снаружи сетки. Для этих маршрутов не создаётся сплошная вертикальная стенка. У посадочных сеток высота маршрута заканчивается на фактическом верхнем ряду без прибавки 1.1 м; выход расположен на поверхности палубы, вычисленной по треугольникам коллайдеров. AdvancedPlayerController использует те же маршруты в существующей сетевой симуляции; прежние лестницы основного корабля сохраняют настройки по умолчанию. После правки проверены только компиляция и edit-mode привязки, игровой онлайн-прогон не выполнялся.
 ShipDeckPassenger учитывает BoardingWalkSurface: перенос по текущей кривой троса между двумя кораблями, обычное управление движением сохранено. При превращении лестницы в одиночную верёвку игрок сохраняет мировое положение; потерявший опору падает. Положение продолжает передаваться существующим состоянием NetworkPlayer относительно корабля пушки.
+Заморозка от корабельного морозного попадания: NetworkHealth синхронизирует конечный серверный Tick на 1 с. AdvancedPlayerController.IsFrozen блокирует InputActive/LocomotionLocked и саму Simulate до применения движения, включая knockback/grapple; получение урона не меняется. PlayerFreezeScreen даёт плавный мороз по краям только экрану владельца; повторный удар продлевает эффект без мигания. Авторитетные ворота предметов, механизмов, инвентаря и BotActionExecutor также учитывают заморозку.
 
 - [Assets/Scripts/AdvancedPlayerController.cs](<Assets/Scripts/AdvancedPlayerController.cs>) — Исходник C#: AdvancedPlayerController.
 - [Assets/Scripts/AdvancedPlayerController.Spectator.cs](<Assets/Scripts/AdvancedPlayerController.Spectator.cs>) — Исходник C#: AdvancedPlayerController.
@@ -279,6 +298,8 @@ ShipDeckPassenger учитывает BoardingWalkSurface: перенос по т
 - [Assets/Scripts/Cannons/BoardingWalkSurface.cs](<Assets/Scripts/Cannons/BoardingWalkSurface.cs>) — Исходник C#: BoardingWalkSurface.
 - [Assets/Scripts/World/WaterImpactPhysics.cs](<Assets/Scripts/World/WaterImpactPhysics.cs>) — Исходник C#: WaterImpactKind, WaterImpactEvent, WaterImpactPhysics.
 - [Assets/Scripts/World/WaterImpactBody.cs](<Assets/Scripts/World/WaterImpactBody.cs>) — Исходник C#: WaterImpactBody.
+- [Assets/Scripts/Networking/NetworkHealth.cs](<Assets/Scripts/Networking/NetworkHealth.cs>) — Исходник C#: NetworkHealth.
+- [Assets/Scripts/Player/PlayerFreezeScreen.cs](<Assets/Scripts/Player/PlayerFreezeScreen.cs>) — Исходник C#: PlayerFreezeScreen.
 - [animation-review.md](<animation-review.md>) — Документация.
 - [unity.md](<unity.md>) — Документация.
 
@@ -295,6 +316,8 @@ SabreAnimation использует отдельный хват Mixamo и пер
 Уточнение размеров и хвата 2026-10-04: итоговые длины корпуса пистолета 0.324 м, снайперки 1.062 м, дробовика 0.648 м (Visual scale 0.72/0.9/0.9). Подтверждённый хват длинного оружия сохранён; пистолет получил GripSocket_Firearm, наклон кисти по рукояти и позу 20 правых пальцев из New_PistolAim. Сабля уменьшена до 0.735 м и развёрнута на 180° вокруг продольной оси клинка в первом/третьем лице и сброшенном визуале. Сабля разбивает Fog/Vortex через прежний проверенный контакт прицела; огнестрел использует IWeaponTarget. Glass добавлен в конец BulletSurfaceKind; бутылочное попадание не создаёт обычный след/звук пули и не передаёт удаляемый Anchor. Компиляция и сохранённые ссылки проверены; Play Mode и игровые/визуальные проверки не запускались.
 Снайперка имеет ShoulderSocket_Firearm на затыльнике, GripSocket_Firearm на рукояти и SupportSocket_Firearm на цевье. NetworkEquipment передаёт смещение плеча и текущую отдачу/движение. WeaponArmRig в мировой стойке закрепляет приклад на плече текущего скелета; при недостижимом цевье левый хват сдвигается вдоль оружия до доступной длины руки, без переноса приклада и без соседней точки правого хвата. При перезарядке освобождается плечевой контакт. FirearmModelReplacementSetup сохраняет сокеты при повторном импорте; масштаб и баланс не изменены.
 NetworkHealth синхронизирует горение экипажа и считает урон на сервере. Контакт с корабельным пламенем поджигает игрока, экологический урон действует и на союзников; погружение в море и ледяное попадание тушат, смерть/возрождение очищают эффект.
+Прицел снайперки 2026-10-06: маска рисуется только в Repaint и заполняется одним SetPixels32. Лог пользовательского краша показывает native CharacterController.Move; для объединённых корабельных коллайдеров добавлен обход без UseFastMidphase. Повторное воспроизведение краша оставлено пользователю.
+Подводная стрельба 2026-10-06: пистолет, снайперка и дробь переходят от воздушного hitscan к серверному UnderwaterFirearmProjectile на 3 с; квадратичное торможение, текущие коллайдеры пловцов, общий DamageCap на залп. PistolBullet показывает пузырьковую траекторию и завершается по серверному результату, без повторного дульного эффекта. FirearmShot передаёт WaterVelocity/ProjectileId; отдельный observer RPC для подводного попадания. SessionConfig.ProtocolVersion128, клиентам нужна одна версия. Компиляция проверена; игровой/сетевой тест не запускался.
 
 - [Assets/Scripts/Player/PirateWeapon.cs](<Assets/Scripts/Player/PirateWeapon.cs>) — Исходник C#: IWeaponTarget, PirateWeapon.
 - [Assets/Scripts/Networking/NetworkWeapon.cs](<Assets/Scripts/Networking/NetworkWeapon.cs>) — Исходник C#: NetworkWeapon.
@@ -333,6 +356,11 @@ NetworkHealth синхронизирует горение экипажа и сч
 - [Assets/Scripts/Networking/NetworkEquipment.cs](<Assets/Scripts/Networking/NetworkEquipment.cs>) — Исходник C#: NetworkEquipment.
 - [Assets/Scripts/Player/BulletSurface.cs](<Assets/Scripts/Player/BulletSurface.cs>) — Исходник C#: BulletSurfaceKind, BulletSurface.
 - [Assets/Scripts/Player/FirearmImpact.cs](<Assets/Scripts/Player/FirearmImpact.cs>) — Исходник C#: FirearmImpact.
+- [Assets/Scripts/Player/FirearmTrace.cs](<Assets/Scripts/Player/FirearmTrace.cs>) — Исходник C#: FirearmSettings, FirearmShot, FirearmTrace.
+- [Assets/Scripts/Player/FirearmPrediction.cs](<Assets/Scripts/Player/FirearmPrediction.cs>) — Исходник C#: FirearmPrediction.
+- [Assets/Scripts/Player/UnderwaterFirearmProjectile.cs](<Assets/Scripts/Player/UnderwaterFirearmProjectile.cs>) — Исходник C#: FirearmDamageBatch, UnderwaterFirearmProjectile.
+- [Assets/Scripts/World/ProjectileWaterFlight.cs](<Assets/Scripts/World/ProjectileWaterFlight.cs>) — Исходник C#: ProjectileWaterFlight.
+- [Assets/Scripts/World/UnderwaterProjectileTrail.cs](<Assets/Scripts/World/UnderwaterProjectileTrail.cs>) — Исходник C#: UnderwaterProjectileTrail.
 - [firearm-foundation.md](<firearm-foundation.md>) — Документация.
 - [combat-balance.md](<combat-balance.md>) — Документация.
 - [Art/Blender/Firearms/README.md](<Art/Blender/Firearms/README.md>) — Документация.
@@ -361,6 +389,12 @@ FogBottle и VortexBottle на палубе и в полёте разбиваю�
 ExperimentalShipEquipment отсчитывает индивидуальную серверную задержку 5 секунд для FogBottle и VortexBottle с момента исчезновения предыдущего экземпляра после подбора или разбития. Первый запас появляется сразу; повторный спавн использует прежний SpawnPoint корабля и NetworkFish.Place. Таймер не зависит от общего 20-секундного пополнения; мгновенная выдача снайперки/дробовика сохранена.
 Баррикада: палубный пикап ExperimentalShipEquipment появляется повторно сразу после подбора. Установка на свободной поверхности корабля — удерживать ЛКМ и смотреть в радиус 0.38 м от закреплённой точки 3 секунды; сервер проверяет непрерывные сообщения каждые 0.12 с, сбрасывает при перерыве более 0.5 с. R/колесо поворачивают, ПКМ отменяет. Предпросмотр по прогрессу переходит из зелёного в исходную текстуру снизу вверх в локальной высоте. Shift+E 7 секунд собирает установленную баррикаду в инвентарь. Оружие игроков не повреждает; прямое обычное ядро уничтожает целиком с BarricadeBreak и 16 косметическими фрагментами. Исходник Art/Blender/Barricade/Barricade.blend, размер 1.4×0.68×2.1 м, проём свободен в 1.42–1.69 м. Протокол 122; Play Mode и мультиплеер не проверены.
 Lantern=26: ручной фонарь из корабельного Body без Hanger, Y-up и исходный scale100 запечены вместе с коэффициентом .65; высота .56м. ExperimentalShipEquipment создаёт один на палубе Loot_Lantern (1.1,4.11,-1.3), повтор через обычные20с. StackSlot всегда EmptySlot:1фонарь=1слот. NetworkEquipment.Lantern хранит отдельный lit-bit каждого слота; E переключает при свободном вводе, подбор/взаимодействие имеют приоритет. NetworkLantern переносит состояние через drop/pickup, G кладёт предмет. World visual даёт единственный свет7.2м, view visual только модель; HandLanternVisual плавно качает корпус вокруг ручки по gravity/acceleration, ограничение24градуса. Подключены DropPrefabs[26], Models[13], LoosePrefabs[26], icon[26], сетевой реестр и Protocol125; ChestLoot.json строка Lantern с шансом0. HandLanternSetup.Configure сохраняет все привязки, полный импорт сохраняет палубный маркер. Компиляция без ошибок; игру/онлайн проверяет пользователь.
+Процедурные варианты фактуры баррикады отменены по новой жалобе пользователя: актуальный путь — исходный PBR и BarricadeAtlasSetup (см. ниже). Ручной фонарь: в первом лице единственный свет у видимой модели, в третьем/чужом виде у мировой; слабое колебание яркости, без самозатенения металлическим корпусом. Выбор общей тени использует гистерезис.
+Сундук 2026-10-06: предоставленные ZIP основы и крышки импортированы через Unity MCP в Assets/Models/Loot/Chest. ChestModelSetup.Configure повторяемо сохраняет новые модели, URP материалы с basecolor/normal и упакованным metallic + smoothness, исходный GUID NetworkLootChest.prefab и ссылки каталога сохранены. Основа шириной 1.2 м, крышка 1.23 м с задней петлёй; NetworkLootChest плавно открывает её на 105° за 1.1 с и воспроизводит пространственный ChestLidCreak (ShipCreakA) один раз при открытии. Поздний клиент сразу видит текущее положение крышки. F8: команда 21 создаёт сундук с Fill/ChestLootTable по общим правилам POI на свободном участке носовой палубы текущего/собственного корабля; проверяет опору под углами и свободный объём, PlaceOnDeck использует существующие support/anchor/facing, сундук следует кораблю, переносится обычным способом и учитывается среди удаляемых тестовых объектов. Игра не запускалась.
+Предыдущую замену древесины шумом пользователь отклонил; актуальные исходные PBR-карты и UV описаны ниже.
+Фикс F8 сундука 2026-10-06 по жалобе: прежний bowLimit вычислялся по всему ShipV3CollisionBatch с выступами. Native чтение сохранённого корабля: actualBow=19.75, combinedBow=26.24579, старый bowLimit=20.74579 — впереди любой палубы. TryFindDeckPoint теперь собирает реальные палубные источники по явному SectionFor/Type Deck, исключает общий batch из расчёта bounds; bounds выключенных MeshCollider Sources берёт из sharedMesh и матрицы. TryDeckHit делает raycast по действующей физике и проверяет точную секцию попадания через batch.Resolve. Этим же путём проверяются четыре угла опоры. Свободный объём, Fill/ChestLootTable, PlaceOnDeck и сеть сохранены. Компиляция без ошибок, новый TryDeckHit загружен в Unity; игровой спавн не запускался.
+Баррикада 2026-10-06, новый фикс по исходной модели: материал URP Lit с оригинальными BarricadeBaseColor/Normal/MetalSmooth, maxTextureSize4096 и BumpScale1. BarricadeWood.hlsl больше не заменяет albedo/normal/smoothness; строительный preview использует исходный PBR. BarricadeAtlasSetup сохраняет отдельные копии meshes в BarricadeAtlas.asset, выполняет положительно взвешенную cotangent UV relaxation внутри островов по уже деформированной геометрии; границы закреплены, перевёрнутые острова откатываются. Полная карта MetalSmooth4096 и консервативный max-pool закрепляют вершины и треугольники с металлическими деталями без усреднения мелких гвоздей. Исправлены 568 внутренних UV вершин, UV перенесены на 3617 вершин фрагментов в физических координатах импортного FBX; геометрия/силуэт 1.4×0.68×2.1 неизменны. Оригинальные FBX/текстуры/GUID сохранены. Игровой вид не проверялся.
+Поворот при строительстве 2026-10-06: PlayerInventory.RotatePlacement общий для пушки и баррикады, колёсико в обе стороны по5° за нормализованный шаг. Исправлено ошибочное повторное деление на120: установлен InputSystem1.20/UniformAcrossAllPlatforms. Деление Windows120 выполняется только при KeepPlatformSpecificInputRange. Вращение наR удалено, подсказки обновлены, zoom третьего лица блокируется через PlacementActive. Компиляция без ошибок; игровой ввод не проверялся.
 
 - [Assets/Scripts/Player/PlayerInventory.cs](<Assets/Scripts/Player/PlayerInventory.cs>) — Исходник C#: PlayerInventory.
 - [Assets/Scripts/Player/PlayerInventory.RaftLockpick.cs](<Assets/Scripts/Player/PlayerInventory.RaftLockpick.cs>) — Исходник C#: PlayerInventory.
@@ -452,6 +486,16 @@ Lantern=26: ручной фонарь из корабельного Body без 
 - [Assets/Models/Loot/HandLantern/HandLanternVisual.prefab](<Assets/Models/Loot/HandLantern/HandLanternVisual.prefab>) — Префаб Unity.
 - [Assets/Models/Loot/HandLantern/HandLanternBody.asset](<Assets/Models/Loot/HandLantern/HandLanternBody.asset>) — Настройки или данные Unity.
 - [Assets/UI/Inventory/Lantern.png](<Assets/UI/Inventory/Lantern.png>) — Изображение / текстура.
+- [Assets/Shaders/BarricadeWood.shader](<Assets/Shaders/BarricadeWood.shader>) — Шейдер.
+- [Assets/Shaders/BarricadeWood.hlsl](<Assets/Shaders/BarricadeWood.hlsl>) — Код шейдера.
+- [Assets/Scripts/Editor/ChestModelSetup.cs](<Assets/Scripts/Editor/ChestModelSetup.cs>) — Исходник C#: ChestModelSetup.
+- [Assets/Models/Loot/Chest/ChestBase/tripo_convert_f24c7824-0801-40ca-a4a6-5177deaa3702.fbx](<Assets/Models/Loot/Chest/ChestBase/tripo_convert_f24c7824-0801-40ca-a4a6-5177deaa3702.fbx>) — Модель / анимации FBX.
+- [Assets/Models/Loot/Chest/ChestLid/tripo_convert_fc547d5f-a403-4e58-9507-d859a80e5520.fbx](<Assets/Models/Loot/Chest/ChestLid/tripo_convert_fc547d5f-a403-4e58-9507-d859a80e5520.fbx>) — Модель / анимации FBX.
+- [Assets/Models/Loot/Chest/ChestBase/ChestBase.mat](<Assets/Models/Loot/Chest/ChestBase/ChestBase.mat>) — Материал Unity.
+- [Assets/Models/Loot/Chest/ChestLid/ChestLid.mat](<Assets/Models/Loot/Chest/ChestLid/ChestLid.mat>) — Материал Unity.
+- [Assets/Scripts/Editor/BarricadeAtlasSetup.cs](<Assets/Scripts/Editor/BarricadeAtlasSetup.cs>) — Исходник C#: BarricadeAtlasSetup.
+- [Assets/Models/Barricade/BarricadeAtlas.asset](<Assets/Models/Barricade/BarricadeAtlas.asset>) — Настройки или данные Unity.
+- [Assets/Models/Barricade/Barricade.mat](<Assets/Models/Barricade/Barricade.mat>) — Материал Unity.
 - [rum-loot.md](<rum-loot.md>) — Документация.
 - [combat-balance.md](<combat-balance.md>) — Документация.
 - [Art/Blender/LootReplacement/README.md](<Art/Blender/LootReplacement/README.md>) — Документация.
@@ -468,7 +512,11 @@ DamageAdjacentFragments включён только в ShipV3Destruction. Обы
 ShipV3CollisionBatch объединяет только неподвижные intact-коллайдеры. CannonShotDamage, ShipDestruction.Resolve и RewardDeckPriority учитывают такие группы; исходные секции, маски соседних фрагментов и механизм ремонта сохранены. ShipDamageSection.VisualChanged уведомляет обе объединённые системы после применения состояния коллайдеров.
 Затопление сохраняет серверную механику 60/40/20/10 с по числу незаделанных попаданий и осушение за 30 с. Новые разрушенные фрагменты корпуса проверяются у воды по собственным центрам, включая потерю опоры; исходная высота попадания больше не исключает нижние пробоины. Ремонт очищает маски прежним способом.
 Обезьянка использует существующие серверные RepairNearby/RepairMast и общие константы ударов NetworkHullRepair. Темп 15% от игрока; ShipMonkey.Repair.cs выбирает доступные точки своего корабля.
-Пожар планируется без изменения геометрии через PlanFire, затем BurnFragment удаляет выбранные реальные фрагменты. Огненные разрушения используют отдельный идентификатор попадания для группировки пробоин и существующий ремонт. OrdinaryCannonballsOnly сохранён: новая ветка допускает только явно спланированное огненное повреждение, остальные особые ядра сохраняют прежние ограничения; правило двух попаданий для мачт сохранено.
+Пожар планируется без изменения геометрии через PlanFire, затем BurnFragment удаляет выбранные реальные фрагменты. Огненные разрушения используют отдельный идентификатор попадания для группировки пробоин и существующий ремонт. OrdinaryCannonballsOnly сохранён: новая ветка допускает только явно спланированное огненное повреждение, остальные особые ядра сохраняют прежние ограничения. Двухударная логика мачт исправлена отдельной общей сборкой (см. актуальную заметку ниже).
+Повторное попадание во время ремонта 2026-10-06: native Unity чтение ShipV3Test подтвердило, что все 2346 Sources физических групп находятся вне родителей ShipDamageSection, но имеют однозначные ссылки через DamageColliders. ShipDestruction хранит явные связи Collider/Renderer→секция, обе группы и RepairReveal используют эти связи вместо одного parent lookup. Это обновляет повреждённую физику и убирает невидимые целые поверхности; новые ленивые коллайдеры осколков сразу регистрируются в Resolve для следующего удара. ShipDamageSection.Apply пропускает неизменившиеся state/mask после первого применения, чтобы сетевые снимки не перестраивали весь корабль при каждом ремонте. На ленивых MeshCollider также выключен UseFastMidphase, как на объединённых коллайдерах. Компиляция без ошибок; пользовательский сценарий с двумя игроками не воспроизводился.
+Фиксы 2026-10-06 по повторной жалобе: ShipDestruction.Masts объединяет основания, стволы и верхние детали Fore/Main/Mizzen, привязывает реи к ближайшей мачте. Первый прямой удар снимает один фрагмент; соседний урон исключает Mast, Unsupported защищает мачту и её реи до второго попадания. Второй удар разрушает всю сборку. RepairMast восстанавливает её целиком, зелёная точка определяется по реальным bounds у палубы и доступна также после первого удара. Первичное повреждение чинится обычными 3 ударами, полное восстановление — 10; игрок и обезьянка используют общие ключи сборки. RepairNearby выбирает до 3 связанных повреждённых фрагментов одного типа в радиусе 1.5 м через ShipStructuralGraph.RepairCluster. Компиляция без ошибок; игровой и сетевой сценарии не проверены.
+PlanFire: минимум 16, максимум 64 очага на выстрел, радиус² 72 сохраняет ранее удвоенную площадь; значения MinimumFireFragments/MaximumFireFragments/FireSurfaceGap задаются профилем. Начало с прямой секции, BFS по живым структурным и ближайшим поверхностям с зазором до 1.5 м; не более 6 пространственных соседей. Для перил приоритет палубе. Пространственный переход запрещён, если его открытый отрезок пересекает bounds удалённого фрагмента; ближайшие точки перехода также ограничены радиусом. Нормаль палубы ship.up, остальных очагов — ближайшая грань bounds; первый очаг сразу, следующие через 0.45–2 с. Общий лимит 128 и правила воды/льда сохранены. Fire mastHits также использует общий ключ сборки, первое горение снимает один фрагмент, повторное обрушает сборку.
+Коррекция первого разрушения мачты 2026-10-06: прежние 3 полных поперечных фрагмента оставляли верхнюю часть без древесной опоры. MastFragmentSetup через native Unity подготовил короткие участки высотой до 1.1 м, каждый разделён на 2 половины сечения с закрытыми срезами и SplinterMaterial. Fore30/Main42/Mizzen18 fragments; первый удар снимает одну короткую половину, вторая продолжает держать верх. Intact/геометрия целой мачты сохранены; новый Structure перенумерован вместе с масками, опорными связями и prefab, невалидных ссылок графа нет. Остаются 2 попадания до полного разрушения и ремонт 3/10 ударов. SessionConfig.ProtocolVersion127 из-за новой схемы фрагментов; обоим игрокам нужна актуальная версия. Компиляция без ошибок; игровой сценарий не запускался.
 
 - [Assets/Scripts/Networking/NetworkHullRepair.cs](<Assets/Scripts/Networking/NetworkHullRepair.cs>) — Исходник C#: NetworkHullRepair.
 - [Assets/Scripts/ShipDestruction/ShipDestruction.cs](<Assets/Scripts/ShipDestruction/ShipDestruction.cs>) — Исходник C#: ShipSectionSnapshot, ShipDestructionEvent, ShipDestruction.
@@ -480,8 +528,16 @@ ShipV3CollisionBatch объединяет только неподвижные in
 - [Assets/Settings/ShipDestruction/ShipV3Destruction.asset](<Assets/Settings/ShipDestruction/ShipV3Destruction.asset>) — Настройки или данные Unity.
 - [Assets/Scripts/Ships/ShipV3Features.cs](<Assets/Scripts/Ships/ShipV3Features.cs>) — Исходник C#: ShipV3TargetKind, ShipV3Lantern, ShipV3DiceSlot, ShipV3PhysicsPose, ShipV3Support, ShipV3Attachment, ShipV3Features.
 - [Assets/Scripts/Ships/ShipMonkey.Repair.cs](<Assets/Scripts/Ships/ShipMonkey.Repair.cs>) — Исходник C#: ShipMonkey.
-- [Assets/Scripts/ShipDestruction/ShipDestruction.Fire.cs](<Assets/Scripts/ShipDestruction/ShipDestruction.Fire.cs>) — Исходник C#: ShipFireTarget, ShipDestruction.
-- [Assets/Scripts/Networking/NetworkShipAmmo.cs](<Assets/Scripts/Networking/NetworkShipAmmo.cs>) — Исходник C#: ShipFirePatch, NetworkShip, FireExposure.
+- [Assets/Scripts/ShipDestruction/ShipDestruction.Fire.cs](<Assets/Scripts/ShipDestruction/ShipDestruction.Fire.cs>) — Исходник C#: ShipFireTarget, ShipDestruction, FireSurface.
+- [Assets/Scripts/Networking/NetworkShipAmmo.cs](<Assets/Scripts/Networking/NetworkShipAmmo.cs>) — Исходник C#: ShipFirePatch, ShipFreezeState, NetworkShip, FireExposure.
+- [Assets/Scripts/Ships/ShipV3CollisionBatch.cs](<Assets/Scripts/Ships/ShipV3CollisionBatch.cs>) — Исходник C#: ShipV3CollisionBatch.
+- [Assets/Scripts/Ships/ShipV3RenderBatch.cs](<Assets/Scripts/Ships/ShipV3RenderBatch.cs>) — Исходник C#: ShipV3RenderBatch.
+- [Assets/Scripts/ShipDestruction/RepairReveal.cs](<Assets/Scripts/ShipDestruction/RepairReveal.cs>) — Исходник C#: RepairReveal.
+- [Assets/Scripts/ShipDestruction/ShipDestruction.Masts.cs](<Assets/Scripts/ShipDestruction/ShipDestruction.Masts.cs>) — Исходник C#: ShipDestruction, MastAssembly.
+- [Assets/Scripts/Editor/MastFragmentSetup.cs](<Assets/Scripts/Editor/MastFragmentSetup.cs>) — Исходник C#: MastFragmentSetup, Vertex, Polygon, Replacement.
+- [Assets/Models/ShipV3/MastChips/V3_Mast_Fore.asset](<Assets/Models/ShipV3/MastChips/V3_Mast_Fore.asset>) — Настройки или данные Unity.
+- [Assets/Models/ShipV3/MastChips/V3_Mast_Main.asset](<Assets/Models/ShipV3/MastChips/V3_Mast_Main.asset>) — Настройки или данные Unity.
+- [Assets/Models/ShipV3/MastChips/V3_Mast_Mizzen.asset](<Assets/Models/ShipV3/MastChips/V3_Mast_Mizzen.asset>) — Настройки или данные Unity.
 - [ship-destruction.md](<ship-destruction.md>) — Документация.
 - [unity.md](<unity.md>) — Документация.
 
@@ -489,6 +545,8 @@ ShipV3CollisionBatch объединяет только неподвижные in
 
 Ключевые слова: мир, острова, карта, океан, water.
 
+Референсы универсального Tripo-набора готовы: ../Blender/Скалы содержит 15 папок и 60 PNG спереди.png/сзаде.png/справа.png/слева.png, TRIPO.txt и README.md с бюджетами. Пользователь предоставил все GLB и затем одобрил фактическую арку, разрешив заменить остальные игровые формы в том же стиле.
+Пользователь предоставил 15 Tripo GLB, 44860 исходных треугольников, UV и встроенные BaseColor/Normal/MetallicRoughness2K. Одобренная SeaArch_Huge_A_Tripo.blend сохранена без перестройки:32камня76786tris+3Palm/11Fern11444=88230. CoastalTripoCollection.blend содержит все17групп:12скал+5растений. assemble_tripo_collection→refine_collection→refine_cliffwall_b_base→export_tripo_collection. Lagoon shoulders связаны whole-модулями, CliffB опирается на целую Terrace07. Protected water passages проверены worldAABB. Старые NativeModules/CReview не приняты. Blender-кадры и actualUnityматериал арки просмотрены; Play/FPS не измерены.
 Согласовывать генерацию карты и её состояние между участниками; seed и профиль брать из используемых ассетов.
 CPU-поверхность воды используется игровой логикой: визуальные волны нельзя менять независимо от OceanSurface без проверки связи. OceanSurface добавляет длинные волны 180/120 м; по StormProgress плавно подключаются 90/64 м. Амплитуды всех четырёх длинных волн удвоены (1.1/0.56/0.36/0.24 м);, высота растёт до FinalSwellMultiplier=2.5 и усиливается мелкое волнение. SwellStrength задаёт базовую высоту. Одинаковые параметры _SwellWaves и время используются CPU и активным SimpleWaterURP; ShipController использует27 площадных проб ShipBuoyancy. SessionStorm больше не меняет неиспользуемый активным SimpleWater параметр WaveScale. Старый неиспользуемый Assets/Shaders/Ocean.shader удалён при очистке 2026-10-05.
 WorldStructureCollision ревизии 2 учитывает соседний authored _COL, не добавляет дублирующие MeshCollider к визуальным LOD. Для нечитаемого меша без коллайдера используется BoxCollider по bounds. Семь FBX в Assets/Game/Environment импортированы с Read/Write; EnvironmentTestSetup сохраняет этот режим. Ошибки CollisionMeshData у Reef_Moai_A/Reef_Spires_B/C/SeaArch_Huge_A/Reef_ShallowField_A относятся к окружению, не к старому кораблю.
@@ -505,7 +563,15 @@ TestSkyPipeline зарегистрирован для сбора shader features
 WaterTestCapture: -environmenttest -watercapture включает12GPUкадров в Player, включая нулевые/сильные волны, закат и ночь. StandardRequest использует полный RenderCameraStack с автоматическим Volume update после создания актуального pipeline. Диагностические profile/stack EV сравниваются после рендера; SingleCameraRequest пропускал штатный update.
 Динамическая пена Boat Attack: 38 проб измеренной ватерлинии, мировая история контактов2.8с и следа12с; 2048² ARGBHalf/512м хранит гладкую плотность, hull mask и высоту V-гребня≤.22м; CPU и atlas shader используют общую форму, ShipController исключает собственный гребень из качки, фактура берётся из общего FoamMap. Носовые плечи по сечениям14–16 и масса перед форштевнем растут с реальной скоростью относительно воды, пакеты живут1.4с и расходятся1м/с. WaterBowSpray запускается от wet×положительного подъёма воды >1.25м/с; cooldown.6с, gravity1, мировые капли с округлым AA-шейдером возвращаются в воду. F8 содержит локальные косметические ползунки носовой пены и брызг0..200%. Подводный medium определяется по фактической Height с волнами/чашей; UnderwaterRendererFeature копирует актуальную глубину после воды и перед postprocessing применяет один Beer pass, затем редкую взвесь. Воздушные PBSky fog/SeaMist под водой отключены. -waterdetailcapture проверяет близкий борт/след, скорости/удары/ночь, переход среды, чашу и POI5/15/30/60м.
 Качка ShipController использует ShipBuoyancy:9 продольных сечений×3 поперечных точки, weighted plane-fit по площади измеренного корпуса. Высота берётся из intercept плоскости в центре корабля с учётом смещённого weighted meanZ; pitch/roll из её уклонов. Четыре края±18/±5.5 раньше давали spatial alias на волне32м и могли менять знак наклона. Сохранены сглаживаниеexp, clamps12/15deg, Flooding/Cannon и сетевой ShipState. Проверены16 аналитических плоскостей при yaw0/90/180/270: height error<7.2e−7, normal dot≥.99999994. Дляsin(2πz/32) oldPitch+1.218deg, new−3.528deg.
-WaterImpactPhysics/WaterImpactBody: общие локальные всплески входа в actual OceanSurface для физических тел, игроков без Rigidbody и скриптовых предметов. Swept crossing промежуточных точек/уточнение; ядро передаёт incoming velocity до Destroy. Нормальная скорость, масса и площадь задают капли/пену; человек вверх, ядро по касательной. Dynamic Rigidbody.GetPointVelocity, кинематика по времени фактического перемещения. Rearm после .25м/.25с над поверхностью, спавн под водой и прыжок позиции игрока не создают всплеск. 64 истории splash-ring в общем foam atlas; единые 600капель/с,1200живых,2burst/.1с. Fish/bottle/grenade RPC передают вход до despawn; сетевой ProtocolVersion124. Носовой spray на текущей высоте воды переносится raycast на наружную обшивку с запасом10см. Обычный Build Windows06.10.2026:0 ошибок; Player32кадра,6событий без повторов/исключений; итоговая VFX-приёмка [APPROVED]. Свободный подводный верх без белого потолка, POI5–30м читается;60м частично закрыт настоящим дном. Два сетевых клиента не проверялись.
+WaterImpactPhysics/WaterImpactBody: общие локальные всплески входа в actual OceanSurface для физических тел, игроков без Rigidbody и скриптовых предметов. Swept crossing промежуточных точек/уточнение; ядро передаёт incoming velocity при входе в воду и продолжает подводный полёт. Нормальная скорость, масса и площадь задают капли/пену; человек вверх, ядро по касательной. Dynamic Rigidbody.GetPointVelocity, кинематика по времени фактического перемещения. Rearm после .25м/.25с над поверхностью, спавн под водой и прыжок позиции игрока не создают всплеск. 64 истории splash-ring в общем foam atlas; единые 600капель/с,1200живых,2burst/.1с. Fish/bottle/grenade RPC передают вход до despawn; сетевой ProtocolVersion124. Носовой spray на текущей высоте воды переносится raycast на наружную обшивку с запасом10см. Обычный Build Windows06.10.2026:0 ошибок; Player32кадра,6событий без повторов/исключений; итоговая VFX-приёмка [APPROVED]. Свободный подводный верх без белого потолка, POI5–30м читается;60м частично закрыт настоящим дном. Два сетевых клиента не проверялись.
+Брызги 2026-10-06: Drops ×4, 2400 капель/с, 4800 живых, запас720, до4 impact bursts/.1с. Подъём ядер5–18 м/с учитывает нормальную и касательную энергию; радиальный разлёт до7 м/с, жизньдо3.4с, линейное сопротивление. WaterSplashContacts проверяет реальные позиции частиц по seed:256 проб,128 сегментных+128 поверхностных запросов/.033с; первое препятствие блокирует каплю.192 проецируемых мокрых следа на корабле, жизнь3.5с с плавным затуханием; локальные капли на экране только по подтверждённому контакту. Компиляция проверена, внешний вид/игра/онлайн не проверены.
+Облака 2026-10-07, фикс после повторной игровой жалобы: удалены volumeShape, smooth union и узнаваемая тройка эллипсоидов. Непрерывный warped weather только размещает редкие группы; сама плотность — remap двух red-выборок линейной Texture3D Worley128 с разными осями/offset и octave2.07, мягкий переменный height-gradient, настоящая erosion и micro erosion. R8 шумы проверены GPU-readback всех слоёв: Worley128³ mean.753/std.118, Perlin32³ mean.500/std.123, оба не-константны/sRGBfalse; G/B/A не используются. samplingNormalization100000, shapeScale6 даёт период16.67км вместо37км. Material coverageStart.54/end.76, cell7000/seed19/farFade12000–28000; profile density.34, shape6/.75, erosion90/.5, microtrue/.28/200, primary64/light6. ShapeLOD<=2/detailLOD<=1 только CLEAR, вертикальные края строго нулевые с защищённым remap denominator. Authoring CPU расчёт43 296 точек:19.29% world columns живые,6.88% точек с промежуточной density, насыщенных0, liveMean.05259/max.16781; это не доля пикселей неба и не игровой рендер. Общие worldOffset/wind, Main/Shadow/Cubemap, fog/солнце/grading сохранены; legacy CandidateA не менялся. Native профиль/материал/keywords сохранены после импорта; shader и console без ошибок, сцена не сохранялась; игровая визуальная приёмка не проводилась.
+Подводный след 2026-10-06: UnderwaterProjectileTrail использует Underwater/Bubbles (PirateSlop/UnderwaterParticles, Ring1), мировые пузырьки с жизнью2.4с, всплытием.12–.28м/с, fade и размером по снаряду. Эмиссия по расстоянию, max40/segment и256/768 частиц; выше actual Height частицы удаляются. VFX-specialist одобрил код и данные native Unity; визуальная игровая приёмка не проводилась. Исправлен NullReferenceException теней VolumetricCloudsURP на Light без UniversalAdditionalLightData: компонент создаётся перед lightCookieSize в обоих путях рендера.
+Брызги ядер 2026-10-06, повторный фикс после жалобы: быстрый вход с tangential energy>=100 допускает splash при closing=0. CannonShotDamage сохраняет launchedAboveWater и сообщает пропущенный вход, когда волна накрыла ядро между FixedUpdate; incomingVelocity берётся до подводного damping, оба пути защищены waterEntered от повторных burst при колебании волны; старт под водой не создаёт новый всплеск. Projectile Lift14–20м/с, Life2.8–4с. WaterBowSpray выделяет треть крупных капель .09–.16м с alpha1 и узким вертикальным plume, остальные .035–.075м; y-скорость минимум .85*Lift, нормаль смешана сup. Shader усиливает центральную видимость только alpha>.7–.9; обычный носовой spray сохранён. Native renderer включает Water layer4, shader существует/support=true. Wet contacts/палубные следы сохранены; игровой вид не проверялся.
+Окружение C/Tripo:51визуальныйFBX подключён к7Environment+10StarterIsland префабам по прежним GUID. CoastalTripoRock сохраняет nativeUV0/2Kкарты, Groughness/Bmetallic,3textureforward, мягкую мокрую полосу у actualseaLevel; простые shadow/depth и vertexweathering. Растения CC0 используют CoastalFoliage. ОбщийLOD0/1/2:417365/147289/35098tris; переходы .45/.16/.015, LOD2безтеней, GPUmesh безCPUreadableкопии. КонсольUnity0ошибок. CoastalRock остаётся прежним материалом terrain; новая каменная модель не перекрашивается общим RockWall02.
+Тестовая галерея:Gallery.prefab сохранён с17обновлёнными моделями в одном ряду,30м по visibleLOD0bounds, maxfloatпогрешность.00013м. ArrangeTestGallery меняет только галерею/подписи/старттестовойкарты. Nativeaudit17prefabs:3LODкаждый,0visualcolliders. Before/after оригинальныхCOL иGUID полностьюравны;15COLFBX SHA256 unchanged; DefaultWorld+19LocationDefinition механики diff0 кромеassetверсий. Seed17421,ShippingGap90,радиусы/количество/проходы сохранены. Пользователь проверяет gameplay,волну/пену,LOD иFPS.
+История окружения:slab-shell/voxel из build_coastal_c.py и SeaArch_Huge_A_CReview.blend отвергнуты как пластилин; прежнийAPPROVED отозван. Сборка изCC0сканов тоже отвергнута. Актуальный согласованный подход — целые пользовательскиеTripoGLB с их nativeUV/PBR, настоящиеCC0растения. Арка одобрена человеком; остальные17записей галереи заменены по его разрешению. Новое согласование арки не требуется.
+Исправление нагрузки окружения после пользовательского FPS100→25: CoastalShoreFoamVfx использует spatial grid24м, область72м, 2048contacts/64probes, максимум4HeightQueries и256stamps/frame, 24queries/.2с. Атлас256²/192м snap12м, profiler markers и counters. ExposedContours строит winding-union сечения каменных submeshes, исключает внутренние пересечения и сохраняет проходы. CoastalRock считает hash weathering в vertex вместо48sin/pixel, собственные depth/shadow passes совместимы с SRP Batcher; LOD thresholds .45/.16/.015. NativeCPU: old13695HeightOffset38.07мс; новая пена64forcedupdates mean.573/maxwarm1.856мс, budgetviolations0. Это не замер FPS; Play/build не запускались.
 
 - [Assets/Scripts/World/ProceduralWorld.cs](<Assets/Scripts/World/ProceduralWorld.cs>) — Исходник C#: ProceduralWorld.
 - [Assets/Scripts/World/WorldProfile.cs](<Assets/Scripts/World/WorldProfile.cs>) — Исходник C#: WorldDecoration, WorldProfile.
@@ -562,9 +628,54 @@ WaterImpactPhysics/WaterImpactBody: общие локальные всплеск
 - [Assets/Settings/TestSky/Underwater.mat](<Assets/Settings/TestSky/Underwater.mat>) — Материал Unity.
 - [Assets/Scripts/World/WaterImpactPhysics.cs](<Assets/Scripts/World/WaterImpactPhysics.cs>) — Исходник C#: WaterImpactKind, WaterImpactEvent, WaterImpactPhysics.
 - [Assets/Scripts/World/WaterImpactBody.cs](<Assets/Scripts/World/WaterImpactBody.cs>) — Исходник C#: WaterImpactBody.
+- [Assets/Scripts/World/WaterSplashContacts.cs](<Assets/Scripts/World/WaterSplashContacts.cs>) — Исходник C#: WaterSplashContacts.
+- [Assets/Resources/EnvironmentTest/WaterWetMark.shader](<Assets/Resources/EnvironmentTest/WaterWetMark.shader>) — Шейдер.
+- [Assets/Tests/StormCloudBakeoff/CandidateA/VolumetricClouds/VolumetricClouds.shader](<Assets/Tests/StormCloudBakeoff/CandidateA/VolumetricClouds/VolumetricClouds.shader>) — Шейдер.
+- [Assets/Tests/StormCloudBakeoff/CandidateA/VolumetricClouds/VolumetricCloudsDefs.hlsl](<Assets/Tests/StormCloudBakeoff/CandidateA/VolumetricClouds/VolumetricCloudsDefs.hlsl>) — Код шейдера.
+- [Assets/Tests/StormCloudBakeoff/CandidateA/VolumetricClouds/VolumetricCloudsUtilities.hlsl](<Assets/Tests/StormCloudBakeoff/CandidateA/VolumetricClouds/VolumetricCloudsUtilities.hlsl>) — Код шейдера.
+- [Assets/Tests/StormCloudBakeoff/CandidateA/VolumetricClouds/VolumetricCloudsURP.cs](<Assets/Tests/StormCloudBakeoff/CandidateA/VolumetricClouds/VolumetricCloudsURP.cs>) — Исходник C#: VolumetricCloudsURP, CloudsRenderMode, CloudsAmbientMode, CloudsUpscaleMode, VolumetricCloudsPass, stores, PassData, RasterPassData, VolumetricCloudsAmbientPass, VolumetricCloudsShadowsPass, LightCookieShaderFormat.
+- [Assets/Scripts/World/ProjectileWaterFlight.cs](<Assets/Scripts/World/ProjectileWaterFlight.cs>) — Исходник C#: ProjectileWaterFlight.
+- [Assets/Scripts/World/UnderwaterProjectileTrail.cs](<Assets/Scripts/World/UnderwaterProjectileTrail.cs>) — Исходник C#: UnderwaterProjectileTrail.
+- [Assets/Resources/Underwater/Bubbles.mat](<Assets/Resources/Underwater/Bubbles.mat>) — Материал Unity.
+- [Assets/Shaders/UnderwaterParticles.shader](<Assets/Shaders/UnderwaterParticles.shader>) — Шейдер.
+- [Assets/Scripts/World/CoastalRockVisual.cs](<Assets/Scripts/World/CoastalRockVisual.cs>) — Исходник C#: CoastalShoreContour, CoastalRockVisual.
+- [Assets/Scripts/World/CoastalShoreFoamVfx.cs](<Assets/Scripts/World/CoastalShoreFoamVfx.cs>) — Исходник C#: CoastalShoreFoamVfx, Source, Probe, Contact.
+- [Assets/Scripts/Editor/CoastalEnvironmentSetup.cs](<Assets/Scripts/Editor/CoastalEnvironmentSetup.cs>) — Исходник C#: CoastalEnvironmentSetup.
+- [Assets/Shaders/CoastalRock.shader](<Assets/Shaders/CoastalRock.shader>) — Шейдер.
+- [Assets/Shaders/CoastalFoliage.shader](<Assets/Shaders/CoastalFoliage.shader>) — Шейдер.
+- [Assets/Shaders/CoastalShoreFoam.hlsl](<Assets/Shaders/CoastalShoreFoam.hlsl>) — Код шейдера.
+- [Art/Blender/World/CoastalEnvironment/CoastalEnvironment.blend](<Art/Blender/World/CoastalEnvironment/CoastalEnvironment.blend>) — Редактируемая сцена Blender.
+- [Art/Blender/World/CoastalEnvironment/generate_coastal.py](<Art/Blender/World/CoastalEnvironment/generate_coastal.py>) — Инструмент Python.
+- [Art/Blender/World/CoastalEnvironment/build_coastal_c.py](<Art/Blender/World/CoastalEnvironment/build_coastal_c.py>) — Инструмент Python.
+- [Art/Blender/World/CoastalEnvironment/SeaArch_Huge_A_CReview.blend](<Art/Blender/World/CoastalEnvironment/SeaArch_Huge_A_CReview.blend>) — Редактируемая сцена Blender.
+- [Art/Blender/World/CoastalEnvironment/CoastalSourceModuleQC.blend](<Art/Blender/World/CoastalEnvironment/CoastalSourceModuleQC.blend>) — Редактируемая сцена Blender.
+- [Art/Blender/World/CoastalEnvironment/assemble_cc0_arch.py](<Art/Blender/World/CoastalEnvironment/assemble_cc0_arch.py>) — Инструмент Python.
+- [Art/Blender/World/CoastalEnvironment/SeaArch_Huge_A_NativeModules.blend](<Art/Blender/World/CoastalEnvironment/SeaArch_Huge_A_NativeModules.blend>) — Редактируемая сцена Blender.
+- [Art/Blender/World/CoastalEnvironment/SeaArch_Huge_A_Tripo.blend](<Art/Blender/World/CoastalEnvironment/SeaArch_Huge_A_Tripo.blend>) — Редактируемая сцена Blender.
+- [Art/Blender/World/CoastalEnvironment/import_tripo_arch_sources.py](<Art/Blender/World/CoastalEnvironment/import_tripo_arch_sources.py>) — Инструмент Python.
+- [Art/Blender/World/CoastalEnvironment/render_tripo_source_contact.py](<Art/Blender/World/CoastalEnvironment/render_tripo_source_contact.py>) — Инструмент Python.
+- [Art/Blender/World/CoastalEnvironment/assemble_tripo_arch.py](<Art/Blender/World/CoastalEnvironment/assemble_tripo_arch.py>) — Инструмент Python.
+- [Art/Blender/World/CoastalEnvironment/refine_tripo_arch_vault.py](<Art/Blender/World/CoastalEnvironment/refine_tripo_arch_vault.py>) — Инструмент Python.
+- [Art/Blender/World/CoastalEnvironment/add_tripo_arch_footstones.py](<Art/Blender/World/CoastalEnvironment/add_tripo_arch_footstones.py>) — Инструмент Python.
+- [Art/Blender/World/CoastalEnvironment/add_tripo_arch_plants.py](<Art/Blender/World/CoastalEnvironment/add_tripo_arch_plants.py>) — Инструмент Python.
+- [Art/Blender/World/CoastalEnvironment/render_tripo_arch.py](<Art/Blender/World/CoastalEnvironment/render_tripo_arch.py>) — Инструмент Python.
+- [Art/Blender/World/CoastalEnvironment/physical-baseline.json](<Art/Blender/World/CoastalEnvironment/physical-baseline.json>) — Конфигурация / данные JSON.
+- [Art/Blender/World/CoastalEnvironment/CoastalTripoCollection.blend](<Art/Blender/World/CoastalEnvironment/CoastalTripoCollection.blend>) — Редактируемая сцена Blender.
+- [Art/Blender/World/CoastalEnvironment/assemble_tripo_collection.py](<Art/Blender/World/CoastalEnvironment/assemble_tripo_collection.py>) — Инструмент Python.
+- [Art/Blender/World/CoastalEnvironment/refine_collection.py](<Art/Blender/World/CoastalEnvironment/refine_collection.py>) — Инструмент Python.
+- [Art/Blender/World/CoastalEnvironment/refine_cliffwall_b_base.py](<Art/Blender/World/CoastalEnvironment/refine_cliffwall_b_base.py>) — Инструмент Python.
+- [Art/Blender/World/CoastalEnvironment/render_tripo_collection.py](<Art/Blender/World/CoastalEnvironment/render_tripo_collection.py>) — Инструмент Python.
+- [Art/Blender/World/CoastalEnvironment/render_cliffwall_b_base.py](<Art/Blender/World/CoastalEnvironment/render_cliffwall_b_base.py>) — Инструмент Python.
+- [Art/Blender/World/CoastalEnvironment/export_tripo_collection.py](<Art/Blender/World/CoastalEnvironment/export_tripo_collection.py>) — Инструмент Python.
+- [Assets/Shaders/CoastalTripoRock.shader](<Assets/Shaders/CoastalTripoRock.shader>) — Шейдер.
 - [procedural-world.md](<procedural-world.md>) — Документация.
 - [unity.md](<unity.md>) — Документация.
 - [Docs/TestOcean.md](<Docs/TestOcean.md>) — Документация.
+- [Art/Sources/CoastalEnvironment/SOURCES.md](<Art/Sources/CoastalEnvironment/SOURCES.md>) — Документация.
+- [Art/Sources/CoastalEnvironment/TRIPO_MODULAR_ROCK_BRIEF.md](<Art/Sources/CoastalEnvironment/TRIPO_MODULAR_ROCK_BRIEF.md>) — Документация.
+- [Art/Blender/World/CoastalEnvironment/README_TRIPO_ARCH.md](<Art/Blender/World/CoastalEnvironment/README_TRIPO_ARCH.md>) — Документация.
+- [../Blender/Скалы/README.md](<../Blender/Скалы/README.md>) — Документация.
+- [Art/Blender/World/CoastalEnvironment/README_TRIPO_COLLECTION.md](<Art/Blender/World/CoastalEnvironment/README_TRIPO_COLLECTION.md>) — Документация.
 
 ### Сеть, сессия и Steam (`networking`)
 
@@ -680,7 +791,7 @@ Whisky Bottle с бесплатной BlenderKit Royalty Free загружена
 - [Assets/Scripts/Editor/PirateCharacterImport.cs](<Assets/Scripts/Editor/PirateCharacterImport.cs>) — Исходник C#: PirateCharacterImport.
 - [Assets/Scripts/Editor/SailRiggingArtSetup.cs](<Assets/Scripts/Editor/SailRiggingArtSetup.cs>) — Исходник C#: SailRiggingArtSetup.
 - [Assets/Scripts/Editor/MainShipSetup.cs](<Assets/Scripts/Editor/MainShipSetup.cs>) — Исходник C#: MainShipSetup.
-- `../NewShip/Ship_V3_Fitted.blend` — отсутствует в текущем снимке; не использовать как готовый путь.
+- [../NewShip/Ship_V3_Fitted.blend](<../NewShip/Ship_V3_Fitted.blend>) — Редактируемая сцена Blender.
 - [Assets/Scripts/Editor/ShipV3ImportSetup.cs](<Assets/Scripts/Editor/ShipV3ImportSetup.cs>) — Исходник C#: ShipV3ImportSetup.
 - [Tools/ShipV3/ExportFromOpenBlender.py](<Tools/ShipV3/ExportFromOpenBlender.py>) — Инструмент Python.
 - [Assets/Models/Ships/ShipV3/ShipV3.fbx](<Assets/Models/Ships/ShipV3/ShipV3.fbx>) — Модель / анимации FBX.
@@ -758,16 +869,16 @@ Whisky Bottle с бесплатной BlenderKit Royalty Free загружена
 - [blender.md](<blender.md>) — Документация.
 - [unity.md](<unity.md>) — Документация.
 - [frigate.md](<frigate.md>) — Документация.
-- `../NewShip/V3Preparation/TelescopeAndAnchorControls.md` — отсутствует в текущем снимке; не использовать как готовый путь.
-- `../NewShip/External/AnchorNikdane12/SOURCES.md` — отсутствует в текущем снимке; не использовать как готовый путь.
-- `../NewShip/V3Preparation/HarpoonControls.md` — отсутствует в текущем снимке; не использовать как готовый путь.
-- `../NewShip/V3Preparation/BowTextureRestoreReport.json` — отсутствует в текущем снимке; не использовать как готовый путь.
-- `../NewShip/V3Preparation/HoldDispenserControls.md` — отсутствует в текущем снимке; не использовать как готовый путь.
-- `../NewShip/V3Preparation/ShipDetailsControls.md` — отсутствует в текущем снимке; не использовать как готовый путь.
-- `../NewShip/FreeAssets/CREDITS.md` — отсутствует в текущем снимке; не использовать как готовый путь.
-- `../NewShip/V3Preparation/OptimizationAndDestructionControls.md` — отсутствует в текущем снимке; не использовать как готовый путь.
-- `../NewShip/V3Preparation/V18Validation.json` — отсутствует в текущем снимке; не использовать как готовый путь.
-- `../NewShip/V3Preparation/V19Validation.json` — отсутствует в текущем снимке; не использовать как готовый путь.
+- [../NewShip/V3Preparation/TelescopeAndAnchorControls.md](<../NewShip/V3Preparation/TelescopeAndAnchorControls.md>) — Документация.
+- [../NewShip/External/AnchorNikdane12/SOURCES.md](<../NewShip/External/AnchorNikdane12/SOURCES.md>) — Документация.
+- [../NewShip/V3Preparation/HarpoonControls.md](<../NewShip/V3Preparation/HarpoonControls.md>) — Документация.
+- [../NewShip/V3Preparation/BowTextureRestoreReport.json](<../NewShip/V3Preparation/BowTextureRestoreReport.json>) — Конфигурация / данные JSON.
+- [../NewShip/V3Preparation/HoldDispenserControls.md](<../NewShip/V3Preparation/HoldDispenserControls.md>) — Документация.
+- [../NewShip/V3Preparation/ShipDetailsControls.md](<../NewShip/V3Preparation/ShipDetailsControls.md>) — Документация.
+- [../NewShip/FreeAssets/CREDITS.md](<../NewShip/FreeAssets/CREDITS.md>) — Документация.
+- [../NewShip/V3Preparation/OptimizationAndDestructionControls.md](<../NewShip/V3Preparation/OptimizationAndDestructionControls.md>) — Документация.
+- [../NewShip/V3Preparation/V18Validation.json](<../NewShip/V3Preparation/V18Validation.json>) — Конфигурация / данные JSON.
+- [../NewShip/V3Preparation/V19Validation.json](<../NewShip/V3Preparation/V19Validation.json>) — Конфигурация / данные JSON.
 
 ### Звуки и голос (`audio`)
 
@@ -827,6 +938,8 @@ MenuPresentationSetup.ReplaceShip создаёт фон меню из геоме
 MenuBackdrop заменяет фон корабля при Awake на Resources/Ships/ShipV3Menu: текущие паруса и кормовая доска без сетевых/физических компонентов. Меню кастомизации использует этот корабль и добавляет поле названия, сохранённого с парусами. Сцену NetworkMenu с несохранёнными изменениями при настройке не сохраняли.
 В кастомизации кнопка «Название» открывает отдельный ввод имени и плавно переводит камеру к кормовой доске. Буквы появляются и удаляются сразу; доска размещается в свободной части экрана слева от панели. Возврат через «Паруса и флаги»/«Вид на корабль». Runtime-буквы объединены в меш и не используют экранный TextMesh.
 F8 в основной тестовой карте содержит ползунки силы, крутизны и скорости Boat Attack волн, сброс, существующие день/ночь и морской туман. Отдельных пунктов водных сцен в меню нет.
+Меню 2026-10-06: MenuBackdrop при Awake заменяет старую MenuSea на Water из EnvironmentTest/Ocean, включает SkyDayNight и TestSkyPipeline, HDR/postprocessing и Volume layer30. Вода спокойнее (.55 strength/.75 steepness), небо TargetBlend .25. Меню включает/выключает окружение вместе с Content и восстанавливает прежний pipeline через TestSkyDayNight. Сцена редактора не перезаписывалась; переходы в игре не проверены.
+Чёрный экран меню после сборки 2026-10-06: Player.log указал NullReferenceException VolumetricCloudsShadowsPass.RecordRenderGraph на lightCookieSize. Светила EnvironmentTest/SkyDayNight не имеют UniversalAdditionalLightData; VolumetricCloudsURP создаёт его перед записью свойств cookie в RenderGraph и legacy pass. Компиляция проверена, новая сборка и запуск Player не выполнялись.
 
 - [Assets/Scripts/Networking/SessionMenu.cs](<Assets/Scripts/Networking/SessionMenu.cs>) — Исходник C#: SessionController.
 - [Assets/Scripts/Networking/SessionPartyMenu.cs](<Assets/Scripts/Networking/SessionPartyMenu.cs>) — Исходник C#: SessionController.
@@ -870,6 +983,7 @@ F8 в основной тестовой карте содержит ползун
 Для будущей замены модели в ../NewShip/Ship_V3_Fitted.blend подготовлены два гарпуна с раздельными Yaw/Pitch/Reel/Projectile и редактируемой верёвкой. Только Blender-модель; игровые скрипты и Unity-префабы не изменены. Основания стоят на перилах без подвесных пластин; уменьшенные курки направлены концом к дулу. Исправлены центр оси цапф, разворот вилки и посадка направляющей; катушки сохраняют исходную PBR-отделку.
 Древко обоих заряженных гарпунов укорочено примерно на 28,4 см, оставлено около 2 см выноса перед узлом ушка. Острие, шейка и ушко перенесены ближе к дулу без изменения формы и масштаба; конец верёвки следует за ушком. Исходные меши сохранены резервными данными в BLEND. Размеры и превью указаны в HarpoonControls.md.
 Для ExternalVisualRig HarpoonGun сохраняет авторскую исходную ориентацию и вращает YawAxis/PitchAxis в локальных координатах. ShipV3BindingRepair располагает камеру на 1.45 м за дулом и на 0.48 м выше, направляя вдоль ствола. У основного корабля остаётся прежняя ветка вращения.
+Подводный гарпун 2026-10-06: отменён возврат по фиксированной высоте 0.05; поверхность определяется OceanSurface, коллайдер исключает слой Water. В воде сопротивление, пониженная гравитация, пузырьковый след и возврат через 4.5 с; тросовое ограничение дальности и попадания сохранены. Клиентский след строится по серверной позе. Компиляция проверена; игровой/сетевой тест не запускался.
 
 - [Assets/Scripts/Harpoon/HarpoonGun.cs](<Assets/Scripts/Harpoon/HarpoonGun.cs>) — Исходник C#: HarpoonGun.
 - [Assets/Scripts/Harpoon/HarpoonProjectile.cs](<Assets/Scripts/Harpoon/HarpoonProjectile.cs>) — Исходник C#: HarpoonProjectile, HarpoonState.
@@ -879,7 +993,7 @@ F8 в основной тестовой карте содержит ползун
 - [Assets/Scripts/Ships/ShipV3HarpoonVisual.cs](<Assets/Scripts/Ships/ShipV3HarpoonVisual.cs>) — Исходник C#: ShipV3HarpoonVisual.
 - [Assets/Resources/Ships/ShipV3HarpoonPort.prefab](<Assets/Resources/Ships/ShipV3HarpoonPort.prefab>) — Префаб Unity.
 - [Assets/Resources/Ships/ShipV3HarpoonStarboard.prefab](<Assets/Resources/Ships/ShipV3HarpoonStarboard.prefab>) — Префаб Unity.
-- `../NewShip/V3Preparation/HarpoonControls.md` — отсутствует в текущем снимке; не использовать как готовый путь.
+- [../NewShip/V3Preparation/HarpoonControls.md](<../NewShip/V3Preparation/HarpoonControls.md>) — Документация.
 
 ### Кракен и щупальца (`kraken`)
 
@@ -950,7 +1064,9 @@ TestSkyPipeline зарегистрирован для сбора shader features
 WaterTestCapture: -environmenttest -watercapture включает12GPUкадров в Player, включая нулевые/сильные волны, закат и ночь. StandardRequest использует полный RenderCameraStack с автоматическим Volume update после создания актуального pipeline. Диагностические profile/stack EV сравниваются после рендера; SingleCameraRequest пропускал штатный update.
 Динамическая пена Boat Attack: 38 проб измеренной ватерлинии, мировая история контактов2.8с и следа12с; 2048² ARGBHalf/512м хранит гладкую плотность, hull mask и высоту V-гребня≤.22м; CPU и atlas shader используют общую форму, ShipController исключает собственный гребень из качки, фактура берётся из общего FoamMap. Носовые плечи по сечениям14–16 и масса перед форштевнем растут с реальной скоростью относительно воды, пакеты живут1.4с и расходятся1м/с. WaterBowSpray запускается от wet×положительного подъёма воды >1.25м/с; cooldown.6с, gravity1, мировые капли с округлым AA-шейдером возвращаются в воду. F8 содержит локальные косметические ползунки носовой пены и брызг0..200%. Подводный medium определяется по фактической Height с волнами/чашей; UnderwaterRendererFeature копирует актуальную глубину после воды и перед postprocessing применяет один Beer pass, затем редкую взвесь. Воздушные PBSky fog/SeaMist под водой отключены. -waterdetailcapture проверяет близкий борт/след, скорости/удары/ночь, переход среды, чашу и POI5/15/30/60м.
 Качка ShipController использует ShipBuoyancy:9 продольных сечений×3 поперечных точки, weighted plane-fit по площади измеренного корпуса. Высота берётся из intercept плоскости в центре корабля с учётом смещённого weighted meanZ; pitch/roll из её уклонов. Четыре края±18/±5.5 раньше давали spatial alias на волне32м и могли менять знак наклона. Сохранены сглаживаниеexp, clamps12/15deg, Flooding/Cannon и сетевой ShipState. Проверены16 аналитических плоскостей при yaw0/90/180/270: height error<7.2e−7, normal dot≥.99999994. Дляsin(2πz/32) oldPitch+1.218deg, new−3.528deg.
-WaterImpactPhysics/WaterImpactBody: общие локальные всплески входа в actual OceanSurface для физических тел, игроков без Rigidbody и скриптовых предметов. Swept crossing промежуточных точек/уточнение; ядро передаёт incoming velocity до Destroy. Нормальная скорость, масса и площадь задают капли/пену; человек вверх, ядро по касательной. Dynamic Rigidbody.GetPointVelocity, кинематика по времени фактического перемещения. Rearm после .25м/.25с над поверхностью, спавн под водой и прыжок позиции игрока не создают всплеск. 64 истории splash-ring в общем foam atlas; единые 600капель/с,1200живых,2burst/.1с. Fish/bottle/grenade RPC передают вход до despawn; сетевой ProtocolVersion124. Носовой spray на текущей высоте воды переносится raycast на наружную обшивку с запасом10см. Обычный Build Windows06.10.2026:0 ошибок; Player32кадра,6событий без повторов/исключений; итоговая VFX-приёмка [APPROVED]. Свободный подводный верх без белого потолка, POI5–30м читается;60м частично закрыт настоящим дном. Два сетевых клиента не проверялись.
+WaterImpactPhysics/WaterImpactBody: общие локальные всплески входа в actual OceanSurface для физических тел, игроков без Rigidbody и скриптовых предметов. Swept crossing промежуточных точек/уточнение; ядро передаёт incoming velocity при входе в воду и продолжает подводный полёт. Нормальная скорость, масса и площадь задают капли/пену; человек вверх, ядро по касательной. Dynamic Rigidbody.GetPointVelocity, кинематика по времени фактического перемещения. Rearm после .25м/.25с над поверхностью, спавн под водой и прыжок позиции игрока не создают всплеск. 64 истории splash-ring в общем foam atlas; единые 600капель/с,1200живых,2burst/.1с. Fish/bottle/grenade RPC передают вход до despawn; сетевой ProtocolVersion124. Носовой spray на текущей высоте воды переносится raycast на наружную обшивку с запасом10см. Обычный Build Windows06.10.2026:0 ошибок; Player32кадра,6событий без повторов/исключений; итоговая VFX-приёмка [APPROVED]. Свободный подводный верх без белого потолка, POI5–30м читается;60м частично закрыт настоящим дном. Два сетевых клиента не проверялись.
+Облака 2026-10-07, фикс после повторной игровой жалобы: удалены volumeShape, smooth union и узнаваемая тройка эллипсоидов. Непрерывный warped weather только размещает редкие группы; сама плотность — remap двух red-выборок линейной Texture3D Worley128 с разными осями/offset и octave2.07, мягкий переменный height-gradient, настоящая erosion и micro erosion. R8 шумы проверены GPU-readback всех слоёв: Worley128³ mean.753/std.118, Perlin32³ mean.500/std.123, оба не-константны/sRGBfalse; G/B/A не используются. samplingNormalization100000, shapeScale6 даёт период16.67км вместо37км. Material coverageStart.54/end.76, cell7000/seed19/farFade12000–28000; profile density.34, shape6/.75, erosion90/.5, microtrue/.28/200, primary64/light6. ShapeLOD<=2/detailLOD<=1 только CLEAR, вертикальные края строго нулевые с защищённым remap denominator. Authoring CPU расчёт43 296 точек:19.29% world columns живые,6.88% точек с промежуточной density, насыщенных0, liveMean.05259/max.16781; это не доля пикселей неба и не игровой рендер. Общие worldOffset/wind, Main/Shadow/Cubemap, fog/солнце/grading сохранены; legacy CandidateA не менялся. Native профиль/материал/keywords сохранены после импорта; shader и console без ошибок, сцена не сохранялась; игровая визуальная приёмка не проводилась.
+Брызги ядер 2026-10-06, повторный фикс после жалобы: быстрый вход с tangential energy>=100 допускает splash при closing=0. CannonShotDamage сохраняет launchedAboveWater и сообщает пропущенный вход, когда волна накрыла ядро между FixedUpdate; incomingVelocity берётся до подводного damping, оба пути защищены waterEntered от повторных burst при колебании волны; старт под водой не создаёт новый всплеск. Projectile Lift14–20м/с, Life2.8–4с. WaterBowSpray выделяет треть крупных капель .09–.16м с alpha1 и узким вертикальным plume, остальные .035–.075м; y-скорость минимум .85*Lift, нормаль смешана сup. Shader усиливает центральную видимость только alpha>.7–.9; обычный носовой spray сохранён. Native renderer включает Water layer4, shader существует/support=true. Wet contacts/палубные следы сохранены; игровой вид не проверялся.
 
 - [Assets/Scripts/World/EnvironmentTestGallery.cs](<Assets/Scripts/World/EnvironmentTestGallery.cs>) — Исходник C#: EnvironmentTestGallery.
 - [Assets/Scripts/Editor/EnvironmentTestSetup.cs](<Assets/Scripts/Editor/EnvironmentTestSetup.cs>) — Исходник C#: EnvironmentTestSetup.
@@ -1007,6 +1123,12 @@ WaterImpactPhysics/WaterImpactBody: общие локальные всплеск
 - [Assets/Settings/TestSky/Underwater.mat](<Assets/Settings/TestSky/Underwater.mat>) — Материал Unity.
 - [Assets/Scripts/World/WaterImpactPhysics.cs](<Assets/Scripts/World/WaterImpactPhysics.cs>) — Исходник C#: WaterImpactKind, WaterImpactEvent, WaterImpactPhysics.
 - [Assets/Scripts/World/WaterImpactBody.cs](<Assets/Scripts/World/WaterImpactBody.cs>) — Исходник C#: WaterImpactBody.
+- [Assets/Scripts/World/WaterSplashContacts.cs](<Assets/Scripts/World/WaterSplashContacts.cs>) — Исходник C#: WaterSplashContacts.
+- [Assets/Resources/EnvironmentTest/WaterWetMark.shader](<Assets/Resources/EnvironmentTest/WaterWetMark.shader>) — Шейдер.
+- [Assets/Tests/StormCloudBakeoff/CandidateA/VolumetricClouds/VolumetricClouds.shader](<Assets/Tests/StormCloudBakeoff/CandidateA/VolumetricClouds/VolumetricClouds.shader>) — Шейдер.
+- [Assets/Tests/StormCloudBakeoff/CandidateA/VolumetricClouds/VolumetricCloudsDefs.hlsl](<Assets/Tests/StormCloudBakeoff/CandidateA/VolumetricClouds/VolumetricCloudsDefs.hlsl>) — Код шейдера.
+- [Assets/Tests/StormCloudBakeoff/CandidateA/VolumetricClouds/VolumetricCloudsUtilities.hlsl](<Assets/Tests/StormCloudBakeoff/CandidateA/VolumetricClouds/VolumetricCloudsUtilities.hlsl>) — Код шейдера.
+- [Assets/Tests/StormCloudBakeoff/CandidateA/VolumetricClouds/VolumetricCloudsURP.cs](<Assets/Tests/StormCloudBakeoff/CandidateA/VolumetricClouds/VolumetricCloudsURP.cs>) — Исходник C#: VolumetricCloudsURP, CloudsRenderMode, CloudsAmbientMode, CloudsUpscaleMode, VolumetricCloudsPass, stores, PassData, RasterPassData, VolumetricCloudsAmbientPass, VolumetricCloudsShadowsPass, LightCookieShaderFormat.
 - [Docs/TestOcean.md](<Docs/TestOcean.md>) — Документация.
 - [Docs/TestSkyDayNight.md](<Docs/TestSkyDayNight.md>) — Документация.
 

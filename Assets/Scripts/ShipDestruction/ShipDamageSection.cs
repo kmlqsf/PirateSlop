@@ -20,6 +20,7 @@ namespace PirateSlop
         int[][] surfaceTriangles;
         float[] surfaceDamage;
         ulong appliedSurface;
+        bool presentationApplied;
         Vector3[] surfaceRepairFrom, surfaceRepairTo, surfaceRepairWork;
         float surfaceRepairAt;
         public GameObject Intact, Damaged, Critical, Destroyed, Repaired;
@@ -40,6 +41,8 @@ namespace PirateSlop
         public Vector3 LocalCenter => Owner.transform.InverseTransformPoint(transform.position);
         public void Apply(ShipSectionState state, ulong removedFragments = 0)
         {
+            if (presentationApplied && State == state && RemovedFragments == removedFragments) return;
+            presentationApplied = true;
             ulong restored = RemovedFragments & ~removedFragments;
             bool rebuilt = State == ShipSectionState.Destroyed && state != ShipSectionState.Destroyed;
             State = state;
@@ -105,10 +108,12 @@ namespace PirateSlop
                 if (filter == null || filter.sharedMesh == null) return;
                 collider = fragment.AddComponent<MeshCollider>();
                 collider.cookingOptions = MeshColliderCookingOptions.CookForFasterSimulation | MeshColliderCookingOptions.EnableMeshCleaning |
-                    MeshColliderCookingOptions.WeldColocatedVertices | MeshColliderCookingOptions.UseFastMidphase;
+                    MeshColliderCookingOptions.WeldColocatedVertices;
                 collider.sharedMesh = filter.sharedMesh;
                 collider.convex = false;
             }
+            collider.cookingOptions &= ~MeshColliderCookingOptions.UseFastMidphase;
+            Owner?.RegisterDamageCollider(this, collider);
             if (Array.IndexOf(DamageColliders, collider) >= 0) return;
             int count = DamageColliders.Length;
             Array.Resize(ref DamageColliders, count + 1);

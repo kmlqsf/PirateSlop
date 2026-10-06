@@ -9,6 +9,11 @@ namespace PirateSlop.Networking
         public int Id, SectionId, Fragment;
         public Vector3 Position, Normal;
     }
+    public struct ShipFreezeState
+    {
+        public uint Until;
+        public Vector3 Point;
+    }
 
     public sealed partial class NetworkShip
     {
@@ -21,14 +26,14 @@ namespace PirateSlop.Networking
         }
 
         readonly SyncList<ShipFirePatch> firePatches = new();
-        readonly SyncVar<bool> frozen = new();
+        readonly SyncVar<ShipFreezeState> frozen = new();
         readonly Dictionary<int, FireExposure> fireExposure = new();
         readonly Dictionary<int, ShipFireVfx> fireVisuals = new();
         readonly HashSet<CombatHealth> burnedPlayers = new();
         readonly List<int> expiredVisuals = new();
         readonly List<int> pendingFires = new();
         readonly Dictionary<long, float> wetFragments = new();
-        CannonAmmoVfx iceVisual;
+        ShipFreezeVfx iceVisual;
         ShipDestruction fireDestruction;
         int nextFireId;
         float nextFireContact;
@@ -37,13 +42,18 @@ namespace PirateSlop.Networking
         public void Ignite(Vector3 point, GameObject attacker = null, float radius = 0f, Collider surface = null, Vector3 normal = default)
         {
             if (!IsServerInitialized || IsSinking) return;
+            if (Motor.IsFrozen || frozen.Value.Until != 0)
+            {
+                Motor.Thaw();
+                frozen.Value = default;
+            }
             fireDestruction ??= GetComponent<ShipDestruction>();
             if (fireDestruction == null) return;
             if (normal.sqrMagnitude < .01f) normal = transform.up;
             var targets = fireDestruction.PlanFire(surface, point, normal);
             float duration = Random.Range(7f, 9f);
             ulong impact = fireDestruction.BeginFireImpact();
-            int initial = Mathf.Max(1, Mathf.CeilToInt(targets.Count / 3f));
+            int initial = 1;
             for (int i = 0; i < targets.Count; i++)
             {
                 var target = targets[i];
@@ -54,7 +64,7 @@ namespace PirateSlop.Networking
                     if (exposure.Target.SectionId == target.SectionId && exposure.Target.Fragment == target.Fragment) { present = true; break; }
                 if (present) continue;
                 if (fireExposure.Count >= 128) break;
-                float spread = i < initial ? 0f : Mathf.Lerp(.65f, 2f, (i - initial) / (float)Mathf.Max(1, targets.Count - initial - 1));
+                float spread = i < initial ? 0f : Mathf.Lerp(.45f, 2f, (i - initial) / (float)Mathf.Max(1, targets.Count - initial - 1));
                 fireExposure[++nextFireId] = new FireExposure { Target = target, Attacker = attacker, Impact = impact,
                     Start = Time.time + spread, Burn = Time.time + duration, End = Time.time + duration };
             }
@@ -87,11 +97,21 @@ namespace PirateSlop.Networking
             return changed;
         }
 
-        public void FreezeFromShot()
+        public void FreezeFromShot(Vector3 point)
         {
             if (!IsServerInitialized) return;
             Motor.Freeze(5f);
-            frozen.Value = true;
+            frozen.Value = new ShipFreezeState { Until = TimeManager.Tick + (uint)Mathf.CeilToInt(5f / (float)TimeManager.TickDelta), Point = transform.InverseTransformPoint(point) };
+            fireExposure.Clear();
+            firePatches.Clear();
+            pendingFires.Clear();
+            foreach (var player in NetworkPlayer.Active)
+            {
+                if (player == null || !player.IsSpawned || player.Motor.IsDead || player.Motor.IsSwimming || player.Passenger == null || player.Passenger.Ship != Body) continue;
+                var status = player.GetComponent<NetworkHealth>();
+                status?.Extinguish();
+                status?.Freeze(1f);
+            }
         }
 
         void RemoveFire(int id)
@@ -105,9 +125,9 @@ namespace PirateSlop.Networking
         {
             if (!IsSpawned) return;
             fireDestruction ??= GetComponent<ShipDestruction>();
+            if (IsServerInitialized && frozen.Value.Until != 0 && !Motor.IsFrozen) frozen.Value = default;
             if (IsServerInitialized && fireDestruction != null)
             {
-                frozen.Value = Motor.IsFrozen;
                 pendingFires.Clear();
                 foreach (var pair in fireExposure)
                 {
@@ -149,8 +169,9 @@ namespace PirateSlop.Networking
                 }
             }
             if (!IsClientInitialized || Application.isBatchMode) return;
-            if (frozen.Value && iceVisual == null) iceVisual = CannonAmmoVfx.Create(transform, Vector3.up * 3f, true);
-            if (!frozen.Value && iceVisual != null) { Destroy(iceVisual.gameObject); iceVisual = null; }
+            float iceSeconds = frozen.Value.Until == 0 ? 0f : Mathf.Max(0, unchecked((int)(frozen.Value.Until - TimeManager.Tick))) * (float)TimeManager.TickDelta;
+            if (iceSeconds > 0f && iceVisual == null) iceVisual = GetComponent<ShipFreezeVfx>() ?? gameObject.AddComponent<ShipFreezeVfx>();
+            if (iceVisual != null) iceVisual.Present(iceSeconds, frozen.Value.Point, frozen.Value.Until);
             foreach (var patch in firePatches)
             {
                 if (!fireVisuals.TryGetValue(patch.Id, out var visual) || visual == null)
@@ -176,8 +197,8 @@ namespace PirateSlop.Networking
         {
             foreach (var visual in fireVisuals.Values) if (visual != null) Destroy(visual.gameObject);
             fireVisuals.Clear(); fireExposure.Clear(); wetFragments.Clear();
-            if (IsServerInitialized) firePatches.Clear();
-            if (iceVisual != null) Destroy(iceVisual.gameObject);
+            if (IsServerInitialized) { firePatches.Clear(); frozen.Value = default; }
+            if (iceVisual != null) iceVisual.StopPresentation();
             iceVisual = null;
         }
     }

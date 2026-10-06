@@ -8,9 +8,11 @@ namespace PirateSlop
         readonly Dictionary<int, HashSet<int>> adjacent = new();
         readonly Dictionary<int, ShipSectionDefinition> definitions = new();
         readonly ShipFragmentConnection[] fragments;
+        readonly Dictionary<long, int> fragmentIndices = new();
         public ShipStructuralGraph(ShipDestructionProfile profile)
         {
             fragments = profile.Structure;
+            for (int i = 0; i < fragments.Length; i++) fragmentIndices[((long)fragments[i].SectionId << 6) | (uint)fragments[i].Fragment] = i;
             foreach (var definition in profile.Sections)
             {
                 if (!definitions.TryAdd(definition.SectionId, definition)) throw new System.ArgumentException("Duplicate SectionId " + definition.SectionId);
@@ -41,6 +43,26 @@ namespace PirateSlop
         }
         public IEnumerable<int> Dependents(int id) => children[id];
         public IEnumerable<int> AdjacentSections(int id) => adjacent[id];
+        public List<ShipFragmentConnection> RepairCluster(int id, int fragment, System.Func<int, int, bool> allowed)
+        {
+            var result = new List<ShipFragmentConnection>();
+            if (!fragmentIndices.TryGetValue(((long)id << 6) | (uint)fragment, out int start) || !allowed(id, fragment)) return result;
+            var queue = new Queue<int>();
+            var visited = new HashSet<int> { start };
+            queue.Enqueue(start);
+            while (queue.Count > 0 && result.Count < 3)
+            {
+                var node = fragments[queue.Dequeue()];
+                result.Add(node);
+                foreach (int next in node.Neighbours)
+                {
+                    if (next < 0 || next >= fragments.Length || !visited.Add(next)) continue;
+                    var target = fragments[next];
+                    if (allowed(target.SectionId, target.Fragment)) queue.Enqueue(next);
+                }
+            }
+            return result;
+        }
         public Dictionary<int, ulong> Unsupported(System.Func<int, ulong> removed)
         {
             var reached = new bool[fragments.Length];

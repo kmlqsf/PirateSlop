@@ -19,6 +19,11 @@ namespace PirateSlop.Editor
         public static void Prepare()
         {
             if (EditorApplication.isPlayingOrWillChangePlaymode) throw new InvalidOperationException("Stop Play Mode before preparing environment assets.");
+            if (CoastalEnvironmentSetup.IsPrepared)
+            {
+                CoastalEnvironmentSetup.RefreshCatalogVersions();
+                return;
+            }
             Directory.CreateDirectory(Prefabs);
             Directory.CreateDirectory(Materials);
             Directory.CreateDirectory(Path.GetDirectoryName(GalleryPath));

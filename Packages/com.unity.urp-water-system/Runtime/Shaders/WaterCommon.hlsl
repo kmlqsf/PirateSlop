@@ -8,6 +8,7 @@
 #include "GerstnerWaves.hlsl"
 #include "WaterLighting.hlsl"
 #include "Assets/Shaders/WaterShipFoam.hlsl"
+#include "Assets/Shaders/CoastalShoreFoam.hlsl"
 #include "Packages/com.jiaozi158.unity-physically-based-sky-urp/Shaders/AtmosphericScattering.hlsl"
 
 #if defined(_STATIC_SHADER)
@@ -382,10 +383,12 @@ void InitializeSurfaceData(inout WaterInputData input, out WaterSurfaceData surf
 
 	// Foam
 	float2 shipFoam = WaterShipFoamMask(input.positionWS);
+	float2 coastalFoam = CoastalShoreMask(input.positionWS);
 	half depthEdge = saturate(input.depth.y * 0.5);
 	half foamShoreRamp = SAMPLE_TEXTURE2D(_BoatAttack_RampTexture, sampler_BoatAttack_Linear_Clamp_RampTexture,  1-depthEdge).r;
 	if (_BoatAttack_Whirlpool.x > 0) foamShoreRamp *= smoothstep(.95, 1.15, WhirlpoolRatio(input.positionWS));
     foamShoreRamp *= 1 - shipFoam.y;
+    foamShoreRamp *= 1 - coastalFoam.r;
 	half foamWaveRamp = SAMPLE_TEXTURE2D(_BoatAttack_RampTexture, sampler_BoatAttack_Linear_Clamp_RampTexture,  additionalData.w).g;
 	
 	half foamBlendMask = max(foamWaveRamp, foamShoreRamp) + input.waterBufferA.r;// + edgeFoam + input.waterBufferA.r;// max(max(waveFoam, edgeFoam), input.waterFX.r * 2);
@@ -404,6 +407,9 @@ void InitializeSurfaceData(inout WaterInputData input, out WaterSurfaceData surf
 	half4 foamB = half4(SAMPLE_TEXTURE2D(_FoamMap, sampler_FoamMap,  input.detailUV.zw * 0.5).rgb, 0); //r=thick, g=medium, b=light
 	half4 foam = lerp(foamA, foamB, GetDetailCascades(input.positionWS).z);
 	surfaceData.foamMask = length(foam * mask);
+    float coastalMask = coastalFoam.g * coastalFoam.r * (1 - shipFoam.y);
+    if (_BoatAttack_Whirlpool.x > 0) coastalMask *= smoothstep(.95, 1.15, WhirlpoolRatio(input.positionWS));
+    surfaceData.foamMask = max(surfaceData.foamMask, coastalMask * smoothstep(.12, .7, foam.g + foam.b * .3));
 
     if (_BoatAttack_Whirlpool.x > 0)
     {

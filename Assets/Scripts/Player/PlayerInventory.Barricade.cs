@@ -83,8 +83,7 @@ namespace PirateSlop
             if (mouse.rightButton.wasPressedThisFrame) { cancelled = true; CancelBarricadeWork(); }
             if (cancelled) return;
             float previousRotation = rotation;
-            rotation += mouse.scroll.ReadValue().y * .125f;
-            if (keys.rKey.wasPressedThisFrame) rotation += 15f;
+            RotatePlacement(mouse);
             if (barricadeBuilding && (!mouse.leftButton.isPressed || !Mathf.Approximately(rotation, previousRotation))) CancelBarricadeWork();
             RaycastHit nearest = default; float distance = 5f;
             foreach (var hit in Physics.RaycastAll(camera.transform.position, camera.transform.forward, distance, ~0, QueryTriggerInteraction.Ignore))
@@ -142,7 +141,7 @@ namespace PirateSlop
         {
             if (!Networked || !network.IsOwner || !motor.InputActive) return;
             if (aimedBarricade != null) ContextPrompt.Offer(CanFitItem(InventoryItem.Barricade) ? "Shift+E — собрать баррикаду · удерживайте 7 секунд" : CannotFitHint(InventoryItem.Barricade), 45);
-            else if (BarricadeSelected && !cancelled) ContextPrompt.Offer("Удерживайте ЛКМ 3 секунды, смотря на место установки\nR/колесо — поворот · ПКМ — отменить", 45);
+            else if (BarricadeSelected && !cancelled) ContextPrompt.Offer("Удерживайте ЛКМ 3 секунды, смотря на место установки\nКолёсико ↕ — поворот · ПКМ — отменить", 45);
             if (!barricadeBuilding && collectingTarget == null) return;
             var rect = new Rect(Screen.width * .5f - 160f, Screen.height * .5f + 65f, 320f, 44f);
             PirateHudStyle.Panel(rect, barricadeBuilding ? "Установка баррикады · удерживайте ЛКМ" : "Сбор баррикады · удерживайте Shift+E");

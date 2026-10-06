@@ -35,7 +35,7 @@ namespace PirateSlop.Ships
             if (motor.ShipActivityLocked && held == null && diceShip == null) Release();
             var mouse = Mouse.current;
             var keys = Keyboard.current;
-            if (motor.IsDead || SessionController.MenuOpen || DeveloperMenu.IsOpen || mouse == null || keys == null) { Release(); return; }
+            if (motor.IsDead || motor.IsFrozen || SessionController.MenuOpen || DeveloperMenu.IsOpen || mouse == null || keys == null) { Release(); return; }
             if (keys.f2Key.wasPressedThisFrame) { Release(); motor.ActiveHarpoon?.ReleaseControl(); player.TeleportToTestShip(); return; }
             if (diceShip != null)
             {

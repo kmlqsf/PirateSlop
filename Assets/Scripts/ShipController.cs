@@ -42,6 +42,7 @@ public class ShipController : MonoBehaviour
         speed = 0f; pushVelocity = cannonShove = motionVelocity = motionAngularVelocity = Vector3.zero;
         pushYawVelocity = 0f; cannonTiltVelocity = Vector2.zero;
     }
+    public void Thaw() => freezeRemaining = 0f;
     public void ApplyPushImpulse(Vector3 point, Vector3 direction)
     {
         if (IsFrozen || !float.IsFinite(point.sqrMagnitude) || !float.IsFinite(direction.sqrMagnitude)) return;
@@ -201,7 +202,7 @@ public class ShipController : MonoBehaviour
         yaw += yawDelta;
         bank = Mathf.Lerp(bank, -rudder * maxBankAngle * factor + destructionHeel, 1 - Mathf.Exp(-bankResponse * dt));
         var next = rb.position + Quaternion.Euler(0, yaw, 0) * Vector3.forward * speed * dt + (cannonShove + pushVelocity) * dt; next.y = waterHeight;
-        if (OceanSurface.Instance != null && OceanSurface.Instance.WhirlpoolDepth > 0f && !anchorHolds)
+        if (OceanSurface.Instance != null && OceanSurface.Instance.WhirlpoolDepth > 0f && !anchorHolds && !immobilized)
         {
             float w_R = OceanSurface.Instance.WhirlpoolRadius;
             Vector2 shipPosXZ = new Vector2(next.x, next.z);
@@ -335,5 +336,3 @@ public class ShipController : MonoBehaviour
         speed *= .35f;
     }
 }
-
-

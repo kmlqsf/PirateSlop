@@ -73,13 +73,15 @@ namespace PirateSlop.EditorTools
                 var importer = (TextureImporter)AssetImporter.GetAtPath(Models + "Textures/Barricade" + suffix);
                 importer.textureType = suffix == "Normal.png" ? TextureImporterType.NormalMap : TextureImporterType.Default;
                 importer.sRGBTexture = suffix == "BaseColor.jpg";
-                importer.maxTextureSize = suffix == "BaseColor.jpg" ? 2048 : 1024;
+                importer.maxTextureSize = 4096;
                 importer.mipmapEnabled = true; importer.streamingMipmaps = true;
                 importer.textureCompression = TextureImporterCompression.CompressedHQ;
                 importer.SaveAndReimport();
             }
             var material = AssetDatabase.LoadAssetAtPath<Material>(Models + "Barricade.mat");
-            if (material == null) { material = new Material(Shader.Find("Universal Render Pipeline/Lit")); AssetDatabase.CreateAsset(material, Models + "Barricade.mat"); }
+            var shader = Shader.Find("Universal Render Pipeline/Lit");
+            if (material == null) { material = new Material(shader); AssetDatabase.CreateAsset(material, Models + "Barricade.mat"); }
+            material.shader = shader;
             material.SetColor("_BaseColor", Color.white);
             material.SetTexture("_BaseMap", AssetDatabase.LoadAssetAtPath<Texture2D>(Models + "Textures/BarricadeBaseColor.jpg"));
             material.SetTexture("_BumpMap", AssetDatabase.LoadAssetAtPath<Texture2D>(Models + "Textures/BarricadeNormal.png"));

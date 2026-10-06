@@ -43,41 +43,24 @@ namespace PirateSlop
     {
         public static FirearmShot[] Resolve(GameObject shooter,FirearmDefinition definition,Vector3 eye,Vector3 muzzle,Vector3 direction,bool aiming,int seed,bool damage)
         {
-            int count=Mathf.Clamp(definition.Pellets,1,32);
-            var shots=new FirearmShot[count];
-            var monkeyHits=new System.Collections.Generic.HashSet<PirateSlop.Ships.ShipMonkey>();
-            var totals=new System.Collections.Generic.Dictionary<CombatHealth,float>();
-            var others=new System.Collections.Generic.Dictionary<IWeaponTarget,float>();
-            var motor=shooter.GetComponent<AdvancedPlayerController>();
-            float spread=aiming ? definition.AimSpread : definition.HipSpread;
-            if(motor!=null) spread+=definition.MovingSpread*Mathf.Clamp01(motor.PlanarSpeed/8)*(aiming?.3f:1);
-            var settings=definition.Ballistics;
-            for(int i=0;i<count;i++)
+            int count = Mathf.Clamp(definition.Pellets, 1, 32);
+            var shots = new FirearmShot[count];
+            var batch = damage ? new FirearmDamageBatch(shooter, definition) : null;
+            var motor = shooter.GetComponent<AdvancedPlayerController>();
+            float spread = aiming ? definition.AimSpread : definition.HipSpread;
+            if (motor != null) spread += definition.MovingSpread * Mathf.Clamp01(motor.PlanarSpeed / 8) * (aiming ? .3f : 1);
+            var settings = definition.Ballistics;
+            for (int i = 0; i < count; i++)
             {
-                Vector3 ray=definition.PelletDirection(direction,i,seed,spread);
-                Vector3 barrel=muzzle+(count>1 ? Quaternion.LookRotation(direction)*Vector3.right*(i<count/2 ? -.049f:.049f):Vector3.zero);
-                shots[i]=FirearmTrace.Resolve(shooter,eye,barrel,ray,settings.Range,out var hit);
-                if(!damage || hit.collider==null) continue;
-                var monkey = hit.collider.GetComponent<PirateSlop.Ships.ShipMonkeyHitbox>();
-                if (monkey != null && monkey.Monkey != null) { monkeyHits.Add(monkey.Monkey); continue; }
-                float distance=Vector3.Distance(eye,hit.point);
-                float falloff=Mathf.InverseLerp(settings.FalloffStart,settings.FalloffEnd,distance);
-                var health=hit.collider.GetComponentInParent<CombatHealth>();
-                if(health!=null)
-                {
-                    var body=health.GetComponent<CharacterController>();
-                    bool head=body!=null && health.transform.InverseTransformPoint(hit.point).y>=body.center.y+body.height*.5f-.3f;
-                    float amount=Mathf.Lerp(head?settings.NearHeadDamage:settings.NearDamage,head?settings.FarHeadDamage:settings.FarDamage,falloff);
-                    totals.TryGetValue(health,out float previous);totals[health]=previous+amount;
-                }
-                else foreach(var component in hit.collider.GetComponentsInParent<MonoBehaviour>())
-                    if(component is IWeaponTarget target)
-                    {others.TryGetValue(target,out float previous);others[target]=previous+Mathf.Lerp(settings.NearDamage,settings.FarDamage,falloff);break;}
+                Vector3 ray = definition.PelletDirection(direction, i, seed, spread);
+                Vector3 barrel = muzzle + (count > 1 ? Quaternion.LookRotation(direction) * Vector3.right * (i < count / 2 ? -.049f : .049f) : Vector3.zero);
+                shots[i] = FirearmTrace.Resolve(shooter, eye, barrel, ray, settings.Range, out var hit, definition.TracerSpeed);
+                if (!damage) continue;
+                if (shots[i].Water) UnderwaterFirearmProjectile.Spawn(shooter, definition, batch, ref shots[i]);
+                else if (hit.collider != null) batch.Apply(hit, Vector3.Distance(eye, hit.point));
             }
-            foreach(var monkey in monkeyHits) monkey.ReceiveFirearmShot(shooter);
-            foreach(var hit in totals) hit.Key.Damage(Mathf.Min(definition.DamageCap,hit.Value),shooter);
-            foreach(var hit in others) hit.Key.ReceiveWeaponHit(Mathf.Min(definition.DamageCap,hit.Value),shooter);
             return shots;
         }
+
     }
 }

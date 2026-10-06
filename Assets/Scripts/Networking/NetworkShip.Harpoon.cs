@@ -52,6 +52,7 @@ namespace PirateSlop.Networking
         [ServerRpc(RequireOwnership = false)]
         void HarpoonAimServerRpc(int index, float yaw, float pitch, NetworkConnection sender = null)
         {
+            if (sender != null && SessionController.Instance.GetPlayer(sender.ClientId)?.Motor.IsFrozen == true) return;
             HarpoonAimObserversRpc(index, yaw, pitch);
         }
 
@@ -67,6 +68,7 @@ namespace PirateSlop.Networking
         [ServerRpc(RequireOwnership = false)]
         void HarpoonFireServerRpc(int index, Vector3 spawnPos, Vector3 velocity, NetworkConnection sender = null)
         {
+            if (sender != null && SessionController.Instance.GetPlayer(sender.ClientId)?.Motor.IsFrozen == true) return;
             var gun = HarpoonMount != null ? HarpoonMount.GetGun(index) : null;
             if (gun == null || gun.IsBroken) return;
             gun.LaunchFromNetwork(spawnPos, velocity);
@@ -101,6 +103,7 @@ namespace PirateSlop.Networking
         [ServerRpc(RequireOwnership = false)]
         void HarpoonDetachServerRpc(int index, NetworkConnection sender = null)
         {
+            if (sender != null && SessionController.Instance.GetPlayer(sender.ClientId)?.Motor.IsFrozen == true) return;
             var gun = HarpoonMount != null ? HarpoonMount.GetGun(index) : null;
             if (gun != null && gun.ActiveProjectile != null)
             {
@@ -124,6 +127,7 @@ namespace PirateSlop.Networking
         [ServerRpc(RequireOwnership = false)]
         void HarpoonWinchServerRpc(int index, float delta, NetworkConnection sender = null)
         {
+            if (sender != null && SessionController.Instance.GetPlayer(sender.ClientId)?.Motor.IsFrozen == true) return;
             var gun = HarpoonMount != null ? HarpoonMount.GetGun(index) : null;
             if (gun != null && gun.ActiveProjectile != null)
             {
