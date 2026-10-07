@@ -271,7 +271,7 @@ namespace PirateSlop.Ships
                 foreach (int edge in adjacent[nearest])
                 {
                     var link = Links[edge]; int next = link.A == nearest ? link.B : link.A;
-                    if (visited[next] || !Nodes[next].Available || !LinkAllowed(next)) continue;
+                    if (visited[next] || !Nodes[next].Available || !LinkAllowed(next) || !SlotLinkClear(nearest, next)) continue;
                     float candidate = best + Vector3.Distance(Point(nearest), Point(next));
                     if (candidate >= distance[next]) continue;
                     distance[next] = candidate; previous[next] = nearest; previousLink[next] = edge;

@@ -1510,6 +1510,51 @@
 | [Assets/Models/Ships/ShipV3/Textures/fe58ba6fd853.png](<../../Assets/Models/Ships/ShipV3/Textures/fe58ba6fd853.png>) | Изображение / текстура |
 | [Assets/Models/Ships/ShipV3/Textures/tripo_mat_4c763aa7_MetallicSmoothness.png](<../../Assets/Models/Ships/ShipV3/Textures/tripo_mat_4c763aa7_MetallicSmoothness.png>) | Изображение / текстура |
 
+## Assets/Models/SlotMachine
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/SlotMachine/Cabinet.fbx](<../../Assets/Models/SlotMachine/Cabinet.fbx>) | Модель / анимации FBX; Корабельная слот-машина |
+| [Assets/Models/SlotMachine/Cabinet.mat](<../../Assets/Models/SlotMachine/Cabinet.mat>) | Материал Unity |
+| [Assets/Models/SlotMachine/Lever.fbx](<../../Assets/Models/SlotMachine/Lever.fbx>) | Модель / анимации FBX; Корабельная слот-машина |
+| [Assets/Models/SlotMachine/Lever.mat](<../../Assets/Models/SlotMachine/Lever.mat>) | Материал Unity |
+| [Assets/Models/SlotMachine/Reel.fbx](<../../Assets/Models/SlotMachine/Reel.fbx>) | Модель / анимации FBX; Корабельная слот-машина |
+| [Assets/Models/SlotMachine/Reel.mat](<../../Assets/Models/SlotMachine/Reel.mat>) | Материал Unity |
+| [Assets/Models/SlotMachine/ReelDividers.asset](<../../Assets/Models/SlotMachine/ReelDividers.asset>) | Настройки или данные Unity; Корабельная слот-машина |
+| [Assets/Models/SlotMachine/ReelInk.mat](<../../Assets/Models/SlotMachine/ReelInk.mat>) | Материал Unity; Корабельная слот-машина |
+| [Assets/Models/SlotMachine/Symbol0.mat](<../../Assets/Models/SlotMachine/Symbol0.mat>) | Материал Unity |
+| [Assets/Models/SlotMachine/Symbol1.mat](<../../Assets/Models/SlotMachine/Symbol1.mat>) | Материал Unity |
+| [Assets/Models/SlotMachine/Symbol2.mat](<../../Assets/Models/SlotMachine/Symbol2.mat>) | Материал Unity |
+| [Assets/Models/SlotMachine/Symbol3.mat](<../../Assets/Models/SlotMachine/Symbol3.mat>) | Материал Unity |
+| [Assets/Models/SlotMachine/Symbol4.mat](<../../Assets/Models/SlotMachine/Symbol4.mat>) | Материал Unity |
+| [Assets/Models/SlotMachine/Symbol5.mat](<../../Assets/Models/SlotMachine/Symbol5.mat>) | Материал Unity |
+| [Assets/Models/SlotMachine/SymbolSurface0.asset](<../../Assets/Models/SlotMachine/SymbolSurface0.asset>) | Настройки или данные Unity |
+| [Assets/Models/SlotMachine/SymbolSurface1.asset](<../../Assets/Models/SlotMachine/SymbolSurface1.asset>) | Настройки или данные Unity |
+| [Assets/Models/SlotMachine/SymbolSurface2.asset](<../../Assets/Models/SlotMachine/SymbolSurface2.asset>) | Настройки или данные Unity |
+| [Assets/Models/SlotMachine/SymbolSurface3.asset](<../../Assets/Models/SlotMachine/SymbolSurface3.asset>) | Настройки или данные Unity |
+| [Assets/Models/SlotMachine/SymbolSurface4.asset](<../../Assets/Models/SlotMachine/SymbolSurface4.asset>) | Настройки или данные Unity |
+| [Assets/Models/SlotMachine/SymbolSurface5.asset](<../../Assets/Models/SlotMachine/SymbolSurface5.asset>) | Настройки или данные Unity |
+
+## Assets/Models/SlotMachine/Textures
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/SlotMachine/Textures/Cabinet_MetalSmooth.png](<../../Assets/Models/SlotMachine/Textures/Cabinet_MetalSmooth.png>) | Изображение / текстура |
+| [Assets/Models/SlotMachine/Textures/Cabinet_basecolor.jpeg](<../../Assets/Models/SlotMachine/Textures/Cabinet_basecolor.jpeg>) | Изображение / текстура |
+| [Assets/Models/SlotMachine/Textures/Cabinet_metallic.jpeg](<../../Assets/Models/SlotMachine/Textures/Cabinet_metallic.jpeg>) | Изображение / текстура |
+| [Assets/Models/SlotMachine/Textures/Cabinet_normal.png](<../../Assets/Models/SlotMachine/Textures/Cabinet_normal.png>) | Изображение / текстура |
+| [Assets/Models/SlotMachine/Textures/Cabinet_roughness.jpeg](<../../Assets/Models/SlotMachine/Textures/Cabinet_roughness.jpeg>) | Изображение / текстура |
+| [Assets/Models/SlotMachine/Textures/Lever_MetalSmooth.png](<../../Assets/Models/SlotMachine/Textures/Lever_MetalSmooth.png>) | Изображение / текстура |
+| [Assets/Models/SlotMachine/Textures/Lever_basecolor.jpeg](<../../Assets/Models/SlotMachine/Textures/Lever_basecolor.jpeg>) | Изображение / текстура |
+| [Assets/Models/SlotMachine/Textures/Lever_metallic.jpeg](<../../Assets/Models/SlotMachine/Textures/Lever_metallic.jpeg>) | Изображение / текстура |
+| [Assets/Models/SlotMachine/Textures/Lever_normal.png](<../../Assets/Models/SlotMachine/Textures/Lever_normal.png>) | Изображение / текстура |
+| [Assets/Models/SlotMachine/Textures/Lever_roughness.jpeg](<../../Assets/Models/SlotMachine/Textures/Lever_roughness.jpeg>) | Изображение / текстура |
+| [Assets/Models/SlotMachine/Textures/Reel_MetalSmooth.png](<../../Assets/Models/SlotMachine/Textures/Reel_MetalSmooth.png>) | Изображение / текстура |
+| [Assets/Models/SlotMachine/Textures/Reel_basecolor.jpeg](<../../Assets/Models/SlotMachine/Textures/Reel_basecolor.jpeg>) | Изображение / текстура |
+| [Assets/Models/SlotMachine/Textures/Reel_metallic.jpeg](<../../Assets/Models/SlotMachine/Textures/Reel_metallic.jpeg>) | Изображение / текстура |
+| [Assets/Models/SlotMachine/Textures/Reel_normal.png](<../../Assets/Models/SlotMachine/Textures/Reel_normal.png>) | Изображение / текстура |
+| [Assets/Models/SlotMachine/Textures/Reel_roughness.jpeg](<../../Assets/Models/SlotMachine/Textures/Reel_roughness.jpeg>) | Изображение / текстура |
+
 ## Assets/Models/Whale
 
 | Файл | Краткое описание |

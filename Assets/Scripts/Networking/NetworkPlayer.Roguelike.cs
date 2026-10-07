@@ -84,6 +84,13 @@ namespace PirateSlop.Networking
             SendUpgrades();
         }
 
+        internal void SlotSkillPointAwarded()
+        {
+            if (IsServerInitialized && Owner != null && Owner.IsActive && !IsBot.Value) SlotSkillPointTargetRpc(Owner);
+        }
+        [TargetRpc]
+        void SlotSkillPointTargetRpc(NetworkConnection connection) => GameAudio.Play(SoundCue.SlotSkillPoint, transform.position, 1f, true);
+
         internal void SendUpgrades()
         {
             if (!IsServerInitialized || Owner == null || !Owner.IsActive || IsBot.Value || SessionController.Instance == null) return;

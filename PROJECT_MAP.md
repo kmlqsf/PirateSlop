@@ -12,42 +12,42 @@
 
 ## Полный каталог
 
-Учтено 4043 файлов без `.meta`. Ещё 4057 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
+Учтено 4124 файлов без `.meta`. Ещё 4130 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
 
 | Раздел | Назначение | Файлов |
 | --- | --- | ---: |
 | [.agents](<Docs/ProjectMap/.agents.md>) | Ресурсы раздела; точный состав — в каталоге | 1 |
 | [.cursor](<Docs/ProjectMap/.cursor.md>) | Ресурсы раздела; точный состав — в каталоге | 1 |
-| [.opencode](<Docs/ProjectMap/.opencode.md>) | Ресурсы раздела; точный состав — в каталоге | 4 |
-| [Art](<Docs/ProjectMap/Art.md>) | Исходники арта и Blender | 387 |
+| [.opencode](<Docs/ProjectMap/.opencode.md>) | Ресурсы раздела; точный состав — в каталоге | 1 |
+| [Art](<Docs/ProjectMap/Art.md>) | Исходники арта и Blender | 400 |
 | [Assets](<Docs/ProjectMap/Assets.md>) | Ресурсы раздела; точный состав — в каталоге | 2 |
 | [Assets/Animations](<Docs/ProjectMap/Assets-Animations.md>) | Анимации | 27 |
-| [Assets/Audio](<Docs/ProjectMap/Assets-Audio.md>) | Звуковые ресурсы и лицензии | 387 |
+| [Assets/Audio](<Docs/ProjectMap/Assets-Audio.md>) | Звуковые ресурсы и лицензии | 397 |
 | [Assets/Branding](<Docs/ProjectMap/Assets-Branding.md>) | Оформление проекта | 1 |
 | [Assets/Editor](<Docs/ProjectMap/Assets-Editor.md>) | Редакторские ресурсы | 1 |
 | [Assets/Fog Particles](<Docs/ProjectMap/Assets-Fog Particles.md>) | Ресурсы раздела; точный состав — в каталоге | 3 |
 | [Assets/Game](<Docs/ProjectMap/Assets-Game.md>) | Игровые подсистемы и эффекты | 66 |
 | [Assets/Houidisoft technology](<Docs/ProjectMap/Assets-Houidisoft technology.md>) | Ресурсы раздела; точный состав — в каталоге | 12 |
-| [Assets/JMO Assets](<Docs/ProjectMap/Assets-JMO Assets.md>) | Ресурсы раздела; точный состав — в каталоге | 18 |
+| [Assets/JMO Assets](<Docs/ProjectMap/Assets-JMO Assets.md>) | Ресурсы раздела; точный состав — в каталоге | 19 |
 | [Assets/Materials](<Docs/ProjectMap/Assets-Materials.md>) | Материалы | 126 |
 | [Assets/Mirza](<Docs/ProjectMap/Assets-Mirza.md>) | Ресурсы раздела; точный состав — в каталоге | 1 |
-| [Assets/Models](<Docs/ProjectMap/Assets-Models.md>) | Модели и связанные ресурсы | 1232 |
+| [Assets/Models](<Docs/ProjectMap/Assets-Models.md>) | Модели и связанные ресурсы | 1267 |
 | [Assets/Plugins](<Docs/ProjectMap/Assets-Plugins.md>) | Плагины | 5 |
-| [Assets/Prefabs](<Docs/ProjectMap/Assets-Prefabs.md>) | Готовые игровые объекты | 114 |
+| [Assets/Prefabs](<Docs/ProjectMap/Assets-Prefabs.md>) | Готовые игровые объекты | 115 |
 | [Assets/Resources](<Docs/ProjectMap/Assets-Resources.md>) | Ресурсы, доступные для загрузки по имени | 73 |
 | [Assets/Scenes](<Docs/ProjectMap/Assets-Scenes.md>) | Сохранённые сцены | 3 |
-| [Assets/Scripts](<Docs/ProjectMap/Assets-Scripts.md>) | Игровой код и редакторские инструменты | 420 |
-| [Assets/Settings](<Docs/ProjectMap/Assets-Settings.md>) | Настройки игровых систем и рендеринга | 48 |
-| [Assets/Shaders](<Docs/ProjectMap/Assets-Shaders.md>) | Шейдеры | 14 |
+| [Assets/Scripts](<Docs/ProjectMap/Assets-Scripts.md>) | Игровой код и редакторские инструменты | 430 |
+| [Assets/Settings](<Docs/ProjectMap/Assets-Settings.md>) | Настройки игровых систем и рендеринга | 49 |
+| [Assets/Shaders](<Docs/ProjectMap/Assets-Shaders.md>) | Шейдеры | 15 |
 | [Assets/StreamingAssets](<Docs/ProjectMap/Assets-StreamingAssets.md>) | Ресурсы раздела; точный состав — в каталоге | 5 |
 | [Assets/Tests](<Docs/ProjectMap/Assets-Tests.md>) | Исходники проверок | 19 |
 | [Assets/ThirdParty](<Docs/ProjectMap/Assets-ThirdParty.md>) | Сторонние ресурсы | 20 |
 | [Assets/TutorialInfo](<Docs/ProjectMap/Assets-TutorialInfo.md>) | Ресурсы раздела; точный состав — в каталоге | 2 |
-| [Assets/UI](<Docs/ProjectMap/Assets-UI.md>) | Ресурсы интерфейса | 29 |
-| [Docs](<Docs/ProjectMap/Docs.md>) | Документы и сохранённые отчёты | 34 |
-| [Packages](<Docs/ProjectMap/Packages.md>) | Манифест, lock-файл и встроенные пакеты | 922 |
+| [Assets/UI](<Docs/ProjectMap/Assets-UI.md>) | Ресурсы интерфейса | 37 |
+| [Docs](<Docs/ProjectMap/Docs.md>) | Документы и сохранённые отчёты | 37 |
+| [Packages](<Docs/ProjectMap/Packages.md>) | Манифест, lock-файл и встроенные пакеты | 924 |
 | [ProjectSettings](<Docs/ProjectMap/ProjectSettings.md>) | Настройки Unity | 28 |
-| [Root](<Docs/ProjectMap/Root.md>) | Корневые инструкции, планы и служебные файлы | 27 |
+| [Root](<Docs/ProjectMap/Root.md>) | Корневые инструкции, планы и служебные файлы | 26 |
 | [ThirdParty](<Docs/ProjectMap/ThirdParty.md>) | Сторонние ресурсы | 2 |
 | [Tools](<Docs/ProjectMap/Tools.md>) | Инструменты разработки и загрузчик контекста | 9 |
 
@@ -197,6 +197,68 @@ ConfigureDispenser разворачивает поперечный захват 
 - [unity.md](<unity.md>) — Документация.
 - [multiplayer-plan.md](<multiplayer-plan.md>) — Документация.
 - [Assets/Audio/ShipInteractions/SOURCES.md](<Assets/Audio/ShipInteractions/SOURCES.md>) — Документация.
+
+### Корабельная слот-машина (`ship-slot-machine`)
+
+Ключевые слова: слот-машина, слот машина, рыбная ставка, барабаны, slot machine.
+
+Слот-машина из моделей пользователя у противоположной стены, справа при взгляде из прохода в трюм ShipV3Test: (-3.6054,4.12,-18.0709), yaw58. E в верхний слот принимает одну обычную рыбу, видимая модель втягивается за 1с. Рычаг справа при взгляде на автомат, хват дочерний LeverPivot; удержание ЛКМ и мышь вниз, как выдача ядер, запускают только после полного хода. Дополнительная рука не показывается; Q отпускает, Q без захвата возвращает ставку. ServerRpc проверяет плательщика, номер состояния, дистанцию и скорость тяги; heartbeat .65с отпускает застрявший захват. Автовозврат30с. Барабаны Z=.12 вместо .235, печатные символы сохраняют пропорции PNG и получают свет/тени URP. Шансы: проигрыш60%, рыба18.33%, предмет8.33%, особое ядро7.5%, огнестрел4.17%, пушка1.25%, очко.42%. Огнестрел только Musket/DoubleBarrel, пистолет исключён. Награды физически на палубу, очко только личному UpgradeState через V. Звуки: восемь смонтированных WAV в Assets/Audio/SlotMachine; приём1с, рычаг: один щелчок.046с на каждые6.5градусов ручного движения, темп следует скорости, без звука в покое, вращение4.9с pitch1/безloop, стоп.195с, возврат.62с, рыба.72с, выдача1.6с, любой выигрыш2.72с один Win/Jackpot CC BY 4.0 Free Sounds Library. Личное очко использует штатный UpgradeAward из сундука через UI, без дубля TargetRpc. HTML содержит обработанные клипы и исходные36вариантов; SlotLose/SlotReject без выбора. Protocol130. Компиляция/импорт и сохранённые ссылки через Unity MCP; PlayMode/build/два клиента не запускались.
+Шесть Reel*.png нарисованы imagegen по CardArt карт прокачки: единая тушевая гравюра, латунь/бирюза/орех. Alpha PNG, aspect по видимому контуру. FBX белая полоса X=-.070..+.044, центр-.014: глиф до.095м, разделитель.098м, толщина3мм на каждом60-градусном стыке. Mesh.Clear/vertex assignments обновляют GPU buffers вместо CopySerialized. LeverPivot X=-.635 прилегает к боковине, рука не добавлена. Опора4точекY4.11; минимальный зазор всей геометрии до стены3.19см. Статичные editor-render сделаны, игровые проверки остаются пользователю. Независимый visual_reviewer: APPROVED для 6 символов, посадки, разделителей и крепления; это не проверка игрового поведения.
+Автомат увеличен на20% (scale1.2, высота2.28м), позиция(-3.6054,4.12,-18.0709),yaw58. После своей рыбной ставки захват ЛКМ доступен рядом без попадания лучом в LeverGrip; подсказка только у приёмника. SlotMachinePlayer order-26 и consumed input исключают перехват ShipV3PlayerInteraction. Обезьянка: бесплатный ход раз180–300с, только свободный автомат, подход спереди по палубному графу с обходом шкафа, Work/рычаг0.8с, Idle/взгляд до окончания спина и выдачи. Проигрыш80%, SkillPoint не выигрывается; оставшиеся20% пропорциональны прежним пяти категориям. При отмене бесплатной ставки не появляется возврат рыбы. Начатый спин не отменяется уходом, помощь раненому может прервать только подход. Игрок: проигрыш60%. Нативный импорт/компиляция без ошибок, PlayMode/build/клиент не запускались.
+Mystery допускает все включенные строки ChestLoot.json кроме оружия, включая рыбу, пушку, ядра и утилитарный крюк. Вопросик исправлен горизонтальным UV-разворотом SymbolSurface2.
+
+- [Assets/Scripts/Ships/ShipSlotMachine.cs](<Assets/Scripts/Ships/ShipSlotMachine.cs>) — Исходник C#: ShipSlotMachine.
+- [Assets/Scripts/Ships/ShipSlotMachineSettings.cs](<Assets/Scripts/Ships/ShipSlotMachineSettings.cs>) — Исходник C#: SlotSymbol, ShipSlotMachineSettings.
+- [Assets/Scripts/Ships/ShipSlotMachineTarget.cs](<Assets/Scripts/Ships/ShipSlotMachineTarget.cs>) — Исходник C#: ShipSlotMachineTarget.
+- [Assets/Scripts/Ships/ShipSlotMachinePlayer.cs](<Assets/Scripts/Ships/ShipSlotMachinePlayer.cs>) — Исходник C#: ShipSlotMachinePlayer.
+- [Assets/Scripts/Networking/NetworkShip.SlotMachine.cs](<Assets/Scripts/Networking/NetworkShip.SlotMachine.cs>) — Исходник C#: ShipSlotSnapshot, NetworkShip.
+- [Assets/Scripts/Networking/NetworkWeapon.SlotMachine.cs](<Assets/Scripts/Networking/NetworkWeapon.SlotMachine.cs>) — Исходник C#: NetworkWeapon.
+- [Assets/Scripts/Networking/SlotPrizeFlight.cs](<Assets/Scripts/Networking/SlotPrizeFlight.cs>) — Исходник C#: SlotPrizeFlight.
+- [Assets/Scripts/Networking/SessionRoguelike.cs](<Assets/Scripts/Networking/SessionRoguelike.cs>) — Исходник C#: UpgradeIdentityMessage, SessionController.
+- [Assets/Scripts/Networking/NetworkPlayer.Roguelike.cs](<Assets/Scripts/Networking/NetworkPlayer.Roguelike.cs>) — Исходник C#: UpgradeReward, PlayerUpgradeState, UpgradeSnapshot, NetworkPlayer.
+- [Assets/Scripts/Loot/ChestLootTable.cs](<Assets/Scripts/Loot/ChestLootTable.cs>) — Исходник C#: ChestLootStack, ChestLootTable, Table, ChestSettings, Entry.
+- [Assets/Scripts/Editor/ShipSlotMachineSetup.cs](<Assets/Scripts/Editor/ShipSlotMachineSetup.cs>) — Исходник C#: ShipSlotMachineSetup.
+- [Assets/Shaders/SlotReelIcon.shader](<Assets/Shaders/SlotReelIcon.shader>) — Шейдер.
+- [Assets/Prefabs/Props/SlotMachine.prefab](<Assets/Prefabs/Props/SlotMachine.prefab>) — Префаб Unity.
+- [Assets/Settings/SlotMachine/DefaultSlotMachine.asset](<Assets/Settings/SlotMachine/DefaultSlotMachine.asset>) — Настройки или данные Unity.
+- [Assets/Resources/Ships/ShipV3Test.prefab](<Assets/Resources/Ships/ShipV3Test.prefab>) — Префаб Unity.
+- [Assets/Prefabs/Networking/NetworkPlayer.prefab](<Assets/Prefabs/Networking/NetworkPlayer.prefab>) — Префаб Unity.
+- [Assets/Scripts/Audio/GameAudioBank.cs](<Assets/Scripts/Audio/GameAudioBank.cs>) — Исходник C#: SoundCue, GameAudioBank, Entry.
+- [Assets/UI/SlotMachine/SkillPoint.png](<Assets/UI/SlotMachine/SkillPoint.png>) — Изображение / текстура.
+- [Assets/UI/SlotMachine/Mystery.png](<Assets/UI/SlotMachine/Mystery.png>) — Изображение / текстура.
+- [Assets/Models/SlotMachine/Cabinet.fbx](<Assets/Models/SlotMachine/Cabinet.fbx>) — Модель / анимации FBX.
+- [Assets/Models/SlotMachine/Reel.fbx](<Assets/Models/SlotMachine/Reel.fbx>) — Модель / анимации FBX.
+- [Assets/Models/SlotMachine/Lever.fbx](<Assets/Models/SlotMachine/Lever.fbx>) — Модель / анимации FBX.
+- [Art/Blender/SlotMachine/SlotMachine.blend](<Art/Blender/SlotMachine/SlotMachine.blend>) — Редактируемая сцена Blender.
+- [Assets/Scripts/Networking/NetworkFishing.cs](<Assets/Scripts/Networking/NetworkFishing.cs>) — Исходник C#: NetworkFishing.
+- [Assets/Scripts/Player/WeaponArmRig.cs](<Assets/Scripts/Player/WeaponArmRig.cs>) — Исходник C#: WeaponArmRig, Arm.
+- [Assets/Scripts/Ships/ShipV3PlayerInteraction.cs](<Assets/Scripts/Ships/ShipV3PlayerInteraction.cs>) — Исходник C#: ShipV3PlayerInteraction.
+- [Assets/Scripts/Player/PlayerInventory.cs](<Assets/Scripts/Player/PlayerInventory.cs>) — Исходник C#: PlayerInventory.
+- [Assets/Scripts/Audio/GameAudio.Selected.cs](<Assets/Scripts/Audio/GameAudio.Selected.cs>) — Исходник C#: GameAudio.
+- [Assets/Scripts/UI/RoguelikeUpgradeUI.cs](<Assets/Scripts/UI/RoguelikeUpgradeUI.cs>) — Исходник C#: RoguelikeUpgradeUI.
+- [Assets/Resources/GameAudioBank.asset](<Assets/Resources/GameAudioBank.asset>) — Настройки или данные Unity.
+- [Assets/Audio/SlotMachine/SOURCES.md](<Assets/Audio/SlotMachine/SOURCES.md>) — Документация.
+- [Assets/Audio/SlotMachine/FishInsert.wav](<Assets/Audio/SlotMachine/FishInsert.wav>) — Аудио.
+- [Assets/Audio/SlotMachine/LeverPull.wav](<Assets/Audio/SlotMachine/LeverPull.wav>) — Аудио.
+- [Assets/Audio/SlotMachine/ReelSpin.wav](<Assets/Audio/SlotMachine/ReelSpin.wav>) — Аудио.
+- [Assets/Audio/SlotMachine/ReelStop.wav](<Assets/Audio/SlotMachine/ReelStop.wav>) — Аудио.
+- [Assets/Audio/SlotMachine/LeverReturn.wav](<Assets/Audio/SlotMachine/LeverReturn.wav>) — Аудио.
+- [Assets/Audio/SlotMachine/FishPayout.wav](<Assets/Audio/SlotMachine/FishPayout.wav>) — Аудио.
+- [Assets/Audio/SlotMachine/PrizePayout.wav](<Assets/Audio/SlotMachine/PrizePayout.wav>) — Аудио.
+- [Assets/Audio/SlotMachine/Win.wav](<Assets/Audio/SlotMachine/Win.wav>) — Аудио.
+- [Assets/UI/SlotMachine/ReelFish.png](<Assets/UI/SlotMachine/ReelFish.png>) — Изображение / текстура.
+- [Assets/UI/SlotMachine/ReelSkillPoint.png](<Assets/UI/SlotMachine/ReelSkillPoint.png>) — Изображение / текстура.
+- [Assets/UI/SlotMachine/ReelMystery.png](<Assets/UI/SlotMachine/ReelMystery.png>) — Изображение / текстура.
+- [Assets/UI/SlotMachine/ReelCannonball.png](<Assets/UI/SlotMachine/ReelCannonball.png>) — Изображение / текстура.
+- [Assets/UI/SlotMachine/ReelWeapon.png](<Assets/UI/SlotMachine/ReelWeapon.png>) — Изображение / текстура.
+- [Assets/UI/SlotMachine/ReelCannon.png](<Assets/UI/SlotMachine/ReelCannon.png>) — Изображение / текстура.
+- [Assets/Audio/SlotMachine/LeverRatchet.wav](<Assets/Audio/SlotMachine/LeverRatchet.wav>) — Аудио.
+- [Assets/Models/SlotMachine/ReelDividers.asset](<Assets/Models/SlotMachine/ReelDividers.asset>) — Настройки или данные Unity.
+- [Assets/Models/SlotMachine/ReelInk.mat](<Assets/Models/SlotMachine/ReelInk.mat>) — Материал Unity.
+- [Assets/Scripts/Ships/ShipMonkey.SlotMachine.cs](<Assets/Scripts/Ships/ShipMonkey.SlotMachine.cs>) — Исходник C#: ShipMonkey.
+- [Docs/ShipSlotMachine.md](<Docs/ShipSlotMachine.md>) — Документация.
+- [Docs/SlotMachineAudio.json](<Docs/SlotMachineAudio.json>) — Конфигурация / данные JSON.
+- [Docs/SlotMachineReelArt.md](<Docs/SlotMachineReelArt.md>) — Документация.
 
 ### Паруса и канаты (`sails`)
 
@@ -426,6 +488,7 @@ Lantern=26: ручной фонарь из корабельного Body без 
 Фикс F8 сундука 2026-10-06 по жалобе: прежний bowLimit вычислялся по всему ShipV3CollisionBatch с выступами. Native чтение сохранённого корабля: actualBow=19.75, combinedBow=26.24579, старый bowLimit=20.74579 — впереди любой палубы. TryFindDeckPoint теперь собирает реальные палубные источники по явному SectionFor/Type Deck, исключает общий batch из расчёта bounds; bounds выключенных MeshCollider Sources берёт из sharedMesh и матрицы. TryDeckHit делает raycast по действующей физике и проверяет точную секцию попадания через batch.Resolve. Этим же путём проверяются четыре угла опоры. Свободный объём, Fill/ChestLootTable, PlaceOnDeck и сеть сохранены. Компиляция без ошибок, новый TryDeckHit загружен в Unity; игровой спавн не запускался.
 Баррикада 2026-10-06, новый фикс по исходной модели: материал URP Lit с оригинальными BarricadeBaseColor/Normal/MetalSmooth, maxTextureSize4096 и BumpScale1. BarricadeWood.hlsl больше не заменяет albedo/normal/smoothness; строительный preview использует исходный PBR. BarricadeAtlasSetup сохраняет отдельные копии meshes в BarricadeAtlas.asset, выполняет положительно взвешенную cotangent UV relaxation внутри островов по уже деформированной геометрии; границы закреплены, перевёрнутые острова откатываются. Полная карта MetalSmooth4096 и консервативный max-pool закрепляют вершины и треугольники с металлическими деталями без усреднения мелких гвоздей. Исправлены 568 внутренних UV вершин, UV перенесены на 3617 вершин фрагментов в физических координатах импортного FBX; геометрия/силуэт 1.4×0.68×2.1 неизменны. Оригинальные FBX/текстуры/GUID сохранены. Игровой вид не проверялся.
 Поворот при строительстве 2026-10-06: PlayerInventory.RotatePlacement общий для пушки и баррикады, колёсико в обе стороны по5° за нормализованный шаг. Исправлено ошибочное повторное деление на120: установлен InputSystem1.20/UniformAcrossAllPlatforms. Деление Windows120 выполняется только при KeepPlatformSpecificInputRange. Вращение наR удалено, подсказки обновлены, zoom третьего лица блокируется через PlacementActive. Компиляция без ошибок; игровой ввод не проверялся.
+FogBottle/VortexBottle: удержание ЛКМ показывает штатную траекторию гранаты, отпускание бросает. NetworkWeapon.GetBottleLaunch и NetworkFogBottle.Advance общие для предпросмотра и серверного полета: скорость корабля, гравитация, радиус0.12м, геометрия и поверхность воды. Переключение предмета, меню и корабельное взаимодействие отменяют прицел.
 
 - [Assets/Scripts/Player/PlayerInventory.cs](<Assets/Scripts/Player/PlayerInventory.cs>) — Исходник C#: PlayerInventory.
 - [Assets/Scripts/Player/PlayerInventory.RaftLockpick.cs](<Assets/Scripts/Player/PlayerInventory.RaftLockpick.cs>) — Исходник C#: PlayerInventory.
@@ -527,6 +590,7 @@ Lantern=26: ручной фонарь из корабельного Body без 
 - [Assets/Scripts/Editor/BarricadeAtlasSetup.cs](<Assets/Scripts/Editor/BarricadeAtlasSetup.cs>) — Исходник C#: BarricadeAtlasSetup.
 - [Assets/Models/Barricade/BarricadeAtlas.asset](<Assets/Models/Barricade/BarricadeAtlas.asset>) — Настройки или данные Unity.
 - [Assets/Models/Barricade/Barricade.mat](<Assets/Models/Barricade/Barricade.mat>) — Материал Unity.
+- [Assets/Scripts/Networking/NetworkEquipment.BottleAim.cs](<Assets/Scripts/Networking/NetworkEquipment.BottleAim.cs>) — Исходник C#: NetworkEquipment.
 - [rum-loot.md](<rum-loot.md>) — Документация.
 - [combat-balance.md](<combat-balance.md>) — Документация.
 - [Art/Blender/LootReplacement/README.md](<Art/Blender/LootReplacement/README.md>) — Документация.
@@ -705,7 +769,7 @@ WaterImpactPhysics/WaterImpactBody: общие локальные всплеск
 - [Art/Sources/CoastalEnvironment/SOURCES.md](<Art/Sources/CoastalEnvironment/SOURCES.md>) — Документация.
 - [Art/Sources/CoastalEnvironment/TRIPO_MODULAR_ROCK_BRIEF.md](<Art/Sources/CoastalEnvironment/TRIPO_MODULAR_ROCK_BRIEF.md>) — Документация.
 - [Art/Blender/World/CoastalEnvironment/README_TRIPO_ARCH.md](<Art/Blender/World/CoastalEnvironment/README_TRIPO_ARCH.md>) — Документация.
-- [../Blender/Скалы/README.md](<../Blender/Скалы/README.md>) — Документация.
+- `../Blender/Скалы/README.md` — отсутствует в текущем снимке; не использовать как готовый путь.
 - [Art/Blender/World/CoastalEnvironment/README_TRIPO_COLLECTION.md](<Art/Blender/World/CoastalEnvironment/README_TRIPO_COLLECTION.md>) — Документация.
 
 ### Сеть, сессия и Steam (`networking`)
@@ -822,7 +886,7 @@ Whisky Bottle с бесплатной BlenderKit Royalty Free загружена
 - [Assets/Scripts/Editor/PirateCharacterImport.cs](<Assets/Scripts/Editor/PirateCharacterImport.cs>) — Исходник C#: PirateCharacterImport.
 - [Assets/Scripts/Editor/SailRiggingArtSetup.cs](<Assets/Scripts/Editor/SailRiggingArtSetup.cs>) — Исходник C#: SailRiggingArtSetup.
 - [Assets/Scripts/Editor/MainShipSetup.cs](<Assets/Scripts/Editor/MainShipSetup.cs>) — Исходник C#: MainShipSetup.
-- [../NewShip/Ship_V3_Fitted.blend](<../NewShip/Ship_V3_Fitted.blend>) — Редактируемая сцена Blender.
+- `../NewShip/Ship_V3_Fitted.blend` — отсутствует в текущем снимке; не использовать как готовый путь.
 - [Assets/Scripts/Editor/ShipV3ImportSetup.cs](<Assets/Scripts/Editor/ShipV3ImportSetup.cs>) — Исходник C#: ShipV3ImportSetup.
 - [Tools/ShipV3/ExportFromOpenBlender.py](<Tools/ShipV3/ExportFromOpenBlender.py>) — Инструмент Python.
 - [Assets/Models/Ships/ShipV3/ShipV3.fbx](<Assets/Models/Ships/ShipV3/ShipV3.fbx>) — Модель / анимации FBX.
@@ -900,16 +964,16 @@ Whisky Bottle с бесплатной BlenderKit Royalty Free загружена
 - [blender.md](<blender.md>) — Документация.
 - [unity.md](<unity.md>) — Документация.
 - [frigate.md](<frigate.md>) — Документация.
-- [../NewShip/V3Preparation/TelescopeAndAnchorControls.md](<../NewShip/V3Preparation/TelescopeAndAnchorControls.md>) — Документация.
-- [../NewShip/External/AnchorNikdane12/SOURCES.md](<../NewShip/External/AnchorNikdane12/SOURCES.md>) — Документация.
-- [../NewShip/V3Preparation/HarpoonControls.md](<../NewShip/V3Preparation/HarpoonControls.md>) — Документация.
-- [../NewShip/V3Preparation/BowTextureRestoreReport.json](<../NewShip/V3Preparation/BowTextureRestoreReport.json>) — Конфигурация / данные JSON.
-- [../NewShip/V3Preparation/HoldDispenserControls.md](<../NewShip/V3Preparation/HoldDispenserControls.md>) — Документация.
-- [../NewShip/V3Preparation/ShipDetailsControls.md](<../NewShip/V3Preparation/ShipDetailsControls.md>) — Документация.
-- [../NewShip/FreeAssets/CREDITS.md](<../NewShip/FreeAssets/CREDITS.md>) — Документация.
-- [../NewShip/V3Preparation/OptimizationAndDestructionControls.md](<../NewShip/V3Preparation/OptimizationAndDestructionControls.md>) — Документация.
-- [../NewShip/V3Preparation/V18Validation.json](<../NewShip/V3Preparation/V18Validation.json>) — Конфигурация / данные JSON.
-- [../NewShip/V3Preparation/V19Validation.json](<../NewShip/V3Preparation/V19Validation.json>) — Конфигурация / данные JSON.
+- `../NewShip/V3Preparation/TelescopeAndAnchorControls.md` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `../NewShip/External/AnchorNikdane12/SOURCES.md` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `../NewShip/V3Preparation/HarpoonControls.md` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `../NewShip/V3Preparation/BowTextureRestoreReport.json` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `../NewShip/V3Preparation/HoldDispenserControls.md` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `../NewShip/V3Preparation/ShipDetailsControls.md` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `../NewShip/FreeAssets/CREDITS.md` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `../NewShip/V3Preparation/OptimizationAndDestructionControls.md` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `../NewShip/V3Preparation/V18Validation.json` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `../NewShip/V3Preparation/V19Validation.json` — отсутствует в текущем снимке; не использовать как готовый путь.
 
 ### Звуки и голос (`audio`)
 
@@ -1030,7 +1094,7 @@ F8 в основной тестовой карте содержит ползун
 - [Assets/Scripts/Ships/ShipV3HarpoonVisual.cs](<Assets/Scripts/Ships/ShipV3HarpoonVisual.cs>) — Исходник C#: ShipV3HarpoonVisual.
 - [Assets/Resources/Ships/ShipV3HarpoonPort.prefab](<Assets/Resources/Ships/ShipV3HarpoonPort.prefab>) — Префаб Unity.
 - [Assets/Resources/Ships/ShipV3HarpoonStarboard.prefab](<Assets/Resources/Ships/ShipV3HarpoonStarboard.prefab>) — Префаб Unity.
-- [../NewShip/V3Preparation/HarpoonControls.md](<../NewShip/V3Preparation/HarpoonControls.md>) — Документация.
+- `../NewShip/V3Preparation/HarpoonControls.md` — отсутствует в текущем снимке; не использовать как готовый путь.
 
 ### Кракен и щупальца (`kraken`)
 
@@ -1064,6 +1128,7 @@ WhaleLootPoint хранит состояния Idle, Agitated, Diving, Cleared �
 Модели обычной рыбы, фугу и рыбы-меча заменены файлами из ../Blender/Лутабельные/Рыба. Исходники в Art/Blender/Loot/FishReplacement, игровые FBX и материалы URP в Assets/Models/Loot/Replacement/Fish, Pufferfish, Swordfish. BottleFishReplacementSetup сохраняет существующие FishVisual, PufferfishVisual и SwordfishVisual GUID и подменяет дочернюю геометрию двух специальных pickup. Коллайдеры, NetworkFish, NetworkFishProjectile, направление головы +Z, подбор, рыбалка, броски, раздувание фугу и втыкание рыбы-меча сохранены. Игровая проверка выполняется пользователем.
 Уточнение заменённых моделей: Swordfish и Pufferfish Geometry rotation Y=-90° с сохранением FBX-преобразования Z-up в Y-up; после смены базиса визуал повторно центрируется. Переносимый визуал без дополнительного Y=90°, смещение и хват соответствуют телу. NetworkFishProjectile раздувает поперечные оси фугу до 2.1x и учитывает любой Renderer.
 NetworkFishMotion: обычная рыба, фугу и рыба-меч на палубе извиваются и небольшими серверными прыжками направляются к ближайшей посадочной сетке ShipLadder.BoardingAccess. Прыжки считаются относительно корабля, при потере опоры и выходе за борт наследуется скорость корабля. Проверка движения использует габариты визуала, BoxCast и дополнительные лучи опоры, а посадка учитывает центр и нижнюю точку модели. При касании воды слышен всплеск, рыба уплывает вниз с вилянием хвоста и удаляется через 3 секунды; состояние и таймер задаёт сервер. Старое удаление обычной рыбы через 600 секунд на палубе отключено. Воткнутая рыба-меч имеет NetworkFishProjectile.Stuck и периодически виляет только хвостом. Все три рыбы при сбросе сразу укладываются на бок через LootPlacement; коллайдеры подогнаны под реальный визуал. У фугу исправлено направление головы по +Z в общем визуале, включая инвентарь и переносимый улов. Модели рыб импортируются с Read/Write для деформации отдельных runtime-копий мешей. Игровая и онлайн-проверка выполняется пользователем.
+Отскок иглобрюха рассчитывает центр по расстоянию SphereCast, а не hit.point: при начальном пересечении нулевая точка контакта не переносит рыбу в центр мира. Фитиль2.5с и штатный взрыв сохранены.
 
 - [Assets/Scripts/Networking/NetworkFishing.cs](<Assets/Scripts/Networking/NetworkFishing.cs>) — Исходник C#: NetworkFishing.
 - [Assets/Scripts/Networking/NetworkFish.cs](<Assets/Scripts/Networking/NetworkFish.cs>) — Исходник C#: InventoryItem, NetworkFish.
@@ -1200,6 +1265,7 @@ NetworkLoadTest запускается из меню Тест нагрузки �
 ShipMonkey.Repair.cs: ремонт своего корабля по доступным палубным маршрутам; модель молотка игрока, Repair-клип, темп строго 15% от NetworkHullRepair.StrikeInterval, общие FragmentStrikes/MastStrikes. Серверный RepairNearby/RepairMast сохраняет сетевые маски, восстановление механизмов и затопление. Ремонт выше рыбалки и шалостей по приоритету. Предыдущие 28 actions сохранены, архив V6-BeforeRepair-2026-10-04 удалён при согласованной очистке 2026-10-05; Play Mode не запускался.
 Доставка лечебной рыбы проверяется каждые 0.5 с и прерывает прочие занятия, включая ремонт и шалости. Подбор/доставка бегом по палубе; выбор доступных игрока/рыбы и допуск 2 с на штатный прыжок рыбы. Руль: 10–15 с с плавными поворотами ±30–50% и циклом 5 с; паруса ±10%. Повторный игровой тест оставлен пользователю.
 Архивные Versions/V1–V6 удалены 2026-10-05 по просьбе пользователя; текущие Art/Blender/Creatures/ShipMonkey/ShipMonkey.blend, исходные actions и игровые Assets сохранены. Дублированные GUID архивных копий вне Assets не являются отдельными подключёнными Unity-ресурсами.
+Автомат увеличен на20% (scale1.2, высота2.28м), позиция(-3.6054,4.12,-18.0709),yaw58. После своей рыбной ставки захват ЛКМ доступен рядом без попадания лучом в LeverGrip; подсказка только у приёмника. SlotMachinePlayer order-26 и consumed input исключают перехват ShipV3PlayerInteraction. Обезьянка: бесплатный ход раз180–300с, только свободный автомат, подход спереди по палубному графу с обходом шкафа, Work/рычаг0.8с, Idle/взгляд до окончания спина и выдачи. Проигрыш80%, SkillPoint не выигрывается; оставшиеся20% пропорциональны прежним пяти категориям. При отмене бесплатной ставки не появляется возврат рыбы. Начатый спин не отменяется уходом, помощь раненому может прервать только подход. Игрок: проигрыш60%. Нативный импорт/компиляция без ошибок, PlayMode/build/клиент не запускались.
 
 - [Assets/Scripts/Ships/ShipMonkey.cs](<Assets/Scripts/Ships/ShipMonkey.cs>) — Исходник C#: ShipMonkeySurface, ShipMonkeyMotion, ShipMonkeyNode, ShipMonkeyLink, ShipMonkeyPose, ShipMonkey.
 - [Assets/Scripts/Networking/NetworkShip.Monkey.cs](<Assets/Scripts/Networking/NetworkShip.Monkey.cs>) — Исходник C#: NetworkShip.
@@ -1234,8 +1300,12 @@ ShipMonkey.Repair.cs: ремонт своего корабля по доступ
 - [Assets/Scripts/Ships/ShipMonkey.Repair.cs](<Assets/Scripts/Ships/ShipMonkey.Repair.cs>) — Исходник C#: ShipMonkey.
 - [Assets/Scripts/Networking/NetworkHullRepair.cs](<Assets/Scripts/Networking/NetworkHullRepair.cs>) — Исходник C#: NetworkHullRepair.
 - [Art/Blender/Creatures/ShipMonkey/monkey_repair.py](<Art/Blender/Creatures/ShipMonkey/monkey_repair.py>) — Инструмент Python.
+- [Assets/Scripts/Ships/ShipMonkey.SlotMachine.cs](<Assets/Scripts/Ships/ShipMonkey.SlotMachine.cs>) — Исходник C#: ShipMonkey.
+- [Assets/Scripts/Networking/NetworkShip.SlotMachine.cs](<Assets/Scripts/Networking/NetworkShip.SlotMachine.cs>) — Исходник C#: ShipSlotSnapshot, NetworkShip.
+- [Assets/Scripts/Ships/ShipSlotMachinePlayer.cs](<Assets/Scripts/Ships/ShipSlotMachinePlayer.cs>) — Исходник C#: ShipSlotMachinePlayer.
 - [Art/Blender/Creatures/ShipMonkey/README.md](<Art/Blender/Creatures/ShipMonkey/README.md>) — Документация.
 - [Art/Blender/Creatures/ShipMonkey/Versions/README.md](<Art/Blender/Creatures/ShipMonkey/Versions/README.md>) — Документация.
+- [Docs/ShipSlotMachine.md](<Docs/ShipSlotMachine.md>) — Документация.
 
 ## Источники актуальных настроек
 

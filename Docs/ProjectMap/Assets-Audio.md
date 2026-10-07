@@ -737,6 +737,21 @@
 | [Assets/Audio/ShipInteractions/FlameLight.wav](<../../Assets/Audio/ShipInteractions/FlameLight.wav>) | Аудио |
 | [Assets/Audio/ShipInteractions/SOURCES.md](<../../Assets/Audio/ShipInteractions/SOURCES.md>) | Документация; Движение корабля и палуба, Звуки и голос |
 
+## Assets/Audio/SlotMachine
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Audio/SlotMachine/FishInsert.wav](<../../Assets/Audio/SlotMachine/FishInsert.wav>) | Аудио; Корабельная слот-машина |
+| [Assets/Audio/SlotMachine/FishPayout.wav](<../../Assets/Audio/SlotMachine/FishPayout.wav>) | Аудио; Корабельная слот-машина |
+| [Assets/Audio/SlotMachine/LeverPull.wav](<../../Assets/Audio/SlotMachine/LeverPull.wav>) | Аудио; Корабельная слот-машина |
+| [Assets/Audio/SlotMachine/LeverRatchet.wav](<../../Assets/Audio/SlotMachine/LeverRatchet.wav>) | Аудио; Корабельная слот-машина |
+| [Assets/Audio/SlotMachine/LeverReturn.wav](<../../Assets/Audio/SlotMachine/LeverReturn.wav>) | Аудио; Корабельная слот-машина |
+| [Assets/Audio/SlotMachine/PrizePayout.wav](<../../Assets/Audio/SlotMachine/PrizePayout.wav>) | Аудио; Корабельная слот-машина |
+| [Assets/Audio/SlotMachine/ReelSpin.wav](<../../Assets/Audio/SlotMachine/ReelSpin.wav>) | Аудио; Корабельная слот-машина |
+| [Assets/Audio/SlotMachine/ReelStop.wav](<../../Assets/Audio/SlotMachine/ReelStop.wav>) | Аудио; Корабельная слот-машина |
+| [Assets/Audio/SlotMachine/SOURCES.md](<../../Assets/Audio/SlotMachine/SOURCES.md>) | Документация; Корабельная слот-машина |
+| [Assets/Audio/SlotMachine/Win.wav](<../../Assets/Audio/SlotMachine/Win.wav>) | Аудио; Корабельная слот-машина |
+
 ## Assets/Audio/Underwater
 
 | Файл | Краткое описание |

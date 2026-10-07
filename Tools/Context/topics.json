@@ -192,6 +192,79 @@
       ]
     },
     {
+      "id": "ship-slot-machine",
+      "title": "Корабельная слот-машина",
+      "aliases": [
+        "слот-машина",
+        "слот машина",
+        "рыбная ставка",
+        "барабаны",
+        "slot machine"
+      ],
+      "notes": [
+        "Слот-машина из моделей пользователя у противоположной стены, справа при взгляде из прохода в трюм ShipV3Test: (-3.6054,4.12,-18.0709), yaw58. E в верхний слот принимает одну обычную рыбу, видимая модель втягивается за 1с. Рычаг справа при взгляде на автомат, хват дочерний LeverPivot; удержание ЛКМ и мышь вниз, как выдача ядер, запускают только после полного хода. Дополнительная рука не показывается; Q отпускает, Q без захвата возвращает ставку. ServerRpc проверяет плательщика, номер состояния, дистанцию и скорость тяги; heartbeat .65с отпускает застрявший захват. Автовозврат30с. Барабаны Z=.12 вместо .235, печатные символы сохраняют пропорции PNG и получают свет/тени URP. Шансы: проигрыш60%, рыба18.33%, предмет8.33%, особое ядро7.5%, огнестрел4.17%, пушка1.25%, очко.42%. Огнестрел только Musket/DoubleBarrel, пистолет исключён. Награды физически на палубу, очко только личному UpgradeState через V. Звуки: восемь смонтированных WAV в Assets/Audio/SlotMachine; приём1с, рычаг: один щелчок.046с на каждые6.5градусов ручного движения, темп следует скорости, без звука в покое, вращение4.9с pitch1/безloop, стоп.195с, возврат.62с, рыба.72с, выдача1.6с, любой выигрыш2.72с один Win/Jackpot CC BY 4.0 Free Sounds Library. Личное очко использует штатный UpgradeAward из сундука через UI, без дубля TargetRpc. HTML содержит обработанные клипы и исходные36вариантов; SlotLose/SlotReject без выбора. Protocol130. Компиляция/импорт и сохранённые ссылки через Unity MCP; PlayMode/build/два клиента не запускались.",
+        "Шесть Reel*.png нарисованы imagegen по CardArt карт прокачки: единая тушевая гравюра, латунь/бирюза/орех. Alpha PNG, aspect по видимому контуру. FBX белая полоса X=-.070..+.044, центр-.014: глиф до.095м, разделитель.098м, толщина3мм на каждом60-градусном стыке. Mesh.Clear/vertex assignments обновляют GPU buffers вместо CopySerialized. LeverPivot X=-.635 прилегает к боковине, рука не добавлена. Опора4точекY4.11; минимальный зазор всей геометрии до стены3.19см. Статичные editor-render сделаны, игровые проверки остаются пользователю. Независимый visual_reviewer: APPROVED для 6 символов, посадки, разделителей и крепления; это не проверка игрового поведения.",
+        "Автомат увеличен на20% (scale1.2, высота2.28м), позиция(-3.6054,4.12,-18.0709),yaw58. После своей рыбной ставки захват ЛКМ доступен рядом без попадания лучом в LeverGrip; подсказка только у приёмника. SlotMachinePlayer order-26 и consumed input исключают перехват ShipV3PlayerInteraction. Обезьянка: бесплатный ход раз180–300с, только свободный автомат, подход спереди по палубному графу с обходом шкафа, Work/рычаг0.8с, Idle/взгляд до окончания спина и выдачи. Проигрыш80%, SkillPoint не выигрывается; оставшиеся20% пропорциональны прежним пяти категориям. При отмене бесплатной ставки не появляется возврат рыбы. Начатый спин не отменяется уходом, помощь раненому может прервать только подход. Игрок: проигрыш60%. Нативный импорт/компиляция без ошибок, PlayMode/build/клиент не запускались.",
+        "Mystery допускает все включенные строки ChestLoot.json кроме оружия, включая рыбу, пушку, ядра и утилитарный крюк. Вопросик исправлен горизонтальным UV-разворотом SymbolSurface2."
+      ],
+      "files": [
+        "Assets/Scripts/Ships/ShipSlotMachine.cs",
+        "Assets/Scripts/Ships/ShipSlotMachineSettings.cs",
+        "Assets/Scripts/Ships/ShipSlotMachineTarget.cs",
+        "Assets/Scripts/Ships/ShipSlotMachinePlayer.cs",
+        "Assets/Scripts/Networking/NetworkShip.SlotMachine.cs",
+        "Assets/Scripts/Networking/NetworkWeapon.SlotMachine.cs",
+        "Assets/Scripts/Networking/SlotPrizeFlight.cs",
+        "Assets/Scripts/Networking/SessionRoguelike.cs",
+        "Assets/Scripts/Networking/NetworkPlayer.Roguelike.cs",
+        "Assets/Scripts/Loot/ChestLootTable.cs",
+        "Assets/Scripts/Editor/ShipSlotMachineSetup.cs",
+        "Assets/Shaders/SlotReelIcon.shader",
+        "Assets/Prefabs/Props/SlotMachine.prefab",
+        "Assets/Settings/SlotMachine/DefaultSlotMachine.asset",
+        "Assets/Resources/Ships/ShipV3Test.prefab",
+        "Assets/Prefabs/Networking/NetworkPlayer.prefab",
+        "Assets/Scripts/Audio/GameAudioBank.cs",
+        "Assets/UI/SlotMachine/SkillPoint.png",
+        "Assets/UI/SlotMachine/Mystery.png",
+        "Assets/Models/SlotMachine/Cabinet.fbx",
+        "Assets/Models/SlotMachine/Reel.fbx",
+        "Assets/Models/SlotMachine/Lever.fbx",
+        "Art/Blender/SlotMachine/SlotMachine.blend",
+        "Assets/Scripts/Networking/NetworkFishing.cs",
+        "Assets/Scripts/Player/WeaponArmRig.cs",
+        "Assets/Scripts/Ships/ShipV3PlayerInteraction.cs",
+        "Assets/Scripts/Player/PlayerInventory.cs",
+        "Assets/Scripts/Audio/GameAudio.Selected.cs",
+        "Assets/Scripts/UI/RoguelikeUpgradeUI.cs",
+        "Assets/Resources/GameAudioBank.asset",
+        "Assets/Audio/SlotMachine/SOURCES.md",
+        "Assets/Audio/SlotMachine/FishInsert.wav",
+        "Assets/Audio/SlotMachine/LeverPull.wav",
+        "Assets/Audio/SlotMachine/ReelSpin.wav",
+        "Assets/Audio/SlotMachine/ReelStop.wav",
+        "Assets/Audio/SlotMachine/LeverReturn.wav",
+        "Assets/Audio/SlotMachine/FishPayout.wav",
+        "Assets/Audio/SlotMachine/PrizePayout.wav",
+        "Assets/Audio/SlotMachine/Win.wav",
+        "Assets/UI/SlotMachine/ReelFish.png",
+        "Assets/UI/SlotMachine/ReelSkillPoint.png",
+        "Assets/UI/SlotMachine/ReelMystery.png",
+        "Assets/UI/SlotMachine/ReelCannonball.png",
+        "Assets/UI/SlotMachine/ReelWeapon.png",
+        "Assets/UI/SlotMachine/ReelCannon.png",
+        "Assets/Audio/SlotMachine/LeverRatchet.wav",
+        "Assets/Models/SlotMachine/ReelDividers.asset",
+        "Assets/Models/SlotMachine/ReelInk.mat",
+        "Assets/Scripts/Ships/ShipMonkey.SlotMachine.cs"
+      ],
+      "docs": [
+        "Docs/ShipSlotMachine.md",
+        "Docs/SlotMachineAudio.json",
+        "Docs/SlotMachineReelArt.md"
+      ]
+    },
+    {
       "id": "sails",
       "title": "Паруса и канаты",
       "aliases": [
@@ -465,7 +538,8 @@
         "Предыдущую замену древесины шумом пользователь отклонил; актуальные исходные PBR-карты и UV описаны ниже.",
         "Фикс F8 сундука 2026-10-06 по жалобе: прежний bowLimit вычислялся по всему ShipV3CollisionBatch с выступами. Native чтение сохранённого корабля: actualBow=19.75, combinedBow=26.24579, старый bowLimit=20.74579 — впереди любой палубы. TryFindDeckPoint теперь собирает реальные палубные источники по явному SectionFor/Type Deck, исключает общий batch из расчёта bounds; bounds выключенных MeshCollider Sources берёт из sharedMesh и матрицы. TryDeckHit делает raycast по действующей физике и проверяет точную секцию попадания через batch.Resolve. Этим же путём проверяются четыре угла опоры. Свободный объём, Fill/ChestLootTable, PlaceOnDeck и сеть сохранены. Компиляция без ошибок, новый TryDeckHit загружен в Unity; игровой спавн не запускался.",
         "Баррикада 2026-10-06, новый фикс по исходной модели: материал URP Lit с оригинальными BarricadeBaseColor/Normal/MetalSmooth, maxTextureSize4096 и BumpScale1. BarricadeWood.hlsl больше не заменяет albedo/normal/smoothness; строительный preview использует исходный PBR. BarricadeAtlasSetup сохраняет отдельные копии meshes в BarricadeAtlas.asset, выполняет положительно взвешенную cotangent UV relaxation внутри островов по уже деформированной геометрии; границы закреплены, перевёрнутые острова откатываются. Полная карта MetalSmooth4096 и консервативный max-pool закрепляют вершины и треугольники с металлическими деталями без усреднения мелких гвоздей. Исправлены 568 внутренних UV вершин, UV перенесены на 3617 вершин фрагментов в физических координатах импортного FBX; геометрия/силуэт 1.4×0.68×2.1 неизменны. Оригинальные FBX/текстуры/GUID сохранены. Игровой вид не проверялся.",
-        "Поворот при строительстве 2026-10-06: PlayerInventory.RotatePlacement общий для пушки и баррикады, колёсико в обе стороны по5° за нормализованный шаг. Исправлено ошибочное повторное деление на120: установлен InputSystem1.20/UniformAcrossAllPlatforms. Деление Windows120 выполняется только при KeepPlatformSpecificInputRange. Вращение наR удалено, подсказки обновлены, zoom третьего лица блокируется через PlacementActive. Компиляция без ошибок; игровой ввод не проверялся."
+        "Поворот при строительстве 2026-10-06: PlayerInventory.RotatePlacement общий для пушки и баррикады, колёсико в обе стороны по5° за нормализованный шаг. Исправлено ошибочное повторное деление на120: установлен InputSystem1.20/UniformAcrossAllPlatforms. Деление Windows120 выполняется только при KeepPlatformSpecificInputRange. Вращение наR удалено, подсказки обновлены, zoom третьего лица блокируется через PlacementActive. Компиляция без ошибок; игровой ввод не проверялся.",
+        "FogBottle/VortexBottle: удержание ЛКМ показывает штатную траекторию гранаты, отпускание бросает. NetworkWeapon.GetBottleLaunch и NetworkFogBottle.Advance общие для предпросмотра и серверного полета: скорость корабля, гравитация, радиус0.12м, геометрия и поверхность воды. Переключение предмета, меню и корабельное взаимодействие отменяют прицел."
       ],
       "files": [
         "Assets/Scripts/Player/PlayerInventory.cs",
@@ -567,7 +641,8 @@
         "Assets/Models/Loot/Chest/ChestLid/ChestLid.mat",
         "Assets/Scripts/Editor/BarricadeAtlasSetup.cs",
         "Assets/Models/Barricade/BarricadeAtlas.asset",
-        "Assets/Models/Barricade/Barricade.mat"
+        "Assets/Models/Barricade/Barricade.mat",
+        "Assets/Scripts/Networking/NetworkEquipment.BottleAim.cs"
       ],
       "docs": [
         "rum-loot.md",
@@ -1211,7 +1286,8 @@
         "Рыбалка — NetworkFishing; предмет рыбы и его полёт — NetworkFish и NetworkFishProjectile. Использование рыбы как метательного предмета находится в NetworkWeapon.FishThrows.",
         "Модели обычной рыбы, фугу и рыбы-меча заменены файлами из ../Blender/Лутабельные/Рыба. Исходники в Art/Blender/Loot/FishReplacement, игровые FBX и материалы URP в Assets/Models/Loot/Replacement/Fish, Pufferfish, Swordfish. BottleFishReplacementSetup сохраняет существующие FishVisual, PufferfishVisual и SwordfishVisual GUID и подменяет дочернюю геометрию двух специальных pickup. Коллайдеры, NetworkFish, NetworkFishProjectile, направление головы +Z, подбор, рыбалка, броски, раздувание фугу и втыкание рыбы-меча сохранены. Игровая проверка выполняется пользователем.",
         "Уточнение заменённых моделей: Swordfish и Pufferfish Geometry rotation Y=-90° с сохранением FBX-преобразования Z-up в Y-up; после смены базиса визуал повторно центрируется. Переносимый визуал без дополнительного Y=90°, смещение и хват соответствуют телу. NetworkFishProjectile раздувает поперечные оси фугу до 2.1x и учитывает любой Renderer.",
-        "NetworkFishMotion: обычная рыба, фугу и рыба-меч на палубе извиваются и небольшими серверными прыжками направляются к ближайшей посадочной сетке ShipLadder.BoardingAccess. Прыжки считаются относительно корабля, при потере опоры и выходе за борт наследуется скорость корабля. Проверка движения использует габариты визуала, BoxCast и дополнительные лучи опоры, а посадка учитывает центр и нижнюю точку модели. При касании воды слышен всплеск, рыба уплывает вниз с вилянием хвоста и удаляется через 3 секунды; состояние и таймер задаёт сервер. Старое удаление обычной рыбы через 600 секунд на палубе отключено. Воткнутая рыба-меч имеет NetworkFishProjectile.Stuck и периодически виляет только хвостом. Все три рыбы при сбросе сразу укладываются на бок через LootPlacement; коллайдеры подогнаны под реальный визуал. У фугу исправлено направление головы по +Z в общем визуале, включая инвентарь и переносимый улов. Модели рыб импортируются с Read/Write для деформации отдельных runtime-копий мешей. Игровая и онлайн-проверка выполняется пользователем."
+        "NetworkFishMotion: обычная рыба, фугу и рыба-меч на палубе извиваются и небольшими серверными прыжками направляются к ближайшей посадочной сетке ShipLadder.BoardingAccess. Прыжки считаются относительно корабля, при потере опоры и выходе за борт наследуется скорость корабля. Проверка движения использует габариты визуала, BoxCast и дополнительные лучи опоры, а посадка учитывает центр и нижнюю точку модели. При касании воды слышен всплеск, рыба уплывает вниз с вилянием хвоста и удаляется через 3 секунды; состояние и таймер задаёт сервер. Старое удаление обычной рыбы через 600 секунд на палубе отключено. Воткнутая рыба-меч имеет NetworkFishProjectile.Stuck и периодически виляет только хвостом. Все три рыбы при сбросе сразу укладываются на бок через LootPlacement; коллайдеры подогнаны под реальный визуал. У фугу исправлено направление головы по +Z в общем визуале, включая инвентарь и переносимый улов. Модели рыб импортируются с Read/Write для деформации отдельных runtime-копий мешей. Игровая и онлайн-проверка выполняется пользователем.",
+        "Отскок иглобрюха рассчитывает центр по расстоянию SphereCast, а не hit.point: при начальном пересечении нулевая точка контакта не переносит рыбу в центр мира. Фитиль2.5с и штатный взрыв сохранены."
       ],
       "files": [
         "Assets/Scripts/Networking/NetworkFishing.cs",
@@ -1376,7 +1452,8 @@
         "Серверные занятия: реальные предметы с пола в руках, E для забора; лечебная рыба ближайшему раненому, фактически на корабле; рыбалка с удочкой игрока и рыбой на палубе; свободный парус изменяется максимум на 0.1, руль вращается 10–15 с туда-сюда на 30–50%. FishingInterval/MischiefInterval 120 с ±15%; семь новых activity-клипов; архив до изменения V5-BipedBeforeActivities-2026-10-04 удалён при согласованной очистке 2026-10-05. Play Mode и второй клиент не проверены.",
         "ShipMonkey.Repair.cs: ремонт своего корабля по доступным палубным маршрутам; модель молотка игрока, Repair-клип, темп строго 15% от NetworkHullRepair.StrikeInterval, общие FragmentStrikes/MastStrikes. Серверный RepairNearby/RepairMast сохраняет сетевые маски, восстановление механизмов и затопление. Ремонт выше рыбалки и шалостей по приоритету. Предыдущие 28 actions сохранены, архив V6-BeforeRepair-2026-10-04 удалён при согласованной очистке 2026-10-05; Play Mode не запускался.",
         "Доставка лечебной рыбы проверяется каждые 0.5 с и прерывает прочие занятия, включая ремонт и шалости. Подбор/доставка бегом по палубе; выбор доступных игрока/рыбы и допуск 2 с на штатный прыжок рыбы. Руль: 10–15 с с плавными поворотами ±30–50% и циклом 5 с; паруса ±10%. Повторный игровой тест оставлен пользователю.",
-        "Архивные Versions/V1–V6 удалены 2026-10-05 по просьбе пользователя; текущие Art/Blender/Creatures/ShipMonkey/ShipMonkey.blend, исходные actions и игровые Assets сохранены. Дублированные GUID архивных копий вне Assets не являются отдельными подключёнными Unity-ресурсами."
+        "Архивные Versions/V1–V6 удалены 2026-10-05 по просьбе пользователя; текущие Art/Blender/Creatures/ShipMonkey/ShipMonkey.blend, исходные actions и игровые Assets сохранены. Дублированные GUID архивных копий вне Assets не являются отдельными подключёнными Unity-ресурсами.",
+        "Автомат увеличен на20% (scale1.2, высота2.28м), позиция(-3.6054,4.12,-18.0709),yaw58. После своей рыбной ставки захват ЛКМ доступен рядом без попадания лучом в LeverGrip; подсказка только у приёмника. SlotMachinePlayer order-26 и consumed input исключают перехват ShipV3PlayerInteraction. Обезьянка: бесплатный ход раз180–300с, только свободный автомат, подход спереди по палубному графу с обходом шкафа, Work/рычаг0.8с, Idle/взгляд до окончания спина и выдачи. Проигрыш80%, SkillPoint не выигрывается; оставшиеся20% пропорциональны прежним пяти категориям. При отмене бесплатной ставки не появляется возврат рыбы. Начатый спин не отменяется уходом, помощь раненому может прервать только подход. Игрок: проигрыш60%. Нативный импорт/компиляция без ошибок, PlayMode/build/клиент не запускались."
       ],
       "files": [
         "Assets/Scripts/Ships/ShipMonkey.cs",
@@ -1411,11 +1488,15 @@
         "Art/Blender/Creatures/ShipMonkey/monkey_activities.py",
         "Assets/Scripts/Ships/ShipMonkey.Repair.cs",
         "Assets/Scripts/Networking/NetworkHullRepair.cs",
-        "Art/Blender/Creatures/ShipMonkey/monkey_repair.py"
+        "Art/Blender/Creatures/ShipMonkey/monkey_repair.py",
+        "Assets/Scripts/Ships/ShipMonkey.SlotMachine.cs",
+        "Assets/Scripts/Networking/NetworkShip.SlotMachine.cs",
+        "Assets/Scripts/Ships/ShipSlotMachinePlayer.cs"
       ],
       "docs": [
         "Art/Blender/Creatures/ShipMonkey/README.md",
-        "Art/Blender/Creatures/ShipMonkey/Versions/README.md"
+        "Art/Blender/Creatures/ShipMonkey/Versions/README.md",
+        "Docs/ShipSlotMachine.md"
       ]
     }
   ]

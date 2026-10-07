@@ -14,6 +14,9 @@
 | [Docs/RoguelikeEffects.md](<../RoguelikeEffects.md>) | Документация; Улучшения рогалика из сундуков |
 | [Docs/RoguelikeMechanic.md](<../RoguelikeMechanic.md>) | Документация; Улучшения рогалика из сундуков |
 | [Docs/RoguelikeUIStyle.md](<../RoguelikeUIStyle.md>) | Документация; Улучшения рогалика из сундуков |
+| [Docs/ShipSlotMachine.md](<../ShipSlotMachine.md>) | Документация; Корабельная слот-машина, Корабельная обезьянка |
+| [Docs/SlotMachineAudio.json](<../SlotMachineAudio.json>) | Конфигурация / данные JSON; Корабельная слот-машина |
+| [Docs/SlotMachineReelArt.md](<../SlotMachineReelArt.md>) | Документация; Корабельная слот-машина |
 | [Docs/TestOcean.md](<../TestOcean.md>) | Документация; Мир, острова и океан, Тестовая карта и водоворот |
 | [Docs/TestSkyDayNight.md](<../TestSkyDayNight.md>) | Документация; Тестовая карта и водоворот |
 

@@ -52,7 +52,7 @@ namespace PirateSlop.Networking
             motionStarted = -1f;
             RestoreBodyMotion();
         }
-        public bool Available => IsSpawned && !taken && !diving.Value && !(GetComponent<NetworkFishProjectile>()?.Flying ?? false) && !(GetComponent<NetworkHolyGrenade>()?.Busy ?? false) && !(GetComponent<NetworkVortexBottle>()?.Flying ?? false) && !(GetComponent<NetworkFogBottle>()?.Flying ?? false);
+        public bool Available => IsSpawned && !taken && !diving.Value && !(GetComponent<SlotPrizeFlight>()?.Flying ?? false) && !(GetComponent<NetworkFishProjectile>()?.Flying ?? false) && !(GetComponent<NetworkHolyGrenade>()?.Busy ?? false) && !(GetComponent<NetworkVortexBottle>()?.Flying ?? false) && !(GetComponent<NetworkFogBottle>()?.Flying ?? false);
         float expires;
         float nextFlop;
         bool airborne;

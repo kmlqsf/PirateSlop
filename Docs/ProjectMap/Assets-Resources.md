@@ -21,7 +21,7 @@
 | [Assets/Resources/CombatParticles.mat](<../../Assets/Resources/CombatParticles.mat>) | Материал Unity |
 | [Assets/Resources/FirearmGlow.mat](<../../Assets/Resources/FirearmGlow.mat>) | Материал Unity |
 | [Assets/Resources/FirearmGlow.shader](<../../Assets/Resources/FirearmGlow.shader>) | Шейдер |
-| [Assets/Resources/GameAudioBank.asset](<../../Assets/Resources/GameAudioBank.asset>) | Настройки или данные Unity; Звуки и голос |
+| [Assets/Resources/GameAudioBank.asset](<../../Assets/Resources/GameAudioBank.asset>) | Настройки или данные Unity; Корабельная слот-машина, Звуки и голос |
 | [Assets/Resources/GeneratedGameVersion.txt](<../../Assets/Resources/GeneratedGameVersion.txt>) | Текстовые данные |
 | [Assets/Resources/GrappleHookModel.prefab](<../../Assets/Resources/GrappleHookModel.prefab>) | Префаб Unity |
 | [Assets/Resources/HarpoonGun.prefab](<../../Assets/Resources/HarpoonGun.prefab>) | Префаб Unity |
@@ -92,7 +92,7 @@
 | [Assets/Resources/Ships/ShipV3HarpoonPort.prefab](<../../Assets/Resources/Ships/ShipV3HarpoonPort.prefab>) | Префаб Unity; Гарпун и корабельное крепление |
 | [Assets/Resources/Ships/ShipV3HarpoonStarboard.prefab](<../../Assets/Resources/Ships/ShipV3HarpoonStarboard.prefab>) | Префаб Unity; Гарпун и корабельное крепление |
 | [Assets/Resources/Ships/ShipV3Menu.prefab](<../../Assets/Resources/Ships/ShipV3Menu.prefab>) | Префаб Unity; Паруса и канаты, Меню и HUD |
-| [Assets/Resources/Ships/ShipV3Test.prefab](<../../Assets/Resources/Ships/ShipV3Test.prefab>) | Префаб Unity; Проект и точки входа, Движение корабля и палуба, Предметы, лут и инвентарь, Тестовая карта и водоворот, Корабельная обезьянка |
+| [Assets/Resources/Ships/ShipV3Test.prefab](<../../Assets/Resources/Ships/ShipV3Test.prefab>) | Префаб Unity; Проект и точки входа, Движение корабля и палуба, Корабельная слот-машина, Предметы, лут и инвентарь, Тестовая карта и водоворот, Корабельная обезьянка |
 
 ## Assets/Resources/Underwater
 

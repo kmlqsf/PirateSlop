@@ -46,6 +46,12 @@ namespace PirateSlop.Ships
 
         void UpdateAttention(float delta)
         {
+            if (task == TaskKind.SlotWait && activitySlot != null)
+            {
+                watchedPlayer = null; looking = true;
+                lookPoint = transform.InverseTransformPoint(activitySlot.transform.TransformPoint(new Vector3(0, 1.01f, .35f)));
+                return;
+            }
             attentionCooldown -= delta;
             if (watchedPlayer == null) looking = false;
             bool allowed = Motion == ShipMonkeyMotion.Idle || Motion == ShipMonkeyMotion.Sit || Motion == ShipMonkeyMotion.Walk || Motion == ShipMonkeyMotion.RailWalk;

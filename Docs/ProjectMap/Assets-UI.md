@@ -49,3 +49,16 @@
 | --- | --- |
 | [Assets/UI/Inventory/HotbarKit/HotbarSlot_Base.png](<../../Assets/UI/Inventory/HotbarKit/HotbarSlot_Base.png>) | Изображение / текстура |
 | [Assets/UI/Inventory/HotbarKit/HotbarSlot_Selected.png](<../../Assets/UI/Inventory/HotbarKit/HotbarSlot_Selected.png>) | Изображение / текстура |
+
+## Assets/UI/SlotMachine
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/UI/SlotMachine/Mystery.png](<../../Assets/UI/SlotMachine/Mystery.png>) | Изображение / текстура; Корабельная слот-машина |
+| [Assets/UI/SlotMachine/ReelCannon.png](<../../Assets/UI/SlotMachine/ReelCannon.png>) | Изображение / текстура; Корабельная слот-машина |
+| [Assets/UI/SlotMachine/ReelCannonball.png](<../../Assets/UI/SlotMachine/ReelCannonball.png>) | Изображение / текстура; Корабельная слот-машина |
+| [Assets/UI/SlotMachine/ReelFish.png](<../../Assets/UI/SlotMachine/ReelFish.png>) | Изображение / текстура; Корабельная слот-машина |
+| [Assets/UI/SlotMachine/ReelMystery.png](<../../Assets/UI/SlotMachine/ReelMystery.png>) | Изображение / текстура; Корабельная слот-машина |
+| [Assets/UI/SlotMachine/ReelSkillPoint.png](<../../Assets/UI/SlotMachine/ReelSkillPoint.png>) | Изображение / текстура; Корабельная слот-машина |
+| [Assets/UI/SlotMachine/ReelWeapon.png](<../../Assets/UI/SlotMachine/ReelWeapon.png>) | Изображение / текстура; Корабельная слот-машина |
+| [Assets/UI/SlotMachine/SkillPoint.png](<../../Assets/UI/SlotMachine/SkillPoint.png>) | Изображение / текстура; Корабельная слот-машина |

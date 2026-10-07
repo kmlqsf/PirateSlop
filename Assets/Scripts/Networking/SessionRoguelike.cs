@@ -115,6 +115,23 @@ namespace PirateSlop.Networking
             if (state.PendingPact) player.GetComponent<CombatHealth>().ApplySnapshot(0f, false);
         }
 
+        public bool SlotUpgradeAvailable => upgradeCatalog != null;
+
+        internal bool CanAwardPersonalUpgrade(PlayerUpgradeState state) => upgradeCatalog != null && state != null &&
+            upgradeCatalog.Cards.Any(card => upgradeCatalog.Eligible(card, state.Taken));
+
+        internal bool AwardPersonalUpgrade(PlayerUpgradeState state)
+        {
+            if (!CanAwardPersonalUpgrade(state)) return false;
+            int ordinal = teamChestNumbers.TryGetValue(state.Team, out int count) ? Mathf.Max(1, count) : 1;
+            state.Rewards.Add(new UpgradeReward { ChestNumber = ordinal, Weights = upgradeCatalog.WeightsAt(ordinal) });
+            state.Revision++;
+            EnsureUpgradeOffer(state);
+            var player = state.Player;
+            if (player != null && player.IsSpawned) player.SendUpgrades();
+            return true;
+        }
+
         internal void AwardChestUpgrade(NetworkPlayer opener)
         {
             if (upgradeCatalog == null || opener == null || !opener.IsServerInitialized || opener.TeamId.Value <= 0) return;

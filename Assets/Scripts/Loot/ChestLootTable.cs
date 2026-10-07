@@ -79,6 +79,25 @@ namespace PirateSlop
             return result;
         }
 
+        public static bool TryRollItem(System.Random random, Predicate<InventoryItem> eligible, out InventoryItem item)
+        {
+            item = InventoryItem.None;
+            var table = Load();
+            double total = 0;
+            foreach (var entry in table.entries)
+                if (entry.chancePercent > 0 && eligible(entry.Item)) total += entry.chancePercent;
+            if (total <= 0) return false;
+            double value = random.NextDouble() * total;
+            foreach (var entry in table.entries)
+            {
+                if (entry.chancePercent <= 0 || !eligible(entry.Item)) continue;
+                item = entry.Item;
+                value -= entry.chancePercent;
+                if (value < 0) return true;
+            }
+            return item != InventoryItem.None;
+        }
+
         static Table Load()
         {
             string json = null;

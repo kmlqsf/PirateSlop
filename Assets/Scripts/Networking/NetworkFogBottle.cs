@@ -39,44 +39,59 @@ namespace PirateSlop.Networking
             while (remaining > .00001f)
             {
                 float dt = Mathf.Min(.02f, remaining);
-                velocity += Physics.gravity * dt;
-                Vector3 delta = velocity * dt;
-                float distance = delta.magnitude;
-                RaycastHit nearest = default;
-                foreach (var hit in Physics.SphereCastAll(transform.position, .12f, delta.normalized, distance, ~0, QueryTriggerInteraction.Collide))
+                Vector3 point = transform.position;
+                if (Advance(source != null ? source.transform : null, transform, ref point, ref velocity, dt, out bool water, out _))
                 {
-                    if (!PlayerHitbox.IsTarget(hit.collider) || hit.transform.IsChildOf(transform)) continue;
-                    if (source != null && hit.transform.IsChildOf(source.transform)) continue;
-                    if (hit.collider.gameObject.layer == LayerMask.NameToLayer("ShipDebris")) continue;
-                    if (hit.distance <= distance) { nearest = hit; distance = hit.distance; }
-                }
-                Vector3 point = transform.position + delta;
-                var ocean = OceanSurface.Instance;
-                if (ocean != null && point.y <= ocean.Height(point))
-                {
-                    float low = 0f, high = 1f;
-                    for (int i = 0; i < 8; i++)
-                    {
-                        float t = (low + high) * .5f;
-                        Vector3 sample = transform.position + delta * t;
-                        if (sample.y > ocean.Height(sample)) low = t; else high = t;
-                    }
-                    if (nearest.collider == null || nearest.distance > delta.magnitude * high)
-                    {
-                        point = transform.position + delta * high;
-                        point.y = ocean.Height(point);
-                        Break(point, true);
-                        return;
-                    }
-                }
-                if (nearest.collider != null)
-                {
-                    Break(nearest.point, false);
+                    Break(point, water);
                     return;
                 }
                 pickup.Place(null, point, transform.rotation * Quaternion.Euler(450f * dt, 100f * dt, 0f));
                 remaining -= dt;
             }
+        }
+        public static bool Advance(Transform source, Transform projectile, ref Vector3 point, ref Vector3 velocity, float dt, out bool water, out Collider collider)
+        {
+            water = false;
+            collider = null;
+            velocity += Physics.gravity * dt;
+            Vector3 delta = velocity * dt;
+            float distance = delta.magnitude;
+            RaycastHit nearest = default;
+            if (distance > .00001f)
+                foreach (var hit in Physics.SphereCastAll(point, .12f, delta / distance, distance, ~0, QueryTriggerInteraction.Collide))
+                {
+                    if (!PlayerHitbox.IsTarget(hit.collider) || projectile != null && hit.transform.IsChildOf(projectile)) continue;
+                    if (source != null && hit.transform.IsChildOf(source)) continue;
+                    if (hit.collider.gameObject.layer == LayerMask.NameToLayer("ShipDebris")) continue;
+                    if (hit.distance <= distance) { nearest = hit; distance = hit.distance; }
+                }
+            Vector3 destination = point + delta;
+            var ocean = OceanSurface.Instance;
+            if (ocean != null && destination.y <= ocean.Height(destination))
+            {
+                float low = 0f, high = 1f;
+                for (int i = 0; i < 8; i++)
+                {
+                    float t = (low + high) * .5f;
+                    Vector3 sample = point + delta * t;
+                    if (sample.y > ocean.Height(sample)) low = t; else high = t;
+                }
+                if (nearest.collider == null || nearest.distance > delta.magnitude * high)
+                {
+                    point += delta * high;
+                    point.y = ocean.Height(point);
+                    water = true;
+                    return true;
+                }
+            }
+            if (nearest.collider != null)
+            {
+                collider = nearest.collider;
+                point = nearest.distance > .00001f ? nearest.point : point;
+                return true;
+            }
+            point = destination;
+            return false;
         }
         bool Break(Vector3 point, bool water)
         {
