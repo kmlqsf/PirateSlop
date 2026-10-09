@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f2ed3da694fce440b1c081421996d5b, type: 3}
+  m_Name: ExplosiveBall
+  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.HandMortarSettings
+  LaunchSpeed: 14
+  FuseSeconds: 2.5
+  IgnitionSeconds: 0.2
+  ReloadSeconds: 2.6
+  ShotInterval: 0.6
+  BallRadius: 0.12
+  Restitution: 0.4
+  TangentialRetention: 0.4
+  BlastRadius: 3
+  BlastDamage: 40
+  DirectDamage: 100
+  ExplodeOnLivingHit: 0
+  ExplodeOnWaterEntry: 1
+  BlastFalloff: 0
+  OwnerGraceSeconds: 0.3
+  ViewPosition: {x: 0.24, y: -0.23, z: 0.42}
+  LaunchOffset: {x: 0.24, y: -0.11, z: 0.97}

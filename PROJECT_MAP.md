@@ -12,14 +12,14 @@
 
 ## Полный каталог
 
-Учтено 4140 файлов без `.meta`. Ещё 4150 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
+Учтено 4252 файлов без `.meta`. Ещё 4241 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
 
 | Раздел | Назначение | Файлов |
 | --- | --- | ---: |
 | [.agents](<Docs/ProjectMap/.agents.md>) | Ресурсы раздела; точный состав — в каталоге | 1 |
 | [.cursor](<Docs/ProjectMap/.cursor.md>) | Ресурсы раздела; точный состав — в каталоге | 1 |
 | [.opencode](<Docs/ProjectMap/.opencode.md>) | Ресурсы раздела; точный состав — в каталоге | 1 |
-| [Art](<Docs/ProjectMap/Art.md>) | Исходники арта и Blender | 400 |
+| [Art](<Docs/ProjectMap/Art.md>) | Исходники арта и Blender | 427 |
 | [Assets](<Docs/ProjectMap/Assets.md>) | Ресурсы раздела; точный состав — в каталоге | 2 |
 | [Assets/Animations](<Docs/ProjectMap/Assets-Animations.md>) | Анимации | 27 |
 | [Assets/Audio](<Docs/ProjectMap/Assets-Audio.md>) | Звуковые ресурсы и лицензии | 400 |
@@ -29,21 +29,21 @@
 | [Assets/Game](<Docs/ProjectMap/Assets-Game.md>) | Игровые подсистемы и эффекты | 66 |
 | [Assets/Houidisoft technology](<Docs/ProjectMap/Assets-Houidisoft technology.md>) | Ресурсы раздела; точный состав — в каталоге | 12 |
 | [Assets/JMO Assets](<Docs/ProjectMap/Assets-JMO Assets.md>) | Ресурсы раздела; точный состав — в каталоге | 19 |
-| [Assets/Materials](<Docs/ProjectMap/Assets-Materials.md>) | Материалы | 127 |
+| [Assets/Materials](<Docs/ProjectMap/Assets-Materials.md>) | Материалы | 133 |
 | [Assets/Mirza](<Docs/ProjectMap/Assets-Mirza.md>) | Ресурсы раздела; точный состав — в каталоге | 1 |
-| [Assets/Models](<Docs/ProjectMap/Assets-Models.md>) | Модели и связанные ресурсы | 1273 |
+| [Assets/Models](<Docs/ProjectMap/Assets-Models.md>) | Модели и связанные ресурсы | 1334 |
 | [Assets/Plugins](<Docs/ProjectMap/Assets-Plugins.md>) | Плагины | 5 |
-| [Assets/Prefabs](<Docs/ProjectMap/Assets-Prefabs.md>) | Готовые игровые объекты | 116 |
+| [Assets/Prefabs](<Docs/ProjectMap/Assets-Prefabs.md>) | Готовые игровые объекты | 120 |
 | [Assets/Resources](<Docs/ProjectMap/Assets-Resources.md>) | Ресурсы, доступные для загрузки по имени | 74 |
 | [Assets/Scenes](<Docs/ProjectMap/Assets-Scenes.md>) | Сохранённые сцены | 3 |
-| [Assets/Scripts](<Docs/ProjectMap/Assets-Scripts.md>) | Игровой код и редакторские инструменты | 434 |
-| [Assets/Settings](<Docs/ProjectMap/Assets-Settings.md>) | Настройки игровых систем и рендеринга | 49 |
+| [Assets/Scripts](<Docs/ProjectMap/Assets-Scripts.md>) | Игровой код и редакторские инструменты | 444 |
+| [Assets/Settings](<Docs/ProjectMap/Assets-Settings.md>) | Настройки игровых систем и рендеринга | 51 |
 | [Assets/Shaders](<Docs/ProjectMap/Assets-Shaders.md>) | Шейдеры | 15 |
 | [Assets/StreamingAssets](<Docs/ProjectMap/Assets-StreamingAssets.md>) | Ресурсы раздела; точный состав — в каталоге | 5 |
 | [Assets/Tests](<Docs/ProjectMap/Assets-Tests.md>) | Исходники проверок | 19 |
 | [Assets/ThirdParty](<Docs/ProjectMap/Assets-ThirdParty.md>) | Сторонние ресурсы | 20 |
 | [Assets/TutorialInfo](<Docs/ProjectMap/Assets-TutorialInfo.md>) | Ресурсы раздела; точный состав — в каталоге | 2 |
-| [Assets/UI](<Docs/ProjectMap/Assets-UI.md>) | Ресурсы интерфейса | 37 |
+| [Assets/UI](<Docs/ProjectMap/Assets-UI.md>) | Ресурсы интерфейса | 39 |
 | [Docs](<Docs/ProjectMap/Docs.md>) | Документы и сохранённые отчёты | 37 |
 | [Packages](<Docs/ProjectMap/Packages.md>) | Манифест, lock-файл и встроенные пакеты | 924 |
 | [ProjectSettings](<Docs/ProjectMap/ProjectSettings.md>) | Настройки Unity | 28 |
@@ -377,7 +377,7 @@ ShipDeckPassenger учитывает BoardingWalkSurface: перенос по т
 Пинок на X: серверный КД 3 с, контакт через 0.16 с, одна ближайшая цель до 1.9 м в конусе перед игроком с проверкой препятствий. Союзники и враги получают отдельный импульс11.3м/с с затуханием6/с и подброс3.6м/с: расчётный свободный сдвиг около1.7м и подъём около0.2м при30Hz, с базовым уроном5 и без обычного нокдауна; KickPushVelocity и VerticalVelocity включены в prediction/reconcile. Пинок блокируется в меню, плавании, лазании и занятиях. PlayerKickVisual сгибает правую ногу существующего Mixamo-рига, KickLeg показывает ту же ногу владельцу от первого лица. У края сервер проверяет опору под целью и отсутствие опоры за ней по направлению пинка, исключает препятствия выше1.6м. При выходе наружу вызывает штатный KnockDown на2.8с, отцепляет пассажира и учитывает высоту низкого ограждения для перелёта. Высота отдельной секции в объединённом collider берётся из ShipV3CollisionBatch.SourceBounds. Protocol134; игровая/мультиплеерная проверка оставлена пользователю.
 Пинок включает trigger-hitbox обезьянки, остальные trigger-коллайдеры не становятся целями. Попадание запускает ShipMonkey.ReceiveKick и звук KickBody.
 Падение 2026-10-09 после повторной игровой жалобы: PlayerKnockdown.Begin использует тот же DeathRagdoll.Build и CorpsePhysicsWorld, что смерть. Физический рэгдолл получает скорость один раз; перенос его сегментов к CharacterController полностью удалён. Во время KnockDown motor.Simulate следует физическому тазу, а не двигает параллельную капсулу; сервер передаёт эту позицию существующими snapshots/reconcile. При окончании позиция восстановления берётся из фактического таза с ближайшей поверхностью под ним. CreateKnockdown разрешён на headless-сервере; активные тела нокдауна не удаляются лимитом декоративных трупов. У края пинок даёт5м/с наружу и минимум6.5м/с вверх; подъём считается по Physics.gravity и высоте ограждения, без управляемой дуги. Protocol134. Проверена компиляция; PlayMode/второй клиент проверяет пользователь. Доработка после подтверждения пользователем: проверка отсутствия палубы вынесена на radius+2м, чтобы выброс включался примерно за два метра от края. Пинок игроку наносит5 базового урона через CombatHealth.Damage с прежними командными фильтрами/улучшениями; при смертельном ударе дополнительный KnockDown не вызывается.
-Исправление исчезающего рэгдолла 2026-10-09: DeathRagdoll копирует skin независимо от activeInHierarchy исходного контейнера, активирует его цепочку, сохраняет layer/renderingLayerMask и не скрывает игрока при пустой копии. RagdollRendererBounds следует за тазом, чтобы физическое тело не отсекалось по старым границам. Проверка Build на NetworkPlayer через Unity MCP без PlayMode: 1 активный skin, 52 кости, BakeMesh26304 вершины, 11 Rigidbody и10 CharacterJoint; компиляция без ошибок. Вид/движение на втором клиенте остаются непроверенными.
+Исправление исчезающего рэгдолла 2026-10-09: DeathRagdoll копирует skin независимо от activeInHierarchy исходного контейнера, активирует его цепочку, сохраняет layer/renderingLayerMask и не скрывает игрока при пустой копии. RagdollRendererBounds следует за тазом, чтобы физическое тело не отсекалось по старым границам. Проверка Build на NetworkPlayer через Unity MCP без PlayMode: 1 активный skin, 52 кости, BakeMesh26304 вершины, 11 Rigidbody и10 CharacterJoint; компиляция без ошибок. Вид/движение на втором клиенте остаются непроверенными. Камера первого лица при нокдауне следует позиции и quaternion головы физического рэгдолла с сохранением исходного направления взгляда; фиксированный наклон камеры больше не перезаписывает её. Общий DeathRagdoll.Build для нокдауна и смерти с вероятностью50% добавляет кувырок5–8рад/с вокруг поперечной оси и небольшой крен/поворот; таз, грудь и голова получают одинаковое вращение, конечности слегка различаются без встречного вращения. Компиляция проверена; ощущение камеры и сетевой результат проверяет пользователь. PlayerKnockdown после окончания нокдауна отключает физику копии и за0.95с смешивает позу её костей к текущему BodyRig; исходная модель и руки возвращаются после перехода. Камера начинает с последней позы головы, сначала выравнивается у земли, затем плавно поднимается к обычной высоте. Начальная поза хранится относительно игрока для движущейся палубы; повторный нокдаун/смерть прерывает вставание. Локальный InputActive блокируется на время перехода; сетевые таймеры нокдауна сохранены. Компиляция проверена, игровую плавность проверяет пользователь.
 
 - [Assets/Scripts/AdvancedPlayerController.cs](<Assets/Scripts/AdvancedPlayerController.cs>) — Исходник C#: AdvancedPlayerController.
 - [Assets/Scripts/AdvancedPlayerController.Spectator.cs](<Assets/Scripts/AdvancedPlayerController.Spectator.cs>) — Исходник C#: AdvancedPlayerController.
@@ -409,7 +409,7 @@ ShipDeckPassenger учитывает BoardingWalkSurface: перенос по т
 
 ### Личное оружие и урон (`weapons`)
 
-Ключевые слова: оружие, пистолет, бой, combat.
+Ключевые слова: оружие, пистолет, бой, combat, мортира, hand-mortar, взрывное ядро, explosive-ball.
 
 Разделять локальный отклик оружия и серверное подтверждение урона/расхода боеприпасов.
 Настройки оружия искать через FirearmDefinition и используемые ссылки; не копировать числовой баланс из истории.
@@ -422,6 +422,8 @@ SabreAnimation использует отдельный хват Mixamo и пер
 NetworkHealth синхронизирует горение экипажа и считает урон на сервере. Контакт с корабельным пламенем поджигает игрока, экологический урон действует и на союзников; погружение в море и ледяное попадание тушат, смерть/возрождение очищают эффект.
 Прицел снайперки 2026-10-06: маска рисуется только в Repaint и заполняется одним SetPixels32. Лог пользовательского краша показывает native CharacterController.Move; для объединённых корабельных коллайдеров добавлен обход без UseFastMidphase. Повторное воспроизведение краша оставлено пользователю.
 Подводная стрельба 2026-10-06: пистолет, снайперка и дробь переходят от воздушного hitscan к серверному UnderwaterFirearmProjectile на 3 с; квадратичное торможение, текущие коллайдеры пловцов, общий DamageCap на залп. PistolBullet показывает пузырьковую траекторию и завершается по серверному результату, без повторного дульного эффекта. FirearmShot передаёт WaterVelocity/ProjectileId; отдельный observer RPC для подводного попадания. SessionConfig.ProtocolVersion128, клиентам нужна одна версия. Компиляция проверена; игровой/сетевой тест не запускался.
+HandMortar=27: готовые четыре модели собраны с исходными PBR-текстурами и отдельными pivots. ЛКМ: спуск, удар кремня через .065с, верхний фитиль и выстрел через .2с; механизмы возвращаются в покой. При успешном серверном вылете ядра отдача стрелку14м/с назад по горизонтали и0.8м/с вверх через NetworkPlayer.KnockDown с рэгдоллом стрелка2.5с и сетевым уведомлением; ShooterKnockback/ShooterLift/ShooterKnockdownSeconds в HandMortar.asset. Один заряд, R базовая перезарядка 10с без отдельного расходного предмета как у существующих ружей. Серверный NetworkHandMortarBall: скорость22м/с, радиус.09м, отскоки .6/.8 относительно движущейся палубы, подводное сопротивление, взрыв через2.5с или при прямом попадании в живую цель. Радиус4м, прямой урон100, splash100 с линейным спадом; урон только игрокам и ботам с NetworkPlayer, штатные командные фильтры CombatHealth. Корабли и остальные объекты не получают урона или импульса от взрыва; отскоки от них сохранены. Настройки HandMortar.asset; модель, pickup, ball, icon, реестр, каталог, ChestLoot вес5 и F8 подключены; тестовая палуба Loot_HandMortar. Protocol137. Компиляция/ссылки проверяются в редакторе, Play/онлайн не запускались.
+ExplosiveBall=28: отдельное ручное взрывное ядро из предоставленного FBX, исходный PBR, диаметр24см. ЛКМ сразу бросает и расходует один предмет; до броска фитиль не горит, после броска сокращается по серверной SyncVar, имеет оранжевый огонек и редкие искры. Полет14м/с, отскок.4, таймер2.5с, взрыв при входе в воду как фугу; прямое касание игрока не сокращает таймер. Урон40 только NetworkPlayer (включая ботов), радиус3м, без спада и с проверкой преград/команд; корабли и объекты без урона/импульса. Общий серверный NetworkHandMortarBall с отдельными ExplosiveBall.asset settings. Pickup и projectile отдельно зарегистрированы, model/icon/F8/DefaultLoot/ChestLoot вес10/тестовая палуба подключены; Protocol138. Компиляция и ссылки проверены; Play/онлайн не запускались.
 
 - [Assets/Scripts/Player/PirateWeapon.cs](<Assets/Scripts/Player/PirateWeapon.cs>) — Исходник C#: IWeaponTarget, PirateWeapon.
 - [Assets/Scripts/Networking/NetworkWeapon.cs](<Assets/Scripts/Networking/NetworkWeapon.cs>) — Исходник C#: NetworkWeapon.
@@ -465,6 +467,28 @@ NetworkHealth синхронизирует горение экипажа и сч
 - [Assets/Scripts/Player/UnderwaterFirearmProjectile.cs](<Assets/Scripts/Player/UnderwaterFirearmProjectile.cs>) — Исходник C#: FirearmDamageBatch, UnderwaterFirearmProjectile.
 - [Assets/Scripts/World/ProjectileWaterFlight.cs](<Assets/Scripts/World/ProjectileWaterFlight.cs>) — Исходник C#: ProjectileWaterFlight.
 - [Assets/Scripts/World/UnderwaterProjectileTrail.cs](<Assets/Scripts/World/UnderwaterProjectileTrail.cs>) — Исходник C#: UnderwaterProjectileTrail.
+- [Assets/Scripts/Player/HandMortarSettings.cs](<Assets/Scripts/Player/HandMortarSettings.cs>) — Исходник C#: HandMortarSettings.
+- [Assets/Scripts/Player/HandMortarVisual.cs](<Assets/Scripts/Player/HandMortarVisual.cs>) — Исходник C#: HandMortarVisual.
+- [Assets/Scripts/Networking/NetworkEquipment.HandMortar.cs](<Assets/Scripts/Networking/NetworkEquipment.HandMortar.cs>) — Исходник C#: NetworkEquipment.
+- [Assets/Scripts/Networking/NetworkHandMortarBall.cs](<Assets/Scripts/Networking/NetworkHandMortarBall.cs>) — Исходник C#: NetworkHandMortarBall.
+- [Assets/Scripts/Editor/HandMortarSetup.cs](<Assets/Scripts/Editor/HandMortarSetup.cs>) — Исходник C#: HandMortarSetup.
+- [Assets/Settings/Weapons/HandMortar.asset](<Assets/Settings/Weapons/HandMortar.asset>) — Настройки или данные Unity.
+- [Assets/Models/HandMortar/HandMortarAssembly.fbx](<Assets/Models/HandMortar/HandMortarAssembly.fbx>) — Модель / анимации FBX.
+- [Assets/Models/HandMortar/HandMortarVisual.prefab](<Assets/Models/HandMortar/HandMortarVisual.prefab>) — Префаб Unity.
+- [Assets/Prefabs/Networking/HandMortarPickup.prefab](<Assets/Prefabs/Networking/HandMortarPickup.prefab>) — Префаб Unity.
+- [Assets/Prefabs/Networking/HandMortarBall.prefab](<Assets/Prefabs/Networking/HandMortarBall.prefab>) — Префаб Unity.
+- [Art/Blender/HandMortar/HandMortarAssembly.blend](<Art/Blender/HandMortar/HandMortarAssembly.blend>) — Редактируемая сцена Blender.
+- [Assets/UI/Inventory/HandMortar.png](<Assets/UI/Inventory/HandMortar.png>) — Изображение / текстура.
+- [Assets/Scripts/Networking/NetworkWeapon.ExplosiveBall.cs](<Assets/Scripts/Networking/NetworkWeapon.ExplosiveBall.cs>) — Исходник C#: NetworkEquipment, NetworkWeapon.
+- [Assets/Scripts/Player/ExplosiveBallFuse.cs](<Assets/Scripts/Player/ExplosiveBallFuse.cs>) — Исходник C#: ExplosiveBallFuse.
+- [Assets/Scripts/Editor/ExplosiveBallSetup.cs](<Assets/Scripts/Editor/ExplosiveBallSetup.cs>) — Исходник C#: ExplosiveBallSetup.
+- [Assets/Settings/Weapons/ExplosiveBall.asset](<Assets/Settings/Weapons/ExplosiveBall.asset>) — Настройки или данные Unity.
+- [Assets/Models/ExplosiveBall/ExplosiveBall.fbx](<Assets/Models/ExplosiveBall/ExplosiveBall.fbx>) — Модель / анимации FBX.
+- [Assets/Models/ExplosiveBall/ExplosiveBallVisual.prefab](<Assets/Models/ExplosiveBall/ExplosiveBallVisual.prefab>) — Префаб Unity.
+- [Assets/Prefabs/Networking/ExplosiveBallPickup.prefab](<Assets/Prefabs/Networking/ExplosiveBallPickup.prefab>) — Префаб Unity.
+- [Assets/Prefabs/Networking/ExplosiveBallProjectile.prefab](<Assets/Prefabs/Networking/ExplosiveBallProjectile.prefab>) — Префаб Unity.
+- [Art/Blender/ExplosiveBall/ExplosiveBall.blend](<Art/Blender/ExplosiveBall/ExplosiveBall.blend>) — Редактируемая сцена Blender.
+- [Assets/UI/Inventory/ExplosiveBall.png](<Assets/UI/Inventory/ExplosiveBall.png>) — Изображение / текстура.
 - [firearm-foundation.md](<firearm-foundation.md>) — Документация.
 - [combat-balance.md](<combat-balance.md>) — Документация.
 - [Art/Blender/Firearms/README.md](<Art/Blender/Firearms/README.md>) — Документация.
@@ -1141,12 +1165,48 @@ WhaleLootPoint хранит состояния Idle, Agitated, Diving, Cleared �
 
 Ключевые слова: рыбалка, рыба.
 
+Катушка собрана из предоставленных ReelMount/ReelMechanism через Blender MCP. Неподвижное крепление, отдельный ReelSpoolPivot со шпулей, намоткой и рукояткой; леска проходит через шесть существующих колец модели, TipLocalPoint(0,.133,1.69). FishingRodReel вращает шпулю обратно при забросе, вперёд при фактическом вываживании, останавливает при отпускании ЛКМ/ожидании. NetworkFishing.reelActive синхронизирует серверное состояние намотки; обезьянка использует существующий FishingPhase. BendPoint совмещает леску с деформацией модели. Общий цвет лески и тонкие LineRenderer, pickup получает статичную сборку. Исходники/упакованные карты в FishingRodAssembly.blend и FishingReelSources.blend; повторная сборка AssembleFishingReel.py. ProtocolVersion136; PlayMode и два клиента не запускались.
+Удочка заменена моделью из Desktop/3d/удочка через Blender MCP: нормализованный хват, направление +Z, кончик в(0,.15,1.7) для штатной лески и FishingRodBend. FishingRodReplacementSetup меняет геометрию FishingRod и DroppedRod с сохранением GUID, назначает URP/PBR и обновляет коллайдер по модели. Player NetworkFishing и ShipMonkey используют общий FishingRod; импорт FBX Read/Write сохраняет runtime-изгиб. FishingSetup повторно применяет замену после настройки рыбалки. Нормализованный BLEND и исходные FBX/карты сохранены в Art/Blender/FishingRod. Сетевая логика/протокол не менялись; игровой и онлайн-тест выполняет пользователь.
 Рыбалка — NetworkFishing; предмет рыбы и его полёт — NetworkFish и NetworkFishProjectile. Использование рыбы как метательного предмета находится в NetworkWeapon.FishThrows.
 Модели обычной рыбы, фугу и рыбы-меча заменены файлами из ../Blender/Лутабельные/Рыба. Исходники в Art/Blender/Loot/FishReplacement, игровые FBX и материалы URP в Assets/Models/Loot/Replacement/Fish, Pufferfish, Swordfish. BottleFishReplacementSetup сохраняет существующие FishVisual, PufferfishVisual и SwordfishVisual GUID и подменяет дочернюю геометрию двух специальных pickup. Коллайдеры, NetworkFish, NetworkFishProjectile, направление головы +Z, подбор, рыбалка, броски, раздувание фугу и втыкание рыбы-меча сохранены. Игровая проверка выполняется пользователем.
 Уточнение заменённых моделей: Swordfish и Pufferfish Geometry rotation Y=-90° с сохранением FBX-преобразования Z-up в Y-up; после смены базиса визуал повторно центрируется. Переносимый визуал без дополнительного Y=90°, смещение и хват соответствуют телу. NetworkFishProjectile раздувает поперечные оси фугу до 2.1x и учитывает любой Renderer.
 NetworkFishMotion: обычная рыба, фугу и рыба-меч на палубе извиваются и небольшими серверными прыжками направляются к ближайшей посадочной сетке ShipLadder.BoardingAccess. Прыжки считаются относительно корабля, при потере опоры и выходе за борт наследуется скорость корабля. Проверка движения использует габариты визуала, BoxCast и дополнительные лучи опоры, а посадка учитывает центр и нижнюю точку модели. При касании воды слышен всплеск, рыба уплывает вниз с вилянием хвоста и удаляется через 3 секунды; состояние и таймер задаёт сервер. Старое удаление обычной рыбы через 600 секунд на палубе отключено. Воткнутая рыба-меч имеет NetworkFishProjectile.Stuck и периодически виляет только хвостом. Все три рыбы при сбросе сразу укладываются на бок через LootPlacement; коллайдеры подогнаны под реальный визуал. У фугу исправлено направление головы по +Z в общем визуале, включая инвентарь и переносимый улов. Модели рыб импортируются с Read/Write для деформации отдельных runtime-копий мешей. Игровая и онлайн-проверка выполняется пользователем.
 Отскок иглобрюха рассчитывает центр по расстоянию SphereCast, а не hit.point: при начальном пересечении нулевая точка контакта не переносит рыбу в центр мира. Фитиль2.5с и штатный взрыв сохранены.
 
+- [Assets/Scripts/Player/FishingRodReel.cs](<Assets/Scripts/Player/FishingRodReel.cs>) — Исходник C#: FishingRodReel.
+- [Art/Blender/FishingRod/AssembleFishingReel.py](<Art/Blender/FishingRod/AssembleFishingReel.py>) — Инструмент Python.
+- [Art/Blender/FishingRod/FishingRodAssembly.blend](<Art/Blender/FishingRod/FishingRodAssembly.blend>) — Редактируемая сцена Blender.
+- [Art/Blender/FishingRod/FishingReelSources.blend](<Art/Blender/FishingRod/FishingReelSources.blend>) — Редактируемая сцена Blender.
+- [Art/Blender/FishingRod/README.md](<Art/Blender/FishingRod/README.md>) — Документация.
+- [Art/Blender/FishingRod/Sources/ReelMount/ReelMountSource.fbx](<Art/Blender/FishingRod/Sources/ReelMount/ReelMountSource.fbx>) — Модель / анимации FBX.
+- [Art/Blender/FishingRod/Sources/ReelMechanism/ReelMechanismSource.fbx](<Art/Blender/FishingRod/Sources/ReelMechanism/ReelMechanismSource.fbx>) — Модель / анимации FBX.
+- [Assets/Models/Fishing/Replacement/Textures/ReelMountBaseColor.jpg](<Assets/Models/Fishing/Replacement/Textures/ReelMountBaseColor.jpg>) — Изображение / текстура.
+- [Assets/Models/Fishing/Replacement/Textures/ReelMountNormal.png](<Assets/Models/Fishing/Replacement/Textures/ReelMountNormal.png>) — Изображение / текстура.
+- [Assets/Models/Fishing/Replacement/Textures/ReelMountMetallic.jpg](<Assets/Models/Fishing/Replacement/Textures/ReelMountMetallic.jpg>) — Изображение / текстура.
+- [Assets/Models/Fishing/Replacement/Textures/ReelMountRoughness.jpg](<Assets/Models/Fishing/Replacement/Textures/ReelMountRoughness.jpg>) — Изображение / текстура.
+- [Assets/Models/Fishing/Replacement/Textures/ReelMountMetalSmooth.png](<Assets/Models/Fishing/Replacement/Textures/ReelMountMetalSmooth.png>) — Изображение / текстура.
+- [Assets/Models/Fishing/Replacement/Textures/ReelMechanismBaseColor.jpg](<Assets/Models/Fishing/Replacement/Textures/ReelMechanismBaseColor.jpg>) — Изображение / текстура.
+- [Assets/Models/Fishing/Replacement/Textures/ReelMechanismNormal.png](<Assets/Models/Fishing/Replacement/Textures/ReelMechanismNormal.png>) — Изображение / текстура.
+- [Assets/Models/Fishing/Replacement/Textures/ReelMechanismMetallic.jpg](<Assets/Models/Fishing/Replacement/Textures/ReelMechanismMetallic.jpg>) — Изображение / текстура.
+- [Assets/Models/Fishing/Replacement/Textures/ReelMechanismRoughness.jpg](<Assets/Models/Fishing/Replacement/Textures/ReelMechanismRoughness.jpg>) — Изображение / текстура.
+- [Assets/Models/Fishing/Replacement/Textures/ReelMechanismMetalSmooth.png](<Assets/Models/Fishing/Replacement/Textures/ReelMechanismMetalSmooth.png>) — Изображение / текстура.
+- [Assets/Materials/Fishing/ReelMount.mat](<Assets/Materials/Fishing/ReelMount.mat>) — Материал Unity.
+- [Assets/Materials/Fishing/ReelMechanism.mat](<Assets/Materials/Fishing/ReelMechanism.mat>) — Материал Unity.
+- [Assets/Materials/Fishing/ReelBrass.mat](<Assets/Materials/Fishing/ReelBrass.mat>) — Материал Unity.
+- [Assets/Materials/Fishing/ReelThread.mat](<Assets/Materials/Fishing/ReelThread.mat>) — Материал Unity.
+- [Assets/Materials/Fishing/ReelGrip.mat](<Assets/Materials/Fishing/ReelGrip.mat>) — Материал Unity.
+- [Assets/Scripts/Editor/FishingRodReplacementSetup.cs](<Assets/Scripts/Editor/FishingRodReplacementSetup.cs>) — Исходник C#: FishingRodReplacementSetup.
+- [Assets/Models/Fishing/FishingRod.prefab](<Assets/Models/Fishing/FishingRod.prefab>) — Префаб Unity.
+- [Assets/Prefabs/Networking/DroppedRod.prefab](<Assets/Prefabs/Networking/DroppedRod.prefab>) — Префаб Unity.
+- [Assets/Models/Fishing/Replacement/FishingRodReplacement.fbx](<Assets/Models/Fishing/Replacement/FishingRodReplacement.fbx>) — Модель / анимации FBX.
+- [Assets/Models/Fishing/Replacement/Textures/FishingRodBaseColor.jpg](<Assets/Models/Fishing/Replacement/Textures/FishingRodBaseColor.jpg>) — Изображение / текстура.
+- [Assets/Models/Fishing/Replacement/Textures/FishingRodNormal.png](<Assets/Models/Fishing/Replacement/Textures/FishingRodNormal.png>) — Изображение / текстура.
+- [Assets/Models/Fishing/Replacement/Textures/FishingRodMetallic.jpg](<Assets/Models/Fishing/Replacement/Textures/FishingRodMetallic.jpg>) — Изображение / текстура.
+- [Assets/Models/Fishing/Replacement/Textures/FishingRodRoughness.jpg](<Assets/Models/Fishing/Replacement/Textures/FishingRodRoughness.jpg>) — Изображение / текстура.
+- [Assets/Models/Fishing/Replacement/Textures/FishingRodMetalSmooth.png](<Assets/Models/Fishing/Replacement/Textures/FishingRodMetalSmooth.png>) — Изображение / текстура.
+- [Assets/Materials/Fishing/FishingRodReplacement.mat](<Assets/Materials/Fishing/FishingRodReplacement.mat>) — Материал Unity.
+- [Art/Blender/FishingRod/FishingRodReplacement.blend](<Art/Blender/FishingRod/FishingRodReplacement.blend>) — Редактируемая сцена Blender.
+- [Art/Blender/FishingRod/Sources/FishingRodSource.fbx](<Art/Blender/FishingRod/Sources/FishingRodSource.fbx>) — Модель / анимации FBX.
 - [Assets/Scripts/Networking/NetworkFishing.cs](<Assets/Scripts/Networking/NetworkFishing.cs>) — Исходник C#: NetworkFishing.
 - [Assets/Scripts/Networking/NetworkFish.cs](<Assets/Scripts/Networking/NetworkFish.cs>) — Исходник C#: InventoryItem, NetworkFish.
 - [Assets/Scripts/Networking/NetworkFishMotion.cs](<Assets/Scripts/Networking/NetworkFishMotion.cs>) — Исходник C#: NetworkFish, BodyMesh.

@@ -39,6 +39,7 @@ namespace PirateSlop.Ships
         bool AidTask => task == TaskKind.Deliver || task == TaskKind.Offer || task == TaskKind.Fetch && fetchForAid;
         GameObject fishingRod, fishingFloat, fishingCatch;
         FishingRodBend fishingBend;
+        FishingRodReel fishingReel;
         LineRenderer fishingLine;
         Transform placementAnchor;
         static readonly int carryIdleState = UnityEngine.Animator.StringToHash("CarryIdle"), carryWalkState = UnityEngine.Animator.StringToHash("CarryWalk");
@@ -466,15 +467,17 @@ namespace PirateSlop.Ships
                 fishingRod = Instantiate(RodModel, Visual); fishingRod.name = "MonkeyFishingRod";
                 fishingBend = fishingRod.GetComponent<FishingRodBend>();
                 if (fishingBend == null) fishingBend = fishingRod.AddComponent<FishingRodBend>();
+                fishingReel = fishingRod.GetComponent<FishingRodReel>();
                 fishingFloat = Instantiate(FloatModel, transform); fishingFloat.name = "MonkeyFishingFloat";
                 var lineObject = new GameObject("MonkeyFishingLine"); lineObject.transform.SetParent(Visual, false);
                 fishingLine = lineObject.AddComponent<LineRenderer>(); fishingLine.sharedMaterial = FishingLineMaterial;
-                fishingLine.useWorldSpace = true; fishingLine.positionCount = 16; fishingLine.startWidth = .006f; fishingLine.endWidth = .004f;
+                fishingLine.useWorldSpace = true; fishingLine.positionCount = 16; fishingLine.startWidth = .0018f; fishingLine.endWidth = .0013f;
             }
             fishingRod.SetActive(true); fishingFloat.SetActive(true); fishingLine.enabled = true;
             float bend = phase == 3 ? .10f + .025f * Mathf.Sin(elapsed * 18f) : 0f;
             fishingRod.transform.SetPositionAndRotation(RightHand.position, Visual.rotation * Quaternion.Euler(phase == 3 ? -15f : -12f, -8f, 0f));
             fishingBend.SetBend(bend);
+            fishingReel?.Present(phase == 3 ? (byte)4 : phase, phase == 3, Time.deltaTime);
             Vector3 end = transform.TransformPoint(localPoint);
             if (OceanSurface.Instance != null) end.y = OceanSurface.Instance.Height(end) + .04f;
             if (phase == 1)

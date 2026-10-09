@@ -11,8 +11,14 @@ namespace PirateSlop
             public Vector3[] Rest, Work, Offset;
         }
         readonly List<Part> parts = new();
+        public Vector3 TipLocalPoint = new(0f, .15f, 1.7f);
         float bend;
-        public Vector3 Tip => transform.TransformPoint(new Vector3(0f, .15f - bend, 1.7f));
+        public Vector3 Tip => BendPoint(TipLocalPoint);
+        public Vector3 BendPoint(Vector3 local)
+        {
+            float weight = Mathf.InverseLerp(.75f, 1.7f, local.z);
+            return transform.TransformPoint(local + Vector3.down * (weight * weight * bend));
+        }
         void Awake()
         {
             foreach (var filter in GetComponentsInChildren<MeshFilter>(true))

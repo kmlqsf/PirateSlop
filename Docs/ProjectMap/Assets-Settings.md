@@ -69,6 +69,8 @@
 | Файл | Краткое описание |
 | --- | --- |
 | [Assets/Settings/Weapons/DoubleBarrel.asset](<../../Assets/Settings/Weapons/DoubleBarrel.asset>) | Настройки или данные Unity |
+| [Assets/Settings/Weapons/ExplosiveBall.asset](<../../Assets/Settings/Weapons/ExplosiveBall.asset>) | Настройки или данные Unity; Личное оружие и урон |
+| [Assets/Settings/Weapons/HandMortar.asset](<../../Assets/Settings/Weapons/HandMortar.asset>) | Настройки или данные Unity; Личное оружие и урон |
 | [Assets/Settings/Weapons/Musket.asset](<../../Assets/Settings/Weapons/Musket.asset>) | Настройки или данные Unity |
 | [Assets/Settings/Weapons/Pistol.asset](<../../Assets/Settings/Weapons/Pistol.asset>) | Настройки или данные Unity |
 

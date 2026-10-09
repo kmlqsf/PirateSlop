@@ -159,10 +159,18 @@ namespace PirateSlop
             root.gameObject.SetActive(true);
             for (int i = 0; i < colliders.Count; i++)
                 for (int j = i + 1; j < colliders.Count; j++) Physics.IgnoreCollision(colliders[i], colliders[j]);
+            if (Random.value < .5f)
+            {
+                var travel = Vector3.ProjectOnPlane(velocity, Vector3.up);
+                var tumbleAxis = travel.sqrMagnitude > .01f ? Vector3.Cross(Vector3.up, travel.normalized) : player.right;
+                spin += tumbleAxis * Random.Range(5f, 8f) * (Random.value < .5f ? -1f : 1f);
+                spin += player.forward * Random.Range(-2.5f, 2.5f) + Vector3.up * Random.Range(-1.5f, 1.5f);
+            }
+            spin = Vector3.ClampMagnitude(spin, 10f);
             for (int i = 0; i < bodies.Count; i++)
             {
                 bodies[i].linearVelocity = velocity;
-                bodies[i].angularVelocity = spin * (i == 0 ? 1f : .35f + .55f * Mathf.Sin(i * 2.4f + spin.x));
+                bodies[i].angularVelocity = spin * (i < 3 ? 1f : .9f + .1f * Mathf.Sin(i * 2.4f + spin.x));
             }
             if (simulate) Object.Destroy(root.gameObject, lifetime);
             return root.gameObject;

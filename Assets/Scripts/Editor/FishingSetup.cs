@@ -81,7 +81,7 @@ namespace PirateSlop.EditorTools
             prefabs.AddObject(dropPrefab.GetComponent<NetworkObject>(), true, true); EditorUtility.SetDirty(prefabs);
             var config = AssetDatabase.LoadAssetAtPath<SessionConfig>("Assets/Settings/Networking/SessionConfig.asset");
             config.ProtocolVersion = Mathf.Max(11, config.ProtocolVersion); EditorUtility.SetDirty(config);
-            CreateAudio(); ConfigureInventoryDrops(); AssetDatabase.SaveAssets();
+            CreateAudio(); ConfigureInventoryDrops(); FishingRodReplacementSetup.Configure(); AssetDatabase.SaveAssets();
         }
         [MenuItem("PirateSlop/Configure Inventory Drops")]
         public static void ConfigureInventoryDrops()

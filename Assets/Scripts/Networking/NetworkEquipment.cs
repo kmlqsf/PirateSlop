@@ -56,7 +56,7 @@ namespace PirateSlop.Networking
         public float ShotAge => Time.time - recoilAt;
         public bool AnimationAiming => IsOwner ? sentAim : aiming.Value;
         public Vector3 AnimationDirection => direction.Value;
-        float ReloadSeconds => (Firearm && handling!=null && handling.Definition!=null ? handling.Definition.Ballistics.ReloadDuration : 3.2f) * GetComponent<NetworkPlayer>().ReloadUpgradeMultiplier;
+        float ReloadSeconds => (HandMortar && MortarSettings != null ? MortarSettings.ReloadSeconds : Firearm && handling!=null && handling.Definition!=null ? handling.Definition.Ballistics.ReloadDuration : 3.2f) * GetComponent<NetworkPlayer>().ReloadUpgradeMultiplier;
         CannonHands hands;
         Transform view, world;
         Renderer[] viewRenderers, worldRenderers;
@@ -81,6 +81,7 @@ namespace PirateSlop.Networking
             get
             {
                 if (Item == InventoryItem.Swordfish) return new Vector3(-.04f, -.06f, .35f);
+                if (HandMortar) return new Vector3(0, .065f, .34f);
                 if (!Firearm) return new Vector3(-.13f, -.06f, .03f);
                 if (action.Value != 1) return CanonicalFirearm ? supportGrip : new Vector3(0, -.04f, .4f);
                 float phase = Mathf.Clamp01((Time.time-animationAt)/ReloadSeconds);
@@ -89,7 +90,7 @@ namespace PirateSlop.Networking
                 return new Vector3(-.045f,-.04f+reach*.13f,.15f+reach*.5f);
             }
         }
-        public Vector3 GripOffset => Item == InventoryItem.Lantern ? Vector3.zero : Firearm ? CanonicalFirearm ? Vector3.zero : new Vector3(0, -.03f, 0) : Item == InventoryItem.Swordfish ? new Vector3(0, -.045f, .13f) : new Vector3(.03f, .06f, 0);
+        public Vector3 GripOffset => Item == InventoryItem.Lantern || HandMortar ? Vector3.zero : Firearm ? CanonicalFirearm ? Vector3.zero : new Vector3(0, -.03f, 0) : Item == InventoryItem.Swordfish ? new Vector3(0, -.045f, .13f) : new Vector3(.03f, .06f, 0);
         int CapacityFor(InventoryItem item) => item==InventoryItem.DoubleBarrel ? handling.Shotgun.Capacity : item==InventoryItem.Musket ? handling.Musket.Capacity : 1;
         public void ResetSlot(int slot, InventoryItem item)
         {
@@ -135,6 +136,7 @@ namespace PirateSlop.Networking
                     if (action.Value == 1) { ammunition[actionSlot] = CapacityFor(Item); rounds.Value = ammunition[actionSlot]; echoPrimedSlots[actionSlot] = true; }
                     if (action.Value == 2 && network.ConsumeEquipment(actionSlot, InventoryItem.Wine)) { waterRunUntil = Time.time+60; waterRunRemaining.Value = 60; WineDrinkObserversRpc(); }
                     if (action.Value == 4) network.ThrowFish(Item, direction.Value);
+                    if (action.Value == 5) LaunchHandMortar();
                     action.Value = 0;
                 }
             }
@@ -157,7 +159,7 @@ namespace PirateSlop.Networking
             if (Item == InventoryItem.Lantern) { ReadLanternInput(keyboard); return; }
             if (Item == InventoryItem.HolyGrenade || Item == InventoryItem.Spyglass) return;
             Vector3 eyeOffset = motor.PlayerCamera.transform.position-transform.position;
-            if (keyboard != null && keyboard.rKey.wasPressedThisFrame && Firearm) UseServerRpc(1, motor.AimDirection, eyeOffset,++localSequence,aim);
+            if (keyboard != null && keyboard.rKey.wasPressedThisFrame && (Firearm || HandMortar)) UseServerRpc(1, motor.AimDirection, eyeOffset,++localSequence,aim);
             if (mouse.leftButton.wasPressedThisFrame && !pendingShot && !inventory.InteractionUsed && !hands.CanPickUpBall() && Time.time>=nextLocalFire && (!Firearm || handling.Ready))
             {
                 int sequence=++localSequence;
@@ -203,6 +205,12 @@ namespace PirateSlop.Networking
             if (!CanUse || action.Value != 0 || !float.IsFinite(forward.sqrMagnitude) || forward.sqrMagnitude < .5f) return;
             if (Item == InventoryItem.GrapplingHook) { if (request == 0) network.ThrowGrapple(forward, eyeOffset); return; }
             if (Time.time < nextShot) return;
+            if (HandMortar) { UseHandMortar(request, forward, eyeOffset); return; }
+            if (Item == InventoryItem.ExplosiveBall)
+            {
+                if (request == 0 && network.ThrowExplosiveBall(forward, eyeOffset)) nextShot = Time.time + .6f;
+                return;
+            }
             if (Item == InventoryItem.FogBottle)
             {
                 if (request == 0 && network.ThrowFogBottle(forward, eyeOffset)) nextShot = Time.time + .6f;
@@ -324,6 +332,8 @@ namespace PirateSlop.Networking
                     lantern.Held = true;
                     if (root == view) viewLantern = lantern; else worldLantern = lantern;
                 }
+                else if (Item == InventoryItem.ExplosiveBall) { visual.localRotation = Quaternion.identity; visual.localPosition = new Vector3(0, -.015f, .06f); }
+                else if (HandMortar) { visual.localRotation = Quaternion.identity; visual.localPosition = Vector3.zero; }
                 else if (Item == InventoryItem.Spyglass) { visual.localRotation = Quaternion.identity; visual.localPosition = new Vector3(0, -.02f, .18f); }
                 else if (Firearm)
                 {
@@ -348,7 +358,7 @@ namespace PirateSlop.Networking
                 }
                 else { visual.localRotation = Quaternion.Euler(0, 180, 0); visual.localPosition = new Vector3(0, Item == InventoryItem.BombParrot ? -.16f : -.09f, 0); visual.localScale *= Item == InventoryItem.BombParrot ? .65f : 1f; }
             }
-            viewRenderers = view.GetComponentsInChildren<Renderer>(); worldRenderers = world.GetComponentsInChildren<Renderer>();
+            viewRenderers = view.GetComponentsInChildren<Renderer>(true); worldRenderers = world.GetComponentsInChildren<Renderer>(true);
             foreach(var root in new[]{view,world}) foreach(var bone in root.GetComponentsInChildren<Transform>())
                 if(bone.name == "WingLeft" || bone.name == "WingRight") wings[bone] = bone.localRotation;
         }
@@ -371,6 +381,7 @@ namespace PirateSlop.Networking
             float recoil = Mathf.Exp(-(Time.time - recoilAt) * 15);
             var definition=Firearm && handling!=null?handling.Definition:null;
             Vector3 position = definition!=null ? Vector3.Lerp(definition.HipPosition,definition.AimPosition,IsOwner?handling.AimBlend:aimBlend) : new Vector3(.22f,-.25f,.45f);
+            if (HandMortar && MortarSettings != null) position = MortarSettings.ViewPosition;
             if (Item == InventoryItem.Lantern) position = new Vector3(.32f, .16f, .62f);
             Vector3 rotation = new Vector3(-recoil * (Item == InventoryItem.DoubleBarrel ? 20 : 15), recoil*1.5f, -recoil*2);
             if(!IsOwner) position.z -= recoil * .13f;
@@ -396,7 +407,7 @@ namespace PirateSlop.Networking
             view.localPosition = position; view.localRotation = Quaternion.Euler(rotation);
             float pitch = Mathf.Asin(Mathf.Clamp(-direction.Value.y,-1,1))*Mathf.Rad2Deg;
             world.localPosition = new Vector3(position.x,1.4f+position.y,position.z);
-            world.localRotation = Quaternion.Euler(rotation + new Vector3(aiming.Value ? pitch : 0,0,0));
+            world.localRotation = Quaternion.Euler(rotation + new Vector3(aiming.Value || HandMortar ? pitch : 0,0,0));
             if (Item == InventoryItem.Lantern) world.localPosition = new Vector3(.34f, motor.IsCrouched ? .97f : 1.42f, .40f);
             if (CanonicalFirearm)
             {
@@ -425,6 +436,8 @@ namespace PirateSlop.Networking
             if(IsOwner && WaterRunning) PirateHudStyle.Label(new Rect(28,140,270,30),"Хождение по воде: "+waterRunRemaining.Value+" с",PirateHudStyle.Paper);
             if (!IsOwner || !Active || !motor.InputActive) return;
             if(Scoped) DrawScope();
+            if (Item == InventoryItem.ExplosiveBall) { ContextPrompt.Offer("ВЗРЫВНОЕ ЯДРО · ЛКМ — бросить · фитиль 2,5 с", 20); return; }
+            if (HandMortar) { ContextPrompt.Offer(IsReloading ? "РУЧНАЯ МОРТИРА · перезарядка…" : "РУЧНАЯ МОРТИРА · ЛКМ — выстрел · R — перезарядить · " + (LoadedRounds > 0 ? "заряжена" : "пусто"), 20); return; }
             if (Item == InventoryItem.Lantern) { ContextPrompt.Offer("РУЧНОЙ ФОНАРЬ · E — " + (LanternLit(inventory.SelectedSlot) ? "погасить" : "зажечь") + " · G — положить", 20); return; }
             if (Item == InventoryItem.VortexBottle) { ContextPrompt.Offer("БУТЫЛКА ВИХРЯ · удерживать ЛКМ — траектория · отпустить — бросок", 20); return; }
             if (Item == InventoryItem.FogBottle) { ContextPrompt.Offer("БУТЫЛКА ТУМАНА · удерживать ЛКМ — траектория · отпустить — бросок", 20); return; }

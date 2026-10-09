@@ -129,6 +129,17 @@
 | [Assets/Materials/Environment/SeaArch_Huge_A_Mat_SeaArch_Huge_A.mat](<../../Assets/Materials/Environment/SeaArch_Huge_A_Mat_SeaArch_Huge_A.mat>) | Материал Unity |
 | [Assets/Materials/Environment/Sea_Lagoon_Cave_Mat_Sea_Lagoon_Cave.mat](<../../Assets/Materials/Environment/Sea_Lagoon_Cave_Mat_Sea_Lagoon_Cave.mat>) | Материал Unity |
 
+## Assets/Materials/Fishing
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Materials/Fishing/FishingRodReplacement.mat](<../../Assets/Materials/Fishing/FishingRodReplacement.mat>) | Материал Unity; Рыбалка и рыба |
+| [Assets/Materials/Fishing/ReelBrass.mat](<../../Assets/Materials/Fishing/ReelBrass.mat>) | Материал Unity; Рыбалка и рыба |
+| [Assets/Materials/Fishing/ReelGrip.mat](<../../Assets/Materials/Fishing/ReelGrip.mat>) | Материал Unity; Рыбалка и рыба |
+| [Assets/Materials/Fishing/ReelMechanism.mat](<../../Assets/Materials/Fishing/ReelMechanism.mat>) | Материал Unity; Рыбалка и рыба |
+| [Assets/Materials/Fishing/ReelMount.mat](<../../Assets/Materials/Fishing/ReelMount.mat>) | Материал Unity; Рыбалка и рыба |
+| [Assets/Materials/Fishing/ReelThread.mat](<../../Assets/Materials/Fishing/ReelThread.mat>) | Материал Unity; Рыбалка и рыба |
+
 ## Assets/Materials/Repair
 
 | Файл | Краткое описание |
