@@ -45,6 +45,8 @@ float _ClearCloudFarFadeEnd;
 float4 _ClearCloudWorldOffset;
 CBUFFER_END
 
+float4 _PirateStormWeather;
+
 // Ambient Probe (unity_SH)
 half4 clouds_SHAr;
 half4 clouds_SHAg;

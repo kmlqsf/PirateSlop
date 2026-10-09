@@ -443,9 +443,6 @@ namespace PirateSlop.Networking
             if (arcMaterial != null) Destroy(arcMaterial);
             if (sunkenRopeMaterial != null) Destroy(sunkenRopeMaterial);
             if (sunkenGrip != null) Destroy(sunkenGrip);
-            if (gullWhite != null) Destroy(gullWhite);
-            if (gullDark != null) Destroy(gullDark);
-            if (gullWingMesh != null) Destroy(gullWingMesh);
             visualCreated = false;
             base.OnStopNetwork();
         }

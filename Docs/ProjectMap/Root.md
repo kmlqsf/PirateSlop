@@ -13,7 +13,7 @@
 | [.cursorrules](<../../.cursorrules>) | Файл без расширения |
 | [.gitattributes](<../../.gitattributes>) | Файл без расширения |
 | [.gitignore](<../../.gitignore>) | Файл без расширения |
-| [AGENTS.md](<../../AGENTS.md>) | Документация |
+| [AGENTS.md](<../../AGENTS.md>) | Документация; VFX: самостоятельная работа основного агента |
 | [AudioIntegration.md](<../../AudioIntegration.md>) | Документация; Звуки и голос |
 | [BOT_ITEMS.md](<../../BOT_ITEMS.md>) | Документация; Новая система ботов |
 | [BOT_PROGRESS.md](<../../BOT_PROGRESS.md>) | Документация; Новая система ботов |

@@ -4,9 +4,14 @@
 #include "./VolumetricCloudsDefs.hlsl"
 #include "./VolumetricCloudsUtilities.hlsl"
 
-CloudRay BuildCloudsRay(float2 screenUV, float depth, half3 invViewDirWS, bool isOccluded)
+TEXTURE2D_X(_StormTestLightningEmission);
+TEXTURE2D_X(_StormTestLightningDistance);
+SAMPLER(sampler_StormTestLightningEmission);
+
+CloudRay BuildCloudsRay(float2 screenUV, float depth, float3 invViewDirWS, bool isOccluded)
 {
     CloudRay ray;
+    ray.lightningUV=screenUV;
 
 #ifdef _LOCAL_VOLUMETRIC_CLOUDS
     ray.originWS = GetCameraPositionWS();
@@ -28,13 +33,96 @@ CloudRay BuildCloudsRay(float2 screenUV, float depth, half3 invViewDirWS, bool i
 
     if (ray.direction.y < -0.0001 && ray.originWS.y >= _StormCenterWater.y)
         ray.maxRayLength = min(ray.maxRayLength, (_StormCenterWater.y - ray.originWS.y) / ray.direction.y);
-    ray.integrationNoise = GenerateRandomFloat(screenUV);
+    if (_PirateStormBackdrop.x < .5 && _PirateStormBillows > .5 && _PirateStormVolume3D < .5) ray.maxRayLength = min(ray.maxRayLength, 420.0);
+    if (_PirateStormBackdrop.x < .5 && _PirateStormVolume3D > .5 && _PirateStormNearMedium > .99) ray.maxRayLength=min(ray.maxRayLength,35.0);
+    ray.integrationNoise = _PirateStormVolume3D>.5 && _PirateStormBackdrop.x<.5 ? lerp(.35,.65,GenerateRandomFloat(screenUV)) : GenerateRandomFloat(screenUV);
+    if(_PirateStormTestClouds.x>.5)
+        ray.integrationNoise=.45+.1*frac(52.9829189*frac(dot(floor(screenUV*_ScreenParams.xy*.75),float2(.06711056,.00583715))));
 
     return ray;
 }
 
+VolumetricRayResult TraceTestCloudWall(CloudRay ray)
+{
+    VolumetricRayResult result;
+    ZERO_INITIALIZE(VolumetricRayResult,result);
+    result.transmittance=1.0;
+    result.meanDistance=FLT_MAX;
+    result.invalidRay=true;
+    float4 spans;
+    if(!StormRayIntervals(ray.originWS,ray.direction,ray.maxRayLength,spans))return result;
+
+    float total=(spans.y-spans.x)+(spans.w-spans.z);
+    float weightedDistance=0.0,weight=0.0;
+    float4 lightning=SAMPLE_TEXTURE2D_X_LOD(_StormTestLightningEmission,sampler_StormTestLightningEmission,ray.lightningUV,0);
+    float lightningDistance=SAMPLE_TEXTURE2D_X_LOD(_StormTestLightningDistance,sampler_StormTestLightningEmission,ray.lightningUV,0).r/max(.00001,lightning.a);
+    bool lightningAdded=false;
+    float projectionScale=1.0/max(1.0,_ScreenParams.y*abs(UNITY_MATRIX_P[1][1]));
+    float footprintScale=6.0*projectionScale;
+    float integrationNoise=lerp(ray.integrationNoise,.5,smoothstep(120.0,350.0,spans.x));
+    float sampleSpacing=max(.25,min(.65,spans.x*projectionScale*.8));
+    float marchStep=max(sampleSpacing,total/160.0);
+    Light sun=GetMainLight();
+    float3 lightDirection=normalize(sun.direction+float3(0,.55,0));
+    [loop] for(int index=0;index<160;index++)
+    {
+        float begin=index*marchStep;
+        if(begin>=total)break;
+        float step=min(marchStep,total-begin);
+        float distanceWS=StormRayDistance(spans,begin+integrationNoise*step);
+        float3 positionWS=ray.originWS+ray.direction*distanceWS;
+        float mip=clamp(log2(max(1.0,distanceWS*footprintScale)),0.0,5.0);
+        float3 normal;
+        float pixelWidth=distanceWS*projectionScale*2.0/.75;
+        float4 field=StormTestCloudField(positionWS,mip,pixelWidth,normal);
+        float density=field.r*_DensityMultiplier;
+        float segmentStart=StormRayDistance(spans,begin);
+        if(!lightningAdded && lightning.a>.001 && lightningDistance>0.0 && lightningDistance<=segmentStart+step && lightningDistance<ray.maxRayLength)
+        {
+            float beforeBolt=clamp(lightningDistance-segmentStart,0.0,step);
+            result.scattering+=lightning.rgb*result.transmittance*exp(-density*.85*beforeBolt);
+            lightningAdded=true;
+        }
+        if(density<=CLOUD_DENSITY_TRESHOLD)continue;
+        float2 radial=normalize(positionWS.xz-_StormCenterWater.xz);
+        float3 lightLocal=float3(dot(lightDirection.xz,float2(-radial.y,radial.x)),lightDirection.y,dot(lightDirection.xz,radial));
+        // Ambient occlusion rotates with the mass; direct light stays in world space.
+        half sunlight=saturate(dot(normal,lightLocal))*pow(saturate(field.a),.65);
+        half3 ambient=half3(.008,.011,.017)+half3(.011,.017,.026)*field.a;
+        half3 color=ambient+half3(.105,.132,.185)*pow(saturate(sunlight),1.6);
+        half curvature=saturate((dot(normal,lightLocal)+.35)/1.35);
+        color+=half3(.02,.024,.031)*curvature*field.a;
+        color*=lerp(.75,1.02,smoothstep(_PirateStormTestCloudBase,_PirateStormTestClouds.z,positionWS.y));
+        float3 normalWS=float3(-radial.y,0,radial.x)*normal.x+float3(0,normal.y,0)+float3(radial.x,0,radial.y)*normal.z;
+        half flash=StormTestLightningScatter(positionWS,field,normalWS,_StormLightning,0)
+            +StormTestLightningScatter(positionWS,field,normalWS,_StormLightningSecondary,1);
+        color+=_StormLightningColor.rgb*flash*2.0;
+        half transmittance=exp(-density*.85*step);
+        half contribution=result.transmittance*(1.0-transmittance);
+        result.scattering+=color*contribution;
+        weightedDistance+=distanceWS*contribution;
+        weight+=contribution;
+        result.transmittance*=transmittance;
+        if(result.transmittance<.003){result.transmittance=0.0;break;}
+    }
+    if(weight>.00001)
+    {
+        result.invalidRay=false;
+        result.meanDistance=weightedDistance/weight;
+    }
+    else if(lightningAdded)
+    {
+        result.invalidRay=false;
+        result.meanDistance=lightningDistance;
+    }
+    return result;
+}
+
 VolumetricRayResult TraceVolumetricRay(CloudRay cloudRay)
 {
+#if defined(_STORM_TEST_CLOUD_WALL)
+    return TraceTestCloudWall(cloudRay);
+#else
     // Initiliaze the volumetric ray
     VolumetricRayResult volumetricRay;
     volumetricRay.scattering = 0.0;
@@ -87,6 +175,15 @@ VolumetricRayResult TraceVolumetricRay(CloudRay cloudRay)
             // Do the ray march for every step that we can.
             while (currentIndex < (int)_NumPrimarySteps && currentDistance < totalDistance)
             {
+                if (_PirateStormBackdrop.x < .5)
+                {
+                    float f0=(float)currentIndex/max(1.0,_NumPrimarySteps);
+                    float f1=(float)(currentIndex+1)/max(1.0,_NumPrimarySteps);
+                    stepS=(f1*f1-f0*f0)*totalDistance;
+                    currentDistance=f0*f0*totalDistance+cloudRay.integrationNoise*stepS;
+                    activeSampling=true;
+                }
+
                 // Compute the camera-distance based attenuation
                 float sampleDistance = StormRayDistance(stormIntervals, max(0.0, currentDistance));
                 currentPositionWS = cloudRay.originWS + sampleDistance * cloudRay.direction;
@@ -102,7 +199,7 @@ VolumetricRayResult TraceVolumetricRay(CloudRay cloudRay)
                 {
                     // If the density is null, we can skip as there will be no contribution
                     CloudProperties properties;
-                    EvaluateCloudProperties(currentPositionPS, 0.0, erosionMipOffset, false, false, properties);
+                    EvaluateCloudProperties(currentPositionPS, min(2.0,log2(max(1.0,stepS/5.0))), erosionMipOffset, false, false, properties);
 
                     // Apply the fade in function to the density
                     properties.density *= densityAttenuationValue;
@@ -166,6 +263,11 @@ VolumetricRayResult TraceVolumetricRay(CloudRay cloudRay)
                     }
                 }
                 currentIndex++;
+                if (_PirateStormBackdrop.x < .5)
+                {
+                    float f=(float)currentIndex/max(1.0,_NumPrimarySteps);
+                    currentDistance=f*f*totalDistance;
+                }
             }
 
             // Normalized the depth we computed
@@ -178,6 +280,7 @@ VolumetricRayResult TraceVolumetricRay(CloudRay cloudRay)
         }
     }
     return volumetricRay;
+#endif
 }
 
 #endif

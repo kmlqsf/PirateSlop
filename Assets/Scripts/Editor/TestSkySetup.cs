@@ -151,8 +151,8 @@ namespace PirateSlop.Editor
                 material.SetFloat("_ClearClouds", 1f);
                 material.SetFloat("_ClearCloudCellSize", 7000f);
                 material.SetFloat("_ClearCloudSeed", 19f);
-                material.SetFloat("_ClearCloudCoverageStart", .54f);
-                material.SetFloat("_ClearCloudCoverageEnd", .76f);
+                material.SetFloat("_ClearCloudCoverageStart", .52f);
+                material.SetFloat("_ClearCloudCoverageEnd", .74f);
                 material.SetFloat("_ClearCloudFarFadeStart", 12000f);
                 material.SetFloat("_ClearCloudFarFadeEnd", 28000f);
                 material.EnableKeyword("_PIRATESLOP_CLEAR_CLOUDS");

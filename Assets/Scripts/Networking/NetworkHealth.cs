@@ -8,11 +8,13 @@ namespace PirateSlop.Networking
         readonly SyncVar<float> maximumHealth = new(100f);
         readonly SyncVar<float> health = new(-1f);
         readonly SyncVar<bool> burning = new();
+        readonly SyncVar<bool> developerInvulnerable = new();
         readonly SyncVar<uint> frozenUntil = new();
         float burnUntil, nextBurnDamage, wetUntil;
         GameObject fireAttacker;
         ShipFireVfx fireVisual;
         public bool IsBurning => burning.Value;
+        public bool DeveloperInvulnerable => developerInvulnerable.Value;
         CombatHealth target;
         public float FrozenSeconds => frozenUntil.Value == 0 || TimeManager == null ? 0f : Mathf.Max(0, unchecked((int)(frozenUntil.Value - TimeManager.Tick))) * (float)TimeManager.TickDelta;
         public bool IsFrozen => FrozenSeconds > 0f;
@@ -42,6 +44,10 @@ namespace PirateSlop.Networking
         }
         public void PublishMaximum(float value) { if (IsServerInitialized) maximumHealth.Value = value; }
         public void Publish(float value) { if (IsServerInitialized) health.Value = value; }
+        public void SetDeveloperInvulnerable(bool enabled)
+        {
+            if (IsServerInitialized) developerInvulnerable.Value = enabled;
+        }
 
         public void Ignite(GameObject attacker = null)
         {
@@ -92,6 +98,7 @@ namespace PirateSlop.Networking
             fireAttacker = null;
             if (IsServerInitialized) frozenUntil.Value = 0;
             if (IsServerInitialized) burning.Value = false;
+            if (IsServerInitialized) developerInvulnerable.Value = false;
             base.OnStopNetwork();
         }
         public void LaunchCorpse(Vector3 position, Vector3 velocity, Vector3 spin)

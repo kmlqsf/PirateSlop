@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 8851085139401561645}
   - component: {fileID: 7466655072615049111}
   - component: {fileID: 6268059016703589692}
+  - component: {fileID: 3969137406371576733}
+  - component: {fileID: 7595774226323219603}
   m_Layer: 0
   m_Name: BRStormVolume
   m_TagString: Untagged
@@ -47,13 +49,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.StormVolumeController
   EnableStormVolume: 1
-  InnerThickness: 30
-  OuterThickness: 110
-  EdgeSoftness: 6
-  StormHeight: 320
-  TopInwardOffset: 45
-  DensityMultiplier: 0.68
-  NoiseScale: 420
+  InnerThickness: 6
+  OuterThickness: 10
+  EdgeSoftness: 1.5
+  WeatherTransitionWidth: 40
+  CloudTransitionWidth: 120
+  CloudEdgeBreakup: 6
+  CloudEdgeRiseHeight: 900
+  StormHeight: 1100
+  TopInwardOffset: 0
+  DensityMultiplier: 0.8
+  NoiseScale: 70
   WindSpeed: 9
   ShapeContrast: 0.78
   MagicIntensity: 0.16
@@ -96,6 +102,33 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.StormWeatherController
   BoltMaterial: {fileID: 2100000, guid: 82c28a11f8c0f7d4988756bc1400e532, type: 2}
-  LightningInterval: 4
-  BoltChance: 0.85
-  LightningIntensity: 0.65
+  LightningInterval: 1.45
+  BoltChance: 1
+  LightningIntensity: 0.8
+--- !u!114 &3969137406371576733
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5682249384526165914}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9560ef7407e35b409f5b6411cc1a5e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.StormRainController
+  RainMaterial: {fileID: 2100000, guid: 366f199b87ca06e47a5a65847bc1a5fb, type: 2}
+  ImpactMaterial: {fileID: 2100000, guid: e43db872de2eeff4f97bf36934167198, type: 2}
+--- !u!114 &7595774226323219603
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5682249384526165914}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ff9aa02ee8cdb04a82767e710e0a4f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.StormBillowController
+  Material: {fileID: 2100000, guid: bf09983e1d5630040b1a3d8fe9e568ad, type: 2}

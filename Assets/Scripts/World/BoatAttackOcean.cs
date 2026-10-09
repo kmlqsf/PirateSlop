@@ -21,6 +21,16 @@ namespace PirateSlop
         public float WaveStrength { get; private set; } = 1f;
         public float WaveSteepness { get; private set; } = 1f;
         public float WaveSpeed { get; private set; } = 1f;
+        public float MaximumWaveHeight
+        {
+            get
+            {
+                if (waves == null) CacheWaves();
+                float maximum = 0;
+                foreach (var wave in waves) maximum += Mathf.Abs(wave.Amplitude);
+                return maximum * WaveStrength;
+            }
+        }
         float clockAnchor, clockValue;
         public float WaveClockAnchor => clockAnchor;
         public float WaveClockValue => clockValue;

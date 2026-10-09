@@ -30,6 +30,13 @@ namespace PirateSlop.Networking
             if (Time.time < nextDeveloperCommand) return;
             nextDeveloperCommand = Time.time + .3f;
             var session = SessionController.Instance;
+            if (command == 25 || command == 26)
+            {
+                DeveloperResultTargetRpc(Owner, session != null
+                    ? session.SpawnDeveloperSeagulls(transform.position, transform.forward, command == 26)
+                    : "Сессия не готова.");
+                return;
+            }
             if (command == 22)
             {
                 DeveloperResultTargetRpc(Owner, session != null ? session.GrantDeveloperUpgrade(GetComponent<NetworkPlayer>(), count) : "Сессия не готова.");
@@ -121,6 +128,15 @@ namespace PirateSlop.Networking
                 return;
             }
             var health = GetComponent<CombatHealth>();
+            if (command == 27)
+            {
+                var networkHealth = GetComponent<NetworkHealth>();
+                if (networkHealth == null) { DeveloperResultTargetRpc(Owner, "Здоровье игрока недоступно."); return; }
+                bool disabled = count != 0;
+                networkHealth.SetDeveloperInvulnerable(disabled);
+                DeveloperResultTargetRpc(Owner, disabled ? "Любой урон по вашему игроку отключён." : "Урон по вашему игроку включён.");
+                return;
+            }
             if (command == 6) { health.Heal(health.MaxHealth); DeveloperResultTargetRpc(Owner, "Здоровье восстановлено."); return; }
             if (command == 12) { health.Damage(10f); DeveloperResultTargetRpc(Owner, "Нанесено 10 урона."); return; }
             if (command >= 32 && command < 64)

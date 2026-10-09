@@ -1,15 +1,32 @@
 using PirateSlop.Networking;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace PirateSlop.World
 {
     public static class WorldStructureCollision
     {
-        public const int Revision = 2;
+        public const int Revision = 3;
         public static void Ensure(GameObject root)
         {
+            var coastalRoots = new HashSet<Transform>();
+            foreach (var visual in root.GetComponentsInChildren<CoastalRockVisual>(true))
+            {
+                var owner = visual.transform.parent;
+                var collision = owner != null ? owner.Find("CoastalCollision") : null;
+                if (collision == null) continue;
+                foreach (var collider in collision.GetComponentsInChildren<Collider>(true))
+                    if (collider.enabled && !collider.isTrigger) { coastalRoots.Add(owner); break; }
+            }
             foreach (var filter in root.GetComponentsInChildren<MeshFilter>(true))
             {
+                bool coastalManaged = false;
+                for (var parent = filter.transform; parent != null; parent = parent.parent)
+                {
+                    if (coastalRoots.Contains(parent)) { coastalManaged = true; break; }
+                    if (parent == root.transform) break;
+                }
+                if (coastalManaged) continue;
                 if (filter.sharedMesh == null || filter.GetComponent<MeshRenderer>() == null ||
                     filter.GetComponentInParent<CoastalRockVisual>() != null ||
                     filter.GetComponentInParent<ShipController>() != null || filter.GetComponentInParent<NetworkShip>() != null ||

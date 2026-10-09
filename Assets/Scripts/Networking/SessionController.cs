@@ -54,8 +54,15 @@ namespace PirateSlop.Networking
         void Awake()
         {
             Instance = this;
+            ResolveShipPrefab();
             Application.runInBackground = true;
             if (GetComponent<GameTelemetry>() == null) gameObject.AddComponent<GameTelemetry>();
+        }
+        void ResolveShipPrefab()
+        {
+            if (ShipPrefab != null) return;
+            var prefab = Resources.Load<GameObject>("Ships/ShipV3Test");
+            if (prefab != null) ShipPrefab = prefab.GetComponent<NetworkObject>();
         }
         void Start()
         {
@@ -75,6 +82,7 @@ namespace PirateSlop.Networking
             manager.ClientManager.RegisterBroadcast<UpgradeIdentityMessage>(ReceiveUpgradeIdentity);
             manager.ClientManager.RegisterBroadcast<StormMessage>(ReceiveStorm);
             manager.ClientManager.RegisterBroadcast<TestOceanMessage>(ReceiveTestOcean);
+            manager.ClientManager.RegisterBroadcast<SeagullFlockMessage>(ReceiveSeagulls);
             manager.ServerManager.RegisterBroadcast<WorldReadyMessage>(WorldReady);
             var args = Environment.GetCommandLineArgs();
             dedicated = Has(args, "-server"); Automated = Has(args, "-autoclient");
@@ -108,6 +116,12 @@ namespace PirateSlop.Networking
         bool EnvironmentTestActive => EnvironmentTestGallery.IsTest(ProceduralWorld.Instance != null ? ProceduralWorld.Instance.Layout : null);
         public void Begin(bool host, string endpoint, bool environmentTest = false)
         {
+            ResolveShipPrefab();
+            if (ShipPrefab == null)
+            {
+                SetError("Не удалось загрузить игровой корабль. Проверьте импорт ShipV3Test.");
+                return;
+            }
             if (starting || connecting || playing || manager.ServerManager.Started) return;
             if (host && !environmentTest && !string.IsNullOrWhiteSpace(seedInput) && !int.TryParse(seedInput, out _)) { SetError("Seed должен быть целым числом."); return; }
             if (!ParseEndpoint(endpoint, out var ip, out var port)) { SetError("Введите IPv4:порт, например 192.168.1.10:7777"); return; }
@@ -126,6 +140,7 @@ namespace PirateSlop.Networking
             var world = ProceduralWorld.Instance;
             if (world == null) { starting = false; connecting = false; SetError("В игровой сцене отсутствует ProceduralWorld."); yield break; }
             stormRunning = stormPaused = false;
+            ClearSeagulls();
             if (storm != null) Destroy(storm.gameObject);
             if (OceanSurface.Instance != null) OceanSurface.Instance.WaveScale = .06f;
             if (host)
@@ -251,6 +266,7 @@ namespace PirateSlop.Networking
             if (observerSession && manager.ClientManager.Connection != null && conn.ClientId == manager.ClientManager.Connection.ClientId)
             { StartObserver(); return; }
             SendTestOcean(conn);
+            SendSeagulls(conn);
             SpawnPlayer(conn, message.UpgradeToken);
         }
         void SpawnPlayer(NetworkConnection conn, string upgradeToken = null)
@@ -294,11 +310,8 @@ namespace PirateSlop.Networking
                 RetireReplacedBot(replacement);
             }
             manager.SceneManager.AddOwnerToDefaultScene(player.NetworkObject);
-            if (!EnvironmentTestActive)
-            {
-                if (!stormRunning) StartStorm();
-                manager.ServerManager.Broadcast(conn, CurrentStorm());
-            }
+            if (!stormRunning) StartStorm();
+            manager.ServerManager.Broadcast(conn, CurrentStorm());
             BroadcastPopulation();
             Debug.Log($"PLAYER_SPAWN participant={id} connection={conn.ClientId} slot={slot} position={player.transform.position}");
         }
@@ -364,6 +377,7 @@ namespace PirateSlop.Networking
         public void SetError(string message) { error = message; status = message; Debug.LogWarning("SESSION_ERROR " + message); }
         public void Disconnect()
         {
+            ClearSeagulls();
             StopObserver();
             playing = connecting = false; hostRequested = false;
             if (worldLoading != null) { StopCoroutine(worldLoading); worldLoading = null; }
@@ -378,6 +392,7 @@ namespace PirateSlop.Networking
         {
             if (steamSession && !SessionBusy && !string.IsNullOrEmpty(error)) { party?.LeaveSession(); steamSession = false; }
             TickStorm();
+            TickSeagulls();
             TickCrewElimination();
             TickLoadTest();
             if (!LoadTestActive)
@@ -404,6 +419,7 @@ namespace PirateSlop.Networking
         }
         void OnDestroy()
         {
+            ClearSeagulls();
             StopObserver();
             ReleaseMenu();
             if (manager != null) manager.TimeManager.OnPostTick -= ResolveShipCollisions;

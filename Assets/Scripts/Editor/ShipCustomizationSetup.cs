@@ -181,7 +181,7 @@ namespace PirateSlop.EditorTools
             nameplate.NameAnchor = label;
             nameplate.GlyphLibrary = ConfigureGlyphs(materials["ShipNameplateBrass"]);
             nameplate.TextWidth = 4.2f;
-            nameplate.TextHeight = .48f;
+            nameplate.TextHeight = .60f;
         }
 
         [MenuItem("PirateSlop/Restore Ship V3 Customization")]

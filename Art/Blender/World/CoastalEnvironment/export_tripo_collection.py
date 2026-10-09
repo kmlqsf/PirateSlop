@@ -12,6 +12,9 @@ TEXTURES=EXPORT/'Textures'/'Tripo'
 all_names=[record['name'] for record in json.loads((OUTPUT/'physical-shape-profiles.json').read_text(encoding='utf-8-sig'))]
 selection=globals().get('TRIPO_EXPORT_NAMES',all_names)
 previous=bpy.context.window.scene
+source_scene=bpy.data.scenes['TripoCoastalCollection']
+source_visibility={coll.name:coll.hide_viewport for coll in source_scene.collection.children}
+source_matrices={}
 scene=bpy.data.scenes.get('TripoCollectionExport') or bpy.data.scenes.new('TripoCollectionExport')
 scene.unit_settings.system='METRIC'
 scene.unit_settings.scale_length=1
@@ -41,7 +44,7 @@ def copy_world(source,name):
     obj.hide_render=False
     obj.hide_viewport=False
     obj.hide_set(False)
-    obj.matrix_world=source.matrix_world.copy()
+    obj.matrix_world=source_matrices[source.name]
     activate([obj])
     bpy.ops.object.transform_apply(location=True,rotation=True,scale=True)
     return obj
@@ -94,6 +97,13 @@ def lod_ratio(model,role,level,triangles):
     return min(ratio,cap/max(1,triangles))
 
 try:
+    bpy.context.window.scene=source_scene
+    for coll in source_scene.collection.children:
+        coll.hide_viewport=False
+    bpy.context.view_layer.update()
+    for name in selection:
+        for obj in bpy.data.collections['TripoSet_'+name].objects:
+            source_matrices[obj.name]=obj.matrix_basis.copy() if obj.parent is None and not obj.constraints else obj.matrix_world.copy()
     bpy.context.window.scene=scene
     material_count=write_maps()
     records=[]
@@ -157,4 +167,7 @@ try:
     result={'exported':records,'materialMaps':material_count,'sourceMeshesUnchanged':True,'existingMetaFilesUntouched':True}
 finally:
     clean()
+    for coll in source_scene.collection.children:
+        if coll.name in source_visibility:
+            coll.hide_viewport=source_visibility[coll.name]
     bpy.context.window.scene=previous

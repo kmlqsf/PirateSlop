@@ -2,6 +2,7 @@ Shader "PirateSlop/VolumetricStorm"
 {
     Properties
     {
+        [HideInInspector] _StormVisibilityDistance("Visibility Distance", Float) = 10000
         _StormCoreColor("Storm Shadow Core", Color) = (0.078431, 0.14902, 0.196078, 1)
         _StormBodyColor("Storm Cloud Body", Color) = (0.188235, 0.294118, 0.345098, 1)
         _StormLitColor("Storm Lit Masses", Color) = (0.321569, 0.423529, 0.454902, 1)
@@ -9,6 +10,10 @@ Shader "PirateSlop/VolumetricStorm"
         _StormRimColor("Storm Sparse Magic Accent", Color) = (0.309804, 0.65098, 0.709804, 1)
         [HideInInspector][NoScaleOffset] _CloudLutTexture("Cloud LUT Texture", 2D) = "white" {}
         [HideInInspector][NoScaleOffset] _CloudCurveTexture("Cloud LUT Curve Texture", 2D) = "white" {}
+        [HideInInspector][NoScaleOffset] _StormTestWallDensity("Test Cloud Wall Density", 3D) = "black" {}
+        [HideInInspector][NoScaleOffset] _StormTestWallNormals("Test Cloud Wall Normals", 3D) = "black" {}
+        [HideInInspector][NoScaleOffset] _StormTestLightningEmission("Test Lightning Emission", 2D) = "black" {}
+        [HideInInspector][NoScaleOffset] _StormTestLightningDistance("Test Lightning Distance", 2D) = "black" {}
         [NoScaleOffset] _ErosionNoise("Erosion Noise Texture", 3D) = "white" {}
         [NoScaleOffset] _Worley128RGBA("Worley Noise Texture", 3D) = "white" {}
         [HideInInspector] _Seed("Private: Random Seed", Float) = 0.0
@@ -95,6 +100,7 @@ Shader "PirateSlop/VolumetricStorm"
             #pragma multi_compile_local_fragment _ _CLOUDS_MICRO_EROSION
             #pragma multi_compile_local_fragment _ _CLOUDS_AMBIENT_PROBE
             #pragma multi_compile_local_fragment _ _LOCAL_VOLUMETRIC_CLOUDS
+            #pragma multi_compile_local_fragment _ _STORM_TEST_CLOUD_WALL
             #pragma multi_compile_local_fragment _ _OUTPUT_CLOUDS_DEPTH
             #pragma multi_compile_local_fragment _ _PHYSICALLY_BASED_SUN
             #pragma multi_compile_local_fragment _ _PERCEPTUAL_BLENDING
@@ -137,7 +143,7 @@ Shader "PirateSlop/VolumetricStorm"
 
                 // Calculate the virtual position of skybox for view direction calculation
                 float3 positionWS = ComputeWorldSpacePosition(screenUV, UNITY_RAW_FAR_CLIP_VALUE, UNITY_MATRIX_I_VP);
-                half3 invViewDirWS = normalize(positionWS - GetCameraPositionWS());
+                float3 invViewDirWS = normalize(positionWS - GetCameraPositionWS());
 
                 CloudRay cloudRay = BuildCloudsRay(screenUV, depth, invViewDirWS, isOccluded);
 
@@ -149,9 +155,8 @@ Shader "PirateSlop/VolumetricStorm"
 
                 cloudsColor = half4(result.scattering.xyz, result.transmittance);
 
-                // Sea Mist is rendered before the storm. Attenuate each cloud ray by its
-                // own distance so the distant ring does not overwrite the open-water haze.
-                float stormVisibility = 1.0 - smoothstep(90.0, 380.0, result.meanDistance);
+                float visibilityRange = _PirateStormBackdrop.x > .5 ? _StormVisibilityDistance : max(24000.0, _StormVisibilityDistance);
+                float stormVisibility = _PirateStormBackdrop.x > .5 ? exp(-max(0.0, result.meanDistance - 120.0) / max(1.0, visibilityRange)) : 1.0;
                 cloudsColor.rgb *= stormVisibility;
                 cloudsColor.a = lerp(1.0, cloudsColor.a, stormVisibility);
 
@@ -304,9 +309,12 @@ Shader "PirateSlop/VolumetricStorm"
             float4 _BlitTexture_TexelSize;
         #endif
 
+            float4 _PirateStormWeather;
+float4 _PirateStormBackdrop;
+
             half3 SampleColorPoint(float2 uv, float2 texelOffset)
             {
-                return SAMPLE_TEXTURE2D_X_LOD(_BlitTexture, s_point_clamp_sampler, uv + _BlitTexture_TexelSize.xy * texelOffset, 0).xyz;
+                return SAMPLE_TEXTURE2D_X_LOD(_BlitTexture, s_point_clamp_sampler, uv + _BlitTexture_TexelSize.xy * texelOffset * (_PirateStormWeather.w > 0.0 && _PirateStormBackdrop.x < .5 ? 2.5 : 1.0), 0).xyz;
             }
             
             void AdjustColorBox(inout half3 boxMin, inout half3 boxMax, inout half3 moment1, inout half3 moment2, float2 uv, half currX, half currY)
@@ -737,7 +745,7 @@ Shader "PirateSlop/VolumetricStorm"
 
                 half4 cloudsColor = half4(0.0, 0.0, 0.0, 1.0);
 
-                half3 invViewDirWS = normalize(input.positionWS - GetCameraPositionWS());
+                float3 invViewDirWS = normalize(input.positionWS - GetCameraPositionWS());
 
                 CloudRay cloudRay = BuildCloudsRay(screenUV, UNITY_RAW_FAR_CLIP_VALUE, invViewDirWS, false);
                 cloudRay.integrationNoise = 0.0;

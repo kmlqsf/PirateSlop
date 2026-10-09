@@ -10,12 +10,15 @@
 
 | Файл | Краткое описание |
 | --- | --- |
+| [Docs/AmbientFish.md](<../AmbientFish.md>) | Документация; Фоновая рыба в океане |
+| [Docs/AmbientSeagulls.md](<../AmbientSeagulls.md>) | Документация; Чайки и фоновые стаи |
 | [Docs/RoguelikeApprovedUpgrades.md](<../RoguelikeApprovedUpgrades.md>) | Документация; Улучшения рогалика из сундуков |
 | [Docs/RoguelikeEffects.md](<../RoguelikeEffects.md>) | Документация; Улучшения рогалика из сундуков |
 | [Docs/RoguelikeMechanic.md](<../RoguelikeMechanic.md>) | Документация; Улучшения рогалика из сундуков |
 | [Docs/RoguelikeUIStyle.md](<../RoguelikeUIStyle.md>) | Документация; Улучшения рогалика из сундуков |
+| [Docs/StormRain.md](<../StormRain.md>) | Документация; Шторм, зона, дождь и объёмный туман, Тестовая карта и водоворот |
 | [Docs/TestOcean.md](<../TestOcean.md>) | Документация; Мир, острова и океан, Тестовая карта и водоворот |
-| [Docs/TestSkyDayNight.md](<../TestSkyDayNight.md>) | Документация; Тестовая карта и водоворот |
+| [Docs/TestSkyDayNight.md](<../TestSkyDayNight.md>) | Документация; Шторм, зона, дождь и объёмный туман, Тестовая карта и водоворот |
 
 ## Docs/Hotbar
 

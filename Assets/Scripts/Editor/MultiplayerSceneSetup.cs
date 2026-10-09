@@ -17,6 +17,16 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 namespace PirateSlop.EditorTools
 {
+    sealed class RuntimePipelineBuildPreparation : UnityEditor.Build.IPreprocessBuildWithReport
+    {
+        public int callbackOrder => int.MinValue;
+
+        public void OnPreprocessBuild(UnityEditor.Build.Reporting.BuildReport report)
+        {
+            UnityEditor.Rendering.CoreBuildData.instance.Dispose();
+        }
+    }
+
     public static class MultiplayerSceneSetup
     {
         const string MenuPath = "Assets/Scenes/NetworkMenu.unity", OceanPath = "Assets/Scenes/NetworkOcean.unity";

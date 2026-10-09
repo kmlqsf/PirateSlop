@@ -110,13 +110,13 @@ namespace PirateSlop
         }
         public void Damage(float amount, GameObject attacker = null, bool environmental = false, bool drowning = false)
         {
+            if (network != null && (!network.IsServerInitialized || network.DeveloperInvulnerable)) return;
             if (!environmental && attacker != null && attacker != gameObject)
             {
                 var source = attacker.GetComponent<NetworkPlayer>();
                 var target = GetComponent<NetworkPlayer>();
                 if (source != null && target != null && source.TeamId.Value > 0 && source.TeamId.Value == target.TeamId.Value) return;
             }
-            if (network != null && !network.IsServerInitialized) return;
             if (IsDead || amount <= 0 || float.IsNaN(amount) || float.IsInfinity(amount)) return;
             amount = GetComponent<NetworkPlayer>()?.FilterUpgradeDamage(amount) ?? amount;
             if (amount <= 0f) return;

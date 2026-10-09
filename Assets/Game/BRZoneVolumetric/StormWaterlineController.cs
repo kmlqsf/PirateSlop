@@ -17,18 +17,24 @@ namespace PirateSlop
         [Min(0)] public float NoiseSpeed = 1;
         [Min(20)] public float NearSprayDistance = 260;
         [Range(8, 24)] public int ActiveSprayCount = 12;
-        const int Segments = 512;
+        const int Segments = 256;
         const int Rows = 17;
         Mesh mesh;
         MeshRenderer ring;
-        Vector3[] vertices;
         readonly ParticleSystem[] spray = new ParticleSystem[24];
         readonly ParticleSystemRenderer[] sprayRenderers = new ParticleSystemRenderer[24];
         readonly float[] nextBurst = new float[24];
         readonly uint[] burstSequence = new uint[24];
         MaterialPropertyBlock properties;
-        float nextMeshUpdate;
+        float nextHeightUpdate;
         Camera viewer;
+        readonly Vector4[] waveShape = new Vector4[12];
+        readonly Vector4[] waveMotion = new Vector4[12];
+        readonly float[] fallbackHeights = new float[32];
+        WaterSystem.GerstnerWaves.Data cachedWaveData;
+        WaterSystem.GerstnerWaves.Wave[] cachedWaves;
+        public int LastHeightQueries { get; private set; }
+        static readonly Unity.Profiling.ProfilerMarker RingMarker = new("StormWaterline.UpdateRing");
         bool visible;
 
         void Awake()
@@ -40,9 +46,8 @@ namespace PirateSlop
             ring.shadowCastingMode = ShadowCastingMode.Off;
             ring.receiveShadows = false;
             mesh = new Mesh { name = "StormWaterlineRuntime" };
-            mesh.MarkDynamic();
             surface.AddComponent<MeshFilter>().sharedMesh = mesh;
-            vertices = new Vector3[(Segments + 1) * Rows];
+            var vertices = new Vector3[(Segments + 1) * Rows];
             var uv = new Vector2[vertices.Length];
             var kinds = new Vector2[vertices.Length];
             var indices = new int[Segments * 14 * 6];
@@ -55,6 +60,7 @@ namespace PirateSlop
                     for (int row = 0; row < rows; row++)
                     {
                         int v = s * Rows + start + row;
+                        vertices[v] = new Vector3(s / (float)Segments, row / (float)(rows - 1), layer);
                         uv[v] = new Vector2(s / (float)Segments, row / (float)(rows - 1));
                         kinds[v] = new Vector2(layer == 0 ? 0 : 1, layer);
                         if (s == Segments || row == rows - 1) continue;
@@ -129,6 +135,13 @@ namespace PirateSlop
 
         void LateUpdate()
         {
+            LastHeightQueries = 0;
+            if (StormVolumeController.Instance != null && StormVolumeController.Instance.TestCloudWall)
+            {
+                SetVisible(false);
+                StopSpray();
+                return;
+            }
             var zone = StormZone.Instance;
             if (zone == null || zone.Radius <= 0 || WaterlineMaterial == null || SprayMaterial == null)
             {
@@ -137,23 +150,25 @@ namespace PirateSlop
             }
             Vector3 center = zone.Center;
             float radius = zone.Radius;
+            if (viewer == null || !viewer.isActiveAndEnabled) viewer = Camera.main;
+            float distance = viewer != null ? Mathf.Abs(Vector2.Distance(new Vector2(viewer.transform.position.x, viewer.transform.position.z), new Vector2(center.x, center.z)) - radius) : float.MaxValue;
+            if (distance > 420f) { SetVisible(false); StopSpray(); return; }
             SetVisible(true);
             var ocean = OceanSurface.Instance;
             center.y = ocean != null ? ocean.SeaLevel : WaterY;
             transform.position = center;
             properties.SetVector("_WaterlineSettings", new Vector4(BaseOpacity, NoiseScale, NoiseSpeed, MistHeight));
             properties.SetVector("_WaterlineCenter", new Vector4(center.x, center.y, center.z, radius));
+            float angle = Mathf.Atan2(viewer.transform.position.z - center.z, viewer.transform.position.x - center.x);
+            float cameraRadius = Vector2.Distance(new Vector2(viewer.transform.position.x, viewer.transform.position.z), new Vector2(center.x, center.z));
+            float halfArc = cameraRadius < .01f || cameraRadius + radius <= 420f ? Mathf.PI : Mathf.Acos(Mathf.Clamp((cameraRadius * cameraRadius + radius * radius - 420f * 420f) / (2f * cameraRadius * radius), -1f, 1f));
+            properties.SetVector("_WaterlineArc", new Vector4(angle, halfArc, FoamWidth, 0));
+            using (RingMarker.Auto()) UpdateWaveProperties(center, radius, angle, halfArc, ocean);
             ring.SetPropertyBlock(properties);
-            if (Time.time >= nextMeshUpdate)
-            {
-                nextMeshUpdate = Time.time + .08f;
-                UpdateRing(center, radius, ocean);
-            }
-            if (viewer == null || !viewer.isActiveAndEnabled) viewer = Camera.main;
-            float distance = viewer != null ? Mathf.Abs(Vector2.Distance(new Vector2(viewer.transform.position.x, viewer.transform.position.z), new Vector2(center.x, center.z)) - radius) : float.MaxValue;
+            var localBounds = new Vector3(viewer.transform.position.x - center.x, MistHeight * .5f, viewer.transform.position.z - center.z);
+            mesh.bounds = new Bounds(localBounds, new Vector3(900 + FoamWidth * 2, MistHeight * 3 + 24, 900 + FoamWidth * 2));
             if (distance >= NearSprayDistance || viewer == null) { StopSpray(); return; }
             float lod = 1 - Mathf.SmoothStep(0, 1, Mathf.InverseLerp(60, NearSprayDistance, distance));
-            float angle = Mathf.Atan2(viewer.transform.position.z - center.z, viewer.transform.position.x - center.x);
             int count = Mathf.Clamp(ActiveSprayCount, 8, 24);
             float arc = Mathf.Min(240, radius * 2.5f);
             for (int i = 0; i < spray.Length; i++)
@@ -165,7 +180,7 @@ namespace PirateSlop
                 Vector3 radial = new Vector3(Mathf.Cos(a), 0, Mathf.Sin(a));
                 Vector3 tangent = new Vector3(-radial.z, 0, radial.x);
                 Vector3 position = center + radial * (radius + Mathf.Sin(i * 7.13f) * 5);
-                position.y = (ocean != null ? ocean.Height(position) : center.y) + .12f;
+                position.y = SampleWater(position, center.y, ocean) + .12f;
                 if ((system.transform.position - position).sqrMagnitude > 2500) system.Clear();
                 float gust = Mathf.PerlinNoise(position.x * .006f + Time.time * .09f, position.z * .006f + i * .17f);
                 system.transform.SetPositionAndRotation(position, Quaternion.LookRotation((Vector3.up * (mist ? .14f : 1) + tangent * .65f - radial * .3f).normalized));
@@ -191,7 +206,7 @@ namespace PirateSlop
                         float spread = Random01(ref burstSequence[i]);
                         float speed = Random01(ref burstSequence[i]);
                         Vector3 source = position + tangent * ((spread - .5f) * 7) + radial * ((Random01(ref burstSequence[i]) - .5f) * 3);
-                        source.y = (ocean != null ? ocean.Height(source) : center.y) + .12f;
+                        source.y = SampleWater(source, position.y - .12f, ocean) + .12f;
                         var burst = new ParticleSystem.EmitParams
                         {
                             position = source,
@@ -212,34 +227,56 @@ namespace PirateSlop
             return (state >> 8) * (1f / 16777216f);
         }
 
-        void UpdateRing(Vector3 center, float radius, OceanSurface ocean)
+        void UpdateWaveProperties(Vector3 center, float radius, float angle, float halfArc, OceanSurface ocean)
         {
-            for (int s = 0; s <= Segments; s++)
+            var source = ocean != null ? ocean.HeightSource as BoatAttackOcean : null;
+            bool spectral = source != null && source.Water != null;
+            properties.SetFloat("_WaterlineWaveMode", spectral ? 1f : 0f);
+            if (ocean != null)
             {
-                float angle = s * (Mathf.PI * 2 / Segments);
-                Vector3 radial = new Vector3(Mathf.Cos(angle), 0, Mathf.Sin(angle));
-                Vector3 tangent = new Vector3(-radial.z, 0, radial.x);
-                Vector3 boundary = center + radial * radius;
-                float patch = Mathf.PerlinNoise(boundary.x * .006f + Time.time * .023f, boundary.z * .006f - Time.time * .015f);
-                float curl = Mathf.PerlinNoise(boundary.x * .021f - Time.time * .055f, boundary.z * .021f + Time.time * .038f);
-                for (int layer = 0; layer < 3; layer++)
-                {
-                    int rows = layer == 0 ? 9 : 4;
-                    int start = layer == 0 ? 0 : 9 + (layer - 1) * 4;
-                    for (int row = 0; row < rows; row++)
-                    {
-                        float u = row / (float)(rows - 1);
-                        float offset = (patch - .5f) * 9 + (layer == 0 ? (u - .5f) * FoamWidth : (layer == 1 ? -.12f : .13f) * FoamWidth - u * FoamWidth * .18f);
-                        Vector3 p = center + radial * Mathf.Max(1, radius + offset);
-                        if (layer != 0) p += tangent * (u * u * (2 + curl * 5));
-                        float water = ocean != null ? ocean.Height(p) : center.y;
-                        p.y = water + .16f + (layer == 0 ? 0 : u * MistHeight * (.42f + patch * .63f + curl * .2f));
-                        vertices[s * Rows + start + row] = p - center;
-                    }
-                }
+                properties.SetVector("_WaterlineWhirlpool", new Vector4(ocean.WhirlpoolCenter.x, ocean.WhirlpoolCenter.z, ocean.WhirlpoolRadius, ocean.WhirlpoolDepth));
             }
-            mesh.vertices = vertices;
-            mesh.bounds = new Bounds(new Vector3(0, MistHeight * .5f, 0), new Vector3((radius + FoamWidth) * 2, MistHeight * 3 + 16, (radius + FoamWidth) * 2));
+            else properties.SetVector("_WaterlineWhirlpool", Vector4.zero);
+            if (spectral)
+            {
+                var data = source.Water.gerstnerData;
+                if (cachedWaves == null || cachedWaveData != data)
+                {
+                    cachedWaveData = data;
+                    cachedWaves = WaterSystem.GerstnerWaves.GetWaveArray(data);
+                }
+                int count = Mathf.Min(12, cachedWaves.Length);
+                for (int i = 0; i < count; i++)
+                {
+                    var wave = cachedWaves[i];
+                    float direction = wave.direction * Mathf.Deg2Rad;
+                    float frequency = 6.28318f / wave.wavelength;
+                    waveShape[i] = new Vector4(Mathf.Sin(direction), Mathf.Cos(direction), frequency, wave.amplitude * source.WaveStrength / cachedWaves.Length);
+                    waveMotion[i] = new Vector4(Mathf.Sqrt(9.8f * frequency), wave.amplitude > 0 ? .85f * Mathf.Min(source.WaveStrength, 1f) * source.WaveSteepness / (frequency * cachedWaves.Length) : 0f, 0, 0);
+                }
+                properties.SetFloat("_WaterlineWaveCount", count);
+                properties.SetFloat("_WaterlineWaveTime", source.Water.waveTime);
+                properties.SetVectorArray("_WaterlineWaveShape", waveShape);
+                properties.SetVectorArray("_WaterlineWaveMotion", waveMotion);
+            }
+            else if (Time.time >= nextHeightUpdate)
+            {
+                nextHeightUpdate = Time.time + .05f;
+                for (int i = 0; i < fallbackHeights.Length; i++)
+                {
+                    float theta = angle + (i / (float)(fallbackHeights.Length - 1) * 2 - 1) * halfArc;
+                    var p = center + new Vector3(Mathf.Cos(theta), 0, Mathf.Sin(theta)) * radius;
+                    fallbackHeights[i] = SampleWater(p, center.y, ocean);
+                }
+                properties.SetFloatArray("_WaterlineFallbackHeight", fallbackHeights);
+            }
+        }
+
+        float SampleWater(Vector3 position, float fallback, OceanSurface ocean)
+        {
+            if (ocean == null || LastHeightQueries >= 64) return fallback;
+            LastHeightQueries++;
+            return ocean.Height(position);
         }
 
         void SetVisible(bool value)

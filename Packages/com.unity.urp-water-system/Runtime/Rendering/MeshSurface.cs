@@ -16,12 +16,9 @@ namespace WaterSystem.Rendering
         private Vector4 settingsShader = Vector4.one;
 
         private NativeList<WaterTile> baseTilesA;
-        private NativeList<WaterTile> baseTilesB;
         private NativeList<WaterTile> WaterTiles;
         private NativeArray<float4> FrustumPlanes;
 
-        private NativeArray<int> TileCount;
-        private int iterations = 5;
 
         private NativeArray<float4x4> TileMatrices;
         private NativeArray<float4> TileLodData;
@@ -43,11 +40,9 @@ namespace WaterSystem.Rendering
         {
             FrustumPlanes = new NativeArray<float4>(6, Allocator.Persistent);
             baseTilesA = new NativeList<WaterTile>(2048, Allocator.Persistent);
-            baseTilesB = new NativeList<WaterTile>(2048, Allocator.Persistent);
             WaterTiles = new NativeList<WaterTile>(8196, Allocator.Persistent);
             TileMatrices = new NativeArray<float4x4>(8196, Allocator.Persistent);
             TileLodData = new NativeArray<float4>(8196, Allocator.Persistent);
-            TileCount = new NativeArray<int>(iterations + 1, Allocator.Persistent);
         }
         
         // funciton to dispose of native arrays if they are created and recreate them
@@ -72,7 +67,7 @@ namespace WaterSystem.Rendering
                 return;
             }
 
-            if (!WaterTiles.IsCreated || !baseTilesA.IsCreated || !baseTilesB.IsCreated)
+            if (!WaterTiles.IsCreated || !baseTilesA.IsCreated)
             {
                 Recreate();
             }
@@ -81,7 +76,6 @@ namespace WaterSystem.Rendering
             settings.density = math.max(ProjectSettings.Quality.geometrySettings.density, 0.05f);
             settings.maxDivisions = math.clamp(ProjectSettings.Quality.geometrySettings.maxDivisions, 1, 6);
 
-            var handles = new JobHandle[iterations + 1];
             baseTilesA.Clear();
             WaterTiles.Clear();
 
@@ -110,10 +104,9 @@ namespace WaterSystem.Rendering
                 TileSize = settings.baseTileSize,
                 SurfaceSize = settings.size,
                 Output = baseTilesA,
-                Count = TileCount,
             };
-            handles[0] = baseLayout.Schedule();
-            handles[0].Complete();
+            var baseHandle = baseLayout.Schedule();
+            baseHandle.Complete();
 
             if (baseTilesA.Length == 0)
             {
@@ -124,42 +117,19 @@ namespace WaterSystem.Rendering
                 // Subdivision
                 var newPoint = math.mul(math.inverse(transformMatrix), new float4(debugCam.transform.position, 1));
 
-                var iterationSize = 2;
-                for (int s = 0; s < iterations; s++)
+                var subdivideJob = new SubdivideTiles()
                 {
-                    //Profiler.BeginSample("Subdivide");
-                    baseTilesB.Clear();
-
-                    var subdivideJob = new SubdivideTiles()
-                    {
-                        BaseTiles = baseTilesA,
-                        CullingPlanes = FrustumPlanes,
-                        CameraPosition = newPoint.xyz,
-                        CameraFov = debugCam.fieldOfView,
-                        Settings = settings,
-                        IterationLength = iterationSize * (s + 1),
-                        TransformationMatrix = transformMatrix,
-                        OverflowTiles = baseTilesB.AsParallelWriter(),
-                        Tiles = WaterTiles.AsParallelWriter(),
-                    };
-                    handles[s + 1] = subdivideJob.Schedule(baseTilesA.Length, 1, handles[s]);
-                    handles[s + 1].Complete();
-
-                    while (!handles[s + 1].IsCompleted)
-                    {
-                        return;
-                    }
-
-                    // job count for next round
-                    //TileCount[s + 1] = baseTilesB.Length;
-
-                    // swap buffer
-                    (baseTilesA, baseTilesB) = (baseTilesB, baseTilesA);
-                    baseTilesB.Clear();
-                    //baseTilesA.CopyFrom(baseTilesB);
-
-                    //Profiler.EndSample();
-                }
+                    BaseTiles = baseTilesA,
+                    CullingPlanes = FrustumPlanes,
+                    CameraPosition = newPoint.xyz,
+                    CameraFov = debugCam.fieldOfView,
+                    Settings = settings,
+                    TransformationMatrix = transformMatrix,
+                    Tiles = WaterTiles,
+                    TileLimit = TileMatrices.Length,
+                };
+                var subdivideHandle = subdivideJob.Schedule(baseHandle);
+                subdivideHandle.Complete();
 
                 // Matrix mul
                 var matrixJob = new MatrixJob()
@@ -168,7 +138,7 @@ namespace WaterSystem.Rendering
                     Matrices = TileMatrices,
                     LodData = TileLodData,
                 };
-                var matrixJobHandle = matrixJob.Schedule(WaterTiles.Length, 128, handles[^1]);
+                var matrixJobHandle = matrixJob.Schedule(WaterTiles.Length, 128, subdivideHandle);
                 matrixJobHandle.Complete();
 
                 //Debug.Log($"{TileCount[0]} base tiles, {WaterTiles.Length} tiles");
@@ -222,8 +192,6 @@ namespace WaterSystem.Rendering
                 FrustumPlanes.Dispose();
             if (baseTilesA.IsCreated)
                 baseTilesA.Dispose();
-            if (baseTilesB.IsCreated)
-                baseTilesB.Dispose();
 
             if (WaterTiles.IsCreated)
                 WaterTiles.Dispose();
@@ -231,8 +199,6 @@ namespace WaterSystem.Rendering
                 TileMatrices.Dispose();
             if (TileLodData.IsCreated)
                 TileLodData.Dispose();
-            if (TileCount.IsCreated)
-                TileCount.Dispose();
         }
 
         [BurstCompile]
@@ -242,7 +208,6 @@ namespace WaterSystem.Rendering
             [ReadOnly] public float2 SurfaceSize;
 
             public NativeList<WaterTile> Output;
-            public NativeArray<int> Count;
 
             public void Execute()
             {
@@ -287,7 +252,6 @@ namespace WaterSystem.Rendering
                             tile.Matrix.c0.x = tile.Matrix.c1.y = tile.Matrix.c2.z = TileSize; // scale
                             //Output[z + (x * zCount)] = tile;
                             Output.AddNoResize(tile);
-                            Count[0]++;
                         }
                     }
                 }
@@ -295,7 +259,7 @@ namespace WaterSystem.Rendering
         }
 
         [BurstCompile]
-        private struct SubdivideTiles : IJobParallelFor
+        private struct SubdivideTiles : IJob
         {
             [ReadOnly] public NativeList<WaterTile> BaseTiles;
             [ReadOnly] public NativeArray<float4> CullingPlanes;
@@ -304,33 +268,29 @@ namespace WaterSystem.Rendering
             [ReadOnly] public float4x4 TransformationMatrix;
             [ReadOnly] public float3 CameraPosition;
             [ReadOnly] public float CameraFov;
-            [ReadOnly] public int IterationLength;
 
-            public NativeList<WaterTile>.ParallelWriter Tiles;
-            public NativeList<WaterTile>.ParallelWriter OverflowTiles;
+            public NativeList<WaterTile> Tiles;
+            [ReadOnly] public int TileLimit;
+            private int pending;
 
-            public void Execute(int index)
+            public void Execute()
             {
-                SubdivideCheck(BaseTiles[index], TileScale(BaseTiles[index].Division));
+                pending = BaseTiles.Length;
+                for (int index = 0; index < BaseTiles.Length; index++)
+                    SubdivideCheck(BaseTiles[index], TileScale(BaseTiles[index].Division));
             }
 
             private void SubdivideCheck(WaterTile tile, float size)
             {
+                pending--;
                 var transformedTile = TransformMatrix(tile.Matrix, TransformationMatrix);
                 if (!InFrustum(tile.Matrix, transformedTile, CullingPlanes, Settings.maxWaveHeight)) return;
 
-                // Check if tile has hit max iteration;
-                if (tile.Division > IterationLength)
-                {
-                    // store for next round
-                    OverflowTiles.AddNoResize(tile);
-                    return;
-                }
-
                 // Check if tile needs further division
                 var divide = Divide(tile.Matrix.c3.xyz, tile.Matrix.c0.x, CameraPosition, CameraFov);
-                if (divide > Settings.density && tile.Division < Settings.maxDivisions)
+                if (divide > Settings.density && tile.Division < Settings.maxDivisions && Tiles.Length + pending + 4 <= TileLimit)
                 {
+                    pending += 4;
                     Subdivide(tile);
                 }
                 else

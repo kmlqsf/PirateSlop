@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!200 &20000000
+ShaderVariantCollection:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: RainWarmup
+  m_Shaders:
+  - first: {fileID: 4800000, guid: 1979b0772940f7e4690832bc58fc6297, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 4800000, guid: 70fe745ac8f465640b62c2e3ff3eb5b6, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 13
+  - first: {fileID: 4800000, guid: 693bd31c95cfbaf4896a7901295c38fd, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 13
+  - first: {fileID: 4800000, guid: 357fd14c9583291439c7c2b6d117aea8, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 13
+  - first: {fileID: 4800000, guid: b5e19f6cdcb329b43b5e81ba3038f2d8, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 13

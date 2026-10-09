@@ -23,6 +23,7 @@ namespace PirateSlop
         public bool Available => Definition!=null && !ShipSpyglassView.IsViewing && !motor.IsDead && !motor.IsSwimming && !motor.IsClimbing && !motor.LocomotionLocked && !inventory.HandsOccupied && !GetComponent<CannonHands>().HasHeldBall && (inventory.Fishing==null || (!inventory.Fishing.IsFishing && !inventory.Fishing.IsEating)) && (controls==null || !controls.BlocksPrimary);
         public bool Aiming => Local && Available && heldAim;
         public float AimBlend => aim;
+        public float UnzoomedFieldOfView => baselineFov > 0 ? baselineFov : motor.PlayerCamera.fieldOfView;
         public bool Ready => Time.time>=nextReady;
         public float ReticleRadius => Definition==null?3:Mathf.Clamp(Screen.height*.5f*Mathf.Tan(((Aiming?Definition.AimSpread:Definition.HipSpread)+Definition.MovingSpread*Mathf.Clamp01(motor.PlanarSpeed/8)*(Aiming?.3f:1))*Mathf.Deg2Rad)/Mathf.Tan(motor.PlayerCamera.fieldOfView*.5f*Mathf.Deg2Rad),3,65)+bloom*8;
         public Vector3 PosePosition { get; private set; }

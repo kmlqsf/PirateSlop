@@ -141,7 +141,7 @@ Shader "Hidden/Sky/VolumetricClouds"
 
                 // Calculate the virtual position of skybox for view direction calculation
                 float3 positionWS = ComputeWorldSpacePosition(screenUV, UNITY_RAW_FAR_CLIP_VALUE, UNITY_MATRIX_I_VP);
-                half3 invViewDirWS = normalize(positionWS - GetCameraPositionWS());
+                float3 invViewDirWS = normalize(positionWS - GetCameraPositionWS());
 
                 CloudRay cloudRay = BuildCloudsRay(screenUV, depth, invViewDirWS, isOccluded);
 
@@ -302,9 +302,11 @@ Shader "Hidden/Sky/VolumetricClouds"
             float4 _BlitTexture_TexelSize;
         #endif
 
+            float4 _PirateStormBackdrop;
+
             half3 SampleColorPoint(float2 uv, float2 texelOffset)
             {
-                return SAMPLE_TEXTURE2D_X_LOD(_BlitTexture, s_point_clamp_sampler, uv + _BlitTexture_TexelSize.xy * texelOffset, 0).xyz;
+                return SAMPLE_TEXTURE2D_X_LOD(_BlitTexture, s_point_clamp_sampler, uv + _BlitTexture_TexelSize.xy * texelOffset * (_PirateStormWeather.w > 0.0 && _PirateStormBackdrop.x < .5 ? 2.5 : 1.0), 0).xyz;
             }
             
             void AdjustColorBox(inout half3 boxMin, inout half3 boxMax, inout half3 moment1, inout half3 moment2, float2 uv, half currX, half currY)
@@ -686,6 +688,7 @@ Shader "Hidden/Sky/VolumetricClouds"
             #pragma multi_compile_fragment _ PHYSICALLY_BASED_SKY
 
             #define OPAQUE_FOG_PASS
+            #define PIRATESLOP_CLOUD_REFLECTION
 
             #pragma multi_compile_local_fragment _ _PIRATESLOP_CLEAR_CLOUDS
             #include "./VolumetricClouds.hlsl"
@@ -738,7 +741,7 @@ Shader "Hidden/Sky/VolumetricClouds"
 
                 half4 cloudsColor = half4(0.0, 0.0, 0.0, 1.0);
 
-                half3 invViewDirWS = normalize(input.positionWS - GetCameraPositionWS());
+                float3 invViewDirWS = normalize(input.positionWS - GetCameraPositionWS());
 
                 CloudRay cloudRay = BuildCloudsRay(screenUV, UNITY_RAW_FAR_CLIP_VALUE, invViewDirWS, false);
                 cloudRay.integrationNoise = 0.0;

@@ -1,5 +1,118 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2283096710889925334
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1154211137570005395}
+  - component: {fileID: 8422609033099110490}
+  - component: {fileID: 6902050169688736796}
+  - component: {fileID: 7369448508006445685}
+  m_Layer: 8
+  m_Name: CoastalSand
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1154211137570005395
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2283096710889925334}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3499063150540215101}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!33 &8422609033099110490
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2283096710889925334}
+  m_Mesh: {fileID: 4300000, guid: 98e1a42638695d948ab30648c966cc91, type: 2}
+--- !u!23 &6902050169688736796
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2283096710889925334}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 71c96c15969a9d247bc7448dde1d960e, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_MaskInteraction: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!64 &7369448508006445685
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2283096710889925334}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 4300000, guid: 98e1a42638695d948ab30648c966cc91, type: 2}
 --- !u!1 &3202791293058844252
 GameObject:
   m_ObjectHideFlags: 0
@@ -11,6 +124,7 @@ GameObject:
   - component: {fileID: 8218346172666418266}
   - component: {fileID: 2197341117560958447}
   - component: {fileID: 2554319403454257158}
+  - component: {fileID: 2626110150210520486}
   m_Layer: 8
   m_Name: CoastalVisual
   m_TagString: Untagged
@@ -224,6 +338,39 @@ LODGroup:
     - renderer: {fileID: 210160458766713604}
   m_Enabled: 1
   m_GlobalIlluminationLOD: 0
+--- !u!114 &2626110150210520486
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3202791293058844252}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a97b4f90f71ed4488a8c4cce1c8edb6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.CoastalSeagullPerches
+  Points:
+  - {x: -1.8050781, y: 8.395479, z: -0.8481441}
+  - {x: 0.9300943, y: 7.8998156, z: -1.5573016}
+  - {x: 3.7784069, y: 3.0700808, z: 0.91370946}
+  - {x: -0.953479, y: 3.491805, z: 1.8730112}
+  - {x: 0.93559957, y: 0.9920597, z: -2.6571891}
+  - {x: 2.1970925, y: 0.09212685, z: 2.0922673}
+  - {x: 4.198109, y: 0.36782932, z: 1.8468071}
+  - {x: -4.2812433, y: 0.9405298, z: 1.7437004}
+  Normals:
+  - {x: -0.5330339, y: 0.83486736, z: -0.13737273}
+  - {x: 0.33052507, y: 0.89764786, z: -0.29151592}
+  - {x: 0.3037607, y: 0.90636045, z: 0.29366663}
+  - {x: 0.07068401, y: 0.9902789, z: 0.11979805}
+  - {x: 0.023294237, y: 0.9996038, z: -0.015801072}
+  - {x: 0.09699539, y: 0.98567826, z: 0.13795023}
+  - {x: 0.21057317, y: 0.88372654, z: 0.41795507}
+  - {x: 0.02172123, y: 0.9959407, z: 0.08735186}
+  RockBounds:
+    m_Center: {x: -0.28908682, y: 4.328884, z: 0.0060532093}
+    m_Extent: {x: 5.302628, y: 4.7009735, z: 3.0887122}
 --- !u!1 &3297385588433193647
 GameObject:
   m_ObjectHideFlags: 0
@@ -255,8 +402,64 @@ Transform:
   m_Children:
   - {fileID: 8463199780119078132}
   - {fileID: 8218346172666418266}
+  - {fileID: 7105925485668804290}
+  - {fileID: 1154211137570005395}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &3515502678202119982
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7105925485668804290}
+  - component: {fileID: 7602795886776321546}
+  m_Layer: 8
+  m_Name: CoastalCollision
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7105925485668804290
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3515502678202119982}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3499063150540215101}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!64 &7602795886776321546
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3515502678202119982}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 4300000, guid: 2c367c0e373917a4db64c9d26e9a129c, type: 2}
 --- !u!1 &4482275957581710247
 GameObject:
   m_ObjectHideFlags: 0
@@ -366,7 +569,7 @@ MeshCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30

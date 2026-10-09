@@ -110,7 +110,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _AccumulationFactor: 0.95
+    - _AccumulationFactor: 0.7
     - _AlphaClip: 0
     - _AlphaToMask: 0
     - _AltitudeDistortion: 0.0625
@@ -120,18 +120,18 @@ Material:
     - _BlendModePreserveSpecular: 1
     - _BumpScale: 1
     - _ClearCloudCellSize: 7000
-    - _ClearCloudCoverageEnd: 0.76
-    - _ClearCloudCoverageStart: 0.54
+    - _ClearCloudCoverageEnd: 0.74
+    - _ClearCloudCoverageStart: 0.52
     - _ClearCloudFarFadeEnd: 28000
     - _ClearCloudFarFadeStart: 12000
     - _ClearCloudSeed: 19
     - _ClearClouds: 1
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
-    - _CloudNearPlane: 2794.211
+    - _CloudNearPlane: 353.55325
     - _Cull: 2
     - _Cutoff: 0.5
-    - _DensityMultiplier: 0.2888
+    - _DensityMultiplier: 0.23120001
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
@@ -139,36 +139,36 @@ Material:
     - _EarthCurvature: 0
     - _EarthRadius: 6378100
     - _EnvironmentReflections: 1
-    - _ErosionFactor: 0.8
+    - _ErosionFactor: 0.32
     - _ErosionFactorCompensation: 1
     - _ErosionOcclusion: 0.1
-    - _ErosionScale: 107
+    - _ErosionScale: 90
     - _Exposure: 1.3
     - _FadeInDistance: 360
     - _FadeInStart: 240
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
-    - _HighestCloudAltitude: 6382100
-    - _LowestCloudAltitude: 6380900
+    - _HighestCloudAltitude: 6380900
+    - _LowestCloudAltitude: 6378460
     - _MaxStep: 24
-    - _MaxStepSize: 150
+    - _MaxStepSize: 203.33333
     - _MediumWindSpeed: 1
     - _Metallic: 0
-    - _MicroErosionFactor: 0.5
+    - _MicroErosionFactor: 0.28
     - _MicroErosionScale: 200
     - _MultiScattering: 0.525
     - _NormalizationFactor: 189011.11
-    - _NumLightSteps: 4
-    - _NumPrimarySteps: 48
+    - _NumLightSteps: 2
+    - _NumPrimarySteps: 64
     - _OcclusionStrength: 1
     - _Parallax: 0.005
     - _PowderEffectIntensity: 0.25
     - _QueueOffset: 0
     - _ReceiveShadows: 1
     - _Seed: 0
-    - _ShapeFactor: 0.95
-    - _ShapeScale: 5
+    - _ShapeFactor: 0.75
+    - _ShapeScale: 18
     - _SmallWindSpeed: 0.25
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
@@ -177,18 +177,18 @@ Material:
     - _SrcBlendAlpha: 1
     - _StepSize: 0.4
     - _SunDisk: 2
-    - _SunLightDimmer: 1
+    - _SunLightDimmer: 0.78
     - _SunSize: 0.04
     - _SunSizeConvergence: 5
     - _Surface: 0
-    - _VerticalErosionWindDisplacement: -7.7804966
+    - _VerticalErosionWindDisplacement: -9.528866
     - _VerticalShapeNoiseOffset: 0
     - _VerticalShapeWindDisplacement: 0
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
-    - _ClearCloudWorldOffset: {r: 0, g: 0, b: 0, a: 0}
+    - _ClearCloudWorldOffset: {r: -696.61346, g: -2914.9849, b: 5.369959, a: 0}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _GroundColor: {r: 0.36899996, g: 0.34899998, b: 0.34099993, a: 1}
@@ -197,7 +197,7 @@ Material:
     - _SkyTint: {r: 0.5, g: 0.5, b: 0.5, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
     - _WindDirection: {r: -0.81915206, g: -0.57357645, b: 0, a: 0}
-    - _WindVector: {r: -254.93716, g: -178.50914, b: 0, a: 0}
+    - _WindVector: {r: -312.22397, g: -218.62221, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
 --- !u!114 &4204168956660823475

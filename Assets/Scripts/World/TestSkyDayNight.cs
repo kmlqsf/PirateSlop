@@ -17,6 +17,7 @@ namespace PirateSlop.World
         public float DayHazeDistance = 2800f, DuskHazeDistance = 4200f;
         public float CurrentBlend { get; private set; }
         float velocity;
+        float previousStormRadius = -1;
         VolumeProfile runtimeProfile;
         PhysicallyBasedSky sky;
         VolumetricClouds clouds;
@@ -103,7 +104,16 @@ namespace PirateSlop.World
             float dusk = Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(.48f, .70f, t));
             float night = Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(.70f, 1f, t));
             bool moonMain = t >= .70f;
-            Sun.transform.rotation = Quaternion.Euler(Mathf.Lerp(55f, -12f, Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(t / .70f))), -35f, 0f);
+            var storm = StormVolumeController.Instance;
+            var sunRotation = Quaternion.Euler(Mathf.Lerp(55f, -12f, Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(t / .70f))), -35f, 0f);
+            if (storm != null && storm.TestCloudWall && storm.Ready && Camera.main != null)
+            {
+                var anchor = storm.CurrentCenter + Vector3.up * Mathf.Max(6000, storm.CurrentRadius * 1.5f);
+                var direction = (anchor - Camera.main.transform.position).normalized;
+                var centeredSun = Quaternion.LookRotation(-direction, Vector3.forward);
+                sunRotation = Quaternion.Slerp(centeredSun, sunRotation, sunset);
+            }
+            Sun.transform.rotation = sunRotation;
             Sun.color = Color.Lerp(new Color(1f, .96f, .87f), new Color(1f, .48f, .22f), sunset);
             Sun.intensity = Mathf.Lerp(3.03f, .8f, sunset) * (1f - dusk);
             Sun.enabled = !moonMain;
@@ -114,14 +124,18 @@ namespace PirateSlop.World
             RenderSettings.sun = moonMain ? Moon : Sun;
             sky.moonBody.Override(moonMain);
             sky.exposure.Override(Mathf.Lerp(0f, -3.5f, night));
-            sky.horizonTint.Override(Color.Lerp(Color.white, new Color(.68f, .76f, .92f), night));
-            sky.zenithTint.Override(Color.Lerp(Color.white, new Color(.55f, .67f, .9f), night));
+            bool gameWeather = storm != null && !storm.IsMenuPreview;
+            sky.horizonTint.Override(Color.Lerp(gameWeather ? new Color(.94f, .97f, 1f) : Color.white, new Color(.68f, .76f, .92f), night));
+            sky.zenithTint.Override(Color.Lerp(gameWeather ? new Color(.46f, .74f, 1f) : Color.white, new Color(.55f, .67f, .9f), night));
             float ambientRise = Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(.28f, .48f, t));
             float ambientNight = Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(.58f, 1f, t));
             Color ambient = Color.Lerp(new Color(.30f, .29f, .30f).linear, new Color(.25f, .29f, .38f).linear * .5f, ambientNight);
             sky.ambientFloor.Override(Color.Lerp(Color.black, ambient, ambientRise).gamma);
             clouds.sunLightDimmer.Override(Mathf.Lerp(1f, .7f, night));
-            clouds.temporalAccumulationFactor.Override(Mathf.Abs(velocity) > .005f ? .8f : .95f);
+            float stormRadius = storm != null && storm.Ready ? storm.CurrentRadius : -1;
+            bool movingBoundary = Mathf.Abs(stormRadius - previousStormRadius) > .05f;
+            clouds.temporalAccumulationFactor.Override(movingBoundary ? .7f : Mathf.Abs(velocity) > .005f ? .8f : .95f);
+            previousStormRadius = stormRadius;
             RenderSettings.reflectionIntensity = Mathf.Lerp(1f, .6f, night);
             if (waterMaterial != null)
             {
@@ -139,7 +153,7 @@ namespace PirateSlop.World
             {
                 float fogScale = SeaMistRendererFeature.DensityMultiplier / SeaMistRendererFeature.DefaultDensityMultiplier;
                 skyFog.enabled.Override(fogScale > .001f);
-                skyFog.meanFreePath.Override(Mathf.Lerp(DayHazeDistance, DuskHazeDistance, dusk) / Mathf.Max(.001f, fogScale));
+                skyFog.meanFreePath.Override(Mathf.Lerp(gameWeather ? Mathf.Max(DayHazeDistance, 6500f) : DayHazeDistance, DuskHazeDistance, dusk) / Mathf.Max(.001f, fogScale));
             }
         }
 

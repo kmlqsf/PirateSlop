@@ -4,21 +4,27 @@
 #include "./VolumetricCloudsDefs.hlsl"
 #include "./VolumetricCloudsUtilities.hlsl"
 
-CloudRay BuildCloudsRay(float2 screenUV, float depth, half3 invViewDirWS, bool isOccluded)
+CloudRay BuildCloudsRay(float2 screenUV, float depth, float3 invViewDirWS, bool isOccluded)
 {
     CloudRay ray;
 
-#ifdef _LOCAL_VOLUMETRIC_CLOUDS
+#if defined(_LOCAL_VOLUMETRIC_CLOUDS) || defined(_PIRATESLOP_CLEAR_CLOUDS)
     ray.originWS = GetCameraPositionWS();
 #else
     ray.originWS = float3(0.0, 0.0, 0.0);
 #endif
 
+#if defined(PIRATESLOP_CLOUD_REFLECTION) && defined(_PIRATESLOP_CLEAR_CLOUDS)
+    if ((_PirateStormWeather.w > 0.0 || _PirateStormTestSkyWeather.w > 0.0) && _PirateStormBackdrop.x < 0.5)
+        ray.originWS = float3(_ClearCloudWorldOffset.x, _ClearCloudWorldOffset.z, _ClearCloudWorldOffset.y);
+#endif
+
     ray.direction = invViewDirWS;
+    ray.pixelConeAngle = max(length(ddx(invViewDirWS)), length(ddy(invViewDirWS)));
 
     // Compute the max cloud ray length
     // For opaque objects, we only care about clouds in front of them.
-#ifdef _LOCAL_VOLUMETRIC_CLOUDS
+#if defined(_LOCAL_VOLUMETRIC_CLOUDS) || defined(_PIRATESLOP_CLEAR_CLOUDS)
     // The depth may from a high-res texture which isn't ideal but can save performance.
     float distance = LinearEyeDepth(depth, _ZBufferParams) * rcp(dot(ray.direction, -UNITY_MATRIX_V[2].xyz));
     ray.maxRayLength = lerp(MAX_SKYBOX_VOLUMETRIC_CLOUDS_DISTANCE, distance, isOccluded);
@@ -27,6 +33,13 @@ CloudRay BuildCloudsRay(float2 screenUV, float depth, half3 invViewDirWS, bool i
 #endif
 
     ray.integrationNoise = GenerateRandomFloat(screenUV);
+#if defined(_PIRATESLOP_CLEAR_CLOUDS)
+    if(_PirateStormTestSkyWeather.w>0.0)
+    {
+        ray.integrationNoise=lerp(.2,.8,ray.integrationNoise);
+        ray.maxRayLength=min(ray.maxRayLength,max(1000.0,_ClearCloudFarFadeEnd)/max(.001,length(ray.direction.xz)));
+    }
+#endif
 
     return ray;
 }
@@ -58,8 +71,21 @@ VolumetricRayResult TraceVolumetricRay(CloudRay cloudRay)
             float totalDistance = min(rayMarchRange.end, cloudRay.maxRayLength) - rayMarchRange.start;
 
             // Evaluate our integration step
-            float stepS = min(totalDistance / (float)_NumPrimarySteps, _MaxStepSize);
-            totalDistance = stepS * _NumPrimarySteps;
+            int primaryStepCount = max(1, (int)_NumPrimarySteps);
+            float maxStepSize = _MaxStepSize;
+#if defined(PIRATESLOP_CLOUD_REFLECTION) && defined(_PIRATESLOP_CLEAR_CLOUDS)
+            if ((_PirateStormWeather.w > 0.0 || _PirateStormTestSkyWeather.w > 0.0) && _PirateStormBackdrop.x < 0.5)
+            {
+                primaryStepCount = min(primaryStepCount, 24);
+                maxStepSize *= max(1.0, _NumPrimarySteps / primaryStepCount);
+            }
+#endif
+            float stepS = min(totalDistance / primaryStepCount, maxStepSize);
+#if defined(_PIRATESLOP_CLEAR_CLOUDS)
+            bool testSky=_PirateStormTestSkyWeather.w>0.0 && _PirateStormBackdrop.x<.5;
+            if(testSky)stepS=totalDistance/primaryStepCount;
+#endif
+            totalDistance = stepS * primaryStepCount;
 
             // Compute the environment lighting that is going to be used for the cloud evaluation
             float3 rayMarchStartPS = ConvertToPS(cloudRay.originWS) + rayMarchRange.start * cloudRay.direction;
@@ -73,6 +99,10 @@ VolumetricRayResult TraceVolumetricRay(CloudRay cloudRay)
 
             // Current position for the evaluation, apply blue noise to start position
             float currentDistance = cloudRay.integrationNoise;
+#if defined(_PIRATESLOP_CLEAR_CLOUDS)
+            if ((_PirateStormWeather.w > 0.0 || _PirateStormTestSkyWeather.w > 0.0) && _PirateStormBackdrop.x < 0.5)
+                currentDistance *= stepS;
+#endif
             float3 currentPositionWS = cloudRay.originWS + (rayMarchRange.start + currentDistance) * cloudRay.direction;
 
             // Initialize the values for the optimized ray marching
@@ -80,12 +110,34 @@ VolumetricRayResult TraceVolumetricRay(CloudRay cloudRay)
             int sequentialEmptySamples = 0;
 
             // Do the ray march for every step that we can.
-            while (currentIndex < (int)_NumPrimarySteps && currentDistance < totalDistance)
+            while (currentIndex < primaryStepCount && currentDistance < totalDistance)
             {
+                float integrationStep = stepS;
+                float shapeMipOffset = 0.0;
+#if defined(_PIRATESLOP_CLEAR_CLOUDS)
+                if(testSky)
+                {
+                    float jitter=frac(cloudRay.integrationNoise+currentIndex*.61803398875);
+                    float intervalStart = totalDistance * Sq((float)currentIndex / primaryStepCount);
+                    float intervalEnd = totalDistance * Sq((float)(currentIndex + 1) / primaryStepCount);
+                    integrationStep = intervalEnd - intervalStart;
+                    currentDistance = lerp(intervalStart, intervalEnd, lerp(.05, .95, jitter));
+                    currentPositionWS=cloudRay.originWS+(rayMarchRange.start+currentDistance)*cloudRay.direction;
+                    float footprint = max(integrationStep * .5, (rayMarchRange.start + currentDistance) * cloudRay.pixelConeAngle);
+                    shapeMipOffset = log2(max(1.0, footprint * _ShapeScale * 1.4 * 128.0 / NOISE_TEXTURE_NORMALIZATION_FACTOR));
+                }
+#endif
                 // Compute the camera-distance based attenuation
                 float densityAttenuationValue = DensityFadeValue(rayMarchRange.start + currentDistance);
                 // Compute the mip offset for the erosion texture
                 float erosionMipOffset = ErosionMipOffset(rayMarchRange.start + currentDistance);
+#if defined(_PIRATESLOP_CLEAR_CLOUDS)
+                if(testSky)
+                {
+                    float footprint = max(integrationStep * .5, (rayMarchRange.start + currentDistance) * cloudRay.pixelConeAngle);
+                    erosionMipOffset = max(erosionMipOffset, log2(max(1.0, footprint * _ErosionScale * 32.0 / NOISE_TEXTURE_NORMALIZATION_FACTOR)));
+                }
+#endif
 
                 // Accumulate in WS and convert at each iteration to avoid precision issues
                 float3 currentPositionPS = ConvertToPS(currentPositionWS);
@@ -95,7 +147,7 @@ VolumetricRayResult TraceVolumetricRay(CloudRay cloudRay)
                 {
                     // If the density is null, we can skip as there will be no contribution
                     CloudProperties properties;
-                    EvaluateCloudProperties(currentPositionPS, 0.0, erosionMipOffset, false, false, properties);
+                    EvaluateCloudProperties(currentPositionPS, shapeMipOffset, erosionMipOffset, false, false, properties);
 
                     // Apply the fade in function to the density
                     properties.density *= densityAttenuationValue;
@@ -108,7 +160,7 @@ VolumetricRayResult TraceVolumetricRay(CloudRay cloudRay)
                         meanDistanceDivider += transmitanceXdensity;
 
                         // Evaluate the cloud at the position
-                        EvaluateCloud(properties, cloudRay.direction, currentPositionPS, stepS, currentDistance / totalDistance, volumetricRay);
+                        EvaluateCloud(properties, cloudRay.direction, currentPositionPS, integrationStep, currentDistance / totalDistance, volumetricRay);
 
                         // if most of the energy is absorbed, just leave.
                         if (volumetricRay.transmittance < 0.003)
@@ -126,9 +178,15 @@ VolumetricRayResult TraceVolumetricRay(CloudRay cloudRay)
                     // If it has been more than EMPTY_STEPS_BEFORE_LARGE_STEPS, disable active sampling and start large steps
                     if (sequentialEmptySamples == EMPTY_STEPS_BEFORE_LARGE_STEPS)
                         activeSampling = false;
+#if defined(_PIRATESLOP_CLEAR_CLOUDS)
+                    if(testSky)activeSampling=true;
+#endif
 
                     // Do the next step
                     float relativeStepSize = lerp(cloudRay.integrationNoise, 1.0, saturate(currentIndex));
+#if defined(_PIRATESLOP_CLEAR_CLOUDS)
+                    if ((_PirateStormWeather.w > 0.0 || _PirateStormTestSkyWeather.w > 0.0) && _PirateStormBackdrop.x < 0.5) relativeStepSize = 1.0;
+#endif
                     currentPositionWS += cloudRay.direction * stepS * relativeStepSize;
                     currentDistance += stepS * relativeStepSize;
 
@@ -190,6 +248,19 @@ VolumetricRayResult TraceVolumetricRay(CloudRay cloudRay)
             #endif
                 half3 ambient = max(0, lerp(ambientTermBottom, ambientTermTop, relativeHeight) * _AmbientProbeDimmer);
 
+            #if defined(_PIRATESLOP_CLEAR_CLOUDS)
+                if ((_PirateStormWeather.w > 0.0 || _PirateStormTestSkyWeather.w > 0.0) && _PirateStormBackdrop.x < 0.5)
+                {
+                    CloudCoverageData meanCoverage;
+                    GetCloudCoverageData(currentPositionPS, meanCoverage);
+                    float localHeight = saturate((relativeHeight - meanCoverage.minCloudHeight) / max(.01, meanCoverage.maxCloudHeight - meanCoverage.minCloudHeight));
+                    half heightLight = lerp(.32, 1.0, smoothstep(.12, .78, localHeight));
+                    half sunLuma = dot(sunColor, half3(.2126,.7152,.0722));
+                    sunColor = lerp(sunColor, sunLuma.xxx, .75) * heightLight * lerp(1.0, .60, meanCoverage.rainClouds);
+                    sunColor *= lerp(half3(1,1,1), half3(.68,.80,1.0), meanCoverage.rainClouds);
+                    ambient *= lerp(half3(.52,.68,1.0), half3(1,1,1), smoothstep(.2,.8,localHeight));
+                }
+            #endif
                 volumetricRay.scattering = sunColor * volumetricRay.scattering;
                 volumetricRay.scattering += ambient * volumetricRay.ambient;
             }

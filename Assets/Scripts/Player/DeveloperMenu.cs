@@ -156,6 +156,10 @@ namespace PirateSlop
                 if (!Mathf.Approximately(newFog, fogMultiplier)) SeaMistRendererFeature.SetDensityMultiplier(newFog);
                 GUILayout.EndHorizontal();
                 GUILayout.Space(8);
+                GUILayout.Label("Чайки");
+                Button("Вызвать стаю в небе", 25);
+                Button("Посадить чаек на скалы", 26);
+                GUILayout.Space(8);
                 GUILayout.Label("Штормовая зона");
                 Button(SessionController.Instance != null && SessionController.Instance.StormPaused ? "Продолжить зону" : "Остановить зону (сужение и урон)", 14);
                 GUILayout.BeginHorizontal();
@@ -171,6 +175,13 @@ namespace PirateSlop
                 Button("Восстановить здоровье", 6);
                 Button("Нанести себе 10 урона", 12);
                 GUILayout.EndHorizontal();
+                var networkHealth = GetComponent<NetworkHealth>();
+                if (networkHealth != null)
+                {
+                    bool disabled = networkHealth.DeveloperInvulnerable;
+                    if (GUILayout.Button(disabled ? "Урон отключён · включить урон" : "Отключить любой урон по игроку", GUILayout.Height(29)))
+                        network.DeveloperCommand(27, disabled ? 0 : 1);
+                }
                 GUILayout.Space(8);
                 GUILayout.Label("Испытания");
                 Button("Создать тренировочную мишень", 1);

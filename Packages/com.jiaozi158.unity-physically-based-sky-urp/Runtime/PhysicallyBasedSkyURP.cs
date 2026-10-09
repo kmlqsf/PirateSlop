@@ -44,6 +44,13 @@ public class PhysicallyBasedSkyURP : ScriptableRendererFeature
 
     private bool isShaderMismatchLogPrinted;
     private int lastSkyType;
+    private Camera gameReflectionCamera;
+    private float nextGameReflection;
+    private Vector4 gameReflectionWeather;
+    private Vector3 gameReflectionPosition;
+    private Quaternion gameReflectionSun;
+    private float gameReflectionExposure;
+    private bool gameReflectionValid;
     private VisualEnvironment.SkyAmbientMode lastSkyAmbientMode;
     
     private CelestialBodyData m_CelestialBodyData = new CelestialBodyData();
@@ -330,13 +337,47 @@ public class PhysicallyBasedSkyURP : ScriptableRendererFeature
             renderer.EnqueuePass(m_PBSkyPostPass);
         }
 
-        if (visualEnvVolume.skyAmbientMode.value == VisualEnvironment.SkyAmbientMode.Dynamic && renderingData.cameraData.camera.cameraType != CameraType.Reflection && RenderSettings.skybox != null)
+        if (visualEnvVolume != null && visualEnvVolume.skyAmbientMode.value == VisualEnvironment.SkyAmbientMode.Dynamic && renderingData.cameraData.camera.cameraType != CameraType.Reflection && RenderSettings.skybox != null)
         {
             m_AmbientProbePass.visualEnvironment = visualEnvVolume;
             m_AmbientProbePass.cloudsMaterial = ValidateCloudsMaterial();
             m_AmbientProbePass.isPbrSky = isPbrSky;
             Shader.EnableKeyword(k_DynamicAmbientProbeKeywordName);
-            renderer.EnqueuePass(m_AmbientProbePass);
+            var camera = renderingData.cameraData.camera;
+            var weather = Shader.GetGlobalVector("_PirateStormWeather");
+            var testWeather = Shader.GetGlobalVector("_PirateStormTestSkyWeather");
+            bool testSky = testWeather.w > 0f && Shader.GetGlobalVector("_PirateStormBackdrop").x < .5f;
+            if (testSky) weather = testWeather;
+            m_AmbientProbePass.timeSliceReflection = testSky;
+            bool gameWeather = (weather.w > 0f || testSky) && Shader.GetGlobalVector("_PirateStormBackdrop").x < .5f;
+            bool updateReflection = true;
+            if (gameWeather)
+            {
+                if (camera.cameraType != CameraType.Game || camera != Camera.main) updateReflection = !gameReflectionValid;
+                else
+                {
+                    var sunRotation = RenderSettings.sun != null ? RenderSettings.sun.transform.rotation : Quaternion.identity;
+                    float exposure = pbrSkyVolume != null ? pbrSkyVolume.exposure.value : 0f;
+                    updateReflection = !gameReflectionValid || gameReflectionCamera != camera || Time.unscaledTime >= nextGameReflection
+                        || !testSky && ((weather - gameReflectionWeather).sqrMagnitude > 625f
+                        || (camera.transform.position - gameReflectionPosition).sqrMagnitude > 900f
+                        || Quaternion.Angle(sunRotation, gameReflectionSun) > .25f
+                        || Mathf.Abs(exposure - gameReflectionExposure) > .1f)
+                        || RenderSettings.customReflectionTexture == null;
+                    if (updateReflection)
+                    {
+                        gameReflectionValid = true;
+                        gameReflectionCamera = camera;
+                        nextGameReflection = Time.unscaledTime + (testSky ? 1f / 30f : .2f);
+                        gameReflectionWeather = weather;
+                        gameReflectionPosition = camera.transform.position;
+                        gameReflectionSun = sunRotation;
+                        gameReflectionExposure = exposure;
+                    }
+                }
+            }
+            else gameReflectionValid = false;
+            if (updateReflection) renderer.EnqueuePass(m_AmbientProbePass);
         }
         else
         {
@@ -1927,6 +1968,9 @@ public class PhysicallyBasedSkyURP : ScriptableRendererFeature
         public VisualEnvironment visualEnvironment;
         public Material cloudsMaterial;
         public bool isPbrSky;
+        public bool timeSliceReflection;
+        private int nextReflectionFace;
+        private bool reflectionInitialized;
 
         private RTHandle probeColorHandle;
         private RTHandle skyColorHandle;
@@ -2151,6 +2195,8 @@ public class PhysicallyBasedSkyURP : ScriptableRendererFeature
             internal bool isStereoEnabled;
 
             internal int skyTextureMipCounts;
+            internal int firstFace;
+            internal int faceCount;
         }
 
         // This static method is used to execute the pass and passed as the RenderFunc delegate to the RenderGraph render pass
@@ -2169,7 +2215,7 @@ public class PhysicallyBasedSkyURP : ScriptableRendererFeature
 
             Matrix4x4 skyMatrixP = GL.GetGPUProjectionMatrix(data.skyProjectionMatrix, true);
 
-            for (int i = 0; i < 6; i++)
+            for (int i = data.firstFace; i < data.firstFace + data.faceCount; i++)
             {
                 CoreUtils.SetRenderTarget(cmd, data.hasVolumetricClouds ? data.skyColorHandle : data.probeColorHandle, ClearFlag.None, 0, (CubemapFace)i);
 
@@ -2197,9 +2243,10 @@ public class PhysicallyBasedSkyURP : ScriptableRendererFeature
             if (data.hasVolumetricClouds)
             {
                 // We split the rendering into 2 loops to avoid calling CopyTexture() multiple times, which can be slow on the GPU side.
-                cmd.CopyTexture(data.skyColorHandle, data.probeColorHandle);
+                if (data.faceCount == 6) cmd.CopyTexture(data.skyColorHandle, data.probeColorHandle);
+                else cmd.CopyTexture(data.skyColorHandle, data.firstFace, 0, data.probeColorHandle, data.firstFace, 0);
 
-                for (int i = 0; i < 6; i++)
+                for (int i = data.firstFace; i < data.firstFace + data.faceCount; i++)
                 {
                     Matrix4x4 skyMatrixVP = skyMatrixP * data.skyViewMatrices[i];
                     // Camera matrices for skybox rendering
@@ -2262,7 +2309,12 @@ public class PhysicallyBasedSkyURP : ScriptableRendererFeature
                 desc.depthBufferBits = 0;
                 desc.useDynamicScale = false;
 
-                RenderingUtils.ReAllocateHandleIfNeeded(ref probeColorHandle, desc, FilterMode.Trilinear, TextureWrapMode.Clamp, name: _GlossyEnvironmentCubeMap);
+                bool resized = RenderingUtils.ReAllocateHandleIfNeeded(ref probeColorHandle, desc, FilterMode.Trilinear, TextureWrapMode.Clamp, name: _GlossyEnvironmentCubeMap);
+                bool initializeReflection = resized || !reflectionInitialized || !timeSliceReflection;
+                passData.firstFace = initializeReflection ? 0 : nextReflectionFace;
+                passData.faceCount = initializeReflection ? 6 : 1;
+                nextReflectionFace = (passData.firstFace + passData.faceCount) % 6;
+                reflectionInitialized = true;
                 TextureHandle probeColorTextureHandle = renderGraph.ImportTexture(probeColorHandle);
                 passData.probeColorHandle = probeColorTextureHandle;
 
@@ -2278,7 +2330,7 @@ public class PhysicallyBasedSkyURP : ScriptableRendererFeature
 
                 passData.cloudsMaterial = cloudsMaterial;
 
-                for (int i = 0; i < 6; i++)
+                for (int i = passData.firstFace; i < passData.firstFace + passData.faceCount; i++)
                 {
                     //var lookAt = Matrix4x4.LookAt(Vector3.zero, CoreUtils.lookAtList[i], CoreUtils.upVectorList[i]);
                     //Matrix4x4 viewMatrix = lookAt * Matrix4x4.Scale(new Vector3(1.0f, 1.0f, -1.0f)); // Need to scale -1.0 on Z to match what is being done in the camera.wolrdToCameraMatrix API. ...
@@ -2306,10 +2358,10 @@ public class PhysicallyBasedSkyURP : ScriptableRendererFeature
                 passData.isStereoEnabled = cameraData.camera.stereoEnabled;
 
                 // UnsafePasses don't setup the outputs using UseTextureFragment/UseTextureFragmentDepth, you should specify your writes with UseTexture instead
-                builder.UseTexture(passData.probeColorHandle, AccessFlags.Write);
+                builder.UseTexture(passData.probeColorHandle, AccessFlags.ReadWrite);
 
                 if (hasVolumetricClouds)
-                    builder.UseTexture(passData.skyColorHandle, AccessFlags.Write);
+                    builder.UseTexture(passData.skyColorHandle, AccessFlags.ReadWrite);
 
                 // Shader keyword changes are considered as global state modifications
                 builder.AllowGlobalStateModification(true);
