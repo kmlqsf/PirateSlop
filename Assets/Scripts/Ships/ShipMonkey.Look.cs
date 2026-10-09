@@ -92,6 +92,7 @@ namespace PirateSlop.Ships
         {
             PresentActivities();
             PresentRepair();
+            PresentDefense();
             if ((!initialized && !remoteInitialized) || Visual == null || !Visual.gameObject.activeInHierarchy || Animator == null || !Animator.isActiveAndEnabled || Head == null) return;
             Vector3 forward = Head.TransformDirection(HeadForward).normalized;
             Vector3 up = Head.TransformDirection(HeadUp).normalized;

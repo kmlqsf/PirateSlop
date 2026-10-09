@@ -12,7 +12,7 @@
 
 ## Полный каталог
 
-Учтено 4131 файлов без `.meta`. Ещё 4139 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
+Учтено 4140 файлов без `.meta`. Ещё 4150 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
 
 | Раздел | Назначение | Файлов |
 | --- | --- | ---: |
@@ -29,14 +29,14 @@
 | [Assets/Game](<Docs/ProjectMap/Assets-Game.md>) | Игровые подсистемы и эффекты | 66 |
 | [Assets/Houidisoft technology](<Docs/ProjectMap/Assets-Houidisoft technology.md>) | Ресурсы раздела; точный состав — в каталоге | 12 |
 | [Assets/JMO Assets](<Docs/ProjectMap/Assets-JMO Assets.md>) | Ресурсы раздела; точный состав — в каталоге | 19 |
-| [Assets/Materials](<Docs/ProjectMap/Assets-Materials.md>) | Материалы | 126 |
+| [Assets/Materials](<Docs/ProjectMap/Assets-Materials.md>) | Материалы | 127 |
 | [Assets/Mirza](<Docs/ProjectMap/Assets-Mirza.md>) | Ресурсы раздела; точный состав — в каталоге | 1 |
-| [Assets/Models](<Docs/ProjectMap/Assets-Models.md>) | Модели и связанные ресурсы | 1267 |
+| [Assets/Models](<Docs/ProjectMap/Assets-Models.md>) | Модели и связанные ресурсы | 1273 |
 | [Assets/Plugins](<Docs/ProjectMap/Assets-Plugins.md>) | Плагины | 5 |
-| [Assets/Prefabs](<Docs/ProjectMap/Assets-Prefabs.md>) | Готовые игровые объекты | 115 |
+| [Assets/Prefabs](<Docs/ProjectMap/Assets-Prefabs.md>) | Готовые игровые объекты | 116 |
 | [Assets/Resources](<Docs/ProjectMap/Assets-Resources.md>) | Ресурсы, доступные для загрузки по имени | 74 |
 | [Assets/Scenes](<Docs/ProjectMap/Assets-Scenes.md>) | Сохранённые сцены | 3 |
-| [Assets/Scripts](<Docs/ProjectMap/Assets-Scripts.md>) | Игровой код и редакторские инструменты | 433 |
+| [Assets/Scripts](<Docs/ProjectMap/Assets-Scripts.md>) | Игровой код и редакторские инструменты | 434 |
 | [Assets/Settings](<Docs/ProjectMap/Assets-Settings.md>) | Настройки игровых систем и рендеринга | 49 |
 | [Assets/Shaders](<Docs/ProjectMap/Assets-Shaders.md>) | Шейдеры | 15 |
 | [Assets/StreamingAssets](<Docs/ProjectMap/Assets-StreamingAssets.md>) | Ресурсы раздела; точный состав — в каталоге | 5 |
@@ -1284,8 +1284,18 @@ ShipMonkey.Repair.cs: ремонт своего корабля по доступ
 Архивные Versions/V1–V6 удалены 2026-10-05 по просьбе пользователя; текущие Art/Blender/Creatures/ShipMonkey/ShipMonkey.blend, исходные actions и игровые Assets сохранены. Дублированные GUID архивных копий вне Assets не являются отдельными подключёнными Unity-ресурсами.
 Автомат увеличен на20% (scale1.2, высота2.28м), позиция(-3.6054,4.12,-18.0709),yaw58. После своей рыбной ставки захват ЛКМ доступен рядом без попадания лучом в LeverGrip; подсказка только у приёмника. SlotMachinePlayer order-26 и consumed input исключают перехват ShipV3PlayerInteraction. Обезьянка: бесплатный ход раз180–300с, только свободный автомат, подход спереди по палубному графу с обходом шкафа, Work/рычаг0.8с, Idle/взгляд до окончания спина и выдачи. Проигрыш80%, SkillPoint не выигрывается; оставшиеся20% пропорциональны прежним пяти категориям. При отмене бесплатной ставки не появляется возврат рыбы. Начатый спин не отменяется уходом, помощь раненому может прервать только подход. Игрок: проигрыш60%. Нативный импорт/компиляция без ошибок, PlayMode/build/клиент не запускались.
 Обезьянку можно пнуть на X через её trigger-hitbox головы/тела: короткая отдача до22см с возвратом за0.25с синхронизируется существующей ShipMonkeyPose. ReceiveKick запускает общую с ReceiveFirearmShot ответную атаку: прыжок на обидчика, KnockDown2.8с, прежний КД реакции6с. За пинок отвечает и союзнику, и врагу; ограничения реакции на выстрел сохранены. Проверены импорт/компиляция; PlayMode/мультиплеер проверяет пользователь.
+ShipMonkey.Defense.cs: серверная защита от абордажа. Враг определяется по TeamId и фактическому нахождению на своём корабле; защита прерывает занятия, преследует по доступным палубным маршрутам и бьёт битой с проверкой дистанции/препятствий в момент контакта. Штатный KnockDown на4с, КД120с после попадания; отмена/промах не расходуют КД. Бита из Desktop/3d/бита импортирована в MonkeyBat.fbx и подключена префабом, замах использует Repair-клип и синхронную ориентацию биты к голове. HoldingBat/BatTarget передаются в ShipMonkeyPose; ProtocolVersion135. Реакции на пинки/выстрелы сохранены. PlayMode и мультиплеер проверяет пользователь.
 
 - [Assets/Scripts/Ships/ShipMonkey.cs](<Assets/Scripts/Ships/ShipMonkey.cs>) — Исходник C#: ShipMonkeySurface, ShipMonkeyMotion, ShipMonkeyNode, ShipMonkeyLink, ShipMonkeyPose, ShipMonkey.
+- [Assets/Scripts/Ships/ShipMonkey.Defense.cs](<Assets/Scripts/Ships/ShipMonkey.Defense.cs>) — Исходник C#: ShipMonkey.
+- [Assets/Prefabs/Creatures/MonkeyBat.prefab](<Assets/Prefabs/Creatures/MonkeyBat.prefab>) — Префаб Unity.
+- [Assets/Models/Creatures/ShipMonkey/Bat/MonkeyBat.fbx](<Assets/Models/Creatures/ShipMonkey/Bat/MonkeyBat.fbx>) — Модель / анимации FBX.
+- [Assets/Models/Creatures/ShipMonkey/Bat/MonkeyBat.fbm/BatBaseColor.jpeg](<Assets/Models/Creatures/ShipMonkey/Bat/MonkeyBat.fbm/BatBaseColor.jpeg>) — Изображение / текстура.
+- [Assets/Models/Creatures/ShipMonkey/Bat/MonkeyBat.fbm/BatMetallic.jpeg](<Assets/Models/Creatures/ShipMonkey/Bat/MonkeyBat.fbm/BatMetallic.jpeg>) — Изображение / текстура.
+- [Assets/Models/Creatures/ShipMonkey/Bat/MonkeyBat.fbm/BatNormal.png](<Assets/Models/Creatures/ShipMonkey/Bat/MonkeyBat.fbm/BatNormal.png>) — Изображение / текстура.
+- [Assets/Models/Creatures/ShipMonkey/Bat/MonkeyBat.fbm/BatRM.jpeg](<Assets/Models/Creatures/ShipMonkey/Bat/MonkeyBat.fbm/BatRM.jpeg>) — Изображение / текстура.
+- [Assets/Models/Creatures/ShipMonkey/Bat/MonkeyBat.fbm/BatRoughness.jpeg](<Assets/Models/Creatures/ShipMonkey/Bat/MonkeyBat.fbm/BatRoughness.jpeg>) — Изображение / текстура.
+- [Assets/Materials/Creatures/MonkeyBat.mat](<Assets/Materials/Creatures/MonkeyBat.mat>) — Материал Unity.
 - [Assets/Scripts/Networking/NetworkShip.Monkey.cs](<Assets/Scripts/Networking/NetworkShip.Monkey.cs>) — Исходник C#: NetworkShip.
 - [Assets/Scripts/Editor/ShipMonkeySetup.cs](<Assets/Scripts/Editor/ShipMonkeySetup.cs>) — Исходник C#: ShipMonkeySetup, RouteBuilder.
 - [Assets/Prefabs/Creatures/ShipMonkey.prefab](<Assets/Prefabs/Creatures/ShipMonkey.prefab>) — Префаб Unity.

@@ -115,6 +115,22 @@
 | --- | --- |
 | [Assets/Models/Creatures/ShipMonkey/ShipMonkeyRigged.fbx](<../../Assets/Models/Creatures/ShipMonkey/ShipMonkeyRigged.fbx>) | Модель / анимации FBX; Корабельная обезьянка |
 
+## Assets/Models/Creatures/ShipMonkey/Bat
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/Creatures/ShipMonkey/Bat/MonkeyBat.fbx](<../../Assets/Models/Creatures/ShipMonkey/Bat/MonkeyBat.fbx>) | Модель / анимации FBX; Корабельная обезьянка |
+
+## Assets/Models/Creatures/ShipMonkey/Bat/MonkeyBat.fbm
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/Creatures/ShipMonkey/Bat/MonkeyBat.fbm/BatBaseColor.jpeg](<../../Assets/Models/Creatures/ShipMonkey/Bat/MonkeyBat.fbm/BatBaseColor.jpeg>) | Изображение / текстура; Корабельная обезьянка |
+| [Assets/Models/Creatures/ShipMonkey/Bat/MonkeyBat.fbm/BatMetallic.jpeg](<../../Assets/Models/Creatures/ShipMonkey/Bat/MonkeyBat.fbm/BatMetallic.jpeg>) | Изображение / текстура; Корабельная обезьянка |
+| [Assets/Models/Creatures/ShipMonkey/Bat/MonkeyBat.fbm/BatNormal.png](<../../Assets/Models/Creatures/ShipMonkey/Bat/MonkeyBat.fbm/BatNormal.png>) | Изображение / текстура; Корабельная обезьянка |
+| [Assets/Models/Creatures/ShipMonkey/Bat/MonkeyBat.fbm/BatRM.jpeg](<../../Assets/Models/Creatures/ShipMonkey/Bat/MonkeyBat.fbm/BatRM.jpeg>) | Изображение / текстура; Корабельная обезьянка |
+| [Assets/Models/Creatures/ShipMonkey/Bat/MonkeyBat.fbm/BatRoughness.jpeg](<../../Assets/Models/Creatures/ShipMonkey/Bat/MonkeyBat.fbm/BatRoughness.jpeg>) | Изображение / текстура; Корабельная обезьянка |
+
 ## Assets/Models/Creatures/ShipMonkey/ShipMonkey.fbm
 
 | Файл | Краткое описание |

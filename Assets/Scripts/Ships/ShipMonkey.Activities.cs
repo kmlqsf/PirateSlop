@@ -7,7 +7,7 @@ namespace PirateSlop.Ships
 {
     public sealed partial class ShipMonkey
     {
-        enum TaskKind { None, Fetch, Carry, Deliver, Offer, GoFish, Fish, GoWheel, Wheel, GoSail, Sail, GoRepair, Repair, GoSlot, SlotPull, SlotWait }
+        enum TaskKind { None, Fetch, Carry, Deliver, Offer, GoFish, Fish, GoWheel, Wheel, GoSail, Sail, GoRepair, Repair, GoSlot, SlotPull, SlotWait, PursueBoarder, BatStrike }
         public Transform LeftHand, RightHand;
         public GameObject RodModel, FloatModel, FishModel;
         public Material FishingLineMaterial;
@@ -45,7 +45,7 @@ namespace PirateSlop.Ships
         bool HasCarriedItem => activityShip != null && heldItem != null && heldItem.IsSpawned && heldItem.MonkeyCarrier == activityShip.NetworkObject;
         bool ShowsCarry => remoteInitialized && !initialized ? remote.Carrying : activityShip != null && HasCarriedItem;
         int ActivityGoal => task == TaskKind.None || task == TaskKind.Carry ? -1 : activityGoal;
-        bool DeckTask => task == TaskKind.Fetch || task == TaskKind.Carry || task == TaskKind.Deliver || task == TaskKind.Offer || task == TaskKind.GoWheel || task == TaskKind.Wheel || task == TaskKind.GoSail || task == TaskKind.Sail || task == TaskKind.GoRepair || task == TaskKind.Repair || task == TaskKind.GoSlot || task == TaskKind.SlotPull || task == TaskKind.SlotWait;
+        bool DeckTask => task == TaskKind.Fetch || task == TaskKind.Carry || task == TaskKind.Deliver || task == TaskKind.Offer || task == TaskKind.GoWheel || task == TaskKind.Wheel || task == TaskKind.GoSail || task == TaskKind.Sail || task == TaskKind.GoRepair || task == TaskKind.Repair || task == TaskKind.GoSlot || task == TaskKind.SlotPull || task == TaskKind.SlotWait || DefenseTask;
 
         float Interval(float seconds) => seconds * UnityEngine.Random.Range(.85f, 1.15f);
 
@@ -60,6 +60,7 @@ namespace PirateSlop.Ships
             activityReachable = new bool[Nodes.Length];
             BeginRepair();
             BeginSlotActivity();
+            BeginDefense();
         }
 
         bool LinkAllowed(int next) => !DeckTask || Surface != ShipMonkeySurface.Deck && !ShowsCarry || Nodes[next].Surface == ShipMonkeySurface.Deck;
@@ -218,7 +219,8 @@ namespace PirateSlop.Ships
         bool UpdateActivities(float delta)
         {
             if (activityShip == null || !activityShip.IsServerInitialized) return false;
-            if (task != TaskKind.SlotPull && task != TaskKind.SlotWait) PrioritizeAid();
+            TryStartDefense();
+            if (!DefenseTask && task != TaskKind.SlotPull && task != TaskKind.SlotWait) PrioritizeAid();
             if (attacker != null) { if (task != TaskKind.None || heldItem != null) CancelActivities(); return false; }
             if ((task == TaskKind.Carry || task == TaskKind.Deliver || task == TaskKind.Offer || heldItem != null) && !HasCarriedItem) { heldItem = null; CancelActivities(); }
             if (task != TaskKind.None && Time.time > activityDeadline) { CancelActivities(); return false; }
@@ -236,6 +238,7 @@ namespace PirateSlop.Ships
                 return false;
             }
             if (Motion == ShipMonkeyMotion.SitDown || Motion == ShipMonkeyMotion.Sit || Motion == ShipMonkeyMotion.StandUp) return false;
+            if (DefenseTask) return UpdateDefense(delta);
             if (task == TaskKind.GoRepair || task == TaskKind.Repair) return UpdateRepair(delta);
             if (task == TaskKind.GoSlot || task == TaskKind.SlotPull || task == TaskKind.SlotWait) return UpdateSlotActivity(delta);
             if (task == TaskKind.Fetch)
@@ -437,6 +440,7 @@ namespace PirateSlop.Ships
             if (activityShip != null && activityShip.IsServerInitialized) DropHeld();
             ResetRepair();
             ResetSlotActivity();
+            boarder = null; batHit = false;
             fetchItem = null; recipient = null; task = TaskKind.None; activityGoal = -1; fishingPhase = 0;
             pickingUp = fetchForAid = false; fetchUnavailableAt = -1f; wantsRest = false; animationSpeed = 1f; nextAid = Time.time + .5f;
             if (target < 0) { path.Clear(); pathIndex = 0; SetMotion(ShipMonkeyMotion.Idle); pause = .5f; }

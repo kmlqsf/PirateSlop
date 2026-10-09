@@ -31,6 +31,7 @@
 
 | Файл | Краткое описание |
 | --- | --- |
+| [Assets/Prefabs/Creatures/MonkeyBat.prefab](<../../Assets/Prefabs/Creatures/MonkeyBat.prefab>) | Префаб Unity; Корабельная обезьянка |
 | [Assets/Prefabs/Creatures/ShipMonkey.prefab](<../../Assets/Prefabs/Creatures/ShipMonkey.prefab>) | Префаб Unity; Корабельная обезьянка |
 
 ## Assets/Prefabs/Environment

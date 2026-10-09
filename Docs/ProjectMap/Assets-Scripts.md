@@ -434,6 +434,7 @@
 | Файл | Краткое описание |
 | --- | --- |
 | [Assets/Scripts/Ships/ShipMonkey.Activities.cs](<../../Assets/Scripts/Ships/ShipMonkey.Activities.cs>) | Исходник C#: ShipMonkey, TaskKind; Корабельная обезьянка |
+| [Assets/Scripts/Ships/ShipMonkey.Defense.cs](<../../Assets/Scripts/Ships/ShipMonkey.Defense.cs>) | Исходник C#: ShipMonkey; Корабельная обезьянка |
 | [Assets/Scripts/Ships/ShipMonkey.Jump.cs](<../../Assets/Scripts/Ships/ShipMonkey.Jump.cs>) | Исходник C#: ShipMonkey; Корабельная обезьянка |
 | [Assets/Scripts/Ships/ShipMonkey.Look.cs](<../../Assets/Scripts/Ships/ShipMonkey.Look.cs>) | Исходник C#: ShipMonkey; Корабельная обезьянка |
 | [Assets/Scripts/Ships/ShipMonkey.Repair.cs](<../../Assets/Scripts/Ships/ShipMonkey.Repair.cs>) | Исходник C#: ShipMonkey; Повреждения корпуса, ремонт и затопление, Корабельная обезьянка |
