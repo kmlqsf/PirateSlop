@@ -6,12 +6,6 @@
 
 Автоматический каталог. Описания обозначают тип файла и известную тему, а не подтверждение использования в игре.
 
-## Assets/JMO Assets
-
-| Файл | Краткое описание |
-| --- | --- |
-| [Assets/JMO Assets/Cartoon FX FREE (old legacy effects).unitypackage](<../../Assets/JMO Assets/Cartoon FX FREE (old legacy effects).unitypackage>) | Файл .unitypackage |
-
 ## Assets/JMO Assets/Cartoon FX Remaster/CFXR Assets/Editor
 
 | Файл | Краткое описание |

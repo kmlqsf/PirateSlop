@@ -3,6 +3,8 @@ Shader "PirateSlop/StormWeather"
     Properties
     {
         _WeatherCenter("Center / Radius", Vector) = (0,0,0,1500)
+        [HideInInspector] _WeatherMenuPreview("Menu Preview", Float) = 0
+        [HideInInspector] _LightningVisibilityDistance("Visibility Distance", Float) = 6000
     }
     SubShader
     {
@@ -19,6 +21,8 @@ Shader "PirateSlop/StormWeather"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareDepthTexture.hlsl"
             CBUFFER_START(UnityPerMaterial)
             float4 _WeatherCenter;
+            float _LightningVisibilityDistance;
+            float _WeatherMenuPreview;
             CBUFFER_END
             struct Attributes { float4 positionOS:POSITION; float2 uv:TEXCOORD0; half4 color:COLOR; };
             struct Varyings { float4 positionCS:SV_POSITION; float3 world:TEXCOORD0; float2 uv:TEXCOORD1; half4 color:COLOR; };
@@ -45,10 +49,11 @@ Shader "PirateSlop/StormWeather"
                     visibility=smoothstep(_WeatherCenter.w/cameraRadius-.08,_WeatherCenter.w/cameraRadius+.08,facing);
                 }
                 float side=abs(i.uv.y*2-1);
-                float core=1-smoothstep(.02,.18,side);
-                float glow=pow(saturate(1-side),2.4);
-                half3 color=i.color.rgb*glow*1.6+half3(1,.97,.9)*core*5;
-                float haze=exp(-max(0,distance(_WorldSpaceCameraPos,i.world)-90)*.003);
+                bool backdrop=_WeatherMenuPreview>.5;
+                float core=1-smoothstep(backdrop?.02:.04,backdrop?.18:.24,side);
+                float glow=pow(saturate(1-side),backdrop?2.4:1.4);
+                half3 color=i.color.rgb*glow*(backdrop?1.6:2.8)+lerp(half3(.88,.93,1),half3(1,.97,.9),backdrop?1:0)*core*(backdrop?5:9);
+                float haze=exp(-max(0,distance(_WorldSpaceCameraPos,i.world)-90)/max(1.0,_LightningVisibilityDistance));
                 return half4(color,i.color.a*depthFade*visibility*haze);
 
             }
@@ -56,3 +61,4 @@ Shader "PirateSlop/StormWeather"
         }
     }
 }
+

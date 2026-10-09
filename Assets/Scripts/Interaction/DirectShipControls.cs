@@ -13,6 +13,7 @@ namespace PirateSlop
         ShipControlHandle hovered, grabbed;
         SailSystem nearbySails;
         Vector2 pointer;
+        float wheelFieldOfView;
         float pendingDrag, nextSend;
         float grabStarted, savedUntil;
         SailSystem savedSails;
@@ -155,6 +156,11 @@ namespace PirateSlop
                 awaitPrimaryRelease = true;
                 if (hovered.Sails != null && hovered.Sails.Owner(hovered.RopeIndex) != 0 && hovered.Sails.Owner(hovered.RopeIndex) != Participant) return;
                 grabbed = hovered; pointer = new Vector2(Screen.width * .5f, Screen.height * .5f); pendingDrag = 0;
+                if (grabbed.Helm != null)
+                {
+                    var firearm = GetComponent<FirearmHandling>();
+                    wheelFieldOfView = firearm != null ? firearm.UnzoomedFieldOfView : motor.PlayerCamera.fieldOfView;
+                }
                 grabStarted = Time.unscaledTime;
                 if (grabbed.Sails != null) { ropeLockOwned = true; motor.SailPullLocked = true; nearbySails = grabbed.Sails; }
                 if (grabbed.Capstan != null)
@@ -175,7 +181,11 @@ namespace PirateSlop
         }
         Vector3 WheelDirection(Transform wheel, Vector2 screenPoint)
         {
-            var ray = motor.PlayerCamera.ScreenPointToRay(screenPoint);
+            var camera = motor.PlayerCamera;
+            var viewport = camera.pixelRect;
+            float slope = Mathf.Tan(wheelFieldOfView * Mathf.Deg2Rad * .5f);
+            var direction = new Vector3(((screenPoint.x - viewport.x) / viewport.width * 2f - 1f) * camera.aspect * slope, ((screenPoint.y - viewport.y) / viewport.height * 2f - 1f) * slope, 1f);
+            var ray = new Ray(camera.transform.position, camera.transform.TransformDirection(direction).normalized);
             var plane = new Plane(wheel.forward, wheel.position);
             return plane.Raycast(ray, out float distance) ? ray.GetPoint(distance) - wheel.position : Vector3.zero;
         }

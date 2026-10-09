@@ -12,6 +12,21 @@
 | --- | --- |
 | [Art/Audio/BottleBreak/GenerateBottleBreak.py](<../../Art/Audio/BottleBreak/GenerateBottleBreak.py>) | Инструмент Python; Звуки и голос |
 
+## Art/Audio/Seagulls
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Audio/Seagulls/SourceCall.mp3](<../../Art/Audio/Seagulls/SourceCall.mp3>) | Аудио |
+
+## Art/Audio/StormRain
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Audio/StormRain/RainDeckLoop-source.mp3](<../../Art/Audio/StormRain/RainDeckLoop-source.mp3>) | Аудио |
+| [Art/Audio/StormRain/RainDownpourLoop-source.mp3](<../../Art/Audio/StormRain/RainDownpourLoop-source.mp3>) | Аудио |
+| [Art/Audio/StormRain/SOURCES.md](<../../Art/Audio/StormRain/SOURCES.md>) | Документация; Звуки и голос, Шторм, зона, дождь и объёмный туман |
+| [Art/Audio/StormRain/manifest.json](<../../Art/Audio/StormRain/manifest.json>) | Конфигурация / данные JSON |
+
 ## Art/Blender
 
 | Файл | Краткое описание |
@@ -92,23 +107,6 @@
 | --- | --- |
 | [Art/Blender/Characters/PirateCaptain/Pirate_Captain.blend](<../../Art/Blender/Characters/PirateCaptain/Pirate_Captain.blend>) | Редактируемая сцена Blender |
 
-## Art/Blender/Characters/Review
-
-| Файл | Краткое описание |
-| --- | --- |
-| [Art/Blender/Characters/Review/screenshot-20260910-011704.png](<../../Art/Blender/Characters/Review/screenshot-20260910-011704.png>) | Изображение / текстура |
-| [Art/Blender/Characters/Review/screenshot-20260910-011712.png](<../../Art/Blender/Characters/Review/screenshot-20260910-011712.png>) | Изображение / текстура |
-| [Art/Blender/Characters/Review/screenshot-20260910-011730.png](<../../Art/Blender/Characters/Review/screenshot-20260910-011730.png>) | Изображение / текстура |
-| [Art/Blender/Characters/Review/screenshot-20260910-011811.png](<../../Art/Blender/Characters/Review/screenshot-20260910-011811.png>) | Изображение / текстура |
-| [Art/Blender/Characters/Review/screenshot-20260910-011838.png](<../../Art/Blender/Characters/Review/screenshot-20260910-011838.png>) | Изображение / текстура |
-| [Art/Blender/Characters/Review/screenshot-20260910-115013.png](<../../Art/Blender/Characters/Review/screenshot-20260910-115013.png>) | Изображение / текстура |
-| [Art/Blender/Characters/Review/screenshot-20260910-115037.png](<../../Art/Blender/Characters/Review/screenshot-20260910-115037.png>) | Изображение / текстура |
-| [Art/Blender/Characters/Review/screenshot-20260910-115128.png](<../../Art/Blender/Characters/Review/screenshot-20260910-115128.png>) | Изображение / текстура |
-| [Art/Blender/Characters/Review/screenshot-20260910-115159.png](<../../Art/Blender/Characters/Review/screenshot-20260910-115159.png>) | Изображение / текстура |
-| [Art/Blender/Characters/Review/screenshot-20260910-115719.png](<../../Art/Blender/Characters/Review/screenshot-20260910-115719.png>) | Изображение / текстура |
-| [Art/Blender/Characters/Review/screenshot-20260910-115758.png](<../../Art/Blender/Characters/Review/screenshot-20260910-115758.png>) | Изображение / текстура |
-| [Art/Blender/Characters/Review/screenshot-20260910-115817.png](<../../Art/Blender/Characters/Review/screenshot-20260910-115817.png>) | Изображение / текстура |
-
 ## Art/Blender/ClimbingRigging
 
 | Файл | Краткое описание |
@@ -122,7 +120,6 @@
 | --- | --- |
 | [Art/Blender/Creatures/ShipMonkey/README.md](<../../Art/Blender/Creatures/ShipMonkey/README.md>) | Документация; Корабельная обезьянка |
 | [Art/Blender/Creatures/ShipMonkey/ShipMonkey.blend](<../../Art/Blender/Creatures/ShipMonkey/ShipMonkey.blend>) | Редактируемая сцена Blender; Корабельная обезьянка |
-| [Art/Blender/Creatures/ShipMonkey/ShipMonkey.blend1](<../../Art/Blender/Creatures/ShipMonkey/ShipMonkey.blend1>) | Файл .blend1 |
 | [Art/Blender/Creatures/ShipMonkey/monkey_activities.py](<../../Art/Blender/Creatures/ShipMonkey/monkey_activities.py>) | Инструмент Python; Корабельная обезьянка |
 | [Art/Blender/Creatures/ShipMonkey/monkey_animation.py](<../../Art/Blender/Creatures/ShipMonkey/monkey_animation.py>) | Инструмент Python; Корабельная обезьянка |
 | [Art/Blender/Creatures/ShipMonkey/monkey_export.py](<../../Art/Blender/Creatures/ShipMonkey/monkey_export.py>) | Инструмент Python; Корабельная обезьянка |
@@ -560,8 +557,10 @@
 | --- | --- |
 | [Art/Blender/PirateLocomotion/Corsair_BindPose.fbx](<../../Art/Blender/PirateLocomotion/Corsair_BindPose.fbx>) | Модель / анимации FBX |
 | [Art/Blender/PirateLocomotion/Corsair_Locomotion.blend](<../../Art/Blender/PirateLocomotion/Corsair_Locomotion.blend>) | Редактируемая сцена Blender |
+| [Art/Blender/PirateLocomotion/Corsair_Locomotion.blend1](<../../Art/Blender/PirateLocomotion/Corsair_Locomotion.blend1>) | Файл .blend1 |
 | [Art/Blender/PirateLocomotion/Corsair_Run.fbx](<../../Art/Blender/PirateLocomotion/Corsair_Run.fbx>) | Модель / анимации FBX |
 | [Art/Blender/PirateLocomotion/Corsair_Sabre.blend](<../../Art/Blender/PirateLocomotion/Corsair_Sabre.blend>) | Редактируемая сцена Blender |
+| [Art/Blender/PirateLocomotion/Corsair_Sabre.blend1](<../../Art/Blender/PirateLocomotion/Corsair_Sabre.blend1>) | Файл .blend1 |
 | [Art/Blender/PirateLocomotion/Corsair_Sabre_Combo.fbx](<../../Art/Blender/PirateLocomotion/Corsair_Sabre_Combo.fbx>) | Модель / анимации FBX |
 | [Art/Blender/PirateLocomotion/Corsair_Walk.fbx](<../../Art/Blender/PirateLocomotion/Corsair_Walk.fbx>) | Модель / анимации FBX |
 | [Art/Blender/PirateLocomotion/README.txt](<../../Art/Blender/PirateLocomotion/README.txt>) | Текстовые данные |
@@ -680,7 +679,6 @@
 | --- | --- |
 | [Art/Blender/SlotMachine/Mystery.svg](<../../Art/Blender/SlotMachine/Mystery.svg>) | Файл .svg |
 | [Art/Blender/SlotMachine/SlotMachine.blend](<../../Art/Blender/SlotMachine/SlotMachine.blend>) | Редактируемая сцена Blender; Корабельная слот-машина |
-| [Art/Blender/SlotMachine/SlotMachine.blend1](<../../Art/Blender/SlotMachine/SlotMachine.blend1>) | Файл .blend1 |
 
 ## Art/Blender/Whale
 
@@ -694,6 +692,7 @@
 | Файл | Краткое описание |
 | --- | --- |
 | [Art/Blender/Whale/HarpoonConcepts/HarpoonConcepts.blend](<../../Art/Blender/Whale/HarpoonConcepts/HarpoonConcepts.blend>) | Редактируемая сцена Blender |
+| [Art/Blender/Whale/HarpoonConcepts/HarpoonConcepts.blend1](<../../Art/Blender/Whale/HarpoonConcepts/HarpoonConcepts.blend1>) | Файл .blend1 |
 | [Art/Blender/Whale/HarpoonConcepts/build_harpoon_concepts.py](<../../Art/Blender/Whale/HarpoonConcepts/build_harpoon_concepts.py>) | Инструмент Python |
 
 ## Art/Blender/Whale/Harpoon_Broken
@@ -728,9 +727,11 @@
 | [Art/Blender/World/CoastalEnvironment/assemble_cc0_arch.py](<../../Art/Blender/World/CoastalEnvironment/assemble_cc0_arch.py>) | Инструмент Python; Мир, острова и океан |
 | [Art/Blender/World/CoastalEnvironment/assemble_tripo_arch.py](<../../Art/Blender/World/CoastalEnvironment/assemble_tripo_arch.py>) | Инструмент Python; Мир, острова и океан |
 | [Art/Blender/World/CoastalEnvironment/assemble_tripo_collection.py](<../../Art/Blender/World/CoastalEnvironment/assemble_tripo_collection.py>) | Инструмент Python; Мир, острова и океан |
+| [Art/Blender/World/CoastalEnvironment/audit_tripo_large_surfaces.py](<../../Art/Blender/World/CoastalEnvironment/audit_tripo_large_surfaces.py>) | Инструмент Python |
 | [Art/Blender/World/CoastalEnvironment/build_coastal_c.py](<../../Art/Blender/World/CoastalEnvironment/build_coastal_c.py>) | Инструмент Python; Мир, острова и океан |
 | [Art/Blender/World/CoastalEnvironment/clear_arch_screen_fragment.py](<../../Art/Blender/World/CoastalEnvironment/clear_arch_screen_fragment.py>) | Инструмент Python |
 | [Art/Blender/World/CoastalEnvironment/export_tripo_collection.py](<../../Art/Blender/World/CoastalEnvironment/export_tripo_collection.py>) | Инструмент Python; Мир, острова и океан |
+| [Art/Blender/World/CoastalEnvironment/export_tripo_collision.py](<../../Art/Blender/World/CoastalEnvironment/export_tripo_collision.py>) | Инструмент Python; Мир, острова и океан |
 | [Art/Blender/World/CoastalEnvironment/finalize_arch_c.py](<../../Art/Blender/World/CoastalEnvironment/finalize_arch_c.py>) | Инструмент Python |
 | [Art/Blender/World/CoastalEnvironment/finish_arch_review.py](<../../Art/Blender/World/CoastalEnvironment/finish_arch_review.py>) | Инструмент Python |
 | [Art/Blender/World/CoastalEnvironment/finish_cc0_arch_layout.py](<../../Art/Blender/World/CoastalEnvironment/finish_cc0_arch_layout.py>) | Инструмент Python |
@@ -743,11 +744,14 @@
 | [Art/Blender/World/CoastalEnvironment/refine_cliffwall_b_base.py](<../../Art/Blender/World/CoastalEnvironment/refine_cliffwall_b_base.py>) | Инструмент Python; Мир, острова и океан |
 | [Art/Blender/World/CoastalEnvironment/refine_collection.py](<../../Art/Blender/World/CoastalEnvironment/refine_collection.py>) | Инструмент Python; Мир, острова и океан |
 | [Art/Blender/World/CoastalEnvironment/refine_tripo_arch_vault.py](<../../Art/Blender/World/CoastalEnvironment/refine_tripo_arch_vault.py>) | Инструмент Python; Мир, острова и океан |
+| [Art/Blender/World/CoastalEnvironment/refine_tripo_lagoon_shoulders.py](<../../Art/Blender/World/CoastalEnvironment/refine_tripo_lagoon_shoulders.py>) | Инструмент Python; Мир, острова и океан |
+| [Art/Blender/World/CoastalEnvironment/refine_tripo_rooted_large.py](<../../Art/Blender/World/CoastalEnvironment/refine_tripo_rooted_large.py>) | Инструмент Python; Мир, острова и океан |
 | [Art/Blender/World/CoastalEnvironment/render_cc0_arch.py](<../../Art/Blender/World/CoastalEnvironment/render_cc0_arch.py>) | Инструмент Python |
 | [Art/Blender/World/CoastalEnvironment/render_cliffwall_b_base.py](<../../Art/Blender/World/CoastalEnvironment/render_cliffwall_b_base.py>) | Инструмент Python; Мир, острова и океан |
 | [Art/Blender/World/CoastalEnvironment/render_source_module_qc.py](<../../Art/Blender/World/CoastalEnvironment/render_source_module_qc.py>) | Инструмент Python |
 | [Art/Blender/World/CoastalEnvironment/render_tripo_arch.py](<../../Art/Blender/World/CoastalEnvironment/render_tripo_arch.py>) | Инструмент Python; Мир, острова и океан |
 | [Art/Blender/World/CoastalEnvironment/render_tripo_collection.py](<../../Art/Blender/World/CoastalEnvironment/render_tripo_collection.py>) | Инструмент Python; Мир, острова и океан |
+| [Art/Blender/World/CoastalEnvironment/render_tripo_ship_views.py](<../../Art/Blender/World/CoastalEnvironment/render_tripo_ship_views.py>) | Инструмент Python; Мир, острова и океан |
 | [Art/Blender/World/CoastalEnvironment/render_tripo_source_contact.py](<../../Art/Blender/World/CoastalEnvironment/render_tripo_source_contact.py>) | Инструмент Python; Мир, острова и океан |
 | [Art/Blender/World/CoastalEnvironment/revise_tripo_arch_placement.py](<../../Art/Blender/World/CoastalEnvironment/revise_tripo_arch_placement.py>) | Инструмент Python |
 
@@ -784,6 +788,101 @@
 | [Art/External/DiceProps/MedievalPropsPack/MedievalBeerMug/Mug_Metallic.png](<../../Art/External/DiceProps/MedievalPropsPack/MedievalBeerMug/Mug_Metallic.png>) | Изображение / текстура |
 | [Art/External/DiceProps/MedievalPropsPack/MedievalBeerMug/Mug_Normal_DirectX.png](<../../Art/External/DiceProps/MedievalPropsPack/MedievalBeerMug/Mug_Normal_DirectX.png>) | Изображение / текстура |
 | [Art/External/DiceProps/MedievalPropsPack/MedievalBeerMug/Mug_Roughness.png](<../../Art/External/DiceProps/MedievalPropsPack/MedievalBeerMug/Mug_Roughness.png>) | Изображение / текстура |
+
+## Art/Source/StormClouds/Generated
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Source/StormClouds/Generated/SOURCE.md](<../../Art/Source/StormClouds/Generated/SOURCE.md>) | Документация; Шторм, зона, дождь и объёмный туман |
+| [Art/Source/StormClouds/Generated/StormCumulusAtlas.png](<../../Art/Source/StormClouds/Generated/StormCumulusAtlas.png>) | Изображение / текстура |
+
+## Art/Source/StormClouds/OlegVegan
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Source/StormClouds/OlegVegan/LICENSE-SOURCE.md](<../../Art/Source/StormClouds/OlegVegan/LICENSE-SOURCE.md>) | Документация |
+| [Art/Source/StormClouds/OlegVegan/StormBillowsAtlas.json](<../../Art/Source/StormClouds/OlegVegan/StormBillowsAtlas.json>) | Конфигурация / данные JSON |
+| [Art/Source/StormClouds/OlegVegan/StormBillowsAtlas.png](<../../Art/Source/StormClouds/OlegVegan/StormBillowsAtlas.png>) | Изображение / текстура |
+| [Art/Source/StormClouds/OlegVegan/contact-sheet.jpg](<../../Art/Source/StormClouds/OlegVegan/contact-sheet.jpg>) | Изображение / текстура |
+| [Art/Source/StormClouds/OlegVegan/realistic-transparent-clouds.zip](<../../Art/Source/StormClouds/OlegVegan/realistic-transparent-clouds.zip>) | Архив |
+
+## Art/Source/StormClouds/OlegVegan/Originals
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Source/StormClouds/OlegVegan/Originals/cloud1.png](<../../Art/Source/StormClouds/OlegVegan/Originals/cloud1.png>) | Изображение / текстура |
+| [Art/Source/StormClouds/OlegVegan/Originals/cloud2.png](<../../Art/Source/StormClouds/OlegVegan/Originals/cloud2.png>) | Изображение / текстура |
+| [Art/Source/StormClouds/OlegVegan/Originals/cloud3.png](<../../Art/Source/StormClouds/OlegVegan/Originals/cloud3.png>) | Изображение / текстура |
+| [Art/Source/StormClouds/OlegVegan/Originals/cloud4.png](<../../Art/Source/StormClouds/OlegVegan/Originals/cloud4.png>) | Изображение / текстура |
+| [Art/Source/StormClouds/OlegVegan/Originals/cloud5.png](<../../Art/Source/StormClouds/OlegVegan/Originals/cloud5.png>) | Изображение / текстура |
+| [Art/Source/StormClouds/OlegVegan/Originals/cloud6.png](<../../Art/Source/StormClouds/OlegVegan/Originals/cloud6.png>) | Изображение / текстура |
+| [Art/Source/StormClouds/OlegVegan/Originals/cloud7.png](<../../Art/Source/StormClouds/OlegVegan/Originals/cloud7.png>) | Изображение / текстура |
+| [Art/Source/StormClouds/OlegVegan/Originals/cloud_second_day (1).png](<../../Art/Source/StormClouds/OlegVegan/Originals/cloud_second_day (1).png>) | Изображение / текстура |
+| [Art/Source/StormClouds/OlegVegan/Originals/cloud_second_day (10).png](<../../Art/Source/StormClouds/OlegVegan/Originals/cloud_second_day (10).png>) | Изображение / текстура |
+| [Art/Source/StormClouds/OlegVegan/Originals/cloud_second_day (11).png](<../../Art/Source/StormClouds/OlegVegan/Originals/cloud_second_day (11).png>) | Изображение / текстура |
+| [Art/Source/StormClouds/OlegVegan/Originals/cloud_second_day (12).png](<../../Art/Source/StormClouds/OlegVegan/Originals/cloud_second_day (12).png>) | Изображение / текстура |
+| [Art/Source/StormClouds/OlegVegan/Originals/cloud_second_day (13).png](<../../Art/Source/StormClouds/OlegVegan/Originals/cloud_second_day (13).png>) | Изображение / текстура |
+| [Art/Source/StormClouds/OlegVegan/Originals/cloud_second_day (14).png](<../../Art/Source/StormClouds/OlegVegan/Originals/cloud_second_day (14).png>) | Изображение / текстура |
+| [Art/Source/StormClouds/OlegVegan/Originals/cloud_second_day (15).png](<../../Art/Source/StormClouds/OlegVegan/Originals/cloud_second_day (15).png>) | Изображение / текстура |
+| [Art/Source/StormClouds/OlegVegan/Originals/cloud_second_day (16).png](<../../Art/Source/StormClouds/OlegVegan/Originals/cloud_second_day (16).png>) | Изображение / текстура |
+| [Art/Source/StormClouds/OlegVegan/Originals/cloud_second_day (17).png](<../../Art/Source/StormClouds/OlegVegan/Originals/cloud_second_day (17).png>) | Изображение / текстура |
+| [Art/Source/StormClouds/OlegVegan/Originals/cloud_second_day (18).png](<../../Art/Source/StormClouds/OlegVegan/Originals/cloud_second_day (18).png>) | Изображение / текстура |
+| [Art/Source/StormClouds/OlegVegan/Originals/cloud_second_day (19).png](<../../Art/Source/StormClouds/OlegVegan/Originals/cloud_second_day (19).png>) | Изображение / текстура |
+| [Art/Source/StormClouds/OlegVegan/Originals/cloud_second_day (2).png](<../../Art/Source/StormClouds/OlegVegan/Originals/cloud_second_day (2).png>) | Изображение / текстура |
+| [Art/Source/StormClouds/OlegVegan/Originals/cloud_second_day (20).png](<../../Art/Source/StormClouds/OlegVegan/Originals/cloud_second_day (20).png>) | Изображение / текстура |
+| [Art/Source/StormClouds/OlegVegan/Originals/cloud_second_day (21).png](<../../Art/Source/StormClouds/OlegVegan/Originals/cloud_second_day (21).png>) | Изображение / текстура |
+| [Art/Source/StormClouds/OlegVegan/Originals/cloud_second_day (22).png](<../../Art/Source/StormClouds/OlegVegan/Originals/cloud_second_day (22).png>) | Изображение / текстура |
+| [Art/Source/StormClouds/OlegVegan/Originals/cloud_second_day (23).png](<../../Art/Source/StormClouds/OlegVegan/Originals/cloud_second_day (23).png>) | Изображение / текстура |
+| [Art/Source/StormClouds/OlegVegan/Originals/cloud_second_day (24).png](<../../Art/Source/StormClouds/OlegVegan/Originals/cloud_second_day (24).png>) | Изображение / текстура |
+| [Art/Source/StormClouds/OlegVegan/Originals/cloud_second_day (25).png](<../../Art/Source/StormClouds/OlegVegan/Originals/cloud_second_day (25).png>) | Изображение / текстура |
+| [Art/Source/StormClouds/OlegVegan/Originals/cloud_second_day (26).png](<../../Art/Source/StormClouds/OlegVegan/Originals/cloud_second_day (26).png>) | Изображение / текстура |
+| [Art/Source/StormClouds/OlegVegan/Originals/cloud_second_day (27).png](<../../Art/Source/StormClouds/OlegVegan/Originals/cloud_second_day (27).png>) | Изображение / текстура |
+| [Art/Source/StormClouds/OlegVegan/Originals/cloud_second_day (28).png](<../../Art/Source/StormClouds/OlegVegan/Originals/cloud_second_day (28).png>) | Изображение / текстура |
+| [Art/Source/StormClouds/OlegVegan/Originals/cloud_second_day (29).png](<../../Art/Source/StormClouds/OlegVegan/Originals/cloud_second_day (29).png>) | Изображение / текстура |
+| [Art/Source/StormClouds/OlegVegan/Originals/cloud_second_day (3).png](<../../Art/Source/StormClouds/OlegVegan/Originals/cloud_second_day (3).png>) | Изображение / текстура |
+| [Art/Source/StormClouds/OlegVegan/Originals/cloud_second_day (30).png](<../../Art/Source/StormClouds/OlegVegan/Originals/cloud_second_day (30).png>) | Изображение / текстура |
+| [Art/Source/StormClouds/OlegVegan/Originals/cloud_second_day (31).png](<../../Art/Source/StormClouds/OlegVegan/Originals/cloud_second_day (31).png>) | Изображение / текстура |
+| [Art/Source/StormClouds/OlegVegan/Originals/cloud_second_day (32).png](<../../Art/Source/StormClouds/OlegVegan/Originals/cloud_second_day (32).png>) | Изображение / текстура |
+| [Art/Source/StormClouds/OlegVegan/Originals/cloud_second_day (33).png](<../../Art/Source/StormClouds/OlegVegan/Originals/cloud_second_day (33).png>) | Изображение / текстура |
+| [Art/Source/StormClouds/OlegVegan/Originals/cloud_second_day (34).png](<../../Art/Source/StormClouds/OlegVegan/Originals/cloud_second_day (34).png>) | Изображение / текстура |
+| [Art/Source/StormClouds/OlegVegan/Originals/cloud_second_day (4).png](<../../Art/Source/StormClouds/OlegVegan/Originals/cloud_second_day (4).png>) | Изображение / текстура |
+| [Art/Source/StormClouds/OlegVegan/Originals/cloud_second_day (5).png](<../../Art/Source/StormClouds/OlegVegan/Originals/cloud_second_day (5).png>) | Изображение / текстура |
+| [Art/Source/StormClouds/OlegVegan/Originals/cloud_second_day (6).png](<../../Art/Source/StormClouds/OlegVegan/Originals/cloud_second_day (6).png>) | Изображение / текстура |
+| [Art/Source/StormClouds/OlegVegan/Originals/cloud_second_day (7).png](<../../Art/Source/StormClouds/OlegVegan/Originals/cloud_second_day (7).png>) | Изображение / текстура |
+| [Art/Source/StormClouds/OlegVegan/Originals/cloud_second_day (8).png](<../../Art/Source/StormClouds/OlegVegan/Originals/cloud_second_day (8).png>) | Изображение / текстура |
+| [Art/Source/StormClouds/OlegVegan/Originals/cloud_second_day (9).png](<../../Art/Source/StormClouds/OlegVegan/Originals/cloud_second_day (9).png>) | Изображение / текстура |
+
+## Art/Source/StormClouds/WickedInsignia
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Source/StormClouds/WickedInsignia/LICENSE-SOURCE.md](<../../Art/Source/StormClouds/WickedInsignia/LICENSE-SOURCE.md>) | Документация |
+| [Art/Source/StormClouds/WickedInsignia/fx_cloudalphas.zip](<../../Art/Source/StormClouds/WickedInsignia/fx_cloudalphas.zip>) | Архив |
+
+## Art/Source/StormClouds/WickedInsignia/Originals
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Source/StormClouds/WickedInsignia/Originals/FX_CloudAlpha01.jpg](<../../Art/Source/StormClouds/WickedInsignia/Originals/FX_CloudAlpha01.jpg>) | Изображение / текстура |
+| [Art/Source/StormClouds/WickedInsignia/Originals/FX_CloudAlpha01.png](<../../Art/Source/StormClouds/WickedInsignia/Originals/FX_CloudAlpha01.png>) | Изображение / текстура |
+| [Art/Source/StormClouds/WickedInsignia/Originals/FX_CloudAlpha02.jpg](<../../Art/Source/StormClouds/WickedInsignia/Originals/FX_CloudAlpha02.jpg>) | Изображение / текстура |
+| [Art/Source/StormClouds/WickedInsignia/Originals/FX_CloudAlpha02.png](<../../Art/Source/StormClouds/WickedInsignia/Originals/FX_CloudAlpha02.png>) | Изображение / текстура |
+| [Art/Source/StormClouds/WickedInsignia/Originals/FX_CloudAlpha03.jpg](<../../Art/Source/StormClouds/WickedInsignia/Originals/FX_CloudAlpha03.jpg>) | Изображение / текстура |
+| [Art/Source/StormClouds/WickedInsignia/Originals/FX_CloudAlpha03.png](<../../Art/Source/StormClouds/WickedInsignia/Originals/FX_CloudAlpha03.png>) | Изображение / текстура |
+| [Art/Source/StormClouds/WickedInsignia/Originals/FX_CloudAlpha04.jpg](<../../Art/Source/StormClouds/WickedInsignia/Originals/FX_CloudAlpha04.jpg>) | Изображение / текстура |
+| [Art/Source/StormClouds/WickedInsignia/Originals/FX_CloudAlpha04.png](<../../Art/Source/StormClouds/WickedInsignia/Originals/FX_CloudAlpha04.png>) | Изображение / текстура |
+| [Art/Source/StormClouds/WickedInsignia/Originals/FX_CloudAlpha05.jpg](<../../Art/Source/StormClouds/WickedInsignia/Originals/FX_CloudAlpha05.jpg>) | Изображение / текстура |
+| [Art/Source/StormClouds/WickedInsignia/Originals/FX_CloudAlpha05.png](<../../Art/Source/StormClouds/WickedInsignia/Originals/FX_CloudAlpha05.png>) | Изображение / текстура |
+| [Art/Source/StormClouds/WickedInsignia/Originals/FX_CloudAlpha06.jpg](<../../Art/Source/StormClouds/WickedInsignia/Originals/FX_CloudAlpha06.jpg>) | Изображение / текстура |
+| [Art/Source/StormClouds/WickedInsignia/Originals/FX_CloudAlpha06.png](<../../Art/Source/StormClouds/WickedInsignia/Originals/FX_CloudAlpha06.png>) | Изображение / текстура |
+| [Art/Source/StormClouds/WickedInsignia/Originals/FX_CloudAlpha07.jpg](<../../Art/Source/StormClouds/WickedInsignia/Originals/FX_CloudAlpha07.jpg>) | Изображение / текстура |
+| [Art/Source/StormClouds/WickedInsignia/Originals/FX_CloudAlpha07.png](<../../Art/Source/StormClouds/WickedInsignia/Originals/FX_CloudAlpha07.png>) | Изображение / текстура |
+| [Art/Source/StormClouds/WickedInsignia/Originals/FX_CloudAlpha08.jpg](<../../Art/Source/StormClouds/WickedInsignia/Originals/FX_CloudAlpha08.jpg>) | Изображение / текстура |
+| [Art/Source/StormClouds/WickedInsignia/Originals/FX_CloudAlpha08.png](<../../Art/Source/StormClouds/WickedInsignia/Originals/FX_CloudAlpha08.png>) | Изображение / текстура |
+| [Art/Source/StormClouds/WickedInsignia/Originals/FX_CloudAlpha09.jpg](<../../Art/Source/StormClouds/WickedInsignia/Originals/FX_CloudAlpha09.jpg>) | Изображение / текстура |
+| [Art/Source/StormClouds/WickedInsignia/Originals/FX_CloudAlpha09.png](<../../Art/Source/StormClouds/WickedInsignia/Originals/FX_CloudAlpha09.png>) | Изображение / текстура |
+| [Art/Source/StormClouds/WickedInsignia/Originals/FX_CloudAlpha10.jpg](<../../Art/Source/StormClouds/WickedInsignia/Originals/FX_CloudAlpha10.jpg>) | Изображение / текстура |
+| [Art/Source/StormClouds/WickedInsignia/Originals/FX_CloudAlpha10.png](<../../Art/Source/StormClouds/WickedInsignia/Originals/FX_CloudAlpha10.png>) | Изображение / текстура |
 
 ## Art/Sources/CoastalEnvironment
 

@@ -6,6 +6,7 @@
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
 
 #include "./PhysicallyBasedSkyCommon.hlsl"
+#include "Assets/Game/BRZoneVolumetric/Shaders/StormCloudBoundary.hlsl"
 
 float3 _PBRSkyCameraPosPS;
 int _DisableSunDisk;

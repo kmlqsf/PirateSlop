@@ -1,0 +1,82 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &944481517571052566
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1033088993804929127}
+  - component: {fileID: 4004008668119704683}
+  - component: {fileID: 6382064648299349630}
+  m_Layer: 30
+  m_Name: StormBackdrop
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1033088993804929127
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 944481517571052566}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4004008668119704683
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 944481517571052566}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5aa786cbbd73b2444ba1a6318e8f2abe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.StormVolumeController
+  EnableStormVolume: 1
+  InnerThickness: 450
+  OuterThickness: 1350
+  EdgeSoftness: 160
+  WeatherTransitionWidth: 40
+  CloudTransitionWidth: 600
+  CloudEdgeBreakup: 900
+  CloudEdgeRiseHeight: 1200
+  StormHeight: 3200
+  TopInwardOffset: 45
+  DensityMultiplier: 0.5
+  NoiseScale: 45
+  WindSpeed: 9
+  ShapeContrast: 0.6
+  MagicIntensity: 0.16
+  FeedbackDistance: 100
+  FeedbackStrength: 0
+  FreezeZoneValues: 0
+  ManualRadius: 1400
+--- !u!114 &6382064648299349630
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 944481517571052566}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0eba18e57785dc4ba390bdb59dcd843, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.StormWeatherController
+  BoltMaterial: {fileID: 2100000, guid: 82c28a11f8c0f7d4988756bc1400e532, type: 2}
+  LightningInterval: 0.85
+  BoltChance: 1
+  LightningIntensity: 0.55

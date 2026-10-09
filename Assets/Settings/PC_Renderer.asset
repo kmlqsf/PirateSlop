@@ -59,6 +59,21 @@ MonoBehaviour:
   m_Active: 0
   downsampleDepthShader: {fileID: 4800000, guid: cffeaeec0396a2c4dad475266cc8dfeb, type: 3}
   volumetricFogShader: {fileID: 4800000, guid: 08f816187f9af0244a95556ee0cab83f, type: 3}
+--- !u!114 &-2536988834562444839
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3323d66f1491e5744b8f7e7225a495c4, type: 3}
+  m_Name: Storm Rain Lens and Veil
+  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.StormRainRendererFeature
+  m_Active: 1
+  Template: {fileID: 2100000, guid: 3fa3687a8e8597b409378874ec3fc6e9, type: 2}
+  DepthCopyShader: {fileID: 4800000, guid: d6dae50ee9e1bfa4db75f19f99355220, type: 3}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -89,6 +104,7 @@ MonoBehaviour:
   - {fileID: -4144231278053079073}
   - {fileID: 2630250939822329195}
   - {fileID: -3461419656797274781}
+  - {fileID: -2536988834562444839}
   m_RendererFeatureMap: ad6b866f10d7b46cl
   xrSystemData: {fileID: 0}
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}

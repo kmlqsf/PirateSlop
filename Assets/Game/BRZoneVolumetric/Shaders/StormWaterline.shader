@@ -16,6 +16,7 @@ Shader "PirateSlop/StormWaterline"
             Blend SrcAlpha OneMinusSrcAlpha
             ZWrite Off Cull Off
             HLSLPROGRAM
+            #pragma target 4.5
             #pragma vertex Vert
             #pragma fragment Frag
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
@@ -25,6 +26,14 @@ Shader "PirateSlop/StormWaterline"
             float _ParticleMode;
             float4 _WaterlineSettings;
             float4 _WaterlineCenter;
+            float4 _WaterlineArc;
+            float4 _WaterlineWhirlpool;
+            float _WaterlineWaveMode;
+            float _WaterlineWaveTime;
+            float _WaterlineWaveCount;
+            float4 _WaterlineWaveShape[12];
+            float4 _WaterlineWaveMotion[12];
+            float _WaterlineFallbackHeight[32];
             CBUFFER_END
             struct Attributes { float4 positionOS:POSITION; float2 uv:TEXCOORD0; float2 kind:TEXCOORD1; half4 color:COLOR; };
             struct Varyings { float4 positionCS:SV_POSITION; float3 world:TEXCOORD0; float2 uv:TEXCOORD1; float2 kind:TEXCOORD2; half4 color:COLOR; };
@@ -34,10 +43,58 @@ Shader "PirateSlop/StormWaterline"
                 float2 i=floor(p), f=frac(p); f=f*f*(3-2*f);
                 return lerp(lerp(Hash(i),Hash(i+float2(1,0)),f.x),lerp(Hash(i+float2(0,1)),Hash(i+1),f.x),f.y);
             }
+            float WaveHeight(float2 target)
+            {
+                float2 parameter=target;
+                float bestError=1e20, height=0;
+                [loop] for (int iteration=0;iteration<6;iteration++)
+                {
+                    float3 offset=0;
+                    float4 jacobian=float4(1,0,0,1);
+                    [loop] for (int k=0;k<(int)_WaterlineWaveCount;k++)
+                    {
+                        float4 shape=_WaterlineWaveShape[k];
+                        float2 motion=_WaterlineWaveMotion[k].xy;
+                        float phase=dot(shape.xy,parameter)*shape.z-_WaterlineWaveTime*motion.x;
+                        float sine,cosine;
+                        sincos(phase,sine,cosine);
+                        offset.xz+=motion.y*shape.xy*cosine;
+                        offset.y+=shape.w*sine;
+                        float derivative=-motion.y*shape.z*sine;
+                        jacobian+=derivative*shape.xyxy*shape.xxyy;
+                    }
+                    float2 residual=parameter+offset.xz-target;
+                    float error=dot(residual,residual);
+                    if (error<bestError) { bestError=error; height=offset.y; }
+                    if (error<.0001) break;
+                    float determinant=jacobian.x*jacobian.w-jacobian.y*jacobian.z;
+                    float2 step=abs(determinant)>.01?float2(jacobian.w*residual.x-jacobian.y*residual.y,-jacobian.z*residual.x+jacobian.x*residual.y)/determinant:residual*.5;
+                    parameter-=step*min(1,12/max(length(step),.001));
+                }
+                float falloff=1-saturate(distance(target,_WaterlineWhirlpool.xy)/max(_WaterlineWhirlpool.z,.01));
+                return _WaterlineCenter.y+height-(_WaterlineWhirlpool.z>0?_WaterlineWhirlpool.w*falloff*falloff:0);
+            }
             Varyings Vert(Attributes input)
             {
                 Varyings o;
                 o.world=TransformObjectToWorld(input.positionOS.xyz);
+                if (_ParticleMode<.5)
+                {
+                    float theta=_WaterlineArc.x+(input.uv.x*2-1)*_WaterlineArc.y;
+                    float2 radial=float2(cos(theta),sin(theta));
+                    float2 tangent=float2(-radial.y,radial.x);
+                    float2 boundary=_WaterlineCenter.xz+radial*_WaterlineCenter.w;
+                    float patch=Noise(boundary*.006+float2(_Time.y*.023,-_Time.y*.015));
+                    float curl=Noise(boundary*.021+float2(-_Time.y*.055,_Time.y*.038));
+                    float u=input.uv.y;
+                    float offset=(patch-.5)*9+(input.kind.x<.5?(u-.5)*_WaterlineArc.z:(input.kind.y<1.5?-.12:.13)*_WaterlineArc.z-u*_WaterlineArc.z*.18);
+                    o.world.xz=_WaterlineCenter.xz+radial*max(1,_WaterlineCenter.w+offset);
+                    if(input.kind.x>.5) o.world.xz+=tangent*u*u*(2+curl*5);
+                    float index=input.uv.x*31;
+                    int first=min(30,(int)index);
+                    float water=_WaterlineWaveMode>.5?WaveHeight(o.world.xz):lerp(_WaterlineFallbackHeight[first],_WaterlineFallbackHeight[first+1],index-first);
+                    o.world.y=water+.16+(input.kind.x<.5?0:u*_WaterlineSettings.w*(.42+patch*.63+curl*.2));
+                }
                 o.positionCS=TransformWorldToHClip(o.world);
                 o.uv=input.uv; o.kind=input.kind; o.color=input.color;
                 return o;
@@ -89,14 +146,14 @@ Shader "PirateSlop/StormWaterline"
                     float vertical=(1-smoothstep(crown*.2,crown,i.uv.y));
                     float wisps=smoothstep(.22,.64,medium*.45+curls*.55);
                     alpha=vertical*patches*(.3+wisps*.7)*_WaterlineSettings.x*1.08;
-                    color=lerp(_Color.rgb*.95,half3(.43,.56,.63),smoothstep(.02,.8,i.uv.y));
+                    color=lerp(half3(.10,.16,.21),half3(.17,.24,.31),smoothstep(.02,.8,i.uv.y));
+                    alpha*=.58;
                 }
                 float scene=LinearEyeDepth(SampleSceneDepth(GetNormalizedScreenSpaceUV(i.positionCS)),_ZBufferParams);
                 float eye=-TransformWorldToView(i.world).z;
                 alpha*=saturate((scene-eye)/(_ParticleMode < .5 && i.kind.x < .5 ? .08 : .65));
                 float cameraDistance=distance(_WorldSpaceCameraPos,i.world);
                 alpha*=smoothstep(.4,2.5,cameraDistance);
-                // Keep the distant waterline under the same haze as the cloud wall.
                 if (_ParticleMode < .5)
                     alpha*=1-smoothstep(90,380,cameraDistance);
                 if (_ParticleMode < .5)
@@ -117,3 +174,4 @@ Shader "PirateSlop/StormWaterline"
         }
     }
 }
+

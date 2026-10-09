@@ -13,7 +13,7 @@
 | [.cursorrules](<../../.cursorrules>) | Файл без расширения |
 | [.gitattributes](<../../.gitattributes>) | Файл без расширения |
 | [.gitignore](<../../.gitignore>) | Файл без расширения |
-| [AGENTS.md](<../../AGENTS.md>) | Документация |
+| [AGENTS.md](<../../AGENTS.md>) | Документация; VFX: самостоятельная работа основного агента |
 | [AudioIntegration.md](<../../AudioIntegration.md>) | Документация; Звуки и голос |
 | [BOT_ITEMS.md](<../../BOT_ITEMS.md>) | Документация; Новая система ботов |
 | [BOT_PROGRESS.md](<../../BOT_PROGRESS.md>) | Документация; Новая система ботов |
@@ -27,6 +27,7 @@
 | [harpoon_generator.py](<../../harpoon_generator.py>) | Инструмент Python |
 | [harpoon_tz.md](<../../harpoon_tz.md>) | Документация |
 | [harpoon_unity_tz.md](<../../harpoon_unity_tz.md>) | Документация |
+| [import_anim.log](<../../import_anim.log>) | Файл .log |
 | [lessons.md](<../../lessons.md>) | Документация |
 | [multiplayer-plan.md](<../../multiplayer-plan.md>) | Документация; Движение корабля и палуба, Сеть, сессия и Steam |
 | [procedural-world.md](<../../procedural-world.md>) | Документация; Мир, острова и океан |

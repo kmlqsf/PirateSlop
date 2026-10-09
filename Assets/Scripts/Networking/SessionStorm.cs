@@ -49,8 +49,9 @@ namespace PirateSlop.Networking
         void StartStorm()
         {
             stormRunning = true;
-            stormPaused = false;
+            stormPaused = EnvironmentTestActive;
             stormStarted = Time.time;
+            stormPausedAt = stormStarted;
             stormTick = Time.time;
             stormRadius = ProceduralWorld.Instance.Layout.Radius;
         }

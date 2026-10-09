@@ -7,7 +7,7 @@ namespace PirateSlop.World
     {
         public const string ResourcePath = "EnvironmentTest/Gallery";
         public const string Marker = "environment_test";
-        public float Radius = 2000f;
+        public float Radius = 4000f;
         public Vector3 Spawn;
         public string Revision;
         public Transform[] Labels;
@@ -19,7 +19,7 @@ namespace PirateSlop.World
         {
             var gallery = Resources.Load<EnvironmentTestGallery>(ResourcePath);
             if (gallery == null) throw new InvalidOperationException("Rebuild the environment gallery from PirateSlop > Prepare Environment Test.");
-            var layout = new WorldLayout { Seed = 1, Resolution = 32, Radius = Mathf.Max(gallery.Radius, 2000f), Depth = 200f, SeaLevel = seaLevel, CatalogHash = WorldGenerator.CatalogHash(profile) };
+            var layout = new WorldLayout { Seed = 1, Resolution = 32, Radius = Mathf.Max(gallery.Radius, 4000f), Depth = 200f, SeaLevel = seaLevel, CatalogHash = WorldGenerator.CatalogHash(profile) };
             layout.Points.Add(new WorldPoint { Id = Marker + "/" + gallery.Revision, Tag = Marker, Position = Vector3.up * seaLevel, Rule = -1 });
             for (int i = 0; i < 10; i++)
                 layout.Points.Add(new WorldPoint { Id = "test_ship_" + i, Tag = "ship_spawn", Position = gallery.Spawn + new Vector3(-i * 65f, seaLevel, 0f), Yaw = 180f, Rule = -1 });

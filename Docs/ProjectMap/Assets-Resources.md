@@ -21,7 +21,7 @@
 | [Assets/Resources/CombatParticles.mat](<../../Assets/Resources/CombatParticles.mat>) | Материал Unity |
 | [Assets/Resources/FirearmGlow.mat](<../../Assets/Resources/FirearmGlow.mat>) | Материал Unity |
 | [Assets/Resources/FirearmGlow.shader](<../../Assets/Resources/FirearmGlow.shader>) | Шейдер |
-| [Assets/Resources/GameAudioBank.asset](<../../Assets/Resources/GameAudioBank.asset>) | Настройки или данные Unity; Корабельная слот-машина, Звуки и голос |
+| [Assets/Resources/GameAudioBank.asset](<../../Assets/Resources/GameAudioBank.asset>) | Настройки или данные Unity; Чайки и фоновые стаи, Звуки и голос, Шторм, зона, дождь и объёмный туман, Корабельная слот-машина |
 | [Assets/Resources/GeneratedGameVersion.txt](<../../Assets/Resources/GeneratedGameVersion.txt>) | Текстовые данные |
 | [Assets/Resources/GrappleHookModel.prefab](<../../Assets/Resources/GrappleHookModel.prefab>) | Префаб Unity |
 | [Assets/Resources/HarpoonGun.prefab](<../../Assets/Resources/HarpoonGun.prefab>) | Префаб Unity |
@@ -78,6 +78,15 @@
 | [Assets/Resources/EnvironmentTest/WaterBowSpray.shader](<../../Assets/Resources/EnvironmentTest/WaterBowSpray.shader>) | Шейдер; Мир, острова и океан, Тестовая карта и водоворот |
 | [Assets/Resources/EnvironmentTest/WaterWetMark.shader](<../../Assets/Resources/EnvironmentTest/WaterWetMark.shader>) | Шейдер; Мир, острова и океан, Тестовая карта и водоворот |
 
+## Assets/Resources/Menu
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Resources/Menu/Scenery.prefab](<../../Assets/Resources/Menu/Scenery.prefab>) | Префаб Unity; Меню и HUD |
+| [Assets/Resources/Menu/StormBackdrop.prefab](<../../Assets/Resources/Menu/StormBackdrop.prefab>) | Префаб Unity; Меню и HUD |
+| [Assets/Resources/Menu/TitlePrint.SOURCES.md](<../../Assets/Resources/Menu/TitlePrint.SOURCES.md>) | Документация; Меню и HUD |
+| [Assets/Resources/Menu/TitlePrint.png](<../../Assets/Resources/Menu/TitlePrint.png>) | Изображение / текстура; Меню и HUD |
+
 ## Assets/Resources/RoguelikeUI
 
 | Файл | Краткое описание |
@@ -93,12 +102,34 @@
 | [Assets/Resources/Ships/ShipV3HarpoonPort.prefab](<../../Assets/Resources/Ships/ShipV3HarpoonPort.prefab>) | Префаб Unity; Гарпун и корабельное крепление |
 | [Assets/Resources/Ships/ShipV3HarpoonStarboard.prefab](<../../Assets/Resources/Ships/ShipV3HarpoonStarboard.prefab>) | Префаб Unity; Гарпун и корабельное крепление |
 | [Assets/Resources/Ships/ShipV3Menu.prefab](<../../Assets/Resources/Ships/ShipV3Menu.prefab>) | Префаб Unity; Паруса и канаты, Меню и HUD |
-| [Assets/Resources/Ships/ShipV3Test.prefab](<../../Assets/Resources/Ships/ShipV3Test.prefab>) | Префаб Unity; Проект и точки входа, Движение корабля и палуба, Корабельная слот-машина, Предметы, лут и инвентарь, Тестовая карта и водоворот, Корабельная обезьянка |
+| [Assets/Resources/Ships/ShipV3Test.prefab](<../../Assets/Resources/Ships/ShipV3Test.prefab>) | Префаб Unity; Проект и точки входа, Движение корабля и палуба, Предметы, лут и инвентарь, Тестовая карта и водоворот, Корабельная обезьянка, Корабельная слот-машина |
+
+## Assets/Resources/Storm
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Resources/Storm/RainContact.mat](<../../Assets/Resources/Storm/RainContact.mat>) | Материал Unity; Шторм, зона, дождь и объёмный туман |
+| [Assets/Resources/Storm/RainContact.shader](<../../Assets/Resources/Storm/RainContact.shader>) | Шейдер; Шторм, зона, дождь и объёмный туман |
+| [Assets/Resources/Storm/RainScreen.mat](<../../Assets/Resources/Storm/RainScreen.mat>) | Материал Unity; Шторм, зона, дождь и объёмный туман |
+| [Assets/Resources/Storm/RainScreen.shader](<../../Assets/Resources/Storm/RainScreen.shader>) | Шейдер; Шторм, зона, дождь и объёмный туман |
+| [Assets/Resources/Storm/RainStreak.mat](<../../Assets/Resources/Storm/RainStreak.mat>) | Материал Unity; Шторм, зона, дождь и объёмный туман |
+| [Assets/Resources/Storm/RainStreak.shader](<../../Assets/Resources/Storm/RainStreak.shader>) | Шейдер; Шторм, зона, дождь и объёмный туман |
+| [Assets/Resources/Storm/RainWarmup.shadervariants](<../../Assets/Resources/Storm/RainWarmup.shadervariants>) | Файл .shadervariants; Шторм, зона, дождь и объёмный туман |
+| [Assets/Resources/Storm/RainWetWood.mat](<../../Assets/Resources/Storm/RainWetWood.mat>) | Материал Unity; Шторм, зона, дождь и объёмный туман |
+| [Assets/Resources/Storm/RainWetWood.shader](<../../Assets/Resources/Storm/RainWetWood.shader>) | Шейдер; Шторм, зона, дождь и объёмный туман |
+| [Assets/Resources/Storm/TestLightning.mat](<../../Assets/Resources/Storm/TestLightning.mat>) | Материал Unity; Шторм, зона, дождь и объёмный туман |
+| [Assets/Resources/Storm/TestLightning.shader](<../../Assets/Resources/Storm/TestLightning.shader>) | Шейдер; Шторм, зона, дождь и объёмный туман |
 
 ## Assets/Resources/Underwater
 
 | Файл | Краткое описание |
 | --- | --- |
+| [Assets/Resources/Underwater/AmbientFish.prefab](<../../Assets/Resources/Underwater/AmbientFish.prefab>) | Префаб Unity; Фоновая рыба в океане |
+| [Assets/Resources/Underwater/AmbientFishSkin.asset](<../../Assets/Resources/Underwater/AmbientFishSkin.asset>) | Настройки или данные Unity; Фоновая рыба в океане |
+| [Assets/Resources/Underwater/AmbientPufferfish.prefab](<../../Assets/Resources/Underwater/AmbientPufferfish.prefab>) | Префаб Unity; Фоновая рыба в океане |
+| [Assets/Resources/Underwater/AmbientPufferfishSkin.asset](<../../Assets/Resources/Underwater/AmbientPufferfishSkin.asset>) | Настройки или данные Unity; Фоновая рыба в океане |
+| [Assets/Resources/Underwater/AmbientSwordfish.prefab](<../../Assets/Resources/Underwater/AmbientSwordfish.prefab>) | Префаб Unity; Фоновая рыба в океане |
+| [Assets/Resources/Underwater/AmbientSwordfishSkin.asset](<../../Assets/Resources/Underwater/AmbientSwordfishSkin.asset>) | Настройки или данные Unity; Фоновая рыба в океане |
 | [Assets/Resources/Underwater/Bubbles.mat](<../../Assets/Resources/Underwater/Bubbles.mat>) | Материал Unity; Мир, острова и океан |
 | [Assets/Resources/Underwater/Fish.prefab](<../../Assets/Resources/Underwater/Fish.prefab>) | Префаб Unity |
 | [Assets/Resources/Underwater/Seabed.mat](<../../Assets/Resources/Underwater/Seabed.mat>) | Материал Unity |
@@ -124,3 +155,11 @@
 | Файл | Краткое описание |
 | --- | --- |
 | [Assets/Resources/Whale/WhaleLootPOI.prefab](<../../Assets/Resources/Whale/WhaleLootPOI.prefab>) | Префаб Unity |
+
+## Assets/Resources/World
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Resources/World/SeagullDark.mat](<../../Assets/Resources/World/SeagullDark.mat>) | Материал Unity; Чайки и фоновые стаи |
+| [Assets/Resources/World/SeagullFeet.mat](<../../Assets/Resources/World/SeagullFeet.mat>) | Материал Unity; Чайки и фоновые стаи |
+| [Assets/Resources/World/SeagullWhite.mat](<../../Assets/Resources/World/SeagullWhite.mat>) | Материал Unity; Чайки и фоновые стаи |

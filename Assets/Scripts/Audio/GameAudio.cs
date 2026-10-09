@@ -24,6 +24,7 @@ namespace PirateSlop
         float underwaterVolume;
         int nextVoice;
         int lastStormThunder = -1;
+        float nextSeagullCall;
         readonly System.Collections.Generic.Dictionary<SoundCue, int> lastVariants = new();
         AudioSource music;
         public static float LastDamageTime = -1000f;
@@ -111,6 +112,16 @@ namespace PirateSlop
             source.clip = clip;
             source.Play();
         }
+        public static void SeagullCall(Vector3 position)
+        {
+            var audio = Get();
+            if (audio == null || Time.unscaledTime < audio.nextSeagullCall || audio.bank.Master * audio.bank.Ambience <= .001f) return;
+            if (!audio.entryMap.TryGetValue(SoundCue.Seagull, out var entry) || entry.Clips == null || entry.Clips.Length == 0) return;
+            var ear = SpatialAudioTone.FindListener();
+            if (ear == null || Vector3.Distance(ear.transform.position, position) >= entry.Distance) return;
+            audio.nextSeagullCall = Time.unscaledTime + Random.Range(12f, 18f);
+            Play(SoundCue.Seagull, position);
+        }
         public static void Play(SoundCue cue, Vector3 position, float scale = 1f, bool ui = false,FirearmDefinition firearm=null)
         {
             var audio = Get(); if (audio == null) return;
@@ -127,14 +138,14 @@ namespace PirateSlop
             source.GetComponent<DistanceShotAudio>()?.ResetPlayback();
             source.Stop(); source.transform.position = position;
             source.spatialBlend = ui ? 0f : 1f;
-            source.minDistance = cue == SoundCue.Cannon ? 8f : gunshot ? 5f : 2f; source.maxDistance = entry.Distance;
-            source.priority = gunshot ? 40 : feedback ? 32 : 128;
+            source.minDistance = cue == SoundCue.Cannon || cue == SoundCue.Seagull ? 8f : gunshot ? 5f : 2f; source.maxDistance = entry.Distance;
+            source.priority = gunshot ? 40 : feedback ? 32 : cue == SoundCue.Seagull ? 200 : 128;
             if (cue == SoundCue.Pistol)
             {
                 var shotListener = SpatialAudioTone.FindListener();
                 if (shotListener != null) scale *= Mathf.Lerp(1.5f, 1f, Mathf.InverseLerp(5f, 15f, Vector3.Distance(position, shotListener.transform.position)));
             }
-            source.volume = Mathf.Clamp01(entry.Volume * scale * audio.bank.Master * (cue == SoundCue.MatchDefeat ? audio.bank.Music : ui && !feedback ? audio.bank.Interface : audio.bank.Effects));
+            source.volume = Mathf.Clamp01(entry.Volume * scale * audio.bank.Master * (cue == SoundCue.MatchDefeat ? audio.bank.Music : cue == SoundCue.Seagull ? audio.bank.Ambience : ui && !feedback ? audio.bank.Interface : audio.bank.Effects));
             source.pitch = ui ? 1f : gunshot ? Random.Range(.975f,1.025f) : Random.Range(.94f, 1.06f);
             int clipIndex = Random.Range(0, entry.Clips.Length);
             if ((cue == SoundCue.ShipBell || cue == SoundCue.DiceSlide || cue == SoundCue.DiceImpact || cue == SoundCue.DiceCup || cue == SoundCue.Creak || cue == SoundCue.Wheel || cue == SoundCue.WheelReverseRope || cue == SoundCue.CannonballRoll || cue == SoundCue.LockpickMove || cue == SoundCue.LockpickJam) && entry.Clips.Length > 1)
@@ -176,9 +187,10 @@ namespace PirateSlop
         public static void Ambience(float speed, bool onShip = false, float floodLevel = 0f)
         {
             var audio = Get(); if (audio == null) return;
+            audio.rainOnShip = onShip;
             audio.UpdateEnvironment(onShip);
             var weather = StormVolumeController.Instance;
-            float stormTarget = weather != null && audio.listener != null
+            float stormTarget = weather != null && !weather.TestCloudWall && audio.listener != null
                 ? StormProximity(weather, audio.listener.transform.position) : 0f;
             audio.stormBlend = Mathf.Lerp(audio.stormBlend, stormTarget, 1f - Mathf.Exp(-2f * Time.unscaledDeltaTime));
             audio.storm.volume = audio.bank.Master * audio.bank.Ambience * audio.stormBlend * audio.bank.StormLevel * Mathf.Lerp(1f, .35f, audio.cabinBlend) * Mathf.Lerp(1f, .12f, audio.underwaterBlend);
@@ -245,6 +257,7 @@ namespace PirateSlop
         }
         void Update()
         {
+            UpdateRainLifetime();
             UpdateMusic();
             if (Time.unscaledTime - lastAmbience < .3f) return;
             ocean.Stop(); wind.Stop(); deck.Stop(); underwater.Stop(); flooding.Stop(); storm.Stop(); stormBlend = 0;

@@ -131,7 +131,6 @@
 | [Packages/com.firstgeargames.fishnet/CodeGenerating/cecil-0.11.4/Mono.Cecil.Tests.props](<../../Packages/com.firstgeargames.fishnet/CodeGenerating/cecil-0.11.4/Mono.Cecil.Tests.props>) | Файл .props |
 | [Packages/com.firstgeargames.fishnet/CodeGenerating/cecil-0.11.4/Mono.Cecil.nunit](<../../Packages/com.firstgeargames.fishnet/CodeGenerating/cecil-0.11.4/Mono.Cecil.nunit>) | Файл .nunit |
 | [Packages/com.firstgeargames.fishnet/CodeGenerating/cecil-0.11.4/Mono.Cecil.nuspec](<../../Packages/com.firstgeargames.fishnet/CodeGenerating/cecil-0.11.4/Mono.Cecil.nuspec>) | Файл .nuspec |
-| [Packages/com.firstgeargames.fishnet/CodeGenerating/cecil-0.11.4/Mono.Cecil.sln](<../../Packages/com.firstgeargames.fishnet/CodeGenerating/cecil-0.11.4/Mono.Cecil.sln>) | Файл .sln |
 | [Packages/com.firstgeargames.fishnet/CodeGenerating/cecil-0.11.4/MonoFN.Cecil.asmdef](<../../Packages/com.firstgeargames.fishnet/CodeGenerating/cecil-0.11.4/MonoFN.Cecil.asmdef>) | Описание сборки Unity |
 | [Packages/com.firstgeargames.fishnet/CodeGenerating/cecil-0.11.4/ProjectInfo.cs](<../../Packages/com.firstgeargames.fishnet/CodeGenerating/cecil-0.11.4/ProjectInfo.cs>) | Исходник C# |
 | [Packages/com.firstgeargames.fishnet/CodeGenerating/cecil-0.11.4/README.md](<../../Packages/com.firstgeargames.fishnet/CodeGenerating/cecil-0.11.4/README.md>) | Документация |
@@ -1482,7 +1481,6 @@
 | [Packages/com.firstgeargames.fishysteamworks/FishySteamworks.asmdef](<../../Packages/com.firstgeargames.fishysteamworks/FishySteamworks.asmdef>) | Описание сборки Unity |
 | [Packages/com.firstgeargames.fishysteamworks/FishySteamworks.cs](<../../Packages/com.firstgeargames.fishysteamworks/FishySteamworks.cs>) | Исходник C#: FishySteamworks |
 | [Packages/com.firstgeargames.fishysteamworks/LICENSE.txt](<../../Packages/com.firstgeargames.fishysteamworks/LICENSE.txt>) | Текстовые данные |
-| [Packages/com.firstgeargames.fishysteamworks/SteamManager.unitypackage](<../../Packages/com.firstgeargames.fishysteamworks/SteamManager.unitypackage>) | Файл .unitypackage |
 | [Packages/com.firstgeargames.fishysteamworks/package.json](<../../Packages/com.firstgeargames.fishysteamworks/package.json>) | Конфигурация / данные JSON |
 
 ## Packages/com.firstgeargames.fishysteamworks/Core
@@ -1534,7 +1532,7 @@
 | --- | --- |
 | [Packages/com.jiaozi158.unity-physically-based-sky-urp/Runtime/FogVolume.cs](<../../Packages/com.jiaozi158.unity-physically-based-sky-urp/Runtime/FogVolume.cs>) | Исходник C#: Fog, FogColorMode, FogColorParameter |
 | [Packages/com.jiaozi158.unity-physically-based-sky-urp/Runtime/PBSkyURP.asmdef](<../../Packages/com.jiaozi158.unity-physically-based-sky-urp/Runtime/PBSkyURP.asmdef>) | Описание сборки Unity |
-| [Packages/com.jiaozi158.unity-physically-based-sky-urp/Runtime/PhysicallyBasedSkyURP.cs](<../../Packages/com.jiaozi158.unity-physically-based-sky-urp/Runtime/PhysicallyBasedSkyURP.cs>) | Исходник C#: PhysicallyBasedSkyURP, PrecomputationQualityMode, CelestialBodyData, PBSkyPrePass, PassData, SkyViewLUTPass, AtmosphericScatteringPass, PBSkyPostPass, AmbientProbePass; Тестовая карта и водоворот |
+| [Packages/com.jiaozi158.unity-physically-based-sky-urp/Runtime/PhysicallyBasedSkyURP.cs](<../../Packages/com.jiaozi158.unity-physically-based-sky-urp/Runtime/PhysicallyBasedSkyURP.cs>) | Исходник C#: PhysicallyBasedSkyURP, PrecomputationQualityMode, CelestialBodyData, PBSkyPrePass, PassData, SkyViewLUTPass, AtmosphericScatteringPass, PBSkyPostPass, AmbientProbePass; Шторм, зона, дождь и объёмный туман, Тестовая карта и водоворот |
 | [Packages/com.jiaozi158.unity-physically-based-sky-urp/Runtime/PhysicallyBasedSkyVolume.cs](<../../Packages/com.jiaozi158.unity-physically-based-sky-urp/Runtime/PhysicallyBasedSkyVolume.cs>) | Исходник C#: PhysicallyBasedSky, PhysicallyBasedSkyModel, EnvironmentUpdateMode, SkyIntensityMode, SkyIntensityParameter, EnvUpdateParameter, PhysicallyBasedSkyModelParameter; Тестовая карта и водоворот |
 | [Packages/com.jiaozi158.unity-physically-based-sky-urp/Runtime/VisualEnvironmentVolume.cs](<../../Packages/com.jiaozi158.unity-physically-based-sky-urp/Runtime/VisualEnvironmentVolume.cs>) | Исходник C#: VisualEnvironment, PlanetMode, RenderingSpace, SkyResolution, SkyType, CloudType, SkyAmbientMode, SkyAmbientModeParameter, PlanetModeParameter, RenderingSpaceParameter |
 
@@ -1663,7 +1661,7 @@
 | [Packages/com.unity.urp-water-system/Runtime/Rendering/Caustics.cs](<../../Packages/com.unity.urp-water-system/Runtime/Rendering/Caustics.cs>) | Исходник C#: WaterCaustics, PassData, Data |
 | [Packages/com.unity.urp-water-system/Runtime/Rendering/DebugTooling.cs](<../../Packages/com.unity.urp-water-system/Runtime/Rendering/DebugTooling.cs>) | Исходник C#: DebugTooling, Styles |
 | [Packages/com.unity.urp-water-system/Runtime/Rendering/InfiniteWaterPlane.cs](<../../Packages/com.unity.urp-water-system/Runtime/Rendering/InfiniteWaterPlane.cs>) | Исходник C#: InfiniteWaterPlane, PassData |
-| [Packages/com.unity.urp-water-system/Runtime/Rendering/MeshSurface.cs](<../../Packages/com.unity.urp-water-system/Runtime/Rendering/MeshSurface.cs>) | Исходник C#: MeshSurface, BaseLayout, SubdivideTiles, MatrixJob, WaterTile, WaterMeshSettings; Мир, острова и океан |
+| [Packages/com.unity.urp-water-system/Runtime/Rendering/MeshSurface.cs](<../../Packages/com.unity.urp-water-system/Runtime/Rendering/MeshSurface.cs>) | Исходник C#: MeshSurface, BaseLayout, SubdivideTiles, MatrixJob, WaterTile, WaterMeshSettings; Мир, острова и океан, Шторм, зона, дождь и объёмный туман |
 | [Packages/com.unity.urp-water-system/Runtime/Rendering/PlanarReflections.cs](<../../Packages/com.unity.urp-water-system/Runtime/Rendering/PlanarReflections.cs>) | Исходник C#: PlanarReflections, ResolutionModes, RendererMode, PlanarReflectionSettings, PlanarReflectionObjects, PlanarReflectionSettingData |
 | [Packages/com.unity.urp-water-system/Runtime/Rendering/Utilities.cs](<../../Packages/com.unity.urp-water-system/Runtime/Rendering/Utilities.cs>) | Исходник C#: Utilities, ShaderKeywords, ShaderIDs, WaterResourceData, WaterSystemSettings, DebugMode, PassData, DummyResourcePass |
 | [Packages/com.unity.urp-water-system/Runtime/Rendering/WaterFXBuffers.cs](<../../Packages/com.unity.urp-water-system/Runtime/Rendering/WaterFXBuffers.cs>) | Исходник C#: WaterBuffers, PassData |

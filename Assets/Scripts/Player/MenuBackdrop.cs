@@ -16,6 +16,8 @@ namespace PirateSlop
         Material runtimeWater;
         WaterSystem.Water menuOcean;
         World.TestSkyDayNight menuSky;
+        UniversalRenderPipelineAsset menuPipeline;
+        Transform menuMonkey;
         bool wasVisible;
         void Awake()
         {
@@ -32,9 +34,10 @@ namespace PirateSlop
                 previous.gameObject.SetActive(false);
                 previous.name = "LegacyMenuShip";
                 Ship = replacement;
-                FocusPoint = transform.InverseTransformPoint(Ship.TransformPoint(new Vector3(0, 14, 0)));
-                FramingRadius = 29f;
             }
+            FocusPoint = transform.InverseTransformPoint(Ship.TransformPoint(new Vector3(0, 11.5f, -9)));
+            FramingRadius = 18f;
+            if (View != null) View.farClipPlane = Mathf.Max(View.farClipPlane, 36000f);
             shipRest = Ship.localPosition;
             shipRotation = Ship.localRotation;
             CreateEnvironment();
@@ -65,11 +68,44 @@ namespace PirateSlop
             menuOcean.whirlpoolRadius = menuOcean.whirlpoolDepth = 0f;
             var sky = Instantiate(skyPrefab, environment.transform);
             menuSky = sky.GetComponent<World.TestSkyDayNight>();
-            menuSky.TargetBlend = .25f;
+            menuSky.TargetBlend = .05f;
+            menuSky.DayHazeDistance = 24000f;
+            if (menuSky.Pipeline != null)
+            {
+                menuPipeline = Instantiate(menuSky.Pipeline);
+                menuPipeline.name = "MenuShipPipeline";
+                menuPipeline.msaaSampleCount = Mathf.Max(menuPipeline.msaaSampleCount, 4);
+                menuPipeline.shadowDistance = Mathf.Max(menuPipeline.shadowDistance, 160f);
+                menuPipeline.mainLightShadowmapResolution = Mathf.Max(menuPipeline.mainLightShadowmapResolution, 4096);
+                menuPipeline.shadowCascadeCount = 2;
+                menuPipeline.cascade2Split = .7f;
+                menuSky.Pipeline = menuPipeline;
+            }
             foreach (var light in sky.GetComponentsInChildren<Light>(true)) light.cullingMask = 1 << 30;
             foreach (var volume in sky.GetComponentsInChildren<UnityEngine.Rendering.Volume>(true)) volume.gameObject.layer = 30;
             var oldSea = Content.transform.Find("MenuSea");
             if (oldSea != null) oldSea.gameObject.SetActive(false);
+            var beam = Content.transform.Find("ShipSunBeam");
+            if (beam != null) beam.gameObject.SetActive(false);
+            foreach (var root in gameObject.scene.GetRootGameObjects())
+                if (root.name == "MenuLight" && root.TryGetComponent<Light>(out var oldLight)) oldLight.enabled = false;
+            var sceneryPrefab = Resources.Load<GameObject>("Menu/Scenery");
+            if (sceneryPrefab != null)
+            {
+                var scenery = Instantiate(sceneryPrefab, environment.transform);
+                scenery.transform.position = Ship.position;
+                scenery.transform.rotation = Ship.rotation;
+                menuMonkey = scenery.transform.Find("MonkeyOnCrowNest");
+                if (menuMonkey != null) menuMonkey.SetParent(Ship, false);
+                var perch = scenery.transform.Find("CrowNestPerch");
+                if (perch != null) perch.SetParent(Ship, false);
+            }
+            var stormPrefab = Resources.Load<GameObject>("Menu/StormBackdrop");
+            if (stormPrefab != null)
+            {
+                var storm = Instantiate(stormPrefab, environment.transform).GetComponent<StormVolumeController>();
+                storm.ConfigureMenuPreview(View, Ship.position, 24000f, environment.transform.position.y);
+            }
             var data = View.GetUniversalAdditionalCameraData();
             data.renderPostProcessing = true;
             data.requiresColorTexture = true;
@@ -85,10 +121,16 @@ namespace PirateSlop
             float tangent = Mathf.Tan(View.fieldOfView * Mathf.Deg2Rad * .5f);
             float distance = Mathf.Max(FramingRadius / (tangent * .8f), FramingRadius / (tangent * Mathf.Max(.6f, View.aspect) * .48f));
             Vector3 focus = transform.TransformPoint(FocusPoint);
-            Vector3 offset = new Vector3(.8f, .18f, -1f).normalized * distance;
+            Vector3 offset = Ship.TransformDirection(new Vector3(-.2f, .19f, -1f).normalized) * distance;
             View.transform.position = focus + offset + new Vector3(Mathf.Sin(time * .08f) * 1.2f, Mathf.Sin(time * .12f) * .35f, 0);
             Vector3 right = Vector3.Cross(Vector3.up, -offset.normalized).normalized;
             View.transform.LookAt(focus - right * (distance * tangent * View.aspect * .34f));
+            if (menuMonkey != null)
+            {
+                var facing = Ship.InverseTransformDirection(View.transform.position - menuMonkey.position);
+                facing.y = 0;
+                if (facing.sqrMagnitude > .01f) menuMonkey.localRotation = Quaternion.LookRotation(facing);
+            }
         }
         void Start()
         {
@@ -113,12 +155,14 @@ namespace PirateSlop
         {
             if (PirateSlop.Customization.SailCustomizationUI.IsOpen) return;
             bool visible=View!=null && View.gameObject.activeInHierarchy;
+            if (visible && !wasVisible && menuSky != null) menuSky.enabled = true;
             Content.SetActive(visible);
-            if(visible!=wasVisible && menuSky == null)
+            if(visible!=wasVisible)
             {
                 wasVisible=visible;
-                foreach(var light in FindObjectsByType<Light>(FindObjectsInactive.Exclude))
-                    if(light.type==LightType.Directional && light.enabled && ((light.cullingMask & (1<<30))!=0)==visible) { RenderSettings.sun=light; break; }
+                if (menuSky == null)
+                    foreach(var light in FindObjectsByType<Light>(FindObjectsInactive.Exclude))
+                        if(light.type==LightType.Directional && light.enabled && ((light.cullingMask & (1<<30))!=0)==visible) { RenderSettings.sun=light; break; }
             }
             if(!visible) return;
             float t=Time.unscaledTime;
@@ -133,6 +177,11 @@ namespace PirateSlop
             }
             GameAudio.Ambience(.15f);
         }
-        void OnDestroy() { if (runtimeWater != null) Destroy(runtimeWater); }
+        void OnDestroy()
+        {
+            if (menuSky != null) menuSky.enabled = false;
+            if (menuPipeline != null) Destroy(menuPipeline);
+            if (runtimeWater != null) Destroy(runtimeWater);
+        }
     }
 }

@@ -6,6 +6,8 @@
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareDepthTexture.hlsl"
 
+float _PirateStormNearMedium;
+
 half3 EvaluateVolumetricCloudsAmbientProbe(half3 normalWS)
 {
     // Linear + constant polynomial terms
@@ -57,11 +59,12 @@ struct CloudRay
     // Origin of the ray in camera-relative space
     float3 originWS;
     // Direction of the ray in world space
-    half3 direction;
+    float3 direction;
     // Maximal ray length before hitting the far plane or an occluder
     float maxRayLength;
     // Integration Noise
     float integrationNoise;
+    float2 lightningUV;
 };
 
 // Structure that holds the result of our volumetric ray
@@ -395,6 +398,25 @@ void EvaluateCloudProperties(float3 positionPS, float noiseMipOffset, float eros
                             out CloudProperties properties)
 {
     ZERO_INITIALIZE(CloudProperties, properties);
+    if((_PirateStormTestClouds.x>.5 || _PirateStormVolume3D>.5) && _PirateStormBackdrop.x<.5)
+    {
+        float4 field=StormVolumeField(positionPS,lightSampling?1.0:noiseMipOffset);
+        float distanceToEye=distance(positionPS,GetCameraPositionWS());
+        properties.height=_PirateStormTestClouds.x>.5
+            ? saturate((positionPS.y-_PirateStormTestClouds.y)/max(1.0,_PirateStormTestClouds.z-_PirateStormTestClouds.y))
+            : saturate((positionPS.y-_StormCenterWater.y)/max(1.0,_StormShape.x));
+        properties.body=field.r;
+        properties.density=field.r*_DensityMultiplier;
+        properties.sigmaT=_PirateStormTestClouds.x>.5 ? .32 : lerp(.14,.018,smoothstep(28.0,100.0,positionPS.y-_StormCenterWater.y));
+        if(_PirateStormNearMedium>.001)properties.sigmaT=lerp(properties.sigmaT,.19,_PirateStormNearMedium)*(smoothstep(2.5,4.0,distanceToEye));
+        Light sun=GetMainLight();
+        float illumination=saturate(dot(field.gba,normalize(sun.direction+float3(0,.55,0)))*.5+.5);
+        properties.ambientOcclusion=saturate(.18+illumination*.7);
+        return;
+    }
+
+    if (_PirateStormBackdrop.x < .5 && _PirateStormBillows > .5 && distance(positionPS, GetCameraPositionWS()) >= 420.0) return;
+    if(_PirateStormBackdrop.x<.5 && _PirateStormBillows>.5 && GetCameraPositionWS().y-_StormCenterWater.y<35.0 && positionPS.y>_StormCenterWater.y+55.0) return;
     float macro, billow;
     float3 flow;
     float stormMask = StormDensityMask(positionPS, min(noiseMipOffset, 1.0), lightSampling, macro, billow, flow);
@@ -415,11 +437,27 @@ void EvaluateCloudProperties(float3 positionPS, float noiseMipOffset, float eros
     }
     float body = saturate((shape - erosion) / max(0.01, 1.0 - erosion));
     body = smoothstep(lerp(0.04, 0.14, _StormStyle.x), lerp(0.88, 0.66, _StormStyle.x), body);
-    float lowerBank = (1.0 - smoothstep(0.10, 0.34, properties.height)) * (0.045 + 0.19 * billow);
+    float lowerBank = (_PirateStormBackdrop.x > .5 ? (1.0 - smoothstep(0.10, 0.34, properties.height)) * (0.045 + 0.19 * billow) : (1.0 - smoothstep(0.28, 0.56, properties.height)) * (0.13 + 0.35 * billow));
     body = max(body, lowerBank);
+    if (_PirateStormBackdrop.x < .5) body = max(body,(.35 + .45 * billow)*(1.0-StormWallSpread(positionPS.y)));
+    if (_PirateStormBackdrop.x < .5)
+    {
+        float nearWeight=(1.0-smoothstep(80.0,180.0,distance(positionPS,GetCameraPositionWS())))*(1.0-smoothstep(40.0,100.0,positionPS.y-_StormCenterWater.y));
+        if(nearWeight>.001)
+        {
+            float localBillow=smoothstep(.18,.82,StormBoundaryNoise(positionPS.xz/18.0+positionPS.y*float2(.019,.035)));
+            body*=lerp(1.0,.50+.80*localBillow,nearWeight);
+            billow=lerp(billow,localBillow,nearWeight*.8);
+        }
+    }
+    float hybridFade=_PirateStormBackdrop.x<.5&&_PirateStormBillows>.5?1.0-smoothstep(220.0,420.0,distance(positionPS,GetCameraPositionWS())):1.0;
+    body*=hybridFade;
+    if(_PirateStormBackdrop.x<.5)body*=1.0-saturate(_PirateStormNearMedium);
     properties.body = body * stormMask;
     properties.density = body * _DensityMultiplier * stormMask;
-    properties.sigmaT = 0.055;
+    properties.sigmaT = lerp(.21,.022,smoothstep(30.0,60.0,positionPS.y-_StormCenterWater.y));
+    properties.sigmaT *= lerp(1.0,4.0,smoothstep(120.0,1000.0,distance(positionPS,GetCameraPositionWS())));
+    if (_PirateStormBackdrop.x > 0.5) properties.sigmaT = 0.008;
     properties.ambientOcclusion = saturate(0.25 + billow * 0.50 + (1.0 - macro) * 0.25);
     float pulse = 0.5 + 0.5 * sin(flow.y * 2.1 - flow.x * 1.7 + _StormShape.z * 0.29);
     float selection = smoothstep(0.55, 0.82, billow) * (1.0 - smoothstep(0.55, 0.9, macro));
@@ -431,13 +469,15 @@ half3 EvaluateSunTransmittance(float3 positionPS, half3 sunDirection, PHASE_FUNC
     float4 lightIntervals;
     if (!StormRayIntervals(positionPS, sunDirection, 100000.0, lightIntervals)) return 1.0;
     float distanceLimit = min(lightIntervals.y, max(32.0, min(_StormShape.x, (_StormBand.y + _StormBand.z) * 0.8)));
+    if(_PirateStormTestClouds.x>.5)distanceLimit=min(lightIntervals.y,12.0);
+    else if(_PirateStormVolume3D>.5 && _PirateStormBackdrop.x<.5)distanceLimit=min(lightIntervals.y,lerp(32.0,600.0,smoothstep(55.0,180.0,positionPS.y-_StormCenterWater.y)));
     float opticalDepth = 0.0;
     float previousDistance = 0.0;
     int count = max(1, (int)_NumLightSteps);
     for (int j = 0; j < count; j++)
     {
         float fraction = (j + 1.0) / count;
-        float endDistance = fraction * fraction * distanceLimit;
+        float endDistance = (_PirateStormTestClouds.x>.5 ? fraction : fraction*fraction) * distanceLimit;
         float interval = endDistance - previousDistance;
         float sampleDistance = previousDistance + interval * 0.5;
         CloudProperties sampleCloud;
@@ -445,7 +485,7 @@ half3 EvaluateSunTransmittance(float3 positionPS, half3 sunDirection, PHASE_FUNC
         opticalDepth += sampleCloud.density * sampleCloud.sigmaT * interval;
         previousDistance = endDistance;
     }
-    return exp(-opticalDepth * 0.48);
+    return exp(-opticalDepth * (_PirateStormVolume3D>.5 && _PirateStormBackdrop.x<.5?1.0:.48));
 }
 float ChapmanUpperApprox(float z, float cosTheta)
 {
@@ -591,10 +631,47 @@ void EvaluateCloud(CloudProperties cloudProperties, half3 rayDirection,
     color = lerp(color, _StormHighlightColor.rgb, softEdge * 0.40h);
     color += _StormRimColor.rgb * _StormStyle.y * cloudProperties.magic * 0.025h * (0.4h + 0.6h * edge);
     color *= lerp(0.96h, 1.04h, saturate(Luminance(sun.color)));
+    bool backdrop = _PirateStormBackdrop.x > 0.5;
+    if (backdrop)
+    {
+        float macro = smoothstep(0.22, 0.78, StormBackdropMacro(currentPositionPS));
+        half3 core = lerp(half3(.075,.11,.15), half3(.20,.27,.32), diffuseFill);
+        color = lerp(core, half3(.43,.49,.53), shading);
+        color = lerp(color, half3(.64,.68,.70), softEdge * .40);
+        color *= lerp(.55, 1.15, macro);
+    }
+    else
+    {
+        half cavity = saturate(1.0 - cloudProperties.ambientOcclusion);
+        color = lerp(color * half3(.65,.76,.95), color, smoothstep(.1,.85,shading));
+        color *= lerp(.88h,.48h,cavity * (1.0h-shading));
+        color *= lerp(.42h,1.0h,smoothstep(.01,.30,cloudProperties.height));
+    }
+    if(_PirateStormVolume3D>.5 && !backdrop)
+    {
+        half lightWeight=saturate(.12+.34*diffuseFill+visibility*.45*diffuseFill);
+        half nearWeight=saturate(_PirateStormNearMedium);
+        half3 core=lerp(half3(.018,.035,.075),half3(.035,.055,.095),nearWeight);
+        half3 bright=lerp(half3(.20,.30,.43),half3(.28,.39,.52),nearWeight);
+        if(_PirateStormTestClouds.x>.5)
+        {
+            core=half3(.035,.045,.065);
+            bright=half3(.28,.31,.37);
+        }
+        color=lerp(core,bright,lightWeight*lightWeight);
+        color*=lerp(.75,1.0,smoothstep(.01,.18,cloudProperties.height));
+    }
     float distanceToViewer = distance(currentPositionPS, GetCameraPositionWS());
-    color = lerp(color, half3(.47,.50,.51), smoothstep(120,1800,distanceToViewer)*.20);
+    half3 hazeColor = backdrop ? half3(.47,.50,.51) : half3(.18,.23,.27);
+    color = lerp(color, hazeColor, smoothstep(120,1800,distanceToViewer) * (backdrop ? .08 : .06));
     float flashDistance = distance(currentPositionPS, _StormLightning.xyz);
-    color += _StormLightningColor.rgb * _StormLightning.w * exp(-flashDistance*flashDistance/6400.0) * .48;
+    float flashRadiusSquared = backdrop ? 722500.0 : 202500.0;
+    if (_StormLightning.w > .001) color += _StormLightningColor.rgb * _StormLightning.w * exp(-flashDistance*flashDistance/flashRadiusSquared) * (backdrop ? .65 : (_PirateStormVolume3D>.5?.9:3.0));
+    if (!backdrop && _StormLightningSecondary.w > .001)
+    {
+        float secondaryDistance = distance(currentPositionPS, _StormLightningSecondary.xyz);
+        color += _StormLightningColor.rgb * _StormLightningSecondary.w * exp(-secondaryDistance*secondaryDistance/202500.0) * (_PirateStormVolume3D>.5?.9:3.0);
+    }
     half contribution = volumetricRay.transmittance * (1.0h - transmittance);
     volumetricRay.scattering += color * contribution;
     volumetricRay.transmittance *= transmittance;

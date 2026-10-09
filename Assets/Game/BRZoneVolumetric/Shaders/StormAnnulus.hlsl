@@ -1,20 +1,128 @@
 #ifndef PIRATESLOP_STORM_ANNULUS
 #define PIRATESLOP_STORM_ANNULUS
+#include "StormCloudBoundary.hlsl"
 float4 _StormCenterWater;
 float4 _StormBand;
 float4 _StormShape;
 float4 _StormStyle;
 float4 _StormLightning;
+float4 _StormLightningSecondary;
 float4 _StormLightningColor;
+float4 _StormTestLightningTiming;
+float4 _StormTestLightningStarts[12];
+float4 _StormTestLightningEnds[12];
+
+TEXTURE3D(_StormVolumeDensity);
+SAMPLER(sampler_StormVolumeDensity);
+TEXTURE3D(_PirateStormNearNoise);
+SAMPLER(sampler_PirateStormNearNoise);
+#include "StormTestCloudField.hlsl"
+float StormTestLightningScatter(float3 positionWS,float4 field,float3 normal,float4 flash,int group)
+{
+    if(flash.w<=0.0 || dot(positionWS-flash.xyz,positionWS-flash.xyz)>2304.0)return 0.0;
+    float flux=0.0;
+    float3 source=0.0;
+    float2 radial=normalize(positionWS.xz-_StormCenterWater.xz);
+    float3 tangent=float3(-radial.y,0,radial.x);
+    [unroll] for(int channel=0;channel<6;channel++)
+    {
+        float4 start=_StormTestLightningStarts[group*6+channel];
+        float3 edge=_StormTestLightningEnds[group*6+channel].xyz-start.xyz;
+        float along=saturate(dot(positionWS-start.xyz,edge)/max(.001,dot(edge,edge)));
+        float3 channelPosition=start.xyz+edge*along;
+        float3 separation=channelPosition-positionWS;
+        float sideways=dot(separation,tangent);
+        float distanceSquared=dot(separation,separation)-sideways*sideways*.7;
+        float energy=start.w*(.7/(1.0+distanceSquared*.11)+.3/(1.0+distanceSquared*.024))
+            *(1.0-smoothstep(324.0,900.0,distanceSquared));
+        flux+=energy;source+=channelPosition*energy;
+    }
+    if(flux<.005)return 0.0;
+    source/=flux;
+    float3 toSource=source-positionWS;
+    float distanceWS=length(toSource);
+    float3 unusedNormal;
+    float middleDensity=StormTestCloudField(positionWS+toSource*.55,3.0,0.0,false,unusedNormal).r;
+    float opticalDepth=distanceWS*(middleDensity*.7+field.r*.3);
+    float transport=exp(-opticalDepth*.18);
+    float escape=lerp(.35,1.15,saturate(field.a));
+    float facing=.55+.45*abs(dot(normal,toSource/max(.001,distanceWS)));
+    return flash.w*flux*transport*escape*facing;
+}
+float4 StormVolumeField(float3 p,float mip)
+{
+#if defined(_STORM_TEST_CLOUD_WALL)
+    return StormTestCloudField(p,mip);
+#else
+    float height=p.y-_StormCenterWater.y;
+    float3 local=p-_StormCenterWater.xyz;
+    float sd=length(local.xz)-_StormBand.x;
+    float scale=min(1.0,_StormBand.x/1200.0);
+    float density=0.0;
+    float3 normalWS=float3(0,1,0);
+    [unroll] for(int tier=0;tier<3;tier++)
+    {
+        float count=tier==0?256.0:64.0;
+        float angleStep=6.283185307/count;
+        float theta=atan2(local.z,local.x)/angleStep,cell=floor(theta);
+        [unroll] for(int j=-1;j<=1;j++)
+        {
+            float id=cell+j,angle=(id+.5)*angleStep;
+            float3 r=float3(cos(angle),0,sin(angle)),t=float3(-r.z,0,r.x);
+            float3 random=StormBoundaryHash(float2(fmod(id+count,count),71.19+tier*19.57));
+            float extent=max(25.0,min(650.0,_StormBand.x*angleStep*lerp(tier==0?1.15:1.35,tier==0?1.40:1.65,random.x)));
+            float width=max(25.0,scale*lerp(tier==0?105.0:520.0,tier==0?140.0:650.0,random.y));
+            float h=max(25.0,scale*lerp(tier==0?105.0:560.0,tier==0?140.0:650.0,random.z));
+            float center=_StormBand.z-width*.5;
+            float centerHeight=scale*((tier==0?65.0:tier==1?305.0:675.0)+(random.x-.5)*(tier==0?22.0:110.0));
+            float3 q=float3((theta-id-.5+(random.z-.5)*.24)*_StormBand.x*angleStep/extent,(height-centerHeight)/h,(sd-center)/width);
+            if(max(abs(q.x),max(abs(q.y),abs(q.z)))>.485)continue;
+            float tile=floor(random.z*3.999);
+            float3 uv=float3((q.x+.5)*.5+frac(tile*.5),q.y+.5,(q.z+.5)*.5+floor(tile*.5)*.5);
+            float4 voxel=SAMPLE_TEXTURE3D_LOD(_StormVolumeDensity,sampler_StormVolumeDensity,uv,mip);
+            float rise=smoothstep(12.0,42.0,height);
+            float footWidth=lerp(_StormBand.y+_StormBand.z,700.0*scale,rise);
+            float footFade=smoothstep(_StormBand.z-footWidth,_StormBand.z-footWidth+lerp(.8,20.0,rise),sd);
+            voxel.r*=footFade*smoothstep(-2.0,2.0,height);
+            if(voxel.r>density)
+            {
+                density=voxel.r;
+                float3 n=voxel.gba*2.0-1.0;
+                normalWS=normalize(t*n.x/extent+float3(0,n.y/h,0)+r*n.z/width+.00001);
+            }
+        }
+    }
+    float4 nearField=SAMPLE_TEXTURE3D_LOD(_PirateStormNearNoise,sampler_PirateStormNearNoise,(p+float3(_StormShape.z*.6,0,0))/288.0,0);
+    float grain=nearField.r;
+    float3 coreUV=(p+float3(_StormShape.z*.6,0,0))/1024.0;
+    float4 coreNoise=SAMPLE_TEXTURE3D_LOD(_PirateStormNearNoise,sampler_PirateStormNearNoise,coreUV,1);
+    float rise=smoothstep(0.0,60.0,height);
+    float width=_StormBand.y+_StormBand.z;
+    float inward=_StormBand.z-width+(coreNoise.r-.5)*lerp(1.0,5.0,rise);
+    float innerFade=smoothstep(inward,inward+lerp(.7,12.0,rise),sd);
+    float outerFade=1-smoothstep(_StormBand.z-1.5,_StormBand.z,sd);
+    float crown=scale*(550.0+coreNoise.r*90.0);
+    float core=innerFade*outerFade*(1-smoothstep(crown-35.0,crown,height))*(.82+.18*coreNoise.r)*lerp(1.0,10.0,smoothstep(20.0,100.0,height))*smoothstep(-2.0,0.0,height);
+    if(core>density)
+    {
+        density=core;
+        float3 radial=normalize(float3(local.x,0,local.z)+.00001);
+        float3 curl=coreNoise.gba*2.0-1.0;
+        normalWS=normalize(-radial+curl*.45+float3(0,.25,0));
+    }
+    float distanceToEye=distance(p,GetCameraPositionWS());
+    if(_PirateStormNearMedium>.0001 && distanceToEye<35.0)
+    {
+        float localDensity=_PirateStormNearMedium*(.40+.60*smoothstep(.22,.78,grain))*(1-smoothstep(29.0,35.0,distanceToEye));
+        if(localDensity>density){density=localDensity;normalWS=normalize(nearField.gba*2.0-1.0+.00001);}
+    }
+    return float4(density,normalWS);
+#endif
+}
+
 float StormInward(float h)
 {
-    float offset;
-    if (h < 1.0 / 6.0) offset = lerp(0.0, 0.05, h * 6.0);
-    else if (h < 1.0 / 3.0) offset = lerp(0.05, 0.15, (h - 1.0 / 6.0) * 6.0);
-    else if (h < 5.0 / 9.0) offset = lerp(0.15, 0.35, (h - 1.0 / 3.0) * 4.5);
-    else if (h < 7.0 / 9.0) offset = lerp(0.35, 0.65, (h - 5.0 / 9.0) * 4.5);
-    else offset = lerp(0.65, 1.0, (h - 7.0 / 9.0) * 4.5);
-    return saturate(offset) * _StormShape.y;
+    return StormBoundaryInward(h, _StormShape.y);
 }
 float2 StormRotate(float2 p, float angle)
 {
@@ -28,17 +136,19 @@ float StormDensityMask(float3 p, float mip, bool lightSampling, out float macro,
     billow = 0.0;
     flow = 0.0;
     float h = (p.y - _StormCenterWater.y) / max(1.0, _StormShape.x);
-    if (h <= 0.0 || h >= 1.0 || _StormShape.w < 0.5) return 0.0;
-    float radius = _StormBand.x - StormInward(h);
+    if (h <= (_PirateStormBackdrop.x > .5 ? 0.0 : -.01) || h >= 1.0 || _StormShape.w < 0.5) return 0.0;
+    float radius = _StormBand.x - StormInward(h) + StormBoundaryOffset(p, _StormBand.x);
     float d = length(p.xz - _StormCenterWater.xz);
-    if (d <= radius - _StormBand.y || d >= radius + _StormBand.z) return 0.0;
+    float innerWidth=StormWallInner(p.y,_StormBand.y);
+    float outerWidth=StormWallOuter(p.y,_StormBand.z);
+    if (d <= radius - innerWidth || d >= radius + outerWidth) return 0.0;
 
     float3 local = p - _StormCenterWater.xyz;
     float t = _StormShape.z;
     float scale = max(0.00001, _StormStyle.z);
     float3 rolling = local;
     rolling.xz = StormRotate(local.xz, -_StormStyle.w * 0.00042);
-    float3 q = rolling * scale * float3(1.0, 1.5, 1.0);
+    float3 q = rolling * scale * float3(1.0, _PirateStormBackdrop.x > .5 ? 1.5 : 1.4, 1.0);
     float3 phase = q.zxy * 2.7 + q.yzx * 1.1;
     float3 primaryCurl = sin(phase + float3(t * 0.137, t * 0.173 + 2.1, -t * 0.119 + 4.7));
     float3 primaryCoords = q * 0.52 + primaryCurl * 0.105;
@@ -64,16 +174,21 @@ float StormDensityMask(float3 p, float mip, bool lightSampling, out float macro,
         billow = smoothstep(0.46, 0.94, billow);
     }
 
-    float softness = max(0.1, min(_StormBand.w, (_StormBand.y + _StormBand.z) * 0.30));
+    float softness = max(.1,min(max(_StormBand.w,StormWallSpread(p.y)*55.0),(innerWidth+outerWidth)*.30));
     float lobes = saturate(macro * 0.68 + billow * 0.32);
-    float carve = (1.0 - lobes) * 0.72;
-    float innerEdge = radius - _StormBand.y + _StormBand.y * carve;
-    float outerEdge = radius + _StormBand.z - _StormBand.z * carve;
+    bool backdrop = _PirateStormBackdrop.x > 0.5;
+    float largeMass = backdrop ? StormBackdropMacro(p) : lobes;
+    if (backdrop) lobes = saturate(largeMass * 0.65 + lobes * 0.35);
+    float carve = (1.0 - lobes) * (backdrop ? .72 : .35);
+    float innerEdge = radius - innerWidth + innerWidth * carve;
+    float outerEdge = radius + outerWidth - outerWidth * carve;
     float inner = smoothstep(innerEdge, innerEdge + softness, d);
     float outer = 1.0 - smoothstep(outerEdge - softness, outerEdge, d);
-    float crownHeight = 0.72 + 0.27 * lobes;
-    float crown = 1.0 - smoothstep(crownHeight - 0.045, crownHeight, h);
-    return inner * outer * smoothstep(0.0, 0.018, h) * crown;
+    float crownHeight = StormBoundaryCrownHeight(p, _StormShape.x) / max(1.0, _StormShape.x);
+    float crown = 1.0 - smoothstep(crownHeight - (backdrop ? 0.065 : 0.14), crownHeight, h);
+    float baseFade = smoothstep(_PirateStormBackdrop.x > .5 ? 0.0 : -3.0, _PirateStormBackdrop.x > .5 ? max(0.1,min(6.0,_StormShape.x*.018)) : 1.0,p.y-_StormCenterWater.y);
+    float cavities = backdrop ? smoothstep(0.14, 0.40, largeMass) : 1.0;
+    return inner * outer * baseFade * crown * cavities;
 }
 bool StormCylinder(float2 p, float2 d, float radius, out float2 span)
 {
@@ -92,11 +207,67 @@ bool StormRayIntervals(float3 origin, float3 direction, float maxDistance, out f
 {
     spans = 0.0;
     if (_StormShape.w < 0.5) return false;
+    if(_PirateStormTestClouds.x>.5)
+    {
+        float2 shell;
+        float2 p=origin.xz-_StormCenterWater.xz;
+        if(!StormCylinder(p,direction.xz,_StormBand.x+18.0,shell))return false;
+        float2 vertical=float2(-1e19,1e19);
+        if(abs(direction.y)>.00001)
+        {
+            vertical=(float2(max(_PirateStormTestClouds.y,_PirateStormTestCloudBase),_PirateStormTestClouds.z)-origin.y)/direction.y;
+            vertical=float2(min(vertical.x,vertical.y),max(vertical.x,vertical.y));
+        }
+        else if(origin.y<max(_PirateStormTestClouds.y,_PirateStormTestCloudBase) || origin.y>_PirateStormTestClouds.z)return false;
+        float begin=max(0.0,max(shell.x,vertical.x));
+        float end=min(maxDistance,min(shell.y,vertical.y));
+        if(end<=begin)return false;
+        float2 hole;
+        if(!StormCylinder(p,direction.xz,max(0.0,_StormBand.x-2.0),hole))
+        {
+            spans=float4(begin,end,end,end);
+            return true;
+        }
+        float front=clamp(hole.x,begin,end),back=clamp(hole.y,begin,end);
+        spans=float4(begin,front,back,end);
+        if(front<=begin+.001)spans=float4(back,end,end,end);
+        return (spans.y-spans.x)+(spans.w-spans.z)>.001;
+    }
+    if(_PirateStormVolume3D>.5 && _PirateStormBackdrop.x<.5)
+    {
+        float2 shell;
+        float2 p=origin.xz-_StormCenterWater.xz;
+        if(!StormCylinder(p,direction.xz,_StormBand.x+_StormBand.z,shell))return false;
+        float2 vertical=float2(-1e19,1e19);
+        if(abs(direction.y)>.00001)
+        {
+            vertical=(float2(_StormCenterWater.y-2,_StormCenterWater.y+_StormShape.x)-origin.y)/direction.y;
+            vertical=float2(min(vertical.x,vertical.y),max(vertical.x,vertical.y));
+        }
+        else if(origin.y<_StormCenterWater.y-2||origin.y>_StormCenterWater.y+_StormShape.x)return false;
+        float begin=max(0,max(shell.x,vertical.x)),end=min(maxDistance,min(shell.y,vertical.y));
+        if(_PirateStormNearMedium>.001){spans=float4(0,max(end,min(maxDistance,35.0)),0,0);spans.zw=spans.yy;return spans.y>.001;}
+        if(end<=begin)return false;
+        float highest=max(origin.y+begin*direction.y,origin.y+end*direction.y)-_StormCenterWater.y;
+        float width=(highest<=18.0?(_StormBand.y+_StormBand.z):700.0*min(1.0,_StormBand.x/1200.0))+2.0;
+        float2 hole;
+        if(!StormCylinder(p,direction.xz,max(0.0,_StormBand.x-width+_StormBand.z),hole)){spans=float4(begin,end,end,end);return true;}
+        float front=clamp(hole.x,begin,end),back=clamp(hole.y,begin,end);
+        spans=float4(begin,front,back,end);
+        if(front<=begin+.001)spans=float4(back,end,end,end);
+        return (spans.y-spans.x)+(spans.w-spans.z)>.001;
+    }
     float2 radial;
     float2 p = origin.xz - _StormCenterWater.xz;
-    if (!StormCylinder(p, direction.xz, _StormBand.x + _StormBand.z + 2.0, radial)) return false;
+    float boundaryAmplitude = StormBoundaryAmplitude(_StormBand.x);
+    if (!StormCylinder(p,direction.xz,_StormBand.x+_StormBand.z+(_PirateStormBackdrop.x>.5?0.0:640.0)+boundaryAmplitude+2.0,radial))return false;
+    float highestRay=max(origin.y,origin.y+direction.y*max(0.0,radial.y));
+    float spread=StormWallSpread(highestRay);
+    if (!StormCylinder(p,direction.xz,_StormBand.x+_StormBand.z+spread*640.0+boundaryAmplitude+2.0,radial))return false;
     float bottom = _StormCenterWater.y;
     float top = bottom + _StormShape.x;
+    if(_PirateStormBackdrop.x<.5 && _PirateStormBillows>.5 && GetCameraPositionWS().y-bottom<35.0)
+        top=min(top,bottom+55.0);
     float2 vertical = float2(-1e19, 1e19);
     if (abs(direction.y) < 1e-6)
     {
@@ -111,7 +282,7 @@ bool StormRayIntervals(float3 origin, float3 direction, float maxDistance, out f
     float exit = min(maxDistance, min(radial.y, vertical.y));
     if (exit <= entry) return false;
     spans = float4(entry, exit, exit, exit);
-    float clearRadius = max(0.0, _StormBand.x - _StormBand.y - _StormShape.y - 2.0);
+    float clearRadius = max(0.0, _StormBand.x - _StormBand.y - _StormShape.y - boundaryAmplitude - 2.0);
     float2 hole;
     if (clearRadius > 0.0 && StormCylinder(p, direction.xz, clearRadius, hole))
     {

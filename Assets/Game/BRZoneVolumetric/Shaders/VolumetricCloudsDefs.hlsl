@@ -2,6 +2,7 @@
 #define URP_VOLUMETRIC_CLOUDS_DEFINES_HLSL
 
 CBUFFER_START(UnityPerMaterial)
+float _StormVisibilityDistance;
 half4 _StormCoreColor;
 half4 _StormBodyColor;
 half4 _StormRimColor;

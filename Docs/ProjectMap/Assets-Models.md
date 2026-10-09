@@ -235,7 +235,7 @@
 | [Assets/Models/Fishing/FishBody.asset](<../../Assets/Models/Fishing/FishBody.asset>) | Настройки или данные Unity |
 | [Assets/Models/Fishing/FishFins.mat](<../../Assets/Models/Fishing/FishFins.mat>) | Материал Unity |
 | [Assets/Models/Fishing/FishSilver.mat](<../../Assets/Models/Fishing/FishSilver.mat>) | Материал Unity |
-| [Assets/Models/Fishing/FishVisual.prefab](<../../Assets/Models/Fishing/FishVisual.prefab>) | Префаб Unity; Рыбалка и рыба |
+| [Assets/Models/Fishing/FishVisual.prefab](<../../Assets/Models/Fishing/FishVisual.prefab>) | Префаб Unity; Фоновая рыба в океане, Рыбалка и рыба |
 | [Assets/Models/Fishing/FishingFloat.prefab](<../../Assets/Models/Fishing/FishingFloat.prefab>) | Префаб Unity |
 | [Assets/Models/Fishing/FishingRod.prefab](<../../Assets/Models/Fishing/FishingRod.prefab>) | Префаб Unity; Рыбалка и рыба |
 | [Assets/Models/Fishing/FloatRed.mat](<../../Assets/Models/Fishing/FloatRed.mat>) | Материал Unity |
@@ -287,11 +287,11 @@
 | [Assets/Models/FishingWeapons/PufferGold.mat](<../../Assets/Models/FishingWeapons/PufferGold.mat>) | Материал Unity |
 | [Assets/Models/FishingWeapons/PufferfishIcon.png](<../../Assets/Models/FishingWeapons/PufferfishIcon.png>) | Изображение / текстура |
 | [Assets/Models/FishingWeapons/PufferfishPickup.prefab](<../../Assets/Models/FishingWeapons/PufferfishPickup.prefab>) | Префаб Unity; Рыбалка и рыба |
-| [Assets/Models/FishingWeapons/PufferfishVisual.prefab](<../../Assets/Models/FishingWeapons/PufferfishVisual.prefab>) | Префаб Unity; Рыбалка и рыба |
+| [Assets/Models/FishingWeapons/PufferfishVisual.prefab](<../../Assets/Models/FishingWeapons/PufferfishVisual.prefab>) | Префаб Unity; Фоновая рыба в океане, Рыбалка и рыба |
 | [Assets/Models/FishingWeapons/SwordfishBlue.mat](<../../Assets/Models/FishingWeapons/SwordfishBlue.mat>) | Материал Unity |
 | [Assets/Models/FishingWeapons/SwordfishIcon.png](<../../Assets/Models/FishingWeapons/SwordfishIcon.png>) | Изображение / текстура |
 | [Assets/Models/FishingWeapons/SwordfishPickup.prefab](<../../Assets/Models/FishingWeapons/SwordfishPickup.prefab>) | Префаб Unity; Рыбалка и рыба |
-| [Assets/Models/FishingWeapons/SwordfishVisual.prefab](<../../Assets/Models/FishingWeapons/SwordfishVisual.prefab>) | Префаб Unity; Рыбалка и рыба |
+| [Assets/Models/FishingWeapons/SwordfishVisual.prefab](<../../Assets/Models/FishingWeapons/SwordfishVisual.prefab>) | Префаб Unity; Фоновая рыба в океане, Рыбалка и рыба |
 
 ## Assets/Models/FloodWater
 
@@ -1678,15 +1678,24 @@
 | [Assets/Models/World/CoastalEnvironment/Bush_LOD0.fbx](<../../Assets/Models/World/CoastalEnvironment/Bush_LOD0.fbx>) | Модель / анимации FBX |
 | [Assets/Models/World/CoastalEnvironment/Bush_LOD1.fbx](<../../Assets/Models/World/CoastalEnvironment/Bush_LOD1.fbx>) | Модель / анимации FBX |
 | [Assets/Models/World/CoastalEnvironment/Bush_LOD2.fbx](<../../Assets/Models/World/CoastalEnvironment/Bush_LOD2.fbx>) | Модель / анимации FBX |
+| [Assets/Models/World/CoastalEnvironment/CliffWallA_COL.fbx](<../../Assets/Models/World/CoastalEnvironment/CliffWallA_COL.fbx>) | Модель / анимации FBX; Мир, острова и океан |
+| [Assets/Models/World/CoastalEnvironment/CliffWallA_Collision.asset](<../../Assets/Models/World/CoastalEnvironment/CliffWallA_Collision.asset>) | Настройки или данные Unity; Мир, острова и океан |
 | [Assets/Models/World/CoastalEnvironment/CliffWallA_LOD0.fbx](<../../Assets/Models/World/CoastalEnvironment/CliffWallA_LOD0.fbx>) | Модель / анимации FBX |
 | [Assets/Models/World/CoastalEnvironment/CliffWallA_LOD1.fbx](<../../Assets/Models/World/CoastalEnvironment/CliffWallA_LOD1.fbx>) | Модель / анимации FBX |
 | [Assets/Models/World/CoastalEnvironment/CliffWallA_LOD2.fbx](<../../Assets/Models/World/CoastalEnvironment/CliffWallA_LOD2.fbx>) | Модель / анимации FBX |
+| [Assets/Models/World/CoastalEnvironment/CliffWallA_Sand.asset](<../../Assets/Models/World/CoastalEnvironment/CliffWallA_Sand.asset>) | Настройки или данные Unity |
+| [Assets/Models/World/CoastalEnvironment/CliffWallB_COL.fbx](<../../Assets/Models/World/CoastalEnvironment/CliffWallB_COL.fbx>) | Модель / анимации FBX; Мир, острова и океан |
+| [Assets/Models/World/CoastalEnvironment/CliffWallB_Collision.asset](<../../Assets/Models/World/CoastalEnvironment/CliffWallB_Collision.asset>) | Настройки или данные Unity; Мир, острова и океан |
 | [Assets/Models/World/CoastalEnvironment/CliffWallB_LOD0.fbx](<../../Assets/Models/World/CoastalEnvironment/CliffWallB_LOD0.fbx>) | Модель / анимации FBX |
 | [Assets/Models/World/CoastalEnvironment/CliffWallB_LOD1.fbx](<../../Assets/Models/World/CoastalEnvironment/CliffWallB_LOD1.fbx>) | Модель / анимации FBX |
 | [Assets/Models/World/CoastalEnvironment/CliffWallB_LOD2.fbx](<../../Assets/Models/World/CoastalEnvironment/CliffWallB_LOD2.fbx>) | Модель / анимации FBX |
+| [Assets/Models/World/CoastalEnvironment/CliffWallB_Sand.asset](<../../Assets/Models/World/CoastalEnvironment/CliffWallB_Sand.asset>) | Настройки или данные Unity |
+| [Assets/Models/World/CoastalEnvironment/CliffWallC_COL.fbx](<../../Assets/Models/World/CoastalEnvironment/CliffWallC_COL.fbx>) | Модель / анимации FBX; Мир, острова и океан |
+| [Assets/Models/World/CoastalEnvironment/CliffWallC_Collision.asset](<../../Assets/Models/World/CoastalEnvironment/CliffWallC_Collision.asset>) | Настройки или данные Unity; Мир, острова и океан |
 | [Assets/Models/World/CoastalEnvironment/CliffWallC_LOD0.fbx](<../../Assets/Models/World/CoastalEnvironment/CliffWallC_LOD0.fbx>) | Модель / анимации FBX |
 | [Assets/Models/World/CoastalEnvironment/CliffWallC_LOD1.fbx](<../../Assets/Models/World/CoastalEnvironment/CliffWallC_LOD1.fbx>) | Модель / анимации FBX |
 | [Assets/Models/World/CoastalEnvironment/CliffWallC_LOD2.fbx](<../../Assets/Models/World/CoastalEnvironment/CliffWallC_LOD2.fbx>) | Модель / анимации FBX |
+| [Assets/Models/World/CoastalEnvironment/CliffWallC_Sand.asset](<../../Assets/Models/World/CoastalEnvironment/CliffWallC_Sand.asset>) | Настройки или данные Unity |
 | [Assets/Models/World/CoastalEnvironment/Fern_LOD0.fbx](<../../Assets/Models/World/CoastalEnvironment/Fern_LOD0.fbx>) | Модель / анимации FBX |
 | [Assets/Models/World/CoastalEnvironment/Fern_LOD1.fbx](<../../Assets/Models/World/CoastalEnvironment/Fern_LOD1.fbx>) | Модель / анимации FBX |
 | [Assets/Models/World/CoastalEnvironment/Fern_LOD2.fbx](<../../Assets/Models/World/CoastalEnvironment/Fern_LOD2.fbx>) | Модель / анимации FBX |
@@ -1699,33 +1708,60 @@
 | [Assets/Models/World/CoastalEnvironment/Palm_LOD0.fbx](<../../Assets/Models/World/CoastalEnvironment/Palm_LOD0.fbx>) | Модель / анимации FBX |
 | [Assets/Models/World/CoastalEnvironment/Palm_LOD1.fbx](<../../Assets/Models/World/CoastalEnvironment/Palm_LOD1.fbx>) | Модель / анимации FBX |
 | [Assets/Models/World/CoastalEnvironment/Palm_LOD2.fbx](<../../Assets/Models/World/CoastalEnvironment/Palm_LOD2.fbx>) | Модель / анимации FBX |
+| [Assets/Models/World/CoastalEnvironment/Reef_Moai_A_COL.fbx](<../../Assets/Models/World/CoastalEnvironment/Reef_Moai_A_COL.fbx>) | Модель / анимации FBX; Мир, острова и океан |
+| [Assets/Models/World/CoastalEnvironment/Reef_Moai_A_Collision.asset](<../../Assets/Models/World/CoastalEnvironment/Reef_Moai_A_Collision.asset>) | Настройки или данные Unity; Мир, острова и океан |
 | [Assets/Models/World/CoastalEnvironment/Reef_Moai_A_LOD0.fbx](<../../Assets/Models/World/CoastalEnvironment/Reef_Moai_A_LOD0.fbx>) | Модель / анимации FBX |
 | [Assets/Models/World/CoastalEnvironment/Reef_Moai_A_LOD1.fbx](<../../Assets/Models/World/CoastalEnvironment/Reef_Moai_A_LOD1.fbx>) | Модель / анимации FBX |
 | [Assets/Models/World/CoastalEnvironment/Reef_Moai_A_LOD2.fbx](<../../Assets/Models/World/CoastalEnvironment/Reef_Moai_A_LOD2.fbx>) | Модель / анимации FBX |
+| [Assets/Models/World/CoastalEnvironment/Reef_Moai_A_Sand.asset](<../../Assets/Models/World/CoastalEnvironment/Reef_Moai_A_Sand.asset>) | Настройки или данные Unity |
+| [Assets/Models/World/CoastalEnvironment/Reef_ShallowField_A_COL.fbx](<../../Assets/Models/World/CoastalEnvironment/Reef_ShallowField_A_COL.fbx>) | Модель / анимации FBX; Мир, острова и океан |
+| [Assets/Models/World/CoastalEnvironment/Reef_ShallowField_A_Collision.asset](<../../Assets/Models/World/CoastalEnvironment/Reef_ShallowField_A_Collision.asset>) | Настройки или данные Unity; Мир, острова и океан |
 | [Assets/Models/World/CoastalEnvironment/Reef_ShallowField_A_LOD0.fbx](<../../Assets/Models/World/CoastalEnvironment/Reef_ShallowField_A_LOD0.fbx>) | Модель / анимации FBX |
 | [Assets/Models/World/CoastalEnvironment/Reef_ShallowField_A_LOD1.fbx](<../../Assets/Models/World/CoastalEnvironment/Reef_ShallowField_A_LOD1.fbx>) | Модель / анимации FBX |
 | [Assets/Models/World/CoastalEnvironment/Reef_ShallowField_A_LOD2.fbx](<../../Assets/Models/World/CoastalEnvironment/Reef_ShallowField_A_LOD2.fbx>) | Модель / анимации FBX |
+| [Assets/Models/World/CoastalEnvironment/Reef_ShallowField_A_Sand.asset](<../../Assets/Models/World/CoastalEnvironment/Reef_ShallowField_A_Sand.asset>) | Настройки или данные Unity |
+| [Assets/Models/World/CoastalEnvironment/Reef_Spires_A_COL.fbx](<../../Assets/Models/World/CoastalEnvironment/Reef_Spires_A_COL.fbx>) | Модель / анимации FBX; Мир, острова и океан |
+| [Assets/Models/World/CoastalEnvironment/Reef_Spires_A_Collision.asset](<../../Assets/Models/World/CoastalEnvironment/Reef_Spires_A_Collision.asset>) | Настройки или данные Unity; Мир, острова и океан |
 | [Assets/Models/World/CoastalEnvironment/Reef_Spires_A_LOD0.fbx](<../../Assets/Models/World/CoastalEnvironment/Reef_Spires_A_LOD0.fbx>) | Модель / анимации FBX |
 | [Assets/Models/World/CoastalEnvironment/Reef_Spires_A_LOD1.fbx](<../../Assets/Models/World/CoastalEnvironment/Reef_Spires_A_LOD1.fbx>) | Модель / анимации FBX |
 | [Assets/Models/World/CoastalEnvironment/Reef_Spires_A_LOD2.fbx](<../../Assets/Models/World/CoastalEnvironment/Reef_Spires_A_LOD2.fbx>) | Модель / анимации FBX |
+| [Assets/Models/World/CoastalEnvironment/Reef_Spires_A_Sand.asset](<../../Assets/Models/World/CoastalEnvironment/Reef_Spires_A_Sand.asset>) | Настройки или данные Unity |
+| [Assets/Models/World/CoastalEnvironment/Reef_Spires_B_COL.fbx](<../../Assets/Models/World/CoastalEnvironment/Reef_Spires_B_COL.fbx>) | Модель / анимации FBX; Мир, острова и океан |
+| [Assets/Models/World/CoastalEnvironment/Reef_Spires_B_Collision.asset](<../../Assets/Models/World/CoastalEnvironment/Reef_Spires_B_Collision.asset>) | Настройки или данные Unity; Мир, острова и океан |
 | [Assets/Models/World/CoastalEnvironment/Reef_Spires_B_LOD0.fbx](<../../Assets/Models/World/CoastalEnvironment/Reef_Spires_B_LOD0.fbx>) | Модель / анимации FBX |
 | [Assets/Models/World/CoastalEnvironment/Reef_Spires_B_LOD1.fbx](<../../Assets/Models/World/CoastalEnvironment/Reef_Spires_B_LOD1.fbx>) | Модель / анимации FBX |
 | [Assets/Models/World/CoastalEnvironment/Reef_Spires_B_LOD2.fbx](<../../Assets/Models/World/CoastalEnvironment/Reef_Spires_B_LOD2.fbx>) | Модель / анимации FBX |
+| [Assets/Models/World/CoastalEnvironment/Reef_Spires_B_Sand.asset](<../../Assets/Models/World/CoastalEnvironment/Reef_Spires_B_Sand.asset>) | Настройки или данные Unity |
+| [Assets/Models/World/CoastalEnvironment/Reef_Spires_C_COL.fbx](<../../Assets/Models/World/CoastalEnvironment/Reef_Spires_C_COL.fbx>) | Модель / анимации FBX; Мир, острова и океан |
+| [Assets/Models/World/CoastalEnvironment/Reef_Spires_C_Collision.asset](<../../Assets/Models/World/CoastalEnvironment/Reef_Spires_C_Collision.asset>) | Настройки или данные Unity; Мир, острова и океан |
 | [Assets/Models/World/CoastalEnvironment/Reef_Spires_C_LOD0.fbx](<../../Assets/Models/World/CoastalEnvironment/Reef_Spires_C_LOD0.fbx>) | Модель / анимации FBX |
 | [Assets/Models/World/CoastalEnvironment/Reef_Spires_C_LOD1.fbx](<../../Assets/Models/World/CoastalEnvironment/Reef_Spires_C_LOD1.fbx>) | Модель / анимации FBX |
 | [Assets/Models/World/CoastalEnvironment/Reef_Spires_C_LOD2.fbx](<../../Assets/Models/World/CoastalEnvironment/Reef_Spires_C_LOD2.fbx>) | Модель / анимации FBX |
+| [Assets/Models/World/CoastalEnvironment/Reef_Spires_C_Sand.asset](<../../Assets/Models/World/CoastalEnvironment/Reef_Spires_C_Sand.asset>) | Настройки или данные Unity |
+| [Assets/Models/World/CoastalEnvironment/RockLarge_COL.fbx](<../../Assets/Models/World/CoastalEnvironment/RockLarge_COL.fbx>) | Модель / анимации FBX; Мир, острова и океан |
+| [Assets/Models/World/CoastalEnvironment/RockLarge_Collision.asset](<../../Assets/Models/World/CoastalEnvironment/RockLarge_Collision.asset>) | Настройки или данные Unity; Мир, острова и океан |
 | [Assets/Models/World/CoastalEnvironment/RockLarge_LOD0.fbx](<../../Assets/Models/World/CoastalEnvironment/RockLarge_LOD0.fbx>) | Модель / анимации FBX |
 | [Assets/Models/World/CoastalEnvironment/RockLarge_LOD1.fbx](<../../Assets/Models/World/CoastalEnvironment/RockLarge_LOD1.fbx>) | Модель / анимации FBX |
 | [Assets/Models/World/CoastalEnvironment/RockLarge_LOD2.fbx](<../../Assets/Models/World/CoastalEnvironment/RockLarge_LOD2.fbx>) | Модель / анимации FBX |
+| [Assets/Models/World/CoastalEnvironment/RockLarge_Sand.asset](<../../Assets/Models/World/CoastalEnvironment/RockLarge_Sand.asset>) | Настройки или данные Unity |
+| [Assets/Models/World/CoastalEnvironment/RockMedium_COL.fbx](<../../Assets/Models/World/CoastalEnvironment/RockMedium_COL.fbx>) | Модель / анимации FBX; Мир, острова и океан |
+| [Assets/Models/World/CoastalEnvironment/RockMedium_Collision.asset](<../../Assets/Models/World/CoastalEnvironment/RockMedium_Collision.asset>) | Настройки или данные Unity; Мир, острова и океан |
 | [Assets/Models/World/CoastalEnvironment/RockMedium_LOD0.fbx](<../../Assets/Models/World/CoastalEnvironment/RockMedium_LOD0.fbx>) | Модель / анимации FBX |
 | [Assets/Models/World/CoastalEnvironment/RockMedium_LOD1.fbx](<../../Assets/Models/World/CoastalEnvironment/RockMedium_LOD1.fbx>) | Модель / анимации FBX |
 | [Assets/Models/World/CoastalEnvironment/RockMedium_LOD2.fbx](<../../Assets/Models/World/CoastalEnvironment/RockMedium_LOD2.fbx>) | Модель / анимации FBX |
+| [Assets/Models/World/CoastalEnvironment/RockMedium_Sand.asset](<../../Assets/Models/World/CoastalEnvironment/RockMedium_Sand.asset>) | Настройки или данные Unity |
+| [Assets/Models/World/CoastalEnvironment/SeaArch_Huge_A_COL.fbx](<../../Assets/Models/World/CoastalEnvironment/SeaArch_Huge_A_COL.fbx>) | Модель / анимации FBX; Мир, острова и океан |
+| [Assets/Models/World/CoastalEnvironment/SeaArch_Huge_A_Collision.asset](<../../Assets/Models/World/CoastalEnvironment/SeaArch_Huge_A_Collision.asset>) | Настройки или данные Unity; Мир, острова и океан |
 | [Assets/Models/World/CoastalEnvironment/SeaArch_Huge_A_LOD0.fbx](<../../Assets/Models/World/CoastalEnvironment/SeaArch_Huge_A_LOD0.fbx>) | Модель / анимации FBX |
 | [Assets/Models/World/CoastalEnvironment/SeaArch_Huge_A_LOD1.fbx](<../../Assets/Models/World/CoastalEnvironment/SeaArch_Huge_A_LOD1.fbx>) | Модель / анимации FBX |
 | [Assets/Models/World/CoastalEnvironment/SeaArch_Huge_A_LOD2.fbx](<../../Assets/Models/World/CoastalEnvironment/SeaArch_Huge_A_LOD2.fbx>) | Модель / анимации FBX |
+| [Assets/Models/World/CoastalEnvironment/SeaArch_Huge_A_Sand.asset](<../../Assets/Models/World/CoastalEnvironment/SeaArch_Huge_A_Sand.asset>) | Настройки или данные Unity |
+| [Assets/Models/World/CoastalEnvironment/Sea_Lagoon_Cave_COL.fbx](<../../Assets/Models/World/CoastalEnvironment/Sea_Lagoon_Cave_COL.fbx>) | Модель / анимации FBX; Мир, острова и океан |
+| [Assets/Models/World/CoastalEnvironment/Sea_Lagoon_Cave_Collision.asset](<../../Assets/Models/World/CoastalEnvironment/Sea_Lagoon_Cave_Collision.asset>) | Настройки или данные Unity; Мир, острова и океан |
 | [Assets/Models/World/CoastalEnvironment/Sea_Lagoon_Cave_LOD0.fbx](<../../Assets/Models/World/CoastalEnvironment/Sea_Lagoon_Cave_LOD0.fbx>) | Модель / анимации FBX |
 | [Assets/Models/World/CoastalEnvironment/Sea_Lagoon_Cave_LOD1.fbx](<../../Assets/Models/World/CoastalEnvironment/Sea_Lagoon_Cave_LOD1.fbx>) | Модель / анимации FBX |
 | [Assets/Models/World/CoastalEnvironment/Sea_Lagoon_Cave_LOD2.fbx](<../../Assets/Models/World/CoastalEnvironment/Sea_Lagoon_Cave_LOD2.fbx>) | Модель / анимации FBX |
+| [Assets/Models/World/CoastalEnvironment/Sea_Lagoon_Cave_Sand.asset](<../../Assets/Models/World/CoastalEnvironment/Sea_Lagoon_Cave_Sand.asset>) | Настройки или данные Unity |
 
 ## Assets/Models/World/CoastalEnvironment/Textures
 
@@ -1738,6 +1774,16 @@
 | [Assets/Models/World/CoastalEnvironment/Textures/PalmNormal.tga](<../../Assets/Models/World/CoastalEnvironment/Textures/PalmNormal.tga>) | Текстура |
 | [Assets/Models/World/CoastalEnvironment/Textures/RockColour.png](<../../Assets/Models/World/CoastalEnvironment/Textures/RockColour.png>) | Изображение / текстура |
 | [Assets/Models/World/CoastalEnvironment/Textures/RockNormal.png](<../../Assets/Models/World/CoastalEnvironment/Textures/RockNormal.png>) | Изображение / текстура |
+
+## Assets/Models/World/CoastalEnvironment/Textures/Sand
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/World/CoastalEnvironment/Textures/Sand/SOURCES.md](<../../Assets/Models/World/CoastalEnvironment/Textures/Sand/SOURCES.md>) | Документация; Мир, острова и океан |
+| [Assets/Models/World/CoastalEnvironment/Textures/Sand/SandColour.jpg](<../../Assets/Models/World/CoastalEnvironment/Textures/Sand/SandColour.jpg>) | Изображение / текстура |
+| [Assets/Models/World/CoastalEnvironment/Textures/Sand/SandMetalSmooth.png](<../../Assets/Models/World/CoastalEnvironment/Textures/Sand/SandMetalSmooth.png>) | Изображение / текстура |
+| [Assets/Models/World/CoastalEnvironment/Textures/Sand/SandNormal.png](<../../Assets/Models/World/CoastalEnvironment/Textures/Sand/SandNormal.png>) | Изображение / текстура |
+| [Assets/Models/World/CoastalEnvironment/Textures/Sand/SandRoughness.jpg](<../../Assets/Models/World/CoastalEnvironment/Textures/Sand/SandRoughness.jpg>) | Изображение / текстура |
 
 ## Assets/Models/World/CoastalEnvironment/Textures/Tripo
 

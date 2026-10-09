@@ -210,6 +210,9 @@ Shader "Hidden/Skybox/PhysicallyBasedSky"
 
                 skyColor += radiance * (1 - skyOpacity);
                 skyColor *= _IntensityMultiplier;
+#ifdef SKY_NOT_BAKING
+                skyColor = StormTestSkyColor(skyColor,-V,GetCameraPositionWS());
+#endif
 
                 return float4(skyColor, 1.0);
             }
@@ -419,6 +422,9 @@ Shader "Hidden/Skybox/PhysicallyBasedSky"
 
                 skyColor += radiance * (1 - skyOpacity);
                 skyColor *= _IntensityMultiplier;
+#ifdef SKY_NOT_BAKING
+                skyColor = StormTestSkyColor(skyColor,-V,GetCameraPositionWS());
+#endif
 
                 return float4(skyColor, 1.0);
             }

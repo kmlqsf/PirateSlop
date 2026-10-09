@@ -26,6 +26,7 @@ namespace PirateSlop.Editor
         {
             if (EditorApplication.isPlayingOrWillChangePlaymode) throw new InvalidOperationException("Stop Play Mode before updating environment art.");
             if (names.Length == 0 || names.Any(n => !Environment.Contains(n) && !Starter.Contains(n))) throw new ArgumentException("Unknown coastal model.");
+            foreach (var name in names.Where(IsRock)) PrepareCollisionSource(name);
             Directory.CreateDirectory(Materials);
             AssetDatabase.Refresh();
             var materials = PrepareMaterials();
@@ -56,6 +57,11 @@ namespace PirateSlop.Editor
                         importer.isReadable = level == 0;
                         importer.meshCompression = ModelImporterMeshCompression.Off;
                         importer.importTangents = ModelImporterTangents.CalculateMikk;
+                        changed |= importer.importNormals != ModelImporterNormals.Calculate || importer.normalCalculationMode != ModelImporterNormalCalculationMode.AreaAndAngleWeighted || importer.normalSmoothingSource != ModelImporterNormalSmoothingSource.FromAngle || importer.normalSmoothingAngle != 65f;
+                        importer.importNormals = ModelImporterNormals.Calculate;
+                        importer.normalCalculationMode = ModelImporterNormalCalculationMode.AreaAndAngleWeighted;
+                        importer.normalSmoothingSource = ModelImporterNormalSmoothingSource.FromAngle;
+                        importer.normalSmoothingAngle = 65f;
                         if (changed) importer.SaveAndReimport();
                         var model = AssetDatabase.LoadAssetAtPath<GameObject>(modelPath);
                         var instance = (GameObject)PrefabUtility.InstantiatePrefab(model, visual.transform);
@@ -80,6 +86,8 @@ namespace PirateSlop.Editor
                     group.RecalculateBounds();
                     foreach (var node in visual.GetComponentsInChildren<Transform>(true)) node.gameObject.layer = root.layer;
                     if (visual.GetComponentsInChildren<Collider>(true).Length > 0) throw new InvalidOperationException("New visuals must not contain colliders.");
+                    if (IsRock(name)) ApplyCollision(root, name);
+                    if (IsRock(name)) SeagullSetup.BuildPerches(visual);
                     PrefabUtility.SaveAsPrefabAsset(root, path);
                 }
                 finally { PrefabUtility.UnloadPrefabContents(root); }
@@ -94,6 +102,114 @@ namespace PirateSlop.Editor
                 importer.SaveAndReimport();
             }
             RefreshCatalogVersions();
+        }
+
+        static bool IsRock(string name) => !name.StartsWith("Palm", StringComparison.Ordinal) && name != "Bush" && name != "Fern";
+
+        [MenuItem("PirateSlop/Art/Repair Coastal Surface Normals")]
+        public static void RepairSurfaceNormals()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode) throw new InvalidOperationException("Stop Play Mode before updating environment art.");
+            foreach (var name in Environment.Concat(Starter).Where(IsRock))
+                for (int level = 0; level < 3; level++)
+                {
+                    var importer = (ModelImporter)AssetImporter.GetAtPath(Models + "/" + name + "_LOD" + level + ".fbx");
+                    if (importer == null) throw new InvalidOperationException("Missing coastal model " + name);
+                    if (importer.importNormals == ModelImporterNormals.Calculate && importer.normalCalculationMode == ModelImporterNormalCalculationMode.AreaAndAngleWeighted && importer.normalSmoothingSource == ModelImporterNormalSmoothingSource.FromAngle && importer.normalSmoothingAngle == 65f) continue;
+                    importer.importNormals = ModelImporterNormals.Calculate;
+                    importer.normalCalculationMode = ModelImporterNormalCalculationMode.AreaAndAngleWeighted;
+                    importer.normalSmoothingSource = ModelImporterNormalSmoothingSource.FromAngle;
+                    importer.normalSmoothingAngle = 65f;
+                    importer.importTangents = ModelImporterTangents.CalculateMikk;
+                    importer.SaveAndReimport();
+                }
+        }
+
+        [MenuItem("PirateSlop/Art/Repair Exact Coastal Collision")]
+        public static void RepairExactCollision() => ApplyCollisionModels(Environment.Concat(Starter).Where(IsRock).ToArray());
+
+        static void PrepareCollisionSource(string name)
+        {
+            string path = Models + "/" + name + "_LOD0.fbx";
+            var importer = AssetImporter.GetAtPath(path) as ModelImporter;
+            if (importer == null) throw new InvalidOperationException("Missing coastal visual model " + name);
+            if (!importer.isReadable) { importer.isReadable = true; importer.SaveAndReimport(); }
+        }
+
+        public static void ApplyCollisionModels(params string[] names)
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode) throw new InvalidOperationException("Stop Play Mode before updating environment collision.");
+            if (names.Length == 0 || names.Any(n => !IsRock(n) || !Environment.Contains(n) && !Starter.Contains(n))) throw new ArgumentException("Unknown coastal rock model.");
+            foreach (var name in names.Distinct()) PrepareCollisionSource(name);
+            foreach (var name in names.Distinct())
+            {
+                string path = PrefabPath(name);
+                var root = PrefabUtility.LoadPrefabContents(path);
+                try
+                {
+                    ApplyCollision(root, name);
+                    PrefabUtility.SaveAsPrefabAsset(root, path);
+                }
+                finally { PrefabUtility.UnloadPrefabContents(root); }
+            }
+            foreach (var name in names.Distinct())
+            {
+                var importer = (ModelImporter)AssetImporter.GetAtPath(Models + "/" + name + "_LOD0.fbx");
+                importer.isReadable = false;
+                importer.SaveAndReimport();
+            }
+            RefreshCatalogVersions();
+        }
+
+        static void ApplyCollision(GameObject root, string name)
+        {
+            var previous = root.transform.Find("CoastalCollision");
+            if (previous != null) UnityEngine.Object.DestroyImmediate(previous.gameObject);
+            foreach (var collider in root.GetComponentsInChildren<Collider>(true))
+                if (!collider.isTrigger) collider.enabled = false;
+            var source = root.transform.Find("CoastalVisual/LOD0");
+            if (source == null) throw new InvalidOperationException("Missing coastal LOD0 " + name);
+            var vertices = new List<Vector3>();
+            var triangles = new List<int>();
+            foreach (var filter in source.GetComponentsInChildren<MeshFilter>(true))
+            {
+                var renderer = filter.GetComponent<Renderer>();
+                bool rock = filter.name.EndsWith("_Rock_LOD0", StringComparison.Ordinal) || renderer != null && renderer.sharedMaterials.Length > 0 && renderer.sharedMaterials.All(m => m != null && (m.name.StartsWith("CoastalRock", StringComparison.Ordinal) || m.name.StartsWith("TripoNative_", StringComparison.Ordinal) && m.name.Contains("_Rock")));
+                if (!rock) continue;
+                var mesh = filter.sharedMesh;
+                if (mesh == null || !mesh.isReadable) throw new InvalidOperationException("Unreadable coastal LOD0 " + filter.name);
+                var matrix = root.transform.worldToLocalMatrix * filter.transform.localToWorldMatrix;
+                int offset = vertices.Count;
+                foreach (var vertex in mesh.vertices) vertices.Add(matrix.MultiplyPoint3x4(vertex));
+                var indices = mesh.triangles;
+                bool mirrored = matrix.determinant < 0;
+                for (int i = 0; i < indices.Length; i += 3)
+                {
+                    triangles.Add(offset + indices[i]);
+                    triangles.Add(offset + indices[i + (mirrored ? 2 : 1)]);
+                    triangles.Add(offset + indices[i + (mirrored ? 1 : 2)]);
+                }
+            }
+            if (triangles.Count == 0) throw new InvalidOperationException("No coastal rock triangles " + name);
+            string path = Models + "/" + name + "_Collision.asset";
+            var collisionMesh = AssetDatabase.LoadAssetAtPath<Mesh>(path);
+            if (collisionMesh == null)
+            {
+                collisionMesh = new Mesh { name = name + "_Collision" };
+                AssetDatabase.CreateAsset(collisionMesh, path);
+            }
+            collisionMesh.Clear();
+            collisionMesh.indexFormat = vertices.Count > 65535 ? UnityEngine.Rendering.IndexFormat.UInt32 : UnityEngine.Rendering.IndexFormat.UInt16;
+            collisionMesh.SetVertices(vertices);
+            collisionMesh.SetTriangles(triangles, 0);
+            collisionMesh.RecalculateBounds();
+            EditorUtility.SetDirty(collisionMesh);
+            AssetDatabase.SaveAssetIfDirty(collisionMesh);
+            var collision = new GameObject("CoastalCollision") { layer = root.layer };
+            collision.transform.SetParent(root.transform, false);
+            var exactCollider = collision.AddComponent<MeshCollider>();
+            exactCollider.sharedMesh = collisionMesh;
+            exactCollider.convex = false;
         }
 
         static Dictionary<string, Material> PrepareMaterials()

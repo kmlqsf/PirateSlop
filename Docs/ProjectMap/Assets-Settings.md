@@ -13,10 +13,10 @@
 | [Assets/Settings/DefaultVolumeProfile.asset](<../../Assets/Settings/DefaultVolumeProfile.asset>) | Настройки или данные Unity |
 | [Assets/Settings/MaritimeAtmosphere.asset](<../../Assets/Settings/MaritimeAtmosphere.asset>) | Настройки или данные Unity |
 | [Assets/Settings/Mobile_RPAsset.asset](<../../Assets/Settings/Mobile_RPAsset.asset>) | Настройки или данные Unity |
-| [Assets/Settings/Mobile_Renderer.asset](<../../Assets/Settings/Mobile_Renderer.asset>) | Настройки или данные Unity |
+| [Assets/Settings/Mobile_Renderer.asset](<../../Assets/Settings/Mobile_Renderer.asset>) | Настройки или данные Unity; Шторм, зона, дождь и объёмный туман |
 | [Assets/Settings/OvercastAtmosphere.asset](<../../Assets/Settings/OvercastAtmosphere.asset>) | Настройки или данные Unity |
 | [Assets/Settings/PC_RPAsset.asset](<../../Assets/Settings/PC_RPAsset.asset>) | Настройки или данные Unity |
-| [Assets/Settings/PC_Renderer.asset](<../../Assets/Settings/PC_Renderer.asset>) | Настройки или данные Unity; Мир, острова и океан, Тестовая карта и водоворот |
+| [Assets/Settings/PC_Renderer.asset](<../../Assets/Settings/PC_Renderer.asset>) | Настройки или данные Unity; Мир, острова и океан, Шторм, зона, дождь и объёмный туман, Тестовая карта и водоворот |
 | [Assets/Settings/SampleSceneProfile.asset](<../../Assets/Settings/SampleSceneProfile.asset>) | Настройки или данные Unity |
 | [Assets/Settings/UniversalRenderPipelineGlobalSettings.asset](<../../Assets/Settings/UniversalRenderPipelineGlobalSettings.asset>) | Настройки или данные Unity; Мир, острова и океан, Тестовая карта и водоворот |
 
@@ -51,9 +51,9 @@
 
 | Файл | Краткое описание |
 | --- | --- |
-| [Assets/Settings/TestSky/TestSkyClouds.mat](<../../Assets/Settings/TestSky/TestSkyClouds.mat>) | Материал Unity; Тестовая карта и водоворот |
+| [Assets/Settings/TestSky/TestSkyClouds.mat](<../../Assets/Settings/TestSky/TestSkyClouds.mat>) | Материал Unity; Шторм, зона, дождь и объёмный туман, Тестовая карта и водоворот |
 | [Assets/Settings/TestSky/TestSkyPipeline.asset](<../../Assets/Settings/TestSky/TestSkyPipeline.asset>) | Настройки или данные Unity; Тестовая карта и водоворот |
-| [Assets/Settings/TestSky/TestSkyRenderer.asset](<../../Assets/Settings/TestSky/TestSkyRenderer.asset>) | Настройки или данные Unity; Тестовая карта и водоворот |
+| [Assets/Settings/TestSky/TestSkyRenderer.asset](<../../Assets/Settings/TestSky/TestSkyRenderer.asset>) | Настройки или данные Unity; Шторм, зона, дождь и объёмный туман, Тестовая карта и водоворот |
 | [Assets/Settings/TestSky/TestSkyVolume.asset](<../../Assets/Settings/TestSky/TestSkyVolume.asset>) | Настройки или данные Unity; Тестовая карта и водоворот |
 | [Assets/Settings/TestSky/Underwater.mat](<../../Assets/Settings/TestSky/Underwater.mat>) | Материал Unity; Мир, острова и океан, Тестовая карта и водоворот |
 

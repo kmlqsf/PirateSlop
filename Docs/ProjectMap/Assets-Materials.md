@@ -91,6 +91,7 @@
 | [Assets/Materials/CoastalEnvironment/CoastalRockDark.mat](<../../Assets/Materials/CoastalEnvironment/CoastalRockDark.mat>) | Материал Unity |
 | [Assets/Materials/CoastalEnvironment/CoastalRockLight.mat](<../../Assets/Materials/CoastalEnvironment/CoastalRockLight.mat>) | Материал Unity |
 | [Assets/Materials/CoastalEnvironment/CoastalRockWarm.mat](<../../Assets/Materials/CoastalEnvironment/CoastalRockWarm.mat>) | Материал Unity |
+| [Assets/Materials/CoastalEnvironment/CoastalSand.mat](<../../Assets/Materials/CoastalEnvironment/CoastalSand.mat>) | Материал Unity; Мир, острова и океан |
 | [Assets/Materials/CoastalEnvironment/CoastalTerrain.mat](<../../Assets/Materials/CoastalEnvironment/CoastalTerrain.mat>) | Материал Unity |
 | [Assets/Materials/CoastalEnvironment/TripoNative_01_RockMass_A.mat](<../../Assets/Materials/CoastalEnvironment/TripoNative_01_RockMass_A.mat>) | Материал Unity |
 | [Assets/Materials/CoastalEnvironment/TripoNative_02_RockMass_B.mat](<../../Assets/Materials/CoastalEnvironment/TripoNative_02_RockMass_B.mat>) | Материал Unity |

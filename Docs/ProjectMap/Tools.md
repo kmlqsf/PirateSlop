@@ -34,3 +34,11 @@
 | Файл | Краткое описание |
 | --- | --- |
 | [Tools/ShipV3/ExportFromOpenBlender.py](<../../Tools/ShipV3/ExportFromOpenBlender.py>) | Инструмент Python; Модели и Blender |
+
+## Tools/VFX
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Tools/VFX/bake_test_cloud_wall.py](<../../Tools/VFX/bake_test_cloud_wall.py>) | Инструмент Python; Шторм, зона, дождь и объёмный туман |
+| [Tools/VFX/prepare_storm_rain_audio.py](<../../Tools/VFX/prepare_storm_rain_audio.py>) | Инструмент Python; Звуки и голос, Шторм, зона, дождь и объёмный туман |
+| [Tools/VFX/prepare_storm_thunder_audio.py](<../../Tools/VFX/prepare_storm_thunder_audio.py>) | Инструмент Python; Звуки и голос, Шторм, зона, дождь и объёмный туман |

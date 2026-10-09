@@ -120,8 +120,8 @@ Material:
     - _BlendModePreserveSpecular: 1
     - _BumpScale: 1
     - _ClearCloudCellSize: 7000
-    - _ClearCloudCoverageEnd: 0.76
-    - _ClearCloudCoverageStart: 0.54
+    - _ClearCloudCoverageEnd: 0.74
+    - _ClearCloudCoverageStart: 0.52
     - _ClearCloudFarFadeEnd: 28000
     - _ClearCloudFarFadeStart: 12000
     - _ClearCloudSeed: 19
@@ -139,7 +139,7 @@ Material:
     - _EarthCurvature: 0
     - _EarthRadius: 6378100
     - _EnvironmentReflections: 1
-    - _ErosionFactor: 0.5
+    - _ErosionFactor: 0.32
     - _ErosionFactorCompensation: 1
     - _ErosionOcclusion: 0.1
     - _ErosionScale: 90
@@ -149,17 +149,17 @@ Material:
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
-    - _HighestCloudAltitude: 6382100
-    - _LowestCloudAltitude: 6380900
+    - _HighestCloudAltitude: 6380900
+    - _LowestCloudAltitude: 6378460
     - _MaxStep: 24
-    - _MaxStepSize: 100
+    - _MaxStepSize: 203.33333
     - _MediumWindSpeed: 1
     - _Metallic: 0
     - _MicroErosionFactor: 0.28
     - _MicroErosionScale: 200
     - _MultiScattering: 0.525
     - _NormalizationFactor: 189011.11
-    - _NumLightSteps: 6
+    - _NumLightSteps: 2
     - _NumPrimarySteps: 64
     - _OcclusionStrength: 1
     - _Parallax: 0.005
@@ -168,7 +168,7 @@ Material:
     - _ReceiveShadows: 1
     - _Seed: 0
     - _ShapeFactor: 0.75
-    - _ShapeScale: 6
+    - _ShapeScale: 18
     - _SmallWindSpeed: 0.25
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
@@ -177,7 +177,7 @@ Material:
     - _SrcBlendAlpha: 1
     - _StepSize: 0.4
     - _SunDisk: 2
-    - _SunLightDimmer: 1
+    - _SunLightDimmer: 0.78
     - _SunSize: 0.04
     - _SunSizeConvergence: 5
     - _Surface: 0

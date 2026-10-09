@@ -33,11 +33,23 @@
 | [Assets/Audio/Ambience/Sea/ShipLeatherB.mp3](<../../Assets/Audio/Ambience/Sea/ShipLeatherB.mp3>) | Аудио |
 | [Assets/Audio/Ambience/Sea/ShipWind.ogg](<../../Assets/Audio/Ambience/Sea/ShipWind.ogg>) | Аудио |
 
+## Assets/Audio/Ambience/Seagulls
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Audio/Ambience/Seagulls/SOURCES.md](<../../Assets/Audio/Ambience/Seagulls/SOURCES.md>) | Документация; Чайки и фоновые стаи |
+| [Assets/Audio/Ambience/Seagulls/SeagullCall.wav](<../../Assets/Audio/Ambience/Seagulls/SeagullCall.wav>) | Аудио; Чайки и фоновые стаи |
+
 ## Assets/Audio/Ambience/Storm
 
 | Файл | Краткое описание |
 | --- | --- |
 | [Assets/Audio/Ambience/Storm/EvilStorm.wav](<../../Assets/Audio/Ambience/Storm/EvilStorm.wav>) | Аудио |
+| [Assets/Audio/Ambience/Storm/RainDeckLoop.wav](<../../Assets/Audio/Ambience/Storm/RainDeckLoop.wav>) | Аудио; Звуки и голос, Шторм, зона, дождь и объёмный туман |
+| [Assets/Audio/Ambience/Storm/RainDownpourLoop.wav](<../../Assets/Audio/Ambience/Storm/RainDownpourLoop.wav>) | Аудио; Звуки и голос, Шторм, зона, дождь и объёмный туман |
+| [Assets/Audio/Ambience/Storm/TestThunderA.wav](<../../Assets/Audio/Ambience/Storm/TestThunderA.wav>) | Аудио; Звуки и голос, Шторм, зона, дождь и объёмный туман |
+| [Assets/Audio/Ambience/Storm/TestThunderB.wav](<../../Assets/Audio/Ambience/Storm/TestThunderB.wav>) | Аудио; Звуки и голос, Шторм, зона, дождь и объёмный туман |
+| [Assets/Audio/Ambience/Storm/TestThunderC.wav](<../../Assets/Audio/Ambience/Storm/TestThunderC.wav>) | Аудио; Звуки и голос, Шторм, зона, дождь и объёмный туман |
 | [Assets/Audio/Ambience/Storm/ThunderA.mp3](<../../Assets/Audio/Ambience/Storm/ThunderA.mp3>) | Аудио |
 | [Assets/Audio/Ambience/Storm/ThunderB.mp3](<../../Assets/Audio/Ambience/Storm/ThunderB.mp3>) | Аудио |
 | [Assets/Audio/Ambience/Storm/ThunderC.mp3](<../../Assets/Audio/Ambience/Storm/ThunderC.mp3>) | Аудио |

@@ -1409,14 +1409,29 @@ MonoBehaviour:
     DistantVolume: 0.65
     Volume: 0.5
     Distance: 20
+  - Cue: 135
+    Clips:
+    - {fileID: 8300000, guid: d5b8296884353994bb2a9c963edcf8c2, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
+    Volume: 0.55
+    Distance: 170
   Ocean: {fileID: 8300000, guid: 385ddaa5ad1a27148a313c3f3ac90d8b, type: 3}
   Wind: {fileID: 8300000, guid: 78aafbe2a5d44ac499fd27fe5bdf180f, type: 3}
   DeckCreaks: {fileID: 0}
   Storm: {fileID: 8300000, guid: c637634fabb0fee4f901013efe59c92a, type: 3}
+  Rain: {fileID: 8300000, guid: 8f4f43ed165e5774f8d5496b2701871a, type: 3}
+  RainDeck: {fileID: 8300000, guid: b1a8d573e93acda4083efaf6ef03af09, type: 3}
   StormThunder:
   - {fileID: 8300000, guid: 0c559706751bc6140baaa2379e58ad44, type: 3}
   - {fileID: 8300000, guid: 1221b879dc58b6142a974b38d64f2e9f, type: 3}
   - {fileID: 8300000, guid: 9cd5fd44a2039b145a63012fcdd71797, type: 3}
+  TestStormThunder:
+  - {fileID: 8300000, guid: 148f2db96e69a87449a4eaa5cb7acb77, type: 3}
+  - {fileID: 8300000, guid: 908209d6c23560e41a9cbd5f76cdbf0b, type: 3}
+  - {fileID: 8300000, guid: ddc13233d1aa03e48baf88384eac1e98, type: 3}
   MainMenuMusic: {fileID: 8300000, guid: 2d390a2a573ed8947879498cc76fdf74, type: 3}
   SailingMusic: {fileID: 8300000, guid: e382a826b2ed79a4a8326183c9f1ea47, type: 3}
   CombatMusic: {fileID: 8300000, guid: 5c91f6305a2df524b9176378e9fa0a40, type: 3}

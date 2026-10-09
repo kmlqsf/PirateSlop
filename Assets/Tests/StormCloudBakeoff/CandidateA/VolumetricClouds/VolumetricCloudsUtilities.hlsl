@@ -47,7 +47,13 @@ half3 EvaluateVolumetricCloudsAmbientProbe(half3 normalWS)
 #define LIGHT_STEP_MAXIMAL_SIZE 1000.0
 
 // The planet center position
+#if defined(_PIRATESLOP_CLEAR_CLOUDS)
+#define _PlanetCenterPosition float3(0.0, -_EarthRadius, 0.0)
+#include "Assets/Game/BRZoneVolumetric/Shaders/StormCloudBoundary.hlsl"
+float4 _ClearCloudLayer;
+#else
 #define _PlanetCenterPosition _PlanetCenterRadius.xyz
+#endif
 #define ConvertToPS(x) (x - _PlanetCenterPosition)
 
 // Structure that holds all the data required for the cloud ray marching
@@ -56,11 +62,12 @@ struct CloudRay
     // Origin of the ray in camera-relative space
     float3 originWS;
     // Direction of the ray in world space
-    half3 direction;
+    float3 direction;
     // Maximal ray length before hitting the far plane or an occluder
     float maxRayLength;
     // Integration Noise
     float integrationNoise;
+    float pixelConeAngle;
 };
 
 // Structure that holds the result of our volumetric ray
@@ -225,7 +232,7 @@ int RaySphereIntersection(float3 startWS, float3 dir, float radius, out float2 r
 
 // Returns true if the ray exits the cloud volume (doesn't intersect earth)
 // The ray is supposed to start inside the volume
-bool ExitCloudVolume(float3 originPS, half3 dir, float higherBoundPS, out float tExit)
+bool ExitCloudVolume(float3 originPS, float3 dir, float higherBoundPS, out float tExit)
 {
     // Given that we are inside the volume, we are guaranteed to exit at the outer bound
     float radialDistance = length(originPS);
@@ -246,7 +253,7 @@ struct RayMarchRange
 
 // Returns true if the ray intersects the cloud volume
 // Outputs the entry and exit distance from the volume
-bool IntersectCloudVolume(float3 originPS, half3 dir, float lowerBoundPS, float higherBoundPS, out float tEntry, out float tExit)
+bool IntersectCloudVolume(float3 originPS, float3 dir, float lowerBoundPS, float higherBoundPS, out float tEntry, out float tExit)
 {
     bool intersect;
     float radialDistance = length(originPS);
@@ -276,9 +283,9 @@ bool IntersectCloudVolume(float3 originPS, half3 dir, float lowerBoundPS, float 
     return intersect;
 }
 
-bool GetCloudVolumeIntersection(float3 originWS, half3 dir, out RayMarchRange rayMarchRange)
+bool GetCloudVolumeIntersection(float3 originWS, float3 dir, out RayMarchRange rayMarchRange)
 {
-#ifdef _LOCAL_VOLUMETRIC_CLOUDS
+#if defined(_LOCAL_VOLUMETRIC_CLOUDS) || defined(_PIRATESLOP_CLEAR_CLOUDS)
     return IntersectCloudVolume(ConvertToPS(originWS), dir, _LowestCloudAltitude, _HighestCloudAltitude, rayMarchRange.start, rayMarchRange.end);
 #else
     {
@@ -309,6 +316,7 @@ struct CloudProperties
     float height;
     // Extinction over the interval
     half sigmaT;
+    half stormShading;
 };
 
 // Global attenuation of the density based on the camera distance
@@ -377,30 +385,73 @@ float2 PirateCloudNoise2(float2 position)
                 lerp(PirateCloudHash(cell + float2(0, 1)).xy, PirateCloudHash(cell + float2(1, 1)).xy, blend.x), blend.y);
 }
 
-void PirateCloudCoverage(float3 positionPS, out CloudCoverageData data)
+float PirateStormWeather(float3 positionWS)
 {
-    ZERO_INITIALIZE(CloudCoverageData, data);
-    float cellSize = max(_ClearCloudCellSize, 1000.0);
-    float2 position = AnimateShapeNoisePosition(positionPS).xz / cellSize;
-    position += float2(0.2381, 0.4044);
-    float2 warp = PirateCloudNoise2(position * 0.18 + float2(_ClearCloudSeed, _ClearCloudSeed + 46.2));
-    position += (warp - 0.5) * 1.8;
-    float2 weather = PirateCloudNoise2(position + float2(_ClearCloudSeed + 83.1, _ClearCloudSeed + 29.7));
-    float coverageStart = clamp(_ClearCloudCoverageStart, 0.0, 0.95);
-    float coverageEnd = clamp(_ClearCloudCoverageEnd, coverageStart + 0.01, 1.0);
-    float coverage = smoothstep(coverageStart, coverageEnd, weather.x);
-    if (coverage <= CLOUD_DENSITY_TRESHOLD)
-        return;
-    float baseHeight = lerp(0.02, 0.16, warp.y);
-    float cloudHeight = lerp(0.58, 0.82, weather.y);
-    float horizontalDistance = length(positionPS.xz - _ClearCloudWorldOffset.xy);
-    float fadeStart = max(_ClearCloudFarFadeStart, 1000.0);
-    float fadeEnd = max(_ClearCloudFarFadeEnd, fadeStart + 1000.0);
-    data.coverage = coverage * (1.0 - smoothstep(fadeStart, fadeEnd, horizontalDistance)) * 0.94;
-    data.rainClouds = 0.0;
-    data.cloudType = 0.25;
-    data.minCloudHeight = baseHeight;
-    data.maxCloudHeight = baseHeight + cloudHeight;
+    float weather=0.0;
+    if(_PirateStormTestSkyWeather.w>0.0)weather=StormTestSkyWeather(positionWS);
+    else if(_PirateStormWeather.w>0.0)
+    {
+        float radius=max(1.0,_PirateStormWeather.z);
+        float sd=length(positionWS.xz-_PirateStormWeather.xy)-radius;
+        if(_PirateStormBackdrop.x<.5)weather=smoothstep(-80.0,120.0,sd);
+        else
+        {
+            float width=StormCloudTransitionWidth(radius,_PirateStormWeather.w);
+            weather=smoothstep(-width*.5,width*.5,sd-StormBoundaryOffset(positionWS,radius));
+        }
+    }
+    return weather;
+}
+void PirateCloudCoverage(float3 positionPS,out CloudCoverageData data)
+{
+    ZERO_INITIALIZE(CloudCoverageData,data);
+    bool gameStorm=(_PirateStormWeather.w>0.0 || _PirateStormTestSkyWeather.w>0.0) && _PirateStormBackdrop.x<.5;
+    float cellSize=max(gameStorm?min(4200.0,_ClearCloudCellSize):_ClearCloudCellSize,1000.0);
+    float2 position=AnimateShapeNoisePosition(positionPS).xz/cellSize+float2(.2381,.4044);
+    float2 warp=PirateCloudNoise2(position*.18+float2(_ClearCloudSeed,_ClearCloudSeed+46.2));
+    position+=(warp-.5)*1.8;
+    float2 weather=PirateCloudNoise2(position+float2(_ClearCloudSeed+83.1,_ClearCloudSeed+29.7));
+    float coverageStart=clamp(_ClearCloudCoverageStart,0.0,.95);
+    float coverageEnd=clamp(_ClearCloudCoverageEnd,coverageStart+.01,1.0);
+    float coverage=smoothstep(coverageStart,coverageEnd,weather.x);
+    float3 world=positionPS+_PlanetCenterPosition;
+    bool testWeather=_PirateStormTestSkyWeather.w>0.0;
+    float stormWeather=testWeather?StormTestSkyWeather(float3(world.x,_PirateStormTestClouds.z+600.0,world.z)):PirateStormWeather(world);
+    float2 stormPattern=PirateCloudNoise2(AnimateShapeNoisePosition(positionPS).xz/(testWeather?2200.0:1350.0)+float2(_ClearCloudSeed+151.3,_ClearCloudSeed+69.4));
+    float stormCoverage=gameStorm?lerp(.28,.92,smoothstep(.26,.58,stormPattern.x)):lerp(.75,.96,weather.y);
+    if(testWeather)stormCoverage=lerp(.12,.65,smoothstep(.37,.73,stormPattern.x));
+    float stormCrown=1.0;
+    float layerBottom=_LowestCloudAltitude-_EarthRadius-_PirateStormCloudBoundary.x;
+    float layerRange=max(1.0,_HighestCloudAltitude-_LowestCloudAltitude);
+    if(_PirateStormBackdrop.x>.5)
+    {
+        stormCrown=saturate((StormBackdropCrownHeight(world)-layerBottom)/layerRange);
+        stormCoverage=lerp(.60,.93,StormBackdropMacro(world))*smoothstep(0.0,.07,stormCrown);
+    }
+    coverage=lerp(coverage,stormCoverage,stormWeather);
+    if(coverage<=CLOUD_DENSITY_TRESHOLD)return;
+    float baseHeight=lerp(.02,.16,warp.y);
+    float cloudHeight=lerp(.58,.82,weather.y);
+    baseHeight=lerp(baseHeight,lerp(.02,gameStorm?.22:.06,warp.y),stormWeather);
+    cloudHeight=lerp(cloudHeight,lerp(.84,.94,weather.y),stormWeather);
+    if(_PirateStormCloudBand.w>0.0)cloudHeight=lerp(cloudHeight,max(.001,stormCrown-baseHeight),stormWeather);
+    float fadeStart=max(_ClearCloudFarFadeStart,1000.0);
+    float fadeEnd=max(_ClearCloudFarFadeEnd,fadeStart+1000.0);
+    data.coverage=coverage*(1.0-smoothstep(fadeStart,fadeEnd,length(positionPS.xz-_ClearCloudWorldOffset.xy)))*.94;
+    data.rainClouds=stormWeather;
+    data.cloudType=.25;
+    data.minCloudHeight=baseHeight;
+    data.maxCloudHeight=baseHeight+cloudHeight;
+    if(gameStorm)
+    {
+        float bottom=_LowestCloudAltitude-_EarthRadius;
+        float clearMin=(1200.0+lerp(.02,.16,warp.y)*1000.0-bottom)/layerRange;
+        float clearMax=(1200.0+(lerp(.02,.16,warp.y)+lerp(.58,.82,weather.y))*1000.0-bottom)/layerRange;
+        float stormBottom=testWeather?400.0+warp.y*150.0:850.0+warp.y*170.0;
+        float stormTop=testWeather?1150.0+stormPattern.y*350.0:1800.0+stormPattern.y*550.0;
+        data.minCloudHeight=lerp(clearMin,(stormBottom-bottom)/layerRange,stormWeather);
+        data.maxCloudHeight=lerp(clearMax,(stormTop-bottom)/layerRange,stormWeather);
+    }
 }
 #endif
 
@@ -464,9 +515,7 @@ void EvaluateCloudProperties(float3 positionPS, float noiseMipOffset, float eros
     properties.height = EvaluateNormalizedCloudHeight(positionPS);
 
     // When rendering in camera space, we still want horizontal scrolling
-#if defined(_PIRATESLOP_CLEAR_CLOUDS)
-    positionPS.xz += _ClearCloudWorldOffset.xy;
-#elif !defined(_LOCAL_VOLUMETRIC_CLOUDS)
+#if !defined(_LOCAL_VOLUMETRIC_CLOUDS) && !defined(_PIRATESLOP_CLEAR_CLOUDS)
     positionPS.xz += _WorldSpaceCameraPos.xz;
 #endif
 
@@ -483,12 +532,16 @@ void EvaluateCloudProperties(float3 positionPS, float noiseMipOffset, float eros
     // Evaluate the generic sampling coordinates
     float3 baseNoiseSamplingCoordinates = float3(AnimateShapeNoisePosition(positionPS).xzy / NOISE_TEXTURE_NORMALIZATION_FACTOR) * _ShapeScale - float3(_ShapeNoiseOffset.x, _ShapeNoiseOffset.y, _VerticalShapeNoiseOffset);
 
+    #if defined(_PIRATESLOP_CLEAR_CLOUDS)
+    if ((_PirateStormWeather.w > 0.0 || _PirateStormTestSkyWeather.w > 0.0) && _PirateStormBackdrop.x < .5) baseNoiseSamplingCoordinates *= 1.4;
+#endif
     // Evaluate the coordinates at which the noise will be sampled and apply wind displacement
     baseNoiseSamplingCoordinates += properties.height * float3(_WindDirection.x, _WindDirection.y, 0.0f) * _AltitudeDistortion;
 
     // Read the low frequency Perlin-Worley and Worley noises
 #if defined(_PIRATESLOP_CLEAR_CLOUDS)
-    noiseMipOffset = min(noiseMipOffset, 2.0);
+    bool filteredTestSky = _PirateStormTestSkyWeather.w > 0.0 && _PirateStormBackdrop.x < 0.5;
+    noiseMipOffset = filteredTestSky ? clamp(noiseMipOffset, 0.0, 4.0) : min(noiseMipOffset, _PirateStormWeather.w > 0.0 && _PirateStormBackdrop.x < 0.5 ? 1.0 : 2.0);
 #endif
     half lowFrequencyNoise = SAMPLE_TEXTURE3D_LOD(_Worley128RGBA, s_trilinear_repeat_sampler, baseNoiseSamplingCoordinates.xyz, noiseMipOffset).r;
 
@@ -496,13 +549,23 @@ void EvaluateCloudProperties(float3 positionPS, float noiseMipOffset, float eros
     half shapeFactor = saturate(_ShapeFactor);
     half erosionFactor = _ErosionFactor * lerp(0.65, 1.0, properties.height);
     float3 secondaryCoords = baseNoiseSamplingCoordinates.zxy * 2.07 + float3(0.173, 0.419, 0.731);
-    half secondaryNoise = SAMPLE_TEXTURE3D_LOD(_Worley128RGBA, s_trilinear_repeat_sampler, secondaryCoords, noiseMipOffset).r;
+    half secondaryNoise = SAMPLE_TEXTURE3D_LOD(_Worley128RGBA, s_trilinear_repeat_sampler, secondaryCoords, filteredTestSky ? noiseMipOffset + 1.05 : noiseMipOffset).r;
     half shapeNoise = lerp(lowFrequencyNoise, secondaryNoise, lerp(0.18, 0.38, shapeFactor));
+    bool gameStorm = (_PirateStormWeather.w > 0.0 || _PirateStormTestSkyWeather.w > 0.0) && _PirateStormBackdrop.x < 0.5;
+    if (gameStorm)
+    {
+        half unionWeight = saturate(.5 + .5 * (lowFrequencyNoise - secondaryNoise) / .15);
+        half rounded = lerp(secondaryNoise, lowFrequencyNoise, unionWeight) + .15 * unionWeight * (1.0 - unionWeight);
+        shapeNoise = lerp(shapeNoise, rounded, .65);
+    }
     half heightGradient = smoothstep(0.02, 0.14, properties.height) * (1.0 - smoothstep(0.55, 0.98, properties.height));
-    half threshold = lerp(1.0, lerp(0.48, 0.64, shapeFactor), cloudCoverageData.coverage * heightGradient);
+    properties.stormShading = _PirateStormBackdrop.x < .5 ? cloudCoverageData.rainClouds : 0.0;
+    half shapeThreshold = lerp(lerp(0.48, 0.64, shapeFactor), 0.46, cloudCoverageData.rainClouds);
+    half threshold = lerp(1.0, shapeThreshold, cloudCoverageData.coverage * heightGradient);
     half base_cloud = saturate((shapeNoise - threshold) / max(1.0 - threshold, 0.001));
-    properties.ambientOcclusion = lerp(0.68, 1.0, smoothstep(0.05, 0.85, properties.height));
-    properties.sigmaT = 0.04;
+    properties.ambientOcclusion = lerp(lerp(0.68, 0.35, cloudCoverageData.rainClouds), lerp(1.0, 0.8, cloudCoverageData.rainClouds), smoothstep(0.05, 0.85, properties.height));
+    if (gameStorm) properties.ambientOcclusion *= lerp(.62, 1.0, smoothstep(.52,.86,shapeNoise));
+    properties.sigmaT = lerp(0.04, _PirateStormBackdrop.x > 0.5 ? 0.07 : 0.045, cloudCoverageData.rainClouds);
 #if defined(_CLOUDS_MICRO_EROSION)
     half microDetailFactor = _MicroErosionFactor;
 #endif
@@ -542,7 +605,7 @@ void EvaluateCloudProperties(float3 positionPS, float noiseMipOffset, float eros
     {
         float3 erosionCoords = AnimateErosionNoisePosition(positionPS) / NOISE_TEXTURE_NORMALIZATION_FACTOR * _ErosionScale;
 #if defined(_PIRATESLOP_CLEAR_CLOUDS)
-        erosionMipOffset = min(erosionMipOffset, 1.0);
+        erosionMipOffset = filteredTestSky ? clamp(erosionMipOffset, 0.0, 5.0) : min(erosionMipOffset, 1.0);
 #endif
         half erosionNoise = 1.0 - SAMPLE_TEXTURE3D_LOD(_ErosionNoise, s_linear_repeat_sampler, erosionCoords, CLOUD_DETAIL_MIP_OFFSET + erosionMipOffset).x;
         erosionNoise = lerp(0.0, erosionNoise, erosionFactor * 0.75 * cloudCoverageData.coverage.x);
@@ -551,7 +614,11 @@ void EvaluateCloudProperties(float3 positionPS, float noiseMipOffset, float eros
 
         #if defined(_CLOUDS_MICRO_EROSION)
         float3 fineCoords = AnimateErosionNoisePosition(positionPS) / (NOISE_TEXTURE_NORMALIZATION_FACTOR) * _MicroErosionScale;
-        half fineNoise = 1.0 - SAMPLE_TEXTURE3D_LOD(_ErosionNoise, s_linear_repeat_sampler, fineCoords, CLOUD_DETAIL_MIP_OFFSET + erosionMipOffset).x;
+        float fineMipOffset = erosionMipOffset;
+#if defined(_PIRATESLOP_CLEAR_CLOUDS)
+        if (filteredTestSky) fineMipOffset = min(5.0, fineMipOffset + log2(max(1.0, _MicroErosionScale / max(1.0, _ErosionScale))));
+#endif
+        half fineNoise = 1.0 - SAMPLE_TEXTURE3D_LOD(_ErosionNoise, s_linear_repeat_sampler, fineCoords, CLOUD_DETAIL_MIP_OFFSET + fineMipOffset).x;
         fineNoise = lerp(0.0, fineNoise, microDetailFactor * 0.5 * cloudCoverageData.coverage.x);
         base_cloud = DensityRemap(base_cloud, fineNoise, 1.0, 0.0, 1.0);
         #endif
@@ -572,7 +639,7 @@ void EvaluateCloudProperties(float3 positionPS, float noiseMipOffset, float eros
     // Attenuate everything by the density multiplier
     properties.density = base_cloud * _DensityMultiplier;
 #if defined(_PIRATESLOP_CLEAR_CLOUDS)
-    properties.density *= cloudCoverageData.coverage;
+    properties.density *= cloudCoverageData.coverage * lerp(1.0, _PirateStormBackdrop.x > 0.5 ? 3.65 : 1.8, cloudCoverageData.rainClouds);
 #endif
 }
 
@@ -580,6 +647,10 @@ void EvaluateCloudProperties(float3 positionPS, float noiseMipOffset, float eros
 half3 EvaluateSunTransmittance(float3 positionPS, half3 sunDirection, PHASE_FUNCTION_STRUCTURE phaseFunction)
 {
     // Compute the Ray to the limits of the cloud volume in the direction of the light
+    int lightStepCount = max(1, (int)_NumLightSteps);
+#if defined(PIRATESLOP_CLOUD_REFLECTION) && defined(_PIRATESLOP_CLEAR_CLOUDS)
+    if ((_PirateStormWeather.w > 0.0 || _PirateStormTestSkyWeather.w > 0.0) && _PirateStormBackdrop.x < 0.5) lightStepCount = min(lightStepCount, 1);
+#endif
     float totalLightDistance = 0.0;
     half3 transmittance = half3(0.0, 0.0, 0.0);
 
@@ -587,17 +658,17 @@ half3 EvaluateSunTransmittance(float3 positionPS, half3 sunDirection, PHASE_FUNC
     if (ExitCloudVolume(positionPS, sunDirection, _HighestCloudAltitude, totalLightDistance))
     {
         // Because of the very limited numebr of light steps and the potential humongous distance to cover, we decide to potnetially cover less and make it more useful
-        totalLightDistance = clamp(totalLightDistance, 0, _NumLightSteps * LIGHT_STEP_MAXIMAL_SIZE);
+        totalLightDistance = clamp(totalLightDistance, 0, lightStepCount * LIGHT_STEP_MAXIMAL_SIZE);
 
         // Apply a small bias to compensate for the imprecision in the ray-sphere intersection at world scale.
         totalLightDistance += 5.0;
 
         // Compute the size of the current step
-        float intervalSize = totalLightDistance * rcp((float)_NumLightSteps);
+        float intervalSize = totalLightDistance * rcp((float)lightStepCount);
         float opticalDepth = 0;
 
         // Collect total density along light ray.
-        for (int j = 0; j < _NumLightSteps; j++)
+        for (int j = 0; j < lightStepCount; j++)
         {
             // Here we intentionally do not take the right step size for the first step
             // as it helps with darkening the clouds a bit more than they should at low light samples
@@ -607,7 +678,7 @@ half3 EvaluateSunTransmittance(float3 positionPS, half3 sunDirection, PHASE_FUNC
             float3 currentSamplePointPS = positionPS + sunDirection * dist;
             // Get the cloud properties at the sample point
             CloudProperties lightRayCloudProperties;
-            EvaluateCloudProperties(currentSamplePointPS, 3.0 * j / _NumLightSteps, 0.0, true, true, lightRayCloudProperties);
+            EvaluateCloudProperties(currentSamplePointPS, 3.0 * j / lightStepCount, 0.0, true, true, lightRayCloudProperties);
 
             opticalDepth += lightRayCloudProperties.density * lightRayCloudProperties.sigmaT;
         }
@@ -784,6 +855,8 @@ void EvaluateCloud(CloudProperties cloudProperties, half3 rayDirection,
     // Use 1 as placeholder to compute the 'transfer function'
     half3 sunLuminance = 1.0 * sunTransmittance * powderEffect;
     half ambientLuminance = 1.0 * cloudProperties.ambientOcclusion;
+    sunLuminance *= lerp(half3(1,1,1),half3(.24,.34,.48),cloudProperties.stormShading);
+    ambientLuminance *= lerp(1.0,.20,cloudProperties.stormShading);
 
     // "Energy-conserving analytical integration"
     // See slide 28 at http://www.frostbite.com/2015/08/physically-based-unified-volumetric-rendering-in-frostbite/

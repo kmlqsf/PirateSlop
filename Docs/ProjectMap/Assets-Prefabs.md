@@ -75,7 +75,7 @@
 | [Assets/Prefabs/Networking/LanternPickup.prefab](<../../Assets/Prefabs/Networking/LanternPickup.prefab>) | Префаб Unity; Предметы, лут и инвентарь |
 | [Assets/Prefabs/Networking/NetworkFish.prefab](<../../Assets/Prefabs/Networking/NetworkFish.prefab>) | Префаб Unity |
 | [Assets/Prefabs/Networking/NetworkLootChest.prefab](<../../Assets/Prefabs/Networking/NetworkLootChest.prefab>) | Префаб Unity |
-| [Assets/Prefabs/Networking/NetworkPlayer.prefab](<../../Assets/Prefabs/Networking/NetworkPlayer.prefab>) | Префаб Unity; Проект и точки входа, Корабельная слот-машина, Персонаж, камера и анимации |
+| [Assets/Prefabs/Networking/NetworkPlayer.prefab](<../../Assets/Prefabs/Networking/NetworkPlayer.prefab>) | Префаб Unity; Проект и точки входа, Персонаж, камера и анимации, Корабельная слот-машина |
 | [Assets/Prefabs/Networking/NetworkShip.prefab](<../../Assets/Prefabs/Networking/NetworkShip.prefab>) | Префаб Unity; Проект и точки входа, Движение корабля и палуба |
 | [Assets/Prefabs/Networking/NetworkSkullEvent.prefab](<../../Assets/Prefabs/Networking/NetworkSkullEvent.prefab>) | Префаб Unity; Предметы, лут и инвентарь |
 

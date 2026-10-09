@@ -1,0 +1,6 @@
+# Записи тестового ливня
+
+- `RainDownpourLoop-source.mp3`: [Rain without thunder](https://freesound.org/people/lebaston100/sounds/346562/) — lebaston100, [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Использован опубликованный высококачественный предпросмотр Freesound. Игровой `RainDownpourLoop.wav`: отрезок 15–40 с, подавление частот ниже 120 Гц, выравнивание громкости, шов с перекрытием 1 с; итоговая петля 24 с. Указание автора, названия, лицензии и изменений сохраняется при распространении.
+- `RainDeckLoop-source.mp3`: [Heavy Rain on a tent](https://freesound.org/people/Breviceps/sounds/484724/) — Breviceps, [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/). Использован опубликованный высококачественный предпросмотр. Игровой `RainDeckLoop.wav`: отрезок 5–30 с, подавление частот ниже 250 Гц и выравнивание громкости, шов с перекрытием 1 с; итоговая петля 24 с. Запись ударов по ткани используется как дополнительный слой попаданий по кораблю; это не запись деревянной палубы.
+
+Гром и музыка не добавлены. Подготовка: `Tools/VFX/prepare_storm_rain_audio.py` с NumPy и SoundFile; данные исходников и обработки в `manifest.json`. Оригинальные записи не заменены синтезированным шумом. В `GameAudioBank` сохранены две ссылки; оба клипа загружаются заранее в фоне, с `DecompressOnLoad`.

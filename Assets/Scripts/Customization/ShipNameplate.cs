@@ -9,7 +9,7 @@ namespace PirateSlop.Customization
         public Transform NameAnchor;
         public ShipNameGlyphLibrary GlyphLibrary;
         public float TextWidth = 4.2f;
-        public float TextHeight = .48f;
+        public float TextHeight = .60f;
         string displayed;
         MeshFilter geometry;
         MeshRenderer letterRenderer;

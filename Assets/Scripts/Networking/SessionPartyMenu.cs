@@ -17,6 +17,8 @@ namespace PirateSlop.Networking
                 GUI.enabled = party.Available && !party.Busy;
                 if (MenuAction(x,y+55,width,"Создать команду",true)) party.Create();
                 MenuText(new Rect(x,y+120,width,40),"Примите приглашение через Steam или вставьте ID лобби:",true);
+                RegisterMenuControl(new Rect(x,y+165,width,45),"menu_lobby");
+                GUI.SetNextControlName("menu_lobby");
                 lobbyInput=GUI.TextField(new Rect(x,y+165,width,45),lobbyInput,20,menuInput);
                 if(MenuAction(x,y+225,width,"Войти по ID") && ulong.TryParse(lobbyInput,out var id)) party.Join(new CSteamID(id));
                 GUI.enabled=true;
@@ -40,13 +42,15 @@ namespace PirateSlop.Networking
             if(party.IsLeader)
             {
                 float halfW=(width-10)*.5f;
-                if(MenuChoice(x,y+288,halfW,"Обычная карта",!useTestMap)) useTestMap=false;
-                if(MenuChoice(x+halfW+10,y+288,halfW,"Тестовая карта",useTestMap)) useTestMap=true;
+                if(MenuChoice(x,y+288,MenuDeveloperTools?halfW:width,"Обычная карта",!useTestMap)) useTestMap=false;
+                if(MenuDeveloperTools && MenuChoice(x+halfW+10,y+288,halfW,"Тестовая карта",useTestMap)) useTestMap=true;
                 if(!useTestMap) DrawBotToggle(x,y+338,width);
                 float launchY=!useTestMap?y+375:y+338;
                 if(MenuAction(x,launchY,width,party.SeparateTeams?"Выйти в море против друзей":"Выйти в море всей командой",true)) party.Launch(useTestMap);
                 float joinY=launchY+58;
                 MenuText(new Rect(x,joinY,width,25),"Или ID сессии другого капитана:",true);
+                RegisterMenuControl(new Rect(x,joinY+24,width-135,45),"menu_match");
+                GUI.SetNextControlName("menu_match");
                 matchInput=GUI.TextField(new Rect(x,joinY+24,width-135,45),matchInput,20,menuInput);
                 if(MenuAction(x+width-125,joinY+24,125,"Войти") && ulong.TryParse(matchInput,out var match)) party.JoinSession(match);
             }
