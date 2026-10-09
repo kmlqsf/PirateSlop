@@ -1,6 +1,6 @@
 # PirateSlop — карта проекта
 
-Снимок файлов: 2026-10-07. Корень: `C:\Users\K\Project`.
+Снимок файлов: 2026-10-09. Корень: `C:\Users\K\Project`.
 
 ## Как пользоваться
 
@@ -12,7 +12,7 @@
 
 ## Полный каталог
 
-Учтено 4124 файлов без `.meta`. Ещё 4130 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
+Учтено 4131 файлов без `.meta`. Ещё 4139 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
 
 | Раздел | Назначение | Файлов |
 | --- | --- | ---: |
@@ -22,7 +22,7 @@
 | [Art](<Docs/ProjectMap/Art.md>) | Исходники арта и Blender | 400 |
 | [Assets](<Docs/ProjectMap/Assets.md>) | Ресурсы раздела; точный состав — в каталоге | 2 |
 | [Assets/Animations](<Docs/ProjectMap/Assets-Animations.md>) | Анимации | 27 |
-| [Assets/Audio](<Docs/ProjectMap/Assets-Audio.md>) | Звуковые ресурсы и лицензии | 397 |
+| [Assets/Audio](<Docs/ProjectMap/Assets-Audio.md>) | Звуковые ресурсы и лицензии | 400 |
 | [Assets/Branding](<Docs/ProjectMap/Assets-Branding.md>) | Оформление проекта | 1 |
 | [Assets/Editor](<Docs/ProjectMap/Assets-Editor.md>) | Редакторские ресурсы | 1 |
 | [Assets/Fog Particles](<Docs/ProjectMap/Assets-Fog Particles.md>) | Ресурсы раздела; точный состав — в каталоге | 3 |
@@ -34,9 +34,9 @@
 | [Assets/Models](<Docs/ProjectMap/Assets-Models.md>) | Модели и связанные ресурсы | 1267 |
 | [Assets/Plugins](<Docs/ProjectMap/Assets-Plugins.md>) | Плагины | 5 |
 | [Assets/Prefabs](<Docs/ProjectMap/Assets-Prefabs.md>) | Готовые игровые объекты | 115 |
-| [Assets/Resources](<Docs/ProjectMap/Assets-Resources.md>) | Ресурсы, доступные для загрузки по имени | 73 |
+| [Assets/Resources](<Docs/ProjectMap/Assets-Resources.md>) | Ресурсы, доступные для загрузки по имени | 74 |
 | [Assets/Scenes](<Docs/ProjectMap/Assets-Scenes.md>) | Сохранённые сцены | 3 |
-| [Assets/Scripts](<Docs/ProjectMap/Assets-Scripts.md>) | Игровой код и редакторские инструменты | 430 |
+| [Assets/Scripts](<Docs/ProjectMap/Assets-Scripts.md>) | Игровой код и редакторские инструменты | 433 |
 | [Assets/Settings](<Docs/ProjectMap/Assets-Settings.md>) | Настройки игровых систем и рендеринга | 49 |
 | [Assets/Shaders](<Docs/ProjectMap/Assets-Shaders.md>) | Шейдеры | 15 |
 | [Assets/StreamingAssets](<Docs/ProjectMap/Assets-StreamingAssets.md>) | Ресурсы раздела; точный состав — в каталоге | 5 |
@@ -317,6 +317,8 @@ NetworkCannon отправляет изменения placements каждые 0.
 ShipFreezeVfx: дополнительная освещённая островковая оболочка по текущим meshes без копирования и замены базовых материалов, трещины и 256 instanced кристаллов. Source renderers из ShipV3RenderBatch исключены; батчи/штурвал/мачты имеют приоритет, максимум 144 shell draw. V3 seeds: 64/64 борта, 40 основная палуба, 20 бак, 20 квартердек, 40 мачты, 8 штурвал; Section/RemovedFragments и renderer visibility не позволяют оставлять лёд в пустотах. Рост ~0.4 с, таяние последние 0.5 с. Короткий ледяной burst +18 холодных пылинок, дымовой атлас 2×2. PlayerFreezeScreen показывает морозные края на 1 с, центр остаётся видимым. Ресурсы/привязки проверены native Unity MCP; компиляция без ошибок, игровой внешний вид/сетевая проверка не выполнялись.
 Огонь против льда: Ignite снимает Motor.freezeRemaining и синхронизированный frozen до расчёта очагов; защита shipWetUntil удалена. Обычные wetFragments от тушения водой сохраняются. ShipFreezeVfx захватывает текущие age/origin/fade и плавно убирает оболочку и уменьшает кристаллы за 0.25 с; повторные Present(0) не продлевают таяние, новый мороз отменяет таяние, ClearAmmo выключает эффект сразу. Заморозка игроков на 1 с не изменяется. VFX review APPROVED по коду и native Unity данным; игра не запускалась.
 Подводные снаряды 2026-10-06: все типы ядер, включая мортиру и огненные/ледяные/толкающие/бумеранг/абордажные, проходят поверхность OceanSurface, тормозятся квадратичным сопротивлением и сохраняют попадания. Подводный срок 6 с; бумеранг после погружения переходит на баллистику. MortarTrajectory показывает продолжение в воде, взрыв только при контакте с целью. Runtime ProjectileWaterFlight и UnderwaterProjectileTrail используют общий пузырьковый материал Underwater/Bubbles. Компиляция проверена; игра и второй клиент не запускались.
+CannonCarriage.Kick даёт небольшой толчок0.52м/с с обычным RollDrag и существующими проверками опоры/препятствий. При RollDrag2.6 свободный путь около20см.
+Отталкивание обычным ядром 2026-10-09: Impact раньше наносил ближайшим игрокам урон, но KnockDown вызывался только при прямом контакте. PushPlayersNearImpact на сервере перебирает CombatHealth.Active и расстояние до капсулы, вызывает KnockDown2.8с с22м/с наружу и8м/с вверх в StandardPushRadius3м; радиус урона0.8м сохранён. Для обычного мортирного ядра используется максимум радиуса взрыва и3м. Прежнее ограничение толчка союзников сохранено. Компиляция проверена, игровой/сетевой результат проверяет пользователь. Рэгдолл ядра: обычный Cannonball уже использует общий KnockDown → PlayerKnockdown → DeathRagdoll.Build. PushCannonball переведён с PushByUpgrade на тот же физический KnockDown, включая прямое попадание в игрока. ImpactPushVelocity задаёт единое направление от точки контакта к игроку и8м/с вверх; при совпадении центров используется направление движения ядра. Радиусы,22м/с и командные фильтры сохранены; модификатор HeavyCannonball применяется только к обычному ядру. Импорт/компиляция проверены, игровой результат проверяет пользователь.
 
 - [Assets/Scripts/Cannons/SimpleCannon.cs](<Assets/Scripts/Cannons/SimpleCannon.cs>) — Исходник C#: SimpleCannon.
 - [Assets/Scripts/Cannons/NetworkCannon.cs](<Assets/Scripts/Cannons/NetworkCannon.cs>) — Исходник C#: CannonPlacement, NetworkCannon, RemoteCarriagePose.
@@ -372,6 +374,10 @@ F2 при наличии сетевого ShipV3Features переносит жи
 Новый корабль использует FollowRopePath у ShipLadder: четыре боковых маршрута к гнёздам и две посадочные сетки, от настоящих нижних вершин мешей до выхода над ограждением. TopSideOffset и TopLean учитывают наклон в двух направлениях; RopeStandOff оставляет пловца снаружи сетки. Для этих маршрутов не создаётся сплошная вертикальная стенка. У посадочных сеток высота маршрута заканчивается на фактическом верхнем ряду без прибавки 1.1 м; выход расположен на поверхности палубы, вычисленной по треугольникам коллайдеров. AdvancedPlayerController использует те же маршруты в существующей сетевой симуляции; прежние лестницы основного корабля сохраняют настройки по умолчанию. После правки проверены только компиляция и edit-mode привязки, игровой онлайн-прогон не выполнялся.
 ShipDeckPassenger учитывает BoardingWalkSurface: перенос по текущей кривой троса между двумя кораблями, обычное управление движением сохранено. При превращении лестницы в одиночную верёвку игрок сохраняет мировое положение; потерявший опору падает. Положение продолжает передаваться существующим состоянием NetworkPlayer относительно корабля пушки.
 Заморозка от корабельного морозного попадания: NetworkHealth синхронизирует конечный серверный Tick на 1 с. AdvancedPlayerController.IsFrozen блокирует InputActive/LocomotionLocked и саму Simulate до применения движения, включая knockback/grapple; получение урона не меняется. PlayerFreezeScreen даёт плавный мороз по краям только экрану владельца; повторный удар продлевает эффект без мигания. Авторитетные ворота предметов, механизмов, инвентаря и BotActionExecutor также учитывают заморозку.
+Пинок на X: серверный КД 3 с, контакт через 0.16 с, одна ближайшая цель до 1.9 м в конусе перед игроком с проверкой препятствий. Союзники и враги получают отдельный импульс11.3м/с с затуханием6/с и подброс3.6м/с: расчётный свободный сдвиг около1.7м и подъём около0.2м при30Hz, с базовым уроном5 и без обычного нокдауна; KickPushVelocity и VerticalVelocity включены в prediction/reconcile. Пинок блокируется в меню, плавании, лазании и занятиях. PlayerKickVisual сгибает правую ногу существующего Mixamo-рига, KickLeg показывает ту же ногу владельцу от первого лица. У края сервер проверяет опору под целью и отсутствие опоры за ней по направлению пинка, исключает препятствия выше1.6м. При выходе наружу вызывает штатный KnockDown на2.8с, отцепляет пассажира и учитывает высоту низкого ограждения для перелёта. Высота отдельной секции в объединённом collider берётся из ShipV3CollisionBatch.SourceBounds. Protocol134; игровая/мультиплеерная проверка оставлена пользователю.
+Пинок включает trigger-hitbox обезьянки, остальные trigger-коллайдеры не становятся целями. Попадание запускает ShipMonkey.ReceiveKick и звук KickBody.
+Падение 2026-10-09 после повторной игровой жалобы: PlayerKnockdown.Begin использует тот же DeathRagdoll.Build и CorpsePhysicsWorld, что смерть. Физический рэгдолл получает скорость один раз; перенос его сегментов к CharacterController полностью удалён. Во время KnockDown motor.Simulate следует физическому тазу, а не двигает параллельную капсулу; сервер передаёт эту позицию существующими snapshots/reconcile. При окончании позиция восстановления берётся из фактического таза с ближайшей поверхностью под ним. CreateKnockdown разрешён на headless-сервере; активные тела нокдауна не удаляются лимитом декоративных трупов. У края пинок даёт5м/с наружу и минимум6.5м/с вверх; подъём считается по Physics.gravity и высоте ограждения, без управляемой дуги. Protocol134. Проверена компиляция; PlayMode/второй клиент проверяет пользователь. Доработка после подтверждения пользователем: проверка отсутствия палубы вынесена на radius+2м, чтобы выброс включался примерно за два метра от края. Пинок игроку наносит5 базового урона через CombatHealth.Damage с прежними командными фильтрами/улучшениями; при смертельном ударе дополнительный KnockDown не вызывается.
+Исправление исчезающего рэгдолла 2026-10-09: DeathRagdoll копирует skin независимо от activeInHierarchy исходного контейнера, активирует его цепочку, сохраняет layer/renderingLayerMask и не скрывает игрока при пустой копии. RagdollRendererBounds следует за тазом, чтобы физическое тело не отсекалось по старым границам. Проверка Build на NetworkPlayer через Unity MCP без PlayMode: 1 активный skin, 52 кости, BakeMesh26304 вершины, 11 Rigidbody и10 CharacterJoint; компиляция без ошибок. Вид/движение на втором клиенте остаются непроверенными.
 
 - [Assets/Scripts/AdvancedPlayerController.cs](<Assets/Scripts/AdvancedPlayerController.cs>) — Исходник C#: AdvancedPlayerController.
 - [Assets/Scripts/AdvancedPlayerController.Spectator.cs](<Assets/Scripts/AdvancedPlayerController.Spectator.cs>) — Исходник C#: AdvancedPlayerController.
@@ -393,6 +399,11 @@ ShipDeckPassenger учитывает BoardingWalkSurface: перенос по т
 - [Assets/Scripts/World/WaterImpactBody.cs](<Assets/Scripts/World/WaterImpactBody.cs>) — Исходник C#: WaterImpactBody.
 - [Assets/Scripts/Networking/NetworkHealth.cs](<Assets/Scripts/Networking/NetworkHealth.cs>) — Исходник C#: NetworkHealth.
 - [Assets/Scripts/Player/PlayerFreezeScreen.cs](<Assets/Scripts/Player/PlayerFreezeScreen.cs>) — Исходник C#: PlayerFreezeScreen.
+- [Assets/Scripts/Networking/NetworkPlayer.Kick.cs](<Assets/Scripts/Networking/NetworkPlayer.Kick.cs>) — Исходник C#: NetworkPlayer.
+- [Assets/Scripts/Player/PlayerKickVisual.cs](<Assets/Scripts/Player/PlayerKickVisual.cs>) — Исходник C#: PlayerKickVisual.
+- [Assets/Resources/KickLeg.asset](<Assets/Resources/KickLeg.asset>) — Настройки или данные Unity.
+- [Assets/Scripts/Player/DeathRagdoll.cs](<Assets/Scripts/Player/DeathRagdoll.cs>) — Исходник C#: DeathRagdoll, RagdollRendererBounds.
+- [Assets/Scripts/Player/PlayerKnockdown.cs](<Assets/Scripts/Player/PlayerKnockdown.cs>) — Исходник C#: PlayerKnockdown.
 - [animation-review.md](<animation-review.md>) — Документация.
 - [unity.md](<unity.md>) — Документация.
 
@@ -489,6 +500,7 @@ Lantern=26: ручной фонарь из корабельного Body без 
 Баррикада 2026-10-06, новый фикс по исходной модели: материал URP Lit с оригинальными BarricadeBaseColor/Normal/MetalSmooth, maxTextureSize4096 и BumpScale1. BarricadeWood.hlsl больше не заменяет albedo/normal/smoothness; строительный preview использует исходный PBR. BarricadeAtlasSetup сохраняет отдельные копии meshes в BarricadeAtlas.asset, выполняет положительно взвешенную cotangent UV relaxation внутри островов по уже деформированной геометрии; границы закреплены, перевёрнутые острова откатываются. Полная карта MetalSmooth4096 и консервативный max-pool закрепляют вершины и треугольники с металлическими деталями без усреднения мелких гвоздей. Исправлены 568 внутренних UV вершин, UV перенесены на 3617 вершин фрагментов в физических координатах импортного FBX; геометрия/силуэт 1.4×0.68×2.1 неизменны. Оригинальные FBX/текстуры/GUID сохранены. Игровой вид не проверялся.
 Поворот при строительстве 2026-10-06: PlayerInventory.RotatePlacement общий для пушки и баррикады, колёсико в обе стороны по5° за нормализованный шаг. Исправлено ошибочное повторное деление на120: установлен InputSystem1.20/UniformAcrossAllPlatforms. Деление Windows120 выполняется только при KeepPlatformSpecificInputRange. Вращение наR удалено, подсказки обновлены, zoom третьего лица блокируется через PlacementActive. Компиляция без ошибок; игровой ввод не проверялся.
 FogBottle/VortexBottle: удержание ЛКМ показывает штатную траекторию гранаты, отпускание бросает. NetworkWeapon.GetBottleLaunch и NetworkFogBottle.Advance общие для предпросмотра и серверного полета: скорость корабля, гравитация, радиус0.12м, геометрия и поверхность воды. Переключение предмета, меню и корабельное взаимодействие отменяют прицел.
+Пинок сдвигает свободный лут через серверный swept-box шаг, гравитацию и скольжение; положение остаётся ship-local до падения с палубы. Удерживаемый/несомый/летящий лут исключён. Свободные ядра получают импульс через существующую физику Cannonball.
 
 - [Assets/Scripts/Player/PlayerInventory.cs](<Assets/Scripts/Player/PlayerInventory.cs>) — Исходник C#: PlayerInventory.
 - [Assets/Scripts/Player/PlayerInventory.RaftLockpick.cs](<Assets/Scripts/Player/PlayerInventory.RaftLockpick.cs>) — Исходник C#: PlayerInventory.
@@ -591,6 +603,7 @@ FogBottle/VortexBottle: удержание ЛКМ показывает штат�
 - [Assets/Models/Barricade/BarricadeAtlas.asset](<Assets/Models/Barricade/BarricadeAtlas.asset>) — Настройки или данные Unity.
 - [Assets/Models/Barricade/Barricade.mat](<Assets/Models/Barricade/Barricade.mat>) — Материал Unity.
 - [Assets/Scripts/Networking/NetworkEquipment.BottleAim.cs](<Assets/Scripts/Networking/NetworkEquipment.BottleAim.cs>) — Исходник C#: NetworkEquipment.
+- [Assets/Scripts/Networking/NetworkFish.Kick.cs](<Assets/Scripts/Networking/NetworkFish.Kick.cs>) — Исходник C#: NetworkFish.
 - [rum-loot.md](<rum-loot.md>) — Документация.
 - [combat-balance.md](<combat-balance.md>) — Документация.
 - [Art/Blender/LootReplacement/README.md](<Art/Blender/LootReplacement/README.md>) — Документация.
@@ -989,6 +1002,7 @@ BarricadeBreak добавлен последним без изменения п�
 Старый неподключённый StormWeather.cs удалён по Git-аудиту 2026-10-05; действующие системы шторма и все звуковые клипы сохранены.
 SelectedReview: выбор звуков revision 132 (80 файлов, 55 событий) импортирован в GameAudioBank; 173 WAV и 9 прежних ссылок после нарезки. GameAudio.Selected управляет LowHealth/Whirlpool/Vortex; DistanceShotAudio разделяет ближние и дальние выстрелы, для DoubleBarrel дальний слой фильтруется в игре. Редкости Rare/Epic/Legendary и BulletNearbyImpact разделены. Источники, интервалы и комментарии сохранены в SelectionManifest.json/SOURCES.md. Новые cues добавлены в конец enum; сетевой протокол 128 из-за новых аудио RPC и причины drowning в DamageFeedback. Play Mode и мультиплеер проверяет пользователь.
 Настройка после ручной проверки 2026-10-06: Pistol усилен на 50% в пределах 5 м с плавным возвратом до 15 м. Редкость проигрывается при открытии V по максимуму текущих offers (с ожиданием первой сетевой руки), подтверждение выбора использует Select. KnockdownBody вызывается при ApplyKnockdown независимо от ragdoll, для локального игрока 2D Effects. WaterRunSteps учитывает вино и улучшение, реальную водную опору и имеет приоритет перед палубой. У водоворота Ocean/Wind плавно снижаются до 30%, оба слоя WhirlpoolNear усилены вдвое. Настройки требуют проверки звучания в игре.
+Пинок: KickSwing — взмах одежды из локального SoundBits/Sonniss2016; KickBody — Deep Punch02 из The Chris Alan/Sonniss2018; KickObject и KickCannon используют существующие деревянные/металлические звуки банка. События пространственные, исходники записаны в Assets/Audio/Combat/Kick/Sources.md. Прослушивание в игре оставлено пользователю.
 
 - [Assets/Scripts/Audio/GameAudio.cs](<Assets/Scripts/Audio/GameAudio.cs>) — Исходник C#: GameAudio.
 - [Assets/Scripts/Audio/GameAudioBank.cs](<Assets/Scripts/Audio/GameAudioBank.cs>) — Исходник C#: SoundCue, GameAudioBank, Entry.
@@ -1022,6 +1036,9 @@ SelectedReview: выбор звуков revision 132 (80 файлов, 55 соб
 - [Assets/Scripts/Audio/GameAudio.Selected.cs](<Assets/Scripts/Audio/GameAudio.Selected.cs>) — Исходник C#: GameAudio.
 - [Assets/Scripts/Audio/DistanceShotAudio.cs](<Assets/Scripts/Audio/DistanceShotAudio.cs>) — Исходник C#: DistanceShotAudio.
 - [Assets/Audio/SelectedReview/SelectionManifest.json](<Assets/Audio/SelectedReview/SelectionManifest.json>) — Конфигурация / данные JSON.
+- [Assets/Audio/Combat/Kick/KickSwing.wav](<Assets/Audio/Combat/Kick/KickSwing.wav>) — Аудио.
+- [Assets/Audio/Combat/Kick/KickBody.wav](<Assets/Audio/Combat/Kick/KickBody.wav>) — Аудио.
+- [Assets/Audio/Combat/Kick/Sources.md](<Assets/Audio/Combat/Kick/Sources.md>) — Документация.
 - [AudioIntegration.md](<AudioIntegration.md>) — Документация.
 - [Assets/Audio/CREDITS.md](<Assets/Audio/CREDITS.md>) — Документация.
 - [Assets/Audio/ShipInteractions/SOURCES.md](<Assets/Audio/ShipInteractions/SOURCES.md>) — Документация.
@@ -1266,6 +1283,7 @@ ShipMonkey.Repair.cs: ремонт своего корабля по доступ
 Доставка лечебной рыбы проверяется каждые 0.5 с и прерывает прочие занятия, включая ремонт и шалости. Подбор/доставка бегом по палубе; выбор доступных игрока/рыбы и допуск 2 с на штатный прыжок рыбы. Руль: 10–15 с с плавными поворотами ±30–50% и циклом 5 с; паруса ±10%. Повторный игровой тест оставлен пользователю.
 Архивные Versions/V1–V6 удалены 2026-10-05 по просьбе пользователя; текущие Art/Blender/Creatures/ShipMonkey/ShipMonkey.blend, исходные actions и игровые Assets сохранены. Дублированные GUID архивных копий вне Assets не являются отдельными подключёнными Unity-ресурсами.
 Автомат увеличен на20% (scale1.2, высота2.28м), позиция(-3.6054,4.12,-18.0709),yaw58. После своей рыбной ставки захват ЛКМ доступен рядом без попадания лучом в LeverGrip; подсказка только у приёмника. SlotMachinePlayer order-26 и consumed input исключают перехват ShipV3PlayerInteraction. Обезьянка: бесплатный ход раз180–300с, только свободный автомат, подход спереди по палубному графу с обходом шкафа, Work/рычаг0.8с, Idle/взгляд до окончания спина и выдачи. Проигрыш80%, SkillPoint не выигрывается; оставшиеся20% пропорциональны прежним пяти категориям. При отмене бесплатной ставки не появляется возврат рыбы. Начатый спин не отменяется уходом, помощь раненому может прервать только подход. Игрок: проигрыш60%. Нативный импорт/компиляция без ошибок, PlayMode/build/клиент не запускались.
+Обезьянку можно пнуть на X через её trigger-hitbox головы/тела: короткая отдача до22см с возвратом за0.25с синхронизируется существующей ShipMonkeyPose. ReceiveKick запускает общую с ReceiveFirearmShot ответную атаку: прыжок на обидчика, KnockDown2.8с, прежний КД реакции6с. За пинок отвечает и союзнику, и врагу; ограничения реакции на выстрел сохранены. Проверены импорт/компиляция; PlayMode/мультиплеер проверяет пользователь.
 
 - [Assets/Scripts/Ships/ShipMonkey.cs](<Assets/Scripts/Ships/ShipMonkey.cs>) — Исходник C#: ShipMonkeySurface, ShipMonkeyMotion, ShipMonkeyNode, ShipMonkeyLink, ShipMonkeyPose, ShipMonkey.
 - [Assets/Scripts/Networking/NetworkShip.Monkey.cs](<Assets/Scripts/Networking/NetworkShip.Monkey.cs>) — Исходник C#: NetworkShip.

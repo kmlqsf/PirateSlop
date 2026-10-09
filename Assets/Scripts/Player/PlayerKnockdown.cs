@@ -8,70 +8,63 @@ namespace PirateSlop
     {
         AdvancedPlayerController motor;
         GameObject ragdoll;
-        Transform hips, fallenHips;
+        Transform fallenHips;
+        Rigidbody pelvis;
         Renderer[] hidden;
-        Rigidbody[] bodies;
-        Vector3 savedHipsPosition;
-        Quaternion savedHipsRotation;
-        bool active, recoveringPose;
+        bool active;
 
         void Awake() => motor = GetComponent<AdvancedPlayerController>();
 
-        void Update()
+        public void Begin(Vector3 velocity)
         {
-            if (!recoveringPose || hips == null) return;
-            hips.SetLocalPositionAndRotation(savedHipsPosition, savedHipsRotation);
-            recoveringPose = false;
+            if (active || motor == null || motor.IsDead) return;
+            ragdoll = DeathRagdoll.CreateKnockdown(transform, transform.position, velocity, new Vector3(.5f, 0f, 1f));
+            if (ragdoll == null) return;
+            ragdoll.name = "PirateKnockdown";
+            fallenHips = DeathRagdoll.FindBone(ragdoll.transform, "Hips");
+            pelvis = fallenHips != null ? fallenHips.GetComponent<Rigidbody>() : null;
+            if (motor.IsLocal && !motor.IsThirdPerson) ragdoll.AddComponent<FirstPersonModelVisibility>().Configure(motor.PlayerCamera);
+            hidden = GetComponentsInChildren<Renderer>(true).Where(r => r.enabled).ToArray();
+            active = true;
+        }
+
+        public bool TryGetPhysicsState(bool recovering, out Vector3 position, out Vector3 velocity)
+        {
+            position = transform.position;
+            velocity = Vector3.zero;
+            if (!active || fallenHips == null || pelvis == null) return false;
+            position = fallenHips.position - Vector3.up * .35f;
+            velocity = pelvis.linearVelocity;
+            if (recovering)
+            {
+                float nearest = 1.2f;
+                foreach (var hit in Physics.RaycastAll(fallenHips.position + Vector3.up * .2f, Vector3.down, nearest, ~0, QueryTriggerInteraction.Ignore))
+                {
+                    if (hit.collider.GetComponentInParent<Networking.NetworkPlayer>() != null || hit.normal.y < .55f || hit.distance >= nearest) continue;
+                    nearest = hit.distance;
+                    position = new Vector3(fallenHips.position.x, hit.point.y + .05f, fallenHips.position.z);
+                }
+            }
+            return true;
         }
 
         void LateUpdate()
         {
             if (motor == null) return;
-            if (motor.IsDead) { Stop(); return; }
-            if (!motor.IsDowned) { if (active) Stop(); return; }
-            if (!active)
-            {
-                var graphics = transform.Find("PlayerGraphics");
-                if (graphics == null) return;
-                var arms = GetComponent<WeaponArmRig>()?.ViewArms;
-                hips = graphics.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "Hips" && (arms == null || !t.IsChildOf(arms)));
-                ragdoll = DeathRagdoll.Create(transform, transform.position, motor.KnockdownVelocity, new Vector3(2f, 0f, 3f), 6f);
-                if (ragdoll == null) return;
-                ragdoll.name = "PirateKnockdown";
-                fallenHips = ragdoll.GetComponentsInChildren<Transform>().FirstOrDefault(t => t.name == "Hips");
-                bodies = ragdoll.GetComponentsInChildren<Rigidbody>();
-                if (motor.IsLocal && !motor.IsThirdPerson) ragdoll.AddComponent<FirstPersonModelVisibility>().Configure(motor.PlayerCamera);
-                hidden = GetComponentsInChildren<Renderer>(true).Where(r => r.enabled).ToArray();
-                active = true;
-            }
+            if (motor.IsDead || !motor.IsDowned) { if (active) Stop(); return; }
+            if (!active) Begin(motor.KnockdownVelocity);
             if (ragdoll == null) { Stop(); return; }
-            if (fallenHips != null)
-            {
-                Vector3 delta = Vector3.ProjectOnPlane(transform.position - fallenHips.position, Vector3.up);
-                foreach (var body in bodies) if (body != null) body.position += delta;
-            }
-            bool gettingUp = motor.KnockdownTime < .45f;
-            foreach (var renderer in hidden) if (renderer != null) renderer.enabled = gettingUp;
-            foreach (var renderer in ragdoll.GetComponentsInChildren<Renderer>()) renderer.enabled = !gettingUp;
-            if (gettingUp && hips != null)
-            {
-                savedHipsPosition = hips.localPosition; savedHipsRotation = hips.localRotation; recoveringPose = true;
-                float blend = Mathf.SmoothStep(0f, 1f, motor.KnockdownTime / .45f);
-                hips.localPosition = savedHipsPosition + Vector3.down * (.5f * blend);
-                hips.localRotation = savedHipsRotation * Quaternion.Euler(55f * blend, 0f, 0f);
-            }
+            foreach (var renderer in hidden) if (renderer != null) renderer.enabled = false;
             var viewArms = GetComponent<WeaponArmRig>()?.ViewArms;
             if (viewArms != null) foreach (var renderer in viewArms.GetComponentsInChildren<Renderer>()) renderer.enabled = false;
         }
 
         public void Stop()
         {
-            if (recoveringPose && hips != null) hips.SetLocalPositionAndRotation(savedHipsPosition, savedHipsRotation);
-            recoveringPose = false;
             if (hidden != null) foreach (var renderer in hidden) if (renderer != null) renderer.enabled = true;
             hidden = null; active = false;
             if (ragdoll != null) Destroy(ragdoll);
-            ragdoll = null;
+            ragdoll = null; fallenHips = null; pelvis = null;
         }
 
         void OnDisable() => Stop();

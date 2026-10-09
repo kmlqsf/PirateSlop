@@ -11,10 +11,11 @@ namespace PirateSlop
         readonly Dictionary<Collider, Rigidbody> surfaces = new();
         readonly List<Collider> expired = new();
         readonly List<GameObject> corpses = new();
+        readonly HashSet<GameObject> gameplayCorpses = new();
         Scene scene;
         PhysicsScene physicsScene;
 
-        public static void Add(GameObject corpse, Vector3 position)
+        public static void Add(GameObject corpse, Vector3 position, bool gameplay = false)
         {
             if (instance == null)
             {
@@ -25,11 +26,16 @@ namespace PirateSlop
             instance.corpses.RemoveAll(c => c == null);
             if (instance.corpses.Count >= 8)
             {
-                Destroy(instance.corpses[0]);
-                instance.corpses.RemoveAt(0);
+                int oldest = instance.corpses.FindIndex(c => !instance.gameplayCorpses.Contains(c));
+                if (oldest >= 0)
+                {
+                    Destroy(instance.corpses[oldest]);
+                    instance.corpses.RemoveAt(oldest);
+                }
             }
             SceneManager.MoveGameObjectToScene(corpse, instance.scene);
             instance.corpses.Add(corpse);
+            if (gameplay) instance.gameplayCorpses.Add(corpse);
             foreach (var collider in Physics.OverlapSphere(position, 45f, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
                 instance.AddSurface(collider);
         }
@@ -66,6 +72,7 @@ namespace PirateSlop
         void FixedUpdate()
         {
             corpses.RemoveAll(c => c == null);
+            gameplayCorpses.RemoveWhere(c => c == null);
             if (corpses.Count == 0) { Destroy(gameObject); return; }
             expired.Clear();
             foreach (var pair in surfaces)

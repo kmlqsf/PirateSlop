@@ -48,6 +48,7 @@ namespace PirateSlop.Networking
         NetworkFishProjectile projectile;
         void OnDisable()
         {
+            kicked = false;
             visualReady = false;
             motionStarted = -1f;
             RestoreBodyMotion();
@@ -108,7 +109,8 @@ namespace PirateSlop.Networking
             visualReady = true; visualSupport = support; visualPlatformId = platformId.Value;
             transform.SetPositionAndRotation(support != null ? support.TransformPoint(visualPosition) : visualPosition,
                 support != null ? support.rotation * visualRotation : visualRotation);
-            if (IsServerInitialized && LivingFish) SimulateFlop(Time.deltaTime);
+            if (IsServerInitialized && kicked) SimulateKick(Time.deltaTime);
+            else if (IsServerInitialized && LivingFish) SimulateFlop(Time.deltaTime);
             if (IsSpawned && IsClientInitialized && LivingFish) AnimateBody();
             if (IsServerInitialized && IsSpawned && Time.time > expires) ServerManager.Despawn(NetworkObject);
         }

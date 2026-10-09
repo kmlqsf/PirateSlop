@@ -7,21 +7,44 @@ namespace PirateSlop
 {
     public static class DeathRagdoll
     {
+        public static Transform FindBone(Transform root, string name)
+        {
+            if (root == null) return null;
+            string mixamo = name switch
+            {
+                "Hips" => "Hips", "Spine" => "Spine", "Chest" => "Spine2", "Neck" => "Neck", "Head" => "Head", "HeadTip" => "HeadTop_End",
+                "UpperArm.L" => "LeftArm", "Forearm.L" => "LeftForeArm", "Hand.L" => "LeftHand", "Thigh.L" => "LeftUpLeg", "Shin.L" => "LeftLeg", "Foot.L" => "LeftFoot",
+                "UpperArm.R" => "RightArm", "Forearm.R" => "RightForeArm", "Hand.R" => "RightHand", "Thigh.R" => "RightUpLeg", "Shin.R" => "RightLeg", "Foot.R" => "RightFoot",
+                _ => name
+            };
+            return root.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == name || t.name == "mixamorig:" + mixamo);
+        }
         public static void Spawn(Transform player, Vector3 position, Vector3 velocity, Vector3 spin)
             => Create(player, position, velocity, spin);
 
         public static GameObject Create(Transform player, Vector3 position, Vector3 velocity, Vector3 spin, float lifetime = 8f)
         {
             if (Application.isBatchMode || !Application.isPlaying) return null;
+            return Build(player, position, velocity, spin, lifetime, true);
+        }
+
+        public static GameObject CreateKnockdown(Transform player, Vector3 position, Vector3 velocity, Vector3 spin)
+        {
+            if (!Application.isPlaying) return null;
+            return Build(player, position, velocity, spin, 6f, true, true);
+        }
+
+        static GameObject Build(Transform player, Vector3 position, Vector3 velocity, Vector3 spin, float lifetime, bool simulate, bool gameplay = false)
+        {
             var source = player.Find("PlayerGraphics");
             if (source == null) return null;
             var viewArms = player.GetComponent<WeaponArmRig>()?.ViewArms;
-            var bodyHips = source.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "Hips" && (viewArms == null || !t.IsChildOf(viewArms)));
+            var bodyHips = FindBone(player.GetComponent<WeaponArmRig>()?.BodyRig ?? source, "Hips");
             if (bodyHips == null) return null;
             var map = new Dictionary<Transform, Transform>();
             Transform Copy(Transform original, Transform parent)
             {
-                var copy = new GameObject(original.name) { layer = 2 }.transform;
+                var copy = new GameObject(original.name) { layer = original.gameObject.layer }.transform;
                 copy.SetParent(parent, false);
                 copy.localPosition = original.localPosition;
                 copy.localRotation = original.localRotation;
@@ -34,12 +57,18 @@ namespace PirateSlop
             }
             var root = Copy(source, null);
             root.name = "PirateCorpse";
+            if (!simulate)
+            {
+                root.gameObject.hideFlags = HideFlags.HideAndDontSave;
+                UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene(root.gameObject, player.gameObject.scene);
+            }
             root.SetPositionAndRotation(source.position + position - player.position, source.rotation);
             root.localScale = source.lossyScale;
             root.gameObject.SetActive(false);
             foreach (var original in source.GetComponentsInChildren<Renderer>(true))
             {
-                if (!original.gameObject.activeInHierarchy || !map.ContainsKey(original.transform)) continue;
+                if (!map.ContainsKey(original.transform)) continue;
+                if (original.name == "KickLegView") continue;
                 Renderer copy = null;
                 if (original is SkinnedMeshRenderer skin)
                 {
@@ -56,21 +85,32 @@ namespace PirateSlop
                 }
                 else if (original is MeshRenderer && original.TryGetComponent<MeshFilter>(out var filter))
                 {
+                    if (!original.gameObject.activeInHierarchy) continue;
                     if (!original.transform.IsChildOf(bodyHips)) continue;
                     map[original.transform].gameObject.AddComponent<MeshFilter>().sharedMesh = filter.sharedMesh;
                     copy = map[original.transform].gameObject.AddComponent<MeshRenderer>();
                 }
                 if (copy == null) continue;
                 copy.sharedMaterials = original.sharedMaterials;
+                copy.renderingLayerMask = original.renderingLayerMask;
+                copy.enabled = true;
+                copy.forceRenderingOff = false;
                 copy.shadowCastingMode = ShadowCastingMode.On;
                 copy.receiveShadows = original.receiveShadows;
                 var properties = new MaterialPropertyBlock();
                 original.GetPropertyBlock(properties); copy.SetPropertyBlock(properties);
+                for (var visible = copy.transform; visible != null && visible != root; visible = visible.parent)
+                    visible.gameObject.SetActive(true);
             }
-            Transform Bone(string name) => map.Values.FirstOrDefault(t => t.name == name);
+            Transform Bone(string name) => FindBone(root, name);
             var hips = Bone("Hips");
-            if (hips == null) { Object.Destroy(root.gameObject); return null; }
-            CorpsePhysicsWorld.Add(root.gameObject, position);
+            if (hips == null || !root.GetComponentsInChildren<SkinnedMeshRenderer>(true).Any(r => r.sharedMesh != null && r.bones.Length > 0))
+            {
+                if (Application.isPlaying) Object.Destroy(root.gameObject); else Object.DestroyImmediate(root.gameObject);
+                return null;
+            }
+            if (simulate) CorpsePhysicsWorld.Add(root.gameObject, position, gameplay);
+            root.gameObject.AddComponent<RagdollRendererBounds>().Configure(hips);
             var bodies = new List<Rigidbody>();
             var colliders = new List<Collider>();
             Rigidbody Segment(string name, string endName, float radius, float mass, Rigidbody parent)
@@ -124,8 +164,26 @@ namespace PirateSlop
                 bodies[i].linearVelocity = velocity;
                 bodies[i].angularVelocity = spin * (i == 0 ? 1f : .35f + .55f * Mathf.Sin(i * 2.4f + spin.x));
             }
-            Object.Destroy(root.gameObject, lifetime);
+            if (simulate) Object.Destroy(root.gameObject, lifetime);
             return root.gameObject;
+        }
+    }
+
+    public sealed class RagdollRendererBounds : MonoBehaviour
+    {
+        Transform pelvis;
+        SkinnedMeshRenderer[] skins;
+        public void Configure(Transform bone)
+        {
+            pelvis = bone;
+            skins = GetComponentsInChildren<SkinnedMeshRenderer>(true);
+            LateUpdate();
+        }
+        void LateUpdate()
+        {
+            if (pelvis == null || skins == null) return;
+            foreach (var skin in skins)
+                if (skin != null) skin.localBounds = new Bounds(skin.transform.InverseTransformPoint(pelvis.position), Vector3.one * 4f);
         }
     }
 }

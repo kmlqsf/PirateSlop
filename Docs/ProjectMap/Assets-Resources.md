@@ -28,6 +28,7 @@
 | [Assets/Resources/HelmCenterMark.mat](<../../Assets/Resources/HelmCenterMark.mat>) | Материал Unity |
 | [Assets/Resources/HookRope.mat](<../../Assets/Resources/HookRope.mat>) | Материал Unity |
 | [Assets/Resources/HudIcon.shader](<../../Assets/Resources/HudIcon.shader>) | Шейдер |
+| [Assets/Resources/KickLeg.asset](<../../Assets/Resources/KickLeg.asset>) | Настройки или данные Unity; Персонаж, камера и анимации |
 | [Assets/Resources/KrakenEncounter.prefab](<../../Assets/Resources/KrakenEncounter.prefab>) | Префаб Unity |
 | [Assets/Resources/KrakenTentacle.prefab](<../../Assets/Resources/KrakenTentacle.prefab>) | Префаб Unity |
 | [Assets/Resources/LootEventBeam.shader](<../../Assets/Resources/LootEventBeam.shader>) | Шейдер; Предметы, лут и инвентарь |

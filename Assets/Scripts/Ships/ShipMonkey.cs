@@ -126,13 +126,20 @@ namespace PirateSlop.Ships
             if (Visual != null) Visual.gameObject.SetActive(false);
         }
 
-        public ShipMonkeyPose Capture() => new() { Position = position, Rotation = rotation, Motion = Motion, AnimationSpeed = animationSpeed, MotionTime = motionTime, Perched = perched, Looking = looking, LookPoint = lookPoint, Carrying = activityShip != null && HasCarriedItem, FishingPhase = fishingPhase, FishingTime = fishingTime, FishingPoint = fishingPoint, Sequence = ++sequence };
+        public ShipMonkeyPose Capture() => new() { Position = position + kickReactionOffset, Rotation = rotation, Motion = Motion, AnimationSpeed = animationSpeed, MotionTime = motionTime, Perched = perched, Looking = looking, LookPoint = lookPoint, Carrying = activityShip != null && HasCarriedItem, FishingPhase = fishingPhase, FishingTime = fishingTime, FishingPoint = fishingPoint, Sequence = ++sequence };
 
         public void Simulate(float delta)
         {
             if (!initialized || Visual == null) return;
             perched = Surface == ShipMonkeySurface.Rail || Surface == ShipMonkeySurface.Prop;
             motionTime += delta * animationSpeed;
+            if (Time.time < kickReactionUntil)
+            {
+                kickReactionOffset = kickReactionDirection * Mathf.Sin(Mathf.Clamp01(1f - (kickReactionUntil - Time.time) / .25f) * Mathf.PI);
+                Show(position + kickReactionOffset, rotation, Motion, animationSpeed, motionTime);
+                return;
+            }
+            kickReactionOffset = Vector3.zero;
             UpdateRetaliation();
             if (UpdateJump(delta)) { Show(position, rotation, Motion, 1f, motionTime); return; }
             if (target < 0 && Nodes[current].Available) position = Point(current);

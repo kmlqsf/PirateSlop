@@ -81,6 +81,14 @@
 | [Assets/Audio/Cannonballs/IceHeld.mp3](<../../Assets/Audio/Cannonballs/IceHeld.mp3>) | Аудио |
 | [Assets/Audio/Cannonballs/PushHeld.wav](<../../Assets/Audio/Cannonballs/PushHeld.wav>) | Аудио |
 
+## Assets/Audio/Combat/Kick
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Audio/Combat/Kick/KickBody.wav](<../../Assets/Audio/Combat/Kick/KickBody.wav>) | Аудио; Звуки и голос |
+| [Assets/Audio/Combat/Kick/KickSwing.wav](<../../Assets/Audio/Combat/Kick/KickSwing.wav>) | Аудио; Звуки и голос |
+| [Assets/Audio/Combat/Kick/Sources.md](<../../Assets/Audio/Combat/Kick/Sources.md>) | Документация; Звуки и голос |
+
 ## Assets/Audio/Fishing
 
 | Файл | Краткое описание |

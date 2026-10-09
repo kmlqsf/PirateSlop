@@ -266,6 +266,7 @@
 | [Assets/Scripts/Networking/NetworkEquipment.BottleAim.cs](<../../Assets/Scripts/Networking/NetworkEquipment.BottleAim.cs>) | Исходник C#: NetworkEquipment; Предметы, лут и инвентарь |
 | [Assets/Scripts/Networking/NetworkEquipment.Lantern.cs](<../../Assets/Scripts/Networking/NetworkEquipment.Lantern.cs>) | Исходник C#: NetworkEquipment; Предметы, лут и инвентарь |
 | [Assets/Scripts/Networking/NetworkEquipment.cs](<../../Assets/Scripts/Networking/NetworkEquipment.cs>) | Исходник C#: NetworkEquipment; Личное оружие и урон |
+| [Assets/Scripts/Networking/NetworkFish.Kick.cs](<../../Assets/Scripts/Networking/NetworkFish.Kick.cs>) | Исходник C#: NetworkFish; Предметы, лут и инвентарь |
 | [Assets/Scripts/Networking/NetworkFish.Monkey.cs](<../../Assets/Scripts/Networking/NetworkFish.Monkey.cs>) | Исходник C#: NetworkFish; Корабельная обезьянка |
 | [Assets/Scripts/Networking/NetworkFish.cs](<../../Assets/Scripts/Networking/NetworkFish.cs>) | Исходник C#: InventoryItem, NetworkFish; Предметы, лут и инвентарь, Рыбалка и рыба, Корабельная обезьянка |
 | [Assets/Scripts/Networking/NetworkFishMotion.cs](<../../Assets/Scripts/Networking/NetworkFishMotion.cs>) | Исходник C#: NetworkFish, BodyMesh; Рыбалка и рыба |
@@ -291,6 +292,7 @@
 | [Assets/Scripts/Networking/NetworkParrotDrone.cs](<../../Assets/Scripts/Networking/NetworkParrotDrone.cs>) | Исходник C#: NetworkParrotDrone |
 | [Assets/Scripts/Networking/NetworkPlayer.BotDiagnostics.cs](<../../Assets/Scripts/Networking/NetworkPlayer.BotDiagnostics.cs>) | Исходник C#: NetworkPlayer; Новая система ботов |
 | [Assets/Scripts/Networking/NetworkPlayer.BotTasks.cs](<../../Assets/Scripts/Networking/NetworkPlayer.BotTasks.cs>) | Исходник C#: NetworkPlayer; Новая система ботов |
+| [Assets/Scripts/Networking/NetworkPlayer.Kick.cs](<../../Assets/Scripts/Networking/NetworkPlayer.Kick.cs>) | Исходник C#: NetworkPlayer; Персонаж, камера и анимации |
 | [Assets/Scripts/Networking/NetworkPlayer.Knockdown.cs](<../../Assets/Scripts/Networking/NetworkPlayer.Knockdown.cs>) | Исходник C#: NetworkPlayer; Корабельная обезьянка |
 | [Assets/Scripts/Networking/NetworkPlayer.Roguelike.cs](<../../Assets/Scripts/Networking/NetworkPlayer.Roguelike.cs>) | Исходник C#: UpgradeReward, PlayerUpgradeState, UpgradeSnapshot, NetworkPlayer; Улучшения рогалика из сундуков, Корабельная слот-машина |
 | [Assets/Scripts/Networking/NetworkPlayer.TargetMarks.cs](<../../Assets/Scripts/Networking/NetworkPlayer.TargetMarks.cs>) | Исходник C#: TargetMarkState, NetworkPlayer |
@@ -363,7 +365,7 @@
 | [Assets/Scripts/Player/CorpsePhysicsWorld.cs](<../../Assets/Scripts/Player/CorpsePhysicsWorld.cs>) | Исходник C#: CorpsePhysicsWorld |
 | [Assets/Scripts/Player/CrewBellMotion.cs](<../../Assets/Scripts/Player/CrewBellMotion.cs>) | Исходник C#: CrewBellMotion |
 | [Assets/Scripts/Player/DamageFeedback.cs](<../../Assets/Scripts/Player/DamageFeedback.cs>) | Исходник C#: DamageFeedback |
-| [Assets/Scripts/Player/DeathRagdoll.cs](<../../Assets/Scripts/Player/DeathRagdoll.cs>) | Исходник C#: DeathRagdoll |
+| [Assets/Scripts/Player/DeathRagdoll.cs](<../../Assets/Scripts/Player/DeathRagdoll.cs>) | Исходник C#: DeathRagdoll, RagdollRendererBounds; Персонаж, камера и анимации |
 | [Assets/Scripts/Player/DeveloperMenu.cs](<../../Assets/Scripts/Player/DeveloperMenu.cs>) | Исходник C#: DeveloperMenu; Предметы, лут и инвентарь, Мир, острова и океан, Меню и HUD, Шторм, зона и объёмный туман, Тестовая карта и водоворот |
 | [Assets/Scripts/Player/FirearmDefinition.cs](<../../Assets/Scripts/Player/FirearmDefinition.cs>) | Исходник C#: FirearmDefinition, FirearmCombat; Личное оружие и урон |
 | [Assets/Scripts/Player/FirearmHandling.cs](<../../Assets/Scripts/Player/FirearmHandling.cs>) | Исходник C#: FirearmHandling; Личное оружие и урон |
@@ -391,7 +393,8 @@
 | [Assets/Scripts/Player/PlayerInventory.RaftLockpick.cs](<../../Assets/Scripts/Player/PlayerInventory.RaftLockpick.cs>) | Исходник C#: PlayerInventory; Предметы, лут и инвентарь, Звуки и голос |
 | [Assets/Scripts/Player/PlayerInventory.Upgrades.cs](<../../Assets/Scripts/Player/PlayerInventory.Upgrades.cs>) | Исходник C#: PlayerInventory; Улучшения рогалика из сундуков |
 | [Assets/Scripts/Player/PlayerInventory.cs](<../../Assets/Scripts/Player/PlayerInventory.cs>) | Исходник C#: PlayerInventory; Корабельная слот-машина, Предметы, лут и инвентарь |
-| [Assets/Scripts/Player/PlayerKnockdown.cs](<../../Assets/Scripts/Player/PlayerKnockdown.cs>) | Исходник C#: PlayerKnockdown; Корабельная обезьянка |
+| [Assets/Scripts/Player/PlayerKickVisual.cs](<../../Assets/Scripts/Player/PlayerKickVisual.cs>) | Исходник C#: PlayerKickVisual; Персонаж, камера и анимации |
+| [Assets/Scripts/Player/PlayerKnockdown.cs](<../../Assets/Scripts/Player/PlayerKnockdown.cs>) | Исходник C#: PlayerKnockdown; Персонаж, камера и анимации, Корабельная обезьянка |
 | [Assets/Scripts/Player/PlayerPresentation.cs](<../../Assets/Scripts/Player/PlayerPresentation.cs>) | Исходник C#: PlayerPresentation |
 | [Assets/Scripts/Player/SabreAnimation.cs](<../../Assets/Scripts/Player/SabreAnimation.cs>) | Исходник C#: SabreAnimation; Улучшения рогалика из сундуков, Личное оружие и урон |
 | [Assets/Scripts/Player/SabreWoodHit.cs](<../../Assets/Scripts/Player/SabreWoodHit.cs>) | Исходник C#: SabreWoodHit, PirateWeapon; Личное оружие и урон |
