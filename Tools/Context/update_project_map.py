@@ -4,6 +4,7 @@ from datetime import date
 import json
 import os
 import re
+import subprocess
 
 ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / 'Docs/ProjectMap'
@@ -38,6 +39,7 @@ def describe(path):
     return result.replace('|', '\\|')
 
 catalog = json.loads((ROOT / 'Tools/Context/topics.json').read_text(encoding='utf-8-sig'))
+tracked_captures = set(subprocess.check_output(['git', 'ls-files', '-z', '--', 'Captures'], cwd=ROOT).decode('utf-8').split('\0'))
 membership = defaultdict(list)
 for topic in catalog['topics']:
     for path in topic['files'] + topic['docs']:
@@ -50,6 +52,10 @@ for folder, dirs, names in os.walk(ROOT):
     for name in sorted(names):
         p = Path(folder) / name
         relative = p.relative_to(ROOT).as_posix()
+        if relative.startswith('Captures/') and relative not in tracked_captures:
+            continue
+        if relative.startswith('Art/Blender/World/CoastalEnvironment/CoastalTripo_Pre'):
+            continue
         if p.suffix == '.meta':
             meta_count += 1
             continue
@@ -84,7 +90,7 @@ for key, paths in sorted(groups.items()):
         page.append('')
     save(OUT / filename, '\n'.join(page))
 
-lines += ['', 'Не индексируются генерируемые сборки, кэши и локальное состояние: ' + ', '.join(f'`{p}/`' for p in sorted(SKIP)) + '. Зависимости из Unity PackageCache представлены манифестом/lock-файлом; встроенные пакеты из `Packages/` перечислены полностью. Скрытые конфиги вне исключённых папок включены только как пути, их содержимое не копируется.', '', '## Механики и точки входа', '']
+lines += ['', 'Не индексируются генерируемые сборки, кэши и локальное состояние: ' + ', '.join(f'`{p}/`' for p in sorted(SKIP)) + '. В Captures индексируются только отслеживаемые Git файлы; промежуточные резервные CoastalTripo_Pre*.blend не индексируются. Зависимости из Unity PackageCache представлены манифестом/lock-файлом; встроенные пакеты из `Packages/` перечислены полностью. Скрытые конфиги вне исключённых папок включены только как пути, их содержимое не копируется.', '', '## Механики и точки входа', '']
 missing = []
 for topic in catalog['topics']:
     lines += [f"### {topic['title']} (`{topic['id']}`)", '', 'Ключевые слова: ' + ', '.join(topic['aliases']) + '.', '']

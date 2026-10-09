@@ -93,6 +93,14 @@
 | [Assets/Audio/Cannonballs/IceHeld.mp3](<../../Assets/Audio/Cannonballs/IceHeld.mp3>) | Аудио |
 | [Assets/Audio/Cannonballs/PushHeld.wav](<../../Assets/Audio/Cannonballs/PushHeld.wav>) | Аудио |
 
+## Assets/Audio/Combat/Kick
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Audio/Combat/Kick/KickBody.wav](<../../Assets/Audio/Combat/Kick/KickBody.wav>) | Аудио; Звуки и голос |
+| [Assets/Audio/Combat/Kick/KickSwing.wav](<../../Assets/Audio/Combat/Kick/KickSwing.wav>) | Аудио; Звуки и голос |
+| [Assets/Audio/Combat/Kick/Sources.md](<../../Assets/Audio/Combat/Kick/Sources.md>) | Документация; Звуки и голос |
+
 ## Assets/Audio/Fishing
 
 | Файл | Краткое описание |
@@ -748,6 +756,21 @@
 | [Assets/Audio/ShipInteractions/FlameExtinguish.wav](<../../Assets/Audio/ShipInteractions/FlameExtinguish.wav>) | Аудио |
 | [Assets/Audio/ShipInteractions/FlameLight.wav](<../../Assets/Audio/ShipInteractions/FlameLight.wav>) | Аудио |
 | [Assets/Audio/ShipInteractions/SOURCES.md](<../../Assets/Audio/ShipInteractions/SOURCES.md>) | Документация; Движение корабля и палуба, Звуки и голос |
+
+## Assets/Audio/SlotMachine
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Audio/SlotMachine/FishInsert.wav](<../../Assets/Audio/SlotMachine/FishInsert.wav>) | Аудио; Корабельная слот-машина |
+| [Assets/Audio/SlotMachine/FishPayout.wav](<../../Assets/Audio/SlotMachine/FishPayout.wav>) | Аудио; Корабельная слот-машина |
+| [Assets/Audio/SlotMachine/LeverPull.wav](<../../Assets/Audio/SlotMachine/LeverPull.wav>) | Аудио; Корабельная слот-машина |
+| [Assets/Audio/SlotMachine/LeverRatchet.wav](<../../Assets/Audio/SlotMachine/LeverRatchet.wav>) | Аудио; Корабельная слот-машина |
+| [Assets/Audio/SlotMachine/LeverReturn.wav](<../../Assets/Audio/SlotMachine/LeverReturn.wav>) | Аудио; Корабельная слот-машина |
+| [Assets/Audio/SlotMachine/PrizePayout.wav](<../../Assets/Audio/SlotMachine/PrizePayout.wav>) | Аудио; Корабельная слот-машина |
+| [Assets/Audio/SlotMachine/ReelSpin.wav](<../../Assets/Audio/SlotMachine/ReelSpin.wav>) | Аудио; Корабельная слот-машина |
+| [Assets/Audio/SlotMachine/ReelStop.wav](<../../Assets/Audio/SlotMachine/ReelStop.wav>) | Аудио; Корабельная слот-машина |
+| [Assets/Audio/SlotMachine/SOURCES.md](<../../Assets/Audio/SlotMachine/SOURCES.md>) | Документация; Корабельная слот-машина |
+| [Assets/Audio/SlotMachine/Win.wav](<../../Assets/Audio/SlotMachine/Win.wav>) | Аудио; Корабельная слот-машина |
 
 ## Assets/Audio/Underwater
 

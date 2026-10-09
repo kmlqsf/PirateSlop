@@ -100,6 +100,7 @@ namespace PirateSlop.Networking
         void Awake()
         {
             motor = GetComponent<AdvancedPlayerController>(); motor.ConfigureNetwork(false);
+            if (GetComponent<PlayerKickVisual>() == null) gameObject.AddComponent<PlayerKickVisual>();
             InitializeUpgradeEffects();
             if (GetComponent<GunnersEyeView>() == null) gameObject.AddComponent<GunnersEyeView>();
             passenger = GetComponent<ShipDeckPassenger>(); passenger.Networked = true;
@@ -317,6 +318,7 @@ namespace PirateSlop.Networking
         void Update()
         {
             TickUpgradeEffects();
+            UpdateKick();
             if (diagnostics && Time.unscaledTime >= nextDiagnostic)
             {
                 nextDiagnostic = Time.unscaledTime + 2f;

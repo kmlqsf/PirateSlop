@@ -1,0 +1,99 @@
+[
+  {
+    "cue": "SlotFishInsert",
+    "asset": "Assets/Audio/SlotMachine/FishInsert.wav",
+    "source": "C:\\звуки\\Sonniss.com - GDC 2018 - Game Audio Bundle\\Articulated Sounds - Bones & Blood - Gore Elements\\GORE Wriggle tortured squishy slime.wav",
+    "start": 0.26,
+    "duration": 1.0,
+    "gain_db": 0.692,
+    "fade_in": 0.012,
+    "fade_out": 0.045,
+    "peak_dbfs": -4.0,
+    "sha256": "62c0b17c8107b6716cc2dd967834b35210185c83075f230afb44a538fb815692"
+  },
+  {
+    "cue": "SlotLeverPull",
+    "asset": "Assets/Audio/SlotMachine/LeverRatchet.wav",
+    "source": "C:\\звуки\\Sonniss.com - GDC 2017 - Game Audio Bundle\\SoundHolder -  Cameras\\camera kodak coloursnap 35 film advance lever fast mono.wav",
+    "start": 0.393,
+    "duration": 0.046,
+    "gain_db": -1.271,
+    "fade_in": 0.0005,
+    "fade_out": 0.008,
+    "peak_dbfs": -5,
+    "sha256": "435eaba7aab821af19950c6bb7e1606a34cbb74d80ea56a5a86c664c62115d8b",
+    "trigger": "Forward manual lever travel crosses a 6.5-degree tooth boundary; no clicks while stationary, released or automatically returning."
+  },
+  {
+    "cue": "SlotReelSpin",
+    "asset": "Assets/Audio/SlotMachine/ReelSpin.wav",
+    "source": "C:\\звуки\\Sonniss.com - GDC 2024 - Game Audio Bundle\\Justsoundeffects - Steampunk Gadgets\\MECHGear_Tiny Rotation 01_JSE_SG_Stereo.wav",
+    "start": 0.16,
+    "duration": 4.9,
+    "gain_db": 1.998,
+    "fade_in": 0.045,
+    "fade_out": 0.2,
+    "peak_dbfs": -6.0,
+    "sha256": "7974cebc5be696eb9d681958401825f3cf9d2801a478595b32e8c6bdfdc56e5b"
+  },
+  {
+    "cue": "SlotReelStop",
+    "asset": "Assets/Audio/SlotMachine/ReelStop.wav",
+    "source": "C:\\звуки\\Sonniss.com - GDC 2018 - Game Audio Bundle\\UberDuo - The Home Barista\\Coffee, Grinder, Knob, Turn, Click X3.wav",
+    "start": 0.198,
+    "duration": 0.195,
+    "gain_db": 2.128,
+    "fade_in": 0.003,
+    "fade_out": 0.025,
+    "peak_dbfs": -4.0,
+    "sha256": "47781f48eb99865f84bcc16222555240a622add2a382c17491e5c357836980b5"
+  },
+  {
+    "cue": "SlotLeverReturn",
+    "asset": "Assets/Audio/SlotMachine/LeverReturn.wav",
+    "source": "C:\\звуки\\Sonniss.com-GDC2026-GameAudioBundle\\Sonic Bat - Music Boxes\\SBmb_Music Box C Wind Up 006.wav",
+    "start": 0.035,
+    "duration": 0.62,
+    "gain_db": -3.13,
+    "fade_in": 0.008,
+    "fade_out": 0.04,
+    "peak_dbfs": -5.0,
+    "sha256": "e5b30a91876456a82566de54a2d9a99f3f278d88adf80d82b2a93a5053431901"
+  },
+  {
+    "cue": "SlotFishPayout",
+    "asset": "Assets/Audio/SlotMachine/FishPayout.wav",
+    "source": "C:\\звуки\\Sonniss.com - GDC 2018 - Game Audio Bundle\\Soundrangers - Hydrology Bubbles and Splashes\\mud_splat_heavy_03.wav",
+    "start": 0.0,
+    "duration": 0.72,
+    "gain_db": -7.139,
+    "fade_in": 0.004,
+    "fade_out": 0.06,
+    "peak_dbfs": -5.0,
+    "sha256": "e00b3fb75b3a3bd15d79a8ab5c8c8de48167285abdc1fcb4b86d907ccdea9492"
+  },
+  {
+    "cue": "SlotPrizePayout",
+    "asset": "Assets/Audio/SlotMachine/PrizePayout.wav",
+    "source": "C:\\звуки\\Sonniss.com - GDC 2017 - Game Audio Bundle\\The Soundcatcher - Electric Cash Register\\Cash Register_SANYO ECR 335_Drawer_Open_Close_1_1.wav",
+    "start": 0.19,
+    "duration": 1.6,
+    "gain_db": 12.087,
+    "fade_in": 0.01,
+    "fade_out": 0.07,
+    "peak_dbfs": -4.0,
+    "sha256": "590e3a6097b9cae62b6c3bfc0441d13d8c520dd7f66aa0ea71133d5b6d2ab691"
+  },
+  {
+    "cue": "SlotWin",
+    "asset": "Assets/Audio/SlotMachine/Win.wav",
+    "source": "https://www.freesoundslibrary.com/wp-content/uploads/2026/06/jackpot-sound-effect.mp3",
+    "start": 0.01,
+    "duration": 2.72,
+    "gain_db": -7.535,
+    "fade_in": 0.01,
+    "fade_out": 0.08,
+    "peak_dbfs": -5.0,
+    "sha256": "b97c31e248f9352be990a0823e90133978cc15c9d65882cfaba54132642a8b81"
+  }
+]

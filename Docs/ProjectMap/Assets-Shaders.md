@@ -21,6 +21,7 @@
 | [Assets/Shaders/OvercastSky.shader](<../../Assets/Shaders/OvercastSky.shader>) | Шейдер |
 | [Assets/Shaders/Sail.shader](<../../Assets/Shaders/Sail.shader>) | Шейдер; Паруса и канаты |
 | [Assets/Shaders/Seabed.shader](<../../Assets/Shaders/Seabed.shader>) | Шейдер |
+| [Assets/Shaders/SlotReelIcon.shader](<../../Assets/Shaders/SlotReelIcon.shader>) | Шейдер; Корабельная слот-машина |
 | [Assets/Shaders/StormWall.shader](<../../Assets/Shaders/StormWall.shader>) | Шейдер |
 | [Assets/Shaders/UnderwaterParticles.shader](<../../Assets/Shaders/UnderwaterParticles.shader>) | Шейдер; Мир, острова и океан |
 | [Assets/Shaders/WaterShipFoam.hlsl](<../../Assets/Shaders/WaterShipFoam.hlsl>) | Код шейдера; Мир, острова и океан, Тестовая карта и водоворот |

@@ -113,6 +113,7 @@
 
 | Файл | Краткое описание |
 | --- | --- |
+| [Assets/Materials/Creatures/MonkeyBat.mat](<../../Assets/Materials/Creatures/MonkeyBat.mat>) | Материал Unity; Корабельная обезьянка |
 | [Assets/Materials/Creatures/ShipMonkey.mat](<../../Assets/Materials/Creatures/ShipMonkey.mat>) | Материал Unity; Корабельная обезьянка |
 
 ## Assets/Materials/Environment

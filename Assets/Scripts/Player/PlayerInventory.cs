@@ -189,6 +189,8 @@ namespace PirateSlop
                 InteractionUsed = true;
                 return;
             }
+            var slotInteraction = GetComponent<PirateSlop.Ships.ShipSlotMachinePlayer>();
+            if (slotInteraction != null && slotInteraction.ConsumedInput) { InteractionUsed = true; return; }
             if (lootWindow)
             {
                 InteractionUsed = true;

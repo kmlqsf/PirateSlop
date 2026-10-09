@@ -117,6 +117,7 @@ namespace PirateSlop.Networking
         void OnEnable() { RenderPipelineManager.beginCameraRendering += BeforeCamera; RenderPipelineManager.endCameraRendering += AfterCamera; }
         void OnDisable()
         {
+            CancelBottleAim();
             RenderPipelineManager.beginCameraRendering -= BeforeCamera; RenderPipelineManager.endCameraRendering -= AfterCamera;
         }
         bool CanUse => Active && (inventory.Fishing == null || (!inventory.Fishing.IsFishing && !inventory.Fishing.IsEating));
@@ -151,7 +152,8 @@ namespace PirateSlop.Networking
                 nextAim = Time.time + .1f; sentAim = aim;
                 AimServerRpc(aim, motor.AimDirection);
             }
-            if (!can || mouse == null) { if (action.Value == 2) CancelServerRpc(); return; }
+            if (!can || mouse == null) { CancelBottleAim(); if (action.Value == 2) CancelServerRpc(); return; }
+            if (ReadBottleInput(mouse)) return;
             if (Item == InventoryItem.Lantern) { ReadLanternInput(keyboard); return; }
             if (Item == InventoryItem.HolyGrenade || Item == InventoryItem.Spyglass) return;
             Vector3 eyeOffset = motor.PlayerCamera.transform.position-transform.position;
@@ -424,8 +426,8 @@ namespace PirateSlop.Networking
             if (!IsOwner || !Active || !motor.InputActive) return;
             if(Scoped) DrawScope();
             if (Item == InventoryItem.Lantern) { ContextPrompt.Offer("РУЧНОЙ ФОНАРЬ · E — " + (LanternLit(inventory.SelectedSlot) ? "погасить" : "зажечь") + " · G — положить", 20); return; }
-            if (Item == InventoryItem.VortexBottle) { ContextPrompt.Offer("БУТЫЛКА ВИХРЯ · ЛКМ — бросить · попадание в корабль: скорость 500% на 10 с", 20); return; }
-            if (Item == InventoryItem.FogBottle) { ContextPrompt.Offer("БУТЫЛКА ТУМАНА · ЛКМ — бросить · густое облако на 15 с, включая удар о воду", 20); return; }
+            if (Item == InventoryItem.VortexBottle) { ContextPrompt.Offer("БУТЫЛКА ВИХРЯ · удерживать ЛКМ — траектория · отпустить — бросок", 20); return; }
+            if (Item == InventoryItem.FogBottle) { ContextPrompt.Offer("БУТЫЛКА ТУМАНА · удерживать ЛКМ — траектория · отпустить — бросок", 20); return; }
             if (Item == InventoryItem.Spyglass) { ContextPrompt.Offer("ПОДЗОРНАЯ ТРУБА · удерживать ПКМ — смотреть · колесо — зум", 20); return; }
             if (Item == InventoryItem.HolyGrenade) { ContextPrompt.Offer("СВЯТАЯ ГРАНАТА · ПКМ — фитиль 3 с · удерживать ЛКМ — прицел · отпустить — бросок", 20); return; }
             if(Firearm || Item == InventoryItem.Pufferfish || Item == InventoryItem.Swordfish) return;
@@ -457,7 +459,7 @@ namespace PirateSlop.Networking
             GUI.DrawTexture(new Rect(x0+size*.1f,Screen.height*.5f-1,size*.8f,2),Texture2D.whiteTexture);
             GUI.color=color; GUI.depth=depth;
         }
-        void OnDestroy() { if(scopeMask!=null) Destroy(scopeMask); if(view!=null) Destroy(view.gameObject); if(world!=null) Destroy(world.gameObject); }
+        void OnDestroy() { if(bottleArc!=null) Destroy(bottleArc.gameObject); if(scopeMask!=null) Destroy(scopeMask); if(view!=null) Destroy(view.gameObject); if(world!=null) Destroy(world.gameObject); }
     }
 }
 

@@ -5,7 +5,7 @@ using UnityEngine;
 namespace PirateSlop.Ships
 {
     public enum ShipMonkeySurface : byte { Deck, Rail, Rigging, Nest, Prop }
-    public enum ShipMonkeyMotion : byte { Idle, Walk, RailWalk, ClimbUp, ClimbDown, Hop, Run, SitDown, Sit, StandUp, JumpStart, JumpAir, JumpLand, Pickup, CarryIdle, CarryWalk, FishingCast, FishingWait, FishingReel, Work, Repair }
+    public enum ShipMonkeyMotion : byte { Idle, Walk, RailWalk, ClimbUp, ClimbDown, Hop, Run, SitDown, Sit, StandUp, JumpStart, JumpAir, JumpLand, Pickup, CarryIdle, CarryWalk, FishingCast, FishingWait, FishingReel, Work, Repair, BatStrike }
 
     [Serializable]
     public sealed class ShipMonkeyNode
@@ -42,6 +42,8 @@ namespace PirateSlop.Ships
         public bool Looking;
         public Vector3 LookPoint;
         public bool Carrying;
+        public bool HoldingBat;
+        public Vector3 BatTarget;
         public byte FishingPhase;
         public float FishingTime;
         public Vector3 FishingPoint;
@@ -92,7 +94,7 @@ namespace PirateSlop.Ships
         float shownTime;
         static readonly int sitDownPerch = UnityEngine.Animator.StringToHash("SitDownPerch"), sitPerch = UnityEngine.Animator.StringToHash("SitPerch"), standUpPerch = UnityEngine.Animator.StringToHash("StandUpPerch");
         static readonly int idleRail = UnityEngine.Animator.StringToHash("IdleRail");
-        static readonly int[] states = { UnityEngine.Animator.StringToHash("Idle"), UnityEngine.Animator.StringToHash("Walk"), UnityEngine.Animator.StringToHash("RailWalk"), UnityEngine.Animator.StringToHash("ClimbUp"), UnityEngine.Animator.StringToHash("ClimbDown"), UnityEngine.Animator.StringToHash("RailWalk"), UnityEngine.Animator.StringToHash("Run"), UnityEngine.Animator.StringToHash("SitDown"), UnityEngine.Animator.StringToHash("Sit"), UnityEngine.Animator.StringToHash("StandUp"), UnityEngine.Animator.StringToHash("JumpStart"), UnityEngine.Animator.StringToHash("JumpAir"), UnityEngine.Animator.StringToHash("JumpLand"), UnityEngine.Animator.StringToHash("Pickup"), UnityEngine.Animator.StringToHash("CarryIdle"), UnityEngine.Animator.StringToHash("CarryWalk"), UnityEngine.Animator.StringToHash("FishingCast"), UnityEngine.Animator.StringToHash("FishingWait"), UnityEngine.Animator.StringToHash("FishingReel"), UnityEngine.Animator.StringToHash("Work"), UnityEngine.Animator.StringToHash("Repair") };
+        static readonly int[] states = { UnityEngine.Animator.StringToHash("Idle"), UnityEngine.Animator.StringToHash("Walk"), UnityEngine.Animator.StringToHash("RailWalk"), UnityEngine.Animator.StringToHash("ClimbUp"), UnityEngine.Animator.StringToHash("ClimbDown"), UnityEngine.Animator.StringToHash("RailWalk"), UnityEngine.Animator.StringToHash("Run"), UnityEngine.Animator.StringToHash("SitDown"), UnityEngine.Animator.StringToHash("Sit"), UnityEngine.Animator.StringToHash("StandUp"), UnityEngine.Animator.StringToHash("JumpStart"), UnityEngine.Animator.StringToHash("JumpAir"), UnityEngine.Animator.StringToHash("JumpLand"), UnityEngine.Animator.StringToHash("Pickup"), UnityEngine.Animator.StringToHash("CarryIdle"), UnityEngine.Animator.StringToHash("CarryWalk"), UnityEngine.Animator.StringToHash("FishingCast"), UnityEngine.Animator.StringToHash("FishingWait"), UnityEngine.Animator.StringToHash("FishingReel"), UnityEngine.Animator.StringToHash("Work"), UnityEngine.Animator.StringToHash("Repair"), UnityEngine.Animator.StringToHash("Repair") };
 
         public void Begin()
         {
@@ -126,13 +128,20 @@ namespace PirateSlop.Ships
             if (Visual != null) Visual.gameObject.SetActive(false);
         }
 
-        public ShipMonkeyPose Capture() => new() { Position = position, Rotation = rotation, Motion = Motion, AnimationSpeed = animationSpeed, MotionTime = motionTime, Perched = perched, Looking = looking, LookPoint = lookPoint, Carrying = activityShip != null && HasCarriedItem, FishingPhase = fishingPhase, FishingTime = fishingTime, FishingPoint = fishingPoint, Sequence = ++sequence };
+        public ShipMonkeyPose Capture() => new() { Position = position + kickReactionOffset, Rotation = rotation, Motion = Motion, AnimationSpeed = animationSpeed, MotionTime = motionTime, Perched = perched, Looking = looking, LookPoint = lookPoint, Carrying = activityShip != null && HasCarriedItem, HoldingBat = DefenseTask, BatTarget = batTarget, FishingPhase = fishingPhase, FishingTime = fishingTime, FishingPoint = fishingPoint, Sequence = ++sequence };
 
         public void Simulate(float delta)
         {
             if (!initialized || Visual == null) return;
             perched = Surface == ShipMonkeySurface.Rail || Surface == ShipMonkeySurface.Prop;
             motionTime += delta * animationSpeed;
+            if (Time.time < kickReactionUntil)
+            {
+                kickReactionOffset = kickReactionDirection * Mathf.Sin(Mathf.Clamp01(1f - (kickReactionUntil - Time.time) / .25f) * Mathf.PI);
+                Show(position + kickReactionOffset, rotation, Motion, animationSpeed, motionTime);
+                return;
+            }
+            kickReactionOffset = Vector3.zero;
             UpdateRetaliation();
             if (UpdateJump(delta)) { Show(position, rotation, Motion, 1f, motionTime); return; }
             if (target < 0 && Nodes[current].Available) position = Point(current);
@@ -271,7 +280,7 @@ namespace PirateSlop.Ships
                 foreach (int edge in adjacent[nearest])
                 {
                     var link = Links[edge]; int next = link.A == nearest ? link.B : link.A;
-                    if (visited[next] || !Nodes[next].Available || !LinkAllowed(next)) continue;
+                    if (visited[next] || !Nodes[next].Available || !LinkAllowed(next) || !SlotLinkClear(nearest, next)) continue;
                     float candidate = best + Vector3.Distance(Point(nearest), Point(next));
                     if (candidate >= distance[next]) continue;
                     distance[next] = candidate; previous[next] = nearest; previousLink[next] = edge;
@@ -316,7 +325,7 @@ namespace PirateSlop.Ships
             path.Clear();
             for (int node = destination; node != current; node = previous[node]) path.Add(previousLink[node]);
             path.Reverse(); pathIndex = 0;
-            routeRunning = AidTask || attacker != null || task == TaskKind.None && UnityEngine.Random.value < RunChance && distance[destination] > 3f;
+            routeRunning = AidTask || DefenseTask || attacker != null || task == TaskKind.None && UnityEngine.Random.value < RunChance && distance[destination] > 3f;
             return path.Count > 0;
         }
 

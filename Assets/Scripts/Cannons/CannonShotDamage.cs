@@ -22,11 +22,31 @@ namespace PirateSlop
             if (player == null || health.IsDead) return;
             var shooter = Attacker != null ? Attacker.GetComponent<NetworkPlayer>() : null;
             if (shooter != null && shooter.TeamId.Value == player.TeamId.Value) return;
-            if (Ammo == InventoryItem.Cannonball)
-                player.KnockDown(velocity, 2.8f * (shooter != null && shooter.HasUpgrade(UpgradeEffect.HeavyCannonball) ? RoguelikeTuning.Current.knockdownMultiplier : 1f));
-            else player.PushByUpgrade(velocity);
+            player.KnockDown(velocity, 2.8f * (Ammo == InventoryItem.Cannonball && shooter != null && shooter.HasUpgrade(UpgradeEffect.HeavyCannonball) ? RoguelikeTuning.Current.knockdownMultiplier : 1f));
         }
         public float StandardBlastRadius = .8f, StandardBlastDamage = 30f;
+        public float StandardPushRadius = 3f;
+
+        Vector3 ImpactPushVelocity(CombatHealth health, Vector3 point)
+        {
+            Vector3 direction = Vector3.ProjectOnPlane(health.transform.position - point, Vector3.up);
+            if (direction.sqrMagnitude < .01f) direction = Vector3.ProjectOnPlane(Velocity, Vector3.up);
+            if (direction.sqrMagnitude < .01f) direction = Vector3.forward;
+            return direction.normalized * PlayerPushSpeed + Vector3.up * 8f;
+        }
+
+        void PushPlayersNearImpact(Vector3 point, float radius)
+        {
+            if (!Authoritative) return;
+            foreach (var health in CombatHealth.Active)
+            {
+                if (health == null || health.IsDead) continue;
+                var controller = health.GetComponent<CharacterController>();
+                Vector3 closest = controller != null && controller.enabled ? controller.bounds.ClosestPoint(point) : health.transform.position + Vector3.up * .9f;
+                if ((closest - point).sqrMagnitude > radius * radius) continue;
+                PushPlayer(health, ImpactPushVelocity(health, point));
+            }
+        }
         public float WorldRestitution = .55f, WorldTangentialRetention = .82f;
         public const float DefaultBoomerangDuration = 6f, DefaultBoomerangWidth = 16f, DefaultBoomerangHeight = 8f, DefaultBoomerangOutboundTime = 2f;
         public float BoomerangDuration = DefaultBoomerangDuration, BoomerangWidth = DefaultBoomerangWidth, BoomerangHeight = DefaultBoomerangHeight;
@@ -261,10 +281,9 @@ namespace PirateSlop
                     health.Damage(Ammo == InventoryItem.Cannonball ? StandardBlastDamage : PlayerDamage, Attacker);
                     if (Ammo == InventoryItem.FireCannonball) health.GetComponent<NetworkHealth>()?.Ignite(Attacker);
                     if (Ammo == InventoryItem.IceCannonball) health.GetComponent<NetworkHealth>()?.Extinguish();
-                    if (Ammo == InventoryItem.Cannonball || Ammo == InventoryItem.PushCannonball)
+                    if (Ammo == InventoryItem.PushCannonball)
                     {
-                        Vector3 direction = Vector3.ProjectOnPlane(health.transform.position - point, Vector3.up).normalized;
-                        PushPlayer(health, direction * PlayerPushSpeed + Vector3.up * 8f);
+                        PushPlayer(health, ImpactPushVelocity(health, point));
                     }
                 }
                 var harpoon = hit.GetComponentInParent<Harpoon.HarpoonGun>();
@@ -281,6 +300,7 @@ namespace PirateSlop
                     if (Ammo == InventoryItem.PushCannonball) ship.GetComponent<ShipController>()?.ApplyPushImpulse(point, Velocity);
                 }
             }
+            if (Ammo == InventoryItem.Cannonball) PushPlayersNearImpact(point, Mathf.Max(blastRadius, StandardPushRadius));
         }
 
         void BeginReturn(Vector3 point, Vector3 normal)
@@ -335,13 +355,13 @@ namespace PirateSlop
                         if (t != null && t != directTentacle) t.TakeDamage(StandardBlastDamage, Attacker);
                     }
                     if (health != null && damaged.Add(health)) health.Damage(StandardBlastDamage, Attacker);
+                    PushPlayersNearImpact(point, StandardPushRadius);
                 }
                 if (health != null)
                 {
                     if (Ammo == InventoryItem.IceCannonball) health.GetComponent<NetworkHealth>()?.Extinguish();
-                    if (Ammo == InventoryItem.Cannonball)
-                        PushPlayer(health, Vector3.ProjectOnPlane(Velocity, Vector3.up).normalized * PlayerPushSpeed + Vector3.up * 8f);
                     if (Ammo != InventoryItem.Cannonball) health.Damage(PlayerDamage, Attacker);
+                    if (Ammo == InventoryItem.PushCannonball) PushPlayer(health, ImpactPushVelocity(health, point));
                 }
             }
             if (Ammo != InventoryItem.BoomerangCannonball) { spent = true; Destroy(gameObject); }

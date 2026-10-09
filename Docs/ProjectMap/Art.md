@@ -601,6 +601,13 @@
 | --- | --- |
 | [Art/Blender/Ships/ShipV3/ShipV3_Fitted.blend](<../../Art/Blender/Ships/ShipV3/ShipV3_Fitted.blend>) | Редактируемая сцена Blender; Модели и Blender |
 
+## Art/Blender/SlotMachine
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/SlotMachine/Mystery.svg](<../../Art/Blender/SlotMachine/Mystery.svg>) | Файл .svg |
+| [Art/Blender/SlotMachine/SlotMachine.blend](<../../Art/Blender/SlotMachine/SlotMachine.blend>) | Редактируемая сцена Blender; Корабельная слот-машина |
+
 ## Art/Blender/Whale
 
 | Файл | Краткое описание |
@@ -637,8 +644,6 @@
 | [Art/Blender/World/CoastalEnvironment/CoastalEnvironment.blend](<../../Art/Blender/World/CoastalEnvironment/CoastalEnvironment.blend>) | Редактируемая сцена Blender; Мир, острова и океан |
 | [Art/Blender/World/CoastalEnvironment/CoastalSourceModuleQC.blend](<../../Art/Blender/World/CoastalEnvironment/CoastalSourceModuleQC.blend>) | Редактируемая сцена Blender; Мир, острова и океан |
 | [Art/Blender/World/CoastalEnvironment/CoastalTripoCollection.blend](<../../Art/Blender/World/CoastalEnvironment/CoastalTripoCollection.blend>) | Редактируемая сцена Blender; Мир, острова и океан |
-| [Art/Blender/World/CoastalEnvironment/CoastalTripo_PreRootedRevision_20261007_121449.blend](<../../Art/Blender/World/CoastalEnvironment/CoastalTripo_PreRootedRevision_20261007_121449.blend>) | Редактируемая сцена Blender |
-| [Art/Blender/World/CoastalEnvironment/CoastalTripo_PreShoulders_20261007_122843.blend](<../../Art/Blender/World/CoastalEnvironment/CoastalTripo_PreShoulders_20261007_122843.blend>) | Редактируемая сцена Blender |
 | [Art/Blender/World/CoastalEnvironment/README_TRIPO_ARCH.md](<../../Art/Blender/World/CoastalEnvironment/README_TRIPO_ARCH.md>) | Документация; Мир, острова и океан |
 | [Art/Blender/World/CoastalEnvironment/README_TRIPO_COLLECTION.md](<../../Art/Blender/World/CoastalEnvironment/README_TRIPO_COLLECTION.md>) | Документация; Мир, острова и океан |
 | [Art/Blender/World/CoastalEnvironment/SeaArch_Huge_A_CReview.blend](<../../Art/Blender/World/CoastalEnvironment/SeaArch_Huge_A_CReview.blend>) | Редактируемая сцена Blender; Мир, острова и океан |

@@ -12,6 +12,9 @@ namespace PirateSlop.Ships
         Vector3 jumpFrom, jumpTo;
         int jumpPhase;
         bool pouncing, returning;
+        bool retaliateAgainstEnemies;
+        float kickReactionUntil;
+        Vector3 kickReactionDirection, kickReactionOffset;
 
         Vector3 Point(int index)
         {
@@ -24,23 +27,47 @@ namespace PirateSlop.Ships
         {
             attacker = null; jumpPhase = 0; pouncing = returning = false;
             aggressionUntil = retaliationCooldown = 0f;
+            retaliateAgainstEnemies = false; kickReactionUntil = 0f; kickReactionOffset = Vector3.zero;
         }
 
-        public void ReceiveFirearmShot(GameObject shooter)
+        public void ReceiveFirearmShot(GameObject shooter) => BeginRetaliation(shooter, false);
+
+        public bool ReceiveKick(GameObject kicker, Vector3 direction)
+        {
+            var ship = GetComponentInParent<NetworkShip>();
+            var player = kicker != null ? kicker.GetComponent<NetworkPlayer>() : null;
+            if (!initialized || ship == null || !ship.IsServerInitialized || ship.IsSinking || player == null || player.Motor == null ||
+                player.Motor.IsDead || !player.IsSpawned || player.Eliminated.Value || !float.IsFinite(direction.sqrMagnitude) || direction.sqrMagnitude < .01f) return false;
+            BeginRetaliation(kicker, true);
+            if (jumpPhase == 0)
+            {
+                Vector3 offset = Vector3.ProjectOnPlane(direction, transform.up).normalized * .22f;
+                Vector3 from = transform.TransformPoint(position) + transform.up * .35f;
+                if (ClearJump(from, from + offset, kicker.transform))
+                {
+                    kickReactionDirection = transform.InverseTransformDirection(offset);
+                    kickReactionUntil = Time.time + .25f;
+                }
+            }
+            return true;
+        }
+
+        void BeginRetaliation(GameObject shooter, bool allowEnemies)
         {
             var ship = GetComponentInParent<NetworkShip>();
             var player = shooter != null ? shooter.GetComponent<NetworkPlayer>() : null;
             if (!initialized || ship == null || !ship.IsServerInitialized || ship.IsSinking || player == null || !player.IsSpawned || player.Motor == null || player.Motor.IsDead || player.Motor.IsDowned || player.Eliminated.Value) return;
-            if (ship.TeamId.Value <= 0 || player.TeamId.Value != ship.TeamId.Value || Time.time < retaliationCooldown || attacker != null || jumpPhase != 0) return;
+            if (ship.TeamId.Value <= 0 || (!allowEnemies && player.TeamId.Value != ship.TeamId.Value) || Time.time < retaliationCooldown || attacker != null || jumpPhase != 0) return;
             CancelActivities();
             attacker = player; aggressionUntil = Time.time + 45f; retaliationCooldown = Time.time + 6f;
+            retaliateAgainstEnemies = allowEnemies;
             wantsRest = false; restTime = 0f; pause = 0f; routeRunning = true;
             if (Motion == ShipMonkeyMotion.Sit || Motion == ShipMonkeyMotion.SitDown) SetMotion(ShipMonkeyMotion.StandUp);
             if (target < 0) path.Clear();
             else if (path.Count > pathIndex + 1) path.RemoveRange(pathIndex + 1, path.Count - pathIndex - 1);
         }
 
-        bool Attackable() => attacker != null && attacker.IsSpawned && !attacker.Eliminated.Value && attacker.Motor != null && !attacker.Motor.IsDead && !attacker.Motor.IsDowned && attacker.TeamId.Value == GetComponentInParent<NetworkShip>().TeamId.Value && Time.time < aggressionUntil;
+        bool Attackable() => attacker != null && attacker.IsSpawned && !attacker.Eliminated.Value && attacker.Motor != null && !attacker.Motor.IsDead && !attacker.Motor.IsDowned && (retaliateAgainstEnemies || attacker.TeamId.Value == GetComponentInParent<NetworkShip>().TeamId.Value) && Time.time < aggressionUntil;
 
         bool ClearJump(Vector3 from, Vector3 to, Transform ignore = null)
         {

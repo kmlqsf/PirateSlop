@@ -38,6 +38,14 @@ namespace PirateSlop
             velocity += Quaternion.Euler(0, Random.Range(-8f,8f),0) * backward * Random.Range(RecoilSpeed*.85f, RecoilSpeed*1.15f);
             spin += Random.Range(-16f,16f);
         }
+        public bool Kick(Vector3 direction)
+        {
+            if (!movable || ship == null || cannon.Network == null || !cannon.Network.IsServerInitialized) return false;
+            var local = Vector3.ProjectOnPlane(ship.InverseTransformDirection(direction), Vector3.up);
+            if (local.sqrMagnitude < .01f) return false;
+            velocity += local.normalized * .52f;
+            return true;
+        }
         static readonly Vector3[] Corners = new[]
         {
             new Vector3(-.62f, 0, -.72f),

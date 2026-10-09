@@ -16,6 +16,9 @@
 | [Docs/RoguelikeEffects.md](<../RoguelikeEffects.md>) | Документация; Улучшения рогалика из сундуков |
 | [Docs/RoguelikeMechanic.md](<../RoguelikeMechanic.md>) | Документация; Улучшения рогалика из сундуков |
 | [Docs/RoguelikeUIStyle.md](<../RoguelikeUIStyle.md>) | Документация; Улучшения рогалика из сундуков |
+| [Docs/ShipSlotMachine.md](<../ShipSlotMachine.md>) | Документация; Корабельная обезьянка, Корабельная слот-машина |
+| [Docs/SlotMachineAudio.json](<../SlotMachineAudio.json>) | Конфигурация / данные JSON; Корабельная слот-машина |
+| [Docs/SlotMachineReelArt.md](<../SlotMachineReelArt.md>) | Документация; Корабельная слот-машина |
 | [Docs/StormRain.md](<../StormRain.md>) | Документация; Шторм, зона, дождь и объёмный туман, Тестовая карта и водоворот |
 | [Docs/TestOcean.md](<../TestOcean.md>) | Документация; Мир, острова и океан, Тестовая карта и водоворот |
 | [Docs/TestSkyDayNight.md](<../TestSkyDayNight.md>) | Документация; Шторм, зона, дождь и объёмный туман, Тестовая карта и водоворот |

@@ -127,6 +127,7 @@ namespace PirateSlop.EditorTools
             monkey.RodModel = fishing.RodModel; monkey.FloatModel = fishing.FloatModel; monkey.FishModel = fishing.FishModel;
             monkey.FishingLineMaterial = fishing.LineMaterial; monkey.FishPrefab = fishing.FishPrefab;
             monkey.MalletModel = playerPrefab.GetComponent<Networking.NetworkHullRepair>().MalletModel;
+            monkey.BatModel = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Creatures/MonkeyBat.prefab");
             monkey.BiteDelay = fishing.BiteDelay; monkey.ReelDuration = fishing.ReelDuration;
             monkey.HeadForward = monkey.Head.InverseTransformDirection(monkey.Visual.forward);
             monkey.HeadUp = monkey.Head.InverseTransformDirection(monkey.Visual.up);

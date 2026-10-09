@@ -74,6 +74,8 @@ namespace PirateSlop.Networking
             if (IsServerInitialized) TickFishing();
             UpdateChewing();
             if (!IsOwner || !motor.InputActive || !Available) return;
+            var slotInput = GetComponent<PirateSlop.Ships.ShipSlotMachinePlayer>();
+            if (slotInput != null && slotInput.ConsumedInput) return;
             var mouse = Mouse.current; var keys = Keyboard.current;
             if (mouse == null || keys == null) return;
             if (IsEating) return;
@@ -340,7 +342,7 @@ namespace PirateSlop.Networking
             Transform anchor = first ? motor.PlayerCamera.transform : transform;
             var hand = anchor.TransformPoint(first ? new Vector3(.28f, -.3f, .55f) : new Vector3(.35f, 1.15f, .45f));
             rod.SetActive(inventory.RodSelected && !CarryingCatch && !HasFish && (Available || motor.SailPullLocked && !motor.IsDead) && !inventory.ControlItemHidden);
-            fish.SetActive(HasFish && !CarryingCatch && !motor.IsDead);
+            fish.SetActive(HasFish && !CarryingCatch && !motor.IsDead && GetComponent<PirateSlop.Ships.ShipSlotMachinePlayer>()?.IsHolding != true);
             rod.transform.SetPositionAndRotation(hand, anchor.rotation * Quaternion.Euler(stage.Value == 3 ? -18f + Mathf.Sin(Time.time * 24f) * 5f : stage.Value == 4 ? -15f + Mathf.Sin(Time.time * 18f) * 2f : -12f, -8f, 0));
             rodBend.SetBend(stage.Value == 3 ? .12f + Mathf.Sin(Time.time * 24f) * .07f : stage.Value == 4 ? .1f + Mathf.Sin(Time.time * 18f) * .025f : 0f);
             fish.transform.SetPositionAndRotation(hand, anchor.rotation * Quaternion.Euler(0, 90, Mathf.Sin(Time.time * 9f) * 4f));

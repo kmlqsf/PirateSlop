@@ -127,8 +127,10 @@ namespace PirateSlop.Networking
                     SoundObserversRpc(SoundCue.SwordfishStick, nearest.point, false);
                     return;
                 }
-                pickup.Place(null, nearest.point + nearest.normal * .15f, transform.rotation);
-                velocity = Vector3.Reflect(velocity, nearest.normal) * PufferBounce;
+                Vector3 normal = nearest.normal.sqrMagnitude > .001f ? nearest.normal.normalized : -delta.normalized;
+                Vector3 contact = transform.position + delta.normalized * Mathf.Max(0f, nearest.distance - .005f);
+                pickup.Place(null, contact + normal * .015f, transform.rotation);
+                velocity = Vector3.Reflect(velocity, normal) * PufferBounce;
             }
             else pickup.Place(null, transform.position + delta, Quaternion.LookRotation(velocity));
             var ocean = OceanSurface.Instance;

@@ -21,13 +21,14 @@
 | [Assets/Resources/CombatParticles.mat](<../../Assets/Resources/CombatParticles.mat>) | Материал Unity |
 | [Assets/Resources/FirearmGlow.mat](<../../Assets/Resources/FirearmGlow.mat>) | Материал Unity |
 | [Assets/Resources/FirearmGlow.shader](<../../Assets/Resources/FirearmGlow.shader>) | Шейдер |
-| [Assets/Resources/GameAudioBank.asset](<../../Assets/Resources/GameAudioBank.asset>) | Настройки или данные Unity; Чайки и фоновые стаи, Звуки и голос, Шторм, зона, дождь и объёмный туман |
+| [Assets/Resources/GameAudioBank.asset](<../../Assets/Resources/GameAudioBank.asset>) | Настройки или данные Unity; Чайки и фоновые стаи, Звуки и голос, Шторм, зона, дождь и объёмный туман, Корабельная слот-машина |
 | [Assets/Resources/GeneratedGameVersion.txt](<../../Assets/Resources/GeneratedGameVersion.txt>) | Текстовые данные |
 | [Assets/Resources/GrappleHookModel.prefab](<../../Assets/Resources/GrappleHookModel.prefab>) | Префаб Unity |
 | [Assets/Resources/HarpoonGun.prefab](<../../Assets/Resources/HarpoonGun.prefab>) | Префаб Unity |
 | [Assets/Resources/HelmCenterMark.mat](<../../Assets/Resources/HelmCenterMark.mat>) | Материал Unity |
 | [Assets/Resources/HookRope.mat](<../../Assets/Resources/HookRope.mat>) | Материал Unity |
 | [Assets/Resources/HudIcon.shader](<../../Assets/Resources/HudIcon.shader>) | Шейдер |
+| [Assets/Resources/KickLeg.asset](<../../Assets/Resources/KickLeg.asset>) | Настройки или данные Unity; Персонаж, камера и анимации |
 | [Assets/Resources/KrakenEncounter.prefab](<../../Assets/Resources/KrakenEncounter.prefab>) | Префаб Unity |
 | [Assets/Resources/KrakenTentacle.prefab](<../../Assets/Resources/KrakenTentacle.prefab>) | Префаб Unity |
 | [Assets/Resources/LootEventBeam.shader](<../../Assets/Resources/LootEventBeam.shader>) | Шейдер; Предметы, лут и инвентарь |
@@ -101,7 +102,7 @@
 | [Assets/Resources/Ships/ShipV3HarpoonPort.prefab](<../../Assets/Resources/Ships/ShipV3HarpoonPort.prefab>) | Префаб Unity; Гарпун и корабельное крепление |
 | [Assets/Resources/Ships/ShipV3HarpoonStarboard.prefab](<../../Assets/Resources/Ships/ShipV3HarpoonStarboard.prefab>) | Префаб Unity; Гарпун и корабельное крепление |
 | [Assets/Resources/Ships/ShipV3Menu.prefab](<../../Assets/Resources/Ships/ShipV3Menu.prefab>) | Префаб Unity; Паруса и канаты, Меню и HUD |
-| [Assets/Resources/Ships/ShipV3Test.prefab](<../../Assets/Resources/Ships/ShipV3Test.prefab>) | Префаб Unity; Проект и точки входа, Движение корабля и палуба, Предметы, лут и инвентарь, Тестовая карта и водоворот, Корабельная обезьянка |
+| [Assets/Resources/Ships/ShipV3Test.prefab](<../../Assets/Resources/Ships/ShipV3Test.prefab>) | Префаб Unity; Проект и точки входа, Движение корабля и палуба, Предметы, лут и инвентарь, Тестовая карта и водоворот, Корабельная обезьянка, Корабельная слот-машина |
 
 ## Assets/Resources/Storm
 

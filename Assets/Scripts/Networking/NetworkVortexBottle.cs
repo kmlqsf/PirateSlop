@@ -38,29 +38,10 @@ namespace PirateSlop.Networking
             while (remaining > .00001f)
             {
                 float dt = Mathf.Min(.02f, remaining);
-                velocity += Physics.gravity * dt;
-                Vector3 delta = velocity * dt;
-                float distance = delta.magnitude;
-                RaycastHit nearest = default;
-                foreach (var hit in Physics.SphereCastAll(transform.position, .12f, delta.normalized, distance, ~0, QueryTriggerInteraction.Collide))
+                Vector3 point = transform.position;
+                if (NetworkFogBottle.Advance(source != null ? source.transform : null, transform, ref point, ref velocity, dt, out bool water, out var collider))
                 {
-                    if (!PlayerHitbox.IsTarget(hit.collider) || hit.transform.IsChildOf(transform)) continue;
-                    if (source != null && hit.transform.IsChildOf(source.transform)) continue;
-                    if (hit.collider.gameObject.layer == LayerMask.NameToLayer("ShipDebris")) continue;
-                    if (hit.distance <= distance) { nearest = hit; distance = hit.distance; }
-                }
-                if (nearest.collider != null)
-                {
-                    var ship = nearest.collider.GetComponentInParent<NetworkShip>();
-                    Break(nearest.point, false, ship);
-                    return;
-                }
-                Vector3 point = transform.position + delta;
-                var ocean = OceanSurface.Instance;
-                if (ocean != null && point.y <= ocean.Height(point))
-                {
-                    point.y = ocean.Height(point);
-                    Break(point, true);
+                    Break(point, water, collider != null ? collider.GetComponentInParent<NetworkShip>() : null);
                     return;
                 }
                 pickup.Place(null, point, transform.rotation * Quaternion.Euler(450f * dt, 100f * dt, 0f));

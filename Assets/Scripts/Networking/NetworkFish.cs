@@ -48,11 +48,12 @@ namespace PirateSlop.Networking
         NetworkFishProjectile projectile;
         void OnDisable()
         {
+            kicked = false;
             visualReady = false;
             motionStarted = -1f;
             RestoreBodyMotion();
         }
-        public bool Available => IsSpawned && !taken && !diving.Value && !(GetComponent<NetworkFishProjectile>()?.Flying ?? false) && !(GetComponent<NetworkHolyGrenade>()?.Busy ?? false) && !(GetComponent<NetworkVortexBottle>()?.Flying ?? false) && !(GetComponent<NetworkFogBottle>()?.Flying ?? false);
+        public bool Available => IsSpawned && !taken && !diving.Value && !(GetComponent<SlotPrizeFlight>()?.Flying ?? false) && !(GetComponent<NetworkFishProjectile>()?.Flying ?? false) && !(GetComponent<NetworkHolyGrenade>()?.Busy ?? false) && !(GetComponent<NetworkVortexBottle>()?.Flying ?? false) && !(GetComponent<NetworkFogBottle>()?.Flying ?? false);
         float expires;
         float nextFlop;
         bool airborne;
@@ -108,7 +109,8 @@ namespace PirateSlop.Networking
             visualReady = true; visualSupport = support; visualPlatformId = platformId.Value;
             transform.SetPositionAndRotation(support != null ? support.TransformPoint(visualPosition) : visualPosition,
                 support != null ? support.rotation * visualRotation : visualRotation);
-            if (IsServerInitialized && LivingFish) SimulateFlop(Time.deltaTime);
+            if (IsServerInitialized && kicked) SimulateKick(Time.deltaTime);
+            else if (IsServerInitialized && LivingFish) SimulateFlop(Time.deltaTime);
             if (IsSpawned && IsClientInitialized && LivingFish) AnimateBody();
             if (IsServerInitialized && IsSpawned && Time.time > expires) ServerManager.Despawn(NetworkObject);
         }

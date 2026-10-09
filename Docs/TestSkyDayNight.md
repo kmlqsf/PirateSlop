@@ -69,4 +69,9 @@ BoatAttack MeshSurface использует bounded serial Burst subdivision с 
 
 Реальные артефакты в Captures/VfxSkyWaterReview20261007: billow6-far-qhd.png, final6-outside-lookback.png, final6-outside-away.png, final8-inwall-deck.png. Final8: обе вспышки 0, near mode 1, R4000, открытая камера над реальной палубой. Динамика записана после endCameraRendering с actual timestamps: final10-motion.csv и final11-motion.csv, изображения 960×540. Shrink: final-shrink.csv. GPU A/B/A: final8-local-performance.csv. Сборка и Player FPS не проверялись; исторический Mono AV не объявлен исправленным. Временные камеры, параметры профайлера и GameView восстановлены, исходная dirty-сцена не сохранялась.
 
+Указанные материалы Captures — локальные архивы проверки, не входят в Git и недоступны в копии другого разработчика.
+
 Итоговая приёмка [APPROVED]: фактически просмотрены принятые ракурсы, молнии и итоговый медленный вход final11; отдельный same-condition GPU A/B/A сохранён. Краткий отчёт и границы измерения: Captures/VfxSkyWaterReview20261007/FINAL-REVIEW.md.
+
+
+Указанные материалы Captures — локальные архивы проверки, не входят в Git и недоступны в копии другого разработчика.

@@ -32,6 +32,8 @@ namespace PirateSlop.Ships
         void Update()
         {
             if (!player.IsOwner) return;
+            var slotInteraction = GetComponent<ShipSlotMachinePlayer>();
+            if (slotInteraction != null && (slotInteraction.IsHolding || slotInteraction.ConsumedInput)) return;
             if (motor.ShipActivityLocked && held == null && diceShip == null) Release();
             var mouse = Mouse.current;
             var keys = Keyboard.current;
