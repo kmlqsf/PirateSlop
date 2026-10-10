@@ -51,6 +51,9 @@ namespace PirateSlop.Editor
                 compute.SetVectorArray("_WaveA", a); compute.SetVectorArray("_WaveB", b);
                 compute.Dispatch(height, 16, 16, 1);
                 material.SetTexture("_StormSmokeNoise", noise);
+                var visibilityRange = StormVolumeRendererFeature.TestSmokeVisibilityRange(fov);
+                visibilityRange.z = 1f;
+                material.SetVector("_StormSmokeVisibilityRange", visibilityRange);
                 material.SetTexture("_StormSmokeWaterHeight", water);
                 material.SetVector("_StormSmokeWaterPatch", patch);
                 material.SetVector("_StormTestSmokeMap", new Vector4(0, 0, 4000, time));

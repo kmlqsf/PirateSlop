@@ -1,6 +1,6 @@
 # PirateSlop — карта проекта
 
-Снимок файлов: 2026-10-10. Корень: `C:\Users\K\Project`.
+Снимок файлов: 2026-10-11. Корень: `C:\Users\K\Project`.
 
 ## Как пользоваться
 
@@ -12,7 +12,7 @@
 
 ## Полный каталог
 
-Учтено 9651 файлов без `.meta`. Ещё 9549 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
+Учтено 9652 файлов без `.meta`. Ещё 9550 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
 
 | Раздел | Назначение | Файлов |
 | --- | --- | ---: |
@@ -31,7 +31,7 @@
 | [Assets/JMO Assets](<Docs/ProjectMap/Assets-JMO Assets.md>) | Ресурсы раздела; точный состав — в каталоге | 18 |
 | [Assets/Materials](<Docs/ProjectMap/Assets-Materials.md>) | Материалы | 134 |
 | [Assets/Mirza](<Docs/ProjectMap/Assets-Mirza.md>) | Ресурсы раздела; точный состав — в каталоге | 1 |
-| [Assets/Models](<Docs/ProjectMap/Assets-Models.md>) | Модели и связанные ресурсы | 6549 |
+| [Assets/Models](<Docs/ProjectMap/Assets-Models.md>) | Модели и связанные ресурсы | 6550 |
 | [Assets/Plugins](<Docs/ProjectMap/Assets-Plugins.md>) | Плагины | 5 |
 | [Assets/Prefabs](<Docs/ProjectMap/Assets-Prefabs.md>) | Готовые игровые объекты | 120 |
 | [Assets/Resources](<Docs/ProjectMap/Assets-Resources.md>) | Ресурсы, доступные для загрузки по имени | 98 |
@@ -262,6 +262,7 @@ ShipBilgeWater создаёт отдельную поверхность без �
 
 Ключевые слова: паруса, парус, канаты, rigging.
 
+2026-10-11: ShipV3VisualRig подключает ShipV3ClothMotion ко всем парусам. Три формы ShipWind добавляются без удаления складывания; крепления неподвижны, волны и нормали ткани меняются после визуального рига, амплитуда зависит от фактического раскрытия и порывов. Флаги колышутся сильнее, стойки не меняются. SailCustomizer убирает бежевый множитель исходной ткани, Sail.shader сохраняет выбранный оттенок фона, используя нейтральную AO и яркость освещения. Игровая проверка пользователем.
 Разделять управление натяжением и визуальную геометрию канатов. Изменение модели не должно менять сетевую занятость.
 Настройка канатов и обновление их арта — отдельные редакторские операции; перед повторным запуском изучить соответствующий setup.
 У четырёх маршрутов Ship V3 к гнёздам включён ShipLadder.BothSides: AdvancedPlayerController выбирает смещение и направление взгляда по стороне захвата. У боковых сеток PinTop вершины смещаются вместе с весом по высоте, сохраняя верхнее крепление; деформация вдоль нормалей, раздувавшая сетку, убрана.
@@ -300,6 +301,7 @@ Ship V3: RopeTubeVisual восстанавливает постоянное кр
 
 Ключевые слова: пушки, пушка, cannon, ядра, мортира.
 
+2026-10-11: NetworkShipAmmo снимает просроченный пожар до повреждения фрагмента и помечает сгорание выполненным до вызова разрушения. Ошибка одной секции снимает её огонь и сохраняет однократный стек, остальные очаги продолжают обрабатываться; обход устойчив к изменению коллекции. ShipDestruction.Fire исключает удалённые/пустые поверхности. OnStopNetwork сначала отключает сетевые тики и очищает пожар; точного стека пользовательской ошибки в логах нет, повторный матч и огненные ядра требуют ручной проверки.
 Проверять серверные условия выстрела, загрузки и занятости; локальные эффекты не подтверждают сетевой выстрел.
 Для движения ядра и лафета учитывать движение корабля. Баланс брать из текущих полей и ассетов, а не старых записей.
 ShipSpyglassView показывает прогноз траекторий пушек своего корабля через стационарную и ручную подзорные трубы, обновляет каждые 0.2 с и скрывает линии при выходе.
@@ -420,6 +422,7 @@ ShipDeckPassenger учитывает BoardingWalkSurface: перенос по т
 
 Ключевые слова: оружие, пистолет, бой, combat, мортира, hand-mortar, взрывное ядро, explosive-ball.
 
+2026-10-11: смерть запускает синхронизированный серверный таймер на 25 с, затем бесплатное возрождение на домашнем корабле независимо от рома. HUD показывает оставшееся время полосой и подсказку о трёх звонках за один ром. Специальное раннее возрождение SeaPact сохранено; любой возврат блокируется при затоплении/выбывании. Разработческий манекен без домашнего корабля автоматически не возвращается.
 Разделять локальный отклик оружия и серверное подтверждение урона/расхода боеприпасов.
 Настройки оружия искать через FirearmDefinition и используемые ссылки; не копировать числовой баланс из истории.
 PistolBullet создаёт мини-дым CannonSmokeTrail по фактическому движению визуальной пули для пистолета, мушкета и каждой дробины двустволки, включая предсказанные и удалённые выстрелы. Масштаб 0.3, шаг 0.12 м, затухание 3.3 с; дым сохраняется при попадании и повторном использовании пула трассеров.
@@ -499,6 +502,7 @@ ExplosiveBall=28: отдельное ручное взрывное ядро из
 - [Assets/Prefabs/Networking/ExplosiveBallProjectile.prefab](<Assets/Prefabs/Networking/ExplosiveBallProjectile.prefab>) — Префаб Unity.
 - [Art/Blender/ExplosiveBall/ExplosiveBall.blend](<Art/Blender/ExplosiveBall/ExplosiveBall.blend>) — Редактируемая сцена Blender.
 - [Assets/UI/Inventory/ExplosiveBall.png](<Assets/UI/Inventory/ExplosiveBall.png>) — Изображение / текстура.
+- [Assets/Scripts/UI/PlayerHud.cs](<Assets/Scripts/UI/PlayerHud.cs>) — Исходник C#: PlayerHud.
 - [firearm-foundation.md](<firearm-foundation.md>) — Документация.
 - [combat-balance.md](<combat-balance.md>) — Документация.
 - [Art/Blender/Firearms/README.md](<Art/Blender/Firearms/README.md>) — Документация.
@@ -508,6 +512,7 @@ ExplosiveBall=28: отдельное ручное взрывное ядро из
 
 Ключевые слова: лут, предметы, инвентарь, inventory.
 
+2026-10-11: Plank доступен для подбора, сундуков, выкладки и обмена, максимум пять досок в одном стеке. ChestLoot.json: вес 20, количество 2–5; валидатор допускает Plank. На основном ShipV3Test пять Loot_Plank_1..5 в ExperimentalShipEquipment с обычным восполнением. NetworkPlayer.DropPrefabs[6] и DefaultLoot.LoosePrefabs[6] ссылаются на зарегистрированный DroppedPlank1.
 Подбор и расход предметов подтверждает сервер. Сверять идентификаторы предметов, иконки и каталог. Одинаковые предметы складываются в стак без игрового лимита количества; ядра сохраняют отдельный слот на 2 ядра одного типа. NetworkWeapon.stackCounts хранит количество оружия/снаряжения; рыба и ром используют прежние счётчики без лимитов 20/6. Расход, сброс, установка пушек и TransferInventoryTo сохраняют остаток стака. DeveloperMenu содержит ползунок скорости корабля 100–500%: команда 20 применяет к текущему кораблю под игроком либо его собственному. Сервер меняет NetworkShip.DeveloperSpeedMultiplier (SyncVar); ShipController масштабирует максимальную скорость и разгон/торможение, сохраняя ограничения якоря, повреждений, затопления и буксировки. DeveloperMenu содержит выпадающий список пяти морских ивентов и спаун перед текущим/собственным кораблём через команду 23 NetworkDeveloperTools. Сервер проверяет свободную воду, наполняет сундук из ChestLoot.json и учитывает его при удалении тестовых объектов. Надписи морских лутовых ивентов скрыты по умолчанию; локальный переключатель DeveloperMenu показывает все доступные клиенту ивенты без ограничения расстояния. Чит-окно F8 разделено на вкладки Игрок, Лут, Корабль и Мир; выдача предметов, все улучшения и морские ивенты выбираются компактными выпадающими списками с текстовым поиском. Каталог улучшений кэшируется при первом открытии окна. Команда 21 создаёт наполненный сундук в 3 м перед игроком на свободной земле или палубе, закрепляя его на корабле; команда 22 выдаёт выбранное улучшение через серверное состояние и штатные эффекты, без расходования очков и повторной выдачи уже полученного. Оба спауна учитывают лимит и удаление тестовых объектов. Команда 19 оставлена переключателю кракена.
 NetworkWeapon имеет отдельные partial-файлы; для морского лута начать с NetworkWeapon.SeaLoot.cs.
 Состав сундуков и число разных типов (до 10) задаёт Assets/StreamingAssets/Loot/ChestLoot.json; любой новый лут сундуков обязательно подключать туда. Сервер перечитывает таблицу при наполнении; инструкция рядом в ChestLoot.README.md.
@@ -643,6 +648,7 @@ FogBottle/VortexBottle: удержание ЛКМ показывает штат�
 - [Assets/Models/Barricade/Barricade.mat](<Assets/Models/Barricade/Barricade.mat>) — Материал Unity.
 - [Assets/Scripts/Networking/NetworkEquipment.BottleAim.cs](<Assets/Scripts/Networking/NetworkEquipment.BottleAim.cs>) — Исходник C#: NetworkEquipment.
 - [Assets/Scripts/Networking/NetworkFish.Kick.cs](<Assets/Scripts/Networking/NetworkFish.Kick.cs>) — Исходник C#: NetworkFish.
+- [Assets/Prefabs/Repair/DroppedPlank1.prefab](<Assets/Prefabs/Repair/DroppedPlank1.prefab>) — Префаб Unity.
 - [rum-loot.md](<rum-loot.md>) — Документация.
 - [combat-balance.md](<combat-balance.md>) — Документация.
 - [Art/Blender/LootReplacement/README.md](<Art/Blender/LootReplacement/README.md>) — Документация.
@@ -651,6 +657,7 @@ FogBottle/VortexBottle: удержание ЛКМ показывает штат�
 
 Ключевые слова: ремонт, repairing, разрушение, затопление, damage.
 
+2026-10-11: киянка игрока восстанавливает строго один фрагмент за три удара; ремонт у основания мачты также возвращает один фрагмент за три удара. Доска закрывает один фрагмент за непрерывное удержание ЛКМ 0.8 с, расходуется только при успешном серверном ремонте. Смена цели/слота, отпускание, смерть или потеря доступа сбрасывают удержание. Общая подсветка повреждений; вокруг прицела заполняется золотистое кольцо с латунной окантовкой. HullRepairPlank.asset создан в Unity: фаски, лёгкая неровность и материал древесины Ship V3; SM_RepairPlank_1/DroppedPlank1 сохраняют GUID, хват двумя руками.
 Текущая точка входа ремонта — NetworkHullRepair, а не старый путь Scripts/Repair/ShipRepair.cs.
 Урон, ремонт фрагментов и затопление связаны с секциями корабля. Старое описание накладных досок не считать актуальной архитектурой.
 ShipV3Destruction использует подготовленный граф опор V18 и собственный профиль OrdinaryCannonballsOnly. Разрушение игрового Ship V3 работает от обычных ядер, ремонт использует существующую систему. Профиль архивного старого корабля не менялся.
@@ -687,6 +694,11 @@ PlanFire: минимум 16, максимум 64 очага на выстрел,
 - [Assets/Models/ShipV3/MastChips/V3_Mast_Fore.asset](<Assets/Models/ShipV3/MastChips/V3_Mast_Fore.asset>) — Настройки или данные Unity.
 - [Assets/Models/ShipV3/MastChips/V3_Mast_Main.asset](<Assets/Models/ShipV3/MastChips/V3_Mast_Main.asset>) — Настройки или данные Unity.
 - [Assets/Models/ShipV3/MastChips/V3_Mast_Mizzen.asset](<Assets/Models/ShipV3/MastChips/V3_Mast_Mizzen.asset>) — Настройки или данные Unity.
+- [Assets/Models/Repair/HullRepairPlank.asset](<Assets/Models/Repair/HullRepairPlank.asset>) — Настройки или данные Unity.
+- [Assets/Prefabs/Repair/SM_RepairPlank_1.prefab](<Assets/Prefabs/Repair/SM_RepairPlank_1.prefab>) — Префаб Unity.
+- [Assets/Prefabs/Repair/DroppedPlank1.prefab](<Assets/Prefabs/Repair/DroppedPlank1.prefab>) — Префаб Unity.
+- [Assets/Scripts/Player/WeaponArmRig.cs](<Assets/Scripts/Player/WeaponArmRig.cs>) — Исходник C#: WeaponArmRig, Arm.
+- [Assets/Scripts/UI/PirateHudStyle.cs](<Assets/Scripts/UI/PirateHudStyle.cs>) — Исходник C#: PirateHudStyle.
 - [ship-destruction.md](<ship-destruction.md>) — Документация.
 - [unity.md](<unity.md>) — Документация.
 
@@ -947,11 +959,12 @@ CoastalSandSetup.Apply создаёт в12каменных префабах от
 
 Ключевые слова: сеть, мультиплеер, steam, network.
 
+2026-10-11: весь экипаж может быть мёртв без поражения и без запуска затопления. BeginSinking разрешён только при уровне воды 100%; живой экипаж защищён от урона до серверного выбывания через 2–2.5 с после начала затопления, затем принудительно погибает и получает сообщение о поражении. Оба пути колокола используют общий NetworkShip.RingForRescue: три звонка своей команды возвращают одного игрока за один ром. ProtocolVersion144 из-за нового SyncVar таймера и RPC удержания доски; компиляция проверяется отдельно, игровые проверки выполняет пользователь.
 FishNet: серверный авторитет. Изменения формата сообщений согласовывать с ProtocolVersion; не повышать его автоматически без изменения протокола.
 IP/Tugboat и Steam — отдельные способы подключения. localhost не подтверждает работу через интернет; позднее подключение и отключение требуют отдельной приёмки.
 MultiplayerSceneSetup.Configure и PromoteShipV3 привязывают ShipV3Test к общему SessionController.ShipPrefab. Отдельный вызов ShipV3TestSpawner из ServerState удалён. ShipComparisonEnabled выключен, ComparisonShips очищен; старый корабль сохранён в проекте и регистрации FishNet без изменения существующих индексов.
 Кастомизация Ship V3 и сетевое горение: ProtocolVersion=123; игровая проверка и проверка двумя клиентами не запускались.
-Меню оставляет основную Тестовую карту и Тест нагрузки. Begin(environmentTest=true) всегда загружает NetworkOcean через SessionSceneLoading; командный -environmenttest запускает тот же режим. Build Windows/Configure Scenes используют NetworkMenu, NetworkOcean, NetworkLoadTest и дополнительные включённые сцены. SteamTestBuild только записывает steam_appid.txt после Windows-сборки. RuntimePipelineBuildPreparation запускается перед встроенными build callbacks (int.MinValue) и сбрасывает CoreBuildData.Dispose: временный MenuShipPipeline может остаться в кэше URP после Destroy и вызвать MissingReferenceException в URPPreprocessBuild.LogIncludedAssets. Настройки рендера и пакеты Unity не меняются.
+Меню оставляет основную Тестовую карту и Тест нагрузки. Begin(environmentTest=true) всегда загружает NetworkOcean через SessionSceneLoading; командный -environmenttest запускает тот же режим. Build Windows/Configure Scenes используют NetworkMenu, NetworkOcean и дополнительные включённые сцены из EditorBuildSettings; NetworkLoadTest не добавляется автоматически. Build Windows сохраняет кэш сборки с Development/StrictMode. Build Windows Clean добавляет CleanBuildCache, Build Windows Diagnostics — DetailedBuildReport без очистки кэша. Все три команды используют общий BuildWindows и одинаковый путь Builds/Windows/PirateSlop.exe; время и пять самых долгих этапов верхнего уровня записываются в Temp/multiplayer-build-result.txt и Console. SteamTestBuild только записывает steam_appid.txt после Windows-сборки. RuntimePipelineBuildPreparation запускается перед встроенными build callbacks (int.MinValue) и сбрасывает CoreBuildData.Dispose: временный MenuShipPipeline может остаться в кэше URP после Destroy и вызвать MissingReferenceException в URPPreprocessBuild.LogIncludedAssets. Настройки рендера и пакеты Unity не меняются.
 2026-10-09 исправлен запуск после ArgumentException Instantiate(null) в SessionCrew.TrySpawnShip: Unity импортировал исправный ShipV3Test.prefab как DefaultAsset. Принудительный нативный повторный импорт восстановил GameObject с тем же GUID; в открытой несохранённой сцене восстановлено только поле ShipPrefab без сохранения чужих изменений. SessionController.Awake и Begin восстанавливают пустую ссылку из Resources/Ships/ShipV3Test; при неудаче Begin показывает ошибку до подключения. Фактический запуск тестовой карты с намеренно пустой runtime-ссылкой восстановил корабль и создал одного игрока без ошибок.
 2026-10-10 ProtocolVersion141: SessionCombatRules хранит серверный FriendlyFireEnabled, транслирует CombatRulesMessage всем клиентам и новым участникам; при закрытии/старте сессии выключен. F8→Игрок→Бой, команда31, общий переключатель дружественного огня. CombatHealth и поджог/толчок ядром разрешают урон союзникам при включении; ShipDestruction принимает попадания своего игрока/команды, CannonShotDamage перестаёт исключать весь Source-корабль, сохраняя исключение выпустившей пушки. Серверные ограничения существующего DeveloperCommand сохранены.
 2026-10-10: Steam-лобби до 30 игроков: доска 10 экипажей по 3 места, переходы до старта, имена/хост/своя команда/готовность, приглашения Steam и ID лобби. Владелец лобби подтверждает запросы и ограничивает экипаж тремя участниками; изменение состава сбрасывает готовность через roster_revision. Старт фиксирует распределение; selected_team передаётся в матч и определяет общий корабль через серверный допуск и HumanTeam. Сохранены вход в другую сессию по ID, выбор карты и ботов. Новый формат Steam-метаданных требует одинакового протокола у участников; текущий SessionConfig.ProtocolVersion=141 (сохранено параллельное изменение). Тестовая карта уже содержит 10 ship_spawn. Компиляция проверена через прямой Unity MCP; PlayMode, сборка, Steam-приглашения и онлайн на 10 людях не запускались.
@@ -975,6 +988,11 @@ MultiplayerSceneSetup.Configure и PromoteShipV3 привязывают ShipV3Te
 - [Assets/Scripts/Networking/SessionPartyMenu.cs](<Assets/Scripts/Networking/SessionPartyMenu.cs>) — Исходник C#: SessionController.
 - [Assets/Scripts/Networking/NetworkPlayer.Identity.cs](<Assets/Scripts/Networking/NetworkPlayer.Identity.cs>) — Исходник C#: NetworkPlayer.
 - [Assets/Scripts/UI/CrewPresentation.cs](<Assets/Scripts/UI/CrewPresentation.cs>) — Исходник C#: CrewPresentation, Plate.
+- [Assets/Scripts/Networking/SessionCrew.cs](<Assets/Scripts/Networking/SessionCrew.cs>) — Исходник C#: SessionController.
+- [Assets/Scripts/Networking/NetworkShipRum.cs](<Assets/Scripts/Networking/NetworkShipRum.cs>) — Исходник C#: NetworkShip.
+- [Assets/Scripts/Networking/NetworkCrewBell.cs](<Assets/Scripts/Networking/NetworkCrewBell.cs>) — Исходник C#: NetworkCrewBell.
+- [Assets/Scripts/Player/CombatHealth.cs](<Assets/Scripts/Player/CombatHealth.cs>) — Исходник C#: CombatHealth.
+- [Assets/Scripts/Networking/NetworkHealth.cs](<Assets/Scripts/Networking/NetworkHealth.cs>) — Исходник C#: NetworkHealth.
 - [multiplayer-plan.md](<multiplayer-plan.md>) — Документация.
 - [unity.md](<unity.md>) — Документация.
 
@@ -1280,6 +1298,8 @@ F8 в основной тестовой карте содержит ползун
 
 Ключевые слова: шторм, зона, туман, fog, brzone, дождь, rain.
 
+2026-10-11: Тестовый дым появляется отдельно по расстоянию каждого образца до камеры: плавный диапазон 1000–650 м, расширенный угловым увеличением относительно FOV65 (максимум8x) для всех видов оптики. Луч обрезается дальностью до расчёта; ближайший край используется только для отключения всего прохода. Градиент света запекается из двух крупных октав128³, плотность сохраняет пять; вклад мелких нитей снижен, mip учитывает фактический вывод.75. Внутренний объём, высота, движение, дождь, небо и молнии сохранены; Docs/StormTestSmoke.md.
+2026-10-11: Только тестовый дым плавно появляется в диапазоне 420–260 м до края 64-метровой бахромы и не рендерится дальше. Дымовой проход .75, float-накопление прозрачности/цвета, до 96 шагов с уточнением входа и покрытием остатка, четыре ячейки водяных клубов вместо девяти, предварительный отбор светящихся групп по лучу. Высота, видимость внутри, характер молний, небо и ливень сохраняются. FPS в игре не измерен; Docs/StormTestSmoke.md.
 2026-10-10 после очередного отклонения дыма: только environment_test. Самостоятельный шум128³ RGBAHalf с аналитическим градиентом и mip-цепочкой готовится GPU один раз при подготовке зоны; три выборки64/29/9м, полный вывод1.0, без столбов14м и деформации ячеек32³. До160 геометрических шагов1–2.5м, пустота до10м, уточнение4проб, ранний выход.003; огромные оптические интервалы отклонены после нативного просмотра как источник колец. Перед фронтом реальные падающие объёмные массы12–16с со шлейфом, затем уплощение/рост45%/растекание3м/исчезновение3с; соседство3×3 без отсечения краёв. GPU-карта реальных Gerstner-волн128²/512м/4м, с текущим временем/управлением и водоворотом. Наступление сохраняет возврат низа под массу; высота+15м, заполненная глубина и ориентир10м сохранены, нижний запас SeaLevel−12м. По отдельному запросу добавлены6групп молний у границы: тройки0.6–0.75с, отдельный случайный поток; старые6групп/тройки0.75–1.05с внутри сохранены. Подсветка расширена48→58м/край22–36м/перенос.155 без повышения интенсивности. Массивы StormSmokeFlashVolumes/ChannelStarts/Ends12/72 имеют новые имена для сброса старого ограничения длины. Нативный изолированный предпросмотр включает тот же TraceTestSmoke: просмотрены дальний/ближний/касательный/увеличенный вид, пауза/наступление10/12с и вспышки. Без Play/изменения сцены/игрового FPS. Небо, дождь, рыбы, корабль и обезьяна не менялись. Подробности Docs/StormTestSmoke.md; старые заметки32³/.67 описывают отклонённые итерации.
 Логика зоны и её сетевое состояние находятся в StormZone и SessionStorm; визуал объёмного шторма — в BRZoneVolumetric. SeaMistRendererFeature задаёт туман 15% по умолчанию; OceanSurface при запуске NetworkOcean применяет тот же множитель к обычному туману. DeveloperMenu показывает процент и меняет оба вида тумана от общей базовой плотности.
 StormVolumeController.ConfigureMenuPreview задаёт отдельный визуальный фон меню с явной камерой/центром/радиусом/уровнем моря. Меню пропускает поиск игровой зоны, feedback и старых эффектов; StormVolumeRendererFeature рисует его только для MenuView. Игровой шторм имеет приоритет Instance; меню повторно забирает освободившееся владение после выгрузки матча. OnDisable очищает globals только своего владельца, включая новый _PirateStormBackdrop(flag,time,height,wind). Menu-only shared макромасштаб2200/900м и Crown1920–3200 согласованы между Annulus и CandidateA clear cloud-layer; game shader ветки сохранены. StormWeatherController наследует слой владельца для линий молний, использует unscaled time, чередует viewport-секторы и не запускает гром в меню; игровой тайминг сохраняется. Меню использует отдельный StormBackdrop без rain/waterline. Настройки AnnularStorm прохода не изменены (96/3, ResolutionScale.67); новых passes/lights/3Dnoiseвыборок нет, макро2D вычисления добавлены только меню.
@@ -1434,6 +1454,12 @@ KrakenEncounterManager отслеживает стоянку корабля и �
 - [Assets/Scripts/Kraken/KrakenTentacle.cs](<Assets/Scripts/Kraken/KrakenTentacle.cs>) — Исходник C#: KrakenTentacle.
 - [Assets/Scripts/Kraken/TentacleAnimator.cs](<Assets/Scripts/Kraken/TentacleAnimator.cs>) — Исходник C#: TentacleAnimator.
 - [Assets/Scripts/Networking/NetworkShip.Kraken.cs](<Assets/Scripts/Networking/NetworkShip.Kraken.cs>) — Исходник C#: NetworkShip.
+- [../Blender/KrakenTentacle_v1/README.md](<../Blender/KrakenTentacle_v1/README.md>) — Документация.
+- [../Blender/KrakenTentacle_v1/TRIPO.txt](<../Blender/KrakenTentacle_v1/TRIPO.txt>) — Текстовые данные.
+- [../Blender/KrakenTentacle_v1/front.png](<../Blender/KrakenTentacle_v1/front.png>) — Изображение / текстура.
+- [../Blender/KrakenTentacle_v1/back.png](<../Blender/KrakenTentacle_v1/back.png>) — Изображение / текстура.
+- [../Blender/KrakenTentacle_v1/left.png](<../Blender/KrakenTentacle_v1/left.png>) — Изображение / текстура.
+- [../Blender/KrakenTentacle_v1/right.png](<../Blender/KrakenTentacle_v1/right.png>) — Изображение / текстура.
 
 ### Кит — точка интереса и сундук (`whale`)
 
@@ -1511,6 +1537,7 @@ NetworkFishMotion: обычная рыба, фугу и рыба-меч на п�
 
 Ключевые слова: тестовая карта, галерея, водоворот, whirlpool.
 
+2026-10-11: Горизонтальные уступы Sea_Lagoon_Cave и SeaArch_Huge_A используют TripoNative_11_RockElongated_A с коричневыми текстурными крышками. CoastalTripoRock включает _CapRepair только у этого материала: затемнённые коричневые участки обращённых вверх граней плавно заменяются деталью камня/нормали из заданного прямоугольника родного атласа. Геометрия, поворот, UV и коллизия скал сохраняются. Проверка в игре пользователем.
 2026-10-10 после очередного отклонения дыма: только environment_test. Самостоятельный шум128³ RGBAHalf с аналитическим градиентом и mip-цепочкой готовится GPU один раз при подготовке зоны; три выборки64/29/9м, полный вывод1.0, без столбов14м и деформации ячеек32³. До160 геометрических шагов1–2.5м, пустота до10м, уточнение4проб, ранний выход.003; огромные оптические интервалы отклонены после нативного просмотра как источник колец. Перед фронтом реальные падающие объёмные массы12–16с со шлейфом, затем уплощение/рост45%/растекание3м/исчезновение3с; соседство3×3 без отсечения краёв. GPU-карта реальных Gerstner-волн128²/512м/4м, с текущим временем/управлением и водоворотом. Наступление сохраняет возврат низа под массу; высота+15м, заполненная глубина и ориентир10м сохранены, нижний запас SeaLevel−12м. По отдельному запросу добавлены6групп молний у границы: тройки0.6–0.75с, отдельный случайный поток; старые6групп/тройки0.75–1.05с внутри сохранены. Подсветка расширена48→58м/край22–36м/перенос.155 без повышения интенсивности. Массивы StormSmokeFlashVolumes/ChannelStarts/Ends12/72 имеют новые имена для сброса старого ограничения длины. Нативный изолированный предпросмотр включает тот же TraceTestSmoke: просмотрены дальний/ближний/касательный/увеличенный вид, пауза/наступление10/12с и вспышки. Без Play/изменения сцены/игрового FPS. Небо, дождь, рыбы, корабль и обезьяна не менялись. Подробности Docs/StormTestSmoke.md; старые заметки32³/.67 описывают отклонённые итерации.
 В NetworkOcean водоворот всегда активен в центре: OceanSurface.CentralWhirlpoolRadius=500 м (вдвое прежнего), CentralWhirlpoolDepth=120 м. StormZone больше не запускает его в финале и не создаёт WhirlpoolVFX. SeabedTerrain формирует локальное углубление радиусом 625 м с запасом под воронкой, CPU и mesh используют одну функцию. WaterGridGenerator больше не создаёт 81 сферу WaterBuoy в меню и удаляет старые объекты по точным именам. SimpleWater исключает небо из depth-пены, проверяет расстояние до контакта геометрии и подавляет береговую пену внутри и у края воронки. В SimpleWater вращающаяся рябь и три разорванные спиральные полосы пены показывают течение внутри воронки по синхронизированному времени; эффект плавно исчезает до края. Нормали учитывают наклон воронки. Старые эффекты каймы и затемнение убраны; bounds воды учитывают глубокую воронку. WhirlpoolTest использует радиус 500 м без частиц, глубину 45 м для отдельной тестовой площадки. Точка входа тестовой карты — EnvironmentTestGallery, подготовка — EnvironmentTestSetup. Водоворот имеет отдельные файлы поведения и визуала; не путать этот режим со старой SampleScene.
 Ship V3 используется как основной корабль и в тестовой карте, и в обычной игре, через общий спавн SessionController. ShipV3TestSpawner оставлен как исторический исходник без вызова из сессии; отдельный лишний корабль больше не создаётся. Старый ShipSkeletonTest ранее удалён. ShipV3Features синхронизирует фонари, рынду, принадлежность кубиков, физические подвесы и гарпуны; игровой онлайн-прогон не выполнялся.

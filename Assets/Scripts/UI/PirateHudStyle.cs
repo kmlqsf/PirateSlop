@@ -10,6 +10,10 @@ namespace PirateSlop
         public static readonly Color Muted = new(.58f, .68f, .68f);
         static GUIStyle text, title;
         static Texture2D wash, stroke;
+        static Texture2D repairRingBack, repairRingFill;
+        static Color[] repairRingGold, repairRingPixels;
+        static float[] repairRingAngles;
+        static int repairRingStep = -1;
         static void Initialize()
         {
             if (text != null) return;
@@ -70,6 +74,56 @@ namespace PirateSlop
         {
             Brush(rect, new Color(0, 0, 0, .65f), true);
             Brush(new Rect(rect.x, rect.y, rect.width * Mathf.Clamp01(fraction), rect.height), color, true);
+        }
+        public static void RepairRing(Vector2 center, float fraction)
+        {
+            if (repairRingBack == null) CreateRepairRing();
+            int step = Mathf.Clamp(Mathf.RoundToInt(fraction * 160f), 0, 160);
+            if (step != repairRingStep)
+            {
+                repairRingStep = step;
+                float progress = step / 160f;
+                for (int i = 0; i < repairRingPixels.Length; i++)
+                {
+                    Color color = repairRingGold[i];
+                    if (step < 160) color.a *= Mathf.Clamp01((progress - repairRingAngles[i]) * 160f);
+                    repairRingPixels[i] = color;
+                }
+                repairRingFill.SetPixels(repairRingPixels);
+                repairRingFill.Apply(false, false);
+            }
+            var rect = new Rect(center.x - 32f, center.y - 32f, 64f, 64f);
+            var old = GUI.color; GUI.color = Color.white;
+            GUI.DrawTexture(rect, repairRingBack);
+            GUI.DrawTexture(rect, repairRingFill);
+            GUI.color = old;
+        }
+        static void CreateRepairRing()
+        {
+            const int size = 128;
+            repairRingBack = new Texture2D(size, size, TextureFormat.RGBA32, false) { hideFlags = HideFlags.HideAndDontSave, wrapMode = TextureWrapMode.Clamp };
+            repairRingFill = new Texture2D(size, size, TextureFormat.RGBA32, false) { hideFlags = HideFlags.HideAndDontSave, wrapMode = TextureWrapMode.Clamp };
+            var back = new Color[size * size];
+            repairRingGold = new Color[size * size];
+            repairRingPixels = new Color[size * size];
+            repairRingAngles = new float[size * size];
+            for (int y = 0; y < size; y++) for (int x = 0; x < size; x++)
+            {
+                int index = y * size + x;
+                float dx = x - 63.5f, dy = y - 63.5f;
+                float radius = Mathf.Sqrt(dx * dx + dy * dy);
+                float angle = Mathf.Repeat(Mathf.Atan2(dx, dy) / (Mathf.PI * 2f), 1f);
+                repairRingAngles[index] = angle;
+                float ring = Mathf.Clamp01(radius - 49f) * Mathf.Clamp01(56f - radius);
+                float rim = Mathf.Clamp01(1f - Mathf.Abs(radius - 47f)) + Mathf.Clamp01(1f - Mathf.Abs(radius - 58f));
+                float tick = Mathf.Abs(Mathf.Repeat(angle * 8f + .5f, 1f) - .5f) < .028f ? Mathf.Clamp01(radius - 58f) * Mathf.Clamp01(62f - radius) : 0f;
+                float metal = .45f + .35f * Mathf.Cos(angle * Mathf.PI * 2f - .7f);
+                Color brass = Color.Lerp(Gold, Paper, metal * .4f);
+                back[index] = ring > 0f ? new Color(.025f, .055f, .06f, ring * .88f) : new Color(brass.r, brass.g, brass.b, Mathf.Clamp01(rim + tick) * .7f);
+                brass.a = ring * .96f;
+                repairRingGold[index] = brass;
+            }
+            repairRingBack.SetPixels(back); repairRingBack.Apply(false, true);
         }
         public static bool Button(Rect rect, string value)
         {

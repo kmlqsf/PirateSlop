@@ -8,13 +8,14 @@ namespace PirateSlop
     public sealed partial class PlayerInventory : MonoBehaviour
     {
         public const int AmmoSlot = 6, SlotCount = 9, AmmoCapacity = 2;
+        public const int PlankCapacity = 5;
         readonly int[] stackCounts = new int[NormalSlotStorage];
         public void SetStackCount(int slot, int count) => stackCounts[slot] = count;
         public int StackSlot(InventoryItem item)
         {
             if (item == InventoryItem.Lantern) return EmptySlot();
             for (int i = 0; i < NormalSlotStorage; i++)
-                if (IsNormalSlot(i) && ItemAt(i) == item && ItemCount(i) < int.MaxValue) return i;
+                if (IsNormalSlot(i) && ItemAt(i) == item && ItemCount(i) < (item == InventoryItem.Plank ? PlankCapacity : int.MaxValue)) return i;
             return EmptySlot();
         }
         public InventoryIcons Icons;
@@ -59,12 +60,13 @@ namespace PirateSlop
         public int PlankCount(int slot) => IsNormalSlot(slot) ? plankCounts[slot] : 0;
         public bool HasMallet(int slot) => IsNormalSlot(slot) && (malletSlots & (1 << slot)) != 0;
         public bool MalletSelected => HasMallet(SelectedSlot);
+        public bool PlankSelected => PlankCount(SelectedSlot) > 0;
         public int TotalPlanks { get { int total = 0; foreach (int count in plankCounts) total += count; return total; } }
         public void SetRepairItems(int mallets, int slot, int count) { malletSlots = mallets; plankCounts[slot] = count; }
         public InventoryItem ItemAt(int slot) => EquipmentAt(slot) != InventoryItem.None ? EquipmentAt(slot) : HasSabre(slot) ? InventoryItem.Sabre : PistolAt(slot) ? InventoryItem.Pistol : RodAt(slot) ? InventoryItem.Rod : HasCannon(slot) ? InventoryItem.Cannon : FishCount(slot) > 0 ? InventoryItem.Fish : BallCount(slot) > 0 ? BallItem(slot) : HasMallet(slot) ? InventoryItem.Mallet : PlankCount(slot) > 0 ? InventoryItem.Plank : RumCount(slot) > 0 ? InventoryItem.Rum : InventoryItem.None;
         public bool CanFitItem(InventoryItem item)
         {
-            if (item < InventoryItem.Fish || item > InventoryItem.ExplosiveBall || item == InventoryItem.Plank) return false;
+            if (item < InventoryItem.Fish || item > InventoryItem.ExplosiveBall) return false;
             if (CannonAmmo.IsBall(item)) return FindAmmoSlot(item) >= 0;
             return StackSlot(item) >= 0;
         }
@@ -85,7 +87,7 @@ namespace PirateSlop
         }
         public bool CanSwapItem(InventoryItem incoming)
         {
-            if (CanFitItem(incoming) || incoming < InventoryItem.Fish || incoming > InventoryItem.ExplosiveBall || incoming == InventoryItem.Plank) return false;
+            if (CanFitItem(incoming) || incoming < InventoryItem.Fish || incoming > InventoryItem.ExplosiveBall) return false;
             if (CannonAmmo.IsBall(incoming)) return IsAmmoSlot(SelectedSlot) && BallCount(SelectedSlot) > 0 && BallItem(SelectedSlot) != incoming;
             return IsNormalSlot(SelectedSlot) && ItemAt(SelectedSlot) != InventoryItem.None;
         }

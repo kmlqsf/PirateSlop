@@ -1,0 +1,76 @@
+{
+  "method": "runtime Rigidbody teleport QA; actual storm radius unchanged",
+  "samples": [
+    {
+      "name": "narrow8-near-deck",
+      "camera": "(-0.209, 6.414, -3949.977)",
+      "rotation": "(355.000, 180.000, 0.000)",
+      "radius": 4000.0,
+      "signedDistance": -50.0234375,
+      "ship": "(3.188, 0.157, -3958.801)",
+      "rain": 0.495879233,
+      "physics": 2,
+      "height": 3
+    },
+    {
+      "name": "narrow8-inwall-deck",
+      "camera": "(-0.324, 6.138, -3999.996)",
+      "rotation": "(355.000, 180.000, 0.000)",
+      "radius": 4000.0,
+      "signedDistance": -0.00366210938,
+      "ship": "(3.188, -0.454, -4008.801)",
+      "rain": 0.99999994,
+      "physics": 2,
+      "height": 4
+    },
+    {
+      "name": "narrow8-outside-lookback",
+      "camera": "(-0.344, 5.794, -4075.011)",
+      "rotation": "(340.000, 0.000, 0.000)",
+      "radius": 4000.0,
+      "signedDistance": 75.01099,
+      "ship": "(3.188, -0.436, -4083.801)",
+      "rain": 1.0,
+      "physics": 2,
+      "height": 4
+    },
+    {
+      "name": "narrow8-outside-away",
+      "camera": "(-0.141, 5.294, -4299.501)",
+      "rotation": "(355.000, 180.000, 0.000)",
+      "radius": 4000.0,
+      "signedDistance": 299.501465,
+      "ship": "(3.188, -0.272, -4308.801)",
+      "rain": 1.0,
+      "physics": 2,
+      "height": 4
+    }
+  ],
+  "measurements": [
+    {
+      "distance": 5.0,
+      "white": "(951.885, 719.995, 4.671)",
+      "black": "(914.465, 719.995, 4.601)"
+    },
+    {
+      "distance": 10.0,
+      "white": "(1129.845, 719.998, 9.852)",
+      "black": "(1096.448, 720.000, 9.780)"
+    },
+    {
+      "distance": 20.0,
+      "white": "(1296.089, 720.000, 20.000)",
+      "black": "(1263.911, 720.000, 20.000)"
+    },
+    {
+      "distance": 25.0,
+      "white": "(1463.547, 719.999, 24.451)",
+      "black": "(1430.154, 720.000, 24.630)"
+    },
+    {
+      "distance": 35.0,
+      "white": "(1645.538, 719.999, 32.206)",
+      "black": "(1608.103, 719.999, 32.697)"
+    }
+  ]
+}

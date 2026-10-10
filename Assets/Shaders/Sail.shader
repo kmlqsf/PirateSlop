@@ -8,6 +8,7 @@ Shader "PirateSlop/Sail"
         _UseDecalUV2 ("Use Decal UV2", Float) = 0
         _DecalCanvasScale ("Decal Canvas Proportions", Vector) = (1, 1, 0, 0)
         _PreserveDecalColor ("Preserve Decal Color", Float) = 0
+        _PreserveFabricColor ("Preserve Fabric Color", Float) = 0
         _OcclusionMap ("Ambient Occlusion (Folds)", 2D) = "white" {}
         _OcclusionStrength ("Occlusion Strength", Range(0, 1)) = 0.45
         _Weathering ("Weathering / Wear", Range(0, 1)) = 0.0
@@ -64,6 +65,7 @@ Shader "PirateSlop/Sail"
                 float _UseDecalUV2;
                 float4 _DecalCanvasScale;
                 float _PreserveDecalColor;
+                float _PreserveFabricColor;
                 half4 _DecalColor;
                 float4 _DecalTransform;
                 float _DecalRotation;
@@ -210,6 +212,7 @@ Shader "PirateSlop/Sail"
                 float3 normal = normalize(isFrontFace ? input.normalWS : -input.normalWS);
 
                 half3 ao = SAMPLE_TEXTURE2D(_OcclusionMap, sampler_OcclusionMap, input.uv).rgb;
+                ao = lerp(ao, dot(ao, half3(.2126, .7152, .0722)).xxx, _PreserveFabricColor);
                 half3 clothColor = _BaseColor.rgb * _FabricTint.rgb * lerp(half3(1.0, 1.0, 1.0), ao, _OcclusionStrength);
 
                 float4 uvBounds = input.isBack > 0.5 ? _SailUVBoundsBack : _SailUVBoundsFront;
@@ -243,7 +246,10 @@ Shader "PirateSlop/Sail"
                 half3 lighting = diffuse + ambient;
                 half brightness = dot(lighting, half3(0.2126, 0.7152, 0.0722));
                 half decalBrightness = clamp(brightness, 0.82, 1.0);
-                half3 shaded = lerp(clothColor * lighting, clothColor * decalBrightness, preservedCoverage * _PreserveDecalColor) + _HighlightColor.rgb * 1.5;
+                half fabricBrightness = clamp(brightness, .08, 1.0);
+                half preserveColor = max(_PreserveFabricColor, preservedCoverage * _PreserveDecalColor);
+                half preservedBrightness = lerp(fabricBrightness, decalBrightness, preservedCoverage * _PreserveDecalColor);
+                half3 shaded = lerp(clothColor * lighting, clothColor * preservedBrightness, preserveColor) + _HighlightColor.rgb * 1.5;
                 return half4(MixFog(shaded, input.fog), 1.0);
             }
             ENDHLSL

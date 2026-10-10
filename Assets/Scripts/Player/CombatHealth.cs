@@ -11,7 +11,7 @@ namespace PirateSlop
 
         public float MaxHealth = 100f;
         public float BarHeight = 2.2f;
-        [Min(0f)] public float RespawnDelay = 5f;
+        public const float RespawnDelay = 25f;
         public float Current { get; private set; }
         public bool IsDead => Current <= 0f;
         NetworkHealth network;
@@ -25,7 +25,15 @@ namespace PirateSlop
         Transform spawnPlatform;
         float respawnAt;
         static readonly System.Random deathRandom = new();
-        public float RespawnRemaining => Mathf.Max(0, respawnAt - Time.time);
+        public float RespawnRemaining => network != null && network.HasRespawnTimer ? network.RespawnSeconds : Mathf.Max(0, respawnAt - Time.time);
+        public bool CanRespawn
+        {
+            get
+            {
+                var player = GetComponent<NetworkPlayer>();
+                return player != null && !player.Eliminated.Value && player.Ship != null && player.Ship.IsSpawned && !player.Ship.IsSinking;
+            }
+        }
         void Awake() { Current = MaxHealth; network = GetComponent<NetworkHealth>(); controller = GetComponent<CharacterController>(); if (controller != null && GetComponent<DamageFeedback>() == null) gameObject.AddComponent<DamageFeedback>(); }
         void Start()
         {
@@ -71,12 +79,28 @@ namespace PirateSlop
         {
             if (!IsDead || (network != null && !network.IsServerInitialized)) return false;
             var player = GetComponent<NetworkPlayer>();
-            if (player == null || player.Eliminated.Value || ship == null || player.Ship != ship || !ship.ConsumeRespawnRum()) return false;
+            if (!CanRespawn || ship == null || player.Ship != ship || !ship.ConsumeRespawnRum()) return false;
             Vector3 position = ship != null ? ship.transform.TransformPoint(SessionController.Instance.Config.PlayerLocalSpawn) : SpawnPosition;
             float yaw = ship != null ? ship.transform.eulerAngles.y : SpawnYaw;
             if (network != null) network.Respawn(position, yaw);
             else Respawn(position, yaw);
             return true;
+        }
+        public void RespawnAutomatically()
+        {
+            if (!IsDead || !CanRespawn || network == null || !network.IsServerInitialized) return;
+            var ship = GetComponent<NetworkPlayer>().Ship;
+            network.Respawn(ship.transform.TransformPoint(SessionController.Instance.Config.PlayerLocalSpawn), ship.transform.eulerAngles.y);
+        }
+        public void DieWithShip()
+        {
+            if (network == null || !network.IsServerInitialized || IsDead) return;
+            float previous = Current;
+            network.LaunchCorpse(transform.position, Vector3.down * 2f, Vector3.zero);
+            ApplySnapshot(0f, false);
+            network.Extinguish();
+            network.DamageFeedback(previous, true, true);
+            network.Publish(0f);
         }
         public void Respawn(Vector3 position, float yaw, float healthFraction = 1f)
         {
@@ -118,6 +142,7 @@ namespace PirateSlop
                 if (!SessionController.FriendlyFire && source != null && target != null && source.TeamId.Value > 0 && source.TeamId.Value == target.TeamId.Value) return;
             }
             if (IsDead || amount <= 0 || float.IsNaN(amount) || float.IsInfinity(amount)) return;
+            if (GetComponent<NetworkPlayer>()?.Ship is { IsSinking: true }) return;
             amount = GetComponent<NetworkPlayer>()?.FilterUpgradeDamage(amount) ?? amount;
             if (amount <= 0f) return;
             float dealt = Mathf.Min(Current, amount);

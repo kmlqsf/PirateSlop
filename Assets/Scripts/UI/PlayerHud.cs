@@ -100,33 +100,41 @@ namespace PirateSlop
             }
             if (health.IsDead)
             {
-                float deathX = Screen.width / 2f - 260f;
-                float deathY = Screen.height - 145f;
-                PirateHudStyle.Panel(new Rect(deathX, deathY, 520, 125));
+                float deathWidth = Mathf.Min(660f, Screen.width - 40f);
+                float deathX = (Screen.width - deathWidth) * .5f;
+                float deathY = Screen.height - 205f;
+                float textWidth = deathWidth - 30f;
+                PirateHudStyle.Panel(new Rect(deathX, deathY, deathWidth, 185));
                 bool eliminated = network != null && network.Eliminated.Value;
-                PirateHudStyle.Label(new Rect(deathX + 15, deathY + 5, 490, 30), eliminated ? "ЭКИПАЖ ВЫБЫЛ" : "ВЫ ПАЛИ В БОЮ", PirateHudStyle.Gold, true);
-                bool hasRum = network == null || (network.Ship != null && network.Ship.RumCount > 0);
-                PirateHudStyle.Label(new Rect(deathX + 15, deathY + 35, 490, 25), eliminated ? "Корабль потерян. Возрождение недоступно." : network != null && network.PactSeconds > 0f ? $"Договор с морем: возрождение через {network.PactSeconds:0.0} с" : hasRum ? "Ждите звонка колокола в рубке • −1 ром" : "Нет рома — экипаж должен пополнить полку", PirateHudStyle.Paper);
+                PirateHudStyle.Label(new Rect(deathX + 15, deathY + 5, textWidth, 30), eliminated ? "ПОРАЖЕНИЕ" : "ВЫ ПАЛИ В БОЮ", PirateHudStyle.Gold, true);
+                if (!health.CanRespawn)
+                    PirateHudStyle.Label(new Rect(deathX + 15, deathY + 40, textWidth, 55), eliminated ? "Корабль затонул. Возрождение невозможно." : "Корабль тонет. Возрождение невозможно.", PirateHudStyle.Paper);
+                else
+                {
+                    PirateHudStyle.Label(new Rect(deathX + 15, deathY + 35, textWidth, 25), $"Бесплатное возрождение через {health.RespawnRemaining:0.0} с", PirateHudStyle.Paper);
+                    PirateHudStyle.Bar(new Rect(deathX + 30, deathY + 63, deathWidth - 60f, 14f), health.RespawnRemaining / CombatHealth.RespawnDelay, PirateHudStyle.Gold);
+                    PirateHudStyle.Label(new Rect(deathX + 15, deathY + 80, textWidth, 42), network != null && network.PactSeconds > 0f ? $"Договор с морем вернёт вас через {network.PactSeconds:0.0} с\nИли попросите союзника позвонить 3 раза · 1 ром" : "Попросите союзника позвонить в колокол 3 раза:\nмгновенное возрождение за 1 ром", PirateHudStyle.Paper);
+                }
                 
                 if (motor.SpectatorTarget != null && motor.SpectatorTarget.Motor != null && !motor.SpectatorTarget.Motor.IsDead)
                 {
-                    PirateHudStyle.Label(new Rect(deathX + 15, deathY + 65, 490, 25), $"Наблюдение за: Игрок {motor.SpectatorTarget.ParticipantId.Value}", PirateHudStyle.Gold, false, TextAnchor.MiddleCenter);
-                    PirateHudStyle.Label(new Rect(deathX + 15, deathY + 90, 490, 25), "ЛКМ — следующий союзник · мышь — обзор", PirateHudStyle.Muted, false, TextAnchor.MiddleCenter);
+                    PirateHudStyle.Label(new Rect(deathX + 15, deathY + 130, textWidth, 25), $"Наблюдение за: Игрок {motor.SpectatorTarget.ParticipantId.Value}", PirateHudStyle.Gold, false, TextAnchor.MiddleCenter);
+                    PirateHudStyle.Label(new Rect(deathX + 15, deathY + 155, textWidth, 25), "ЛКМ — следующий союзник · мышь — обзор", PirateHudStyle.Muted, false, TextAnchor.MiddleCenter);
                 }
                 else if (motor.FreeSpectating)
                 {
-                    PirateHudStyle.Label(new Rect(deathX + 15, deathY + 65, 490, 25), "Свободное наблюдение", PirateHudStyle.Gold);
-                    PirateHudStyle.Label(new Rect(deathX + 15, deathY + 90, 490, 25), "WASD · пробел / Ctrl — вверх / вниз · Shift — быстрее", PirateHudStyle.Muted);
+                    PirateHudStyle.Label(new Rect(deathX + 15, deathY + 130, textWidth, 25), "Свободное наблюдение", PirateHudStyle.Gold);
+                    PirateHudStyle.Label(new Rect(deathX + 15, deathY + 155, textWidth, 25), "WASD · пробел / Ctrl — вверх / вниз · Shift — быстрее", PirateHudStyle.Muted);
                 }
                 else if (network != null && !eliminated)
                 {
-                    PirateHudStyle.Label(new Rect(deathX + 15, deathY + 65, 490, 25), "Подключение к наблюдению за союзниками…", PirateHudStyle.Muted, false, TextAnchor.MiddleCenter);
+                    PirateHudStyle.Label(new Rect(deathX + 15, deathY + 130, textWidth, 25), "Подключение к наблюдению за союзниками…", PirateHudStyle.Muted, false, TextAnchor.MiddleCenter);
                 }
                 return;
             }
             if (network != null && network.Ship != null)
             {
-                PirateHudStyle.Label(new Rect(24, sideY - 65, 280, 24), $"Ром корабля: {network.Ship.RumCount} возрождений", network.Ship.RumCount > 0 ? PirateHudStyle.Paper : PirateHudStyle.Gold);
+                PirateHudStyle.Label(new Rect(24, sideY - 65, 330, 24), $"Ром корабля: {network.Ship.RumCount} быстрых возрождений", network.Ship.RumCount > 0 ? PirateHudStyle.Paper : PirateHudStyle.Gold);
                 var flooding = network.Ship.GetComponent<ShipFlooding>();
                 if (flooding != null && flooding.Level > 0f)
                     PirateHudStyle.Label(new Rect(24, sideY - 91, 420, 24), $"Вода: {flooding.Level * 100f:0}% · {flooding.ReportedOpenImpacts} пробоин · {(flooding.ReportedOpenImpacts == 0 ? "убывает" : flooding.Level >= 1f ? "полон" : "прибывает")}", PirateHudStyle.Gold);

@@ -4904,7 +4904,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.CombatHealth
   MaxHealth: 100
   BarHeight: 2.2
-  RespawnDelay: 5
 --- !u!114 &2669655026264017984
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5200,6 +5199,7 @@ MonoBehaviour:
   _addedNetworkObject: {fileID: 8718541801069254893}
   _networkObjectCache: {fileID: 8718541801069254893}
   MalletModel: {fileID: 5075510370247273477, guid: 08b8b52b8b62bda4496591436d1395ef, type: 3}
+  PlankModel: {fileID: 2941739829668237266, guid: 3b0a39a13213d60469bcdb1ac246ef2b, type: 3}
 --- !u!114 &3103176091704272209
 MonoBehaviour:
   m_ObjectHideFlags: 0

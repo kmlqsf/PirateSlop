@@ -13,6 +13,11 @@ namespace PirateSlop
         Material material;
         VolumetricCloudsURP.VolumetricCloudsPass pass;
         LightningCapturePass lightning;
+        public static Vector4 TestSmokeVisibilityRange(float fieldOfView)
+        {
+            float zoom = Mathf.Clamp(Mathf.Tan(65f * Mathf.Deg2Rad * .5f) / Mathf.Tan(Mathf.Clamp(fieldOfView, 5f, 170f) * Mathf.Deg2Rad * .5f), 1f, 8f);
+            return new Vector4(650f * zoom, 1000f * zoom, 1f / .75f, 0f);
+        }
         public override void Create()
         {
             pass?.Dispose();
@@ -45,7 +50,17 @@ namespace PirateSlop
             var storm = StormVolumeController.Instance;
             if (pass == null || storm == null || !storm.Ready || !storm.RendersCamera(renderingData.cameraData.camera) || renderingData.cameraData.cameraType != CameraType.Game || renderingData.cameraData.renderType != CameraRenderType.Base) return;
             if (!storm.IsMenuPreview && renderingData.cameraData.camera != Camera.main) return;
-            
+            bool smokeInRange = true;
+            if (storm.TestCloudWall)
+            {
+                var camera = renderingData.cameraData.camera;
+                var eye = camera.transform.position;
+                var range = TestSmokeVisibilityRange(camera.fieldOfView);
+                float radial = Vector2.Distance(new Vector2(eye.x, eye.z), new Vector2(storm.CurrentCenter.x, storm.CurrentCenter.z));
+                float distance = Mathf.Max(0f, storm.CurrentRadius - radial - 64f);
+                smokeInRange = distance < range.y;
+                material.SetVector("_StormSmokeVisibilityRange", range);
+            }
             if (!storm.IsMenuPreview && !storm.TestCloudWall && Shader.GetGlobalFloat("_PirateStormBillows") > .5f && Shader.GetGlobalFloat("_PirateStormVolume3D") < .5f)
             {
                 var eye = renderingData.cameraData.camera.transform.position;
@@ -85,10 +100,11 @@ namespace PirateSlop
                 if (!ready) return;
             }
 #endif
+            if (!smokeInRange) return;
             pass.cloudsVolume = storm.CloudSettings;
             pass.afterTransparentDepth = storm.TestCloudWall;
             pass.colorAdjustments = null;
-            pass.resolutionScale = storm.TestCloudWall ? 1f : Mathf.Clamp(ResolutionScale, .25f, storm.IsMenuPreview ? .67f : .4f);
+            pass.resolutionScale = storm.TestCloudWall ? .75f : Mathf.Clamp(ResolutionScale, .25f, storm.IsMenuPreview ? .67f : .4f);
             pass.ConfigureInput(ScriptableRenderPassInput.Depth);
             if (storm.TestCloudWall) renderer.EnqueuePass(lightning);
             renderer.EnqueuePass(pass);

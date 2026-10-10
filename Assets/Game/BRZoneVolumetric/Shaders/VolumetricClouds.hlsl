@@ -49,10 +49,21 @@ VolumetricRayResult TraceTestSmoke(CloudRay ray)
     result.transmittance=1.0;
     result.meanDistance=FLT_MAX;
     result.invalidRay=true;
+    ray.maxRayLength=min(ray.maxRayLength,_StormSmokeVisibilityRange.y);
     float4 spans;
     if(!StormRayIntervals(ray.originWS,ray.direction,ray.maxRayLength,spans))return result;
 
     float weightedDistance=0.0,weight=0.0;
+    float transmission=1.0;
+    float3 scattering=0.0;
+    uint flashMask=0;
+    [unroll] for(int group=0;group<12;group++)
+    {
+        float4 flash=_StormSmokeFlashVolumes[group];
+        float along=clamp(dot(flash.xyz-ray.originWS,ray.direction),0.0,ray.maxRayLength);
+        float3 separation=flash.xyz-ray.originWS-ray.direction*along;
+        if(flash.w>0.0 && dot(separation,separation)<3364.0) flashMask|=(1u<<group);
+    }
     float4 lightning=SAMPLE_TEXTURE2D_X_LOD(_StormTestLightningEmission,sampler_StormTestLightningEmission,ray.lightningUV,0);
     float lightningDistance=SAMPLE_TEXTURE2D_X_LOD(_StormTestLightningDistance,sampler_StormTestLightningEmission,ray.lightningUV,0).r/max(.00001,lightning.a);
     bool lightningAdded=false;
@@ -61,28 +72,30 @@ VolumetricRayResult TraceTestSmoke(CloudRay ray)
 #else
     float projectionScale=1.0/max(1.0,_ScreenParams.y*abs(UNITY_MATRIX_P[1][1]));
 #endif
+    projectionScale*=_StormSmokeVisibilityRange.z;
     Light sun=GetMainLight();
     float3 lightDirection=normalize(sun.direction+float3(0,.55,0));
     [loop] for(int segment=0;segment<2;segment++)
     {
         float spanStart=segment==0?spans.x:spans.z;
         float total=segment==0?spans.y-spans.x:spans.w-spans.z;
-        if(total<=.001 || result.transmittance<.003)continue;
+        if(total<=.001 || transmission<.01)continue;
         float current=0.0;
-        float nextStep=1.0;
+        float nextStep=.65;
         float previousDensity=0.0;
-        [loop] for(int index=0;index<160;index++)
+        [loop] for(int index=0;index<96;index++)
         {
             if(current>=total)break;
-            float desiredStep=clamp(1.0+(spanStart+current)*projectionScale*.8,1.0,2.5);
+            float desiredStep=clamp(.65+(spanStart+current)*projectionScale*2.0,.65,3.0);
             float step=min(total-current,max(desiredStep,nextStep));
+            if(index>=88) step=max(step,(total-current)/max(1.0,96.0-index));
             float jitter=ray.integrationNoise;
             float distanceWS=spanStart+current+jitter*step;
             float3 positionWS=ray.originWS+ray.direction*distanceWS;
             float3 normal;
             float pixelWidth=distanceWS*projectionScale*2.0;
             float4 field=StormTestSmokeField(positionWS,pixelWidth,normal);
-            if(field.r>previousDensity*2.0+.025 && step>desiredStep*3.0)
+            if(index<88 && field.r>previousDensity*2.0+.025 && step>desiredStep*3.0)
             {
                 float low=current,high=current+jitter*step;
                 [unroll] for(int refine=0;refine<4;refine++)
@@ -100,16 +113,16 @@ VolumetricRayResult TraceTestSmoke(CloudRay ray)
                 pixelWidth=distanceWS*projectionScale*2.0;
                 field=StormTestSmokeField(positionWS,pixelWidth,normal);
             }
-            float density=min(1.0,field.r*_DensityMultiplier)*smoothstep(.5,3.5,distanceWS);
+            float density=min(1.0,field.r*_DensityMultiplier)*smoothstep(.5,3.5,distanceWS)*StormSmokeDistanceVisibility(distanceWS);
             float extinction=.14;
             float segmentStart=spanStart+current;
             current+=step;
-            nextStep=field.r>.003?desiredStep:min(10.0,step*1.6);
+            nextStep=field.r>.003?desiredStep:min(18.0,step*1.8);
             previousDensity=field.r;
             if(!lightningAdded && lightning.a>.001 && lightningDistance>=spanStart && lightningDistance<=segmentStart+step && lightningDistance<ray.maxRayLength)
             {
                 float beforeBolt=clamp(lightningDistance-segmentStart,0.0,step);
-                result.scattering+=lightning.rgb*result.transmittance*exp(-density*extinction*beforeBolt);
+                scattering+=lightning.rgb*StormSmokeDistanceVisibility(lightningDistance)*transmission*exp(-density*extinction*beforeBolt);
                 lightningAdded=true;
             }
             if(density<=CLOUD_DENSITY_TRESHOLD)continue;
@@ -117,20 +130,20 @@ VolumetricRayResult TraceTestSmoke(CloudRay ray)
             half sunlight=(.35+.65*saturate(dot(normal,lightDirection)))*selfShadow*saturate(field.a);
             half3 ambient=half3(.009,.012,.016)+half3(.012,.014,.016)*field.a;
             half3 color=ambient+half3(.12,.124,.13)*pow(saturate(sunlight),1.35);
-            color+=half3(.012,.013,.014)*field.b*selfShadow;
-            color*=lerp(.7,1.2,field.b);
+            color+=half3(.003,.00325,.0035)*field.b*selfShadow;
+            color*=lerp(.86,1.08,field.g);
             color*=lerp(.68,1.0,smoothstep(_StormCenterWater.y,_PirateStormTestClouds.z,positionWS.y));
             half flash=0;
             [loop] for(int group=0;group<12;group++)
-                flash+=StormTestLightningScatter(positionWS,field,normal,_StormSmokeFlashVolumes[group],group);
+                if((flashMask&(1u<<group))!=0) flash+=StormTestLightningScatter(positionWS,field,normal,_StormSmokeFlashVolumes[group],group);
             color+=_StormLightningColor.rgb*flash*2.0;
-            half transmittance=exp(-density*extinction*step);
-            half contribution=result.transmittance*(1.0-transmittance);
-            result.scattering+=color*contribution;
+            float transmittance=exp(-density*extinction*step);
+            float contribution=transmission*(1.0-transmittance);
+            scattering+=color*contribution;
             weightedDistance+=distanceWS*contribution;
             weight+=contribution;
-            result.transmittance*=transmittance;
-            if(result.transmittance<.003)break;
+            transmission*=transmittance;
+            if(transmission<.01)break;
         }
     }
     if(weight>.00001)
@@ -143,6 +156,8 @@ VolumetricRayResult TraceTestSmoke(CloudRay ray)
         result.invalidRay=false;
         result.meanDistance=lightningDistance;
     }
+    result.scattering=scattering;
+    result.transmittance=transmission;
     return result;
 }
 

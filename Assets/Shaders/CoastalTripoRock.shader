@@ -17,6 +17,10 @@ Shader "PirateSlop/CoastalTripoRock"
         _MossColor ("Additional moss", Color) = (.22,.29,.13,1)
         _MossStrength ("Additional moss strength", Range(0,.25)) = 0
         _StreakStrength ("Additional streak strength", Range(0,.2)) = 0
+        _CapRepair ("Exposed underside repair", Range(0,1)) = 0
+        _CapMap ("Cap stone detail", 2D) = "white" {}
+        [Normal] _CapBumpMap ("Cap stone normal", 2D) = "bump" {}
+        _CapUVRect ("Cap detail atlas rectangle", Vector) = (.257,.34,.061,.085)
     }
     SubShader
     {
@@ -35,6 +39,10 @@ Shader "PirateSlop/CoastalTripoRock"
         SAMPLER(sampler_BumpMap);
         TEXTURE2D(_MetallicRoughnessMap);
         SAMPLER(sampler_MetallicRoughnessMap);
+        TEXTURE2D(_CapMap);
+        SAMPLER(sampler_CapMap);
+        TEXTURE2D(_CapBumpMap);
+        SAMPLER(sampler_CapBumpMap);
 
         float _CoastalSeaLevel;
 
@@ -52,6 +60,8 @@ Shader "PirateSlop/CoastalTripoRock"
             half _WetSmoothness;
             half _MossStrength;
             half _StreakStrength;
+            half _CapRepair;
+            float4 _CapUVRect;
         CBUFFER_END
 
         struct Attributes
@@ -178,6 +188,24 @@ Shader "PirateSlop/CoastalTripoRock"
             half roughness = saturate(packed.g * _RoughnessFactor);
             half3 normalTS;
             half3 normalWS = CoastalNormalWS(input.uv, input.normalWS, input.tangentWS, normalTS);
+            if (_CapRepair > .001)
+            {
+                half brightness = dot(albedo, half3(.2126,.7152,.0722));
+                half bare = (1 - smoothstep(.12,.30,brightness)) * smoothstep(.008,.028,albedo.r - albedo.b);
+                half cap = _CapRepair * bare * smoothstep(.5,.85,normalize(input.normalWS).y);
+                if (cap > .001)
+                {
+                    float2 plane = input.positionWS.xz * .09;
+                    plane += float2(input.weathering.x, input.weathering.y) * .12;
+                    float2 capUV = _CapUVRect.xy + (1 - abs(frac(plane) * 2 - 1)) * _CapUVRect.zw;
+                    half3 stone = SAMPLE_TEXTURE2D(_CapMap, sampler_CapMap, capUV).rgb * _BaseColor.rgb;
+                    half3 detail = UnpackNormalScale(SAMPLE_TEXTURE2D(_CapBumpMap, sampler_CapBumpMap, capUV), .65);
+                    half3 capNormal = normalize(half3(detail.x, detail.z, detail.y));
+                    albedo = lerp(albedo, stone, cap);
+                    normalWS = normalize(lerp(normalWS, capNormal, cap * .65));
+                    roughness = lerp(roughness, .85, cap);
+                }
+            }
             float relativeHeight = input.positionWS.y - _CoastalSeaLevel;
             float wetEdge = _WetBandHeight + (input.weathering.x * 2 - 1) * _WetIrregularity;
             half wet = 1 - smoothstep(wetEdge - _WetBandSoftness, wetEdge + _WetBandSoftness, relativeHeight);

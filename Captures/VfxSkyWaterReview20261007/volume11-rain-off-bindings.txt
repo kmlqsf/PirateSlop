@@ -1,0 +1,8 @@
+Camera=Storm Billow Review Camera;main=Storm Billow Review Camera
+Volume3D=1
+Diagnostic=1
+Shape=(0.00, 0.00, 0.00, 0.00)
+Band=(0.00, 0.00, 0.00, 0.00)
+_StormVolumeDensity=StormVolumeDensity;path=Assets/Game/BRZoneVolumetric/Resources/StormVolumeDensity.asset;format=R8G8B8A8_UNorm;sRGB=False
+_PirateStormNearNoise=Storm continuous density field;path=;format=R8G8B8A8_UNorm;sRGB=False
+FeatureActive=True;material=AnnularStorm;shader=PirateSlop/VolumetricStorm;path=Assets/Game/BRZoneVolumetric/Shaders/VolumetricStorm.shader;VolumeProperty=False;keywords=_LOCAL_VOLUMETRIC_CLOUDS|_SUNDISK_HIGH_QUALITY;shaderMessages=0

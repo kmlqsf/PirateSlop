@@ -87,7 +87,7 @@ namespace PirateSlop.EditorTools
                 const string targetPath = "Assets/Prefabs/Networking/DeveloperTarget.prefab";
                 var dummy = GameObject.CreatePrimitive(PrimitiveType.Capsule); dummy.name = "DeveloperTarget";
                 dummy.AddComponent<NetworkObject>();
-                var hp = dummy.AddComponent<CombatHealth>(); hp.MaxHealth = 100; hp.BarHeight = 1.3f; hp.RespawnDelay = float.MaxValue;
+                var hp = dummy.AddComponent<CombatHealth>(); hp.MaxHealth = 100; hp.BarHeight = 1.3f;
                 dummy.AddComponent<NetworkHealth>(); dummy.AddComponent<DeveloperTarget>();
                 var targetPrefab = PrefabUtility.SaveAsPrefabAsset(dummy, targetPath); UnityEngine.Object.DestroyImmediate(dummy);
                 network.DeveloperTargetPrefab = targetPrefab.GetComponent<NetworkObject>();

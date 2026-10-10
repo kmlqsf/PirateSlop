@@ -131,7 +131,6 @@ namespace PirateSlop.Ships
         Vector2 bellForce;
         float lastBellDrag = float.NegativeInfinity;
         int bellTeam;
-        readonly Dictionary<int, int> rescueRings = new();
         ShipV3PhysicsPose[] remotePoses;
         uint remoteRevision, serverRevision;
         MaterialPropertyBlock glassBlock;
@@ -400,20 +399,7 @@ namespace PirateSlop.Ships
             nextRing = Time.time + .12f;
             BellSound(point, Mathf.Clamp(speed * .8f, .2f, .85f));
             if (Time.time - bellHeartbeat > 1.2f) return;
-            rescueRings.TryGetValue(bellTeam, out int rings);
-            bool dead = false;
-            foreach (var member in NetworkPlayer.Active)
-                if (member.TeamId.Value == bellTeam && !member.Eliminated.Value && member.Motor.IsDead) dead = true;
-            if (!dead) { rescueRings[bellTeam] = 0; return; }
-            rescueRings[bellTeam] = ++rings;
-            if (rings < 3) return;
-            foreach (var member in NetworkPlayer.Active)
-            {
-                if (member.TeamId.Value != bellTeam || member.Eliminated.Value || !member.Motor.IsDead) continue;
-                member.GetComponent<NetworkHealth>().Respawn(RespawnPoint.position, transform.eulerAngles.y);
-                rescueRings[bellTeam] = 0;
-                break;
-            }
+            GetComponent<NetworkShip>().RingForRescue(bellTeam);
         }
 
         [ObserversRpc(RunLocally = true)]

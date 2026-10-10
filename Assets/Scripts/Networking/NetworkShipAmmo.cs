@@ -47,7 +47,7 @@ namespace PirateSlop.Networking
                 Motor.Thaw();
                 frozen.Value = default;
             }
-            fireDestruction ??= GetComponent<ShipDestruction>();
+            if (fireDestruction == null) fireDestruction = GetComponent<ShipDestruction>();
             if (fireDestruction == null) return;
             if (normal.sqrMagnitude < .01f) normal = transform.up;
             var targets = fireDestruction.PlanFire(surface, point, normal);
@@ -124,31 +124,38 @@ namespace PirateSlop.Networking
         void UpdateAmmo()
         {
             if (!IsSpawned) return;
-            fireDestruction ??= GetComponent<ShipDestruction>();
+            if (fireDestruction == null) fireDestruction = GetComponent<ShipDestruction>();
             if (IsServerInitialized && frozen.Value.Until != 0 && !Motor.IsFrozen) frozen.Value = default;
             if (IsServerInitialized && fireDestruction != null)
             {
                 pendingFires.Clear();
-                foreach (var pair in fireExposure)
+                pendingFires.AddRange(fireExposure.Keys);
+                for (int fireIndex = 0; fireIndex < pendingFires.Count; fireIndex++)
                 {
-                    var fire = pair.Value;
+                    int id = pendingFires[fireIndex];
+                    if (!fireExposure.TryGetValue(id, out var fire)) continue;
                     var target = fire.Target;
+                    if (Time.time >= fire.End) RemoveFire(id);
+                    if (!fireDestruction.FireTargetAlive(target.SectionId, target.Fragment))
+                    { RemoveFire(id); continue; }
                     var point = fireDestruction.FireTargetPoint(target.SectionId, target.Fragment, transform.TransformPoint(target.Position));
                     bool submerged = OceanSurface.Instance != null && point.y < OceanSurface.Instance.Height(point) - .05f;
-                    if (!fireDestruction.FireTargetAlive(target.SectionId, target.Fragment) || submerged)
-                    { pendingFires.Add(pair.Key); continue; }
+                    if (submerged) { RemoveFire(id); continue; }
                     if (Time.time < fire.Start) continue;
                     bool present = false;
-                    foreach (var patch in firePatches) if (patch.Id == pair.Key) { present = true; break; }
-                    if (!present) firePatches.Add(new ShipFirePatch { Id = pair.Key, SectionId = target.SectionId, Fragment = target.Fragment, Position = target.Position, Normal = target.Normal });
+                    foreach (var patch in firePatches) if (patch.Id == id) { present = true; break; }
+                    if (!present && Time.time < fire.End) firePatches.Add(new ShipFirePatch { Id = id, SectionId = target.SectionId, Fragment = target.Fragment, Position = target.Position, Normal = target.Normal });
                     if (Time.time >= fire.Burn)
                     {
-                        fireDestruction.BurnFragment(target, fire.Attacker, fire.Impact);
                         fire.Burn = float.PositiveInfinity;
+                        try { fireDestruction.BurnFragment(target, fire.Attacker, fire.Impact); }
+                        catch (System.Exception error)
+                        {
+                            RemoveFire(id);
+                            Debug.LogException(error, this);
+                        }
                     }
-                    if (Time.time >= fire.End) pendingFires.Add(pair.Key);
                 }
-                foreach (int id in pendingFires) RemoveFire(id);
                 if (Time.time >= nextFireContact)
                 {
                     nextFireContact = Time.time + .25f;
@@ -197,6 +204,8 @@ namespace PirateSlop.Networking
         {
             foreach (var visual in fireVisuals.Values) if (visual != null) Destroy(visual.gameObject);
             fireVisuals.Clear(); fireExposure.Clear(); wetFragments.Clear();
+            pendingFires.Clear(); expiredVisuals.Clear(); burnedPlayers.Clear();
+            nextFireContact = 0; nextFireId = 0;
             if (IsServerInitialized) { firePatches.Clear(); frozen.Value = default; }
             if (iceVisual != null) iceVisual.StopPresentation();
             iceVisual = null;

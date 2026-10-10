@@ -144,7 +144,7 @@ namespace PirateSlop.Ships
             int required = repairFragment < 0 && repairOwner.IsMastCollapsed(repairSection.SectionId) ? NetworkHullRepair.MastStrikes : NetworkHullRepair.FragmentStrikes;
             if (repairStrikes < required) return true;
             if (repairFragment < 0) repairOwner.RepairMast(repairSection.SectionId);
-            else repairOwner.RepairNearby(repairSection.SectionId, repairFragment, point);
+            else repairOwner.RepairFragment(repairSection.SectionId, repairFragment);
             repairSection = null; CancelActivities(); return true;
         }
 

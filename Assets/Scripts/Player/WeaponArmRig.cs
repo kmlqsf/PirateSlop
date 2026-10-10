@@ -23,6 +23,7 @@ namespace PirateSlop
         PlayerInventory inventory;
         SabreAnimation sabreAnimation;
         PirateSlop.Networking.NetworkEquipment equipment;
+        PirateSlop.Networking.NetworkHullRepair repair;
         sealed class Arm
         {
             public Transform Upper, Fore, Hand;
@@ -79,6 +80,7 @@ namespace PirateSlop
             inventory = GetComponent<PlayerInventory>();
             sabreAnimation = GetComponent<SabreAnimation>();
             equipment = GetComponent<PirateSlop.Networking.NetworkEquipment>();
+            repair = GetComponent<PirateSlop.Networking.NetworkHullRepair>();
             triggerFingers = ViewArms.GetComponentsInChildren<Transform>(true).Where(t => t.name == "View_Index1.R" || t.name == "View_Index2.R" || t.name == "View_Index3.R").OrderBy(t => t.name).ToArray();
             triggerRest = triggerFingers.Select(t => t.localRotation).ToArray();
             pistolWorldGrip = weapon.WorldPivot.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "GripSocket_Firearm");
@@ -92,7 +94,8 @@ namespace PirateSlop
             bool visible = ((bell != null && bell.IsPulling) || weapon.AnimationEquipped || (equipment != null && equipment.Active && !equipment.Scoped)) && camera == motor.PlayerCamera && camera.enabled && !motor.IsThirdPerson;
             if (motor.SailPullLocked && camera == motor.PlayerCamera && camera.enabled && !motor.IsThirdPerson && !motor.IsDead)
                 visible |= inventory.PistolSelected || inventory.SabreSelected || equipment != null && equipment.Item >= PirateSlop.Networking.InventoryItem.Wine;
-            foreach (var r in renderers) r.forceRenderingOff = true;
+            bool plankVisible = repair != null && repair.FirstPersonPlank && camera == motor.PlayerCamera && camera.enabled;
+            foreach (var r in renderers) r.forceRenderingOff = !plankVisible;
         }
         void After(ScriptableRenderContext context, Camera camera) { if (renderers != null) foreach (var r in renderers) r.forceRenderingOff = true; }
         void LateUpdate()
@@ -108,6 +111,12 @@ namespace PirateSlop
             }
             if (GetComponent<PirateSlop.Networking.NetworkFishing>()?.IsPickingUp == true) return;
             if (GetComponent<CharacterActions>() is { ControlsEquipment: true }) return;
+            if (repair != null && repair.HeldPlank != null)
+            {
+                SolvePlank(repair.HeldPlank, right, left, transform);
+                SolvePlank(repair.HeldPlank, viewRight, viewLeft, motor.PlayerCamera.transform);
+                return;
+            }
             if (equipment != null && equipment.Active && equipment.View != null && equipment.World != null)
             {
                 SolveEquipment(equipment.View, viewRight, viewLeft, motor.PlayerCamera.transform);
@@ -200,6 +209,14 @@ namespace PirateSlop
             if (equipment.Item == PirateSlop.Networking.InventoryItem.Lantern) return;
             Vector3 otherPole = support.Upper.position - basis.right * .5f - basis.up * .4f;
             support.Solve(item.TransformPoint(equipment.SupportOffset), item.rotation, otherPole, 1);
+        }
+        static void SolvePlank(Transform item, Arm main, Arm support, Transform basis)
+        {
+            if (!main.Valid || !support.Valid) return;
+            Quaternion rightRotation = item.rotation * Quaternion.Euler(90f, 0f, -90f);
+            Quaternion leftRotation = item.rotation * Quaternion.Euler(90f, 0f, 90f);
+            main.Solve(item.TransformPoint(new Vector3(.3f, -.028f, 0f)) - rightRotation * main.Palm, rightRotation, main.Upper.position + basis.right * .4f - basis.up * .4f, 1f, true);
+            support.Solve(item.TransformPoint(new Vector3(-.3f, -.028f, 0f)) - leftRotation * support.Palm, leftRotation, support.Upper.position - basis.right * .4f - basis.up * .4f, 1f, true);
         }
         static void FitGrip(Transform item, Arm arm, Vector3 point)
         {

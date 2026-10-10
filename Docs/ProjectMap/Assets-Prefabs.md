@@ -108,11 +108,11 @@
 | Файл | Краткое описание |
 | --- | --- |
 | [Assets/Prefabs/Repair/DroppedMallet.prefab](<../../Assets/Prefabs/Repair/DroppedMallet.prefab>) | Префаб Unity |
-| [Assets/Prefabs/Repair/DroppedPlank1.prefab](<../../Assets/Prefabs/Repair/DroppedPlank1.prefab>) | Префаб Unity |
+| [Assets/Prefabs/Repair/DroppedPlank1.prefab](<../../Assets/Prefabs/Repair/DroppedPlank1.prefab>) | Префаб Unity; Предметы, лут и инвентарь, Повреждения корпуса, ремонт и затопление |
 | [Assets/Prefabs/Repair/DroppedPlank2.prefab](<../../Assets/Prefabs/Repair/DroppedPlank2.prefab>) | Префаб Unity |
 | [Assets/Prefabs/Repair/DroppedPlank3.prefab](<../../Assets/Prefabs/Repair/DroppedPlank3.prefab>) | Префаб Unity |
 | [Assets/Prefabs/Repair/SM_RepairMallet.prefab](<../../Assets/Prefabs/Repair/SM_RepairMallet.prefab>) | Префаб Unity |
-| [Assets/Prefabs/Repair/SM_RepairPlank_1.prefab](<../../Assets/Prefabs/Repair/SM_RepairPlank_1.prefab>) | Префаб Unity |
+| [Assets/Prefabs/Repair/SM_RepairPlank_1.prefab](<../../Assets/Prefabs/Repair/SM_RepairPlank_1.prefab>) | Префаб Unity; Повреждения корпуса, ремонт и затопление |
 | [Assets/Prefabs/Repair/SM_RepairPlank_2.prefab](<../../Assets/Prefabs/Repair/SM_RepairPlank_2.prefab>) | Префаб Unity |
 | [Assets/Prefabs/Repair/SM_RepairPlank_3.prefab](<../../Assets/Prefabs/Repair/SM_RepairPlank_3.prefab>) | Префаб Unity |
 

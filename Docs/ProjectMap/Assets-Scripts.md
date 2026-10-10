@@ -281,7 +281,7 @@
 | [Assets/Scripts/Networking/NetworkBarricade.cs](<../../Assets/Scripts/Networking/NetworkBarricade.cs>) | Исходник C#: NetworkBarricade; Предметы, лут и инвентарь |
 | [Assets/Scripts/Networking/NetworkBoarding.cs](<../../Assets/Scripts/Networking/NetworkBoarding.cs>) | Исходник C#: BoardingCable, NetworkCannon; Пушки, ядра и лафеты |
 | [Assets/Scripts/Networking/NetworkCannonDismantle.cs](<../../Assets/Scripts/Networking/NetworkCannonDismantle.cs>) | Исходник C#: NetworkWeapon; Движение корабля и палуба |
-| [Assets/Scripts/Networking/NetworkCrewBell.cs](<../../Assets/Scripts/Networking/NetworkCrewBell.cs>) | Исходник C#: NetworkCrewBell; Новая система ботов |
+| [Assets/Scripts/Networking/NetworkCrewBell.cs](<../../Assets/Scripts/Networking/NetworkCrewBell.cs>) | Исходник C#: NetworkCrewBell; Сеть, сессия и Steam, Новая система ботов |
 | [Assets/Scripts/Networking/NetworkDeveloperTools.cs](<../../Assets/Scripts/Networking/NetworkDeveloperTools.cs>) | Исходник C#: NetworkWeapon; Предметы, лут и инвентарь, Чайки и фоновые стаи |
 | [Assets/Scripts/Networking/NetworkEquipment.BottleAim.cs](<../../Assets/Scripts/Networking/NetworkEquipment.BottleAim.cs>) | Исходник C#: NetworkEquipment; Предметы, лут и инвентарь |
 | [Assets/Scripts/Networking/NetworkEquipment.HandMortar.cs](<../../Assets/Scripts/Networking/NetworkEquipment.HandMortar.cs>) | Исходник C#: NetworkEquipment; Личное оружие и урон |
@@ -297,7 +297,7 @@
 | [Assets/Scripts/Networking/NetworkFogCloud.cs](<../../Assets/Scripts/Networking/NetworkFogCloud.cs>) | Исходник C#: NetworkFogCloud; Предметы, лут и инвентарь |
 | [Assets/Scripts/Networking/NetworkGrapple.cs](<../../Assets/Scripts/Networking/NetworkGrapple.cs>) | Исходник C#: NetworkWeapon |
 | [Assets/Scripts/Networking/NetworkHandMortarBall.cs](<../../Assets/Scripts/Networking/NetworkHandMortarBall.cs>) | Исходник C#: NetworkHandMortarBall; Личное оружие и урон |
-| [Assets/Scripts/Networking/NetworkHealth.cs](<../../Assets/Scripts/Networking/NetworkHealth.cs>) | Исходник C#: NetworkHealth; Пушки, ядра и лафеты, Персонаж, камера и анимации, Личное оружие и урон |
+| [Assets/Scripts/Networking/NetworkHealth.cs](<../../Assets/Scripts/Networking/NetworkHealth.cs>) | Исходник C#: NetworkHealth; Пушки, ядра и лафеты, Персонаж, камера и анимации, Личное оружие и урон, Сеть, сессия и Steam |
 | [Assets/Scripts/Networking/NetworkHolyGrenade.cs](<../../Assets/Scripts/Networking/NetworkHolyGrenade.cs>) | Исходник C#: NetworkHolyGrenade |
 | [Assets/Scripts/Networking/NetworkHolyGrenadeHands.cs](<../../Assets/Scripts/Networking/NetworkHolyGrenadeHands.cs>) | Исходник C#: NetworkHolyGrenadeHands |
 | [Assets/Scripts/Networking/NetworkHullRepair.cs](<../../Assets/Scripts/Networking/NetworkHullRepair.cs>) | Исходник C#: NetworkHullRepair; Повреждения корпуса, ремонт и затопление, Корабельная обезьянка |
@@ -337,7 +337,7 @@
 | [Assets/Scripts/Networking/NetworkShip.cs](<../../Assets/Scripts/Networking/NetworkShip.cs>) | Исходник C#: NetworkShip; Движение корабля и палуба, Паруса и канаты, Сеть, сессия и Steam, Производительность и тест нагрузки без AI |
 | [Assets/Scripts/Networking/NetworkShipAmmo.cs](<../../Assets/Scripts/Networking/NetworkShipAmmo.cs>) | Исходник C#: ShipFirePatch, ShipFreezeState, NetworkShip, FireExposure; Пушки, ядра и лафеты, Повреждения корпуса, ремонт и затопление |
 | [Assets/Scripts/Networking/NetworkShipPush.cs](<../../Assets/Scripts/Networking/NetworkShipPush.cs>) | Исходник C#: NetworkShipPush |
-| [Assets/Scripts/Networking/NetworkShipRum.cs](<../../Assets/Scripts/Networking/NetworkShipRum.cs>) | Исходник C#: NetworkShip |
+| [Assets/Scripts/Networking/NetworkShipRum.cs](<../../Assets/Scripts/Networking/NetworkShipRum.cs>) | Исходник C#: NetworkShip; Сеть, сессия и Steam |
 | [Assets/Scripts/Networking/NetworkSkullEvent.cs](<../../Assets/Scripts/Networking/NetworkSkullEvent.cs>) | Исходник C#: NetworkSkullEvent; Предметы, лут и инвентарь |
 | [Assets/Scripts/Networking/NetworkVortexBottle.cs](<../../Assets/Scripts/Networking/NetworkVortexBottle.cs>) | Исходник C#: NetworkVortexBottle; Предметы, лут и инвентарь |
 | [Assets/Scripts/Networking/NetworkWeapon.Barricade.cs](<../../Assets/Scripts/Networking/NetworkWeapon.Barricade.cs>) | Исходник C#: NetworkWeapon; Предметы, лут и инвентарь |
@@ -361,7 +361,7 @@
 | [Assets/Scripts/Networking/SessionCombatRules.cs](<../../Assets/Scripts/Networking/SessionCombatRules.cs>) | Исходник C#: CombatRulesMessage, SessionController; Персонаж, камера и анимации, Сеть, сессия и Steam, Тестовая карта и водоворот |
 | [Assets/Scripts/Networking/SessionConfig.cs](<../../Assets/Scripts/Networking/SessionConfig.cs>) | Исходник C#: SessionConfig; Проект и точки входа, Сеть, сессия и Steam |
 | [Assets/Scripts/Networking/SessionController.cs](<../../Assets/Scripts/Networking/SessionController.cs>) | Исходник C#: SessionController; Проект и точки входа, Чайки и фоновые стаи, Сеть, сессия и Steam, Новая система ботов, Шторм, зона, дождь и объёмный туман |
-| [Assets/Scripts/Networking/SessionCrew.cs](<../../Assets/Scripts/Networking/SessionCrew.cs>) | Исходник C#: SessionController; Новая система ботов |
+| [Assets/Scripts/Networking/SessionCrew.cs](<../../Assets/Scripts/Networking/SessionCrew.cs>) | Исходник C#: SessionController; Сеть, сессия и Steam, Новая система ботов |
 | [Assets/Scripts/Networking/SessionLoadTest.cs](<../../Assets/Scripts/Networking/SessionLoadTest.cs>) | Исходник C#: SessionController; Производительность и тест нагрузки без AI |
 | [Assets/Scripts/Networking/SessionMenu.cs](<../../Assets/Scripts/Networking/SessionMenu.cs>) | Исходник C#: SessionController, MenuAccent; Сеть, сессия и Steam, Меню и HUD |
 | [Assets/Scripts/Networking/SessionMetrics.cs](<../../Assets/Scripts/Networking/SessionMetrics.cs>) | Исходник C#: SessionMetrics |
@@ -388,7 +388,7 @@
 | --- | --- |
 | [Assets/Scripts/Player/BulletSurface.cs](<../../Assets/Scripts/Player/BulletSurface.cs>) | Исходник C#: BulletSurfaceKind, BulletSurface; Личное оружие и урон |
 | [Assets/Scripts/Player/CharacterActions.cs](<../../Assets/Scripts/Player/CharacterActions.cs>) | Исходник C#: CharacterActions; Личное оружие и урон |
-| [Assets/Scripts/Player/CombatHealth.cs](<../../Assets/Scripts/Player/CombatHealth.cs>) | Исходник C#: CombatHealth; Личное оружие и урон |
+| [Assets/Scripts/Player/CombatHealth.cs](<../../Assets/Scripts/Player/CombatHealth.cs>) | Исходник C#: CombatHealth; Личное оружие и урон, Сеть, сессия и Steam |
 | [Assets/Scripts/Player/CorpsePhysicsWorld.cs](<../../Assets/Scripts/Player/CorpsePhysicsWorld.cs>) | Исходник C#: CorpsePhysicsWorld |
 | [Assets/Scripts/Player/CrewBellMotion.cs](<../../Assets/Scripts/Player/CrewBellMotion.cs>) | Исходник C#: CrewBellMotion |
 | [Assets/Scripts/Player/DamageFeedback.cs](<../../Assets/Scripts/Player/DamageFeedback.cs>) | Исходник C#: DamageFeedback |
@@ -437,7 +437,7 @@
 | [Assets/Scripts/Player/SwimPresentation.cs](<../../Assets/Scripts/Player/SwimPresentation.cs>) | Исходник C#: SwimPresentation |
 | [Assets/Scripts/Player/UnderwaterFirearmProjectile.cs](<../../Assets/Scripts/Player/UnderwaterFirearmProjectile.cs>) | Исходник C#: FirearmDamageBatch, UnderwaterFirearmProjectile; Личное оружие и урон |
 | [Assets/Scripts/Player/UpgradeCombat.cs](<../../Assets/Scripts/Player/UpgradeCombat.cs>) | Исходник C#: UpgradeCombat; Улучшения рогалика из сундуков |
-| [Assets/Scripts/Player/WeaponArmRig.cs](<../../Assets/Scripts/Player/WeaponArmRig.cs>) | Исходник C#: WeaponArmRig, Arm; Личное оружие и урон, Корабельная слот-машина |
+| [Assets/Scripts/Player/WeaponArmRig.cs](<../../Assets/Scripts/Player/WeaponArmRig.cs>) | Исходник C#: WeaponArmRig, Arm; Личное оружие и урон, Повреждения корпуса, ремонт и затопление, Корабельная слот-машина |
 
 ## Assets/Scripts/Ship
 
@@ -518,8 +518,8 @@
 | [Assets/Scripts/UI/GameTelemetry.cs](<../../Assets/Scripts/UI/GameTelemetry.cs>) | Исходник C#: GameTelemetry; Меню и HUD, Производительность и тест нагрузки без AI |
 | [Assets/Scripts/UI/GameVersionOverlay.cs](<../../Assets/Scripts/UI/GameVersionOverlay.cs>) | Исходник C#: GameVersionOverlay; Меню и HUD |
 | [Assets/Scripts/UI/HudLayout.cs](<../../Assets/Scripts/UI/HudLayout.cs>) | Исходник C#: HudLayout, Scope; Меню и HUD |
-| [Assets/Scripts/UI/PirateHudStyle.cs](<../../Assets/Scripts/UI/PirateHudStyle.cs>) | Исходник C#: PirateHudStyle; Меню и HUD |
-| [Assets/Scripts/UI/PlayerHud.cs](<../../Assets/Scripts/UI/PlayerHud.cs>) | Исходник C#: PlayerHud; Меню и HUD |
+| [Assets/Scripts/UI/PirateHudStyle.cs](<../../Assets/Scripts/UI/PirateHudStyle.cs>) | Исходник C#: PirateHudStyle; Повреждения корпуса, ремонт и затопление, Меню и HUD |
+| [Assets/Scripts/UI/PlayerHud.cs](<../../Assets/Scripts/UI/PlayerHud.cs>) | Исходник C#: PlayerHud; Личное оружие и урон, Меню и HUD |
 | [Assets/Scripts/UI/RoguelikeUpgradeUI.Presentation.cs](<../../Assets/Scripts/UI/RoguelikeUpgradeUI.Presentation.cs>) | Исходник C#: RoguelikeUpgradeUI; Улучшения рогалика из сундуков |
 | [Assets/Scripts/UI/RoguelikeUpgradeUI.cs](<../../Assets/Scripts/UI/RoguelikeUpgradeUI.cs>) | Исходник C#: RoguelikeUpgradeUI; Улучшения рогалика из сундуков, Корабельная слот-машина |
 | [Assets/Scripts/UI/RoguelikeUpgradeView.cs](<../../Assets/Scripts/UI/RoguelikeUpgradeView.cs>) | Исходник C#: RoguelikeUpgradeView, CardSlot, UpgradeCardPointer; Улучшения рогалика из сундуков |

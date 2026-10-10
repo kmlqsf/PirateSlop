@@ -56,7 +56,7 @@ void BakeNoise(uint3 id : SV_DispatchThreadID)
     {
         float4 n = Perlin(uv * frequency, frequency);
         field.r += n.r * amplitude;
-        field.gba += n.gba * (amplitude * frequency);
+        if (octave < 2) field.gba += n.gba * (amplitude * frequency);
         amplitude *= .48;
         frequency *= 2u;
     }

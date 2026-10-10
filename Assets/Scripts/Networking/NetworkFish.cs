@@ -33,7 +33,7 @@ namespace PirateSlop.Networking
         readonly SyncVar<InventoryItem> ammoItem = new(InventoryItem.None);
         public InventoryItem CurrentItem => ammoItem.Value != InventoryItem.None ? ammoItem.Value : Item;
         public void SetAmmoItem(InventoryItem value) { if (CannonAmmo.IsBall(value)) ammoItem.Value = value; }
-        public string ItemName => Item >= InventoryItem.Wine ? InventoryIcons.ItemName(Item) : Item == InventoryItem.Rum ? "ром — запас возрождений" : CannonAmmo.IsBall(CurrentItem) ? InventoryIcons.ItemName(CurrentItem) : Item == InventoryItem.Sabre ? "саблю" : Item == InventoryItem.Fish ? "рыбу" : Item == InventoryItem.Pistol ? "пистолет" : Item == InventoryItem.Rod ? "удочку" : Item == InventoryItem.Cannonball ? "ядро" : Item == InventoryItem.Mallet ? "киянку" : Item == InventoryItem.Plank ? "доску" : "разобранную пушку";
+        public string ItemName => Item >= InventoryItem.Wine ? InventoryIcons.ItemName(Item) : Item == InventoryItem.Rum ? "ром — для быстрого возрождения" : CannonAmmo.IsBall(CurrentItem) ? InventoryIcons.ItemName(CurrentItem) : Item == InventoryItem.Sabre ? "саблю" : Item == InventoryItem.Fish ? "рыбу" : Item == InventoryItem.Pistol ? "пистолет" : Item == InventoryItem.Rod ? "удочку" : Item == InventoryItem.Cannonball ? "ядро" : Item == InventoryItem.Mallet ? "киянку" : Item == InventoryItem.Plank ? "доску" : "разобранную пушку";
         readonly SyncVar<NetworkObject> platform = new();
         readonly SyncVar<int> platformId = new();
         readonly SyncVar<Vector3> worldPosition = new();

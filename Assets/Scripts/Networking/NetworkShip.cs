@@ -28,9 +28,10 @@ namespace PirateSlop.Networking
         Vector3 sinkingPosition;
         float sinkingYaw;
         public bool IsSinking => sinking.Value;
+        public float SinkingElapsed => IsSinking ? Time.time - sinkingStarted : 0f;
         public void BeginSinking()
         {
-            if (!IsServerInitialized || IsSinking) return;
+            if (!IsServerInitialized || IsSinking || GetComponent<ShipFlooding>() is not { Level: >= 1f }) return;
             sinking.Value = true;
             sinkingStarted = Time.time;
             sinkingPosition = transform.position;
@@ -69,12 +70,15 @@ namespace PirateSlop.Networking
         }
         public override void OnStopNetwork()
         {
-            if (monkey != null) monkey.End();
-            targetMarks.Clear();
+            if (TimeManager != null)
+            {
+                TimeManager.OnTick -= Tick;
+                TimeManager.OnPostTick -= Publish;
+            }
             ActiveShips.Remove(this);
             ClearAmmo();
-            TimeManager.OnTick -= Tick;
-            TimeManager.OnPostTick -= Publish;
+            if (monkey != null) monkey.End();
+            targetMarks.Clear();
             Helm.ReleaseControl();
         }
         void Tick()

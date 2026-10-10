@@ -108,8 +108,7 @@ namespace PirateSlop.Networking
             {
                 var ship = player.Ship;
                 nextRing = Time.time + 2f;
-                foreach (var member in NetworkPlayer.Active)
-                    if (member.Ship == ship && member.TeamId.Value == player.TeamId.Value && member.GetComponent<CombatHealth>() is { } health && health.RespawnFromBell(ship)) break;
+                ship.RingForRescue(player.TeamId.Value);
                 ServerRingCount++;
                 RingObserversRpc(motion.transform.position);
                 StopServerPull();
@@ -156,7 +155,7 @@ namespace PirateSlop.Networking
             if (ship.IsSinking) text.Append("\nКорабль погибает — возрождение недоступно");
             else if (waiting.Count == 0) text.Append(eliminated > 0 ? "\nНекого вернуть колоколом" : "\nВесь экипаж жив").Append("\nЛКМ на верёвке + потянуть мышь вниз (просто позвонить)");
             else if (ship.RumCount == 0) text.Append("\nНет рома — нужен 1 ром на пирата").Append("\nЛКМ на верёвке + потянуть мышь вниз (просто позвонить)");
-            else text.Append("\nМожно вернуть: ").Append(Mathf.Min(waiting.Count, ship.RumCount)).Append(" из ").Append(waiting.Count).Append("\nЛКМ на верёвке + потянуть мышь вниз (1 ром за пирата)");
+            else text.Append("\nМожно вернуть: ").Append(Mathf.Min(waiting.Count, ship.RumCount)).Append(" из ").Append(waiting.Count).Append("\nПозвоните 3 раза · 1 ром за пирата").Append("\nЛКМ на верёвке + потянуть мышь вниз");
             bellStatus = text.ToString();
         }
         [ObserversRpc(RunLocally = true)]

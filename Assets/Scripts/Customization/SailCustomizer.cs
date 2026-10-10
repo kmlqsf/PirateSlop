@@ -175,12 +175,13 @@ namespace PirateSlop.Customization
                             if (currentModel && r.sharedMaterial != null)
                             {
                                 var source = r.sharedMaterial;
-                                partMaterials[i].SetColor("_FabricTint", source.HasProperty("_BaseColor") ? source.GetColor("_BaseColor") : Color.white);
+                                partMaterials[i].SetColor("_FabricTint", Color.white);
                                 if (source.HasProperty("_OcclusionMap") && source.GetTexture("_OcclusionMap") != null)
                                     partMaterials[i].SetTexture("_OcclusionMap", source.GetTexture("_OcclusionMap"));
                             }
                             partMaterials[i].SetFloat("_UseFaceOrientation", currentModel ? 1f : 0f);
                             partMaterials[i].SetFloat("_PreserveDecalColor", currentModel ? 1f : 0f);
+                            partMaterials[i].SetFloat("_PreserveFabricColor", currentModel ? 1f : 0f);
                             decalCanvasScales[i] = currentModel ? PrepareDecalCoordinates(r, i == 0) : new Vector4(1f, 1f, 0f, 0f);
                             partMaterials[i].SetFloat("_UseDecalUV2", currentModel && i == 0 && mizzenDecalMesh != null ? 1f : 0f);
                             partMaterials[i].SetVector("_DecalCanvasScale", decalCanvasScales[i]);

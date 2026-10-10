@@ -110,7 +110,7 @@ namespace PirateSlop.Networking
                 pactSeconds.Value = Mathf.Ceil(Mathf.Max(0, state.PactAt - Time.time) * 10f) / 10f;
                 if (state.PactPlatform != null) state.PactWorldPosition = state.PactPlatform.TransformPoint(state.PactPosition);
             }
-            if (state != null && state.PendingPact && !health.IsDead) { state.PendingPact = false; pactSeconds.Value = 0f; }
+            if (state != null && state.PendingPact && (!health.IsDead || !health.CanRespawn)) { state.PendingPact = false; pactSeconds.Value = 0f; }
             if (state != null && state.PendingPact && Time.time >= state.PactAt)
             {
                 state.PendingPact = false; pactSeconds.Value = 0f;

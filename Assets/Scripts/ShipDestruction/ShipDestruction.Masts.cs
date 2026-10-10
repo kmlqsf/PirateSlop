@@ -113,6 +113,16 @@ namespace PirateSlop
             return true;
         }
 
+        public bool MastRepairFragment(int id, out int sectionId, out int fragmentId)
+        {
+            sectionId = fragmentId = -1;
+            if (!mastParts.TryGetValue(id, out var assembly)) return false;
+            foreach (var part in assembly.Parts)
+                for (int i = 0; i < Mathf.Min(64, part.RepairCount); i++)
+                    if ((part.RemovedFragments & (1UL << i)) != 0)
+                    { sectionId = part.SectionId; fragmentId = i; return true; }
+            return false;
+        }
         public bool RepairMast(int id)
         {
             if (!ready || !IsServerInitialized || ship.IsSinking || !mastParts.TryGetValue(id, out var assembly) || !MastHasDamage(assembly)) return false;

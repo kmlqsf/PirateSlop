@@ -72,6 +72,13 @@ namespace PirateSlop.Ships
                 var mesh = Sails[i] != null ? Sails[i].sharedMesh : null;
                 furlShapes[i] = mesh != null ? mesh.GetBlendShapeIndex("Furled") : -1;
                 if (furlShapes[i] < 0 && mesh != null) furlShapes[i] = mesh.GetBlendShapeIndex("Deployed.Furled");
+                if (Sails[i] != null && mesh != null)
+                {
+                    var cloth = Sails[i].GetComponent<ShipV3ClothMotion>() ?? Sails[i].gameObject.AddComponent<ShipV3ClothMotion>();
+                    cloth.PinTop = true;
+                    cloth.Strength = .65f;
+                    cloth.SailIndex = i;
+                }
             }
             int count = RigMeshes != null ? RigMeshes.Length : 0;
             rigShapes = new int[count][]; rigHasHalf = new bool[count]; appliedRig = new float[count];

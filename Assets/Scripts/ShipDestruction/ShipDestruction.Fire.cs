@@ -58,16 +58,27 @@ namespace PirateSlop
 
         public bool FireTargetAlive(int id, int fragment)
         {
-            return sections.TryGetValue(id, out var section) && section.gameObject.activeInHierarchy
+            return sections.TryGetValue(id, out var section) && section != null && section.gameObject.activeInHierarchy
                 && section.State != ShipSectionState.Destroyed && fragment >= 0 && fragment < section.RepairCount
-                && (section.RemovedFragments & (1UL << fragment)) == 0;
+                && (section.RemovedFragments & (1UL << fragment)) == 0 && TryFireSurface(section, fragment, out _, out _);
+        }
+
+        static bool TryFireSurface(ShipDamageSection section, int fragment, out Transform anchor, out Bounds bounds)
+        {
+            anchor = null; bounds = default;
+            if (section == null || fragment < 0 || fragment >= section.RepairCount) return false;
+            var part = section.Fragments.Length > 0 ? section.Fragments[fragment] : section.Intact;
+            if (part == null) return false;
+            var filter = part.GetComponent<MeshFilter>();
+            if (filter == null || filter.sharedMesh == null || filter.sharedMesh.vertexCount == 0) return false;
+            anchor = part.transform;
+            bounds = section.RepairBounds(fragment);
+            return true;
         }
 
         public Vector3 FireTargetPoint(int id, int fragment, Vector3 fallback)
         {
-            if (!sections.TryGetValue(id, out var section) || fragment < 0 || fragment >= section.RepairCount) return fallback;
-            var anchor = section.RepairTransform(fragment);
-            var bounds = section.RepairBounds(fragment);
+            if (!sections.TryGetValue(id, out var section) || !TryFireSurface(section, fragment, out var anchor, out var bounds)) return fallback;
             return anchor.TransformPoint(bounds.ClosestPoint(anchor.InverseTransformPoint(fallback)));
         }
 
@@ -104,9 +115,13 @@ namespace PirateSlop
                 Vector3 deckPoint = point;
                 foreach (var candidate in Sections)
                 {
+                    if (candidate == null || candidate.State == ShipSectionState.Destroyed || !candidate.gameObject.activeInHierarchy) continue;
                     if ((!candidate.SurfaceDamage && definitions[candidate.SectionId].Type != ShipSectionType.Deck) || affected.ContainsKey(candidate.SectionId) || candidate.Distance(point) >= nearest) continue;
+                    if (candidate.Intact == null) continue;
+                    var filter = candidate.Intact.GetComponent<MeshFilter>();
+                    if (filter == null || filter.sharedMesh == null || filter.sharedMesh.vertexCount == 0) continue;
                     var visual = candidate.Intact.transform;
-                    var bounds = candidate.Intact.GetComponent<MeshFilter>().sharedMesh.bounds;
+                    var bounds = filter.sharedMesh.bounds;
                     var local = visual.InverseTransformPoint(point);
                     var top = visual.TransformPoint(new Vector3(Mathf.Clamp(local.x, bounds.min.x, bounds.max.x), bounds.max.y, Mathf.Clamp(local.z, bounds.min.z, bounds.max.z)));
                     float distance = Vector3.Distance(point, top);
@@ -125,9 +140,8 @@ namespace PirateSlop
             for (int i = 0; i < connections.Length; i++)
             {
                 var node = connections[i];
-                if (!sections.TryGetValue(node.SectionId, out var section) || node.Fragment < 0 || node.Fragment >= section.RepairCount) continue;
-                var anchor = section.RepairTransform(node.Fragment);
-                var candidate = new FireSurface { Index = i, Anchor = anchor, LocalToWorld = anchor.localToWorldMatrix, WorldToLocal = anchor.worldToLocalMatrix, Bounds = section.RepairBounds(node.Fragment) };
+                if (!sections.TryGetValue(node.SectionId, out var section) || !TryFireSurface(section, node.Fragment, out var anchor, out var bounds)) continue;
+                var candidate = new FireSurface { Index = i, Anchor = anchor, LocalToWorld = anchor.localToWorldMatrix, WorldToLocal = anchor.worldToLocalMatrix, Bounds = bounds };
                 candidate.Point = candidate.Closest(point);
                 float distance = (candidate.Point - point).sqrMagnitude;
                 if (distance > 72f) continue;

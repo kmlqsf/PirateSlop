@@ -118,7 +118,7 @@ namespace PirateSlop
                 {
                     if (entry == null || !Enum.TryParse(entry.item, false, out InventoryItem item) ||
                         !Enum.IsDefined(typeof(InventoryItem), item) || entry.item != item.ToString() ||
-                        item == InventoryItem.None || item == InventoryItem.Plank || !ids.Add(item))
+                        item == InventoryItem.None || !ids.Add(item))
                         throw new InvalidDataException("Unknown, unsupported or duplicate chest item: " + entry?.item);
                     if (!float.IsFinite(entry.chancePercent) || entry.chancePercent < 0 || entry.chancePercent > 100 ||
                         entry.minCount < 1 || entry.maxCount < entry.minCount || entry.maxCount > 1000)

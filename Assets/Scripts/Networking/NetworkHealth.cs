@@ -10,12 +10,15 @@ namespace PirateSlop.Networking
         readonly SyncVar<bool> burning = new();
         readonly SyncVar<bool> developerInvulnerable = new();
         readonly SyncVar<uint> frozenUntil = new();
+        readonly SyncVar<uint> respawnUntil = new();
         float burnUntil, nextBurnDamage, wetUntil;
         GameObject fireAttacker;
         ShipFireVfx fireVisual;
         public bool IsBurning => burning.Value;
         public bool DeveloperInvulnerable => developerInvulnerable.Value;
         CombatHealth target;
+        public bool HasRespawnTimer => respawnUntil.Value != 0;
+        public float RespawnSeconds => respawnUntil.Value == 0 || TimeManager == null ? 0f : Mathf.Max(0, unchecked((int)(respawnUntil.Value - TimeManager.Tick))) * (float)TimeManager.TickDelta;
         public float FrozenSeconds => frozenUntil.Value == 0 || TimeManager == null ? 0f : Mathf.Max(0, unchecked((int)(frozenUntil.Value - TimeManager.Tick))) * (float)TimeManager.TickDelta;
         public bool IsFrozen => FrozenSeconds > 0f;
         void Awake()
@@ -43,7 +46,14 @@ namespace PirateSlop.Networking
             if (IsFrozen) GetComponent<AdvancedPlayerController>()?.BeginFreeze();
         }
         public void PublishMaximum(float value) { if (IsServerInitialized) maximumHealth.Value = value; }
-        public void Publish(float value) { if (IsServerInitialized) health.Value = value; }
+        public void Publish(float value)
+        {
+            if (!IsServerInitialized) return;
+            if (value <= 0f && health.Value > 0f)
+                respawnUntil.Value = TimeManager.Tick + (uint)Mathf.CeilToInt(CombatHealth.RespawnDelay / (float)TimeManager.TickDelta);
+            else if (value > 0f) respawnUntil.Value = 0;
+            health.Value = value;
+        }
         public void SetDeveloperInvulnerable(bool enabled)
         {
             if (IsServerInitialized) developerInvulnerable.Value = enabled;
@@ -74,6 +84,7 @@ namespace PirateSlop.Networking
         void Update()
         {
             if (!IsSpawned) return;
+            if (IsServerInitialized && target.IsDead && HasRespawnTimer && RespawnSeconds <= 0f) target.RespawnAutomatically();
             if (IsServerInitialized && frozenUntil.Value != 0 && (!IsFrozen || target.IsDead)) frozenUntil.Value = 0;
             if (IsServerInitialized && burning.Value)
             {
@@ -102,6 +113,7 @@ namespace PirateSlop.Networking
             if (IsServerInitialized) frozenUntil.Value = 0;
             if (IsServerInitialized) burning.Value = false;
             if (IsServerInitialized) developerInvulnerable.Value = false;
+            if (IsServerInitialized) respawnUntil.Value = 0;
             base.OnStopNetwork();
         }
         public void LaunchCorpse(Vector3 position, Vector3 velocity, Vector3 spin)
@@ -129,7 +141,7 @@ namespace PirateSlop.Networking
             => GetComponent<PirateSlop.DamageFeedback>()?.ConfirmHit();
         public void Respawn(Vector3 position, float yaw, float healthFraction = 1f)
         {
-            if (!IsServerInitialized) return;
+            if (!IsServerInitialized || target.IsDead && !target.CanRespawn) return;
             Extinguish();
             frozenUntil.Value = 0;
             RespawnObserversRpc(position, yaw, healthFraction);

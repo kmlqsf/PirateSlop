@@ -11,7 +11,7 @@ namespace PirateSlop.Networking
         public ushort Port = 7777;
         [Range(3, 126)] public int MaxPlayers = 30;
         public ushort TickRate = 30;
-        public int ProtocolVersion = 143;
+        public int ProtocolVersion = 144;
         public float ConnectTimeout = 15, ObserverRadius = 1000, ObserverHysteresis = .2f;
         public bool ClusteredTestSpawns;
         public float SpawnSpacing = 60;

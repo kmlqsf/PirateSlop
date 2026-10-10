@@ -50,7 +50,6 @@ namespace PirateSlop.Networking
         public bool CanAddItem(InventoryItem item)
         {
             if (!IsServerInitialized || item < InventoryItem.Fish || item > InventoryItem.ExplosiveBall) return false;
-            if (item == InventoryItem.Plank) return false;
             if (CannonAmmo.IsBall(item))
                 return inventory.FindAmmoSlot(item) >= 0;
             return inventory.CanFitItem(item);
@@ -196,6 +195,11 @@ namespace PirateSlop.Networking
         {
             if (!IsServerInitialized || slot < 0 || slot >= equipmentItems.Count || equipmentItems[slot] != item) return false;
             RemoveStackedItem(slot, 1); ApplyInventory(); return true;
+        }
+        public bool ConsumePlank(int slot)
+        {
+            if (!IsServerInitialized || slot != selectedSlot.Value || slot < 0 || slot >= plankCounts.Count || plankCounts[slot] <= 0) return false;
+            plankCounts[slot]--; ApplyInventory(); return true;
         }
         void RemoveStackedItem(int slot, int amount)
         {

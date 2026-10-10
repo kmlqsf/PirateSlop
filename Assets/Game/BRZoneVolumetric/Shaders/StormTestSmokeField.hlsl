@@ -2,12 +2,18 @@
 #define PIRATESLOP_STORM_TEST_SMOKE_FIELD
 float4 _StormTestSmokeMap;
 float4 _StormTestSmokeMotion;
+float4 _StormSmokeVisibilityRange;
 float4 _StormSmokeWaterPatch;
 TEXTURE3D(_StormSmokeNoise);
 SAMPLER(sampler_StormSmokeNoise);
 TEXTURE2D(_StormSmokeWaterHeight);
 SAMPLER(sampler_StormSmokeWaterHeight);
 static const float STORM_SMOKE_FRINGE = 64.0;
+
+float StormSmokeDistanceVisibility(float distanceWS)
+{
+    return 1.0 - smoothstep(_StormSmokeVisibilityRange.x, _StormSmokeVisibilityRange.y, distanceWS);
+}
 
 float4 StormSmokeNoise(float3 uv, float pixelWidth, float scale)
 {
@@ -40,7 +46,7 @@ float4 StormTestSmokeField(float3 p, float pixelWidth, bool sampleNormal, out fl
     float water = _StormCenterWater.y;
     if (local.y < 12.0) water += (StormSmokeWater(p) - water) * (1.0 - smoothstep(6.0, 12.0, local.y));
     float height = p.y - water;
-    float ground = exp(-max(0.0, height) * .28);
+    float ground = 1.0 - smoothstep(0.0, 12.0, height);
     float3 flow = local;
     flow.xz += radial * travel;
     flow.y += fall;
@@ -64,8 +70,8 @@ float4 StormTestSmokeField(float3 p, float pixelWidth, bool sampleNormal, out fl
     float upper = smoothstep(0.0, 6.0, crown - p.y);
     float lower = smoothstep(StormTestSmokeBottom(), StormTestSmokeBottom() + 3.0, p.y);
     float deep = smoothstep(0.0, 28.0, sd);
-    float surface = .1 + body * .75 + threads * .15;
-    float interior = .4 + body * .42 + threads * .15;
+    float surface = .145 + body * .75 + threads * .06;
+    float interior = .445 + body * .42 + threads * .06;
     if (advance > .001 && ground > .04)
     {
         float3 underFlow = local;
@@ -82,10 +88,10 @@ float4 StormTestSmokeField(float3 p, float pixelWidth, bool sampleNormal, out fl
     float eligibility = smoothstep(-49.0, -35.0, sd) * (1.0 - smoothstep(-9.0, 5.0, sd)) * (1.0 - advance);
     if (eligibility > .001)
     {
-        float2 cellBase = floor(local.xz / 18.0) - 1.0;
-        [loop] for (int cellIndex = 0; cellIndex < 9; cellIndex++)
+        float2 cellBase = floor(local.xz / 18.0 - .5);
+        [unroll] for (int cellIndex = 0; cellIndex < 4; cellIndex++)
         {
-            float2 cell = cellBase + float2(cellIndex % 3, cellIndex / 3);
+            float2 cell = cellBase + float2(cellIndex % 2, cellIndex / 2);
             float3 seed = StormBoundaryHash(cell + float2(13.17, 73.91));
             float2 centerXZ = (cell + .5) * 18.0 + (seed.xz - .5) * 4.0;
             float centerDistance = length(centerXZ) - _StormBand.x;
@@ -102,6 +108,8 @@ float4 StormTestSmokeField(float3 p, float pixelWidth, bool sampleNormal, out fl
             float centerY = lerp(top - _StormCenterWater.y - puffRadius, water - _StormCenterWater.y + puffRadius * .28, falling);
             centerY = lerp(centerY, water - _StormCenterWater.y + .6, spreading);
             float3 extent = float3(puffRadius * (1.0 + spreading * .45), radiusY, puffRadius * (1.0 + spreading * .45));
+            float horizontalDistance = dot(local.xz - centerXZ, local.xz - centerXZ) / (extent.x * extent.x);
+            if (horizontalDistance >= 1.0) continue;
             float3 q = (local - float3(centerXZ.x, centerY, centerXZ.y)) / extent;
             q += (float3(broad.r, fold.r, fine.r) - .5) * 1.25;
             float lobe = 1.0 - dot(q, q) + (fold.r - .5) * .8 + (fine.r - .5) * .5;
@@ -109,7 +117,8 @@ float4 StormTestSmokeField(float3 p, float pixelWidth, bool sampleNormal, out fl
             float trailLobe = .52 - dot(trail, trail) + (fine.r - .5) * .5;
             lobe = lerp(max(lobe, trailLobe), lobe, spreading);
             float life = smoothstep(0.0, 1.5, age) * (1.0 - smoothstep(.25, 1.0, spreading));
-            float puff = smoothstep(-.25, .55, lobe) * life * eligibility * centerWeight * (.55 + threads * .37);
+            float puff = smoothstep(-.25, .55, lobe) * life * eligibility * centerWeight * (.55 + threads * .37)
+                * (1.0 - smoothstep(.65, 1.0, horizontalDistance));
             if (puff > density)
             {
                 density = puff;
@@ -119,7 +128,7 @@ float4 StormTestSmokeField(float3 p, float pixelWidth, bool sampleNormal, out fl
         }
     }
     normal = sampleNormal ? fieldNormal : float3(0, 1, 0);
-    float exposure = saturate(.28 + (1.0 - body) * .34 + threads * .12 + (1.0 - upper) * .2);
+    float exposure = saturate(.3225 + (1.0 - body) * .34 + threads * .035 + (1.0 - upper) * .2);
     return float4(min(1.0, density) * outer * upper * lower, body, threads, exposure);
 }
 float4 StormTestSmokeField(float3 p, float pixelWidth, out float3 normal) { return StormTestSmokeField(p, pixelWidth, true, normal); }

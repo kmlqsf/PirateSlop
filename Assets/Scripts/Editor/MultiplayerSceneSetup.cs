@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using FishNet.Managing;
 using FishNet.Managing.Client;
 using FishNet.Managing.Server;
@@ -112,10 +113,34 @@ namespace PirateSlop.EditorTools
         [MenuItem("PirateSlop/Multiplayer/Build Windows")]
         public static void Build()
         {
+            BuildWindows(BuildOptions.None);
+        }
+
+        [MenuItem("PirateSlop/Multiplayer/Build Windows Clean")]
+        public static void BuildClean()
+        {
+            BuildWindows(BuildOptions.CleanBuildCache);
+        }
+
+        [MenuItem("PirateSlop/Multiplayer/Build Windows Diagnostics")]
+        public static void BuildDiagnostics()
+        {
+            BuildWindows(BuildOptions.DetailedBuildReport);
+        }
+
+        static void BuildWindows(BuildOptions additionalOptions)
+        {
             if (!File.Exists(MenuPath)) throw new InvalidOperationException("Configure multiplayer scenes first.");
             Directory.CreateDirectory("Builds/Windows");
-            var report = BuildPipeline.BuildPlayer(new BuildPlayerOptions { scenes = GetBuildScenePaths(), locationPathName = "Builds/Windows/PirateSlop.exe", target = BuildTarget.StandaloneWindows64, options = BuildOptions.Development | BuildOptions.StrictMode | BuildOptions.CleanBuildCache | BuildOptions.DetailedBuildReport });
-            File.WriteAllText("Temp/multiplayer-build-result.txt", report.summary.result + " errors=" + report.summary.totalErrors + " size=" + report.summary.totalSize);
+            var report = BuildPipeline.BuildPlayer(new BuildPlayerOptions { scenes = GetBuildScenePaths(), locationPathName = "Builds/Windows/PirateSlop.exe", target = BuildTarget.StandaloneWindows64, options = BuildOptions.Development | BuildOptions.StrictMode | additionalOptions });
+            var summary = report.summary;
+            var result = new System.Text.StringBuilder();
+            result.AppendLine(summary.result + " errors=" + summary.totalErrors + " size=" + summary.totalSize + " elapsed=" + summary.totalTime.ToString("c") + " options=" + summary.options);
+            foreach (var step in report.steps.Where(step => step.depth == 0).OrderByDescending(step => step.duration).Take(5))
+                result.AppendLine(step.name + ": " + step.duration.ToString("c"));
+            Directory.CreateDirectory("Temp");
+            File.WriteAllText("Temp/multiplayer-build-result.txt", result.ToString());
+            Debug.Log("MULTIPLAYER_BUILD_REPORT\n" + result);
             if (report.summary.result != UnityEditor.Build.Reporting.BuildResult.Succeeded) throw new InvalidOperationException("Multiplayer build failed.");
             Debug.Log("MULTIPLAYER_BUILD_OK");
         }

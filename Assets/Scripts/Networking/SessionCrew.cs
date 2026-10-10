@@ -21,19 +21,15 @@ namespace PirateSlop.Networking
             for (int shipIndex = NetworkShip.ActiveShips.Count - 1; shipIndex >= 0; shipIndex--)
             {
                 var ship = NetworkShip.ActiveShips[shipIndex];
-                if (ship == null || !ship.IsSpawned || ship.IsSinking || ship.TeamId.Value <= 0) continue;
-                bool hasCrew = false, hasSurvivor = false;
+                if (ship == null || !ship.IsSpawned || !ship.IsSinking || ship.SinkingElapsed < 2f || ship.TeamId.Value <= 0 || TeamEliminated(ship.TeamId.Value)) continue;
+                eliminatedTeams.Add(ship.TeamId.Value);
                 foreach (var member in players.Values)
                 {
                     if (member == null || member.HomeShipId.Value != ship.ParticipantId.Value) continue;
-                    hasCrew = true;
-                    if (!member.Motor.IsDead || member.HasPendingSeaPact) { hasSurvivor = true; break; }
+                    member.Eliminated.Value = true;
+                    member.ReleaseServerInteractions();
+                    member.GetComponent<CombatHealth>().DieWithShip();
                 }
-                if (!hasCrew || hasSurvivor) continue;
-                eliminatedTeams.Add(ship.TeamId.Value);
-                foreach (var member in players.Values)
-                    if (member != null && member.HomeShipId.Value == ship.ParticipantId.Value) member.Eliminated.Value = true;
-                ship.BeginSinking();
                 eliminatedBotKeys.Clear();
                 foreach (var entry in players)
                     if (entry.Value != null && entry.Value.IsBot.Value && entry.Value.TeamId.Value == ship.TeamId.Value) eliminatedBotKeys.Add(entry.Key);
