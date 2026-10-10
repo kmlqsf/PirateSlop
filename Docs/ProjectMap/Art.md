@@ -556,6 +556,38 @@
 | [Art/Blender/Shark/Shark.blend](<../../Art/Blender/Shark/Shark.blend>) | Редактируемая сцена Blender |
 | [Art/Blender/Shark/generate_shark.py](<../../Art/Blender/Shark/generate_shark.py>) | Инструмент Python |
 
+## Art/Blender/Ships/BilgePump/Sources/Body
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/Ships/BilgePump/Sources/Body/tripo_convert_2ef4b4bc-68d7-44e5-ba03-5ecb31a31448.fbx](<../../Art/Blender/Ships/BilgePump/Sources/Body/tripo_convert_2ef4b4bc-68d7-44e5-ba03-5ecb31a31448.fbx>) | Модель / анимации FBX |
+
+## Art/Blender/Ships/BilgePump/Sources/Body/tripo_convert_2ef4b4bc-68d7-44e5-ba03-5ecb31a31448.fbm
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/Ships/BilgePump/Sources/Body/tripo_convert_2ef4b4bc-68d7-44e5-ba03-5ecb31a31448.fbm/насос_basecolor.JPEG](<../../Art/Blender/Ships/BilgePump/Sources/Body/tripo_convert_2ef4b4bc-68d7-44e5-ba03-5ecb31a31448.fbm/насос_basecolor.JPEG>) | Изображение / текстура |
+| [Art/Blender/Ships/BilgePump/Sources/Body/tripo_convert_2ef4b4bc-68d7-44e5-ba03-5ecb31a31448.fbm/насос_metallic.JPEG](<../../Art/Blender/Ships/BilgePump/Sources/Body/tripo_convert_2ef4b4bc-68d7-44e5-ba03-5ecb31a31448.fbm/насос_metallic.JPEG>) | Изображение / текстура |
+| [Art/Blender/Ships/BilgePump/Sources/Body/tripo_convert_2ef4b4bc-68d7-44e5-ba03-5ecb31a31448.fbm/насос_normal.PNG](<../../Art/Blender/Ships/BilgePump/Sources/Body/tripo_convert_2ef4b4bc-68d7-44e5-ba03-5ecb31a31448.fbm/насос_normal.PNG>) | Изображение / текстура |
+| [Art/Blender/Ships/BilgePump/Sources/Body/tripo_convert_2ef4b4bc-68d7-44e5-ba03-5ecb31a31448.fbm/насос_rm.JPEG](<../../Art/Blender/Ships/BilgePump/Sources/Body/tripo_convert_2ef4b4bc-68d7-44e5-ba03-5ecb31a31448.fbm/насос_rm.JPEG>) | Изображение / текстура |
+| [Art/Blender/Ships/BilgePump/Sources/Body/tripo_convert_2ef4b4bc-68d7-44e5-ba03-5ecb31a31448.fbm/насос_roughness.JPEG](<../../Art/Blender/Ships/BilgePump/Sources/Body/tripo_convert_2ef4b4bc-68d7-44e5-ba03-5ecb31a31448.fbm/насос_roughness.JPEG>) | Изображение / текстура |
+
+## Art/Blender/Ships/BilgePump/Sources/Lever
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/Ships/BilgePump/Sources/Lever/tripo_convert_138ffa72-5a2d-4119-bcdc-4af058b86cb2.fbx](<../../Art/Blender/Ships/BilgePump/Sources/Lever/tripo_convert_138ffa72-5a2d-4119-bcdc-4af058b86cb2.fbx>) | Модель / анимации FBX |
+
+## Art/Blender/Ships/BilgePump/Sources/Lever/tripo_convert_138ffa72-5a2d-4119-bcdc-4af058b86cb2.fbm
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/Ships/BilgePump/Sources/Lever/tripo_convert_138ffa72-5a2d-4119-bcdc-4af058b86cb2.fbm/ручка_насоса_basecolor.JPEG](<../../Art/Blender/Ships/BilgePump/Sources/Lever/tripo_convert_138ffa72-5a2d-4119-bcdc-4af058b86cb2.fbm/ручка_насоса_basecolor.JPEG>) | Изображение / текстура |
+| [Art/Blender/Ships/BilgePump/Sources/Lever/tripo_convert_138ffa72-5a2d-4119-bcdc-4af058b86cb2.fbm/ручка_насоса_metallic.JPEG](<../../Art/Blender/Ships/BilgePump/Sources/Lever/tripo_convert_138ffa72-5a2d-4119-bcdc-4af058b86cb2.fbm/ручка_насоса_metallic.JPEG>) | Изображение / текстура |
+| [Art/Blender/Ships/BilgePump/Sources/Lever/tripo_convert_138ffa72-5a2d-4119-bcdc-4af058b86cb2.fbm/ручка_насоса_normal.PNG](<../../Art/Blender/Ships/BilgePump/Sources/Lever/tripo_convert_138ffa72-5a2d-4119-bcdc-4af058b86cb2.fbm/ручка_насоса_normal.PNG>) | Изображение / текстура |
+| [Art/Blender/Ships/BilgePump/Sources/Lever/tripo_convert_138ffa72-5a2d-4119-bcdc-4af058b86cb2.fbm/ручка_насоса_rm.JPEG](<../../Art/Blender/Ships/BilgePump/Sources/Lever/tripo_convert_138ffa72-5a2d-4119-bcdc-4af058b86cb2.fbm/ручка_насоса_rm.JPEG>) | Изображение / текстура |
+| [Art/Blender/Ships/BilgePump/Sources/Lever/tripo_convert_138ffa72-5a2d-4119-bcdc-4af058b86cb2.fbm/ручка_насоса_roughness.JPEG](<../../Art/Blender/Ships/BilgePump/Sources/Lever/tripo_convert_138ffa72-5a2d-4119-bcdc-4af058b86cb2.fbm/ручка_насоса_roughness.JPEG>) | Изображение / текстура |
+
 ## Art/Blender/Ships/Capstan
 
 | Файл | Краткое описание |

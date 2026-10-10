@@ -7,7 +7,7 @@ using PirateSlop.World;
 namespace PirateSlop
 {
     [DefaultExecutionOrder(300)]
-    public sealed class StormVolumeController : MonoBehaviour
+    public sealed partial class StormVolumeController : MonoBehaviour
     {
         public bool EnableStormVolume = true;
         [Min(1)] public float InnerThickness = 80;
@@ -36,7 +36,7 @@ namespace PirateSlop
         public float WaterLevel { get; private set; }
         public float EffectiveInnerThickness { get; private set; }
         public float EffectiveInwardOffset { get; private set; }
-        public bool Ready => isActiveAndEnabled && EnableStormVolume && CurrentRadius > 0 && CloudSettings != null && (!TestCloudWall || testWallDensity != null && testWallNormals != null);
+        public bool Ready => isActiveAndEnabled && EnableStormVolume && CurrentRadius > 0 && CloudSettings != null && (!TestCloudWall || testWallDensity != null && testWallNormals != null && smokeNoise != null);
         public bool IsMenuPreview { get; private set; }
         public bool TestCloudWall => !IsMenuPreview && EnvironmentTestGallery.IsTest(ProceduralWorld.Instance != null ? ProceduralWorld.Instance.Layout : null);
         public Camera PreviewCamera { get; private set; }
@@ -58,6 +58,10 @@ namespace PirateSlop
         GameObject testShipSource;
         float testShipTop;
         float testRadiusVelocity;
+        float testSmokeAdvance;
+        float testSmokeAdvanceVelocity;
+        float testSmokeTravel;
+        float testSmokeFall;
         Camera feedbackCamera;
         static readonly int CenterId = Shader.PropertyToID("_StormCenterWater");
         static readonly int BandId = Shader.PropertyToID("_StormBand");
@@ -74,12 +78,15 @@ namespace PirateSlop
         static readonly int TestNormalsId = Shader.PropertyToID("_StormTestWallNormals");
         static readonly int TestBaseId = Shader.PropertyToID("_PirateStormTestCloudBase");
         static readonly int TestSkyId = Shader.PropertyToID("_PirateStormTestSkyWeather");
+        static readonly int TestSmokeMapId = Shader.PropertyToID("_StormTestSmokeMap");
+        static readonly int TestSmokeMotionId = Shader.PropertyToID("_StormTestSmokeMotion");
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         static void Register()
         {
             Instance = null;
             Shader.SetGlobalVector(TestCloudsId, Vector4.zero);
+            Shader.SetGlobalVector(TestSmokeMotionId, Vector4.zero);
             Shader.SetGlobalFloat(TestBaseId, 0);
             Shader.SetGlobalVector(TestSkyId, Vector4.zero);
             Shader.SetGlobalVector(WeatherId, Vector4.zero);
@@ -164,7 +171,7 @@ namespace PirateSlop
             if (arc != null && arc.gameObject.activeSelf) arc.gameObject.SetActive(false);
             if (curtain != null && curtain.gameObject.activeSelf) curtain.gameObject.SetActive(false);
             zone = StormZone.Instance;
-            if (zone == null) { CurrentRadius = 0; feedbackVolume.weight = 0; Shader.SetGlobalVector(TestCloudsId, Vector4.zero); Shader.SetGlobalVector(TestSkyId, Vector4.zero); Shader.SetGlobalVector(WeatherId, Vector4.zero); Shader.SetGlobalVector(CloudBoundaryId, Vector4.zero); Shader.SetGlobalVector(BackdropId, Vector4.zero);
+            if (zone == null) { CurrentRadius = 0; feedbackVolume.weight = 0; Shader.SetGlobalVector(TestCloudsId, Vector4.zero); Shader.SetGlobalVector(TestSmokeMotionId, Vector4.zero); Shader.SetGlobalVector(TestSkyId, Vector4.zero); Shader.SetGlobalVector(WeatherId, Vector4.zero); Shader.SetGlobalVector(CloudBoundaryId, Vector4.zero); Shader.SetGlobalVector(BackdropId, Vector4.zero);
             Shader.SetGlobalFloat(TestBaseId, 0);
             Shader.SetGlobalVector(CloudBandId, Vector4.zero);
             Shader.SetGlobalFloat(NearMediumId, 0); return; }
@@ -183,12 +190,21 @@ namespace PirateSlop
                 testRadiusVelocity = 0;
             }
             TargetRadius = zone.TargetRadius;
+            if (TestCloudWall)
+            {
+                float advance = !FreezeZoneValues && !zone.Paused && zone.Progress < 1
+                    ? Mathf.SmoothStep(0, 1, Mathf.InverseLerp(.05f, .4f, -testRadiusVelocity)) : 0;
+                testSmokeAdvance = Mathf.SmoothDamp(testSmokeAdvance, advance, ref testSmokeAdvanceVelocity, 1.25f, Mathf.Infinity, delta);
+                testSmokeTravel += delta * testSmokeAdvance * (5 + Mathf.Clamp(-testRadiusVelocity, 0, 12));
+                testSmokeFall += delta * Mathf.Lerp(3.5f, 9f, testSmokeAdvance);
+            }
             UpdateVolume();
             UpdateFeedback();
         }
         void UpdateVolume()
         {
             bool testWall = TestCloudWall;
+            if (testWall) UpdateSmokeFields();
             if (testWall && testWallDensity == null) testWallDensity = Resources.Load<Texture3D>("StormTestCloudWallDensity");
             if (testWall && testWallNormals == null) testWallNormals = Resources.Load<Texture3D>("StormTestCloudWallNormals");
             var layout = testWall ? ProceduralWorld.Instance.Layout : null;
@@ -208,6 +224,9 @@ namespace PirateSlop
             CloudSettings.globalSpeed.value = testWall ? 0 : WindSpeed;
             Shader.SetGlobalVector(TestCloudsId, Ready && testWall
                 ? new Vector4(1, bottom, WaterLevel + volumeHeight, Mathf.Max(1, CurrentRadius * Mathf.PI * 2 / 64f))
+                : Vector4.zero);
+            Shader.SetGlobalVector(TestSmokeMotionId, Ready && testWall
+                ? new Vector4(testSmokeAdvance, testSmokeTravel, testSmokeFall, 0)
                 : Vector4.zero);
             var sea = testWall ? OceanSurface.Instance : null;
             float maximumWave = sea != null && sea.HeightSource is BoatAttackOcean boat ? boat.MaximumWaveHeight : 0;
@@ -271,7 +290,7 @@ namespace PirateSlop
                             }
                 }
             }
-            return Mathf.Max(20, testShipTop + 10);
+            return Mathf.Max(20, testShipTop + 10) + 15;
         }
         public void ConfigureMenuPreview(Camera view, Vector3 center, float radius, float waterLevel)
         {
@@ -315,6 +334,7 @@ namespace PirateSlop
             {
                 material.SetTexture(TestDensityId, testWallDensity);
                 material.SetTexture(TestNormalsId, testWallNormals);
+                material.SetVector(TestSmokeMapId, new Vector4(0, 0, ProceduralWorld.Instance.Layout.Radius, motionTime));
             }
             material.SetVector(CenterId, new Vector4(CurrentCenter.x, WaterLevel, CurrentCenter.z, TargetRadius));
             material.SetVector(BandId, new Vector4(CurrentRadius, EffectiveInnerThickness, testWall ? 18 : Mathf.Max(1, OuterThickness), testWall ? .6f : Mathf.Max(.1f, EdgeSoftness)));
@@ -334,10 +354,12 @@ namespace PirateSlop
         }
         void OnDestroy()
         {
+            ReleaseSmokeFields();
             if (Instance == this)
             {
                 Instance = null;
                 Shader.SetGlobalVector(TestCloudsId, Vector4.zero);
+                Shader.SetGlobalVector(TestSmokeMotionId, Vector4.zero);
                 Shader.SetGlobalVector(TestSkyId, Vector4.zero);
                 Shader.SetGlobalFloat(TestBaseId, 0);
                 Shader.SetGlobalVector(WeatherId, Vector4.zero);
@@ -356,11 +378,13 @@ namespace PirateSlop
         }
         void OnDisable()
         {
+            ReleaseSmokeFields();
             if (feedbackVolume != null) feedbackVolume.weight = 0;
             if (Instance == this)
             {
                 Instance = null;
                 Shader.SetGlobalVector(TestCloudsId, Vector4.zero);
+                Shader.SetGlobalVector(TestSmokeMotionId, Vector4.zero);
                 Shader.SetGlobalVector(TestSkyId, Vector4.zero);
                 Shader.SetGlobalFloat(TestBaseId, 0);
                 Shader.SetGlobalVector(WeatherId, Vector4.zero);

@@ -1,5 +1,6 @@
 using UnityEngine;
 using PirateSlop;
+using PirateSlop.World;
 [RequireComponent(typeof(Rigidbody))]
 public class ShipController : MonoBehaviour
 {
@@ -18,6 +19,7 @@ public class ShipController : MonoBehaviour
     float pushYawVelocity, freezeRemaining, manualPushUntil;
     public bool IsFrozen => freezeRemaining > 0f;
     float floodLevel, fullWaterline, fullBowPitch;
+    public float InitialDraft;
     public bool IsFlooded => floodLevel >= 1f;
     public static readonly System.Collections.Generic.List<ShipController> ActiveControllers = new();
     void OnEnable() { ActiveControllers.Add(this); }
@@ -41,6 +43,7 @@ public class ShipController : MonoBehaviour
         freezeRemaining = Mathf.Max(freezeRemaining, duration);
         speed = 0f; pushVelocity = cannonShove = motionVelocity = motionAngularVelocity = Vector3.zero;
         pushYawVelocity = 0f; cannonTiltVelocity = Vector2.zero;
+        buoyantVelocity = buoyantTargetVelocity = Vector3.zero; buoyantResponseReady = false;
     }
     public void Thaw() => freezeRemaining = 0f;
     public void ApplyPushImpulse(Vector3 point, Vector3 direction)
@@ -84,6 +87,8 @@ public class ShipController : MonoBehaviour
     }
     [SerializeField] float buoyancyResponse = 2.5f, floatLength = 8f, floatWidth = 3f;
     float pitch, waveRoll;
+    Vector3 buoyantVelocity, previousBuoyantTarget, buoyantTargetVelocity;
+    bool buoyantResponseReady;
     ShipBuoyancy buoyancy;
     OceanSurface buoyancyOcean;
     System.Func<Vector3, float> sampleWaterHeight;
@@ -163,7 +168,8 @@ public class ShipController : MonoBehaviour
         networkShip = GetComponent<PirateSlop.Networking.NetworkShip>();
         rb = GetComponent<Rigidbody>(); rb.isKinematic = true; rb.useGravity = false; rb.constraints = RigidbodyConstraints.None;
         rb.interpolation = Networked ? RigidbodyInterpolation.None : RigidbodyInterpolation.Interpolate; rb.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
-        yaw = transform.eulerAngles.y; waterHeight = transform.position.y;
+        yaw = transform.eulerAngles.y;
+        waterHeight = InitialDraft > 0f ? OceanSurface.Instance != null ? OceanSurface.Instance.SeaLevel : 0f : transform.position.y;
         buoyancy = new ShipBuoyancy(floatLength, floatWidth, HullFootprint);
         if (sailSystem == null) sailSystem = GetComponent<SailSystem>();
         if (helm == null) helm = GetComponentInChildren<HelmInteraction>();
@@ -252,13 +258,44 @@ public class ShipController : MonoBehaviour
             {
                 buoyancyOcean = ocean;
                 sampleWaterHeight = SampleWaterForBuoyancy;
+                buoyantResponseReady = false;
             }
             var support = buoyancy.Evaluate(next, yaw, sampleWaterHeight);
             float blend = 1f - Mathf.Exp(-buoyancyResponse * dt);
-            float draftHeight = Mathf.Lerp(waterHeight, ocean.SeaLevel - fullWaterline, floodLevel);
-            next.y = Mathf.Lerp(rb.position.y, draftHeight + support.x - ocean.SeaLevel, blend);
-            pitch = Mathf.Lerp(pitch, Mathf.Clamp(support.y, -12, 12) + fullBowPitch * floodLevel, blend);
-            waveRoll = Mathf.Lerp(waveRoll, Mathf.Clamp(support.z, -15, 15), blend);
+            float draftHeight = Mathf.Lerp(waterHeight - InitialDraft, ocean.SeaLevel - fullWaterline, floodLevel);
+            var buoyantTarget = new Vector3(draftHeight + support.x - ocean.SeaLevel,
+                Mathf.Clamp(support.y, -12, 12) + fullBowPitch * floodLevel, Mathf.Clamp(support.z, -15, 15));
+            if (EnvironmentTestGallery.IsTest(ProceduralWorld.Instance != null ? ProceduralWorld.Instance.Layout : null))
+            {
+                buoyantTarget.x += buoyancy.ExposedHullLift(new Vector3(next.x, rb.position.y, next.z),
+                    Quaternion.Euler(pitch, yaw, bank + waveRoll));
+                if (!buoyantResponseReady) { previousBuoyantTarget = buoyantTarget; buoyantResponseReady = true; }
+                var targetVelocity = (buoyantTarget - previousBuoyantTarget) / Mathf.Max(.001f, dt);
+                targetVelocity.x = Mathf.Clamp(targetVelocity.x, -20, 20);
+                targetVelocity.y = Mathf.Clamp(targetVelocity.y, -45, 45);
+                targetVelocity.z = Mathf.Clamp(targetVelocity.z, -45, 45);
+                buoyantTargetVelocity = Vector3.Lerp(buoyantTargetVelocity, targetVelocity, 1 - Mathf.Exp(-8 * dt));
+                previousBuoyantTarget = buoyantTarget;
+                var state = new Vector3(rb.position.y, pitch, waveRoll);
+                float frequency = Mathf.Clamp(buoyancyResponse * 2, 3, 10);
+                int steps = Mathf.Max(1, Mathf.CeilToInt(dt / .01f));
+                float step = dt / steps;
+                for (int i = 0; i < steps; i++)
+                {
+                    var force = (buoyantTarget - state) * (frequency * frequency)
+                        + (buoyantTargetVelocity - buoyantVelocity) * (1.7f * frequency);
+                    force.x = Mathf.Clamp(force.x, -40, 40);
+                    buoyantVelocity += force * step;
+                    state += buoyantVelocity * step;
+                }
+                next.y = state.x; pitch = state.y; waveRoll = state.z;
+            }
+            else
+            {
+                next.y = Mathf.Lerp(rb.position.y, buoyantTarget.x, blend);
+                pitch = Mathf.Lerp(pitch, buoyantTarget.y, blend);
+                waveRoll = Mathf.Lerp(waveRoll, buoyantTarget.z, blend);
+            }
         }
         var rotation = Quaternion.Euler(pitch + cannonTilt.x, yaw, bank + waveRoll + cannonTilt.y);
         PirateSlop.Networking.NetworkCannon.ConstrainBoarding(this, ref next, rotation);
@@ -292,6 +329,7 @@ public class ShipController : MonoBehaviour
     public void Restore(ShipState s, AdvancedPlayerController driver)
     {
         cannonTilt=Vector2.zero; cannonTiltVelocity=Vector2.zero;
+        buoyantVelocity = buoyantTargetVelocity = Vector3.zero; buoyantResponseReady = false;
         speed = s.Speed; yaw = s.Yaw; bank = s.Bank; pitch = s.Pitch; waveRoll = s.WaveRoll;
         rb.position = s.Position; rb.rotation = Quaternion.Euler(pitch + cannonTilt.x, yaw, bank + waveRoll + cannonTilt.y); transform.SetPositionAndRotation(rb.position, rb.rotation);
         sailSystem.ApplyAggregate(s.Sail); helm.Restore(s.Rudder, s.Controlling, driver);

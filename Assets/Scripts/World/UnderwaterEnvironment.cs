@@ -54,7 +54,8 @@ namespace PirateSlop
             var surface = OceanSurface.Instance;
             if (suspension == null || camera == null || surface == null) return;
             var position = camera.transform.position;
-            bool inside = surface.Height(position) - position.y > 0;
+            float height = Ships.ShipWaterInterior.TryWaterHeight(position, out float bilgeHeight) ? bilgeHeight : surface.Height(position);
+            bool inside = height > position.y;
             if (inside && (!submerged || (position - lastCameraPosition).sqrMagnitude > 225))
             {
                 suspension.Clear();

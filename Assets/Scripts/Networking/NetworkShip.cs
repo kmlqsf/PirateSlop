@@ -156,6 +156,7 @@ namespace PirateSlop.Networking
         }
         void Update()
         {
+            UpdatePump();
             UpdateMonkey();
             UpdateAmmo();
             if (IsServerInitialized || !hasRemoteState) return;

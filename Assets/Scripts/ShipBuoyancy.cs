@@ -7,6 +7,7 @@ namespace PirateSlop
         static readonly float[] Contour = { 4.74f, 5.84f, 6.12f, 6.26f, 6.51f, 6.40f, 6.63f, 6.42f, 6.56f, 6.33f, 6.23f, 6.26f, 5.84f, 5.67f, 5.06f, 4.48f, 3.57f, 0f };
         readonly Vector3[] offsets = new Vector3[27];
         readonly float[] weights = new float[27];
+        readonly float[] surfaceHeights = new float[27];
         readonly float total, meanZ, momentX, momentZ;
         public ShipBuoyancy(float halfLength, float halfWidth, Vector2 footprint)
         {
@@ -45,6 +46,7 @@ namespace PirateSlop
             {
                 if (weights[i] <= 0) continue;
                 float water = height(position + rotation * offsets[i]);
+                surfaceHeights[i] = water;
                 float weighted = weights[i] * water;
                 sumHeight += weighted;
                 sumXHeight += offsets[i].x * weighted;
@@ -56,6 +58,13 @@ namespace PirateSlop
             float pitch = -Mathf.Atan(slopeZ);
             float roll = Mathf.Atan(slopeX * Mathf.Cos(pitch));
             return new Vector3(level, pitch * Mathf.Rad2Deg, roll * Mathf.Rad2Deg);
+        }
+        public float ExposedHullLift(Vector3 position, Quaternion rotation)
+        {
+            float missingImmersion = 0;
+            for (int i = 0; i < offsets.Length; i++)
+                missingImmersion += weights[i] * Mathf.Max(0, (position + rotation * offsets[i]).y - surfaceHeights[i]);
+            return missingImmersion / Mathf.Max(.001f, total);
         }
     }
 }

@@ -20,6 +20,8 @@ namespace PirateSlop.Ships
         void Update()
         {
             if (player == null || !player.IsOwner || !player.IsSpawned) return;
+            var pumpInteraction = GetComponent<ShipBilgePumpPlayer>();
+            if (pumpInteraction != null && (pumpInteraction.IsHolding || pumpInteraction.ConsumedInput)) return;
             if (player.Motor.IsDead || player.Motor.IsDowned || player.Motor.IsFrozen || player.Motor.IsSwimming || player.Motor.IsClimbing || player.Motor.LocomotionLocked && held == null ||
                 SessionController.MenuOpen || DeveloperMenu.IsOpen || RoguelikeUpgradeUI.BlocksInput || Keyboard.current == null || Mouse.current == null)
             { Release(); return; }

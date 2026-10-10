@@ -15,6 +15,7 @@ Shader "Hidden/PirateSlop/Storm Rain Screen"
             #include "Packages/com.unity.render-pipelines.core/Runtime/Utilities/Blit.hlsl"
             TEXTURE2D_X_FLOAT(_RainSceneDepth);
             float4 _RainWeather, _RainLens[24], _RainLensMotion[24], _RainDownpour;
+            float4 _PirateStormTestClouds;
             float _RainSeaLevel;
             int _RainLensCount;
 
@@ -57,7 +58,7 @@ Shader "Hidden/PirateSlop/Storm Rain Screen"
                     wet = max(wet, body * drop.w * .055);
                 }
                 half4 color = SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, clamp(colorUV + bend, .001, .999));
-                if (_RainWeather.z > 0)
+                if (_RainWeather.z > 0 && _PirateStormTestClouds.x < .5)
                 {
                     float rawDepth = SAMPLE_TEXTURE2D_X(_RainSceneDepth, sampler_PointClamp, screenUV).r;
                     #if !UNITY_REVERSED_Z

@@ -52,6 +52,9 @@ namespace PirateSlop.Networking
         public void Ignite(GameObject attacker = null)
         {
             if (!IsServerInitialized || target == null || target.IsDead || burning.Value || Time.time < wetUntil) return;
+            var shooter = attacker != null ? attacker.GetComponent<NetworkPlayer>() : null;
+            var player = GetComponent<NetworkPlayer>();
+            if (!SessionController.FriendlyFire && attacker != gameObject && shooter != null && player != null && shooter.TeamId.Value > 0 && shooter.TeamId.Value == player.TeamId.Value) return;
             var motor = GetComponent<AdvancedPlayerController>();
             if (motor != null && motor.IsSwimming) return;
             burning.Value = true;

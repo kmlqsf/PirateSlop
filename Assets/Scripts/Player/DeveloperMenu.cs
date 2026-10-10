@@ -27,7 +27,7 @@ namespace PirateSlop
         string[] upgradeNames = Array.Empty<string>();
         bool catalogLoaded;
         GUIStyle descriptionStyle;
-        static readonly string[] tabs = { "Игрок", "Лут", "Корабль", "Мир" };
+        static readonly string[] tabs = { "Игрок", "Лут", "Корабль", "Мир", "Разрушение" };
         static readonly string[] quantityNames = { "1", "5", "20" };
         int lootEvent;
         static readonly string[] lootEventNames = { "Зона захвата", "Плот с закрытым сундуком", "Подводный тайник", "Сундук со стаей акул", "Огненный череп" };
@@ -183,6 +183,12 @@ namespace PirateSlop
                         network.DeveloperCommand(27, disabled ? 0 : 1);
                 }
                 GUILayout.Space(8);
+                GUILayout.Label("Бой");
+                bool friendlyFire = SessionController.FriendlyFire;
+                if (GUILayout.Button(friendlyFire ? "Дружественный огонь: ВКЛ · выключить" : "Дружественный огонь: ВЫКЛ · включить", GUILayout.Height(29)))
+                    network.DeveloperCommand(31, friendlyFire ? 0 : 1);
+                GUILayout.Label("Урон союзникам и своему кораблю · вся сессия");
+                GUILayout.Space(8);
                 GUILayout.Label("Испытания");
                 Button("Создать тренировочную мишень", 1);
                 Button("Создать врага-манекена перед собой", 13);
@@ -268,6 +274,18 @@ namespace PirateSlop
                     }
                 }
                 GUILayout.EndHorizontal();
+            }
+            if (tab == 4)
+            {
+                var ship = SpeedShip;
+                var flooding = ship != null ? ship.GetComponent<ShipFlooding>() : null;
+                GUI.enabled = ship != null && ship.IsSpawned && !ship.IsSinking && flooding != null && flooding.UseBilgeFlooding;
+                Button("Слабая течь", 28);
+                Button("Большая течь", 29);
+                Button("Попадание ядра", 30);
+                GUI.enabled = true;
+                if (flooding != null) GUILayout.Label($"Затопление трюма: {flooding.Level * 100f:0}%");
+                else GUILayout.Label("Встаньте на корабль с трюмом.");
             }
             GUILayout.EndScrollView();
             GUILayout.Space(8);

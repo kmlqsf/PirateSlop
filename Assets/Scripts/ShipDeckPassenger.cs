@@ -69,6 +69,7 @@ public class ShipDeckPassenger : MonoBehaviour
     public void Detect()
     {
         if (player != null && player.IsKnockedBack) { if (Support != null) Attach(null); return; }
+        if (player != null && player.ShipActivityLocked && Support != null) return;
         if (player != null && player.IsClimbing) return;
         if (player != null && player.IsSwimming) { if (Support != null) Attach(null); return; }
         if (player != null && player.LocomotionLocked) return;
@@ -88,4 +89,13 @@ public class ShipDeckPassenger : MonoBehaviour
         if (bridge != nextBridge) { bridge = nextBridge; ResetAnchor(); }
     }
     void Update() { if (!Networked && (player == null || !player.IsDead)) { Carry(true); Detect(); } }
+    public bool HasDryDeckSupport()
+    {
+        if (ship == null || !ship.TryGetComponent<ShipController>(out var motor) || motor.IsFlooded) return false;
+        int count = Physics.SphereCastNonAlloc(transform.position + Vector3.up * .3f, .2f, Vector3.down,
+            supportHits, .8f, ~0, QueryTriggerInteraction.Ignore);
+        for (int i = 0; i < count; i++)
+            if (supportHits[i].rigidbody == ship && supportHits[i].normal.y > .5f) return true;
+        return false;
+    }
 }

@@ -1,0 +1,116 @@
+#pragma kernel BakeNoise
+#pragma kernel WaterHeight
+RWTexture3D<float4> _NoiseOutput;
+RWTexture2D<float> _WaterOutput;
+float4 _WaterPatch;
+float4 _WaveSettings;
+float4 _Whirlpool;
+float4 _WaveA[16];
+float4 _WaveB[16];
+int _WaveCount;
+
+uint Hash(uint3 p)
+{
+    uint h = p.x * 1597334677u ^ p.y * 3812015801u ^ p.z * 958282973u;
+    h ^= h >> 16;
+    h *= 2246822519u;
+    h ^= h >> 13;
+    return h;
+}
+float3 Gradient(uint3 p, uint period)
+{
+    uint h = Hash(p % period);
+    float3 g = float3((h & 1023u), ((h >> 10) & 1023u), ((h >> 20) & 1023u)) / 511.5 - 1.0;
+    return normalize(g + .0001);
+}
+float4 Perlin(float3 p, uint period)
+{
+    int3 cell = (int3)floor(p);
+    float3 f = frac(p);
+    float3 u = f * f * f * (f * (f * 6.0 - 15.0) + 10.0);
+    float3 du = 30.0 * f * f * (f * (f - 2.0) + 1.0);
+    float4 sum = 0.0;
+    [unroll] for (int z = 0; z < 2; z++)
+    [unroll] for (int y = 0; y < 2; y++)
+    [unroll] for (int x = 0; x < 2; x++)
+    {
+        int3 corner = int3(x, y, z);
+        float3 g = Gradient((uint3)(cell + corner + (int)period), period);
+        float3 w = lerp(1.0 - u, u, (float3)corner);
+        float3 dw = du * ((float3)corner * 2.0 - 1.0);
+        float value = dot(g, f - corner);
+        float weight = w.x * w.y * w.z;
+        sum.r += value * weight;
+        sum.gba += g * weight + value * float3(dw.x * w.y * w.z, w.x * dw.y * w.z, w.x * w.y * dw.z);
+    }
+    return sum;
+}
+[numthreads(4, 4, 4)]
+void BakeNoise(uint3 id : SV_DispatchThreadID)
+{
+    float3 uv = (id + .5) / 128.0;
+    float4 field = 0.0;
+    float amplitude = .62;
+    uint frequency = 4u;
+    [unroll] for (int octave = 0; octave < 5; octave++)
+    {
+        float4 n = Perlin(uv * frequency, frequency);
+        field.r += n.r * amplitude;
+        field.gba += n.gba * (amplitude * frequency);
+        amplitude *= .48;
+        frequency *= 2u;
+    }
+    field.r = .5 + field.r * .85;
+    field.gba *= .85;
+    _NoiseOutput[id] = field;
+}
+float3 Waves(float2 parameter, out float4 jacobian)
+{
+    float3 result = 0.0;
+    jacobian = float4(1, 0, 0, 1);
+    [loop] for (int i = 0; i < _WaveCount; i++)
+    {
+        float4 a = _WaveA[i], b = _WaveB[i];
+        float phase = dot(a.xy, parameter) * a.z - _WaveSettings.z * a.w;
+        float sine, cosine;
+        sincos(phase, sine, cosine);
+        float horizontal = b.y * min(_WaveSettings.x, 1.0) * _WaveSettings.y;
+        result.xz += horizontal * a.xy * cosine;
+        result.y += b.x * _WaveSettings.x * sine;
+        float derivative = -horizontal * a.z * sine;
+        jacobian += derivative * float4(a.x * a.x, a.x * a.y, a.y * a.x, a.y * a.y);
+    }
+    return result;
+}
+[numthreads(8, 8, 1)]
+void WaterHeight(uint3 id : SV_DispatchThreadID)
+{
+    float2 target = _WaterPatch.xy + (id.xy + .5) * 4.0;
+    float2 parameter = target;
+    float bestError = 1e20, height = 0.0;
+    [loop] for (int iteration = 0; iteration < 8; iteration++)
+    {
+        float4 jacobian;
+        float3 displacement = Waves(parameter, jacobian);
+        float2 residual = parameter + displacement.xz - target;
+        float error = dot(residual, residual);
+        if (error < bestError) { bestError = error; height = displacement.y; }
+        if (error < .0001) break;
+        float determinant = jacobian.x * jacobian.w - jacobian.y * jacobian.z;
+        float2 step = abs(determinant) > .01
+            ? float2(jacobian.w * residual.x - jacobian.y * residual.y, -jacobian.z * residual.x + jacobian.x * residual.y) / determinant
+            : residual * .5;
+        step *= min(1.0, 12.0 / max(.001, length(step)));
+        [unroll] for (int attempt = 0; attempt < 3; attempt++)
+        {
+            float4 unused;
+            float2 candidate = parameter - step;
+            float2 nextResidual = candidate + Waves(candidate, unused).xz - target;
+            if (dot(nextResidual, nextResidual) < error) break;
+            step *= .5;
+        }
+        parameter -= step;
+    }
+    float falloff = 1.0 - saturate(length(target - _Whirlpool.xy) / max(.001, _Whirlpool.z));
+    _WaterOutput[id.xy] = _WaveSettings.w + height - _Whirlpool.w * falloff * falloff;
+}

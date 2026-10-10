@@ -1,0 +1,454 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!200 &20000000
+ShaderVariantCollection:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: DamageWarmup
+  m_Shaders:
+  - first: {fileID: 4800000, guid: 933532a4fcc9baf4fa0491de14d08ed7, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 13
+      - keywords: FOG_EXP
+        passType: 13
+      - keywords: FOG_EXP _EMISSION _MAIN_LIGHT_SHADOWS _NORMALMAP
+        passType: 13
+      - keywords: FOG_EXP _EMISSION _MAIN_LIGHT_SHADOWS _NORMALMAP _SHADOWS_SOFT
+        passType: 13
+      - keywords: FOG_EXP _EMISSION _MAIN_LIGHT_SHADOWS _NORMALMAP _SHADOWS_SOFT _SURFACE_TYPE_TRANSPARENT
+        passType: 13
+      - keywords: FOG_EXP _EMISSION _MAIN_LIGHT_SHADOWS _NORMALMAP _SURFACE_TYPE_TRANSPARENT
+        passType: 13
+      - keywords: FOG_EXP _EMISSION _MAIN_LIGHT_SHADOWS_CASCADE _NORMALMAP
+        passType: 13
+      - keywords: FOG_EXP _EMISSION _MAIN_LIGHT_SHADOWS_CASCADE _NORMALMAP _SHADOWS_SOFT
+        passType: 13
+      - keywords: FOG_EXP _EMISSION _MAIN_LIGHT_SHADOWS_CASCADE _NORMALMAP _SHADOWS_SOFT _SURFACE_TYPE_TRANSPARENT
+        passType: 13
+      - keywords: FOG_EXP _EMISSION _MAIN_LIGHT_SHADOWS_CASCADE _NORMALMAP _SURFACE_TYPE_TRANSPARENT
+        passType: 13
+      - keywords: FOG_EXP _EMISSION _NORMALMAP
+        passType: 13
+      - keywords: FOG_EXP _EMISSION _NORMALMAP _SHADOWS_SOFT
+        passType: 13
+      - keywords: FOG_EXP _EMISSION _NORMALMAP _SHADOWS_SOFT _SURFACE_TYPE_TRANSPARENT
+        passType: 13
+      - keywords: FOG_EXP _EMISSION _NORMALMAP _SURFACE_TYPE_TRANSPARENT
+        passType: 13
+      - keywords: FOG_EXP _MAIN_LIGHT_SHADOWS
+        passType: 13
+      - keywords: FOG_EXP _MAIN_LIGHT_SHADOWS _METALLICSPECGLOSSMAP _NORMALMAP
+        passType: 13
+      - keywords: FOG_EXP _MAIN_LIGHT_SHADOWS _METALLICSPECGLOSSMAP _NORMALMAP _SHADOWS_SOFT
+        passType: 13
+      - keywords: FOG_EXP _MAIN_LIGHT_SHADOWS _NORMALMAP
+        passType: 13
+      - keywords: FOG_EXP _MAIN_LIGHT_SHADOWS _NORMALMAP _OCCLUSIONMAP
+        passType: 13
+      - keywords: FOG_EXP _MAIN_LIGHT_SHADOWS _NORMALMAP _OCCLUSIONMAP _SHADOWS_SOFT
+        passType: 13
+      - keywords: FOG_EXP _MAIN_LIGHT_SHADOWS _NORMALMAP _SHADOWS_SOFT
+        passType: 13
+      - keywords: FOG_EXP _MAIN_LIGHT_SHADOWS _SHADOWS_SOFT
+        passType: 13
+      - keywords: FOG_EXP _MAIN_LIGHT_SHADOWS_CASCADE
+        passType: 13
+      - keywords: FOG_EXP _MAIN_LIGHT_SHADOWS_CASCADE _METALLICSPECGLOSSMAP _NORMALMAP
+        passType: 13
+      - keywords: FOG_EXP _MAIN_LIGHT_SHADOWS_CASCADE _METALLICSPECGLOSSMAP _NORMALMAP _SHADOWS_SOFT
+        passType: 13
+      - keywords: FOG_EXP _MAIN_LIGHT_SHADOWS_CASCADE _NORMALMAP
+        passType: 13
+      - keywords: FOG_EXP _MAIN_LIGHT_SHADOWS_CASCADE _NORMALMAP _OCCLUSIONMAP
+        passType: 13
+      - keywords: FOG_EXP _MAIN_LIGHT_SHADOWS_CASCADE _NORMALMAP _OCCLUSIONMAP _SHADOWS_SOFT
+        passType: 13
+      - keywords: FOG_EXP _MAIN_LIGHT_SHADOWS_CASCADE _NORMALMAP _SHADOWS_SOFT
+        passType: 13
+      - keywords: FOG_EXP _MAIN_LIGHT_SHADOWS_CASCADE _SHADOWS_SOFT
+        passType: 13
+      - keywords: FOG_EXP _METALLICSPECGLOSSMAP _NORMALMAP
+        passType: 13
+      - keywords: FOG_EXP _METALLICSPECGLOSSMAP _NORMALMAP _SHADOWS_SOFT
+        passType: 13
+      - keywords: FOG_EXP _NORMALMAP
+        passType: 13
+      - keywords: FOG_EXP _NORMALMAP _OCCLUSIONMAP
+        passType: 13
+      - keywords: FOG_EXP _NORMALMAP _OCCLUSIONMAP _SHADOWS_SOFT
+        passType: 13
+      - keywords: FOG_EXP _NORMALMAP _SHADOWS_SOFT
+        passType: 13
+      - keywords: FOG_EXP _SHADOWS_SOFT
+        passType: 13
+      - keywords: FOG_EXP2
+        passType: 13
+      - keywords: FOG_EXP2 _EMISSION _MAIN_LIGHT_SHADOWS _NORMALMAP
+        passType: 13
+      - keywords: FOG_EXP2 _EMISSION _MAIN_LIGHT_SHADOWS _NORMALMAP _SHADOWS_SOFT
+        passType: 13
+      - keywords: FOG_EXP2 _EMISSION _MAIN_LIGHT_SHADOWS _NORMALMAP _SHADOWS_SOFT _SURFACE_TYPE_TRANSPARENT
+        passType: 13
+      - keywords: FOG_EXP2 _EMISSION _MAIN_LIGHT_SHADOWS _NORMALMAP _SURFACE_TYPE_TRANSPARENT
+        passType: 13
+      - keywords: FOG_EXP2 _EMISSION _MAIN_LIGHT_SHADOWS_CASCADE _NORMALMAP
+        passType: 13
+      - keywords: FOG_EXP2 _EMISSION _MAIN_LIGHT_SHADOWS_CASCADE _NORMALMAP _SHADOWS_SOFT
+        passType: 13
+      - keywords: FOG_EXP2 _EMISSION _MAIN_LIGHT_SHADOWS_CASCADE _NORMALMAP _SHADOWS_SOFT _SURFACE_TYPE_TRANSPARENT
+        passType: 13
+      - keywords: FOG_EXP2 _EMISSION _MAIN_LIGHT_SHADOWS_CASCADE _NORMALMAP _SURFACE_TYPE_TRANSPARENT
+        passType: 13
+      - keywords: FOG_EXP2 _EMISSION _NORMALMAP
+        passType: 13
+      - keywords: FOG_EXP2 _EMISSION _NORMALMAP _SHADOWS_SOFT
+        passType: 13
+      - keywords: FOG_EXP2 _EMISSION _NORMALMAP _SHADOWS_SOFT _SURFACE_TYPE_TRANSPARENT
+        passType: 13
+      - keywords: FOG_EXP2 _EMISSION _NORMALMAP _SURFACE_TYPE_TRANSPARENT
+        passType: 13
+      - keywords: FOG_EXP2 _MAIN_LIGHT_SHADOWS
+        passType: 13
+      - keywords: FOG_EXP2 _MAIN_LIGHT_SHADOWS _METALLICSPECGLOSSMAP _NORMALMAP
+        passType: 13
+      - keywords: FOG_EXP2 _MAIN_LIGHT_SHADOWS _METALLICSPECGLOSSMAP _NORMALMAP _SHADOWS_SOFT
+        passType: 13
+      - keywords: FOG_EXP2 _MAIN_LIGHT_SHADOWS _NORMALMAP
+        passType: 13
+      - keywords: FOG_EXP2 _MAIN_LIGHT_SHADOWS _NORMALMAP _OCCLUSIONMAP
+        passType: 13
+      - keywords: FOG_EXP2 _MAIN_LIGHT_SHADOWS _NORMALMAP _OCCLUSIONMAP _SHADOWS_SOFT
+        passType: 13
+      - keywords: FOG_EXP2 _MAIN_LIGHT_SHADOWS _NORMALMAP _SHADOWS_SOFT
+        passType: 13
+      - keywords: FOG_EXP2 _MAIN_LIGHT_SHADOWS _SHADOWS_SOFT
+        passType: 13
+      - keywords: FOG_EXP2 _MAIN_LIGHT_SHADOWS_CASCADE
+        passType: 13
+      - keywords: FOG_EXP2 _MAIN_LIGHT_SHADOWS_CASCADE _METALLICSPECGLOSSMAP _NORMALMAP
+        passType: 13
+      - keywords: FOG_EXP2 _MAIN_LIGHT_SHADOWS_CASCADE _METALLICSPECGLOSSMAP _NORMALMAP _SHADOWS_SOFT
+        passType: 13
+      - keywords: FOG_EXP2 _MAIN_LIGHT_SHADOWS_CASCADE _NORMALMAP
+        passType: 13
+      - keywords: FOG_EXP2 _MAIN_LIGHT_SHADOWS_CASCADE _NORMALMAP _OCCLUSIONMAP
+        passType: 13
+      - keywords: FOG_EXP2 _MAIN_LIGHT_SHADOWS_CASCADE _NORMALMAP _OCCLUSIONMAP _SHADOWS_SOFT
+        passType: 13
+      - keywords: FOG_EXP2 _MAIN_LIGHT_SHADOWS_CASCADE _NORMALMAP _SHADOWS_SOFT
+        passType: 13
+      - keywords: FOG_EXP2 _MAIN_LIGHT_SHADOWS_CASCADE _SHADOWS_SOFT
+        passType: 13
+      - keywords: FOG_EXP2 _METALLICSPECGLOSSMAP _NORMALMAP
+        passType: 13
+      - keywords: FOG_EXP2 _METALLICSPECGLOSSMAP _NORMALMAP _SHADOWS_SOFT
+        passType: 13
+      - keywords: FOG_EXP2 _NORMALMAP
+        passType: 13
+      - keywords: FOG_EXP2 _NORMALMAP _OCCLUSIONMAP
+        passType: 13
+      - keywords: FOG_EXP2 _NORMALMAP _OCCLUSIONMAP _SHADOWS_SOFT
+        passType: 13
+      - keywords: FOG_EXP2 _NORMALMAP _SHADOWS_SOFT
+        passType: 13
+      - keywords: FOG_EXP2 _SHADOWS_SOFT
+        passType: 13
+      - keywords: FOG_LINEAR
+        passType: 13
+      - keywords: FOG_LINEAR _EMISSION _MAIN_LIGHT_SHADOWS _NORMALMAP
+        passType: 13
+      - keywords: FOG_LINEAR _EMISSION _MAIN_LIGHT_SHADOWS _NORMALMAP _SHADOWS_SOFT
+        passType: 13
+      - keywords: FOG_LINEAR _EMISSION _MAIN_LIGHT_SHADOWS _NORMALMAP _SHADOWS_SOFT _SURFACE_TYPE_TRANSPARENT
+        passType: 13
+      - keywords: FOG_LINEAR _EMISSION _MAIN_LIGHT_SHADOWS _NORMALMAP _SURFACE_TYPE_TRANSPARENT
+        passType: 13
+      - keywords: FOG_LINEAR _EMISSION _MAIN_LIGHT_SHADOWS_CASCADE _NORMALMAP
+        passType: 13
+      - keywords: FOG_LINEAR _EMISSION _MAIN_LIGHT_SHADOWS_CASCADE _NORMALMAP _SHADOWS_SOFT
+        passType: 13
+      - keywords: FOG_LINEAR _EMISSION _MAIN_LIGHT_SHADOWS_CASCADE _NORMALMAP _SHADOWS_SOFT _SURFACE_TYPE_TRANSPARENT
+        passType: 13
+      - keywords: FOG_LINEAR _EMISSION _MAIN_LIGHT_SHADOWS_CASCADE _NORMALMAP _SURFACE_TYPE_TRANSPARENT
+        passType: 13
+      - keywords: FOG_LINEAR _EMISSION _NORMALMAP
+        passType: 13
+      - keywords: FOG_LINEAR _EMISSION _NORMALMAP _SHADOWS_SOFT
+        passType: 13
+      - keywords: FOG_LINEAR _EMISSION _NORMALMAP _SHADOWS_SOFT _SURFACE_TYPE_TRANSPARENT
+        passType: 13
+      - keywords: FOG_LINEAR _EMISSION _NORMALMAP _SURFACE_TYPE_TRANSPARENT
+        passType: 13
+      - keywords: FOG_LINEAR _MAIN_LIGHT_SHADOWS
+        passType: 13
+      - keywords: FOG_LINEAR _MAIN_LIGHT_SHADOWS _METALLICSPECGLOSSMAP _NORMALMAP
+        passType: 13
+      - keywords: FOG_LINEAR _MAIN_LIGHT_SHADOWS _METALLICSPECGLOSSMAP _NORMALMAP _SHADOWS_SOFT
+        passType: 13
+      - keywords: FOG_LINEAR _MAIN_LIGHT_SHADOWS _NORMALMAP
+        passType: 13
+      - keywords: FOG_LINEAR _MAIN_LIGHT_SHADOWS _NORMALMAP _OCCLUSIONMAP
+        passType: 13
+      - keywords: FOG_LINEAR _MAIN_LIGHT_SHADOWS _NORMALMAP _OCCLUSIONMAP _SHADOWS_SOFT
+        passType: 13
+      - keywords: FOG_LINEAR _MAIN_LIGHT_SHADOWS _NORMALMAP _SHADOWS_SOFT
+        passType: 13
+      - keywords: FOG_LINEAR _MAIN_LIGHT_SHADOWS _SHADOWS_SOFT
+        passType: 13
+      - keywords: FOG_LINEAR _MAIN_LIGHT_SHADOWS_CASCADE
+        passType: 13
+      - keywords: FOG_LINEAR _MAIN_LIGHT_SHADOWS_CASCADE _METALLICSPECGLOSSMAP _NORMALMAP
+        passType: 13
+      - keywords: FOG_LINEAR _MAIN_LIGHT_SHADOWS_CASCADE _METALLICSPECGLOSSMAP _NORMALMAP _SHADOWS_SOFT
+        passType: 13
+      - keywords: FOG_LINEAR _MAIN_LIGHT_SHADOWS_CASCADE _NORMALMAP
+        passType: 13
+      - keywords: FOG_LINEAR _MAIN_LIGHT_SHADOWS_CASCADE _NORMALMAP _OCCLUSIONMAP
+        passType: 13
+      - keywords: FOG_LINEAR _MAIN_LIGHT_SHADOWS_CASCADE _NORMALMAP _OCCLUSIONMAP _SHADOWS_SOFT
+        passType: 13
+      - keywords: FOG_LINEAR _MAIN_LIGHT_SHADOWS_CASCADE _NORMALMAP _SHADOWS_SOFT
+        passType: 13
+      - keywords: FOG_LINEAR _MAIN_LIGHT_SHADOWS_CASCADE _SHADOWS_SOFT
+        passType: 13
+      - keywords: FOG_LINEAR _METALLICSPECGLOSSMAP _NORMALMAP
+        passType: 13
+      - keywords: FOG_LINEAR _METALLICSPECGLOSSMAP _NORMALMAP _SHADOWS_SOFT
+        passType: 13
+      - keywords: FOG_LINEAR _NORMALMAP
+        passType: 13
+      - keywords: FOG_LINEAR _NORMALMAP _OCCLUSIONMAP
+        passType: 13
+      - keywords: FOG_LINEAR _NORMALMAP _OCCLUSIONMAP _SHADOWS_SOFT
+        passType: 13
+      - keywords: FOG_LINEAR _NORMALMAP _SHADOWS_SOFT
+        passType: 13
+      - keywords: FOG_LINEAR _SHADOWS_SOFT
+        passType: 13
+      - keywords: _EMISSION _MAIN_LIGHT_SHADOWS _NORMALMAP
+        passType: 13
+      - keywords: _EMISSION _MAIN_LIGHT_SHADOWS _NORMALMAP _SHADOWS_SOFT
+        passType: 13
+      - keywords: _EMISSION _MAIN_LIGHT_SHADOWS _NORMALMAP _SHADOWS_SOFT _SURFACE_TYPE_TRANSPARENT
+        passType: 13
+      - keywords: _EMISSION _MAIN_LIGHT_SHADOWS _NORMALMAP _SURFACE_TYPE_TRANSPARENT
+        passType: 13
+      - keywords: _EMISSION _MAIN_LIGHT_SHADOWS_CASCADE _NORMALMAP
+        passType: 13
+      - keywords: _EMISSION _MAIN_LIGHT_SHADOWS_CASCADE _NORMALMAP _SHADOWS_SOFT
+        passType: 13
+      - keywords: _EMISSION _MAIN_LIGHT_SHADOWS_CASCADE _NORMALMAP _SHADOWS_SOFT _SURFACE_TYPE_TRANSPARENT
+        passType: 13
+      - keywords: _EMISSION _MAIN_LIGHT_SHADOWS_CASCADE _NORMALMAP _SURFACE_TYPE_TRANSPARENT
+        passType: 13
+      - keywords: _EMISSION _NORMALMAP
+        passType: 13
+      - keywords: _EMISSION _NORMALMAP _SHADOWS_SOFT
+        passType: 13
+      - keywords: _EMISSION _NORMALMAP _SHADOWS_SOFT _SURFACE_TYPE_TRANSPARENT
+        passType: 13
+      - keywords: _EMISSION _NORMALMAP _SURFACE_TYPE_TRANSPARENT
+        passType: 13
+      - keywords: _MAIN_LIGHT_SHADOWS
+        passType: 13
+      - keywords: _MAIN_LIGHT_SHADOWS _METALLICSPECGLOSSMAP _NORMALMAP
+        passType: 13
+      - keywords: _MAIN_LIGHT_SHADOWS _METALLICSPECGLOSSMAP _NORMALMAP _SHADOWS_SOFT
+        passType: 13
+      - keywords: _MAIN_LIGHT_SHADOWS _NORMALMAP
+        passType: 13
+      - keywords: _MAIN_LIGHT_SHADOWS _NORMALMAP _OCCLUSIONMAP
+        passType: 13
+      - keywords: _MAIN_LIGHT_SHADOWS _NORMALMAP _OCCLUSIONMAP _SHADOWS_SOFT
+        passType: 13
+      - keywords: _MAIN_LIGHT_SHADOWS _NORMALMAP _SHADOWS_SOFT
+        passType: 13
+      - keywords: _MAIN_LIGHT_SHADOWS _SHADOWS_SOFT
+        passType: 13
+      - keywords: _MAIN_LIGHT_SHADOWS_CASCADE
+        passType: 13
+      - keywords: _MAIN_LIGHT_SHADOWS_CASCADE _METALLICSPECGLOSSMAP _NORMALMAP
+        passType: 13
+      - keywords: _MAIN_LIGHT_SHADOWS_CASCADE _METALLICSPECGLOSSMAP _NORMALMAP _SHADOWS_SOFT
+        passType: 13
+      - keywords: _MAIN_LIGHT_SHADOWS_CASCADE _NORMALMAP
+        passType: 13
+      - keywords: _MAIN_LIGHT_SHADOWS_CASCADE _NORMALMAP _OCCLUSIONMAP
+        passType: 13
+      - keywords: _MAIN_LIGHT_SHADOWS_CASCADE _NORMALMAP _OCCLUSIONMAP _SHADOWS_SOFT
+        passType: 13
+      - keywords: _MAIN_LIGHT_SHADOWS_CASCADE _NORMALMAP _SHADOWS_SOFT
+        passType: 13
+      - keywords: _MAIN_LIGHT_SHADOWS_CASCADE _SHADOWS_SOFT
+        passType: 13
+      - keywords: _METALLICSPECGLOSSMAP _NORMALMAP
+        passType: 13
+      - keywords: _METALLICSPECGLOSSMAP _NORMALMAP _SHADOWS_SOFT
+        passType: 13
+      - keywords: _NORMALMAP
+        passType: 13
+      - keywords: _NORMALMAP _OCCLUSIONMAP
+        passType: 13
+      - keywords: _NORMALMAP _OCCLUSIONMAP _SHADOWS_SOFT
+        passType: 13
+      - keywords: _NORMALMAP _SHADOWS_SOFT
+        passType: 13
+      - keywords: _SHADOWS_SOFT
+        passType: 13
+  - first: {fileID: 4800000, guid: 5b21e6fcf9956c742a14634cc6575236, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 13
+      - keywords: FOG_EXP
+        passType: 13
+      - keywords: FOG_EXP _MAIN_LIGHT_SHADOWS
+        passType: 13
+      - keywords: FOG_EXP _MAIN_LIGHT_SHADOWS _SHADOWS_SOFT
+        passType: 13
+      - keywords: FOG_EXP _MAIN_LIGHT_SHADOWS_CASCADE
+        passType: 13
+      - keywords: FOG_EXP _MAIN_LIGHT_SHADOWS_CASCADE _SHADOWS_SOFT
+        passType: 13
+      - keywords: FOG_EXP _SHADOWS_SOFT
+        passType: 13
+      - keywords: FOG_EXP2
+        passType: 13
+      - keywords: FOG_EXP2 _MAIN_LIGHT_SHADOWS
+        passType: 13
+      - keywords: FOG_EXP2 _MAIN_LIGHT_SHADOWS _SHADOWS_SOFT
+        passType: 13
+      - keywords: FOG_EXP2 _MAIN_LIGHT_SHADOWS_CASCADE
+        passType: 13
+      - keywords: FOG_EXP2 _MAIN_LIGHT_SHADOWS_CASCADE _SHADOWS_SOFT
+        passType: 13
+      - keywords: FOG_EXP2 _SHADOWS_SOFT
+        passType: 13
+      - keywords: FOG_LINEAR
+        passType: 13
+      - keywords: FOG_LINEAR _MAIN_LIGHT_SHADOWS
+        passType: 13
+      - keywords: FOG_LINEAR _MAIN_LIGHT_SHADOWS _SHADOWS_SOFT
+        passType: 13
+      - keywords: FOG_LINEAR _MAIN_LIGHT_SHADOWS_CASCADE
+        passType: 13
+      - keywords: FOG_LINEAR _MAIN_LIGHT_SHADOWS_CASCADE _SHADOWS_SOFT
+        passType: 13
+      - keywords: FOG_LINEAR _SHADOWS_SOFT
+        passType: 13
+      - keywords: _MAIN_LIGHT_SHADOWS
+        passType: 13
+      - keywords: _MAIN_LIGHT_SHADOWS _SHADOWS_SOFT
+        passType: 13
+      - keywords: _MAIN_LIGHT_SHADOWS_CASCADE
+        passType: 13
+      - keywords: _MAIN_LIGHT_SHADOWS_CASCADE _SHADOWS_SOFT
+        passType: 13
+      - keywords: _SHADOWS_SOFT
+        passType: 13
+  - first: {fileID: 4800000, guid: d30435c9124adf142a73bdd894a1acd1, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 13
+      - keywords: FOG_EXP
+        passType: 13
+      - keywords: FOG_EXP _MAIN_LIGHT_SHADOWS
+        passType: 13
+      - keywords: FOG_EXP _MAIN_LIGHT_SHADOWS _SHADOWS_SOFT
+        passType: 13
+      - keywords: FOG_EXP _MAIN_LIGHT_SHADOWS_CASCADE
+        passType: 13
+      - keywords: FOG_EXP _MAIN_LIGHT_SHADOWS_CASCADE _SHADOWS_SOFT
+        passType: 13
+      - keywords: FOG_EXP _SHADOWS_SOFT
+        passType: 13
+      - keywords: FOG_EXP2
+        passType: 13
+      - keywords: FOG_EXP2 _MAIN_LIGHT_SHADOWS
+        passType: 13
+      - keywords: FOG_EXP2 _MAIN_LIGHT_SHADOWS _SHADOWS_SOFT
+        passType: 13
+      - keywords: FOG_EXP2 _MAIN_LIGHT_SHADOWS_CASCADE
+        passType: 13
+      - keywords: FOG_EXP2 _MAIN_LIGHT_SHADOWS_CASCADE _SHADOWS_SOFT
+        passType: 13
+      - keywords: FOG_EXP2 _SHADOWS_SOFT
+        passType: 13
+      - keywords: FOG_LINEAR
+        passType: 13
+      - keywords: FOG_LINEAR _MAIN_LIGHT_SHADOWS
+        passType: 13
+      - keywords: FOG_LINEAR _MAIN_LIGHT_SHADOWS _SHADOWS_SOFT
+        passType: 13
+      - keywords: FOG_LINEAR _MAIN_LIGHT_SHADOWS_CASCADE
+        passType: 13
+      - keywords: FOG_LINEAR _MAIN_LIGHT_SHADOWS_CASCADE _SHADOWS_SOFT
+        passType: 13
+      - keywords: FOG_LINEAR _SHADOWS_SOFT
+        passType: 13
+      - keywords: _MAIN_LIGHT_SHADOWS
+        passType: 13
+      - keywords: _MAIN_LIGHT_SHADOWS _SHADOWS_SOFT
+        passType: 13
+      - keywords: _MAIN_LIGHT_SHADOWS_CASCADE
+        passType: 13
+      - keywords: _MAIN_LIGHT_SHADOWS_CASCADE _SHADOWS_SOFT
+        passType: 13
+      - keywords: _SHADOWS_SOFT
+        passType: 13
+  - first: {fileID: 4800000, guid: fb6f2ee87fe45c949b848ff717f621b7, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 13
+      - keywords: FOG_EXP
+        passType: 13
+      - keywords: FOG_EXP _MAIN_LIGHT_SHADOWS
+        passType: 13
+      - keywords: FOG_EXP _MAIN_LIGHT_SHADOWS _SHADOWS_SOFT
+        passType: 13
+      - keywords: FOG_EXP _MAIN_LIGHT_SHADOWS_CASCADE
+        passType: 13
+      - keywords: FOG_EXP _MAIN_LIGHT_SHADOWS_CASCADE _SHADOWS_SOFT
+        passType: 13
+      - keywords: FOG_EXP _SHADOWS_SOFT
+        passType: 13
+      - keywords: FOG_EXP2
+        passType: 13
+      - keywords: FOG_EXP2 _MAIN_LIGHT_SHADOWS
+        passType: 13
+      - keywords: FOG_EXP2 _MAIN_LIGHT_SHADOWS _SHADOWS_SOFT
+        passType: 13
+      - keywords: FOG_EXP2 _MAIN_LIGHT_SHADOWS_CASCADE
+        passType: 13
+      - keywords: FOG_EXP2 _MAIN_LIGHT_SHADOWS_CASCADE _SHADOWS_SOFT
+        passType: 13
+      - keywords: FOG_EXP2 _SHADOWS_SOFT
+        passType: 13
+      - keywords: FOG_LINEAR
+        passType: 13
+      - keywords: FOG_LINEAR _MAIN_LIGHT_SHADOWS
+        passType: 13
+      - keywords: FOG_LINEAR _MAIN_LIGHT_SHADOWS _SHADOWS_SOFT
+        passType: 13
+      - keywords: FOG_LINEAR _MAIN_LIGHT_SHADOWS_CASCADE
+        passType: 13
+      - keywords: FOG_LINEAR _MAIN_LIGHT_SHADOWS_CASCADE _SHADOWS_SOFT
+        passType: 13
+      - keywords: FOG_LINEAR _SHADOWS_SOFT
+        passType: 13
+      - keywords: _MAIN_LIGHT_SHADOWS
+        passType: 13
+      - keywords: _MAIN_LIGHT_SHADOWS _SHADOWS_SOFT
+        passType: 13
+      - keywords: _MAIN_LIGHT_SHADOWS_CASCADE
+        passType: 13
+      - keywords: _MAIN_LIGHT_SHADOWS_CASCADE _SHADOWS_SOFT
+        passType: 13
+      - keywords: _SHADOWS_SOFT
+        passType: 13

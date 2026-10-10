@@ -48,6 +48,8 @@ namespace PirateSlop
         readonly Dictionary<int, float> nextBurn = new();
         readonly Dictionary<string, int> mastHits = new();
         readonly HashSet<string> struckMasts = new();
+        readonly Dictionary<long, ShipFragmentConnection> trimSupports = new();
+        readonly Dictionary<long, List<ShipFragmentConnection>> attachedTrim = new();
         ShipStructuralGraph graph;
         NetworkShip ship;
         ShipFlooding flooding;
@@ -76,6 +78,19 @@ namespace PirateSlop
                     foreach (var renderer in section.Intact.GetComponentsInChildren<Renderer>(true)) visualSections.TryAdd(renderer, section);
             }
             if (!sections.ContainsKey(Profile.FallbackSectionId)) throw new ArgumentException("Missing fallback section");
+            foreach (var node in Profile.Structure)
+            {
+                if (!sections.TryGetValue(node.SectionId, out var section) || section.HullSupports.Length == 0) continue;
+                foreach (int index in node.Neighbours)
+                {
+                    var support = Profile.Structure[index];
+                    if (definitions[support.SectionId].Type != ShipSectionType.Hull) continue;
+                    trimSupports[((long)node.SectionId << 6) | (uint)node.Fragment] = support;
+                    long key = ((long)support.SectionId << 6) | (uint)support.Fragment;
+                    if (!attachedTrim.TryGetValue(key, out var trim)) attachedTrim[key] = trim = new List<ShipFragmentConnection>();
+                    trim.Add(node);
+                }
+            }
             BuildMasts();
             ready = true;
         }
@@ -145,6 +160,7 @@ namespace PirateSlop
         public ShipDamageSection Resolve(Collider collider, Vector3 point)
         {
             if (!ready) return null;
+            if (collider != null && collider.GetComponentInParent<PirateSlop.Ships.ShipPermanentPart>() != null) return null;
             if (collider != null && collider.transform.IsChildOf(transform))
             {
                 var batch = collider.GetComponent<PirateSlop.Ships.ShipV3CollisionBatch>();
@@ -171,7 +187,14 @@ namespace PirateSlop
         {
             if (Profile != null && Profile.OrdinaryCannonballsOnly && ammo != InventoryItem.Cannonball) return;
             if (!ready || !IsServerInitialized || ship.IsSinking || !float.IsFinite(point.sqrMagnitude) || !float.IsFinite(velocity.sqrMagnitude)) return;
-            var direct = Resolve(collider, point);
+            var shooter = attacker != null ? attacker.GetComponent<NetworkPlayer>() : null;
+            if (!SessionController.FriendlyFire && shooter != null && shooter.TeamId.Value > 0 && shooter.TeamId.Value == ship.TeamId.Value) return;
+            var direct = DamageReceiver(Resolve(collider, point), point);
+            ApplyCannonHit(direct, point, normal, velocity, ammo, attacker, radius);
+        }
+        void ApplyCannonHit(ShipDamageSection direct, Vector3 point, Vector3 normal, Vector3 velocity, InventoryItem ammo, GameObject attacker, float radius)
+        {
+            if (direct == null || direct.Indestructible) return;
             flooding.BeginImpact();
             struckMasts.Clear();
             if (definitions[direct.SectionId].Type == ShipSectionType.Mast)
@@ -194,6 +217,7 @@ namespace PirateSlop
             {
                 foreach (var section in sections.Values)
                 {
+                    if (section.HullSupports.Length > 0) continue;
                     float distance = section.Distance(point);
                     if (distance < radius) affected[section.SectionId] = 1f - distance / radius;
                 }
@@ -204,7 +228,7 @@ namespace PirateSlop
             if (Profile.DamageAdjacentFragments && radius <= 0f)
                 foreach (int id in graph.AdjacentSections(direct.SectionId))
                 {
-                    if (affected.ContainsKey(id) || definitions[id].Type == ShipSectionType.Mast || !sections.TryGetValue(id, out var neighbour) || neighbour.Fragments.Length == 0 || !neighbour.gameObject.activeInHierarchy) continue;
+                    if (affected.ContainsKey(id) || definitions[id].Type == ShipSectionType.Mast || !sections.TryGetValue(id, out var neighbour) || neighbour.HullSupports.Length > 0 || neighbour.Fragments.Length == 0 || !neighbour.gameObject.activeInHierarchy) continue;
                     ulong mask = neighbour.BreakSingleNear(point);
                     if (mask == neighbour.RemovedFragments) continue;
                     Change(id, neighbour.Health, neighbour.State, point, normal, velocity, ammo, attacker, ShipDamageReason.Hit,
@@ -250,8 +274,83 @@ namespace PirateSlop
             DetachUnsupported(point, transform.up, Vector3.zero, InventoryItem.FireCannonball, attacker);
             Publish();
         }
+        public string CreateDeveloperBreach(bool strong, GameObject attacker)
+        {
+            if (!ready || !IsServerInitialized || ship.IsSinking || !flooding.UseBilgeFlooding) return "Корабль не готов к разрушению.";
+            var candidates = new List<(ShipDamageSection Section, int Fragment, Vector3 Point)>();
+            foreach (var section in sections.Values)
+            {
+                var definition = definitions[section.SectionId];
+                if (section.Indestructible || definition.Type != ShipSectionType.Hull || !definition.CanFlood) continue;
+                for (int i = 0; i < section.Fragments.Length; i++)
+                {
+                    if (((state[section.SectionId].RemovedFragments | section.ProtectedFragments) & (1UL << i)) != 0) continue;
+                    var filter = section.Fragments[i].GetComponent<MeshFilter>();
+                    if (!flooding.CanOpenBreach(filter)) continue;
+                    var bounds = filter.sharedMesh.bounds;
+                    flooding.OpeningHeads(filter, out float lower, out float upper);
+                    if (strong ? upper < .04f : upper >= .04f || lower < -.75f) continue;
+                    candidates.Add((section, i, filter.transform.TransformPoint(bounds.center)));
+                }
+            }
+            if (candidates.Count == 0) return "Подходящих целых досок больше нет.";
+            var selected = candidates[UnityEngine.Random.Range(0, candidates.Count)];
+            var current = state[selected.Section.SectionId];
+            var inward = (transform.position - selected.Point).normalized;
+            flooding.BeginImpact();
+            Change(selected.Section.SectionId, selected.Section.Health, ShipSectionState.Damaged, selected.Point, inward, inward * 35f, InventoryItem.Cannonball, attacker, ShipDamageReason.Scripted, 0f, current.RemovedFragments | (1UL << selected.Fragment));
+            DetachUnsupported(selected.Point, inward, inward * 35f, InventoryItem.Cannonball, attacker);
+            Publish();
+            return strong ? "Создана большая течь." : "Создана слабая течь.";
+        }
+        public string CreateDeveloperCannonImpact(GameObject attacker)
+        {
+            if (!ready || !IsServerInitialized || ship.IsSinking || !flooding.UseBilgeFlooding) return "Корабль не готов к разрушению.";
+            var candidates = new List<(ShipDamageSection Section, Vector3 Point)>();
+            foreach (var section in sections.Values)
+            {
+                var definition = definitions[section.SectionId];
+                if (section.Indestructible || definition.Type != ShipSectionType.Hull || !definition.CanFlood) continue;
+                for (int i = 0; i < section.Fragments.Length; i++)
+                {
+                    if (((state[section.SectionId].RemovedFragments | section.ProtectedFragments) & (1UL << i)) != 0) continue;
+                    var filter = section.Fragments[i].GetComponent<MeshFilter>();
+                    if (!flooding.CanOpenBreach(filter)) continue;
+                    candidates.Add((section, filter.transform.TransformPoint(filter.sharedMesh.bounds.center)));
+                }
+            }
+            if (candidates.Count == 0) return "Подходящих целых досок больше нет.";
+            var selected = candidates[UnityEngine.Random.Range(0, candidates.Count)];
+            var local = transform.InverseTransformPoint(selected.Point);
+            var inward = transform.TransformDirection(new Vector3(-local.x, 0f, -local.z).normalized);
+            var velocity = inward * 80f;
+            ApplyCannonHit(selected.Section, selected.Point, -inward, velocity, InventoryItem.Cannonball, attacker, 0f);
+            ship.Motor.ApplyCannonImpulse(selected.Point, inward * 1.5f, 1.5f);
+            ship.ImpactVfx(selected.Point, -inward);
+            return "Сымитировано попадание обычного ядра.";
+        }
+        ShipDamageSection DamageReceiver(ShipDamageSection section, Vector3 point)
+        {
+            if (section == null || section.HullSupports.Length == 0) return section;
+            ShipDamageSection receiver = null;
+            float nearest = float.MaxValue;
+            foreach (var support in section.HullSupports)
+            {
+                if (support == null || support.Indestructible) continue;
+                float distance = support.Distance(point);
+                if (distance >= nearest) continue;
+                nearest = distance;
+                receiver = support;
+            }
+            return receiver;
+        }
         void ApplyDamage(int id, float amount, Vector3 point, Vector3 normal, Vector3 velocity, InventoryItem ammo, GameObject attacker, ShipDamageReason reason)
         {
+            if (!sections.TryGetValue(id, out var damaged)) return;
+            var receiver = DamageReceiver(damaged, point);
+            if (receiver == null) return;
+            id = receiver.SectionId;
+            if (sections.TryGetValue(id, out var protectedSection) && protectedSection.Indestructible) return;
             if (attacker != null)
                 PirateSlop.Networking.SessionController.Instance?.NotifyCombatDamage(ship, attacker);
             if (!state.TryGetValue(id, out var current)) return;
@@ -296,11 +395,13 @@ namespace PirateSlop
         }
         void Change(int id, float health, ShipSectionState next, Vector3 point, Vector3 normal, Vector3 velocity, InventoryItem ammo, GameObject attacker, ShipDamageReason reason, float damage, ulong? fragmentMask = null, ulong? floodingImpactId = null)
         {
+            if (sections.TryGetValue(id, out var protectedSection) && protectedSection.Indestructible) return;
             var current = state[id]; var previous = current.State; var definition = definitions[id];
             ulong previousFragments = current.RemovedFragments;
             if (sections.TryGetValue(id, out var fragmentSection))
             {
-                current.RemovedFragments = fragmentMask ?? fragmentSection.BreakNear(point, damage, reason == ShipDamageReason.SupportLost);
+                current.RemovedFragments = (fragmentMask ?? fragmentSection.BreakNear(point, damage, reason == ShipDamageReason.SupportLost)) & ~fragmentSection.ProtectedFragments;
+                if (current.RemovedFragments == previousFragments && fragmentSection.Fragments.Length > 0) return;
                 if (fragmentSection.Fragments.Length > 0)
                 {
                     int remaining = 0;
@@ -312,7 +413,7 @@ namespace PirateSlop
             }
             current.State = next; current.Health = (ushort)Mathf.RoundToInt(health / definition.MaxHealth * ushort.MaxValue);
             current.Revision = ++revision;
-            if (Profile.EnableFlooding && definition.CanFlood && next != ShipSectionState.Intact)
+            if (Profile.EnableFlooding && definition.CanFlood && (!flooding.UseBilgeFlooding || definition.Type == ShipSectionType.Hull) && next != ShipSectionState.Intact)
             {
                 ulong openings = 0;
                 if (fragmentSection != null && fragmentSection.Fragments.Length > 0)
@@ -324,7 +425,7 @@ namespace PirateSlop
                         var part = fragmentSection.Fragments[i].transform;
                         var filter = part.GetComponent<MeshFilter>();
                         Vector3 breachPoint = filter != null ? part.TransformPoint(filter.sharedMesh.bounds.center) : point;
-                        if (flooding.CanOpenBreach(breachPoint)) openings |= 1UL << i;
+                        if (filter != null ? flooding.CanOpenBreach(filter) : flooding.CanOpenBreach(breachPoint)) openings |= 1UL << i;
                     }
                 }
                 else if (flooding.CanOpenBreach(point)) openings = 1UL;
@@ -392,8 +493,14 @@ namespace PirateSlop
         }
         public bool RepairFragment(int id, int fragment)
         {
+            return RepairFragment(id, fragment, true);
+        }
+        bool RepairFragment(int id, int fragment, bool publish)
+        {
             if (!ready || !IsServerInitialized || ship.IsSinking || !state.TryGetValue(id, out var entry) || !sections.TryGetValue(id, out var section)) return false;
             if (fragment < 0 || fragment >= section.RepairCount || fragment >= 64) return false;
+            long key = ((long)id << 6) | (uint)fragment;
+            if (trimSupports.TryGetValue(key, out var support) && state.TryGetValue(support.SectionId, out var supporting) && (supporting.RemovedFragments & (1UL << support.Fragment)) != 0) return false;
             ulong bit = 1UL << fragment;
             if ((entry.RemovedFragments & bit) == 0) return false;
             entry.RemovedFragments &= ~bit;
@@ -412,7 +519,9 @@ namespace PirateSlop
             section.Apply(entry.State, entry.RemovedFragments);
             if (mastParts.TryGetValue(id, out var mast) && !MastHasDamage(mast)) mastHits.Remove(mast.Key);
             SetBreach(entry);
-            Publish();
+            if (attachedTrim.TryGetValue(key, out var trim))
+                foreach (var attached in trim) RepairFragment(attached.SectionId, attached.Fragment, false);
+            if (publish) Publish();
             return true;
         }
         public void RepairNearby(int id, int fragment, Vector3 point, float areaMultiplier = 1f)
@@ -466,6 +575,7 @@ namespace PirateSlop
             if (!ready || !IsServerInitialized || ship.IsSinking || !Profile.EnableFlooding) return;
             flooding.Simulate(Time.deltaTime, Profile);
             ApplyFloodModifiers();
+            if (flooding.Level >= 1f) ship.BeginSinking();
             if (Time.time >= nextFloodPublish)
             {
                 nextFloodPublish = Time.time + .25f;

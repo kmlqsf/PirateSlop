@@ -1,5 +1,6 @@
 #ifndef PIRATESLOP_WATER_SHIP_FOAM_INCLUDED
 #define PIRATESLOP_WATER_SHIP_FOAM_INCLUDED
+#include "Assets/Shaders/ShipWaterInterior.hlsl"
 int _WaterShipCount;
 TEXTURE2D(_WaterShipFoamAtlas);
 SAMPLER(sampler_WaterShipFoamAtlas);

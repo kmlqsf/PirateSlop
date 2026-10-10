@@ -83,6 +83,7 @@ Shader "Custom/SimpleWaterURP"
             HLSLPROGRAM
             #pragma vertex vert
             #pragma fragment frag
+            #pragma target 3.5
             #pragma multi_compile_fog
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
@@ -90,6 +91,7 @@ Shader "Custom/SimpleWaterURP"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareDepthTexture.hlsl"
             #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/EntityLighting.hlsl"
             #include "Assets/Shaders/CoastalShoreFoam.hlsl"
+            #include "Assets/Shaders/ShipWaterInterior.hlsl"
 
             struct Attributes
             {
@@ -204,6 +206,7 @@ Shader "Custom/SimpleWaterURP"
 
             half4 frag(Varyings IN) : SV_Target
             {
+                ClipShipWaterInterior(IN.positionWS);
                 float2 screenUV = IN.screenPos.xy / IN.screenPos.w;
                 float surfaceEyeDepth = IN.screenPos.w;
 

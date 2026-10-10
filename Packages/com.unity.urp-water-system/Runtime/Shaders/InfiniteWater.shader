@@ -98,6 +98,7 @@ Shader "Boat Attack/Water/InfiniteWater"
 
 				InfinitePlane plane = WorldPlane(i.viewDirectionWS, i.positionWS);
 				i.positionWS = plane.positionWS + HALF_MIN;
+                ClipShipWaterInterior(i.positionWS);
                 float3 viewDirectionWS = GetCameraPositionWS().xyz - i.positionWS.xyz;
 				float3 viewPos = TransformWorldToView(i.positionWS);
 				float4 additionalData = float4(length(viewPos / viewPos.z), length(viewDirectionWS), waterBufferA.w, 0);

@@ -32,6 +32,8 @@ namespace PirateSlop.Ships
         void Update()
         {
             if (!player.IsOwner) return;
+            var pumpInteraction = GetComponent<ShipBilgePumpPlayer>();
+            if (pumpInteraction != null && (pumpInteraction.IsHolding || pumpInteraction.ConsumedInput)) return;
             var slotInteraction = GetComponent<ShipSlotMachinePlayer>();
             if (slotInteraction != null && (slotInteraction.IsHolding || slotInteraction.ConsumedInput)) return;
             if (motor.ShipActivityLocked && held == null && diceShip == null) Release();

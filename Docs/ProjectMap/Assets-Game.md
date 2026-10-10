@@ -101,6 +101,7 @@
 | [Assets/Game/BRZoneVolumetric/StormRainController.cs](<../../Assets/Game/BRZoneVolumetric/StormRainController.cs>) | Исходник C#: StormRainController; Шторм, зона, дождь и объёмный туман |
 | [Assets/Game/BRZoneVolumetric/StormRainRendererFeature.cs](<../../Assets/Game/BRZoneVolumetric/StormRainRendererFeature.cs>) | Исходник C#: StormRainRendererFeature, RainPass, GeometryData, Data; Шторм, зона, дождь и объёмный туман |
 | [Assets/Game/BRZoneVolumetric/StormSpray.mat](<../../Assets/Game/BRZoneVolumetric/StormSpray.mat>) | Материал Unity |
+| [Assets/Game/BRZoneVolumetric/StormVolumeController.Smoke.cs](<../../Assets/Game/BRZoneVolumetric/StormVolumeController.Smoke.cs>) | Исходник C#: StormVolumeController; Мир, острова и океан, Шторм, зона, дождь и объёмный туман, Тестовая карта и водоворот |
 | [Assets/Game/BRZoneVolumetric/StormVolumeController.cs](<../../Assets/Game/BRZoneVolumetric/StormVolumeController.cs>) | Исходник C#: StormVolumeController; Мир, острова и океан, Шторм, зона, дождь и объёмный туман |
 | [Assets/Game/BRZoneVolumetric/StormVolumeRendererFeature.cs](<../../Assets/Game/BRZoneVolumetric/StormVolumeRendererFeature.cs>) | Исходник C#: StormVolumeRendererFeature, LightningCapturePass, Data; Мир, острова и океан, Шторм, зона, дождь и объёмный туман |
 | [Assets/Game/BRZoneVolumetric/StormWaterline.mat](<../../Assets/Game/BRZoneVolumetric/StormWaterline.mat>) | Материал Unity |
@@ -115,6 +116,7 @@
 | [Assets/Game/BRZoneVolumetric/Resources/BRStormVolume.prefab](<../../Assets/Game/BRZoneVolumetric/Resources/BRStormVolume.prefab>) | Префаб Unity; Шторм, зона, дождь и объёмный туман |
 | [Assets/Game/BRZoneVolumetric/Resources/StormBillows.mat](<../../Assets/Game/BRZoneVolumetric/Resources/StormBillows.mat>) | Материал Unity; Шторм, зона, дождь и объёмный туман |
 | [Assets/Game/BRZoneVolumetric/Resources/StormBillowsAtlas.png](<../../Assets/Game/BRZoneVolumetric/Resources/StormBillowsAtlas.png>) | Изображение / текстура; Шторм, зона, дождь и объёмный туман |
+| [Assets/Game/BRZoneVolumetric/Resources/StormSmokeFields.compute](<../../Assets/Game/BRZoneVolumetric/Resources/StormSmokeFields.compute>) | Вычислительный шейдер; Мир, острова и океан, Шторм, зона, дождь и объёмный туман, Тестовая карта и водоворот |
 | [Assets/Game/BRZoneVolumetric/Resources/StormTestCloudWallDensity.asset](<../../Assets/Game/BRZoneVolumetric/Resources/StormTestCloudWallDensity.asset>) | Настройки или данные Unity; Шторм, зона, дождь и объёмный туман |
 | [Assets/Game/BRZoneVolumetric/Resources/StormTestCloudWallNormals.asset](<../../Assets/Game/BRZoneVolumetric/Resources/StormTestCloudWallNormals.asset>) | Настройки или данные Unity; Шторм, зона, дождь и объёмный туман |
 | [Assets/Game/BRZoneVolumetric/Resources/StormVolumeDensity.asset](<../../Assets/Game/BRZoneVolumetric/Resources/StormVolumeDensity.asset>) | Настройки или данные Unity; Шторм, зона, дождь и объёмный туман |
@@ -128,6 +130,7 @@
 | [Assets/Game/BRZoneVolumetric/Shaders/StormBillows.shader](<../../Assets/Game/BRZoneVolumetric/Shaders/StormBillows.shader>) | Шейдер; Шторм, зона, дождь и объёмный туман |
 | [Assets/Game/BRZoneVolumetric/Shaders/StormCloudBoundary.hlsl](<../../Assets/Game/BRZoneVolumetric/Shaders/StormCloudBoundary.hlsl>) | Код шейдера; Мир, острова и океан, Шторм, зона, дождь и объёмный туман |
 | [Assets/Game/BRZoneVolumetric/Shaders/StormTestCloudField.hlsl](<../../Assets/Game/BRZoneVolumetric/Shaders/StormTestCloudField.hlsl>) | Код шейдера; Шторм, зона, дождь и объёмный туман |
+| [Assets/Game/BRZoneVolumetric/Shaders/StormTestSmokeField.hlsl](<../../Assets/Game/BRZoneVolumetric/Shaders/StormTestSmokeField.hlsl>) | Код шейдера; Мир, острова и океан, Шторм, зона, дождь и объёмный туман, Тестовая карта и водоворот |
 | [Assets/Game/BRZoneVolumetric/Shaders/StormWaterline.shader](<../../Assets/Game/BRZoneVolumetric/Shaders/StormWaterline.shader>) | Шейдер; Шторм, зона, дождь и объёмный туман |
 | [Assets/Game/BRZoneVolumetric/Shaders/StormWeather.shader](<../../Assets/Game/BRZoneVolumetric/Shaders/StormWeather.shader>) | Шейдер; Шторм, зона, дождь и объёмный туман |
 | [Assets/Game/BRZoneVolumetric/Shaders/VolumetricClouds.hlsl](<../../Assets/Game/BRZoneVolumetric/Shaders/VolumetricClouds.hlsl>) | Код шейдера; Шторм, зона, дождь и объёмный туман |

@@ -237,8 +237,7 @@ namespace PirateSlop
                 if (listener != null)
                 {
                     Vector3 eye = listener.transform.position;
-                    var sea = OceanSurface.Instance;
-                    underwaterTarget = sea != null && eye.y < sea.Height(eye) - .1f ? 1f : 0f;
+                    underwaterTarget = PirateSlop.Ships.ShipWaterInterior.IsSubmerged(eye) ? 1f : 0f;
                     if (onShip)
                     {
                         int count = Physics.RaycastNonAlloc(eye, Vector3.up, envHits, 4f, ~0, QueryTriggerInteraction.Ignore);

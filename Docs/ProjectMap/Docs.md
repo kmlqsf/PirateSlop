@@ -20,6 +20,7 @@
 | [Docs/SlotMachineAudio.json](<../SlotMachineAudio.json>) | Конфигурация / данные JSON; Корабельная слот-машина |
 | [Docs/SlotMachineReelArt.md](<../SlotMachineReelArt.md>) | Документация; Корабельная слот-машина |
 | [Docs/StormRain.md](<../StormRain.md>) | Документация; Шторм, зона, дождь и объёмный туман, Тестовая карта и водоворот |
+| [Docs/StormTestSmoke.md](<../StormTestSmoke.md>) | Документация; Мир, острова и океан, Шторм, зона, дождь и объёмный туман, Тестовая карта и водоворот |
 | [Docs/TestOcean.md](<../TestOcean.md>) | Документация; Мир, острова и океан, Тестовая карта и водоворот |
 | [Docs/TestSkyDayNight.md](<../TestSkyDayNight.md>) | Документация; Шторм, зона, дождь и объёмный туман, Тестовая карта и водоворот |
 

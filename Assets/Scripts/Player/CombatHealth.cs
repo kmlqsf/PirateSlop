@@ -115,7 +115,7 @@ namespace PirateSlop
             {
                 var source = attacker.GetComponent<NetworkPlayer>();
                 var target = GetComponent<NetworkPlayer>();
-                if (source != null && target != null && source.TeamId.Value > 0 && source.TeamId.Value == target.TeamId.Value) return;
+                if (!SessionController.FriendlyFire && source != null && target != null && source.TeamId.Value > 0 && source.TeamId.Value == target.TeamId.Value) return;
             }
             if (IsDead || amount <= 0 || float.IsNaN(amount) || float.IsInfinity(amount)) return;
             amount = GetComponent<NetworkPlayer>()?.FilterUpgradeDamage(amount) ?? amount;

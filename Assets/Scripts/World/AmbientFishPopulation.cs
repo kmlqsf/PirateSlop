@@ -63,6 +63,7 @@ namespace PirateSlop.World
             {
                 var prefab = i < 18 ? common : i == 18 ? puffer : sword;
                 var visual = Object.Instantiate(prefab, parent);
+                visual.ConfigureForTest(EnvironmentTestGallery.IsTest(world.Layout));
                 visual.gameObject.SetActive(false);
                 fish[i] = new Fish
                 {
@@ -146,9 +147,13 @@ namespace PirateSlop.World
                 float escapeSpeed = item.Visual.Species == 1 ? 1.8f : item.Visual.Species == 2 ? 4.8f : 3.6f;
                 var cohesion = Vector3.ProjectOnPlane(formation - item.Position, Vector3.up);
                 var direction = escaping ? item.EscapeDirection : heading * Vector3.forward + Vector3.ClampMagnitude(cohesion * .18f, .85f);
+                float hullClearance = Mathf.Max(item.Visual.BodyRadius, item.Visual.Length * .5f) * item.Scale + .35f;
+                var ahead = item.Position + direction.normalized * Mathf.Max(2f, item.Speed * 1.5f);
+                bool avoidingShip = Ships.ShipWaterInterior.KeepFishOutside(ref ahead, hullClearance, out var avoid);
+                if (avoidingShip) direction = avoid.normalized * 2f + direction.normalized * .5f;
                 float targetHeading = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
                 float oldHeading = item.Heading;
-                item.Heading = Mathf.MoveTowardsAngle(item.Heading, targetHeading, dt * (escaping ? 180f : 65f));
+                item.Heading = Mathf.MoveTowardsAngle(item.Heading, targetHeading, dt * (escaping || avoidingShip ? 180f : 65f));
                 item.Turn = dt > .0001f ? Mathf.DeltaAngle(oldHeading, item.Heading) / dt : 0f;
                 float targetSpeed = escaping ? escapeSpeed : school.Speed + Mathf.Min(.4f, cohesion.magnitude * .03f);
                 item.Speed = Mathf.MoveTowards(item.Speed, targetSpeed, dt * (escaping ? 8f : 2f));
@@ -163,6 +168,13 @@ namespace PirateSlop.World
                     float radius = item.Visual.BodyRadius * item.Scale;
                     point.y = Mathf.Min(point.y, item.Water - radius - .4f);
                     point.y = Mathf.Max(point.y, item.Floor + radius + .6f);
+                }
+                if (Ships.ShipWaterInterior.KeepFishOutside(ref point, hullClearance, out var outward))
+                {
+                    item.EscapeDirection = Vector3.ProjectOnPlane(outward, Vector3.up).normalized;
+                    item.EscapeUntil = Time.time + 1.5f;
+                    item.LastChecked = point;
+                    item.Clear = false;
                 }
                 item.Position = point;
             }
@@ -240,6 +252,7 @@ namespace PirateSlop.World
             item.Floor = world.GroundHeight(point);
             point.y = Mathf.Min(point.y, item.Water - radius - .35f);
             point.y = Mathf.Max(point.y, item.Floor + radius + .5f);
+            Ships.ShipWaterInterior.KeepFishOutside(ref point, Mathf.Max(radius, item.Visual.Length * item.Scale * .5f) + .35f, out _);
             var forward = Quaternion.Euler(0f, item.Heading, 0f) * Vector3.forward;
             float half = Mathf.Max(0f, item.Visual.Length * item.Scale * .5f - radius);
             int mask = ~(1 << 4);

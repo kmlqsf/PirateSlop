@@ -607,6 +607,7 @@ Varyings WaterVertex(Attributes v)
 half4 WaterFragment(Varyings IN, FRONT_FACE_TYPE face : FRONT_FACE_SEMANTIC) : SV_Target
 {
 	UNITY_SETUP_INSTANCE_ID(IN);
+	ClipShipWaterInterior(IN.positionWS);
 	float2 screenUV = IN.screenPosition.xy / IN.screenPosition.w; // screen UVs
 	
     WaterInputData inputData;

@@ -23,6 +23,7 @@
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareDepthTexture.hlsl"
+            #include "Assets/Shaders/ShipWaterInterior.hlsl"
 
             #define WATER_HEIGHT _WaterBodyToWorld._24
             #define WATER_POSITION _WaterBodyToWorld._14_24_34
@@ -95,10 +96,16 @@
             
             real4 frag (Varyings input) : SV_Target
             {
+                clip(.5 - _ShipWaterInteriorCameraInside);
                 float4 screenPos = input.screenpos / input.screenpos.w;
                 
                 // Get depth
                 real depth = SampleSceneDepth(screenPos.xy);
+                float interiorDepth = depth;
+                #if !UNITY_REVERSED_Z
+                interiorDepth = lerp(UNITY_NEAR_CLIP_VALUE, 1, depth);
+                #endif
+                ClipShipWaterInterior(ComputeWorldSpacePosition(screenPos.xy, interiorDepth, UNITY_MATRIX_I_VP));
                 
                 // Get main light
                 Light MainLight = GetMainLight();

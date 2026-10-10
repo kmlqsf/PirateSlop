@@ -80,6 +80,11 @@ namespace PirateSlop
             var position = camera.transform.position;
             float height = Surface.Height(position);
             float depth = height - position.y;
+            if (PirateSlop.Ships.ShipWaterInterior.TryWaterHeight(position, out float bilgeHeight))
+            {
+                height = float.IsFinite(bilgeHeight) ? bilgeHeight : position.y - 1000f;
+                depth = height - position.y;
+            }
             Shader.SetGlobalVector(CameraWaterId, new Vector4(depth > 0 ? 1 : 0, height, depth, 1));
         }
 

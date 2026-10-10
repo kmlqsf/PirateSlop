@@ -190,6 +190,8 @@ namespace PirateSlop
                 return;
             }
             var slotInteraction = GetComponent<PirateSlop.Ships.ShipSlotMachinePlayer>();
+            var pumpInteraction = GetComponent<PirateSlop.Ships.ShipBilgePumpPlayer>();
+            if (pumpInteraction != null && pumpInteraction.ConsumedInput) { InteractionUsed = true; return; }
             if (slotInteraction != null && slotInteraction.ConsumedInput) { InteractionUsed = true; return; }
             if (lootWindow)
             {

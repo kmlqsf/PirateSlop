@@ -15,7 +15,7 @@ namespace PirateSlop
         {
             var audio = Get();
             if (audio == null || audio.testThunder != null) return;
-            audio.testThunder = new AudioSource[4];
+            audio.testThunder = new AudioSource[32];
             for (int i = 0; i < audio.testThunder.Length; i++)
             {
                 var source = audio.Source("Test storm thunder " + i, false);

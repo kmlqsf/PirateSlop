@@ -52,8 +52,7 @@ namespace PirateSlop
                 if (listener != null && (source.spatialBlend > .5f || Environment))
                 {
                     Vector3 eye = listener.transform.position;
-                    var ocean = OceanSurface.Instance;
-                    bool submerged = ocean != null && eye.y < ocean.Height(eye) - .1f;
+                    bool submerged = PirateSlop.Ships.ShipWaterInterior.IsSubmerged(eye);
                     Vector3 delta = eye - transform.position;
                     float distance = delta.magnitude;
                     bool blocked = false;

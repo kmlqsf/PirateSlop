@@ -14,7 +14,8 @@ namespace PirateSlop.Ships
         public Mesh CachedMesh;
         ShipDamageSection[] sections;
         MeshCollider output;
-        Mesh runtimeMesh;
+        readonly HashSet<ShipDamageSection> trackedSections = new();
+        readonly Dictionary<ShipDamageSection, List<int>> sectionSources = new();
         bool dirty;
 
         void OnEnable()
@@ -30,19 +31,26 @@ namespace PirateSlop.Ships
                 sections[i] = owner != null ? owner.SectionFor(Sources[i]) : Sources[i].GetComponentInParent<ShipDamageSection>();
                 if (sections[i] == null) continue;
                 sections[i].CollisionBatch = this;
-                sections[i].VisualChanged += Invalidate;
+                if (!sectionSources.TryGetValue(sections[i], out var members)) sectionSources[sections[i]] = members = new List<int>();
+                members.Add(i);
+                if (trackedSections.Add(sections[i])) sections[i].VisualChanged += Invalidate;
             }
             dirty = true;
         }
 
         void Invalidate(ShipDamageSection section)
         {
-            for (int i = 0; i < Sources.Length; i++)
-                if (sections[i] == section && Sources[i] != null) Sources[i].enabled = false;
             dirty = true;
         }
 
-        bool Visible(int index) => Sources[index] != null && Sources[index].gameObject.activeInHierarchy;
+        static bool HasGeometry(MeshCollider source)
+        {
+            if (source == null || source.sharedMesh == null || source.sharedMesh.vertexCount == 0) return false;
+            var filter = source.GetComponent<MeshFilter>();
+            return filter == null || filter.sharedMesh != null && filter.sharedMesh.vertexCount > 0;
+        }
+
+        bool Visible(int index) => HasGeometry(Sources[index]) && Sources[index].gameObject.activeInHierarchy;
 
         void LateUpdate()
         {
@@ -50,11 +58,10 @@ namespace PirateSlop.Ships
             dirty = false;
             bool all = true;
             for (int i = 0; i < Sources.Length; i++) all &= Visible(i);
-            Mesh next = all ? CachedMesh : BuildMesh(Sources, transform, false);
-            output.enabled = next != null && next.vertexCount != 0;
-            output.sharedMesh = output.enabled ? next : null;
-            if (runtimeMesh != null) Destroy(runtimeMesh);
-            runtimeMesh = all ? null : next;
+            bool batched = all && CachedMesh != null && CachedMesh.vertexCount > 0;
+            output.enabled = batched;
+            output.sharedMesh = batched ? CachedMesh : null;
+            for (int i = 0; i < Sources.Length; i++) ShipDamageSection.SetColliderEnabled(Sources[i], !batched && Visible(i));
         }
 
         public ShipDamageSection Resolve(Vector3 point)
@@ -77,10 +84,11 @@ namespace PirateSlop.Ships
 
         public float Distance(ShipDamageSection section, Vector3 point)
         {
+            if (!sectionSources.TryGetValue(section, out var members)) return float.MaxValue;
             Vector3 local = transform.InverseTransformPoint(point);
             float distance = float.MaxValue;
-            for (int i = 0; i < sections.Length; i++)
-                if (sections[i] == section && Visible(i))
+            foreach (int i in members)
+                if (Visible(i))
                     distance = Mathf.Min(distance, Vector3.Distance(transform.TransformPoint(SourceBounds[i].ClosestPoint(local)), point));
             return distance;
         }
@@ -110,7 +118,7 @@ namespace PirateSlop.Ships
             for (int i = 0; i < sources.Count; i++)
             {
                 var source = sources[i];
-                if (source == null || source.sharedMesh == null || !includeInactive && !source.gameObject.activeInHierarchy) continue;
+                if (!HasGeometry(source) || !includeInactive && !source.gameObject.activeInHierarchy) continue;
                 var mesh = source.sharedMesh;
                 if (!mesh.isReadable) throw new InvalidOperationException("Collision mesh is not readable: " + mesh.name);
                 int offset = vertices.Count;
@@ -132,12 +140,12 @@ namespace PirateSlop.Ships
                 for (int i = 0; i < sections.Length; i++)
                     if (sections[i] != null)
                     {
-                        sections[i].VisualChanged -= Invalidate;
                         if (sections[i].CollisionBatch == this) sections[i].CollisionBatch = null;
-                        if (Sources[i] != null) Sources[i].enabled = true;
+                        ShipDamageSection.SetColliderEnabled(Sources[i], true);
                     }
-            if (runtimeMesh != null) Destroy(runtimeMesh);
-            runtimeMesh = null;
+            foreach (var section in trackedSections) if (section != null) section.VisualChanged -= Invalidate;
+            trackedSections.Clear();
+            sectionSources.Clear();
         }
     }
 }

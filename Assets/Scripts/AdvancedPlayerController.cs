@@ -291,7 +291,8 @@ public partial class AdvancedPlayerController : MonoBehaviour
         pending.Slide |= InputActive && kb.cKey.wasPressedThisFrame;
         pending.Jump |= InputActive && kb.spaceKey.wasPressedThisFrame;
         if (shipV3Interaction == null) shipV3Interaction = GetComponent<PirateSlop.Ships.ShipV3PlayerInteraction>();
-        if (shipV3Interaction != null && shipV3Interaction.ConsumedInput) pending.Use = false;
+        var pumpInput = GetComponent<PirateSlop.Ships.ShipBilgePumpPlayer>();
+        if (shipV3Interaction != null && shipV3Interaction.ConsumedInput || pumpInput != null && pumpInput.ConsumedInput) pending.Use = false;
         else pending.Use |= InputActive && (kb.eKey.wasPressedThisFrame || kb.fKey.wasPressedThisFrame) && (IsSwimming || LocomotionLocked || inventory == null || !inventory.AimingAtPickup());
         pending.Release |= kb.qKey.wasPressedThisFrame || !InputActive;
         if (!networked) Simulate(ConsumeCommand(), Time.deltaTime);
@@ -416,12 +417,17 @@ public partial class AdvancedPlayerController : MonoBehaviour
         if (!IsKnockedBack && SimulateLadder(command, dt)) { jumpBuffer = groundGrace = 0f; return; }
         var ocean = OceanSurface.Instance;
         float water = ocean != null ? ocean.Height(transform.position) : float.NegativeInfinity;
+        bool insideHull = PirateSlop.Ships.ShipWaterInterior.TryWaterHeight(transform.position, out float bilgeWater);
+        if (insideHull) water = bilgeWater;
+        var deckPassenger = GetComponent<ShipDeckPassenger>();
+        bool dryDeck = !insideHull && PirateSlop.World.EnvironmentTestGallery.IsTest(PirateSlop.World.ProceduralWorld.Instance != null ? PirateSlop.World.ProceduralWorld.Instance.Layout : null)
+            && !IsKnockedBack && deckPassenger != null && deckPassenger.HasDryDeckSupport();
         bool solidGround = verticalVelocity <= 0 && HasGround() && !IsSwimming;
         bool upgradeWater = SimulateUpgradeWater(dt, solidGround);
         bool waterSupport = ocean != null && ((equipment != null && equipment.WaterRunning) || upgradeWater) && transform.position.y >= water-1.2f;
         bool wasSwimming = IsSwimming;
         bool risingFromWater = !wasSwimming && verticalVelocity > 0f;
-        IsSwimming = !risingFromWater && !waterSupport && ocean != null && water - transform.position.y > (wasSwimming ? .65f : 1.1f);
+        IsSwimming = !dryDeck && !risingFromWater && !waterSupport && ocean != null && water - transform.position.y > (wasSwimming ? .65f : 1.1f);
         if (IsSwimming && jumpBuffer > 0f && !command.Crouch && !IsKnockedBack && water - transform.position.y <= 1.4f && CanStand())
         {
             GetComponent<ShipDeckPassenger>()?.Attach(null);

@@ -678,7 +678,7 @@ public class VolumetricCloudsURP : ScriptableRendererFeature
             cloudsMaterial.SetFloat(ambientProbeDimmer, cloudsVolume.ambientLightProbeDimmer.value);
             cloudsMaterial.SetFloat(sunLightDimmer, cloudsVolume.sunLightDimmer.value * (boundedStorm ? .78f : 1f));
             cloudsMaterial.SetFloat(earthRadius, actualEarthRad);
-            cloudsMaterial.SetFloat(accumulationFactor, cloudsVolume.temporalAccumulationFactor.value);
+            cloudsMaterial.SetFloat(accumulationFactor, testSky ? 0 : cloudsVolume.temporalAccumulationFactor.value);
             cloudsMaterial.SetFloat(improvedTransmittanceBlend, cloudsVolume.perceptualBlending.value);
             Vector3 cameraPosPS = camera.transform.position - new Vector3(0.0f, -actualEarthRad, 0.0f);
             cloudsMaterial.SetFloat(cloudnearPlane, max(GetCloudNearPlane(cameraPosPS, bottomAltitude, highestAltitude), camera.nearClipPlane));
@@ -722,7 +722,7 @@ public class VolumetricCloudsURP : ScriptableRendererFeature
             cloudsVolume.cloudPreset = cloudPreset;
 
             UpdateMaterialProperties(camera);
-            denoiseClouds = cloudsVolume.temporalAccumulationFactor.value >= 0.01f;
+            denoiseClouds = cloudsMaterial.GetFloat(accumulationFactor) >= 0.01f;
         }
 
         private void PrepareCustomLutData(VolumetricClouds clouds)
@@ -1299,7 +1299,7 @@ public class VolumetricCloudsURP : ScriptableRendererFeature
                 passData.historyHandle = historyTexture;
                 passData.history = history;
                 passData.historyValid = historyValid;
-                passData.historyBlend = cloudsVolume.temporalAccumulationFactor.value;
+                passData.historyBlend = cloudsMaterial.GetFloat(accumulationFactor);
 
                 ConfigureInput(ScriptableRenderPassInput.Depth);
 

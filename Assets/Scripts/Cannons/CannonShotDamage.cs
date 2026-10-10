@@ -21,11 +21,19 @@ namespace PirateSlop
             var player = health.GetComponent<NetworkPlayer>();
             if (player == null || health.IsDead) return;
             var shooter = Attacker != null ? Attacker.GetComponent<NetworkPlayer>() : null;
-            if (shooter != null && shooter.TeamId.Value == player.TeamId.Value) return;
+            if (!SessionController.FriendlyFire && shooter != null && shooter.TeamId.Value == player.TeamId.Value) return;
             player.KnockDown(velocity, 2.8f * (Ammo == InventoryItem.Cannonball && shooter != null && shooter.HasUpgrade(UpgradeEffect.HeavyCannonball) ? RoguelikeTuning.Current.knockdownMultiplier : 1f));
         }
         public float StandardBlastRadius = .8f, StandardBlastDamage = 30f;
         public float StandardPushRadius = 3f;
+
+        bool IgnoreSource(Collider collider)
+        {
+            if (Source == null || !collider.transform.IsChildOf(Source)) return false;
+            if (!SessionController.FriendlyFire) return true;
+            var cannon = collider.GetComponentInParent<SimpleCannon>();
+            return cannon != null && cannon.Index == SourceCannonIndex;
+        }
 
         Vector3 ImpactPushVelocity(CombatHealth health, Vector3 point)
         {
@@ -153,7 +161,7 @@ namespace PirateSlop
                     if (!PlayerHitbox.IsTarget(hit.collider) || hit.collider.gameObject.layer == LayerMask.NameToLayer("Water")) continue;
                     if (hit.collider.gameObject.layer == LayerMask.NameToLayer("ShipDebris")) continue;
                     if (hit.collider.GetComponentInParent<BoardingWalkSurface>() != null) continue;
-                    if (hit.transform.IsChildOf(transform) || (Source != null && hit.transform.IsChildOf(Source)) ||
+                    if (hit.transform.IsChildOf(transform) || IgnoreSource(hit.collider) ||
                         hit.collider.GetComponentInParent<CannonShotDamage>() != null) continue;
                     var section = PirateSlop.Ships.ShipV3CollisionBatch.ResolveSection(hit.collider, hit.point);
                     if (section != null && hitSections.Contains(section)) continue;
@@ -274,7 +282,7 @@ namespace PirateSlop
             float blastRadius = Ammo == InventoryItem.FireCannonball ? StandardBlastRadius : CannonAmmo.MortarBlastRadius(Ammo);
             foreach (var hit in Physics.OverlapSphere(point, blastRadius, ~0, QueryTriggerInteraction.Ignore))
             {
-                if (Source != null && hit.transform.IsChildOf(Source)) continue;
+                if (IgnoreSource(hit)) continue;
                 var health = hit.GetComponentInParent<CombatHealth>();
                 if (health != null && damaged.Add(health))
                 {

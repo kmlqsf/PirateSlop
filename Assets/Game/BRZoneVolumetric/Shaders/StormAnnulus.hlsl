@@ -9,32 +9,34 @@ float4 _StormLightning;
 float4 _StormLightningSecondary;
 float4 _StormLightningColor;
 float4 _StormTestLightningTiming;
-float4 _StormTestLightningStarts[12];
-float4 _StormTestLightningEnds[12];
+float4 _StormSmokeFlashVolumes[12];
+float4 _StormSmokeFlashChannelStarts[72];
+float4 _StormSmokeFlashChannelEnds[72];
 
 TEXTURE3D(_StormVolumeDensity);
 SAMPLER(sampler_StormVolumeDensity);
 TEXTURE3D(_PirateStormNearNoise);
 SAMPLER(sampler_PirateStormNearNoise);
 #include "StormTestCloudField.hlsl"
+#include "StormTestSmokeField.hlsl"
 float StormTestLightningScatter(float3 positionWS,float4 field,float3 normal,float4 flash,int group)
 {
-    if(flash.w<=0.0 || dot(positionWS-flash.xyz,positionWS-flash.xyz)>2304.0)return 0.0;
+    if(flash.w<=0.0 || dot(positionWS-flash.xyz,positionWS-flash.xyz)>3364.0)return 0.0;
     float flux=0.0;
     float3 source=0.0;
     float2 radial=normalize(positionWS.xz-_StormCenterWater.xz);
     float3 tangent=float3(-radial.y,0,radial.x);
     [unroll] for(int channel=0;channel<6;channel++)
     {
-        float4 start=_StormTestLightningStarts[group*6+channel];
-        float3 edge=_StormTestLightningEnds[group*6+channel].xyz-start.xyz;
+        float4 start=_StormSmokeFlashChannelStarts[group*6+channel];
+        float3 edge=_StormSmokeFlashChannelEnds[group*6+channel].xyz-start.xyz;
         float along=saturate(dot(positionWS-start.xyz,edge)/max(.001,dot(edge,edge)));
         float3 channelPosition=start.xyz+edge*along;
         float3 separation=channelPosition-positionWS;
         float sideways=dot(separation,tangent);
-        float distanceSquared=dot(separation,separation)-sideways*sideways*.7;
-        float energy=start.w*(.7/(1.0+distanceSquared*.11)+.3/(1.0+distanceSquared*.024))
-            *(1.0-smoothstep(324.0,900.0,distanceSquared));
+        float distanceSquared=dot(separation,separation)-sideways*sideways*.74;
+        float energy=start.w*(.7/(1.0+distanceSquared*.09)+.3/(1.0+distanceSquared*.019))
+            *(1.0-smoothstep(484.0,1296.0,distanceSquared));
         flux+=energy;source+=channelPosition*energy;
     }
     if(flux<.005)return 0.0;
@@ -42,9 +44,9 @@ float StormTestLightningScatter(float3 positionWS,float4 field,float3 normal,flo
     float3 toSource=source-positionWS;
     float distanceWS=length(toSource);
     float3 unusedNormal;
-    float middleDensity=StormTestCloudField(positionWS+toSource*.55,3.0,0.0,false,unusedNormal).r;
+    float middleDensity=StormTestSmokeField(positionWS+toSource*.55,1.5,false,unusedNormal).r;
     float opticalDepth=distanceWS*(middleDensity*.7+field.r*.3);
-    float transport=exp(-opticalDepth*.18);
+    float transport=exp(-opticalDepth*.155);
     float escape=lerp(.35,1.15,saturate(field.a));
     float facing=.55+.45*abs(dot(normal,toSource/max(.001,distanceWS)));
     return flash.w*flux*transport*escape*facing;
@@ -211,19 +213,19 @@ bool StormRayIntervals(float3 origin, float3 direction, float maxDistance, out f
     {
         float2 shell;
         float2 p=origin.xz-_StormCenterWater.xz;
-        if(!StormCylinder(p,direction.xz,_StormBand.x+18.0,shell))return false;
+        if(!StormCylinder(origin.xz-_StormTestSmokeMap.xy,direction.xz,_StormTestSmokeMap.z,shell))return false;
         float2 vertical=float2(-1e19,1e19);
         if(abs(direction.y)>.00001)
         {
-            vertical=(float2(max(_PirateStormTestClouds.y,_PirateStormTestCloudBase),_PirateStormTestClouds.z)-origin.y)/direction.y;
+            vertical=(float2(StormTestSmokeBottom(),_PirateStormTestClouds.z)-origin.y)/direction.y;
             vertical=float2(min(vertical.x,vertical.y),max(vertical.x,vertical.y));
         }
-        else if(origin.y<max(_PirateStormTestClouds.y,_PirateStormTestCloudBase) || origin.y>_PirateStormTestClouds.z)return false;
+        else if(origin.y<StormTestSmokeBottom() || origin.y>_PirateStormTestClouds.z)return false;
         float begin=max(0.0,max(shell.x,vertical.x));
         float end=min(maxDistance,min(shell.y,vertical.y));
         if(end<=begin)return false;
         float2 hole;
-        if(!StormCylinder(p,direction.xz,max(0.0,_StormBand.x-2.0),hole))
+        if(!StormCylinder(p,direction.xz,max(0.0,_StormBand.x-STORM_SMOKE_FRINGE),hole))
         {
             spans=float4(begin,end,end,end);
             return true;

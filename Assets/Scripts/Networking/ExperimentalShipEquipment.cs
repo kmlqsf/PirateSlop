@@ -1,5 +1,6 @@
 using FishNet.Object;
 using UnityEngine;
+using PirateSlop.World;
 
 namespace PirateSlop.Networking
 {
@@ -12,11 +13,15 @@ namespace PirateSlop.Networking
         NetworkFish[] spawned;
         float[] bottleRespawnAt;
         float nextSpawn;
+        readonly RaycastHit[] deckHits = new RaycastHit[64];
+        NetworkShip ship;
         public override void OnStartServer()
         {
             spawned = new NetworkFish[Prefabs.Length];
             bottleRespawnAt = new float[Prefabs.Length];
-            SpawnItems();
+            ship = GetComponent<NetworkShip>();
+            nextSpawn = Time.time;
+            if (!EnvironmentTestGallery.IsTest(ProceduralWorld.Instance != null ? ProceduralWorld.Instance.Layout : null)) SpawnItems();
         }
         void Update()
         {
@@ -28,6 +33,9 @@ namespace PirateSlop.Networking
         {
             if (!bottlesOnly) nextSpawn = Time.time + 20;
             if (!Enabled) return;
+            bool testItems = EnvironmentTestGallery.IsTest(ProceduralWorld.Instance != null ? ProceduralWorld.Instance.Layout : null);
+            if (testItems && (ship == null || !ship.IsSpawned)) return;
+            bool synced = false;
             if (bottleRespawnAt == null)
             {
                 bottleRespawnAt = new float[Prefabs.Length];
@@ -47,10 +55,16 @@ namespace PirateSlop.Networking
                     if (Time.time < bottleRespawnAt[i]) continue;
                 }
                 Vector3 point=i<SpawnPoints.Length && SpawnPoints[i]!=null ? SpawnPoints[i].position : transform.TransformPoint(new Vector3(-3.4f+(i%5)*1.7f,4.6f,(i/5)*1.2f));
-                float nearest = 4f;
-                foreach(var hit in Physics.RaycastAll(point+transform.up*2,-transform.up,4,~0,QueryTriggerInteraction.Ignore))
-                    if(hit.collider.GetComponentInParent<NetworkShip>() == GetComponent<NetworkShip>() && hit.distance < nearest && Vector3.Dot(hit.normal,transform.up)>.7f)
-                    { nearest=hit.distance; point=hit.point; }
+                if (testItems && !synced) { Physics.SyncTransforms(); synced = true; }
+                float nearest = float.PositiveInfinity;
+                int count = Physics.RaycastNonAlloc(point + transform.up * 2, -transform.up, deckHits, 4, ~0, QueryTriggerInteraction.Ignore);
+                for (int hitIndex = 0; hitIndex < count; hitIndex++)
+                {
+                    var hit = deckHits[hitIndex];
+                    if (hit.collider.GetComponentInParent<NetworkShip>() != ship || hit.distance >= nearest || Vector3.Dot(hit.normal, transform.up) <= .7f) continue;
+                    nearest = hit.distance; point = hit.point;
+                }
+                if (testItems && float.IsPositiveInfinity(nearest)) { nextSpawn = Mathf.Min(nextSpawn, Time.time + .25f); continue; }
                 var shape=Prefabs[i].GetComponent<BoxCollider>();
                 var sphere=Prefabs[i].GetComponent<SphereCollider>();
                 point+=transform.up*((shape!=null ? shape.size.y*.5f-shape.center.y : sphere!=null ? sphere.radius-sphere.center.y : 0f)+.025f);

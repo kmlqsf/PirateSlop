@@ -14,6 +14,7 @@ Shader "PirateSlop/UnderwaterSuspension"
             #pragma target 3.5
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
+            #include "Assets/Shaders/ShipWaterInterior.hlsl"
             TEXTURE2D_X_FLOAT(_UnderwaterSceneDepth);
             float4 _BoatAttack_CameraWater, _UnderwaterExtinction;
             struct Attributes { float4 positionOS : POSITION; float2 uv : TEXCOORD0; half4 color : COLOR; };
@@ -29,6 +30,7 @@ Shader "PirateSlop/UnderwaterSuspension"
             }
             half4 Frag(Varyings input) : SV_Target
             {
+                ClipShipWaterInterior(input.positionWS);
                 float2 uv = GetNormalizedScreenSpaceUV(input.positionCS);
                 float raw = SAMPLE_TEXTURE2D_X(_UnderwaterSceneDepth, sampler_PointClamp, uv).r;
                 float surface = LinearEyeDepth(raw, _ZBufferParams);

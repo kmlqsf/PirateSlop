@@ -285,6 +285,23 @@ bool IntersectCloudVolume(float3 originPS, float3 dir, float lowerBoundPS, float
 
 bool GetCloudVolumeIntersection(float3 originWS, float3 dir, out RayMarchRange rayMarchRange)
 {
+#if defined(_PIRATESLOP_CLEAR_CLOUDS)
+    if(_PirateStormTestSkyWeather.w>0.0 && _PirateStormBackdrop.x<.5)
+    {
+        ZERO_INITIALIZE(RayMarchRange,rayMarchRange);
+        float bottom=_PirateStormCloudBoundary.x+360.0;
+        float top=_PirateStormCloudBoundary.x+2200.0;
+        if(abs(dir.y)<.00001)
+        {
+            rayMarchRange.end=MAX_SKYBOX_VOLUMETRIC_CLOUDS_DISTANCE;
+            return originWS.y>bottom && originWS.y<top;
+        }
+        float2 span=(float2(bottom,top)-originWS.y)/dir.y;
+        rayMarchRange.start=max(0.0,min(span.x,span.y));
+        rayMarchRange.end=max(span.x,span.y);
+        return rayMarchRange.end>rayMarchRange.start;
+    }
+#endif
 #if defined(_LOCAL_VOLUMETRIC_CLOUDS) || defined(_PIRATESLOP_CLEAR_CLOUDS)
     return IntersectCloudVolume(ConvertToPS(originWS), dir, _LowestCloudAltitude, _HighestCloudAltitude, rayMarchRange.start, rayMarchRange.end);
 #else
@@ -334,6 +351,10 @@ float ErosionMipOffset(float distanceToCamera)
 // Function that returns the normalized height inside the cloud layer
 float EvaluateNormalizedCloudHeight(float3 positionPS)
 {
+#if defined(_PIRATESLOP_CLEAR_CLOUDS)
+    if(_PirateStormTestSkyWeather.w>0.0 && _PirateStormBackdrop.x<.5)
+        return RangeRemap(_LowestCloudAltitude,_HighestCloudAltitude,positionPS.y);
+#endif
     return RangeRemap(_LowestCloudAltitude, _HighestCloudAltitude, length(positionPS));
 }
 
@@ -420,6 +441,27 @@ void PirateCloudCoverage(float3 positionPS,out CloudCoverageData data)
     float2 stormPattern=PirateCloudNoise2(AnimateShapeNoisePosition(positionPS).xz/(testWeather?2200.0:1350.0)+float2(_ClearCloudSeed+151.3,_ClearCloudSeed+69.4));
     float stormCoverage=gameStorm?lerp(.28,.92,smoothstep(.26,.58,stormPattern.x)):lerp(.75,.96,weather.y);
     if(testWeather)stormCoverage=lerp(.12,.65,smoothstep(.37,.73,stormPattern.x));
+    if(testWeather && gameStorm)
+    {
+        float height=world.y-_PirateStormCloudBoundary.x;
+        float clearBottom=1200.0+warp.y*120.0;
+        float clearTop=2000.0+weather.y*180.0;
+        float stormBottom=400.0+warp.y*150.0;
+        float stormTop=1150.0+stormPattern.y*350.0;
+        float clearWindow=smoothstep(clearBottom,clearBottom+120.0,height)*(1.0-smoothstep(clearTop-180.0,clearTop,height));
+        float stormWindow=smoothstep(stormBottom,stormBottom+140.0,height)*(1.0-smoothstep(stormTop-220.0,stormTop,height));
+        float clearWeight=coverage*(1.0-stormWeather)*clearWindow;
+        float stormWeight=stormCoverage*stormWeather*stormWindow;
+        float totalWeight=clearWeight+stormWeight;
+        float testFadeStart=max(_ClearCloudFarFadeStart,1000.0);
+        float testFadeEnd=max(_ClearCloudFarFadeEnd,testFadeStart+1000.0);
+        data.coverage=totalWeight*(1.0-smoothstep(testFadeStart,testFadeEnd,length(world.xz-_ClearCloudWorldOffset.xy)))*.94;
+        data.rainClouds=stormWeight/max(.001,totalWeight);
+        data.cloudType=.25;
+        data.minCloudHeight=0.0;
+        data.maxCloudHeight=1.0;
+        return;
+    }
     float stormCrown=1.0;
     float layerBottom=_LowestCloudAltitude-_EarthRadius-_PirateStormCloudBoundary.x;
     float layerRange=max(1.0,_HighestCloudAltitude-_LowestCloudAltitude);
@@ -490,12 +532,45 @@ half PowderEffect(half cloudDensity, half cosAngle, half intensity)
     return lerp(1.0, lerp(1.0, powderEffect, smoothstep(0.5, -0.5, cosAngle)), intensity);
 }
 
+#if defined(_PIRATESLOP_CLEAR_CLOUDS)
+void EvaluateTestSkyProperties(float3 positionPS,float footprint,out CloudProperties properties)
+{
+    ZERO_INITIALIZE(CloudProperties,properties);
+    float3 world=positionPS+_PlanetCenterPosition;
+    float height=world.y-_PirateStormCloudBoundary.x;
+    if(height<=360.0 || height>=2200.0)return;
+    CloudCoverageData coverage;
+    PirateCloudCoverage(positionPS,coverage);
+    if(coverage.coverage<=CLOUD_DENSITY_TRESHOLD)return;
+    float3 flow=world+float3(_WindVector.x,0,_WindVector.y)*_MediumWindSpeed;
+    flow.y=height;
+    float3 coordinates=flow*float3(1.0,.7,1.0);
+    float broadMip=clamp(log2(max(1.0,footprint*32.0/2600.0)),0.0,4.0);
+    float detailMip=clamp(log2(max(1.0,footprint*32.0/1100.0)),0.0,4.0);
+    float broad=SAMPLE_TEXTURE3D_LOD(_ErosionNoise,s_trilinear_repeat_sampler,coordinates/2600.0,broadMip).r;
+    float detail=SAMPLE_TEXTURE3D_LOD(_ErosionNoise,s_trilinear_repeat_sampler,coordinates/1100.0+float3(.31,.57,.83),detailMip).r;
+    float shape=smoothstep(.28,.65,broad*.72+detail*.28);
+    properties.height=saturate((height-360.0)/1840.0);
+    properties.stormShading=coverage.rainClouds;
+    properties.density=shape*coverage.coverage*_DensityMultiplier;
+    properties.sigmaT=lerp(.012,.018,coverage.rainClouds);
+    properties.ambientOcclusion=lerp(.65,.36,coverage.rainClouds)*lerp(.65,1.0,shape);
+}
+#endif
+
 // Function that evaluates the cloud properties at a given absolute world space position
 void EvaluateCloudProperties(float3 positionPS, float noiseMipOffset, float erosionMipOffset, bool cheapVersion, bool lightSampling,
                             out CloudProperties properties)
 {
     // Initliaze all the values to 0 in case
     ZERO_INITIALIZE(CloudProperties, properties);
+#if defined(_PIRATESLOP_CLEAR_CLOUDS)
+    if(_PirateStormTestSkyWeather.w>0.0 && _PirateStormBackdrop.x<.5)
+    {
+        EvaluateTestSkyProperties(positionPS,noiseMipOffset,properties);
+        return;
+    }
+#endif
 
 //#ifndef CLOUDS_SIMPLE_PRESET
     // When using a cloud map, we cannot support the full planet due to UV issues
@@ -559,6 +634,7 @@ void EvaluateCloudProperties(float3 positionPS, float noiseMipOffset, float eros
         shapeNoise = lerp(shapeNoise, rounded, .65);
     }
     half heightGradient = smoothstep(0.02, 0.14, properties.height) * (1.0 - smoothstep(0.55, 0.98, properties.height));
+    if(filteredTestSky)heightGradient=1.0;
     properties.stormShading = _PirateStormBackdrop.x < .5 ? cloudCoverageData.rainClouds : 0.0;
     half shapeThreshold = lerp(lerp(0.48, 0.64, shapeFactor), 0.46, cloudCoverageData.rainClouds);
     half threshold = lerp(1.0, shapeThreshold, cloudCoverageData.coverage * heightGradient);

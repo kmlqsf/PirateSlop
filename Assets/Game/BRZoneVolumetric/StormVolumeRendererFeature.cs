@@ -46,7 +46,7 @@ namespace PirateSlop
             if (pass == null || storm == null || !storm.Ready || !storm.RendersCamera(renderingData.cameraData.camera) || renderingData.cameraData.cameraType != CameraType.Game || renderingData.cameraData.renderType != CameraRenderType.Base) return;
             if (!storm.IsMenuPreview && renderingData.cameraData.camera != Camera.main) return;
             
-            if (!storm.IsMenuPreview && Shader.GetGlobalFloat("_PirateStormBillows") > .5f && Shader.GetGlobalFloat("_PirateStormVolume3D") < .5f)
+            if (!storm.IsMenuPreview && !storm.TestCloudWall && Shader.GetGlobalFloat("_PirateStormBillows") > .5f && Shader.GetGlobalFloat("_PirateStormVolume3D") < .5f)
             {
                 var eye = renderingData.cameraData.camera.transform.position;
                 float radialDistance = Vector2.Distance(new Vector2(eye.x, eye.z), new Vector2(storm.CurrentCenter.x, storm.CurrentCenter.z));
@@ -88,7 +88,7 @@ namespace PirateSlop
             pass.cloudsVolume = storm.CloudSettings;
             pass.afterTransparentDepth = storm.TestCloudWall;
             pass.colorAdjustments = null;
-            pass.resolutionScale = storm.TestCloudWall ? .75f : Mathf.Clamp(ResolutionScale, .25f, storm.IsMenuPreview ? .67f : .4f);
+            pass.resolutionScale = storm.TestCloudWall ? 1f : Mathf.Clamp(ResolutionScale, .25f, storm.IsMenuPreview ? .67f : .4f);
             pass.ConfigureInput(ScriptableRenderPassInput.Depth);
             if (storm.TestCloudWall) renderer.EnqueuePass(lightning);
             renderer.EnqueuePass(pass);

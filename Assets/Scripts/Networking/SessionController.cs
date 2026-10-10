@@ -82,6 +82,7 @@ namespace PirateSlop.Networking
             manager.ClientManager.RegisterBroadcast<UpgradeIdentityMessage>(ReceiveUpgradeIdentity);
             manager.ClientManager.RegisterBroadcast<StormMessage>(ReceiveStorm);
             manager.ClientManager.RegisterBroadcast<TestOceanMessage>(ReceiveTestOcean);
+            manager.ClientManager.RegisterBroadcast<CombatRulesMessage>(ReceiveCombatRules);
             manager.ClientManager.RegisterBroadcast<SeagullFlockMessage>(ReceiveSeagulls);
             manager.ServerManager.RegisterBroadcast<WorldReadyMessage>(WorldReady);
             var args = Environment.GetCommandLineArgs();
@@ -187,6 +188,7 @@ namespace PirateSlop.Networking
         {
             if (args.ConnectionState == LocalConnectionState.Started)
             {
+                FriendlyFireEnabled = false;
                 ResetUpgrades();
                 upgradeCatalog = RoguelikeCatalog.Load();
                 Debug.Log($"SESSION_READY id={SessionId} port={transport.GetPort()} capacity={MaxPlayers}");
@@ -198,6 +200,7 @@ namespace PirateSlop.Networking
             }
             else if (args.ConnectionState == LocalConnectionState.Stopped)
             {
+                FriendlyFireEnabled = false;
                 if (connecting && error == "") SetError("Сервер не запущен: порт занят или недоступен");
                 players.Clear(); slots.Clear(); awaitingWorld.Clear(); population = 0;
                 ResetUpgrades();
@@ -207,6 +210,7 @@ namespace PirateSlop.Networking
         void ClientState(ClientConnectionStateArgs args)
         {
             if (args.ConnectionState != LocalConnectionState.Stopped) return;
+            FriendlyFireEnabled = false;
             StopObserver();
             bool unexpected = playing || connecting;
             playing = connecting = false;
@@ -266,6 +270,7 @@ namespace PirateSlop.Networking
             if (observerSession && manager.ClientManager.Connection != null && conn.ClientId == manager.ClientManager.Connection.ClientId)
             { StartObserver(); return; }
             SendTestOcean(conn);
+            SendCombatRules(conn);
             SendSeagulls(conn);
             SpawnPlayer(conn, message.UpgradeToken);
         }

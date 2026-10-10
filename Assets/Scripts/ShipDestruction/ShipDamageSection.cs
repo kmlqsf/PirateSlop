@@ -7,6 +7,9 @@ namespace PirateSlop
     public sealed class ShipDamageSection : MonoBehaviour
     {
         public int SectionId;
+        public bool Indestructible;
+        public ShipDamageSection[] HullSupports = Array.Empty<ShipDamageSection>();
+        public ulong ProtectedFragments;
         public Collider[] DamageColliders = Array.Empty<Collider>();
         public Collider[] GameplayColliders = Array.Empty<Collider>();
         public Collider[] DamagedColliders = Array.Empty<Collider>();
@@ -39,8 +42,22 @@ namespace PirateSlop
         public float Health { get; internal set; }
         public ulong AllFragments => Fragments.Length >= 64 ? ulong.MaxValue : (1UL << Fragments.Length) - 1UL;
         public Vector3 LocalCenter => Owner.transform.InverseTransformPoint(transform.position);
+        internal static void SetColliderEnabled(Collider collider, bool active)
+        {
+            if (collider == null) return;
+            if (active && collider is MeshCollider mesh)
+            {
+                var geometry = mesh.sharedMesh != null ? mesh.sharedMesh : mesh.GetComponent<MeshFilter>()?.sharedMesh;
+                var filter = mesh.GetComponent<MeshFilter>();
+                if (filter != null && (filter.sharedMesh == null || filter.sharedMesh.vertexCount == 0)) geometry = null;
+                active = geometry != null && geometry.vertexCount != 0;
+            }
+            collider.enabled = active;
+        }
         public void Apply(ShipSectionState state, ulong removedFragments = 0)
         {
+            if (Indestructible) { state = ShipSectionState.Intact; removedFragments = 0; }
+            removedFragments &= ~ProtectedFragments;
             if (presentationApplied && State == state && RemovedFragments == removedFragments) return;
             presentationApplied = true;
             ulong restored = RemovedFragments & ~removedFragments;
@@ -58,7 +75,7 @@ namespace PirateSlop
             {
                 bool fractured = removedFragments != 0 || state == ShipSectionState.Destroyed;
                 foreach (var visual in new[] { Intact, Damaged, Critical, Destroyed, Repaired }) if (visual != null) visual.SetActive(!fractured && visual == Intact);
-                foreach (var collider in GameplayColliders) if (collider != null) collider.enabled = !fractured;
+                foreach (var collider in GameplayColliders) SetColliderEnabled(collider, !fractured);
                 foreach (var collider in DamagedColliders) if (collider != null) collider.enabled = false;
                 foreach (var collider in CriticalColliders) if (collider != null) collider.enabled = false;
                 foreach (var collider in ReplacementColliders) if (collider != null) collider.enabled = false;
@@ -78,7 +95,7 @@ namespace PirateSlop
                     else for (int i = 0; i < Fragments.Length; i++) if ((restored & (1UL << i)) != 0) RepairReveal.Show(Fragments[i]);
                 }
                 for (int i = 0; i < DisabledControls.Length; i++)
-                    if (DisabledControls[i] != null) DisabledControls[i].enabled = state != ShipSectionState.Destroyed && (i >= ControlFragments.Length || (removedFragments & (1UL << ControlFragments[i])) == 0);
+                    SetColliderEnabled(DisabledControls[i], state != ShipSectionState.Destroyed && (i >= ControlFragments.Length || (removedFragments & (1UL << ControlFragments[i])) == 0));
                 foreach (var renderer in DependentRenderers) if (renderer != null) renderer.enabled = state != ShipSectionState.Destroyed;
                 NotifyVisualChanged();
                 return;
@@ -88,31 +105,38 @@ namespace PirateSlop
             if (visible == null && state != ShipSectionState.Destroyed) visible = Intact;
             foreach (var item in new[] { Intact, Damaged, Critical, Destroyed, Repaired }) if (item != null) item.SetActive(item == visible);
             foreach (var renderer in DependentRenderers) if (renderer != null) renderer.enabled = state != ShipSectionState.Destroyed;
-            foreach (var collider in DisabledControls) if (collider != null) collider.enabled = state != ShipSectionState.Destroyed;
+            foreach (var collider in DisabledControls) SetColliderEnabled(collider, state != ShipSectionState.Destroyed);
             if (rebuilt && !SurfaceDamage) RepairReveal.Show(visible);
             if (!SafeColliderReplacement) { NotifyVisualChanged(); return; }
             bool damaged = state == ShipSectionState.Damaged && DamagedColliders.Length > 0;
             bool critical = state == ShipSectionState.Critical && CriticalColliders.Length > 0;
-            foreach (var collider in ReplacementColliders) if (collider != null) collider.enabled = state == ShipSectionState.Destroyed;
-            foreach (var collider in DamagedColliders) if (collider != null) collider.enabled = damaged;
-            foreach (var collider in CriticalColliders) if (collider != null) collider.enabled = critical;
-            foreach (var collider in GameplayColliders) if (collider != null) collider.enabled = state != ShipSectionState.Destroyed && !damaged && !critical;
+            foreach (var collider in ReplacementColliders) SetColliderEnabled(collider, state == ShipSectionState.Destroyed);
+            foreach (var collider in DamagedColliders) SetColliderEnabled(collider, damaged);
+            foreach (var collider in CriticalColliders) SetColliderEnabled(collider, critical);
+            foreach (var collider in GameplayColliders) SetColliderEnabled(collider, state != ShipSectionState.Destroyed && !damaged && !critical);
             NotifyVisualChanged();
         }
         void EnsureFragmentCollider(GameObject fragment)
         {
             var collider = fragment.GetComponent<MeshCollider>();
+            if (collider == null) collider = fragment.transform.Find("FragmentCollider")?.GetComponent<MeshCollider>();
+            var filter = fragment.GetComponent<MeshFilter>();
+            if (filter == null || filter.sharedMesh == null || filter.sharedMesh.vertexCount == 0)
+            {
+                SetColliderEnabled(collider, false);
+                return;
+            }
             if (collider == null)
             {
-                var filter = fragment.GetComponent<MeshFilter>();
-                if (filter == null || filter.sharedMesh == null) return;
-                collider = fragment.AddComponent<MeshCollider>();
+                var node = new GameObject("FragmentCollider");
+                node.layer = fragment.layer;
+                node.transform.SetParent(fragment.transform, false);
+                collider = node.AddComponent<MeshCollider>();
                 collider.cookingOptions = MeshColliderCookingOptions.CookForFasterSimulation | MeshColliderCookingOptions.EnableMeshCleaning |
                     MeshColliderCookingOptions.WeldColocatedVertices;
                 collider.sharedMesh = filter.sharedMesh;
                 collider.convex = false;
             }
-            collider.cookingOptions &= ~MeshColliderCookingOptions.UseFastMidphase;
             Owner?.RegisterDamageCollider(this, collider);
             if (Array.IndexOf(DamageColliders, collider) >= 0) return;
             int count = DamageColliders.Length;
@@ -121,6 +145,7 @@ namespace PirateSlop
         }
         public ulong BreakNear(Vector3 point, float damage, bool supportLost)
         {
+            if (Indestructible) return RemovedFragments;
             if (SurfaceDamage && Fragments.Length == 0 && damage > 0f)
             {
                 var bounds = Intact.GetComponent<MeshFilter>().sharedMesh.bounds;
@@ -143,7 +168,7 @@ namespace PirateSlop
                 return RemovedFragments | (1UL << selected);
             }
             if (Fragments.Length == 0 || damage <= 0f && !supportLost) return RemovedFragments;
-            if (supportLost) return AllFragments;
+            if (supportLost) return AllFragments & ~ProtectedFragments;
             ulong mask = RemovedFragments;
             int count = Owner != null && (Owner.Definition(SectionId).Type == ShipSectionType.Mast || Owner.Definition(SectionId).Type == ShipSectionType.Yard) ? 1 : Mathf.Clamp(Mathf.CeilToInt(damage / 28f), 1, 5);
             for (int n = 0; n < count; n++)
@@ -151,7 +176,7 @@ namespace PirateSlop
                 int nearest = -1; float distance = float.MaxValue;
                 for (int i = 0; i < Fragments.Length; i++)
                 {
-                    if ((mask & (1UL << i)) != 0) continue;
+                    if (((mask | ProtectedFragments) & (1UL << i)) != 0) continue;
                     var bounds = Fragments[i].GetComponent<MeshFilter>().sharedMesh.bounds;
                     Vector3 local = Fragments[i].transform.InverseTransformPoint(point);
                     float score = (bounds.ClosestPoint(local) - local).sqrMagnitude + .15f * (bounds.center - local).sqrMagnitude;
@@ -175,10 +200,11 @@ namespace PirateSlop
         }
         public ulong BreakSingleNear(Vector3 point)
         {
+            if (Indestructible) return RemovedFragments;
             int closest = -1; float distance = float.MaxValue;
             for (int i = 0; i < Fragments.Length; i++)
             {
-                if ((RemovedFragments & (1UL << i)) != 0) continue;
+                if (((RemovedFragments | ProtectedFragments) & (1UL << i)) != 0) continue;
                 var part = Fragments[i].transform;
                 var bounds = part.GetComponent<MeshFilter>().sharedMesh.bounds;
                 var local = part.InverseTransformPoint(point);

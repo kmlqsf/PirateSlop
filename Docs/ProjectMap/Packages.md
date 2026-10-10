@@ -1670,7 +1670,7 @@
 
 | Файл | Краткое описание |
 | --- | --- |
-| [Packages/com.unity.urp-water-system/Runtime/Shaders/Caustics.shader](<../../Packages/com.unity.urp-water-system/Runtime/Shaders/Caustics.shader>) | Шейдер |
+| [Packages/com.unity.urp-water-system/Runtime/Shaders/Caustics.shader](<../../Packages/com.unity.urp-water-system/Runtime/Shaders/Caustics.shader>) | Шейдер; Движение корабля и палуба, Мир, острова и океан |
 | [Packages/com.unity.urp-water-system/Runtime/Shaders/CommonUtilities.hlsl](<../../Packages/com.unity.urp-water-system/Runtime/Shaders/CommonUtilities.hlsl>) | Код шейдера; Мир, острова и океан |
 | [Packages/com.unity.urp-water-system/Runtime/Shaders/GerstnerWaves.hlsl](<../../Packages/com.unity.urp-water-system/Runtime/Shaders/GerstnerWaves.hlsl>) | Код шейдера; Мир, острова и океан, Тестовая карта и водоворот |
 | [Packages/com.unity.urp-water-system/Runtime/Shaders/InfiniteWater.hlsl](<../../Packages/com.unity.urp-water-system/Runtime/Shaders/InfiniteWater.hlsl>) | Код шейдера |

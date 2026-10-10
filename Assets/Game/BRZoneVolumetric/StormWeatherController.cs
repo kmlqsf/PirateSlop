@@ -244,6 +244,7 @@ namespace PirateSlop
         void ClearLightning()
         {
             ReleaseCullDistance();
+            ClearTestLightning();
             if (StormVolumeController.Instance == owner || StormVolumeController.Instance == null)
             {
                 Shader.SetGlobalVector(LightningId, Vector4.zero);

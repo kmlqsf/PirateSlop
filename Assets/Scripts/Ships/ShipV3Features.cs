@@ -303,6 +303,7 @@ namespace PirateSlop.Ships
 
         public override void OnStartServer()
         {
+            lights.Value = (1 << Mathf.Min(Lanterns.Length, 30)) - 1;
             for (int i = 0; i < DiceSlots.Length; i++) { diceOwners.Add(-1); diceResults.Add(""); dicePhases.Add(0); }
             foreach (var body in PhysicsBodies) if (body != null) body.isKinematic = false;
             foreach (var slot in DiceSlots) if (slot.Cup != null) slot.Cup.isKinematic = true;

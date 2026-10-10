@@ -13,6 +13,9 @@
 | [Assets/Shaders/BarricadeConstruction.shader](<../../Assets/Shaders/BarricadeConstruction.shader>) | Шейдер; Предметы, лут и инвентарь |
 | [Assets/Shaders/BarricadeWood.hlsl](<../../Assets/Shaders/BarricadeWood.hlsl>) | Код шейдера; Предметы, лут и инвентарь |
 | [Assets/Shaders/BarricadeWood.shader](<../../Assets/Shaders/BarricadeWood.shader>) | Шейдер; Предметы, лут и инвентарь |
+| [Assets/Shaders/BilgeLeak.shader](<../../Assets/Shaders/BilgeLeak.shader>) | Шейдер; Движение корабля и палуба |
+| [Assets/Shaders/BilgeWater.shader](<../../Assets/Shaders/BilgeWater.shader>) | Шейдер; Движение корабля и палуба |
+| [Assets/Shaders/BilgeWaterOptics.hlsl](<../../Assets/Shaders/BilgeWaterOptics.hlsl>) | Код шейдера; Движение корабля и палуба |
 | [Assets/Shaders/CoastalFoliage.shader](<../../Assets/Shaders/CoastalFoliage.shader>) | Шейдер; Мир, острова и океан |
 | [Assets/Shaders/CoastalRock.shader](<../../Assets/Shaders/CoastalRock.shader>) | Шейдер; Мир, острова и океан |
 | [Assets/Shaders/CoastalShoreFoam.hlsl](<../../Assets/Shaders/CoastalShoreFoam.hlsl>) | Код шейдера; Мир, острова и океан |
@@ -21,6 +24,7 @@
 | [Assets/Shaders/OvercastSky.shader](<../../Assets/Shaders/OvercastSky.shader>) | Шейдер |
 | [Assets/Shaders/Sail.shader](<../../Assets/Shaders/Sail.shader>) | Шейдер; Паруса и канаты |
 | [Assets/Shaders/Seabed.shader](<../../Assets/Shaders/Seabed.shader>) | Шейдер |
+| [Assets/Shaders/ShipWaterInterior.hlsl](<../../Assets/Shaders/ShipWaterInterior.hlsl>) | Код шейдера; Движение корабля и палуба, Мир, острова и океан, Шторм, зона, дождь и объёмный туман, Тестовая карта и водоворот |
 | [Assets/Shaders/SlotReelIcon.shader](<../../Assets/Shaders/SlotReelIcon.shader>) | Шейдер; Корабельная слот-машина |
 | [Assets/Shaders/StormWall.shader](<../../Assets/Shaders/StormWall.shader>) | Шейдер |
 | [Assets/Shaders/UnderwaterParticles.shader](<../../Assets/Shaders/UnderwaterParticles.shader>) | Шейдер; Мир, острова и океан |

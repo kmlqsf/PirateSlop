@@ -126,6 +126,7 @@ namespace PirateSlop.EditorTools
                 HandLanternSetup.ConfigureImportedShip(root);
                 ShipMonkeySetup.Configure(root);
                 ShipCustomizationSetup.Configure(root);
+                ShipV3BilgeSetup.Apply(root);
                 var prefab = PrefabUtility.SaveAsPrefabAsset(root, PrefabPath);
                 if (prefab == null) throw new InvalidOperationException("ShipV3 prefab was not saved.");
                 RemoveUnusedBatchMeshes(root);
@@ -220,6 +221,7 @@ namespace PirateSlop.EditorTools
                 .Concat(new[] { rig.Rudder, mechanics.DoorHinge, mechanics.AnchorTravel, mechanics.DispenserLever })
                 .Concat(mechanics.Attachments.Where(a => a.Fall).Select(a => a.Object))
                 .Concat(prefabRoot.GetComponentsInChildren<HelmInteraction>(true).SelectMany(h => new[] { h.transform, h.Wheel }))
+                .Concat(prefabRoot.GetComponentsInChildren<ShipBilgePump>(true).Select(p => p.LeverPivot))
                 .Where(t => t != null).ToArray();
             var shipBody = prefabRoot.GetComponent<Rigidbody>();
             var dependent = new HashSet<Renderer>(destruction.Sections.SelectMany(s => s.DependentRenderers));

@@ -22,17 +22,51 @@ namespace PirateSlop.Ships
         Mesh runtimeMesh;
         MeshRenderer[] trackedSources;
         bool[] visible;
+        Mesh[] sourceMeshes;
+        IndexLayout layout;
+        List<int> activeIndices;
+        static readonly Dictionary<Mesh, IndexLayout> layouts = new();
         readonly HashSet<ShipDamageSection> trackedSections = new();
         bool dirty;
         float nextVisibilityCheck;
         static readonly Unity.Profiling.ProfilerMarker marker = new("Ships.RenderBatchVisibility");
+
+        sealed class IndexLayout
+        {
+            public int[] Indices, Starts, Counts;
+        }
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        static void ResetLayouts() => layouts.Clear();
+
+        IndexLayout PrepareLayout()
+        {
+            if (CachedMesh == null || !CachedMesh.isReadable) return null;
+            if (layouts.TryGetValue(CachedMesh, out var cached) && cached.Starts.Length == trackedSources.Length) return cached;
+            var result = new IndexLayout { Starts = new int[trackedSources.Length], Counts = new int[trackedSources.Length] };
+            int offset = 0;
+            for (int i = 0; i < trackedSources.Length; i++)
+            {
+                result.Starts[i] = offset;
+                var source = trackedSources[i];
+                var mesh = sourceMeshes[i];
+                if (source == null || mesh == null || mesh.vertexCount == 0) continue;
+                var materials = source.sharedMaterials;
+                for (int sub = 0; sub < mesh.subMeshCount && materials.Length > 0; sub++)
+                    if (materials[Mathf.Min(sub, materials.Length - 1)] == SharedMaterial) result.Counts[i] += (int)mesh.GetIndexCount(sub);
+                offset += result.Counts[i];
+            }
+            if (offset != CachedMesh.GetIndexCount(0)) return null;
+            result.Indices = CachedMesh.GetTriangles(0);
+            layouts[CachedMesh] = result;
+            return result;
+        }
 
         void OnEnable()
         {
             Unsubscribe();
             outputFilter = GetComponent<MeshFilter>();
             outputRenderer = GetComponent<MeshRenderer>();
-            if (Application.isPlaying && CachedMesh != null && CachedMesh.isReadable) CachedMesh.UploadMeshData(true);
             if (BatchAnchor != null && BatchAnchor != transform)
             {
                 transform.SetParent(BatchAnchor, false);
@@ -42,6 +76,7 @@ namespace PirateSlop.Ships
             Sources ??= Array.Empty<MeshRenderer>();
             trackedSources = Sources;
             visible = new bool[trackedSources.Length];
+            sourceMeshes = new Mesh[trackedSources.Length];
             bool allVisible = true;
             var owner = GetComponentInParent<ShipDestruction>();
             for (int i = 0; i < trackedSources.Length; i++)
@@ -50,10 +85,12 @@ namespace PirateSlop.Ships
                 visible[i] = source != null && source.gameObject.activeInHierarchy && !source.forceRenderingOff;
                 allVisible &= visible[i];
                 if (source != null) source.enabled = false;
+                sourceMeshes[i] = source != null ? source.GetComponent<MeshFilter>()?.sharedMesh : null;
                 var section = source != null ? owner != null ? owner.SectionFor(source) : source.GetComponentInParent<ShipDamageSection>() : null;
                 if (section != null && trackedSections.Add(section)) section.VisualChanged += Invalidate;
             }
             outputRenderer.sharedMaterial = SharedMaterial;
+            layout = PrepareLayout();
             if (ShadowProxy != null) outputRenderer.shadowCastingMode = ShadowCastingMode.Off;
             if (CachedMesh != null && allVisible)
             {
@@ -108,13 +145,37 @@ namespace PirateSlop.Ships
                     ReleaseRuntimeMesh();
                     return;
                 }
+                bool topologyUnchanged = layout != null;
+                for (int i = 0; i < trackedSources.Length && topologyUnchanged; i++)
+                    if (trackedSources[i] != null && trackedSources[i].GetComponent<MeshFilter>()?.sharedMesh != sourceMeshes[i]) topologyUnchanged = false;
+                if (topologyUnchanged)
+                {
+                    activeIndices ??= new List<int>(layout.Indices.Length);
+                    activeIndices.Clear();
+                    for (int i = 0; i < visible.Length; i++)
+                    {
+                        if (!visible[i]) continue;
+                        int end = layout.Starts[i] + layout.Counts[i];
+                        for (int at = layout.Starts[i]; at < end; at++) activeIndices.Add(layout.Indices[at]);
+                    }
+                    if (runtimeMesh == null)
+                    {
+                        runtimeMesh = Instantiate(CachedMesh);
+                        runtimeMesh.name = "ShipV3DamagedBatch";
+                        runtimeMesh.MarkDynamic();
+                    }
+                    runtimeMesh.SetTriangles(activeIndices, 0, false);
+                    outputFilter.sharedMesh = runtimeMesh;
+                    outputRenderer.enabled = activeIndices.Count > 0;
+                    SetShadow(runtimeMesh);
+                    return;
+                }
                 var next = BuildMesh(trackedSources, SharedMaterial, transform, false);
                 outputFilter.sharedMesh = next;
                 outputRenderer.enabled = next.vertexCount != 0;
                 SetShadow(next);
                 ReleaseRuntimeMesh();
                 runtimeMesh = next;
-                if (Application.isPlaying) runtimeMesh.UploadMeshData(true);
             }
             catch (Exception exception)
             {

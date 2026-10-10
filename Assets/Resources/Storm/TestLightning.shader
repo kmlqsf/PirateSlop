@@ -45,7 +45,7 @@ Shader "PirateSlop/Test Storm Lightning"
                 clip(_WeatherTestBand.w-i.world.y);
                 float cloudRadius=length(i.world.xz-_WeatherCenter.xz)-_WeatherCenter.w;
                 clip(cloudRadius+_WeatherTestBand.x);
-                clip(_WeatherTestBand.y-cloudRadius);
+                clip(_WeatherTestBand.y-length(i.world.xz));
                 float3 delta=i.world-_WorldSpaceCameraPos;
                 float distanceWS=length(delta);
                 float near=1-smoothstep(80,260,distanceWS);

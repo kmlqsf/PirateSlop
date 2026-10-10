@@ -52,6 +52,7 @@ namespace PirateSlop
                 var center = MastBounds(section).center;
                 foreach (var assembly in mastAssemblies.Values)
                 {
+                    if (assembly.Key.StartsWith("BilgeBeam_")) continue;
                     float candidate = new Vector2(center.x - assembly.RepairPoint.x, center.z - assembly.RepairPoint.z).sqrMagnitude;
                     if (candidate >= distance) continue;
                     distance = candidate; nearest = assembly;

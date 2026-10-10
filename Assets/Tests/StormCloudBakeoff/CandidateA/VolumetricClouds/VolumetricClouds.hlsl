@@ -118,13 +118,13 @@ VolumetricRayResult TraceVolumetricRay(CloudRay cloudRay)
                 if(testSky)
                 {
                     float jitter=frac(cloudRay.integrationNoise+currentIndex*.61803398875);
-                    float intervalStart = totalDistance * Sq((float)currentIndex / primaryStepCount);
-                    float intervalEnd = totalDistance * Sq((float)(currentIndex + 1) / primaryStepCount);
+                    float intervalStart = totalDistance * ((float)currentIndex / primaryStepCount);
+                    float intervalEnd = totalDistance * ((float)(currentIndex + 1) / primaryStepCount);
                     integrationStep = intervalEnd - intervalStart;
                     currentDistance = lerp(intervalStart, intervalEnd, lerp(.05, .95, jitter));
                     currentPositionWS=cloudRay.originWS+(rayMarchRange.start+currentDistance)*cloudRay.direction;
                     float footprint = max(integrationStep * .5, (rayMarchRange.start + currentDistance) * cloudRay.pixelConeAngle);
-                    shapeMipOffset = log2(max(1.0, footprint * _ShapeScale * 1.4 * 128.0 / NOISE_TEXTURE_NORMALIZATION_FACTOR));
+                    shapeMipOffset = footprint;
                 }
 #endif
                 // Compute the camera-distance based attenuation

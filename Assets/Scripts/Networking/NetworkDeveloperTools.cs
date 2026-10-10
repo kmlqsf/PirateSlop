@@ -30,6 +30,24 @@ namespace PirateSlop.Networking
             if (Time.time < nextDeveloperCommand) return;
             nextDeveloperCommand = Time.time + .3f;
             var session = SessionController.Instance;
+            if (command == 31)
+            {
+                bool enabled = count != 0;
+                DeveloperResultTargetRpc(Owner, session == null || !session.SetFriendlyFire(enabled) ? "Сессия не готова." :
+                    enabled ? "Дружественный огонь включён для всех: союзники и свой корабль получают урон." : "Дружественный огонь выключен.");
+                return;
+            }
+            if (command == 28 || command == 29 || command == 30)
+            {
+                var player = GetComponent<NetworkPlayer>();
+                var deck = player != null && player.Passenger != null ? player.Passenger.Ship : null;
+                var targetShip = deck != null ? deck.GetComponent<NetworkShip>() : player != null ? player.Ship : null;
+                var destruction = targetShip != null ? targetShip.GetComponent<ShipDestruction>() : null;
+                DeveloperResultTargetRpc(Owner, destruction != null
+                    ? command == 30 ? destruction.CreateDeveloperCannonImpact(gameObject) : destruction.CreateDeveloperBreach(command == 29, gameObject)
+                    : "Корабль с трюмом не найден.");
+                return;
+            }
             if (command == 25 || command == 26)
             {
                 DeveloperResultTargetRpc(Owner, session != null
