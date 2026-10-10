@@ -7,7 +7,7 @@ namespace PirateSlop.Ships
 {
     public sealed partial class ShipMonkey
     {
-        enum TaskKind { None, Fetch, Carry, Deliver, Offer, GoFish, Fish, GoWheel, Wheel, GoSail, Sail, GoRepair, Repair, GoSlot, SlotPull, SlotWait, PursueBoarder, BatStrike }
+        enum TaskKind { None, Fetch, Carry, Deliver, Offer, GoFish, Fish, GoWheel, Wheel, GoSail, Sail, GoRepair, Repair, GoSlot, SlotPull, SlotWait, PursueBoarder, BatStrike, GoHead, HeadRide }
         public Transform LeftHand, RightHand;
         public GameObject RodModel, FloatModel, FishModel;
         public Material FishingLineMaterial;
@@ -39,13 +39,14 @@ namespace PirateSlop.Ships
         bool AidTask => task == TaskKind.Deliver || task == TaskKind.Offer || task == TaskKind.Fetch && fetchForAid;
         GameObject fishingRod, fishingFloat, fishingCatch;
         FishingRodBend fishingBend;
+        FishingRodReel fishingReel;
         LineRenderer fishingLine;
         Transform placementAnchor;
         static readonly int carryIdleState = UnityEngine.Animator.StringToHash("CarryIdle"), carryWalkState = UnityEngine.Animator.StringToHash("CarryWalk");
         bool HasCarriedItem => activityShip != null && heldItem != null && heldItem.IsSpawned && heldItem.MonkeyCarrier == activityShip.NetworkObject;
         bool ShowsCarry => remoteInitialized && !initialized ? remote.Carrying : activityShip != null && HasCarriedItem;
         int ActivityGoal => task == TaskKind.None || task == TaskKind.Carry ? -1 : activityGoal;
-        bool DeckTask => task == TaskKind.Fetch || task == TaskKind.Carry || task == TaskKind.Deliver || task == TaskKind.Offer || task == TaskKind.GoWheel || task == TaskKind.Wheel || task == TaskKind.GoSail || task == TaskKind.Sail || task == TaskKind.GoRepair || task == TaskKind.Repair || task == TaskKind.GoSlot || task == TaskKind.SlotPull || task == TaskKind.SlotWait || DefenseTask;
+        bool DeckTask => task == TaskKind.Fetch || task == TaskKind.Carry || task == TaskKind.Deliver || task == TaskKind.Offer || task == TaskKind.GoWheel || task == TaskKind.Wheel || task == TaskKind.GoSail || task == TaskKind.Sail || task == TaskKind.GoRepair || task == TaskKind.Repair || task == TaskKind.GoSlot || task == TaskKind.SlotPull || task == TaskKind.SlotWait || DefenseTask || HeadTask;
 
         float Interval(float seconds) => seconds * UnityEngine.Random.Range(.85f, 1.15f);
 
@@ -61,6 +62,7 @@ namespace PirateSlop.Ships
             BeginRepair();
             BeginSlotActivity();
             BeginDefense();
+            BeginHeadRide();
         }
 
         bool LinkAllowed(int next) => !DeckTask || Surface != ShipMonkeySurface.Deck && !ShowsCarry || Nodes[next].Surface == ShipMonkeySurface.Deck;
@@ -227,6 +229,7 @@ namespace PirateSlop.Ships
             if (task == TaskKind.None)
             {
                 if (TryStartRepair()) return false;
+                if (TryStartHeadTrip()) return false;
                 if (TryStartSlotTrip()) return false;
                 if (Time.time >= nextFishing) { StartFishingTrip(); if (task != TaskKind.None) return false; }
                 if (Time.time >= nextMischief) { StartMischiefTrip(); if (task != TaskKind.None) return false; }
@@ -237,6 +240,7 @@ namespace PirateSlop.Ships
                 }
                 return false;
             }
+            if (HeadTask) return UpdateHeadTrip();
             if (Motion == ShipMonkeyMotion.SitDown || Motion == ShipMonkeyMotion.Sit || Motion == ShipMonkeyMotion.StandUp) return false;
             if (DefenseTask) return UpdateDefense(delta);
             if (task == TaskKind.GoRepair || task == TaskKind.Repair) return UpdateRepair(delta);
@@ -438,6 +442,7 @@ namespace PirateSlop.Ships
         void CancelActivities()
         {
             if (activityShip != null && activityShip.IsServerInitialized) DropHeld();
+            ResetHeadRide();
             ResetRepair();
             ResetSlotActivity();
             boarder = null; batHit = false;
@@ -466,15 +471,17 @@ namespace PirateSlop.Ships
                 fishingRod = Instantiate(RodModel, Visual); fishingRod.name = "MonkeyFishingRod";
                 fishingBend = fishingRod.GetComponent<FishingRodBend>();
                 if (fishingBend == null) fishingBend = fishingRod.AddComponent<FishingRodBend>();
+                fishingReel = fishingRod.GetComponent<FishingRodReel>();
                 fishingFloat = Instantiate(FloatModel, transform); fishingFloat.name = "MonkeyFishingFloat";
                 var lineObject = new GameObject("MonkeyFishingLine"); lineObject.transform.SetParent(Visual, false);
                 fishingLine = lineObject.AddComponent<LineRenderer>(); fishingLine.sharedMaterial = FishingLineMaterial;
-                fishingLine.useWorldSpace = true; fishingLine.positionCount = 16; fishingLine.startWidth = .006f; fishingLine.endWidth = .004f;
+                fishingLine.useWorldSpace = true; fishingLine.positionCount = 16; fishingLine.startWidth = .0018f; fishingLine.endWidth = .0013f;
             }
             fishingRod.SetActive(true); fishingFloat.SetActive(true); fishingLine.enabled = true;
             float bend = phase == 3 ? .10f + .025f * Mathf.Sin(elapsed * 18f) : 0f;
             fishingRod.transform.SetPositionAndRotation(RightHand.position, Visual.rotation * Quaternion.Euler(phase == 3 ? -15f : -12f, -8f, 0f));
             fishingBend.SetBend(bend);
+            fishingReel?.Present(phase == 3 ? (byte)4 : phase, phase == 3, Time.deltaTime);
             Vector3 end = transform.TransformPoint(localPoint);
             if (OceanSurface.Instance != null) end.y = OceanSurface.Instance.Height(end) + .04f;
             if (phase == 1)

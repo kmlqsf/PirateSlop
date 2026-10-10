@@ -14,8 +14,10 @@
 | [Assets/UI/Inventory/BoardingHook.png](<../../Assets/UI/Inventory/BoardingHook.png>) | Изображение / текстура |
 | [Assets/UI/Inventory/Cannon.png](<../../Assets/UI/Inventory/Cannon.png>) | Изображение / текстура |
 | [Assets/UI/Inventory/Cannonball.png](<../../Assets/UI/Inventory/Cannonball.png>) | Изображение / текстура |
+| [Assets/UI/Inventory/ExplosiveBall.png](<../../Assets/UI/Inventory/ExplosiveBall.png>) | Изображение / текстура; Личное оружие и урон |
 | [Assets/UI/Inventory/FireCannonball.png](<../../Assets/UI/Inventory/FireCannonball.png>) | Изображение / текстура |
 | [Assets/UI/Inventory/GrapplingHook.png](<../../Assets/UI/Inventory/GrapplingHook.png>) | Изображение / текстура |
+| [Assets/UI/Inventory/HandMortar.png](<../../Assets/UI/Inventory/HandMortar.png>) | Изображение / текстура; Личное оружие и урон |
 | [Assets/UI/Inventory/HolyGrenade.png](<../../Assets/UI/Inventory/HolyGrenade.png>) | Изображение / текстура |
 | [Assets/UI/Inventory/IceCannonball.png](<../../Assets/UI/Inventory/IceCannonball.png>) | Изображение / текстура |
 | [Assets/UI/Inventory/InventoryIcons.asset](<../../Assets/UI/Inventory/InventoryIcons.asset>) | Настройки или данные Unity |

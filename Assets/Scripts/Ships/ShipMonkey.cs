@@ -39,6 +39,7 @@ namespace PirateSlop.Ships
         public float AnimationSpeed;
         public float MotionTime;
         public bool Perched;
+        public FishNet.Object.NetworkObject HeadRider;
         public bool Looking;
         public Vector3 LookPoint;
         public bool Carrying;
@@ -128,7 +129,7 @@ namespace PirateSlop.Ships
             if (Visual != null) Visual.gameObject.SetActive(false);
         }
 
-        public ShipMonkeyPose Capture() => new() { Position = position + kickReactionOffset, Rotation = rotation, Motion = Motion, AnimationSpeed = animationSpeed, MotionTime = motionTime, Perched = perched, Looking = looking, LookPoint = lookPoint, Carrying = activityShip != null && HasCarriedItem, HoldingBat = DefenseTask, BatTarget = batTarget, FishingPhase = fishingPhase, FishingTime = fishingTime, FishingPoint = fishingPoint, Sequence = ++sequence };
+        public ShipMonkeyPose Capture() => new() { Position = position + kickReactionOffset, Rotation = rotation, Motion = Motion, AnimationSpeed = animationSpeed, MotionTime = motionTime, Perched = perched, HeadRider = HeadRider, Looking = looking, LookPoint = lookPoint, Carrying = activityShip != null && HasCarriedItem, HoldingBat = DefenseTask, BatTarget = batTarget, FishingPhase = fishingPhase, FishingTime = fishingTime, FishingPoint = fishingPoint, Sequence = ++sequence };
 
         public void Simulate(float delta)
         {
@@ -143,6 +144,7 @@ namespace PirateSlop.Ships
             }
             kickReactionOffset = Vector3.zero;
             UpdateRetaliation();
+            if (UpdateHeadRide(delta)) { Show(position, rotation, Motion, 1f, motionTime); return; }
             if (UpdateJump(delta)) { Show(position, rotation, Motion, 1f, motionTime); return; }
             if (target < 0 && Nodes[current].Available) position = Point(current);
             if (target >= 0) UpdateActivities(delta);

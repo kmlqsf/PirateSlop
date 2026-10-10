@@ -66,8 +66,12 @@
 | [Assets/Prefabs/Networking/DroppedCannon.prefab](<../../Assets/Prefabs/Networking/DroppedCannon.prefab>) | Префаб Unity |
 | [Assets/Prefabs/Networking/DroppedCannonball.prefab](<../../Assets/Prefabs/Networking/DroppedCannonball.prefab>) | Префаб Unity |
 | [Assets/Prefabs/Networking/DroppedPistol.prefab](<../../Assets/Prefabs/Networking/DroppedPistol.prefab>) | Префаб Unity |
-| [Assets/Prefabs/Networking/DroppedRod.prefab](<../../Assets/Prefabs/Networking/DroppedRod.prefab>) | Префаб Unity |
+| [Assets/Prefabs/Networking/DroppedRod.prefab](<../../Assets/Prefabs/Networking/DroppedRod.prefab>) | Префаб Unity; Рыбалка и рыба |
 | [Assets/Prefabs/Networking/DroppedSabre.prefab](<../../Assets/Prefabs/Networking/DroppedSabre.prefab>) | Префаб Unity; Личное оружие и урон |
+| [Assets/Prefabs/Networking/ExplosiveBallPickup.prefab](<../../Assets/Prefabs/Networking/ExplosiveBallPickup.prefab>) | Префаб Unity; Личное оружие и урон |
+| [Assets/Prefabs/Networking/ExplosiveBallProjectile.prefab](<../../Assets/Prefabs/Networking/ExplosiveBallProjectile.prefab>) | Префаб Unity; Личное оружие и урон |
+| [Assets/Prefabs/Networking/HandMortarBall.prefab](<../../Assets/Prefabs/Networking/HandMortarBall.prefab>) | Префаб Unity; Личное оружие и урон |
+| [Assets/Prefabs/Networking/HandMortarPickup.prefab](<../../Assets/Prefabs/Networking/HandMortarPickup.prefab>) | Префаб Unity; Личное оружие и урон |
 | [Assets/Prefabs/Networking/LanternPickup.prefab](<../../Assets/Prefabs/Networking/LanternPickup.prefab>) | Префаб Unity; Предметы, лут и инвентарь |
 | [Assets/Prefabs/Networking/NetworkFish.prefab](<../../Assets/Prefabs/Networking/NetworkFish.prefab>) | Префаб Unity |
 | [Assets/Prefabs/Networking/NetworkLootChest.prefab](<../../Assets/Prefabs/Networking/NetworkLootChest.prefab>) | Префаб Unity |

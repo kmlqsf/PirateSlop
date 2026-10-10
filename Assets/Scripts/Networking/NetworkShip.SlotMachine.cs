@@ -134,8 +134,8 @@ namespace PirateSlop.Networking
         }
 
         static bool SlotWeapon(InventoryItem item) => item == InventoryItem.Pistol || item == InventoryItem.Sabre ||
-            item == InventoryItem.Musket || item == InventoryItem.DoubleBarrel || item == InventoryItem.BombParrot ||
-            item == InventoryItem.HolyGrenade || item == InventoryItem.Pufferfish || item == InventoryItem.Swordfish;
+            item == InventoryItem.Musket || item == InventoryItem.DoubleBarrel || item == InventoryItem.HandMortar || item == InventoryItem.BombParrot ||
+            item == InventoryItem.HolyGrenade || item == InventoryItem.ExplosiveBall || item == InventoryItem.Pufferfish || item == InventoryItem.Swordfish;
         static bool SlotEquipment(InventoryItem item) => !SlotWeapon(item) &&
             item != InventoryItem.Plank && item != InventoryItem.None;
 

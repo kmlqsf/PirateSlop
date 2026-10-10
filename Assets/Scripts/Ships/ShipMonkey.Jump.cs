@@ -79,7 +79,7 @@ namespace PirateSlop.Ships
 
         void UpdateRetaliation()
         {
-            if (attacker == null || jumpPhase != 0) return;
+            if (attacker == null || jumpPhase != 0 || headPhase != 0) return;
             if (!Attackable()) { attacker = null; return; }
             if (Motion == ShipMonkeyMotion.Sit || Motion == ShipMonkeyMotion.SitDown || Motion == ShipMonkeyMotion.StandUp) return;
             Vector3 goal = transform.InverseTransformPoint(attacker.transform.position + Vector3.up * .65f);

@@ -124,6 +124,8 @@ namespace PirateSlop.EditorTools
                 ConfigureGeometryBudget(root);
                 ConfigureLanternLighting(root);
                 HandLanternSetup.ConfigureImportedShip(root);
+                HandMortarSetup.ConfigureImportedShip(root);
+                ExplosiveBallSetup.ConfigureImportedShip(root);
                 ShipMonkeySetup.Configure(root);
                 ShipCustomizationSetup.Configure(root);
                 ShipV3BilgeSetup.Apply(root);
@@ -172,6 +174,8 @@ namespace PirateSlop.EditorTools
                 ConfigureGeometryBudget(prefabRoot);
                 ConfigureLanternLighting(prefabRoot);
                 HandLanternSetup.ConfigureImportedShip(prefabRoot);
+                HandMortarSetup.ConfigureImportedShip(prefabRoot);
+                ExplosiveBallSetup.ConfigureImportedShip(prefabRoot);
                 PrefabUtility.SaveAsPrefabAsset(prefabRoot, PrefabPath);
                 RemoveUnusedBatchMeshes(prefabRoot);
                 RegisterNetworkPrefab();

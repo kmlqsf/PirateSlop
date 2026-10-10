@@ -152,6 +152,22 @@
 | [Assets/Models/Equipment/HookAgedBrass.mat](<../../Assets/Models/Equipment/HookAgedBrass.mat>) | Материал Unity |
 | [Assets/Models/Equipment/HookForgedIron.mat](<../../Assets/Models/Equipment/HookForgedIron.mat>) | Материал Unity |
 
+## Assets/Models/ExplosiveBall
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/ExplosiveBall/Ember.mat](<../../Assets/Models/ExplosiveBall/Ember.mat>) | Материал Unity |
+| [Assets/Models/ExplosiveBall/ExplosiveBall.fbx](<../../Assets/Models/ExplosiveBall/ExplosiveBall.fbx>) | Модель / анимации FBX; Личное оружие и урон |
+| [Assets/Models/ExplosiveBall/ExplosiveBall.mat](<../../Assets/Models/ExplosiveBall/ExplosiveBall.mat>) | Материал Unity |
+| [Assets/Models/ExplosiveBall/ExplosiveBallBody.asset](<../../Assets/Models/ExplosiveBall/ExplosiveBallBody.asset>) | Настройки или данные Unity |
+| [Assets/Models/ExplosiveBall/ExplosiveBallVisual.prefab](<../../Assets/Models/ExplosiveBall/ExplosiveBallVisual.prefab>) | Префаб Unity; Личное оружие и урон |
+| [Assets/Models/ExplosiveBall/ExplosiveBall_MetalSmooth.png](<../../Assets/Models/ExplosiveBall/ExplosiveBall_MetalSmooth.png>) | Изображение / текстура |
+| [Assets/Models/ExplosiveBall/ExplosiveBall_basecolor.JPEG](<../../Assets/Models/ExplosiveBall/ExplosiveBall_basecolor.JPEG>) | Изображение / текстура |
+| [Assets/Models/ExplosiveBall/ExplosiveBall_metallic.JPEG](<../../Assets/Models/ExplosiveBall/ExplosiveBall_metallic.JPEG>) | Изображение / текстура |
+| [Assets/Models/ExplosiveBall/ExplosiveBall_normal.PNG](<../../Assets/Models/ExplosiveBall/ExplosiveBall_normal.PNG>) | Изображение / текстура |
+| [Assets/Models/ExplosiveBall/ExplosiveBall_roughness.JPEG](<../../Assets/Models/ExplosiveBall/ExplosiveBall_roughness.JPEG>) | Изображение / текстура |
+| [Assets/Models/ExplosiveBall/Wick.mat](<../../Assets/Models/ExplosiveBall/Wick.mat>) | Материал Unity |
+
 ## Assets/Models/Firearms
 
 | Файл | Краткое описание |
@@ -221,7 +237,7 @@
 | [Assets/Models/Fishing/FishSilver.mat](<../../Assets/Models/Fishing/FishSilver.mat>) | Материал Unity |
 | [Assets/Models/Fishing/FishVisual.prefab](<../../Assets/Models/Fishing/FishVisual.prefab>) | Префаб Unity; Фоновая рыба в океане, Рыбалка и рыба |
 | [Assets/Models/Fishing/FishingFloat.prefab](<../../Assets/Models/Fishing/FishingFloat.prefab>) | Префаб Unity |
-| [Assets/Models/Fishing/FishingRod.prefab](<../../Assets/Models/Fishing/FishingRod.prefab>) | Префаб Unity |
+| [Assets/Models/Fishing/FishingRod.prefab](<../../Assets/Models/Fishing/FishingRod.prefab>) | Префаб Unity; Рыбалка и рыба |
 | [Assets/Models/Fishing/FloatRed.mat](<../../Assets/Models/Fishing/FloatRed.mat>) | Материал Unity |
 | [Assets/Models/Fishing/FloatWhite.mat](<../../Assets/Models/Fishing/FloatWhite.mat>) | Материал Unity |
 | [Assets/Models/Fishing/LeftFin.asset](<../../Assets/Models/Fishing/LeftFin.asset>) | Настройки или данные Unity |
@@ -230,6 +246,32 @@
 | [Assets/Models/Fishing/RightFin.asset](<../../Assets/Models/Fishing/RightFin.asset>) | Настройки или данные Unity |
 | [Assets/Models/Fishing/RodWood.mat](<../../Assets/Models/Fishing/RodWood.mat>) | Материал Unity |
 | [Assets/Models/Fishing/Tail.asset](<../../Assets/Models/Fishing/Tail.asset>) | Настройки или данные Unity |
+
+## Assets/Models/Fishing/Replacement
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/Fishing/Replacement/FishingRodReplacement.fbx](<../../Assets/Models/Fishing/Replacement/FishingRodReplacement.fbx>) | Модель / анимации FBX; Рыбалка и рыба |
+
+## Assets/Models/Fishing/Replacement/Textures
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/Fishing/Replacement/Textures/FishingRodBaseColor.jpg](<../../Assets/Models/Fishing/Replacement/Textures/FishingRodBaseColor.jpg>) | Изображение / текстура; Рыбалка и рыба |
+| [Assets/Models/Fishing/Replacement/Textures/FishingRodMetalSmooth.png](<../../Assets/Models/Fishing/Replacement/Textures/FishingRodMetalSmooth.png>) | Изображение / текстура; Рыбалка и рыба |
+| [Assets/Models/Fishing/Replacement/Textures/FishingRodMetallic.jpg](<../../Assets/Models/Fishing/Replacement/Textures/FishingRodMetallic.jpg>) | Изображение / текстура; Рыбалка и рыба |
+| [Assets/Models/Fishing/Replacement/Textures/FishingRodNormal.png](<../../Assets/Models/Fishing/Replacement/Textures/FishingRodNormal.png>) | Изображение / текстура; Рыбалка и рыба |
+| [Assets/Models/Fishing/Replacement/Textures/FishingRodRoughness.jpg](<../../Assets/Models/Fishing/Replacement/Textures/FishingRodRoughness.jpg>) | Изображение / текстура; Рыбалка и рыба |
+| [Assets/Models/Fishing/Replacement/Textures/ReelMechanismBaseColor.jpg](<../../Assets/Models/Fishing/Replacement/Textures/ReelMechanismBaseColor.jpg>) | Изображение / текстура; Рыбалка и рыба |
+| [Assets/Models/Fishing/Replacement/Textures/ReelMechanismMetalSmooth.png](<../../Assets/Models/Fishing/Replacement/Textures/ReelMechanismMetalSmooth.png>) | Изображение / текстура; Рыбалка и рыба |
+| [Assets/Models/Fishing/Replacement/Textures/ReelMechanismMetallic.jpg](<../../Assets/Models/Fishing/Replacement/Textures/ReelMechanismMetallic.jpg>) | Изображение / текстура; Рыбалка и рыба |
+| [Assets/Models/Fishing/Replacement/Textures/ReelMechanismNormal.png](<../../Assets/Models/Fishing/Replacement/Textures/ReelMechanismNormal.png>) | Изображение / текстура; Рыбалка и рыба |
+| [Assets/Models/Fishing/Replacement/Textures/ReelMechanismRoughness.jpg](<../../Assets/Models/Fishing/Replacement/Textures/ReelMechanismRoughness.jpg>) | Изображение / текстура; Рыбалка и рыба |
+| [Assets/Models/Fishing/Replacement/Textures/ReelMountBaseColor.jpg](<../../Assets/Models/Fishing/Replacement/Textures/ReelMountBaseColor.jpg>) | Изображение / текстура; Рыбалка и рыба |
+| [Assets/Models/Fishing/Replacement/Textures/ReelMountMetalSmooth.png](<../../Assets/Models/Fishing/Replacement/Textures/ReelMountMetalSmooth.png>) | Изображение / текстура; Рыбалка и рыба |
+| [Assets/Models/Fishing/Replacement/Textures/ReelMountMetallic.jpg](<../../Assets/Models/Fishing/Replacement/Textures/ReelMountMetallic.jpg>) | Изображение / текстура; Рыбалка и рыба |
+| [Assets/Models/Fishing/Replacement/Textures/ReelMountNormal.png](<../../Assets/Models/Fishing/Replacement/Textures/ReelMountNormal.png>) | Изображение / текстура; Рыбалка и рыба |
+| [Assets/Models/Fishing/Replacement/Textures/ReelMountRoughness.jpg](<../../Assets/Models/Fishing/Replacement/Textures/ReelMountRoughness.jpg>) | Изображение / текстура; Рыбалка и рыба |
 
 ## Assets/Models/FishingWeapons
 
@@ -287,6 +329,50 @@
 | [Assets/Models/FloodWater/FloodSlice8.asset](<../../Assets/Models/FloodWater/FloodSlice8.asset>) | Настройки или данные Unity |
 | [Assets/Models/FloodWater/FloodSlice9.asset](<../../Assets/Models/FloodWater/FloodSlice9.asset>) | Настройки или данные Unity |
 | [Assets/Models/FloodWater/FloodWater.mat](<../../Assets/Models/FloodWater/FloodWater.mat>) | Материал Unity |
+
+## Assets/Models/HandMortar
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/HandMortar/Ball.mat](<../../Assets/Models/HandMortar/Ball.mat>) | Материал Unity |
+| [Assets/Models/HandMortar/Body.mat](<../../Assets/Models/HandMortar/Body.mat>) | Материал Unity |
+| [Assets/Models/HandMortar/Body_MetalSmooth.png](<../../Assets/Models/HandMortar/Body_MetalSmooth.png>) | Изображение / текстура |
+| [Assets/Models/HandMortar/Body_basecolor.JPEG](<../../Assets/Models/HandMortar/Body_basecolor.JPEG>) | Изображение / текстура |
+| [Assets/Models/HandMortar/Body_metallic.JPEG](<../../Assets/Models/HandMortar/Body_metallic.JPEG>) | Изображение / текстура |
+| [Assets/Models/HandMortar/Body_normal.PNG](<../../Assets/Models/HandMortar/Body_normal.PNG>) | Изображение / текстура |
+| [Assets/Models/HandMortar/Body_roughness.JPEG](<../../Assets/Models/HandMortar/Body_roughness.JPEG>) | Изображение / текстура |
+| [Assets/Models/HandMortar/Ember.mat](<../../Assets/Models/HandMortar/Ember.mat>) | Материал Unity |
+| [Assets/Models/HandMortar/FlintHammer.mat](<../../Assets/Models/HandMortar/FlintHammer.mat>) | Материал Unity |
+| [Assets/Models/HandMortar/FlintHammer_MetalSmooth.png](<../../Assets/Models/HandMortar/FlintHammer_MetalSmooth.png>) | Изображение / текстура |
+| [Assets/Models/HandMortar/FlintHammer_basecolor.JPEG](<../../Assets/Models/HandMortar/FlintHammer_basecolor.JPEG>) | Изображение / текстура |
+| [Assets/Models/HandMortar/FlintHammer_metallic.JPEG](<../../Assets/Models/HandMortar/FlintHammer_metallic.JPEG>) | Изображение / текстура |
+| [Assets/Models/HandMortar/FlintHammer_normal.PNG](<../../Assets/Models/HandMortar/FlintHammer_normal.PNG>) | Изображение / текстура |
+| [Assets/Models/HandMortar/FlintHammer_roughness.JPEG](<../../Assets/Models/HandMortar/FlintHammer_roughness.JPEG>) | Изображение / текстура |
+| [Assets/Models/HandMortar/Frizzen.mat](<../../Assets/Models/HandMortar/Frizzen.mat>) | Материал Unity |
+| [Assets/Models/HandMortar/Frizzen_MetalSmooth.png](<../../Assets/Models/HandMortar/Frizzen_MetalSmooth.png>) | Изображение / текстура |
+| [Assets/Models/HandMortar/Frizzen_basecolor.JPEG](<../../Assets/Models/HandMortar/Frizzen_basecolor.JPEG>) | Изображение / текстура |
+| [Assets/Models/HandMortar/Frizzen_metallic.JPEG](<../../Assets/Models/HandMortar/Frizzen_metallic.JPEG>) | Изображение / текстура |
+| [Assets/Models/HandMortar/Frizzen_normal.PNG](<../../Assets/Models/HandMortar/Frizzen_normal.PNG>) | Изображение / текстура |
+| [Assets/Models/HandMortar/Frizzen_roughness.JPEG](<../../Assets/Models/HandMortar/Frizzen_roughness.JPEG>) | Изображение / текстура |
+| [Assets/Models/HandMortar/HandMortarAssembly.fbx](<../../Assets/Models/HandMortar/HandMortarAssembly.fbx>) | Модель / анимации FBX; Личное оружие и урон |
+| [Assets/Models/HandMortar/HandMortarVisual.prefab](<../../Assets/Models/HandMortar/HandMortarVisual.prefab>) | Префаб Unity; Личное оружие и урон |
+| [Assets/Models/HandMortar/Trigger.mat](<../../Assets/Models/HandMortar/Trigger.mat>) | Материал Unity |
+| [Assets/Models/HandMortar/Trigger_MetalSmooth.png](<../../Assets/Models/HandMortar/Trigger_MetalSmooth.png>) | Изображение / текстура |
+| [Assets/Models/HandMortar/Trigger_basecolor.JPEG](<../../Assets/Models/HandMortar/Trigger_basecolor.JPEG>) | Изображение / текстура |
+| [Assets/Models/HandMortar/Trigger_metallic.JPEG](<../../Assets/Models/HandMortar/Trigger_metallic.JPEG>) | Изображение / текстура |
+| [Assets/Models/HandMortar/Trigger_normal.PNG](<../../Assets/Models/HandMortar/Trigger_normal.PNG>) | Изображение / текстура |
+| [Assets/Models/HandMortar/Trigger_roughness.JPEG](<../../Assets/Models/HandMortar/Trigger_roughness.JPEG>) | Изображение / текстура |
+| [Assets/Models/HandMortar/Wick.mat](<../../Assets/Models/HandMortar/Wick.mat>) | Материал Unity |
+
+## Assets/Models/HandMortar/Meshes
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/HandMortar/Meshes/Body.asset](<../../Assets/Models/HandMortar/Meshes/Body.asset>) | Настройки или данные Unity |
+| [Assets/Models/HandMortar/Meshes/FlintHammer.asset](<../../Assets/Models/HandMortar/Meshes/FlintHammer.asset>) | Настройки или данные Unity |
+| [Assets/Models/HandMortar/Meshes/Frizzen.asset](<../../Assets/Models/HandMortar/Meshes/Frizzen.asset>) | Настройки или данные Unity |
+| [Assets/Models/HandMortar/Meshes/Trigger.asset](<../../Assets/Models/HandMortar/Meshes/Trigger.asset>) | Настройки или данные Unity |
+| [Assets/Models/HandMortar/Meshes/Wick.asset](<../../Assets/Models/HandMortar/Meshes/Wick.asset>) | Настройки или данные Unity |
 
 ## Assets/Models/HolyGrenade
 

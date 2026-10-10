@@ -144,6 +144,12 @@
 | [Art/Blender/Equipment/ButcherHook.blend](<../../Art/Blender/Equipment/ButcherHook.blend>) | Редактируемая сцена Blender |
 | [Art/Blender/Equipment/GrapplingHook.blend](<../../Art/Blender/Equipment/GrapplingHook.blend>) | Редактируемая сцена Blender |
 
+## Art/Blender/ExplosiveBall
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/ExplosiveBall/ExplosiveBall.blend](<../../Art/Blender/ExplosiveBall/ExplosiveBall.blend>) | Редактируемая сцена Blender; Личное оружие и урон |
+
 ## Art/Blender/Firearms
 
 | Файл | Краткое описание |
@@ -249,6 +255,64 @@
 | [Art/Blender/Firearms/Sources/Trigger/tripo_convert_c8b65acb-3381-4ca0-8b13-15dd676bac23.fbm/курок_rm.JPEG](<../../Art/Blender/Firearms/Sources/Trigger/tripo_convert_c8b65acb-3381-4ca0-8b13-15dd676bac23.fbm/курок_rm.JPEG>) | Изображение / текстура |
 | [Art/Blender/Firearms/Sources/Trigger/tripo_convert_c8b65acb-3381-4ca0-8b13-15dd676bac23.fbm/курок_roughness.JPEG](<../../Art/Blender/Firearms/Sources/Trigger/tripo_convert_c8b65acb-3381-4ca0-8b13-15dd676bac23.fbm/курок_roughness.JPEG>) | Изображение / текстура |
 
+## Art/Blender/FishingRod
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/FishingRod/AssembleFishingReel.py](<../../Art/Blender/FishingRod/AssembleFishingReel.py>) | Инструмент Python; Рыбалка и рыба |
+| [Art/Blender/FishingRod/FishingReelSources.blend](<../../Art/Blender/FishingRod/FishingReelSources.blend>) | Редактируемая сцена Blender; Рыбалка и рыба |
+| [Art/Blender/FishingRod/FishingRodAssembly.blend](<../../Art/Blender/FishingRod/FishingRodAssembly.blend>) | Редактируемая сцена Blender; Рыбалка и рыба |
+| [Art/Blender/FishingRod/FishingRodReplacement.blend](<../../Art/Blender/FishingRod/FishingRodReplacement.blend>) | Редактируемая сцена Blender; Рыбалка и рыба |
+| [Art/Blender/FishingRod/README.md](<../../Art/Blender/FishingRod/README.md>) | Документация; Рыбалка и рыба |
+
+## Art/Blender/FishingRod/Sources
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/FishingRod/Sources/FishingRodSource.fbx](<../../Art/Blender/FishingRod/Sources/FishingRodSource.fbx>) | Модель / анимации FBX; Рыбалка и рыба |
+
+## Art/Blender/FishingRod/Sources/FishingRodSource.fbm
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/FishingRod/Sources/FishingRodSource.fbm/удочка_basecolor.JPEG](<../../Art/Blender/FishingRod/Sources/FishingRodSource.fbm/удочка_basecolor.JPEG>) | Изображение / текстура |
+| [Art/Blender/FishingRod/Sources/FishingRodSource.fbm/удочка_metallic.JPEG](<../../Art/Blender/FishingRod/Sources/FishingRodSource.fbm/удочка_metallic.JPEG>) | Изображение / текстура |
+| [Art/Blender/FishingRod/Sources/FishingRodSource.fbm/удочка_normal.PNG](<../../Art/Blender/FishingRod/Sources/FishingRodSource.fbm/удочка_normal.PNG>) | Изображение / текстура |
+| [Art/Blender/FishingRod/Sources/FishingRodSource.fbm/удочка_rm.JPEG](<../../Art/Blender/FishingRod/Sources/FishingRodSource.fbm/удочка_rm.JPEG>) | Изображение / текстура |
+| [Art/Blender/FishingRod/Sources/FishingRodSource.fbm/удочка_roughness.JPEG](<../../Art/Blender/FishingRod/Sources/FishingRodSource.fbm/удочка_roughness.JPEG>) | Изображение / текстура |
+
+## Art/Blender/FishingRod/Sources/ReelMechanism
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/FishingRod/Sources/ReelMechanism/ReelMechanismSource.fbx](<../../Art/Blender/FishingRod/Sources/ReelMechanism/ReelMechanismSource.fbx>) | Модель / анимации FBX; Рыбалка и рыба |
+
+## Art/Blender/FishingRod/Sources/ReelMechanism/ReelMechanismSource.fbm
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/FishingRod/Sources/ReelMechanism/ReelMechanismSource.fbm/кольцо_меха_basecolor.JPEG](<../../Art/Blender/FishingRod/Sources/ReelMechanism/ReelMechanismSource.fbm/кольцо_меха_basecolor.JPEG>) | Изображение / текстура |
+| [Art/Blender/FishingRod/Sources/ReelMechanism/ReelMechanismSource.fbm/кольцо_меха_metallic.JPEG](<../../Art/Blender/FishingRod/Sources/ReelMechanism/ReelMechanismSource.fbm/кольцо_меха_metallic.JPEG>) | Изображение / текстура |
+| [Art/Blender/FishingRod/Sources/ReelMechanism/ReelMechanismSource.fbm/кольцо_меха_normal.PNG](<../../Art/Blender/FishingRod/Sources/ReelMechanism/ReelMechanismSource.fbm/кольцо_меха_normal.PNG>) | Изображение / текстура |
+| [Art/Blender/FishingRod/Sources/ReelMechanism/ReelMechanismSource.fbm/кольцо_меха_rm.JPEG](<../../Art/Blender/FishingRod/Sources/ReelMechanism/ReelMechanismSource.fbm/кольцо_меха_rm.JPEG>) | Изображение / текстура |
+| [Art/Blender/FishingRod/Sources/ReelMechanism/ReelMechanismSource.fbm/кольцо_меха_roughness.JPEG](<../../Art/Blender/FishingRod/Sources/ReelMechanism/ReelMechanismSource.fbm/кольцо_меха_roughness.JPEG>) | Изображение / текстура |
+
+## Art/Blender/FishingRod/Sources/ReelMount
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/FishingRod/Sources/ReelMount/ReelMountSource.fbx](<../../Art/Blender/FishingRod/Sources/ReelMount/ReelMountSource.fbx>) | Модель / анимации FBX; Рыбалка и рыба |
+
+## Art/Blender/FishingRod/Sources/ReelMount/ReelMountSource.fbm
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/FishingRod/Sources/ReelMount/ReelMountSource.fbm/крепление_катушки_basecolor.JPEG](<../../Art/Blender/FishingRod/Sources/ReelMount/ReelMountSource.fbm/крепление_катушки_basecolor.JPEG>) | Изображение / текстура |
+| [Art/Blender/FishingRod/Sources/ReelMount/ReelMountSource.fbm/крепление_катушки_metallic.JPEG](<../../Art/Blender/FishingRod/Sources/ReelMount/ReelMountSource.fbm/крепление_катушки_metallic.JPEG>) | Изображение / текстура |
+| [Art/Blender/FishingRod/Sources/ReelMount/ReelMountSource.fbm/крепление_катушки_normal.PNG](<../../Art/Blender/FishingRod/Sources/ReelMount/ReelMountSource.fbm/крепление_катушки_normal.PNG>) | Изображение / текстура |
+| [Art/Blender/FishingRod/Sources/ReelMount/ReelMountSource.fbm/крепление_катушки_rm.JPEG](<../../Art/Blender/FishingRod/Sources/ReelMount/ReelMountSource.fbm/крепление_катушки_rm.JPEG>) | Изображение / текстура |
+| [Art/Blender/FishingRod/Sources/ReelMount/ReelMountSource.fbm/крепление_катушки_roughness.JPEG](<../../Art/Blender/FishingRod/Sources/ReelMount/ReelMountSource.fbm/крепление_катушки_roughness.JPEG>) | Изображение / текстура |
+
 ## Art/Blender/FishingWeapons
 
 | Файл | Краткое описание |
@@ -261,6 +325,12 @@
 | --- | --- |
 | [Art/Blender/Frigate/PirateFrigate.blend](<../../Art/Blender/Frigate/PirateFrigate.blend>) | Редактируемая сцена Blender |
 | [Art/Blender/Frigate/build_frigate.py](<../../Art/Blender/Frigate/build_frigate.py>) | Инструмент Python |
+
+## Art/Blender/HandMortar
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/HandMortar/HandMortarAssembly.blend](<../../Art/Blender/HandMortar/HandMortarAssembly.blend>) | Редактируемая сцена Blender; Личное оружие и урон |
 
 ## Art/Blender/HolyGrenade
 

@@ -250,6 +250,17 @@ namespace PirateSlop.Networking
             GUI.color=Color.white; GUI.DrawTexture(new Rect(0,0,Screen.width*.45f,Screen.height),menuShade);
             float scale=Mathf.Min(Screen.height/900f,Screen.width/1000f), width=Screen.width/scale;
             GUI.matrix=Matrix4x4.Scale(new Vector3(scale,scale,1));
+            if(menuPage==5 && party!=null && party.InLobby && !connecting && !chooseObserver)
+            {
+                scale=Mathf.Min(Screen.height/900f,Screen.width/1280f);
+                width=Screen.width/scale;
+                GUI.matrix=Matrix4x4.Scale(new Vector3(scale,scale,1));
+                BeginMenuNavigation();
+                DrawCrewLobby(width);
+                CompleteMenuNavigation();
+                GUI.enabled=true; GUI.matrix=oldMatrix; GUI.color=oldColor;
+                return;
+            }
             float x=Mathf.Clamp(width*.04f,48f,84f), panelWidth=450;
             float titleWidth=Mathf.Min(540,width*.36f);
             if(menuTitlePrint!=null)
@@ -423,7 +434,7 @@ namespace PirateSlop.Networking
                     if(MenuAction(x,y,panelWidth,"ВЫЙТИ В МОРЕ",true)) menuPage=party != null && party.InLobby ? 5 : 1;
                     if(MenuAction(x,y+58,panelWidth,"Присоединиться к сессии")) menuPage=party != null && party.InLobby ? 5 : 2;
                 }
-                if(MenuAction(x,y+146,panelWidth,"Команда · Steam")) menuPage=5;
+                if(MenuAction(x,y+146,panelWidth,"Лобби · Steam")) menuPage=5;
                 bool isLeader = party == null || !party.InLobby || party.IsLeader;
                 if(isLeader && MenuAction(x,y+198,panelWidth,"Кастомизация")) PirateSlop.Customization.SailCustomizationUI.Open();
                 if(MenuAction(x,y+250,panelWidth,"Настройки")) menuPage=7;
@@ -447,14 +458,16 @@ namespace PirateSlop.Networking
                 menuSmall.normal.textColor=previous;
             }
             if(playing) GUI.Label(new Rect(x,868,width-128,22),"Игроки: "+(population-botPopulation)+" · Боты: "+botPopulation+" · Команды: "+teamPopulation+" · Мест: "+population+" / "+MaxPlayers,menuFooter);
-            if(Event.current.type==EventType.Repaint)
-            {
-                menuPreviousControls.Clear();
-                menuPreviousControls.AddRange(menuControls);
-                if(!menuControls.Contains(menuFocus)) menuFocus=menuControls.Count>0?menuControls[0]:null;
-                menuSubmit=null;
-            }
+            CompleteMenuNavigation();
             GUI.matrix=oldMatrix; GUI.color=oldColor;
+        }
+        void CompleteMenuNavigation()
+        {
+            if(Event.current.type!=EventType.Repaint) return;
+            menuPreviousControls.Clear();
+            menuPreviousControls.AddRange(menuControls);
+            if(!menuControls.Contains(menuFocus)) menuFocus=menuControls.Count>0?menuControls[0]:null;
+            menuSubmit=null;
         }
         void DrawBotToggle(float x, float y, float width)
         {

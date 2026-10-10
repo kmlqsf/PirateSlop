@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f2ed3da694fce440b1c081421996d5b, type: 3}
+  m_Name: HandMortar
+  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.HandMortarSettings
+  LaunchSpeed: 22
+  FuseSeconds: 2.5
+  IgnitionSeconds: 0.2
+  ReloadSeconds: 10
+  ShotInterval: 0.6
+  ShooterKnockback: 14
+  ShooterLift: 0.8
+  ShooterKnockdownSeconds: 2.5
+  BallRadius: 0.09
+  Restitution: 0.6
+  TangentialRetention: 0.8
+  BlastRadius: 4
+  BlastDamage: 100
+  DirectDamage: 100
+  ExplodeOnLivingHit: 1
+  ExplodeOnWaterEntry: 0
+  BlastFalloff: 1
+  OwnerGraceSeconds: 0.15
+  ViewPosition: {x: 0.24, y: -0.23, z: 0.42}
+  LaunchOffset: {x: 0.24, y: -0.11, z: 0.97}

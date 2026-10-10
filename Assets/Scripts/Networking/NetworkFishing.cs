@@ -30,6 +30,7 @@ namespace PirateSlop.Networking
             }
         }
         readonly SyncVar<float> progress = new();
+        readonly SyncVar<bool> reelActive = new();
         public bool IsPickingUp => false;
         readonly SyncVar<bool> eating = new();
         readonly SyncVar<float> eatProgress = new();
@@ -44,6 +45,7 @@ namespace PirateSlop.Networking
         DirectShipControls controls;
         GameObject rod, fish, bobber;
         FishingRodBend rodBend;
+        FishingRodReel rodReel;
         LineRenderer line;
         float deadline, lastReel, nextCast, nextInput, nextReelSound, castStarted;
         bool reeling;
@@ -153,6 +155,7 @@ namespace PirateSlop.Networking
         Vector3 catchThrowDirection;
         void TickFishing()
         {
+            reelActive.Value = stage.Value == 4 && reeling && Time.time - lastReel < .35f && Available && inventory.RodSelected;
             if (motor.IsDead) { stage.Value = 0; catchThrowUntil = 0; return; }
             if (catchThrowUntil > 0f)
             {
@@ -190,7 +193,7 @@ namespace PirateSlop.Networking
         void ResetFishing()
         {
             if (IsFishing) SoundObserversRpc(SoundCue.FishingEscape, transform.position);
-            stage.Value = 0; progress.Value = 0; reeling = false;
+            stage.Value = 0; progress.Value = 0; reeling = false; reelActive.Value = false;
         }
         [ServerRpc] void CancelServerRpc() { if (IsFishing) ResetFishing(); }
         [ServerRpc]
@@ -332,11 +335,13 @@ namespace PirateSlop.Networking
             if (rod == null)
             {
                 rod = Instantiate(RodModel, transform); fish = Instantiate(FishModel, transform); bobber = Instantiate(FloatModel);
-                rodBend = rod.AddComponent<FishingRodBend>();
+                rodBend = rod.GetComponent<FishingRodBend>();
+                if (rodBend == null) rodBend = rod.AddComponent<FishingRodBend>();
+                rodReel = rod.GetComponent<FishingRodReel>();
                 if (IsOwner) { motor.ViewMotion.Register(rod.transform); motor.ViewMotion.Register(fish.transform); }
                 var go = new GameObject("FishingLine"); go.transform.SetParent(transform);
                 line = go.AddComponent<LineRenderer>(); line.sharedMaterial = LineMaterial;
-                line.startWidth = .008f; line.endWidth = .004f; line.positionCount = 16;
+                line.startWidth = .0018f; line.endWidth = .0013f; line.positionCount = 16;
             }
             bool first = IsOwner && !motor.IsThirdPerson;
             Transform anchor = first ? motor.PlayerCamera.transform : transform;
@@ -345,6 +350,7 @@ namespace PirateSlop.Networking
             fish.SetActive(HasFish && !CarryingCatch && !motor.IsDead && GetComponent<PirateSlop.Ships.ShipSlotMachinePlayer>()?.IsHolding != true);
             rod.transform.SetPositionAndRotation(hand, anchor.rotation * Quaternion.Euler(stage.Value == 3 ? -18f + Mathf.Sin(Time.time * 24f) * 5f : stage.Value == 4 ? -15f + Mathf.Sin(Time.time * 18f) * 2f : -12f, -8f, 0));
             rodBend.SetBend(stage.Value == 3 ? .12f + Mathf.Sin(Time.time * 24f) * .07f : stage.Value == 4 ? .1f + Mathf.Sin(Time.time * 18f) * .025f : 0f);
+            rodReel?.Present(stage.Value, reelActive.Value, Time.deltaTime);
             fish.transform.SetPositionAndRotation(hand, anchor.rotation * Quaternion.Euler(0, 90, Mathf.Sin(Time.time * 9f) * 4f));
             if (IsEating) fish.transform.position = Vector3.Lerp(hand, anchor.TransformPoint(first ? new Vector3(.05f, -.12f, .3f) : new Vector3(.1f, 1.55f, .25f)), .8f + Mathf.Sin(Time.time * 14f) * .1f);
             if (shownStage != stage.Value) { if (stage.Value == 1) castStarted = Time.time; shownStage = stage.Value; }

@@ -134,7 +134,7 @@ public partial class AdvancedPlayerController : MonoBehaviour
     float crouchBlend;
     public float CrouchBlend => crouchBlend;
     public float PlanarSpeed { get; private set; }
-    public bool InputActive => !IsFrozen && !RoguelikeUpgradeUI.BlocksInput && ActiveParrot == null && !BellPullLocked && !ShipActivityLocked && !DeveloperMenu.IsOpen && !BotDebugPanel.ConsumedInput && !ShipSpyglassView.IsViewing && local && !IsDead && !IsDowned && Cursor.lockState == CursorLockMode.Locked;
+    public bool InputActive => !IsFrozen && !RoguelikeUpgradeUI.BlocksInput && ActiveParrot == null && !BellPullLocked && !ShipActivityLocked && !DeveloperMenu.IsOpen && !BotDebugPanel.ConsumedInput && !ShipSpyglassView.IsViewing && local && !IsDead && !IsDowned && !(GetComponent<PlayerKnockdown>()?.IsRecovering ?? false) && Cursor.lockState == CursorLockMode.Locked;
     public Camera PlayerCamera => playerCamera;
     void Awake()
     {
@@ -305,6 +305,7 @@ public partial class AdvancedPlayerController : MonoBehaviour
             PositionDeathSpectator();
             return;
         }
+        if (IsDowned && !IsThirdPerson && GetComponent<PlayerKnockdown>()?.PositionCamera() == true) return;
         var helm = shipControls != null ? shipControls.TurningHelm : null;
         var ship = helm != null ? helm.GetComponentInParent<ShipController>() : null;
         if (ship != null)

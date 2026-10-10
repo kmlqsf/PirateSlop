@@ -93,7 +93,8 @@
         "Очистка 2026-10-04: удалены старые визуальные отчёты Docs/StormCloudBakeoff, Docs/StormFinal, Docs/StormV2, Docs/StormV3; сцены Assets/_Recovery, изображения Assets/Screenshots и пять резервных .blend1 с сохранением основных .blend. Игровые модели, код, префабы, Resources и сетевой реестр не изменялись.",
         "Очистка 2026-10-05 по Git-аудиту: удалены 73 основных кандидата высокой уверенности и 57 сопутствующих .meta, всего 130 файлов (180.11 МиБ). Удалены Docs/Reports.zip, дублирующий Docs/LootModels/loot.zip, Python-кэш, одноразовые отчёты и исправления, старая SampleScene, старый Ocean.shader и отдельные неподключённые демо/ассеты сторонних пакетов. По просьбе пользователя все звуковые клипы сохранены, включая 15 high-кандидатов и их .meta. Кандидаты средней и низкой уверенности не удалялись; сетевые коллекции и игровой C# не изменялись. Игровая проверка не выполнялась.",
         "Ship V3 теперь единственный игровой корабль: SessionController.ShipPrefab в NetworkMenu указывает на Assets/Resources/Ships/ShipV3Test.prefab. Старый NetworkShip.prefab сохранён как архивный ассет и не создаётся в игре. Историческое имя ShipV3Test сохранено вместе с GUID и регистрацией FishNet.",
-        "Очистка 2026-10-05 по Git-аудиту, второй этап: удалены 1300 основных кандидатов средней уверенности и 3 сопутствующих инспектора удаляемых демо, с .meta — 2697 файлов (758.73 МиБ). Удалены неподключённые части прежних кораблей, старые локальные игровые скрипты, архивы версий обезьянки, старые анимации/иконки, демо FishNet/Cartoon FX/Mirza и отдельные отладочные материалы шторма. Все звуковые клипы и метаданные их папок сохранены, как и .meta папок с другими сохранёнными файлами. Низкие условные игровые кандидаты не удалялись. Сетевые коллекции не редактировались; игровой прогон не выполнялся."
+        "Очистка 2026-10-05 по Git-аудиту, второй этап: удалены 1300 основных кандидатов средней уверенности и 3 сопутствующих инспектора удаляемых демо, с .meta — 2697 файлов (758.73 МиБ). Удалены неподключённые части прежних кораблей, старые локальные игровые скрипты, архивы версий обезьянки, старые анимации/иконки, демо FishNet/Cartoon FX/Mirza и отдельные отладочные материалы шторма. Все звуковые клипы и метаданные их папок сохранены, как и .meta папок с другими сохранёнными файлами. Низкие условные игровые кандидаты не удалялись. Сетевые коллекции не редактировались; игровой прогон не выполнялся.",
+        "2026-10-10 общий ProtocolVersion143 после объединения локальных трюма/насоса/дружественного огня из141 и оружия/лобби/Steam-ников/обезьяны друга из142. Сохранены BilgeWater/BilgePermanent/BilgeDestructible и Loot_HandMortar/Loot_ExplosiveBall одного корабля; оба клиента должны использовать общий обновлённый проект/сборку. Статический дефолт SessionConfig также143. PlayMode, сборки и сетевой прогон не выполнялись."
       ],
       "files": [
         "Assets/Scripts/Networking/SessionController.cs",
@@ -398,7 +399,11 @@
         "Исправление исчезающего рэгдолла 2026-10-09: DeathRagdoll копирует skin независимо от activeInHierarchy исходного контейнера, активирует его цепочку, сохраняет layer/renderingLayerMask и не скрывает игрока при пустой копии. RagdollRendererBounds следует за тазом, чтобы физическое тело не отсекалось по старым границам. Проверка Build на NetworkPlayer через Unity MCP без PlayMode: 1 активный skin, 52 кости, BakeMesh26304 вершины, 11 Rigidbody и10 CharacterJoint; компиляция без ошибок. Вид/движение на втором клиенте остаются непроверенными.",
         "2026-10-09 общий ProtocolVersion136 после объединения сетевых изменений друга135 и локальных чаек/неуязвимости F8. Пинок, обезьянка, рэгдолл и F8 сохранены вместе; обоим игрокам нужны одинаковые новые сборки. Игровая проверка объединённой версии не запускалась.",
         "2026-10-10 только environment_test: AdvancedPlayerController различает внешнюю волну и воду внутри корпуса. Близкая действующая опора собственного корабля через ShipDeckPassenger.HasDryDeckSupport (SphereCastNonAlloc,.8м) исключает ложное плавание и отцепление от гребня. Нокбэк, настоящая потеря опоры, полностью затопленный корабль и вода трюма сохраняют прежние пути. C#errors0; игра/500%/мультиплеер не запускались. Docs/TestOcean.md.",
-        "2026-10-10 ProtocolVersion141: SessionCombatRules хранит серверный FriendlyFireEnabled, транслирует CombatRulesMessage всем клиентам и новым участникам; при закрытии/старте сессии выключен. F8→Игрок→Бой, команда31, общий переключатель дружественного огня. CombatHealth и поджог/толчок ядром разрешают урон союзникам при включении; ShipDestruction принимает попадания своего игрока/команды, CannonShotDamage перестаёт исключать весь Source-корабль, сохраняя исключение выпустившей пушки. Серверные ограничения существующего DeveloperCommand сохранены."
+        "2026-10-10 ProtocolVersion141: SessionCombatRules хранит серверный FriendlyFireEnabled, транслирует CombatRulesMessage всем клиентам и новым участникам; при закрытии/старте сессии выключен. F8→Игрок→Бой, команда31, общий переключатель дружественного огня. CombatHealth и поджог/толчок ядром разрешают урон союзникам при включении; ShipDestruction принимает попадания своего игрока/команды, CannonShotDamage перестаёт исключать весь Source-корабль, сохраняя исключение выпустившей пушки. Серверные ограничения существующего DeveloperCommand сохранены.",
+        "Исправление исчезающего рэгдолла 2026-10-09: DeathRagdoll копирует skin независимо от activeInHierarchy исходного контейнера, активирует его цепочку, сохраняет layer/renderingLayerMask и не скрывает игрока при пустой копии. RagdollRendererBounds следует за тазом, чтобы физическое тело не отсекалось по старым границам. Проверка Build на NetworkPlayer через Unity MCP без PlayMode: 1 активный skin, 52 кости, BakeMesh26304 вершины, 11 Rigidbody и10 CharacterJoint; компиляция без ошибок. Вид/движение на втором клиенте остаются непроверенными. Камера первого лица при нокдауне следует позиции и quaternion головы физического рэгдолла с сохранением исходного направления взгляда; фиксированный наклон камеры больше не перезаписывает её. Общий DeathRagdoll.Build для нокдауна и смерти с вероятностью50% добавляет кувырок5–8рад/с вокруг поперечной оси и небольшой крен/поворот; таз, грудь и голова получают одинаковое вращение, конечности слегка различаются без встречного вращения. Компиляция проверена; ощущение камеры и сетевой результат проверяет пользователь. PlayerKnockdown после окончания нокдауна отключает физику копии и за0.95с смешивает позу её костей к текущему BodyRig; исходная модель и руки возвращаются после перехода. Камера начинает с последней позы головы, сначала выравнивается у земли, затем плавно поднимается к обычной высоте. Начальная поза хранится относительно игрока для движущейся палубы; повторный нокдаун/смерть прерывает вставание. Локальный InputActive блокируется на время перехода; сетевые таймеры нокдауна сохранены. Компиляция проверена, игровую плавность проверяет пользователь.",
+        "2026-10-09 общий ProtocolVersion139 после объединения локальных мортиры/взрывного ядра138 и сетевых изменений чаек/неуязвимости F8 из136. Пинок, обезьянка, рэгдолл, плавное вставание и F8 сохранены вместе; обоим игрокам нужны одинаковые новые сборки. Игровая проверка объединённой версии не запускалась.",
+        "2026-10-10: Steam-ники над игроками. NetworkPlayer.Identity синхронизирует SteamName серверным SyncVar, Steam-сессия получает имя по адресу владельца из Steam; IP-сессия передаёт локальный Steam-ник owner-only ServerRpc. DisplayName также используется голосовым UI. CrewPresentation заменяет старые номера союзников на один локальный uGUI Canvas с табличками всех видимых союзников/противников и именами ботов. Светлая надпись 21px с обводкой, скруглённая тёмная подложка, зелёный/латунный акцент команды и индикатор речи. Привязка к Humanoid Head или generic mixamorig:Head, fallback по CharacterController; экранное разрешение масштабируется CanvasScaler. Свой ник только в третьем лице; за препятствиями/меню/после смерти скрывается, дальность50м с fade35–50м. RaycastNonAlloc каждые0.1с, очистка despawn и ресурсов Canvas. RichText выключен, управляющие символы удаляются, Unicode-графемы не разрезаются при сокращении. ProtocolVersion142 из-за нового SyncVar/RPC. Компиляция через прямой Unity MCP без ошибок; PlayMode, визуальная приёмка и онлайн не запускались.",
+        "2026-10-10 уточнение по игровому скриншоту: крупная рамочная табличка отвергнута пользователем. CrewPresentation теперь рисует только Steam-ник 16px Regular с мягкой тенью и тонкой обводкой; подложка, рамка и постоянный ромб удалены. Сам текст расположен в центре проекции головы, экранный clamp убран (на краях скрывается), голосовые полоски появляются сверху по центру без сдвига имени. Мягкий оттенок союзника/нейтральный оттенок противника и alpha0.88, прежняя видимость35–50м/LOS сохранены. Референс — игровые снимки Sea of Thieves, ссылки просмотрены через web search. Сетевой формат не менялся."
       ],
       "files": [
         "Assets/Scripts/AdvancedPlayerController.cs",
@@ -426,7 +431,9 @@
         "Assets/Resources/KickLeg.asset",
         "Assets/Scripts/Player/DeathRagdoll.cs",
         "Assets/Scripts/Player/PlayerKnockdown.cs",
-        "Assets/Scripts/Networking/SessionCombatRules.cs"
+        "Assets/Scripts/Networking/SessionCombatRules.cs",
+        "Assets/Scripts/Networking/NetworkPlayer.Identity.cs",
+        "Assets/Scripts/UI/CrewPresentation.cs"
       ],
       "docs": [
         "animation-review.md",
@@ -440,7 +447,11 @@
         "оружие",
         "пистолет",
         "бой",
-        "combat"
+        "combat",
+        "мортира",
+        "hand-mortar",
+        "взрывное ядро",
+        "explosive-ball"
       ],
       "notes": [
         "Разделять локальный отклик оружия и серверное подтверждение урона/расхода боеприпасов.",
@@ -454,6 +465,8 @@
         "NetworkHealth синхронизирует горение экипажа и считает урон на сервере. Контакт с корабельным пламенем поджигает игрока, экологический урон действует и на союзников; погружение в море и ледяное попадание тушат, смерть/возрождение очищают эффект.",
         "Прицел снайперки 2026-10-06: маска рисуется только в Repaint и заполняется одним SetPixels32. Лог пользовательского краша показывает native CharacterController.Move; для объединённых корабельных коллайдеров добавлен обход без UseFastMidphase. Повторное воспроизведение краша оставлено пользователю.",
         "Подводная стрельба 2026-10-06: пистолет, снайперка и дробь переходят от воздушного hitscan к серверному UnderwaterFirearmProjectile на 3 с; квадратичное торможение, текущие коллайдеры пловцов, общий DamageCap на залп. PistolBullet показывает пузырьковую траекторию и завершается по серверному результату, без повторного дульного эффекта. FirearmShot передаёт WaterVelocity/ProjectileId; отдельный observer RPC для подводного попадания. SessionConfig.ProtocolVersion128, клиентам нужна одна версия. Компиляция проверена; игровой/сетевой тест не запускался.",
+        "HandMortar=27: готовые четыре модели собраны с исходными PBR-текстурами и отдельными pivots. ЛКМ: спуск, удар кремня через .065с, верхний фитиль и выстрел через .2с; механизмы возвращаются в покой. При успешном серверном вылете ядра отдача стрелку14м/с назад по горизонтали и0.8м/с вверх через NetworkPlayer.KnockDown с рэгдоллом стрелка2.5с и сетевым уведомлением; ShooterKnockback/ShooterLift/ShooterKnockdownSeconds в HandMortar.asset. Один заряд, R базовая перезарядка 10с без отдельного расходного предмета как у существующих ружей. Серверный NetworkHandMortarBall: скорость22м/с, радиус.09м, отскоки .6/.8 относительно движущейся палубы, подводное сопротивление, взрыв через2.5с или при прямом попадании в живую цель. Радиус4м, прямой урон100, splash100 с линейным спадом; урон только игрокам и ботам с NetworkPlayer, штатные командные фильтры CombatHealth. Корабли и остальные объекты не получают урона или импульса от взрыва; отскоки от них сохранены. Настройки HandMortar.asset; модель, pickup, ball, icon, реестр, каталог, ChestLoot вес5 и F8 подключены; тестовая палуба Loot_HandMortar. Protocol137. Компиляция/ссылки проверяются в редакторе, Play/онлайн не запускались.",
+        "ExplosiveBall=28: отдельное ручное взрывное ядро из предоставленного FBX, исходный PBR, диаметр24см. ЛКМ сразу бросает и расходует один предмет; до броска фитиль не горит, после броска сокращается по серверной SyncVar, имеет оранжевый огонек и редкие искры. Полет14м/с, отскок.4, таймер2.5с, взрыв при входе в воду как фугу; прямое касание игрока не сокращает таймер. Урон40 только NetworkPlayer (включая ботов), радиус3м, без спада и с проверкой преград/команд; корабли и объекты без урона/импульса. Общий серверный NetworkHandMortarBall с отдельными ExplosiveBall.asset settings. Pickup и projectile отдельно зарегистрированы, model/icon/F8/DefaultLoot/ChestLoot вес10/тестовая палуба подключены; Protocol138. Компиляция и ссылки проверены; Play/онлайн не запускались.",
         "2026-10-09 F8 → Игрок → Здоровье: кнопка отключения любого урона по своему игроку, повторное нажатие включает урон. NetworkHealth.DeveloperInvulnerable — серверный SyncVar, выключен по умолчанию и сбрасывается при остановке сети, сохраняется при возрождении. CombatHealth.Damage выходит до уменьшения здоровья, побочных эффектов урона и смерти; оружие, огонь, утопление и зона проходят через эту проверку. Игровая проверка не запускалась."
       ],
       "files": [
@@ -498,7 +511,29 @@
         "Assets/Scripts/Player/FirearmPrediction.cs",
         "Assets/Scripts/Player/UnderwaterFirearmProjectile.cs",
         "Assets/Scripts/World/ProjectileWaterFlight.cs",
-        "Assets/Scripts/World/UnderwaterProjectileTrail.cs"
+        "Assets/Scripts/World/UnderwaterProjectileTrail.cs",
+        "Assets/Scripts/Player/HandMortarSettings.cs",
+        "Assets/Scripts/Player/HandMortarVisual.cs",
+        "Assets/Scripts/Networking/NetworkEquipment.HandMortar.cs",
+        "Assets/Scripts/Networking/NetworkHandMortarBall.cs",
+        "Assets/Scripts/Editor/HandMortarSetup.cs",
+        "Assets/Settings/Weapons/HandMortar.asset",
+        "Assets/Models/HandMortar/HandMortarAssembly.fbx",
+        "Assets/Models/HandMortar/HandMortarVisual.prefab",
+        "Assets/Prefabs/Networking/HandMortarPickup.prefab",
+        "Assets/Prefabs/Networking/HandMortarBall.prefab",
+        "Art/Blender/HandMortar/HandMortarAssembly.blend",
+        "Assets/UI/Inventory/HandMortar.png",
+        "Assets/Scripts/Networking/NetworkWeapon.ExplosiveBall.cs",
+        "Assets/Scripts/Player/ExplosiveBallFuse.cs",
+        "Assets/Scripts/Editor/ExplosiveBallSetup.cs",
+        "Assets/Settings/Weapons/ExplosiveBall.asset",
+        "Assets/Models/ExplosiveBall/ExplosiveBall.fbx",
+        "Assets/Models/ExplosiveBall/ExplosiveBallVisual.prefab",
+        "Assets/Prefabs/Networking/ExplosiveBallPickup.prefab",
+        "Assets/Prefabs/Networking/ExplosiveBallProjectile.prefab",
+        "Art/Blender/ExplosiveBall/ExplosiveBall.blend",
+        "Assets/UI/Inventory/ExplosiveBall.png"
       ],
       "docs": [
         "firearm-foundation.md",
@@ -1013,7 +1048,10 @@
         "Кастомизация Ship V3 и сетевое горение: ProtocolVersion=123; игровая проверка и проверка двумя клиентами не запускались.",
         "Меню оставляет основную Тестовую карту и Тест нагрузки. Begin(environmentTest=true) всегда загружает NetworkOcean через SessionSceneLoading; командный -environmenttest запускает тот же режим. Build Windows/Configure Scenes используют NetworkMenu, NetworkOcean, NetworkLoadTest и дополнительные включённые сцены. SteamTestBuild только записывает steam_appid.txt после Windows-сборки. RuntimePipelineBuildPreparation запускается перед встроенными build callbacks (int.MinValue) и сбрасывает CoreBuildData.Dispose: временный MenuShipPipeline может остаться в кэше URP после Destroy и вызвать MissingReferenceException в URPPreprocessBuild.LogIncludedAssets. Настройки рендера и пакеты Unity не меняются.",
         "2026-10-09 исправлен запуск после ArgumentException Instantiate(null) в SessionCrew.TrySpawnShip: Unity импортировал исправный ShipV3Test.prefab как DefaultAsset. Принудительный нативный повторный импорт восстановил GameObject с тем же GUID; в открытой несохранённой сцене восстановлено только поле ShipPrefab без сохранения чужих изменений. SessionController.Awake и Begin восстанавливают пустую ссылку из Resources/Ships/ShipV3Test; при неудаче Begin показывает ошибку до подключения. Фактический запуск тестовой карты с намеренно пустой runtime-ссылкой восстановил корабль и создал одного игрока без ошибок.",
-        "2026-10-10 ProtocolVersion141: SessionCombatRules хранит серверный FriendlyFireEnabled, транслирует CombatRulesMessage всем клиентам и новым участникам; при закрытии/старте сессии выключен. F8→Игрок→Бой, команда31, общий переключатель дружественного огня. CombatHealth и поджог/толчок ядром разрешают урон союзникам при включении; ShipDestruction принимает попадания своего игрока/команды, CannonShotDamage перестаёт исключать весь Source-корабль, сохраняя исключение выпустившей пушки. Серверные ограничения существующего DeveloperCommand сохранены."
+        "2026-10-10 ProtocolVersion141: SessionCombatRules хранит серверный FriendlyFireEnabled, транслирует CombatRulesMessage всем клиентам и новым участникам; при закрытии/старте сессии выключен. F8→Игрок→Бой, команда31, общий переключатель дружественного огня. CombatHealth и поджог/толчок ядром разрешают урон союзникам при включении; ShipDestruction принимает попадания своего игрока/команды, CannonShotDamage перестаёт исключать весь Source-корабль, сохраняя исключение выпустившей пушки. Серверные ограничения существующего DeveloperCommand сохранены.",
+        "2026-10-10: Steam-лобби до 30 игроков: доска 10 экипажей по 3 места, переходы до старта, имена/хост/своя команда/готовность, приглашения Steam и ID лобби. Владелец лобби подтверждает запросы и ограничивает экипаж тремя участниками; изменение состава сбрасывает готовность через roster_revision. Старт фиксирует распределение; selected_team передаётся в матч и определяет общий корабль через серверный допуск и HumanTeam. Сохранены вход в другую сессию по ID, выбор карты и ботов. Новый формат Steam-метаданных требует одинакового протокола у участников; текущий SessionConfig.ProtocolVersion=141 (сохранено параллельное изменение). Тестовая карта уже содержит 10 ship_spawn. Компиляция проверена через прямой Unity MCP; PlayMode, сборка, Steam-приглашения и онлайн на 10 людях не запускались.",
+        "2026-10-10: Steam-ники над игроками. NetworkPlayer.Identity синхронизирует SteamName серверным SyncVar, Steam-сессия получает имя по адресу владельца из Steam; IP-сессия передаёт локальный Steam-ник owner-only ServerRpc. DisplayName также используется голосовым UI. CrewPresentation заменяет старые номера союзников на один локальный uGUI Canvas с табличками всех видимых союзников/противников и именами ботов. Светлая надпись 21px с обводкой, скруглённая тёмная подложка, зелёный/латунный акцент команды и индикатор речи. Привязка к Humanoid Head или generic mixamorig:Head, fallback по CharacterController; экранное разрешение масштабируется CanvasScaler. Свой ник только в третьем лице; за препятствиями/меню/после смерти скрывается, дальность50м с fade35–50м. RaycastNonAlloc каждые0.1с, очистка despawn и ресурсов Canvas. RichText выключен, управляющие символы удаляются, Unicode-графемы не разрезаются при сокращении. ProtocolVersion142 из-за нового SyncVar/RPC. Компиляция через прямой Unity MCP без ошибок; PlayMode, визуальная приёмка и онлайн не запускались.",
+        "2026-10-10 общий ProtocolVersion143 после объединения локальных трюма/насоса/дружественного огня из141 и оружия/лобби/Steam-ников/обезьяны друга из142. Сохранены BilgeWater/BilgePermanent/BilgeDestructible и Loot_HandMortar/Loot_ExplosiveBall одного корабля; оба клиента должны использовать общий обновлённый проект/сборку. Статический дефолт SessionConfig также143. PlayMode, сборки и сетевой прогон не выполнялись."
       ],
       "files": [
         "Assets/Scripts/Networking/SessionController.cs",
@@ -1029,7 +1067,10 @@
         "Assets/Scripts/Networking/SessionMenu.cs",
         "Assets/Scripts/Editor/SteamTestBuild.cs",
         "Assets/Scripts/Networking/SessionOcean.cs",
-        "Assets/Scripts/Networking/SessionCombatRules.cs"
+        "Assets/Scripts/Networking/SessionCombatRules.cs",
+        "Assets/Scripts/Networking/SessionPartyMenu.cs",
+        "Assets/Scripts/Networking/NetworkPlayer.Identity.cs",
+        "Assets/Scripts/UI/CrewPresentation.cs"
       ],
       "docs": [
         "multiplayer-plan.md",
@@ -1335,7 +1376,9 @@
         "F8 в основной тестовой карте содержит ползунки силы, крутизны и скорости Boat Attack волн, сброс, существующие день/ночь и морской туман. Отдельных пунктов водных сцен в меню нет.",
         "Меню 2026-10-06: MenuBackdrop при Awake заменяет старую MenuSea на Water из EnvironmentTest/Ocean, включает SkyDayNight и TestSkyPipeline, HDR/postprocessing и Volume layer30. Вода спокойнее (.55 strength/.75 steepness), небо TargetBlend .25. Меню включает/выключает окружение вместе с Content и восстанавливает прежний pipeline через TestSkyDayNight. Сцена редактора не перезаписывалась; переходы в игре не проверены.",
         "Чёрный экран меню после сборки 2026-10-06: Player.log указал NullReferenceException VolumetricCloudsShadowsPass.RecordRenderGraph на lightCookieSize. Светила EnvironmentTest/SkyDayNight не имеют UniversalAdditionalLightData; VolumetricCloudsURP создаёт его перед записью свойств cookie в RenderGraph и legacy pass. Компиляция проверена, новая сборка и запуск Player не выполнялись.",
-        "2026-10-10 F8: отдельная вкладка «Разрушение», команды28 «Слабая течь» и29 «Большая течь». Сервер выбирает случайный целый доступный фрагмент Hull/CanFlood в высоте трюма на корабле пассажира либо собственном, снимает его через штатные Change/DetachUnsupported/Publish; сильная течь ниже середины трюма, слабая выше и не соединена с имеющейся сильной. Слабые кандидаты ограничены нижним краем до0.3м над серединой, чтобы реальные волны могли давать перелив. Hover по корпусу или ручке насоса, а также удержание ручки показывают «Затопление трюма: N%» через ContextPrompt; подсказка качать только для свободной доступной ручки. Протокол138, схема RPC не менялась. Компиляция успешна; кнопки и подсказку в игре проверяет пользователь."
+        "2026-10-10 F8: отдельная вкладка «Разрушение», команды28 «Слабая течь» и29 «Большая течь». Сервер выбирает случайный целый доступный фрагмент Hull/CanFlood в высоте трюма на корабле пассажира либо собственном, снимает его через штатные Change/DetachUnsupported/Publish; сильная течь ниже середины трюма, слабая выше и не соединена с имеющейся сильной. Слабые кандидаты ограничены нижним краем до0.3м над серединой, чтобы реальные волны могли давать перелив. Hover по корпусу или ручке насоса, а также удержание ручки показывают «Затопление трюма: N%» через ContextPrompt; подсказка качать только для свободной доступной ручки. Протокол138, схема RPC не менялась. Компиляция успешна; кнопки и подсказку в игре проверяет пользователь.",
+        "2026-10-10: Steam-ники над игроками. NetworkPlayer.Identity синхронизирует SteamName серверным SyncVar, Steam-сессия получает имя по адресу владельца из Steam; IP-сессия передаёт локальный Steam-ник owner-only ServerRpc. DisplayName также используется голосовым UI. CrewPresentation заменяет старые номера союзников на один локальный uGUI Canvas с табличками всех видимых союзников/противников и именами ботов. Светлая надпись 21px с обводкой, скруглённая тёмная подложка, зелёный/латунный акцент команды и индикатор речи. Привязка к Humanoid Head или generic mixamorig:Head, fallback по CharacterController; экранное разрешение масштабируется CanvasScaler. Свой ник только в третьем лице; за препятствиями/меню/после смерти скрывается, дальность50м с fade35–50м. RaycastNonAlloc каждые0.1с, очистка despawn и ресурсов Canvas. RichText выключен, управляющие символы удаляются, Unicode-графемы не разрезаются при сокращении. ProtocolVersion142 из-за нового SyncVar/RPC. Компиляция через прямой Unity MCP без ошибок; PlayMode, визуальная приёмка и онлайн не запускались.",
+        "2026-10-10 уточнение по игровому скриншоту: крупная рамочная табличка отвергнута пользователем. CrewPresentation теперь рисует только Steam-ник 16px Regular с мягкой тенью и тонкой обводкой; подложка, рамка и постоянный ромб удалены. Сам текст расположен в центре проекции головы, экранный clamp убран (на краях скрывается), голосовые полоски появляются сверху по центру без сдвига имени. Мягкий оттенок союзника/нейтральный оттенок противника и alpha0.88, прежняя видимость35–50м/LOS сохранены. Референс — игровые снимки Sea of Thieves, ссылки просмотрены через web search. Сетевой формат не менялся."
       ],
       "files": [
         "Assets/Scripts/Networking/SessionMenu.cs",
@@ -1360,7 +1403,9 @@
         "Assets/Scripts/Networking/SessionVoiceMenu.cs",
         "Assets/Scripts/UI/GameVersionOverlay.cs",
         "Assets/Resources/Menu/TitlePrint.png",
-        "Assets/Resources/Menu/TitlePrint.SOURCES.md"
+        "Assets/Resources/Menu/TitlePrint.SOURCES.md",
+        "Assets/Scripts/Networking/NetworkPlayer.Identity.cs",
+        "Assets/Scripts/UI/CrewPresentation.cs"
       ],
       "docs": [
         "unity.md",
@@ -1579,6 +1624,8 @@
         "рыба"
       ],
       "notes": [
+        "Катушка собрана из предоставленных ReelMount/ReelMechanism через Blender MCP. Неподвижное крепление, отдельный ReelSpoolPivot со шпулей, намоткой и рукояткой; леска проходит через шесть существующих колец модели, TipLocalPoint(0,.133,1.69). FishingRodReel вращает шпулю обратно при забросе, вперёд при фактическом вываживании, останавливает при отпускании ЛКМ/ожидании. NetworkFishing.reelActive синхронизирует серверное состояние намотки; обезьянка использует существующий FishingPhase. BendPoint совмещает леску с деформацией модели. Общий цвет лески и тонкие LineRenderer, pickup получает статичную сборку. Исходники/упакованные карты в FishingRodAssembly.blend и FishingReelSources.blend; повторная сборка AssembleFishingReel.py. ProtocolVersion136; PlayMode и два клиента не запускались.",
+        "Удочка заменена моделью из Desktop/3d/удочка через Blender MCP: нормализованный хват, направление +Z, кончик в(0,.15,1.7) для штатной лески и FishingRodBend. FishingRodReplacementSetup меняет геометрию FishingRod и DroppedRod с сохранением GUID, назначает URP/PBR и обновляет коллайдер по модели. Player NetworkFishing и ShipMonkey используют общий FishingRod; импорт FBX Read/Write сохраняет runtime-изгиб. FishingSetup повторно применяет замену после настройки рыбалки. Нормализованный BLEND и исходные FBX/карты сохранены в Art/Blender/FishingRod. Сетевая логика/протокол не менялись; игровой и онлайн-тест выполняет пользователь.",
         "Рыбалка — NetworkFishing; предмет рыбы и его полёт — NetworkFish и NetworkFishProjectile. Использование рыбы как метательного предмета находится в NetworkWeapon.FishThrows.",
         "Модели обычной рыбы, фугу и рыбы-меча заменены файлами из ../Blender/Лутабельные/Рыба. Исходники в Art/Blender/Loot/FishReplacement, игровые FBX и материалы URP в Assets/Models/Loot/Replacement/Fish, Pufferfish, Swordfish. BottleFishReplacementSetup сохраняет существующие FishVisual, PufferfishVisual и SwordfishVisual GUID и подменяет дочернюю геометрию двух специальных pickup. Коллайдеры, NetworkFish, NetworkFishProjectile, направление головы +Z, подбор, рыбалка, броски, раздувание фугу и втыкание рыбы-меча сохранены. Игровая проверка выполняется пользователем.",
         "Уточнение заменённых моделей: Swordfish и Pufferfish Geometry rotation Y=-90° с сохранением FBX-преобразования Z-up в Y-up; после смены базиса визуал повторно центрируется. Переносимый визуал без дополнительного Y=90°, смещение и хват соответствуют телу. NetworkFishProjectile раздувает поперечные оси фугу до 2.1x и учитывает любой Renderer.",
@@ -1586,6 +1633,40 @@
         "Отскок иглобрюха рассчитывает центр по расстоянию SphereCast, а не hit.point: при начальном пересечении нулевая точка контакта не переносит рыбу в центр мира. Фитиль2.5с и штатный взрыв сохранены."
       ],
       "files": [
+        "Assets/Scripts/Player/FishingRodReel.cs",
+        "Art/Blender/FishingRod/AssembleFishingReel.py",
+        "Art/Blender/FishingRod/FishingRodAssembly.blend",
+        "Art/Blender/FishingRod/FishingReelSources.blend",
+        "Art/Blender/FishingRod/README.md",
+        "Art/Blender/FishingRod/Sources/ReelMount/ReelMountSource.fbx",
+        "Art/Blender/FishingRod/Sources/ReelMechanism/ReelMechanismSource.fbx",
+        "Assets/Models/Fishing/Replacement/Textures/ReelMountBaseColor.jpg",
+        "Assets/Models/Fishing/Replacement/Textures/ReelMountNormal.png",
+        "Assets/Models/Fishing/Replacement/Textures/ReelMountMetallic.jpg",
+        "Assets/Models/Fishing/Replacement/Textures/ReelMountRoughness.jpg",
+        "Assets/Models/Fishing/Replacement/Textures/ReelMountMetalSmooth.png",
+        "Assets/Models/Fishing/Replacement/Textures/ReelMechanismBaseColor.jpg",
+        "Assets/Models/Fishing/Replacement/Textures/ReelMechanismNormal.png",
+        "Assets/Models/Fishing/Replacement/Textures/ReelMechanismMetallic.jpg",
+        "Assets/Models/Fishing/Replacement/Textures/ReelMechanismRoughness.jpg",
+        "Assets/Models/Fishing/Replacement/Textures/ReelMechanismMetalSmooth.png",
+        "Assets/Materials/Fishing/ReelMount.mat",
+        "Assets/Materials/Fishing/ReelMechanism.mat",
+        "Assets/Materials/Fishing/ReelBrass.mat",
+        "Assets/Materials/Fishing/ReelThread.mat",
+        "Assets/Materials/Fishing/ReelGrip.mat",
+        "Assets/Scripts/Editor/FishingRodReplacementSetup.cs",
+        "Assets/Models/Fishing/FishingRod.prefab",
+        "Assets/Prefabs/Networking/DroppedRod.prefab",
+        "Assets/Models/Fishing/Replacement/FishingRodReplacement.fbx",
+        "Assets/Models/Fishing/Replacement/Textures/FishingRodBaseColor.jpg",
+        "Assets/Models/Fishing/Replacement/Textures/FishingRodNormal.png",
+        "Assets/Models/Fishing/Replacement/Textures/FishingRodMetallic.jpg",
+        "Assets/Models/Fishing/Replacement/Textures/FishingRodRoughness.jpg",
+        "Assets/Models/Fishing/Replacement/Textures/FishingRodMetalSmooth.png",
+        "Assets/Materials/Fishing/FishingRodReplacement.mat",
+        "Art/Blender/FishingRod/FishingRodReplacement.blend",
+        "Art/Blender/FishingRod/Sources/FishingRodSource.fbx",
         "Assets/Scripts/Networking/NetworkFishing.cs",
         "Assets/Scripts/Networking/NetworkFish.cs",
         "Assets/Scripts/Networking/NetworkFishMotion.cs",
@@ -1780,10 +1861,12 @@
         "Архивные Versions/V1–V6 удалены 2026-10-05 по просьбе пользователя; текущие Art/Blender/Creatures/ShipMonkey/ShipMonkey.blend, исходные actions и игровые Assets сохранены. Дублированные GUID архивных копий вне Assets не являются отдельными подключёнными Unity-ресурсами.",
         "Автомат увеличен на20% (scale1.2, высота2.28м), позиция(-3.6054,4.12,-18.0709),yaw58. После своей рыбной ставки захват ЛКМ доступен рядом без попадания лучом в LeverGrip; подсказка только у приёмника. SlotMachinePlayer order-26 и consumed input исключают перехват ShipV3PlayerInteraction. Обезьянка: бесплатный ход раз180–300с, только свободный автомат, подход спереди по палубному графу с обходом шкафа, Work/рычаг0.8с, Idle/взгляд до окончания спина и выдачи. Проигрыш80%, SkillPoint не выигрывается; оставшиеся20% пропорциональны прежним пяти категориям. При отмене бесплатной ставки не появляется возврат рыбы. Начатый спин не отменяется уходом, помощь раненому может прервать только подход. Игрок: проигрыш60%. Нативный импорт/компиляция без ошибок, PlayMode/build/клиент не запускались.",
         "Обезьянку можно пнуть на X через её trigger-hitbox головы/тела: короткая отдача до22см с возвратом за0.25с синхронизируется существующей ShipMonkeyPose. ReceiveKick запускает общую с ReceiveFirearmShot ответную атаку: прыжок на обидчика, KnockDown2.8с, прежний КД реакции6с. За пинок отвечает и союзнику, и врагу; ограничения реакции на выстрел сохранены. Проверены импорт/компиляция; PlayMode/мультиплеер проверяет пользователь.",
-        "ShipMonkey.Defense.cs: серверная защита от абордажа. Враг определяется по TeamId и фактическому нахождению на своём корабле; защита прерывает занятия, преследует по доступным палубным маршрутам и бьёт битой с проверкой дистанции/препятствий в момент контакта. Штатный KnockDown на4с, КД120с после попадания; отмена/промах не расходуют КД. Бита из Desktop/3d/бита импортирована в MonkeyBat.fbx и подключена префабом, замах использует Repair-клип и синхронную ориентацию биты к голове. HoldingBat/BatTarget передаются в ShipMonkeyPose; ProtocolVersion135. Реакции на пинки/выстрелы сохранены. PlayMode и мультиплеер проверяет пользователь."
+        "ShipMonkey.Defense.cs: серверная защита от абордажа. Враг определяется по TeamId и фактическому нахождению на своём корабле; защита прерывает занятия, преследует по доступным палубным маршрутам и бьёт битой с проверкой дистанции/препятствий в момент контакта. Штатный KnockDown на4с, КД120с после попадания; отмена/промах не расходуют КД. Бита из Desktop/3d/бита импортирована в MonkeyBat.fbx и подключена префабом, замах использует Repair-клип и синхронную ориентацию биты к голове. HoldingBat/BatTarget передаются в ShipMonkeyPose; ProtocolVersion135. Реакции на пинки/выстрелы сохранены. PlayMode и мультиплеер проверяет пользователь.",
+        "ShipMonkey.HeadRide.cs: редкая серверная прогулка к живому союзнику на своём корабле раз120–240с; безопасный прыжок на голову, SitPerch8–15с и спрыгивание на доступный палубный узел. Абордаж, помощь раненому, ответная агрессия, смерть/рэгдолл/плавание/лестница пассажира прерывают занятие. HeadRider в ShipMonkeyPose привязывает визуал к mixamorig:HeadTop_End с выравниванием Pelvis в LateUpdate; камера/управление игрока не меняются. ProtocolVersion141. PlayMode и мультиплеер проверяет пользователь."
       ],
       "files": [
         "Assets/Scripts/Ships/ShipMonkey.cs",
+        "Assets/Scripts/Ships/ShipMonkey.HeadRide.cs",
         "Assets/Scripts/Ships/ShipMonkey.Defense.cs",
         "Assets/Prefabs/Creatures/MonkeyBat.prefab",
         "Assets/Models/Creatures/ShipMonkey/Bat/MonkeyBat.fbx",

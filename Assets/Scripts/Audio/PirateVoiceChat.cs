@@ -24,7 +24,7 @@ namespace PirateSlop
         public bool IsMuted { get; private set; }
         public bool Transmitting { get; private set; }
         public bool SpeechDetected => !IsMuted && Time.unscaledTime - lastSpeech < .25f;
-        public string DisplayName => "Пират " + player.ParticipantId.Value;
+        public string DisplayName => player != null ? player.DisplayName : "Пират";
         public string Status => !VoiceEnabled ? "Голос отключён" : input.Mic == null || !input.Mic.IsRecording ? "Микрофон недоступен" : VoiceActivation ? "Активация голосом · рядом" : "B — говорить рядом";
         internal bool CanTransmit => IsSelf && VoiceEnabled && Application.isFocused && !player.Motor.IsDead && !SessionController.MenuOpen && !DeveloperMenu.IsOpen && !PlayerInventory.LootWindowOpen && Cursor.lockState == CursorLockMode.Locked;
         internal void SetTransmitting(bool value) => Transmitting = value;
