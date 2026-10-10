@@ -1,6 +1,6 @@
 # PirateSlop — карта проекта
 
-Снимок файлов: 2026-10-09. Корень: `C:\Users\K\Project`.
+Снимок файлов: 2026-10-10. Корень: `C:\Users\K\Project`.
 
 ## Как пользоваться
 
@@ -12,7 +12,7 @@
 
 ## Полный каталог
 
-Учтено 4445 файлов без `.meta`. Ещё 4353 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
+Учтено 4447 файлов без `.meta`. Ещё 4355 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
 
 | Раздел | Назначение | Файлов |
 | --- | --- | ---: |
@@ -36,7 +36,7 @@
 | [Assets/Prefabs](<Docs/ProjectMap/Assets-Prefabs.md>) | Готовые игровые объекты | 120 |
 | [Assets/Resources](<Docs/ProjectMap/Assets-Resources.md>) | Ресурсы, доступные для загрузки по имени | 98 |
 | [Assets/Scenes](<Docs/ProjectMap/Assets-Scenes.md>) | Сохранённые сцены | 3 |
-| [Assets/Scripts](<Docs/ProjectMap/Assets-Scripts.md>) | Игровой код и редакторские инструменты | 464 |
+| [Assets/Scripts](<Docs/ProjectMap/Assets-Scripts.md>) | Игровой код и редакторские инструменты | 466 |
 | [Assets/Settings](<Docs/ProjectMap/Assets-Settings.md>) | Настройки игровых систем и рендеринга | 51 |
 | [Assets/Shaders](<Docs/ProjectMap/Assets-Shaders.md>) | Шейдеры | 15 |
 | [Assets/StreamingAssets](<Docs/ProjectMap/Assets-StreamingAssets.md>) | Ресурсы раздела; точный состав — в каталоге | 5 |
@@ -320,6 +320,8 @@ ShipDeckPassenger учитывает BoardingWalkSurface: перенос по т
 Падение 2026-10-09 после повторной игровой жалобы: PlayerKnockdown.Begin использует тот же DeathRagdoll.Build и CorpsePhysicsWorld, что смерть. Физический рэгдолл получает скорость один раз; перенос его сегментов к CharacterController полностью удалён. Во время KnockDown motor.Simulate следует физическому тазу, а не двигает параллельную капсулу; сервер передаёт эту позицию существующими snapshots/reconcile. При окончании позиция восстановления берётся из фактического таза с ближайшей поверхностью под ним. CreateKnockdown разрешён на headless-сервере; активные тела нокдауна не удаляются лимитом декоративных трупов. У края пинок даёт5м/с наружу и минимум6.5м/с вверх; подъём считается по Physics.gravity и высоте ограждения, без управляемой дуги. Protocol134. Проверена компиляция; PlayMode/второй клиент проверяет пользователь. Доработка после подтверждения пользователем: проверка отсутствия палубы вынесена на radius+2м, чтобы выброс включался примерно за два метра от края. Пинок игроку наносит5 базового урона через CombatHealth.Damage с прежними командными фильтрами/улучшениями; при смертельном ударе дополнительный KnockDown не вызывается.
 Исправление исчезающего рэгдолла 2026-10-09: DeathRagdoll копирует skin независимо от activeInHierarchy исходного контейнера, активирует его цепочку, сохраняет layer/renderingLayerMask и не скрывает игрока при пустой копии. RagdollRendererBounds следует за тазом, чтобы физическое тело не отсекалось по старым границам. Проверка Build на NetworkPlayer через Unity MCP без PlayMode: 1 активный skin, 52 кости, BakeMesh26304 вершины, 11 Rigidbody и10 CharacterJoint; компиляция без ошибок. Вид/движение на втором клиенте остаются непроверенными. Камера первого лица при нокдауне следует позиции и quaternion головы физического рэгдолла с сохранением исходного направления взгляда; фиксированный наклон камеры больше не перезаписывает её. Общий DeathRagdoll.Build для нокдауна и смерти с вероятностью50% добавляет кувырок5–8рад/с вокруг поперечной оси и небольшой крен/поворот; таз, грудь и голова получают одинаковое вращение, конечности слегка различаются без встречного вращения. Компиляция проверена; ощущение камеры и сетевой результат проверяет пользователь. PlayerKnockdown после окончания нокдауна отключает физику копии и за0.95с смешивает позу её костей к текущему BodyRig; исходная модель и руки возвращаются после перехода. Камера начинает с последней позы головы, сначала выравнивается у земли, затем плавно поднимается к обычной высоте. Начальная поза хранится относительно игрока для движущейся палубы; повторный нокдаун/смерть прерывает вставание. Локальный InputActive блокируется на время перехода; сетевые таймеры нокдауна сохранены. Компиляция проверена, игровую плавность проверяет пользователь.
 2026-10-09 общий ProtocolVersion139 после объединения локальных мортиры/взрывного ядра138 и сетевых изменений чаек/неуязвимости F8 из136. Пинок, обезьянка, рэгдолл, плавное вставание и F8 сохранены вместе; обоим игрокам нужны одинаковые новые сборки. Игровая проверка объединённой версии не запускалась.
+2026-10-10: Steam-ники над игроками. NetworkPlayer.Identity синхронизирует SteamName серверным SyncVar, Steam-сессия получает имя по адресу владельца из Steam; IP-сессия передаёт локальный Steam-ник owner-only ServerRpc. DisplayName также используется голосовым UI. CrewPresentation заменяет старые номера союзников на один локальный uGUI Canvas с табличками всех видимых союзников/противников и именами ботов. Светлая надпись 21px с обводкой, скруглённая тёмная подложка, зелёный/латунный акцент команды и индикатор речи. Привязка к Humanoid Head или generic mixamorig:Head, fallback по CharacterController; экранное разрешение масштабируется CanvasScaler. Свой ник только в третьем лице; за препятствиями/меню/после смерти скрывается, дальность50м с fade35–50м. RaycastNonAlloc каждые0.1с, очистка despawn и ресурсов Canvas. RichText выключен, управляющие символы удаляются, Unicode-графемы не разрезаются при сокращении. ProtocolVersion142 из-за нового SyncVar/RPC. Компиляция через прямой Unity MCP без ошибок; PlayMode, визуальная приёмка и онлайн не запускались.
+2026-10-10 уточнение по игровому скриншоту: крупная рамочная табличка отвергнута пользователем. CrewPresentation теперь рисует только Steam-ник 16px Regular с мягкой тенью и тонкой обводкой; подложка, рамка и постоянный ромб удалены. Сам текст расположен в центре проекции головы, экранный clamp убран (на краях скрывается), голосовые полоски появляются сверху по центру без сдвига имени. Мягкий оттенок союзника/нейтральный оттенок противника и alpha0.88, прежняя видимость35–50м/LOS сохранены. Референс — игровые снимки Sea of Thieves, ссылки просмотрены через web search. Сетевой формат не менялся.
 
 - [Assets/Scripts/AdvancedPlayerController.cs](<Assets/Scripts/AdvancedPlayerController.cs>) — Исходник C#: AdvancedPlayerController.
 - [Assets/Scripts/AdvancedPlayerController.Spectator.cs](<Assets/Scripts/AdvancedPlayerController.Spectator.cs>) — Исходник C#: AdvancedPlayerController.
@@ -346,6 +348,8 @@ ShipDeckPassenger учитывает BoardingWalkSurface: перенос по т
 - [Assets/Resources/KickLeg.asset](<Assets/Resources/KickLeg.asset>) — Настройки или данные Unity.
 - [Assets/Scripts/Player/DeathRagdoll.cs](<Assets/Scripts/Player/DeathRagdoll.cs>) — Исходник C#: DeathRagdoll, RagdollRendererBounds.
 - [Assets/Scripts/Player/PlayerKnockdown.cs](<Assets/Scripts/Player/PlayerKnockdown.cs>) — Исходник C#: PlayerKnockdown.
+- [Assets/Scripts/Networking/NetworkPlayer.Identity.cs](<Assets/Scripts/Networking/NetworkPlayer.Identity.cs>) — Исходник C#: NetworkPlayer.
+- [Assets/Scripts/UI/CrewPresentation.cs](<Assets/Scripts/UI/CrewPresentation.cs>) — Исходник C#: CrewPresentation, Plate.
 - [animation-review.md](<animation-review.md>) — Документация.
 - [unity.md](<unity.md>) — Документация.
 
@@ -865,6 +869,8 @@ MultiplayerSceneSetup.Configure и PromoteShipV3 привязывают ShipV3Te
 Кастомизация Ship V3 и сетевое горение: ProtocolVersion=123; игровая проверка и проверка двумя клиентами не запускались.
 Меню оставляет основную Тестовую карту и Тест нагрузки. Begin(environmentTest=true) всегда загружает NetworkOcean через SessionSceneLoading; командный -environmenttest запускает тот же режим. Build Windows/Configure Scenes используют NetworkMenu, NetworkOcean, NetworkLoadTest и дополнительные включённые сцены. SteamTestBuild только записывает steam_appid.txt после Windows-сборки. RuntimePipelineBuildPreparation запускается перед встроенными build callbacks (int.MinValue) и сбрасывает CoreBuildData.Dispose: временный MenuShipPipeline может остаться в кэше URP после Destroy и вызвать MissingReferenceException в URPPreprocessBuild.LogIncludedAssets. Настройки рендера и пакеты Unity не меняются.
 2026-10-09 исправлен запуск после ArgumentException Instantiate(null) в SessionCrew.TrySpawnShip: Unity импортировал исправный ShipV3Test.prefab как DefaultAsset. Принудительный нативный повторный импорт восстановил GameObject с тем же GUID; в открытой несохранённой сцене восстановлено только поле ShipPrefab без сохранения чужих изменений. SessionController.Awake и Begin восстанавливают пустую ссылку из Resources/Ships/ShipV3Test; при неудаче Begin показывает ошибку до подключения. Фактический запуск тестовой карты с намеренно пустой runtime-ссылкой восстановил корабль и создал одного игрока без ошибок.
+2026-10-10: Steam-лобби до 30 игроков: доска 10 экипажей по 3 места, переходы до старта, имена/хост/своя команда/готовность, приглашения Steam и ID лобби. Владелец лобби подтверждает запросы и ограничивает экипаж тремя участниками; изменение состава сбрасывает готовность через roster_revision. Старт фиксирует распределение; selected_team передаётся в матч и определяет общий корабль через серверный допуск и HumanTeam. Сохранены вход в другую сессию по ID, выбор карты и ботов. Новый формат Steam-метаданных требует одинакового протокола у участников; текущий SessionConfig.ProtocolVersion=141 (сохранено параллельное изменение). Тестовая карта уже содержит 10 ship_spawn. Компиляция проверена через прямой Unity MCP; PlayMode, сборка, Steam-приглашения и онлайн на 10 людях не запускались.
+2026-10-10: Steam-ники над игроками. NetworkPlayer.Identity синхронизирует SteamName серверным SyncVar, Steam-сессия получает имя по адресу владельца из Steam; IP-сессия передаёт локальный Steam-ник owner-only ServerRpc. DisplayName также используется голосовым UI. CrewPresentation заменяет старые номера союзников на один локальный uGUI Canvas с табличками всех видимых союзников/противников и именами ботов. Светлая надпись 21px с обводкой, скруглённая тёмная подложка, зелёный/латунный акцент команды и индикатор речи. Привязка к Humanoid Head или generic mixamorig:Head, fallback по CharacterController; экранное разрешение масштабируется CanvasScaler. Свой ник только в третьем лице; за препятствиями/меню/после смерти скрывается, дальность50м с fade35–50м. RaycastNonAlloc каждые0.1с, очистка despawn и ресурсов Canvas. RichText выключен, управляющие символы удаляются, Unicode-графемы не разрезаются при сокращении. ProtocolVersion142 из-за нового SyncVar/RPC. Компиляция через прямой Unity MCP без ошибок; PlayMode, визуальная приёмка и онлайн не запускались.
 
 - [Assets/Scripts/Networking/SessionController.cs](<Assets/Scripts/Networking/SessionController.cs>) — Исходник C#: SessionController.
 - [Assets/Scripts/Networking/SessionConfig.cs](<Assets/Scripts/Networking/SessionConfig.cs>) — Исходник C#: SessionConfig.
@@ -879,6 +885,9 @@ MultiplayerSceneSetup.Configure и PromoteShipV3 привязывают ShipV3Te
 - [Assets/Scripts/Networking/SessionMenu.cs](<Assets/Scripts/Networking/SessionMenu.cs>) — Исходник C#: SessionController, MenuAccent.
 - [Assets/Scripts/Editor/SteamTestBuild.cs](<Assets/Scripts/Editor/SteamTestBuild.cs>) — Исходник C#: SteamTestBuild.
 - [Assets/Scripts/Networking/SessionOcean.cs](<Assets/Scripts/Networking/SessionOcean.cs>) — Исходник C#: TestOceanMessage, SessionController.
+- [Assets/Scripts/Networking/SessionPartyMenu.cs](<Assets/Scripts/Networking/SessionPartyMenu.cs>) — Исходник C#: SessionController.
+- [Assets/Scripts/Networking/NetworkPlayer.Identity.cs](<Assets/Scripts/Networking/NetworkPlayer.Identity.cs>) — Исходник C#: NetworkPlayer.
+- [Assets/Scripts/UI/CrewPresentation.cs](<Assets/Scripts/UI/CrewPresentation.cs>) — Исходник C#: CrewPresentation, Plate.
 - [multiplayer-plan.md](<multiplayer-plan.md>) — Документация.
 - [unity.md](<unity.md>) — Документация.
 
@@ -929,7 +938,7 @@ BotNumber использует стабильный ParticipantId; номера 
 - [Assets/Scripts/Networking/SessionBotDiagnostics.cs](<Assets/Scripts/Networking/SessionBotDiagnostics.cs>) — Исходник C#: SessionController.
 - [Assets/Scripts/Networking/NetworkPlayer.BotDiagnostics.cs](<Assets/Scripts/Networking/NetworkPlayer.BotDiagnostics.cs>) — Исходник C#: NetworkPlayer.
 - [Assets/Scripts/UI/BotDebugPanel.cs](<Assets/Scripts/UI/BotDebugPanel.cs>) — Исходник C#: BotDebugPanel.
-- [Assets/Scripts/UI/CrewPresentation.cs](<Assets/Scripts/UI/CrewPresentation.cs>) — Исходник C#: CrewPresentation.
+- [Assets/Scripts/UI/CrewPresentation.cs](<Assets/Scripts/UI/CrewPresentation.cs>) — Исходник C#: CrewPresentation, Plate.
 - [Assets/Scripts/Networking/BotRosterPolicy.cs](<Assets/Scripts/Networking/BotRosterPolicy.cs>) — Исходник C#: IBotRosterPolicy, InitialFillBotRosterPolicy.
 - [Assets/Scripts/Networking/SessionBotRoster.cs](<Assets/Scripts/Networking/SessionBotRoster.cs>) — Исходник C#: SessionController.
 - [Assets/Scripts/Networking/SessionCrew.cs](<Assets/Scripts/Networking/SessionCrew.cs>) — Исходник C#: SessionController.
@@ -1145,6 +1154,8 @@ MenuBackdrop заменяет фон корабля при Awake на Resources/
 F8 в основной тестовой карте содержит ползунки силы, крутизны и скорости Boat Attack волн, сброс, существующие день/ночь и морской туман. Отдельных пунктов водных сцен в меню нет.
 Меню 2026-10-06: MenuBackdrop при Awake заменяет старую MenuSea на Water из EnvironmentTest/Ocean, включает SkyDayNight и TestSkyPipeline, HDR/postprocessing и Volume layer30. Вода спокойнее (.55 strength/.75 steepness), небо TargetBlend .25. Меню включает/выключает окружение вместе с Content и восстанавливает прежний pipeline через TestSkyDayNight. Сцена редактора не перезаписывалась; переходы в игре не проверены.
 Чёрный экран меню после сборки 2026-10-06: Player.log указал NullReferenceException VolumetricCloudsShadowsPass.RecordRenderGraph на lightCookieSize. Светила EnvironmentTest/SkyDayNight не имеют UniversalAdditionalLightData; VolumetricCloudsURP создаёт его перед записью свойств cookie в RenderGraph и legacy pass. Компиляция проверена, новая сборка и запуск Player не выполнялись.
+2026-10-10: Steam-ники над игроками. NetworkPlayer.Identity синхронизирует SteamName серверным SyncVar, Steam-сессия получает имя по адресу владельца из Steam; IP-сессия передаёт локальный Steam-ник owner-only ServerRpc. DisplayName также используется голосовым UI. CrewPresentation заменяет старые номера союзников на один локальный uGUI Canvas с табличками всех видимых союзников/противников и именами ботов. Светлая надпись 21px с обводкой, скруглённая тёмная подложка, зелёный/латунный акцент команды и индикатор речи. Привязка к Humanoid Head или generic mixamorig:Head, fallback по CharacterController; экранное разрешение масштабируется CanvasScaler. Свой ник только в третьем лице; за препятствиями/меню/после смерти скрывается, дальность50м с fade35–50м. RaycastNonAlloc каждые0.1с, очистка despawn и ресурсов Canvas. RichText выключен, управляющие символы удаляются, Unicode-графемы не разрезаются при сокращении. ProtocolVersion142 из-за нового SyncVar/RPC. Компиляция через прямой Unity MCP без ошибок; PlayMode, визуальная приёмка и онлайн не запускались.
+2026-10-10 уточнение по игровому скриншоту: крупная рамочная табличка отвергнута пользователем. CrewPresentation теперь рисует только Steam-ник 16px Regular с мягкой тенью и тонкой обводкой; подложка, рамка и постоянный ромб удалены. Сам текст расположен в центре проекции головы, экранный clamp убран (на краях скрывается), голосовые полоски появляются сверху по центру без сдвига имени. Мягкий оттенок союзника/нейтральный оттенок противника и alpha0.88, прежняя видимость35–50м/LOS сохранены. Референс — игровые снимки Sea of Thieves, ссылки просмотрены через web search. Сетевой формат не менялся.
 
 - [Assets/Scripts/Networking/SessionMenu.cs](<Assets/Scripts/Networking/SessionMenu.cs>) — Исходник C#: SessionController, MenuAccent.
 - [Assets/Scripts/Networking/SessionPartyMenu.cs](<Assets/Scripts/Networking/SessionPartyMenu.cs>) — Исходник C#: SessionController.
@@ -1169,6 +1180,8 @@ F8 в основной тестовой карте содержит ползун
 - [Assets/Scripts/UI/GameVersionOverlay.cs](<Assets/Scripts/UI/GameVersionOverlay.cs>) — Исходник C#: GameVersionOverlay.
 - [Assets/Resources/Menu/TitlePrint.png](<Assets/Resources/Menu/TitlePrint.png>) — Изображение / текстура.
 - [Assets/Resources/Menu/TitlePrint.SOURCES.md](<Assets/Resources/Menu/TitlePrint.SOURCES.md>) — Документация.
+- [Assets/Scripts/Networking/NetworkPlayer.Identity.cs](<Assets/Scripts/Networking/NetworkPlayer.Identity.cs>) — Исходник C#: NetworkPlayer.
+- [Assets/Scripts/UI/CrewPresentation.cs](<Assets/Scripts/UI/CrewPresentation.cs>) — Исходник C#: CrewPresentation, Plate.
 - [unity.md](<unity.md>) — Документация.
 - [qol-roadmap.md](<qol-roadmap.md>) — Документация.
 
@@ -1521,8 +1534,10 @@ ShipMonkey.Repair.cs: ремонт своего корабля по доступ
 Автомат увеличен на20% (scale1.2, высота2.28м), позиция(-3.6054,4.12,-18.0709),yaw58. После своей рыбной ставки захват ЛКМ доступен рядом без попадания лучом в LeverGrip; подсказка только у приёмника. SlotMachinePlayer order-26 и consumed input исключают перехват ShipV3PlayerInteraction. Обезьянка: бесплатный ход раз180–300с, только свободный автомат, подход спереди по палубному графу с обходом шкафа, Work/рычаг0.8с, Idle/взгляд до окончания спина и выдачи. Проигрыш80%, SkillPoint не выигрывается; оставшиеся20% пропорциональны прежним пяти категориям. При отмене бесплатной ставки не появляется возврат рыбы. Начатый спин не отменяется уходом, помощь раненому может прервать только подход. Игрок: проигрыш60%. Нативный импорт/компиляция без ошибок, PlayMode/build/клиент не запускались.
 Обезьянку можно пнуть на X через её trigger-hitbox головы/тела: короткая отдача до22см с возвратом за0.25с синхронизируется существующей ShipMonkeyPose. ReceiveKick запускает общую с ReceiveFirearmShot ответную атаку: прыжок на обидчика, KnockDown2.8с, прежний КД реакции6с. За пинок отвечает и союзнику, и врагу; ограничения реакции на выстрел сохранены. Проверены импорт/компиляция; PlayMode/мультиплеер проверяет пользователь.
 ShipMonkey.Defense.cs: серверная защита от абордажа. Враг определяется по TeamId и фактическому нахождению на своём корабле; защита прерывает занятия, преследует по доступным палубным маршрутам и бьёт битой с проверкой дистанции/препятствий в момент контакта. Штатный KnockDown на4с, КД120с после попадания; отмена/промах не расходуют КД. Бита из Desktop/3d/бита импортирована в MonkeyBat.fbx и подключена префабом, замах использует Repair-клип и синхронную ориентацию биты к голове. HoldingBat/BatTarget передаются в ShipMonkeyPose; ProtocolVersion135. Реакции на пинки/выстрелы сохранены. PlayMode и мультиплеер проверяет пользователь.
+ShipMonkey.HeadRide.cs: редкая серверная прогулка к живому союзнику на своём корабле раз120–240с; безопасный прыжок на голову, SitPerch8–15с и спрыгивание на доступный палубный узел. Абордаж, помощь раненому, ответная агрессия, смерть/рэгдолл/плавание/лестница пассажира прерывают занятие. HeadRider в ShipMonkeyPose привязывает визуал к mixamorig:HeadTop_End с выравниванием Pelvis в LateUpdate; камера/управление игрока не меняются. ProtocolVersion141. PlayMode и мультиплеер проверяет пользователь.
 
 - [Assets/Scripts/Ships/ShipMonkey.cs](<Assets/Scripts/Ships/ShipMonkey.cs>) — Исходник C#: ShipMonkeySurface, ShipMonkeyMotion, ShipMonkeyNode, ShipMonkeyLink, ShipMonkeyPose, ShipMonkey.
+- [Assets/Scripts/Ships/ShipMonkey.HeadRide.cs](<Assets/Scripts/Ships/ShipMonkey.HeadRide.cs>) — Исходник C#: ShipMonkey.
 - [Assets/Scripts/Ships/ShipMonkey.Defense.cs](<Assets/Scripts/Ships/ShipMonkey.Defense.cs>) — Исходник C#: ShipMonkey.
 - [Assets/Prefabs/Creatures/MonkeyBat.prefab](<Assets/Prefabs/Creatures/MonkeyBat.prefab>) — Префаб Unity.
 - [Assets/Models/Creatures/ShipMonkey/Bat/MonkeyBat.fbx](<Assets/Models/Creatures/ShipMonkey/Bat/MonkeyBat.fbx>) — Модель / анимации FBX.

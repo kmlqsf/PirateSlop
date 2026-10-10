@@ -7,7 +7,7 @@ namespace PirateSlop.Ships
 {
     public sealed partial class ShipMonkey
     {
-        enum TaskKind { None, Fetch, Carry, Deliver, Offer, GoFish, Fish, GoWheel, Wheel, GoSail, Sail, GoRepair, Repair, GoSlot, SlotPull, SlotWait, PursueBoarder, BatStrike }
+        enum TaskKind { None, Fetch, Carry, Deliver, Offer, GoFish, Fish, GoWheel, Wheel, GoSail, Sail, GoRepair, Repair, GoSlot, SlotPull, SlotWait, PursueBoarder, BatStrike, GoHead, HeadRide }
         public Transform LeftHand, RightHand;
         public GameObject RodModel, FloatModel, FishModel;
         public Material FishingLineMaterial;
@@ -46,7 +46,7 @@ namespace PirateSlop.Ships
         bool HasCarriedItem => activityShip != null && heldItem != null && heldItem.IsSpawned && heldItem.MonkeyCarrier == activityShip.NetworkObject;
         bool ShowsCarry => remoteInitialized && !initialized ? remote.Carrying : activityShip != null && HasCarriedItem;
         int ActivityGoal => task == TaskKind.None || task == TaskKind.Carry ? -1 : activityGoal;
-        bool DeckTask => task == TaskKind.Fetch || task == TaskKind.Carry || task == TaskKind.Deliver || task == TaskKind.Offer || task == TaskKind.GoWheel || task == TaskKind.Wheel || task == TaskKind.GoSail || task == TaskKind.Sail || task == TaskKind.GoRepair || task == TaskKind.Repair || task == TaskKind.GoSlot || task == TaskKind.SlotPull || task == TaskKind.SlotWait || DefenseTask;
+        bool DeckTask => task == TaskKind.Fetch || task == TaskKind.Carry || task == TaskKind.Deliver || task == TaskKind.Offer || task == TaskKind.GoWheel || task == TaskKind.Wheel || task == TaskKind.GoSail || task == TaskKind.Sail || task == TaskKind.GoRepair || task == TaskKind.Repair || task == TaskKind.GoSlot || task == TaskKind.SlotPull || task == TaskKind.SlotWait || DefenseTask || HeadTask;
 
         float Interval(float seconds) => seconds * UnityEngine.Random.Range(.85f, 1.15f);
 
@@ -62,6 +62,7 @@ namespace PirateSlop.Ships
             BeginRepair();
             BeginSlotActivity();
             BeginDefense();
+            BeginHeadRide();
         }
 
         bool LinkAllowed(int next) => !DeckTask || Surface != ShipMonkeySurface.Deck && !ShowsCarry || Nodes[next].Surface == ShipMonkeySurface.Deck;
@@ -228,6 +229,7 @@ namespace PirateSlop.Ships
             if (task == TaskKind.None)
             {
                 if (TryStartRepair()) return false;
+                if (TryStartHeadTrip()) return false;
                 if (TryStartSlotTrip()) return false;
                 if (Time.time >= nextFishing) { StartFishingTrip(); if (task != TaskKind.None) return false; }
                 if (Time.time >= nextMischief) { StartMischiefTrip(); if (task != TaskKind.None) return false; }
@@ -238,6 +240,7 @@ namespace PirateSlop.Ships
                 }
                 return false;
             }
+            if (HeadTask) return UpdateHeadTrip();
             if (Motion == ShipMonkeyMotion.SitDown || Motion == ShipMonkeyMotion.Sit || Motion == ShipMonkeyMotion.StandUp) return false;
             if (DefenseTask) return UpdateDefense(delta);
             if (task == TaskKind.GoRepair || task == TaskKind.Repair) return UpdateRepair(delta);
@@ -439,6 +442,7 @@ namespace PirateSlop.Ships
         void CancelActivities()
         {
             if (activityShip != null && activityShip.IsServerInitialized) DropHeld();
+            ResetHeadRide();
             ResetRepair();
             ResetSlotActivity();
             boarder = null; batHit = false;

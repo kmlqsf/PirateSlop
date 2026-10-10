@@ -310,6 +310,7 @@
 | [Assets/Scripts/Networking/NetworkParrotDrone.cs](<../../Assets/Scripts/Networking/NetworkParrotDrone.cs>) | Исходник C#: NetworkParrotDrone |
 | [Assets/Scripts/Networking/NetworkPlayer.BotDiagnostics.cs](<../../Assets/Scripts/Networking/NetworkPlayer.BotDiagnostics.cs>) | Исходник C#: NetworkPlayer; Новая система ботов |
 | [Assets/Scripts/Networking/NetworkPlayer.BotTasks.cs](<../../Assets/Scripts/Networking/NetworkPlayer.BotTasks.cs>) | Исходник C#: NetworkPlayer; Новая система ботов |
+| [Assets/Scripts/Networking/NetworkPlayer.Identity.cs](<../../Assets/Scripts/Networking/NetworkPlayer.Identity.cs>) | Исходник C#: NetworkPlayer; Персонаж, камера и анимации, Сеть, сессия и Steam, Меню и HUD |
 | [Assets/Scripts/Networking/NetworkPlayer.Kick.cs](<../../Assets/Scripts/Networking/NetworkPlayer.Kick.cs>) | Исходник C#: NetworkPlayer; Персонаж, камера и анимации |
 | [Assets/Scripts/Networking/NetworkPlayer.Knockdown.cs](<../../Assets/Scripts/Networking/NetworkPlayer.Knockdown.cs>) | Исходник C#: NetworkPlayer; Корабельная обезьянка |
 | [Assets/Scripts/Networking/NetworkPlayer.Roguelike.cs](<../../Assets/Scripts/Networking/NetworkPlayer.Roguelike.cs>) | Исходник C#: UpgradeReward, PlayerUpgradeState, UpgradeSnapshot, NetworkPlayer; Улучшения рогалика из сундуков, Корабельная слот-машина |
@@ -359,7 +360,7 @@
 | [Assets/Scripts/Networking/SessionMenu.cs](<../../Assets/Scripts/Networking/SessionMenu.cs>) | Исходник C#: SessionController, MenuAccent; Сеть, сессия и Steam, Меню и HUD |
 | [Assets/Scripts/Networking/SessionMetrics.cs](<../../Assets/Scripts/Networking/SessionMetrics.cs>) | Исходник C#: SessionMetrics |
 | [Assets/Scripts/Networking/SessionOcean.cs](<../../Assets/Scripts/Networking/SessionOcean.cs>) | Исходник C#: TestOceanMessage, SessionController; Мир, острова и океан, Сеть, сессия и Steam, Тестовая карта и водоворот |
-| [Assets/Scripts/Networking/SessionPartyMenu.cs](<../../Assets/Scripts/Networking/SessionPartyMenu.cs>) | Исходник C#: SessionController; Меню и HUD |
+| [Assets/Scripts/Networking/SessionPartyMenu.cs](<../../Assets/Scripts/Networking/SessionPartyMenu.cs>) | Исходник C#: SessionController; Сеть, сессия и Steam, Меню и HUD |
 | [Assets/Scripts/Networking/SessionRoguelike.cs](<../../Assets/Scripts/Networking/SessionRoguelike.cs>) | Исходник C#: UpgradeIdentityMessage, SessionController; Улучшения рогалика из сундуков, Корабельная слот-машина |
 | [Assets/Scripts/Networking/SessionSceneLoading.cs](<../../Assets/Scripts/Networking/SessionSceneLoading.cs>) | Исходник C#: SessionController; Сеть, сессия и Steam |
 | [Assets/Scripts/Networking/SessionSeagulls.cs](<../../Assets/Scripts/Networking/SessionSeagulls.cs>) | Исходник C#: SeagullFlockMessage, SessionController, SeagullEvent; Чайки и фоновые стаи |
@@ -460,6 +461,7 @@
 | --- | --- |
 | [Assets/Scripts/Ships/ShipMonkey.Activities.cs](<../../Assets/Scripts/Ships/ShipMonkey.Activities.cs>) | Исходник C#: ShipMonkey, TaskKind; Корабельная обезьянка |
 | [Assets/Scripts/Ships/ShipMonkey.Defense.cs](<../../Assets/Scripts/Ships/ShipMonkey.Defense.cs>) | Исходник C#: ShipMonkey; Корабельная обезьянка |
+| [Assets/Scripts/Ships/ShipMonkey.HeadRide.cs](<../../Assets/Scripts/Ships/ShipMonkey.HeadRide.cs>) | Исходник C#: ShipMonkey; Корабельная обезьянка |
 | [Assets/Scripts/Ships/ShipMonkey.Jump.cs](<../../Assets/Scripts/Ships/ShipMonkey.Jump.cs>) | Исходник C#: ShipMonkey; Корабельная обезьянка |
 | [Assets/Scripts/Ships/ShipMonkey.Look.cs](<../../Assets/Scripts/Ships/ShipMonkey.Look.cs>) | Исходник C#: ShipMonkey; Корабельная обезьянка |
 | [Assets/Scripts/Ships/ShipMonkey.Repair.cs](<../../Assets/Scripts/Ships/ShipMonkey.Repair.cs>) | Исходник C#: ShipMonkey; Повреждения корпуса, ремонт и затопление, Корабельная обезьянка |
@@ -499,7 +501,7 @@
 | [Assets/Scripts/UI/BotDebugPanel.cs](<../../Assets/Scripts/UI/BotDebugPanel.cs>) | Исходник C#: BotDebugPanel; Новая система ботов |
 | [Assets/Scripts/UI/CannonRangeHud.cs](<../../Assets/Scripts/UI/CannonRangeHud.cs>) | Исходник C#: CannonRangeHud |
 | [Assets/Scripts/UI/ContextPrompt.cs](<../../Assets/Scripts/UI/ContextPrompt.cs>) | Исходник C#: ContextPrompt |
-| [Assets/Scripts/UI/CrewPresentation.cs](<../../Assets/Scripts/UI/CrewPresentation.cs>) | Исходник C#: CrewPresentation; Новая система ботов |
+| [Assets/Scripts/UI/CrewPresentation.cs](<../../Assets/Scripts/UI/CrewPresentation.cs>) | Исходник C#: CrewPresentation, Plate; Персонаж, камера и анимации, Сеть, сессия и Steam, Новая система ботов, Меню и HUD |
 | [Assets/Scripts/UI/GameTelemetry.cs](<../../Assets/Scripts/UI/GameTelemetry.cs>) | Исходник C#: GameTelemetry; Меню и HUD, Производительность и тест нагрузки без AI |
 | [Assets/Scripts/UI/GameVersionOverlay.cs](<../../Assets/Scripts/UI/GameVersionOverlay.cs>) | Исходник C#: GameVersionOverlay; Меню и HUD |
 | [Assets/Scripts/UI/HudLayout.cs](<../../Assets/Scripts/UI/HudLayout.cs>) | Исходник C#: HudLayout, Scope; Меню и HUD |

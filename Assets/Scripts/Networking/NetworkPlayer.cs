@@ -317,6 +317,7 @@ namespace PirateSlop.Networking
         }
         void Update()
         {
+            TickIdentity();
             TickUpgradeEffects();
             UpdateKick();
             if (diagnostics && Time.unscaledTime >= nextDiagnostic)

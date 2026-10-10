@@ -29,9 +29,23 @@ namespace PirateSlop.Networking
         SteamParty party;
         bool steamSession;
         ulong steamHost;
-        public void ShowSteamParty() { menuPage = 0; AdvancedPlayerController.SetCursor(false); }
+        public void ShowSteamParty() { menuPage = 5; AdvancedPlayerController.SetCursor(false); }
         public bool SessionBusy => connecting || playing || starting || (manager != null && manager.ServerManager.Started);
         public int SteamTeam(NetworkConnection conn) => !steamSession ? 0 : party.AdmittedTeam(manager.TransportManager.Transport.GetConnectionAddress(conn.ClientId));
+        public string LocalSteamName => party != null && party.Available ? Steamworks.SteamFriends.GetPersonaName() : "";
+        public bool ResolveSteamName(NetworkConnection connection, out string name)
+        {
+            name = "";
+            if (!steamSession) return false;
+            if (connection != null && party != null && party.Available && ulong.TryParse(manager.TransportManager.Transport.GetConnectionAddress(connection.ClientId), out var id))
+            {
+                var steamId = new Steamworks.CSteamID(id);
+                name = party.Name(steamId);
+                if (string.IsNullOrEmpty(name) || name == "[unknown]" || name == "[unassigned]") Steamworks.SteamFriends.RequestUserInformation(steamId, true);
+            }
+            if (name == "[unknown]" || name == "[unassigned]") name = "";
+            return true;
+        }
         public bool AcceptSteamConnection(NetworkConnection conn) => !steamSession || SteamTeam(conn) > 0;
         public void BeginSteam(bool host, ulong steamId, bool environmentTest = false)
         {
@@ -299,6 +313,7 @@ namespace PirateSlop.Networking
             player.ParticipantId.Value = id; player.ShipObject.Value = ship.NetworkObject;
             player.HomeShipId.Value = ship.ParticipantId.Value;
             player.TeamId.Value = team;
+            if (ResolveSteamName(conn, out var steamName)) player.SteamName.Value = NetworkPlayer.CleanDisplayName(steamName);
             AttachUpgrades(player, resume ?? replacement?.UpgradeState, crew);
             players.Add(conn.ClientId, player);
             manager.ServerManager.Spawn(player.NetworkObject, conn);
