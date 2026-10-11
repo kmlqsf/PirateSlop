@@ -163,6 +163,17 @@
 | [Assets/Materials/SailRigging/Rigging_Recess.mat](<../../Assets/Materials/SailRigging/Rigging_Recess.mat>) | Материал Unity |
 | [Assets/Materials/SailRigging/SailRopeHemp.mat](<../../Assets/Materials/SailRigging/SailRopeHemp.mat>) | Материал Unity |
 
+## Assets/Materials/SandyIslands
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Materials/SandyIslands/ExcavatedSand.mat](<../../Assets/Materials/SandyIslands/ExcavatedSand.mat>) | Материал Unity; Остров с весами и пятью камнями |
+| [Assets/Materials/SandyIslands/SandyGround.mat](<../../Assets/Materials/SandyIslands/SandyGround.mat>) | Материал Unity; Мир, острова и океан, Тестовая карта и водоворот |
+| [Assets/Materials/SandyIslands/brown_mud_03.terrainlayer](<../../Assets/Materials/SandyIslands/brown_mud_03.terrainlayer>) | Файл .terrainlayer; Мир, острова и океан, Тестовая карта и водоворот |
+| [Assets/Materials/SandyIslands/coast_sand_01.terrainlayer](<../../Assets/Materials/SandyIslands/coast_sand_01.terrainlayer>) | Файл .terrainlayer; Мир, острова и океан, Тестовая карта и водоворот |
+| [Assets/Materials/SandyIslands/coast_sand_rocks_02.terrainlayer](<../../Assets/Materials/SandyIslands/coast_sand_rocks_02.terrainlayer>) | Файл .terrainlayer; Мир, острова и океан, Тестовая карта и водоворот |
+| [Assets/Materials/SandyIslands/leafy_grass.terrainlayer](<../../Assets/Materials/SandyIslands/leafy_grass.terrainlayer>) | Файл .terrainlayer; Мир, острова и океан, Тестовая карта и водоворот |
+
 ## Assets/Materials/SeaEvents
 
 | Файл | Краткое описание |

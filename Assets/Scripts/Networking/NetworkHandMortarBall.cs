@@ -93,6 +93,15 @@ namespace PirateSlop.Networking
             Vector3 normal = nearest.normal.sqrMagnitude > .5f ? nearest.normal.normalized : -delta.normalized;
             transform.position = start + delta * fraction + normal * .004f;
             velocity = Vector3.Lerp(velocity, next, fraction);
+            var seagull = nearest.collider.GetComponentInParent<PirateSlop.World.SeagullVisual>();
+            if (seagull != null)
+            {
+                seagull.ReceiveFirearmHit(velocity);
+                if (settings.ExplodeOnLivingHit) { Explode(null); remaining = 0; return; }
+                transform.position += delta.normalized * .02f;
+                remaining *= 1f - Mathf.Max(fraction, .05f);
+                return;
+            }
             var health = nearest.collider.GetComponentInParent<CombatHealth>();
             if (settings.ExplodeOnLivingHit && health != null && health.GetComponent<NetworkPlayer>() != null && !health.IsDead) { Explode(health); remaining = 0; return; }
             var ship = nearest.collider.GetComponentInParent<NetworkShip>();

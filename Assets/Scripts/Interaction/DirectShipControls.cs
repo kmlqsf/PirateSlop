@@ -15,6 +15,7 @@ namespace PirateSlop
         Vector2 pointer;
         float wheelFieldOfView;
         float pendingDrag, nextSend;
+        float cameraDrag;
         float grabStarted, savedUntil;
         SailSystem savedSails;
         int savedRope;
@@ -93,8 +94,13 @@ namespace PirateSlop
                     if (before.sqrMagnitude > .0025f && after.sqrMagnitude > .0025f) pendingDrag += Vector3.SignedAngle(before, after, wheel.forward);
                     else pendingDrag += delta.x * .3f;
                 }
-                else if (grabbed.Sails != null) pendingDrag -= delta.y / 420f;
-                else pendingDrag += delta.y * .12f;
+                else
+                {
+                    if(grabbed.Sails!=null) pendingDrag-=delta.y/420f;
+                    else pendingDrag+=delta.y*.12f;
+                    cameraDrag=Mathf.Clamp(cameraDrag-delta.y*.0015f,-1f,1f);
+                    motor.SetInteractionCameraPull(cameraDrag);
+                }
                 if (Time.unscaledTime >= nextSend) Send(true);
                 return;
             }
@@ -156,6 +162,7 @@ namespace PirateSlop
                 awaitPrimaryRelease = true;
                 if (hovered.Sails != null && hovered.Sails.Owner(hovered.RopeIndex) != 0 && hovered.Sails.Owner(hovered.RopeIndex) != Participant) return;
                 grabbed = hovered; pointer = new Vector2(Screen.width * .5f, Screen.height * .5f); pendingDrag = 0;
+                cameraDrag=0;
                 if (grabbed.Helm != null)
                 {
                     var firearm = GetComponent<FirearmHandling>();

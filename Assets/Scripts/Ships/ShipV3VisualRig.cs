@@ -86,6 +86,7 @@ namespace PirateSlop.Ships
             {
                 appliedRig[i] = float.NaN;
                 var mesh = RigMeshes[i] != null ? RigMeshes[i].sharedMesh : null;
+                if(RigMeshes[i]!=null && RigMeshes[i].name.Contains("_Seam_")) RigMeshes[i].gameObject.SetActive(false);
                 if (mesh == null) continue;
                 rigHasHalf[i] = mesh.GetBlendShapeIndex("Half") >= 0;
                 rigShapes[i] = new int[mesh.blendShapeCount];

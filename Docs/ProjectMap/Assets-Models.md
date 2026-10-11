@@ -10,7 +10,7 @@
 
 | Файл | Краткое описание |
 | --- | --- |
-| [Assets/Models/KrakenTentacles.fbx](<../../Assets/Models/KrakenTentacles.fbx>) | Модель / анимации FBX |
+| [Assets/Models/KrakenTentacles.fbx](<../../Assets/Models/KrakenTentacles.fbx>) | Модель / анимации FBX; Кракен и щупальца |
 | [Assets/Models/MenuSeaGrid.asset](<../../Assets/Models/MenuSeaGrid.asset>) | Настройки или данные Unity |
 
 ## Assets/Models/Barricade
@@ -393,6 +393,15 @@
 | [Assets/Models/Hooks/Anchor.mat](<../../Assets/Models/Hooks/Anchor.mat>) | Материал Unity |
 | [Assets/Models/Hooks/AnchorAtlas.png](<../../Assets/Models/Hooks/AnchorAtlas.png>) | Изображение / текстура |
 
+## Assets/Models/Kraken
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/Kraken/KrakenBaseColor.jpg](<../../Assets/Models/Kraken/KrakenBaseColor.jpg>) | Изображение / текстура; Кракен и щупальца |
+| [Assets/Models/Kraken/KrakenMetalSmooth.png](<../../Assets/Models/Kraken/KrakenMetalSmooth.png>) | Изображение / текстура; Кракен и щупальца |
+| [Assets/Models/Kraken/KrakenNormal.png](<../../Assets/Models/Kraken/KrakenNormal.png>) | Изображение / текстура; Кракен и щупальца |
+| [Assets/Models/Kraken/KrakenTripoSkin.mat](<../../Assets/Models/Kraken/KrakenTripoSkin.mat>) | Материал Unity; Кракен и щупальца |
+
 ## Assets/Models/Loot/Chest
 
 | Файл | Краткое описание |
@@ -528,7 +537,7 @@
 
 | Файл | Краткое описание |
 | --- | --- |
-| [Assets/Models/Loot/Replacement/CannonWheel/CannonWheel.fbx](<../../Assets/Models/Loot/Replacement/CannonWheel/CannonWheel.fbx>) | Модель / анимации FBX |
+| [Assets/Models/Loot/Replacement/CannonWheel/CannonWheel.fbx](<../../Assets/Models/Loot/Replacement/CannonWheel/CannonWheel.fbx>) | Модель / анимации FBX; Раковина с сундуком и парные рычаги |
 | [Assets/Models/Loot/Replacement/CannonWheel/CannonWheel.mat](<../../Assets/Models/Loot/Replacement/CannonWheel/CannonWheel.mat>) | Материал Unity |
 | [Assets/Models/Loot/Replacement/CannonWheel/CannonWheelBaseColor.jpg](<../../Assets/Models/Loot/Replacement/CannonWheel/CannonWheelBaseColor.jpg>) | Изображение / текстура |
 | [Assets/Models/Loot/Replacement/CannonWheel/CannonWheelMetalSmooth.png](<../../Assets/Models/Loot/Replacement/CannonWheel/CannonWheelMetalSmooth.png>) | Изображение / текстура |
@@ -602,7 +611,7 @@
 
 | Файл | Краткое описание |
 | --- | --- |
-| [Assets/Models/Loot/Replacement/GrappleHook/GrappleHook.fbx](<../../Assets/Models/Loot/Replacement/GrappleHook/GrappleHook.fbx>) | Модель / анимации FBX |
+| [Assets/Models/Loot/Replacement/GrappleHook/GrappleHook.fbx](<../../Assets/Models/Loot/Replacement/GrappleHook/GrappleHook.fbx>) | Модель / анимации FBX; Раковина с сундуком и парные рычаги |
 | [Assets/Models/Loot/Replacement/GrappleHook/GrappleHook.mat](<../../Assets/Models/Loot/Replacement/GrappleHook/GrappleHook.mat>) | Материал Unity |
 | [Assets/Models/Loot/Replacement/GrappleHook/GrappleHookBaseColor.jpg](<../../Assets/Models/Loot/Replacement/GrappleHook/GrappleHookBaseColor.jpg>) | Изображение / текстура |
 | [Assets/Models/Loot/Replacement/GrappleHook/GrappleHookMetalSmooth.png](<../../Assets/Models/Loot/Replacement/GrappleHook/GrappleHookMetalSmooth.png>) | Изображение / текстура |
@@ -795,6 +804,36 @@
 | [Assets/Models/SailRigging/SailGripCombined.asset](<../../Assets/Models/SailRigging/SailGripCombined.asset>) | Настройки или данные Unity |
 | [Assets/Models/SailRigging/SailSingleStationCombined.asset](<../../Assets/Models/SailRigging/SailSingleStationCombined.asset>) | Настройки или данные Unity |
 
+## Assets/Models/SeaEvents/Clam
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/SeaEvents/Clam/Clam.fbx](<../../Assets/Models/SeaEvents/Clam/Clam.fbx>) | Модель / анимации FBX; Раковина с сундуком и парные рычаги |
+| [Assets/Models/SeaEvents/Clam/ClamBaseColor.jpg](<../../Assets/Models/SeaEvents/Clam/ClamBaseColor.jpg>) | Изображение / текстура |
+| [Assets/Models/SeaEvents/Clam/ClamLidCollision0.asset](<../../Assets/Models/SeaEvents/Clam/ClamLidCollision0.asset>) | Настройки или данные Unity; Раковина с сундуком и парные рычаги |
+| [Assets/Models/SeaEvents/Clam/ClamLidCollision1.asset](<../../Assets/Models/SeaEvents/Clam/ClamLidCollision1.asset>) | Настройки или данные Unity; Раковина с сундуком и парные рычаги |
+| [Assets/Models/SeaEvents/Clam/ClamLower.asset](<../../Assets/Models/SeaEvents/Clam/ClamLower.asset>) | Настройки или данные Unity; Раковина с сундуком и парные рычаги |
+| [Assets/Models/SeaEvents/Clam/ClamMetalSmooth.png](<../../Assets/Models/SeaEvents/Clam/ClamMetalSmooth.png>) | Изображение / текстура |
+| [Assets/Models/SeaEvents/Clam/ClamMetallic.jpg](<../../Assets/Models/SeaEvents/Clam/ClamMetallic.jpg>) | Изображение / текстура |
+| [Assets/Models/SeaEvents/Clam/ClamNormal.png](<../../Assets/Models/SeaEvents/Clam/ClamNormal.png>) | Изображение / текстура |
+| [Assets/Models/SeaEvents/Clam/ClamRM.jpg](<../../Assets/Models/SeaEvents/Clam/ClamRM.jpg>) | Изображение / текстура |
+| [Assets/Models/SeaEvents/Clam/ClamRoughness.jpg](<../../Assets/Models/SeaEvents/Clam/ClamRoughness.jpg>) | Изображение / текстура |
+| [Assets/Models/SeaEvents/Clam/ClamSkin.mat](<../../Assets/Models/SeaEvents/Clam/ClamSkin.mat>) | Материал Unity; Раковина с сундуком и парные рычаги |
+| [Assets/Models/SeaEvents/Clam/ClamUpper.asset](<../../Assets/Models/SeaEvents/Clam/ClamUpper.asset>) | Настройки или данные Unity; Раковина с сундуком и парные рычаги |
+| [Assets/Models/SeaEvents/Clam/ForgedRimHook.asset](<../../Assets/Models/SeaEvents/Clam/ForgedRimHook.asset>) | Настройки или данные Unity |
+| [Assets/Models/SeaEvents/Clam/ReusedAxle.asset](<../../Assets/Models/SeaEvents/Clam/ReusedAxle.asset>) | Настройки или данные Unity; Раковина с сундуком и парные рычаги |
+| [Assets/Models/SeaEvents/Clam/ReusedBand.asset](<../../Assets/Models/SeaEvents/Clam/ReusedBand.asset>) | Настройки или данные Unity; Раковина с сундуком и парные рычаги |
+| [Assets/Models/SeaEvents/Clam/ReusedBearing.asset](<../../Assets/Models/SeaEvents/Clam/ReusedBearing.asset>) | Настройки или данные Unity; Раковина с сундуком и парные рычаги |
+| [Assets/Models/SeaEvents/Clam/ReusedBolt.asset](<../../Assets/Models/SeaEvents/Clam/ReusedBolt.asset>) | Настройки или данные Unity; Раковина с сундуком и парные рычаги |
+| [Assets/Models/SeaEvents/Clam/ReusedBracket.asset](<../../Assets/Models/SeaEvents/Clam/ReusedBracket.asset>) | Настройки или данные Unity; Раковина с сундуком и парные рычаги |
+| [Assets/Models/SeaEvents/Clam/ReusedDrum.asset](<../../Assets/Models/SeaEvents/Clam/ReusedDrum.asset>) | Настройки или данные Unity; Раковина с сундуком и парные рычаги |
+| [Assets/Models/SeaEvents/Clam/ReusedGrip.asset](<../../Assets/Models/SeaEvents/Clam/ReusedGrip.asset>) | Настройки или данные Unity; Раковина с сундуком и парные рычаги |
+| [Assets/Models/SeaEvents/Clam/ReusedHook.asset](<../../Assets/Models/SeaEvents/Clam/ReusedHook.asset>) | Настройки или данные Unity; Раковина с сундуком и парные рычаги |
+| [Assets/Models/SeaEvents/Clam/ReusedLever.asset](<../../Assets/Models/SeaEvents/Clam/ReusedLever.asset>) | Настройки или данные Unity; Раковина с сундуком и парные рычаги |
+| [Assets/Models/SeaEvents/Clam/ReusedShackle.asset](<../../Assets/Models/SeaEvents/Clam/ReusedShackle.asset>) | Настройки или данные Unity; Раковина с сундуком и парные рычаги |
+| [Assets/Models/SeaEvents/Clam/ReusedSleeve.asset](<../../Assets/Models/SeaEvents/Clam/ReusedSleeve.asset>) | Настройки или данные Unity; Раковина с сундуком и парные рычаги |
+| [Assets/Models/SeaEvents/Clam/ReusedWheel.asset](<../../Assets/Models/SeaEvents/Clam/ReusedWheel.asset>) | Настройки или данные Unity; Раковина с сундуком и парные рычаги |
+
 ## Assets/Models/SeaEvents/SkullAltar
 
 | Файл | Краткое описание |
@@ -815,8 +854,15 @@
 
 | Файл | Краткое описание |
 | --- | --- |
-| [Assets/Models/Shark/Shark.controller](<../../Assets/Models/Shark/Shark.controller>) | Контроллер анимации |
+| [Assets/Models/Shark/Shark.controller](<../../Assets/Models/Shark/Shark.controller>) | Контроллер анимации; Предметы, лут и инвентарь |
 | [Assets/Models/Shark/Shark.fbx](<../../Assets/Models/Shark/Shark.fbx>) | Модель / анимации FBX |
+| [Assets/Models/Shark/SharkBaseColor.jpg](<../../Assets/Models/Shark/SharkBaseColor.jpg>) | Изображение / текстура; Предметы, лут и инвентарь |
+| [Assets/Models/Shark/SharkMetalSmooth.png](<../../Assets/Models/Shark/SharkMetalSmooth.png>) | Изображение / текстура; Предметы, лут и инвентарь |
+| [Assets/Models/Shark/SharkMetallic.jpg](<../../Assets/Models/Shark/SharkMetallic.jpg>) | Изображение / текстура; Предметы, лут и инвентарь |
+| [Assets/Models/Shark/SharkNormal.png](<../../Assets/Models/Shark/SharkNormal.png>) | Изображение / текстура; Предметы, лут и инвентарь |
+| [Assets/Models/Shark/SharkRoughness.jpg](<../../Assets/Models/Shark/SharkRoughness.jpg>) | Изображение / текстура; Предметы, лут и инвентарь |
+| [Assets/Models/Shark/SharkTripo.fbx](<../../Assets/Models/Shark/SharkTripo.fbx>) | Модель / анимации FBX; Предметы, лут и инвентарь |
+| [Assets/Models/Shark/SharkTripoSkin.mat](<../../Assets/Models/Shark/SharkTripoSkin.mat>) | Материал Unity; Предметы, лут и инвентарь |
 
 ## Assets/Models/ShipV3/MastChips
 
@@ -1107,6 +1153,16 @@
 | Файл | Краткое описание |
 | --- | --- |
 | [Assets/Models/Ships/ShipV3/DiceTablePhysics.asset](<../../Assets/Models/Ships/ShipV3/DiceTablePhysics.asset>) | Настройки или данные Unity |
+| [Assets/Models/Ships/ShipV3/SailFoot_Fore_Course.asset](<../../Assets/Models/Ships/ShipV3/SailFoot_Fore_Course.asset>) | Настройки или данные Unity; Паруса и канаты |
+| [Assets/Models/Ships/ShipV3/SailFoot_Fore_Topsail.asset](<../../Assets/Models/Ships/ShipV3/SailFoot_Fore_Topsail.asset>) | Настройки или данные Unity; Паруса и канаты |
+| [Assets/Models/Ships/ShipV3/SailFoot_Main_Course.asset](<../../Assets/Models/Ships/ShipV3/SailFoot_Main_Course.asset>) | Настройки или данные Unity; Паруса и канаты |
+| [Assets/Models/Ships/ShipV3/SailFoot_Main_Topsail.asset](<../../Assets/Models/Ships/ShipV3/SailFoot_Main_Topsail.asset>) | Настройки или данные Unity; Паруса и канаты |
+| [Assets/Models/Ships/ShipV3/SailFoot_Mizzen.asset](<../../Assets/Models/Ships/ShipV3/SailFoot_Mizzen.asset>) | Настройки или данные Unity; Паруса и канаты |
+| [Assets/Models/Ships/ShipV3/SailFoot_Mizzen_Boom.asset](<../../Assets/Models/Ships/ShipV3/SailFoot_Mizzen_Boom.asset>) | Настройки или данные Unity; Паруса и канаты |
+| [Assets/Models/Ships/ShipV3/SailPinned_Fore_Course.asset](<../../Assets/Models/Ships/ShipV3/SailPinned_Fore_Course.asset>) | Настройки или данные Unity; Паруса и канаты |
+| [Assets/Models/Ships/ShipV3/SailPinned_Fore_Topsail.asset](<../../Assets/Models/Ships/ShipV3/SailPinned_Fore_Topsail.asset>) | Настройки или данные Unity; Паруса и канаты |
+| [Assets/Models/Ships/ShipV3/SailPinned_Main_Course.asset](<../../Assets/Models/Ships/ShipV3/SailPinned_Main_Course.asset>) | Настройки или данные Unity; Паруса и канаты |
+| [Assets/Models/Ships/ShipV3/SailPinned_Main_Topsail.asset](<../../Assets/Models/Ships/ShipV3/SailPinned_Main_Topsail.asset>) | Настройки или данные Unity; Паруса и канаты |
 | [Assets/Models/Ships/ShipV3/ShipV3.fbx](<../../Assets/Models/Ships/ShipV3/ShipV3.fbx>) | Модель / анимации FBX; Модели и Blender |
 | [Assets/Models/Ships/ShipV3/ShipV3.json](<../../Assets/Models/Ships/ShipV3/ShipV3.json>) | Конфигурация / данные JSON; Модели и Blender |
 
@@ -6851,15 +6907,61 @@
 
 | Файл | Краткое описание |
 | --- | --- |
-| [Assets/Models/Whale/Harpoon_Broken.fbx](<../../Assets/Models/Whale/Harpoon_Broken.fbx>) | Модель / анимации FBX |
-| [Assets/Models/Whale/Whale.fbx](<../../Assets/Models/Whale/Whale.fbx>) | Модель / анимации FBX |
-| [Assets/Models/Whale/whale_diffuse.png](<../../Assets/Models/Whale/whale_diffuse.png>) | Изображение / текстура |
+| [Assets/Models/Whale/Harpoon_Broken.fbx](<../../Assets/Models/Whale/Harpoon_Broken.fbx>) | Модель / анимации FBX; Кит — точка интереса и сундук |
+| [Assets/Models/Whale/Whale.fbx](<../../Assets/Models/Whale/Whale.fbx>) | Модель / анимации FBX; Кит — точка интереса и сундук |
+| [Assets/Models/Whale/whale_diffuse.png](<../../Assets/Models/Whale/whale_diffuse.png>) | Изображение / текстура; Кит — точка интереса и сундук |
+
+## Assets/Models/Whale/Coralback
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/Whale/Coralback/CoralbackRig.asset](<../../Assets/Models/Whale/Coralback/CoralbackRig.asset>) | Настройки или данные Unity; Кит — точка интереса и сундук |
+| [Assets/Models/Whale/Coralback/CoralbackWhale.zip](<../../Assets/Models/Whale/Coralback/CoralbackWhale.zip>) | Архив; Кит — точка интереса и сундук |
+| [Assets/Models/Whale/Coralback/EventSkin.mat](<../../Assets/Models/Whale/Coralback/EventSkin.mat>) | Материал Unity; Кит — точка интереса и сундук |
+| [Assets/Models/Whale/Coralback/MetalSmooth.png](<../../Assets/Models/Whale/Coralback/MetalSmooth.png>) | Изображение / текстура; Кит — точка интереса и сундук |
+
+## Assets/Models/Whale/Coralback/CoralbackWhale
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/Whale/Coralback/CoralbackWhale/tripo_convert_c44df717-9a58-4bb0-8550-c36476f6da12.fbx](<../../Assets/Models/Whale/Coralback/CoralbackWhale/tripo_convert_c44df717-9a58-4bb0-8550-c36476f6da12.fbx>) | Модель / анимации FBX; Кит — точка интереса и сундук |
+
+## Assets/Models/Whale/Coralback/CoralbackWhale/tripo_convert_c44df717-9a58-4bb0-8550-c36476f6da12.fbm
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/Whale/Coralback/CoralbackWhale/tripo_convert_c44df717-9a58-4bb0-8550-c36476f6da12.fbm/Кит_basecolor.JPEG](<../../Assets/Models/Whale/Coralback/CoralbackWhale/tripo_convert_c44df717-9a58-4bb0-8550-c36476f6da12.fbm/Кит_basecolor.JPEG>) | Изображение / текстура; Кит — точка интереса и сундук |
+| [Assets/Models/Whale/Coralback/CoralbackWhale/tripo_convert_c44df717-9a58-4bb0-8550-c36476f6da12.fbm/Кит_metallic.JPEG](<../../Assets/Models/Whale/Coralback/CoralbackWhale/tripo_convert_c44df717-9a58-4bb0-8550-c36476f6da12.fbm/Кит_metallic.JPEG>) | Изображение / текстура; Кит — точка интереса и сундук |
+| [Assets/Models/Whale/Coralback/CoralbackWhale/tripo_convert_c44df717-9a58-4bb0-8550-c36476f6da12.fbm/Кит_normal.PNG](<../../Assets/Models/Whale/Coralback/CoralbackWhale/tripo_convert_c44df717-9a58-4bb0-8550-c36476f6da12.fbm/Кит_normal.PNG>) | Изображение / текстура; Кит — точка интереса и сундук |
+| [Assets/Models/Whale/Coralback/CoralbackWhale/tripo_convert_c44df717-9a58-4bb0-8550-c36476f6da12.fbm/Кит_rm.JPEG](<../../Assets/Models/Whale/Coralback/CoralbackWhale/tripo_convert_c44df717-9a58-4bb0-8550-c36476f6da12.fbm/Кит_rm.JPEG>) | Изображение / текстура; Кит — точка интереса и сундук |
+| [Assets/Models/Whale/Coralback/CoralbackWhale/tripo_convert_c44df717-9a58-4bb0-8550-c36476f6da12.fbm/Кит_roughness.JPEG](<../../Assets/Models/Whale/Coralback/CoralbackWhale/tripo_convert_c44df717-9a58-4bb0-8550-c36476f6da12.fbm/Кит_roughness.JPEG>) | Изображение / текстура; Кит — точка интереса и сундук |
+
+## Assets/Models/Whale/Harpoon
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/Whale/Harpoon/EventSkin.mat](<../../Assets/Models/Whale/Harpoon/EventSkin.mat>) | Материал Unity; Кит — точка интереса и сундук |
+| [Assets/Models/Whale/Harpoon/ForgedRopeEye.asset](<../../Assets/Models/Whale/Harpoon/ForgedRopeEye.asset>) | Настройки или данные Unity; Кит — точка интереса и сундук |
+| [Assets/Models/Whale/Harpoon/HarpoonNormalized.asset](<../../Assets/Models/Whale/Harpoon/HarpoonNormalized.asset>) | Настройки или данные Unity; Кит — точка интереса и сундук |
+| [Assets/Models/Whale/Harpoon/MetalSmooth.png](<../../Assets/Models/Whale/Harpoon/MetalSmooth.png>) | Изображение / текстура; Кит — точка интереса и сундук |
+| [Assets/Models/Whale/Harpoon/RopeEyeSeizing.asset](<../../Assets/Models/Whale/Harpoon/RopeEyeSeizing.asset>) | Настройки или данные Unity; Кит — точка интереса и сундук |
+| [Assets/Models/Whale/Harpoon/WhaleHarpoon.fbx](<../../Assets/Models/Whale/Harpoon/WhaleHarpoon.fbx>) | Модель / анимации FBX; Кит — точка интереса и сундук |
+
+## Assets/Models/Whale/Harpoon/Textures
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/Whale/Harpoon/Textures/гарпун_basecolor.JPEG](<../../Assets/Models/Whale/Harpoon/Textures/гарпун_basecolor.JPEG>) | Изображение / текстура; Кит — точка интереса и сундук |
+| [Assets/Models/Whale/Harpoon/Textures/гарпун_metallic.JPEG](<../../Assets/Models/Whale/Harpoon/Textures/гарпун_metallic.JPEG>) | Изображение / текстура; Кит — точка интереса и сундук |
+| [Assets/Models/Whale/Harpoon/Textures/гарпун_normal.PNG](<../../Assets/Models/Whale/Harpoon/Textures/гарпун_normal.PNG>) | Изображение / текстура; Кит — точка интереса и сундук |
+| [Assets/Models/Whale/Harpoon/Textures/гарпун_rm.JPEG](<../../Assets/Models/Whale/Harpoon/Textures/гарпун_rm.JPEG>) | Изображение / текстура; Кит — точка интереса и сундук |
+| [Assets/Models/Whale/Harpoon/Textures/гарпун_roughness.JPEG](<../../Assets/Models/Whale/Harpoon/Textures/гарпун_roughness.JPEG>) | Изображение / текстура; Кит — точка интереса и сундук |
 
 ## Assets/Models/Whale/Materials
 
 | Файл | Краткое описание |
 | --- | --- |
-| [Assets/Models/Whale/Materials/M_Whale.mat](<../../Assets/Models/Whale/Materials/M_Whale.mat>) | Материал Unity |
+| [Assets/Models/Whale/Materials/M_Whale.mat](<../../Assets/Models/Whale/Materials/M_Whale.mat>) | Материал Unity; Кит — точка интереса и сундук |
 
 ## Assets/Models/World/CoastalEnvironment
 
@@ -7053,6 +7155,71 @@
 | [Assets/Models/World/LocationExpansion/WreckHull.fbx](<../../Assets/Models/World/LocationExpansion/WreckHull.fbx>) | Модель / анимации FBX |
 | [Assets/Models/World/LocationExpansion/WreckMast.fbx](<../../Assets/Models/World/LocationExpansion/WreckMast.fbx>) | Модель / анимации FBX |
 | [Assets/Models/World/LocationExpansion/WreckStern.fbx](<../../Assets/Models/World/LocationExpansion/WreckStern.fbx>) | Модель / анимации FBX |
+
+## Assets/Models/World/SandyIslands
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/World/SandyIslands/DisplacedSandHeap_0.asset](<../../Assets/Models/World/SandyIslands/DisplacedSandHeap_0.asset>) | Настройки или данные Unity |
+| [Assets/Models/World/SandyIslands/DisplacedSandHeap_1.asset](<../../Assets/Models/World/SandyIslands/DisplacedSandHeap_1.asset>) | Настройки или данные Unity |
+| [Assets/Models/World/SandyIslands/DisplacedSandHeap_2.asset](<../../Assets/Models/World/SandyIslands/DisplacedSandHeap_2.asset>) | Настройки или данные Unity |
+| [Assets/Models/World/SandyIslands/ExcavatedSandPit.asset](<../../Assets/Models/World/SandyIslands/ExcavatedSandPit.asset>) | Настройки или данные Unity; Остров с весами и пятью камнями |
+| [Assets/Models/World/SandyIslands/SingleLandingRockIsland_RockRim.asset](<../../Assets/Models/World/SandyIslands/SingleLandingRockIsland_RockRim.asset>) | Настройки или данные Unity; Мир, острова и океан, Тестовая карта и водоворот |
+| [Assets/Models/World/SandyIslands/TwoLandingIsland_RockRim.asset](<../../Assets/Models/World/SandyIslands/TwoLandingIsland_RockRim.asset>) | Настройки или данные Unity; Мир, острова и океан, Тестовая карта и водоворот |
+
+## Assets/Models/World/SandyIslands/Balance
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/World/SandyIslands/Balance/Axle.asset](<../../Assets/Models/World/SandyIslands/Balance/Axle.asset>) | Настройки или данные Unity |
+| [Assets/Models/World/SandyIslands/Balance/Band.asset](<../../Assets/Models/World/SandyIslands/Balance/Band.asset>) | Настройки или данные Unity |
+| [Assets/Models/World/SandyIslands/Balance/Bearing.asset](<../../Assets/Models/World/SandyIslands/Balance/Bearing.asset>) | Настройки или данные Unity |
+| [Assets/Models/World/SandyIslands/Balance/Bolt.asset](<../../Assets/Models/World/SandyIslands/Balance/Bolt.asset>) | Настройки или данные Unity |
+| [Assets/Models/World/SandyIslands/Balance/Rope.asset](<../../Assets/Models/World/SandyIslands/Balance/Rope.asset>) | Настройки или данные Unity |
+| [Assets/Models/World/SandyIslands/Balance/Shackle.asset](<../../Assets/Models/World/SandyIslands/Balance/Shackle.asset>) | Настройки или данные Unity |
+| [Assets/Models/World/SandyIslands/Balance/Timber.asset](<../../Assets/Models/World/SandyIslands/Balance/Timber.asset>) | Настройки или данные Unity |
+
+## Assets/Models/World/SandyIslands/Textures
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/World/SandyIslands/Textures/SOURCES.md](<../../Assets/Models/World/SandyIslands/Textures/SOURCES.md>) | Документация; Мир, острова и океан, Тестовая карта и водоворот |
+
+## Assets/Models/World/SandyIslands/Textures/brown_mud_03
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/World/SandyIslands/Textures/brown_mud_03/Colour.jpg](<../../Assets/Models/World/SandyIslands/Textures/brown_mud_03/Colour.jpg>) | Изображение / текстура; Мир, острова и океан, Тестовая карта и водоворот |
+| [Assets/Models/World/SandyIslands/Textures/brown_mud_03/Mask.png](<../../Assets/Models/World/SandyIslands/Textures/brown_mud_03/Mask.png>) | Изображение / текстура; Мир, острова и океан, Тестовая карта и водоворот |
+| [Assets/Models/World/SandyIslands/Textures/brown_mud_03/Normal.png](<../../Assets/Models/World/SandyIslands/Textures/brown_mud_03/Normal.png>) | Изображение / текстура; Мир, острова и океан, Тестовая карта и водоворот |
+| [Assets/Models/World/SandyIslands/Textures/brown_mud_03/Roughness.jpg](<../../Assets/Models/World/SandyIslands/Textures/brown_mud_03/Roughness.jpg>) | Изображение / текстура; Мир, острова и океан, Тестовая карта и водоворот |
+
+## Assets/Models/World/SandyIslands/Textures/coast_sand_01
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/World/SandyIslands/Textures/coast_sand_01/Colour.jpg](<../../Assets/Models/World/SandyIslands/Textures/coast_sand_01/Colour.jpg>) | Изображение / текстура; Мир, острова и океан, Тестовая карта и водоворот |
+| [Assets/Models/World/SandyIslands/Textures/coast_sand_01/Mask.png](<../../Assets/Models/World/SandyIslands/Textures/coast_sand_01/Mask.png>) | Изображение / текстура; Мир, острова и океан, Тестовая карта и водоворот |
+| [Assets/Models/World/SandyIslands/Textures/coast_sand_01/Normal.png](<../../Assets/Models/World/SandyIslands/Textures/coast_sand_01/Normal.png>) | Изображение / текстура; Мир, острова и океан, Тестовая карта и водоворот |
+| [Assets/Models/World/SandyIslands/Textures/coast_sand_01/Roughness.jpg](<../../Assets/Models/World/SandyIslands/Textures/coast_sand_01/Roughness.jpg>) | Изображение / текстура; Мир, острова и океан, Тестовая карта и водоворот |
+
+## Assets/Models/World/SandyIslands/Textures/coast_sand_rocks_02
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/World/SandyIslands/Textures/coast_sand_rocks_02/Colour.jpg](<../../Assets/Models/World/SandyIslands/Textures/coast_sand_rocks_02/Colour.jpg>) | Изображение / текстура; Мир, острова и океан, Тестовая карта и водоворот |
+| [Assets/Models/World/SandyIslands/Textures/coast_sand_rocks_02/Mask.png](<../../Assets/Models/World/SandyIslands/Textures/coast_sand_rocks_02/Mask.png>) | Изображение / текстура; Мир, острова и океан, Тестовая карта и водоворот |
+| [Assets/Models/World/SandyIslands/Textures/coast_sand_rocks_02/Normal.png](<../../Assets/Models/World/SandyIslands/Textures/coast_sand_rocks_02/Normal.png>) | Изображение / текстура; Мир, острова и океан, Тестовая карта и водоворот |
+| [Assets/Models/World/SandyIslands/Textures/coast_sand_rocks_02/Roughness.jpg](<../../Assets/Models/World/SandyIslands/Textures/coast_sand_rocks_02/Roughness.jpg>) | Изображение / текстура; Мир, острова и океан, Тестовая карта и водоворот |
+
+## Assets/Models/World/SandyIslands/Textures/leafy_grass
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/World/SandyIslands/Textures/leafy_grass/Colour.jpg](<../../Assets/Models/World/SandyIslands/Textures/leafy_grass/Colour.jpg>) | Изображение / текстура; Мир, острова и океан, Тестовая карта и водоворот |
+| [Assets/Models/World/SandyIslands/Textures/leafy_grass/Mask.png](<../../Assets/Models/World/SandyIslands/Textures/leafy_grass/Mask.png>) | Изображение / текстура; Мир, острова и океан, Тестовая карта и водоворот |
+| [Assets/Models/World/SandyIslands/Textures/leafy_grass/Normal.png](<../../Assets/Models/World/SandyIslands/Textures/leafy_grass/Normal.png>) | Изображение / текстура; Мир, острова и океан, Тестовая карта и водоворот |
+| [Assets/Models/World/SandyIslands/Textures/leafy_grass/Roughness.jpg](<../../Assets/Models/World/SandyIslands/Textures/leafy_grass/Roughness.jpg>) | Изображение / текстура; Мир, острова и океан, Тестовая карта и водоворот |
 
 ## Assets/Models/World/StarterIsland
 

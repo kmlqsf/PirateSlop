@@ -20,8 +20,7 @@ namespace PirateSlop.World
             var center = Vector3.zero;
             if (EnvironmentTestGallery.IsTest(layout))
             {
-                var spawn = layout.Points.Find(p => p.Id == "test_ship_0");
-                if (spawn != null) center = spawn.Position + new Vector3(0f, 0f, -550f);
+                center = EnvironmentTestGallery.WhirlpoolCenter(layout);
             }
             float distanceFromCenter = Vector2.Distance(new Vector2(x, z), new Vector2(center.x, center.z));
             float falloff = 1f - Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(distanceFromCenter / radius));

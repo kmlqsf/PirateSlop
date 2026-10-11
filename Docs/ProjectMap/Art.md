@@ -344,6 +344,21 @@
 | Файл | Краткое описание |
 | --- | --- |
 | [Art/Blender/Kraken/KrakenTentacle.blend](<../../Art/Blender/Kraken/KrakenTentacle.blend>) | Редактируемая сцена Blender |
+| [Art/Blender/Kraken/KrakenTripoRig.blend](<../../Art/Blender/Kraken/KrakenTripoRig.blend>) | Редактируемая сцена Blender; Кракен и щупальца |
+| [Art/Blender/Kraken/PrepareTripoTentacle.py](<../../Art/Blender/Kraken/PrepareTripoTentacle.py>) | Инструмент Python; Кракен и щупальца |
+| [Art/Blender/Kraken/README.md](<../../Art/Blender/Kraken/README.md>) | Документация; Кракен и щупальца |
+| [Art/Blender/Kraken/VariantsPreview.png](<../../Art/Blender/Kraken/VariantsPreview.png>) | Изображение / текстура; Кракен и щупальца |
+
+## Art/Blender/Kraken/TripoSources
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/Kraken/TripoSources/TentacleSource.fbx](<../../Art/Blender/Kraken/TripoSources/TentacleSource.fbx>) | Модель / анимации FBX; Кракен и щупальца |
+| [Art/Blender/Kraken/TripoSources/Tentacle_basecolor.JPEG](<../../Art/Blender/Kraken/TripoSources/Tentacle_basecolor.JPEG>) | Изображение / текстура |
+| [Art/Blender/Kraken/TripoSources/Tentacle_metallic.JPEG](<../../Art/Blender/Kraken/TripoSources/Tentacle_metallic.JPEG>) | Изображение / текстура |
+| [Art/Blender/Kraken/TripoSources/Tentacle_normal.PNG](<../../Art/Blender/Kraken/TripoSources/Tentacle_normal.PNG>) | Изображение / текстура |
+| [Art/Blender/Kraken/TripoSources/Tentacle_rm.JPEG](<../../Art/Blender/Kraken/TripoSources/Tentacle_rm.JPEG>) | Изображение / текстура |
+| [Art/Blender/Kraken/TripoSources/Tentacle_roughness.JPEG](<../../Art/Blender/Kraken/TripoSources/Tentacle_roughness.JPEG>) | Изображение / текстура |
 
 ## Art/Blender/Loot/FishReplacement/Fish
 
@@ -623,8 +638,22 @@
 
 | Файл | Краткое описание |
 | --- | --- |
+| [Art/Blender/Shark/PrepareTripoShark.py](<../../Art/Blender/Shark/PrepareTripoShark.py>) | Инструмент Python; Предметы, лут и инвентарь |
+| [Art/Blender/Shark/README.md](<../../Art/Blender/Shark/README.md>) | Документация; Предметы, лут и инвентарь |
 | [Art/Blender/Shark/Shark.blend](<../../Art/Blender/Shark/Shark.blend>) | Редактируемая сцена Blender |
+| [Art/Blender/Shark/SharkTripoRig.blend](<../../Art/Blender/Shark/SharkTripoRig.blend>) | Редактируемая сцена Blender; Предметы, лут и инвентарь |
 | [Art/Blender/Shark/generate_shark.py](<../../Art/Blender/Shark/generate_shark.py>) | Инструмент Python |
+
+## Art/Blender/Shark/TripoSources
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/Shark/TripoSources/SharkSource.fbx](<../../Art/Blender/Shark/TripoSources/SharkSource.fbx>) | Модель / анимации FBX; Предметы, лут и инвентарь |
+| [Art/Blender/Shark/TripoSources/Shark_basecolor.JPEG](<../../Art/Blender/Shark/TripoSources/Shark_basecolor.JPEG>) | Изображение / текстура |
+| [Art/Blender/Shark/TripoSources/Shark_metallic.JPEG](<../../Art/Blender/Shark/TripoSources/Shark_metallic.JPEG>) | Изображение / текстура |
+| [Art/Blender/Shark/TripoSources/Shark_normal.PNG](<../../Art/Blender/Shark/TripoSources/Shark_normal.PNG>) | Изображение / текстура |
+| [Art/Blender/Shark/TripoSources/Shark_rm.JPEG](<../../Art/Blender/Shark/TripoSources/Shark_rm.JPEG>) | Изображение / текстура |
+| [Art/Blender/Shark/TripoSources/Shark_roughness.JPEG](<../../Art/Blender/Shark/TripoSources/Shark_roughness.JPEG>) | Изображение / текстура |
 
 ## Art/Blender/Ships/BilgePump/Sources/Body
 
@@ -818,6 +847,31 @@
 | [Art/External/DiceProps/MedievalPropsPack/MedievalBeerMug/Mug_Metallic.png](<../../Art/External/DiceProps/MedievalPropsPack/MedievalBeerMug/Mug_Metallic.png>) | Изображение / текстура |
 | [Art/External/DiceProps/MedievalPropsPack/MedievalBeerMug/Mug_Normal_DirectX.png](<../../Art/External/DiceProps/MedievalPropsPack/MedievalBeerMug/Mug_Normal_DirectX.png>) | Изображение / текстура |
 | [Art/External/DiceProps/MedievalPropsPack/MedievalBeerMug/Mug_Roughness.png](<../../Art/External/DiceProps/MedievalPropsPack/MedievalBeerMug/Mug_Roughness.png>) | Изображение / текстура |
+
+## Art/References/WhalePOI/2026-10-11
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/References/WhalePOI/2026-10-11/01_ScarredSpermWhale.png](<../../Art/References/WhalePOI/2026-10-11/01_ScarredSpermWhale.png>) | Изображение / текстура; Кит — точка интереса и сундук |
+| [Art/References/WhalePOI/2026-10-11/02_BroadbackHumpback.png](<../../Art/References/WhalePOI/2026-10-11/02_BroadbackHumpback.png>) | Изображение / текстура; Кит — точка интереса и сундук |
+| [Art/References/WhalePOI/2026-10-11/03_AncientBowhead.png](<../../Art/References/WhalePOI/2026-10-11/03_AncientBowhead.png>) | Изображение / текстура; Кит — точка интереса и сундук |
+| [Art/References/WhalePOI/2026-10-11/04_CoralbackWhale.png](<../../Art/References/WhalePOI/2026-10-11/04_CoralbackWhale.png>) | Изображение / текстура; Кит — точка интереса и сундук |
+| [Art/References/WhalePOI/2026-10-11/05_SalvagerWhale.png](<../../Art/References/WhalePOI/2026-10-11/05_SalvagerWhale.png>) | Изображение / текстура; Кит — точка интереса и сундук |
+| [Art/References/WhalePOI/2026-10-11/PROMPTS.json](<../../Art/References/WhalePOI/2026-10-11/PROMPTS.json>) | Конфигурация / данные JSON; Кит — точка интереса и сундук |
+| [Art/References/WhalePOI/2026-10-11/README.md](<../../Art/References/WhalePOI/2026-10-11/README.md>) | Документация; Кит — точка интереса и сундук |
+
+## Art/References/WhalePOI/CoralbackTurnaround
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/References/WhalePOI/CoralbackTurnaround/ApprovedConcept.png](<../../Art/References/WhalePOI/CoralbackTurnaround/ApprovedConcept.png>) | Изображение / текстура; Кит — точка интереса и сундук |
+| [Art/References/WhalePOI/CoralbackTurnaround/Front.png](<../../Art/References/WhalePOI/CoralbackTurnaround/Front.png>) | Изображение / текстура; Кит — точка интереса и сундук |
+| [Art/References/WhalePOI/CoralbackTurnaround/Left.png](<../../Art/References/WhalePOI/CoralbackTurnaround/Left.png>) | Изображение / текстура; Кит — точка интереса и сундук |
+| [Art/References/WhalePOI/CoralbackTurnaround/LootInteractionOptions.md](<../../Art/References/WhalePOI/CoralbackTurnaround/LootInteractionOptions.md>) | Документация; Кит — точка интереса и сундук |
+| [Art/References/WhalePOI/CoralbackTurnaround/PROMPTS.json](<../../Art/References/WhalePOI/CoralbackTurnaround/PROMPTS.json>) | Конфигурация / данные JSON; Кит — точка интереса и сундук |
+| [Art/References/WhalePOI/CoralbackTurnaround/README.md](<../../Art/References/WhalePOI/CoralbackTurnaround/README.md>) | Документация; Кит — точка интереса и сундук |
+| [Art/References/WhalePOI/CoralbackTurnaround/Rear.png](<../../Art/References/WhalePOI/CoralbackTurnaround/Rear.png>) | Изображение / текстура; Кит — точка интереса и сундук |
+| [Art/References/WhalePOI/CoralbackTurnaround/Right.png](<../../Art/References/WhalePOI/CoralbackTurnaround/Right.png>) | Изображение / текстура; Кит — точка интереса и сундук |
 
 ## Art/Source/StormClouds/Generated
 

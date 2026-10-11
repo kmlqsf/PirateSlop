@@ -320,7 +320,7 @@ namespace PirateSlop.Networking
         }
         void SpawnDeveloperLootEvent(SeaLootKind kind)
         {
-            if (kind < SeaLootKind.Capture || kind > SeaLootKind.Skull) return;
+            if ((kind < SeaLootKind.Capture || kind > SeaLootKind.Skull) && kind != SeaLootKind.Clam) return;
             var session = SessionController.Instance;
             var world = PirateSlop.World.ProceduralWorld.Instance;
             var catalog = session != null && session.Config != null ? session.Config.Loot : null;
@@ -332,7 +332,7 @@ namespace PirateSlop.Networking
             if (world == null || !world.Ready || catalog == null || catalog.ChestPrefab == null)
             { DeveloperResultTargetRpc(Owner, "Мир или каталог лута ещё не готовы."); return; }
             var forward = Vector3.ProjectOnPlane(ship.transform.forward, Vector3.up).normalized;
-            float clearance = kind == SeaLootKind.Capture ? catalog.CaptureRadius : kind == SeaLootKind.Skull && catalog.SkullEventPrefab != null ? catalog.SkullEventPrefab.PlatformRadius : 8f;
+            float clearance = kind == SeaLootKind.Capture ? catalog.CaptureRadius : kind == SeaLootKind.Skull && catalog.SkullEventPrefab != null ? catalog.SkullEventPrefab.PlatformRadius : kind == SeaLootKind.Clam && catalog.ClamEventPrefab != null ? catalog.ClamEventPrefab.PlatformRadius : 8f;
             float distance = ship.Motor.HullFootprint.y * .5f + clearance + 15f;
             float depth = kind == SeaLootKind.Sunken ? catalog.SunkenDepth + 2f : 3f;
             for (int attempt = 0; attempt < 12; attempt++)
@@ -356,7 +356,17 @@ namespace PirateSlop.Networking
                 if (!clear) continue;
                 foreach (var altar in NetworkSkullEvent.ServerEvents)
                     if (altar != null && Vector3.Distance(point, altar.transform.position) < clearance + altar.PlatformRadius) { clear = false; break; }
+                foreach (var clam in NetworkClamEvent.ServerEvents)
+                    if (clam != null && Vector3.Distance(point, clam.transform.position) < clearance + clam.PlatformRadius) { clear = false; break; }
                 if (!clear) continue;
+                if (kind == SeaLootKind.Clam)
+                {
+                    var clam = NetworkClamEvent.SpawnEvent(catalog, NetworkManager, point, world.gameObject.scene);
+                    if (clam == null) { DeveloperResultTargetRpc(Owner, "Префаб раковины не подключён к каталогу лута."); return; }
+                    developerObjects.Add(clam.NetworkObject);
+                    DeveloperResultTargetRpc(Owner, "Раковина с сундуком создана перед кораблём.");
+                    return;
+                }
                 if (kind == SeaLootKind.Skull)
                 {
                     var altar = NetworkSkullEvent.SpawnEvent(catalog, NetworkManager, point, world.gameObject.scene);

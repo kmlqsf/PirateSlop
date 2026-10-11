@@ -6,14 +6,15 @@ namespace PirateSlop
 {
     public sealed class KrakenAttackSystem : MonoBehaviour
     {
+        public const float FirstStrikeDamage = 50f;
         [SerializeField] float attackInterval = 20f;
-        [SerializeField] float damageRadius = 7f;
 
         Transform targetShip;
         readonly List<KrakenTentacle> tentacles = new();
         float nextAttackTime;
         int globalAttackCount;
         bool crewDamagedInCurrentWave;
+        bool shipDamagedInCurrentWave;
 
         public void Initialize(Transform ship, List<KrakenTentacle> activeTentacles)
         {
@@ -40,12 +41,13 @@ namespace PirateSlop
 
         void TriggerAttackWave()
         {
-            var available = tentacles.FindAll(t => t != null && t.gameObject.activeInHierarchy && !t.IsAttacking);
+            var available = tentacles.FindAll(t => t != null && t.gameObject.activeInHierarchy && !t.IsDefeated && !t.IsAttacking);
             if (available.Count == 0) return;
 
             globalAttackCount++;
-            float crewDamage = globalAttackCount == 1 ? 50f : 100f;
+            float crewDamage = globalAttackCount == 1 ? FirstStrikeDamage : 100f;
             crewDamagedInCurrentWave = false;
+            shipDamagedInCurrentWave = false;
 
             if (available.Count == 1)
             {
@@ -65,12 +67,13 @@ namespace PirateSlop
         {
             int index = tentacles.IndexOf(tentacle);
             var netShip = targetShip != null ? targetShip.GetComponent<PirateSlop.Networking.NetworkShip>() : null;
+            Vector3 local = targetShip.InverseTransformPoint(tentacle.transform.position);
+            Vector3 target = targetShip.TransformPoint(new Vector3(Mathf.Sign(local.x) * 3.5f, 4.3f, Mathf.Clamp(local.z, -8f, 8f)));
+            tentacle.Attack(target, () => OnTentacleImpact(tentacle, crewDamage));
             if (netShip != null && netShip.IsServerInitialized && index >= 0)
             {
-                netShip.KrakenAttackTentacle(index, targetShip.position);
+                netShip.KrakenAttackTentacle(index, target);
             }
-
-            tentacle.Attack(targetShip.position, () => OnTentacleImpact(tentacle, crewDamage));
         }
 
         void OnTentacleImpact(KrakenTentacle tentacle, float crewDamage)
@@ -92,38 +95,20 @@ namespace PirateSlop
                 CombatVfx.Impact(strikePoint, Vector3.up, true, true);
             }
 
-            DamageShip(strikePoint);
+            if (!shipDamagedInCurrentWave)
+            {
+                shipDamagedInCurrentWave = true;
+                targetShip.GetComponent<ShipDestruction>()?.KrakenStrike(strikePoint, globalAttackCount);
+            }
 
             if (!crewDamagedInCurrentWave)
             {
                 crewDamagedInCurrentWave = true;
-                DamageCrew(crewDamage);
+                DamageCrew(targetShip,crewDamage,gameObject);
             }
         }
 
-        void DamageShip(Vector3 strikePoint)
-        {
-            var hitSections = new HashSet<ShipDamageSection>();
-            var colliders = Physics.OverlapSphere(strikePoint, damageRadius, ~0, QueryTriggerInteraction.Collide);
-
-            for (int i = 0; i < colliders.Length; i++)
-            {
-                var section = colliders[i].GetComponentInParent<ShipDamageSection>();
-                if (section == null || !hitSections.Add(section)) continue;
-
-                if (section.Owner != null)
-                {
-                    section.Owner.Damage(colliders[i], strikePoint, Vector3.up, Vector3.down * 15f, InventoryItem.Cannonball, gameObject, damageRadius);
-                }
-                else
-                {
-                    ulong broken = section.BreakNear(strikePoint, 100f, false);
-                    section.Apply(ShipSectionState.Damaged, broken);
-                }
-            }
-        }
-
-        void DamageCrew(float damage)
+        public static void DamageCrew(Transform targetShip,float damage,GameObject attacker)
         {
             if (targetShip == null) return;
 
@@ -167,7 +152,7 @@ namespace PirateSlop
 
             foreach (var member in crew)
             {
-                member.Damage(damage, gameObject);
+                member.Damage(damage, attacker);
             }
         }
     }

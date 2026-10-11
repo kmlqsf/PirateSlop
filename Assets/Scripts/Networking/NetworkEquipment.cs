@@ -143,7 +143,7 @@ namespace PirateSlop.Networking
             if (!IsOwner) return;
             var mouse = Mouse.current; var keyboard = Keyboard.current;
             if (Item == InventoryItem.GrapplingHook && mouse != null && mouse.leftButton.wasReleasedThisFrame) network.ReleaseGrapple();
-            bool can = CanUse && motor.InputActive && !PlayerInventory.LootWindowOpen && !inventory.ControlFocused;
+            bool can = CanUse && motor.InputActive && !PirateSlop.WhalePlayerInteraction.InputBlocked && !PlayerInventory.LootWindowOpen && !inventory.ControlFocused;
             bool aim = can && Firearm && action.Value == 0 && handling!=null && handling.Aiming;
             if (aim && motor.IsThirdPerson) motor.SetThirdPerson(false);
             if (aim && Item == InventoryItem.Musket && mouse != null)

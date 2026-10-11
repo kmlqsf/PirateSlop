@@ -10,7 +10,7 @@ namespace PirateSlop.Networking
         readonly SyncVar<NetworkObject> carriedLoot = new();
         public NetworkLootChest WorkingLoot => workingLoot.Value != null ? workingLoot.Value.GetComponent<NetworkLootChest>() : null;
         public NetworkLootChest CarriedLoot => carriedLoot.Value != null ? carriedLoot.Value.GetComponent<NetworkLootChest>() : null;
-        public bool LootHandsBusy => WorkingLoot != null || CarriedLoot != null;
+        public bool LootHandsBusy => WorkingLoot != null || CarriedLoot != null || WhalePin != null || CarryingBalanceStone;
         public bool LootWorkLocked => WorkingLoot != null && WorkingLoot.Kind == SeaLootKind.Raft;
 
         public void SetLootWork(NetworkLootChest chest)
@@ -31,7 +31,7 @@ namespace PirateSlop.Networking
         public bool CanHandleLoot(NetworkLootChest chest, bool continuing = false)
         {
             var motor = GetComponent<AdvancedPlayerController>();
-            if (!IsServerInitialized || !IsSpawned || chest == null || !chest.IsSpawned || motor.IsDead || motor.IsKnockedBack || motor.IsClimbing || CarriedLoot != null) return false;
+            if (!IsServerInitialized || !IsSpawned || chest == null || !chest.IsSpawned || motor.IsDead || motor.IsKnockedBack || motor.IsClimbing || CarriedLoot != null || CarryingBalanceStone) return false;
             if (!continuing && (motor.LocomotionLocked || WorkingLoot != null)) return false;
             if (GetComponent<CannonHands>().HasHeldBall) return false;
             var fishing = inventory.Fishing;

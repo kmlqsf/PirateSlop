@@ -12,14 +12,14 @@
 
 ## Полный каталог
 
-Учтено 9652 файлов без `.meta`. Ещё 9550 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
+Учтено 10848 файлов без `.meta`. Ещё 9770 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
 
 | Раздел | Назначение | Файлов |
 | --- | --- | ---: |
 | [.agents](<Docs/ProjectMap/.agents.md>) | Ресурсы раздела; точный состав — в каталоге | 1 |
 | [.cursor](<Docs/ProjectMap/.cursor.md>) | Ресурсы раздела; точный состав — в каталоге | 1 |
 | [.opencode](<Docs/ProjectMap/.opencode.md>) | Ресурсы раздела; точный состав — в каталоге | 4 |
-| [Art](<Docs/ProjectMap/Art.md>) | Исходники арта и Blender | 506 |
+| [Art](<Docs/ProjectMap/Art.md>) | Исходники арта и Blender | 540 |
 | [Assets](<Docs/ProjectMap/Assets.md>) | Ресурсы раздела; точный состав — в каталоге | 2 |
 | [Assets/Animations](<Docs/ProjectMap/Assets-Animations.md>) | Анимации | 27 |
 | [Assets/Audio](<Docs/ProjectMap/Assets-Audio.md>) | Звуковые ресурсы и лицензии | 407 |
@@ -29,22 +29,24 @@
 | [Assets/Game](<Docs/ProjectMap/Assets-Game.md>) | Игровые подсистемы и эффекты | 83 |
 | [Assets/Houidisoft technology](<Docs/ProjectMap/Assets-Houidisoft technology.md>) | Ресурсы раздела; точный состав — в каталоге | 12 |
 | [Assets/JMO Assets](<Docs/ProjectMap/Assets-JMO Assets.md>) | Ресурсы раздела; точный состав — в каталоге | 18 |
-| [Assets/Materials](<Docs/ProjectMap/Assets-Materials.md>) | Материалы | 134 |
+| [Assets/Materials](<Docs/ProjectMap/Assets-Materials.md>) | Материалы | 140 |
 | [Assets/Mirza](<Docs/ProjectMap/Assets-Mirza.md>) | Ресурсы раздела; точный состав — в каталоге | 1 |
-| [Assets/Models](<Docs/ProjectMap/Assets-Models.md>) | Модели и связанные ресурсы | 6550 |
+| [Assets/Models](<Docs/ProjectMap/Assets-Models.md>) | Модели и связанные ресурсы | 6647 |
 | [Assets/Plugins](<Docs/ProjectMap/Assets-Plugins.md>) | Плагины | 5 |
-| [Assets/Prefabs](<Docs/ProjectMap/Assets-Prefabs.md>) | Готовые игровые объекты | 120 |
-| [Assets/Resources](<Docs/ProjectMap/Assets-Resources.md>) | Ресурсы, доступные для загрузки по имени | 98 |
+| [Assets/Prefabs](<Docs/ProjectMap/Assets-Prefabs.md>) | Готовые игровые объекты | 125 |
+| [Assets/Resources](<Docs/ProjectMap/Assets-Resources.md>) | Ресурсы, доступные для загрузки по имени | 149 |
 | [Assets/Scenes](<Docs/ProjectMap/Assets-Scenes.md>) | Сохранённые сцены | 3 |
-| [Assets/Scripts](<Docs/ProjectMap/Assets-Scripts.md>) | Игровой код и редакторские инструменты | 479 |
-| [Assets/Settings](<Docs/ProjectMap/Assets-Settings.md>) | Настройки игровых систем и рендеринга | 51 |
-| [Assets/Shaders](<Docs/ProjectMap/Assets-Shaders.md>) | Шейдеры | 19 |
+| [Assets/Scripts](<Docs/ProjectMap/Assets-Scripts.md>) | Игровой код и редакторские инструменты | 515 |
+| [Assets/Settings](<Docs/ProjectMap/Assets-Settings.md>) | Настройки игровых систем и рендеринга | 55 |
+| [Assets/Shaders](<Docs/ProjectMap/Assets-Shaders.md>) | Шейдеры | 20 |
 | [Assets/StreamingAssets](<Docs/ProjectMap/Assets-StreamingAssets.md>) | Ресурсы раздела; точный состав — в каталоге | 5 |
 | [Assets/Tests](<Docs/ProjectMap/Assets-Tests.md>) | Исходники проверок | 19 |
 | [Assets/ThirdParty](<Docs/ProjectMap/Assets-ThirdParty.md>) | Сторонние ресурсы | 20 |
 | [Assets/TutorialInfo](<Docs/ProjectMap/Assets-TutorialInfo.md>) | Ресурсы раздела; точный состав — в каталоге | 2 |
 | [Assets/UI](<Docs/ProjectMap/Assets-UI.md>) | Ресурсы интерфейса | 39 |
-| [Docs](<Docs/ProjectMap/Docs.md>) | Документы и сохранённые отчёты | 41 |
+| [Assets/_Recovery](<Docs/ProjectMap/Assets-_Recovery.md>) | Сохранённые восстановленные данные | 1 |
+| [Captures](<Docs/ProjectMap/Captures.md>) | Ресурсы раздела; точный состав — в каталоге | 959 |
+| [Docs](<Docs/ProjectMap/Docs.md>) | Документы и сохранённые отчёты | 43 |
 | [Packages](<Docs/ProjectMap/Packages.md>) | Манифест, lock-файл и встроенные пакеты | 922 |
 | [ProjectSettings](<Docs/ProjectMap/ProjectSettings.md>) | Настройки Unity | 28 |
 | [Root](<Docs/ProjectMap/Root.md>) | Корневые инструкции, планы и служебные файлы | 27 |
@@ -54,6 +56,27 @@
 Не индексируются генерируемые сборки, кэши и локальное состояние: `.git/`, `.idea/`, `.vs/`, `Builds/`, `Library/`, `Logs/`, `Temp/`, `UserSettings/`, `__pycache__/`, `bin/`, `node_modules/`, `obj/`. В Captures индексируются только отслеживаемые Git файлы; промежуточные резервные CoastalTripo_Pre*.blend не индексируются. Зависимости из Unity PackageCache представлены манифестом/lock-файлом; встроенные пакеты из `Packages/` перечислены полностью. Скрытые конфиги вне исключённых папок включены только как пути, их содержимое не копируется.
 
 ## Механики и точки входа
+
+### Телепортация корабля через F8 (`developer-teleport`)
+
+Ключевые слова: телепортация, телепорт, F8.
+
+DeveloperMenu содержит подменю Телепортация: категории Скалы, Ивенты, Острова, выпадающий список с поиском, кнопки Телепорт и Обновить список мест. Доступно в Editor/Development Build с существующим разрешением хоста. Сервер собирает места из ProceduralWorld, тестовой галереи и текущих морских ивентов, включая объекты вне радиуса видимости клиента; при нажатии заново разрешает ключ и подбирает свободную воду рядом с целью по глубине, геометрии и габаритам корабля.
+NetworkDeveloperTeleport переносит текущий корабль или домашний корабль игрока, самого игрока, пассажиров, закреплённые предметы, свободные ядра и сундуки, а также груз в руках. Сохраняет локальное размещение на палубе, состояние корабля, паруса и якорь; сбрасывает скорость, старые управляющие захваты и визуальное сглаживание. Ревизия телепорта в корабельных снимках и CaptainState отбрасывает старые сетевые позиции. ShipController.Restore принимает необязательную новую точку якоря. ProtocolVersion 154. Проверка ограничена компиляцией; Play Mode, сборка и игровой сетевой перенос не запускались.
+11.10.2026: обязательное правило — каждый новый тестовый ивент сразу получает телепорт в F8 / Телепортация / Ивенты. Раковина собирается из NetworkClamEvent.ServerEvents независимо от клиентской видимости, со штатным переносом корабля и груза. ProtocolVersion155.
+
+- [Assets/Scripts/Player/DeveloperMenu.cs](<Assets/Scripts/Player/DeveloperMenu.cs>) — Исходник C#: DeveloperMenu.
+- [Assets/Scripts/World/DeveloperTeleportDestinations.cs](<Assets/Scripts/World/DeveloperTeleportDestinations.cs>) — Исходник C#: DeveloperTeleportDestination, DeveloperTeleportDestinations.
+- [Assets/Scripts/Networking/NetworkDeveloperTeleport.cs](<Assets/Scripts/Networking/NetworkDeveloperTeleport.cs>) — Исходник C#: NetworkWeapon, NetworkShip, NetworkPlayer.
+- [Assets/Scripts/Networking/NetworkPlayer.cs](<Assets/Scripts/Networking/NetworkPlayer.cs>) — Исходник C#: CaptainInput, CaptainState, NetworkPlayer.
+- [Assets/Scripts/Networking/NetworkShip.cs](<Assets/Scripts/Networking/NetworkShip.cs>) — Исходник C#: NetworkShip.
+- [Assets/Scripts/ShipController.cs](<Assets/Scripts/ShipController.cs>) — Исходник C#: ShipController.
+- [Assets/Scripts/Networking/NetworkFish.cs](<Assets/Scripts/Networking/NetworkFish.cs>) — Исходник C#: InventoryItem, NetworkFish.
+- [Assets/Scripts/Networking/NetworkLooseCannonball.cs](<Assets/Scripts/Networking/NetworkLooseCannonball.cs>) — Исходник C#: NetworkLooseCannonball.
+- [Assets/Scripts/Networking/NetworkLootChest.Ocean.cs](<Assets/Scripts/Networking/NetworkLootChest.Ocean.cs>) — Исходник C#: SeaLootKind, SeaLootState, NetworkLootChest.
+- [Assets/Scripts/Networking/SessionConfig.cs](<Assets/Scripts/Networking/SessionConfig.cs>) — Исходник C#: SessionConfig.
+- [Assets/Settings/Networking/SessionConfig.asset](<Assets/Settings/Networking/SessionConfig.asset>) — Настройки или данные Unity.
+- [Assets/Scripts/Networking/NetworkClamEvent.cs](<Assets/Scripts/Networking/NetworkClamEvent.cs>) — Исходник C#: ClamLeverStroke, ClamLeverHold, NetworkClamEvent.
 
 ### Улучшения рогалика из сундуков (`roguelike-upgrades`)
 
@@ -175,6 +198,8 @@ ShipBilgeWater создаёт отдельную поверхность без �
 2026-10-10 после жалобы на сброс волной при500%: только environment_test ShipController интегрирует подъём/pitch/roll с инерцией, демпфированием и скоростью изменения волновой опоры вместо прежнего exp-сглаживания; подшаг≤.01с, вертикальное ускорение≤40м/с². ShipBuoyancy.ExposedHullLift учитывает сухие участки как нулевое погружение, исключая отрицательную плавучесть от них; использует те же27кэшированных высот. Осадка/затопление/пушки и существующий кинематический сетевой мотор/ShipState сохранены, другие карты имеют прежнюю реакцию. Пассажир на реальной целой палубе не переходит в плавание от внешнего гребня; вода трюма/затопленный корабль/выход за борт сохранены. Старт трубы/кошки откладывается до готовности коллизии; обезьянка не изменена. C#errors0 после нативной перезагрузки, без Play/500%/двух клиентов. Docs/TestOcean.md.
 2026-10-10 BilgeDeck v12: насос ограничен −82° вокруг штатного шарнира; геометрический контакт наружной части ручки с корпусом начинается после83°. Большой ход сохранён, удержаниеE и откачка не изменены. Четыре деревянные вертикальные балки BilgeBeam_Bow/Stern_Port/Starboard у бортов, Y±11.4м в Blender, от пола5.21 до низа палубы8.55. Каждая имеет8 фрагментов и отдельную Mast-группу: первый удар выбивает щепу, второй обрушает балку; реи верхних мачт исключают BilgeBeam при поиске опоры. По одному исходному корабельному фонарю на балке: сетевой свет/E, штатный Rigidbody/ConfigurableJoint и маятник, падение после разрушения балки. В ShipV3Features всего10 фонарей,31 physics-body/pendulum-slot; начальная световая маска вычисляется по числу фонарей. Сохранены Blender/FBX/ShipV3Test/Profile GUIDs; игровая проверка остаётся пользователю.
 2026-10-10 сохранено исправление v13 внутренней обшивки в ShipV3_Fitted.blend и BilgeDeck.fbx через открытый Blender MCP, обновлён ShipV3Test.prefab через Unity MCP. RepairHoldInterior удаляет накладные кромки, подгоняет 1084 внутренних меша к наружной поверхности с максимальным сдвигом 0.0963м, триангулирует и сглаживает внутренние грани, сохраняет фрагменты и наружную форму корпуса. ClipHullTrimToSkin обрезает 245 мешей Wale по настоящей наружной поверхности вместо направленияX. Балки и их фрагменты используют Hull_Honey_Oak_V0 с волокнами вдоль высоты. AddBilgeDeck вызывает новые процедуры вместо SealHoldEndSeams. Игровую и визуальную приёмку выполняет пользователь.
+11.10.2026, исправление после игровой проверки: непрерывная плоскость изгиба и покадровое сглаживание сетевых часов/высоты щупалец. Урон кораблю один раз на волну: первый этап — шесть соседних блоков верхней обшивки трюма со стороны удара и случайные верхние секции; второй — большое разрушение корпуса, заполнение трюма за 3 с и быстрое погружение. Штурвал и минимум два живых паруса с их мачтами защищены. Урон людям прежний (50/100). Вместо повторных радиусных ударов и обхода графа — явные маски, максимум две секции за кадр, сетевые дельты; физика и меши готовятся заранее. ProtocolVersion146. Результат только в общей Builds/Windows/PirateSlop.exe; игровой FPS и новый баланс требуют ручной проверки.
+11.10.2026, повторный фриз при ударе кракена: ShipBilgeLeakGeometry.Builder.TryBuild копирует геометрию пробоин на основном потоке, объединяет и строит форму водяных струй в Task.Run, затем загружает Unity-меши по одному за кадр. ShipBilgeWater объединяет изменения за 0.06 с, оставляет старые струи до готовности и переиспользует неизменившиеся. Физический приток воды, этапы урона и сроки затопления сохранены. Игровой замер не выполнялся.
 
 - [Assets/Scripts/ShipController.cs](<Assets/Scripts/ShipController.cs>) — Исходник C#: ShipController.
 - [Assets/Scripts/ShipDeckPassenger.cs](<Assets/Scripts/ShipDeckPassenger.cs>) — Исходник C#: ShipDeckPassenger.
@@ -239,7 +264,7 @@ ShipBilgeWater создаёт отдельную поверхность без �
 - [Assets/Scripts/ShipDestruction/ShipFlooding.cs](<Assets/Scripts/ShipDestruction/ShipFlooding.cs>) — Исходник C#: ShipBreach, ShipFlooding.
 - [Assets/Scripts/World/BoatAttackOcean.cs](<Assets/Scripts/World/BoatAttackOcean.cs>) — Исходник C#: BoatAttackOcean, SpectralWave.
 - [Assets/Scripts/World/UnderwaterEnvironment.cs](<Assets/Scripts/World/UnderwaterEnvironment.cs>) — Исходник C#: UnderwaterEnvironment.
-- [Assets/Scripts/Ships/ShipBilgeLeakGeometry.cs](<Assets/Scripts/Ships/ShipBilgeLeakGeometry.cs>) — Исходник C#: ShipBilgeLeakGeometry, Surface, Aperture, Patch, Builder.
+- [Assets/Scripts/Ships/ShipBilgeLeakGeometry.cs](<Assets/Scripts/Ships/ShipBilgeLeakGeometry.cs>) — Исходник C#: ShipBilgeLeakGeometry, Surface, Aperture, Patch, Builder, SurfaceData.
 - [Assets/Shaders/BilgeWaterOptics.hlsl](<Assets/Shaders/BilgeWaterOptics.hlsl>) — Код шейдера.
 - [Packages/com.unity.urp-water-system/Runtime/Shaders/Caustics.shader](<Packages/com.unity.urp-water-system/Runtime/Shaders/Caustics.shader>) — Шейдер.
 - [Assets/Scripts/Ships/ShipDamagePreparation.cs](<Assets/Scripts/Ships/ShipDamagePreparation.cs>) — Исходник C#: ShipDamagePreparation, BakeJob.
@@ -254,6 +279,7 @@ ShipBilgeWater создаёт отдельную поверхность без �
 - [Assets/Scripts/Editor/ShipV3HoldSupportsSetup.cs](<Assets/Scripts/Editor/ShipV3HoldSupportsSetup.cs>) — Исходник C#: ShipV3HoldSupportsSetup.
 - [Tools/ShipV3/RepairHoldInterior.py](<Tools/ShipV3/RepairHoldInterior.py>) — Инструмент Python.
 - [Tools/ShipV3/ClipHullTrimToSkin.py](<Tools/ShipV3/ClipHullTrimToSkin.py>) — Инструмент Python.
+- [Assets/Scripts/ShipDestruction/ShipDestruction.Kraken.cs](<Assets/Scripts/ShipDestruction/ShipDestruction.Kraken.cs>) — Исходник C#: ShipDestruction, KrakenBlock.
 - [unity.md](<unity.md>) — Документация.
 - [multiplayer-plan.md](<multiplayer-plan.md>) — Документация.
 - [Assets/Audio/ShipInteractions/SOURCES.md](<Assets/Audio/ShipInteractions/SOURCES.md>) — Документация.
@@ -270,6 +296,8 @@ ShipGripAim расширяет наведение на парусные ручк
 Ship V3: RopeTubeVisual восстанавливает постоянное круглое сечение RunningRope по центрам UV-колец деформированного меша; UV пересчитываются по длине. ConfigureSailRopes добавляет пять вращений шкивов в ShipV3VisualRig.Motions, исключая их из статических render batches.
 Кастомизация Ship V3 восстановлена: пять парусов и два флага, два слоя изображений, цвет и износ. Семь старых индексов сохранены, фор-марсель добавлен как индекс 7; архивный третий флаг скрыт. У V3 UV 0..1 и лицевая/обратная сторона определяются ориентацией грани. Коллайдеры выбора создаются только в меню. Название до 28 текстовых элементов сохраняется с пресетом и передаётся вместе с кастомизацией; сервер принимает данные первого участника команды и раздаёт изображения поздним клиентам.
 Название корабля собирается из настоящих мешей букв Georgia Bold, кириллица/латиница/цифры. Для читаемости с 5 м заполнение светло-золотистое, штрихи слегка утолщены, латунный кант расширен до 0.032 cap с ограничением по толщине штриха; отверстия реальные. Непрозрачный URP Lit закрывается геометрией корабля. ShipNameGlyphLibrary содержит меши, advance и kerning; ShipNameplate объединяет имя в два submesh, вписывает в 4.2×0.60 м, сжимает ширину глифов до 0.88 и обновляет только при изменении строки. Face/rim имеют металлическость 0.15/0.35, отдельный материал канта не меняет рамку доски. Бизань получает runtime-копию меша с ортогональной UV2, UV0/FBX/анимации сохранены. Обычные картинки сохраняют RGB при тёплом свете; размеры исходного изображения и физические размеры парусов задают правильные пропорции.
+11.10.2026: скрыты отдельные вертикальные меши _Seam_. ShipV3SailFootSetup сохраняет четыре SailPinned-меша с нижним краем у реальной нижней реи, исходной UV и morph Furled. ShipV3ClothMotion фиксирует верхний и нижний край по UV: 4v(1-v), для треугольной бизани высота колонки 1-u; изгибается середина, флаги сохраняют прежнее движение. Пять мешей FootLashings содержат по 7 видимых пеньковых привязок, с Deploy_0/25/50/75/100 для следования ткани и реям. В пустой Mizzen_FootBoom_Pivot добавлена видимая нижняя деревянная балка. Крепления включены в зависимые renderer секций повреждений. Одинаковые исправления сохранены в ShipV3Test и ShipV3Menu, повторный setup использует исходные FBX-меши и сохраняет GUID. Визуальная/игровая приёмка не запускалась.
+11.10.2026, исправление по повторным снимкам: квадратные FootLashings заменены тонкими круглыми петлями вокруг нижней реи (48 сегментов кольца, 8 по сечению, радиус троса 0.017 м). Сохранены пять Deploy-форм и зависимость от повреждений. Полосы _Seam_ удалены из префабов и RigMeshes; их Attachments также удалены, поскольку UpdateAttachments повторно включал поддерживаемые объекты. Оба префаба ShipV3Test/ShipV3Menu используют новые петли и закреплённую ткань. Визуальный прогон не выполнялся.
 
 - [Assets/Scripts/SailSystem.cs](<Assets/Scripts/SailSystem.cs>) — Исходник C#: SailSystem.
 - [Assets/Scripts/Interaction/DirectShipControls.cs](<Assets/Scripts/Interaction/DirectShipControls.cs>) — Исходник C#: DirectShipControls.
@@ -294,6 +322,19 @@ Ship V3: RopeTubeVisual восстанавливает постоянное кр
 - [Assets/Models/Ships/ShipNameplate/ShipNameplate.fbx](<Assets/Models/Ships/ShipNameplate/ShipNameplate.fbx>) — Модель / анимации FBX.
 - [Assets/Scripts/Customization/ShipNameGlyphLibrary.cs](<Assets/Scripts/Customization/ShipNameGlyphLibrary.cs>) — Исходник C#: ShipNameGlyphLibrary, Glyph, Kerning.
 - [Assets/Resources/Customization/ShipNameGlyphs.asset](<Assets/Resources/Customization/ShipNameGlyphs.asset>) — Настройки или данные Unity.
+- [Assets/Scripts/Editor/ShipV3SailFootSetup.cs](<Assets/Scripts/Editor/ShipV3SailFootSetup.cs>) — Исходник C#: ShipV3SailFootSetup.
+- [Assets/Scripts/Ships/ShipV3ClothMotion.cs](<Assets/Scripts/Ships/ShipV3ClothMotion.cs>) — Исходник C#: ShipV3ClothMotion.
+- [Assets/Resources/Ships/ShipV3Test.prefab](<Assets/Resources/Ships/ShipV3Test.prefab>) — Префаб Unity.
+- [Assets/Models/Ships/ShipV3/SailPinned_Main_Course.asset](<Assets/Models/Ships/ShipV3/SailPinned_Main_Course.asset>) — Настройки или данные Unity.
+- [Assets/Models/Ships/ShipV3/SailPinned_Main_Topsail.asset](<Assets/Models/Ships/ShipV3/SailPinned_Main_Topsail.asset>) — Настройки или данные Unity.
+- [Assets/Models/Ships/ShipV3/SailPinned_Fore_Course.asset](<Assets/Models/Ships/ShipV3/SailPinned_Fore_Course.asset>) — Настройки или данные Unity.
+- [Assets/Models/Ships/ShipV3/SailPinned_Fore_Topsail.asset](<Assets/Models/Ships/ShipV3/SailPinned_Fore_Topsail.asset>) — Настройки или данные Unity.
+- [Assets/Models/Ships/ShipV3/SailFoot_Main_Course.asset](<Assets/Models/Ships/ShipV3/SailFoot_Main_Course.asset>) — Настройки или данные Unity.
+- [Assets/Models/Ships/ShipV3/SailFoot_Main_Topsail.asset](<Assets/Models/Ships/ShipV3/SailFoot_Main_Topsail.asset>) — Настройки или данные Unity.
+- [Assets/Models/Ships/ShipV3/SailFoot_Fore_Course.asset](<Assets/Models/Ships/ShipV3/SailFoot_Fore_Course.asset>) — Настройки или данные Unity.
+- [Assets/Models/Ships/ShipV3/SailFoot_Fore_Topsail.asset](<Assets/Models/Ships/ShipV3/SailFoot_Fore_Topsail.asset>) — Настройки или данные Unity.
+- [Assets/Models/Ships/ShipV3/SailFoot_Mizzen.asset](<Assets/Models/Ships/ShipV3/SailFoot_Mizzen.asset>) — Настройки или данные Unity.
+- [Assets/Models/Ships/ShipV3/SailFoot_Mizzen_Boom.asset](<Assets/Models/Ships/ShipV3/SailFoot_Mizzen_Boom.asset>) — Настройки или данные Unity.
 - [unity.md](<unity.md>) — Документация.
 - [blender.md](<blender.md>) — Документация.
 
@@ -386,6 +427,8 @@ ShipDeckPassenger учитывает BoardingWalkSurface: перенос по т
 2026-10-09 общий ProtocolVersion139 после объединения локальных мортиры/взрывного ядра138 и сетевых изменений чаек/неуязвимости F8 из136. Пинок, обезьянка, рэгдолл, плавное вставание и F8 сохранены вместе; обоим игрокам нужны одинаковые новые сборки. Игровая проверка объединённой версии не запускалась.
 2026-10-10: Steam-ники над игроками. NetworkPlayer.Identity синхронизирует SteamName серверным SyncVar, Steam-сессия получает имя по адресу владельца из Steam; IP-сессия передаёт локальный Steam-ник owner-only ServerRpc. DisplayName также используется голосовым UI. CrewPresentation заменяет старые номера союзников на один локальный uGUI Canvas с табличками всех видимых союзников/противников и именами ботов. Светлая надпись 21px с обводкой, скруглённая тёмная подложка, зелёный/латунный акцент команды и индикатор речи. Привязка к Humanoid Head или generic mixamorig:Head, fallback по CharacterController; экранное разрешение масштабируется CanvasScaler. Свой ник только в третьем лице; за препятствиями/меню/после смерти скрывается, дальность50м с fade35–50м. RaycastNonAlloc каждые0.1с, очистка despawn и ресурсов Canvas. RichText выключен, управляющие символы удаляются, Unicode-графемы не разрезаются при сокращении. ProtocolVersion142 из-за нового SyncVar/RPC. Компиляция через прямой Unity MCP без ошибок; PlayMode, визуальная приёмка и онлайн не запускались.
 2026-10-10 уточнение по игровому скриншоту: крупная рамочная табличка отвергнута пользователем. CrewPresentation теперь рисует только Steam-ник 16px Regular с мягкой тенью и тонкой обводкой; подложка, рамка и постоянный ромб удалены. Сам текст расположен в центре проекции головы, экранный clamp убран (на краях скрывается), голосовые полоски появляются сверху по центру без сдвига имени. Мягкий оттенок союзника/нейтральный оттенок противника и alpha0.88, прежняя видимость35–50м/LOS сохранены. Референс — игровые снимки Sea of Thieves, ссылки просмотрены через web search. Сетевой формат не менялся.
+11.10.2026: AdvancedPlayerController.SetInteractionCameraPull задаёт временный наклон камеры до 6 градусов и смещение до 1.8 см, сглаживание exp(-10dt), автоматический возврат, когда взаимодействие больше не задаёт pull. SlotMachinePlayer передаёт предсказанное положение рычага, DirectShipControls — вертикальное движение захваченных рычагов парусов/казённика, BilgePumpPlayer — цикл помпы с амплитудой 3.6 градуса. Основной pitch при захвате не меняется; ЛКМ отпущена/захват отменён — камера возвращается. Игровой прогон не выполнялся.
+2026-10-11: WhalePlayerInteraction перехватывает ЛКМ/мышь для ослабления и вытягивания гарпунов. WeaponArmRig плавно ведёт обе руки за стержнем; камера использует существующий SetInteractionCameraPull. ShipDeckPassenger распознаёт Rigidbody кита как Support/PlatformObject, но свойство Ship возвращает только настоящий ShipController, чтобы корабельные действия не применялись к киту. На наклонённой спине добавляется скольжение, приседание уменьшает его; правила плавания/лестниц сохранены. См. whale, ProtocolVersion150.
 
 - [Assets/Scripts/AdvancedPlayerController.cs](<Assets/Scripts/AdvancedPlayerController.cs>) — Исходник C#: AdvancedPlayerController.
 - [Assets/Scripts/AdvancedPlayerController.Spectator.cs](<Assets/Scripts/AdvancedPlayerController.Spectator.cs>) — Исходник C#: AdvancedPlayerController.
@@ -415,6 +458,7 @@ ShipDeckPassenger учитывает BoardingWalkSurface: перенос по т
 - [Assets/Scripts/Networking/SessionCombatRules.cs](<Assets/Scripts/Networking/SessionCombatRules.cs>) — Исходник C#: CombatRulesMessage, SessionController.
 - [Assets/Scripts/Networking/NetworkPlayer.Identity.cs](<Assets/Scripts/Networking/NetworkPlayer.Identity.cs>) — Исходник C#: NetworkPlayer.
 - [Assets/Scripts/UI/CrewPresentation.cs](<Assets/Scripts/UI/CrewPresentation.cs>) — Исходник C#: CrewPresentation, Plate.
+- [Assets/Scripts/WhalePOI/WhalePlayerInteraction.cs](<Assets/Scripts/WhalePOI/WhalePlayerInteraction.cs>) — Исходник C#: WhalePlayerInteraction.
 - [animation-review.md](<animation-review.md>) — Документация.
 - [unity.md](<unity.md>) — Документация.
 
@@ -512,12 +556,14 @@ ExplosiveBall=28: отдельное ручное взрывное ядро из
 
 Ключевые слова: лут, предметы, инвентарь, inventory.
 
+2026-10-11, исправления по игровой проверке: центральная стойка увеличена в1.8раза, буйки в2.2раза. Сама модель буйка пересобрана из12 изогнутых дубовых клёпок ShipV3, дощатой крышки/днища, трёх плоских железных обручей с заклёпками, четырёх деревянных подкосов, крепёжного кольца и пеньковых обвязок; прежняя цельная оболочка удалена. Флаги на стойке и24буйках повторяют прогресс, цвет и спор; SeaSignalRig анимирует каретку, фал, противовес и лебёдку. Сундук привязан под стойкой на глубине2.4м; при100% стойка распадается, сундук всплывает и становится доступным, поднятые флаги на буйках остаются после разбора награды. Команда победителя сохранена сервером. Плот только в тестовом layout разворачивается с16м и ограничен22м от начальной станции. Контакт подводной верёвки запечён по настоящему ChestBase:17×256 точек/нормалей, прилегание между четырьмя скобами. Исходные правила захвата, взлома и разматывания сохранены. Префабы и меши сохранены через Unity MCP; Play Mode и игровая/визуальная/сетевая приёмка не выполнялись.
+2026-10-11, акулы: NetworkLootChest.Sharks симулирует три акулы на сервере30Гц и передаёт позы10Гц. Неровные орбиты меняют радиус, темп и глубину; преследование учитывает глубину игрока, поворот корпуса и скорость Swim дают погружение/подъём. Избегание и раздвижение капсул тела выполняются на сервере и при сглаживании клиентом. Урон25 наносится при реальном сближении морды, с общим перерывом1.2с. SharkHitTarget и FirearmDamageBatch связывают выстрел любого огнестрела, включая подводный снаряд, с отдельной акулой: уход на15–19м, ожидание7с после достижения глубины, атака из глубины при пловце в7м от сундука либо возврат в стаю. Рыба сохраняет отвлечение10/15с, открытие/перенос сундука рассеивает стаю. SharkVisual и существующие Swim/Bite сохранены; ProtocolVersion152.
 2026-10-11: Plank доступен для подбора, сундуков, выкладки и обмена, максимум пять досок в одном стеке. ChestLoot.json: вес 20, количество 2–5; валидатор допускает Plank. На основном ShipV3Test пять Loot_Plank_1..5 в ExperimentalShipEquipment с обычным восполнением. NetworkPlayer.DropPrefabs[6] и DefaultLoot.LoosePrefabs[6] ссылаются на зарегистрированный DroppedPlank1.
 Подбор и расход предметов подтверждает сервер. Сверять идентификаторы предметов, иконки и каталог. Одинаковые предметы складываются в стак без игрового лимита количества; ядра сохраняют отдельный слот на 2 ядра одного типа. NetworkWeapon.stackCounts хранит количество оружия/снаряжения; рыба и ром используют прежние счётчики без лимитов 20/6. Расход, сброс, установка пушек и TransferInventoryTo сохраняют остаток стака. DeveloperMenu содержит ползунок скорости корабля 100–500%: команда 20 применяет к текущему кораблю под игроком либо его собственному. Сервер меняет NetworkShip.DeveloperSpeedMultiplier (SyncVar); ShipController масштабирует максимальную скорость и разгон/торможение, сохраняя ограничения якоря, повреждений, затопления и буксировки. DeveloperMenu содержит выпадающий список пяти морских ивентов и спаун перед текущим/собственным кораблём через команду 23 NetworkDeveloperTools. Сервер проверяет свободную воду, наполняет сундук из ChestLoot.json и учитывает его при удалении тестовых объектов. Надписи морских лутовых ивентов скрыты по умолчанию; локальный переключатель DeveloperMenu показывает все доступные клиенту ивенты без ограничения расстояния. Чит-окно F8 разделено на вкладки Игрок, Лут, Корабль и Мир; выдача предметов, все улучшения и морские ивенты выбираются компактными выпадающими списками с текстовым поиском. Каталог улучшений кэшируется при первом открытии окна. Команда 21 создаёт наполненный сундук в 3 м перед игроком на свободной земле или палубе, закрепляя его на корабле; команда 22 выдаёт выбранное улучшение через серверное состояние и штатные эффекты, без расходования очков и повторной выдачи уже полученного. Оба спауна учитывают лимит и удаление тестовых объектов. Команда 19 оставлена переключателю кракена.
 NetworkWeapon имеет отдельные partial-файлы; для морского лута начать с NetworkWeapon.SeaLoot.cs.
 Состав сундуков и число разных типов (до 10) задаёт Assets/StreamingAssets/Loot/ChestLoot.json; любой новый лут сундуков обязательно подключать туда. Сервер перечитывает таблицу при наполнении; инструкция рядом в ChestLoot.README.md.
 Плот движется на сервере со скоростью 20% MaxSpeed корабля, поворачивает внутрь за 150 м от границы зоны; ограничение радиуса оставляет 108 м от центра плота до границы при сужении. RaftPlatform и ShipDeckPassenger переносят игрока, сетевой Platform ссылается на сундук. ShipSpyglassView.LootHint создаёт один полупрозрачный золотистый столб света с сечением 1×1 м и высотой 300 м над ближайшим активным морским ивентом из ClientChests. Выбор по расстоянию от игрока не зависит от направления взгляда; переносимые, пустые и закреплённые на корабле сундуки исключаются. LootEventBeam.shader использует мягкие края, затухание к вершине и depth test. Render callbacks показывают столб только камере подзорной трубы, на выходе скрывают. Экранное пятно удалено. В обеих подзорных трубах туман сохраняется первую секунду, затем за 3 с SmoothStep ослабляет его плотность до 1% исходной. ShipSpyglassView.FogMultiplier применяется к обычному и SeaMist туману только камеры трубы; выход восстанавливает значения. Экранный взлом: мышь/A/D задают угол, ЛКМ/пробел вращают замок, три отмычки на попытку; секретный угол и успех проверяет сервер.
-Подводный сундук: только сундук и верёвка от дна с витками вокруг корпуса. E схватывает верёвку; сервер считает реальное плавание вокруг сундука, по умолчанию два круга (LootCatalog.SunkenUnwrapTurns). Обратное движение наматывает обратно; E/Q/Esc отпускают с сохранением прогресса. После полного разматывания сундук всплывает. Боты плывут по орбите, прежние буй и три крепления удалены. Две процедурные чайки с взмахами крыльев кружат на высоте 10–12 м над водой по радиусам 6–8 м до завершения всплытия, обозначая место сундука.
+Подводный сундук: непрерывный объёмный пеньковый канат от дна, плавные витки по размерам корпуса и четыре корабельные скобы с пальцами и заклёпками. E схватывает конец с настоящим стопорным узлом; сервер считает реальное плавание вокруг сундука, по умолчанию два круга (LootCatalog.SunkenUnwrapTurns). Обратное движение наматывает обратно; E/Q/Esc отпускают с сохранением прогресса. Скобы отлетают на 22/48/74/100% разматывания, затем тонут; возврат прогресса возвращает соответствующий крепёж. Поздний клиент сразу получает актуальное положение витков и креплений. После полного разматывания сундук всплывает. Боты плывут по прежней орбите. Две чайки кружат на высоте 10–12 м над водой до завершения всплытия.
 VortexBottle=23 — бутылка с вращающимся вихрем. ЛКМ бросает через NetworkEquipment и NetworkWeapon.VortexBottle. NetworkVortexBottle считает полёт и столкновения на сервере; удар по NetworkShip даёт 500% обычной скорости на 10 с, повторный удар обновляет таймер без сложения. NetworkShip.VortexBoost хранит SyncVar, ShipController за 0.35 с разгоняет до 500% базовой максимальной скорости самостоятельной тягой, включая старт с нуля, закрытые паруса и опущенный якорь. На время эффекта обычные ограничения тяги и буксировки не задают скорость, якорь перемещается вместе с кораблём через anchorSeabedPoint; после 10 с возвращаются обычные правила, опущенный якорь останавливает корабль в новой точке. DeveloperSpeedMultiplier сохраняется. VortexBottleSetup регистрирует pickup/model/icon/DefaultLoot и тестовую палубу. ChestLoot.json содержит отдельный настраиваемый entry. VortexBottleVisual создаёт локальный объём шести дымчатых потоков внутри прозрачной бутылки при Awake.
 FogBottle=24 — бутылка тумана, бросок по ЛКМ через NetworkWeapon.FogBottle и NetworkEquipment. NetworkFogBottle считает попадание на сервере, включая геометрию и первую точку пересечения CPU-поверхности воды. При разбитии создаёт отдельный сетевой FogCloud в мировой точке удара. NetworkFogCloud живёт 15 с, синхронизирует возраст каждые 0.2 с и даёт клиентам плавное время, включая позднее появление. FogCloudVisual/BottleFog.shader рисуют объём эллипсоида радиусом 50 м и высотой 44 м, цвет .23/.28/.29, плотность .18; raymarch с depth clipping работает снаружи и изнутри, независимо от обычного тумана, читов и подзорной трубы. Облако разворачивается за .55 с и исчезает в последние 1.1 с. FogBottleVisual использует тот же эффект внутри стеклянной бутылки с отдельными локальными осями, плотностью 10 и очередью 3000 перед стеклом. FogBottleSetup сохраняет модель/pickup/cloud, иконку, каталог, сетевой реестр, тестовую палубу; ChestLoot.json имеет отдельную настраиваемую строку без изменения прежних настроек. ProtocolVersion=108.
 Огненный череп — пятый морской ивент. NetworkSkullEvent вращает платформу и череп 8°/с; сервер принимает первое фронтальное попадание ядром в увеличенный объём рта 25.2×13.68×20 м, включая зубы и края, через SkullMouthTarget или коллайдер черепа, гасит огонь и фиксирует угол. Через 3 с создаёт наш сундук из ChestLoot.json и запускает дугой 2.5 с на свободную поверхность палубы корабля стрелявшего. TryFindRewardDeckPoint использует коллайдеры палубы, включая секции разрушения; траектория следует за локальной точкой корабля через существующие support/anchor, после посадки сундук остаётся закреплён на корабле. При отсутствии пригодной палубы или потере корабля награда падает в воду. Платформа остаётся потушенной. SkullFireVfx: девять ParticleSystem, три источника света, URP SkullFire; затухание .55 с, late join восстанавливает состояние. SeaLootSpawner, F8 и подсказка подзорной трубы поддерживают ивент. SkullEventSetup сохраняет префаб, каталог и FishNet registry. ProtocolVersion=109; игровая и сетевая приёмка выполняется пользователем. После правки размеры: череп высотой 54 м, платформа шириной 96 м; текущий масштаб ивента ×2 (последний размер уменьшен в 1.5 раза) через RotatingRoot префаба, исходная модель FBX/BLEND сохраняет авторский масштаб; посадка вычислена по контакту нижней поверхности черепа с местной поверхностью платформы. Позиция ивента фиксирована как у острова, Rigidbody FreezeAll. Сокеты, область рта и пространственные параметры огня увеличены ×3; радиус платформы 50 м учитывается при спауне и выбросе сундука. ParticleSystemScalingMode.Hierarchy применяет масштаб иерархии один раз; дальность света и SoftDistance увеличены отдельно. Сундук остаётся обычного размера.
@@ -545,6 +591,8 @@ Lantern=26: ручной фонарь из корабельного Body без 
 FogBottle/VortexBottle: удержание ЛКМ показывает штатную траекторию гранаты, отпускание бросает. NetworkWeapon.GetBottleLaunch и NetworkFogBottle.Advance общие для предпросмотра и серверного полета: скорость корабля, гравитация, радиус0.12м, геометрия и поверхность воды. Переключение предмета, меню и корабельное взаимодействие отменяют прицел.
 Пинок сдвигает свободный лут через серверный swept-box шаг, гравитацию и скольжение; положение остаётся ship-local до падения с палубы. Удерживаемый/несомый/летящий лут исключён. Свободные ядра получают импульс через существующую физику Cannonball.
 2026-10-10 пользователь уточнил: труба/крюк-кошка иногда отсутствуют именно при старте, поведение обезьянки вернуть. NetworkFish.MonkeyCanCollect полностью восстановлен, ограничения её сбора отменены. Только environment_test ExperimentalShipEquipment откладывает OnStartServer-размещение до Update и ждёт настоящей поверхности собственного корабля; SyncTransforms один раз на попытку, RaycastNonAlloc64. Если ShipV3CollisionBatch ещё не включил общий коллайдер после OnEnable, повтор через.25с без создания по запасной высоте. Сохранённые ссылки трубы/кошки и точки проверены native на ShipV3Test; префаб/GUID не менялись. C#errors0, без Play/проверки стартового появления. Docs/TestOcean.md.
+2026-10-11: штатный сундук на ките следует за ChestSocket, закрыт до освобождения трёх независимых связок, выдаёт обычный лут и очко рогалика; таймер кита продолжает идти. SeaLootSpawner включает шестой морской ивент и фиксированный тестовый ряд. См. тему whale; ProtocolVersion150.
+11.10.2026: пользовательская модель ../Blender/Акула/акула.zip заменяет внешний вид всех акул ивента. PrepareTripoShark выполняется через проверенный Blender MCP bridge в отдельной сцене, сохраняет SharkTripoRig.blend и SharkTripo.fbx. Модель длиной 5.2 м, 9570 вершин, 9 костей, плавные веса тела/хвоста/плавников/нижней челюсти. Shark_Swim (40 кадров/24fps) и Shark_Bite (18 кадров) подключены через прежний Shark.controller с Biting/Bite; SharkVisual.prefab сохраняет GUID. SharkTripoSetup назначает URP basecolor/normal/metallic+smoothness (1-roughness), импорт Generic, Swim loop, root motion отключён. SharkSwarmVisual сохраняет три акулы, патруль/преследование/кормление/уход, добавляет короткий выпад ближайшей акулы при серверном SharkAttackRpc. Урон и время отвлечения рыбой сохранены. ProtocolVersion151, единственная общая Windows-сборка; игровая приёмка не выполнялась.
 
 - [Assets/Scripts/Player/PlayerInventory.cs](<Assets/Scripts/Player/PlayerInventory.cs>) — Исходник C#: PlayerInventory.
 - [Assets/Scripts/Player/PlayerInventory.RaftLockpick.cs](<Assets/Scripts/Player/PlayerInventory.RaftLockpick.cs>) — Исходник C#: PlayerInventory.
@@ -649,6 +697,80 @@ FogBottle/VortexBottle: удержание ЛКМ показывает штат�
 - [Assets/Scripts/Networking/NetworkEquipment.BottleAim.cs](<Assets/Scripts/Networking/NetworkEquipment.BottleAim.cs>) — Исходник C#: NetworkEquipment.
 - [Assets/Scripts/Networking/NetworkFish.Kick.cs](<Assets/Scripts/Networking/NetworkFish.Kick.cs>) — Исходник C#: NetworkFish.
 - [Assets/Prefabs/Repair/DroppedPlank1.prefab](<Assets/Prefabs/Repair/DroppedPlank1.prefab>) — Префаб Unity.
+- [Assets/Scripts/Networking/NetworkLootChest.Whale.cs](<Assets/Scripts/Networking/NetworkLootChest.Whale.cs>) — Исходник C#: NetworkLootChest.
+- [Assets/Scripts/Networking/NetworkWeapon.Whale.cs](<Assets/Scripts/Networking/NetworkWeapon.Whale.cs>) — Исходник C#: NetworkWeapon.
+- [Assets/Scripts/Networking/SharkSwarmVisual.cs](<Assets/Scripts/Networking/SharkSwarmVisual.cs>) — Исходник C#: SharkSwarmVisual.
+- [Assets/Scripts/Editor/SharkTripoSetup.cs](<Assets/Scripts/Editor/SharkTripoSetup.cs>) — Исходник C#: SharkTripoSetup.
+- [Assets/Resources/SharkVisual.prefab](<Assets/Resources/SharkVisual.prefab>) — Префаб Unity.
+- [Assets/Models/Shark/Shark.controller](<Assets/Models/Shark/Shark.controller>) — Контроллер анимации.
+- [Assets/Models/Shark/SharkTripo.fbx](<Assets/Models/Shark/SharkTripo.fbx>) — Модель / анимации FBX.
+- [Assets/Models/Shark/SharkBaseColor.jpg](<Assets/Models/Shark/SharkBaseColor.jpg>) — Изображение / текстура.
+- [Assets/Models/Shark/SharkNormal.png](<Assets/Models/Shark/SharkNormal.png>) — Изображение / текстура.
+- [Assets/Models/Shark/SharkMetallic.jpg](<Assets/Models/Shark/SharkMetallic.jpg>) — Изображение / текстура.
+- [Assets/Models/Shark/SharkRoughness.jpg](<Assets/Models/Shark/SharkRoughness.jpg>) — Изображение / текстура.
+- [Assets/Models/Shark/SharkMetalSmooth.png](<Assets/Models/Shark/SharkMetalSmooth.png>) — Изображение / текстура.
+- [Assets/Models/Shark/SharkTripoSkin.mat](<Assets/Models/Shark/SharkTripoSkin.mat>) — Материал Unity.
+- [Art/Blender/Shark/PrepareTripoShark.py](<Art/Blender/Shark/PrepareTripoShark.py>) — Инструмент Python.
+- [Art/Blender/Shark/SharkTripoRig.blend](<Art/Blender/Shark/SharkTripoRig.blend>) — Редактируемая сцена Blender.
+- [Art/Blender/Shark/README.md](<Art/Blender/Shark/README.md>) — Документация.
+- [Art/Blender/Shark/TripoSources/SharkSource.fbx](<Art/Blender/Shark/TripoSources/SharkSource.fbx>) — Модель / анимации FBX.
+- [Assets/Scripts/Loot/SeaEventArt.cs](<Assets/Scripts/Loot/SeaEventArt.cs>) — Исходник C#: SeaEventArt.
+- [Assets/Scripts/Loot/SeaRopeVisual.cs](<Assets/Scripts/Loot/SeaRopeVisual.cs>) — Исходник C#: SeaRopeVisual.
+- [Assets/Scripts/Networking/NetworkLootChest.CaptureVisual.cs](<Assets/Scripts/Networking/NetworkLootChest.CaptureVisual.cs>) — Исходник C#: NetworkLootChest, SignalFlag.
+- [Assets/Scripts/Editor/SeaEventVisualSetup.cs](<Assets/Scripts/Editor/SeaEventVisualSetup.cs>) — Исходник C#: SeaEventVisualSetup.
+- [Assets/Resources/SeaEvents/BoundaryFlagMesh.asset](<Assets/Resources/SeaEvents/BoundaryFlagMesh.asset>) — Настройки или данные Unity.
+- [Assets/Resources/SeaEvents/BuoyGeometry0.asset](<Assets/Resources/SeaEvents/BuoyGeometry0.asset>) — Настройки или данные Unity.
+- [Assets/Resources/SeaEvents/BuoyGeometry1.asset](<Assets/Resources/SeaEvents/BuoyGeometry1.asset>) — Настройки или данные Unity.
+- [Assets/Resources/SeaEvents/CaptureBuoy.prefab](<Assets/Resources/SeaEvents/CaptureBuoy.prefab>) — Префаб Unity.
+- [Assets/Resources/SeaEvents/CaptureFlagMesh.asset](<Assets/Resources/SeaEvents/CaptureFlagMesh.asset>) — Настройки или данные Unity.
+- [Assets/Resources/SeaEvents/CaptureStation.prefab](<Assets/Resources/SeaEvents/CaptureStation.prefab>) — Префаб Unity.
+- [Assets/Resources/SeaEvents/ContestPennantMesh.asset](<Assets/Resources/SeaEvents/ContestPennantMesh.asset>) — Настройки или данные Unity.
+- [Assets/Resources/SeaEvents/GripGeometry0.asset](<Assets/Resources/SeaEvents/GripGeometry0.asset>) — Настройки или данные Unity.
+- [Assets/Resources/SeaEvents/Raft.prefab](<Assets/Resources/SeaEvents/Raft.prefab>) — Префаб Unity.
+- [Assets/Resources/SeaEvents/RaftGeometry0.asset](<Assets/Resources/SeaEvents/RaftGeometry0.asset>) — Настройки или данные Unity.
+- [Assets/Resources/SeaEvents/RaftGeometry1.asset](<Assets/Resources/SeaEvents/RaftGeometry1.asset>) — Настройки или данные Unity.
+- [Assets/Resources/SeaEvents/RaftGeometry2.asset](<Assets/Resources/SeaEvents/RaftGeometry2.asset>) — Настройки или данные Unity.
+- [Assets/Resources/SeaEvents/RaftGeometry3.asset](<Assets/Resources/SeaEvents/RaftGeometry3.asset>) — Настройки или данные Unity.
+- [Assets/Resources/SeaEvents/RaftGeometry4.asset](<Assets/Resources/SeaEvents/RaftGeometry4.asset>) — Настройки или данные Unity.
+- [Assets/Resources/SeaEvents/RopeGrip.prefab](<Assets/Resources/SeaEvents/RopeGrip.prefab>) — Префаб Unity.
+- [Assets/Resources/SeaEvents/RopeShackle.prefab](<Assets/Resources/SeaEvents/RopeShackle.prefab>) — Префаб Unity.
+- [Assets/Resources/SeaEvents/SalvagedDeck0.asset](<Assets/Resources/SeaEvents/SalvagedDeck0.asset>) — Настройки или данные Unity.
+- [Assets/Resources/SeaEvents/SalvagedDeck1.asset](<Assets/Resources/SeaEvents/SalvagedDeck1.asset>) — Настройки или данные Unity.
+- [Assets/Resources/SeaEvents/SalvagedDeck2.asset](<Assets/Resources/SeaEvents/SalvagedDeck2.asset>) — Настройки или данные Unity.
+- [Assets/Resources/SeaEvents/SalvagedDeck3.asset](<Assets/Resources/SeaEvents/SalvagedDeck3.asset>) — Настройки или данные Unity.
+- [Assets/Resources/SeaEvents/SalvagedTimber.asset](<Assets/Resources/SeaEvents/SalvagedTimber.asset>) — Настройки или данные Unity.
+- [Assets/Resources/SeaEvents/SeaEventArt.asset](<Assets/Resources/SeaEvents/SeaEventArt.asset>) — Настройки или данные Unity.
+- [Assets/Resources/SeaEvents/ShackleGeometry0.asset](<Assets/Resources/SeaEvents/ShackleGeometry0.asset>) — Настройки или данные Unity.
+- [Assets/Resources/SeaEvents/SignalCanvas.mat](<Assets/Resources/SeaEvents/SignalCanvas.mat>) — Материал Unity.
+- [Assets/Resources/SeaEvents/StationGeometry0.asset](<Assets/Resources/SeaEvents/StationGeometry0.asset>) — Настройки или данные Unity.
+- [Assets/Resources/SeaEvents/StationGeometry1.asset](<Assets/Resources/SeaEvents/StationGeometry1.asset>) — Настройки или данные Unity.
+- [Assets/Resources/SeaEvents/StationGeometry2.asset](<Assets/Resources/SeaEvents/StationGeometry2.asset>) — Настройки или данные Unity.
+- [Assets/Resources/SeaEvents/StationGeometry3.asset](<Assets/Resources/SeaEvents/StationGeometry3.asset>) — Настройки или данные Unity.
+- [Assets/Resources/SeaEvents/StationGeometry4.asset](<Assets/Resources/SeaEvents/StationGeometry4.asset>) — Настройки или данные Unity.
+- [Assets/Scripts/Loot/SeaSignalRig.cs](<Assets/Scripts/Loot/SeaSignalRig.cs>) — Исходник C#: SeaSignalRig.
+- [Assets/Scripts/Loot/SharkHitTarget.cs](<Assets/Scripts/Loot/SharkHitTarget.cs>) — Исходник C#: SharkHitTarget.
+- [Assets/Scripts/Networking/NetworkLootChest.Sharks.cs](<Assets/Scripts/Networking/NetworkLootChest.Sharks.cs>) — Исходник C#: SharkMotionState, SharkMotion, NetworkLootChest.
+- [Assets/Resources/SeaEvents/BuoyGeometry2.asset](<Assets/Resources/SeaEvents/BuoyGeometry2.asset>) — Настройки или данные Unity.
+- [Assets/Resources/SeaEvents/BuoyGeometry3.asset](<Assets/Resources/SeaEvents/BuoyGeometry3.asset>) — Настройки или данные Unity.
+- [Assets/Resources/SeaEvents/BuoyGeometry4.asset](<Assets/Resources/SeaEvents/BuoyGeometry4.asset>) — Настройки или данные Unity.
+- [Assets/Resources/SeaEvents/BuoyGeometry5.asset](<Assets/Resources/SeaEvents/BuoyGeometry5.asset>) — Настройки или данные Unity.
+- [Assets/Resources/SeaEvents/BuoyOakStave0.asset](<Assets/Resources/SeaEvents/BuoyOakStave0.asset>) — Настройки или данные Unity.
+- [Assets/Resources/SeaEvents/BuoyOakStave1.asset](<Assets/Resources/SeaEvents/BuoyOakStave1.asset>) — Настройки или данные Unity.
+- [Assets/Resources/SeaEvents/BuoyOakStave2.asset](<Assets/Resources/SeaEvents/BuoyOakStave2.asset>) — Настройки или данные Unity.
+- [Assets/Resources/SeaEvents/BuoyOakStave3.asset](<Assets/Resources/SeaEvents/BuoyOakStave3.asset>) — Настройки или данные Unity.
+- [Assets/Resources/SeaEvents/CaptureBoundaryBuoyBoundaryFlagMesh.asset](<Assets/Resources/SeaEvents/CaptureBoundaryBuoyBoundaryFlagMesh.asset>) — Настройки или данные Unity.
+- [Assets/Resources/SeaEvents/CaptureBoundaryBuoyCarriageGeometry0.asset](<Assets/Resources/SeaEvents/CaptureBoundaryBuoyCarriageGeometry0.asset>) — Настройки или данные Unity.
+- [Assets/Resources/SeaEvents/CaptureBoundaryBuoyCarriageGeometry1.asset](<Assets/Resources/SeaEvents/CaptureBoundaryBuoyCarriageGeometry1.asset>) — Настройки или данные Unity.
+- [Assets/Resources/SeaEvents/CaptureBoundaryBuoyContestPennantMesh.asset](<Assets/Resources/SeaEvents/CaptureBoundaryBuoyContestPennantMesh.asset>) — Настройки или данные Unity.
+- [Assets/Resources/SeaEvents/CaptureBoundaryBuoyWeightGeometry0.asset](<Assets/Resources/SeaEvents/CaptureBoundaryBuoyWeightGeometry0.asset>) — Настройки или данные Unity.
+- [Assets/Resources/SeaEvents/CaptureBoundaryBuoyWinchGeometry0.asset](<Assets/Resources/SeaEvents/CaptureBoundaryBuoyWinchGeometry0.asset>) — Настройки или данные Unity.
+- [Assets/Resources/SeaEvents/CaptureSignalStationCaptureFlagMesh.asset](<Assets/Resources/SeaEvents/CaptureSignalStationCaptureFlagMesh.asset>) — Настройки или данные Unity.
+- [Assets/Resources/SeaEvents/CaptureSignalStationCarriageGeometry0.asset](<Assets/Resources/SeaEvents/CaptureSignalStationCarriageGeometry0.asset>) — Настройки или данные Unity.
+- [Assets/Resources/SeaEvents/CaptureSignalStationCarriageGeometry1.asset](<Assets/Resources/SeaEvents/CaptureSignalStationCarriageGeometry1.asset>) — Настройки или данные Unity.
+- [Assets/Resources/SeaEvents/CaptureSignalStationContestPennantMesh.asset](<Assets/Resources/SeaEvents/CaptureSignalStationContestPennantMesh.asset>) — Настройки или данные Unity.
+- [Assets/Resources/SeaEvents/CaptureSignalStationWeightGeometry0.asset](<Assets/Resources/SeaEvents/CaptureSignalStationWeightGeometry0.asset>) — Настройки или данные Unity.
+- [Assets/Resources/SeaEvents/CaptureSignalStationWinchGeometry0.asset](<Assets/Resources/SeaEvents/CaptureSignalStationWinchGeometry0.asset>) — Настройки или данные Unity.
+- [Assets/Resources/SeaEvents/StationGeometry5.asset](<Assets/Resources/SeaEvents/StationGeometry5.asset>) — Настройки или данные Unity.
 - [rum-loot.md](<rum-loot.md>) — Документация.
 - [combat-balance.md](<combat-balance.md>) — Документация.
 - [Art/Blender/LootReplacement/README.md](<Art/Blender/LootReplacement/README.md>) — Документация.
@@ -706,18 +828,26 @@ PlanFire: минимум 16, максимум 64 очага на выстрел,
 
 Ключевые слова: чайки, птицы, seagull, flock.
 
+2026-10-11, приземление сбитой птицы: SeagullVisual проверяет swept spherecast между кадрами и пересечение OceanSurface, выбирая первую поверхность. На корабле, острове, скале или другом твёрдом объекте чайка ложится и исчезает через3с от касания; погружение и всплеск только в воде. SeagullFall хранит подтверждённый контакт, точку, поворот и сетевую опору с локальной позой для движения/качки корабля и плота. SessionSeagulls и сундуковые SyncVar передают приземление и актуальное состояние позднему клиенту. ProtocolVersion157; игровой/визуальный и сетевой прогон не выполнялся.
+2026-10-11: любое подтверждённое попадание пистолета, мушкета/снайперки, дробины двустволки, ручной мортиры или пушечного ядра сбивает чайку из фоновой стаи либо над подводным сундуком. SeagullVisual содержит отдельные trigger-хитбоксы корпуса, головы и крыльев; FirearmCombat, FirearmDamageBatch, NetworkHandMortarBall и CannonShotDamage используют серверные callbacks. Падение сохраняет инерцию, плавно складывает и разворачивает крылья, переходит к всплеску на актуальной поверхности OceanSurface, затем чайка погружается и исчезает через3с после касания воды. SessionSeagulls передаёт отдельное сообщение попадания и снимок сбитых птиц позднему клиенту; срок стаи продлевается до конца последнего падения. Сундуковые чайки используют SyncVar состояния/возраста и не возвращаются при смене фазы ивента. ProtocolVersion156; игровой/визуальный и сетевой прогон не выполнялся.
 Общая процедурная модель SeagullVisual используется двумя чайками над подводным сундуком и фоновыми стаями. Общие меши/URP материалы, плечевые и концевые суставы крыльев; взмахи, планирование, раскрытие лап, посадка, складывание крыльев, отдых14–21с и взлёт. Орбиты сундуковых чаек сохранены.
 SessionSeagulls: серверные события6–8птиц, первый через18с, затем45–75с у живого человека; до3стай одновременно. Пролёт18–28м над морем, не ниже10м над игроком; четыре направления низкого маршрута проверяются без подъёма всей стаи над соседними скалами. До3птиц садятся на проверенные площадки. Площадки и RockBounds сохранены по видимым LOD0; поддержка лап проверена четырьмя пробами. ClearSeagullRoute использует actual AmbientSeagullFlock.Evaluate и выполняется только при спавне. Взмахи плавнее, меньшая амплитуда, задержка кончиков и цикл9.4с с длинным планированием. Подключившийся клиент получает возраст активных стай; очистка при выходе/перегенерации. ProtocolVersion129.
 F8 → Мир → Чайки: Вызвать стаю в небе (command25), Посадить чаек на скалы (26). Используются существующие серверные права; команды идут до лимита прочих developerObjects. SeagullSetup.Prepare создаёт3Resource материала и точки на12скальных префабах; CoastalEnvironmentSetup обновляет точки при замене моделей. Компиляция проверена; Play Mode, сборка и два клиента не запускались.
 Редкий крик CC0 через GameAudioBank/SoundCue.Seagull, добавленный последним в enum. Не больше2криков настаю и общая пауза12–18с, 3D min8/max170м, Volume.55×Master×Ambience, priority200. Audio PCMmono безloop; без отдельных AudioSource накаждой птице. Звучание в игре не проверялось.
 Специалист осмотрел native Unity preview5поз и указал наскачки поворотов Cruise→Approach и Takeoff→Departure. Добавлены deterministic .85сSlerp и плавный Power. Native phase probe12границ: rotation/power jump0, контакт/rest без смещения. Повторная независимая визуальная приёмка не завершена из-за лимита сервиса агента; APPROVED не получен.
 
-- [Assets/Scripts/World/SeagullVisual.cs](<Assets/Scripts/World/SeagullVisual.cs>) — Исходник C#: SeagullVisual.
+- [Assets/Scripts/World/SeagullVisual.cs](<Assets/Scripts/World/SeagullVisual.cs>) — Исходник C#: SeagullFall, SeagullVisual.
 - [Assets/Scripts/World/AmbientSeagullFlock.cs](<Assets/Scripts/World/AmbientSeagullFlock.cs>) — Исходник C#: AmbientSeagullFlock, BirdPose.
 - [Assets/Scripts/World/CoastalSeagullPerches.cs](<Assets/Scripts/World/CoastalSeagullPerches.cs>) — Исходник C#: CoastalSeagullPerches.
-- [Assets/Scripts/Networking/SessionSeagulls.cs](<Assets/Scripts/Networking/SessionSeagulls.cs>) — Исходник C#: SeagullFlockMessage, SessionController, SeagullEvent.
+- [Assets/Scripts/Networking/SessionSeagulls.cs](<Assets/Scripts/Networking/SessionSeagulls.cs>) — Исходник C#: SeagullFlockMessage, SeagullHitMessage, SessionController, SeagullEvent.
 - [Assets/Scripts/Networking/NetworkLootChest.Seagulls.cs](<Assets/Scripts/Networking/NetworkLootChest.Seagulls.cs>) — Исходник C#: NetworkLootChest.
 - [Assets/Scripts/Networking/NetworkLootChest.Ocean.cs](<Assets/Scripts/Networking/NetworkLootChest.Ocean.cs>) — Исходник C#: SeaLootKind, SeaLootState, NetworkLootChest.
+- [Assets/Scripts/Player/FirearmDefinition.cs](<Assets/Scripts/Player/FirearmDefinition.cs>) — Исходник C#: FirearmDefinition, FirearmCombat.
+- [Assets/Scripts/Player/UnderwaterFirearmProjectile.cs](<Assets/Scripts/Player/UnderwaterFirearmProjectile.cs>) — Исходник C#: FirearmDamageBatch, UnderwaterFirearmProjectile.
+- [Assets/Scripts/Player/PlayerHitbox.cs](<Assets/Scripts/Player/PlayerHitbox.cs>) — Исходник C#: PlayerHitbox.
+- [Assets/Scripts/Player/BulletSurface.cs](<Assets/Scripts/Player/BulletSurface.cs>) — Исходник C#: BulletSurfaceKind, BulletSurface.
+- [Assets/Scripts/Networking/NetworkHandMortarBall.cs](<Assets/Scripts/Networking/NetworkHandMortarBall.cs>) — Исходник C#: NetworkHandMortarBall.
+- [Assets/Scripts/Cannons/CannonShotDamage.cs](<Assets/Scripts/Cannons/CannonShotDamage.cs>) — Исходник C#: CannonShotDamage.
 - [Assets/Scripts/Networking/SessionController.cs](<Assets/Scripts/Networking/SessionController.cs>) — Исходник C#: SessionController.
 - [Assets/Scripts/Networking/NetworkDeveloperTools.cs](<Assets/Scripts/Networking/NetworkDeveloperTools.cs>) — Исходник C#: NetworkWeapon.
 - [Assets/Scripts/Player/DeveloperMenu.cs](<Assets/Scripts/Player/DeveloperMenu.cs>) — Исходник C#: DeveloperMenu.
@@ -803,6 +933,9 @@ CoastalSandSetup.Apply создаёт в12каменных префабах от
 2026-10-09: океанские каустики исключаются внутри ShipWaterInterior той же профильной маской корпуса, что и поверхность океана. Маска использует мировую позицию видимой геометрии из depth buffer; наружные каустики сохранены.
 2026-10-10 после повторных полос неба, бокового искажения и слабого движения: только environment_test. Дым сохраняет весь опасный объём до WorldLayout.Radius, потолок max(20,testShipTop+10)+15, низ SeaLevel−1.2м и настоящую глубину воды. _StormTestSmokeMotion хранит плавный вес наступления, независимые горизонтальный и нисходящий пути. Оседание3.5→9м/с и перекат3.5→7м направлены вниз в обоих режимах; переход SmoothDamp1.25с без сброса пути. На паузе водяные клубы немного расходятся до3м и плавно затухают; при наступлении нижний поток возвращается под массу дыма, без растекания наружу. Встречные поля смешивают плотность, не накопленные координаты; добавлена одна выборка только в низком движущемся слое. Глубина остаётся заполненной. PerlinR8 74/31/12м, минимум mip0 и фильтрация по реальному пикселю без зависимости от шага луча. TraceTestSmoke: до96 адаптивных интервалов, пустота до256м, дым1–6м, четыре пробы уточняют вход, последние16 покрывают весь остаток; разрешение.67, ранний выход.003. Минимум глубины.4, плотность≤1, поглощение.14 и ближний вес.5–3.5м сохраняют расчётный ориентир10м плохого обзора. Небо CandidateA получает отдельную непрерывную плотность Perlin2600/1100м вместо старого порогования/повторной эрозии; ясные1200–2180м и пасмурные400–1500м слои смешиваются по плотности. Тестовая история0 вместо профиля.95 согласована в материале/denoise/RenderGraph;64пробы и разрешение.5 сохранены. Рыбы получают только тестовую коррекцию ориентации/хвостов, Docs/AmbientFish.md. Дождь, мокрые следы, капли, молнии и гром не менялись. Native C# errors0; smoke SetPass0..3true/messages0 после последнего уточнения, sky0..3/7/8true/messages0. Без Play, визуальной приёмки и FPS. Docs/StormTestSmoke.md, Docs/TestSkyDayNight.md.
 2026-10-10 повторная пиксельность дыма и слабое оседание: только environment_test. Наступление связано с реальной скоростью радиуса0.05–0.4м/с, затем SmoothDamp1.25с. Стоящий круг оставляет стационарный поток. Отдельные падающие клубы идут по height+fall с периодом высоты14м; на паузе цикл≈4с. При контакте огибающая набирается0–8%, растекается наружу до3м и гаснет35–88%; отдельная объёмная водяная бахрома усиливает этот этап. При наступлении эти клубы выключаются, низ возвращается под массу дыма. Глубина/верх+15м/обзор≈10м сохранены. TraceTestSmoke использует середины интервалов без случайного пиксельного сдвига; StormSmokeNoise сглаживает ячейки исходного шума32³ у mip0, включая нормали, дальние mips сохраняются. Native PerlinNoise32RGB размер32³ подтверждён. Разрешение.67/до96интервалов не повышены. Небо/ливень/молнии не изменены. Стартовые предметы и волновой подъём корабля исправлены отдельно, Docs/TestOcean.md; обезьянка сохранена. C#errors0, smoke SetPass0..3true/messages0; без Play/визуальной/FPS-приёмки. Docs/StormTestSmoke.md.
+11.10.2026, исправление по игровому скриншоту: кольцо тестовой воронки перенесено с 60 м на 30 м (0.06R). Для этих восьми щупалец убрано дополнительное удлинение 1.65 и применён одинаковый масштаб по всем осям: длина 43–57 м, пропорции присосок и исходной текстуры сохраняются. Idle-движение конца и волны скелета усилены в 3.2 раза; у каждого экземпляра своя фаза и форма. Сервер проверяет реальный проход конца во время удара через OverlapCapsuleNonAlloc после обновления костей: 25 здоровья один раз на игрока за удар щупальца, без урона всей команде. Совместная атака по кораблю чередует 3 соседних верхних блока трюма и 1 ближайший блок средней/нижней части; дополнительных случайных верхних разрушений и катастрофы нет. Подготовка начинается в радиусе 230 м, атаки раз в 6 с. Снимки атак/здоровья для всех клиентов и позднего входа сохранены. Обычная встреча с кракеном сохраняет прежний урон. ProtocolVersion149, общая Builds/Windows/PirateSlop.exe; игровой прогон не выполнялся.
+11.10.2026, уточнение пользователя: EnvironmentEventTestRow содержит только шесть станций (захват, плот, затонувший сундук, акулы, череп, кит). Автозапуск кракена рядом со станцией удалён; KrakenEncounterManager запрещает таймер ожидания на EnvironmentTestGallery, ручной запуск F8 сохраняется. EnvironmentTestGallery.WhirlpoolCenter получает test_ship_0 и смещает Z на -550 м, возвращая прежнюю позицию (-635.41,SeaLevel,-788.4); вода, SeabedTerrain и кольцо используют единый центр. Водоворот не относится к ряду ивентов. ProtocolVersion151.
+2026-10-11: SandyIslandTestSetup.Prepare сохраняет три песчаных острова в отдельный SandyIslandTestRow ресурса EnvironmentTest/Gallery: X=-520/-130/340, Z=700, параллельно скалам и за рядом ивентов Z=370, вдали от водоворота. SmallSandyIsland: обычный пологий берег, радиус28м. TwoLandingIsland: радиус59м, песчаное плато8.2м, цельные непроходимые с воды скальные плечи12м и два пляжных прохода по ±Z. SingleLandingRockIsland: радиус78м, песчаная середина4.8м, один проход с -Z, замкнутый неровный скальный пояс с минимумом гребня50м, выше верхнего корабельного коллайдера28.29м и прыжка1.2м с запасом. Грунт — редактируемые TerrainData513, TerrainCollider; скальные пояса — закрытые MeshCollider, совпадающие с видимыми поверхностями, без невидимых стен. Четыре CC0 PolyHaven PBR2K TerrainLayer: CoastSand01/LeafyGrass/BrownMud03/CoastSandRocks02, преимущественно песок и локальные травянистые пятна. StarterIsland Palm/PalmBent/PalmYoung/Bush/Fern расставлены группами, проходы свободны; SandyIslandFoliageWind задаёт шейдерное покачивание0.2м для пальм и0.065м для кустов/папоротников с неподвижным корнем, включая тени/глубину, без изменения коллайдеров. Исходные растения имеют WindStrength0. ArrangeTestGallery сохраняет новый ряд через Attach; версия галереи учитывает зависимости островов. Префабы/материалы сохранены через Unity MCP; компиляция без новых ошибок, Play/визуальная игровая приёмка не запускались.
 
 - [Assets/Game/BRZoneVolumetric/StormVolumeController.Smoke.cs](<Assets/Game/BRZoneVolumetric/StormVolumeController.Smoke.cs>) — Исходник C#: StormVolumeController.
 - [Assets/Game/BRZoneVolumetric/Resources/StormSmokeFields.compute](<Assets/Game/BRZoneVolumetric/Resources/StormSmokeFields.compute>) — Вычислительный шейдер.
@@ -945,6 +1078,40 @@ CoastalSandSetup.Apply создаёт в12каменных префабах от
 - [Assets/Models/Ships/ShipV3/Bilge/InteriorWaterProfile.asset](<Assets/Models/Ships/ShipV3/Bilge/InteriorWaterProfile.asset>) — Настройки или данные Unity.
 - [Packages/com.unity.urp-water-system/Runtime/Shaders/Caustics.shader](<Packages/com.unity.urp-water-system/Runtime/Shaders/Caustics.shader>) — Шейдер.
 - [Assets/Game/BRZoneVolumetric/Shaders/StormTestSmokeField.hlsl](<Assets/Game/BRZoneVolumetric/Shaders/StormTestSmokeField.hlsl>) — Код шейдера.
+- [Assets/Scripts/World/WhirlpoolTentacleRing.cs](<Assets/Scripts/World/WhirlpoolTentacleRing.cs>) — Исходник C#: WhirlpoolTentacleRing.
+- [Assets/Scripts/Networking/SessionWhirlpoolTentacles.cs](<Assets/Scripts/Networking/SessionWhirlpoolTentacles.cs>) — Исходник C#: WhirlpoolTentacleState, WhirlpoolTentaclesMessage, SessionController.
+- [Assets/Scripts/Editor/SandyIslandTestSetup.cs](<Assets/Scripts/Editor/SandyIslandTestSetup.cs>) — Исходник C#: SandyIslandTestSetup, Shape.
+- [Assets/Scripts/World/SandyIslandFoliageWind.cs](<Assets/Scripts/World/SandyIslandFoliageWind.cs>) — Исходник C#: SandyIslandFoliageWind.
+- [Assets/Models/World/SandyIslands/Textures/SOURCES.md](<Assets/Models/World/SandyIslands/Textures/SOURCES.md>) — Документация.
+- [Assets/Materials/SandyIslands/SandyGround.mat](<Assets/Materials/SandyIslands/SandyGround.mat>) — Материал Unity.
+- [Assets/Prefabs/World/SandyIslands/SmallSandyIsland.prefab](<Assets/Prefabs/World/SandyIslands/SmallSandyIsland.prefab>) — Префаб Unity.
+- [Assets/Settings/World/SandyIslands/SmallSandyIsland.asset](<Assets/Settings/World/SandyIslands/SmallSandyIsland.asset>) — Настройки или данные Unity.
+- [Assets/Prefabs/World/SandyIslands/TwoLandingIsland.prefab](<Assets/Prefabs/World/SandyIslands/TwoLandingIsland.prefab>) — Префаб Unity.
+- [Assets/Settings/World/SandyIslands/TwoLandingIsland.asset](<Assets/Settings/World/SandyIslands/TwoLandingIsland.asset>) — Настройки или данные Unity.
+- [Assets/Prefabs/World/SandyIslands/SingleLandingRockIsland.prefab](<Assets/Prefabs/World/SandyIslands/SingleLandingRockIsland.prefab>) — Префаб Unity.
+- [Assets/Settings/World/SandyIslands/SingleLandingRockIsland.asset](<Assets/Settings/World/SandyIslands/SingleLandingRockIsland.asset>) — Настройки или данные Unity.
+- [Assets/Models/World/SandyIslands/TwoLandingIsland_RockRim.asset](<Assets/Models/World/SandyIslands/TwoLandingIsland_RockRim.asset>) — Настройки или данные Unity.
+- [Assets/Models/World/SandyIslands/SingleLandingRockIsland_RockRim.asset](<Assets/Models/World/SandyIslands/SingleLandingRockIsland_RockRim.asset>) — Настройки или данные Unity.
+- [Assets/Materials/SandyIslands/coast_sand_01.terrainlayer](<Assets/Materials/SandyIslands/coast_sand_01.terrainlayer>) — Файл .terrainlayer.
+- [Assets/Models/World/SandyIslands/Textures/coast_sand_01/Colour.jpg](<Assets/Models/World/SandyIslands/Textures/coast_sand_01/Colour.jpg>) — Изображение / текстура.
+- [Assets/Models/World/SandyIslands/Textures/coast_sand_01/Normal.png](<Assets/Models/World/SandyIslands/Textures/coast_sand_01/Normal.png>) — Изображение / текстура.
+- [Assets/Models/World/SandyIslands/Textures/coast_sand_01/Roughness.jpg](<Assets/Models/World/SandyIslands/Textures/coast_sand_01/Roughness.jpg>) — Изображение / текстура.
+- [Assets/Models/World/SandyIslands/Textures/coast_sand_01/Mask.png](<Assets/Models/World/SandyIslands/Textures/coast_sand_01/Mask.png>) — Изображение / текстура.
+- [Assets/Materials/SandyIslands/leafy_grass.terrainlayer](<Assets/Materials/SandyIslands/leafy_grass.terrainlayer>) — Файл .terrainlayer.
+- [Assets/Models/World/SandyIslands/Textures/leafy_grass/Colour.jpg](<Assets/Models/World/SandyIslands/Textures/leafy_grass/Colour.jpg>) — Изображение / текстура.
+- [Assets/Models/World/SandyIslands/Textures/leafy_grass/Normal.png](<Assets/Models/World/SandyIslands/Textures/leafy_grass/Normal.png>) — Изображение / текстура.
+- [Assets/Models/World/SandyIslands/Textures/leafy_grass/Roughness.jpg](<Assets/Models/World/SandyIslands/Textures/leafy_grass/Roughness.jpg>) — Изображение / текстура.
+- [Assets/Models/World/SandyIslands/Textures/leafy_grass/Mask.png](<Assets/Models/World/SandyIslands/Textures/leafy_grass/Mask.png>) — Изображение / текстура.
+- [Assets/Materials/SandyIslands/brown_mud_03.terrainlayer](<Assets/Materials/SandyIslands/brown_mud_03.terrainlayer>) — Файл .terrainlayer.
+- [Assets/Models/World/SandyIslands/Textures/brown_mud_03/Colour.jpg](<Assets/Models/World/SandyIslands/Textures/brown_mud_03/Colour.jpg>) — Изображение / текстура.
+- [Assets/Models/World/SandyIslands/Textures/brown_mud_03/Normal.png](<Assets/Models/World/SandyIslands/Textures/brown_mud_03/Normal.png>) — Изображение / текстура.
+- [Assets/Models/World/SandyIslands/Textures/brown_mud_03/Roughness.jpg](<Assets/Models/World/SandyIslands/Textures/brown_mud_03/Roughness.jpg>) — Изображение / текстура.
+- [Assets/Models/World/SandyIslands/Textures/brown_mud_03/Mask.png](<Assets/Models/World/SandyIslands/Textures/brown_mud_03/Mask.png>) — Изображение / текстура.
+- [Assets/Materials/SandyIslands/coast_sand_rocks_02.terrainlayer](<Assets/Materials/SandyIslands/coast_sand_rocks_02.terrainlayer>) — Файл .terrainlayer.
+- [Assets/Models/World/SandyIslands/Textures/coast_sand_rocks_02/Colour.jpg](<Assets/Models/World/SandyIslands/Textures/coast_sand_rocks_02/Colour.jpg>) — Изображение / текстура.
+- [Assets/Models/World/SandyIslands/Textures/coast_sand_rocks_02/Normal.png](<Assets/Models/World/SandyIslands/Textures/coast_sand_rocks_02/Normal.png>) — Изображение / текстура.
+- [Assets/Models/World/SandyIslands/Textures/coast_sand_rocks_02/Roughness.jpg](<Assets/Models/World/SandyIslands/Textures/coast_sand_rocks_02/Roughness.jpg>) — Изображение / текстура.
+- [Assets/Models/World/SandyIslands/Textures/coast_sand_rocks_02/Mask.png](<Assets/Models/World/SandyIslands/Textures/coast_sand_rocks_02/Mask.png>) — Изображение / текстура.
 - [procedural-world.md](<procedural-world.md>) — Документация.
 - [unity.md](<unity.md>) — Документация.
 - [Docs/TestOcean.md](<Docs/TestOcean.md>) — Документация.
@@ -970,6 +1137,9 @@ MultiplayerSceneSetup.Configure и PromoteShipV3 привязывают ShipV3Te
 2026-10-10: Steam-лобби до 30 игроков: доска 10 экипажей по 3 места, переходы до старта, имена/хост/своя команда/готовность, приглашения Steam и ID лобби. Владелец лобби подтверждает запросы и ограничивает экипаж тремя участниками; изменение состава сбрасывает готовность через roster_revision. Старт фиксирует распределение; selected_team передаётся в матч и определяет общий корабль через серверный допуск и HumanTeam. Сохранены вход в другую сессию по ID, выбор карты и ботов. Новый формат Steam-метаданных требует одинакового протокола у участников; текущий SessionConfig.ProtocolVersion=141 (сохранено параллельное изменение). Тестовая карта уже содержит 10 ship_spawn. Компиляция проверена через прямой Unity MCP; PlayMode, сборка, Steam-приглашения и онлайн на 10 людях не запускались.
 2026-10-10: Steam-ники над игроками. NetworkPlayer.Identity синхронизирует SteamName серверным SyncVar, Steam-сессия получает имя по адресу владельца из Steam; IP-сессия передаёт локальный Steam-ник owner-only ServerRpc. DisplayName также используется голосовым UI. CrewPresentation заменяет старые номера союзников на один локальный uGUI Canvas с табличками всех видимых союзников/противников и именами ботов. Светлая надпись 21px с обводкой, скруглённая тёмная подложка, зелёный/латунный акцент команды и индикатор речи. Привязка к Humanoid Head или generic mixamorig:Head, fallback по CharacterController; экранное разрешение масштабируется CanvasScaler. Свой ник только в третьем лице; за препятствиями/меню/после смерти скрывается, дальность50м с fade35–50м. RaycastNonAlloc каждые0.1с, очистка despawn и ресурсов Canvas. RichText выключен, управляющие символы удаляются, Unicode-графемы не разрезаются при сокращении. ProtocolVersion142 из-за нового SyncVar/RPC. Компиляция через прямой Unity MCP без ошибок; PlayMode, визуальная приёмка и онлайн не запускались.
 2026-10-10 общий ProtocolVersion143 после объединения локальных трюма/насоса/дружественного огня из141 и оружия/лобби/Steam-ников/обезьяны друга из142. Сохранены BilgeWater/BilgePermanent/BilgeDestructible и Loot_HandMortar/Loot_ExplosiveBall одного корабля; оба клиента должны использовать общий обновлённый проект/сборку. Статический дефолт SessionConfig также143. PlayMode, сборки и сетевой прогон не выполнялись.
+11.10.2026: ProtocolVersion146 для KrakenStrike и сетевых дельт разрушения. Использовать общую Windows-сборку для всех участников.
+11.10.2026, исправление по игровому скриншоту: кольцо тестовой воронки перенесено с 60 м на 30 м (0.06R). Для этих восьми щупалец убрано дополнительное удлинение 1.65 и применён одинаковый масштаб по всем осям: длина 43–57 м, пропорции присосок и исходной текстуры сохраняются. Idle-движение конца и волны скелета усилены в 3.2 раза; у каждого экземпляра своя фаза и форма. Сервер проверяет реальный проход конца во время удара через OverlapCapsuleNonAlloc после обновления костей: 25 здоровья один раз на игрока за удар щупальца, без урона всей команде. Совместная атака по кораблю чередует 3 соседних верхних блока трюма и 1 ближайший блок средней/нижней части; дополнительных случайных верхних разрушений и катастрофы нет. Подготовка начинается в радиусе 230 м, атаки раз в 6 с. Снимки атак/здоровья для всех клиентов и позднего входа сохранены. Обычная встреча с кракеном сохраняет прежний урон. ProtocolVersion149, общая Builds/Windows/PirateSlop.exe; игровой прогон не выполнялся.
+11.10.2026, уточнение пользователя: EnvironmentEventTestRow содержит только шесть станций (захват, плот, затонувший сундук, акулы, череп, кит). Автозапуск кракена рядом со станцией удалён; KrakenEncounterManager запрещает таймер ожидания на EnvironmentTestGallery, ручной запуск F8 сохраняется. EnvironmentTestGallery.WhirlpoolCenter получает test_ship_0 и смещает Z на -550 м, возвращая прежнюю позицию (-635.41,SeaLevel,-788.4); вода, SeabedTerrain и кольцо используют единый центр. Водоворот не относится к ряду ивентов. ProtocolVersion151.
 
 - [Assets/Scripts/Networking/SessionController.cs](<Assets/Scripts/Networking/SessionController.cs>) — Исходник C#: SessionController.
 - [Assets/Scripts/Networking/SessionConfig.cs](<Assets/Scripts/Networking/SessionConfig.cs>) — Исходник C#: SessionConfig.
@@ -993,6 +1163,8 @@ MultiplayerSceneSetup.Configure и PromoteShipV3 привязывают ShipV3Te
 - [Assets/Scripts/Networking/NetworkCrewBell.cs](<Assets/Scripts/Networking/NetworkCrewBell.cs>) — Исходник C#: NetworkCrewBell.
 - [Assets/Scripts/Player/CombatHealth.cs](<Assets/Scripts/Player/CombatHealth.cs>) — Исходник C#: CombatHealth.
 - [Assets/Scripts/Networking/NetworkHealth.cs](<Assets/Scripts/Networking/NetworkHealth.cs>) — Исходник C#: NetworkHealth.
+- [Assets/Scripts/World/WhirlpoolTentacleRing.cs](<Assets/Scripts/World/WhirlpoolTentacleRing.cs>) — Исходник C#: WhirlpoolTentacleRing.
+- [Assets/Scripts/Networking/SessionWhirlpoolTentacles.cs](<Assets/Scripts/Networking/SessionWhirlpoolTentacles.cs>) — Исходник C#: WhirlpoolTentacleState, WhirlpoolTentaclesMessage, SessionController.
 - [multiplayer-plan.md](<multiplayer-plan.md>) — Документация.
 - [unity.md](<unity.md>) — Документация.
 
@@ -1446,7 +1618,12 @@ TestMap R4000м. После повторной жалобы CLEAR rays/planetcen
 
 Ключевые слова: кракен, щупальца.
 
-KrakenEncounterManager отслеживает стоянку корабля и управляет встречей; для сетевого корабля обновление ограничено сервером. Атаки, щупальца и их анимация разделены по файлам.
+Новая модель из Blender/Кракен/щупальце.zip заменяет прежний KrakenTentacles.fbx с сохранением GUID. Присоски с обеих сторон намеренные; 17 костей с плавными весами. Пять экземпляров вокруг ShipV3Test отличаются детерминированными пропорциями, толщиной, сужением, оттенком, изгибом и фазой движения. Процедурные появление, покачивание, замах, удар по локальной точке движущегося корабля, возврат, гибель и уход под воду работают через TentacleAnimator. Атаки и урон принадлежат серверу. KrakenEncounterManager подключён к текущему ShipV3Test; NetworkShip также инициализирует его при сетевом старте. BufferLast сохраняет актуальные seed, маску/время гибели и уход; OnSpawnServer передаёт текущие удары новым наблюдателям. Callback удара хоста устанавливается до RPC. ProtocolVersion145.
+11.10.2026: Unity preview пяти разных силуэтов одобрен visual_reviewer; скелет касается целевой точки и вызывает impact один раз. Windows Development Build без ошибок. Финальный прогон хоста и двух отдельных клиентов: варианты совпадают, первый клиент получает пять живых щупалец, поздний восстанавливает погибшее щупальце и текущий удар, погружение и удаление встречи приходят всем. Исключений в финальном прогоне нет. Журналы/результат — Builds/KrakenNetworkCheck; игровой вид с палубы и баланс оценивает пользователь.
+11.10.2026, исправление после игровой проверки: непрерывная плоскость изгиба и покадровое сглаживание сетевых часов/высоты щупалец. Урон кораблю один раз на волну: первый этап — шесть соседних блоков верхней обшивки трюма со стороны удара и случайные верхние секции; второй — большое разрушение корпуса, заполнение трюма за 3 с и быстрое погружение. Штурвал и минимум два живых паруса с их мачтами защищены. Урон людям прежний (50/100). Вместо повторных радиусных ударов и обхода графа — явные маски, максимум две секции за кадр, сетевые дельты; физика и меши готовятся заранее. ProtocolVersion146. Результат только в общей Builds/Windows/PirateSlop.exe; игровой FPS и новый баланс требуют ручной проверки.
+11.10.2026, повторная игровая обратная связь: постоянная волна изгиба вдоль всей длины в ожидании, плавное ослабление при ударе и возврат после него. Длина ×2.05, толщина ×1.18 поверх детерминированных вариантов. Основание на 10 м ниже границы Hull в мировых координатах с учётом наклона; появление плавное. ProtocolVersion147, результат только в общей Builds/Windows/PirateSlop.exe. Игровой вид и отсутствие фриза требуют ручной проверки.
+11.10.2026, исправление по игровому скриншоту: кольцо тестовой воронки перенесено с 60 м на 30 м (0.06R). Для этих восьми щупалец убрано дополнительное удлинение 1.65 и применён одинаковый масштаб по всем осям: длина 43–57 м, пропорции присосок и исходной текстуры сохраняются. Idle-движение конца и волны скелета усилены в 3.2 раза; у каждого экземпляра своя фаза и форма. Сервер проверяет реальный проход конца во время удара через OverlapCapsuleNonAlloc после обновления костей: 25 здоровья один раз на игрока за удар щупальца, без урона всей команде. Совместная атака по кораблю чередует 3 соседних верхних блока трюма и 1 ближайший блок средней/нижней части; дополнительных случайных верхних разрушений и катастрофы нет. Подготовка начинается в радиусе 230 м, атаки раз в 6 с. Снимки атак/здоровья для всех клиентов и позднего входа сохранены. Обычная встреча с кракеном сохраняет прежний урон. ProtocolVersion149, общая Builds/Windows/PirateSlop.exe; игровой прогон не выполнялся.
+11.10.2026, уточнение пользователя: EnvironmentEventTestRow содержит только шесть станций (захват, плот, затонувший сундук, акулы, череп, кит). Автозапуск кракена рядом со станцией удалён; KrakenEncounterManager запрещает таймер ожидания на EnvironmentTestGallery, ручной запуск F8 сохраняется. EnvironmentTestGallery.WhirlpoolCenter получает test_ship_0 и смещает Z на -550 м, возвращая прежнюю позицию (-635.41,SeaLevel,-788.4); вода, SeabedTerrain и кольцо используют единый центр. Водоворот не относится к ряду ивентов. ProtocolVersion151.
 
 - [Assets/Scripts/Kraken/KrakenEncounterManager.cs](<Assets/Scripts/Kraken/KrakenEncounterManager.cs>) — Исходник C#: KrakenEncounterManager.
 - [Assets/Scripts/Kraken/KrakenEncounter.cs](<Assets/Scripts/Kraken/KrakenEncounter.cs>) — Исходник C#: KrakenEncounter.
@@ -1454,23 +1631,102 @@ KrakenEncounterManager отслеживает стоянку корабля и �
 - [Assets/Scripts/Kraken/KrakenTentacle.cs](<Assets/Scripts/Kraken/KrakenTentacle.cs>) — Исходник C#: KrakenTentacle.
 - [Assets/Scripts/Kraken/TentacleAnimator.cs](<Assets/Scripts/Kraken/TentacleAnimator.cs>) — Исходник C#: TentacleAnimator.
 - [Assets/Scripts/Networking/NetworkShip.Kraken.cs](<Assets/Scripts/Networking/NetworkShip.Kraken.cs>) — Исходник C#: NetworkShip.
+- [Assets/Resources/KrakenTentacle.prefab](<Assets/Resources/KrakenTentacle.prefab>) — Префаб Unity.
+- [Assets/Resources/KrakenEncounter.prefab](<Assets/Resources/KrakenEncounter.prefab>) — Префаб Unity.
+- [Assets/Resources/Ships/ShipV3Test.prefab](<Assets/Resources/Ships/ShipV3Test.prefab>) — Префаб Unity.
+- [Assets/Models/KrakenTentacles.fbx](<Assets/Models/KrakenTentacles.fbx>) — Модель / анимации FBX.
+- [Assets/Models/Kraken/KrakenTripoSkin.mat](<Assets/Models/Kraken/KrakenTripoSkin.mat>) — Материал Unity.
+- [Assets/Models/Kraken/KrakenBaseColor.jpg](<Assets/Models/Kraken/KrakenBaseColor.jpg>) — Изображение / текстура.
+- [Assets/Models/Kraken/KrakenNormal.png](<Assets/Models/Kraken/KrakenNormal.png>) — Изображение / текстура.
+- [Assets/Models/Kraken/KrakenMetalSmooth.png](<Assets/Models/Kraken/KrakenMetalSmooth.png>) — Изображение / текстура.
+- [Assets/Scripts/Editor/KrakenTripoSetup.cs](<Assets/Scripts/Editor/KrakenTripoSetup.cs>) — Исходник C#: KrakenTripoSetup.
+- [Assets/Scripts/Kraken/KrakenNetworkProbe.cs](<Assets/Scripts/Kraken/KrakenNetworkProbe.cs>) — Исходник C#: KrakenNetworkProbe.
+- [Assets/Scripts/Networking/SessionRoguelike.cs](<Assets/Scripts/Networking/SessionRoguelike.cs>) — Исходник C#: UpgradeIdentityMessage, SessionController.
+- [Assets/Scripts/ShipDestruction/ShipDestruction.Kraken.cs](<Assets/Scripts/ShipDestruction/ShipDestruction.Kraken.cs>) — Исходник C#: ShipDestruction, KrakenBlock.
+- [Assets/Scripts/World/WhirlpoolTentacleRing.cs](<Assets/Scripts/World/WhirlpoolTentacleRing.cs>) — Исходник C#: WhirlpoolTentacleRing.
+- [Assets/Scripts/Networking/SessionWhirlpoolTentacles.cs](<Assets/Scripts/Networking/SessionWhirlpoolTentacles.cs>) — Исходник C#: WhirlpoolTentacleState, WhirlpoolTentaclesMessage, SessionController.
+- [Assets/Scripts/World/EnvironmentTestGallery.cs](<Assets/Scripts/World/EnvironmentTestGallery.cs>) — Исходник C#: EnvironmentTestGallery.
 - [../Blender/KrakenTentacle_v1/README.md](<../Blender/KrakenTentacle_v1/README.md>) — Документация.
 - [../Blender/KrakenTentacle_v1/TRIPO.txt](<../Blender/KrakenTentacle_v1/TRIPO.txt>) — Текстовые данные.
 - [../Blender/KrakenTentacle_v1/front.png](<../Blender/KrakenTentacle_v1/front.png>) — Изображение / текстура.
 - [../Blender/KrakenTentacle_v1/back.png](<../Blender/KrakenTentacle_v1/back.png>) — Изображение / текстура.
 - [../Blender/KrakenTentacle_v1/left.png](<../Blender/KrakenTentacle_v1/left.png>) — Изображение / текстура.
 - [../Blender/KrakenTentacle_v1/right.png](<../Blender/KrakenTentacle_v1/right.png>) — Изображение / текстура.
+- [Art/Blender/Kraken/KrakenTripoRig.blend](<Art/Blender/Kraken/KrakenTripoRig.blend>) — Редактируемая сцена Blender.
+- [Art/Blender/Kraken/PrepareTripoTentacle.py](<Art/Blender/Kraken/PrepareTripoTentacle.py>) — Инструмент Python.
+- [Art/Blender/Kraken/README.md](<Art/Blender/Kraken/README.md>) — Документация.
+- [Art/Blender/Kraken/TripoSources/TentacleSource.fbx](<Art/Blender/Kraken/TripoSources/TentacleSource.fbx>) — Модель / анимации FBX.
+- [Art/Blender/Kraken/VariantsPreview.png](<Art/Blender/Kraken/VariantsPreview.png>) — Изображение / текстура.
 
 ### Кит — точка интереса и сундук (`whale`)
 
 Ключевые слова: кит, poi.
 
-WhaleLootPoint хранит состояния Idle, Agitated, Diving, Cleared и таймер испытания. Гарпуны, сундук и знак вынесены в отдельные компоненты. Наличие кода не подтверждает игровую или сетевую приёмку.
+2026-10-11, повторный отказ ЛКМ: WhalePlayerInteraction выбирает цель по текущему выступающему отрезку стержня с допуском0.38м, вместо SphereCast по физическим коллайдерам. CanReach использует одинаковую высоту глаз на клиенте и сервере и пять точек стержня на6м; у пассажира кита геометрия этого же кита не блокирует хват, остальные препятствия и дальность проверяются. HarpoonBlockReason возвращает конкретную причину недоступности и используется обоими путями. Захват подтверждается серверным TargetRpc с номером попытки; руки и ввод тяги включаются после принятия, старые ответы игнорируются. Освобождение сбрасывает движение камеры. UI в существующем стиле показывает инструкцию на спине даже без наведения, подтверждение хвата, шесть раскачиваний, процент вытягивания, правильную сторону тяги, отпускание ЛКМ, таймер и свободные связки, причины отказа. Protocol158. Префаб и подключённый компонент прочитаны через Unity MCP; игровой прогон и мультиплеер не запускались.
+2026-10-11, повторная правка по игровому скриншоту: две диагонали образуют X на реальных краях ChestLid, третья связка проходит поперёк. Натянутый маршрут — верхняя огибающая опор с прямыми участками, без повторения каждой впадины спины; небольшой подъём только на пересечениях канатов. Проушина и узел перенесены к застрявшей части стержня, ниже крышки. Runtime сохраняет натяжение до извлечения первого гарпуна пары. WhalePlayerInteraction явно сохранён на NetworkPlayer с прежним защитным добавлением в Awake. Наведение допускает отклонение0.16м от стержня; CanReach проверяет три видимые точки на6м, начало луча — камера владельца или серверная высота глаз с учётом приседания. При отказе сервера TargetRpc освобождает локальный хват и показывает подсказку; повтор требует отпускания ЛКМ. Protocol153. Игровая проверка пользователем обязательна, компиляция не подтверждает хват и визуальную приёмку.
+2026-10-11, исправления по скриншотам: гарпун выровнен вдоль настоящего стержня от наконечника, наконечник посажен на0.65м внутрь поверхности кита. HandGrip отделён от RopeEye; добавлены металлическая проушина и пеньковый узел. Три каната проходят поверх настоящих мешей крышки сундука и спины, все концы совпадают с RopeEye. Снятая с одного гарпуна связка соскальзывает с сундука. Клиент/сервер используют одну проверку доступности6м от уровня глаз вместо расходившихся5/6м; ЛКМ захватывает и при уже удержанной кнопке, ввод мыши продолжает серверное раскачивание/вытягивание. Сохранены три пары,75с испытание,9с погружение и15с дрейф. Сохранены префаб, нормализованный меш и отдельные меши крепления; Protocol152. Компиляция проверена, игровой хват и мультиплеер вручную не проверены.
+2026-10-11: WhaleLootPOI.prefab заменён на Coralback из Blender/Кит/Кит.zip и гарпуны NewShip/Гарпун/гарпун. Исходные PBR-карты сохранены; нормализованный кит длиной35м имеет плавные веса трёх костей хвоста и двух плавников. На спине отдельно сервером создаётся штатный NetworkLootChest из DefaultLoot/ChestLoot.json с обычными предметами и наградой рогалика.
+Шесть гарпунов образуют три пары L1–R3, L2–R2, L3–R1. Перекрёстные канаты используют HookRope.mat и RopeTubeVisual. Сундук доступен после удаления хотя бы одного гарпуна каждой пары: это три не соединённых друг с другом вершины. ЛКМ захватывает гарпун; шесть полных чередующихся движений мыши ослабляют его, затем мышь вниз тянет на себя при нахождении игрока с внешней стороны. Удержание без движения прогресса не даёт. Сервер проверяет игрока, дальность, видимость, занятость и частоту ввода; отпускание или потеря связи освобождает гарпун.
+После первого извлечения канат провисает, гарпун падает и болтается у воды. После второго извлечения вся пара с канатом отделяется, дрейфует и исчезает через15с. Время извлечения, позы выхода и рабочее состояние передаются поздним наблюдателям. Кит после первого захвата начинает испытание75с, усиливает наклон/рывки и сдвиг игрока к краю; приседание уменьшает скольжение. Сундук не останавливает таймер. За следующие9с кит полностью погружается и уплывает, сервер удаляет его и оставшийся сундук. ShipDeckPassenger/NetworkPlayer используют Rigidbody кита как сетевую опору.
+SeaLootSpawner создаёт китов в обычном мире и фиксированный ряд морских ивентов в тестовом layout. Префаб зарегистрирован в NetworkPrefabs, DefaultLoot.WhaleEventPrefab назначен. ProtocolVersion150. Подготовка сохранена через Unity MCP; игровую/сетевую/визуальную приёмку выполняет пользователь.
+Хват кита подключён к существующему WeaponArmRig: обе руки следуют за двумя точками стержня, с плавным захватом и отпусканием и ограничением длиной рук. SetInteractionCameraPull даёт мягкое движение камеры при раскачивании/тяге. На время хвата обычные предметы скрываются, атаки/использование других предметов блокируются. Water.Height используется для высоты кита и плавающих гарпунов. Позиция/поворот выхода каждого гарпуна сохраняются сервером, чтобы поздние клиенты восстанавливали падение и дрейф.
 
-- [Assets/Scripts/WhalePOI/WhaleLootPoint.cs](<Assets/Scripts/WhalePOI/WhaleLootPoint.cs>) — Исходник C#: WhalePOIState, WhaleLootPoint.
+- [Assets/Scripts/WhalePOI/WhaleLootPoint.cs](<Assets/Scripts/WhalePOI/WhaleLootPoint.cs>) — Исходник C#: WhalePOIState, WhaleHarpoonWork, WhaleLootPoint.
 - [Assets/Scripts/WhalePOI/WhaleChest.cs](<Assets/Scripts/WhalePOI/WhaleChest.cs>) — Исходник C#: WhaleChest.
-- [Assets/Scripts/WhalePOI/WhaleHarpoonPin.cs](<Assets/Scripts/WhalePOI/WhaleHarpoonPin.cs>) — Исходник C#: WhaleHarpoonPin, HarpoonWaterImpact.
+- [Assets/Scripts/WhalePOI/WhaleHarpoonPin.cs](<Assets/Scripts/WhalePOI/WhaleHarpoonPin.cs>) — Исходник C#: WhaleHarpoonPin.
 - [Assets/Scripts/WhalePOI/WhaleYellowSign.cs](<Assets/Scripts/WhalePOI/WhaleYellowSign.cs>) — Исходник C#: WhaleYellowSign.
+- [Art/References/WhalePOI/2026-10-11/01_ScarredSpermWhale.png](<Art/References/WhalePOI/2026-10-11/01_ScarredSpermWhale.png>) — Изображение / текстура.
+- [Art/References/WhalePOI/2026-10-11/02_BroadbackHumpback.png](<Art/References/WhalePOI/2026-10-11/02_BroadbackHumpback.png>) — Изображение / текстура.
+- [Art/References/WhalePOI/2026-10-11/03_AncientBowhead.png](<Art/References/WhalePOI/2026-10-11/03_AncientBowhead.png>) — Изображение / текстура.
+- [Art/References/WhalePOI/2026-10-11/04_CoralbackWhale.png](<Art/References/WhalePOI/2026-10-11/04_CoralbackWhale.png>) — Изображение / текстура.
+- [Art/References/WhalePOI/2026-10-11/05_SalvagerWhale.png](<Art/References/WhalePOI/2026-10-11/05_SalvagerWhale.png>) — Изображение / текстура.
+- [Art/References/WhalePOI/CoralbackTurnaround/ApprovedConcept.png](<Art/References/WhalePOI/CoralbackTurnaround/ApprovedConcept.png>) — Изображение / текстура.
+- [Art/References/WhalePOI/CoralbackTurnaround/Front.png](<Art/References/WhalePOI/CoralbackTurnaround/Front.png>) — Изображение / текстура.
+- [Art/References/WhalePOI/CoralbackTurnaround/Rear.png](<Art/References/WhalePOI/CoralbackTurnaround/Rear.png>) — Изображение / текстура.
+- [Art/References/WhalePOI/CoralbackTurnaround/Right.png](<Art/References/WhalePOI/CoralbackTurnaround/Right.png>) — Изображение / текстура.
+- [Art/References/WhalePOI/CoralbackTurnaround/Left.png](<Art/References/WhalePOI/CoralbackTurnaround/Left.png>) — Изображение / текстура.
+- [Assets/Resources/Whale/WhaleLootPOI.prefab](<Assets/Resources/Whale/WhaleLootPOI.prefab>) — Префаб Unity.
+- [Assets/Scripts/WhalePOI/WhaleHarpoonRope.cs](<Assets/Scripts/WhalePOI/WhaleHarpoonRope.cs>) — Исходник C#: WhaleHarpoonRope.
+- [Assets/Scripts/WhalePOI/WhalePlayerInteraction.cs](<Assets/Scripts/WhalePOI/WhalePlayerInteraction.cs>) — Исходник C#: WhalePlayerInteraction.
+- [Assets/Scripts/Editor/WhaleEventSetup.cs](<Assets/Scripts/Editor/WhaleEventSetup.cs>) — Исходник C#: WhaleEventSetup.
+- [Assets/Scripts/Networking/NetworkWeapon.Whale.cs](<Assets/Scripts/Networking/NetworkWeapon.Whale.cs>) — Исходник C#: NetworkWeapon.
+- [Assets/Scripts/Networking/NetworkLootChest.Whale.cs](<Assets/Scripts/Networking/NetworkLootChest.Whale.cs>) — Исходник C#: NetworkLootChest.
+- [Assets/Scripts/World/SeaLootSpawner.cs](<Assets/Scripts/World/SeaLootSpawner.cs>) — Исходник C#: SeaLootSpawner.
+- [Assets/Models/Whale/Harpoon_Broken.fbx](<Assets/Models/Whale/Harpoon_Broken.fbx>) — Модель / анимации FBX.
+- [Assets/Models/Whale/Whale.fbx](<Assets/Models/Whale/Whale.fbx>) — Модель / анимации FBX.
+- [Assets/Models/Whale/whale_diffuse.png](<Assets/Models/Whale/whale_diffuse.png>) — Изображение / текстура.
+- [Assets/Models/Whale/Coralback/CoralbackRig.asset](<Assets/Models/Whale/Coralback/CoralbackRig.asset>) — Настройки или данные Unity.
+- [Assets/Models/Whale/Coralback/CoralbackWhale.zip](<Assets/Models/Whale/Coralback/CoralbackWhale.zip>) — Архив.
+- [Assets/Models/Whale/Coralback/EventSkin.mat](<Assets/Models/Whale/Coralback/EventSkin.mat>) — Материал Unity.
+- [Assets/Models/Whale/Coralback/MetalSmooth.png](<Assets/Models/Whale/Coralback/MetalSmooth.png>) — Изображение / текстура.
+- [Assets/Models/Whale/Harpoon/EventSkin.mat](<Assets/Models/Whale/Harpoon/EventSkin.mat>) — Материал Unity.
+- [Assets/Models/Whale/Harpoon/HarpoonNormalized.asset](<Assets/Models/Whale/Harpoon/HarpoonNormalized.asset>) — Настройки или данные Unity.
+- [Assets/Models/Whale/Harpoon/MetalSmooth.png](<Assets/Models/Whale/Harpoon/MetalSmooth.png>) — Изображение / текстура.
+- [Assets/Models/Whale/Harpoon/WhaleHarpoon.fbx](<Assets/Models/Whale/Harpoon/WhaleHarpoon.fbx>) — Модель / анимации FBX.
+- [Assets/Models/Whale/Materials/M_Whale.mat](<Assets/Models/Whale/Materials/M_Whale.mat>) — Материал Unity.
+- [Assets/Models/Whale/Harpoon/Textures/гарпун_basecolor.JPEG](<Assets/Models/Whale/Harpoon/Textures/гарпун_basecolor.JPEG>) — Изображение / текстура.
+- [Assets/Models/Whale/Harpoon/Textures/гарпун_metallic.JPEG](<Assets/Models/Whale/Harpoon/Textures/гарпун_metallic.JPEG>) — Изображение / текстура.
+- [Assets/Models/Whale/Harpoon/Textures/гарпун_normal.PNG](<Assets/Models/Whale/Harpoon/Textures/гарпун_normal.PNG>) — Изображение / текстура.
+- [Assets/Models/Whale/Harpoon/Textures/гарпун_rm.JPEG](<Assets/Models/Whale/Harpoon/Textures/гарпун_rm.JPEG>) — Изображение / текстура.
+- [Assets/Models/Whale/Harpoon/Textures/гарпун_roughness.JPEG](<Assets/Models/Whale/Harpoon/Textures/гарпун_roughness.JPEG>) — Изображение / текстура.
+- [Assets/Models/Whale/Coralback/CoralbackWhale/tripo_convert_c44df717-9a58-4bb0-8550-c36476f6da12.fbx](<Assets/Models/Whale/Coralback/CoralbackWhale/tripo_convert_c44df717-9a58-4bb0-8550-c36476f6da12.fbx>) — Модель / анимации FBX.
+- [Assets/Models/Whale/Coralback/CoralbackWhale/tripo_convert_c44df717-9a58-4bb0-8550-c36476f6da12.fbm/Кит_basecolor.JPEG](<Assets/Models/Whale/Coralback/CoralbackWhale/tripo_convert_c44df717-9a58-4bb0-8550-c36476f6da12.fbm/Кит_basecolor.JPEG>) — Изображение / текстура.
+- [Assets/Models/Whale/Coralback/CoralbackWhale/tripo_convert_c44df717-9a58-4bb0-8550-c36476f6da12.fbm/Кит_metallic.JPEG](<Assets/Models/Whale/Coralback/CoralbackWhale/tripo_convert_c44df717-9a58-4bb0-8550-c36476f6da12.fbm/Кит_metallic.JPEG>) — Изображение / текстура.
+- [Assets/Models/Whale/Coralback/CoralbackWhale/tripo_convert_c44df717-9a58-4bb0-8550-c36476f6da12.fbm/Кит_normal.PNG](<Assets/Models/Whale/Coralback/CoralbackWhale/tripo_convert_c44df717-9a58-4bb0-8550-c36476f6da12.fbm/Кит_normal.PNG>) — Изображение / текстура.
+- [Assets/Models/Whale/Coralback/CoralbackWhale/tripo_convert_c44df717-9a58-4bb0-8550-c36476f6da12.fbm/Кит_rm.JPEG](<Assets/Models/Whale/Coralback/CoralbackWhale/tripo_convert_c44df717-9a58-4bb0-8550-c36476f6da12.fbm/Кит_rm.JPEG>) — Изображение / текстура.
+- [Assets/Models/Whale/Coralback/CoralbackWhale/tripo_convert_c44df717-9a58-4bb0-8550-c36476f6da12.fbm/Кит_roughness.JPEG](<Assets/Models/Whale/Coralback/CoralbackWhale/tripo_convert_c44df717-9a58-4bb0-8550-c36476f6da12.fbm/Кит_roughness.JPEG>) — Изображение / текстура.
+- [Assets/Scripts/Player/WeaponArmRig.cs](<Assets/Scripts/Player/WeaponArmRig.cs>) — Исходник C#: WeaponArmRig, Arm.
+- [Assets/Scripts/ShipDeckPassenger.cs](<Assets/Scripts/ShipDeckPassenger.cs>) — Исходник C#: ShipDeckPassenger.
+- [Assets/Scripts/Networking/NetworkWeapon.SeaLoot.cs](<Assets/Scripts/Networking/NetworkWeapon.SeaLoot.cs>) — Исходник C#: NetworkWeapon.
+- [Assets/Scripts/Loot/LootCatalog.cs](<Assets/Scripts/Loot/LootCatalog.cs>) — Исходник C#: LootCatalog, Entry.
+- [Assets/Scripts/Networking/SessionConfig.cs](<Assets/Scripts/Networking/SessionConfig.cs>) — Исходник C#: SessionConfig.
+- [Assets/Models/Whale/Harpoon/ForgedRopeEye.asset](<Assets/Models/Whale/Harpoon/ForgedRopeEye.asset>) — Настройки или данные Unity.
+- [Assets/Models/Whale/Harpoon/RopeEyeSeizing.asset](<Assets/Models/Whale/Harpoon/RopeEyeSeizing.asset>) — Настройки или данные Unity.
+- [Art/References/WhalePOI/2026-10-11/README.md](<Art/References/WhalePOI/2026-10-11/README.md>) — Документация.
+- [Art/References/WhalePOI/2026-10-11/PROMPTS.json](<Art/References/WhalePOI/2026-10-11/PROMPTS.json>) — Конфигурация / данные JSON.
+- [Art/References/WhalePOI/CoralbackTurnaround/README.md](<Art/References/WhalePOI/CoralbackTurnaround/README.md>) — Документация.
+- [Art/References/WhalePOI/CoralbackTurnaround/PROMPTS.json](<Art/References/WhalePOI/CoralbackTurnaround/PROMPTS.json>) — Конфигурация / данные JSON.
+- [Art/References/WhalePOI/CoralbackTurnaround/LootInteractionOptions.md](<Art/References/WhalePOI/CoralbackTurnaround/LootInteractionOptions.md>) — Документация.
 
 ### Рыбалка и рыба (`fishing`)
 
@@ -1537,6 +1793,7 @@ NetworkFishMotion: обычная рыба, фугу и рыба-меч на п�
 
 Ключевые слова: тестовая карта, галерея, водоворот, whirlpool.
 
+2026-10-11: Скальные берега островов2/3 заменены исходными CliffWallA/B/C вместо гладкой кольцевой сетки. Главный пол гнезда26.75м, максимум третьего берега28.75м. Обычный маленький остров сохранён без ямы; отдельный остров с весами стоит восьмым в ряду ивентов; сохранены Terrain, песчаные PBR и растительность с ветром.
 2026-10-11: Горизонтальные уступы Sea_Lagoon_Cave и SeaArch_Huge_A используют TripoNative_11_RockElongated_A с коричневыми текстурными крышками. CoastalTripoRock включает _CapRepair только у этого материала: затемнённые коричневые участки обращённых вверх граней плавно заменяются деталью камня/нормали из заданного прямоугольника родного атласа. Геометрия, поворот, UV и коллизия скал сохраняются. Проверка в игре пользователем.
 2026-10-10 после очередного отклонения дыма: только environment_test. Самостоятельный шум128³ RGBAHalf с аналитическим градиентом и mip-цепочкой готовится GPU один раз при подготовке зоны; три выборки64/29/9м, полный вывод1.0, без столбов14м и деформации ячеек32³. До160 геометрических шагов1–2.5м, пустота до10м, уточнение4проб, ранний выход.003; огромные оптические интервалы отклонены после нативного просмотра как источник колец. Перед фронтом реальные падающие объёмные массы12–16с со шлейфом, затем уплощение/рост45%/растекание3м/исчезновение3с; соседство3×3 без отсечения краёв. GPU-карта реальных Gerstner-волн128²/512м/4м, с текущим временем/управлением и водоворотом. Наступление сохраняет возврат низа под массу; высота+15м, заполненная глубина и ориентир10м сохранены, нижний запас SeaLevel−12м. По отдельному запросу добавлены6групп молний у границы: тройки0.6–0.75с, отдельный случайный поток; старые6групп/тройки0.75–1.05с внутри сохранены. Подсветка расширена48→58м/край22–36м/перенос.155 без повышения интенсивности. Массивы StormSmokeFlashVolumes/ChannelStarts/Ends12/72 имеют новые имена для сброса старого ограничения длины. Нативный изолированный предпросмотр включает тот же TraceTestSmoke: просмотрены дальний/ближний/касательный/увеличенный вид, пауза/наступление10/12с и вспышки. Без Play/изменения сцены/игрового FPS. Небо, дождь, рыбы, корабль и обезьяна не менялись. Подробности Docs/StormTestSmoke.md; старые заметки32³/.67 описывают отклонённые итерации.
 В NetworkOcean водоворот всегда активен в центре: OceanSurface.CentralWhirlpoolRadius=500 м (вдвое прежнего), CentralWhirlpoolDepth=120 м. StormZone больше не запускает его в финале и не создаёт WhirlpoolVFX. SeabedTerrain формирует локальное углубление радиусом 625 м с запасом под воронкой, CPU и mesh используют одну функцию. WaterGridGenerator больше не создаёт 81 сферу WaterBuoy в меню и удаляет старые объекты по точным именам. SimpleWater исключает небо из depth-пены, проверяет расстояние до контакта геометрии и подавляет береговую пену внутри и у края воронки. В SimpleWater вращающаяся рябь и три разорванные спиральные полосы пены показывают течение внутри воронки по синхронизированному времени; эффект плавно исчезает до края. Нормали учитывают наклон воронки. Старые эффекты каймы и затемнение убраны; bounds воды учитывают глубокую воронку. WhirlpoolTest использует радиус 500 м без частиц, глубину 45 м для отдельной тестовой площадки. Точка входа тестовой карты — EnvironmentTestGallery, подготовка — EnvironmentTestSetup. Водоворот имеет отдельные файлы поведения и визуала; не путать этот режим со старой SampleScene.
@@ -1549,7 +1806,7 @@ ShipV3GameplayRepair добавляет точку игры в кости неп
 Основная тестовая карта: TestSkyDayNight через EnvironmentTestGallery создаёт день, закат и лунную ночь; F8 управляет плавным переходом0..1. TestSkyPipeline/Renderer/Volume и отдельный материал облаков; PBSky1.0.4 MIT дляUnity6000.6, облакаCandidateA. Moon .30, видимыйазимут125°, высота24°, skyExposure−3.5EV, ambientFloor(.25,.29,.38).linear x .5. Сумеречный fill (.30,.29,.30) растёт в linear на .28–.48 до ухода солнца под горизонт, с .58 переходит в более слабый ночной свет. Boat Attack near/far отражает динамический skyCube; PBSky Fog связан с F8 морским туманом. Обычная игра сохраняет прежнийpipeline; свет/отражения/туман восстанавливаются при выходе.
 Дополнительная коррекция Boat Attack после проверки exe: Gerstner peak=2 создавал отрицательный горизонтальный якобиан (на реальных шести волнах det min−.455, 2.20% перевёрнутых точек). В GerstnerWaves.hlsl, GerstnerWaves.cs и BoatAttackOcean.CacheWaves согласованно установлен peak=.85; вертикальная амплитуда сохранена. J=I−(peak/N)Σsin(phase)d dᵀ, поэтому λmin≥.15 для любых направлений/фаз, для текущего спектра≥.28376. Повторная сборка и приёмка завершены, результат ниже.
 Основная Тестовая карта запускается через EnvironmentTestGallery внутри NetworkOcean. Resources/EnvironmentTest/Ocean.prefab сохраняет настройки Boat Attack; TestOceanController подключает адаптер к единственному игровому OceanSurface, скрывает прежний MeshRenderer и восстанавливает его в OnDisable до следующей генерации. Ресурс содержит instanced BoatAttackWater.mat для Player.
-Стартовая ориентация yaw180 (от галереи в открытое море); центр воронки=Spawn+(0,0,−550), R500/D120/Twist2, ближний край50м. Другие корабли разнесены поперёк по−X65м. Layout.Radius≥4000м обеспечивает доступ ко всей чаше и широкую стартовую зону. Глубина дна200м, SeabedTerrain углубляет чашу под тем же центром.
+Стартовая ориентация yaw180 (от галереи в открытое море); центр воронки=(2550,SeaLevel,370), R500/D120/Twist2. Другие корабли разнесены поперёк по−X65м. Layout.Radius≥4000м обеспечивает доступ ко всей чаше и широкую стартовую зону. Глубина дна200м, SeabedTerrain углубляет чашу под тем же центром.
 F8: сила волн0..200%, крутизна0..100%, скорость.25..2x и сброс. CPU/GPU вертикаль×strength, горизонталь peak.85×min(strength,1)×steepness; speed меняет непрерывные часы, высота0 не делит на ноль. Волны меняет хост; SessionOcean передаёт параметры и общие clockanchor/value клиентам, включая подключившихся позднее.
 TestSky: HDR grading/LUT32, Neutral, Contrast6/Saturation−4, Bloomthreshold1.2/intensity.15/scatter.55/clamp8/Half, SSAOdirectStrength.15. Boat Water near/far используют динамический skyCube; ночью пена×.45/scatter×.65. Прозрачная вода применяет тот же PBSky atmospheric fog в fragment через Lighting.w, без второго fullscreen pass.
 TestSkyPipeline зарегистрирован для сбора shader features через IncludeAdditionalRPAssets/includeAssetsByLabel и метку PirateSlopRuntimePipeline. Без этого URP удаляет HDR_GRADING для динамического переключения pipeline: в Player белое небо и резкий контраст, хотя Editor работает. TestSkySetup.ConfigureLook поддерживает регистрацию.
@@ -1567,6 +1824,9 @@ WaterImpactPhysics/WaterImpactBody: общие локальные всплеск
 2026-10-10 после повторных полос неба, бокового искажения и слабого движения: только environment_test. Дым сохраняет весь опасный объём до WorldLayout.Radius, потолок max(20,testShipTop+10)+15, низ SeaLevel−1.2м и настоящую глубину воды. _StormTestSmokeMotion хранит плавный вес наступления, независимые горизонтальный и нисходящий пути. Оседание3.5→9м/с и перекат3.5→7м направлены вниз в обоих режимах; переход SmoothDamp1.25с без сброса пути. На паузе водяные клубы немного расходятся до3м и плавно затухают; при наступлении нижний поток возвращается под массу дыма, без растекания наружу. Встречные поля смешивают плотность, не накопленные координаты; добавлена одна выборка только в низком движущемся слое. Глубина остаётся заполненной. PerlinR8 74/31/12м, минимум mip0 и фильтрация по реальному пикселю без зависимости от шага луча. TraceTestSmoke: до96 адаптивных интервалов, пустота до256м, дым1–6м, четыре пробы уточняют вход, последние16 покрывают весь остаток; разрешение.67, ранний выход.003. Минимум глубины.4, плотность≤1, поглощение.14 и ближний вес.5–3.5м сохраняют расчётный ориентир10м плохого обзора. Небо CandidateA получает отдельную непрерывную плотность Perlin2600/1100м вместо старого порогования/повторной эрозии; ясные1200–2180м и пасмурные400–1500м слои смешиваются по плотности. Тестовая история0 вместо профиля.95 согласована в материале/denoise/RenderGraph;64пробы и разрешение.5 сохранены. Рыбы получают только тестовую коррекцию ориентации/хвостов, Docs/AmbientFish.md. Дождь, мокрые следы, капли, молнии и гром не менялись. Native C# errors0; smoke SetPass0..3true/messages0 после последнего уточнения, sky0..3/7/8true/messages0. Без Play, визуальной приёмки и FPS. Docs/StormTestSmoke.md, Docs/TestSkyDayNight.md.
 2026-10-10 повторная пиксельность дыма и слабое оседание: только environment_test. Наступление связано с реальной скоростью радиуса0.05–0.4м/с, затем SmoothDamp1.25с. Стоящий круг оставляет стационарный поток. Отдельные падающие клубы идут по height+fall с периодом высоты14м; на паузе цикл≈4с. При контакте огибающая набирается0–8%, растекается наружу до3м и гаснет35–88%; отдельная объёмная водяная бахрома усиливает этот этап. При наступлении эти клубы выключаются, низ возвращается под массу дыма. Глубина/верх+15м/обзор≈10м сохранены. TraceTestSmoke использует середины интервалов без случайного пиксельного сдвига; StormSmokeNoise сглаживает ячейки исходного шума32³ у mip0, включая нормали, дальние mips сохраняются. Native PerlinNoise32RGB размер32³ подтверждён. Разрешение.67/до96интервалов не повышены. Небо/ливень/молнии не изменены. Стартовые предметы и волновой подъём корабля исправлены отдельно, Docs/TestOcean.md; обезьянка сохранена. C#errors0, smoke SetPass0..3true/messages0; без Play/визуальной/FPS-приёмки. Docs/StormTestSmoke.md.
 2026-10-10 ProtocolVersion141: SessionCombatRules хранит серверный FriendlyFireEnabled, транслирует CombatRulesMessage всем клиентам и новым участникам; при закрытии/старте сессии выключен. F8→Игрок→Бой, команда31, общий переключатель дружественного огня. CombatHealth и поджог/толчок ядром разрешают урон союзникам при включении; ShipDestruction принимает попадания своего игрока/команды, CannonShotDamage перестаёт исключать весь Source-корабль, сохраняя исключение выпустившей пушки. Серверные ограничения существующего DeveloperCommand сохранены.
+11.10.2026, исправление по игровому скриншоту: кольцо тестовой воронки перенесено с 60 м на 30 м (0.06R). Для этих восьми щупалец убрано дополнительное удлинение 1.65 и применён одинаковый масштаб по всем осям: длина 43–57 м, пропорции присосок и исходной текстуры сохраняются. Idle-движение конца и волны скелета усилены в 3.2 раза; у каждого экземпляра своя фаза и форма. Сервер проверяет реальный проход конца во время удара через OverlapCapsuleNonAlloc после обновления костей: 25 здоровья один раз на игрока за удар щупальца, без урона всей команде. Совместная атака по кораблю чередует 3 соседних верхних блока трюма и 1 ближайший блок средней/нижней части; дополнительных случайных верхних разрушений и катастрофы нет. Подготовка начинается в радиусе 230 м, атаки раз в 6 с. Снимки атак/здоровья для всех клиентов и позднего входа сохранены. Обычная встреча с кракеном сохраняет прежний урон. ProtocolVersion149, общая Builds/Windows/PirateSlop.exe; игровой прогон не выполнялся.
+11.10.2026, уточнение пользователя: EnvironmentEventTestRow содержит только шесть станций (захват, плот, затонувший сундук, акулы, череп, кит). Автозапуск кракена рядом со станцией удалён; KrakenEncounterManager запрещает таймер ожидания на EnvironmentTestGallery, ручной запуск F8 сохраняется. EnvironmentTestGallery.WhirlpoolCenter получает test_ship_0 и смещает Z на -550 м, возвращая прежнюю позицию (-635.41,SeaLevel,-788.4); вода, SeabedTerrain и кольцо используют единый центр. Водоворот не относится к ряду ивентов. ProtocolVersion151.
+2026-10-11: SandyIslandTestSetup.Prepare сохраняет три песчаных острова в отдельный SandyIslandTestRow ресурса EnvironmentTest/Gallery: X=-520/-130/340, Z=700, параллельно скалам и за рядом ивентов Z=370, вдали от водоворота. SmallSandyIsland: обычный пологий берег, радиус28м. TwoLandingIsland: радиус59м, песчаное плато8.2м, цельные непроходимые с воды скальные плечи12м и два пляжных прохода по ±Z. SingleLandingRockIsland: радиус78м, песчаная середина4.8м, один проход с -Z, замкнутый неровный скальный пояс с минимумом гребня50м, выше верхнего корабельного коллайдера28.29м и прыжка1.2м с запасом. Грунт — редактируемые TerrainData513, TerrainCollider; скальные пояса — закрытые MeshCollider, совпадающие с видимыми поверхностями, без невидимых стен. Четыре CC0 PolyHaven PBR2K TerrainLayer: CoastSand01/LeafyGrass/BrownMud03/CoastSandRocks02, преимущественно песок и локальные травянистые пятна. StarterIsland Palm/PalmBent/PalmYoung/Bush/Fern расставлены группами, проходы свободны; SandyIslandFoliageWind задаёт шейдерное покачивание0.2м для пальм и0.065м для кустов/папоротников с неподвижным корнем, включая тени/глубину, без изменения коллайдеров. Исходные растения имеют WindStrength0. ArrangeTestGallery сохраняет новый ряд через Attach; версия галереи учитывает зависимости островов. Префабы/материалы сохранены через Unity MCP; компиляция без новых ошибок, Play/визуальная игровая приёмка не запускались.
 
 - [Assets/Game/BRZoneVolumetric/StormVolumeController.Smoke.cs](<Assets/Game/BRZoneVolumetric/StormVolumeController.Smoke.cs>) — Исходник C#: StormVolumeController.
 - [Assets/Game/BRZoneVolumetric/Resources/StormSmokeFields.compute](<Assets/Game/BRZoneVolumetric/Resources/StormSmokeFields.compute>) — Вычислительный шейдер.
@@ -1638,6 +1898,42 @@ WaterImpactPhysics/WaterImpactBody: общие локальные всплеск
 - [Assets/Models/Ships/ShipV3/Bilge/InteriorWaterProfile.asset](<Assets/Models/Ships/ShipV3/Bilge/InteriorWaterProfile.asset>) — Настройки или данные Unity.
 - [Assets/Game/BRZoneVolumetric/Shaders/StormTestSmokeField.hlsl](<Assets/Game/BRZoneVolumetric/Shaders/StormTestSmokeField.hlsl>) — Код шейдера.
 - [Assets/Scripts/Networking/SessionCombatRules.cs](<Assets/Scripts/Networking/SessionCombatRules.cs>) — Исходник C#: CombatRulesMessage, SessionController.
+- [Assets/Scripts/World/WhirlpoolTentacleRing.cs](<Assets/Scripts/World/WhirlpoolTentacleRing.cs>) — Исходник C#: WhirlpoolTentacleRing.
+- [Assets/Scripts/Networking/SessionWhirlpoolTentacles.cs](<Assets/Scripts/Networking/SessionWhirlpoolTentacles.cs>) — Исходник C#: WhirlpoolTentacleState, WhirlpoolTentaclesMessage, SessionController.
+- [Assets/Scripts/World/EnvironmentEventTestRow.cs](<Assets/Scripts/World/EnvironmentEventTestRow.cs>) — Исходник C#: EnvironmentEventTestRow.
+- [Assets/Scripts/World/SeaLootSpawner.cs](<Assets/Scripts/World/SeaLootSpawner.cs>) — Исходник C#: SeaLootSpawner.
+- [Assets/Scripts/Editor/SandyIslandTestSetup.cs](<Assets/Scripts/Editor/SandyIslandTestSetup.cs>) — Исходник C#: SandyIslandTestSetup, Shape.
+- [Assets/Scripts/World/SandyIslandFoliageWind.cs](<Assets/Scripts/World/SandyIslandFoliageWind.cs>) — Исходник C#: SandyIslandFoliageWind.
+- [Assets/Models/World/SandyIslands/Textures/SOURCES.md](<Assets/Models/World/SandyIslands/Textures/SOURCES.md>) — Документация.
+- [Assets/Materials/SandyIslands/SandyGround.mat](<Assets/Materials/SandyIslands/SandyGround.mat>) — Материал Unity.
+- [Assets/Prefabs/World/SandyIslands/SmallSandyIsland.prefab](<Assets/Prefabs/World/SandyIslands/SmallSandyIsland.prefab>) — Префаб Unity.
+- [Assets/Settings/World/SandyIslands/SmallSandyIsland.asset](<Assets/Settings/World/SandyIslands/SmallSandyIsland.asset>) — Настройки или данные Unity.
+- [Assets/Prefabs/World/SandyIslands/TwoLandingIsland.prefab](<Assets/Prefabs/World/SandyIslands/TwoLandingIsland.prefab>) — Префаб Unity.
+- [Assets/Settings/World/SandyIslands/TwoLandingIsland.asset](<Assets/Settings/World/SandyIslands/TwoLandingIsland.asset>) — Настройки или данные Unity.
+- [Assets/Prefabs/World/SandyIslands/SingleLandingRockIsland.prefab](<Assets/Prefabs/World/SandyIslands/SingleLandingRockIsland.prefab>) — Префаб Unity.
+- [Assets/Settings/World/SandyIslands/SingleLandingRockIsland.asset](<Assets/Settings/World/SandyIslands/SingleLandingRockIsland.asset>) — Настройки или данные Unity.
+- [Assets/Models/World/SandyIslands/TwoLandingIsland_RockRim.asset](<Assets/Models/World/SandyIslands/TwoLandingIsland_RockRim.asset>) — Настройки или данные Unity.
+- [Assets/Models/World/SandyIslands/SingleLandingRockIsland_RockRim.asset](<Assets/Models/World/SandyIslands/SingleLandingRockIsland_RockRim.asset>) — Настройки или данные Unity.
+- [Assets/Materials/SandyIslands/coast_sand_01.terrainlayer](<Assets/Materials/SandyIslands/coast_sand_01.terrainlayer>) — Файл .terrainlayer.
+- [Assets/Models/World/SandyIslands/Textures/coast_sand_01/Colour.jpg](<Assets/Models/World/SandyIslands/Textures/coast_sand_01/Colour.jpg>) — Изображение / текстура.
+- [Assets/Models/World/SandyIslands/Textures/coast_sand_01/Normal.png](<Assets/Models/World/SandyIslands/Textures/coast_sand_01/Normal.png>) — Изображение / текстура.
+- [Assets/Models/World/SandyIslands/Textures/coast_sand_01/Roughness.jpg](<Assets/Models/World/SandyIslands/Textures/coast_sand_01/Roughness.jpg>) — Изображение / текстура.
+- [Assets/Models/World/SandyIslands/Textures/coast_sand_01/Mask.png](<Assets/Models/World/SandyIslands/Textures/coast_sand_01/Mask.png>) — Изображение / текстура.
+- [Assets/Materials/SandyIslands/leafy_grass.terrainlayer](<Assets/Materials/SandyIslands/leafy_grass.terrainlayer>) — Файл .terrainlayer.
+- [Assets/Models/World/SandyIslands/Textures/leafy_grass/Colour.jpg](<Assets/Models/World/SandyIslands/Textures/leafy_grass/Colour.jpg>) — Изображение / текстура.
+- [Assets/Models/World/SandyIslands/Textures/leafy_grass/Normal.png](<Assets/Models/World/SandyIslands/Textures/leafy_grass/Normal.png>) — Изображение / текстура.
+- [Assets/Models/World/SandyIslands/Textures/leafy_grass/Roughness.jpg](<Assets/Models/World/SandyIslands/Textures/leafy_grass/Roughness.jpg>) — Изображение / текстура.
+- [Assets/Models/World/SandyIslands/Textures/leafy_grass/Mask.png](<Assets/Models/World/SandyIslands/Textures/leafy_grass/Mask.png>) — Изображение / текстура.
+- [Assets/Materials/SandyIslands/brown_mud_03.terrainlayer](<Assets/Materials/SandyIslands/brown_mud_03.terrainlayer>) — Файл .terrainlayer.
+- [Assets/Models/World/SandyIslands/Textures/brown_mud_03/Colour.jpg](<Assets/Models/World/SandyIslands/Textures/brown_mud_03/Colour.jpg>) — Изображение / текстура.
+- [Assets/Models/World/SandyIslands/Textures/brown_mud_03/Normal.png](<Assets/Models/World/SandyIslands/Textures/brown_mud_03/Normal.png>) — Изображение / текстура.
+- [Assets/Models/World/SandyIslands/Textures/brown_mud_03/Roughness.jpg](<Assets/Models/World/SandyIslands/Textures/brown_mud_03/Roughness.jpg>) — Изображение / текстура.
+- [Assets/Models/World/SandyIslands/Textures/brown_mud_03/Mask.png](<Assets/Models/World/SandyIslands/Textures/brown_mud_03/Mask.png>) — Изображение / текстура.
+- [Assets/Materials/SandyIslands/coast_sand_rocks_02.terrainlayer](<Assets/Materials/SandyIslands/coast_sand_rocks_02.terrainlayer>) — Файл .terrainlayer.
+- [Assets/Models/World/SandyIslands/Textures/coast_sand_rocks_02/Colour.jpg](<Assets/Models/World/SandyIslands/Textures/coast_sand_rocks_02/Colour.jpg>) — Изображение / текстура.
+- [Assets/Models/World/SandyIslands/Textures/coast_sand_rocks_02/Normal.png](<Assets/Models/World/SandyIslands/Textures/coast_sand_rocks_02/Normal.png>) — Изображение / текстура.
+- [Assets/Models/World/SandyIslands/Textures/coast_sand_rocks_02/Roughness.jpg](<Assets/Models/World/SandyIslands/Textures/coast_sand_rocks_02/Roughness.jpg>) — Изображение / текстура.
+- [Assets/Models/World/SandyIslands/Textures/coast_sand_rocks_02/Mask.png](<Assets/Models/World/SandyIslands/Textures/coast_sand_rocks_02/Mask.png>) — Изображение / текстура.
 - [Docs/TestOcean.md](<Docs/TestOcean.md>) — Документация.
 - [Docs/TestSkyDayNight.md](<Docs/TestSkyDayNight.md>) — Документация.
 - [Docs/StormRain.md](<Docs/StormRain.md>) — Документация.
@@ -1653,6 +1949,7 @@ NetworkLoadTest запускается из меню Тест нагрузки �
 07.10 сборка16:21, вылет16:28 при взгляде трубой на зону: exceptionstream C0000005/read0x248/Mono+1c3c7c (mono_runtime_class_init+29c), Player.log такжеSubmit/URP. Логи/дамп сохранены в../output/CrashReview20261007/Crash_2026-10-07_132818887. Исправлены реальныеRGRead-зависимости облаков иspyglassresolutionrealloc; causal связь сMono не доказана, крашнеобъявленresolved, движок/backend неизменны. Source/nativecompileerrors0; безPlay/build/repro.
 Попадания Ship V3, 2026-10-09: RenderBatch заранее кэширует диапазоны индексов исходных деталей и после разрушения меняет только треугольники копии CachedMesh; не копирует каждый раз вершины, нормали, тангенты и UV и не вызывает UploadMeshData(true) для общего меша. CollisionBatch при повреждении выключает объединённый коллайдер и включает сохранившиеся исходные коллайдеры; при полном ремонте возвращает CachedMesh, без повторного BuildMesh/cooking большого корпуса. Подписки на секции уникальны, Distance использует индексы только нужной секции. Течи сохраняют неизменившиеся меши. Соответствие диапазонов всех 116 сохранённых render batches проверено; замеры кадров и Play не запускались.
 Первый удар Ship V3: ShipDamagePreparation в Awake готовит читаемые меши точных коллайдеров и ленивых фрагментов через Physics.BakeMesh с теми же convex/cookingOptions, пакетами Job System, и прогревает сохранённые192 варианта корабельных шейдеров. Подготовка общих мешей выполняется один раз на загрузку сессии. Ленивый FragmentCollider создаётся на дочернем объекте без MeshFilter и получает cookingOptions до sharedMesh, предотвращая автоматическое назначение меша и двойной cooking. Код скомпилирован, префаб сохранён; Play и замеры первого/повторных попаданий не выполнялись, исчезновение фриза не подтверждено.
+11.10.2026, повторный фриз кракена: расчёт геометрии течей (растр до 224 ячеек, сглаживание, кольца и капли) вынесен в фоновую задачу без Unity-объектных API; исходные массивы копируются на основном потоке, загрузка готовых мешей ограничена одним за кадр. Новые ревизии пробоин собираются за 0.06 с, устаревшие результаты отбрасываются, временные загруженные меши освобождаются. Синхронный расчёт струй в UpdateLeaks устранён; исчезновение фриза без игрового замера не подтверждено.
 
 - [Assets/Scripts/Networking/SessionLoadTest.cs](<Assets/Scripts/Networking/SessionLoadTest.cs>) — Исходник C#: SessionController.
 - [Assets/Scripts/Editor/NetworkLoadTestSetup.cs](<Assets/Scripts/Editor/NetworkLoadTestSetup.cs>) — Исходник C#: NetworkLoadTestSetup.
@@ -1666,7 +1963,7 @@ NetworkLoadTest запускается из меню Тест нагрузки �
 - [Assets/Scripts/Ships/ShipV3RenderBatch.cs](<Assets/Scripts/Ships/ShipV3RenderBatch.cs>) — Исходник C#: ShipV3RenderBatch, IndexLayout.
 - [Assets/Scripts/UI/GameTelemetry.cs](<Assets/Scripts/UI/GameTelemetry.cs>) — Исходник C#: GameTelemetry.
 - [Assets/Scripts/Ships/ShipV3CollisionBatch.cs](<Assets/Scripts/Ships/ShipV3CollisionBatch.cs>) — Исходник C#: ShipV3CollisionBatch.
-- [Assets/Scripts/Ships/ShipBilgeLeakGeometry.cs](<Assets/Scripts/Ships/ShipBilgeLeakGeometry.cs>) — Исходник C#: ShipBilgeLeakGeometry, Surface, Aperture, Patch, Builder.
+- [Assets/Scripts/Ships/ShipBilgeLeakGeometry.cs](<Assets/Scripts/Ships/ShipBilgeLeakGeometry.cs>) — Исходник C#: ShipBilgeLeakGeometry, Surface, Aperture, Patch, Builder, SurfaceData.
 - [Assets/Scripts/Ships/ShipDamagePreparation.cs](<Assets/Scripts/Ships/ShipDamagePreparation.cs>) — Исходник C#: ShipDamagePreparation, BakeJob.
 - [Assets/Models/Ships/ShipV3/Bilge/DamageWarmup.shadervariants](<Assets/Models/Ships/ShipV3/Bilge/DamageWarmup.shadervariants>) — Файл .shadervariants.
 - [Docs/Performance/NetworkLoadTest.md](<Docs/Performance/NetworkLoadTest.md>) — Документация.
@@ -1756,6 +2053,7 @@ ShipMonkey.HeadRide.cs: редкая серверная прогулка к жи
 Шесть Reel*.png нарисованы imagegen по CardArt карт прокачки: единая тушевая гравюра, латунь/бирюза/орех. Alpha PNG, aspect по видимому контуру. FBX белая полоса X=-.070..+.044, центр-.014: глиф до.095м, разделитель.098м, толщина3мм на каждом60-градусном стыке. Mesh.Clear/vertex assignments обновляют GPU buffers вместо CopySerialized. LeverPivot X=-.635 прилегает к боковине, рука не добавлена. Опора4точекY4.11; минимальный зазор всей геометрии до стены3.19см. Статичные editor-render сделаны, игровые проверки остаются пользователю. Независимый visual_reviewer: APPROVED для 6 символов, посадки, разделителей и крепления; это не проверка игрового поведения.
 Автомат увеличен на20% (scale1.2, высота2.28м), позиция(-3.6054,4.12,-18.0709),yaw58. После своей рыбной ставки захват ЛКМ доступен рядом без попадания лучом в LeverGrip; подсказка только у приёмника. SlotMachinePlayer order-26 и consumed input исключают перехват ShipV3PlayerInteraction. Обезьянка: бесплатный ход раз180–300с, только свободный автомат, подход спереди по палубному графу с обходом шкафа, Work/рычаг0.8с, Idle/взгляд до окончания спина и выдачи. Проигрыш80%, SkillPoint не выигрывается; оставшиеся20% пропорциональны прежним пяти категориям. При отмене бесплатной ставки не появляется возврат рыбы. Начатый спин не отменяется уходом, помощь раненому может прервать только подход. Игрок: проигрыш60%. Нативный импорт/компиляция без ошибок, PlayMode/build/клиент не запускались.
 Mystery допускает все включенные строки ChestLoot.json кроме оружия, включая рыбу, пушку, ядра и утилитарный крюк. Вопросик исправлен горизонтальным UV-разворотом SymbolSurface2.
+11.10.2026: AdvancedPlayerController.SetInteractionCameraPull задаёт временный наклон камеры до 6 градусов и смещение до 1.8 см, сглаживание exp(-10dt), автоматический возврат, когда взаимодействие больше не задаёт pull. SlotMachinePlayer передаёт предсказанное положение рычага, DirectShipControls — вертикальное движение захваченных рычагов парусов/казённика, BilgePumpPlayer — цикл помпы с амплитудой 3.6 градуса. Основной pitch при захвате не меняется; ЛКМ отпущена/захват отменён — камера возвращается. Игровой прогон не выполнялся.
 
 - [Assets/Scripts/Ships/ShipSlotMachine.cs](<Assets/Scripts/Ships/ShipSlotMachine.cs>) — Исходник C#: ShipSlotMachine.
 - [Assets/Scripts/Ships/ShipSlotMachineSettings.cs](<Assets/Scripts/Ships/ShipSlotMachineSettings.cs>) — Исходник C#: SlotSymbol, ShipSlotMachineSettings.
@@ -1809,6 +2107,92 @@ Mystery допускает все включенные строки ChestLoot.js
 - [Docs/ShipSlotMachine.md](<Docs/ShipSlotMachine.md>) — Документация.
 - [Docs/SlotMachineAudio.json](<Docs/SlotMachineAudio.json>) — Конфигурация / данные JSON.
 - [Docs/SlotMachineReelArt.md](<Docs/SlotMachineReelArt.md>) — Документация.
+
+### Раковина с сундуком и парные рычаги (`clam-event`)
+
+Ключевые слова: раковина, ракушка, clam, shell, парные рычаги.
+
+11.10.2026: седьмой морской ивент (1500,SeaLevel,370). ЛКМ захватывает ручку, мышь вниз задаёт полный ход; E остаётся прямым нажатием и посадкой на настил из воды. Сервер подтверждает хват и причины отказа, ограничивает скорость тяги, освобождает по heartbeat0.65с. Наведение по отрезку ручки; посторонние препятствия проверяются, своя раковина не блокирует доступ. Два разных игрока нажимают в окне0.8с; пять равных ступеней12° до60°, движение1.1с, возврат ручки и КД5с. Сохраняются промах с локальным приоткрытием края8см только у первого нажавшего; опоздавший второй не поднимает свой край и поздняя синхронизация. F8 / Телепортация / Ивенты и F8 / Лут. Protocol161; игровой прогон и сборка не запускались.
+После исправления пользовательских замечаний: цельные V19_PumpBody/V19_PumpLever из ShipV3 с исходными шарниром и пропорциями. Ручка неподвижного корпуса доступна на всех ступенях, пять вложенных прямых металлических секций из пальца корабельной таблички следуют уменьшенному крюку. Деревянная ось катушки исключена. Общая створка вращается от задней петли только для успешных пар; локальное приоткрытие выполнено blend shapes, с одинаковой деформацией коллайдера и крепления крюка. Десятки разрозненных зубцов и растянутые фрагменты удалены из префаба. Внутри только штатный сундук; деревянный пол и внутренние мостики отсутствуют. Дно самой нижней створки выровнено до уровня наружных деревянных площадок, видимая геометрия совпадает с коллайдером. Посадка сундука вычисляется по треугольникам дна и нижней поверхности модели, без фиксированного зазора. Копии Reused*.asset сохраняют UV/PBR; исходники не изменяются.
+
+- [Assets/Scripts/Networking/NetworkClamEvent.cs](<Assets/Scripts/Networking/NetworkClamEvent.cs>) — Исходник C#: ClamLeverStroke, ClamLeverHold, NetworkClamEvent.
+- [Assets/Scripts/Networking/NetworkWeapon.Clam.cs](<Assets/Scripts/Networking/NetworkWeapon.Clam.cs>) — Исходник C#: NetworkWeapon.
+- [Assets/Scripts/Networking/NetworkLootChest.Clam.cs](<Assets/Scripts/Networking/NetworkLootChest.Clam.cs>) — Исходник C#: NetworkLootChest.
+- [Assets/Scripts/Loot/ClamLeverTarget.cs](<Assets/Scripts/Loot/ClamLeverTarget.cs>) — Исходник C#: ClamLeverTarget.
+- [Assets/Scripts/Player/ClamPlayerInteraction.cs](<Assets/Scripts/Player/ClamPlayerInteraction.cs>) — Исходник C#: ClamPlayerInteraction.
+- [Assets/Scripts/Editor/ClamEventSetup.cs](<Assets/Scripts/Editor/ClamEventSetup.cs>) — Исходник C#: ClamEventSetup, ReusedPart.
+- [Assets/Scripts/Loot/LootCatalog.cs](<Assets/Scripts/Loot/LootCatalog.cs>) — Исходник C#: LootCatalog, Entry.
+- [Assets/Scripts/World/SeaLootSpawner.cs](<Assets/Scripts/World/SeaLootSpawner.cs>) — Исходник C#: SeaLootSpawner.
+- [Assets/Scripts/World/EnvironmentEventTestRow.cs](<Assets/Scripts/World/EnvironmentEventTestRow.cs>) — Исходник C#: EnvironmentEventTestRow.
+- [Assets/Scripts/World/DeveloperTeleportDestinations.cs](<Assets/Scripts/World/DeveloperTeleportDestinations.cs>) — Исходник C#: DeveloperTeleportDestination, DeveloperTeleportDestinations.
+- [Assets/Scripts/Player/DeveloperMenu.cs](<Assets/Scripts/Player/DeveloperMenu.cs>) — Исходник C#: DeveloperMenu.
+- [Assets/Scripts/Networking/NetworkDeveloperTools.cs](<Assets/Scripts/Networking/NetworkDeveloperTools.cs>) — Исходник C#: NetworkWeapon.
+- [Assets/Scripts/Networking/NetworkLootChest.Ocean.cs](<Assets/Scripts/Networking/NetworkLootChest.Ocean.cs>) — Исходник C#: SeaLootKind, SeaLootState, NetworkLootChest.
+- [Assets/Scripts/Networking/NetworkLootChest.OceanVisual.cs](<Assets/Scripts/Networking/NetworkLootChest.OceanVisual.cs>) — Исходник C#: NetworkLootChest.
+- [Assets/Scripts/Networking/NetworkWeapon.cs](<Assets/Scripts/Networking/NetworkWeapon.cs>) — Исходник C#: NetworkWeapon.
+- [Assets/Scripts/Player/PlayerInventory.cs](<Assets/Scripts/Player/PlayerInventory.cs>) — Исходник C#: PlayerInventory.
+- [Assets/Scripts/Ships/ShipV3PlayerInteraction.cs](<Assets/Scripts/Ships/ShipV3PlayerInteraction.cs>) — Исходник C#: ShipV3PlayerInteraction.
+- [Assets/Scripts/ShipDeckPassenger.cs](<Assets/Scripts/ShipDeckPassenger.cs>) — Исходник C#: ShipDeckPassenger.
+- [Assets/Resources/SeaEvents/ClamEvent.prefab](<Assets/Resources/SeaEvents/ClamEvent.prefab>) — Префаб Unity.
+- [Assets/Models/SeaEvents/Clam/Clam.fbx](<Assets/Models/SeaEvents/Clam/Clam.fbx>) — Модель / анимации FBX.
+- [Assets/Models/SeaEvents/Clam/ClamSkin.mat](<Assets/Models/SeaEvents/Clam/ClamSkin.mat>) — Материал Unity.
+- [Assets/Models/SeaEvents/Clam/ClamLower.asset](<Assets/Models/SeaEvents/Clam/ClamLower.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Clam/ClamUpper.asset](<Assets/Models/SeaEvents/Clam/ClamUpper.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Clam/ClamLidCollision0.asset](<Assets/Models/SeaEvents/Clam/ClamLidCollision0.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Clam/ClamLidCollision1.asset](<Assets/Models/SeaEvents/Clam/ClamLidCollision1.asset>) — Настройки или данные Unity.
+- [Assets/Settings/Loot/DefaultLoot.asset](<Assets/Settings/Loot/DefaultLoot.asset>) — Настройки или данные Unity.
+- [Assets/Settings/Networking/NetworkPrefabs.asset](<Assets/Settings/Networking/NetworkPrefabs.asset>) — Настройки или данные Unity.
+- [Assets/Prefabs/Networking/NetworkPlayer.prefab](<Assets/Prefabs/Networking/NetworkPlayer.prefab>) — Префаб Unity.
+- [Assets/Models/SeaEvents/Clam/ReusedBearing.asset](<Assets/Models/SeaEvents/Clam/ReusedBearing.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Clam/ReusedBand.asset](<Assets/Models/SeaEvents/Clam/ReusedBand.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Clam/ReusedSleeve.asset](<Assets/Models/SeaEvents/Clam/ReusedSleeve.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Clam/ReusedDrum.asset](<Assets/Models/SeaEvents/Clam/ReusedDrum.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Clam/ReusedGrip.asset](<Assets/Models/SeaEvents/Clam/ReusedGrip.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Clam/ReusedAxle.asset](<Assets/Models/SeaEvents/Clam/ReusedAxle.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Clam/ReusedLever.asset](<Assets/Models/SeaEvents/Clam/ReusedLever.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Clam/ReusedBracket.asset](<Assets/Models/SeaEvents/Clam/ReusedBracket.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Clam/ReusedBolt.asset](<Assets/Models/SeaEvents/Clam/ReusedBolt.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Clam/ReusedShackle.asset](<Assets/Models/SeaEvents/Clam/ReusedShackle.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Clam/ReusedHook.asset](<Assets/Models/SeaEvents/Clam/ReusedHook.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Clam/ReusedWheel.asset](<Assets/Models/SeaEvents/Clam/ReusedWheel.asset>) — Настройки или данные Unity.
+- [Assets/Resources/Ships/ShipV3Test.prefab](<Assets/Resources/Ships/ShipV3Test.prefab>) — Префаб Unity.
+- [Assets/Resources/SeaEvents/RopeShackle.prefab](<Assets/Resources/SeaEvents/RopeShackle.prefab>) — Префаб Unity.
+- [Assets/Models/Loot/Replacement/GrappleHook/GrappleHook.fbx](<Assets/Models/Loot/Replacement/GrappleHook/GrappleHook.fbx>) — Модель / анимации FBX.
+- [Assets/Models/Loot/Replacement/CannonWheel/CannonWheel.fbx](<Assets/Models/Loot/Replacement/CannonWheel/CannonWheel.fbx>) — Модель / анимации FBX.
+- [Docs/ClamChestEvent.md](<Docs/ClamChestEvent.md>) — Документация.
+
+### Остров с весами и пятью камнями (`island-balance-event`)
+
+Ключевые слова: весы, камни, яма, остров с сундуком.
+
+Отдельный BalanceSandyIsland восьмым в ряду ивентов (1850, SeaLevel, 370), с пунктом F8 / Телепортация / Ивенты. Обычный SmallSandyIsland (-520, SeaLevel, 700) остаётся в ряду островов без ямы. Яма почти 3 м, без кучек песка, подвес сундука 2.14 м; чаша изначально на 2.5 м ниже берега, после пяти грузов примерно на 1 м выше. Первые четыре груза оставляют весь сундук ниже края, пятый поднимает его наружу. E подобрать/положить, G бросить; только ходьба при переноске, обе руки заняты. Цель укладки включает всё дно и бортики чаши; FromCollider поддерживает прежнее расположение компонента. При отпускании камня сервер засчитывает груз, запускает наклон и сообщает число грузов; отказ показывает причину. G не засчитывает укладку. Сервер проверяет дистанцию, видимость и занятость; сетевые состояния, переносчик, фазы и время анимации. Пять отдельных мест на чаше, горизонтальные подвесы, штатный сундук после окончания пятого движения. Минимальный протокол механики 162. Механизм из корабельных деталей; песок использует масштаб и PBR Terrain с triplanar стенками.
+
+- [Assets/Scripts/Networking/NetworkBalanceEvent.cs](<Assets/Scripts/Networking/NetworkBalanceEvent.cs>) — Исходник C#: BalanceStoneState, NetworkBalanceEvent.
+- [Assets/Scripts/Networking/NetworkWeapon.Balance.cs](<Assets/Scripts/Networking/NetworkWeapon.Balance.cs>) — Исходник C#: NetworkWeapon.
+- [Assets/Scripts/Networking/NetworkLootChest.Balance.cs](<Assets/Scripts/Networking/NetworkLootChest.Balance.cs>) — Исходник C#: NetworkLootChest.
+- [Assets/Scripts/Player/BalanceStonePlayer.cs](<Assets/Scripts/Player/BalanceStonePlayer.cs>) — Исходник C#: BalanceStonePlayer.
+- [Assets/Scripts/World/BalanceEventTarget.cs](<Assets/Scripts/World/BalanceEventTarget.cs>) — Исходник C#: BalanceEventTarget.
+- [Assets/Scripts/Editor/BalanceEventSetup.cs](<Assets/Scripts/Editor/BalanceEventSetup.cs>) — Исходник C#: BalanceEventSetup, Part.
+- [Assets/Scripts/Editor/SandyIslandTestSetup.cs](<Assets/Scripts/Editor/SandyIslandTestSetup.cs>) — Исходник C#: SandyIslandTestSetup, Shape.
+- [Assets/Scripts/Networking/NetworkWeapon.SeaLoot.cs](<Assets/Scripts/Networking/NetworkWeapon.SeaLoot.cs>) — Исходник C#: NetworkWeapon.
+- [Assets/Scripts/Networking/NetworkLootChest.Ocean.cs](<Assets/Scripts/Networking/NetworkLootChest.Ocean.cs>) — Исходник C#: SeaLootKind, SeaLootState, NetworkLootChest.
+- [Assets/Scripts/Loot/LootCatalog.cs](<Assets/Scripts/Loot/LootCatalog.cs>) — Исходник C#: LootCatalog, Entry.
+- [Assets/Scripts/World/SeaLootSpawner.cs](<Assets/Scripts/World/SeaLootSpawner.cs>) — Исходник C#: SeaLootSpawner.
+- [Assets/Scripts/World/DeveloperTeleportDestinations.cs](<Assets/Scripts/World/DeveloperTeleportDestinations.cs>) — Исходник C#: DeveloperTeleportDestination, DeveloperTeleportDestinations.
+- [Assets/Scripts/Player/WeaponArmRig.cs](<Assets/Scripts/Player/WeaponArmRig.cs>) — Исходник C#: WeaponArmRig, Arm.
+- [Assets/Scripts/Player/PlayerInventory.cs](<Assets/Scripts/Player/PlayerInventory.cs>) — Исходник C#: PlayerInventory.
+- [Assets/Scripts/AdvancedPlayerController.cs](<Assets/Scripts/AdvancedPlayerController.cs>) — Исходник C#: AdvancedPlayerController.
+- [Assets/Prefabs/Networking/NetworkBalanceEvent.prefab](<Assets/Prefabs/Networking/NetworkBalanceEvent.prefab>) — Префаб Unity.
+- [Assets/Prefabs/Networking/NetworkPlayer.prefab](<Assets/Prefabs/Networking/NetworkPlayer.prefab>) — Префаб Unity.
+- [Assets/Settings/Networking/NetworkPrefabs.asset](<Assets/Settings/Networking/NetworkPrefabs.asset>) — Настройки или данные Unity.
+- [Assets/Settings/Loot/DefaultLoot.asset](<Assets/Settings/Loot/DefaultLoot.asset>) — Настройки или данные Unity.
+- [Assets/Prefabs/World/SandyIslands/SmallSandyIsland.prefab](<Assets/Prefabs/World/SandyIslands/SmallSandyIsland.prefab>) — Префаб Unity.
+- [Assets/Prefabs/World/SandyIslands/BalanceSandyIsland.prefab](<Assets/Prefabs/World/SandyIslands/BalanceSandyIsland.prefab>) — Префаб Unity.
+- [Assets/Settings/World/SandyIslands/BalanceSandyIsland.asset](<Assets/Settings/World/SandyIslands/BalanceSandyIsland.asset>) — Настройки или данные Unity.
+- [Assets/Shaders/ExcavatedSand.shader](<Assets/Shaders/ExcavatedSand.shader>) — Шейдер.
+- [Assets/Models/World/SandyIslands/ExcavatedSandPit.asset](<Assets/Models/World/SandyIslands/ExcavatedSandPit.asset>) — Настройки или данные Unity.
+- [Assets/Materials/SandyIslands/ExcavatedSand.mat](<Assets/Materials/SandyIslands/ExcavatedSand.mat>) — Материал Unity.
+- [Docs/IslandBalanceEvent.md](<Docs/IslandBalanceEvent.md>) — Документация.
 
 ## Источники актуальных настроек
 

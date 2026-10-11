@@ -4,29 +4,9 @@ namespace PirateSlop.Networking
 {
     public sealed partial class NetworkLootChest
     {
-        LineRenderer captureArc;
-        Material arcMaterial;
-        float shownProgress, floatVelocity;
+        float floatVelocity;
         SeaLootState lastPhase;
         bool phaseKnown;
-
-        void CreateObjectiveDetails()
-        {
-            if (Kind == SeaLootKind.Capture)
-            {
-                var arc = new GameObject("CaptureProgress");
-                arc.transform.SetParent(eventVisual.transform, false);
-                captureArc = arc.AddComponent<LineRenderer>();
-                arcMaterial = new Material(markerMaterial) { renderQueue = markerMaterial.renderQueue + 1 };
-                arcMaterial.SetColor("_BaseColor", Color.white);
-                captureArc.sharedMaterial = arcMaterial;
-                captureArc.useWorldSpace = false;
-                captureArc.loop = false;
-                captureArc.widthMultiplier = ring.widthMultiplier;
-                captureArc.numCapVertices = 4;
-                shownProgress = progress.Value;
-            }
-        }
 
         void UpdateObjectivePresentation()
         {
@@ -42,36 +22,12 @@ namespace PirateSlop.Networking
             }
             phaseKnown = true;
             lastPhase = phase.Value;
-            if (captureArc != null)
-            {
-                shownProgress = contested.Value ? progress.Value : Mathf.MoveTowards(shownProgress, progress.Value, Time.deltaTime / Mathf.Max(1, Catalog.CaptureSeconds) * 2f);
-                captureArc.enabled = phase.Value == SeaLootState.Locked && shownProgress > .0001f;
-                captureArc.startColor = captureArc.endColor = contested.Value ? new Color(1f, .78f, .12f) : capturing.Value ? new Color(.15f, 1f, .48f) : new Color(1f, .2f, .14f);
-                int segments = Mathf.Max(1, Mathf.CeilToInt(shownProgress * 128f));
-                captureArc.positionCount = segments + 1;
-                for (int i = 0; i <= segments; i++)
-                {
-                    float angle = Mathf.Min(i / 128f, shownProgress) * Mathf.PI * 2f;
-                    captureArc.SetPosition(i, SurfaceVertex(new Vector3(Mathf.Sin(angle), 0, Mathf.Cos(angle)) * Catalog.CaptureRadius));
-                }
-                for (int i = 0; i < ring.positionCount; i++)
-                {
-                    float angle = i * Mathf.PI * 2f / ring.positionCount;
-                    ring.SetPosition(i, SurfaceVertex(new Vector3(Mathf.Sin(angle), 0, Mathf.Cos(angle)) * Catalog.CaptureRadius));
-                }
-            }
+            if (Kind == SeaLootKind.Capture) UpdateCaptureStation();
             if (Kind == SeaLootKind.Sunken)
             {
                 UpdateSunkenRope();
                 UpdateSunkenGulls();
             }
-        }
-
-        Vector3 SurfaceVertex(Vector3 local)
-        {
-            var world = eventPoint.Value + local;
-            local.y = OceanSurface.Instance != null ? OceanSurface.Instance.Height(world) - eventPoint.Value.y + .18f : .18f;
-            return local;
         }
 
         void FloatChest(Vector3 point)

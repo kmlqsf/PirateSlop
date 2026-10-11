@@ -35,7 +35,7 @@ namespace PirateSlop
             var netShip = GetComponent<PirateSlop.Networking.NetworkShip>();
             if (netShip != null && !netShip.IsServerInitialized) return;
 
-            if (!AutoEncounterEnabled)
+            if (!AutoEncounterEnabled || PirateSlop.World.EnvironmentTestGallery.IsTest(PirateSlop.World.ProceduralWorld.Instance!=null ? PirateSlop.World.ProceduralWorld.Instance.Layout : null))
             {
                 anchorPosition = transform.position;
                 stationaryTimer = 0f;
@@ -83,9 +83,10 @@ namespace PirateSlop
             }
         }
 
-        public void StartEncounterLocal()
+        public void StartEncounterLocal(int seed = 1, double appearedAt = -1)
         {
-            if (activeEncounter != null) return;
+            if (activeEncounter != null && activeEncounter.Seed == seed) return;
+            if (activeEncounter != null) StopEncounterLocal();
 
             if (encounterPrefab == null)
                 encounterPrefab = Resources.Load<GameObject>("KrakenEncounter");
@@ -93,16 +94,28 @@ namespace PirateSlop
             GameObject encounterGo = encounterPrefab != null
                 ? Instantiate(encounterPrefab, transform.position, Quaternion.identity)
                 : new GameObject("KrakenEncounter");
+            UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene(encounterGo, gameObject.scene);
 
             activeEncounter = encounterGo.GetComponent<KrakenEncounter>();
             if (activeEncounter == null) activeEncounter = encounterGo.AddComponent<KrakenEncounter>();
 
-            activeEncounter.Initialize(transform);
+            activeEncounter.Initialize(transform, seed, appearedAt);
         }
 
-        public void ClearEncounter()
+        public void ClearEncounter(KrakenEncounter expected = null)
         {
+            if (expected != null && activeEncounter != expected) return;
             activeEncounter = null;
+            GetComponent<PirateSlop.Networking.NetworkShip>()?.ClearKrakenEncounter();
         }
+
+        public void StopEncounterLocal()
+        {
+            var previous = activeEncounter;
+            activeEncounter = null;
+            if (previous != null) Destroy(previous.gameObject);
+        }
+
+        void OnDestroy() => StopEncounterLocal();
     }
 }

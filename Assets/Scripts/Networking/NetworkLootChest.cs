@@ -48,7 +48,7 @@ namespace PirateSlop.Networking
         public void Open(NetworkWeapon opener = null)
         {
             if (!IsServerInitialized || !IsSpawned || !Available) return;
-            if (contents.Count == 0) { ServerManager.Despawn(NetworkObject); return; }
+            if (contents.Count == 0) { if (!PreserveCapturedBuoys()) ServerManager.Despawn(NetworkObject); return; }
             opened.Value = true;
             if (!upgradeRewardEligible || upgradeRewardClaimed || opener == null) return;
             var player = opener.GetComponent<NetworkPlayer>();
@@ -74,7 +74,7 @@ namespace PirateSlop.Networking
             if (remaining == 0) stack.Item = InventoryItem.None;
             contents[slot] = stack;
             for (int i = 0; i < contents.Count; i++) if (contents[i].Count > 0) return;
-            ServerManager.Despawn(NetworkObject);
+            if (!PreserveCapturedBuoys()) ServerManager.Despawn(NetworkObject);
         }
         void LateUpdate()
         {

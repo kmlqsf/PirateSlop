@@ -54,6 +54,7 @@ namespace PirateSlop
             var shots = new FirearmShot[count];
             var batch = damage ? new FirearmDamageBatch(shooter, definition) : null;
             var monkeyHits = new System.Collections.Generic.HashSet<PirateSlop.Ships.ShipMonkey>();
+            var seagullHits = new System.Collections.Generic.HashSet<PirateSlop.World.SeagullVisual>();
             var totals = new System.Collections.Generic.Dictionary<CombatHealth, float>();
             var headTotals = new System.Collections.Generic.Dictionary<CombatHealth, float>();
             var hitPoints = new System.Collections.Generic.Dictionary<CombatHealth, Vector3>();
@@ -75,6 +76,8 @@ namespace PirateSlop
                     continue;
                 }
                 if (hit.collider == null) continue;
+                var seagull = hit.collider.GetComponentInParent<PirateSlop.World.SeagullVisual>();
+                if (seagull != null) { seagullHits.Add(seagull); continue; }
                 var monkey = hit.collider.GetComponent<PirateSlop.Ships.ShipMonkeyHitbox>();
                 if (monkey != null && monkey.Monkey != null) { monkeyHits.Add(monkey.Monkey); continue; }
                 float distance = Vector3.Distance(eye, hit.point);
@@ -94,6 +97,7 @@ namespace PirateSlop
                     { others.TryGetValue(target, out float previous); others[target] = previous + Mathf.Lerp(settings.NearDamage, settings.FarDamage, falloff); break; }
             }
             foreach (var monkey in monkeyHits) monkey.ReceiveFirearmShot(shooter);
+            foreach (var seagull in seagullHits) seagull.ReceiveFirearmHit(direction);
             foreach (var hit in totals)
             {
                 headTotals.TryGetValue(hit.Key, out float headDamage);

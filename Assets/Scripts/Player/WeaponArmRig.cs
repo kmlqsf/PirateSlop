@@ -17,6 +17,10 @@ namespace PirateSlop
         Arm right, left, viewRight, viewLeft;
         Quaternion gripRotation;
         float weight;
+        WhalePlayerInteraction whaleInteraction;
+        float whaleGripWeight;
+        Vector3 whaleRightPoint, whaleLeftPoint;
+        Quaternion whaleWrist;
         PirateSlop.Networking.NetworkCrewBell bell;
         Transform[] triggerFingers;
         Quaternion[] triggerRest;
@@ -24,6 +28,8 @@ namespace PirateSlop
         SabreAnimation sabreAnimation;
         PirateSlop.Networking.NetworkEquipment equipment;
         PirateSlop.Networking.NetworkHullRepair repair;
+        BalanceStonePlayer balanceStone;
+        Transform balanceHips, balanceSpine;
         sealed class Arm
         {
             public Transform Upper, Fore, Hand;
@@ -81,6 +87,10 @@ namespace PirateSlop
             sabreAnimation = GetComponent<SabreAnimation>();
             equipment = GetComponent<PirateSlop.Networking.NetworkEquipment>();
             repair = GetComponent<PirateSlop.Networking.NetworkHullRepair>();
+            whaleInteraction = GetComponent<WhalePlayerInteraction>();
+            balanceStone = GetComponent<BalanceStonePlayer>();
+            balanceHips = BodyRig.GetComponentsInChildren<Transform>(true).FirstOrDefault(t=>t.name=="mixamorig:Hips" || t.name=="Hips");
+            balanceSpine = BodyRig.GetComponentsInChildren<Transform>(true).FirstOrDefault(t=>t.name=="mixamorig:Spine" || t.name=="Spine");
             triggerFingers = ViewArms.GetComponentsInChildren<Transform>(true).Where(t => t.name == "View_Index1.R" || t.name == "View_Index2.R" || t.name == "View_Index3.R").OrderBy(t => t.name).ToArray();
             triggerRest = triggerFingers.Select(t => t.localRotation).ToArray();
             pistolWorldGrip = weapon.WorldPivot.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "GripSocket_Firearm");
@@ -95,11 +105,47 @@ namespace PirateSlop
             if (motor.SailPullLocked && camera == motor.PlayerCamera && camera.enabled && !motor.IsThirdPerson && !motor.IsDead)
                 visible |= inventory.PistolSelected || inventory.SabreSelected || equipment != null && equipment.Item >= PirateSlop.Networking.InventoryItem.Wine;
             bool plankVisible = repair != null && repair.FirstPersonPlank && camera == motor.PlayerCamera && camera.enabled;
-            foreach (var r in renderers) r.forceRenderingOff = !plankVisible;
+            bool whaleVisible = whaleGripWeight > .01f && camera == motor.PlayerCamera && camera.enabled && !motor.IsThirdPerson && !motor.IsDead;
+            bool stoneVisible = balanceStone != null && balanceStone.HeldVisual != null && balanceStone.GripWeight>.01f && camera == motor.PlayerCamera && camera.enabled && !motor.IsThirdPerson && !motor.IsDead;
+            foreach (var r in renderers) r.forceRenderingOff = !(plankVisible || whaleVisible || stoneVisible);
         }
         void After(ScriptableRenderContext context, Camera camera) { if (renderers != null) foreach (var r in renderers) r.forceRenderingOff = true; }
         void LateUpdate()
         {
+            if (balanceStone == null) balanceStone = GetComponent<BalanceStonePlayer>();
+            var stone = balanceStone != null ? balanceStone.HeldVisual : null;
+            if (stone != null && !motor.IsDead)
+            {
+                var network=GetComponent<PirateSlop.Networking.NetworkWeapon>();
+                var owner=network.BalanceEvent;var state=owner.Stone(network.BalanceStoneIndex);
+                float age=(float)(owner.Clock-state.Started);
+                float bend=state.Phase==1 && age<.48f ? Mathf.Sin(Mathf.Clamp01(age/.48f)*Mathf.PI) : 0;
+                if (balanceHips != null) balanceHips.position-=Vector3.up*(bend*.32f);
+                if (balanceSpine != null) balanceSpine.rotation=Quaternion.AngleAxis(bend*25,transform.right)*balanceSpine.rotation;
+                float stoneGrip=balanceStone.GripWeight;
+                if(state.Phase==2) {float shrug=stoneGrip*Mathf.Clamp01(age/.25f)*.05f;right.Upper.position+=Vector3.up*shrug;left.Upper.position+=Vector3.up*shrug;}
+                SolveStone(balanceStone.HandPoint,right,left,transform,stoneGrip);
+                SolveStone(balanceStone.HandPoint,viewRight,viewLeft,motor.PlayerCamera.transform,stoneGrip);
+                return;
+            }
+            if (whaleInteraction == null) whaleInteraction = GetComponent<WhalePlayerInteraction>();
+            var whalePin = whaleInteraction != null ? whaleInteraction.HeldPin : null;
+            bool grip = whalePin != null && !motor.IsDead;
+            whaleGripWeight = Mathf.MoveTowards(whaleGripWeight, grip ? 1 : 0, Time.deltaTime * 6);
+            if (grip)
+            {
+                whaleRightPoint = whalePin.GripPoint - whalePin.transform.forward * .22f;
+                whaleLeftPoint = whalePin.GripPoint - whalePin.transform.forward * .48f;
+                whaleWrist = whalePin.transform.rotation * gripRotation;
+            }
+            if (whaleGripWeight > 0)
+            {
+                right.Solve(whaleRightPoint, whaleWrist, transform.TransformPoint(new Vector3(.6f, .95f, .1f)), whaleGripWeight, true);
+                left.Solve(whaleLeftPoint, whaleWrist, transform.TransformPoint(new Vector3(-.6f, .95f, .1f)), whaleGripWeight, true);
+                viewRight.Solve(whaleRightPoint, whaleWrist, motor.PlayerCamera.transform.TransformPoint(new Vector3(.55f, -.45f, .3f)), whaleGripWeight, true);
+                viewLeft.Solve(whaleLeftPoint, whaleWrist, motor.PlayerCamera.transform.TransformPoint(new Vector3(-.55f, -.45f, .3f)), whaleGripWeight, true);
+                return;
+            }
             if (bell != null && bell.IsPulling)
             {
                 var point = bell.HandPoint;
@@ -217,6 +263,16 @@ namespace PirateSlop
             Quaternion leftRotation = item.rotation * Quaternion.Euler(90f, 0f, 90f);
             main.Solve(item.TransformPoint(new Vector3(.3f, -.028f, 0f)) - rightRotation * main.Palm, rightRotation, main.Upper.position + basis.right * .4f - basis.up * .4f, 1f, true);
             support.Solve(item.TransformPoint(new Vector3(-.3f, -.028f, 0f)) - leftRotation * support.Palm, leftRotation, support.Upper.position - basis.right * .4f - basis.up * .4f, 1f, true);
+        }
+        static void SolveStone(Vector3 position, Arm main, Arm support, Transform basis,float blend)
+        {
+            if (!main.Valid || !support.Valid) return;
+            Quaternion rightRotation=basis.rotation*Quaternion.Euler(75,0,-75);
+            Quaternion leftRotation=basis.rotation*Quaternion.Euler(75,0,75);
+            Vector3 rightPoint=position+basis.right*.17f-Vector3.up*.12f;
+            Vector3 leftPoint=position-basis.right*.17f-Vector3.up*.12f;
+            main.Solve(rightPoint-rightRotation*main.Palm,rightRotation,main.Upper.position+basis.right*.5f-Vector3.up*.4f,blend,true);
+            support.Solve(leftPoint-leftRotation*support.Palm,leftRotation,support.Upper.position-basis.right*.5f-Vector3.up*.4f,blend,true);
         }
         static void FitGrip(Transform item, Arm arm, Vector3 point)
         {

@@ -136,6 +136,9 @@ namespace PirateSlop
         }
         public override void OnStopNetwork()
         {
+            if (krakenDamage != null) StopCoroutine(krakenDamage);
+            if (krakenPreparation != null) StopCoroutine(krakenPreparation);
+            krakenDamage = krakenPreparation = null; krakenGeometryReady = false;
             visuals?.Clear(); flooding?.Clear(); pending.Clear(); state.Clear();
             snapshotReceived = false; appliedEvent = 0; appliedRevision = 0;
         }
@@ -413,7 +416,7 @@ namespace PirateSlop
             }
             current.State = next; current.Health = (ushort)Mathf.RoundToInt(health / definition.MaxHealth * ushort.MaxValue);
             current.Revision = ++revision;
-            if (Profile.EnableFlooding && definition.CanFlood && (!flooding.UseBilgeFlooding || definition.Type == ShipSectionType.Hull) && next != ShipSectionState.Intact)
+            if (Profile.EnableFlooding && !flooding.KrakenCatastrophe && definition.CanFlood && (!flooding.UseBilgeFlooding || definition.Type == ShipSectionType.Hull) && next != ShipSectionState.Intact)
             {
                 ulong openings = 0;
                 if (fragmentSection != null && fragmentSection.Fragments.Length > 0)
@@ -575,7 +578,7 @@ namespace PirateSlop
             if (!ready || !IsServerInitialized || ship.IsSinking || !Profile.EnableFlooding) return;
             flooding.Simulate(Time.deltaTime, Profile);
             ApplyFloodModifiers();
-            if (flooding.Level >= 1f) ship.BeginSinking();
+            if (flooding.Level >= 1f) ship.BeginSinking(flooding.KrakenCatastrophe ? 3f : 12f);
             if (Time.time >= nextFloodPublish)
             {
                 nextFloodPublish = Time.time + .25f;

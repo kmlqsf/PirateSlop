@@ -68,6 +68,7 @@ namespace PirateSlop
         }
         void Update()
         {
+            if (PirateSlop.WhalePlayerInteraction.InputBlocked && motor.IsLocal) return;
             if (!Networked) TickAuthority();
             if (controls != null && controls.BlocksPrimary) return;
             if (!Equipped || !motor.InputActive || motor.LocomotionLocked || (hands != null && hands.HasHeldBall)) return;

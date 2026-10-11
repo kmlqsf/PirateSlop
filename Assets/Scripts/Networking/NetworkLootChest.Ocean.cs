@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace PirateSlop.Networking
 {
-    public enum SeaLootKind : byte { None, Capture, Raft, Sunken, Shark, Skull, FloatingReward }
+    public enum SeaLootKind : byte { None, Capture, Raft, Sunken, Shark, Skull, FloatingReward, Clam, Balance }
     public enum SeaLootState : byte { Locked, Rising, Ready, Flying }
 
     public sealed partial class NetworkLootChest
@@ -27,32 +27,34 @@ namespace PirateSlop.Networking
         readonly SyncVar<float> sharksDistractedUntil = new();
         readonly SyncVar<Vector3> sharkBaitPoint = new();
         readonly SyncVar<NetworkObject> sharkTargetPlayer = new();
-        NetworkPlayer lastSharkTarget;
-        float nextSharkAttack;
         NetworkWeapon worker;
         NetworkWeapon carryingPlayer;
         Vector3 workPosition;
         float heartbeat, riseStarted, nextCapture;
         NetworkShip deck;
         Collider chestCollider;
+        Collider[] captureChestColliders;
         Renderer[] chestRenderers;
         GameObject eventVisual;
         SharkSwarmVisual swarm;
-        LineRenderer ring;
-        LineRenderer rope;
-        Material markerMaterial;
         bool visualCreated;
-        internal bool BotLootCandidate => IsSpawned && carrier.Value == null && supportId.Value == 0;
+        internal bool BotLootCandidate => IsSpawned && !captureRewardTaken.Value && carrier.Value == null && supportId.Value == 0 && (!InClam || Clam != null && Clam.ChestAvailable) && (!OnBalance || Balance != null && Balance.ChestAvailable);
         internal bool BotCapturePending => Kind == SeaLootKind.Capture && phase.Value == SeaLootState.Locked;
         internal bool BotLootRising => phase.Value == SeaLootState.Rising || phase.Value == SeaLootState.Flying;
         internal Vector3 BotLootPoint => Kind == SeaLootKind.None ? transform.position : eventPoint.Value;
         public SeaLootKind Kind => kind.Value;
         public Vector3 EventPoint => eventPoint.Value;
         public NetworkObject Carrier => carrier.Value;
+        public NetworkShip SupportingShip => support.Value != null ? support.Value.GetComponent<NetworkShip>() : deck;
+        public void RefreshDeveloperShipPose()
+        {
+            if (Carrier != null) transform.SetPositionAndRotation(Carrier.transform.position + Carrier.transform.forward * .9f + Carrier.transform.right * .35f + Vector3.up * .65f, Carrier.transform.rotation);
+            else if (SupportingShip != null) transform.SetPositionAndRotation(SupportingShip.transform.TransformPoint(anchor.Value), SupportingShip.transform.rotation * facing.Value);
+        }
         public bool SharksDistracted => Time.time < sharksDistractedUntil.Value;
         public Vector3 SharkBaitPoint => sharkBaitPoint.Value;
         public NetworkObject SharkTargetPlayer => sharkTargetPlayer.Value;
-        public bool Available => IsSpawned && phase.Value == SeaLootState.Ready && carrier.Value == null;
+        public bool Available => IsSpawned && !captureRewardTaken.Value && phase.Value == SeaLootState.Ready && carrier.Value == null && (!OnWhale || Whale != null && Whale.ChestAvailable) && (!InClam || Clam != null && Clam.ChestAvailable) && (!OnBalance || Balance != null && Balance.ChestAvailable);
         public bool LootHintEligible
         {
             get
@@ -76,7 +78,7 @@ namespace PirateSlop.Networking
         public string WorkHint => Kind == SeaLootKind.Raft
             ? "Мышь — угол отмычки · ЛКМ — повернуть замок · Q / E / Esc — отменить"
             : $"Верёвка: {Mathf.RoundToInt(Progress * 100)}% · плыви вокруг сундука · E / Q — отпустить";
-        public string OceanHint => phase.Value == SeaLootState.Flying ? "Череп выплюнул сундук"
+        public string OceanHint => OnBalance ? BalanceHint : InClam ? ClamHint : OnWhale ? WhaleHint : phase.Value == SeaLootState.Flying ? "Череп выплюнул сундук"
             : phase.Value == SeaLootState.Rising ? "Ящик всплывает"
             : carrier.Value != null ? "Ящик несут"
             : phase.Value == SeaLootState.Ready ? (Kind == SeaLootKind.Shark && !SharksDistracted ? "E — открыть · F — нести ящик · Акулы агрессивны!" : "E — открыть · F — нести ящик")
@@ -110,10 +112,11 @@ namespace PirateSlop.Networking
             kind.Value = value;
             phase.Value = value == SeaLootKind.Shark ? SeaLootState.Ready : SeaLootState.Locked;
             eventPoint.Value = center;
-            anchor.Value = center + Vector3.up * (value == SeaLootKind.Sunken ? -Mathf.Max(3, Catalog.SunkenDepth) : value == SeaLootKind.Raft ? .45f : 0);
+            anchor.Value = center + Vector3.up * (value == SeaLootKind.Sunken ? -Mathf.Max(3, Catalog.SunkenDepth) : value == SeaLootKind.Capture ? -CaptureChestDepth : value == SeaLootKind.Raft ? .45f : 0);
             transform.position = anchor.Value;
             if (value == SeaLootKind.Raft) InitializeRaft();
             if (value == SeaLootKind.Sunken) InitializeSunkenRope();
+            if (value == SeaLootKind.Shark) InitializeSharks();
         }
 
         public void PlaceOnDeck(NetworkShip ship, Vector3 point, Quaternion rotation)
@@ -145,68 +148,6 @@ namespace PirateSlop.Networking
             GameAudio.Play(SoundCue.WaterSplash, dropPoint);
             GameAudio.Play(SoundCue.FishEat, dropPoint);
             CombatVfx.Splash(dropPoint);
-        }
-
-        void UpdateSharkBehavior()
-        {
-            if (Kind != SeaLootKind.Shark) return;
-            if (carrier.Value != null || opened.Value || SharksDistracted)
-            {
-                sharkTargetPlayer.Value = null;
-                lastSharkTarget = null;
-                return;
-            }
-
-            float aggroRadius = 16f;
-            NetworkPlayer target = null;
-            float nearestSqr = aggroRadius * aggroRadius;
-            Vector3 center = eventPoint.Value;
-
-            foreach (var player in NetworkPlayer.Active)
-            {
-                if (player == null || !player.IsSpawned || player.Motor.IsDead || !player.Motor.IsSwimming) continue;
-                Vector3 playerPos = player.transform.position;
-                playerPos.y = center.y;
-                float sqrDist = (playerPos - center).sqrMagnitude;
-                if (sqrDist < nearestSqr)
-                {
-                    nearestSqr = sqrDist;
-                    target = player;
-                }
-            }
-
-            sharkTargetPlayer.Value = target != null ? target.NetworkObject : null;
-
-            if (target != null)
-            {
-                if (lastSharkTarget != target)
-                {
-                    lastSharkTarget = target;
-                    nextSharkAttack = Time.time + 0.8f;
-                }
-                else if (Time.time >= nextSharkAttack)
-                {
-                    nextSharkAttack = Time.time + 1.0f;
-                    var health = target.GetComponent<CombatHealth>();
-                    if (health != null)
-                    {
-                        health.Damage(25f);
-                        SharkAttackRpc(target.transform.position);
-                    }
-                }
-            }
-            else
-            {
-                lastSharkTarget = null;
-            }
-        }
-
-        [ObserversRpc(RunLocally = true)]
-        void SharkAttackRpc(Vector3 point)
-        {
-            GameAudio.Play(SoundCue.BulletFlesh, point);
-            CombatVfx.Impact(point, Vector3.up, false);
-            if (swarm != null) swarm.AttackLunge(point);
         }
 
         public void StartWork(NetworkWeapon player)
@@ -266,6 +207,14 @@ namespace PirateSlop.Networking
                 return;
             }
             phase.Value = SeaLootState.Rising;
+            if (Kind == SeaLootKind.Capture)
+            {
+                captureBreakAge.Value = 0;
+                captureReleasePoint = transform.position;
+                anchor.Value = captureReleasePoint;
+                riseStarted = Time.time;
+                return;
+            }
             anchor.Value = eventPoint.Value + (Kind == SeaLootKind.Raft ? Vector3.right * 4.5f : Vector3.zero) + Vector3.down * (Kind == SeaLootKind.Sunken ? Mathf.Max(3, Catalog.SunkenDepth) : 3f);
             transform.position = anchor.Value;
             riseStarted = Time.time;
@@ -291,10 +240,11 @@ namespace PirateSlop.Networking
             {
                 capturing.Value = false;
                 progress.Value = Mathf.Max(0, progress.Value - .2f / Mathf.Max(1, Catalog.CaptureSeconds));
-                if (progress.Value == 0) captureShip.Value = 0;
+                if (progress.Value == 0) { captureShip.Value = 0; captureTeam.Value = 0; }
                 return;
             }
             captureShip.Value = only.ParticipantId.Value;
+            captureTeam.Value = only.TeamId.Value;
             progress.Value = Mathf.Clamp01(progress.Value + .2f / Mathf.Max(1, Catalog.CaptureSeconds));
             if (progress.Value >= 1) Unlock();
         }
@@ -302,6 +252,8 @@ namespace PirateSlop.Networking
         public void Carry(NetworkWeapon player)
         {
             if (!IsServerInitialized || !Available || Kind == SeaLootKind.None) return;
+            if (InClam) { inClam.Value = false; clamSupport.Value = null; }
+            if (OnBalance) balanceSupport.Value = null;
             if (Kind == SeaLootKind.Raft) raftDetachedState.Value = true;
             carryingPlayer = player;
             carrier.Value = player.NetworkObject;
@@ -350,10 +302,15 @@ namespace PirateSlop.Networking
 
         void UpdateOceanLoot()
         {
+            if (UpdateBalanceChest()) return;
+            if (UpdateClamChest()) return;
+            if (UpdateWhaleChest()) return;
             if (!IsSpawned || Kind == SeaLootKind.None) return;
             if (!visualCreated) CreateOceanVisual();
             if (IsServerInitialized)
             {
+                if (Kind == SeaLootKind.Capture && captureBreakAge.Value >= 0 && captureBreakAge.Value < 5f && phase.Value != SeaLootState.Rising)
+                    captureBreakAge.Value = Mathf.Min(5f, Time.time - riseStarted);
                 TickRewardFlight();
                 if (Kind == SeaLootKind.Raft) TickRaft();
                 if (occupied.Value)
@@ -371,10 +328,17 @@ namespace PirateSlop.Networking
                     UpdateSharkBehavior();
                 if (phase.Value == SeaLootState.Rising)
                 {
+                    float age = Time.time - riseStarted;
                     var point = eventPoint.Value + (Kind == SeaLootKind.Raft ? Vector3.right * 4.5f : Vector3.zero);
-                    point.y -= Mathf.Max(0, (Kind == SeaLootKind.Sunken ? Mathf.Max(3, Catalog.SunkenDepth) : 3f) - (Time.time - riseStarted) * Mathf.Max(.1f, Catalog.LootRiseSpeed));
+                    if (Kind == SeaLootKind.Capture)
+                    {
+                        captureBreakAge.Value = age;
+                        point = captureReleasePoint + Vector3.up * Mathf.Max(0, age - 1.1f) * Mathf.Max(.1f, Catalog.LootRiseSpeed);
+                    }
+                    else point.y -= Mathf.Max(0, (Kind == SeaLootKind.Sunken ? Mathf.Max(3, Catalog.SunkenDepth) : 3f) - age * Mathf.Max(.1f, Catalog.LootRiseSpeed));
                     anchor.Value = point;
-                    if (point.y >= eventPoint.Value.y) phase.Value = SeaLootState.Ready;
+                    float surface = Kind == SeaLootKind.Capture && OceanSurface.Instance != null ? OceanSurface.Instance.Height(point) : eventPoint.Value.y;
+                    if (point.y >= surface) phase.Value = SeaLootState.Ready;
                 }
                 if (carryingPlayer != null && (!carryingPlayer.IsSpawned || carryingPlayer.GetComponent<AdvancedPlayerController>().IsDead)) Drop();
                 if (carryingPlayer == null && carrier.Value != null) Drop();
@@ -407,20 +371,17 @@ namespace PirateSlop.Networking
             {
                 Vector3 point = anchor.Value;
                 if (Kind == SeaLootKind.Raft && !raftDetachedState.Value)
-                    transform.SetPositionAndRotation(eventVisual.transform.position + Vector3.up * .45f, eventVisual.transform.rotation);
+                    transform.SetPositionAndRotation(eventVisual.transform.TransformPoint(Vector3.up * .45f), eventVisual.transform.rotation);
+                else if (Kind == SeaLootKind.Capture && phase.Value == SeaLootState.Locked && captureStation != null)
+                    transform.SetPositionAndRotation(captureStation.position - captureStation.up * CaptureChestDepth, captureStation.rotation);
                 else if (phase.Value == SeaLootState.Ready || (Kind == SeaLootKind.Shark && phase.Value == SeaLootState.Locked)) FloatChest(point);
                 else transform.SetPositionAndRotation(Vector3.Lerp(transform.position, point, 1f - Mathf.Exp(-12f * Time.deltaTime)), facing.Value);
             }
-            bool show = Kind != SeaLootKind.Capture || phase.Value != SeaLootState.Locked;
+            bool show = !captureRewardTaken.Value;
             foreach (var renderer in chestRenderers) if (renderer != null) renderer.enabled = show;
-            if (chestCollider != null) chestCollider.enabled = show && carrier.Value == null && phase.Value != SeaLootState.Flying;
-            if (ring != null)
-            {
-                ring.enabled = phase.Value == SeaLootState.Locked;
-                ring.startColor = ring.endColor = new Color(.55f, .55f, .55f);
-                markerMaterial.SetColor("_BaseColor", Color.white);
-            }
-            if (rope != null) rope.enabled = phase.Value == SeaLootState.Locked;
+            if (chestCollider != null) chestCollider.enabled = show && carrier.Value == null && phase.Value != SeaLootState.Flying && !(Kind == SeaLootKind.Capture && phase.Value != SeaLootState.Ready);
+            if (Kind == SeaLootKind.Capture && captureChestColliders != null)
+                foreach (var collider in captureChestColliders) collider.enabled = show && carrier.Value == null && phase.Value == SeaLootState.Ready;
             UpdateObjectivePresentation();
         }
 
@@ -439,9 +400,7 @@ namespace PirateSlop.Networking
         {
             ClientChests.Remove(this);
             if (eventVisual != null) Destroy(eventVisual);
-            if (markerMaterial != null) Destroy(markerMaterial);
-            if (arcMaterial != null) Destroy(arcMaterial);
-            if (sunkenRopeMaterial != null) Destroy(sunkenRopeMaterial);
+            DestroyCaptureMeshes();
             if (sunkenGrip != null) Destroy(sunkenGrip);
             visualCreated = false;
             base.OnStopNetwork();

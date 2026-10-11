@@ -326,11 +326,12 @@ public class ShipController : MonoBehaviour
         else { rb.MoveRotation(rotation); rb.MovePosition(next); transform.SetPositionAndRotation(next, rotation); }
     }
     public ShipState Capture() => new ShipState { Position = rb.position, Yaw = yaw, Speed = speed, Bank = bank, Pitch = pitch + cannonTilt.x, WaveRoll = waveRoll + cannonTilt.y, WaveTime = OceanSurface.Instance != null ? OceanSurface.Instance.WaveTime : Time.time, Sail = sailSystem.DeployPercentage, Rudder = helm.CurrentRudderNormalized, Controlling = helm.IsControlling };
-    public void Restore(ShipState s, AdvancedPlayerController driver)
+    public void Restore(ShipState s, AdvancedPlayerController driver, Vector3? relocatedAnchor = null)
     {
         cannonTilt=Vector2.zero; cannonTiltVelocity=Vector2.zero;
         buoyantVelocity = buoyantTargetVelocity = Vector3.zero; buoyantResponseReady = false;
         speed = s.Speed; yaw = s.Yaw; bank = s.Bank; pitch = s.Pitch; waveRoll = s.WaveRoll;
+        if (relocatedAnchor.HasValue) anchorPoint = relocatedAnchor.Value;
         rb.position = s.Position; rb.rotation = Quaternion.Euler(pitch + cannonTilt.x, yaw, bank + waveRoll + cannonTilt.y); transform.SetPositionAndRotation(rb.position, rb.rotation);
         sailSystem.ApplyAggregate(s.Sail); helm.Restore(s.Rudder, s.Controlling, driver);
     }

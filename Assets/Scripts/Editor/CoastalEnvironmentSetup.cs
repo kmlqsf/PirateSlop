@@ -436,7 +436,7 @@ namespace PirateSlop.Editor
 
         static string GalleryRevision()
         {
-            return WorldLayout.Hash("CoastalEnvironmentCRow30|" + string.Join("|", Environment.Concat(Starter).Select(n => AssetDatabase.GetAssetDependencyHash(PrefabPath(n)).ToString())));
+            return WorldLayout.Hash("CoastalEnvironmentCRow30|" + string.Join("|", Environment.Concat(Starter).Select(n => AssetDatabase.GetAssetDependencyHash(PrefabPath(n)).ToString())) + "|SandyIslands|" + SandyIslandTestSetup.Revision);
         }
 
         static string PrefabPath(string name) => (Environment.Contains(name) ? "Assets/Prefabs/Environment/" : "Assets/Prefabs/World/StarterIsland/") + name + ".prefab";
@@ -476,6 +476,7 @@ namespace PirateSlop.Editor
                 component.Spawn = new Vector3(-half, 0, -depth - 120);
                 component.Radius = Mathf.Max(2000, half + depth + 650);
                 component.Revision = GalleryRevision();
+                SandyIslandTestSetup.Attach(gallery);
                 PrefabUtility.SaveAsPrefabAsset(gallery, Gallery);
             }
             finally { PrefabUtility.UnloadPrefabContents(gallery); }

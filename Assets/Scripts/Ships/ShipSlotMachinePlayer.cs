@@ -11,7 +11,7 @@ namespace PirateSlop.Ships
         PlayerInventory inventory;
         int consumedFrame = -1;
         ShipSlotMachine held;
-        float pendingPull, nextSend;
+        float pendingPull, nextSend, cameraPull;
         public bool IsHolding => held != null;
         public ShipSlotMachine HeldMachine => held;
         public bool ConsumedInput => consumedFrame == Time.frameCount;
@@ -33,7 +33,10 @@ namespace PirateSlop.Ships
                     state.Payer != player.ParticipantId.Value || !Mouse.current.leftButton.isPressed || Keyboard.current.qKey.wasPressedThisFrame || !held.CanReach(player, true))
                 { Release(); return; }
                 player.Motor.ShipActivityLocked = true;
-                pendingPull -= Mouse.current.delta.ReadValue().y * .004f;
+                float pullDelta=-Mouse.current.delta.ReadValue().y*.004f;
+                pendingPull += pullDelta;
+                cameraPull=Mathf.Clamp01(cameraPull+pullDelta);
+                player.Motor.SetInteractionCameraPull(cameraPull);
                 if (Time.unscaledTime >= nextSend)
                 {
                     held.Ship.PullSlotLever(pendingPull, true);
@@ -65,6 +68,7 @@ namespace PirateSlop.Ships
             {
                 consumedFrame = Time.frameCount;
                 held = nearby; pendingPull = 0; nextSend = Time.unscaledTime + .05f;
+                cameraPull=nearby.Ship.SlotState.LeverPull;
                 player.Motor.ShipActivityLocked = true;
                 nearby.Ship.PullSlotLever(0, true); return;
             }
@@ -92,6 +96,7 @@ namespace PirateSlop.Ships
             if (held == null) return;
             if (held.Ship != null && held.Ship.IsSpawned) held.Ship.PullSlotLever(0, false);
             held = null; pendingPull = 0;
+            cameraPull=0;
             if (player != null) player.Motor.ShipActivityLocked = false;
         }
         void OnDisable() { Release(); }

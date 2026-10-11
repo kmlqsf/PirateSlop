@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -24,6 +25,7 @@ namespace PirateSlop.Ships
 
         sealed class Patch
         {
+            public ulong Key;
             public ShipBreach Breach;
             public readonly List<Vector3> Vertices = new();
             public Vector3 Normal;
@@ -169,6 +171,82 @@ namespace PirateSlop.Ships
         public sealed class Builder
         {
             readonly Dictionary<(int, int, Mesh), Patch> cache = new();
+            Task<List<SurfaceData>> generation;
+            int generationSignature, uploadedCount;
+            int? failedSignature;
+            readonly List<Surface> uploaded = new();
+            readonly List<Mesh> owned = new();
+            public bool IsBuilding => generation != null;
+
+            public void Clear()
+            {
+                foreach (var mesh in owned) if (mesh != null) Object.Destroy(mesh);
+                owned.Clear(); uploaded.Clear(); uploadedCount = 0; generation = null;
+            }
+
+            public bool TryBuild(IReadOnlyList<ShipBreach> breaches, IReadOnlyList<Surface> previous, int signature, out List<Surface> result)
+            {
+                result = null;
+                if (breaches.Count == 0) { Clear(); result = new List<Surface>(); return true; }
+                if (failedSignature == signature) return false;
+                if (generation != null)
+                {
+                    if (!generation.IsCompleted) return false;
+                    if (generation.IsFaulted)
+                    {
+                        var error = generation.Exception.GetBaseException();
+                        failedSignature = generationSignature; Clear(); Debug.LogException(error);
+                        return false;
+                    }
+                    if (generationSignature != signature) Clear();
+                }
+                if (generation == null)
+                {
+                    var patches = ReadAll(breaches);
+                    var cached = new Dictionary<ulong, Surface>();
+                    foreach (var surface in previous) if (surface.Mesh != null) cached[surface.Key] = surface;
+                    generationSignature = signature;
+                    generation = Task.Run(() =>
+                    {
+                        var prepared = new List<SurfaceData>();
+                        foreach (var group in Groups(patches))
+                        {
+                            ulong key = GroupKey(group);
+                            ulong strongKey = key ^ 0x9e3779b97f4a7c15UL;
+                            if (cached.TryGetValue(strongKey, out var strong) && cached.TryGetValue(key, out var upper))
+                            {
+                                prepared.Add(new SurfaceData { Surface = strong, Reuse = true });
+                                prepared.Add(new SurfaceData { Surface = upper, Reuse = true });
+                                continue;
+                            }
+                            var pair = BuildSurfaces(group);
+                            pair[0].Surface.Key = strongKey; pair[1].Surface.Key = key;
+                            prepared.AddRange(pair);
+                        }
+                        return prepared;
+                    });
+                    return false;
+                }
+                var data = generation.Result;
+                if (uploadedCount < data.Count)
+                {
+                    var next = data[uploadedCount++];
+                    var surface = next.Upload();
+                    uploaded.Add(surface);
+                    if (!next.Reuse) owned.Add(surface.Mesh);
+                    if (uploadedCount < data.Count) return false;
+                }
+                result = new List<Surface>(uploaded);
+                owned.Clear(); uploaded.Clear(); uploadedCount = 0; generation = null;
+                return true;
+            }
+
+            static ulong GroupKey(List<Patch> group)
+            {
+                ulong key = 0;
+                foreach (var patch in group) key ^= patch.Key;
+                return key;
+            }
 
             List<Patch> ReadAll(IEnumerable<ShipBreach> breaches)
             {
@@ -177,6 +255,13 @@ namespace PirateSlop.Ships
                 {
                     var identity = (breach.SectionId, breach.FragmentIndex, breach.SurfaceMesh);
                     if (!cache.TryGetValue(identity, out var patch)) cache[identity] = patch = Read(breach);
+                    if (patch != null && patch.Key == 0)
+                    {
+                        ulong id = (uint)breach.SectionId * 64UL + (uint)breach.FragmentIndex;
+                        id ^= (ulong)(uint)breach.SurfaceMesh.GetEntityId().GetHashCode() << 32;
+                        id ^= id >> 30; id *= 0xbf58476d1ce4e5b9UL; id ^= id >> 27; id *= 0x94d049bb133111ebUL;
+                        patch.Key = id ^ (id >> 31);
+                    }
                     if (patch != null) patches.Add(patch);
                 }
                 return patches;
@@ -228,7 +313,7 @@ namespace PirateSlop.Ships
                     if (!cached)
                     {
                         var generated = BuildSurfaces(group);
-                        for (int mode = 0; mode < 2; mode++) { generated[mode].Key = pair[mode].Key; pair[mode] = generated[mode]; }
+                        for (int mode = 0; mode < 2; mode++) { generated[mode].Surface.Key = pair[mode].Key; pair[mode] = generated[mode].Upload(); }
                     }
                     surfaces.AddRange(pair);
                 }
@@ -236,7 +321,28 @@ namespace PirateSlop.Ships
             }
         }
 
-        static Surface[] BuildSurfaces(List<Patch> group)
+        sealed class SurfaceData
+        {
+            public Surface Surface;
+            public bool Reuse;
+            public List<Vector3> Vertices, Normals, Origins;
+            public List<Vector2> UV;
+            public List<Vector4> Flow, Centers;
+            public List<Color> Colors;
+            public List<int> Indices;
+            public Surface Upload()
+            {
+                if (Reuse) return Surface;
+                var mesh = new Mesh { name = "BilgeBreachFlow", indexFormat = IndexFormat.UInt32 };
+                mesh.SetVertices(Vertices); mesh.SetNormals(Normals); mesh.SetUVs(0, UV); mesh.SetUVs(1, Flow);
+                mesh.SetUVs(2, Origins); mesh.SetUVs(3, Centers); mesh.SetColors(Colors); mesh.SetTriangles(Indices, 0);
+                mesh.RecalculateBounds(); var bounds = mesh.bounds; bounds.Expand(12f); mesh.bounds = bounds;
+                Surface.Mesh = mesh;
+                return Surface;
+            }
+        }
+
+        static SurfaceData[] BuildSurfaces(List<Patch> group)
         {
             var normal = Vector3.zero;
             var center = Vector3.zero;
@@ -364,7 +470,7 @@ namespace PirateSlop.Ships
                     previous = current; current = next;
                 }
             }
-            Surface EmitSurface(bool strong)
+            SurfaceData EmitSurface(bool strong)
             {
             var vertices = new List<Vector3>();
             var uv = new List<Vector2>();
@@ -442,7 +548,7 @@ namespace PirateSlop.Ships
             var occupied = new List<int>();
             for (int i = 0; i < filled.Length; i++) if (filled[i]) occupied.Add(i);
             int droplets = strong ? 640 : 128;
-            for (int i = 0; i < droplets; i++)
+            for (int i = 0; i < droplets && occupied.Count > 0; i++)
             {
                 int at = occupied[random.Next(occupied.Count)], x = at % width, y = at / width;
                 var source = across * (originX + (x + .5f) * cell) + Vector3.up * (strong ? originY + (y + .5f) * cell : minY) + normal * depths[at];
@@ -458,10 +564,11 @@ namespace PirateSlop.Ships
                 if (i % 5 == 0) Sprite(source, 4, Mathf.Lerp(.006f, .022f, phase), phase);
                 if (i % 8 == 0) Sprite(source, 5, Mathf.Lerp(.065f, .16f, phase), phase);
             }
-            var mesh = new Mesh { name = "BilgeBreachFlow", indexFormat = IndexFormat.UInt32 };
-            mesh.SetVertices(vertices); mesh.SetNormals(normals); mesh.SetUVs(0, uv); mesh.SetUVs(1, flow); mesh.SetUVs(2, origins); mesh.SetUVs(3, centers); mesh.SetColors(colors); mesh.SetTriangles(indices, 0);
-            mesh.RecalculateBounds(); var bounds = mesh.bounds; bounds.Expand(12f); mesh.bounds = bounds;
-            return new Surface { Mesh = mesh, Seed = center.z * .137f, LowerPoint = lowerPoint, Strong = strong, Outline = points.ToArray() };
+            return new SurfaceData
+            {
+                Surface = new Surface { Seed = center.z * .137f, LowerPoint = lowerPoint, Strong = strong, Outline = points.ToArray() },
+                Vertices = vertices, Normals = normals, Origins = origins, UV = uv, Flow = flow, Centers = centers, Colors = colors, Indices = indices
+            };
             }
             return new[] { EmitSurface(true), EmitSurface(false) };
         }

@@ -24,14 +24,14 @@
 
 | Файл | Краткое описание |
 | --- | --- |
-| [Assets/Settings/Loot/DefaultLoot.asset](<../../Assets/Settings/Loot/DefaultLoot.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |
+| [Assets/Settings/Loot/DefaultLoot.asset](<../../Assets/Settings/Loot/DefaultLoot.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь, Раковина с сундуком и парные рычаги, Остров с весами и пятью камнями |
 
 ## Assets/Settings/Networking
 
 | Файл | Краткое описание |
 | --- | --- |
-| [Assets/Settings/Networking/NetworkPrefabs.asset](<../../Assets/Settings/Networking/NetworkPrefabs.asset>) | Настройки или данные Unity |
-| [Assets/Settings/Networking/SessionConfig.asset](<../../Assets/Settings/Networking/SessionConfig.asset>) | Настройки или данные Unity; Сеть, сессия и Steam |
+| [Assets/Settings/Networking/NetworkPrefabs.asset](<../../Assets/Settings/Networking/NetworkPrefabs.asset>) | Настройки или данные Unity; Раковина с сундуком и парные рычаги, Остров с весами и пятью камнями |
+| [Assets/Settings/Networking/SessionConfig.asset](<../../Assets/Settings/Networking/SessionConfig.asset>) | Настройки или данные Unity; Телепортация корабля через F8, Сеть, сессия и Steam |
 | [Assets/Settings/Networking/ShipObserver.asset](<../../Assets/Settings/Networking/ShipObserver.asset>) | Настройки или данные Unity |
 
 ## Assets/Settings/ShipDestruction
@@ -101,3 +101,12 @@
 | [Assets/Settings/World/smuggler_cove_b.asset](<../../Assets/Settings/World/smuggler_cove_b.asset>) | Настройки или данные Unity |
 | [Assets/Settings/World/wreck_island_a.asset](<../../Assets/Settings/World/wreck_island_a.asset>) | Настройки или данные Unity |
 | [Assets/Settings/World/wreck_island_b.asset](<../../Assets/Settings/World/wreck_island_b.asset>) | Настройки или данные Unity |
+
+## Assets/Settings/World/SandyIslands
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Settings/World/SandyIslands/BalanceSandyIsland.asset](<../../Assets/Settings/World/SandyIslands/BalanceSandyIsland.asset>) | Настройки или данные Unity; Остров с весами и пятью камнями |
+| [Assets/Settings/World/SandyIslands/SingleLandingRockIsland.asset](<../../Assets/Settings/World/SandyIslands/SingleLandingRockIsland.asset>) | Настройки или данные Unity; Мир, острова и океан, Тестовая карта и водоворот |
+| [Assets/Settings/World/SandyIslands/SmallSandyIsland.asset](<../../Assets/Settings/World/SandyIslands/SmallSandyIsland.asset>) | Настройки или данные Unity; Мир, острова и океан, Тестовая карта и водоворот |
+| [Assets/Settings/World/SandyIslands/TwoLandingIsland.asset](<../../Assets/Settings/World/SandyIslands/TwoLandingIsland.asset>) | Настройки или данные Unity; Мир, острова и океан, Тестовая карта и водоворот |

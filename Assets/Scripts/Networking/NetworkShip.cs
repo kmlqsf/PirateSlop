@@ -25,15 +25,17 @@ namespace PirateSlop.Networking
         bool hasRemoteState;
         readonly SyncVar<bool> sinking = new();
         float sinkingStarted;
+        float sinkingDuration = 12f;
         Vector3 sinkingPosition;
         float sinkingYaw;
         public bool IsSinking => sinking.Value;
         public float SinkingElapsed => IsSinking ? Time.time - sinkingStarted : 0f;
-        public void BeginSinking()
+        public void BeginSinking(float duration = 12f)
         {
             if (!IsServerInitialized || IsSinking || GetComponent<ShipFlooding>() is not { Level: >= 1f }) return;
             sinking.Value = true;
             sinkingStarted = Time.time;
+            sinkingDuration = Mathf.Max(.1f, duration);
             sinkingPosition = transform.position;
             sinkingYaw = transform.eulerAngles.y;
             Helm.ReleaseControl();
@@ -62,7 +64,9 @@ namespace PirateSlop.Networking
         }
         public override void OnStartNetwork()
         {
+            developerTeleportRevision = 0;
             if (!ActiveShips.Contains(this)) ActiveShips.Add(this);
+            InitializeKraken();
             BeginMonkey();
             Body.interpolation = RigidbodyInterpolation.None;
             TimeManager.OnTick += Tick;
@@ -76,6 +80,7 @@ namespace PirateSlop.Networking
                 TimeManager.OnPostTick -= Publish;
             }
             ActiveShips.Remove(this);
+            StopKraken();
             ClearAmmo();
             if (monkey != null) monkey.End();
             targetMarks.Clear();
@@ -87,7 +92,7 @@ namespace PirateSlop.Networking
             TickVortexBoost();
             if (IsSinking)
             {
-                float progress = Mathf.Clamp01((Time.time - sinkingStarted) / 12f);
+                float progress = Mathf.Clamp01((Time.time - sinkingStarted) / sinkingDuration);
                 var state = Motor.Capture();
                 state.Position = sinkingPosition + Vector3.down * (45f * progress * progress);
                 state.Yaw = sinkingYaw; state.Pitch = progress * 18f; state.Bank = progress * 12f;
@@ -111,7 +116,7 @@ namespace PirateSlop.Networking
             }
             sails.ValidateGrips();
             sails.CaptureRopes(ref publishedTensions, ref publishedOwners);
-            ReceiveState(Motor.Capture(), driver, publishedTensions, publishedOwners);
+            ReceiveState(Motor.Capture(), driver, publishedTensions, publishedOwners, developerTeleportRevision);
         }
         public void DragWheel(float degrees, bool holding) => DragWheelServerRpc(degrees, holding);
         public void CollisionAudio(float strength, Vector3 point, bool showEffect) { if (IsServerInitialized) CollisionAudioObserversRpc(strength, point, showEffect); }
@@ -151,9 +156,10 @@ namespace PirateSlop.Networking
             if (player != null && !player.Motor.IsFrozen && !IsSinking && sails.InRange(player.Motor) && float.IsFinite(amount)) sails.AdjustSail(Mathf.Clamp(amount, -.2f, .2f));
         }
         [ObserversRpc(BufferLast = true)]
-        void ReceiveState(ShipState state, int driver, float[] ropes, int[] holders)
+        void ReceiveState(ShipState state, int driver, float[] ropes, int[] holders, uint revision)
         {
-            if (IsServerInitialized) return;
+            if (IsServerInitialized || revision < developerTeleportRevision) return;
+            if (revision > developerTeleportRevision) { developerTeleportRevision = revision; Motor.Restore(state, null); Motor.Freeze(0); }
             GetComponent<SailSystem>().ApplyRopes(ropes, holders);
             if (OceanSurface.Instance != null) OceanSurface.Instance.Synchronize(state.WaveTime);
             remoteState = state; remoteDriver = driver; hasRemoteState = true;

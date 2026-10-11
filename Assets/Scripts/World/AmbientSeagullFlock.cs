@@ -6,7 +6,7 @@ namespace PirateSlop.World
     public sealed class AmbientSeagullFlock : MonoBehaviour
     {
         public const float Lifetime = 66;
-        public static float Duration(SeagullFlockMessage state) => state.Perches != null && state.Perches.Length > 0 ? Lifetime : 32;
+        public static float Duration(SeagullFlockMessage state) => Mathf.Max(state.EndAge, state.Perches != null && state.Perches.Length > 0 ? Lifetime : 32);
         public struct BirdPose
         {
             public Vector3 Position;
@@ -26,8 +26,26 @@ namespace PirateSlop.World
             receivedAt = Time.time;
             nextCallAge = state.Age + 8 + (state.Seed & 3);
             birds = new SeagullVisual[state.Count];
-            for (int i = 0; i < birds.Length; i++) birds[i] = SeagullVisual.Create(transform, state.Seed + i * 113);
+            for (int i = 0; i < birds.Length; i++)
+            {
+                int index = i;
+                birds[i] = SeagullVisual.Create(transform, state.Seed + i * 113);
+                birds[i].FirearmHit = direction => SessionController.Instance?.ShootSeagull(state.Id, index, direction);
+                birds[i].SurfaceContact = fall => SessionController.Instance?.LandSeagull(state.Id, index, fall);
+                if ((state.ShotMask & (1 << i)) != 0 && state.Falls != null && i < state.Falls.Length)
+                    birds[i].BeginFall(state.Falls[i]);
+            }
             Apply(state.Age);
+        }
+
+        public SeagullVisual Bird(int index) => birds != null && index >= 0 && index < birds.Length ? birds[index] : null;
+
+        public void ShootBird(int index, SeagullFall fall, float endAge)
+        {
+            var bird = Bird(index);
+            if (bird == null) return;
+            message.EndAge = Mathf.Max(message.EndAge, endAge);
+            bird.BeginFall(fall);
         }
 
         void LateUpdate()
@@ -43,7 +61,7 @@ namespace PirateSlop.World
             for (int i = 0; i < birds.Length; i++)
             {
                 var bird = birds[(start + i) % birds.Length];
-                if (!bird.gameObject.activeSelf) continue;
+                if (bird.Shot || !bird.gameObject.activeSelf) continue;
                 GameAudio.SeagullCall(bird.transform.position);
                 break;
             }
@@ -55,6 +73,7 @@ namespace PirateSlop.World
             {
                 var pose = Evaluate(message, i, age);
                 var bird = birds[i];
+                if (bird.Shot) continue;
                 bird.gameObject.SetActive(pose.Visible);
                 if (!pose.Visible) continue;
                 bird.transform.SetPositionAndRotation(pose.Position, pose.Rotation);

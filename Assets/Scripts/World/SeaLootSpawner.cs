@@ -11,9 +11,15 @@ namespace PirateSlop.World
         public static void Spawn(ProceduralWorld world, NetworkManager manager, LootCatalog catalog)
         {
             if (world == null || !world.Ready || catalog == null || catalog.ChestPrefab == null) return;
+            if (EnvironmentTestGallery.IsTest(world.Layout))
+            {
+                for (int i = 0; i < 7; i++) SpawnOne(world, manager, catalog, i, EnvironmentEventTestRow.Point(i, world.Layout.SeaLevel));
+                NetworkBalanceEvent.SpawnEvent(catalog, manager, EnvironmentEventTestRow.Point(7, world.Layout.SeaLevel), world.gameObject.scene);
+                return;
+            }
             var random = new MapRandom((uint)world.Layout.Seed ^ 0x79c526abu);
             var occupied = new List<Vector3>();
-            int types = catalog.SkullEventPrefab != null ? 5 : 4;
+            int types = catalog.ClamEventPrefab != null ? 7 : catalog.WhaleEventPrefab != null ? 6 : catalog.SkullEventPrefab != null ? 5 : 4;
             int count = Mathf.Clamp(catalog.SeaEventsPerType, 1, 20) * types;
             float separation = Mathf.Max(160, catalog.CaptureRadius * 2.5f);
             for (int i = 0; i < count; i++)
@@ -32,6 +38,12 @@ namespace PirateSlop.World
                         if (!world.CanSail(sample, side * 45)) { clear = false; break; }
                     }
                     if (!clear || !world.CanSail(point, 0) || world.GroundHeight(point) > point.y - catalog.SunkenDepth - 2) continue;
+                    if (i % types >= 5)
+                    {
+                        SpawnOne(world, manager, catalog, i % types, point);
+                        occupied.Add(point);
+                        break;
+                    }
                     if (i % types == 4)
                     {
                         NetworkSkullEvent.SpawnEvent(catalog, manager, point, world.gameObject.scene);
@@ -49,6 +61,28 @@ namespace PirateSlop.World
                     break;
                 }
             }
+        }
+
+        static void SpawnOne(ProceduralWorld world, NetworkManager manager, LootCatalog catalog, int index, Vector3 point)
+        {
+            if (index == 6) { NetworkClamEvent.SpawnEvent(catalog, manager, point, world.gameObject.scene); return; }
+            if (index == 4) { if (catalog.SkullEventPrefab != null) NetworkSkullEvent.SpawnEvent(catalog, manager, point, world.gameObject.scene); return; }
+            if (index == 5)
+            {
+                if (catalog.WhaleEventPrefab == null) return;
+                var whale = Object.Instantiate(catalog.WhaleEventPrefab, point + Vector3.up * catalog.WhaleEventPrefab.SurfaceOffset, Quaternion.identity);
+                SceneManager.MoveGameObjectToScene(whale.gameObject, world.gameObject.scene);
+                whale.Catalog = catalog;
+                manager.ServerManager.Spawn(whale.NetworkObject);
+                return;
+            }
+            var chest = Object.Instantiate(catalog.ChestPrefab, point, Quaternion.identity);
+            SceneManager.MoveGameObjectToScene(chest.gameObject, world.gameObject.scene);
+            chest.Catalog = catalog;
+            var random = new MapRandom(unchecked((uint)world.Layout.Seed ^ 0xa35f19c7u ^ ((uint)index * 2654435761u)));
+            chest.Fill(ref random);
+            chest.ConfigureOcean((SeaLootKind)(1 + index), point);
+            manager.ServerManager.Spawn(chest.NetworkObject);
         }
     }
 }

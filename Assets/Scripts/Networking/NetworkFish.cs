@@ -10,6 +10,15 @@ namespace PirateSlop.Networking
     {
         public static readonly System.Collections.Generic.List<NetworkFish> ServerItems = new();
         public bool OnShip => platformId.Value != 0;
+        public void RefreshDeveloperShipPose(NetworkShip ship)
+        {
+            var loose = GetComponent<NetworkLooseCannonball>();
+            if (loose != null) { loose.RefreshDeveloperShipPose(ship); return; }
+            if (SupportingShip != ship) return;
+            visualReady = false;
+            transform.SetPositionAndRotation(ship.transform.TransformPoint(position.Value), ship.transform.rotation * rotation.Value);
+            if (IsServerInitialized) worldPosition.Value = transform.position;
+        }
         public NetworkShip SupportingShip
         {
             get

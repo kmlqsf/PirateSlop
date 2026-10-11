@@ -4520,6 +4520,9 @@ GameObject:
   - component: {fileID: 3441351058542915250}
   - component: {fileID: 9188302990957446569}
   - component: {fileID: 7915708308571852714}
+  - component: {fileID: 8740996128520314449}
+  - component: {fileID: 4859268537664893006}
+  - component: {fileID: 2551033971947360644}
   m_Layer: 0
   m_Name: NetworkPlayer
   m_TagString: Player
@@ -5267,6 +5270,42 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f07e4b995853f9e47a1ba8b502523ddc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.Ships.ShipBilgePumpPlayer
+--- !u!114 &8740996128520314449
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4193507432475942729}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c60378b09bf8fbd4b90237ccb6f2a605, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.WhalePlayerInteraction
+--- !u!114 &4859268537664893006
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4193507432475942729}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 176f78c74ae972340b9adea9e0f2fd75, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.ClamPlayerInteraction
+--- !u!114 &2551033971947360644
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4193507432475942729}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c78ce420ed7813b46b89777e44a51c34, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.BalanceStonePlayer
 --- !u!1 &4199649050588610447
 GameObject:
   m_ObjectHideFlags: 0

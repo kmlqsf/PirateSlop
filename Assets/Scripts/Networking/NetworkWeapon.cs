@@ -23,7 +23,7 @@ namespace PirateSlop.Networking
         public NetworkFish[] DropPrefabs;
         PlayerInventory inventory;
         PirateWeapon weapon;
-        void Awake() { weapon = GetComponent<PirateWeapon>(); inventory = GetComponent<PlayerInventory>(); }
+        void Awake() { weapon = GetComponent<PirateWeapon>(); inventory = GetComponent<PlayerInventory>(); if (GetComponent<WhalePlayerInteraction>() == null) gameObject.AddComponent<WhalePlayerInteraction>(); if (GetComponent<ClamPlayerInteraction>() == null) gameObject.AddComponent<ClamPlayerInteraction>(); }
         public override void OnStartServer()
         {
             base.OnStartServer();
@@ -216,7 +216,7 @@ namespace PirateSlop.Networking
         [ServerRpc]
         void SelectSlotServerRpc(int slot)
         {
-            if (inventory == null || GetComponent<AdvancedPlayerController>().IsFrozen || !inventory.SlotAvailable(slot)) return;
+            if (inventory == null || CarryingBalanceStone || GetComponent<AdvancedPlayerController>().IsFrozen || !inventory.SlotAvailable(slot)) return;
             selectedSlot.Value = slot; inventory.SetSelection(slot);
         }
         public void UseChest(NetworkObject target, int slot = -1, bool swap = false) => UseChestServerRpc(target, slot, swap, inventory.SelectedSlot, inventory.ItemAt(inventory.SelectedSlot), inventory.ItemCount(inventory.SelectedSlot));

@@ -33,7 +33,9 @@ namespace PirateSlop.Ships
                 { Release(); return; }
                 motor.ShipActivityLocked = true;
                 float start = state.Holder == player.Owner.ClientId + 1 ? state.ReleasedAt : cycleStarted;
-                held.Predict(held.CyclePull(held.Clock - start));
+                float pull=held.CyclePull(held.Clock-start);
+                held.Predict(pull);
+                motor.SetInteractionCameraPull(pull*.6f);
                 if (Time.unscaledTime >= nextSend)
                 {
                     held.Ship.PullPump(0f, true, heldSequence);

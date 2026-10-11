@@ -26,6 +26,7 @@ namespace PirateSlop
         }
         static BulletSurfaceKind Guess(Collider collider)
         {
+            if (collider.GetComponentInParent<PirateSlop.World.SeagullVisual>() != null) return BulletSurfaceKind.Flesh;
             if (collider.GetComponentInParent<NetworkVortexBottle>() != null || collider.GetComponentInParent<NetworkFogBottle>() != null) return BulletSurfaceKind.Glass;
             if(collider.GetComponentInParent<CombatHealth>()!=null) return BulletSurfaceKind.Flesh;
             if(collider.GetComponentInParent<SimpleCannon>()!=null || collider.GetComponentInParent<Cannonball>()!=null) return BulletSurfaceKind.Metal;

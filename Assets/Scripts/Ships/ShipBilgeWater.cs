@@ -27,6 +27,8 @@ namespace PirateSlop.Ships
         float surfaceHeight, zMin, zMax;
         int revision = -1;
         int leakSignature = int.MinValue;
+        int requestedLeakSignature;
+        float leakBuildAt;
         const int Rows = 97, Columns = 9;
 
         void Awake()
@@ -203,10 +205,16 @@ namespace PirateSlop.Ships
                     leaks.Add(breach);
                     signature ^= unchecked((breach.SectionId * 64 + breach.FragmentIndex) * 397 ^ (breach.SurfaceMesh != null ? breach.SurfaceMesh.GetEntityId().GetHashCode() : breach.LocalPoint.GetHashCode()));
                 }
-                if (signature != leakSignature)
+                if (signature != requestedLeakSignature)
                 {
-                    leakSignature = signature;
-                    var next = leakBuilder.Build(leaks, leakSurfaces);
+                    requestedLeakSignature = signature;
+                    leakBuildAt = Time.unscaledTime+.06f;
+                }
+            }
+            if ((requestedLeakSignature != leakSignature || leakBuilder.IsBuilding) && Time.unscaledTime >= leakBuildAt)
+                if (leakBuilder.TryBuild(leaks, leakSurfaces, requestedLeakSignature, out var next))
+                {
+                    leakSignature = requestedLeakSignature;
                     foreach (var surface in leakSurfaces)
                         if (surface.Mesh != null && !next.Exists(candidate => candidate.Mesh == surface.Mesh)) Destroy(surface.Mesh);
                     leakSurfaces.Clear();
@@ -224,7 +232,6 @@ namespace PirateSlop.Ships
                     }
                     for (int i = 0; i < leakSurfaces.Count; i++) jets[i].GetComponent<MeshFilter>().sharedMesh = leakSurfaces[i].Mesh;
                 }
-            }
             for (int i = 0; i < jets.Count; i++)
             {
                 bool visible = i < leakSurfaces.Count;
@@ -247,6 +254,7 @@ namespace PirateSlop.Ships
 
         void OnDestroy()
         {
+            leakBuilder.Clear();
             if (waterMesh != null) Destroy(waterMesh);
             foreach (var surface in leakSurfaces) if (surface.Mesh != null) Destroy(surface.Mesh);
         }

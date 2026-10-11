@@ -13,8 +13,18 @@ namespace PirateSlop.Networking
     {
         public int Id, Seed, Count;
         public float Age;
+        public float EndAge;
+        public byte ShotMask;
+        public SeagullFall[] Falls;
         public Vector3 Start, Control, End;
         public Vector3[] Perches, Normals;
+    }
+
+    public struct SeagullHitMessage : IBroadcast
+    {
+        public int Id, Index;
+        public float EndAge;
+        public SeagullFall Fall;
     }
 
     public sealed partial class SessionController
@@ -23,6 +33,7 @@ namespace PirateSlop.Networking
         {
             public SeagullFlockMessage Message;
             public float Started;
+            public readonly float[] ShotAt = new float[8];
         }
         readonly List<SeagullEvent> seagullEvents = new();
         readonly Dictionary<int, AmbientSeagullFlock> seagullVisuals = new();
@@ -127,10 +138,11 @@ namespace PirateSlop.Networking
             }
             if (requiredLanding && landing && points.Count == 0) return "Рядом нет скалы со свободной площадкой для посадки.";
             message.Perches = points.ToArray(); message.Normals = normals.ToArray();
+            message.Falls = new SeagullFall[message.Count];
             nextSeagullId = message.Id;
             seagullEvents.Add(new SeagullEvent { Message = message, Started = Time.time });
             manager.ServerManager.Broadcast(message);
-            if (manager.ClientManager.Started) ReceiveSeagulls(message, Channel.Reliable);
+            ReceiveSeagulls(message, Channel.Reliable);
             return points.Count > 0 ? $"Стая вызвана: {points.Count} чайки направляются на скалы." : "Стая чаек пролетит над вами.";
         }
 
@@ -153,8 +165,52 @@ namespace PirateSlop.Networking
             {
                 var message = entry.Message;
                 message.Age = Time.time - entry.Started;
+                message.Falls = (SeagullFall[])entry.Message.Falls.Clone();
+                for (int i = 0; i < message.Count; i++)
+                    if ((message.ShotMask & (1 << i)) != 0) message.Falls[i].Age = Time.time - entry.ShotAt[i];
                 if (message.Age < AmbientSeagullFlock.Duration(message)) manager.ServerManager.Broadcast(connection, message);
             }
+        }
+
+        public void ShootSeagull(int id, int index, Vector3 direction)
+        {
+            if (manager == null || !manager.ServerManager.Started) return;
+            var entry = seagullEvents.Find(e => e.Message.Id == id);
+            if (entry == null || index < 0 || index >= entry.Message.Count || (entry.Message.ShotMask & (1 << index)) != 0) return;
+            if (!seagullVisuals.TryGetValue(id, out var flock) || flock == null) return;
+            var bird = flock.Bird(index);
+            if (bird == null || bird.Shot || !bird.gameObject.activeSelf) return;
+            float age = Time.time - entry.Started;
+            var current = AmbientSeagullFlock.Evaluate(entry.Message, index, age);
+            var next = AmbientSeagullFlock.Evaluate(entry.Message, index, age + .04f);
+            var fall = bird.CaptureFall((next.Position - current.Position) / .04f, direction);
+            entry.Message.ShotMask |= (byte)(1 << index);
+            entry.Message.Falls[index] = fall;
+            entry.ShotAt[index] = Time.time;
+            entry.Message.EndAge = Mathf.Max(AmbientSeagullFlock.Duration(entry.Message), age + fall.Seconds + SeagullVisual.SinkSeconds);
+            var message = new SeagullHitMessage { Id = id, Index = index, Fall = fall, EndAge = entry.Message.EndAge };
+            manager.ServerManager.Broadcast(message);
+            ReceiveSeagullHit(message, Channel.Reliable);
+        }
+
+        void ReceiveSeagullHit(SeagullHitMessage message, Channel channel)
+        {
+            if (seagullVisuals.TryGetValue(message.Id, out var flock) && flock != null)
+                flock.ShootBird(message.Index, message.Fall, message.EndAge);
+        }
+
+        public void LandSeagull(int id, int index, SeagullFall fall)
+        {
+            if (manager == null || !manager.ServerManager.Started || !fall.Landed) return;
+            var entry = seagullEvents.Find(e => e.Message.Id == id);
+            if (entry == null || index < 0 || index >= entry.Message.Count || (entry.Message.ShotMask & (1 << index)) == 0) return;
+            fall.Age = Time.time - entry.ShotAt[index];
+            entry.Message.Falls[index] = fall;
+            float endAge = entry.ShotAt[index] - entry.Started + fall.Seconds + SeagullVisual.SinkSeconds;
+            entry.Message.EndAge = Mathf.Max(AmbientSeagullFlock.Duration(entry.Message), endAge);
+            var message = new SeagullHitMessage { Id = id, Index = index, Fall = fall, EndAge = entry.Message.EndAge };
+            manager.ServerManager.Broadcast(message);
+            ReceiveSeagullHit(message, Channel.Reliable);
         }
 
         void ReceiveSeagulls(SeagullFlockMessage message, Channel channel)

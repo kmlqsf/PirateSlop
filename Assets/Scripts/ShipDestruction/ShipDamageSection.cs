@@ -116,7 +116,12 @@ namespace PirateSlop
             foreach (var collider in GameplayColliders) SetColliderEnabled(collider, state != ShipSectionState.Destroyed && !damaged && !critical);
             NotifyVisualChanged();
         }
-        void EnsureFragmentCollider(GameObject fragment)
+        internal void PrepareFragmentCollider(int index)
+        {
+            if (LazyFragmentColliders && State == ShipSectionState.Intact && index >= 0 && index < Fragments.Length)
+                EnsureFragmentCollider(Fragments[index], false);
+        }
+        void EnsureFragmentCollider(GameObject fragment, bool enable = true)
         {
             var collider = fragment.GetComponent<MeshCollider>();
             if (collider == null) collider = fragment.transform.Find("FragmentCollider")?.GetComponent<MeshCollider>();
@@ -138,6 +143,7 @@ namespace PirateSlop
                 collider.convex = false;
             }
             Owner?.RegisterDamageCollider(this, collider);
+            SetColliderEnabled(collider, enable);
             if (Array.IndexOf(DamageColliders, collider) >= 0) return;
             int count = DamageColliders.Length;
             Array.Resize(ref DamageColliders, count + 1);

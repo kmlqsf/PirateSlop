@@ -16,6 +16,10 @@ namespace PirateSlop.Networking
         float nextRaftTurn, raftSpeed, lockSecret, lockInputAt, desiredLockAngle;
         bool lockTorque, lockInitialized;
         Rigidbody raftBody;
+        Vector3 raftWaveNormal = Vector3.up;
+        float raftWaveHeight, nextRaftWaveSample;
+        bool raftPoseKnown;
+        Vector3 raftRoamCenter;
         public Rigidbody RaftBody => raftBody;
         public float LockAngle => lockAngle.Value;
         public float LockRotation => lockRotation.Value;
@@ -29,6 +33,7 @@ namespace PirateSlop.Networking
             raftSpeed = (ship != null ? ship.MaxSpeed : 10f) * .2f;
             raftYaw.Value = Random.Range(0f, 360f);
             nextRaftTurn = Time.time + Random.Range(20f, 45f);
+            raftRoamCenter = eventPoint.Value;
         }
 
         void TickRaft()
@@ -41,7 +46,16 @@ namespace PirateSlop.Networking
             var point = eventPoint.Value;
             var flat = new Vector3(point.x, 0, point.z);
             float margin = radius - flat.magnitude;
-            if (margin <= 150f)
+            bool testRoam = EnvironmentTestGallery.IsTest(world.Layout);
+            var roamOffset = Vector3.ProjectOnPlane(point - raftRoamCenter, Vector3.up);
+            if (testRoam && roamOffset.magnitude >= 16f)
+            {
+                var inward = -roamOffset.normalized;
+                float target = Mathf.Atan2(inward.x, inward.z) * Mathf.Rad2Deg;
+                raftYaw.Value = Mathf.MoveTowardsAngle(raftYaw.Value, target, 70f * dt);
+                nextRaftTurn = Time.time + 5f;
+            }
+            else if (!testRoam && margin <= 150f)
             {
                 var inward = flat.sqrMagnitude > .001f ? -flat.normalized : Vector3.forward;
                 float target = Mathf.Atan2(inward.x, inward.z) * Mathf.Rad2Deg;
@@ -61,7 +75,9 @@ namespace PirateSlop.Networking
                 next = point;
             }
             float safeRadius = Mathf.Max(0f, radius - 108f);
-            var safe = Vector3.ClampMagnitude(new Vector3(next.x, 0, next.z), safeRadius);
+            var safe = testRoam
+                ? raftRoamCenter + Vector3.ClampMagnitude(Vector3.ProjectOnPlane(next - raftRoamCenter, Vector3.up), 22f)
+                : Vector3.ClampMagnitude(new Vector3(next.x, 0, next.z), safeRadius);
             eventPoint.Value = new Vector3(safe.x, point.y, safe.z);
             if (!raftDetachedState.Value) anchor.Value = eventPoint.Value + Vector3.up * .45f;
         }
@@ -70,10 +86,32 @@ namespace PirateSlop.Networking
         {
             if (eventVisual == null) return;
             var point = eventPoint.Value;
-            if (OceanSurface.Instance != null) point.y = OceanSurface.Instance.Height(point);
-            float blend = IsServerInitialized ? 1f : 1f - Mathf.Exp(-12f * Time.deltaTime);
+            var ocean = OceanSurface.Instance;
+            if (!raftPoseKnown || Time.time >= nextRaftWaveSample)
+            {
+                raftWaveHeight = ocean != null ? ocean.Height(point) : point.y;
+                if (ocean != null)
+                {
+                    var right = Quaternion.Euler(0, raftYaw.Value, 0) * Vector3.right * 1.5f;
+                    var forward = Quaternion.Euler(0, raftYaw.Value, 0) * Vector3.forward * 1.5f;
+                    float x = ocean.Height(point - right) - ocean.Height(point + right);
+                    float z = ocean.Height(point - forward) - ocean.Height(point + forward);
+                    raftWaveNormal = (Vector3.up * 3f + right.normalized * x + forward.normalized * z).normalized;
+                    raftWaveNormal = Vector3.Slerp(Vector3.up, raftWaveNormal, .7f);
+                }
+                nextRaftWaveSample = Time.time + .12f;
+            }
+            point.y = raftWaveHeight;
+            var rotation = Quaternion.FromToRotation(Vector3.up, raftWaveNormal) * Quaternion.Euler(0, raftYaw.Value, 0);
+            if (!raftPoseKnown)
+            {
+                eventVisual.transform.SetPositionAndRotation(point, rotation);
+                raftPoseKnown = true;
+                return;
+            }
+            float blend = 1f - Mathf.Exp(-7f * Time.deltaTime);
             eventVisual.transform.SetPositionAndRotation(Vector3.Lerp(eventVisual.transform.position, point, blend),
-                Quaternion.Slerp(eventVisual.transform.rotation, Quaternion.Euler(0, raftYaw.Value, 0), blend));
+                Quaternion.Slerp(eventVisual.transform.rotation, rotation, blend));
         }
 
         void BeginRaftLock()

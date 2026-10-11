@@ -15,6 +15,10 @@ namespace PirateSlop
         public void Apply(RaycastHit hit, float distance)
         {
             if (hit.collider == null || shooter == null) return;
+            var seagull = hit.collider.GetComponentInParent<PirateSlop.World.SeagullVisual>();
+            if (seagull != null) { seagull.ReceiveFirearmHit((hit.point - shooter.transform.position).normalized); return; }
+            var shark = hit.collider.GetComponentInParent<SharkHitTarget>();
+            if (shark != null) { shark.ReceiveFirearmShot(shooter); return; }
             var monkey = hit.collider.GetComponent<PirateSlop.Ships.ShipMonkeyHitbox>();
             if (monkey != null && monkey.Monkey != null)
             {

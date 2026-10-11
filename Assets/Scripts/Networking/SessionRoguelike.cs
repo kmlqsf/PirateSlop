@@ -16,7 +16,16 @@ namespace PirateSlop.Networking
         readonly System.Random upgradeRandom = new();
         RoguelikeCatalog upgradeCatalog;
         string UpgradeTokenKey => "RoguelikeResume:" + (steamSession ? "Steam:" + steamHost : address);
-        string UpgradeResumeToken => PlayerPrefs.GetString(UpgradeTokenKey, "");
+        string UpgradeResumeToken
+        {
+            get
+            {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+                if(KrakenNetworkProbe.IsActive) return "";
+#endif
+                return PlayerPrefs.GetString(UpgradeTokenKey, "");
+            }
+        }
 
         System.Collections.IEnumerator SpawnTestUpgradeChest(NetworkShip ship)
         {
@@ -86,6 +95,9 @@ namespace PirateSlop.Networking
 
         void ReceiveUpgradeIdentity(UpgradeIdentityMessage message, Channel channel)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            if(KrakenNetworkProbe.IsActive) return;
+#endif
             if (string.IsNullOrEmpty(message.Token) || message.Token.Length > 80) return;
             PlayerPrefs.SetString(UpgradeTokenKey, message.Token);
             PlayerPrefs.Save();

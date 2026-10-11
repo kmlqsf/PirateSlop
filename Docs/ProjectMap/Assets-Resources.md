@@ -29,8 +29,8 @@
 | [Assets/Resources/HookRope.mat](<../../Assets/Resources/HookRope.mat>) | Материал Unity |
 | [Assets/Resources/HudIcon.shader](<../../Assets/Resources/HudIcon.shader>) | Шейдер |
 | [Assets/Resources/KickLeg.asset](<../../Assets/Resources/KickLeg.asset>) | Настройки или данные Unity; Персонаж, камера и анимации |
-| [Assets/Resources/KrakenEncounter.prefab](<../../Assets/Resources/KrakenEncounter.prefab>) | Префаб Unity |
-| [Assets/Resources/KrakenTentacle.prefab](<../../Assets/Resources/KrakenTentacle.prefab>) | Префаб Unity |
+| [Assets/Resources/KrakenEncounter.prefab](<../../Assets/Resources/KrakenEncounter.prefab>) | Префаб Unity; Кракен и щупальца |
+| [Assets/Resources/KrakenTentacle.prefab](<../../Assets/Resources/KrakenTentacle.prefab>) | Префаб Unity; Кракен и щупальца |
 | [Assets/Resources/LootEventBeam.shader](<../../Assets/Resources/LootEventBeam.shader>) | Шейдер; Предметы, лут и инвентарь |
 | [Assets/Resources/ParticleSoft.asset](<../../Assets/Resources/ParticleSoft.asset>) | Настройки или данные Unity |
 | [Assets/Resources/SabreCut.mat](<../../Assets/Resources/SabreCut.mat>) | Материал Unity; Личное оружие и урон |
@@ -39,7 +39,7 @@
 | [Assets/Resources/SabreWoodChip.shader](<../../Assets/Resources/SabreWoodChip.shader>) | Шейдер; Личное оружие и урон |
 | [Assets/Resources/SailCustom.mat](<../../Assets/Resources/SailCustom.mat>) | Материал Unity |
 | [Assets/Resources/SeaObjective.shader](<../../Assets/Resources/SeaObjective.shader>) | Шейдер |
-| [Assets/Resources/SharkVisual.prefab](<../../Assets/Resources/SharkVisual.prefab>) | Префаб Unity |
+| [Assets/Resources/SharkVisual.prefab](<../../Assets/Resources/SharkVisual.prefab>) | Префаб Unity; Предметы, лут и инвентарь |
 | [Assets/Resources/ShipFire.shader](<../../Assets/Resources/ShipFire.shader>) | Шейдер; Пушки, ядра и лафеты |
 | [Assets/Resources/SkullFire.shader](<../../Assets/Resources/SkullFire.shader>) | Шейдер; Предметы, лут и инвентарь |
 | [Assets/Resources/StormRain.shader](<../../Assets/Resources/StormRain.shader>) | Шейдер |
@@ -95,6 +95,62 @@
 | [Assets/Resources/RoguelikeUI/CardFace.png](<../../Assets/Resources/RoguelikeUI/CardFace.png>) | Изображение / текстура; Улучшения рогалика из сундуков |
 | [Assets/Resources/RoguelikeUI/RarityGlow.shader](<../../Assets/Resources/RoguelikeUI/RarityGlow.shader>) | Шейдер; Улучшения рогалика из сундуков |
 
+## Assets/Resources/SeaEvents
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Resources/SeaEvents/BoundaryFlagMesh.asset](<../../Assets/Resources/SeaEvents/BoundaryFlagMesh.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |
+| [Assets/Resources/SeaEvents/BuoyGeometry0.asset](<../../Assets/Resources/SeaEvents/BuoyGeometry0.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |
+| [Assets/Resources/SeaEvents/BuoyGeometry1.asset](<../../Assets/Resources/SeaEvents/BuoyGeometry1.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |
+| [Assets/Resources/SeaEvents/BuoyGeometry2.asset](<../../Assets/Resources/SeaEvents/BuoyGeometry2.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |
+| [Assets/Resources/SeaEvents/BuoyGeometry3.asset](<../../Assets/Resources/SeaEvents/BuoyGeometry3.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |
+| [Assets/Resources/SeaEvents/BuoyGeometry4.asset](<../../Assets/Resources/SeaEvents/BuoyGeometry4.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |
+| [Assets/Resources/SeaEvents/BuoyGeometry5.asset](<../../Assets/Resources/SeaEvents/BuoyGeometry5.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |
+| [Assets/Resources/SeaEvents/BuoyOakStave0.asset](<../../Assets/Resources/SeaEvents/BuoyOakStave0.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |
+| [Assets/Resources/SeaEvents/BuoyOakStave1.asset](<../../Assets/Resources/SeaEvents/BuoyOakStave1.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |
+| [Assets/Resources/SeaEvents/BuoyOakStave2.asset](<../../Assets/Resources/SeaEvents/BuoyOakStave2.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |
+| [Assets/Resources/SeaEvents/BuoyOakStave3.asset](<../../Assets/Resources/SeaEvents/BuoyOakStave3.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |
+| [Assets/Resources/SeaEvents/CaptureBoundaryBuoyBoundaryFlagMesh.asset](<../../Assets/Resources/SeaEvents/CaptureBoundaryBuoyBoundaryFlagMesh.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |
+| [Assets/Resources/SeaEvents/CaptureBoundaryBuoyCarriageGeometry0.asset](<../../Assets/Resources/SeaEvents/CaptureBoundaryBuoyCarriageGeometry0.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |
+| [Assets/Resources/SeaEvents/CaptureBoundaryBuoyCarriageGeometry1.asset](<../../Assets/Resources/SeaEvents/CaptureBoundaryBuoyCarriageGeometry1.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |
+| [Assets/Resources/SeaEvents/CaptureBoundaryBuoyContestPennantMesh.asset](<../../Assets/Resources/SeaEvents/CaptureBoundaryBuoyContestPennantMesh.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |
+| [Assets/Resources/SeaEvents/CaptureBoundaryBuoyWeightGeometry0.asset](<../../Assets/Resources/SeaEvents/CaptureBoundaryBuoyWeightGeometry0.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |
+| [Assets/Resources/SeaEvents/CaptureBoundaryBuoyWinchGeometry0.asset](<../../Assets/Resources/SeaEvents/CaptureBoundaryBuoyWinchGeometry0.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |
+| [Assets/Resources/SeaEvents/CaptureBuoy.prefab](<../../Assets/Resources/SeaEvents/CaptureBuoy.prefab>) | Префаб Unity; Предметы, лут и инвентарь |
+| [Assets/Resources/SeaEvents/CaptureFlagMesh.asset](<../../Assets/Resources/SeaEvents/CaptureFlagMesh.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |
+| [Assets/Resources/SeaEvents/CaptureSignalStationCaptureFlagMesh.asset](<../../Assets/Resources/SeaEvents/CaptureSignalStationCaptureFlagMesh.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |
+| [Assets/Resources/SeaEvents/CaptureSignalStationCarriageGeometry0.asset](<../../Assets/Resources/SeaEvents/CaptureSignalStationCarriageGeometry0.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |
+| [Assets/Resources/SeaEvents/CaptureSignalStationCarriageGeometry1.asset](<../../Assets/Resources/SeaEvents/CaptureSignalStationCarriageGeometry1.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |
+| [Assets/Resources/SeaEvents/CaptureSignalStationContestPennantMesh.asset](<../../Assets/Resources/SeaEvents/CaptureSignalStationContestPennantMesh.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |
+| [Assets/Resources/SeaEvents/CaptureSignalStationWeightGeometry0.asset](<../../Assets/Resources/SeaEvents/CaptureSignalStationWeightGeometry0.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |
+| [Assets/Resources/SeaEvents/CaptureSignalStationWinchGeometry0.asset](<../../Assets/Resources/SeaEvents/CaptureSignalStationWinchGeometry0.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |
+| [Assets/Resources/SeaEvents/CaptureStation.prefab](<../../Assets/Resources/SeaEvents/CaptureStation.prefab>) | Префаб Unity; Предметы, лут и инвентарь |
+| [Assets/Resources/SeaEvents/ClamEvent.prefab](<../../Assets/Resources/SeaEvents/ClamEvent.prefab>) | Префаб Unity; Раковина с сундуком и парные рычаги |
+| [Assets/Resources/SeaEvents/ContestPennantMesh.asset](<../../Assets/Resources/SeaEvents/ContestPennantMesh.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |
+| [Assets/Resources/SeaEvents/GripGeometry0.asset](<../../Assets/Resources/SeaEvents/GripGeometry0.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |
+| [Assets/Resources/SeaEvents/Raft.prefab](<../../Assets/Resources/SeaEvents/Raft.prefab>) | Префаб Unity; Предметы, лут и инвентарь |
+| [Assets/Resources/SeaEvents/RaftGeometry0.asset](<../../Assets/Resources/SeaEvents/RaftGeometry0.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |
+| [Assets/Resources/SeaEvents/RaftGeometry1.asset](<../../Assets/Resources/SeaEvents/RaftGeometry1.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |
+| [Assets/Resources/SeaEvents/RaftGeometry2.asset](<../../Assets/Resources/SeaEvents/RaftGeometry2.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |
+| [Assets/Resources/SeaEvents/RaftGeometry3.asset](<../../Assets/Resources/SeaEvents/RaftGeometry3.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |
+| [Assets/Resources/SeaEvents/RaftGeometry4.asset](<../../Assets/Resources/SeaEvents/RaftGeometry4.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |
+| [Assets/Resources/SeaEvents/RopeGrip.prefab](<../../Assets/Resources/SeaEvents/RopeGrip.prefab>) | Префаб Unity; Предметы, лут и инвентарь |
+| [Assets/Resources/SeaEvents/RopeShackle.prefab](<../../Assets/Resources/SeaEvents/RopeShackle.prefab>) | Префаб Unity; Предметы, лут и инвентарь, Раковина с сундуком и парные рычаги |
+| [Assets/Resources/SeaEvents/SalvagedDeck0.asset](<../../Assets/Resources/SeaEvents/SalvagedDeck0.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |
+| [Assets/Resources/SeaEvents/SalvagedDeck1.asset](<../../Assets/Resources/SeaEvents/SalvagedDeck1.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |
+| [Assets/Resources/SeaEvents/SalvagedDeck2.asset](<../../Assets/Resources/SeaEvents/SalvagedDeck2.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |
+| [Assets/Resources/SeaEvents/SalvagedDeck3.asset](<../../Assets/Resources/SeaEvents/SalvagedDeck3.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |
+| [Assets/Resources/SeaEvents/SalvagedTimber.asset](<../../Assets/Resources/SeaEvents/SalvagedTimber.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |
+| [Assets/Resources/SeaEvents/SeaEventArt.asset](<../../Assets/Resources/SeaEvents/SeaEventArt.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |
+| [Assets/Resources/SeaEvents/ShackleGeometry0.asset](<../../Assets/Resources/SeaEvents/ShackleGeometry0.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |
+| [Assets/Resources/SeaEvents/SignalCanvas.mat](<../../Assets/Resources/SeaEvents/SignalCanvas.mat>) | Материал Unity; Предметы, лут и инвентарь |
+| [Assets/Resources/SeaEvents/StationGeometry0.asset](<../../Assets/Resources/SeaEvents/StationGeometry0.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |
+| [Assets/Resources/SeaEvents/StationGeometry1.asset](<../../Assets/Resources/SeaEvents/StationGeometry1.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |
+| [Assets/Resources/SeaEvents/StationGeometry2.asset](<../../Assets/Resources/SeaEvents/StationGeometry2.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |
+| [Assets/Resources/SeaEvents/StationGeometry3.asset](<../../Assets/Resources/SeaEvents/StationGeometry3.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |
+| [Assets/Resources/SeaEvents/StationGeometry4.asset](<../../Assets/Resources/SeaEvents/StationGeometry4.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |
+| [Assets/Resources/SeaEvents/StationGeometry5.asset](<../../Assets/Resources/SeaEvents/StationGeometry5.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |
+
 ## Assets/Resources/Ships
 
 | Файл | Краткое описание |
@@ -102,7 +158,7 @@
 | [Assets/Resources/Ships/ShipV3HarpoonPort.prefab](<../../Assets/Resources/Ships/ShipV3HarpoonPort.prefab>) | Префаб Unity; Гарпун и корабельное крепление |
 | [Assets/Resources/Ships/ShipV3HarpoonStarboard.prefab](<../../Assets/Resources/Ships/ShipV3HarpoonStarboard.prefab>) | Префаб Unity; Гарпун и корабельное крепление |
 | [Assets/Resources/Ships/ShipV3Menu.prefab](<../../Assets/Resources/Ships/ShipV3Menu.prefab>) | Префаб Unity; Паруса и канаты, Меню и HUD |
-| [Assets/Resources/Ships/ShipV3Test.prefab](<../../Assets/Resources/Ships/ShipV3Test.prefab>) | Префаб Unity; Проект и точки входа, Движение корабля и палуба, Предметы, лут и инвентарь, Тестовая карта и водоворот, Корабельная обезьянка, Корабельная слот-машина |
+| [Assets/Resources/Ships/ShipV3Test.prefab](<../../Assets/Resources/Ships/ShipV3Test.prefab>) | Префаб Unity; Проект и точки входа, Движение корабля и палуба, Паруса и канаты, Предметы, лут и инвентарь, Кракен и щупальца, Тестовая карта и водоворот, Корабельная обезьянка, Корабельная слот-машина, Раковина с сундуком и парные рычаги |
 
 ## Assets/Resources/Storm
 
@@ -154,7 +210,7 @@
 
 | Файл | Краткое описание |
 | --- | --- |
-| [Assets/Resources/Whale/WhaleLootPOI.prefab](<../../Assets/Resources/Whale/WhaleLootPOI.prefab>) | Префаб Unity |
+| [Assets/Resources/Whale/WhaleLootPOI.prefab](<../../Assets/Resources/Whale/WhaleLootPOI.prefab>) | Префаб Unity; Кит — точка интереса и сундук |
 
 ## Assets/Resources/World
 

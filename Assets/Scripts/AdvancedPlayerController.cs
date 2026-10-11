@@ -95,10 +95,13 @@ public partial class AdvancedPlayerController : MonoBehaviour
     float pitch, verticalVelocity, slideTimer, cooldown, lookYaw, bodyYaw;
     Vector2 aimRecoil;
     public float AimSensitivityScale { get; set; } = 1;
-    public Vector3 AimEuler => new Vector3(Mathf.Clamp(pitch-aimRecoil.x,-85,85),lookYaw+aimRecoil.y,0);
+    public Vector3 AimEuler => new Vector3(Mathf.Clamp(pitch-aimRecoil.x+interactionCameraPitch,-85,85),lookYaw+aimRecoil.y,0);
     public Vector3 AimDirection => Quaternion.Euler(AimEuler)*Vector3.forward;
     public void AddAimRecoil(float vertical,float horizontal) { if(local) aimRecoil+=new Vector2(vertical,horizontal); }
     float cameraHeight;
+    float interactionCameraPull, interactionCameraPitch;
+    int interactionCameraFrame=-1;
+    public void SetInteractionCameraPull(float amount) { interactionCameraPull=Mathf.Clamp(amount,-1f,1f); interactionCameraFrame=Time.frameCount; }
     Transform turningShip;
     float turningShipYaw;
     float jumpBuffer, groundGrace;
@@ -251,7 +254,7 @@ public partial class AdvancedPlayerController : MonoBehaviour
         if (kb.f1Key.wasPressedThisFrame && ActiveCannon == null && ActiveHarpoon == null && ActiveParrot == null && !BellPullLocked) SetThirdPerson(!IsThirdPerson);
         if (kb.escapeKey.wasPressedThisFrame) { pending.Release = true; SetCursor(false); }
         if (mouse != null && mouse.leftButton.wasPressedThisFrame && !PlayerInventory.LootWindowOpen && !PirateSlop.Networking.SessionController.MenuOpen) SetCursor(true);
-        if (InputActive && ActiveCannon == null && ActiveHarpoon == null && mouse != null && (lootNetwork == null || !lootNetwork.LootWorkLocked) && (shipControls == null || !shipControls.IsDragging)) { var d = mouse.delta.ReadValue() * mouseSensitivity * AimSensitivityScale; lookYaw = Mathf.Repeat(lookYaw + d.x, 360f); pitch = Mathf.Clamp(pitch - d.y, -85f, 85f); }
+        if (InputActive && !PirateSlop.WhalePlayerInteraction.InputCaptured && !ShipActivityLocked && ActiveCannon == null && ActiveHarpoon == null && mouse != null && (lootNetwork == null || !lootNetwork.LootWorkLocked) && (shipControls == null || !shipControls.IsDragging)) { var d = mouse.delta.ReadValue() * mouseSensitivity * AimSensitivityScale; lookYaw = Mathf.Repeat(lookYaw + d.x, 360f); pitch = Mathf.Clamp(pitch - d.y, -85f, 85f); }
         if (IsThirdPerson && mouse != null && (inventory == null || !inventory.PlacementActive))
         {
             float scroll = mouse.scroll.ReadValue().y;
@@ -292,7 +295,7 @@ public partial class AdvancedPlayerController : MonoBehaviour
         pending.Jump |= InputActive && kb.spaceKey.wasPressedThisFrame;
         if (shipV3Interaction == null) shipV3Interaction = GetComponent<PirateSlop.Ships.ShipV3PlayerInteraction>();
         var pumpInput = GetComponent<PirateSlop.Ships.ShipBilgePumpPlayer>();
-        if (shipV3Interaction != null && shipV3Interaction.ConsumedInput || pumpInput != null && pumpInput.ConsumedInput) pending.Use = false;
+        if (GetComponent<PirateSlop.BalanceStonePlayer>()?.BlocksInventory == true || shipV3Interaction != null && shipV3Interaction.ConsumedInput || pumpInput != null && pumpInput.ConsumedInput) pending.Use = false;
         else pending.Use |= InputActive && (kb.eKey.wasPressedThisFrame || kb.fKey.wasPressedThisFrame) && (IsSwimming || LocomotionLocked || inventory == null || !inventory.AimingAtPickup());
         pending.Release |= kb.qKey.wasPressedThisFrame || !InputActive;
         if (!networked) Simulate(ConsumeCommand(), Time.deltaTime);
@@ -333,6 +336,8 @@ public partial class AdvancedPlayerController : MonoBehaviour
             playerCamera.transform.SetPositionAndRotation(origin - cannon.Muzzle.forward * .35f + cannon.Muzzle.up * .42f, cannon.Muzzle.rotation);
             return;
         }
+        float interactionTarget=interactionCameraFrame==Time.frameCount && !IsDowned && !IsThirdPerson ? interactionCameraPull*6f : 0f;
+        interactionCameraPitch=Mathf.Lerp(interactionCameraPitch,interactionTarget,1f-Mathf.Exp(-10f*Time.deltaTime));
         var cameraAim = AimEuler;
         cameraAim.z = IsDowned ? 58f * Mathf.Clamp01(knockdownTime / .45f) : 0f;
         playerCamera.transform.rotation = Quaternion.Euler(cameraAim);
@@ -346,7 +351,7 @@ public partial class AdvancedPlayerController : MonoBehaviour
                 if (!hit.transform.IsChildOf(transform)) distance = Mathf.Min(distance, Mathf.Max(0, hit.distance - .05f));
             playerCamera.transform.position = pivot + direction * distance;
         }
-        else playerCamera.transform.position = pivot;
+        else playerCamera.transform.position = pivot-playerCamera.transform.up*(Mathf.Abs(interactionCameraPitch)*.003f);
     }
     public void SetThirdPerson(bool value)
     {
@@ -387,6 +392,12 @@ public partial class AdvancedPlayerController : MonoBehaviour
         if (IsDead || controller == null || !controller.enabled || !float.IsFinite(dt) || dt <= 0f) { jumpBuffer = groundGrace = 0f; return; }
         if (IsFrozen) { ClearFrozenMotion(); return; }
         if (!command.IsValid) command = default;
+        bool carryingStone = GetComponent<PirateSlop.Networking.NetworkWeapon>()?.CarryingBalanceStone == true;
+        if (carryingStone)
+        {
+            command.Sprint = command.Jump = command.Crouch = command.Slide = command.Use = command.Rise = false;
+            slideTimer = jumpBuffer = groundGrace = 0;
+        }
         bool downed = IsDowned;
         if (downed) command = new PlayerCommand { Yaw = transform.eulerAngles.y, Release = true };
         knockdownTime = Mathf.Max(0f, knockdownTime - dt);
@@ -415,7 +426,7 @@ public partial class AdvancedPlayerController : MonoBehaviour
         knockbackVelocity *= Mathf.Exp(-(IsSwimming ? 3f : downed && IsGrounded ? 4f : .65f) * dt);
         kickPushVelocity *= Mathf.Exp(-6f * dt);
         if (!downed && SimulateGrapple(command, dt)) { jumpBuffer = groundGrace = 0f; return; }
-        if (!IsKnockedBack && SimulateLadder(command, dt)) { jumpBuffer = groundGrace = 0f; return; }
+        if (!carryingStone && !IsKnockedBack && SimulateLadder(command, dt)) { jumpBuffer = groundGrace = 0f; return; }
         var ocean = OceanSurface.Instance;
         float water = ocean != null ? ocean.Height(transform.position) : float.NegativeInfinity;
         bool insideHull = PirateSlop.Ships.ShipWaterInterior.TryWaterHeight(transform.position, out float bilgeWater);
@@ -457,6 +468,7 @@ public partial class AdvancedPlayerController : MonoBehaviour
         var planar = IsSliding ? slideDirection * Mathf.Lerp(slideSpeed, crouchSpeed, slideProgress * slideProgress) : direction * Mathf.Lerp(command.Sprint ? sprintSpeed : walkSpeed, crouchSpeed, crouchBlend);
         if (command.Sprint && !crouched && !IsSliding && Upgrade(UpgradeEffect.LightBoots)) planar *= RoguelikeTuning.Current.runMultiplier;
         PlanarSpeed = planar.magnitude;
+        if (grounded && deckPassenger != null && deckPassenger.Support != null && deckPassenger.Support.TryGetComponent<PirateSlop.WhaleLootPoint>(out var whaleSupport)) planar += whaleSupport.SlipVelocity(command.Crouch);
         if (solidGround) airJumpUsed = false;
         if (grounded && verticalVelocity < 0) verticalVelocity = -2;
         if (jumpBuffer > 0f && groundGrace > 0f && !crouched && !IsKnockedBack)

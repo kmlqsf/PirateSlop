@@ -27,10 +27,17 @@ namespace PirateSlop
         string[] upgradeNames = Array.Empty<string>();
         bool catalogLoaded;
         GUIStyle descriptionStyle;
-        static readonly string[] tabs = { "Игрок", "Лут", "Корабль", "Мир", "Разрушение" };
+        static readonly string[] tabs = { "Игрок", "Лут", "Корабль", "Мир", "Разрушение", "Телепортация" };
+        static readonly string[] teleportCategories = { "Скалы", "Ивенты", "Острова" };
+        World.DeveloperTeleportDestination[] teleportDestinations = Array.Empty<World.DeveloperTeleportDestination>();
+        World.DeveloperTeleportDestination[] teleportOptions = Array.Empty<World.DeveloperTeleportDestination>();
+        string[] teleportNames = Array.Empty<string>();
+        int teleportCategory, teleportPlace;
+        bool teleportLoading;
         static readonly string[] quantityNames = { "1", "5", "20" };
         int lootEvent;
-        static readonly string[] lootEventNames = { "Зона захвата", "Плот с закрытым сундуком", "Подводный тайник", "Сундук со стаей акул", "Огненный череп" };
+        static readonly string[] lootEventNames = { "Зона захвата", "Плот с закрытым сундуком", "Подводный тайник", "Сундук со стаей акул", "Огненный череп", "Раковина с сундуком" };
+        static readonly SeaLootKind[] lootEventKinds = { SeaLootKind.Capture, SeaLootKind.Raft, SeaLootKind.Sunken, SeaLootKind.Shark, SeaLootKind.Skull, SeaLootKind.Clam };
         float zoneSpeedMultiplier = 1f;
         float shipSpeedPercent = 100f, nextShipSpeedSend;
         bool shipSpeedPending;
@@ -56,6 +63,7 @@ namespace PirateSlop
                 IsOpen = !IsOpen;
                 if (IsOpen)
                 {
+                    RequestTeleportPlaces();
                     if (!shipSpeedPending) shipSpeedPercent = SpeedShip != null ? SpeedShip.DeveloperSpeedMultiplier.Value * 100f : 100f;
                     if (!catalogLoaded)
                     {
@@ -85,7 +93,7 @@ namespace PirateSlop
             GUILayout.BeginArea(new Rect(20, 30, Mathf.Min(480, Screen.width - 40), Mathf.Min(760, Screen.height - 60)), "Инструменты разработчика · F8", GUI.skin.window);
             GUILayout.Space(25);
             if (network.IsServerInitialized) AllowRemote = GUILayout.Toggle(AllowRemote, "Разрешить команды другим игрокам");
-            int nextTab = GUILayout.Toolbar(tab, tabs, GUILayout.Height(30));
+            int nextTab = GUILayout.SelectionGrid(tab, tabs, 3, GUILayout.Height(64));
             if (nextTab != tab) { tab = nextTab; scroll = Vector2.zero; openList = -1; }
             GUILayout.Space(8);
             scroll = GUILayout.BeginScrollView(scroll);
@@ -243,7 +251,7 @@ namespace PirateSlop
                 if (GUILayout.Button("Создать ивент", GUILayout.Height(29)))
                 {
                     openList = -1;
-                    network.DeveloperCommand(23, lootEvent + 1);
+                    network.DeveloperCommand(23, (int)lootEventKinds[lootEvent]);
                 }
             }
             if (tab == 3)
@@ -286,6 +294,25 @@ namespace PirateSlop
                 GUI.enabled = true;
                 if (flooding != null) GUILayout.Label($"Затопление трюма: {flooding.Level * 100f:0}%");
                 else GUILayout.Label("Встаньте на корабль с трюмом.");
+            }
+            if (tab == 5)
+            {
+                int category = GUILayout.Toolbar(teleportCategory, teleportCategories, GUILayout.Height(30));
+                if (category != teleportCategory) { teleportCategory = category; teleportPlace = 0; openList = -1; FilterTeleportPlaces(); }
+                GUILayout.Space(8);
+                GUILayout.Label("Место назначения");
+                if (teleportOptions.Length > 0) Dropdown(4, teleportNames, ref teleportPlace);
+                else GUILayout.Label(teleportLoading ? "Загрузка мест…" : "В этой категории пока нет мест");
+                GUILayout.Space(8);
+                GUI.enabled = teleportOptions.Length > 0 && !teleportLoading;
+                if (GUILayout.Button("Телепорт", GUILayout.Height(34)))
+                {
+                    openList = -1;
+                    network.DeveloperTeleport(teleportOptions[teleportPlace].Key);
+                }
+                GUI.enabled = true;
+                GUILayout.Label("Корабль, игроки и груз переместятся на свободную воду рядом с выбранным местом.");
+                if (GUILayout.Button("Обновить список мест", GUILayout.Height(29))) RequestTeleportPlaces();
             }
             GUILayout.EndScrollView();
             GUILayout.Space(8);
@@ -334,5 +361,19 @@ namespace PirateSlop
             if (GUILayout.Button(label, GUILayout.Height(29))) network.DeveloperCommand(command);
         }
         public void Report(string value) => message = value;
+        void RequestTeleportPlaces() { teleportLoading = true; network.RequestDeveloperTeleportPlaces(); }
+        public void ReceiveTeleportPlaces(World.DeveloperTeleportDestination[] places)
+        {
+            teleportLoading = false;
+            teleportDestinations = places ?? Array.Empty<World.DeveloperTeleportDestination>();
+            FilterTeleportPlaces();
+        }
+        void FilterTeleportPlaces()
+        {
+            string key = teleportOptions.Length > teleportPlace ? teleportOptions[teleportPlace].Key : null;
+            teleportOptions = teleportDestinations.Where(p => p.Category == teleportCategory).ToArray();
+            teleportNames = teleportOptions.Select(p => p.Name).ToArray();
+            teleportPlace = Mathf.Max(0, Array.FindIndex(teleportOptions, p => p.Key == key));
+        }
     }
 }

@@ -96,8 +96,10 @@ namespace PirateSlop.Networking
             manager.ClientManager.RegisterBroadcast<UpgradeIdentityMessage>(ReceiveUpgradeIdentity);
             manager.ClientManager.RegisterBroadcast<StormMessage>(ReceiveStorm);
             manager.ClientManager.RegisterBroadcast<TestOceanMessage>(ReceiveTestOcean);
+            manager.ClientManager.RegisterBroadcast<WhirlpoolTentaclesMessage>(ReceiveWhirlpoolTentacles);
             manager.ClientManager.RegisterBroadcast<CombatRulesMessage>(ReceiveCombatRules);
             manager.ClientManager.RegisterBroadcast<SeagullFlockMessage>(ReceiveSeagulls);
+            manager.ClientManager.RegisterBroadcast<SeagullHitMessage>(ReceiveSeagullHit);
             manager.ServerManager.RegisterBroadcast<WorldReadyMessage>(WorldReady);
             var args = Environment.GetCommandLineArgs();
             dedicated = Has(args, "-server"); Automated = Has(args, "-autoclient");
@@ -206,7 +208,7 @@ namespace PirateSlop.Networking
                 ResetUpgrades();
                 upgradeCatalog = RoguelikeCatalog.Load();
                 Debug.Log($"SESSION_READY id={SessionId} port={transport.GetPort()} capacity={MaxPlayers}");
-                if (!EnvironmentTestActive) SeaLootSpawner.Spawn(ProceduralWorld.Instance, manager, Config.Loot);
+                SeaLootSpawner.Spawn(ProceduralWorld.Instance, manager, Config.Loot);
                 InitializeBotRoster();
                 if (steamSession) party.ServerReady();
                 if (dedicated) { connecting = false; status = "Сервер запущен"; }
@@ -284,6 +286,7 @@ namespace PirateSlop.Networking
             if (observerSession && manager.ClientManager.Connection != null && conn.ClientId == manager.ClientManager.Connection.ClientId)
             { StartObserver(); return; }
             SendTestOcean(conn);
+            SendWhirlpoolTentacles(conn);
             SendCombatRules(conn);
             SendSeagulls(conn);
             SpawnPlayer(conn, message.UpgradeToken);

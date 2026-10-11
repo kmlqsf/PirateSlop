@@ -185,6 +185,10 @@ namespace PirateSlop
             InteractionUsed = false; pickup = null; chest = null; aimedBall = null; aimedCannon = null; aimedHarpoon = null; valid = false;
             aimedRumShelf = null;
             if (preview != null) preview.SetActive(false);
+            if (PirateSlop.WhalePlayerInteraction.InputCaptured && motor.IsLocal) { InteractionUsed = true; return; }
+            if (GetComponent<PirateSlop.ClamPlayerInteraction>()?.ConsumedInput == true) { InteractionUsed = true; return; }
+            var balanceInput = GetComponent<BalanceStonePlayer>();
+            if (balanceInput != null && (balanceInput.ConsumedInput || balanceInput.BlocksInventory)) { if (lootWindow) CloseLoot(false); InteractionUsed = true; return; }
             if (RoguelikeUpgradeUI.BlocksInput) { InteractionUsed = true; return; }
             if (harpoonExitFrame == Time.frameCount)
             {

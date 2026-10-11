@@ -19,6 +19,17 @@ namespace PirateSlop.Networking
         Quaternion visualRotation;
         float nextSync, lastHold;
         public bool IsHeld => holder.Value >= 0;
+        public NetworkShip SupportingShip => IsServerInitialized ? ball.PlatformBody != null ? ball.PlatformBody.GetComponent<NetworkShip>() : null : platform.Value != null ? platform.Value.GetComponent<NetworkShip>() : null;
+        public void RefreshDeveloperShipPose(NetworkShip ship)
+        {
+            if (SupportingShip != ship || IsHeld) return;
+            visualPlatform = null;
+            var point = ship.transform.TransformPoint(position.Value);
+            var orientation = ship.transform.rotation * rotation.Value;
+            ball.Body.position = point; ball.Body.rotation = orientation;
+            transform.SetPositionAndRotation(point, orientation);
+            if (IsServerInitialized) { ball.AttachToPlatform(ship.Body); PublishPose(); }
+        }
         void Awake() { ball = GetComponent<Cannonball>(); }
         public override void OnStartServer()
         {

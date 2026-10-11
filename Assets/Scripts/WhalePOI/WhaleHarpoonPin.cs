@@ -1,111 +1,85 @@
 using UnityEngine;
-
+using PirateSlop.World;
 namespace PirateSlop
 {
-    [RequireComponent(typeof(Collider))]
     public sealed class WhaleHarpoonPin : MonoBehaviour
     {
         public WhaleLootPoint Owner;
-        public float PullDuration = 1.6f;
-        public Vector3 LocalPullDirection = Vector3.forward;
-        public float MaxPullDistance = 0.85f;
-
-        Vector3 initialLocalPosition;
-        Quaternion initialLocalRotation;
-        float progress;
-        bool isRemoved;
-        bool beingPulled;
-
-        public float Progress => progress;
-        public bool IsRemoved => isRemoved;
-
-        void Awake()
+        public int Index;
+        public Transform Grip;
+        public Transform RopeEye;
+        public Vector3 LocalOutward;
+        Vector3 restPosition;
+        Quaternion restRotation;
+        float rock, pull;
+        bool removed, splashed;
+        Collider hitbox;
+        public const float ReachDistance = 6f;
+        public bool IsRemoved => Owner != null && Owner.Work(Index).Removed;
+        public float Progress => Owner == null ? 0 : Owner.Work(Index).Strokes / 12f + Owner.Work(Index).Pull * .5f;
+        public Vector3 Outward => Owner.transform.TransformDirection(LocalOutward).normalized;
+        public Vector3 EmbeddedPoint => Owner.transform.TransformPoint(restPosition);
+        public Vector3 GripPoint => Grip != null ? Grip.position : transform.position;
+        public Vector3 RopePoint => RopeEye != null ? RopeEye.position : GripPoint;
+        public bool Aim(Ray ray, float distance, out float range)
         {
-            initialLocalPosition = transform.localPosition;
-            initialLocalRotation = transform.localRotation;
+            var start = transform.TransformPoint(Vector3.forward * .75f);
+            var shaft = transform.TransformPoint(Vector3.forward * 2.55f) - start;
+            var offset = ray.origin - start;
+            float projection = Vector3.Dot(ray.direction, shaft);
+            float denominator = shaft.sqrMagnitude - projection * projection;
+            float along = denominator > .0001f ? Mathf.Clamp01((Vector3.Dot(shaft, offset) - projection * Vector3.Dot(ray.direction, offset)) / denominator) : .5f;
+            var point = start + shaft * along;
+            range = Vector3.Dot(point - ray.origin, ray.direction);
+            return range >= 0 && range <= distance && (point - ray.GetPoint(range)).sqrMagnitude <= .38f * .38f;
         }
-
-        public void RegisterPullThisFrame()
+        public static Vector3 ReachOrigin(Networking.NetworkWeapon actor)
         {
-            if (isRemoved) return;
-            beingPulled = true;
-            if (Owner != null) Owner.NotifyPullStarted();
+            var motor = actor.GetComponent<AdvancedPlayerController>();
+            return actor.transform.position + Vector3.up * Mathf.Lerp(1.65f, .75f, motor.CrouchBlend);
         }
-
-        void Update()
+        public bool CanReach(Networking.NetworkWeapon actor) => CanReach(actor, out _);
+        public bool CanReach(Networking.NetworkWeapon actor, out string reason)
         {
-            if (isRemoved) return;
-
-            if (beingPulled)
+            reason = "Подойди ближе к гарпуну";
+            if (actor == null || Owner == null) return false;
+            var origin = ReachOrigin(actor);
+            var support = actor.GetComponent<ShipDeckPassenger>()?.Support;
+            bool onWhale = support != null && support.GetComponent<WhaleLootPoint>() == Owner;
+            for (int i = 0; i < 5; i++)
             {
-                progress += Time.deltaTime / Mathf.Max(0.1f, PullDuration);
-                Vector3 shake = Random.insideUnitSphere * (0.025f * progress);
-                transform.localPosition = initialLocalPosition + LocalPullDirection * (progress * MaxPullDistance) + shake;
-
-                if (progress >= 1f)
+                var target = transform.TransformPoint(Vector3.forward * (1f + i * .38f));
+                var delta = target - origin;
+                if (delta.sqrMagnitude > ReachDistance * ReachDistance) continue;
+                reason = "Гарпун закрыт препятствием — обойди его";
+                if (delta.sqrMagnitude < .01f) { reason = null; return true; }
+                bool blocked = false;
+                foreach (var hit in Physics.RaycastAll(origin, delta.normalized, delta.magnitude, ~0, QueryTriggerInteraction.Ignore))
                 {
-                    EjectHarpoon();
+                    if (hit.transform.IsChildOf(actor.transform) || hit.transform.IsChildOf(transform) || hit.collider.GetComponentInParent<AdvancedPlayerController>() != null) continue;
+                    if (onWhale && hit.collider.GetComponentInParent<WhaleLootPoint>() == Owner) continue;
+                    if (hit.distance < delta.magnitude - .12f) { blocked = true; break; }
                 }
+                if (!blocked) { reason = null; return true; }
             }
-            else
-            {
-                progress = Mathf.MoveTowards(progress, 0f, Time.deltaTime * 1.8f);
-                transform.localPosition = initialLocalPosition + LocalPullDirection * (progress * MaxPullDistance);
-            }
-
-            beingPulled = false;
+            return false;
         }
-
-        void EjectHarpoon()
+        void Awake() { restPosition = transform.localPosition; restRotation = transform.localRotation; hitbox = GetComponent<Collider>(); }
+        void LateUpdate()
         {
-            isRemoved = true;
-            progress = 1f;
-            transform.SetParent(null, true);
-
-            var rb = gameObject.AddComponent<Rigidbody>();
-            rb.mass = 25f;
-            rb.interpolation = RigidbodyInterpolation.Interpolate;
-
-            Vector3 throwDir = (-transform.forward + Vector3.up * 0.8f + Random.insideUnitSphere * 0.25f).normalized;
-            rb.AddForce(throwDir * 13f, ForceMode.Impulse);
-            rb.AddTorque(Random.insideUnitSphere * 16f, ForceMode.Impulse);
-
-            GameAudio.Play(SoundCue.BulletFlesh, transform.position);
-
-            if (Owner != null)
+            if (Owner == null || IsRemoved)
             {
-                Owner.OnHarpoonRemoved(this);
+                if (!removed && IsRemoved) { removed = true; hitbox.enabled = false; GameAudio.Play(SoundCue.BulletFlesh, transform.position); }
+                float surface = OceanSurface.Instance != null ? OceanSurface.Instance.Height(transform.position) : Owner != null ? Owner.SeaLevel : 0;
+                if (Owner != null && removed && !splashed && transform.position.y <= surface + .25f) { splashed = true; GameAudio.Play(SoundCue.WaterSplash, transform.position); }
+                return;
             }
-
-            var splashTracker = gameObject.AddComponent<HarpoonWaterImpact>();
-            splashTracker.Initialize(0f);
-        }
-    }
-
-    public sealed class HarpoonWaterImpact : MonoBehaviour
-    {
-        float waterHeight;
-        bool splashed;
-
-        public void Initialize(float surfaceHeight)
-        {
-            waterHeight = surfaceHeight;
-            Destroy(gameObject, 6f);
-        }
-
-        void Update()
-        {
-            if (!splashed && transform.position.y <= waterHeight + 0.2f)
-            {
-                splashed = true;
-                GameAudio.Play(SoundCue.WaterSplash, transform.position);
-                var rb = GetComponent<Rigidbody>();
-                if (rb != null)
-                {
-                    rb.linearDamping = 4f;
-                    rb.angularDamping = 3f;
-                }
-            }
+            var s = Owner.Work(Index);
+            rock = Mathf.Lerp(rock, s.Actor != null ? s.Rock : 0, 1 - Mathf.Exp(-16 * Time.deltaTime));
+            pull = Mathf.Lerp(pull, s.Pull, 1 - Mathf.Exp(-12 * Time.deltaTime));
+            transform.localPosition = restPosition + LocalOutward * (pull * 1.15f + s.Strokes * .018f);
+            transform.localRotation = Quaternion.AngleAxis(rock * (8 + s.Strokes * 1.3f), Vector3.up) * restRotation;
         }
     }
 }
+

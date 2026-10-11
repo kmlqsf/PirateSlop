@@ -131,6 +131,15 @@ namespace PirateSlop.Ships
             if (changed) Rebuild();
         }
 
+        public void PrepareDamageMesh()
+        {
+            if (runtimeMesh != null || CachedMesh == null || layout == null) return;
+            activeIndices ??= new List<int>(layout.Indices.Length);
+            runtimeMesh = Instantiate(CachedMesh);
+            runtimeMesh.name = "ShipV3DamagedBatch";
+            runtimeMesh.MarkDynamic();
+        }
+
         void Rebuild()
         {
             try

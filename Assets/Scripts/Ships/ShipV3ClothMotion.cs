@@ -56,10 +56,16 @@ namespace PirateSlop.Ships
                 pinMin = Mathf.Min(pinMin, coordinate); pinMax = Mathf.Max(pinMax, coordinate);
             }
             weights = new float[rest.Length];
+            var clothUV=mesh.uv;
             for (int i = 0; i < weights.Length; i++)
             {
                 float pin = Mathf.InverseLerp(pinMin, pinMax, Vector3.Dot(rest[i], pinAxis));
-                weights[i] = 1f - pin;
+                if(SailIndex>=0 && clothUV.Length==rest.Length)
+                {
+                    float height=SailIndex==4 ? 1f-clothUV[i].x : 1f;
+                    pin=height>.0001f ? Mathf.Clamp01(clothUV[i].y/height) : 0f;
+                }
+                weights[i] = SailIndex>=0 ? 4f*pin*(1f-pin) : 1f-pin;
             }
             if (skin != null)
             {

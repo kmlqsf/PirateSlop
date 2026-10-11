@@ -20,6 +20,7 @@ namespace PirateSlop.Networking
         public NetworkObject ActiveShip;
         public NetworkObject Platform;
         public Vector3 RelativePosition;
+        public uint TeleportRevision;
         uint tick;
         public uint GetTick() => tick;
         public void SetTick(uint value) => tick = value;
@@ -112,6 +113,7 @@ namespace PirateSlop.Networking
         }
         public override void OnStartNetwork()
         {
+            DeveloperTeleportRevision = 0;
             TimeManager.OnTick += Tick;
             TimeManager.OnPostTick += PostTick;
             TryBind();
@@ -297,7 +299,7 @@ namespace PirateSlop.Networking
         CaptainState BuildState()
         {
             var activeShip = ActiveShip ?? Ship;
-            var state = new CaptainState { Ship = activeShip != null ? activeShip.Motor.Capture() : default, Player = motor.Capture(), ActiveShip = activeShip != null ? activeShip.NetworkObject : null };
+            var state = new CaptainState { Ship = activeShip != null ? activeShip.Motor.Capture() : default, Player = motor.Capture(), ActiveShip = activeShip != null ? activeShip.NetworkObject : null, TeleportRevision = DeveloperTeleportRevision };
             if (passenger.Support != null)
             {
                 state.Platform = passenger.PlatformObject;
@@ -310,7 +312,8 @@ namespace PirateSlop.Networking
         {
             // The server already owns the authoritative transforms; the owning
             // client receives prediction reconciliation instead.
-            if (IsOwner || IsServerInitialized) return;
+            if (IsOwner || IsServerInitialized || state.TeleportRevision < DeveloperTeleportRevision) return;
+            if (state.TeleportRevision > DeveloperTeleportRevision) ApplyDeveloperTeleport(state.Player, state.Platform, state.TeleportRevision);
             observerState = state;
             hasObserverState = true;
             receivedSnapshots++;
@@ -388,6 +391,8 @@ namespace PirateSlop.Networking
         void Reconcile(CaptainState state, Channel channel = Channel.Unreliable)
         {
             if (motor.IsDead) return;
+            if (state.TeleportRevision < DeveloperTeleportRevision) return;
+            if (state.TeleportRevision > DeveloperTeleportRevision) { ApplyDeveloperTeleport(state.Player, state.Platform, state.TeleportRevision); return; }
             // Observers are driven exclusively by snapshots, never prediction replay.
             if (!IsOwner && !IsServerInitialized) return;
             if (!TryBind()) return;

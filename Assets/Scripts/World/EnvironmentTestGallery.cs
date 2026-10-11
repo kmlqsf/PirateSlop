@@ -15,6 +15,13 @@ namespace PirateSlop.World
 
         public static bool IsTest(WorldLayout layout) => layout != null && layout.Points.Exists(p => p.Tag == Marker);
 
+        public static Vector3 WhirlpoolCenter(WorldLayout layout)
+        {
+            foreach(var point in layout.Points)
+                if(point.Id=="test_ship_0") return new Vector3(point.Position.x,layout.SeaLevel,point.Position.z-550f);
+            throw new InvalidOperationException("Environment test ship spawn is missing.");
+        }
+
         public static WorldLayout CreateLayout(WorldProfile profile, float seaLevel)
         {
             var gallery = Resources.Load<EnvironmentTestGallery>(ResourcePath);
@@ -37,14 +44,11 @@ namespace PirateSlop.World
             Instantiate(ocean, parent);
             var sky = Resources.Load<GameObject>("EnvironmentTest/SkyDayNight");
             if (sky != null) Instantiate(sky, parent);
-            instance.transform.localPosition = Vector3.up * layout.SeaLevel; var wp = instance.gameObject.AddComponent<WhirlpoolTest>(); wp.Center = gallery.Spawn + new Vector3(0f, 0f, -550f); wp.Depth = OceanSurface.CentralWhirlpoolDepth;
-            var whalePrefab = Resources.Load<GameObject>("Whale/WhaleLootPOI");
-            if (whalePrefab != null)
-            {
-                var whale = Instantiate(whalePrefab, parent);
-                whale.transform.position = gallery.Spawn + new Vector3(140f, layout.SeaLevel - 4.5f, 160f);
-                whale.transform.rotation = Quaternion.Euler(0f, -30f, 0f);
-            }
+            instance.transform.localPosition = Vector3.up * layout.SeaLevel; var wp = instance.gameObject.AddComponent<WhirlpoolTest>(); wp.Center = WhirlpoolCenter(layout); wp.Depth = OceanSurface.CentralWhirlpoolDepth;
+            instance.gameObject.AddComponent<EnvironmentEventTestRow>().SeaLevel = layout.SeaLevel;
+            var tentacles = new GameObject("WhirlpoolTentacles");
+            tentacles.transform.SetParent(instance.transform,false);
+            tentacles.AddComponent<WhirlpoolTentacleRing>().Initialize(wp.Center,wp.Radius,wp.Depth,layout.SeaLevel,layout.Seed);
         }
 
         void OnGUI()

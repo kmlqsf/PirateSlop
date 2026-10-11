@@ -73,9 +73,10 @@
 | [Assets/Prefabs/Networking/HandMortarBall.prefab](<../../Assets/Prefabs/Networking/HandMortarBall.prefab>) | Префаб Unity; Личное оружие и урон |
 | [Assets/Prefabs/Networking/HandMortarPickup.prefab](<../../Assets/Prefabs/Networking/HandMortarPickup.prefab>) | Префаб Unity; Личное оружие и урон |
 | [Assets/Prefabs/Networking/LanternPickup.prefab](<../../Assets/Prefabs/Networking/LanternPickup.prefab>) | Префаб Unity; Предметы, лут и инвентарь |
+| [Assets/Prefabs/Networking/NetworkBalanceEvent.prefab](<../../Assets/Prefabs/Networking/NetworkBalanceEvent.prefab>) | Префаб Unity; Остров с весами и пятью камнями |
 | [Assets/Prefabs/Networking/NetworkFish.prefab](<../../Assets/Prefabs/Networking/NetworkFish.prefab>) | Префаб Unity |
 | [Assets/Prefabs/Networking/NetworkLootChest.prefab](<../../Assets/Prefabs/Networking/NetworkLootChest.prefab>) | Префаб Unity |
-| [Assets/Prefabs/Networking/NetworkPlayer.prefab](<../../Assets/Prefabs/Networking/NetworkPlayer.prefab>) | Префаб Unity; Проект и точки входа, Персонаж, камера и анимации, Корабельная слот-машина |
+| [Assets/Prefabs/Networking/NetworkPlayer.prefab](<../../Assets/Prefabs/Networking/NetworkPlayer.prefab>) | Префаб Unity; Проект и точки входа, Персонаж, камера и анимации, Корабельная слот-машина, Раковина с сундуком и парные рычаги, Остров с весами и пятью камнями |
 | [Assets/Prefabs/Networking/NetworkShip.prefab](<../../Assets/Prefabs/Networking/NetworkShip.prefab>) | Префаб Unity; Проект и точки входа, Движение корабля и палуба |
 | [Assets/Prefabs/Networking/NetworkSkullEvent.prefab](<../../Assets/Prefabs/Networking/NetworkSkullEvent.prefab>) | Префаб Unity; Предметы, лут и инвентарь |
 
@@ -155,6 +156,15 @@
 | [Assets/Prefabs/World/LocationExpansion/smuggler_cove_b.prefab](<../../Assets/Prefabs/World/LocationExpansion/smuggler_cove_b.prefab>) | Префаб Unity |
 | [Assets/Prefabs/World/LocationExpansion/wreck_island_a.prefab](<../../Assets/Prefabs/World/LocationExpansion/wreck_island_a.prefab>) | Префаб Unity |
 | [Assets/Prefabs/World/LocationExpansion/wreck_island_b.prefab](<../../Assets/Prefabs/World/LocationExpansion/wreck_island_b.prefab>) | Префаб Unity |
+
+## Assets/Prefabs/World/SandyIslands
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Prefabs/World/SandyIslands/BalanceSandyIsland.prefab](<../../Assets/Prefabs/World/SandyIslands/BalanceSandyIsland.prefab>) | Префаб Unity; Остров с весами и пятью камнями |
+| [Assets/Prefabs/World/SandyIslands/SingleLandingRockIsland.prefab](<../../Assets/Prefabs/World/SandyIslands/SingleLandingRockIsland.prefab>) | Префаб Unity; Мир, острова и океан, Тестовая карта и водоворот |
+| [Assets/Prefabs/World/SandyIslands/SmallSandyIsland.prefab](<../../Assets/Prefabs/World/SandyIslands/SmallSandyIsland.prefab>) | Префаб Unity; Мир, острова и океан, Тестовая карта и водоворот, Остров с весами и пятью камнями |
+| [Assets/Prefabs/World/SandyIslands/TwoLandingIsland.prefab](<../../Assets/Prefabs/World/SandyIslands/TwoLandingIsland.prefab>) | Префаб Unity; Мир, острова и океан, Тестовая карта и водоворот |
 
 ## Assets/Prefabs/World/StarterIsland
 

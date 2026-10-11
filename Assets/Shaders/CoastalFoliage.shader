@@ -9,6 +9,10 @@ Shader "PirateSlop/CoastalFoliage"
         _Cutoff ("Leaf cutoff", Range(0,1)) = .4
         _NormalScale ("Normal strength", Range(0,2)) = .5
         _LeafTintStrength ("Leaf colour balance", Range(0,1)) = 0
+        _WindStrength ("Wind displacement", Float) = 0
+        _WindHeight ("Plant height", Float) = 7
+        _WindRoot ("Plant root", Vector) = (0,0,0,0)
+        _WindPhase ("Wind phase", Float) = 0
     }
     SubShader
     {
@@ -23,6 +27,8 @@ Shader "PirateSlop/CoastalFoliage"
         CBUFFER_START(UnityPerMaterial)
             float4 _BaseMap_ST, _BaseColor;
             float _Cutoff, _NormalScale, _LeafTintStrength;
+            float4 _WindRoot;
+            float _WindStrength, _WindHeight, _WindPhase;
         CBUFFER_END
         struct Attributes
         {
@@ -48,12 +54,20 @@ Shader "PirateSlop/CoastalFoliage"
             UNITY_SETUP_INSTANCE_ID(input);
             UNITY_TRANSFER_INSTANCE_ID(input,output);
             VertexPositionInputs p = GetVertexPositionInputs(input.positionOS.xyz);
-            output.positionCS=p.positionCS;
+            float height=saturate((p.positionWS.y-_WindRoot.y)/max(_WindHeight,.3));
+            float wave=sin(_Time.y*1.05+_WindPhase)+.3*sin(_Time.y*1.73+_WindPhase*.7);
+            float flutter=sin(_Time.y*3.1+dot(p.positionWS.xz,float2(1.8,2.7)))*.12;
+            float bend=(wave+flutter*height*height)*height*height*_WindStrength;
+            float2 direction=float2(.92,.39);
+            p.positionWS.xz+=direction*bend;
+            output.positionCS=TransformWorldToHClip(p.positionWS);
             output.positionWS=p.positionWS;
             output.normalWS=TransformObjectToWorldNormal(input.normalOS);
+            output.normalWS.y-=dot(output.normalWS.xz,direction)*(2*height*wave*_WindStrength/max(_WindHeight,.3));
+            output.normalWS=normalize(output.normalWS);
             output.tangentWS=float4(TransformObjectToWorldDir(input.tangentOS.xyz),input.tangentOS.w*GetOddNegativeScale());
             output.uv=TRANSFORM_TEX(input.uv,_BaseMap);
-            output.fog=ComputeFogFactor(p.positionCS.z);
+            output.fog=ComputeFogFactor(output.positionCS.z);
             return output;
         }
         half4 LeafSample(float2 uv)

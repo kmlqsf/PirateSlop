@@ -27,6 +27,8 @@ namespace PirateSlop
         public float DrainDuration = 30f, WaterlineAllowance = 3.5f;
         public Vector4 FloodSecondsByHits = new(60f, 40f, 20f, 10f);
         public float Level { get; private set; }
+        public bool KrakenCatastrophe { get; private set; }
+        float catastropheElapsed, catastropheStartLevel;
         public bool UseBilgeFlooding;
         public float StrongHoleFillSeconds = 540f;
         public float ReferenceBreachArea = .35f, ReferencePressureHead = 1f;
@@ -87,7 +89,13 @@ namespace PirateSlop
         }
         public void Clear()
         {
+            KrakenCatastrophe = false; catastropheElapsed = catastropheStartLevel = 0f;
             breaches.Clear(); impacts.Clear(); impactId = 0; BreachRevision++; SetLevel(0f);
+        }
+        public void BeginKrakenCatastrophe()
+        {
+            if (KrakenCatastrophe) return;
+            KrakenCatastrophe = true; catastropheElapsed = 0f; catastropheStartLevel = Level;
         }
         public bool CanOpenBreach(Vector3 point)
         {
@@ -143,6 +151,12 @@ namespace PirateSlop
         }
         public float Simulate(float dt, ShipDestructionProfile profile)
         {
+            if (KrakenCatastrophe)
+            {
+                catastropheElapsed += Mathf.Max(0f, dt);
+                SetLevel(Mathf.Lerp(catastropheStartLevel, 1f, catastropheElapsed / 3f));
+                return Level;
+            }
             if (UseBilgeFlooding)
             {
                 if (dt <= 0f) return Level;
@@ -284,7 +298,7 @@ namespace PirateSlop
         }
         public void Pump(float seconds)
         {
-            if (UseBilgeFlooding && seconds > 0f) SetLevel(Level - StrongHoleRate * 3f * seconds);
+            if (!KrakenCatastrophe && UseBilgeFlooding && seconds > 0f) SetLevel(Level - StrongHoleRate * 3f * seconds);
         }
         public void SetLevel(float value)
         {
