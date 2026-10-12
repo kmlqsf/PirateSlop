@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6931783828273256401}
+  - component: {fileID: 1415679842389182631}
   m_Layer: 8
   m_Name: Bush
   m_TagString: Untagged
@@ -33,6 +34,22 @@ Transform:
   - {fileID: 7356247712357464450}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1415679842389182631
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2666337917895754982}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
+  Height: 0
+  Strength: 0.045
+  Phase: 0
+  SwayDegrees: 1.1
 --- !u!1 &5208324943448453610
 GameObject:
   m_ObjectHideFlags: 0

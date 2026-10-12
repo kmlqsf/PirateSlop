@@ -53,7 +53,7 @@ namespace PirateSlop.World
             }
             foreach (var chest in NetworkLootChest.ServerChests)
             {
-                if (chest == null || !chest.IsSpawned || chest.gameObject.scene != scene || chest.SupportingShip != null || chest.Carrier != null || chest.OnWhale || chest.InClam || chest.OnBalance) continue;
+                if (chest == null || !chest.IsSpawned || chest.gameObject.scene != scene || chest.SupportingShip != null || chest.Carrier != null || chest.OnWhale || chest.InClam || chest.OnBalance || chest.InRigging) continue;
                 string title = chest.Kind switch { SeaLootKind.Capture => "Захват зоны", SeaLootKind.Raft => "Плот", SeaLootKind.Sunken => "Подводный сундук", SeaLootKind.Shark => "Стая акул", _ => null };
                 if (title != null) Add(places, "chest/" + chest.NetworkObject.ObjectId, title + " · " + chest.NetworkObject.ObjectId, 1, chest.Kind == SeaLootKind.Raft && chest.RaftBody != null ? chest.RaftBody.position : chest.EventPoint, 0);
             }
@@ -63,6 +63,8 @@ namespace PirateSlop.World
                 if (clam != null && clam.IsSpawned && clam.gameObject.scene == scene) Add(places, "clam/" + clam.NetworkObject.ObjectId, "Раковина с сундуком · " + clam.NetworkObject.ObjectId, 1, clam.transform.position, clam.PlatformRadius);
             foreach (var balance in NetworkBalanceEvent.ServerEvents)
                 if (balance != null && balance.IsSpawned && balance.gameObject.scene == scene) Add(places, "balance/" + balance.NetworkObject.ObjectId, "Остров с весами · " + balance.NetworkObject.ObjectId, 1, balance.transform.position, 40);
+            foreach (var rigging in NetworkRiggingEvent.ServerEvents)
+                if (rigging != null && rigging.IsSpawned && rigging.gameObject.scene == scene) Add(places, "rigging/" + rigging.NetworkObject.ObjectId, "Сундук в такелаже · " + rigging.NetworkObject.ObjectId, 1, rigging.transform.position, rigging.PlatformRadius);
             foreach (var whale in UnityEngine.Object.FindObjectsByType<WhaleLootPoint>(FindObjectsSortMode.None))
                 if (whale.IsSpawned && whale.gameObject.scene == scene) Add(places, "whale/" + whale.NetworkObject.ObjectId, "Раненый кит · " + whale.NetworkObject.ObjectId, 1, whale.transform.position, 18);
             return places.OrderBy(p => p.Category).ThenBy(p => p.Name, StringComparer.Ordinal).ToArray();

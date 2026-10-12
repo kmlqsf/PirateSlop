@@ -6,7 +6,7 @@ namespace PirateSlop.World
 {
     public static class WorldStructureCollision
     {
-        public const int Revision = 3;
+        public const int Revision = 4;
         public static void Ensure(GameObject root)
         {
             var coastalRoots = new HashSet<Transform>();
@@ -27,7 +27,8 @@ namespace PirateSlop.World
                     if (parent == root.transform) break;
                 }
                 if (coastalManaged) continue;
-                if (filter.sharedMesh == null || filter.GetComponent<MeshRenderer>() == null ||
+                var renderer = filter.GetComponent<MeshRenderer>();
+                if (filter.sharedMesh == null || renderer == null || !renderer.enabled || !filter.gameObject.activeInHierarchy ||
                     filter.GetComponentInParent<CoastalRockVisual>() != null ||
                     filter.GetComponentInParent<ShipController>() != null || filter.GetComponentInParent<NetworkShip>() != null ||
                     filter.GetComponentInParent<CombatHealth>() != null || filter.GetComponentInParent<Rigidbody>() != null) continue;

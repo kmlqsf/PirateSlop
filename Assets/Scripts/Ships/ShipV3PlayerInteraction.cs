@@ -33,6 +33,7 @@ namespace PirateSlop.Ships
         {
             if (!player.IsOwner) return;
             if (GetComponent<ClamPlayerInteraction>()?.ConsumedInput == true) return;
+            if (GetComponent<RiggingPlayerInteraction>()?.ConsumedInput == true) return;
             var pumpInteraction = GetComponent<ShipBilgePumpPlayer>();
             if (pumpInteraction != null && (pumpInteraction.IsHolding || pumpInteraction.ConsumedInput)) return;
             var slotInteraction = GetComponent<ShipSlotMachinePlayer>();

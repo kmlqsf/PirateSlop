@@ -23,7 +23,7 @@ namespace PirateSlop.Networking
         public NetworkFish[] DropPrefabs;
         PlayerInventory inventory;
         PirateWeapon weapon;
-        void Awake() { weapon = GetComponent<PirateWeapon>(); inventory = GetComponent<PlayerInventory>(); if (GetComponent<WhalePlayerInteraction>() == null) gameObject.AddComponent<WhalePlayerInteraction>(); if (GetComponent<ClamPlayerInteraction>() == null) gameObject.AddComponent<ClamPlayerInteraction>(); }
+        void Awake() { weapon = GetComponent<PirateWeapon>(); inventory = GetComponent<PlayerInventory>(); if (GetComponent<WhalePlayerInteraction>() == null) gameObject.AddComponent<WhalePlayerInteraction>(); if (GetComponent<ClamPlayerInteraction>() == null) gameObject.AddComponent<ClamPlayerInteraction>(); if (GetComponent<RiggingPlayerInteraction>() == null) gameObject.AddComponent<RiggingPlayerInteraction>(); }
         public override void OnStartServer()
         {
             base.OnStartServer();
@@ -230,11 +230,19 @@ namespace PirateSlop.Networking
             if (!IsServerInitialized || target == null || LootHandsBusy || motor.IsDead || motor.IsClimbing || motor.LocomotionLocked || GetComponent<CannonHands>().HasHeldBall) return false;
             if (fishing != null && (fishing.CarryingCatch || fishing.IsFishing || fishing.IsEating)) return false;
             var chest = target.GetComponent<NetworkLootChest>();
-            if (chest == null || !chest.IsSpawned || !chest.Available || Vector3.Distance(transform.position, target.transform.position) > 5f) return false;
-            Vector3 origin = transform.position + Vector3.up * 1.5f;
-            Vector3 delta = target.transform.position + Vector3.up * .4f - origin;
-            foreach (var hit in Physics.RaycastAll(origin, delta.normalized, Mathf.Max(0f, delta.magnitude - .03f), ~0, QueryTriggerInteraction.Ignore))
-                if (!hit.transform.IsChildOf(transform) && !hit.transform.IsChildOf(target.transform)) return false;
+            if (chest == null || !chest.IsSpawned || !chest.Available) return false;
+            if(chest.OnWhale)
+            {
+                if(!chest.CanReachWhaleChest(this)) return false;
+            }
+            else
+            {
+                if(Vector3.Distance(transform.position,target.transform.position)>5f) return false;
+                Vector3 origin = transform.position + Vector3.up * 1.5f;
+                Vector3 delta = target.transform.position + Vector3.up * .4f - origin;
+                foreach (var hit in Physics.RaycastAll(origin, delta.normalized, Mathf.Max(0f, delta.magnitude - .03f), ~0, QueryTriggerInteraction.Ignore))
+                    if (!hit.transform.IsChildOf(transform) && !hit.transform.IsChildOf(target.transform)) return false;
+            }
             if (slot < 0)
             {
                 chest.Open(this);

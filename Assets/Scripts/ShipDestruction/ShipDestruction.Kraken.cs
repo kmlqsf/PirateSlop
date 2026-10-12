@@ -19,12 +19,14 @@ namespace PirateSlop
         }
         readonly List<KrakenBlock> krakenUpperHull = new();
         readonly List<KrakenBlock> krakenHullBlocks = new();
+        readonly List<KrakenBlock> krakenDeckBlocks = new();
         readonly Dictionary<int, Bounds> krakenBounds = new();
         readonly HashSet<int> krakenProtected = new();
         bool krakenGeometryReady;
         Coroutine krakenDamage, krakenPreparation;
         Bounds krakenHullBounds;
         bool krakenHullBoundsReady;
+        int whirlpoolStrikeSequence;
         public Bounds KrakenHullBounds
         {
             get
@@ -50,7 +52,7 @@ namespace PirateSlop
         IEnumerator PrepareKrakenGeometry()
         {
             krakenGeometryReady = false;
-            krakenBounds.Clear(); krakenUpperHull.Clear(); krakenHullBlocks.Clear();
+            krakenBounds.Clear(); krakenUpperHull.Clear(); krakenHullBlocks.Clear(); krakenDeckBlocks.Clear();
             var indices = new Dictionary<long, int>();
             var warming = new List<ShipDamageSection>();
             float upperHeight = Mathf.Max(Mathf.Lerp(flooding.EmptyHeight, flooding.FullHeight, .62f), ship.Motor.InitialDraft + .65f);
@@ -81,6 +83,23 @@ namespace PirateSlop
                         krakenUpperHull.Add(block); upperSection = true;
                     }
                 if (upperSection && section.LazyFragmentColliders) warming.Add(section);
+                if (definition.Type != ShipSectionType.Hull && definition.Type != ShipSectionType.Helm && definition.Type != ShipSectionType.Rudder && definition.Type != ShipSectionType.Capstan && section.HullSupports.Length == 0)
+                {
+                    for (int i=0;i<section.Fragments.Length;i++)
+                    {
+                        if ((section.ProtectedFragments&(1UL<<i))!=0) continue;
+                        var filter=section.Fragments[i].GetComponent<MeshFilter>();
+                        if (filter==null || filter.sharedMesh==null || filter.sharedMesh.vertexCount==0) continue;
+                        var bounds=filter.sharedMesh.bounds;
+                        var matrix=transform.worldToLocalMatrix*filter.transform.localToWorldMatrix;
+                        var e=bounds.extents;
+                        var local=new Bounds(matrix.MultiplyPoint3x4(bounds.center),new Vector3(
+                            Mathf.Abs(matrix.m00)*e.x+Mathf.Abs(matrix.m01)*e.y+Mathf.Abs(matrix.m02)*e.z,
+                            Mathf.Abs(matrix.m10)*e.x+Mathf.Abs(matrix.m11)*e.y+Mathf.Abs(matrix.m12)*e.z,
+                            Mathf.Abs(matrix.m20)*e.x+Mathf.Abs(matrix.m21)*e.y+Mathf.Abs(matrix.m22)*e.z)*2);
+                        if (local.center.y>flooding.FullHeight+.25f) krakenDeckBlocks.Add(new KrakenBlock { Section=section,Fragment=i,Bounds=local });
+                    }
+                }
                 if (++work % 24 == 0) yield return null;
             }
             foreach (var node in Profile.Structure)
@@ -121,6 +140,7 @@ namespace PirateSlop
         {
             if(!ready || !IsServerInitialized || ship.IsSinking || krakenDamage!=null) return;
             PrepareKrakenEncounter();
+            whirlpoolStrikeSequence++;
             krakenDamage=StartCoroutine(ApplyKrakenStrike(transform.InverseTransformPoint(point),1,true,lower));
         }
 
@@ -232,7 +252,27 @@ namespace PirateSlop
                 hull.Sort((a,b) => (krakenBounds[a].ClosestPoint(point)-point).sqrMagnitude.CompareTo((krakenBounds[b].ClosestPoint(point)-point).sqrMagnitude));
                 for (int i = 0; i < Mathf.Min(180,hull.Count); i++) masks[hull[i]] = sections[hull[i]].AllFragments;
             }
-            if(whirlpool) return masks;
+            if(whirlpool)
+            {
+                var deckRandom=new System.Random(unchecked(ObjectId*7919+whirlpoolStrikeSequence*104729));
+                var deck=new List<(KrakenBlock Block,float Score)>();
+                foreach(var block in krakenDeckBlocks)
+                {
+                    if(krakenProtected.Contains(block.Section.SectionId) || block.Section.State==ShipSectionState.Destroyed || (block.Section.RemovedFragments&(1UL<<block.Fragment))!=0) continue;
+                    deck.Add((block,(block.Bounds.ClosestPoint(point)-point).sqrMagnitude*.025f+(float)deckRandom.NextDouble()*8f));
+                }
+                deck.Sort((a,b)=>a.Score.CompareTo(b.Score));
+                int deckCount=deckRandom.Next(2,5),selected=0;
+                var damagedSections=new HashSet<int>();
+                foreach(var entry in deck)
+                {
+                    if(!damagedSections.Add(entry.Block.Section.SectionId)) continue;
+                    masks.TryGetValue(entry.Block.Section.SectionId,out ulong mask);
+                    masks[entry.Block.Section.SectionId]=mask|(1UL<<entry.Block.Fragment);
+                    if(++selected>=deckCount) break;
+                }
+                return masks;
+            }
             var random = new System.Random(unchecked(ObjectId*7919+wave*104729));
             var upper = new List<(int Id, float Score)>();
             float deckHeight = flooding.FullHeight+.17f;

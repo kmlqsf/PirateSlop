@@ -143,6 +143,7 @@
 | [Assets/Resources/SeaEvents/RaftGeometry2.asset](<../../Assets/Resources/SeaEvents/RaftGeometry2.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |
 | [Assets/Resources/SeaEvents/RaftGeometry3.asset](<../../Assets/Resources/SeaEvents/RaftGeometry3.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |
 | [Assets/Resources/SeaEvents/RaftGeometry4.asset](<../../Assets/Resources/SeaEvents/RaftGeometry4.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |
+| [Assets/Resources/SeaEvents/RiggingEvent.prefab](<../../Assets/Resources/SeaEvents/RiggingEvent.prefab>) | Префаб Unity; Сундук в такелаже |
 | [Assets/Resources/SeaEvents/RopeGrip.prefab](<../../Assets/Resources/SeaEvents/RopeGrip.prefab>) | Префаб Unity; Предметы, лут и инвентарь |
 | [Assets/Resources/SeaEvents/RopeShackle.prefab](<../../Assets/Resources/SeaEvents/RopeShackle.prefab>) | Префаб Unity; Предметы, лут и инвентарь, Раковина с сундуком и парные рычаги |
 | [Assets/Resources/SeaEvents/SalvagedDeck0.asset](<../../Assets/Resources/SeaEvents/SalvagedDeck0.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |

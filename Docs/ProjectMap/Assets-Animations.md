@@ -40,6 +40,7 @@
 
 | Файл | Краткое описание |
 | --- | --- |
+| [Assets/Animations/ShipMonkey/MonkeyIdleRelaxed.anim](<../../Assets/Animations/ShipMonkey/MonkeyIdleRelaxed.anim>) | Клип анимации; Корабельная обезьянка |
 | [Assets/Animations/ShipMonkey/ShipMonkey.controller](<../../Assets/Animations/ShipMonkey/ShipMonkey.controller>) | Контроллер анимации; Корабельная обезьянка |
 
 ## Assets/Animations/Whale

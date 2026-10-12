@@ -76,7 +76,7 @@ public class ShipDeckPassenger : MonoBehaviour
         Rigidbody nextShip = null;
         PirateSlop.BoardingWalkSurface nextBridge = null;
         if (Physics.SphereCast(transform.position + Vector3.up * .4f, .2f, Vector3.down, out var hit, .35f, ~0, QueryTriggerInteraction.Ignore) && hit.rigidbody != null &&
-            (hit.rigidbody.GetComponent<ShipController>() != null || hit.rigidbody.GetComponent<PirateSlop.Networking.RaftPlatform>() != null || hit.rigidbody.GetComponent<PirateSlop.WhaleLootPoint>() != null || hit.rigidbody.GetComponent<PirateSlop.Networking.NetworkClamEvent>() != null))
+            (hit.rigidbody.GetComponent<ShipController>() != null || hit.rigidbody.GetComponent<PirateSlop.Networking.RaftPlatform>() != null || hit.rigidbody.GetComponent<PirateSlop.WhaleLootPoint>() != null || hit.rigidbody.GetComponent<PirateSlop.Networking.NetworkClamEvent>() != null || hit.rigidbody.GetComponent<PirateSlop.Networking.NetworkRiggingEvent>() != null))
         { nextShip = hit.rigidbody; nextBridge = hit.collider.GetComponentInParent<PirateSlop.BoardingWalkSurface>(); }
         if (nextShip == null && Support != null && player != null)
         {
@@ -93,7 +93,7 @@ public class ShipDeckPassenger : MonoBehaviour
     {
         if (ship == null) return false;
         if (ship.TryGetComponent<ShipController>(out var motor)) { if (motor.IsFlooded) return false; }
-        else if (ship.GetComponent<PirateSlop.Networking.NetworkClamEvent>() == null && (!ship.TryGetComponent<PirateSlop.WhaleLootPoint>(out var whale) || whale.State == PirateSlop.WhalePOIState.Diving)) return false;
+        else if (ship.GetComponent<PirateSlop.Networking.NetworkClamEvent>() == null && ship.GetComponent<PirateSlop.Networking.NetworkRiggingEvent>() == null && (!ship.TryGetComponent<PirateSlop.WhaleLootPoint>(out var whale) || whale.State == PirateSlop.WhalePOIState.Diving)) return false;
         int count = Physics.SphereCastNonAlloc(transform.position + Vector3.up * .3f, .2f, Vector3.down,
             supportHits, .8f, ~0, QueryTriggerInteraction.Ignore);
         for (int i = 0; i < count; i++)

@@ -24,14 +24,14 @@
 
 | Файл | Краткое описание |
 | --- | --- |
-| [Assets/Settings/Loot/DefaultLoot.asset](<../../Assets/Settings/Loot/DefaultLoot.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь, Раковина с сундуком и парные рычаги, Остров с весами и пятью камнями |
+| [Assets/Settings/Loot/DefaultLoot.asset](<../../Assets/Settings/Loot/DefaultLoot.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь, Раковина с сундуком и парные рычаги, Остров с весами и пятью камнями, Сундук в такелаже |
 
 ## Assets/Settings/Networking
 
 | Файл | Краткое описание |
 | --- | --- |
-| [Assets/Settings/Networking/NetworkPrefabs.asset](<../../Assets/Settings/Networking/NetworkPrefabs.asset>) | Настройки или данные Unity; Раковина с сундуком и парные рычаги, Остров с весами и пятью камнями |
-| [Assets/Settings/Networking/SessionConfig.asset](<../../Assets/Settings/Networking/SessionConfig.asset>) | Настройки или данные Unity; Телепортация корабля через F8, Сеть, сессия и Steam |
+| [Assets/Settings/Networking/NetworkPrefabs.asset](<../../Assets/Settings/Networking/NetworkPrefabs.asset>) | Настройки или данные Unity; Раковина с сундуком и парные рычаги, Остров с весами и пятью камнями, Сундук в такелаже |
+| [Assets/Settings/Networking/SessionConfig.asset](<../../Assets/Settings/Networking/SessionConfig.asset>) | Настройки или данные Unity; Телепортация корабля через F8, Сеть, сессия и Steam, Сундук в такелаже |
 | [Assets/Settings/Networking/ShipObserver.asset](<../../Assets/Settings/Networking/ShipObserver.asset>) | Настройки или данные Unity |
 
 ## Assets/Settings/ShipDestruction

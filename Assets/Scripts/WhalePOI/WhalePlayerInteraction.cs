@@ -32,27 +32,32 @@ namespace PirateSlop
             InputCaptured = InputBlocked = selected != null;
             var mouse = Mouse.current; var camera = motor.PlayerCamera;
             if (mouse != null && !mouse.leftButton.isPressed) waitForRelease = false;
-            if (mouse == null || camera == null || !motor.InputActive || motor.IsDead) { Release(); InputBlocked = false; return; }
+            if (mouse == null || camera == null || motor.IsDead) { Release(); InputBlocked = false; return; }
+            if (!motor.InputActive && selected != null) Release();
             if (selected == null)
             {
                 var ray = new Ray(camera.transform.position, camera.transform.forward);
+                var origin = WhaleHarpoonPin.ReachOrigin(network);
                 float range = WhaleHarpoonPin.ReachDistance + Vector3.Distance(ray.origin, WhaleHarpoonPin.ReachOrigin(network)) + 2f;
-                float nearest = float.MaxValue;
+                float nearest = float.MaxValue, nearbyDistance = WhaleHarpoonPin.ReachDistance+2f;
                 foreach (var whale in WhaleLootPoint.Active)
                 {
-                    if (whale == null || !whale.IsSpawned || whale.gameObject.scene != gameObject.scene) continue;
+                    if (whale == null || !whale.IsSpawned) continue;
                     foreach (var pin in whale.Harpoons)
                     {
-                        if (pin == null || pin.IsRemoved || !pin.Aim(ray, range, out float distance) || distance >= nearest) continue;
+                        if (pin == null || pin.IsRemoved) continue;
+                        float proximity = pin.ShaftDistance(origin);
+                        if (proximity < nearbyDistance) { nearbyDistance = proximity; nearbyWhale = whale; }
+                        if (proximity > WhaleHarpoonPin.ReachDistance+2f || !pin.Aim(ray, range, out float distance) || distance >= nearest) continue;
                         nearest = distance; hovered = pin;
                     }
                 }
-                InputBlocked = hovered != null;
+                InputBlocked = motor.InputActive && hovered != null;
                 if (hovered != null)
                 {
                     nearbyWhale = hovered.Owner;
                     blockedReason = hovered.Owner.HarpoonBlockReason(network, hovered.Index);
-                    if (mouse.leftButton.isPressed && !waitForRelease)
+                    if (motor.InputActive && mouse.leftButton.isPressed && !waitForRelease)
                     {
                         if (blockedReason != null) { Notify(blockedReason); waitForRelease = true; }
                         else
@@ -97,9 +102,14 @@ namespace PirateSlop
             motor?.SetInteractionCameraPull(0);
         }
         void OnDisable() { if (network != null && localOwner) { Release(); InputBlocked = false; } }
+        bool ShowUI => network != null && network.IsOwner && motor != null && !motor.IsDead && !RoguelikeUpgradeUI.WindowOpen && !DeveloperMenu.IsOpen && !PlayerInventory.LootWindowOpen && !SessionController.MenuOpen;
+        void LateUpdate()
+        {
+            if (ShowUI && motor.InputActive && (selected!=null || hovered!=null || nearbyWhale!=null && !nearbyWhale.ChestUnlocked || !string.IsNullOrEmpty(message) && Time.unscaledTime < messageUntil)) ContextPrompt.Offer(Hint(),100);
+        }
         void OnGUI()
         {
-            if (network == null || !network.IsOwner || motor.IsDead || RoguelikeUpgradeUI.WindowOpen || DeveloperMenu.IsOpen || PlayerInventory.LootWindowOpen || SessionController.MenuOpen) return;
+            if (!ShowUI) return;
             var whale = nearbyWhale;
             var pin = selected != null ? selected : hovered;
             if (whale == null && (string.IsNullOrEmpty(message) || Time.unscaledTime >= messageUntil)) return;
@@ -109,24 +119,53 @@ namespace PirateSlop
                 if (whale.State == WhalePOIState.Agitated) status += $" · До погружения: {whale.RemainingTime:F0} с";
                 PirateHudStyle.Panel(new Rect(Screen.width * .5f - 340, 30, 680, 48), status);
             }
+            if (selected!=null && confirmed) DrawGuide();
+            if (!motor.InputActive) ContextPrompt.Draw(Hint());
+        }
+        string Hint()
+        {
+            var whale=nearbyWhale;
+            var pin=selected!=null ? selected : hovered;
             string hint = "Наведи прицел на выступающий стержень гарпуна\nЛКМ — удерживай и двигай мышью влево-вправо\nПосле ослабления тяни мышью вниз";
-            if (whale != null && whale.ChestUnlocked) hint = "Все три связки сняты — забери сундук";
+            if (whale != null && whale.ChestUnlocked) hint = "Сундук свободен\nНаведи прицел на сундук · E — открыть · F — забрать";
             if (pin != null && pin.Owner != null)
             {
                 var s = pin.Owner.Work(pin.Index);
                 if (selected == null) hint = blockedReason ?? "ЛКМ — удерживай, чтобы схватить гарпун\nМышь ← → — раскачивай до полного ослабления";
                 else if (!confirmed) hint = "Захватываем гарпун…";
-                else if (s.Strokes < 6) hint = $"Гарпун схвачен · Ослабление: {s.Strokes}/6\nЛКМ + мышь ← → — раскачивай до упора в обе стороны\nОтпусти ЛКМ — отпустить гарпун";
+                else if (s.Strokes < 6) hint = $"Гарпун схвачен · Ослабление: {s.Strokes}/6\nУдерживай ЛКМ · двигай мышь {(s.LastSide>0 ? "ВЛЕВО ←" : "ВПРАВО →")} до подсвеченного края\nОтпусти ЛКМ — отпустить гарпун";
                 else
                 {
                     hint = $"Гарпун ослаблен · Вытягивание: {s.Pull * 100f:F0}%\nЛКМ + мышь вниз — тяни гарпун на себя\nОтпусти ЛКМ — отпустить гарпун";
-                    if (Vector3.Dot((transform.position + Vector3.up - pin.EmbeddedPoint).normalized, pin.Outward) <= .2f) hint = "Гарпун ослаблен\nПодойди к выступающему концу со стороны края кита\nЛКМ + мышь вниз — тяни гарпун от кита";
                 }
-                PirateHudStyle.Bar(new Rect(Screen.width * .5f - 150, Screen.height * .5f + 72, 300, 10), pin.Progress, PirateHudStyle.Gold);
             }
             if (!string.IsNullOrEmpty(message) && Time.unscaledTime < messageUntil) hint = message + (waitForRelease ? "\nОтпусти ЛКМ и попробуй снова" : "");
-            if (motor.InputActive) ContextPrompt.Offer(hint, 100);
-            else ContextPrompt.Draw(hint);
+            return hint;
+        }
+        void DrawGuide()
+        {
+            var state=selected.Owner.Work(selected.Index);
+            var panel=new Rect(Screen.width*.5f-185,Screen.height*.5f+64,370,104);
+            PirateHudStyle.Brush(panel,PirateHudStyle.Ink);
+            var label=new Rect(panel.x+12,panel.y+8,panel.width-24,27);
+            var track=new Rect(panel.x+44,panel.y+49,panel.width-88,12);
+            if(state.Strokes<6)
+            {
+                bool left=state.LastSide>0;
+                PirateHudStyle.Label(label,left ? "← ДВИГАЙ МЫШЬ ВЛЕВО" : "ДВИГАЙ МЫШЬ ВПРАВО →",PirateHudStyle.Gold);
+                PirateHudStyle.Fill(track,PirateHudStyle.Muted);
+                float target=left ? track.x : track.xMax;
+                PirateHudStyle.Fill(new Rect(target-8,track.y-7,16,26),PirateHudStyle.Gold);
+                float cursor=Mathf.Lerp(track.x,track.xMax,(state.Rock+1)*.5f);
+                PirateHudStyle.Fill(new Rect(cursor-4,track.y-5,8,22),PirateHudStyle.Paper);
+                PirateHudStyle.Label(new Rect(panel.x+12,panel.y+76,panel.width-24,22),$"Раскачивание {state.Strokes}/6 · дойди до края, затем обратно",PirateHudStyle.Paper);
+            }
+            else
+            {
+                PirateHudStyle.Label(label,"↓ ТЯНИ МЫШЬ ВНИЗ, УДЕРЖИВАЯ ЛКМ",PirateHudStyle.Gold);
+                PirateHudStyle.Bar(track,state.Pull,PirateHudStyle.Gold);
+                PirateHudStyle.Label(new Rect(panel.x+12,panel.y+76,panel.width-24,22),$"Вытягивание {state.Pull*100:F0}%",PirateHudStyle.Paper);
+            }
         }
     }
 }

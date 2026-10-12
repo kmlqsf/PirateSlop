@@ -56,6 +56,7 @@ namespace PirateSlop.World
                 tentacle.Configure(null,i,unchecked(seed+18647));
                 tentacle.transform.localScale=Vector3.one*tentacle.transform.localScale.y;
                 tentacle.Animator.SetIdleMotion(3.2f);
+                tentacle.Animator.SetDirectionalStrikes(true);
                 tentacle.Animator.SetClockSource(()=>Clock);
                 tentacles[i]=tentacle;
                 previousTips[i]=tentacle.TipPosition;
@@ -189,7 +190,14 @@ namespace PirateSlop.World
             var local=ship.transform.InverseTransformPoint(tentacle.transform.position);
             var flood=ship.GetComponent<ShipFlooding>();
             float height=lower && flood!=null ? Mathf.Lerp(flood.EmptyHeight,flood.FullHeight,.25f) : 4.3f;
-            return ship.transform.TransformPoint(new Vector3(Mathf.Sign(local.x)*ship.HullHalfExtents.x*.9f,height,Mathf.Clamp(local.z,-8f,8f)));
+            float halfWidth=ship.HullHalfExtents.x*.9f,halfLength=ship.HullHalfExtents.y*.9f;
+            var point=new Vector3(Mathf.Clamp(local.x,-halfWidth,halfWidth),height,Mathf.Clamp(local.z,-halfLength,halfLength));
+            if(Mathf.Abs(local.x)<halfWidth && Mathf.Abs(local.z)<halfLength)
+            {
+                if(halfWidth-Mathf.Abs(local.x)<halfLength-Mathf.Abs(local.z)) point.x=(local.x<0 ? -1 : 1)*halfWidth;
+                else point.z=(local.z<0 ? -1 : 1)*halfLength;
+            }
+            return ship.transform.TransformPoint(point);
         }
 
         void LateUpdate()

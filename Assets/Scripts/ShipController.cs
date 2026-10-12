@@ -11,6 +11,10 @@ public class ShipController : MonoBehaviour
     Rigidbody rb;
     float speed, yaw, bank, waterHeight;
     float nextCollisionAudio, lastCollisionContact = -10f;
+    BoxCollider hullMotionProbe;
+    Vector3 hullMotionCenter, hullMotionExtents;
+    Collider[] hullOverlapHits = new Collider[512];
+    RaycastHit[] hullCastHits = new RaycastHit[512];
     [SerializeField] float pushImpulse = 450000f, pushLinearDrag = .55f, pushAngularDrag = .7f;
     [SerializeField] float impulseMass = 15000f, hullLength = 46f, hullWidth = 13f;
     public Vector2 HullFootprint => new Vector2(hullWidth, hullLength);
@@ -173,6 +177,18 @@ public class ShipController : MonoBehaviour
         buoyancy = new ShipBuoyancy(floatLength, floatWidth, HullFootprint);
         if (sailSystem == null) sailSystem = GetComponent<SailSystem>();
         if (helm == null) helm = GetComponentInChildren<HelmInteraction>();
+        var probe = new GameObject("HullMotionProbe");
+        probe.transform.SetParent(transform, false);
+        hullMotionProbe = probe.AddComponent<BoxCollider>();
+        hullMotionProbe.enabled = false;
+        hullMotionProbe.isTrigger = true;
+        var flooding = GetComponent<ShipFlooding>();
+        float bottom = flooding != null ? flooding.EmptyHeight : -1f;
+        float top = flooding != null ? flooding.FullHeight + .5f : 4f;
+        var footprint = networkShip != null ? networkShip.HullHalfExtents : HullFootprint * .5f;
+        hullMotionCenter = new Vector3(0, (bottom + top) * .5f, 0);
+        hullMotionExtents = new Vector3(footprint.x, (top - bottom) * .5f, footprint.y);
+        hullMotionProbe.size = hullMotionExtents * 2f;
     }
     float SampleWaterForBuoyancy(Vector3 position)
     {
@@ -304,18 +320,15 @@ public class ShipController : MonoBehaviour
         if (world != null && world.Ready && !world.CanSail(next, yaw))
         {
             bool canEscape=Time.time<manualPushUntil && world.SailingObstruction(next,yaw)<world.SailingObstruction(rb.position,yaw)-.001f;
-            if(canEscape)
+            if(!canEscape)
             {
-                if (vortexBoost && isAnchored) anchorPoint += next - rb.position;
-                motionVelocity=(next-rb.position)/Mathf.Max(.001f,dt);
-                rb.position=next; rb.rotation=rotation; transform.SetPositionAndRotation(next,rotation);
-                return;
+                float previousYaw = rb.rotation.eulerAngles.y;
+                if (!world.CanSail(rb.position, yaw)) { yaw = previousYaw; rotation = Quaternion.Euler(pitch + cannonTilt.x, yaw, bank + waveRoll + cannonTilt.y); }
+                next.x = rb.position.x; next.z = rb.position.z; speed = 0;
+                pushVelocity = Vector3.zero; pushYawVelocity = 0f;
             }
-            float previousYaw = rb.rotation.eulerAngles.y;
-            if (!world.CanSail(rb.position, yaw)) { yaw = previousYaw; rotation = Quaternion.Euler(pitch + cannonTilt.x, yaw, bank + waveRoll + cannonTilt.y); }
-            next.x = rb.position.x; next.z = rb.position.z; speed = 0;
-            pushVelocity = Vector3.zero; pushYawVelocity = 0f;
         }
+        ConstrainHullMotion(ref next, ref rotation);
         if (vortexBoost && isAnchored) anchorPoint += next - rb.position;
         motionVelocity=(next-rb.position)/Mathf.Max(.001f,dt);
         var rotationDelta=rotation*Quaternion.Inverse(rb.rotation);
@@ -324,6 +337,113 @@ public class ShipController : MonoBehaviour
         motionAngularVelocity=float.IsFinite(axis.sqrMagnitude) ? axis*(angle*Mathf.Deg2Rad/Mathf.Max(.001f,dt)) : Vector3.zero;
         if (Networked) { rb.position = next; rb.rotation = rotation; transform.SetPositionAndRotation(next, rotation); }
         else { rb.MoveRotation(rotation); rb.MovePosition(next); transform.SetPositionAndRotation(next, rotation); }
+    }
+    bool HullBlocker(Collider collider)
+    {
+        if (collider == null || !collider.enabled || collider.isTrigger || collider.attachedRigidbody == rb || collider.transform.IsChildOf(transform)) return false;
+        if (collider.GetComponentInParent<AdvancedPlayerController>() != null || collider.GetComponentInParent<PirateSlop.Networking.NetworkLootChest>() != null || collider.GetComponentInParent<PirateSlop.Networking.NetworkFish>() != null) return false;
+        return collider.attachedRigidbody == null || collider.attachedRigidbody.isKinematic;
+    }
+    int HullOverlaps(Vector3 position, Quaternion rotation)
+    {
+        int count;
+        while (true)
+        {
+            count = Physics.OverlapBoxNonAlloc(position + rotation * hullMotionCenter, hullMotionExtents, hullOverlapHits, rotation, ~0, QueryTriggerInteraction.Ignore);
+            if (count < hullOverlapHits.Length || hullOverlapHits.Length >= 4096) return count;
+            System.Array.Resize(ref hullOverlapHits, hullOverlapHits.Length * 2);
+        }
+    }
+    bool HullPenetration(Vector3 position, Quaternion rotation, Collider obstacle, out Vector3 direction, out float depth)
+    {
+        direction = Vector3.zero; depth = 0;
+        return HullBlocker(obstacle) && Physics.ComputePenetration(hullMotionProbe, position + rotation * hullMotionCenter, rotation, obstacle, obstacle.transform.position, obstacle.transform.rotation, out direction, out depth) && depth > .001f;
+    }
+    void ConstrainHullMotion(ref Vector3 next, ref Quaternion rotation)
+    {
+        Physics.SyncTransforms();
+        var start = rb.position;
+        var startRotation = rb.rotation;
+        var recovery = Vector3.zero;
+        Vector3 normal = Vector3.zero, contact = start;
+        bool collided = false;
+        for (int pass = 0; pass < 4; pass++)
+        {
+            bool moved = false;
+            int count = HullOverlaps(start, startRotation);
+            for (int i = 0; i < count; i++)
+            {
+                var obstacle = hullOverlapHits[i];
+                if (!HullPenetration(start, startRotation, obstacle, out var direction, out float depth)) continue;
+                var horizontal = Vector3.ProjectOnPlane(direction, Vector3.up);
+                float length = horizontal.magnitude;
+                if (length < .1f) continue;
+                normal = horizontal / length;
+                var correction = normal * (depth / length + .03f);
+                start += correction; recovery += correction;
+                contact = obstacle.ClosestPoint(start + startRotation * hullMotionCenter);
+                collided = moved = true;
+            }
+            if (!moved) break;
+        }
+        var destination = next + recovery;
+        var accepted = start;
+        var acceptedRotation = startRotation;
+        int steps = Mathf.Max(1, Mathf.CeilToInt(Mathf.Max(Vector3.Distance(start, destination) / .75f, Quaternion.Angle(startRotation, rotation) / 2f)));
+        for (int step = 1; step <= steps; step++)
+        {
+            var candidate = Vector3.Lerp(start, destination, step / (float)steps);
+            var candidateRotation = Quaternion.Slerp(startRotation, rotation, step / (float)steps);
+            var center = accepted + acceptedRotation * hullMotionCenter;
+            var movement = candidate + acceptedRotation * hullMotionCenter - center;
+            float distance = movement.magnitude, allowed = distance;
+            bool blocked = false;
+            if (distance > .0001f)
+            {
+                int count;
+                while (true)
+                {
+                    count = Physics.BoxCastNonAlloc(center, hullMotionExtents, movement / distance, hullCastHits, acceptedRotation, distance + .03f, ~0, QueryTriggerInteraction.Ignore);
+                    if (count < hullCastHits.Length || hullCastHits.Length >= 4096) break;
+                    System.Array.Resize(ref hullCastHits, hullCastHits.Length * 2);
+                }
+                for (int i = 0; i < count; i++)
+                {
+                    var hit = hullCastHits[i];
+                    if (!HullBlocker(hit.collider) || Vector3.Dot(movement, hit.normal) >= -.0001f || hit.distance > allowed + .03f) continue;
+                    allowed = Mathf.Max(0, hit.distance - .03f);
+                    normal = hit.normal; contact = hit.point; blocked = true;
+                }
+                if (blocked)
+                {
+                    accepted += movement * Mathf.Clamp01(allowed / distance);
+                    collided = true;
+                    break;
+                }
+            }
+            int overlaps = HullOverlaps(candidate, candidateRotation);
+            for (int i = 0; i < overlaps; i++)
+            {
+                var obstacle = hullOverlapHits[i];
+                if (!HullPenetration(candidate, candidateRotation, obstacle, out var direction, out _)) continue;
+                normal = direction; contact = obstacle.ClosestPoint(candidate + candidateRotation * hullMotionCenter);
+                blocked = true; break;
+            }
+            if (blocked) { collided = true; break; }
+            accepted = candidate; acceptedRotation = candidateRotation;
+        }
+        next = accepted; rotation = acceptedRotation;
+        if (!collided) return;
+        RegisterCollision(normal * .03f, contact, true, Mathf.Clamp01(Mathf.Abs(speed) / Mathf.Max(1f, maxSpeed)));
+        speed = 0; pushYawVelocity = 0;
+        var horizontalNormal = Vector3.ProjectOnPlane(normal, Vector3.up).normalized;
+        float inward = Vector3.Dot(pushVelocity, horizontalNormal);
+        if (inward < 0) pushVelocity -= horizontalNormal * inward;
+        inward = Vector3.Dot(cannonShove, horizontalNormal);
+        if (inward < 0) cannonShove -= horizontalNormal * inward;
+        var angles = rotation.eulerAngles;
+        yaw = angles.y; pitch = Mathf.DeltaAngle(0, angles.x) - cannonTilt.x;
+        waveRoll = Mathf.DeltaAngle(0, angles.z) - bank - cannonTilt.y;
     }
     public ShipState Capture() => new ShipState { Position = rb.position, Yaw = yaw, Speed = speed, Bank = bank, Pitch = pitch + cannonTilt.x, WaveRoll = waveRoll + cannonTilt.y, WaveTime = OceanSurface.Instance != null ? OceanSurface.Instance.WaveTime : Time.time, Sail = sailSystem.DeployPercentage, Rudder = helm.CurrentRudderNormalized, Controlling = helm.IsControlling };
     public void Restore(ShipState s, AdvancedPlayerController driver, Vector3? relocatedAnchor = null)
@@ -360,6 +480,14 @@ public class ShipController : MonoBehaviour
             float inward = Vector3.Dot(pushVelocity, normal);
             if (inward < 0f) pushVelocity -= normal * inward;
         }
+        RegisterCollision(displacement, contact, showEffect, impactStrength);
+        var position = rb.position + displacement; position.y = rb.position.y;
+        rb.position = position;
+        transform.position = position;
+        speed *= .35f;
+    }
+    void RegisterCollision(Vector3 displacement, Vector3? contact, bool showEffect, float impactStrength)
+    {
         if (Time.time >= nextCollisionAudio && Time.time - lastCollisionContact > .75f && displacement.sqrMagnitude > .00001f)
         {
             var network = GetComponent<PirateSlop.Networking.NetworkShip>();
@@ -370,9 +498,5 @@ public class ShipController : MonoBehaviour
             nextCollisionAudio = Time.time + 2f;
         }
         if (displacement.sqrMagnitude > .00001f) lastCollisionContact = Time.time;
-        var position = rb.position + displacement; position.y = rb.position.y;
-        rb.position = position;
-        transform.position = position;
-        speed *= .35f;
     }
 }
