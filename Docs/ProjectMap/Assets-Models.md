@@ -7374,6 +7374,60 @@
 | [Assets/Models/SlotMachine/Textures/Reel_normal.png](<../../Assets/Models/SlotMachine/Textures/Reel_normal.png>) | Изображение / текстура |
 | [Assets/Models/SlotMachine/Textures/Reel_roughness.jpeg](<../../Assets/Models/SlotMachine/Textures/Reel_roughness.jpeg>) | Изображение / текстура |
 
+## Assets/Models/Weapons/FireStaff
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/Weapons/FireStaff/BaseColor.jpg](<../../Assets/Models/Weapons/FireStaff/BaseColor.jpg>) | Изображение / текстура |
+| [Assets/Models/Weapons/FireStaff/FireStaff.fbx](<../../Assets/Models/Weapons/FireStaff/FireStaff.fbx>) | Модель / анимации FBX; Личное оружие и урон |
+| [Assets/Models/Weapons/FireStaff/FireStaff.mat](<../../Assets/Models/Weapons/FireStaff/FireStaff.mat>) | Материал Unity; Личное оружие и урон |
+| [Assets/Models/Weapons/FireStaff/MetalSmooth.png](<../../Assets/Models/Weapons/FireStaff/MetalSmooth.png>) | Изображение / текстура |
+| [Assets/Models/Weapons/FireStaff/Metallic.jpg](<../../Assets/Models/Weapons/FireStaff/Metallic.jpg>) | Изображение / текстура |
+| [Assets/Models/Weapons/FireStaff/Normal.png](<../../Assets/Models/Weapons/FireStaff/Normal.png>) | Изображение / текстура |
+| [Assets/Models/Weapons/FireStaff/Roughness.jpg](<../../Assets/Models/Weapons/FireStaff/Roughness.jpg>) | Изображение / текстура |
+
+## Assets/Models/Weapons/FireStaff/FireStaff.fbm
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/Weapons/FireStaff/FireStaff.fbm/огненный_посохl_rm.JPEG](<../../Assets/Models/Weapons/FireStaff/FireStaff.fbm/огненный_посохl_rm.JPEG>) | Изображение / текстура |
+
+## Assets/Models/Weapons/IceStaff
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/Weapons/IceStaff/BaseColor.jpg](<../../Assets/Models/Weapons/IceStaff/BaseColor.jpg>) | Изображение / текстура |
+| [Assets/Models/Weapons/IceStaff/IceStaff.fbx](<../../Assets/Models/Weapons/IceStaff/IceStaff.fbx>) | Модель / анимации FBX; Личное оружие и урон |
+| [Assets/Models/Weapons/IceStaff/IceStaff.mat](<../../Assets/Models/Weapons/IceStaff/IceStaff.mat>) | Материал Unity; Личное оружие и урон |
+| [Assets/Models/Weapons/IceStaff/MetalSmooth.png](<../../Assets/Models/Weapons/IceStaff/MetalSmooth.png>) | Изображение / текстура |
+| [Assets/Models/Weapons/IceStaff/Metallic.jpg](<../../Assets/Models/Weapons/IceStaff/Metallic.jpg>) | Изображение / текстура |
+| [Assets/Models/Weapons/IceStaff/Normal.png](<../../Assets/Models/Weapons/IceStaff/Normal.png>) | Изображение / текстура |
+| [Assets/Models/Weapons/IceStaff/Roughness.jpg](<../../Assets/Models/Weapons/IceStaff/Roughness.jpg>) | Изображение / текстура |
+
+## Assets/Models/Weapons/IceStaff/IceStaff.fbm
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/Weapons/IceStaff/IceStaff.fbm/морозный_посох_rm.JPEG](<../../Assets/Models/Weapons/IceStaff/IceStaff.fbm/морозный_посох_rm.JPEG>) | Изображение / текстура |
+
+## Assets/Models/Weapons/LightningStaff
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/Weapons/LightningStaff/BaseColor.jpg](<../../Assets/Models/Weapons/LightningStaff/BaseColor.jpg>) | Изображение / текстура |
+| [Assets/Models/Weapons/LightningStaff/LightningStaff.fbx](<../../Assets/Models/Weapons/LightningStaff/LightningStaff.fbx>) | Модель / анимации FBX; Личное оружие и урон |
+| [Assets/Models/Weapons/LightningStaff/LightningStaff.mat](<../../Assets/Models/Weapons/LightningStaff/LightningStaff.mat>) | Материал Unity; Личное оружие и урон |
+| [Assets/Models/Weapons/LightningStaff/MetalSmooth.png](<../../Assets/Models/Weapons/LightningStaff/MetalSmooth.png>) | Изображение / текстура |
+| [Assets/Models/Weapons/LightningStaff/Metallic.jpg](<../../Assets/Models/Weapons/LightningStaff/Metallic.jpg>) | Изображение / текстура |
+| [Assets/Models/Weapons/LightningStaff/Normal.png](<../../Assets/Models/Weapons/LightningStaff/Normal.png>) | Изображение / текстура |
+| [Assets/Models/Weapons/LightningStaff/Roughness.jpg](<../../Assets/Models/Weapons/LightningStaff/Roughness.jpg>) | Изображение / текстура |
+
+## Assets/Models/Weapons/LightningStaff/LightningStaff.fbm
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/Weapons/LightningStaff/LightningStaff.fbm/электро_посох_rm.JPEG](<../../Assets/Models/Weapons/LightningStaff/LightningStaff.fbm/электро_посох_rm.JPEG>) | Изображение / текстура |
+
 ## Assets/Models/Whale
 
 | Файл | Краткое описание |

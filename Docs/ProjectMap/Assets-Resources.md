@@ -21,6 +21,7 @@
 | [Assets/Resources/CombatParticles.mat](<../../Assets/Resources/CombatParticles.mat>) | Материал Unity |
 | [Assets/Resources/FirearmGlow.mat](<../../Assets/Resources/FirearmGlow.mat>) | Материал Unity |
 | [Assets/Resources/FirearmGlow.shader](<../../Assets/Resources/FirearmGlow.shader>) | Шейдер |
+| [Assets/Resources/FrozenWaterIce.shader](<../../Assets/Resources/FrozenWaterIce.shader>) | Шейдер; Личное оружие и урон |
 | [Assets/Resources/GameAudioBank.asset](<../../Assets/Resources/GameAudioBank.asset>) | Настройки или данные Unity; Чайки и фоновые стаи, Звуки и голос, Шторм, зона, дождь и объёмный туман, Корабельная слот-машина |
 | [Assets/Resources/GeneratedGameVersion.txt](<../../Assets/Resources/GeneratedGameVersion.txt>) | Текстовые данные |
 | [Assets/Resources/GrappleHookModel.prefab](<../../Assets/Resources/GrappleHookModel.prefab>) | Префаб Unity |
@@ -33,6 +34,8 @@
 | [Assets/Resources/KrakenTentacle.prefab](<../../Assets/Resources/KrakenTentacle.prefab>) | Префаб Unity; Кракен и щупальца |
 | [Assets/Resources/LootEventBeam.shader](<../../Assets/Resources/LootEventBeam.shader>) | Шейдер; Предметы, лут и инвентарь |
 | [Assets/Resources/ParticleSoft.asset](<../../Assets/Resources/ParticleSoft.asset>) | Настройки или данные Unity |
+| [Assets/Resources/PerformanceTestRunInfo.json](<../../Assets/Resources/PerformanceTestRunInfo.json>) | Конфигурация / данные JSON |
+| [Assets/Resources/PerformanceTestRunSettings.json](<../../Assets/Resources/PerformanceTestRunSettings.json>) | Конфигурация / данные JSON |
 | [Assets/Resources/SabreCut.mat](<../../Assets/Resources/SabreCut.mat>) | Материал Unity; Личное оружие и урон |
 | [Assets/Resources/SabreCut.shader](<../../Assets/Resources/SabreCut.shader>) | Шейдер; Личное оружие и урон |
 | [Assets/Resources/SabreWoodChip.mat](<../../Assets/Resources/SabreWoodChip.mat>) | Материал Unity; Личное оружие и урон |
@@ -42,6 +45,12 @@
 | [Assets/Resources/SharkVisual.prefab](<../../Assets/Resources/SharkVisual.prefab>) | Префаб Unity; Предметы, лут и инвентарь |
 | [Assets/Resources/ShipFire.shader](<../../Assets/Resources/ShipFire.shader>) | Шейдер; Пушки, ядра и лафеты |
 | [Assets/Resources/SkullFire.shader](<../../Assets/Resources/SkullFire.shader>) | Шейдер; Предметы, лут и инвентарь |
+| [Assets/Resources/StaffCore.shader](<../../Assets/Resources/StaffCore.shader>) | Шейдер; Личное оружие и урон |
+| [Assets/Resources/StaffEnergy.shader](<../../Assets/Resources/StaffEnergy.shader>) | Шейдер; Личное оружие и урон |
+| [Assets/Resources/StaffFlameShell.shader](<../../Assets/Resources/StaffFlameShell.shader>) | Шейдер; Личное оружие и урон |
+| [Assets/Resources/StaffGround.shader](<../../Assets/Resources/StaffGround.shader>) | Шейдер; Личное оружие и урон |
+| [Assets/Resources/StaffHeldCrystal.shader](<../../Assets/Resources/StaffHeldCrystal.shader>) | Шейдер; Личное оружие и урон |
+| [Assets/Resources/StaffLightning.shader](<../../Assets/Resources/StaffLightning.shader>) | Шейдер; Личное оружие и урон |
 | [Assets/Resources/StormRain.shader](<../../Assets/Resources/StormRain.shader>) | Шейдер |
 | [Assets/Resources/StormWall.mat](<../../Assets/Resources/StormWall.mat>) | Материал Unity |
 | [Assets/Resources/StormWeather.shader](<../../Assets/Resources/StormWeather.shader>) | Шейдер |

@@ -38,6 +38,7 @@
 | [Assets/Scripts/Audio/PirateVoiceChat.cs](<../../Assets/Scripts/Audio/PirateVoiceChat.cs>) | Исходник C#: PirateVoiceChat; Звуки и голос |
 | [Assets/Scripts/Audio/PirateVoiceInputFilter.cs](<../../Assets/Scripts/Audio/PirateVoiceInputFilter.cs>) | Исходник C#: PirateVoiceInputFilter; Звуки и голос |
 | [Assets/Scripts/Audio/SpatialAudioTone.cs](<../../Assets/Scripts/Audio/SpatialAudioTone.cs>) | Исходник C#: SpatialAudioTone; Движение корабля и палуба, Звуки и голос |
+| [Assets/Scripts/Audio/StaffAudio.cs](<../../Assets/Scripts/Audio/StaffAudio.cs>) | Исходник C#: StaffAudio; Личное оружие и урон |
 
 ## Assets/Scripts/Cannons
 
@@ -108,6 +109,7 @@
 | [Assets/Scripts/Editor/FocusedInspector.cs](<../../Assets/Scripts/Editor/FocusedInspector.cs>) | Исходник C#: FocusedInspector, Report; Инспектор объектов Unity |
 | [Assets/Scripts/Editor/FocusedInspectorWindow.cs](<../../Assets/Scripts/Editor/FocusedInspectorWindow.cs>) | Исходник C#: FocusedInspectorWindow; Инспектор объектов Unity |
 | [Assets/Scripts/Editor/FogBottleSetup.cs](<../../Assets/Scripts/Editor/FogBottleSetup.cs>) | Исходник C#: FogBottleSetup; Предметы, лут и инвентарь |
+| [Assets/Scripts/Editor/FrozenWaterPreview.cs](<../../Assets/Scripts/Editor/FrozenWaterPreview.cs>) | Исходник C#: FrozenWaterPreview; Личное оружие и урон |
 | [Assets/Scripts/Editor/GameVersionStamp.cs](<../../Assets/Scripts/Editor/GameVersionStamp.cs>) | Исходник C#: GameVersionStamp |
 | [Assets/Scripts/Editor/GameplayDiagnostics.cs](<../../Assets/Scripts/Editor/GameplayDiagnostics.cs>) | Исходник C#: GameplayDiagnostics |
 | [Assets/Scripts/Editor/GameplayImprovementsSetup.cs](<../../Assets/Scripts/Editor/GameplayImprovementsSetup.cs>) | Исходник C#: GameplayImprovementsSetup |
@@ -177,6 +179,9 @@
 | [Assets/Scripts/Editor/ShipWoodFractureSetup.cs](<../../Assets/Scripts/Editor/ShipWoodFractureSetup.cs>) | Исходник C#: ShipWoodFractureSetup |
 | [Assets/Scripts/Editor/SkullEventSetup.cs](<../../Assets/Scripts/Editor/SkullEventSetup.cs>) | Исходник C#: SkullEventSetup; Предметы, лут и инвентарь |
 | [Assets/Scripts/Editor/SpyglassSetup.cs](<../../Assets/Scripts/Editor/SpyglassSetup.cs>) | Исходник C#: SpyglassSetup; Предметы, лут и инвентарь |
+| [Assets/Scripts/Editor/StaffCastingPreview.cs](<../../Assets/Scripts/Editor/StaffCastingPreview.cs>) | Исходник C#: StaffCastingPreview; Личное оружие и урон |
+| [Assets/Scripts/Editor/StaffSetup.cs](<../../Assets/Scripts/Editor/StaffSetup.cs>) | Исходник C#: StaffSetup; Личное оружие и урон |
+| [Assets/Scripts/Editor/StaffVfxPreview.cs](<../../Assets/Scripts/Editor/StaffVfxPreview.cs>) | Исходник C#: StaffVfxPreview; Личное оружие и урон |
 | [Assets/Scripts/Editor/StarterIslandSetup.cs](<../../Assets/Scripts/Editor/StarterIslandSetup.cs>) | Исходник C#: StarterIslandSetup |
 | [Assets/Scripts/Editor/SteamTestBuild.cs](<../../Assets/Scripts/Editor/SteamTestBuild.cs>) | Исходник C#: SteamTestBuild; Мир, острова и океан, Сеть, сессия и Steam, Тестовая карта и водоворот |
 | [Assets/Scripts/Editor/SternCargoEventSetup.cs](<../../Assets/Scripts/Editor/SternCargoEventSetup.cs>) | Исходник C#: SternCargoEventSetup; Груз за кормой |
@@ -306,8 +311,11 @@
 | [Assets/Scripts/Networking/NetworkDeveloperTeleport.cs](<../../Assets/Scripts/Networking/NetworkDeveloperTeleport.cs>) | Исходник C#: NetworkWeapon, NetworkShip, NetworkPlayer; Телепортация корабля через F8 |
 | [Assets/Scripts/Networking/NetworkDeveloperTools.cs](<../../Assets/Scripts/Networking/NetworkDeveloperTools.cs>) | Исходник C#: NetworkWeapon; Предметы, лут и инвентарь, Чайки и фоновые стаи, Раковина с сундуком и парные рычаги, Чайка с ключом |
 | [Assets/Scripts/Networking/NetworkEquipment.BottleAim.cs](<../../Assets/Scripts/Networking/NetworkEquipment.BottleAim.cs>) | Исходник C#: NetworkEquipment; Предметы, лут и инвентарь |
+| [Assets/Scripts/Networking/NetworkEquipment.FrozenWater.cs](<../../Assets/Scripts/Networking/NetworkEquipment.FrozenWater.cs>) | Исходник C#: NetworkEquipment, FrozenCell; Личное оружие и урон |
 | [Assets/Scripts/Networking/NetworkEquipment.HandMortar.cs](<../../Assets/Scripts/Networking/NetworkEquipment.HandMortar.cs>) | Исходник C#: NetworkEquipment; Личное оружие и урон |
+| [Assets/Scripts/Networking/NetworkEquipment.IceBeam.cs](<../../Assets/Scripts/Networking/NetworkEquipment.IceBeam.cs>) | Исходник C#: NetworkEquipment; Личное оружие и урон |
 | [Assets/Scripts/Networking/NetworkEquipment.Lantern.cs](<../../Assets/Scripts/Networking/NetworkEquipment.Lantern.cs>) | Исходник C#: NetworkEquipment; Предметы, лут и инвентарь |
+| [Assets/Scripts/Networking/NetworkEquipment.Staves.cs](<../../Assets/Scripts/Networking/NetworkEquipment.Staves.cs>) | Исходник C#: NetworkEquipment; Личное оружие и урон |
 | [Assets/Scripts/Networking/NetworkEquipment.cs](<../../Assets/Scripts/Networking/NetworkEquipment.cs>) | Исходник C#: NetworkEquipment; Личное оружие и урон |
 | [Assets/Scripts/Networking/NetworkFish.Kick.cs](<../../Assets/Scripts/Networking/NetworkFish.Kick.cs>) | Исходник C#: NetworkFish; Предметы, лут и инвентарь |
 | [Assets/Scripts/Networking/NetworkFish.Monkey.cs](<../../Assets/Scripts/Networking/NetworkFish.Monkey.cs>) | Исходник C#: NetworkFish; Корабельная обезьянка |
@@ -372,6 +380,7 @@
 | [Assets/Scripts/Networking/NetworkShipPush.cs](<../../Assets/Scripts/Networking/NetworkShipPush.cs>) | Исходник C#: NetworkShipPush |
 | [Assets/Scripts/Networking/NetworkShipRum.cs](<../../Assets/Scripts/Networking/NetworkShipRum.cs>) | Исходник C#: NetworkShip; Сеть, сессия и Steam |
 | [Assets/Scripts/Networking/NetworkSkullEvent.cs](<../../Assets/Scripts/Networking/NetworkSkullEvent.cs>) | Исходник C#: NetworkSkullEvent; Предметы, лут и инвентарь |
+| [Assets/Scripts/Networking/NetworkStaffProjectile.cs](<../../Assets/Scripts/Networking/NetworkStaffProjectile.cs>) | Исходник C#: NetworkStaffProjectile, FlightState; Личное оружие и урон |
 | [Assets/Scripts/Networking/NetworkSternCargoEvent.cs](<../../Assets/Scripts/Networking/NetworkSternCargoEvent.cs>) | Исходник C#: SternRopeStation, NetworkSternCargoEvent; Груз за кормой |
 | [Assets/Scripts/Networking/NetworkTowedCargo.cs](<../../Assets/Scripts/Networking/NetworkTowedCargo.cs>) | Исходник C#: TowedCargoPose, SternRopeFloorDeposit, SternCargoPhase, NetworkTowedCargo; Груз за кормой |
 | [Assets/Scripts/Networking/NetworkVortexBottle.cs](<../../Assets/Scripts/Networking/NetworkVortexBottle.cs>) | Исходник C#: NetworkVortexBottle; Предметы, лут и инвентарь |
@@ -451,6 +460,8 @@
 | [Assets/Scripts/Player/FirstPersonMotion.cs](<../../Assets/Scripts/Player/FirstPersonMotion.cs>) | Исходник C#: FirstPersonMotion |
 | [Assets/Scripts/Player/FishingRodBend.cs](<../../Assets/Scripts/Player/FishingRodBend.cs>) | Исходник C#: FishingRodBend, Part; Рыбалка и рыба |
 | [Assets/Scripts/Player/FishingRodReel.cs](<../../Assets/Scripts/Player/FishingRodReel.cs>) | Исходник C#: FishingRodReel; Рыбалка и рыба |
+| [Assets/Scripts/Player/FrozenWaterSurface.cs](<../../Assets/Scripts/Player/FrozenWaterSurface.cs>) | Исходник C#: FrozenWaterSurface, Thaw; Личное оружие и урон |
+| [Assets/Scripts/Player/FrozenWaterTile.cs](<../../Assets/Scripts/Player/FrozenWaterTile.cs>) | Исходник C#: FrozenWaterTile; Личное оружие и урон |
 | [Assets/Scripts/Player/GhostSabreWave.cs](<../../Assets/Scripts/Player/GhostSabreWave.cs>) | Исходник C#: GhostSabreWave; Улучшения рогалика из сундуков |
 | [Assets/Scripts/Player/GunnersEyeView.cs](<../../Assets/Scripts/Player/GunnersEyeView.cs>) | Исходник C#: GunnersEyeView; Улучшения рогалика из сундуков |
 | [Assets/Scripts/Player/HandLanternVisual.cs](<../../Assets/Scripts/Player/HandLanternVisual.cs>) | Исходник C#: HandLanternVisual; Предметы, лут и инвентарь |
@@ -479,6 +490,13 @@
 | [Assets/Scripts/Player/ShipSpyglass.cs](<../../Assets/Scripts/Player/ShipSpyglass.cs>) | Исходник C#: ShipSpyglass |
 | [Assets/Scripts/Player/ShipSpyglassView.LootHint.cs](<../../Assets/Scripts/Player/ShipSpyglassView.LootHint.cs>) | Исходник C#: ShipSpyglassView; Предметы, лут и инвентарь |
 | [Assets/Scripts/Player/ShipSpyglassView.cs](<../../Assets/Scripts/Player/ShipSpyglassView.cs>) | Исходник C#: ShipSpyglassView; Предметы, лут и инвентарь, Чайка с ключом |
+| [Assets/Scripts/Player/StaffCastingAnimation.cs](<../../Assets/Scripts/Player/StaffCastingAnimation.cs>) | Исходник C#: StaffCastingAnimation, Pose; Личное оружие и урон |
+| [Assets/Scripts/Player/StaffCombat.cs](<../../Assets/Scripts/Player/StaffCombat.cs>) | Исходник C#: StaffCombat; Личное оружие и урон |
+| [Assets/Scripts/Player/StaffHeldPresentation.cs](<../../Assets/Scripts/Player/StaffHeldPresentation.cs>) | Исходник C#: StaffHeldPresentation; Личное оружие и урон |
+| [Assets/Scripts/Player/StaffIceBeamPresentation.cs](<../../Assets/Scripts/Player/StaffIceBeamPresentation.cs>) | Исходник C#: StaffIceBeamPresentation; Личное оружие и урон |
+| [Assets/Scripts/Player/StaffSettings.cs](<../../Assets/Scripts/Player/StaffSettings.cs>) | Исходник C#: StaffSettings; Личное оружие и урон |
+| [Assets/Scripts/Player/StaffVfx.cs](<../../Assets/Scripts/Player/StaffVfx.cs>) | Исходник C#: StaffVfx; Личное оружие и урон |
+| [Assets/Scripts/Player/StaffVfxEffect.cs](<../../Assets/Scripts/Player/StaffVfxEffect.cs>) | Исходник C#: StaffVfxEffect; Личное оружие и урон |
 | [Assets/Scripts/Player/SternCargoPlayerInteraction.cs](<../../Assets/Scripts/Player/SternCargoPlayerInteraction.cs>) | Исходник C#: SternCargoPlayerInteraction; Груз за кормой |
 | [Assets/Scripts/Player/SwimPresentation.cs](<../../Assets/Scripts/Player/SwimPresentation.cs>) | Исходник C#: SwimPresentation |
 | [Assets/Scripts/Player/UnderwaterFirearmProjectile.cs](<../../Assets/Scripts/Player/UnderwaterFirearmProjectile.cs>) | Исходник C#: FirearmDamageBatch, UnderwaterFirearmProjectile; Личное оружие и урон, Чайки и фоновые стаи |

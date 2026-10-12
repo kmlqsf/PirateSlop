@@ -82,7 +82,9 @@ namespace PirateSlop
             return -WhirlpoolDepth * (falloff * falloff);
         }
 
-        public float Height(Vector3 position)
+        public float Height(Vector3 position) => FrozenWaterSurface.Height(position, UnfrozenHeight(position), gameObject.scene);
+
+        float UnfrozenHeight(Vector3 position)
         {
             if (HeightSource != null) return SeaLevel + HeightSource.HeightOffset(position, WaveTime) + GetWhirlpoolHeight(position);
             float wHeight = GetWhirlpoolHeight(position) + SwellHeight(position);
@@ -143,6 +145,7 @@ namespace PirateSlop
         }
         void LateUpdate()
         {
+            FrozenWaterSurface.Upload(this);
             if (HeightSource != null) return;
             var camera = Camera.main;
             if (camera != null) transform.position = new Vector3(Mathf.Floor(camera.transform.position.x / 8) * 8, SeaLevel, Mathf.Floor(camera.transform.position.z / 8) * 8);

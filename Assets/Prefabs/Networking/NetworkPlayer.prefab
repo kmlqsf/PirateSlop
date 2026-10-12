@@ -4893,6 +4893,9 @@ MonoBehaviour:
   - {fileID: 9077003972062055808, guid: a9670d6a7775e9845a5e41b84221e9af, type: 3}
   - {fileID: 8975693937502030895, guid: ace1d1201914f2b4da40dae67e4358c8, type: 3}
   - {fileID: 4166042010216863753, guid: 7b1df79e5196bf744b2edd3230e77fd7, type: 3}
+  - {fileID: 5655365093800096483, guid: b3c500d2543af8049bb23abf4a6c29ff, type: 3}
+  - {fileID: 6629551348885018589, guid: 505c92c13dd376e458071cdaa166d3f9, type: 3}
+  - {fileID: 5234771085821387453, guid: 2b48b0abce75e774dbdb17e6ea03bf13, type: 3}
 --- !u!114 &4694566103855019808
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5121,6 +5124,14 @@ MonoBehaviour:
   _networkObjectCache: {fileID: 8718541801069254893}
   MortarSettings: {fileID: 11400000, guid: 612f694010120e644a03ee3da9ca8918, type: 2}
   MortarBallPrefab: {fileID: 6291742946454886123, guid: aaa0bb2612957b54a8e7918881a77795, type: 3}
+  Staves:
+  - {fileID: 11400000, guid: 9c984b26ab656d24e9174765ab0359a5, type: 2}
+  - {fileID: 11400000, guid: 1aef9a5877004de4ca717e867a9bdec3, type: 2}
+  - {fileID: 11400000, guid: 6dc9b47f037379e4c9f3d87a0ac86c11, type: 2}
+  StaffProjectiles:
+  - {fileID: 8781359700576982585, guid: e514f4de3649a904ebfa7d6c4a54f32c, type: 3}
+  - {fileID: 0}
+  - {fileID: 4953127206090495274, guid: 3e4c4f0caae32bb4ca7d39d8e56dbad6, type: 3}
   Models:
   - {fileID: 6315706825796137226, guid: 57ff4511143359247b680f53fe7a1742, type: 3}
   - {fileID: 3119629828483021475, guid: 073e679e209d4714eb7acf9697e733f0, type: 3}
@@ -5138,6 +5149,9 @@ MonoBehaviour:
   - {fileID: 8013011134021848255, guid: 24ce74ec2d929fb4bae569d6f588a72c, type: 3}
   - {fileID: 1435868251391276052, guid: 46c4b02c25d355d47a5a2ae37667eb28, type: 3}
   - {fileID: 6910338296775716706, guid: 998485edcc9c80646a84722144fb8756, type: 3}
+  - {fileID: 2967897297931198355, guid: bc7d35d75c4917b4e8b0c35db3b0f228, type: 3}
+  - {fileID: 3593203059406409202, guid: a31bad6b65f01d3419cbf2874a2cb46d, type: 3}
+  - {fileID: 8353967016499105986, guid: a155d34eb01c88944bd65b14566f18bd, type: 3}
   ParrotPrefab: {fileID: 3399042490705193612, guid: 879b536b5b1c40a408199fc90cbf65be, type: 3}
   ExplosiveBallSettings: {fileID: 11400000, guid: 83afabf1da763c24b97e9bf71b2d90cf, type: 2}
   ExplosiveBallPrefab: {fileID: 1618073138275046037, guid: a667592485dc1714387c3ff9db8f2f8b, type: 3}

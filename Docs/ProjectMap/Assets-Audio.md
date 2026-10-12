@@ -772,6 +772,56 @@
 | [Assets/Audio/SlotMachine/SOURCES.md](<../../Assets/Audio/SlotMachine/SOURCES.md>) | Документация; Корабельная слот-машина |
 | [Assets/Audio/SlotMachine/Win.wav](<../../Assets/Audio/SlotMachine/Win.wav>) | Аудио; Корабельная слот-машина |
 
+## Assets/Audio/Staves
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Audio/Staves/FireStaffCast.wav](<../../Assets/Audio/Staves/FireStaffCast.wav>) | Аудио |
+| [Assets/Audio/Staves/FireStaffCharge.wav](<../../Assets/Audio/Staves/FireStaffCharge.wav>) | Аудио |
+| [Assets/Audio/Staves/FireStaffFlight.wav](<../../Assets/Audio/Staves/FireStaffFlight.wav>) | Аудио |
+| [Assets/Audio/Staves/FireStaffImpact.wav](<../../Assets/Audio/Staves/FireStaffImpact.wav>) | Аудио |
+| [Assets/Audio/Staves/IceStaffBeam.wav](<../../Assets/Audio/Staves/IceStaffBeam.wav>) | Аудио; Личное оружие и урон |
+| [Assets/Audio/Staves/IceStaffBeamAlt.wav](<../../Assets/Audio/Staves/IceStaffBeamAlt.wav>) | Аудио; Личное оружие и урон |
+| [Assets/Audio/Staves/IceStaffBeamContact.wav](<../../Assets/Audio/Staves/IceStaffBeamContact.wav>) | Аудио; Личное оружие и урон |
+| [Assets/Audio/Staves/IceStaffCast.wav](<../../Assets/Audio/Staves/IceStaffCast.wav>) | Аудио |
+| [Assets/Audio/Staves/IceStaffCharge.wav](<../../Assets/Audio/Staves/IceStaffCharge.wav>) | Аудио |
+| [Assets/Audio/Staves/IceStaffFlight.wav](<../../Assets/Audio/Staves/IceStaffFlight.wav>) | Аудио |
+| [Assets/Audio/Staves/IceStaffHeld.wav](<../../Assets/Audio/Staves/IceStaffHeld.wav>) | Аудио; Личное оружие и урон |
+| [Assets/Audio/Staves/IceStaffImpact.wav](<../../Assets/Audio/Staves/IceStaffImpact.wav>) | Аудио |
+| [Assets/Audio/Staves/LICENSE.md](<../../Assets/Audio/Staves/LICENSE.md>) | Документация; Личное оружие и урон |
+| [Assets/Audio/Staves/LightningStaffCast.wav](<../../Assets/Audio/Staves/LightningStaffCast.wav>) | Аудио |
+| [Assets/Audio/Staves/LightningStaffCharge.wav](<../../Assets/Audio/Staves/LightningStaffCharge.wav>) | Аудио |
+| [Assets/Audio/Staves/LightningStaffHeld.wav](<../../Assets/Audio/Staves/LightningStaffHeld.wav>) | Аудио; Личное оружие и урон |
+| [Assets/Audio/Staves/LightningStaffImpact.wav](<../../Assets/Audio/Staves/LightningStaffImpact.wav>) | Аудио |
+| [Assets/Audio/Staves/LightningStaffTarget.wav](<../../Assets/Audio/Staves/LightningStaffTarget.wav>) | Аудио |
+| [Assets/Audio/Staves/Sources.json](<../../Assets/Audio/Staves/Sources.json>) | Конфигурация / данные JSON; Личное оружие и урон |
+| [Assets/Audio/Staves/StaffBurnLoop.wav](<../../Assets/Audio/Staves/StaffBurnLoop.wav>) | Аудио |
+| [Assets/Audio/Staves/StaffCancel.wav](<../../Assets/Audio/Staves/StaffCancel.wav>) | Аудио |
+| [Assets/Audio/Staves/StaffDissipate.wav](<../../Assets/Audio/Staves/StaffDissipate.wav>) | Аудио |
+| [Assets/Audio/Staves/StaffFrostLoop.wav](<../../Assets/Audio/Staves/StaffFrostLoop.wav>) | Аудио |
+| [Assets/Audio/Staves/StaffWater.wav](<../../Assets/Audio/Staves/StaffWater.wav>) | Аудио |
+
+## Assets/Audio/Staves/Originals
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Audio/Staves/Originals/ambience-thunder-06.wav](<../../Assets/Audio/Staves/Originals/ambience-thunder-06.wav>) | Аудио |
+| [Assets/Audio/Staves/Originals/fire-electric-arc-58.wav](<../../Assets/Audio/Staves/Originals/fire-electric-arc-58.wav>) | Аудио |
+| [Assets/Audio/Staves/Originals/fire-electric-crackle-39.wav](<../../Assets/Audio/Staves/Originals/fire-electric-crackle-39.wav>) | Аудио |
+| [Assets/Audio/Staves/Originals/fire-electric-spark-70.wav](<../../Assets/Audio/Staves/Originals/fire-electric-spark-70.wav>) | Аудио |
+| [Assets/Audio/Staves/Originals/freesound-180328-preview.mp3](<../../Assets/Audio/Staves/Originals/freesound-180328-preview.mp3>) | Аудио |
+| [Assets/Audio/Staves/Originals/freesound-260555-preview.mp3](<../../Assets/Audio/Staves/Originals/freesound-260555-preview.mp3>) | Аудио |
+| [Assets/Audio/Staves/Originals/freesound-452645-preview.mp3](<../../Assets/Audio/Staves/Originals/freesound-452645-preview.mp3>) | Аудио |
+| [Assets/Audio/Staves/Originals/freesound-510766-preview.mp3](<../../Assets/Audio/Staves/Originals/freesound-510766-preview.mp3>) | Аудио |
+| [Assets/Audio/Staves/Originals/freesound-641336-preview.mp3](<../../Assets/Audio/Staves/Originals/freesound-641336-preview.mp3>) | Аудио |
+| [Assets/Audio/Staves/Originals/glass-crack-75.wav](<../../Assets/Audio/Staves/Originals/glass-crack-75.wav>) | Аудио |
+| [Assets/Audio/Staves/Originals/growth-6f615f07ba0e4bc86742d214-part-1-v1.wav](<../../Assets/Audio/Staves/Originals/growth-6f615f07ba0e4bc86742d214-part-1-v1.wav>) | Аудио |
+| [Assets/Audio/Staves/Originals/impact-explosion-02.wav](<../../Assets/Audio/Staves/Originals/impact-explosion-02.wav>) | Аудио |
+| [Assets/Audio/Staves/Originals/magic-scifi-portal-32.wav](<../../Assets/Audio/Staves/Originals/magic-scifi-portal-32.wav>) | Аудио |
+| [Assets/Audio/Staves/Originals/magic-scifi-spell-73.wav](<../../Assets/Audio/Staves/Originals/magic-scifi-spell-73.wav>) | Аудио |
+| [Assets/Audio/Staves/Originals/owner-2026-09-22-short-magic-sparkle.wav](<../../Assets/Audio/Staves/Originals/owner-2026-09-22-short-magic-sparkle.wav>) | Аудио |
+| [Assets/Audio/Staves/Originals/owner-continuous-20260922-charge-source-unspecified.wav](<../../Assets/Audio/Staves/Originals/owner-continuous-20260922-charge-source-unspecified.wav>) | Аудио |
+
 ## Assets/Audio/Underwater
 
 | Файл | Краткое описание |

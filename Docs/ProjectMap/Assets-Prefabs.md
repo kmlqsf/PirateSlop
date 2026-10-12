@@ -123,6 +123,23 @@
 | --- | --- |
 | [Assets/Prefabs/ShipDestruction/MainShipSections.prefab](<../../Assets/Prefabs/ShipDestruction/MainShipSections.prefab>) | Префаб Unity |
 
+## Assets/Prefabs/Weapons/Staves
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Prefabs/Weapons/Staves/FireStaffCrystal.mat](<../../Assets/Prefabs/Weapons/Staves/FireStaffCrystal.mat>) | Материал Unity |
+| [Assets/Prefabs/Weapons/Staves/FireStaffPickup.prefab](<../../Assets/Prefabs/Weapons/Staves/FireStaffPickup.prefab>) | Префаб Unity; Личное оружие и урон |
+| [Assets/Prefabs/Weapons/Staves/FireStaffProjectile.prefab](<../../Assets/Prefabs/Weapons/Staves/FireStaffProjectile.prefab>) | Префаб Unity; Личное оружие и урон |
+| [Assets/Prefabs/Weapons/Staves/FireStaffVisual.prefab](<../../Assets/Prefabs/Weapons/Staves/FireStaffVisual.prefab>) | Префаб Unity; Личное оружие и урон |
+| [Assets/Prefabs/Weapons/Staves/IceStaffCrystal.mat](<../../Assets/Prefabs/Weapons/Staves/IceStaffCrystal.mat>) | Материал Unity |
+| [Assets/Prefabs/Weapons/Staves/IceStaffPickup.prefab](<../../Assets/Prefabs/Weapons/Staves/IceStaffPickup.prefab>) | Префаб Unity; Личное оружие и урон |
+| [Assets/Prefabs/Weapons/Staves/IceStaffProjectile.prefab](<../../Assets/Prefabs/Weapons/Staves/IceStaffProjectile.prefab>) | Префаб Unity; Личное оружие и урон |
+| [Assets/Prefabs/Weapons/Staves/IceStaffVisual.prefab](<../../Assets/Prefabs/Weapons/Staves/IceStaffVisual.prefab>) | Префаб Unity; Личное оружие и урон |
+| [Assets/Prefabs/Weapons/Staves/LightningStaffCrystal.mat](<../../Assets/Prefabs/Weapons/Staves/LightningStaffCrystal.mat>) | Материал Unity |
+| [Assets/Prefabs/Weapons/Staves/LightningStaffPickup.prefab](<../../Assets/Prefabs/Weapons/Staves/LightningStaffPickup.prefab>) | Префаб Unity; Личное оружие и урон |
+| [Assets/Prefabs/Weapons/Staves/LightningStaffVisual.prefab](<../../Assets/Prefabs/Weapons/Staves/LightningStaffVisual.prefab>) | Префаб Unity; Личное оружие и урон |
+| [Assets/Prefabs/Weapons/Staves/StaffWood.mat](<../../Assets/Prefabs/Weapons/Staves/StaffWood.mat>) | Материал Unity |
+
 ## Assets/Prefabs/World/LocationExpansion
 
 | Файл | Краткое описание |
