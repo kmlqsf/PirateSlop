@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace PirateSlop.Networking
 {
-    public enum SeaLootKind : byte { None, Capture, Raft, Sunken, Shark, Skull, FloatingReward, Clam, Balance }
+    public enum SeaLootKind : byte { None, Capture, Raft, Sunken, Shark, Skull, FloatingReward, Clam, Balance, Rigging }
     public enum SeaLootState : byte { Locked, Rising, Ready, Flying }
 
     public sealed partial class NetworkLootChest
@@ -38,7 +38,7 @@ namespace PirateSlop.Networking
         GameObject eventVisual;
         SharkSwarmVisual swarm;
         bool visualCreated;
-        internal bool BotLootCandidate => IsSpawned && !captureRewardTaken.Value && carrier.Value == null && supportId.Value == 0 && (!InClam || Clam != null && Clam.ChestAvailable) && (!OnBalance || Balance != null && Balance.ChestAvailable);
+        internal bool BotLootCandidate => IsSpawned && !captureRewardTaken.Value && carrier.Value == null && supportId.Value == 0 && (!OnWhale || Whale != null && Whale.ChestAvailable) && (!InClam || Clam != null && Clam.ChestAvailable) && (!OnBalance || Balance != null && Balance.ChestAvailable) && (!InRigging || Rigging != null && Rigging.ChestAvailable);
         internal bool BotCapturePending => Kind == SeaLootKind.Capture && phase.Value == SeaLootState.Locked;
         internal bool BotLootRising => phase.Value == SeaLootState.Rising || phase.Value == SeaLootState.Flying;
         internal Vector3 BotLootPoint => Kind == SeaLootKind.None ? transform.position : eventPoint.Value;
@@ -54,7 +54,7 @@ namespace PirateSlop.Networking
         public bool SharksDistracted => Time.time < sharksDistractedUntil.Value;
         public Vector3 SharkBaitPoint => sharkBaitPoint.Value;
         public NetworkObject SharkTargetPlayer => sharkTargetPlayer.Value;
-        public bool Available => IsSpawned && !captureRewardTaken.Value && phase.Value == SeaLootState.Ready && carrier.Value == null && (!OnWhale || Whale != null && Whale.ChestAvailable) && (!InClam || Clam != null && Clam.ChestAvailable) && (!OnBalance || Balance != null && Balance.ChestAvailable);
+        public bool Available => IsSpawned && !captureRewardTaken.Value && phase.Value == SeaLootState.Ready && carrier.Value == null && (!OnWhale || Whale != null && Whale.ChestAvailable) && (!InClam || Clam != null && Clam.ChestAvailable) && (!OnBalance || Balance != null && Balance.ChestAvailable) && (!InRigging || Rigging != null && Rigging.ChestAvailable);
         public bool LootHintEligible
         {
             get
@@ -78,7 +78,7 @@ namespace PirateSlop.Networking
         public string WorkHint => Kind == SeaLootKind.Raft
             ? "Мышь — угол отмычки · ЛКМ — повернуть замок · Q / E / Esc — отменить"
             : $"Верёвка: {Mathf.RoundToInt(Progress * 100)}% · плыви вокруг сундука · E / Q — отпустить";
-        public string OceanHint => OnBalance ? BalanceHint : InClam ? ClamHint : OnWhale ? WhaleHint : phase.Value == SeaLootState.Flying ? "Череп выплюнул сундук"
+        public string OceanHint => InRigging ? RiggingHint : OnBalance ? BalanceHint : InClam ? ClamHint : OnWhale ? WhaleHint : phase.Value == SeaLootState.Flying ? "Череп выплюнул сундук"
             : phase.Value == SeaLootState.Rising ? "Ящик всплывает"
             : carrier.Value != null ? "Ящик несут"
             : phase.Value == SeaLootState.Ready ? (Kind == SeaLootKind.Shark && !SharksDistracted ? "E — открыть · F — нести ящик · Акулы агрессивны!" : "E — открыть · F — нести ящик")
@@ -252,8 +252,10 @@ namespace PirateSlop.Networking
         public void Carry(NetworkWeapon player)
         {
             if (!IsServerInitialized || !Available || Kind == SeaLootKind.None) return;
+            if (OnWhale) { whaleAttached.Value = false; whaleSupport.Value = null; }
             if (InClam) { inClam.Value = false; clamSupport.Value = null; }
             if (OnBalance) balanceSupport.Value = null;
+            if (InRigging) riggingSupport.Value = null;
             if (Kind == SeaLootKind.Raft) raftDetachedState.Value = true;
             carryingPlayer = player;
             carrier.Value = player.NetworkObject;
@@ -302,6 +304,7 @@ namespace PirateSlop.Networking
 
         void UpdateOceanLoot()
         {
+            if (UpdateRiggingChest()) return;
             if (UpdateBalanceChest()) return;
             if (UpdateClamChest()) return;
             if (UpdateWhaleChest()) return;

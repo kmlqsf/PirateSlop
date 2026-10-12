@@ -41,8 +41,14 @@ namespace PirateSlop.Networking
                 bottleRespawnAt = new float[Prefabs.Length];
                 for (int i = 0; i < bottleRespawnAt.Length; i++) bottleRespawnAt[i] = float.PositiveInfinity;
             }
+            bool plankPointSeen=false;
             for(int i=0;i<Prefabs.Length;i++)
             {
+                if(Prefabs[i]!=null && Prefabs[i].Item==InventoryItem.Plank)
+                {
+                    if(plankPointSeen) continue;
+                    plankPointSeen=true;
+                }
                 if (bottlesOnly && (Prefabs[i] == null ||
                     (Prefabs[i].Item != InventoryItem.FogBottle && Prefabs[i].Item != InventoryItem.VortexBottle &&
                      Prefabs[i].Item != InventoryItem.Musket && Prefabs[i].Item != InventoryItem.DoubleBarrel &&

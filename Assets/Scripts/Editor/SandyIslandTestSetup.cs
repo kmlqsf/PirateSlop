@@ -390,9 +390,10 @@ namespace PirateSlop.Editor
                 if (sand!=null) sand.gameObject.SetActive(false);
                 if (!stone)
                 {
-                    var wind=plant.AddComponent<SandyIslandFoliageWind>();
-                    wind.Height=(source=="Palm" ? 7.38f : source=="PalmBent" ? 6.35f : source=="PalmYoung" ? 4.8f : source=="Bush" ? 1.33f : .76f)*scale;
-                    wind.Strength=palm ? .2f : .065f;
+                    var wind=plant.GetComponent<SandyIslandFoliageWind>() ?? plant.AddComponent<SandyIslandFoliageWind>();
+                    wind.Height=0;
+                    wind.Strength=palm ? .12f : source=="Bush" ? .045f : .035f;
+                    wind.SwayDegrees=palm ? .65f : source=="Bush" ? 1.1f : .8f;
                     wind.Phase=(float)random.NextDouble()*Mathf.PI*2;
                     wind.Apply();
                 }

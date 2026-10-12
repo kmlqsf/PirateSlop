@@ -124,8 +124,7 @@ namespace PirateSlop
             }
             else
             {
-                float alignment = Vector3.Dot((actor.transform.position + Vector3.up - Harpoons[index].EmbeddedPoint).normalized, Harpoons[index].Outward);
-                if (alignment > .2f) s.Pull = Mathf.Clamp01(s.Pull + Mathf.Clamp(pullDelta, -.18f, .18f));
+                s.Pull = Mathf.Clamp01(s.Pull + Mathf.Clamp(pullDelta, -.18f, .18f));
                 s.Rock = Mathf.MoveTowards(s.Rock, 0, .12f);
                 if (s.Pull >= 1)
                 {
@@ -170,7 +169,7 @@ namespace PirateSlop
         }
         public override void OnStopServer()
         {
-            if (chest != null && chest.IsSpawned) ServerManager.Despawn(chest.NetworkObject);
+            if (chest != null && chest.IsSpawned && chest.OnWhale && chest.Whale==this) ServerManager.Despawn(chest.NetworkObject);
             base.OnStopServer();
         }
     }

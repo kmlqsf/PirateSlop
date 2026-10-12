@@ -19495,37 +19495,6 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!1 &153422871434112687
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 7636709776648918317}
-  m_Layer: 0
-  m_Name: Loot_Plank_4
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &7636709776648918317
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 153422871434112687}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.3, y: 4.11, z: -5.01}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 6414479177402469937}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &154207905849835473
 GameObject:
   m_ObjectHideFlags: 0
@@ -567734,37 +567703,6 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!1 &4307887660662576512
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 7171638796725626397}
-  m_Layer: 0
-  m_Name: Loot_Plank_5
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &7171638796725626397
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4307887660662576512}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.6, y: 4.11, z: -5.01}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 6414479177402469937}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4308638673156046025
 GameObject:
   m_ObjectHideFlags: 0
@@ -651559,7 +651497,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6479283695743299855}
   m_Layer: 0
-  m_Name: Loot_Plank_3
+  m_Name: Loot_Plank
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -654033,11 +653971,7 @@ Transform:
   - {fileID: 5641270998358791616}
   - {fileID: 3438731111713898791}
   - {fileID: 4862631293872765847}
-  - {fileID: 8957321840763182510}
-  - {fileID: 5751268183984114504}
   - {fileID: 6479283695743299855}
-  - {fileID: 7636709776648918317}
-  - {fileID: 7171638796725626397}
   m_Father: {fileID: 7375941287875263209}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4951077750177963488
@@ -725529,37 +725463,6 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!1 &5486032597462183754
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 5751268183984114504}
-  m_Layer: 0
-  m_Name: Loot_Plank_2
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &5751268183984114504
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5486032597462183754}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.3, y: 4.11, z: -5.01}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 6414479177402469937}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5487221498092714503
 GameObject:
   m_ObjectHideFlags: 0
@@ -733956,37 +733859,6 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: c6775c879bfb4e24eb7faba17061b804, type: 2}
---- !u!1 &5553797844181725736
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 8957321840763182510}
-  m_Layer: 0
-  m_Name: Loot_Plank_1
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &8957321840763182510
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5553797844181725736}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.6, y: 4.11, z: -5.01}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 6414479177402469937}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5554675976238028181
 GameObject:
   m_ObjectHideFlags: 0
@@ -797985,11 +797857,7 @@ MonoBehaviour:
   - {fileID: 8975693937502030895, guid: ace1d1201914f2b4da40dae67e4358c8, type: 3}
   - {fileID: 4166042010216863753, guid: 7b1df79e5196bf744b2edd3230e77fd7, type: 3}
   - {fileID: 1133702697705914243, guid: 6523b631db6bda249af42eff0ded20e9, type: 3}
-  - {fileID: 1133702697705914243, guid: 6523b631db6bda249af42eff0ded20e9, type: 3}
-  - {fileID: 1133702697705914243, guid: 6523b631db6bda249af42eff0ded20e9, type: 3}
-  - {fileID: 1133702697705914243, guid: 6523b631db6bda249af42eff0ded20e9, type: 3}
-  - {fileID: 1133702697705914243, guid: 6523b631db6bda249af42eff0ded20e9, type: 3}
-  Items: 0300000008000000090000000a0000000c0000001100000015000000120000000d0000001600000018000000170000000e0000000f000000190000001a0000001b0000001c0000000600000006000000060000000600000006000000i
+  Items: 0300000008000000090000000a0000000c0000001100000015000000120000000d0000001600000018000000170000000e0000000f000000190000001a0000001b0000001c00000006000000i
   SpawnPoints:
   - {fileID: 8901769122076713436}
   - {fileID: 2180883079539485966}
@@ -798009,11 +797877,7 @@ MonoBehaviour:
   - {fileID: 3753775243995614503}
   - {fileID: 4767465840562539845}
   - {fileID: 8760065195233669843}
-  - {fileID: 8957321840763182510}
-  - {fileID: 5751268183984114504}
   - {fileID: 6479283695743299855}
-  - {fileID: 7636709776648918317}
-  - {fileID: 7171638796725626397}
 --- !u!114 &5768362578233168814
 MonoBehaviour:
   m_ObjectHideFlags: 0

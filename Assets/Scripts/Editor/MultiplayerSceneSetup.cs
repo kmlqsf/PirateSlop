@@ -110,19 +110,19 @@ namespace PirateSlop.EditorTools
                     throw new InvalidOperationException("Build scene is missing: " + path);
             return paths.ToArray();
         }
-        [MenuItem("PirateSlop/Multiplayer/Build Windows")]
+        [MenuItem("Windows Build/Build", false, 0)]
         public static void Build()
         {
             BuildWindows(BuildOptions.None);
         }
 
-        [MenuItem("PirateSlop/Multiplayer/Build Windows Clean")]
+        [MenuItem("Windows Build/Clean Build", false, 20)]
         public static void BuildClean()
         {
             BuildWindows(BuildOptions.CleanBuildCache);
         }
 
-        [MenuItem("PirateSlop/Multiplayer/Build Windows Diagnostics")]
+        [MenuItem("Windows Build/Diagnostics", false, 21)]
         public static void BuildDiagnostics()
         {
             BuildWindows(BuildOptions.DetailedBuildReport);

@@ -36,7 +36,7 @@ namespace PirateSlop.Networking
             if (GetComponent<CannonHands>().HasHeldBall) return false;
             var fishing = inventory.Fishing;
             if (fishing != null && (fishing.HasFish || fishing.IsFishing || fishing.IsEating)) return false;
-            return CanReach(chest.WorkPoint(transform.position + Vector3.up), chest.transform);
+            return chest.OnWhale ? chest.CanReachWhaleChest(this) : CanReach(chest.WorkPoint(transform.position + Vector3.up), chest.transform);
         }
 
         public void StartLootWork(NetworkObject target) => StartLootWorkServerRpc(target);

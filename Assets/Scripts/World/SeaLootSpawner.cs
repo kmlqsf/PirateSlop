@@ -15,15 +15,22 @@ namespace PirateSlop.World
             {
                 for (int i = 0; i < 7; i++) SpawnOne(world, manager, catalog, i, EnvironmentEventTestRow.Point(i, world.Layout.SeaLevel));
                 NetworkBalanceEvent.SpawnEvent(catalog, manager, EnvironmentEventTestRow.Point(7, world.Layout.SeaLevel), world.gameObject.scene);
+                NetworkRiggingEvent.SpawnEvent(catalog, manager, EnvironmentEventTestRow.Point(8, world.Layout.SeaLevel), world.gameObject.scene);
                 return;
             }
             var random = new MapRandom((uint)world.Layout.Seed ^ 0x79c526abu);
             var occupied = new List<Vector3>();
-            int types = catalog.ClamEventPrefab != null ? 7 : catalog.WhaleEventPrefab != null ? 6 : catalog.SkullEventPrefab != null ? 5 : 4;
+            var eventTypes = new List<int> { 0, 1, 2, 3 };
+            if (catalog.SkullEventPrefab != null) eventTypes.Add(4);
+            if (catalog.WhaleEventPrefab != null) eventTypes.Add(5);
+            if (catalog.ClamEventPrefab != null) eventTypes.Add(6);
+            if (catalog.RiggingEventPrefab != null) eventTypes.Add(8);
+            int types = eventTypes.Count;
             int count = Mathf.Clamp(catalog.SeaEventsPerType, 1, 20) * types;
             float separation = Mathf.Max(160, catalog.CaptureRadius * 2.5f);
             for (int i = 0; i < count; i++)
             {
+                int eventIndex = eventTypes[i % types];
                 for (int attempt = 0; attempt < 512; attempt++)
                 {
                     float angle = random.Range(0, Mathf.PI * 2);
@@ -38,13 +45,13 @@ namespace PirateSlop.World
                         if (!world.CanSail(sample, side * 45)) { clear = false; break; }
                     }
                     if (!clear || !world.CanSail(point, 0) || world.GroundHeight(point) > point.y - catalog.SunkenDepth - 2) continue;
-                    if (i % types >= 5)
+                    if (eventIndex >= 5)
                     {
-                        SpawnOne(world, manager, catalog, i % types, point);
+                        SpawnOne(world, manager, catalog, eventIndex, point);
                         occupied.Add(point);
                         break;
                     }
-                    if (i % types == 4)
+                    if (eventIndex == 4)
                     {
                         NetworkSkullEvent.SpawnEvent(catalog, manager, point, world.gameObject.scene);
                         occupied.Add(point);
@@ -55,7 +62,7 @@ namespace PirateSlop.World
                     chest.Catalog = catalog;
                     var lootRandom = new MapRandom(unchecked((uint)world.Layout.Seed ^ 0xa35f19c7u ^ ((uint)i * 2654435761u)));
                     chest.Fill(ref lootRandom);
-                    chest.ConfigureOcean((SeaLootKind)(1 + i % types), point);
+                    chest.ConfigureOcean((SeaLootKind)(1 + eventIndex), point);
                     manager.ServerManager.Spawn(chest.NetworkObject);
                     occupied.Add(point);
                     break;
@@ -65,6 +72,7 @@ namespace PirateSlop.World
 
         static void SpawnOne(ProceduralWorld world, NetworkManager manager, LootCatalog catalog, int index, Vector3 point)
         {
+            if (index == 8) { NetworkRiggingEvent.SpawnEvent(catalog, manager, point, world.gameObject.scene); return; }
             if (index == 6) { NetworkClamEvent.SpawnEvent(catalog, manager, point, world.gameObject.scene); return; }
             if (index == 4) { if (catalog.SkullEventPrefab != null) NetworkSkullEvent.SpawnEvent(catalog, manager, point, world.gameObject.scene); return; }
             if (index == 5)

@@ -165,7 +165,9 @@ namespace PirateSlop
             float distance = 5f;
             foreach (var hit in Physics.RaycastAll(camera.transform.position, camera.transform.forward, distance, ~0, QueryTriggerInteraction.Ignore))
                 if (!hit.transform.IsChildOf(transform) && hit.distance < distance) { nearest = hit.collider; distance = hit.distance; }
-            return nearest != null && nearest.GetComponentInParent<CannonPickup>() != null;
+            if (nearest == null) return false;
+            var loot = nearest.GetComponentInParent<NetworkLootChest>();
+            return nearest.GetComponentInParent<CannonPickup>() != null || loot != null && loot.Kind == SeaLootKind.Rigging;
         }
 
         void Awake()
@@ -187,6 +189,7 @@ namespace PirateSlop
             if (preview != null) preview.SetActive(false);
             if (PirateSlop.WhalePlayerInteraction.InputCaptured && motor.IsLocal) { InteractionUsed = true; return; }
             if (GetComponent<PirateSlop.ClamPlayerInteraction>()?.ConsumedInput == true) { InteractionUsed = true; return; }
+            if (GetComponent<RiggingPlayerInteraction>()?.ConsumedInput == true) { InteractionUsed = true; return; }
             var balanceInput = GetComponent<BalanceStonePlayer>();
             if (balanceInput != null && (balanceInput.ConsumedInput || balanceInput.BlocksInventory)) { if (lootWindow) CloseLoot(false); InteractionUsed = true; return; }
             if (RoguelikeUpgradeUI.BlocksInput) { InteractionUsed = true; return; }

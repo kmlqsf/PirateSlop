@@ -164,20 +164,123 @@ namespace PirateSlop.EditorTools
             lever.Grip = Child(lever.HandlePivot, "Grip"); lever.Grip.localPosition = new Vector3(0, .45f, -.61f);
             var gripHit = lever.Grip.gameObject.AddComponent<SphereCollider>(); gripHit.radius = .18f;
             var handleHit = lever.HandlePivot.gameObject.AddComponent<BoxCollider>(); handleHit.center = new Vector3(0, .225f, -.305f); handleHit.size = new Vector3(.25f, .65f, .85f);
-            lever.LiftArm = Child(t, "HingedTelescopicJack"); lever.LiftArm.localPosition = new Vector3(0, .22f, -.1f);
-            VisualPart(lever.LiftArm, "Shackle", "JackBaseClevis", Vector3.zero, .28f, Quaternion.identity);
-            var size = parts["Axle"].Mesh.bounds.size;
-            lever.SectionLength = Vector3.Distance(hook.position, lever.LiftArm.position);
-            lever.LiftSections = new Transform[5];
-            for (int i = 0; i < lever.LiftSections.Length; i++)
-            {
-                var section = VisualPart(lever.LiftArm, "Axle", "MetalJackSection" + i, Vector3.zero, 1, Quaternion.identity);
-                float diameter = .3f - i * .045f;
-                section.localScale = new Vector3(diameter / size.x, lever.SectionLength, diameter / size.z); lever.LiftSections[i] = section;
-            }
+            BuildLift(lever,t,side);
             lever.BoardingPoint = Child(t, "BoardingPoint"); lever.BoardingPoint.localPosition = new Vector3(0, .025f, 1.25f);
             lever.Animate();
             return lever;
+        }
+
+        [MenuItem("PirateSlop/Repair Clam Lift Mechanisms")]
+        public static string RepairLiftMechanisms()
+        {
+            if(EditorApplication.isPlaying) throw new InvalidOperationException("Exit Play Mode first.");
+            LoadMechanismParts();
+            var root=PrefabUtility.LoadPrefabContents(PrefabPath);
+            try
+            {
+                var clam=root.GetComponent<NetworkClamEvent>();
+                foreach(var lever in clam.Levers)
+                {
+                    foreach(string name in new[]{"HingedTelescopicJack","HydraulicCylinder","CylinderFoot","CylinderTopClevis","HydraulicFeed","PumpFeedFitting","CylinderFeedFitting"})
+                    {
+                        var old=lever.transform.Find(name);
+                        if(old!=null) Object.DestroyImmediate(old.gameObject);
+                    }
+                    BuildLift(lever,lever.transform,lever.Side);
+                    lever.Animate();
+                }
+                PrefabUtility.SaveAsPrefabAsset(root,PrefabPath);
+            }
+            finally { PrefabUtility.UnloadPrefabContents(root); }
+            foreach(var part in parts.Values) AssetDatabase.SaveAssetIfDirty(part.Mesh);
+            foreach(string meshName in new[]{"ClamHydraulicFeedLeft","ClamHydraulicFeedRight","ClamCylinderTube"}) AssetDatabase.SaveAssetIfDirty(AssetDatabase.LoadAssetAtPath<Mesh>(Folder+meshName+".asset"));
+            return "Two pivoted hydraulic cylinders, seven overlapping stages, clevis pins and pump feed hoses saved.";
+        }
+
+        static void BuildLift(ClamLeverTarget lever,Transform root,int side)
+        {
+            int sign=side==0 ? -1 : 1;
+            var steel=AssetDatabase.LoadAssetAtPath<Material>("Assets/Models/Loot/Replacement/GrappleHook/GrappleHook.mat");
+            var sleeve=SaveMesh(CylinderTube(),"ClamCylinderTube");
+            if(steel==null) throw new InvalidOperationException("Grapple metal is required.");
+            parts["Cylinder"]=new ReusedPart { Mesh=sleeve,Materials=new[]{steel} };
+            var foot=VisualPart(root,"Bearing","CylinderFoot",new Vector3(-sign*.3f,.08f,.16f),.68f,Quaternion.identity);
+            lever.LiftArm=Child(root,"HydraulicCylinder"); lever.LiftArm.localPosition=foot.localPosition+Vector3.up*.13f;
+            VisualPart(lever.LiftArm,"Shackle","LowerPivotClevis",Vector3.zero,.36f,Quaternion.identity);
+            var pin=VisualPart(lever.LiftArm,"Cylinder","LowerPivotPin",Vector3.zero,1,Quaternion.Euler(0,0,90));
+            pin.localScale=new Vector3(.075f,.48f,.075f);
+            lever.SectionLength=Vector3.Distance(lever.HookSocket.position,lever.LiftArm.position);
+            lever.SectionOverlap=.12f;
+            lever.LiftSections=new Transform[7];
+            var size=sleeve.bounds.size;
+            for(int i=0;i<lever.LiftSections.Length;i++)
+            {
+                float diameter=.34f*Mathf.Pow(.8f,i);
+                var section=VisualPart(lever.LiftArm,"Cylinder","PressureStage"+i,Vector3.zero,1,Quaternion.identity);
+                section.localScale=new Vector3(diameter/size.x,lever.SectionLength/size.y,diameter/size.z);
+                var collar=VisualPart(section,"Cylinder","SealCollar",Vector3.up*(sleeve.bounds.max.y-.018f),1,Quaternion.identity);
+                collar.localScale=new Vector3(1.12f,.035f/lever.SectionLength,1.12f);
+                lever.LiftSections[i]=section;
+            }
+            lever.LiftEnd=Child(root,"CylinderTopClevis");
+            VisualPart(lever.LiftEnd,"Shackle","HookSwivelClevis",Vector3.down*.07f,.27f,Quaternion.Euler(0,0,180));
+            var topPin=VisualPart(lever.LiftEnd,"Cylinder","HookSwivelPin",Vector3.zero,1,Quaternion.Euler(0,0,90));
+            topPin.localScale=new Vector3(.055f,.34f,.055f);
+            var feed=Child(root,"HydraulicFeed");
+            var pumpPort=new Vector3(-sign*.24f,.63f,.14f);
+            var cylinderPort=lever.LiftArm.localPosition+new Vector3(sign*.1f,0,-.02f);
+            var mesh=FeedHose(pumpPort,cylinderPort);
+            feed.gameObject.AddComponent<MeshFilter>().sharedMesh=SaveMesh(mesh,side==0 ? "ClamHydraulicFeedLeft" : "ClamHydraulicFeedRight");
+            feed.gameObject.AddComponent<MeshRenderer>().sharedMaterial=steel;
+            VisualPart(root,"Shackle","PumpFeedFitting",pumpPort,.1f,Quaternion.Euler(0,0,90));
+            VisualPart(root,"Shackle","CylinderFeedFitting",cylinderPort,.1f,Quaternion.Euler(0,0,90));
+        }
+
+        static Mesh CylinderTube()
+        {
+            const int sides=32;
+            var radii=new[]{.48f,.5f,.5f,.48f,.41f,.41f};
+            var heights=new[]{-.5f,-.48f,.48f,.5f,.5f,-.5f};
+            var vertices=new Vector3[radii.Length*(sides+1)]; var uv=new Vector2[vertices.Length]; var triangles=new int[radii.Length*sides*6];
+            for(int ring=0;ring<radii.Length;ring++)
+                for(int side=0;side<=sides;side++)
+                {
+                    float angle=side*Mathf.PI*2/sides; int index=ring*(sides+1)+side;
+                    vertices[index]=new Vector3(Mathf.Cos(angle)*radii[ring],heights[ring],Mathf.Sin(angle)*radii[ring]);
+                    uv[index]=new Vector2(side/(float)sides,heights[ring]+.5f);
+                    if(side==sides) continue;
+                    int nextRing=(ring+1)%radii.Length,other=nextRing*(sides+1)+side,k=(ring*sides+side)*6;
+                    triangles[k]=index; triangles[k+1]=other; triangles[k+2]=index+1;
+                    triangles[k+3]=index+1; triangles[k+4]=other; triangles[k+5]=other+1;
+                }
+            var mesh=new Mesh(); mesh.vertices=vertices; mesh.uv=uv; mesh.triangles=triangles; mesh.RecalculateNormals(); mesh.RecalculateTangents(); mesh.RecalculateBounds(); return mesh;
+        }
+
+        static Mesh FeedHose(Vector3 start,Vector3 end)
+        {
+            const int rings=20,sides=10;
+            var vertices=new Vector3[rings*sides]; var uv=new Vector2[vertices.Length]; var triangles=new int[(rings-1)*sides*6];
+            var middle=(start+end)*.5f+Vector3.forward*.22f;
+            for(int ring=0;ring<rings;ring++)
+            {
+                float t=ring/(float)(rings-1);
+                var center=(1-t)*(1-t)*start+2*(1-t)*t*middle+t*t*end;
+                var direction=(2*(1-t)*(middle-start)+2*t*(end-middle)).normalized;
+                var right=Vector3.Cross(direction,Vector3.forward).normalized;
+                var up=Vector3.Cross(right,direction).normalized;
+                for(int side=0;side<sides;side++)
+                {
+                    float angle=side*Mathf.PI*2/sides;
+                    int index=ring*sides+side;
+                    vertices[index]=center+(right*Mathf.Cos(angle)+up*Mathf.Sin(angle))*.022f;
+                    uv[index]=new Vector2(side/(float)sides,t*3);
+                    if(ring==rings-1) continue;
+                    int next=ring*sides+(side+1)%sides,k=(ring*sides+side)*6;
+                    triangles[k]=index; triangles[k+1]=index+sides; triangles[k+2]=next;
+                    triangles[k+3]=next; triangles[k+4]=index+sides; triangles[k+5]=next+sides;
+                }
+            }
+            var mesh=new Mesh(); mesh.vertices=vertices; mesh.uv=uv; mesh.triangles=triangles; mesh.RecalculateNormals(); mesh.RecalculateTangents(); mesh.RecalculateBounds(); return mesh;
         }
 
         static void BuildHook(Transform hook)

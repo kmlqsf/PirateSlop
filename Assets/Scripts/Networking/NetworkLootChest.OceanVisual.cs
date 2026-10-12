@@ -55,7 +55,7 @@ namespace PirateSlop.Networking
             float distance = Vector3.Distance(camera.transform.position, point);
             Vector3 screen = camera.WorldToScreenPoint(point + Vector3.up * 4);
             if (screen.z <= 0) return;
-            string label = InClam ? "Раковина с сундуком" : Kind == SeaLootKind.FloatingReward ? "Сундук из черепа"
+            string label = InRigging ? "Сундук в такелаже" : InClam ? "Раковина с сундуком" : Kind == SeaLootKind.FloatingReward ? "Сундук из черепа"
                 : Kind == SeaLootKind.Shark
                 ? (Opened || carrier.Value != null ? "Ящик с припасами" : SharksDistracted ? "Ящик с припасами" : "Стая акул")
                 : phase.Value == SeaLootState.Ready

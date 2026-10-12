@@ -290,6 +290,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5433685440119719193}
     m_Modifications:
+    - target: {fileID: 87871785901642089, guid: eed3adc680e0b114fb997c73868541b3, type: 3}
+      propertyPath: Phase
+      value: 3.9608328
+      objectReference: {fileID: 0}
     - target: {fileID: 6561509448292978426, guid: eed3adc680e0b114fb997c73868541b3, type: 3}
       propertyPath: m_LocalScale.x
       value: 1.1992865
@@ -349,36 +353,13 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 7483162407297301406, guid: eed3adc680e0b114fb997c73868541b3, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 6968994944174766186}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: eed3adc680e0b114fb997c73868541b3, type: 3}
 --- !u!4 &6437662524607968850 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6561509448292978426, guid: eed3adc680e0b114fb997c73868541b3, type: 3}
   m_PrefabInstance: {fileID: 168887052254148776}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &7314278378843292470 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7483162407297301406, guid: eed3adc680e0b114fb997c73868541b3, type: 3}
-  m_PrefabInstance: {fileID: 168887052254148776}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &6968994944174766186
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7314278378843292470}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 5.756575
-  Strength: 0.2
-  Phase: 3.9608328
 --- !u!1001 &314690598728552826
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -547,6 +528,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Palm_000
       objectReference: {fileID: 0}
+    - target: {fileID: 3061075776203827681, guid: d16e8628190132344b5b604d08d95dbb, type: 3}
+      propertyPath: Phase
+      value: 5.8654523
+      objectReference: {fileID: 0}
     - target: {fileID: 6378271966836968634, guid: d16e8628190132344b5b604d08d95dbb, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.77675045
@@ -602,31 +587,8 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2231072388044150058, guid: d16e8628190132344b5b604d08d95dbb, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 6899998823225146387}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d16e8628190132344b5b604d08d95dbb, type: 3}
---- !u!1 &1948992539463104330 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2231072388044150058, guid: d16e8628190132344b5b604d08d95dbb, type: 3}
-  m_PrefabInstance: {fileID: 430774256164954720}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &6899998823225146387
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1948992539463104330}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 5.7324185
-  Strength: 0.2
-  Phase: 5.8654523
 --- !u!4 &6736899505708216026 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6378271966836968634, guid: d16e8628190132344b5b604d08d95dbb, type: 3}
@@ -640,6 +602,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5433685440119719193}
     m_Modifications:
+    - target: {fileID: 1415679842389182631, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
+      propertyPath: Phase
+      value: 2.826509
+      objectReference: {fileID: 0}
     - target: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
       propertyPath: m_Name
       value: Bush_016
@@ -699,31 +665,8 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 8741249813054161539}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
---- !u!1 &2467533438763447269 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
-  m_PrefabInstance: {fileID: 522079608744474371}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &8741249813054161539
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2467533438763447269}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 1.5151246
-  Strength: 0.065
-  Phase: 2.826509
 --- !u!4 &7425424274560000210 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6931783828273256401, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
@@ -737,6 +680,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5433685440119719193}
     m_Modifications:
+    - target: {fileID: 1415679842389182631, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
+      propertyPath: Phase
+      value: 6.1002016
+      objectReference: {fileID: 0}
     - target: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
       propertyPath: m_Name
       value: Bush_022
@@ -796,31 +743,8 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 6987971049893232326}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
---- !u!1 &3447988788012712394 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
-  m_PrefabInstance: {fileID: 781668917982774572}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &6987971049893232326
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3447988788012712394}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 1.0839752
-  Strength: 0.065
-  Phase: 6.1002016
 --- !u!4 &7704444101476061949 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6931783828273256401, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
@@ -968,34 +892,15 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5870903489391617622, guid: 85b316cdfbd66ed4cb0e02c77b843769, type: 3}
+      propertyPath: Phase
+      value: 5.618453
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 4383708281859581557, guid: 85b316cdfbd66ed4cb0e02c77b843769, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1699834276749402139}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 85b316cdfbd66ed4cb0e02c77b843769, type: 3}
---- !u!1 &3495462185676460709 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4383708281859581557, guid: 85b316cdfbd66ed4cb0e02c77b843769, type: 3}
-  m_PrefabInstance: {fileID: 888457219730044112}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1699834276749402139
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3495462185676460709}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 6.782171
-  Strength: 0.2
-  Phase: 5.618453
 --- !u!4 &4666348313936510144 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5518699768144873488, guid: 85b316cdfbd66ed4cb0e02c77b843769, type: 3}
@@ -1165,6 +1070,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5433685440119719193}
     m_Modifications:
+    - target: {fileID: 1415679842389182631, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
+      propertyPath: Phase
+      value: 2.2150037
+      objectReference: {fileID: 0}
     - target: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
       propertyPath: m_Name
       value: Bush_020
@@ -1224,31 +1133,8 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 3695515911367248533}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
---- !u!1 &3129274465280761791 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
-  m_PrefabInstance: {fileID: 1039723202480593753}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &3695515911367248533
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3129274465280761791}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 1.5919355
-  Strength: 0.065
-  Phase: 2.2150037
 --- !u!4 &7953200897663700104 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6931783828273256401, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
@@ -1265,6 +1151,10 @@ PrefabInstance:
     - target: {fileID: 2231072388044150058, guid: d16e8628190132344b5b604d08d95dbb, type: 3}
       propertyPath: m_Name
       value: Palm_009
+      objectReference: {fileID: 0}
+    - target: {fileID: 3061075776203827681, guid: d16e8628190132344b5b604d08d95dbb, type: 3}
+      propertyPath: Phase
+      value: 3.062861
       objectReference: {fileID: 0}
     - target: {fileID: 6378271966836968634, guid: d16e8628190132344b5b604d08d95dbb, type: 3}
       propertyPath: m_LocalScale.x
@@ -1321,31 +1211,8 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2231072388044150058, guid: d16e8628190132344b5b604d08d95dbb, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 8838073002070124350}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d16e8628190132344b5b604d08d95dbb, type: 3}
---- !u!1 &1296986659440374165 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2231072388044150058, guid: d16e8628190132344b5b604d08d95dbb, type: 3}
-  m_PrefabInstance: {fileID: 1083554392433550527}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &8838073002070124350
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1296986659440374165}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 6.521473
-  Strength: 0.2
-  Phase: 3.062861
 --- !u!4 &6308877280436725765 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6378271966836968634, guid: d16e8628190132344b5b604d08d95dbb, type: 3}
@@ -1359,6 +1226,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5433685440119719193}
     m_Modifications:
+    - target: {fileID: 87871785901642089, guid: eed3adc680e0b114fb997c73868541b3, type: 3}
+      propertyPath: Phase
+      value: 1.5759622
+      objectReference: {fileID: 0}
     - target: {fileID: 6561509448292978426, guid: eed3adc680e0b114fb997c73868541b3, type: 3}
       propertyPath: m_LocalScale.x
       value: 1.1141311
@@ -1418,36 +1289,13 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 7483162407297301406, guid: eed3adc680e0b114fb997c73868541b3, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 6007751347411768082}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: eed3adc680e0b114fb997c73868541b3, type: 3}
 --- !u!4 &6064905136452960379 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6561509448292978426, guid: eed3adc680e0b114fb997c73868541b3, type: 3}
   m_PrefabInstance: {fileID: 1091547876622323329}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &7565059520412841247 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7483162407297301406, guid: eed3adc680e0b114fb997c73868541b3, type: 3}
-  m_PrefabInstance: {fileID: 1091547876622323329}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &6007751347411768082
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7565059520412841247}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 5.3478293
-  Strength: 0.2
-  Phase: 1.5759622
 --- !u!1001 &1288778001481941851
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1512,34 +1360,15 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7447370573700625928, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
+      propertyPath: Phase
+      value: 1.3905509
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2586184628829847036, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1269646058058102488}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
---- !u!1 &3603251285829172903 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2586184628829847036, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
-  m_PrefabInstance: {fileID: 1288778001481941851}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1269646058058102488
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3603251285829172903}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 0.61330473
-  Strength: 0.065
-  Phase: 1.3905509
 --- !u!4 &4293569850133089186 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3060050555094812921, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
@@ -1609,34 +1438,15 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7447370573700625928, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
+      propertyPath: Phase
+      value: 0.28065643
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2586184628829847036, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 7279281022674655200}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
---- !u!1 &3605111801572894467 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2586184628829847036, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
-  m_PrefabInstance: {fileID: 1289180830423866111}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &7279281022674655200
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3605111801572894467}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 0.70509595
-  Strength: 0.065
-  Phase: 0.28065643
 --- !u!4 &4292894608460976646 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3060050555094812921, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
@@ -1706,34 +1516,15 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7447370573700625928, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
+      propertyPath: Phase
+      value: 4.6682057
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2586184628829847036, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 196617734130101597}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
---- !u!1 &3587553372591403343 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2586184628829847036, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
-  m_PrefabInstance: {fileID: 1308988381374106803}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &196617734130101597
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3587553372591403343}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 0.6537891
-  Strength: 0.065
-  Phase: 4.6682057
 --- !u!4 &4061418085620581450 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3060050555094812921, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
@@ -1747,6 +1538,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5433685440119719193}
     m_Modifications:
+    - target: {fileID: 1415679842389182631, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
+      propertyPath: Phase
+      value: 4.9584403
+      objectReference: {fileID: 0}
     - target: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
       propertyPath: m_Name
       value: Bush_042
@@ -1806,31 +1601,8 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1395455500471081311}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
---- !u!1 &3988694844722393668 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
-  m_PrefabInstance: {fileID: 1322383603615200930}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1395455500471081311
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3988694844722393668}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 1.5442828
-  Strength: 0.065
-  Phase: 4.9584403
 --- !u!4 &8244024162244272499 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6931783828273256401, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
@@ -1900,34 +1672,15 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7447370573700625928, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
+      propertyPath: Phase
+      value: 4.454944
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2586184628829847036, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 6379832561820746727}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
---- !u!1 &3560279444127261360 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2586184628829847036, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
-  m_PrefabInstance: {fileID: 1336265606159064908}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &6379832561820746727
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3560279444127261360}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 0.67209834
-  Strength: 0.065
-  Phase: 4.454944
 --- !u!4 &4106198438759569333 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3060050555094812921, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
@@ -2097,6 +1850,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5433685440119719193}
     m_Modifications:
+    - target: {fileID: 1415679842389182631, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
+      propertyPath: Phase
+      value: 1.8243445
+      objectReference: {fileID: 0}
     - target: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
       propertyPath: m_Name
       value: Bush_050
@@ -2156,31 +1913,8 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 889940072317199457}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
---- !u!1 &3580224161427817752 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
-  m_PrefabInstance: {fileID: 1490479075250782718}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &889940072317199457
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3580224161427817752}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 1.4168253
-  Strength: 0.065
-  Phase: 1.8243445
 --- !u!4 &8403042320357758511 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6931783828273256401, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
@@ -2194,6 +1928,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5433685440119719193}
     m_Modifications:
+    - target: {fileID: 1415679842389182631, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
+      propertyPath: Phase
+      value: 1.8032875
+      objectReference: {fileID: 0}
     - target: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
       propertyPath: m_Name
       value: Bush_036
@@ -2253,31 +1991,8 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 3453746054194161185}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
---- !u!1 &3621887404279998174 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
-  m_PrefabInstance: {fileID: 1676248709882896952}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &3453746054194161185
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3621887404279998174}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 1.0610582
-  Strength: 0.065
-  Phase: 1.8032875
 --- !u!4 &8606836252056008169 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6931783828273256401, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
@@ -2369,6 +2084,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5433685440119719193}
     m_Modifications:
+    - target: {fileID: 1415679842389182631, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
+      propertyPath: Phase
+      value: 1.2031903
+      objectReference: {fileID: 0}
     - target: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
       propertyPath: m_Name
       value: Bush_017
@@ -2428,31 +2147,8 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 6654201823849740237}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
---- !u!1 &4436531520480085999 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
-  m_PrefabInstance: {fileID: 1770202571493786377}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &6654201823849740237
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4436531520480085999}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 1.0985566
-  Strength: 0.065
-  Phase: 1.2031903
 --- !u!4 &8692969235918918872 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6931783828273256401, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
@@ -2700,6 +2396,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5433685440119719193}
     m_Modifications:
+    - target: {fileID: 1415679842389182631, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
+      propertyPath: Phase
+      value: 4.617985
+      objectReference: {fileID: 0}
     - target: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
       propertyPath: m_Name
       value: Bush_024
@@ -2759,31 +2459,8 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 6842379457959936822}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
---- !u!1 &4605319972117661210 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
-  m_PrefabInstance: {fileID: 1939325381299471100}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &6842379457959936822
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4605319972117661210}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 1.4632106
-  Strength: 0.065
-  Phase: 4.617985
 --- !u!4 &8852804193980208429 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6931783828273256401, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
@@ -2879,6 +2556,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Palm_012
       objectReference: {fileID: 0}
+    - target: {fileID: 3061075776203827681, guid: d16e8628190132344b5b604d08d95dbb, type: 3}
+      propertyPath: Phase
+      value: 3.9119096
+      objectReference: {fileID: 0}
     - target: {fileID: 6378271966836968634, guid: d16e8628190132344b5b604d08d95dbb, type: 3}
       propertyPath: m_LocalScale.x
       value: 1.0738753
@@ -2934,31 +2615,8 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2231072388044150058, guid: d16e8628190132344b5b604d08d95dbb, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 5179325745611677763}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d16e8628190132344b5b604d08d95dbb, type: 3}
---- !u!1 &281569007636840043 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2231072388044150058, guid: d16e8628190132344b5b604d08d95dbb, type: 3}
-  m_PrefabInstance: {fileID: 2098124377953282881}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &5179325745611677763
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 281569007636840043}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 7.9252
-  Strength: 0.2
-  Phase: 3.9119096
 --- !u!4 &5015362427153836027 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6378271966836968634, guid: d16e8628190132344b5b604d08d95dbb, type: 3}
@@ -2972,6 +2630,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5433685440119719193}
     m_Modifications:
+    - target: {fileID: 1415679842389182631, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
+      propertyPath: Phase
+      value: 0.87108624
+      objectReference: {fileID: 0}
     - target: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
       propertyPath: m_Name
       value: Bush_051
@@ -3031,31 +2693,8 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 8740446875353214476}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
---- !u!1 &4241496342634857459 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
-  m_PrefabInstance: {fileID: 2295831157474477845}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &8740446875353214476
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4241496342634857459}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 1.0257959
-  Strength: 0.065
-  Phase: 0.87108624
 --- !u!4 &9218528604207190212 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6931783828273256401, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
@@ -3303,6 +2942,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5433685440119719193}
     m_Modifications:
+    - target: {fileID: 1415679842389182631, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
+      propertyPath: Phase
+      value: 5.739518
+      objectReference: {fileID: 0}
     - target: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
       propertyPath: m_Name
       value: Bush_037
@@ -3362,31 +3005,8 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 6637766585699232564}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
---- !u!1 &122358285025781551 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
-  m_PrefabInstance: {fileID: 2644184743907517385}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &6637766585699232564
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 122358285025781551}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 1.0995994
-  Strength: 0.065
-  Phase: 5.739518
 --- !u!4 &4936135036485973016 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6931783828273256401, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
@@ -3456,34 +3076,15 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7447370573700625928, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
+      propertyPath: Phase
+      value: 6.1122785
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2586184628829847036, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2119970546350626486}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
---- !u!1 &496308513786048279 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2586184628829847036, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
-  m_PrefabInstance: {fileID: 2666347312808350443}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &2119970546350626486
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 496308513786048279}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 0.88535357
-  Strength: 0.065
-  Phase: 6.1122785
 --- !u!4 &1114569462350846482 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3060050555094812921, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
@@ -3553,34 +3154,15 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5870903489391617622, guid: 85b316cdfbd66ed4cb0e02c77b843769, type: 3}
+      propertyPath: Phase
+      value: 1.1368699
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 4383708281859581557, guid: 85b316cdfbd66ed4cb0e02c77b843769, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 145913717989017850}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 85b316cdfbd66ed4cb0e02c77b843769, type: 3}
---- !u!1 &1943351842310217784 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4383708281859581557, guid: 85b316cdfbd66ed4cb0e02c77b843769, type: 3}
-  m_PrefabInstance: {fileID: 2751175182598915661}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &145913717989017850
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1943351842310217784}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 7.1200876
-  Strength: 0.2
-  Phase: 1.1368699
 --- !u!4 &7690036498718232157 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5518699768144873488, guid: 85b316cdfbd66ed4cb0e02c77b843769, type: 3}
@@ -3728,39 +3310,20 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7447370573700625928, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
+      propertyPath: Phase
+      value: 1.5957294
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2586184628829847036, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 7506245630008425120}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
 --- !u!4 &167113941171201613 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3060050555094812921, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
   m_PrefabInstance: {fileID: 2893227384435093172}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &848145461043123016 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2586184628829847036, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
-  m_PrefabInstance: {fileID: 2893227384435093172}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &7506245630008425120
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 848145461043123016}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 0.83818525
-  Strength: 0.065
-  Phase: 1.5957294
 --- !u!1001 &2935949120298621826
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3903,39 +3466,20 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7447370573700625928, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
+      propertyPath: Phase
+      value: 5.3803463
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2586184628829847036, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 7076905893704168441}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
 --- !u!4 &27685160198739469 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3060050555094812921, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
   m_PrefabInstance: {fileID: 3032365408857087732}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &718000275551527688 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2586184628829847036, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
-  m_PrefabInstance: {fileID: 3032365408857087732}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &7076905893704168441
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 718000275551527688}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 0.6758404
-  Strength: 0.065
-  Phase: 5.3803463
 --- !u!1001 &3062870445874436892
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4022,6 +3566,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5433685440119719193}
     m_Modifications:
+    - target: {fileID: 1415679842389182631, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
+      propertyPath: Phase
+      value: 3.7225516
+      objectReference: {fileID: 0}
     - target: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
       propertyPath: m_Name
       value: Bush_019
@@ -4081,31 +3629,8 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 6467008402963416957}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
---- !u!1 &1011010076548101247 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
-  m_PrefabInstance: {fileID: 3100561747093336217}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &6467008402963416957
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1011010076548101247}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 1.4770597
-  Strength: 0.065
-  Phase: 3.7225516
 --- !u!4 &5419462925363439432 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6931783828273256401, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
@@ -4119,6 +3644,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5433685440119719193}
     m_Modifications:
+    - target: {fileID: 1415679842389182631, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
+      propertyPath: Phase
+      value: 3.0291953
+      objectReference: {fileID: 0}
     - target: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
       propertyPath: m_Name
       value: Bush_049
@@ -4178,31 +3707,8 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 3094311653157802668}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
---- !u!1 &817612549543565984 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
-  m_PrefabInstance: {fileID: 3339421862611836486}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &3094311653157802668
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 817612549543565984}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 1.3661548
-  Strength: 0.065
-  Phase: 3.0291953
 --- !u!4 &5650512128531007895 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6931783828273256401, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
@@ -4216,6 +3722,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5433685440119719193}
     m_Modifications:
+    - target: {fileID: 1415679842389182631, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
+      propertyPath: Phase
+      value: 5.6901593
+      objectReference: {fileID: 0}
     - target: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
       propertyPath: m_Name
       value: Bush_044
@@ -4275,31 +3785,8 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 9182863393120278775}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
---- !u!1 &791655108143538248 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
-  m_PrefabInstance: {fileID: 3457702480057476270}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &9182863393120278775
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 791655108143538248}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 1.5262396
-  Strength: 0.065
-  Phase: 5.6901593
 --- !u!4 &5750708319905280895 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6931783828273256401, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
@@ -4316,6 +3803,10 @@ PrefabInstance:
     - target: {fileID: 2231072388044150058, guid: d16e8628190132344b5b604d08d95dbb, type: 3}
       propertyPath: m_Name
       value: Palm_015
+      objectReference: {fileID: 0}
+    - target: {fileID: 3061075776203827681, guid: d16e8628190132344b5b604d08d95dbb, type: 3}
+      propertyPath: Phase
+      value: 1.2376816
       objectReference: {fileID: 0}
     - target: {fileID: 6378271966836968634, guid: d16e8628190132344b5b604d08d95dbb, type: 3}
       propertyPath: m_LocalScale.x
@@ -4372,31 +3863,8 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2231072388044150058, guid: d16e8628190132344b5b604d08d95dbb, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 7645722270693687196}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d16e8628190132344b5b604d08d95dbb, type: 3}
---- !u!1 &3380429513054912993 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2231072388044150058, guid: d16e8628190132344b5b604d08d95dbb, type: 3}
-  m_PrefabInstance: {fileID: 3467752194536592587}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &7645722270693687196
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3380429513054912993}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 8.664508
-  Strength: 0.2
-  Phase: 1.2376816
 --- !u!4 &7537832462710806641 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6378271966836968634, guid: d16e8628190132344b5b604d08d95dbb, type: 3}
@@ -4544,34 +4012,15 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7447370573700625928, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
+      propertyPath: Phase
+      value: 3.7742229
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2586184628829847036, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 3532630409773176249}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
---- !u!1 &1374289837144892238 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2586184628829847036, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
-  m_PrefabInstance: {fileID: 3526754348183396018}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &3532630409773176249
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1374289837144892238}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 0.58116806
-  Strength: 0.065
-  Phase: 3.7742229
 --- !u!4 &1911487361630393931 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3060050555094812921, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
@@ -4719,34 +4168,15 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7447370573700625928, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
+      propertyPath: Phase
+      value: 4.496072
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2586184628829847036, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 6802385145190215638}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
---- !u!1 &1255472902826595983 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2586184628829847036, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
-  m_PrefabInstance: {fileID: 3643320580085771123}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &6802385145190215638
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1255472902826595983}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 0.69175446
-  Strength: 0.065
-  Phase: 4.496072
 --- !u!4 &1799424480121463690 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3060050555094812921, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
@@ -4816,34 +4246,15 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5870903489391617622, guid: 85b316cdfbd66ed4cb0e02c77b843769, type: 3}
+      propertyPath: Phase
+      value: 1.206451
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 4383708281859581557, guid: 85b316cdfbd66ed4cb0e02c77b843769, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 616360883648884624}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 85b316cdfbd66ed4cb0e02c77b843769, type: 3}
---- !u!1 &1029777492238272238 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4383708281859581557, guid: 85b316cdfbd66ed4cb0e02c77b843769, type: 3}
-  m_PrefabInstance: {fileID: 3646946309247836315}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &616360883648884624
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1029777492238272238}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 6.012654
-  Strength: 0.2
-  Phase: 1.206451
 --- !u!4 &9082302958433855627 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5518699768144873488, guid: 85b316cdfbd66ed4cb0e02c77b843769, type: 3}
@@ -4913,34 +4324,15 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7447370573700625928, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
+      propertyPath: Phase
+      value: 0.2922744
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2586184628829847036, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 389959824537536593}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
---- !u!1 &1208911667868611988 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2586184628829847036, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
-  m_PrefabInstance: {fileID: 3685373819450050664}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &389959824537536593
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1208911667868611988}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 0.76904243
-  Strength: 0.065
-  Phase: 0.2922744
 --- !u!4 &1824635363666264209 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3060050555094812921, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
@@ -5010,34 +4402,15 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7447370573700625928, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
+      propertyPath: Phase
+      value: 3.7406628
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2586184628829847036, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 411370573512560037}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
---- !u!1 &1717446229906501147 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2586184628829847036, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
-  m_PrefabInstance: {fileID: 3762301228295607271}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &411370573512560037
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1717446229906501147}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 0.6808054
-  Strength: 0.065
-  Phase: 3.7406628
 --- !u!4 &2180053161349913374 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3060050555094812921, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
@@ -5051,6 +4424,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5433685440119719193}
     m_Modifications:
+    - target: {fileID: 1415679842389182631, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
+      propertyPath: Phase
+      value: 0.32366183
+      objectReference: {fileID: 0}
     - target: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
       propertyPath: m_Name
       value: Bush_025
@@ -5110,31 +4487,8 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 3295334337798874161}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
---- !u!1 &1255775154716311774 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
-  m_PrefabInstance: {fileID: 3777909772812305464}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &3295334337798874161
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1255775154716311774}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 1.2686682
-  Strength: 0.065
-  Phase: 0.32366183
 --- !u!4 &6079701469969388521 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6931783828273256401, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
@@ -5360,34 +4714,15 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7447370573700625928, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
+      propertyPath: Phase
+      value: 0.07741536
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2586184628829847036, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 6222526385257896444}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
---- !u!1 &1566948411597483036 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2586184628829847036, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
-  m_PrefabInstance: {fileID: 3917307525314843104}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &6222526385257896444
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1566948411597483036}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 0.9089138
-  Strength: 0.065
-  Phase: 0.07741536
 --- !u!4 &2029550807547042073 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3060050555094812921, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
@@ -5401,6 +4736,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5433685440119719193}
     m_Modifications:
+    - target: {fileID: 1415679842389182631, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
+      propertyPath: Phase
+      value: 2.1750073
+      objectReference: {fileID: 0}
     - target: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
       propertyPath: m_Name
       value: Bush_029
@@ -5460,31 +4799,8 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 7968638730973045061}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
---- !u!1 &1430010860268366026 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
-  m_PrefabInstance: {fileID: 3952145585970867244}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &7968638730973045061
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1430010860268366026}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 1.5403326
-  Strength: 0.065
-  Phase: 2.1750073
 --- !u!4 &6262945581626145789 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6931783828273256401, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
@@ -5554,34 +4870,15 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5870903489391617622, guid: 85b316cdfbd66ed4cb0e02c77b843769, type: 3}
+      propertyPath: Phase
+      value: 3.3232188
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 4383708281859581557, guid: 85b316cdfbd66ed4cb0e02c77b843769, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 635897291678844049}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 85b316cdfbd66ed4cb0e02c77b843769, type: 3}
---- !u!1 &849925455268449938 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4383708281859581557, guid: 85b316cdfbd66ed4cb0e02c77b843769, type: 3}
-  m_PrefabInstance: {fileID: 3971477532229445863}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &635897291678844049
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 849925455268449938}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 5.4719787
-  Strength: 0.2
-  Phase: 3.3232188
 --- !u!4 &8902448735585657079 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5518699768144873488, guid: 85b316cdfbd66ed4cb0e02c77b843769, type: 3}
@@ -5651,39 +4948,20 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7447370573700625928, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
+      propertyPath: Phase
+      value: 6.043629
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2586184628829847036, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 8116530226115371857}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
 --- !u!4 &1318549791845388231 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3060050555094812921, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
   m_PrefabInstance: {fileID: 4051856242291099454}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &2006614215536655042 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2586184628829847036, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
-  m_PrefabInstance: {fileID: 4051856242291099454}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &8116530226115371857
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2006614215536655042}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 0.88901794
-  Strength: 0.065
-  Phase: 6.043629
 --- !u!1001 &4074652803287966647
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5770,6 +5048,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5433685440119719193}
     m_Modifications:
+    - target: {fileID: 1415679842389182631, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
+      propertyPath: Phase
+      value: 2.8155735
+      objectReference: {fileID: 0}
     - target: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
       propertyPath: m_Name
       value: Bush_048
@@ -5829,31 +5111,8 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1319329329861328517}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
---- !u!1 &2059160405029429889 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
-  m_PrefabInstance: {fileID: 4148702905785968231}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1319329329861328517
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2059160405029429889}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 1.3304348
-  Strength: 0.065
-  Phase: 2.8155735
 --- !u!4 &6458588362512445878 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6931783828273256401, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
@@ -5923,39 +5182,20 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7447370573700625928, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
+      propertyPath: Phase
+      value: 3.4952168
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2586184628829847036, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 3969128291888227117}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
 --- !u!4 &1410517361765394979 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3060050555094812921, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
   m_PrefabInstance: {fileID: 4171549131776844506}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1875653462169984806 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2586184628829847036, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
-  m_PrefabInstance: {fileID: 4171549131776844506}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &3969128291888227117
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1875653462169984806}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 0.9119107
-  Strength: 0.065
-  Phase: 3.4952168
 --- !u!1001 &4271427224236314273
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5967,6 +5207,10 @@ PrefabInstance:
     - target: {fileID: 2231072388044150058, guid: d16e8628190132344b5b604d08d95dbb, type: 3}
       propertyPath: m_Name
       value: Palm_003
+      objectReference: {fileID: 0}
+    - target: {fileID: 3061075776203827681, guid: d16e8628190132344b5b604d08d95dbb, type: 3}
+      propertyPath: Phase
+      value: 2.5789185
       objectReference: {fileID: 0}
     - target: {fileID: 6378271966836968634, guid: d16e8628190132344b5b604d08d95dbb, type: 3}
       propertyPath: m_LocalScale.x
@@ -6023,31 +5267,8 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2231072388044150058, guid: d16e8628190132344b5b604d08d95dbb, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 4791418090902629320}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d16e8628190132344b5b604d08d95dbb, type: 3}
---- !u!1 &2716080597931137931 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2231072388044150058, guid: d16e8628190132344b5b604d08d95dbb, type: 3}
-  m_PrefabInstance: {fileID: 4271427224236314273}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &4791418090902629320
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2716080597931137931}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 7.096488
-  Strength: 0.2
-  Phase: 2.5789185
 --- !u!4 &7188594801081549339 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6378271966836968634, guid: d16e8628190132344b5b604d08d95dbb, type: 3}
@@ -6139,6 +5360,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5433685440119719193}
     m_Modifications:
+    - target: {fileID: 1415679842389182631, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
+      propertyPath: Phase
+      value: 1.6070358
+      objectReference: {fileID: 0}
     - target: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
       propertyPath: m_Name
       value: Bush_033
@@ -6198,31 +5423,8 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2731453528410629307}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
---- !u!1 &1770646491018928653 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
-  m_PrefabInstance: {fileID: 4436650019427018475}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &2731453528410629307
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1770646491018928653}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 1.3279308
-  Strength: 0.065
-  Phase: 1.6070358
 --- !u!4 &6746534103910920506 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6931783828273256401, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
@@ -6314,6 +5516,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5433685440119719193}
     m_Modifications:
+    - target: {fileID: 1415679842389182631, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
+      propertyPath: Phase
+      value: 2.3083272
+      objectReference: {fileID: 0}
     - target: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
       propertyPath: m_Name
       value: Bush_023
@@ -6373,31 +5579,8 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 7667440370675644665}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
---- !u!1 &1794855093904570005 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
-  m_PrefabInstance: {fileID: 4460858343408251507}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &7667440370675644665
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1794855093904570005}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 1.4543403
-  Strength: 0.065
-  Phase: 2.3083272
 --- !u!4 &6762862570310854050 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6931783828273256401, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
@@ -6567,6 +5750,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5433685440119719193}
     m_Modifications:
+    - target: {fileID: 1415679842389182631, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
+      propertyPath: Phase
+      value: 0.21691959
+      objectReference: {fileID: 0}
     - target: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
       propertyPath: m_Name
       value: Bush_034
@@ -6626,36 +5813,13 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2470549336221670026}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
 --- !u!4 &2381934327795352961 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6931783828273256401, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
   m_PrefabInstance: {fileID: 4700896048729248336}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &7222731711600105142 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
-  m_PrefabInstance: {fileID: 4700896048729248336}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &2470549336221670026
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7222731711600105142}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 1.3573343
-  Strength: 0.065
-  Phase: 0.21691959
 --- !u!1001 &4745168605566279969
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6742,6 +5906,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5433685440119719193}
     m_Modifications:
+    - target: {fileID: 1415679842389182631, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
+      propertyPath: Phase
+      value: 5.390673
+      objectReference: {fileID: 0}
     - target: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
       propertyPath: m_Name
       value: Bush_030
@@ -6801,36 +5969,13 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 7277490616889290687}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
 --- !u!4 &2459937123321138444 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6931783828273256401, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
   m_PrefabInstance: {fileID: 4760823147167226589}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &7426835287051394619 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
-  m_PrefabInstance: {fileID: 4760823147167226589}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &7277490616889290687
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7426835287051394619}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 1.4127257
-  Strength: 0.065
-  Phase: 5.390673
 --- !u!1001 &4900687729944534982
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6895,34 +6040,15 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7447370573700625928, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
+      propertyPath: Phase
+      value: 1.5141721
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2586184628829847036, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 3086613371567067836}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
---- !u!1 &7485339583715992122 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2586184628829847036, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
-  m_PrefabInstance: {fileID: 4900687729944534982}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &3086613371567067836
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7485339583715992122}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 0.6139772
-  Strength: 0.065
-  Phase: 1.5141721
 --- !u!4 &7959485906864068415 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3060050555094812921, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
@@ -7014,6 +6140,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5433685440119719193}
     m_Modifications:
+    - target: {fileID: 87871785901642089, guid: eed3adc680e0b114fb997c73868541b3, type: 3}
+      propertyPath: Phase
+      value: 2.2793097
+      objectReference: {fileID: 0}
     - target: {fileID: 6561509448292978426, guid: eed3adc680e0b114fb997c73868541b3, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.8771137
@@ -7073,36 +6203,13 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 7483162407297301406, guid: eed3adc680e0b114fb997c73868541b3, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 4640130531554915413}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: eed3adc680e0b114fb997c73868541b3, type: 3}
 --- !u!4 &2292482855655662455 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6561509448292978426, guid: eed3adc680e0b114fb997c73868541b3, type: 3}
   m_PrefabInstance: {fileID: 4962864633411546509}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &2523752578078676499 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7483162407297301406, guid: eed3adc680e0b114fb997c73868541b3, type: 3}
-  m_PrefabInstance: {fileID: 4962864633411546509}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &4640130531554915413
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2523752578078676499}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 4.210146
-  Strength: 0.2
-  Phase: 2.2793097
 --- !u!1001 &5005399637936635038
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7189,6 +6296,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5433685440119719193}
     m_Modifications:
+    - target: {fileID: 1415679842389182631, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
+      propertyPath: Phase
+      value: 5.2478576
+      objectReference: {fileID: 0}
     - target: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
       propertyPath: m_Name
       value: Bush_026
@@ -7248,36 +6359,13 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1012303539862764413}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
 --- !u!4 &2705084593000164296 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6931783828273256401, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
   m_PrefabInstance: {fileID: 5023977248712981529}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &6969457334472587519 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
-  m_PrefabInstance: {fileID: 5023977248712981529}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1012303539862764413
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6969457334472587519}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 1.0550897
-  Strength: 0.065
-  Phase: 5.2478576
 --- !u!1001 &5120054691979970428
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7342,34 +6430,15 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7447370573700625928, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
+      propertyPath: Phase
+      value: 5.907505
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2586184628829847036, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 6892658127492298402}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
---- !u!1 &7272732490034559616 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2586184628829847036, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
-  m_PrefabInstance: {fileID: 5120054691979970428}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &6892658127492298402
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7272732490034559616}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 0.84790343
-  Strength: 0.065
-  Phase: 5.907505
 --- !u!4 &7888456451891400581 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3060050555094812921, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
@@ -7383,6 +6452,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5433685440119719193}
     m_Modifications:
+    - target: {fileID: 1415679842389182631, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
+      propertyPath: Phase
+      value: 0.3348132
+      objectReference: {fileID: 0}
     - target: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
       propertyPath: m_Name
       value: Bush_043
@@ -7442,36 +6515,13 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 6825982288376317229}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
 --- !u!4 &2850294487044151697 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6931783828273256401, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
   m_PrefabInstance: {fileID: 5169256157780577856}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &7114666119341263526 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
-  m_PrefabInstance: {fileID: 5169256157780577856}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &6825982288376317229
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7114666119341263526}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 1.2049806
-  Strength: 0.065
-  Phase: 0.3348132
 --- !u!1001 &5380188156214060808
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7614,39 +6664,20 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7447370573700625928, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
+      propertyPath: Phase
+      value: 5.712371
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2586184628829847036, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 7823274316681908545}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
 --- !u!4 &7030939100898762432 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3060050555094812921, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
   m_PrefabInstance: {fileID: 5468937954310247993}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &7495796482594450373 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2586184628829847036, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
-  m_PrefabInstance: {fileID: 5468937954310247993}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &7823274316681908545
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7495796482594450373}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 0.64947504
-  Strength: 0.065
-  Phase: 5.712371
 --- !u!1001 &5649497071374285625
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7711,39 +6742,20 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7447370573700625928, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
+      propertyPath: Phase
+      value: 4.9563227
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2586184628829847036, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 3275078675074123327}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
 --- !u!4 &7210386574628254656 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3060050555094812921, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
   m_PrefabInstance: {fileID: 5649497071374285625}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &7891699150807746245 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2586184628829847036, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
-  m_PrefabInstance: {fileID: 5649497071374285625}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &3275078675074123327
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7891699150807746245}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 0.8122886
-  Strength: 0.065
-  Phase: 4.9563227
 --- !u!1001 &5732663410387309890
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7830,6 +6842,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5433685440119719193}
     m_Modifications:
+    - target: {fileID: 87871785901642089, guid: eed3adc680e0b114fb997c73868541b3, type: 3}
+      propertyPath: Phase
+      value: 2.2565734
+      objectReference: {fileID: 0}
     - target: {fileID: 6561509448292978426, guid: eed3adc680e0b114fb997c73868541b3, type: 3}
       propertyPath: m_LocalScale.x
       value: 1.1657654
@@ -7889,36 +6905,13 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 7483162407297301406, guid: eed3adc680e0b114fb997c73868541b3, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 5628999068629280361}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: eed3adc680e0b114fb997c73868541b3, type: 3}
 --- !u!4 &657489022890957255 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6561509448292978426, guid: eed3adc680e0b114fb997c73868541b3, type: 3}
   m_PrefabInstance: {fileID: 5913495537725544253}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &3875765652694117539 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7483162407297301406, guid: eed3adc680e0b114fb997c73868541b3, type: 3}
-  m_PrefabInstance: {fileID: 5913495537725544253}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &5628999068629280361
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3875765652694117539}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 5.595674
-  Strength: 0.2
-  Phase: 2.2565734
 --- !u!1001 &5950279773352180662
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8005,6 +6998,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5433685440119719193}
     m_Modifications:
+    - target: {fileID: 1415679842389182631, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
+      propertyPath: Phase
+      value: 1.8939186
+      objectReference: {fileID: 0}
     - target: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
       propertyPath: m_Name
       value: Bush_038
@@ -8064,36 +7061,13 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 7496939723746740139}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
 --- !u!4 &3690961823343305273 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6931783828273256401, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
   m_PrefabInstance: {fileID: 5983677052012836328}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &8505882043106029838 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
-  m_PrefabInstance: {fileID: 5983677052012836328}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &7496939723746740139
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8505882043106029838}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 1.2491817
-  Strength: 0.065
-  Phase: 1.8939186
 --- !u!1001 &6214801281087201714
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8180,6 +7154,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5433685440119719193}
     m_Modifications:
+    - target: {fileID: 1415679842389182631, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
+      propertyPath: Phase
+      value: 1.9506675
+      objectReference: {fileID: 0}
     - target: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
       propertyPath: m_Name
       value: Bush_032
@@ -8239,36 +7217,13 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 8960859535747609265}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
 --- !u!4 &3915409527480374688 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6931783828273256401, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
   m_PrefabInstance: {fileID: 6225365095252460145}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &8314855094406825623 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
-  m_PrefabInstance: {fileID: 6225365095252460145}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &8960859535747609265
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8314855094406825623}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 1.0874745
-  Strength: 0.065
-  Phase: 1.9506675
 --- !u!1001 &6288676244969554454
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8333,39 +7288,20 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5870903489391617622, guid: 85b316cdfbd66ed4cb0e02c77b843769, type: 3}
+      propertyPath: Phase
+      value: 5.94506
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 4383708281859581557, guid: 85b316cdfbd66ed4cb0e02c77b843769, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 5177974291592546446}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 85b316cdfbd66ed4cb0e02c77b843769, type: 3}
 --- !u!4 &2005088693086800390 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5518699768144873488, guid: 85b316cdfbd66ed4cb0e02c77b843769, type: 3}
   m_PrefabInstance: {fileID: 6288676244969554454}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &7751771161611248739 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4383708281859581557, guid: 85b316cdfbd66ed4cb0e02c77b843769, type: 3}
-  m_PrefabInstance: {fileID: 6288676244969554454}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &5177974291592546446
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7751771161611248739}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 7.2553134
-  Strength: 0.2
-  Phase: 5.94506
 --- !u!1001 &6513607596534071029
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8452,6 +7388,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5433685440119719193}
     m_Modifications:
+    - target: {fileID: 1415679842389182631, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
+      propertyPath: Phase
+      value: 1.7687638
+      objectReference: {fileID: 0}
     - target: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
       propertyPath: m_Name
       value: Bush_039
@@ -8511,36 +7451,13 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 6121545448905519100}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
 --- !u!4 &4257589041816677968 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6931783828273256401, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
   m_PrefabInstance: {fileID: 6568317569484355969}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &9090487479358111079 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
-  m_PrefabInstance: {fileID: 6568317569484355969}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &6121545448905519100
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9090487479358111079}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 1.553621
-  Strength: 0.065
-  Phase: 1.7687638
 --- !u!1001 &6706261970840876617
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8705,6 +7622,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5433685440119719193}
     m_Modifications:
+    - target: {fileID: 1415679842389182631, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
+      propertyPath: Phase
+      value: 6.055201
+      objectReference: {fileID: 0}
     - target: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
       propertyPath: m_Name
       value: Bush_031
@@ -8764,36 +7685,13 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2611385937110155712}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
 --- !u!4 &4466972369373929937 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6931783828273256401, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
   m_PrefabInstance: {fileID: 6759756915594688000}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &8705395596612481766 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
-  m_PrefabInstance: {fileID: 6759756915594688000}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &2611385937110155712
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8705395596612481766}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 1.1901894
-  Strength: 0.065
-  Phase: 6.055201
 --- !u!1001 &6833311046180026533
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8802,6 +7700,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5433685440119719193}
     m_Modifications:
+    - target: {fileID: 1415679842389182631, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
+      propertyPath: Phase
+      value: 5.3977113
+      objectReference: {fileID: 0}
     - target: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
       propertyPath: m_Name
       value: Bush_045
@@ -8861,36 +7763,13 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 5218004810020503590}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
 --- !u!4 &4532425091053940596 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6931783828273256401, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
   m_PrefabInstance: {fileID: 6833311046180026533}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &8922879927230200899 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
-  m_PrefabInstance: {fileID: 6833311046180026533}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &5218004810020503590
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8922879927230200899}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 1.0007886
-  Strength: 0.065
-  Phase: 5.3977113
 --- !u!1001 &6898972451466139823
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8899,6 +7778,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5433685440119719193}
     m_Modifications:
+    - target: {fileID: 1415679842389182631, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
+      propertyPath: Phase
+      value: 0.5169622
+      objectReference: {fileID: 0}
     - target: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
       propertyPath: m_Name
       value: Bush_027
@@ -8958,36 +7841,13 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 55593602103683747}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
 --- !u!4 &4579235367334317950 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6931783828273256401, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
   m_PrefabInstance: {fileID: 6898972451466139823}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &8844698934959709257 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
-  m_PrefabInstance: {fileID: 6898972451466139823}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &55593602103683747
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8844698934959709257}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 1.360252
-  Strength: 0.065
-  Phase: 0.5169622
 --- !u!1001 &7065473568620499708
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9074,6 +7934,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5433685440119719193}
     m_Modifications:
+    - target: {fileID: 1415679842389182631, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
+      propertyPath: Phase
+      value: 3.7002573
+      objectReference: {fileID: 0}
     - target: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
       propertyPath: m_Name
       value: Bush_047
@@ -9133,36 +7997,13 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 3154015569332684275}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
 --- !u!4 &164232525521879580 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6931783828273256401, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
   m_PrefabInstance: {fileID: 7094818915838744013}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &5149127316430819627 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
-  m_PrefabInstance: {fileID: 7094818915838744013}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &3154015569332684275
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5149127316430819627}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 1.4663891
-  Strength: 0.065
-  Phase: 3.7002573
 --- !u!1001 &7224513777560053865
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9171,6 +8012,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5433685440119719193}
     m_Modifications:
+    - target: {fileID: 1415679842389182631, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
+      propertyPath: Phase
+      value: 6.1974864
+      objectReference: {fileID: 0}
     - target: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
       propertyPath: m_Name
       value: Bush_021
@@ -9230,36 +8075,13 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 9172130264550372397}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
 --- !u!4 &319761803433721784 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6931783828273256401, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
   m_PrefabInstance: {fileID: 7224513777560053865}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &4702353076365110415 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
-  m_PrefabInstance: {fileID: 7224513777560053865}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &9172130264550372397
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4702353076365110415}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 1.0685451
-  Strength: 0.065
-  Phase: 6.1974864
 --- !u!1001 &7328063891533479428
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9268,6 +8090,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5433685440119719193}
     m_Modifications:
+    - target: {fileID: 1415679842389182631, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
+      propertyPath: Phase
+      value: 4.25967
+      objectReference: {fileID: 0}
     - target: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
       propertyPath: m_Name
       value: Bush_046
@@ -9327,36 +8153,13 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 3876594257158701824}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
 --- !u!4 &396360622888872405 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6931783828273256401, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
   m_PrefabInstance: {fileID: 7328063891533479428}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &4661858370476374754 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
-  m_PrefabInstance: {fileID: 7328063891533479428}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &3876594257158701824
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4661858370476374754}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 1.5177115
-  Strength: 0.065
-  Phase: 4.25967
 --- !u!1001 &7334436219829048831
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9421,34 +8224,15 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7447370573700625928, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
+      propertyPath: Phase
+      value: 4.704265
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2586184628829847036, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 9054532286422806224}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
---- !u!1 &5056099643408066563 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2586184628829847036, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
-  m_PrefabInstance: {fileID: 7334436219829048831}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &9054532286422806224
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5056099643408066563}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 0.7961161
-  Strength: 0.065
-  Phase: 4.704265
 --- !u!4 &5746132591245958406 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3060050555094812921, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
@@ -9674,34 +8458,15 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7447370573700625928, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
+      propertyPath: Phase
+      value: 5.2074957
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2586184628829847036, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 8202668029175546834}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
---- !u!1 &5010354661712333029 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2586184628829847036, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
-  m_PrefabInstance: {fileID: 7380170756164711705}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &8202668029175546834
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5010354661712333029}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 0.60119885
-  Strength: 0.065
-  Phase: 5.2074957
 --- !u!4 &5484498102012722656 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3060050555094812921, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
@@ -9718,6 +8483,10 @@ PrefabInstance:
     - target: {fileID: 2231072388044150058, guid: d16e8628190132344b5b604d08d95dbb, type: 3}
       propertyPath: m_Name
       value: Palm_006
+      objectReference: {fileID: 0}
+    - target: {fileID: 3061075776203827681, guid: d16e8628190132344b5b604d08d95dbb, type: 3}
+      propertyPath: Phase
+      value: 5.2357993
       objectReference: {fileID: 0}
     - target: {fileID: 6378271966836968634, guid: d16e8628190132344b5b604d08d95dbb, type: 3}
       propertyPath: m_LocalScale.x
@@ -9774,36 +8543,13 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2231072388044150058, guid: d16e8628190132344b5b604d08d95dbb, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2491948777512706344}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d16e8628190132344b5b604d08d95dbb, type: 3}
 --- !u!4 &4565335229716166425 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6378271966836968634, guid: d16e8628190132344b5b604d08d95dbb, type: 3}
   m_PrefabInstance: {fileID: 7484833852279012259}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &8730549207018335881 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2231072388044150058, guid: d16e8628190132344b5b604d08d95dbb, type: 3}
-  m_PrefabInstance: {fileID: 7484833852279012259}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &2491948777512706344
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8730549207018335881}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 8.197614
-  Strength: 0.2
-  Phase: 5.2357993
 --- !u!1001 &7492984715982590993
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9968,6 +8714,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5433685440119719193}
     m_Modifications:
+    - target: {fileID: 1415679842389182631, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
+      propertyPath: Phase
+      value: 4.47891
+      objectReference: {fileID: 0}
     - target: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
       propertyPath: m_Name
       value: Bush_035
@@ -10027,36 +8777,13 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 7579520617462209992}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
 --- !u!4 &768440816222819876 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6931783828273256401, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
   m_PrefabInstance: {fileID: 7681074379338875381}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &5735356417117635859 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
-  m_PrefabInstance: {fileID: 7681074379338875381}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &7579520617462209992
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5735356417117635859}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 1.3930501
-  Strength: 0.065
-  Phase: 4.47891
 --- !u!1001 &7776119907310427982
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10121,39 +8848,20 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7447370573700625928, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
+      propertyPath: Phase
+      value: 1.9562563
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2586184628829847036, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 7104598225606206981}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
 --- !u!4 &4727979299519141815 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3060050555094812921, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
   m_PrefabInstance: {fileID: 7776119907310427982}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &5190867978709541554 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2586184628829847036, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
-  m_PrefabInstance: {fileID: 7776119907310427982}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &7104598225606206981
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5190867978709541554}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 0.66006243
-  Strength: 0.065
-  Phase: 1.9562563
 --- !u!1001 &7804166829334679286
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10162,6 +8870,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5433685440119719193}
     m_Modifications:
+    - target: {fileID: 1415679842389182631, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
+      propertyPath: Phase
+      value: 0.27822348
+      objectReference: {fileID: 0}
     - target: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
       propertyPath: m_Name
       value: Bush_040
@@ -10221,36 +8933,13 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 3280208722123185}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
 --- !u!4 &900540466278635815 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6931783828273256401, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
   m_PrefabInstance: {fileID: 7804166829334679286}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &5281953080864508432 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
-  m_PrefabInstance: {fileID: 7804166829334679286}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &3280208722123185
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5281953080864508432}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 1.015641
-  Strength: 0.065
-  Phase: 0.27822348
 --- !u!1001 &7898597307509182816
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10571,6 +9260,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5433685440119719193}
     m_Modifications:
+    - target: {fileID: 1415679842389182631, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
+      propertyPath: Phase
+      value: 5.0342855
+      objectReference: {fileID: 0}
     - target: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
       propertyPath: m_Name
       value: Bush_028
@@ -10630,36 +9323,13 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 6103518352657646678}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
 --- !u!4 &1140550274127534148 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6931783828273256401, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
   m_PrefabInstance: {fileID: 8063317743054540693}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &5397024231026985843 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
-  m_PrefabInstance: {fileID: 8063317743054540693}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &6103518352657646678
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5397024231026985843}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 1.4153246
-  Strength: 0.065
-  Phase: 5.0342855
 --- !u!1001 &8067160472327566631
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10668,6 +9338,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5433685440119719193}
     m_Modifications:
+    - target: {fileID: 1415679842389182631, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
+      propertyPath: Phase
+      value: 2.8195927
+      objectReference: {fileID: 0}
     - target: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
       propertyPath: m_Name
       value: Bush_018
@@ -10727,36 +9401,13 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 8264718766609926090}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
 --- !u!4 &1136854475729691382 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6931783828273256401, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
   m_PrefabInstance: {fileID: 8067160472327566631}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &5401209586965082561 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
-  m_PrefabInstance: {fileID: 8067160472327566631}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &8264718766609926090
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5401209586965082561}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 1.4943975
-  Strength: 0.065
-  Phase: 2.8195927
 --- !u!1001 &8068157361461098577
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10765,6 +9416,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5433685440119719193}
     m_Modifications:
+    - target: {fileID: 1415679842389182631, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
+      propertyPath: Phase
+      value: 3.2546031
+      objectReference: {fileID: 0}
     - target: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
       propertyPath: m_Name
       value: Bush_041
@@ -10824,36 +9479,13 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 6846853573613744995}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
 --- !u!4 &1136454075904241536 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6931783828273256401, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
   m_PrefabInstance: {fileID: 8068157361461098577}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &5401898883750280375 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2666337917895754982, guid: 7071c5e63d796c24cb4ba3ad9072b94b, type: 3}
-  m_PrefabInstance: {fileID: 8068157361461098577}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &6846853573613744995
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5401898883750280375}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 1.5471076
-  Strength: 0.065
-  Phase: 3.2546031
 --- !u!1001 &8080362769874156958
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10918,34 +9550,15 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7447370573700625928, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
+      propertyPath: Phase
+      value: 3.9447258
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2586184628829847036, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 4167993934686707139}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
---- !u!1 &6035050099230998626 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2586184628829847036, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
-  m_PrefabInstance: {fileID: 8080362769874156958}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &4167993934686707139
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6035050099230998626}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 0.7198905
-  Strength: 0.065
-  Phase: 3.9447258
 --- !u!4 &6508911907645830503 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3060050555094812921, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
@@ -11015,34 +9628,15 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7447370573700625928, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
+      propertyPath: Phase
+      value: 6.192398
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2586184628829847036, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2624802227825436737}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
---- !u!1 &6043068669436467180 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2586184628829847036, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
-  m_PrefabInstance: {fileID: 8088099722439944720}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &2624802227825436737
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6043068669436467180}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 0.678379
-  Strength: 0.065
-  Phase: 6.192398
 --- !u!4 &6505951159648133865 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3060050555094812921, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
@@ -11190,34 +9784,15 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7447370573700625928, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
+      propertyPath: Phase
+      value: 0.36819357
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2586184628829847036, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 8336286664281209409}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
---- !u!1 &6213565533231041549 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2586184628829847036, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
-  m_PrefabInstance: {fileID: 8491816209080300017}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &8336286664281209409
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6213565533231041549}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 0.86655354
-  Strength: 0.065
-  Phase: 0.36819357
 --- !u!4 &6894877016240912648 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3060050555094812921, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
@@ -11231,6 +9806,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5433685440119719193}
     m_Modifications:
+    - target: {fileID: 87871785901642089, guid: eed3adc680e0b114fb997c73868541b3, type: 3}
+      propertyPath: Phase
+      value: 3.6260548
+      objectReference: {fileID: 0}
     - target: {fileID: 6561509448292978426, guid: eed3adc680e0b114fb997c73868541b3, type: 3}
       propertyPath: m_LocalScale.x
       value: 1.0932285
@@ -11290,31 +9869,8 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 7483162407297301406, guid: eed3adc680e0b114fb997c73868541b3, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 8401487306763752177}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: eed3adc680e0b114fb997c73868541b3, type: 3}
---- !u!1 &2241092594181623484 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7483162407297301406, guid: eed3adc680e0b114fb997c73868541b3, type: 3}
-  m_PrefabInstance: {fileID: 8701092300940866850}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &8401487306763752177
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2241092594181623484}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 5.2474966
-  Strength: 0.2
-  Phase: 3.6260548
 --- !u!4 &2580377098735074264 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6561509448292978426, guid: eed3adc680e0b114fb997c73868541b3, type: 3}
@@ -11384,36 +9940,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7447370573700625928, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
+      propertyPath: Phase
+      value: 5.063676
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2586184628829847036, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 5311493436307399008}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
 --- !u!4 &5983858511732514548 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3060050555094812921, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
   m_PrefabInstance: {fileID: 8754316358657398285}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &6529776834145430513 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2586184628829847036, guid: 1586078d2386bde428386ea3cc731af9, type: 3}
-  m_PrefabInstance: {fileID: 8754316358657398285}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &5311493436307399008
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6529776834145430513}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2896f19b7f05b9448e6c4eeae5667d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.SandyIslandFoliageWind
-  Height: 0.8398082
-  Strength: 0.065
-  Phase: 5.063676

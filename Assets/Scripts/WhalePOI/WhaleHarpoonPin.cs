@@ -21,6 +21,13 @@ namespace PirateSlop
         public Vector3 EmbeddedPoint => Owner.transform.TransformPoint(restPosition);
         public Vector3 GripPoint => Grip != null ? Grip.position : transform.position;
         public Vector3 RopePoint => RopeEye != null ? RopeEye.position : GripPoint;
+        public float ShaftDistance(Vector3 origin)
+        {
+            var start=transform.TransformPoint(Vector3.forward*.75f);
+            var shaft=transform.TransformPoint(Vector3.forward*2.6f)-start;
+            float along=shaft.sqrMagnitude>.0001f ? Mathf.Clamp01(Vector3.Dot(origin-start,shaft)/shaft.sqrMagnitude) : 0;
+            return Vector3.Distance(origin,start+shaft*along);
+        }
         public bool Aim(Ray ray, float distance, out float range)
         {
             var start = transform.TransformPoint(Vector3.forward * .75f);
@@ -28,7 +35,7 @@ namespace PirateSlop
             var offset = ray.origin - start;
             float projection = Vector3.Dot(ray.direction, shaft);
             float denominator = shaft.sqrMagnitude - projection * projection;
-            float along = denominator > .0001f ? Mathf.Clamp01((Vector3.Dot(shaft, offset) - projection * Vector3.Dot(ray.direction, offset)) / denominator) : .5f;
+            float along = denominator > .0001f ? Mathf.Clamp01((Vector3.Dot(shaft, offset) - projection * Vector3.Dot(ray.direction, offset)) / denominator) : Mathf.Clamp01(Vector3.Dot(shaft,offset)/Mathf.Max(.0001f,shaft.sqrMagnitude));
             var point = start + shaft * along;
             range = Vector3.Dot(point - ray.origin, ray.direction);
             return range >= 0 && range <= distance && (point - ray.GetPoint(range)).sqrMagnitude <= .38f * .38f;
@@ -45,7 +52,7 @@ namespace PirateSlop
             if (actor == null || Owner == null) return false;
             var origin = ReachOrigin(actor);
             var support = actor.GetComponent<ShipDeckPassenger>()?.Support;
-            bool onWhale = support != null && support.GetComponent<WhaleLootPoint>() == Owner;
+            bool onWhale = support != null && support.GetComponent<WhaleLootPoint>() == Owner || Vector3.Dot(origin-EmbeddedPoint,Owner.transform.up)>.25f;
             for (int i = 0; i < 5; i++)
             {
                 var target = transform.TransformPoint(Vector3.forward * (1f + i * .38f));

@@ -39,6 +39,12 @@ namespace PirateSlop.World
             if (gallery == null || !layout.Points.Exists(p => p.Id == Marker + "/" + gallery.Revision))
                 throw new InvalidOperationException("Environment gallery differs from the host. Update the game assets.");
             var instance = Instantiate(gallery, parent);
+            foreach (var terrain in instance.GetComponentsInChildren<Terrain>(true))
+                if (terrain.terrainData == null)
+                {
+                    Destroy(instance.gameObject);
+                    throw new InvalidOperationException("Данные островов повреждены или отсутствуют. Обновите файлы игры.");
+                }
             var ocean = Resources.Load<GameObject>("EnvironmentTest/Ocean");
             if (ocean == null) throw new InvalidOperationException("The environment test ocean is missing.");
             Instantiate(ocean, parent);

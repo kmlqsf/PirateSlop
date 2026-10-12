@@ -14,6 +14,7 @@
 | [Docs/AmbientSeagulls.md](<../AmbientSeagulls.md>) | Документация; Чайки и фоновые стаи |
 | [Docs/ClamChestEvent.md](<../ClamChestEvent.md>) | Документация; Раковина с сундуком и парные рычаги |
 | [Docs/IslandBalanceEvent.md](<../IslandBalanceEvent.md>) | Документация; Остров с весами и пятью камнями |
+| [Docs/RiggingChestEvent.md](<../RiggingChestEvent.md>) | Документация; Сундук в такелаже |
 | [Docs/RoguelikeApprovedUpgrades.md](<../RoguelikeApprovedUpgrades.md>) | Документация; Улучшения рогалика из сундуков |
 | [Docs/RoguelikeEffects.md](<../RoguelikeEffects.md>) | Документация; Улучшения рогалика из сундуков |
 | [Docs/RoguelikeMechanic.md](<../RoguelikeMechanic.md>) | Документация; Улучшения рогалика из сундуков |

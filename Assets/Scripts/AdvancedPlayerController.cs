@@ -295,7 +295,7 @@ public partial class AdvancedPlayerController : MonoBehaviour
         pending.Jump |= InputActive && kb.spaceKey.wasPressedThisFrame;
         if (shipV3Interaction == null) shipV3Interaction = GetComponent<PirateSlop.Ships.ShipV3PlayerInteraction>();
         var pumpInput = GetComponent<PirateSlop.Ships.ShipBilgePumpPlayer>();
-        if (GetComponent<PirateSlop.BalanceStonePlayer>()?.BlocksInventory == true || shipV3Interaction != null && shipV3Interaction.ConsumedInput || pumpInput != null && pumpInput.ConsumedInput) pending.Use = false;
+        if (GetComponent<PirateSlop.RiggingPlayerInteraction>()?.ConsumedInput == true || GetComponent<PirateSlop.BalanceStonePlayer>()?.BlocksInventory == true || shipV3Interaction != null && shipV3Interaction.ConsumedInput || pumpInput != null && pumpInput.ConsumedInput) pending.Use = false;
         else pending.Use |= InputActive && (kb.eKey.wasPressedThisFrame || kb.fKey.wasPressedThisFrame) && (IsSwimming || LocomotionLocked || inventory == null || !inventory.AimingAtPickup());
         pending.Release |= kb.qKey.wasPressedThisFrame || !InputActive;
         if (!networked) Simulate(ConsumeCommand(), Time.deltaTime);

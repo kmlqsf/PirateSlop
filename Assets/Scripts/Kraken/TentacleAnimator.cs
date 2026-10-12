@@ -25,6 +25,8 @@ namespace PirateSlop
         Action impactCallback;
         Func<double> clockSource;
         float idleMotionScale=1f;
+        bool directionalStrikes;
+        float strikeHeading;
 
         public bool IsAttacking => isAttacking;
         public double AttackStartedAt => attackStartTime;
@@ -34,6 +36,7 @@ namespace PirateSlop
         public float Duration => attackDuration;
         public bool IsStriking => isAttacking && visualClock>=attackStartTime+attackDuration*.32f && visualClock<=attackStartTime+attackDuration*.6f;
         public void SetIdleMotion(float scale) => idleMotionScale=Mathf.Clamp(scale,1f,5f);
+        public void SetDirectionalStrikes(bool enabled) => directionalStrikes=enabled;
         public float Reach => restPositions != null && restPositions.Length > 1 ? Vector3.Distance(transform.TransformPoint(restPositions[0]),transform.TransformPoint(restPositions[^1])) : 0f;
         public void SetClockSource(Func<double> source) { clockSource=source; clockReady=false; }
         public void SetTarget(NetworkShip target) => ship=target;
@@ -70,6 +73,8 @@ namespace PirateSlop
             isAttacking = true;
             attackStartTime = startedAt >= 0 ? startedAt : Clock;
             attackTargetLocal = ship != null ? ship.transform.InverseTransformPoint(targetPosition) : targetPosition;
+            Vector3 strikeDirection = Vector3.ProjectOnPlane(targetPosition-transform.position,Vector3.up);
+            strikeHeading = directionalStrikes && strikeDirection.sqrMagnitude>.0001f ? Vector3.SignedAngle(transform.forward,strikeDirection,Vector3.up) : 0;
             impactCallback = onImpact;
             impactTriggered = false;
         }
@@ -96,11 +101,21 @@ namespace PirateSlop
             double time = now*idleFrequency+phase;
             Vector3 idleTip = start+Vector3.up*(length*.87f)+transform.right*(lean+(float)Math.Sin(time*.55)*sway*idleMotionScale)+transform.forward*(curl+(float)Math.Sin(time*.7)*sway*idleMotionScale);
             Vector3 tip = idleTip;
+            Vector3 strikeForward = transform.forward;
             float progress = isAttacking ? Mathf.Clamp01((float)(now-attackStartTime)/attackDuration) : 0;
             if (isAttacking)
             {
                 Vector3 aim = AttackTarget;
-                Vector3 windup = start+Vector3.up*(length*.94f)-transform.forward*(length*.16f)+transform.right*lean;
+                if (directionalStrikes)
+                {
+                    Vector3 direction = Vector3.ProjectOnPlane(aim-start,Vector3.up);
+                    if (direction.sqrMagnitude > .0001f)
+                    {
+                        strikeHeading += Mathf.DeltaAngle(strikeHeading,Vector3.SignedAngle(transform.forward,direction,Vector3.up));
+                        strikeForward = Quaternion.AngleAxis(strikeHeading,Vector3.up)*transform.forward;
+                    }
+                }
+                Vector3 windup = start+Vector3.up*(length*.94f)-strikeForward*(length*.16f)+transform.right*lean;
                 if (progress < .32f) tip = Vector3.Lerp(idleTip,windup,Mathf.SmoothStep(0,1,progress/.32f));
                 else if (progress < .52f) { float t=(progress-.32f)/.2f; tip=Vector3.Lerp(windup,aim,t*t); }
                 else if (progress < .6f) tip = aim;
@@ -108,7 +123,9 @@ namespace PirateSlop
             }
             Vector3 offset = tip-start;
             if (offset.magnitude > length*.98f) tip=start+offset.normalized*(length*.98f);
-            Vector3 bend = Vector3.ProjectOnPlane(-transform.forward,(tip-start).normalized);
+            float strikeBlend = directionalStrikes && isAttacking ? Mathf.SmoothStep(0,1,Mathf.Min(progress/.32f,(1-progress)/.4f)) : 0;
+            Vector3 bendForward = Quaternion.AngleAxis(strikeHeading*strikeBlend,Vector3.up)*transform.forward;
+            Vector3 bend = Vector3.ProjectOnPlane(-bendForward,(tip-start).normalized);
             if (bend.sqrMagnitude < .000001f) bend=Vector3.ProjectOnPlane(transform.right,(tip-start).normalized);
             bend.Normalize();
             float idleBlend = !isAttacking ? 1f : progress < .32f ? 1f-Mathf.SmoothStep(0,1,progress/.32f) : progress > .6f ? Mathf.SmoothStep(0,1,(progress-.6f)/.4f) : 0f;

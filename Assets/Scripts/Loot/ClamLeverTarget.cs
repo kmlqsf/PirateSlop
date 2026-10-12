@@ -15,6 +15,8 @@ namespace PirateSlop
         public Vector3 HookRestPoint;
         public float HookLiftWeight;
         public Transform BoardingPoint;
+        public Transform LiftEnd;
+        public float SectionOverlap=.12f;
         void OnEnable() { if (!Active.Contains(this)) Active.Add(this); }
         void OnDisable() { Active.Remove(this); }
 
@@ -49,13 +51,14 @@ namespace PirateSlop
             var delta = HookSocket.position - LiftArm.position;
             if (delta.sqrMagnitude < .001f) return;
             LiftArm.rotation = Quaternion.FromToRotation(Vector3.up, delta.normalized);
-            float length = Mathf.Min(SectionLength, delta.magnitude);
-            float spacing = Mathf.Max(0, delta.magnitude - length) / (LiftSections.Length - 1);
+            float length = SectionLength;
+            float spacing = Mathf.Clamp((delta.magnitude-length)/(LiftSections.Length-1),0,length*(1-SectionOverlap));
             for (int i = 0; i < LiftSections.Length; i++)
             {
                 LiftSections[i].localPosition = Vector3.up * (length * .5f + i * spacing);
                 var scale = LiftSections[i].localScale; scale.y = length; LiftSections[i].localScale = scale;
             }
+            if(LiftEnd!=null) LiftEnd.SetPositionAndRotation(HookSocket.position,LiftArm.rotation);
         }
 
         public void SetHandle(float pull) => HandlePivot.localRotation = Quaternion.Euler(-65f * Mathf.Clamp01(pull), 0, 0);

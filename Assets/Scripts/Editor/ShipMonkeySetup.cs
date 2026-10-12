@@ -14,6 +14,7 @@ namespace PirateSlop.EditorTools
         const string VisualPath = "Assets/Prefabs/Creatures/ShipMonkey.prefab";
         const string ShipPath = "Assets/Resources/Ships/ShipV3Test.prefab";
         const string ControllerPath = "Assets/Animations/ShipMonkey/ShipMonkey.controller";
+        const string RelaxedIdlePath = "Assets/Animations/ShipMonkey/MonkeyIdleRelaxed.anim";
         static readonly string[] ClipNames = { "Idle", "IdleRail", "Walk", "RailWalk", "ClimbUp", "ClimbDown", "Run", "SitDown", "Sit", "StandUp", "SitDownPerch", "SitPerch", "StandUpPerch", "LegacyIdle", "LegacyWalk", "LegacyRailWalk", "LegacyClimbUp", "LegacyClimbDown", "JumpStart", "JumpAir", "JumpLand", "Pickup", "CarryIdle", "CarryWalk", "FishingCast", "FishingWait", "FishingReel", "Work", "Repair" };
 
         [MenuItem("PirateSlop/Configure Ship Monkey")]
@@ -55,6 +56,8 @@ namespace PirateSlop.EditorTools
             importer.SaveAndReimport();
             var clips = AssetDatabase.LoadAllAssetsAtPath(Model).OfType<AnimationClip>().Where(c => ClipNames.Contains(c.name)).ToDictionary(c => c.name);
             if (clips.Count != ClipNames.Length) throw new InvalidOperationException("The monkey model must contain all current and legacy animation clips.");
+            var relaxedIdle=AssetDatabase.LoadAssetAtPath<AnimationClip>(RelaxedIdlePath);
+            if(relaxedIdle!=null) clips["Idle"]=relaxedIdle;
             var controller = AssetDatabase.LoadAssetAtPath<AnimatorController>(ControllerPath);
             if (controller == null) controller = AnimatorController.CreateAnimatorControllerAtPath(ControllerPath);
             var machine = controller.layers[0].stateMachine;
@@ -102,6 +105,76 @@ namespace PirateSlop.EditorTools
                 if (root != null) UnityEngine.Object.DestroyImmediate(root);
                 UnityEditor.SceneManagement.EditorSceneManager.ClosePreviewScene(preview);
             }
+        }
+
+        [MenuItem("PirateSlop/Repair Monkey Idle Arms")]
+        public static string RepairIdleArms()
+        {
+            if(EditorApplication.isPlaying) throw new InvalidOperationException("Exit Play Mode first.");
+            var source=AssetDatabase.LoadAllAssetsAtPath(Model).OfType<AnimationClip>().First(c=>c.name=="Idle");
+            var clip=UnityEngine.Object.Instantiate(source); clip.name="MonkeyIdleRelaxed"; clip.hideFlags=HideFlags.None;
+            var preview=new PreviewRenderUtility();
+            try
+            {
+                var root=preview.InstantiatePrefabInScene(AssetDatabase.LoadAssetAtPath<GameObject>(VisualPath));
+                var animator=root.GetComponentInChildren<Animator>(); animator.enabled=false;
+                var bones=root.GetComponentsInChildren<Transform>(true).ToDictionary(t=>t.name);
+                var tracks=new Dictionary<Transform,Keyframe[][]>();
+                int frames=Mathf.CeilToInt(source.length*30);
+                foreach(string side in new[]{"L","R"})
+                    foreach(string joint in new[]{"UpperArm.","Forearm.","Hand."}) tracks[bones[joint+side]]=new[]{new Keyframe[frames+1],new Keyframe[frames+1],new Keyframe[frames+1],new Keyframe[frames+1]};
+                var previous=new Dictionary<Transform,Quaternion>();
+                for(int frame=0;frame<=frames;frame++)
+                {
+                    float time=source.length*frame/frames;
+                    source.SampleAnimation(animator.gameObject,time);
+                    foreach(string side in new[]{"L","R"})
+                    {
+                        var upper=bones["UpperArm."+side]; var lower=bones["Forearm."+side]; var hand=bones["Hand."+side];
+                        float sign=Mathf.Sign(Vector3.Dot(upper.position-bones["Chest"].position,root.transform.right));
+                        float a=Vector3.Distance(upper.position,lower.position),b=Vector3.Distance(lower.position,hand.position);
+                        var offset=root.transform.TransformDirection(new Vector3(sign*.07f,-(a+b)*.9f,.025f));
+                        float distance=Mathf.Min(offset.magnitude,a+b-.001f);
+                        var axis=offset.normalized;
+                        float along=(a*a-b*b+distance*distance)/(2*distance);
+                        var pole=root.transform.TransformDirection(new Vector3(sign,.1f,.3f));
+                        var bend=Vector3.ProjectOnPlane(pole,axis).normalized;
+                        var elbow=upper.position+axis*along+bend*Mathf.Sqrt(Mathf.Max(0,a*a-along*along));
+                        var wrist=upper.position+axis*distance;
+                        upper.rotation=Quaternion.FromToRotation(lower.position-upper.position,elbow-upper.position)*upper.rotation;
+                        lower.rotation=Quaternion.FromToRotation(hand.position-lower.position,wrist-lower.position)*lower.rotation;
+                        var palm=bones["Fingers."+side].position-hand.position;
+                        var thumb=bones["Thumb."+side].position-hand.position;
+                        var from=Quaternion.LookRotation(palm.normalized,Vector3.ProjectOnPlane(thumb,palm).normalized);
+                        var to=Quaternion.LookRotation(root.transform.TransformDirection(new Vector3(0,-1,.12f)),root.transform.forward);
+                        hand.rotation=to*Quaternion.Inverse(from)*hand.rotation;
+                    }
+                    foreach(var entry in tracks)
+                    {
+                        var q=entry.Key.localRotation;
+                        if(previous.TryGetValue(entry.Key,out var last) && Quaternion.Dot(last,q)<0) q=new Quaternion(-q.x,-q.y,-q.z,-q.w);
+                        previous[entry.Key]=q;
+                        entry.Value[0][frame]=new Keyframe(time,q.x); entry.Value[1][frame]=new Keyframe(time,q.y);
+                        entry.Value[2][frame]=new Keyframe(time,q.z); entry.Value[3][frame]=new Keyframe(time,q.w);
+                    }
+                }
+                foreach(var entry in tracks)
+                    for(int component=0;component<4;component++)
+                    {
+                        var curve=new AnimationCurve(entry.Value[component]);
+                        for(int key=0;key<curve.length;key++) { AnimationUtility.SetKeyLeftTangentMode(curve,key,AnimationUtility.TangentMode.Linear); AnimationUtility.SetKeyRightTangentMode(curve,key,AnimationUtility.TangentMode.Linear); }
+                        AnimationUtility.SetEditorCurve(clip,EditorCurveBinding.FloatCurve(AnimationUtility.CalculateTransformPath(entry.Key,animator.transform),typeof(Transform),"m_LocalRotation."+"xyzw"[component]),curve);
+                    }
+                clip.EnsureQuaternionContinuity();
+                var existing=AssetDatabase.LoadAssetAtPath<AnimationClip>(RelaxedIdlePath);
+                if(existing==null) AssetDatabase.CreateAsset(clip,RelaxedIdlePath);
+                else { EditorUtility.CopySerialized(clip,existing); UnityEngine.Object.DestroyImmediate(clip); clip=existing; }
+                var controller=AssetDatabase.LoadAssetAtPath<AnimatorController>(ControllerPath);
+                controller.layers[0].stateMachine.states.Select(s=>s.state).First(s=>s.name=="Idle").motion=clip;
+                EditorUtility.SetDirty(controller); AssetDatabase.SaveAssetIfDirty(clip); AssetDatabase.SaveAssetIfDirty(controller);
+                return "Idle arms relaxed with stable elbow bend and inward palms; other animations preserved.";
+            }
+            finally { preview.Cleanup(); }
         }
 
         public static void Configure(GameObject root)
