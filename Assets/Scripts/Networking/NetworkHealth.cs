@@ -10,10 +10,14 @@ namespace PirateSlop.Networking
         readonly SyncVar<bool> burning = new();
         readonly SyncVar<bool> developerInvulnerable = new();
         readonly SyncVar<uint> frozenUntil = new();
+        readonly SyncVar<uint> slowedUntil = new();
+        readonly SyncVar<float> slowMultiplier = new(1f);
         readonly SyncVar<uint> respawnUntil = new();
         float burnUntil, nextBurnDamage, wetUntil;
         GameObject fireAttacker;
         ShipFireVfx fireVisual;
+        GameObject frostVisual;
+        AudioSource burnAudio, frostAudio;
         public bool IsBurning => burning.Value;
         public bool DeveloperInvulnerable => developerInvulnerable.Value;
         CombatHealth target;
@@ -21,6 +25,14 @@ namespace PirateSlop.Networking
         public float RespawnSeconds => respawnUntil.Value == 0 || TimeManager == null ? 0f : Mathf.Max(0, unchecked((int)(respawnUntil.Value - TimeManager.Tick))) * (float)TimeManager.TickDelta;
         public float FrozenSeconds => frozenUntil.Value == 0 || TimeManager == null ? 0f : Mathf.Max(0, unchecked((int)(frozenUntil.Value - TimeManager.Tick))) * (float)TimeManager.TickDelta;
         public bool IsFrozen => FrozenSeconds > 0f;
+        public float MovementMultiplier => slowedUntil.Value != 0 && TimeManager != null && unchecked((int)(slowedUntil.Value - TimeManager.Tick)) > 0 ? slowMultiplier.Value : 1f;
+        public void Slow(float seconds, float multiplier)
+        {
+            if (!IsServerInitialized || target == null || target.IsDead || DeveloperInvulnerable || !float.IsFinite(seconds) || !float.IsFinite(multiplier) || seconds <= 0f) return;
+            float remaining = slowedUntil.Value == 0 ? 0f : Mathf.Max(0, unchecked((int)(slowedUntil.Value - TimeManager.Tick))) * (float)TimeManager.TickDelta;
+            slowMultiplier.Value = Mathf.Min(MovementMultiplier, Mathf.Clamp(multiplier, .1f, 1f));
+            slowedUntil.Value = TimeManager.Tick + (uint)Mathf.CeilToInt(Mathf.Max(remaining, seconds) / (float)TimeManager.TickDelta);
+        }
         void Awake()
         {
             target = GetComponent<CombatHealth>();
@@ -59,7 +71,7 @@ namespace PirateSlop.Networking
             if (IsServerInitialized) developerInvulnerable.Value = enabled;
         }
 
-        public void Ignite(GameObject attacker = null)
+        public void Ignite(GameObject attacker = null, float seconds = -1f)
         {
             if (!IsServerInitialized || target == null || target.IsDead || burning.Value || Time.time < wetUntil) return;
             var shooter = attacker != null ? attacker.GetComponent<NetworkPlayer>() : null;
@@ -68,7 +80,7 @@ namespace PirateSlop.Networking
             var motor = GetComponent<AdvancedPlayerController>();
             if (motor != null && motor.IsSwimming) return;
             burning.Value = true;
-            burnUntil = Time.time + Random.Range(5f, 9f);
+            burnUntil = Time.time + (float.IsFinite(seconds) && seconds > 0f ? seconds : Random.Range(5f, 9f));
             nextBurnDamage = Time.time;
             fireAttacker = attacker;
         }
@@ -85,6 +97,7 @@ namespace PirateSlop.Networking
         {
             if (!IsSpawned) return;
             if (IsServerInitialized && target.IsDead && HasRespawnTimer && RespawnSeconds <= 0f) target.RespawnAutomatically();
+            if (IsServerInitialized && slowedUntil.Value != 0 && (MovementMultiplier >= 1f || target.IsDead)) { slowedUntil.Value = 0; slowMultiplier.Value = 1f; }
             if (IsServerInitialized && frozenUntil.Value != 0 && (!IsFrozen || target.IsDead)) frozenUntil.Value = 0;
             if (IsServerInitialized && burning.Value)
             {
@@ -100,6 +113,10 @@ namespace PirateSlop.Networking
                 }
             }
             if (!IsClientInitialized || Application.isBatchMode) return;
+            if (burning.Value && !target.IsDead) GameAudio.Loop(ref burnAudio, SoundCue.StaffBurnLoop, transform, .6f); else StaffAudio.Stop(ref burnAudio);
+            if (MovementMultiplier < 1f && !target.IsDead) GameAudio.Loop(ref frostAudio, SoundCue.StaffFrostLoop, transform, .5f); else StaffAudio.Stop(ref frostAudio);
+            if (MovementMultiplier < 1f && !target.IsDead && frostVisual == null) frostVisual = StaffVfx.Frost(transform);
+            if ((MovementMultiplier >= 1f || target.IsDead) && frostVisual != null) { StaffVfx.FinishStatus(frostVisual); frostVisual = null; }
             if (burning.Value && !target.IsDead && fireVisual == null)
                 fireVisual = ShipFireVfx.Create(transform, Vector3.up * .65f, Vector3.up, .45f, true);
             if ((!burning.Value || target.IsDead) && fireVisual != null) { fireVisual.Finish(); fireVisual = null; }
@@ -107,10 +124,13 @@ namespace PirateSlop.Networking
 
         public override void OnStopNetwork()
         {
+            StaffAudio.Stop(ref burnAudio); StaffAudio.Stop(ref frostAudio);
+            if (frostVisual != null) Destroy(frostVisual);
+            frostVisual = null;
             if (fireVisual != null) Destroy(fireVisual.gameObject);
             fireVisual = null;
             fireAttacker = null;
-            if (IsServerInitialized) frozenUntil.Value = 0;
+            if (IsServerInitialized) { frozenUntil.Value = 0; slowedUntil.Value = 0; slowMultiplier.Value = 1f; }
             if (IsServerInitialized) burning.Value = false;
             if (IsServerInitialized) developerInvulnerable.Value = false;
             if (IsServerInitialized) respawnUntil.Value = 0;
@@ -144,6 +164,7 @@ namespace PirateSlop.Networking
             if (!IsServerInitialized || target.IsDead && !target.CanRespawn) return;
             Extinguish();
             frozenUntil.Value = 0;
+            slowedUntil.Value = 0; slowMultiplier.Value = 1f;
             RespawnObserversRpc(position, yaw, healthFraction);
             Publish(target.Current);
         }

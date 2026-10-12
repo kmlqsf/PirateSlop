@@ -21,6 +21,7 @@
 | [Assets/Shaders/CoastalShoreFoam.hlsl](<../../Assets/Shaders/CoastalShoreFoam.hlsl>) | Код шейдера; Мир, острова и океан |
 | [Assets/Shaders/CoastalTripoRock.shader](<../../Assets/Shaders/CoastalTripoRock.shader>) | Шейдер; Мир, острова и океан |
 | [Assets/Shaders/ExcavatedSand.shader](<../../Assets/Shaders/ExcavatedSand.shader>) | Шейдер; Остров с весами и пятью камнями |
+| [Assets/Shaders/FrozenWaterSurface.hlsl](<../../Assets/Shaders/FrozenWaterSurface.hlsl>) | Код шейдера; Личное оружие и урон |
 | [Assets/Shaders/IslandTerrain.shader](<../../Assets/Shaders/IslandTerrain.shader>) | Шейдер |
 | [Assets/Shaders/OvercastSky.shader](<../../Assets/Shaders/OvercastSky.shader>) | Шейдер |
 | [Assets/Shaders/Sail.shader](<../../Assets/Shaders/Sail.shader>) | Шейдер; Паруса и канаты |

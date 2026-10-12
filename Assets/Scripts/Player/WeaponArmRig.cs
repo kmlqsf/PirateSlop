@@ -38,6 +38,8 @@ namespace PirateSlop
             public float Reach => Valid ? Vector3.Distance(Upper.position, Fore.position) + Vector3.Distance(Fore.position, Hand.position) - .005f : 0;
             public Vector3 Palm => Mixamo ? new Vector3(-.005f, .075f, .025f) : new Vector3(0, .065f, .025f);
             public Quaternion wristRest;
+            Transform[] staffFingers;
+            Quaternion[] staffFingerRotations;
             public Arm(Transform root, string side)
             {
                 if (root == null) return;
@@ -53,6 +55,23 @@ namespace PirateSlop
                 Mixamo = Hand != null && Hand.name.StartsWith("mixamorig:");
                 if (Fore != null && Hand != null)
                     wristRest = Quaternion.Inverse(Fore.rotation) * Hand.rotation;
+                var fingers = new System.Collections.Generic.List<Transform>();
+                var rotations = new System.Collections.Generic.List<Quaternion>();
+                if (Mixamo)
+                    foreach (var digit in new[] { "Index", "Middle", "Ring", "Pinky", "Thumb" })
+                        for (int segment = 1; segment <= 3; segment++)
+                        {
+                            var finger = bones.FirstOrDefault(t => t.name == "mixamorig:" + sideFull + "Hand" + digit + segment);
+                            if (finger == null) continue;
+                            float curl = digit == "Thumb" ? (segment == 1 ? 18 : segment == 2 ? 32 : 20) : segment == 1 ? 55 : segment == 2 ? 70 : 30;
+                            float spread = segment == 1 ? (digit == "Thumb" ? 28 : digit == "Pinky" ? 7 : 2) * (side == "R" ? 1 : -1) : 0;
+                            fingers.Add(finger); rotations.Add(Quaternion.Euler(curl, 0, spread));
+                        }
+                staffFingers = fingers.ToArray(); staffFingerRotations = rotations.ToArray();
+            }
+            public void GripStaff()
+            {
+                for (int i = 0; i < staffFingers.Length; i++) staffFingers[i].localRotation = staffFingerRotations[i];
             }
             public void Solve(Vector3 point, Quaternion rotation, Vector3 pole, float blend, bool orientWrist = false)
             {
@@ -107,7 +126,7 @@ namespace PirateSlop
             bool plankVisible = repair != null && repair.FirstPersonPlank && camera == motor.PlayerCamera && camera.enabled;
             bool whaleVisible = whaleGripWeight > .01f && camera == motor.PlayerCamera && camera.enabled && !motor.IsThirdPerson && !motor.IsDead;
             bool stoneVisible = balanceStone != null && balanceStone.HeldVisual != null && balanceStone.GripWeight>.01f && camera == motor.PlayerCamera && camera.enabled && !motor.IsThirdPerson && !motor.IsDead;
-            foreach (var r in renderers) r.forceRenderingOff = !(plankVisible || whaleVisible || stoneVisible);
+            foreach (var renderer in renderers) renderer.forceRenderingOff = !(plankVisible || whaleVisible || stoneVisible);
         }
         void After(ScriptableRenderContext context, Camera camera) { if (renderers != null) foreach (var r in renderers) r.forceRenderingOff = true; }
         void LateUpdate()
@@ -212,6 +231,12 @@ namespace PirateSlop
         }
         void SolveEquipment(Transform item, Arm main, Arm support, Transform basis)
         {
+            if (equipment.Staff)
+            {
+                if (item == equipment.View) return;
+                SolveStaff(item, main, support, basis, equipment.SupportOffset, equipment.StaffWristRotation);
+                return;
+            }
             if (equipment.CanonicalFirearm)
             {
                 if (!main.Valid || !support.Valid) return;
@@ -255,6 +280,24 @@ namespace PirateSlop
             if (equipment.Item == PirateSlop.Networking.InventoryItem.Lantern) return;
             Vector3 otherPole = support.Upper.position - basis.right * .5f - basis.up * .4f;
             support.Solve(item.TransformPoint(equipment.SupportOffset), item.rotation, otherPole, 1);
+        }
+        static void SolveStaff(Transform item, Arm main, Arm support, Transform basis, Vector3 supportOffset, Vector3 wristRotation)
+        {
+            if (!main.Valid || !support.Valid) return;
+            supportOffset = new Vector3(0, Mathf.Clamp(supportOffset.y + .36f, .12f, .28f), 0);
+            Quaternion rightRotation = item.rotation * Quaternion.LookRotation(Vector3.left, Vector3.forward);
+            Quaternion leftRotation = item.rotation * Quaternion.AngleAxis(wristRotation.z * .2f, Vector3.up) * Quaternion.LookRotation(Vector3.right, Vector3.forward);
+            for (int i = 0; i < 8; i++)
+            {
+                FitGrip(item, main, item.position - rightRotation * main.Palm);
+                FitGrip(item, support, item.TransformPoint(supportOffset) - leftRotation * support.Palm);
+            }
+            Vector3 rightPole = main.Upper.position + basis.right * .4f - basis.up * .4f;
+            Vector3 leftPole = support.Upper.position - basis.right * .4f - basis.up * .35f;
+            main.Solve(item.position - rightRotation * main.Palm, rightRotation, rightPole, 1, true);
+            item.position = main.Hand.TransformPoint(main.Palm);
+            support.Solve(item.TransformPoint(supportOffset) - leftRotation * support.Palm, leftRotation, leftPole, 1, true);
+            main.GripStaff(); support.GripStaff();
         }
         static void SolvePlank(Transform item, Arm main, Arm support, Transform basis)
         {

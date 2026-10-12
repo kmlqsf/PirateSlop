@@ -81,6 +81,7 @@ namespace PirateSlop.Networking
             get
             {
                 if (Item == InventoryItem.Swordfish) return new Vector3(-.04f, -.06f, .35f);
+                if (Staff) return StaffSupportOffset;
                 if (HandMortar) return new Vector3(0, .065f, .34f);
                 if (!Firearm) return new Vector3(-.13f, -.06f, .03f);
                 if (action.Value != 1) return CanonicalFirearm ? supportGrip : new Vector3(0, -.04f, .4f);
@@ -90,7 +91,7 @@ namespace PirateSlop.Networking
                 return new Vector3(-.045f,-.04f+reach*.13f,.15f+reach*.5f);
             }
         }
-        public Vector3 GripOffset => Item == InventoryItem.Lantern || HandMortar ? Vector3.zero : Firearm ? CanonicalFirearm ? Vector3.zero : new Vector3(0, -.03f, 0) : Item == InventoryItem.Swordfish ? new Vector3(0, -.045f, .13f) : new Vector3(.03f, .06f, 0);
+        public Vector3 GripOffset => Item == InventoryItem.Lantern || HandMortar || Staff ? Vector3.zero : Firearm ? CanonicalFirearm ? Vector3.zero : new Vector3(0, -.03f, 0) : Item == InventoryItem.Swordfish ? new Vector3(0, -.045f, .13f) : new Vector3(.03f, .06f, 0);
         int CapacityFor(InventoryItem item) => item==InventoryItem.DoubleBarrel ? handling.Shotgun.Capacity : item==InventoryItem.Musket ? handling.Musket.Capacity : 1;
         public void ResetSlot(int slot, InventoryItem item)
         {
@@ -119,31 +120,40 @@ namespace PirateSlop.Networking
         void OnDisable()
         {
             CancelBottleAim();
+            ClearStaffCastVisuals();
+            ClearStaffHeldAudio();
+            ClearIceBeamVisuals();
             RenderPipelineManager.beginCameraRendering -= BeforeCamera; RenderPipelineManager.endCameraRendering -= AfterCamera;
         }
         bool CanUse => Active && (inventory.Fishing == null || (!inventory.Fishing.IsFishing && !inventory.Fishing.IsEating));
         void Update()
         {
-            if (!IsSpawned) return;
+            if (!IsSpawned) { ClearFrozenWater(); return; }
+            UpdateFrozenWater();
             if (IsServerInitialized)
             {
                 if (motor.IsDead) waterRunUntil = 0;
                 waterRunRemaining.Value = Mathf.Ceil(Mathf.Max(0,waterRunUntil-Time.time));
                 previousSlot = inventory.SelectedSlot; rounds.Value = previousSlot < ammunition.Length ? ammunition[previousSlot] : 0;
                 if (!CanUse || (action.Value != 0 && actionSlot != inventory.SelectedSlot)) { action.Value = 0; aiming.Value = false; }
+                UpdateStaffCasting();
+                UpdateIceBeamAuthority();
                 if (action.Value != 0 && Time.time >= until)
                 {
                     if (action.Value == 1) { ammunition[actionSlot] = CapacityFor(Item); rounds.Value = ammunition[actionSlot]; echoPrimedSlots[actionSlot] = true; }
                     if (action.Value == 2 && network.ConsumeEquipment(actionSlot, InventoryItem.Wine)) { waterRunUntil = Time.time+60; waterRunRemaining.Value = 60; WineDrinkObserversRpc(); }
                     if (action.Value == 4) network.ThrowFish(Item, direction.Value);
                     if (action.Value == 5) LaunchHandMortar();
-                    action.Value = 0;
+                    if (action.Value == 6) FinishStaffCast();
+                    if (action.Value != 7) action.Value = 0;
                 }
             }
             if (!IsOwner) return;
             var mouse = Mouse.current; var keyboard = Keyboard.current;
             if (Item == InventoryItem.GrapplingHook && mouse != null && mouse.leftButton.wasReleasedThisFrame) network.ReleaseGrapple();
             bool can = CanUse && motor.InputActive && !PirateSlop.WhalePlayerInteraction.InputBlocked && !PlayerInventory.LootWindowOpen && !inventory.ControlFocused;
+            ReadIceBeamInput(can, mouse);
+            ReadStaffGuidance(can);
             bool aim = can && Firearm && action.Value == 0 && handling!=null && handling.Aiming;
             if (aim && motor.IsThirdPerson) motor.SetThirdPerson(false);
             if (aim && Item == InventoryItem.Musket && mouse != null)
@@ -205,6 +215,7 @@ namespace PirateSlop.Networking
             if (!CanUse || action.Value != 0 || !float.IsFinite(forward.sqrMagnitude) || forward.sqrMagnitude < .5f) return;
             if (Item == InventoryItem.GrapplingHook) { if (request == 0) network.ThrowGrapple(forward, eyeOffset); return; }
             if (Time.time < nextShot) return;
+            if (Staff) { UseStaff(request, forward, eyeOffset); return; }
             if (HandMortar) { UseHandMortar(request, forward, eyeOffset); return; }
             if (Item == InventoryItem.ExplosiveBall)
             {
@@ -299,6 +310,8 @@ namespace PirateSlop.Networking
         }
         void CreateVisuals()
         {
+            ResetStaffPose();
+            ClearStaffHeldAudio();
             wings.Clear();
             viewLantern = worldLantern = null;
             if (view != null) Destroy(view.gameObject);
@@ -333,6 +346,7 @@ namespace PirateSlop.Networking
                     if (root == view) viewLantern = lantern; else worldLantern = lantern;
                 }
                 else if (Item == InventoryItem.ExplosiveBall) { visual.localRotation = Quaternion.identity; visual.localPosition = new Vector3(0, -.015f, .06f); }
+                else if (Staff) { visual.localRotation = Quaternion.identity; visual.localPosition = Vector3.zero; }
                 else if (HandMortar) { visual.localRotation = Quaternion.identity; visual.localPosition = Vector3.zero; }
                 else if (Item == InventoryItem.Spyglass) { visual.localRotation = Quaternion.identity; visual.localPosition = new Vector3(0, -.02f, .18f); }
                 else if (Firearm)
@@ -358,6 +372,7 @@ namespace PirateSlop.Networking
                 }
                 else { visual.localRotation = Quaternion.Euler(0, 180, 0); visual.localPosition = new Vector3(0, Item == InventoryItem.BombParrot ? -.16f : -.09f, 0); visual.localScale *= Item == InventoryItem.BombParrot ? .65f : 1f; }
             }
+            CreateStaffHeldEffects();
             viewRenderers = view.GetComponentsInChildren<Renderer>(true); worldRenderers = world.GetComponentsInChildren<Renderer>(true);
             foreach(var root in new[]{view,world}) foreach(var bone in root.GetComponentsInChildren<Transform>())
                 if(bone.name == "WingLeft" || bone.name == "WingRight") wings[bone] = bone.localRotation;
@@ -374,7 +389,7 @@ namespace PirateSlop.Networking
                 else if (previous == 2) GameAudio.Play(SoundCue.BottleClose, transform.position);
                 else if (previous == 1 && rounds.Value > 0) GameAudio.Play(SoundCue.ReloadReady, transform.position);
             }
-            if (view == null || world == null) return;
+            if (view == null || world == null) { ClearStaffCastVisuals(); ClearIceBeamVisuals(); return; }
             view.gameObject.SetActive(Active); world.gameObject.SetActive(Active);
             aimBlend = Mathf.MoveTowards(aimBlend, Active && (IsOwner ? sentAim : aiming.Value) ? 1 : 0, Time.deltaTime * 7);
             float t = Time.time - animationAt;
@@ -382,9 +397,10 @@ namespace PirateSlop.Networking
             var definition=Firearm && handling!=null?handling.Definition:null;
             Vector3 position = definition!=null ? Vector3.Lerp(definition.HipPosition,definition.AimPosition,IsOwner?handling.AimBlend:aimBlend) : new Vector3(.22f,-.25f,.45f);
             if (HandMortar && MortarSettings != null) position = MortarSettings.ViewPosition;
+            if (Staff && CurrentStaff != null) position = CurrentStaff.ViewPosition;
             if (Item == InventoryItem.Lantern) position = new Vector3(.32f, .16f, .62f);
-            Vector3 rotation = new Vector3(-recoil * (Item == InventoryItem.DoubleBarrel ? 20 : 15), recoil*1.5f, -recoil*2);
-            if(!IsOwner) position.z -= recoil * .13f;
+            Vector3 rotation = Staff ? Vector3.zero : new Vector3(-recoil * (Item == InventoryItem.DoubleBarrel ? 20 : 15), recoil*1.5f, -recoil*2);
+            if(!IsOwner && !Staff) position.z -= recoil * .13f;
             if(IsOwner && definition!=null) { rotation=handling.PoseRotation;position+=handling.PosePosition; }
             if (visualAction == 1)
             {
@@ -404,10 +420,19 @@ namespace PirateSlop.Networking
                 position += new Vector3(.06f,.09f,-.18f) * windup;
                 rotation += new Vector3(-22,12,0) * windup;
             }
-            view.localPosition = position; view.localRotation = Quaternion.Euler(rotation);
+            if (Staff) ApplyStaffPose(ref position, ref rotation);
+            var viewPosition = position;
+            var viewRotation = rotation;
+            if (Staff)
+            {
+                var viewPose = StaffCastingAnimation.FirstPerson(staffPose);
+                viewPosition = CurrentStaff.ViewPosition + viewPose.Position;
+                viewRotation = viewPose.Rotation;
+            }
+            view.localPosition = viewPosition; view.localRotation = Quaternion.Euler(viewRotation);
             float pitch = Mathf.Asin(Mathf.Clamp(-direction.Value.y,-1,1))*Mathf.Rad2Deg;
-            world.localPosition = new Vector3(position.x,1.4f+position.y,position.z);
-            world.localRotation = Quaternion.Euler(rotation + new Vector3(aiming.Value || HandMortar ? pitch : 0,0,0));
+            world.localPosition = Staff ? StaffCastingAnimation.WorldPosition(staffPose) - Vector3.up * (motor.IsCrouched ? .35f : 0f) : new Vector3(position.x,1.4f+position.y,position.z);
+            world.localRotation = Quaternion.Euler(rotation + new Vector3(aiming.Value || HandMortar || Staff ? pitch : 0,0,0));
             if (Item == InventoryItem.Lantern) world.localPosition = new Vector3(.34f, motor.IsCrouched ? .97f : 1.42f, .40f);
             if (CanonicalFirearm)
             {
@@ -419,6 +444,9 @@ namespace PirateSlop.Networking
                 world.localRotation = Quaternion.Euler(rotation + new Vector3(aiming.Value ? pitch : 0, Mathf.Lerp(-20, 0, blend), 0));
             }
             PresentLantern();
+            PresentStaffCasting();
+            PresentIceBeam();
+            PresentStaffHeldAudio();
             foreach(var wing in wings)
                 wing.Key.localRotation = wing.Value * Quaternion.Euler(0,(wing.Key.name == "WingLeft" ? 1 : -1) * Mathf.Sin(Time.time*(visualAction==3 ? 18 : 3)) * (visualAction==3 ? 60 : 5),0);
         }
@@ -436,6 +464,8 @@ namespace PirateSlop.Networking
             if(IsOwner && WaterRunning) PirateHudStyle.Label(new Rect(28,140,270,30),"Хождение по воде: "+waterRunRemaining.Value+" с",PirateHudStyle.Paper);
             if (!IsOwner || !Active || !motor.InputActive) return;
             if(Scoped) DrawScope();
+            if (Item == InventoryItem.IceStaff) { ContextPrompt.Offer(StaffCasting ? "МОРОЗНЫЙ ЛУЧ · подготовка: " + StaffCastRemaining.ToString("0.0") + " с" : "МОРОЗНЫЙ ЛУЧ · удерживать ЛКМ · 30 м", 20); return; }
+            if (Staff) { ContextPrompt.Offer(InventoryIcons.ItemName(Item).ToUpperInvariant() + (StaffCasting ? " · подготовка: " + StaffCastRemaining.ToString("0.0") + " с" : Item == InventoryItem.LightningStaff ? " · ЛКМ — удар в точку прицела" : " · ЛКМ — снаряд · мышь — направлять в полёте"), 20); return; }
             if (Item == InventoryItem.ExplosiveBall) { ContextPrompt.Offer("ВЗРЫВНОЕ ЯДРО · ЛКМ — бросить · фитиль 2,5 с", 20); return; }
             if (HandMortar) { ContextPrompt.Offer(IsReloading ? "РУЧНАЯ МОРТИРА · перезарядка…" : "РУЧНАЯ МОРТИРА · ЛКМ — выстрел · R — перезарядить · " + (LoadedRounds > 0 ? "заряжена" : "пусто"), 20); return; }
             if (Item == InventoryItem.Lantern) { ContextPrompt.Offer("РУЧНОЙ ФОНАРЬ · E — " + (LanternLit(inventory.SelectedSlot) ? "погасить" : "зажечь") + " · G — положить", 20); return; }
@@ -472,7 +502,7 @@ namespace PirateSlop.Networking
             GUI.DrawTexture(new Rect(x0+size*.1f,Screen.height*.5f-1,size*.8f,2),Texture2D.whiteTexture);
             GUI.color=color; GUI.depth=depth;
         }
-        void OnDestroy() { if(bottleArc!=null) Destroy(bottleArc.gameObject); if(scopeMask!=null) Destroy(scopeMask); if(view!=null) Destroy(view.gameObject); if(world!=null) Destroy(world.gameObject); }
+        void OnDestroy() { ClearFrozenWater(); if(bottleArc!=null) Destroy(bottleArc.gameObject); if(scopeMask!=null) Destroy(scopeMask); if(view!=null) Destroy(view.gameObject); if(world!=null) Destroy(world.gameObject); }
     }
 }
 

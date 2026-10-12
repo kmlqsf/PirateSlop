@@ -52,8 +52,8 @@ namespace PirateSlop
         }
         float fogMultiplier => SeaMistRendererFeature.DensityMultiplier;
         static readonly int[] quantities = { 1, 5, 20 };
-        static readonly InventoryItem[] items = { InventoryItem.Cannon, InventoryItem.Pistol, InventoryItem.Sabre, InventoryItem.Rod, InventoryItem.Fish, InventoryItem.Swordfish, InventoryItem.Pufferfish, InventoryItem.Cannonball, InventoryItem.FireCannonball, InventoryItem.IceCannonball, InventoryItem.PushCannonball, InventoryItem.BoomerangCannonball, InventoryItem.HandMortar, InventoryItem.ExplosiveBall };
-        static readonly string[] names = { "Пушка", "Пистолет", "Сабля", "Удочка", "Рыба", "Рыба-меч", "Рыба-фугу", "Обычное ядро", "Огненное ядро", "Ледяное ядро", "Отталкивающее ядро", "Бумеранг", "Ручная мортира", "Взрывное ядро" };
+        static readonly InventoryItem[] items = { InventoryItem.Cannon, InventoryItem.Pistol, InventoryItem.Sabre, InventoryItem.Rod, InventoryItem.Fish, InventoryItem.Swordfish, InventoryItem.Pufferfish, InventoryItem.Cannonball, InventoryItem.FireCannonball, InventoryItem.IceCannonball, InventoryItem.PushCannonball, InventoryItem.BoomerangCannonball, InventoryItem.HandMortar, InventoryItem.ExplosiveBall, InventoryItem.FireStaff, InventoryItem.LightningStaff, InventoryItem.IceStaff };
+        static readonly string[] names = { "Пушка", "Пистолет", "Сабля", "Удочка", "Рыба", "Рыба-меч", "Рыба-фугу", "Обычное ядро", "Огненное ядро", "Ледяное ядро", "Отталкивающее ядро", "Бумеранг", "Ручная мортира", "Взрывное ядро", "Посох огня", "Посох молнии", "Посох льда" };
         void Awake() => network = GetComponent<NetworkWeapon>();
         void Update()
         {

@@ -115,6 +115,7 @@ public partial class AdvancedPlayerController : MonoBehaviour
     CombatHealth health;
     PirateSlop.Networking.NetworkHealth networkHealth;
     public bool IsFrozen => networkHealth != null && networkHealth.IsFrozen;
+    float MovementMultiplier => networkHealth != null ? networkHealth.MovementMultiplier : 1f;
     PlayerInventory inventory;
     PirateSlop.Networking.NetworkEquipment equipment;
     DirectShipControls shipControls;
@@ -439,7 +440,7 @@ public partial class AdvancedPlayerController : MonoBehaviour
         bool waterSupport = ocean != null && ((equipment != null && equipment.WaterRunning) || upgradeWater) && transform.position.y >= water-1.2f;
         bool wasSwimming = IsSwimming;
         bool risingFromWater = !wasSwimming && verticalVelocity > 0f;
-        IsSwimming = !dryDeck && !risingFromWater && !waterSupport && ocean != null && water - transform.position.y > (wasSwimming ? .65f : 1.1f);
+        IsSwimming = !dryDeck && !PirateSlop.FrozenWaterTile.Supports(transform.position, gameObject.scene) && !risingFromWater && !waterSupport && ocean != null && water - transform.position.y > (wasSwimming ? .65f : 1.1f);
         if (IsSwimming && jumpBuffer > 0f && !command.Crouch && !IsKnockedBack && water - transform.position.y <= 1.4f && CanStand())
         {
             GetComponent<ShipDeckPassenger>()?.Attach(null);
@@ -467,6 +468,7 @@ public partial class AdvancedPlayerController : MonoBehaviour
         float slideProgress = 1f - slideTimer / Mathf.Max(.01f, slideDuration);
         var planar = IsSliding ? slideDirection * Mathf.Lerp(slideSpeed, crouchSpeed, slideProgress * slideProgress) : direction * Mathf.Lerp(command.Sprint ? sprintSpeed : walkSpeed, crouchSpeed, crouchBlend);
         if (command.Sprint && !crouched && !IsSliding && Upgrade(UpgradeEffect.LightBoots)) planar *= RoguelikeTuning.Current.runMultiplier;
+        planar *= MovementMultiplier;
         PlanarSpeed = planar.magnitude;
         if (grounded && deckPassenger != null && deckPassenger.Support != null && deckPassenger.Support.TryGetComponent<PirateSlop.WhaleLootPoint>(out var whaleSupport)) planar += whaleSupport.SlipVelocity(command.Crouch);
         if (solidGround) airJumpUsed = false;
@@ -507,7 +509,7 @@ public partial class AdvancedPlayerController : MonoBehaviour
             direction = transform.right * command.Move.x + transform.forward * (command.Move.y * Mathf.Cos(angle));
             vertical = -Mathf.Sin(angle) * command.Move.y;
         }
-        var target = Vector3.ClampMagnitude(direction + Vector3.up * vertical, 1) * UpgradeSwimSpeed(submerged, command.Sprint);
+        var target = Vector3.ClampMagnitude(direction + Vector3.up * vertical, 1) * UpgradeSwimSpeed(submerged, command.Sprint) * MovementMultiplier;
         if (!command.Crouch && !submerged && !command.Rise) target.y = Mathf.Clamp((water - 1.25f - transform.position.y) * 5f, -2f, 2f);
         else if (command.Rise && transform.position.y > water - 1.2f) target.y = 0;
         else if (submerged && Mathf.Abs(vertical) < .05f) target.y = .35f;
@@ -611,11 +613,11 @@ public partial class AdvancedPlayerController : MonoBehaviour
             { IsClimbing = false; ladderExiting = false; ladderCooldown = .65f; }
             return true;
         }
-        float climbSpeed = vertical < 0 ? ladder.Speed * 0.5f : ladder.Speed * 0.75f;
+        float climbSpeed = (vertical < 0 ? ladder.Speed * 0.5f : ladder.Speed * 0.75f) * MovementMultiplier;
         float horizontal = command.Move.x;
         if (localPosition.x > ladder.HalfWidth - 0.15f && horizontal > 0) horizontal = 0;
         if (localPosition.x < -ladder.HalfWidth + 0.15f && horizontal < 0) horizontal = 0;
-        float horizontalSpeed = ladder.Speed * 0.5f;
+        float horizontalSpeed = ladder.Speed * 0.5f * MovementMultiplier;
         Vector3 velocity = ladder.transform.up * vertical * climbSpeed + ladder.transform.right * horizontal * horizontalSpeed;
         if (fromTop)
         {
@@ -679,7 +681,7 @@ public partial class AdvancedPlayerController : MonoBehaviour
         transform.rotation = Quaternion.Euler(0, ladderYaw, 0);
         var p = ladder.transform.InverseTransformPoint(transform.position);
         float rise = command.Crouch ? -Mathf.Abs(command.Move.y) : command.Move.y;
-        float ropeSpeed = ladder.Speed * (Upgrade(UpgradeEffect.RopeSprinter) ? RoguelikeTuning.Current.ropeMultiplier : 1f);
+        float ropeSpeed = ladder.Speed * MovementMultiplier * (Upgrade(UpgradeEffect.RopeSprinter) ? RoguelikeTuning.Current.ropeMultiplier : 1f);
         float climbSpeed = rise < 0 ? ropeSpeed * 0.5f : ropeSpeed * 0.75f;
         Vector3 target;
         if (ladderExiting || p.y >= ladder.Height - .05f && rise > 0)

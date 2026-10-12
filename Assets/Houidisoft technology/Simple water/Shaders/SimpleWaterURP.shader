@@ -92,6 +92,7 @@ Shader "Custom/SimpleWaterURP"
             #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/EntityLighting.hlsl"
             #include "Assets/Shaders/CoastalShoreFoam.hlsl"
             #include "Assets/Shaders/ShipWaterInterior.hlsl"
+            #include "Assets/Shaders/FrozenWaterSurface.hlsl"
 
             struct Attributes
             {
@@ -195,6 +196,7 @@ Shader "Custom/SimpleWaterURP"
                 
                 positionWS.y += GetWhirlpoolHeight(positionWS);
 
+                positionWS.y = FrozenWaterHeight(positionWS);
                 OUT.positionWS = positionWS;
 
                 OUT.positionHCS = TransformWorldToHClip(positionWS);
@@ -207,6 +209,8 @@ Shader "Custom/SimpleWaterURP"
             half4 frag(Varyings IN) : SV_Target
             {
                 ClipShipWaterInterior(IN.positionWS);
+                float3 frozen = FrozenWaterSample(IN.positionWS.xz);
+                clip(.76 - frozen.b);
                 float2 screenUV = IN.screenPos.xy / IN.screenPos.w;
                 float surfaceEyeDepth = IN.screenPos.w;
 
@@ -254,6 +258,8 @@ Shader "Custom/SimpleWaterURP"
                 float vortexFalloff = 1.0 - vortexT * vortexT * (3.0 - 2.0 * vortexT);
                 float vortexSlope = 12.0 * _WhirlpoolDepth * vortexFalloff * vortexT * (1.0 - vortexT) / max(1.0, _WhirlpoolRadius);
                 slope += vortexDelta / max(.01, vortexRadius) * vortexSlope * vortexActive;
+                slope *= 1 - frozen.g;
+                rippleXY *= 1 - frozen.g;
                 float3 normalWS = normalize(float3(rippleXY.x - slope.x, 1.0, rippleXY.y - slope.y));
 
                 float fresnel = pow(1.0 - saturate(dot(normalWS, viewDir)), _FresnelPower);

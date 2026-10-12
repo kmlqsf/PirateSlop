@@ -16,12 +16,15 @@
 | [Assets/UI/Inventory/Cannonball.png](<../../Assets/UI/Inventory/Cannonball.png>) | Изображение / текстура |
 | [Assets/UI/Inventory/ExplosiveBall.png](<../../Assets/UI/Inventory/ExplosiveBall.png>) | Изображение / текстура; Личное оружие и урон |
 | [Assets/UI/Inventory/FireCannonball.png](<../../Assets/UI/Inventory/FireCannonball.png>) | Изображение / текстура |
+| [Assets/UI/Inventory/FireStaff.png](<../../Assets/UI/Inventory/FireStaff.png>) | Изображение / текстура; Личное оружие и урон |
 | [Assets/UI/Inventory/GrapplingHook.png](<../../Assets/UI/Inventory/GrapplingHook.png>) | Изображение / текстура |
 | [Assets/UI/Inventory/HandMortar.png](<../../Assets/UI/Inventory/HandMortar.png>) | Изображение / текстура; Личное оружие и урон |
 | [Assets/UI/Inventory/HolyGrenade.png](<../../Assets/UI/Inventory/HolyGrenade.png>) | Изображение / текстура |
 | [Assets/UI/Inventory/IceCannonball.png](<../../Assets/UI/Inventory/IceCannonball.png>) | Изображение / текстура |
+| [Assets/UI/Inventory/IceStaff.png](<../../Assets/UI/Inventory/IceStaff.png>) | Изображение / текстура; Личное оружие и урон |
 | [Assets/UI/Inventory/InventoryIcons.asset](<../../Assets/UI/Inventory/InventoryIcons.asset>) | Настройки или данные Unity |
 | [Assets/UI/Inventory/Lantern.png](<../../Assets/UI/Inventory/Lantern.png>) | Изображение / текстура; Предметы, лут и инвентарь, Меню и HUD |
+| [Assets/UI/Inventory/LightningStaff.png](<../../Assets/UI/Inventory/LightningStaff.png>) | Изображение / текстура; Личное оружие и урон |
 | [Assets/UI/Inventory/Mallet.png](<../../Assets/UI/Inventory/Mallet.png>) | Изображение / текстура |
 | [Assets/UI/Inventory/Plank.png](<../../Assets/UI/Inventory/Plank.png>) | Изображение / текстура |
 | [Assets/UI/Inventory/PushCannonball.png](<../../Assets/UI/Inventory/PushCannonball.png>) | Изображение / текстура |

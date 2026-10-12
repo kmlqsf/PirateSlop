@@ -6,6 +6,27 @@
 
 Автоматический каталог. Описания обозначают тип файла и известную тему, а не подтверждение использования в игре.
 
+## Captures/IslandBalanceReview
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Captures/IslandBalanceReview/balance-final.png](<../../Captures/IslandBalanceReview/balance-final.png>) | Изображение / текстура |
+| [Captures/IslandBalanceReview/balance-initial.png](<../../Captures/IslandBalanceReview/balance-initial.png>) | Изображение / текстура |
+| [Captures/IslandBalanceReview/deep-pit-clean.png](<../../Captures/IslandBalanceReview/deep-pit-clean.png>) | Изображение / текстура |
+| [Captures/IslandBalanceReview/deep-pit-final.png](<../../Captures/IslandBalanceReview/deep-pit-final.png>) | Изображение / текстура |
+| [Captures/IslandBalanceReview/deep-pit-initial-clean-1.png](<../../Captures/IslandBalanceReview/deep-pit-initial-clean-1.png>) | Изображение / текстура |
+| [Captures/IslandBalanceReview/deep-pit-initial-clean.png](<../../Captures/IslandBalanceReview/deep-pit-initial-clean.png>) | Изображение / текстура |
+| [Captures/IslandBalanceReview/deep-pit-initial.png](<../../Captures/IslandBalanceReview/deep-pit-initial.png>) | Изображение / текстура |
+| [Captures/IslandBalanceReview/e-input-verification-complete.json](<../../Captures/IslandBalanceReview/e-input-verification-complete.json>) | Конфигурация / данные JSON |
+| [Captures/IslandBalanceReview/e-input-verification-final.json](<../../Captures/IslandBalanceReview/e-input-verification-final.json>) | Конфигурация / данные JSON |
+| [Captures/IslandBalanceReview/e-input-verification.json](<../../Captures/IslandBalanceReview/e-input-verification.json>) | Конфигурация / данные JSON |
+| [Captures/IslandBalanceReview/event-five-stones-final.png](<../../Captures/IslandBalanceReview/event-five-stones-final.png>) | Изображение / текстура |
+| [Captures/IslandBalanceReview/pit-height-verification.json](<../../Captures/IslandBalanceReview/pit-height-verification.json>) | Конфигурация / данные JSON |
+| [Captures/IslandBalanceReview/second-island-overview.png](<../../Captures/IslandBalanceReview/second-island-overview.png>) | Изображение / текстура |
+| [Captures/IslandBalanceReview/stone-carry-first-person.png](<../../Captures/IslandBalanceReview/stone-carry-first-person.png>) | Изображение / текстура |
+| [Captures/IslandBalanceReview/third-island-overview.png](<../../Captures/IslandBalanceReview/third-island-overview.png>) | Изображение / текстура |
+| [Captures/IslandBalanceReview/verification.json](<../../Captures/IslandBalanceReview/verification.json>) | Конфигурация / данные JSON |
+
 ## Captures/StormCloudDark20261009
 
 | Файл | Краткое описание |

@@ -1,6 +1,6 @@
 # PirateSlop — карта проекта
 
-Снимок файлов: 2026-10-11. Корень: `C:\Users\K\Project`.
+Снимок файлов: 2026-10-12. Корень: `C:\Users\K\Project`.
 
 ## Как пользоваться
 
@@ -12,44 +12,44 @@
 
 ## Полный каталог
 
-Учтено 10848 файлов без `.meta`. Ещё 9770 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
+Учтено 10986 файлов без `.meta`. Ещё 9894 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
 
 | Раздел | Назначение | Файлов |
 | --- | --- | ---: |
 | [.agents](<Docs/ProjectMap/.agents.md>) | Ресурсы раздела; точный состав — в каталоге | 1 |
 | [.cursor](<Docs/ProjectMap/.cursor.md>) | Ресурсы раздела; точный состав — в каталоге | 1 |
-| [.opencode](<Docs/ProjectMap/.opencode.md>) | Ресурсы раздела; точный состав — в каталоге | 4 |
-| [Art](<Docs/ProjectMap/Art.md>) | Исходники арта и Blender | 540 |
+| [.opencode](<Docs/ProjectMap/.opencode.md>) | Ресурсы раздела; точный состав — в каталоге | 1 |
+| [Art](<Docs/ProjectMap/Art.md>) | Исходники арта и Blender | 553 |
 | [Assets](<Docs/ProjectMap/Assets.md>) | Ресурсы раздела; точный состав — в каталоге | 2 |
 | [Assets/Animations](<Docs/ProjectMap/Assets-Animations.md>) | Анимации | 27 |
-| [Assets/Audio](<Docs/ProjectMap/Assets-Audio.md>) | Звуковые ресурсы и лицензии | 407 |
+| [Assets/Audio](<Docs/ProjectMap/Assets-Audio.md>) | Звуковые ресурсы и лицензии | 447 |
 | [Assets/Branding](<Docs/ProjectMap/Assets-Branding.md>) | Оформление проекта | 1 |
 | [Assets/Editor](<Docs/ProjectMap/Assets-Editor.md>) | Редакторские ресурсы | 1 |
 | [Assets/Fog Particles](<Docs/ProjectMap/Assets-Fog Particles.md>) | Ресурсы раздела; точный состав — в каталоге | 3 |
 | [Assets/Game](<Docs/ProjectMap/Assets-Game.md>) | Игровые подсистемы и эффекты | 83 |
 | [Assets/Houidisoft technology](<Docs/ProjectMap/Assets-Houidisoft technology.md>) | Ресурсы раздела; точный состав — в каталоге | 12 |
-| [Assets/JMO Assets](<Docs/ProjectMap/Assets-JMO Assets.md>) | Ресурсы раздела; точный состав — в каталоге | 18 |
+| [Assets/JMO Assets](<Docs/ProjectMap/Assets-JMO Assets.md>) | Ресурсы раздела; точный состав — в каталоге | 19 |
 | [Assets/Materials](<Docs/ProjectMap/Assets-Materials.md>) | Материалы | 140 |
 | [Assets/Mirza](<Docs/ProjectMap/Assets-Mirza.md>) | Ресурсы раздела; точный состав — в каталоге | 1 |
-| [Assets/Models](<Docs/ProjectMap/Assets-Models.md>) | Модели и связанные ресурсы | 6647 |
+| [Assets/Models](<Docs/ProjectMap/Assets-Models.md>) | Модели и связанные ресурсы | 6671 |
 | [Assets/Plugins](<Docs/ProjectMap/Assets-Plugins.md>) | Плагины | 5 |
-| [Assets/Prefabs](<Docs/ProjectMap/Assets-Prefabs.md>) | Готовые игровые объекты | 125 |
-| [Assets/Resources](<Docs/ProjectMap/Assets-Resources.md>) | Ресурсы, доступные для загрузки по имени | 149 |
+| [Assets/Prefabs](<Docs/ProjectMap/Assets-Prefabs.md>) | Готовые игровые объекты | 137 |
+| [Assets/Resources](<Docs/ProjectMap/Assets-Resources.md>) | Ресурсы, доступные для загрузки по имени | 158 |
 | [Assets/Scenes](<Docs/ProjectMap/Assets-Scenes.md>) | Сохранённые сцены | 3 |
-| [Assets/Scripts](<Docs/ProjectMap/Assets-Scripts.md>) | Игровой код и редакторские инструменты | 515 |
-| [Assets/Settings](<Docs/ProjectMap/Assets-Settings.md>) | Настройки игровых систем и рендеринга | 55 |
-| [Assets/Shaders](<Docs/ProjectMap/Assets-Shaders.md>) | Шейдеры | 20 |
+| [Assets/Scripts](<Docs/ProjectMap/Assets-Scripts.md>) | Игровой код и редакторские инструменты | 533 |
+| [Assets/Settings](<Docs/ProjectMap/Assets-Settings.md>) | Настройки игровых систем и рендеринга | 58 |
+| [Assets/Shaders](<Docs/ProjectMap/Assets-Shaders.md>) | Шейдеры | 21 |
 | [Assets/StreamingAssets](<Docs/ProjectMap/Assets-StreamingAssets.md>) | Ресурсы раздела; точный состав — в каталоге | 5 |
 | [Assets/Tests](<Docs/ProjectMap/Assets-Tests.md>) | Исходники проверок | 19 |
 | [Assets/ThirdParty](<Docs/ProjectMap/Assets-ThirdParty.md>) | Сторонние ресурсы | 20 |
 | [Assets/TutorialInfo](<Docs/ProjectMap/Assets-TutorialInfo.md>) | Ресурсы раздела; точный состав — в каталоге | 2 |
-| [Assets/UI](<Docs/ProjectMap/Assets-UI.md>) | Ресурсы интерфейса | 39 |
+| [Assets/UI](<Docs/ProjectMap/Assets-UI.md>) | Ресурсы интерфейса | 42 |
 | [Assets/_Recovery](<Docs/ProjectMap/Assets-_Recovery.md>) | Сохранённые восстановленные данные | 1 |
-| [Captures](<Docs/ProjectMap/Captures.md>) | Ресурсы раздела; точный состав — в каталоге | 959 |
+| [Captures](<Docs/ProjectMap/Captures.md>) | Ресурсы раздела; точный состав — в каталоге | 975 |
 | [Docs](<Docs/ProjectMap/Docs.md>) | Документы и сохранённые отчёты | 43 |
-| [Packages](<Docs/ProjectMap/Packages.md>) | Манифест, lock-файл и встроенные пакеты | 922 |
+| [Packages](<Docs/ProjectMap/Packages.md>) | Манифест, lock-файл и встроенные пакеты | 924 |
 | [ProjectSettings](<Docs/ProjectMap/ProjectSettings.md>) | Настройки Unity | 28 |
-| [Root](<Docs/ProjectMap/Root.md>) | Корневые инструкции, планы и служебные файлы | 27 |
+| [Root](<Docs/ProjectMap/Root.md>) | Корневые инструкции, планы и служебные файлы | 26 |
 | [ThirdParty](<Docs/ProjectMap/ThirdParty.md>) | Сторонние ресурсы | 2 |
 | [Tools](<Docs/ProjectMap/Tools.md>) | Инструменты разработки и загрузчик контекста | 21 |
 
@@ -464,7 +464,7 @@ ShipDeckPassenger учитывает BoardingWalkSurface: перенос по т
 
 ### Личное оружие и урон (`weapons`)
 
-Ключевые слова: оружие, пистолет, бой, combat, мортира, hand-mortar, взрывное ядро, explosive-ball.
+Ключевые слова: оружие, пистолет, бой, combat, мортира, hand-mortar, взрывное ядро, explosive-ball, посох, staves, fire-staff, ice-staff, lightning-staff.
 
 2026-10-11: смерть запускает синхронизированный серверный таймер на 25 с, затем бесплатное возрождение на домашнем корабле независимо от рома. HUD показывает оставшееся время полосой и подсказку о трёх звонках за один ром. Специальное раннее возрождение SeaPact сохранено; любой возврат блокируется при затоплении/выбывании. Разработческий манекен без домашнего корабля автоматически не возвращается.
 Разделять локальный отклик оружия и серверное подтверждение урона/расхода боеприпасов.
@@ -481,6 +481,25 @@ NetworkHealth синхронизирует горение экипажа и сч
 HandMortar=27: готовые четыре модели собраны с исходными PBR-текстурами и отдельными pivots. ЛКМ: спуск, удар кремня через .065с, верхний фитиль и выстрел через .2с; механизмы возвращаются в покой. При успешном серверном вылете ядра отдача стрелку14м/с назад по горизонтали и0.8м/с вверх через NetworkPlayer.KnockDown с рэгдоллом стрелка2.5с и сетевым уведомлением; ShooterKnockback/ShooterLift/ShooterKnockdownSeconds в HandMortar.asset. Один заряд, R базовая перезарядка 10с без отдельного расходного предмета как у существующих ружей. Серверный NetworkHandMortarBall: скорость22м/с, радиус.09м, отскоки .6/.8 относительно движущейся палубы, подводное сопротивление, взрыв через2.5с или при прямом попадании в живую цель. Радиус4м, прямой урон100, splash100 с линейным спадом; урон только игрокам и ботам с NetworkPlayer, штатные командные фильтры CombatHealth. Корабли и остальные объекты не получают урона или импульса от взрыва; отскоки от них сохранены. Настройки HandMortar.asset; модель, pickup, ball, icon, реестр, каталог, ChestLoot вес5 и F8 подключены; тестовая палуба Loot_HandMortar. Protocol137. Компиляция/ссылки проверяются в редакторе, Play/онлайн не запускались.
 ExplosiveBall=28: отдельное ручное взрывное ядро из предоставленного FBX, исходный PBR, диаметр24см. ЛКМ сразу бросает и расходует один предмет; до броска фитиль не горит, после броска сокращается по серверной SyncVar, имеет оранжевый огонек и редкие искры. Полет14м/с, отскок.4, таймер2.5с, взрыв при входе в воду как фугу; прямое касание игрока не сокращает таймер. Урон40 только NetworkPlayer (включая ботов), радиус3м, без спада и с проверкой преград/команд; корабли и объекты без урона/импульса. Общий серверный NetworkHandMortarBall с отдельными ExplosiveBall.asset settings. Pickup и projectile отдельно зарегистрированы, model/icon/F8/DefaultLoot/ChestLoot вес10/тестовая палуба подключены; Protocol138. Компиляция и ссылки проверены; Play/онлайн не запускались.
 2026-10-09 F8 → Игрок → Здоровье: кнопка отключения любого урона по своему игроку, повторное нажатие включает урон. NetworkHealth.DeveloperInvulnerable — серверный SyncVar, выключен по умолчанию и сбрасывается при остановке сети, сохраняется при возрождении. CombatHealth.Damage выходит до уменьшения здоровья, побочных эффектов урона и смерти; оружие, огонь, утопление и зона проходят через эту проверку. Игровая проверка не запускалась.
+2026-10-12: FireStaff=29, LightningStaff=30, IceStaff=31. Серверные управляемые снаряды огня/льда: скорость12м/с, плавный поворот120град/с к точке текущего прицела, жизнь8с, радиус попадания.18м, AoE3м. ЛКМ, cooldown1.5с, без расходников; огонь30урона и штатное горение, лёд35урона и скорость движения50% на4с (ходьба/бег/скольжение/плавание/лестницы), без полной заморозки. Молния мгновенно в видимую точку поверхности/воды до60м, 55урона, радиус1.5м, cooldown3с. Урон игрокам/ботам, исключение стрелка, командные фильтры и преграды; нет урона кораблям. Настройки в Assets/Settings/Weapons/*Staff.asset, временные Unity-визуалы и иконки, drop/loot/NetworkPlayer/реестр/ChestLoot вес5/F8 подключены. Protocol163. Без Play Mode/онлайн проверки.
+2026-10-12 уточнение посохов: урон огонь25/молния45/лёд30. Отдельная длительность поджога FireStaff.BurnSeconds=2с, прочие источники огня сохраняют5–9с. VFX: процедурная мягкая текстура и прозрачные/additive материалы, светящийся огненный/ледяной центр, пламя/иней, искры, дым, сохраняющийся после despawn хвост, вспышка при касте, расширяющееся кольцо, вспышка/дым/осколки при попадании; молния с ветвями и короткими повторными вспышками, иней на замедленных целях. При истечении жизни/в воде малое рассеивание вместо боевого взрыва. Модели посохов без изменений. Protocol164; визуальная и сетевая проверка пользователем.
+2026-10-12: все посохи имеют CastSeconds=2с, серверный action6 и синхронизированный срок каста; урон/спаун только после подготовки, cooldown после выпуска. Смена слота/предмета, смерть, заморозка, нокдаун или потеря возможности использовать посох прерывают каст. Огнём/льдом можно прицеливаться во время подготовки; молния фиксирует точку при нажатии, на корабле хранит локальную точку/нормаль и NetworkObject-якорь. Радиус LightningStaff.BlastRadius=2.5м; все наблюдатели и поздние подключившиеся получают круг полного радиуса в точке будущего удара во время подготовки, светится навершие текущего посоха, HUD показывает оставшиеся секунды. Круг и заряд очищаются при отмене/ударе. Protocol165. Компиляция не подтверждает сетевой и визуальный результат.
+2026-10-12 VFX второй проход: полёт имеет плотное геометрическое тело (раскалённая сфера с анимированными прожилками / гранёный вращающийся ледяной кристалл с малыми спутниками); отдельный непрозрачный Resources/StaffCore.shader. Процедурная вытянутая текстура языков пламени заменяет круглые огненные капли. Молния использует самостоятельный Resources/StaffLightning.shader по принципу белого канала/фиолетового свечения TestLightning, без зависимости от штормового прохода/границ облаков. Основной канал32м, шесть подключённых ветвей и шесть наземных разрядов, широкий отдельный halo и три вспышки за.6с. Ядра скрываются при despawn, частицы/хвост остаются до затухания. Модели посохов, урон и каст без изменений. Изолированный Native Unity-предпросмотр для оценки читаемости; это не Play Mode или сетевой тест.
+2026-10-12 аудио посохов:17 CC0 cue из11 оригинальных источников SFXMint, поиск выполнен также Freesound MCP (скачивание оригиналов отклонено ключом). Assets/Audio/Staves/Sources.json содержит URL,лицензию,SHA256 исходников/производных и рецепты обработки; Original WAV сохранены. Отдельные charge/cast/flight/impact огня/льда/молнии, spatial предупреждение из круга, cancel/dissipate/water, burn/frost loops. Заряд синхронизирован по оставшемуся времени2с и растёт по громкости, поздний клиент начинает с текущего progress. Loop останавливается/уничтожается при отмене/смерти/despawn. GameAudioBank и Master/Effects сохранены, урон/модели без изменений. Protocol166. Проверка импорта/компиляции/ссылок не подтверждает прослушивание в матче.
+2026-10-12 после прослушивания: пользователь отклонил мультяшную подготовку и недостаточно огненный огонь. Заменены3charge и FireStaffCast/Flight/Impact/StaffBurnLoop на записи fire whoosh/fire crackling/ice grinding/electric hum из CC0-поиска Freesound. Rising electronic charge и sparkle/portal не участвуют в этих7cue. Использованы доступные MP3-превью (оригинальный API-download недоступен), сохранены источники/хеши/рецепты. CastSeconds2 и сетевые события без изменений.
+2026-10-12 FireStaff: модель из Desktop/3d/огеннный посох импортирована в Assets/Models/Weapons/FireStaff/FireStaff.fbx, URP Lit с basecolor/normal/metallic и упакованной smoothness=1-roughness. Сохранены GUID существующих FireStaffVisual/FireStaffPickup и иконки, высота1.5м, хват в корне модели, Muzzle на красном кристалле y.52м. Обновлён pickup BoxCollider по реальной геометрии. StaffSetup сохраняет импортированный FireStaffVisual при повторной настройке. Без Play Mode/проверки хвата в матче.
+2026-10-12 IceStaff: импортирован FBX из Desktop/3d/морозный посох, URP PBR в Assets/Models/Weapons/IceStaff, сохранены GUID IceStaffVisual/IceStaffPickup/icon, высота1.5м, Muzzle y.48м, LaunchOffset(.3,.2,.6), pickup BoxCollider по реальным bounds. StaffSetup сохраняет обе импортированные модели и pickup. Огненный/ледяной посохи имеют маленький локальный Held VFX вокруг Muzzle (искры/малые языки пламени или иней/дымка), только на view/world моделях в руках; Renderer входят в штатный BeforeCamera кэш, нет дублирования первого/третьего лица. Один тихий spatial loop у активного навершия: StaffBurnLoop/StaffFrostLoop, scale.18 (.07 при касте), minDistance.7/maxDistance7м. При смене предмета/неактивности/OnDisable звук уничтожается; на pickup нет idle VFX/звука. Компиляция/импорт проверены; игровой хват и субъективная громкость не проверялись.
+2026-10-12 LightningStaff: импортирован FBX и PBR из Desktop/3d/электро посох в Assets/Models/Weapons/LightningStaff. Сохранены GUID LightningStaffVisual/LightningStaffPickup/icon, высота1.5м, Muzzle y.5м на фиолетовом кристалле, коллайдер pickup по bounds. StaffSetup сохраняет все3 импортированные модели/pickup. HeldElectricSparks/мягкое свечение только у посоха в руках через штатный view/world renderer cache. Тихий LightningStaffTarget loop у навершия, scale.18 (.07 при касте), min.7/max7м, Master/Effects и cleanup сохранены. Урон, радиус и каст без изменений; компиляция/импорт подтверждены, игровой хват/громкость не проверялись.
+2026-10-12 IceStaff переделан в непрерывный удерживаемый луч: ЛКМ удерживать, подготовка2с, затем action7 до отпускания; не спавнит IceStaffProjectile. Range30м, BeamDamagePerSecond2, серверный ray hit первой цели, преграды/вода/команды/неуязвимость учитываются. Tick.125с, урон по dt с ограничениемcatchup.25с; SlowMultiplier.2 (скорость20%) / SlowSeconds1.25 постоянно обновляются при контакте. Сервер хранит SyncVar active/start/end/contact и получает heartbeat прицела/удержания10Гц; отсутствие ввода>.45с, отпускание, смена слота, смерть/заморозка/нокдаун/неактивность останавливают луч, при отпускании во времяcast он отменяется. Клиент владельца рассчитывает только визуальныйendpoint каждыйкадр; здоровье/slow толькоserver. Непрерывный голубойcore, морозныйstream и contactmist без взрывов/разовых IceStaffCast звуков, два новых зацикленных cue IceStaffBeam/IceStaffBeamContact на основе ранее сохранённыхCC0источников. При остановке line скрывается сразу, wispsзатухают; аудио уничтожается. Модели/heldэффекты сохранены. Protocol167; компиляция/ассетссылки не являются игровым/сетевым тестом.
+2026-10-12 правки после игры: ледяной/электрический idle больше не постоянный раздражающий loop — отдельные короткие IceStaffHeld/LightningStaffHeld, первые через4–7с, далее7–13с, не играют приcast/beam. Огненный фон сохранён. Heartbeat льда: снят фильтр входныхпакетов, grace2с вместо.45; данные прицела старше.4с приостанавливают урон, не выключают visual/audio. Stop по реальному отпусканию/неактивности/смерти/2с потери ввода сохранён; игровой repro этой причины не запускался. Луч полностью без синей линии: Mesh-кристаллы, объёмная холодная дымка, контактный мороз; фиксированная скорость45м/с, lifetime по длине луча. IceStaffBeam имеет2 длинных5.75с CC0wind/crunch варианта, contact3.75с; sources/recipes/hashes сохранены. Круг молнии всегдаQuaternion.identity в мировомпространстве, включая стены/движущиеся наклонённыепалубы. Protocol168. Импорт/компиляция и изолированныйpreview не подтверждают поведение вматче.
+2026-10-12 движение посохов: фаербол наследует CannonPointVelocity при запуске; наведение задаёт направление прицела, без погони за смещающейся мировой точкой. Position/Velocity передаются атомарным FlightState, клиент экстраполирует максимум .15с и сглаживает коррекции. Морозный поток и contact-частицы симулируются Local и следуют актуальной оси луча, без бокового отставания от корабля. Молния сохраняет локальный anchor места попадания, круг горизонтальный. Protocol170. Компиляция не подтверждает игровую/сетевую плавность.
+2026-10-12 повторные рывки фаербола: на хосте StaffFlightVfx интерполируется между физическими позициями в LateUpdate, authoritative transform/sweep не меняются. У удалённых клиентов позиция интегрируется по скорости с плавной коррекцией snapshots и пределом экстраполяции .15с. Наведение30Гц вместо10, без фильтра по времени прихода; unreliable RPC с возрастающим sequence отбрасывает устаревшие направления. FireStaff TurnDegreesPerSecond360 вместо120. Protocol171. Плавность/отзывчивость в игре ещё не проверены.
+2026-10-12 полный VFX-проход: StaffCore добавлены UniversalForwardOnly/DepthOnly/DepthNormalsOnly с общей геометрией (прежнее ядро не участвовало в depth prepass для облаков); объёмная текучая раскалённая поверхность и прозрачная FlameEnvelope. StaffEnergy premultiplied noise/soft depth для пламени/дымки/дыма. Огненный удар: короткая вспышка, замедление выброса, турбулентный дым и долгие угли. Мороз: 3 локальных слоя, контактные чипы, StaffIceBeamPresentation обрезает уже живые частицы по актуальной длине без аллокаций каждый кадр. Молния: связные шумовые каналы, вторичные тонкие ветви, отдельные halo, корректный widthMultiplier после widthCurve, 3 импульса и ionvapor. StaffGround горизонтальный точный круг с внутренним контуром и сегментами. Заряд нарастает по реальному прогрессу; FinishStatus отключает линии. StaffVfxPreview экспортирует нативные фазы через PreviewRenderUtility и очищает временные объекты/профили. Проверены дневные/ночные изолированные кадры и ошибки шейдеров; матч, облачный repro, первое лицо, FPS и multiplayer не запускались. Модели, звук, баланс и Protocol171 сохранены. Frost-status также использует локальную холодную дымку и геометрические чипы вокруг замороженного игрока вместо уходящих мировых пылинок.
+2026-10-12 анимации подготовки посохов: StaffCastingAnimation задаёт отдельные charge/release poses огню/молнии/льду по синхронизированному прогрессу двухсекундного каста. Fire отвод/круговой сбор/толчок, Lightning подъём/замах вниз, Ice плавный вынос/удержание канала. NetworkEquipment сглаживает offset/rotation/support/wrist, release запускается существующим StaffCastObserversRpc для всех клиентов, отмена возвращает к idle. Generic firearm recoil для Staff убран, VFX/audio/beam обновляются после установки позы. WeaponArmRig двигает обе руки, ограничивает хват длиной правой руки, поддерживающая рука меняет точку и наклон; ViewArms включаются только с посохом у owner-camera, bounds временно расширяются для новых поз и восстанавливаются после камеры. StaffCastingPreview использует реальные модели/руки и тот же SolveStaff для нативных кадров первого лица и мира. Нет новых сетевых полей/RPC, Protocol171 сохранён. Компиляция/изолированные кадры проверены; игровые/сетевые анимации не проверялись.
+2026-10-12 исправление представления посохов: ViewArms снова скрыты; SolveStaff/FitGrip применяется только к мировой модели. Анимация первого лица двигает посох, глубина не меньше исходной ViewPosition.z. StaffHeldPresentation/StaffHeldCrystal добавляют мягкое пульсирующее свечение цветных частей навершия по текстуре модели и локальной маске, редкий короткий разряд молнии, малые угли/иней/дымку. Нет новых источников света или аудиолупов. Preview первого лица без рук; игровая проверка остаётся пользователю.
+2026-10-12 взаимодействие посохов с водой: непрерывный морозный луч создаёт физические участки льда на воде, сеточная ширина2м, срок7с от последнего попадания. SyncList FrozenCell хранит координаты/высоту/серверный тик конца, восстанавливает дорожку поздним клиентам, коллайдеры есть на сервере/клиентах. Соседние участки выравниваются по высоте; лёд подавляет переход в плавание под стоящим игроком при волнах. Молния фиксирует признак попадания по воде при начале каста: radiusMultiplier5 увеличивает круг подготовки, серверный AoE и impact VFX с2.5м до12.5м, урон без множителя. Protocol172; игровая и сетевая проверка пользователем.
+2026-10-12 переработка ледяной дорожки: высота от SeaLevel+WhirlpoolHeight+.12, а не мгновенной волны. FrozenWaterSurface согласованно сглаживает CPU OceanSurface.Height и активный SimpleWaterURP; локальная карта подавления волн имеет плавную границу3.5м, вода внутри льда маскируется, после распада волны возвращаются за.8с. Коллайдеры неподвижны; диагональные клетки соединяются дополнительной клеткой. Тонкая фасочная геометрия, непрерывные мировые трещины/иней, неровный внешний край, морозная дымка, фронт кристаллизации. За последнюю1.15с лёд темнеет; через7с отключается опора, визуал распадается за.45с. Native FrozenWaterPreview показывает разные фазы волн/создания/таяния; CPU-проба под льдом остаётся.02 при внешних волнах от-1.586 до1.743. Protocol173. Play Mode/мультиплеер/ощущение бега не проверялись.
+2026-10-12 мировой хват посохов для наблюдателей: StaffCastingAnimation.WorldPosition задаёт независимую позу(.22,1.04,.34) и60% позиционного движения, учитывается приседание. WeaponArmRig.SolveStaff совмещает древко с Hand.TransformPoint(Palm), явно ориентирует противоположные кисти, удерживает поддержку на оси древка12–28см выше основного хвата, подгоняет обе точки по длине рук и закрывает Mixamo пальцы. Первое лицо без рук не изменено. Нативные позы покоя/зарядки/луча просмотрены, ошибок компиляции нет; сетевой игровой результат не проверялся.
 
 - [Assets/Scripts/Player/PirateWeapon.cs](<Assets/Scripts/Player/PirateWeapon.cs>) — Исходник C#: IWeaponTarget, PirateWeapon.
 - [Assets/Scripts/Networking/NetworkWeapon.cs](<Assets/Scripts/Networking/NetworkWeapon.cs>) — Исходник C#: NetworkWeapon.
@@ -547,6 +566,59 @@ ExplosiveBall=28: отдельное ручное взрывное ядро из
 - [Art/Blender/ExplosiveBall/ExplosiveBall.blend](<Art/Blender/ExplosiveBall/ExplosiveBall.blend>) — Редактируемая сцена Blender.
 - [Assets/UI/Inventory/ExplosiveBall.png](<Assets/UI/Inventory/ExplosiveBall.png>) — Изображение / текстура.
 - [Assets/Scripts/UI/PlayerHud.cs](<Assets/Scripts/UI/PlayerHud.cs>) — Исходник C#: PlayerHud.
+- [Assets/Scripts/Player/StaffSettings.cs](<Assets/Scripts/Player/StaffSettings.cs>) — Исходник C#: StaffSettings.
+- [Assets/Scripts/Player/StaffCombat.cs](<Assets/Scripts/Player/StaffCombat.cs>) — Исходник C#: StaffCombat.
+- [Assets/Scripts/Player/StaffVfx.cs](<Assets/Scripts/Player/StaffVfx.cs>) — Исходник C#: StaffVfx.
+- [Assets/Scripts/Networking/NetworkEquipment.Staves.cs](<Assets/Scripts/Networking/NetworkEquipment.Staves.cs>) — Исходник C#: NetworkEquipment.
+- [Assets/Scripts/Networking/NetworkStaffProjectile.cs](<Assets/Scripts/Networking/NetworkStaffProjectile.cs>) — Исходник C#: NetworkStaffProjectile, FlightState.
+- [Assets/Scripts/Editor/StaffSetup.cs](<Assets/Scripts/Editor/StaffSetup.cs>) — Исходник C#: StaffSetup.
+- [Assets/Settings/Weapons/FireStaff.asset](<Assets/Settings/Weapons/FireStaff.asset>) — Настройки или данные Unity.
+- [Assets/Prefabs/Weapons/Staves/FireStaffVisual.prefab](<Assets/Prefabs/Weapons/Staves/FireStaffVisual.prefab>) — Префаб Unity.
+- [Assets/Prefabs/Weapons/Staves/FireStaffPickup.prefab](<Assets/Prefabs/Weapons/Staves/FireStaffPickup.prefab>) — Префаб Unity.
+- [Assets/UI/Inventory/FireStaff.png](<Assets/UI/Inventory/FireStaff.png>) — Изображение / текстура.
+- [Assets/Settings/Weapons/LightningStaff.asset](<Assets/Settings/Weapons/LightningStaff.asset>) — Настройки или данные Unity.
+- [Assets/Prefabs/Weapons/Staves/LightningStaffVisual.prefab](<Assets/Prefabs/Weapons/Staves/LightningStaffVisual.prefab>) — Префаб Unity.
+- [Assets/Prefabs/Weapons/Staves/LightningStaffPickup.prefab](<Assets/Prefabs/Weapons/Staves/LightningStaffPickup.prefab>) — Префаб Unity.
+- [Assets/UI/Inventory/LightningStaff.png](<Assets/UI/Inventory/LightningStaff.png>) — Изображение / текстура.
+- [Assets/Settings/Weapons/IceStaff.asset](<Assets/Settings/Weapons/IceStaff.asset>) — Настройки или данные Unity.
+- [Assets/Prefabs/Weapons/Staves/IceStaffVisual.prefab](<Assets/Prefabs/Weapons/Staves/IceStaffVisual.prefab>) — Префаб Unity.
+- [Assets/Prefabs/Weapons/Staves/IceStaffPickup.prefab](<Assets/Prefabs/Weapons/Staves/IceStaffPickup.prefab>) — Префаб Unity.
+- [Assets/UI/Inventory/IceStaff.png](<Assets/UI/Inventory/IceStaff.png>) — Изображение / текстура.
+- [Assets/Prefabs/Weapons/Staves/FireStaffProjectile.prefab](<Assets/Prefabs/Weapons/Staves/FireStaffProjectile.prefab>) — Префаб Unity.
+- [Assets/Prefabs/Weapons/Staves/IceStaffProjectile.prefab](<Assets/Prefabs/Weapons/Staves/IceStaffProjectile.prefab>) — Префаб Unity.
+- [Assets/Scripts/Player/StaffVfxEffect.cs](<Assets/Scripts/Player/StaffVfxEffect.cs>) — Исходник C#: StaffVfxEffect.
+- [Assets/Resources/StaffCore.shader](<Assets/Resources/StaffCore.shader>) — Шейдер.
+- [Assets/Resources/StaffLightning.shader](<Assets/Resources/StaffLightning.shader>) — Шейдер.
+- [Assets/Scripts/Audio/StaffAudio.cs](<Assets/Scripts/Audio/StaffAudio.cs>) — Исходник C#: StaffAudio.
+- [Assets/Audio/Staves/Sources.json](<Assets/Audio/Staves/Sources.json>) — Конфигурация / данные JSON.
+- [Assets/Audio/Staves/LICENSE.md](<Assets/Audio/Staves/LICENSE.md>) — Документация.
+- [Assets/Models/Weapons/FireStaff/FireStaff.fbx](<Assets/Models/Weapons/FireStaff/FireStaff.fbx>) — Модель / анимации FBX.
+- [Assets/Models/Weapons/FireStaff/FireStaff.mat](<Assets/Models/Weapons/FireStaff/FireStaff.mat>) — Материал Unity.
+- [Assets/Models/Weapons/IceStaff/IceStaff.fbx](<Assets/Models/Weapons/IceStaff/IceStaff.fbx>) — Модель / анимации FBX.
+- [Assets/Models/Weapons/IceStaff/IceStaff.mat](<Assets/Models/Weapons/IceStaff/IceStaff.mat>) — Материал Unity.
+- [Assets/Models/Weapons/LightningStaff/LightningStaff.fbx](<Assets/Models/Weapons/LightningStaff/LightningStaff.fbx>) — Модель / анимации FBX.
+- [Assets/Models/Weapons/LightningStaff/LightningStaff.mat](<Assets/Models/Weapons/LightningStaff/LightningStaff.mat>) — Материал Unity.
+- [Assets/Scripts/Networking/NetworkEquipment.IceBeam.cs](<Assets/Scripts/Networking/NetworkEquipment.IceBeam.cs>) — Исходник C#: NetworkEquipment.
+- [Assets/Audio/Staves/IceStaffBeam.wav](<Assets/Audio/Staves/IceStaffBeam.wav>) — Аудио.
+- [Assets/Audio/Staves/IceStaffBeamContact.wav](<Assets/Audio/Staves/IceStaffBeamContact.wav>) — Аудио.
+- [Assets/Audio/Staves/IceStaffHeld.wav](<Assets/Audio/Staves/IceStaffHeld.wav>) — Аудио.
+- [Assets/Audio/Staves/LightningStaffHeld.wav](<Assets/Audio/Staves/LightningStaffHeld.wav>) — Аудио.
+- [Assets/Audio/Staves/IceStaffBeamAlt.wav](<Assets/Audio/Staves/IceStaffBeamAlt.wav>) — Аудио.
+- [Assets/Resources/StaffEnergy.shader](<Assets/Resources/StaffEnergy.shader>) — Шейдер.
+- [Assets/Resources/StaffFlameShell.shader](<Assets/Resources/StaffFlameShell.shader>) — Шейдер.
+- [Assets/Resources/StaffGround.shader](<Assets/Resources/StaffGround.shader>) — Шейдер.
+- [Assets/Scripts/Player/StaffIceBeamPresentation.cs](<Assets/Scripts/Player/StaffIceBeamPresentation.cs>) — Исходник C#: StaffIceBeamPresentation.
+- [Assets/Scripts/Editor/StaffVfxPreview.cs](<Assets/Scripts/Editor/StaffVfxPreview.cs>) — Исходник C#: StaffVfxPreview.
+- [Assets/Scripts/Player/StaffCastingAnimation.cs](<Assets/Scripts/Player/StaffCastingAnimation.cs>) — Исходник C#: StaffCastingAnimation, Pose.
+- [Assets/Scripts/Editor/StaffCastingPreview.cs](<Assets/Scripts/Editor/StaffCastingPreview.cs>) — Исходник C#: StaffCastingPreview.
+- [Assets/Scripts/Player/StaffHeldPresentation.cs](<Assets/Scripts/Player/StaffHeldPresentation.cs>) — Исходник C#: StaffHeldPresentation.
+- [Assets/Resources/StaffHeldCrystal.shader](<Assets/Resources/StaffHeldCrystal.shader>) — Шейдер.
+- [Assets/Scripts/Networking/NetworkEquipment.FrozenWater.cs](<Assets/Scripts/Networking/NetworkEquipment.FrozenWater.cs>) — Исходник C#: NetworkEquipment, FrozenCell.
+- [Assets/Scripts/Player/FrozenWaterTile.cs](<Assets/Scripts/Player/FrozenWaterTile.cs>) — Исходник C#: FrozenWaterTile.
+- [Assets/Scripts/Player/FrozenWaterSurface.cs](<Assets/Scripts/Player/FrozenWaterSurface.cs>) — Исходник C#: FrozenWaterSurface, Thaw.
+- [Assets/Shaders/FrozenWaterSurface.hlsl](<Assets/Shaders/FrozenWaterSurface.hlsl>) — Код шейдера.
+- [Assets/Resources/FrozenWaterIce.shader](<Assets/Resources/FrozenWaterIce.shader>) — Шейдер.
+- [Assets/Scripts/Editor/FrozenWaterPreview.cs](<Assets/Scripts/Editor/FrozenWaterPreview.cs>) — Исходник C#: FrozenWaterPreview.
 - [firearm-foundation.md](<firearm-foundation.md>) — Документация.
 - [combat-balance.md](<combat-balance.md>) — Документация.
 - [Art/Blender/Firearms/README.md](<Art/Blender/Firearms/README.md>) — Документация.
@@ -1118,7 +1190,7 @@ CoastalSandSetup.Apply создаёт в12каменных префабах от
 - [Art/Sources/CoastalEnvironment/SOURCES.md](<Art/Sources/CoastalEnvironment/SOURCES.md>) — Документация.
 - [Art/Sources/CoastalEnvironment/TRIPO_MODULAR_ROCK_BRIEF.md](<Art/Sources/CoastalEnvironment/TRIPO_MODULAR_ROCK_BRIEF.md>) — Документация.
 - [Art/Blender/World/CoastalEnvironment/README_TRIPO_ARCH.md](<Art/Blender/World/CoastalEnvironment/README_TRIPO_ARCH.md>) — Документация.
-- [../Blender/Скалы/README.md](<../Blender/Скалы/README.md>) — Документация.
+- `../Blender/Скалы/README.md` — отсутствует в текущем снимке; не использовать как готовый путь.
 - [Art/Blender/World/CoastalEnvironment/README_TRIPO_COLLECTION.md](<Art/Blender/World/CoastalEnvironment/README_TRIPO_COLLECTION.md>) — Документация.
 - [Docs/StormTestSmoke.md](<Docs/StormTestSmoke.md>) — Документация.
 
@@ -1256,7 +1328,7 @@ Whisky Bottle с бесплатной BlenderKit Royalty Free загружена
 - [Assets/Scripts/Editor/PirateCharacterImport.cs](<Assets/Scripts/Editor/PirateCharacterImport.cs>) — Исходник C#: PirateCharacterImport.
 - [Assets/Scripts/Editor/SailRiggingArtSetup.cs](<Assets/Scripts/Editor/SailRiggingArtSetup.cs>) — Исходник C#: SailRiggingArtSetup.
 - [Assets/Scripts/Editor/MainShipSetup.cs](<Assets/Scripts/Editor/MainShipSetup.cs>) — Исходник C#: MainShipSetup.
-- [../NewShip/Ship_V3_Fitted.blend](<../NewShip/Ship_V3_Fitted.blend>) — Редактируемая сцена Blender.
+- `../NewShip/Ship_V3_Fitted.blend` — отсутствует в текущем снимке; не использовать как готовый путь.
 - [Assets/Scripts/Editor/ShipV3ImportSetup.cs](<Assets/Scripts/Editor/ShipV3ImportSetup.cs>) — Исходник C#: ShipV3ImportSetup.
 - [Tools/ShipV3/ExportFromOpenBlender.py](<Tools/ShipV3/ExportFromOpenBlender.py>) — Инструмент Python.
 - [Assets/Models/Ships/ShipV3/ShipV3.fbx](<Assets/Models/Ships/ShipV3/ShipV3.fbx>) — Модель / анимации FBX.
@@ -1334,16 +1406,16 @@ Whisky Bottle с бесплатной BlenderKit Royalty Free загружена
 - [blender.md](<blender.md>) — Документация.
 - [unity.md](<unity.md>) — Документация.
 - [frigate.md](<frigate.md>) — Документация.
-- [../NewShip/V3Preparation/TelescopeAndAnchorControls.md](<../NewShip/V3Preparation/TelescopeAndAnchorControls.md>) — Документация.
-- [../NewShip/External/AnchorNikdane12/SOURCES.md](<../NewShip/External/AnchorNikdane12/SOURCES.md>) — Документация.
-- [../NewShip/V3Preparation/HarpoonControls.md](<../NewShip/V3Preparation/HarpoonControls.md>) — Документация.
-- [../NewShip/V3Preparation/BowTextureRestoreReport.json](<../NewShip/V3Preparation/BowTextureRestoreReport.json>) — Конфигурация / данные JSON.
-- [../NewShip/V3Preparation/HoldDispenserControls.md](<../NewShip/V3Preparation/HoldDispenserControls.md>) — Документация.
-- [../NewShip/V3Preparation/ShipDetailsControls.md](<../NewShip/V3Preparation/ShipDetailsControls.md>) — Документация.
-- [../NewShip/FreeAssets/CREDITS.md](<../NewShip/FreeAssets/CREDITS.md>) — Документация.
-- [../NewShip/V3Preparation/OptimizationAndDestructionControls.md](<../NewShip/V3Preparation/OptimizationAndDestructionControls.md>) — Документация.
-- [../NewShip/V3Preparation/V18Validation.json](<../NewShip/V3Preparation/V18Validation.json>) — Конфигурация / данные JSON.
-- [../NewShip/V3Preparation/V19Validation.json](<../NewShip/V3Preparation/V19Validation.json>) — Конфигурация / данные JSON.
+- `../NewShip/V3Preparation/TelescopeAndAnchorControls.md` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `../NewShip/External/AnchorNikdane12/SOURCES.md` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `../NewShip/V3Preparation/HarpoonControls.md` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `../NewShip/V3Preparation/BowTextureRestoreReport.json` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `../NewShip/V3Preparation/HoldDispenserControls.md` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `../NewShip/V3Preparation/ShipDetailsControls.md` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `../NewShip/FreeAssets/CREDITS.md` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `../NewShip/V3Preparation/OptimizationAndDestructionControls.md` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `../NewShip/V3Preparation/V18Validation.json` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `../NewShip/V3Preparation/V19Validation.json` — отсутствует в текущем снимке; не использовать как готовый путь.
 
 ### Звуки и голос (`audio`)
 
@@ -1612,7 +1684,7 @@ TestMap R4000м. После повторной жалобы CLEAR rays/planetcen
 - [Assets/Scripts/Ships/ShipV3HarpoonVisual.cs](<Assets/Scripts/Ships/ShipV3HarpoonVisual.cs>) — Исходник C#: ShipV3HarpoonVisual.
 - [Assets/Resources/Ships/ShipV3HarpoonPort.prefab](<Assets/Resources/Ships/ShipV3HarpoonPort.prefab>) — Префаб Unity.
 - [Assets/Resources/Ships/ShipV3HarpoonStarboard.prefab](<Assets/Resources/Ships/ShipV3HarpoonStarboard.prefab>) — Префаб Unity.
-- [../NewShip/V3Preparation/HarpoonControls.md](<../NewShip/V3Preparation/HarpoonControls.md>) — Документация.
+- `../NewShip/V3Preparation/HarpoonControls.md` — отсутствует в текущем снимке; не использовать как готовый путь.
 
 ### Кракен и щупальца (`kraken`)
 
@@ -1646,12 +1718,12 @@ TestMap R4000м. После повторной жалобы CLEAR rays/planetcen
 - [Assets/Scripts/World/WhirlpoolTentacleRing.cs](<Assets/Scripts/World/WhirlpoolTentacleRing.cs>) — Исходник C#: WhirlpoolTentacleRing.
 - [Assets/Scripts/Networking/SessionWhirlpoolTentacles.cs](<Assets/Scripts/Networking/SessionWhirlpoolTentacles.cs>) — Исходник C#: WhirlpoolTentacleState, WhirlpoolTentaclesMessage, SessionController.
 - [Assets/Scripts/World/EnvironmentTestGallery.cs](<Assets/Scripts/World/EnvironmentTestGallery.cs>) — Исходник C#: EnvironmentTestGallery.
-- [../Blender/KrakenTentacle_v1/README.md](<../Blender/KrakenTentacle_v1/README.md>) — Документация.
-- [../Blender/KrakenTentacle_v1/TRIPO.txt](<../Blender/KrakenTentacle_v1/TRIPO.txt>) — Текстовые данные.
-- [../Blender/KrakenTentacle_v1/front.png](<../Blender/KrakenTentacle_v1/front.png>) — Изображение / текстура.
-- [../Blender/KrakenTentacle_v1/back.png](<../Blender/KrakenTentacle_v1/back.png>) — Изображение / текстура.
-- [../Blender/KrakenTentacle_v1/left.png](<../Blender/KrakenTentacle_v1/left.png>) — Изображение / текстура.
-- [../Blender/KrakenTentacle_v1/right.png](<../Blender/KrakenTentacle_v1/right.png>) — Изображение / текстура.
+- `../Blender/KrakenTentacle_v1/README.md` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `../Blender/KrakenTentacle_v1/TRIPO.txt` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `../Blender/KrakenTentacle_v1/front.png` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `../Blender/KrakenTentacle_v1/back.png` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `../Blender/KrakenTentacle_v1/left.png` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `../Blender/KrakenTentacle_v1/right.png` — отсутствует в текущем снимке; не использовать как готовый путь.
 - [Art/Blender/Kraken/KrakenTripoRig.blend](<Art/Blender/Kraken/KrakenTripoRig.blend>) — Редактируемая сцена Blender.
 - [Art/Blender/Kraken/PrepareTripoTentacle.py](<Art/Blender/Kraken/PrepareTripoTentacle.py>) — Инструмент Python.
 - [Art/Blender/Kraken/README.md](<Art/Blender/Kraken/README.md>) — Документация.
@@ -1967,7 +2039,7 @@ NetworkLoadTest запускается из меню Тест нагрузки �
 - [Assets/Scripts/Ships/ShipDamagePreparation.cs](<Assets/Scripts/Ships/ShipDamagePreparation.cs>) — Исходник C#: ShipDamagePreparation, BakeJob.
 - [Assets/Models/Ships/ShipV3/Bilge/DamageWarmup.shadervariants](<Assets/Models/Ships/ShipV3/Bilge/DamageWarmup.shadervariants>) — Файл .shadervariants.
 - [Docs/Performance/NetworkLoadTest.md](<Docs/Performance/NetworkLoadTest.md>) — Документация.
-- [../output/CrashReview20261007/Spyglass_1628.md](<../output/CrashReview20261007/Spyglass_1628.md>) — Документация.
+- `../output/CrashReview20261007/Spyglass_1628.md` — отсутствует в текущем снимке; не использовать как готовый путь.
 
 ### Корабельная обезьянка (`ship-monkey`)
 
@@ -2042,7 +2114,7 @@ ShipMonkey.HeadRide.cs: редкая серверная прогулка к жи
 С 2026-10-08 профиль vfx_specialist удалён по указанию пользователя. Основной агент сам реализует VFX по согласованным этапам; не создавать и не продолжать прежнего субагента.
 По умолчанию игровой вид проверяет пользователь. Проверки компиляции не подтверждают внешний вид или производительность.
 
-- [../AGENTS.md](<../AGENTS.md>) — Документация.
+- `../AGENTS.md` — отсутствует в текущем снимке; не использовать как готовый путь.
 - [AGENTS.md](<AGENTS.md>) — Документация.
 
 ### Корабельная слот-машина (`ship-slot-machine`)
