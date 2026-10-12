@@ -320,6 +320,7 @@ namespace PirateSlop.Networking
         }
         void Update()
         {
+            UpdateSeagullMarkInput();
             TickIdentity();
             TickUpgradeEffects();
             UpdateKick();

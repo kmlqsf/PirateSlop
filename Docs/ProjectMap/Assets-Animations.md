@@ -40,7 +40,16 @@
 
 | Файл | Краткое описание |
 | --- | --- |
+| [Assets/Animations/ShipMonkey/MonkeyCarryIdleArms.anim](<../../Assets/Animations/ShipMonkey/MonkeyCarryIdleArms.anim>) | Клип анимации; Корабельная обезьянка |
+| [Assets/Animations/ShipMonkey/MonkeyCarryWalkArms.anim](<../../Assets/Animations/ShipMonkey/MonkeyCarryWalkArms.anim>) | Клип анимации; Корабельная обезьянка |
+| [Assets/Animations/ShipMonkey/MonkeyClimbDownArms.anim](<../../Assets/Animations/ShipMonkey/MonkeyClimbDownArms.anim>) | Клип анимации; Корабельная обезьянка |
+| [Assets/Animations/ShipMonkey/MonkeyClimbUpArms.anim](<../../Assets/Animations/ShipMonkey/MonkeyClimbUpArms.anim>) | Клип анимации; Корабельная обезьянка |
+| [Assets/Animations/ShipMonkey/MonkeyIdleRailArms.anim](<../../Assets/Animations/ShipMonkey/MonkeyIdleRailArms.anim>) | Клип анимации; Корабельная обезьянка |
 | [Assets/Animations/ShipMonkey/MonkeyIdleRelaxed.anim](<../../Assets/Animations/ShipMonkey/MonkeyIdleRelaxed.anim>) | Клип анимации; Корабельная обезьянка |
+| [Assets/Animations/ShipMonkey/MonkeyPickupArms.anim](<../../Assets/Animations/ShipMonkey/MonkeyPickupArms.anim>) | Клип анимации; Корабельная обезьянка |
+| [Assets/Animations/ShipMonkey/MonkeyRailWalkArms.anim](<../../Assets/Animations/ShipMonkey/MonkeyRailWalkArms.anim>) | Клип анимации; Корабельная обезьянка |
+| [Assets/Animations/ShipMonkey/MonkeyRunArms.anim](<../../Assets/Animations/ShipMonkey/MonkeyRunArms.anim>) | Клип анимации; Корабельная обезьянка |
+| [Assets/Animations/ShipMonkey/MonkeyWalkArms.anim](<../../Assets/Animations/ShipMonkey/MonkeyWalkArms.anim>) | Клип анимации; Корабельная обезьянка |
 | [Assets/Animations/ShipMonkey/ShipMonkey.controller](<../../Assets/Animations/ShipMonkey/ShipMonkey.controller>) | Контроллер анимации; Корабельная обезьянка |
 
 ## Assets/Animations/Whale

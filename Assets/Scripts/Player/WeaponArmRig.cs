@@ -18,6 +18,11 @@ namespace PirateSlop
         Quaternion gripRotation;
         float weight;
         WhalePlayerInteraction whaleInteraction;
+        SternCargoPlayerInteraction sternInteraction;
+        PirateSlop.Networking.NetworkWeapon sternNetwork;
+        float sternGripWeight;
+        Vector3 sternRightPoint, sternLeftPoint;
+        Quaternion sternWrist;
         float whaleGripWeight;
         Vector3 whaleRightPoint, whaleLeftPoint;
         Quaternion whaleWrist;
@@ -88,6 +93,8 @@ namespace PirateSlop
             equipment = GetComponent<PirateSlop.Networking.NetworkEquipment>();
             repair = GetComponent<PirateSlop.Networking.NetworkHullRepair>();
             whaleInteraction = GetComponent<WhalePlayerInteraction>();
+            sternInteraction = GetComponent<SternCargoPlayerInteraction>();
+            sternNetwork = GetComponent<PirateSlop.Networking.NetworkWeapon>();
             balanceStone = GetComponent<BalanceStonePlayer>();
             balanceHips = BodyRig.GetComponentsInChildren<Transform>(true).FirstOrDefault(t=>t.name=="mixamorig:Hips" || t.name=="Hips");
             balanceSpine = BodyRig.GetComponentsInChildren<Transform>(true).FirstOrDefault(t=>t.name=="mixamorig:Spine" || t.name=="Spine");
@@ -106,8 +113,9 @@ namespace PirateSlop
                 visible |= inventory.PistolSelected || inventory.SabreSelected || equipment != null && equipment.Item >= PirateSlop.Networking.InventoryItem.Wine;
             bool plankVisible = repair != null && repair.FirstPersonPlank && camera == motor.PlayerCamera && camera.enabled;
             bool whaleVisible = whaleGripWeight > .01f && camera == motor.PlayerCamera && camera.enabled && !motor.IsThirdPerson && !motor.IsDead;
+            bool sternVisible = sternGripWeight > .01f && camera == motor.PlayerCamera && camera.enabled && !motor.IsThirdPerson && !motor.IsDead;
             bool stoneVisible = balanceStone != null && balanceStone.HeldVisual != null && balanceStone.GripWeight>.01f && camera == motor.PlayerCamera && camera.enabled && !motor.IsThirdPerson && !motor.IsDead;
-            foreach (var r in renderers) r.forceRenderingOff = !(plankVisible || whaleVisible || stoneVisible);
+            foreach (var r in renderers) r.forceRenderingOff = !(plankVisible || whaleVisible || sternVisible || stoneVisible);
         }
         void After(ScriptableRenderContext context, Camera camera) { if (renderers != null) foreach (var r in renderers) r.forceRenderingOff = true; }
         void LateUpdate()
@@ -126,6 +134,29 @@ namespace PirateSlop
                 if(state.Phase==2) {float shrug=stoneGrip*Mathf.Clamp01(age/.25f)*.05f;right.Upper.position+=Vector3.up*shrug;left.Upper.position+=Vector3.up*shrug;}
                 SolveStone(balanceStone.HandPoint,right,left,transform,stoneGrip);
                 SolveStone(balanceStone.HandPoint,viewRight,viewLeft,motor.PlayerCamera.transform,stoneGrip);
+                return;
+            }
+            if (sternInteraction == null) sternInteraction = GetComponent<SternCargoPlayerInteraction>();
+            var cargo = sternInteraction != null ? sternInteraction.HeldCargo : null;
+            if (cargo == null && sternNetwork != null && !sternNetwork.IsOwner)
+                foreach (var candidate in PirateSlop.Networking.NetworkTowedCargo.Active)
+                    if (candidate != null && candidate.Operator == sternNetwork.NetworkObject) { cargo = candidate; break; }
+            bool sternGrip = cargo != null && !motor.IsDead;
+            sternGripWeight = Mathf.MoveTowards(sternGripWeight,sternGrip ? 1 : 0,Time.deltaTime*8);
+            if (sternGrip)
+            {
+                var motion = sternNetwork.IsOwner ? sternInteraction.HandMotion : cargo.HandMotion;
+                sternRightPoint = cargo.GripPoint(transform,motion);
+                var direction = (cargo.Station.Pulley.position-sternRightPoint).normalized;
+                sternLeftPoint = sternRightPoint+direction*.17f;
+                sternWrist = Quaternion.LookRotation(direction,transform.up)*gripRotation;
+            }
+            if (sternGripWeight>0)
+            {
+                right.Solve(sternRightPoint,sternWrist,transform.TransformPoint(new Vector3(.6f,1,.15f)),sternGripWeight,true);
+                left.Solve(sternLeftPoint,sternWrist,transform.TransformPoint(new Vector3(-.6f,1,.15f)),sternGripWeight,true);
+                viewRight.Solve(sternRightPoint,sternWrist,motor.PlayerCamera.transform.TransformPoint(new Vector3(.55f,-.4f,.3f)),sternGripWeight,true);
+                viewLeft.Solve(sternLeftPoint,sternWrist,motor.PlayerCamera.transform.TransformPoint(new Vector3(-.55f,-.4f,.3f)),sternGripWeight,true);
                 return;
             }
             if (whaleInteraction == null) whaleInteraction = GetComponent<WhalePlayerInteraction>();

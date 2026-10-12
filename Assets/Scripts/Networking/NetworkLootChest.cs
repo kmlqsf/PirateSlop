@@ -37,7 +37,7 @@ namespace PirateSlop.Networking
         public int SlotCount => contents.Count;
         public InventoryItem ItemAt(int slot) => slot >= 0 && slot < contents.Count && contents[slot].Count > 0 ? contents[slot].Item : InventoryItem.None;
         public int CountAt(int slot) => slot >= 0 && slot < contents.Count ? contents[slot].Count : 0;
-        public string Hint(PlayerInventory inventory) => Kind == SeaLootKind.Raft && !Available && inventory.GetComponent<AdvancedPlayerController>().IsSwimming ? "E — забраться на плот" : OceanHint;
+        public string Hint(PlayerInventory inventory) => InSeagullWreck ? SeagullChestHint(inventory) : Kind == SeaLootKind.Raft && !Available && inventory.GetComponent<AdvancedPlayerController>().IsSwimming ? "E — забраться на плот" : OceanHint;
         public void Fill(ref MapRandom random)
         {
             var rolled = ChestLootTable.RollContents(ref random);

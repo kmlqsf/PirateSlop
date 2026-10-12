@@ -110,6 +110,7 @@
 | [Assets/Resources/SeaEvents/BuoyOakStave1.asset](<../../Assets/Resources/SeaEvents/BuoyOakStave1.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |
 | [Assets/Resources/SeaEvents/BuoyOakStave2.asset](<../../Assets/Resources/SeaEvents/BuoyOakStave2.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |
 | [Assets/Resources/SeaEvents/BuoyOakStave3.asset](<../../Assets/Resources/SeaEvents/BuoyOakStave3.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |
+| [Assets/Resources/SeaEvents/CannonBreachFort.prefab](<../../Assets/Resources/SeaEvents/CannonBreachFort.prefab>) | Префаб Unity; Пушечный пролом |
 | [Assets/Resources/SeaEvents/CaptureBoundaryBuoyBoundaryFlagMesh.asset](<../../Assets/Resources/SeaEvents/CaptureBoundaryBuoyBoundaryFlagMesh.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |
 | [Assets/Resources/SeaEvents/CaptureBoundaryBuoyCarriageGeometry0.asset](<../../Assets/Resources/SeaEvents/CaptureBoundaryBuoyCarriageGeometry0.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |
 | [Assets/Resources/SeaEvents/CaptureBoundaryBuoyCarriageGeometry1.asset](<../../Assets/Resources/SeaEvents/CaptureBoundaryBuoyCarriageGeometry1.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |
@@ -143,6 +144,7 @@
 | [Assets/Resources/SeaEvents/SalvagedDeck3.asset](<../../Assets/Resources/SeaEvents/SalvagedDeck3.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |
 | [Assets/Resources/SeaEvents/SalvagedTimber.asset](<../../Assets/Resources/SeaEvents/SalvagedTimber.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |
 | [Assets/Resources/SeaEvents/SeaEventArt.asset](<../../Assets/Resources/SeaEvents/SeaEventArt.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |
+| [Assets/Resources/SeaEvents/SeagullKeyEvent.prefab](<../../Assets/Resources/SeaEvents/SeagullKeyEvent.prefab>) | Префаб Unity; Чайка с ключом |
 | [Assets/Resources/SeaEvents/ShackleGeometry0.asset](<../../Assets/Resources/SeaEvents/ShackleGeometry0.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |
 | [Assets/Resources/SeaEvents/SignalCanvas.mat](<../../Assets/Resources/SeaEvents/SignalCanvas.mat>) | Материал Unity; Предметы, лут и инвентарь |
 | [Assets/Resources/SeaEvents/StationGeometry0.asset](<../../Assets/Resources/SeaEvents/StationGeometry0.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |
@@ -151,6 +153,8 @@
 | [Assets/Resources/SeaEvents/StationGeometry3.asset](<../../Assets/Resources/SeaEvents/StationGeometry3.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |
 | [Assets/Resources/SeaEvents/StationGeometry4.asset](<../../Assets/Resources/SeaEvents/StationGeometry4.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |
 | [Assets/Resources/SeaEvents/StationGeometry5.asset](<../../Assets/Resources/SeaEvents/StationGeometry5.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |
+| [Assets/Resources/SeaEvents/SternCargoShip.prefab](<../../Assets/Resources/SeaEvents/SternCargoShip.prefab>) | Префаб Unity; Груз за кормой |
+| [Assets/Resources/SeaEvents/TowedCargo.prefab](<../../Assets/Resources/SeaEvents/TowedCargo.prefab>) | Префаб Unity; Груз за кормой |
 
 ## Assets/Resources/Ships
 

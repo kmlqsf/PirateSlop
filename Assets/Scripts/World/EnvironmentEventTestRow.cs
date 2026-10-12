@@ -5,7 +5,7 @@ namespace PirateSlop.World
     public sealed class EnvironmentEventTestRow : MonoBehaviour
     {
         public float SeaLevel;
-        static readonly string[] titles = { "1 · Захват круга", "2 · Плот / взлом", "3 · Затонувший сундук", "4 · Акулы", "5 · Огненный череп", "6 · Раненый кит", "7 · Раковина с сундуком", "8 · Остров с весами", "9 · Сундук в такелаже" };
+        static readonly string[] titles = { "1 · Захват круга", "2 · Плот / взлом", "3 · Затонувший сундук", "4 · Акулы", "5 · Огненный череп", "6 · Раненый кит", "7 · Раковина с сундуком", "8 · Остров с весами", "9 · Сундук в такелаже", "10 · Груз за кормой", "11 · Пушечный пролом", "12 · Чайка с ключом" };
         GUIStyle style;
         public static Vector3 Point(int index, float seaLevel) => new(-600 + index * 350, seaLevel, 370);
         void OnGUI()

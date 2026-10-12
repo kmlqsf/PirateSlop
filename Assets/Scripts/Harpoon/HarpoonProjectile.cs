@@ -18,6 +18,8 @@ namespace PirateSlop.Harpoon
 
         public HarpoonGun Gun { get; private set; }
         public HarpoonState State => state;
+        public PirateSlop.Networking.NetworkTowedCargo CargoTarget => hitParent != null ? hitParent.GetComponentInParent<PirateSlop.Networking.NetworkTowedCargo>() : null;
+        public Vector3 AttachedPoint => hitParent != null ? hitParent.TransformPoint(hitLocalPos) : transform.position;
         public bool IsAttached => state == HarpoonState.Attached;
         public bool IsRewinding => state == HarpoonState.Rewinding;
         public bool IsFlying => state == HarpoonState.Flying;
@@ -143,6 +145,7 @@ namespace PirateSlop.Harpoon
 
         void SimulateTetherPhysics()
         {
+            if (CargoTarget != null) return;
             if (Gun != null && Gun.NetworkShip != null && !Gun.NetworkShip.IsServerInitialized) return;
 
             if (Gun == null || Gun.Muzzle == null)
@@ -323,7 +326,7 @@ namespace PirateSlop.Harpoon
                 for (int i = 0; i < ActiveAttached.Count; i++)
                 {
                     var harpoon = ActiveAttached[i];
-                    if (harpoon == null || harpoon.state != HarpoonState.Attached) continue;
+                    if (harpoon == null || harpoon.state != HarpoonState.Attached || harpoon.CargoTarget != null) continue;
 
                     Vector3 local, other;
 
@@ -404,7 +407,7 @@ namespace PirateSlop.Harpoon
             bool isRock = collision.gameObject.layer == 8 || collision.collider.CompareTag("Rock")
                           || (collision.collider.attachedRigidbody == null && collision.gameObject.layer == 0);
 
-            if (isShip || isRock)
+            if (isShip || isRock || collision.collider.GetComponentInParent<PirateSlop.Networking.NetworkTowedCargo>() != null || collision.collider.GetComponentInParent<PirateSlop.Networking.NetworkLootChest>()?.InTow == true)
             {
                 Attach(collision, isShip);
             }
@@ -425,7 +428,9 @@ namespace PirateSlop.Harpoon
             var contact = collision.GetContact(0);
             transform.position = contact.point;
 
-            hitParent = collision.collider.transform;
+            var cargo = collision.collider.GetComponentInParent<PirateSlop.Networking.NetworkTowedCargo>() ?? collision.collider.GetComponentInParent<PirateSlop.Networking.NetworkLootChest>()?.TowedCargo;
+            if (cargo != null && cargo.Recovered) { DetachAndRewind(); return; }
+            hitParent = cargo != null ? cargo.transform : collision.collider.transform;
             hitLocalPos = hitParent.InverseTransformPoint(contact.point);
             hitLocalRot = Quaternion.Inverse(hitParent.rotation) * transform.rotation;
 
@@ -458,7 +463,7 @@ namespace PirateSlop.Harpoon
 
             if (Gun != null && Gun.NetworkShip != null && Gun.NetworkShip.IsServerInitialized && Gun.MountIndex >= 0)
             {
-                var targetNetObj = collision.collider != null ? collision.collider.GetComponentInParent<FishNet.Object.NetworkObject>() : null;
+                var targetNetObj = cargo != null ? cargo.NetworkObject : collision.collider != null ? collision.collider.GetComponentInParent<FishNet.Object.NetworkObject>() : null;
                 Gun.NetworkShip.HarpoonAttach(Gun.MountIndex, isShip, targetNetObj, hitLocalPos, hitLocalRot, currentCableLength);
             }
         }
@@ -491,7 +496,7 @@ namespace PirateSlop.Harpoon
 
             targetShip = isShip && targetNetObj != null ? (targetNetObj.GetComponent<ShipController>() ?? targetNetObj.GetComponentInChildren<ShipController>()) : null;
             isStaticTarget = !isShip || targetShip == null;
-            currentCableLength = Mathf.Clamp(cableLength, 8f, maxRange);
+            currentCableLength = Mathf.Clamp(cableLength, CargoTarget != null ? .8f : 8f, maxRange);
 
             if (!ActiveAttached.Contains(this)) ActiveAttached.Add(this);
             GameAudio.Play(SoundCue.BulletMetal, transform.position, 1.0f);
@@ -500,7 +505,7 @@ namespace PirateSlop.Harpoon
 
         public void SetCableLength(float length)
         {
-            currentCableLength = Mathf.Clamp(length, 8f, maxRange);
+            currentCableLength = Mathf.Clamp(length, CargoTarget != null ? .8f : 8f, maxRange);
         }
 
         public void DetachAndRewind()

@@ -41,7 +41,7 @@ public partial class AdvancedPlayerController : MonoBehaviour
         ActiveHarpoon?.ReleaseControl();
         lootNetwork?.CancelLootWork();
         lootNetwork?.ReleaseGrapple();
-        BellPullLocked = ShipActivityLocked = SailPullLocked = PickupLocked = false;
+        BellPullLocked = ShipActivityLocked = SailPullLocked = PickupLocked = CargoRopeWalking = false;
         ApplyKnockback(velocity);
         knockdownTime = Mathf.Clamp(duration, 1f, 5f);
         knockbackTime = ladderCooldown = knockdownTime;
@@ -127,9 +127,10 @@ public partial class AdvancedPlayerController : MonoBehaviour
     public PirateSlop.Networking.NetworkParrotDrone ActiveParrot { get; set; }
     public bool BellPullLocked { get; set; }
     public bool ShipActivityLocked { get; set; }
+    public bool CargoRopeWalking { get; set; }
     public bool SailPullLocked { get; set; }
     public float LookSensitivity => mouseSensitivity;
-    public bool OtherLocomotionLocked => IsFrozen || ActiveParrot != null || BellPullLocked || ShipActivityLocked || locomotionLocked || PickupLocked || ActiveCannon != null || ActiveHarpoon != null || (lootNetwork != null && lootNetwork.LootWorkLocked);
+    public bool OtherLocomotionLocked => IsFrozen || ActiveParrot != null || BellPullLocked || ShipActivityLocked && !CargoRopeWalking || locomotionLocked || PickupLocked || ActiveCannon != null || ActiveHarpoon != null || (lootNetwork != null && lootNetwork.LootWorkLocked);
     public bool LocomotionLocked => SailPullLocked || OtherLocomotionLocked;
     PirateSlop.Networking.NetworkWeapon lootNetwork;
     public bool IsSliding => slideTimer > 0f;
@@ -251,16 +252,17 @@ public partial class AdvancedPlayerController : MonoBehaviour
         aimRecoil=Vector2.Lerp(aimRecoil,Vector2.zero,1-Mathf.Exp(-7*Time.deltaTime));
         var kb = Keyboard.current; var mouse = Mouse.current;
         if (kb == null) return;
+        bool ropeWalk = CargoRopeWalking && ShipActivityLocked && !LocomotionLocked && !IsDead && !IsDowned && !PirateSlop.Networking.SessionController.MenuOpen && !DeveloperMenu.IsOpen && Cursor.lockState == CursorLockMode.Locked;
         if (kb.f1Key.wasPressedThisFrame && ActiveCannon == null && ActiveHarpoon == null && ActiveParrot == null && !BellPullLocked) SetThirdPerson(!IsThirdPerson);
         if (kb.escapeKey.wasPressedThisFrame) { pending.Release = true; SetCursor(false); }
         if (mouse != null && mouse.leftButton.wasPressedThisFrame && !PlayerInventory.LootWindowOpen && !PirateSlop.Networking.SessionController.MenuOpen) SetCursor(true);
-        if (InputActive && !PirateSlop.WhalePlayerInteraction.InputCaptured && !ShipActivityLocked && ActiveCannon == null && ActiveHarpoon == null && mouse != null && (lootNetwork == null || !lootNetwork.LootWorkLocked) && (shipControls == null || !shipControls.IsDragging)) { var d = mouse.delta.ReadValue() * mouseSensitivity * AimSensitivityScale; lookYaw = Mathf.Repeat(lookYaw + d.x, 360f); pitch = Mathf.Clamp(pitch - d.y, -85f, 85f); }
+        if ((InputActive || ropeWalk) && !PirateSlop.WhalePlayerInteraction.InputCaptured && (!ShipActivityLocked || ropeWalk) && ActiveCannon == null && ActiveHarpoon == null && mouse != null && (lootNetwork == null || !lootNetwork.LootWorkLocked) && (shipControls == null || !shipControls.IsDragging)) { var d = mouse.delta.ReadValue() * mouseSensitivity * AimSensitivityScale; lookYaw = Mathf.Repeat(lookYaw + d.x, 360f); pitch = Mathf.Clamp(pitch - d.y, -85f, 85f); }
         if (IsThirdPerson && mouse != null && (inventory == null || !inventory.PlacementActive))
         {
             float scroll = mouse.scroll.ReadValue().y;
             if (Mathf.Abs(scroll) > 0.01f) thirdPersonDistance = Mathf.Clamp(thirdPersonDistance - Mathf.Sign(scroll) * 0.5f, 1.2f, 6f);
         }
-        var rawMove = InputActive ? Vector2.ClampMagnitude(new Vector2((kb.dKey.isPressed || kb.rightArrowKey.isPressed ? 1 : 0) - (kb.aKey.isPressed || kb.leftArrowKey.isPressed ? 1 : 0), (kb.wKey.isPressed || kb.upArrowKey.isPressed ? 1 : 0) - (kb.sKey.isPressed || kb.downArrowKey.isPressed ? 1 : 0)), 1) : Vector2.zero;
+        var rawMove = InputActive || ropeWalk ? Vector2.ClampMagnitude(new Vector2((kb.dKey.isPressed || kb.rightArrowKey.isPressed ? 1 : 0) - (kb.aKey.isPressed || kb.leftArrowKey.isPressed ? 1 : 0), (kb.wKey.isPressed || kb.upArrowKey.isPressed ? 1 : 0) - (kb.sKey.isPressed || kb.downArrowKey.isPressed ? 1 : 0)), 1) : Vector2.zero;
         if (IsClimbing)
         {
             pending.Move = rawMove;
@@ -465,7 +467,7 @@ public partial class AdvancedPlayerController : MonoBehaviour
         SetHeight(wantCrouch);
         crouchBlend = Mathf.MoveTowards(crouchBlend, crouched ? 1f : 0f, dt * 6f);
         float slideProgress = 1f - slideTimer / Mathf.Max(.01f, slideDuration);
-        var planar = IsSliding ? slideDirection * Mathf.Lerp(slideSpeed, crouchSpeed, slideProgress * slideProgress) : direction * Mathf.Lerp(command.Sprint ? sprintSpeed : walkSpeed, crouchSpeed, crouchBlend);
+        var planar = IsSliding ? slideDirection * Mathf.Lerp(slideSpeed, crouchSpeed, slideProgress * slideProgress) : direction * Mathf.Lerp(CargoRopeWalking ? Mathf.Min(walkSpeed,3.2f) : command.Sprint ? sprintSpeed : walkSpeed, crouchSpeed, crouchBlend);
         if (command.Sprint && !crouched && !IsSliding && Upgrade(UpgradeEffect.LightBoots)) planar *= RoguelikeTuning.Current.runMultiplier;
         PlanarSpeed = planar.magnitude;
         if (grounded && deckPassenger != null && deckPassenger.Support != null && deckPassenger.Support.TryGetComponent<PirateSlop.WhaleLootPoint>(out var whaleSupport)) planar += whaleSupport.SlipVelocity(command.Crouch);

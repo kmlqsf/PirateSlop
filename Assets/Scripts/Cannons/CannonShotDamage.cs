@@ -189,6 +189,11 @@ namespace PirateSlop
                     MoveShot(transform.position + delta * fraction);
                     Velocity = Vector3.Lerp(Velocity, nextVelocity, fraction);
                     if (HitSkullMouth(nearest.collider, nearest.point)) return;
+                    var fortGate = nearest.collider.GetComponentInParent<PirateSlop.World.FortGateTarget>();
+                    if (fortGate != null && fortGate.Hit(this, nearest.point))
+                    {
+                        spent = true; Destroy(gameObject); return;
+                    }
                     if (Authoritative && Ammo != InventoryItem.BoardingHook)
                         nearest.collider.GetComponentInParent<PirateSlop.World.SeagullVisual>()?.ReceiveFirearmHit(Velocity);
                     if (explosive)

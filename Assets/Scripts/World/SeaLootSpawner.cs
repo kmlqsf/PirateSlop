@@ -16,6 +16,9 @@ namespace PirateSlop.World
                 for (int i = 0; i < 7; i++) SpawnOne(world, manager, catalog, i, EnvironmentEventTestRow.Point(i, world.Layout.SeaLevel));
                 NetworkBalanceEvent.SpawnEvent(catalog, manager, EnvironmentEventTestRow.Point(7, world.Layout.SeaLevel), world.gameObject.scene);
                 NetworkRiggingEvent.SpawnEvent(catalog, manager, EnvironmentEventTestRow.Point(8, world.Layout.SeaLevel), world.gameObject.scene);
+                NetworkSternCargoEvent.SpawnEvent(catalog, manager, EnvironmentEventTestRow.Point(9, world.Layout.SeaLevel), world.gameObject.scene, true);
+                NetworkCannonBreachEvent.SpawnEvent(catalog, manager, EnvironmentEventTestRow.Point(10, world.Layout.SeaLevel), world.gameObject.scene);
+                NetworkSeagullEvent.SpawnEvent(catalog, manager, EnvironmentEventTestRow.Point(11, world.Layout.SeaLevel), world.gameObject.scene);
                 return;
             }
             var random = new MapRandom((uint)world.Layout.Seed ^ 0x79c526abu);
@@ -25,6 +28,9 @@ namespace PirateSlop.World
             if (catalog.WhaleEventPrefab != null) eventTypes.Add(5);
             if (catalog.ClamEventPrefab != null) eventTypes.Add(6);
             if (catalog.RiggingEventPrefab != null) eventTypes.Add(8);
+            if (catalog.SternCargoEventPrefab != null) eventTypes.Add(9);
+            if (catalog.CannonBreachEventPrefab != null) eventTypes.Add(10);
+            if (catalog.SeagullEventPrefab != null) eventTypes.Add(11);
             int types = eventTypes.Count;
             int count = Mathf.Clamp(catalog.SeaEventsPerType, 1, 20) * types;
             float separation = Mathf.Max(160, catalog.CaptureRadius * 2.5f);
@@ -41,7 +47,7 @@ namespace PirateSlop.World
                     for (int side = 0; side < 8; side++)
                     {
                         float bearing = side * Mathf.PI / 4;
-                        Vector3 sample = point + new Vector3(Mathf.Cos(bearing), 0, Mathf.Sin(bearing)) * catalog.CaptureRadius;
+                        Vector3 sample = point + new Vector3(Mathf.Cos(bearing), 0, Mathf.Sin(bearing)) * (eventIndex == 10 ? Mathf.Max(100, catalog.CaptureRadius) : catalog.CaptureRadius);
                         if (!world.CanSail(sample, side * 45)) { clear = false; break; }
                     }
                     if (!clear || !world.CanSail(point, 0) || world.GroundHeight(point) > point.y - catalog.SunkenDepth - 2) continue;
@@ -72,6 +78,9 @@ namespace PirateSlop.World
 
         static void SpawnOne(ProceduralWorld world, NetworkManager manager, LootCatalog catalog, int index, Vector3 point)
         {
+            if (index == 11) { NetworkSeagullEvent.SpawnEvent(catalog, manager, point, world.gameObject.scene); return; }
+            if (index == 10) { NetworkCannonBreachEvent.SpawnEvent(catalog, manager, point, world.gameObject.scene); return; }
+            if (index == 9) { NetworkSternCargoEvent.SpawnEvent(catalog, manager, point, world.gameObject.scene, false); return; }
             if (index == 8) { NetworkRiggingEvent.SpawnEvent(catalog, manager, point, world.gameObject.scene); return; }
             if (index == 6) { NetworkClamEvent.SpawnEvent(catalog, manager, point, world.gameObject.scene); return; }
             if (index == 4) { if (catalog.SkullEventPrefab != null) NetworkSkullEvent.SpawnEvent(catalog, manager, point, world.gameObject.scene); return; }

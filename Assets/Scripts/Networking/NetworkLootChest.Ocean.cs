@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace PirateSlop.Networking
 {
-    public enum SeaLootKind : byte { None, Capture, Raft, Sunken, Shark, Skull, FloatingReward, Clam, Balance, Rigging }
+    public enum SeaLootKind : byte { None, Capture, Raft, Sunken, Shark, Skull, FloatingReward, Clam, Balance, Rigging, SternCargo, CannonBreach, SeagullKey }
     public enum SeaLootState : byte { Locked, Rising, Ready, Flying }
 
     public sealed partial class NetworkLootChest
@@ -38,7 +38,7 @@ namespace PirateSlop.Networking
         GameObject eventVisual;
         SharkSwarmVisual swarm;
         bool visualCreated;
-        internal bool BotLootCandidate => IsSpawned && !captureRewardTaken.Value && carrier.Value == null && supportId.Value == 0 && (!OnWhale || Whale != null && Whale.ChestAvailable) && (!InClam || Clam != null && Clam.ChestAvailable) && (!OnBalance || Balance != null && Balance.ChestAvailable) && (!InRigging || Rigging != null && Rigging.ChestAvailable);
+        internal bool BotLootCandidate => IsSpawned && !captureRewardTaken.Value && carrier.Value == null && supportId.Value == 0 && (!InSeagullWreck || SeagullChestAvailable) && (!InFort || Fort != null && Fort.ChestAvailable) && (!InTow || TowedCargo != null && TowedCargo.LootReady) && (!OnWhale || Whale != null && Whale.ChestAvailable) && (!InClam || Clam != null && Clam.ChestAvailable) && (!OnBalance || Balance != null && Balance.ChestAvailable) && (!InRigging || Rigging != null && Rigging.ChestAvailable);
         internal bool BotCapturePending => Kind == SeaLootKind.Capture && phase.Value == SeaLootState.Locked;
         internal bool BotLootRising => phase.Value == SeaLootState.Rising || phase.Value == SeaLootState.Flying;
         internal Vector3 BotLootPoint => Kind == SeaLootKind.None ? transform.position : eventPoint.Value;
@@ -54,12 +54,12 @@ namespace PirateSlop.Networking
         public bool SharksDistracted => Time.time < sharksDistractedUntil.Value;
         public Vector3 SharkBaitPoint => sharkBaitPoint.Value;
         public NetworkObject SharkTargetPlayer => sharkTargetPlayer.Value;
-        public bool Available => IsSpawned && !captureRewardTaken.Value && phase.Value == SeaLootState.Ready && carrier.Value == null && (!OnWhale || Whale != null && Whale.ChestAvailable) && (!InClam || Clam != null && Clam.ChestAvailable) && (!OnBalance || Balance != null && Balance.ChestAvailable) && (!InRigging || Rigging != null && Rigging.ChestAvailable);
+        public bool Available => IsSpawned && !captureRewardTaken.Value && phase.Value == SeaLootState.Ready && carrier.Value == null && (!InSeagullWreck || SeagullChestAvailable) && (!InFort || Fort != null && Fort.ChestAvailable) && (!InTow || TowedCargo != null && TowedCargo.LootReady) && (!OnWhale || Whale != null && Whale.ChestAvailable) && (!InClam || Clam != null && Clam.ChestAvailable) && (!OnBalance || Balance != null && Balance.ChestAvailable) && (!InRigging || Rigging != null && Rigging.ChestAvailable);
         public bool LootHintEligible
         {
             get
             {
-                if (!IsSpawned || Kind == SeaLootKind.None || carrier.Value != null || supportId.Value != 0) return false;
+                if (!IsSpawned || Kind == SeaLootKind.None || carrier.Value != null || supportId.Value != 0 || InTow && (TowedCargo == null || !TowedCargo.LootReady)) return false;
                 for (int i = 0; i < contents.Count; i++) if (contents[i].Count > 0) return true;
                 return false;
             }
@@ -78,7 +78,7 @@ namespace PirateSlop.Networking
         public string WorkHint => Kind == SeaLootKind.Raft
             ? "Мышь — угол отмычки · ЛКМ — повернуть замок · Q / E / Esc — отменить"
             : $"Верёвка: {Mathf.RoundToInt(Progress * 100)}% · плыви вокруг сундука · E / Q — отпустить";
-        public string OceanHint => InRigging ? RiggingHint : OnBalance ? BalanceHint : InClam ? ClamHint : OnWhale ? WhaleHint : phase.Value == SeaLootState.Flying ? "Череп выплюнул сундук"
+        public string OceanHint => InFort ? FortHint : InTow ? TowedCargo != null && TowedCargo.LootReady ? "E — открыть · F — снять сундук со стропы" : "Груз закреплён на канате" : InRigging ? RiggingHint : OnBalance ? BalanceHint : InClam ? ClamHint : OnWhale ? WhaleHint : phase.Value == SeaLootState.Flying ? "Череп выплюнул сундук"
             : phase.Value == SeaLootState.Rising ? "Ящик всплывает"
             : carrier.Value != null ? "Ящик несут"
             : phase.Value == SeaLootState.Ready ? (Kind == SeaLootKind.Shark && !SharksDistracted ? "E — открыть · F — нести ящик · Акулы агрессивны!" : "E — открыть · F — нести ящик")
@@ -256,6 +256,9 @@ namespace PirateSlop.Networking
             if (InClam) { inClam.Value = false; clamSupport.Value = null; }
             if (OnBalance) balanceSupport.Value = null;
             if (InRigging) riggingSupport.Value = null;
+            if (InFort) fortSupport.Value = null;
+            if (InSeagullWreck) seagullSupport.Value = null;
+            if (InTow) { TowedCargo?.ChestTaken(player.GetComponent<ShipDeckPassenger>()?.Ship?.GetComponent<NetworkShip>()); ReleaseTowChest(); }
             if (Kind == SeaLootKind.Raft) raftDetachedState.Value = true;
             carryingPlayer = player;
             carrier.Value = player.NetworkObject;
@@ -304,6 +307,9 @@ namespace PirateSlop.Networking
 
         void UpdateOceanLoot()
         {
+            if (UpdateSeagullChest()) return;
+            if (UpdateFortChest()) return;
+            if (UpdateTowChest()) return;
             if (UpdateRiggingChest()) return;
             if (UpdateBalanceChest()) return;
             if (UpdateClamChest()) return;

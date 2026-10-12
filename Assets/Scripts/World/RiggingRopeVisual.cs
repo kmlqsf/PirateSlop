@@ -9,6 +9,7 @@ namespace PirateSlop.World
     public sealed class RiggingRopeVisual : MonoBehaviour
     {
         public float TilesPerMeter = 3;
+        public float LengthOffset;
         LineRenderer line;
         Mesh mesh;
         MeshRenderer output;
@@ -22,7 +23,7 @@ namespace PirateSlop.World
             public readonly List<int> Triangles=new();
         }
         Vector3[] previous;
-        float previousRadius;
+        float previousRadius, previousOffset;
         void Awake()
         {
             line = GetComponent<LineRenderer>();
@@ -38,7 +39,7 @@ namespace PirateSlop.World
             if (!output.enabled) return;
             line.forceRenderingOff = true; output.sharedMaterial = line.sharedMaterial;
             int count = line.positionCount; float radius = line.widthMultiplier*.5f;
-            bool changed = previous == null || previous.Length != count || !Mathf.Approximately(radius,previousRadius);
+            bool changed = previous == null || previous.Length != count || !Mathf.Approximately(radius,previousRadius) || !Mathf.Approximately(LengthOffset,previousOffset);
             if (previous == null || previous.Length != count) previous = new Vector3[count];
             points.Clear();
             for (int i=0;i<count;i++)
@@ -49,14 +50,14 @@ namespace PirateSlop.World
                 points.Add(point); previous[i] = point;
             }
             if (!changed) return;
-            previousRadius = radius; BuildTube(mesh,points,radius,TilesPerMeter,buffers);
+            previousRadius = radius; previousOffset = LengthOffset; BuildTube(mesh,points,radius,TilesPerMeter,buffers,LengthOffset);
         }
         public static Mesh CreateTube(IReadOnlyList<Vector3> points,float radius)
         {
             var mesh = new Mesh { indexFormat = IndexFormat.UInt32 };
             BuildTube(mesh,points,radius,3,new TubeBuffers()); return mesh;
         }
-        static void BuildTube(Mesh mesh,IReadOnlyList<Vector3> source,float radius,float tiles,TubeBuffers buffers)
+        static void BuildTube(Mesh mesh,IReadOnlyList<Vector3> source,float radius,float tiles,TubeBuffers buffers,float offset = 0)
         {
             if (source.Count < 2) { mesh.Clear(); return; }
             bool closed = (source[0]-source[source.Count-1]).sqrMagnitude < .000001f;
@@ -104,7 +105,7 @@ namespace PirateSlop.World
                 for(int side=0;side<=sides;side++)
                 {
                     float angle=side*Mathf.PI*2/sides;var normal=across*Mathf.Cos(angle)+other*Mathf.Sin(angle);
-                    vertices.Add(path[i]+normal*radius);normals.Add(normal);tangents.Add(new Vector4(direction.x,direction.y,direction.z,-1));uv.Add(new Vector2(distance*tiles,side/(float)sides));
+                    vertices.Add(path[i]+normal*radius);normals.Add(normal);tangents.Add(new Vector4(direction.x,direction.y,direction.z,-1));uv.Add(new Vector2((distance+offset)*tiles,side/(float)sides));
                     if(i==0||side==sides)continue;
                     int a=(i-1)*ring+side,b=i*ring+side;
                     triangles.Add(a);triangles.Add(a+1);triangles.Add(b);triangles.Add(a+1);triangles.Add(b+1);triangles.Add(b);

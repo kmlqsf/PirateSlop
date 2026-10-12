@@ -19,6 +19,14 @@ namespace PirateSlop.Ships
         Vector3 Point(int index)
         {
             var node = Nodes[index];
+            if (node.Surface == ShipMonkeySurface.Rigging && node.Ladder != null)
+            {
+                var ladder = node.Ladder;
+                var local = ladder.transform.InverseTransformPoint(transform.TransformPoint(node.Position));
+                local.x = ladder.RopeSide(local.y);
+                local.z = ladder.RopeDepth(local.y) + Mathf.Abs(ladder.RopeStandOff);
+                return transform.InverseTransformPoint(ladder.transform.TransformPoint(local));
+            }
             return node.Surface == ShipMonkeySurface.Prop && node.Support != null
                 ? transform.InverseTransformPoint(node.Support.TransformPoint(node.SupportLocalPoint)) : node.Position;
         }

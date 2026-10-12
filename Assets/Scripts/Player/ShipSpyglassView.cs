@@ -109,7 +109,7 @@ namespace PirateSlop
                 { Exit(); return; }
                 if (Mouse.current != null)
                 {
-                    if (!portable) markRequested |= Mouse.current.middleButton.wasPressedThisFrame;
+                    markRequested |= Mouse.current.middleButton.wasPressedThisFrame;
                     var delta = Mouse.current.delta.ReadValue() * (.055f * zoom / 48f);
                     angles.x = Mathf.Clamp(angles.x - delta.y, -70f, 70f);
                     angles.y = Mathf.Repeat(angles.y + delta.x, 360f);
@@ -160,7 +160,8 @@ namespace PirateSlop
             if (markRequested)
             {
                 markRequested = false;
-                player.MarkSpyglassTarget(cameraView.transform.forward);
+                if (portable) player.MarkSeagullTarget(cameraView.transform.position, cameraView.transform.forward);
+                else player.MarkSpyglassTarget(cameraView.transform.forward);
             }
             if (player.Ship != null && Time.unscaledTime >= nextPreview) { nextPreview = Time.unscaledTime + .2f; Preview(); }
         }

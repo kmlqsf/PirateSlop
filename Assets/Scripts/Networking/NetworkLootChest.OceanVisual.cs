@@ -45,7 +45,7 @@ namespace PirateSlop.Networking
         {
             if (Event.current.type != EventType.Repaint) return;
             if (!DeveloperMenu.Available || !DeveloperMenu.ShowLootEventLabels) return;
-            if (!IsSpawned || Kind == SeaLootKind.None || SessionController.MenuOpen) return;
+            if (!IsSpawned || Kind == SeaLootKind.None || SessionController.MenuOpen || InTow) return;
             var camera = Camera.main;
             if (camera == null || !camera.isActiveAndEnabled) return;
             var viewer = camera.GetComponentInParent<NetworkPlayer>();
@@ -55,7 +55,7 @@ namespace PirateSlop.Networking
             float distance = Vector3.Distance(camera.transform.position, point);
             Vector3 screen = camera.WorldToScreenPoint(point + Vector3.up * 4);
             if (screen.z <= 0) return;
-            string label = InRigging ? "Сундук в такелаже" : InClam ? "Раковина с сундуком" : Kind == SeaLootKind.FloatingReward ? "Сундук из черепа"
+            string label = InSeagullWreck ? "Чайка с ключом" : InFort ? $"Пушечный пролом · входы {Fort?.Hits(0) ?? 0}/{Fort?.HitsToBreach ?? 6} · {Fort?.Hits(1) ?? 0}/{Fort?.HitsToBreach ?? 6}" : Kind == SeaLootKind.SternCargo ? "Груз за кормой" : InRigging ? "Сундук в такелаже" : InClam ? "Раковина с сундуком" : Kind == SeaLootKind.FloatingReward ? "Сундук из черепа"
                 : Kind == SeaLootKind.Shark
                 ? (Opened || carrier.Value != null ? "Ящик с припасами" : SharksDistracted ? "Ящик с припасами" : "Стая акул")
                 : phase.Value == SeaLootState.Ready

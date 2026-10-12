@@ -179,16 +179,19 @@ namespace PirateSlop.Ships
             if (target >= 0 && jumpPhase == 0)
             {
                 var link = Links[path[pathIndex]];
+                bool climbing = link.Motion == ShipMonkeyMotion.ClimbUp || link.Motion == ShipMonkeyMotion.ClimbDown;
                 bool canRun = (!ShowsCarry || task == TaskKind.Deliver) && routeRunning && link.Motion == ShipMonkeyMotion.Walk && Nodes[current].Surface == ShipMonkeySurface.Deck && Nodes[target].Surface == ShipMonkeySurface.Deck && Mathf.Abs(Point(target).y - segmentStart.y) < .12f;
-                float speed = link.Motion == ShipMonkeyMotion.RailWalk ? RailSpeed : link.Motion == ShipMonkeyMotion.ClimbUp ? ClimbSpeed : canRun ? RunSpeed : WalkSpeed;
+                float speed = link.Motion == ShipMonkeyMotion.RailWalk ? RailSpeed : climbing ? ClimbSpeed : canRun ? RunSpeed : WalkSpeed;
                 segmentTime += delta * speed / segmentLength;
                 float blend = Mathf.Clamp01(segmentTime);
                 position = Vector3.Lerp(segmentStart, Point(target), blend);
                 if (link.Motion == ShipMonkeyMotion.Hop) position.y += Mathf.Sin(blend * Mathf.PI) * HopHeight;
-                Vector3 forward = link.Motion == ShipMonkeyMotion.ClimbUp ? link.Facing : Point(target) - segmentStart;
+                Vector3 forward = climbing ? link.Facing : Point(target) - segmentStart;
+                var ladder = Nodes[current].Ladder != null ? Nodes[current].Ladder : Nodes[target].Ladder;
+                if (climbing && ladder != null) forward = -transform.InverseTransformDirection(ladder.transform.forward);
                 forward.y = 0f;
-                if (forward.sqrMagnitude > .0001f) rotation = Quaternion.RotateTowards(rotation, Quaternion.LookRotation(forward), delta * 280f);
-                SetMotion(link.Motion == ShipMonkeyMotion.ClimbUp && Point(target).y < segmentStart.y ? ShipMonkeyMotion.ClimbDown : canRun ? ShipMonkeyMotion.Run : link.Motion);
+                if (forward.sqrMagnitude > .0001f) rotation = climbing ? Quaternion.LookRotation(forward) : Quaternion.RotateTowards(rotation, Quaternion.LookRotation(forward), delta * 280f);
+                SetMotion(climbing ? (Point(target).y < segmentStart.y ? ShipMonkeyMotion.ClimbDown : ShipMonkeyMotion.ClimbUp) : canRun ? ShipMonkeyMotion.Run : link.Motion);
                 animationSpeed = Motion == ShipMonkeyMotion.ClimbUp || Motion == ShipMonkeyMotion.ClimbDown ? ClimbSpeed / .18f : Motion == ShipMonkeyMotion.RailWalk ? RailSpeed / .20f : Motion == ShipMonkeyMotion.Run ? RunSpeed / .45f : WalkSpeed / .45f;
                 if (blend >= 1f)
                 {

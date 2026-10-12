@@ -24,14 +24,14 @@
 
 | Файл | Краткое описание |
 | --- | --- |
-| [Assets/Settings/Loot/DefaultLoot.asset](<../../Assets/Settings/Loot/DefaultLoot.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь, Раковина с сундуком и парные рычаги, Остров с весами и пятью камнями, Сундук в такелаже |
+| [Assets/Settings/Loot/DefaultLoot.asset](<../../Assets/Settings/Loot/DefaultLoot.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь, Раковина с сундуком и парные рычаги, Остров с весами и пятью камнями, Сундук в такелаже, Груз за кормой, Пушечный пролом, Чайка с ключом |
 
 ## Assets/Settings/Networking
 
 | Файл | Краткое описание |
 | --- | --- |
-| [Assets/Settings/Networking/NetworkPrefabs.asset](<../../Assets/Settings/Networking/NetworkPrefabs.asset>) | Настройки или данные Unity; Раковина с сундуком и парные рычаги, Остров с весами и пятью камнями, Сундук в такелаже |
-| [Assets/Settings/Networking/SessionConfig.asset](<../../Assets/Settings/Networking/SessionConfig.asset>) | Настройки или данные Unity; Телепортация корабля через F8, Сеть, сессия и Steam, Сундук в такелаже |
+| [Assets/Settings/Networking/NetworkPrefabs.asset](<../../Assets/Settings/Networking/NetworkPrefabs.asset>) | Настройки или данные Unity; Раковина с сундуком и парные рычаги, Остров с весами и пятью камнями, Сундук в такелаже, Груз за кормой, Пушечный пролом, Чайка с ключом |
+| [Assets/Settings/Networking/SessionConfig.asset](<../../Assets/Settings/Networking/SessionConfig.asset>) | Настройки или данные Unity; Телепортация корабля через F8, Сеть, сессия и Steam, Сундук в такелаже, Груз за кормой, Пушечный пролом, Чайка с ключом |
 | [Assets/Settings/Networking/ShipObserver.asset](<../../Assets/Settings/Networking/ShipObserver.asset>) | Настройки или данные Unity |
 
 ## Assets/Settings/ShipDestruction
@@ -107,6 +107,7 @@
 | Файл | Краткое описание |
 | --- | --- |
 | [Assets/Settings/World/SandyIslands/BalanceSandyIsland.asset](<../../Assets/Settings/World/SandyIslands/BalanceSandyIsland.asset>) | Настройки или данные Unity; Остров с весами и пятью камнями |
+| [Assets/Settings/World/SandyIslands/CannonBreachIsland.asset](<../../Assets/Settings/World/SandyIslands/CannonBreachIsland.asset>) | Настройки или данные Unity; Пушечный пролом |
 | [Assets/Settings/World/SandyIslands/SingleLandingRockIsland.asset](<../../Assets/Settings/World/SandyIslands/SingleLandingRockIsland.asset>) | Настройки или данные Unity; Мир, острова и океан, Тестовая карта и водоворот |
 | [Assets/Settings/World/SandyIslands/SmallSandyIsland.asset](<../../Assets/Settings/World/SandyIslands/SmallSandyIsland.asset>) | Настройки или данные Unity; Мир, острова и океан, Тестовая карта и водоворот |
 | [Assets/Settings/World/SandyIslands/TwoLandingIsland.asset](<../../Assets/Settings/World/SandyIslands/TwoLandingIsland.asset>) | Настройки или данные Unity; Мир, острова и океан, Тестовая карта и водоворот |

@@ -21,6 +21,9 @@ namespace PirateSlop
         public NetworkClamEvent ClamEventPrefab;
         public NetworkBalanceEvent BalanceEventPrefab;
         public NetworkRiggingEvent RiggingEventPrefab;
+        public NetworkSternCargoEvent SternCargoEventPrefab;
+        public NetworkCannonBreachEvent CannonBreachEventPrefab;
+        public NetworkSeagullEvent SeagullEventPrefab;
         [Min(0)] public float SkullRotationSpeed = 8f;
         [Min(.1f)] public float SkullRewardDelay = 3f;
         [Min(.5f)] public float SkullRewardFlightSeconds = 2.5f;

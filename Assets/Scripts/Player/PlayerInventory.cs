@@ -190,6 +190,7 @@ namespace PirateSlop
             if (PirateSlop.WhalePlayerInteraction.InputCaptured && motor.IsLocal) { InteractionUsed = true; return; }
             if (GetComponent<PirateSlop.ClamPlayerInteraction>()?.ConsumedInput == true) { InteractionUsed = true; return; }
             if (GetComponent<RiggingPlayerInteraction>()?.ConsumedInput == true) { InteractionUsed = true; return; }
+            if (GetComponent<SternCargoPlayerInteraction>()?.ConsumedInput == true) { InteractionUsed = true; return; }
             var balanceInput = GetComponent<BalanceStonePlayer>();
             if (balanceInput != null && (balanceInput.ConsumedInput || balanceInput.BlocksInventory)) { if (lootWindow) CloseLoot(false); InteractionUsed = true; return; }
             if (RoguelikeUpgradeUI.BlocksInput) { InteractionUsed = true; return; }
@@ -408,15 +409,23 @@ namespace PirateSlop
             if (camera == null) return false;
             RaycastHit nearest = default;
             float distance = 5;
-            foreach (var hit in Physics.RaycastAll(camera.transform.position, camera.transform.forward, distance, ~0, QueryTriggerInteraction.Ignore))
-                if (!hit.transform.IsChildOf(transform) && hit.distance < distance) { nearest = hit; distance = hit.distance; }
+            foreach (var hit in Physics.RaycastAll(camera.transform.position, camera.transform.forward, distance, ~0, QueryTriggerInteraction.Collide))
+                if (!hit.transform.IsChildOf(transform) && (!hit.collider.isTrigger || hit.collider.GetComponentInParent<PirateSlop.World.SeagullKeyTarget>() != null) && hit.distance < distance) { nearest = hit; distance = hit.distance; }
+            var key = nearest.collider != null ? nearest.collider.GetComponentInParent<PirateSlop.World.SeagullKeyTarget>() : null;
+            if (key != null && key.Event != null && key.Event.KeyDropped)
+            {
+                InteractionUsed = true;
+                ContextPrompt.Offer("E — подобрать ключ от сундука", 45);
+                if (keyboard.eKey.wasPressedThisFrame) network.PickupSeagullKey(key.Event.NetworkObject);
+                return true;
+            }
             chest = nearest.collider != null ? nearest.collider.GetComponentInParent<NetworkLootChest>() : null;
             if (chest == null || chest.Kind == SeaLootKind.None) return false;
             InteractionUsed = true;
             if (keyboard.fKey.wasPressedThisFrame && chest.Available) network.CarryLoot(chest.NetworkObject);
             else if (keyboard.eKey.wasPressedThisFrame)
             {
-                if (chest.Available) network.UseChest(chest.NetworkObject);
+                if (chest.Available || chest.InSeagullWreck) network.UseChest(chest.NetworkObject);
                 else network.StartLootWork(chest.NetworkObject);
             }
             return true;
@@ -519,6 +528,9 @@ namespace PirateSlop
             }
             if (Time.unscaledTime - selectionShownAt < 2.5f)
                 PirateHudStyle.Label(new Rect(HudLayout.Width * .5f - 180, HudLayout.Height - slotSize - 56, 360, 26), InventoryIcons.ItemName(ItemAt(SelectedSlot)), PirateHudStyle.Paper);
+            foreach (var wreck in NetworkSeagullEvent.Active)
+                if (network != null && wreck != null && wreck.IsSpawned && wreck.KeyHolder == network.NetworkObject)
+                { PirateHudStyle.Label(new Rect(HudLayout.Width * .5f - 240, HudLayout.Height - slotSize - 84, 480, 26), "Ключ от сундука · Чайка с ключом", PirateHudStyle.Paper); break; }
             string hint = aimedCannon != null && aimedCannon.Network != null && aimedCannon.Network.HasBoarding(aimedCannon.Index) ? "Колесо вверх — натянуть · вниз — ослабить канат" : aimedBall != null && aimedBall.Network != null ? "ЛКМ / E — взять ядра (до 2 в слоте)" : BallSelected && aimedCannon != null && !aimedCannon.AcceptsAmmo(BallItem(SelectedSlot)) ? "Неподходящий боеприпас · E — прицелиться" : BallSelected && aimedCannon != null && !aimedCannon.IsLoaded ? "E — зарядить выбранное ядро" : chest != null ? chest.Hint(this) : pickup != null ? (EmptySlot() >= 0 ? "E — взять разобранную пушку" : "Инвентарь заполнен") : Placing && !cancelled ? "ЛКМ — поставить · Колёсико ↕ — поворот · Q/E — наклон\nShift+Q/E — крен · ПКМ — отменить" : "";
             if (BarricadeSelected) hint = "";
             if (hint.Length > 0) ContextPrompt.Offer(hint, 40);

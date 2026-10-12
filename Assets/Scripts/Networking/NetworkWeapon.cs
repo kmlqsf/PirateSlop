@@ -23,7 +23,7 @@ namespace PirateSlop.Networking
         public NetworkFish[] DropPrefabs;
         PlayerInventory inventory;
         PirateWeapon weapon;
-        void Awake() { weapon = GetComponent<PirateWeapon>(); inventory = GetComponent<PlayerInventory>(); if (GetComponent<WhalePlayerInteraction>() == null) gameObject.AddComponent<WhalePlayerInteraction>(); if (GetComponent<ClamPlayerInteraction>() == null) gameObject.AddComponent<ClamPlayerInteraction>(); if (GetComponent<RiggingPlayerInteraction>() == null) gameObject.AddComponent<RiggingPlayerInteraction>(); }
+        void Awake() { weapon = GetComponent<PirateWeapon>(); inventory = GetComponent<PlayerInventory>(); if (GetComponent<WhalePlayerInteraction>() == null) gameObject.AddComponent<WhalePlayerInteraction>(); if (GetComponent<ClamPlayerInteraction>() == null) gameObject.AddComponent<ClamPlayerInteraction>(); if (GetComponent<RiggingPlayerInteraction>() == null) gameObject.AddComponent<RiggingPlayerInteraction>(); if (GetComponent<SternCargoPlayerInteraction>() == null) gameObject.AddComponent<SternCargoPlayerInteraction>(); }
         public override void OnStartServer()
         {
             base.OnStartServer();
@@ -230,7 +230,7 @@ namespace PirateSlop.Networking
             if (!IsServerInitialized || target == null || LootHandsBusy || motor.IsDead || motor.IsClimbing || motor.LocomotionLocked || GetComponent<CannonHands>().HasHeldBall) return false;
             if (fishing != null && (fishing.CarryingCatch || fishing.IsFishing || fishing.IsEating)) return false;
             var chest = target.GetComponent<NetworkLootChest>();
-            if (chest == null || !chest.IsSpawned || !chest.Available) return false;
+            if (chest == null || !chest.IsSpawned || !chest.Available && !(slot < 0 && chest.InSeagullWreck)) return false;
             if(chest.OnWhale)
             {
                 if(!chest.CanReachWhaleChest(this)) return false;
@@ -245,6 +245,9 @@ namespace PirateSlop.Networking
             }
             if (slot < 0)
             {
+                if (!chest.TryUnlockSeagullKey(this, out bool justUnlocked)) return false;
+                if (justUnlocked) return true;
+                if (!chest.Available) return false;
                 chest.Open(this);
                 if (chest.IsSpawned && Owner != null && Owner.IsActive) OpenChestTargetRpc(Owner, target);
                 return true;

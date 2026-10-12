@@ -15,6 +15,9 @@ namespace PirateSlop.EditorTools
         const string ShipPath = "Assets/Resources/Ships/ShipV3Test.prefab";
         const string ControllerPath = "Assets/Animations/ShipMonkey/ShipMonkey.controller";
         const string RelaxedIdlePath = "Assets/Animations/ShipMonkey/MonkeyIdleRelaxed.anim";
+        static readonly string[] RepairedArmClips = { "Idle", "IdleRail", "Walk", "Run", "RailWalk", "CarryIdle", "CarryWalk", "Pickup", "ClimbUp", "ClimbDown" };
+
+        static string ArmClipPath(string name) => name == "Idle" ? RelaxedIdlePath : "Assets/Animations/ShipMonkey/Monkey" + name + "Arms.anim";
         static readonly string[] ClipNames = { "Idle", "IdleRail", "Walk", "RailWalk", "ClimbUp", "ClimbDown", "Run", "SitDown", "Sit", "StandUp", "SitDownPerch", "SitPerch", "StandUpPerch", "LegacyIdle", "LegacyWalk", "LegacyRailWalk", "LegacyClimbUp", "LegacyClimbDown", "JumpStart", "JumpAir", "JumpLand", "Pickup", "CarryIdle", "CarryWalk", "FishingCast", "FishingWait", "FishingReel", "Work", "Repair" };
 
         [MenuItem("PirateSlop/Configure Ship Monkey")]
@@ -56,8 +59,11 @@ namespace PirateSlop.EditorTools
             importer.SaveAndReimport();
             var clips = AssetDatabase.LoadAllAssetsAtPath(Model).OfType<AnimationClip>().Where(c => ClipNames.Contains(c.name)).ToDictionary(c => c.name);
             if (clips.Count != ClipNames.Length) throw new InvalidOperationException("The monkey model must contain all current and legacy animation clips.");
-            var relaxedIdle=AssetDatabase.LoadAssetAtPath<AnimationClip>(RelaxedIdlePath);
-            if(relaxedIdle!=null) clips["Idle"]=relaxedIdle;
+            foreach (string name in RepairedArmClips)
+            {
+                var repaired = AssetDatabase.LoadAssetAtPath<AnimationClip>(ArmClipPath(name));
+                if (repaired != null) clips[name] = repaired;
+            }
             var controller = AssetDatabase.LoadAssetAtPath<AnimatorController>(ControllerPath);
             if (controller == null) controller = AnimatorController.CreateAnimatorControllerAtPath(ControllerPath);
             var machine = controller.layers[0].stateMachine;
@@ -108,73 +114,157 @@ namespace PirateSlop.EditorTools
         }
 
         [MenuItem("PirateSlop/Repair Monkey Idle Arms")]
-        public static string RepairIdleArms()
+        public static string RepairIdleArms() => RepairArms();
+
+        [MenuItem("PirateSlop/Repair Monkey Arms")]
+        public static string RepairArms()
         {
-            if(EditorApplication.isPlaying) throw new InvalidOperationException("Exit Play Mode first.");
-            var source=AssetDatabase.LoadAllAssetsAtPath(Model).OfType<AnimationClip>().First(c=>c.name=="Idle");
-            var clip=UnityEngine.Object.Instantiate(source); clip.name="MonkeyIdleRelaxed"; clip.hideFlags=HideFlags.None;
-            var preview=new PreviewRenderUtility();
+            var sources = AssetDatabase.LoadAllAssetsAtPath(Model).OfType<AnimationClip>().Where(c => RepairedArmClips.Contains(c.name)).ToDictionary(c => c.name);
+            var controller = AssetDatabase.LoadAssetAtPath<AnimatorController>(ControllerPath);
+            var preview = new PreviewRenderUtility();
             try
             {
-                var root=preview.InstantiatePrefabInScene(AssetDatabase.LoadAssetAtPath<GameObject>(VisualPath));
-                var animator=root.GetComponentInChildren<Animator>(); animator.enabled=false;
-                var bones=root.GetComponentsInChildren<Transform>(true).ToDictionary(t=>t.name);
-                var tracks=new Dictionary<Transform,Keyframe[][]>();
-                int frames=Mathf.CeilToInt(source.length*30);
-                foreach(string side in new[]{"L","R"})
-                    foreach(string joint in new[]{"UpperArm.","Forearm.","Hand."}) tracks[bones[joint+side]]=new[]{new Keyframe[frames+1],new Keyframe[frames+1],new Keyframe[frames+1],new Keyframe[frames+1]};
-                var previous=new Dictionary<Transform,Quaternion>();
-                for(int frame=0;frame<=frames;frame++)
+                var root = preview.InstantiatePrefabInScene(AssetDatabase.LoadAssetAtPath<GameObject>(VisualPath));
+                var animator = root.GetComponentInChildren<Animator>(); animator.enabled = false;
+                var bones = root.GetComponentsInChildren<Transform>(true).ToDictionary(t => t.name);
+                foreach (string name in RepairedArmClips)
                 {
-                    float time=source.length*frame/frames;
-                    source.SampleAnimation(animator.gameObject,time);
-                    foreach(string side in new[]{"L","R"})
+                    var source = sources[name];
+                    var clip = UnityEngine.Object.Instantiate(source);
+                    clip.name = name == "Idle" ? "MonkeyIdleRelaxed" : "Monkey" + name + "Arms";
+                    clip.hideFlags = HideFlags.None;
+                    int frames = Mathf.CeilToInt(source.length * 30f);
+                    var tracks = new Dictionary<Transform, Keyframe[][]>();
+                    bool climbing = name == "ClimbUp" || name == "ClimbDown";
+                    foreach (string side in new[] { "L", "R" })
+                        foreach (string joint in climbing
+                            ? new[] { "UpperArm.", "Forearm.", "Hand.", "Fingers.", "Thumb.", "Thigh.", "Shin.", "Foot." }
+                            : new[] { "UpperArm.", "Forearm.", "Hand.", "Fingers.", "Thumb." })
+                            tracks[bones[joint + side]] = new[] { new Keyframe[frames + 1], new Keyframe[frames + 1], new Keyframe[frames + 1], new Keyframe[frames + 1] };
+                    var previous = new Dictionary<Transform, Quaternion>();
+                    for (int frame = 0; frame <= frames; frame++)
                     {
-                        var upper=bones["UpperArm."+side]; var lower=bones["Forearm."+side]; var hand=bones["Hand."+side];
-                        float sign=Mathf.Sign(Vector3.Dot(upper.position-bones["Chest"].position,root.transform.right));
-                        float a=Vector3.Distance(upper.position,lower.position),b=Vector3.Distance(lower.position,hand.position);
-                        var offset=root.transform.TransformDirection(new Vector3(sign*.07f,-(a+b)*.9f,.025f));
-                        float distance=Mathf.Min(offset.magnitude,a+b-.001f);
-                        var axis=offset.normalized;
-                        float along=(a*a-b*b+distance*distance)/(2*distance);
-                        var pole=root.transform.TransformDirection(new Vector3(sign,.1f,.3f));
-                        var bend=Vector3.ProjectOnPlane(pole,axis).normalized;
-                        var elbow=upper.position+axis*along+bend*Mathf.Sqrt(Mathf.Max(0,a*a-along*along));
-                        var wrist=upper.position+axis*distance;
-                        upper.rotation=Quaternion.FromToRotation(lower.position-upper.position,elbow-upper.position)*upper.rotation;
-                        lower.rotation=Quaternion.FromToRotation(hand.position-lower.position,wrist-lower.position)*lower.rotation;
-                        var palm=bones["Fingers."+side].position-hand.position;
-                        var thumb=bones["Thumb."+side].position-hand.position;
-                        var from=Quaternion.LookRotation(palm.normalized,Vector3.ProjectOnPlane(thumb,palm).normalized);
-                        var to=Quaternion.LookRotation(root.transform.TransformDirection(new Vector3(0,-1,.12f)),root.transform.forward);
-                        hand.rotation=to*Quaternion.Inverse(from)*hand.rotation;
+                        float time = source.length * frame / frames;
+                        source.SampleAnimation(animator.gameObject, time);
+                        foreach (string side in new[] { "L", "R" })
+                        {
+                            if (climbing) PoseClimbingLimbs(root.transform, bones, side);
+                            else PoseArm(root.transform, bones, side, name, time / source.length);
+                        }
+                        foreach (var entry in tracks)
+                        {
+                            var q = entry.Key.localRotation;
+                            if (previous.TryGetValue(entry.Key, out var last) && Quaternion.Dot(last, q) < 0f) q = new Quaternion(-q.x, -q.y, -q.z, -q.w);
+                            previous[entry.Key] = q;
+                            entry.Value[0][frame] = new Keyframe(time, q.x); entry.Value[1][frame] = new Keyframe(time, q.y);
+                            entry.Value[2][frame] = new Keyframe(time, q.z); entry.Value[3][frame] = new Keyframe(time, q.w);
+                        }
                     }
-                    foreach(var entry in tracks)
-                    {
-                        var q=entry.Key.localRotation;
-                        if(previous.TryGetValue(entry.Key,out var last) && Quaternion.Dot(last,q)<0) q=new Quaternion(-q.x,-q.y,-q.z,-q.w);
-                        previous[entry.Key]=q;
-                        entry.Value[0][frame]=new Keyframe(time,q.x); entry.Value[1][frame]=new Keyframe(time,q.y);
-                        entry.Value[2][frame]=new Keyframe(time,q.z); entry.Value[3][frame]=new Keyframe(time,q.w);
-                    }
+                    foreach (var entry in tracks)
+                        for (int component = 0; component < 4; component++)
+                        {
+                            var curve = new AnimationCurve(entry.Value[component]);
+                            for (int key = 0; key < curve.length; key++) { AnimationUtility.SetKeyLeftTangentMode(curve, key, AnimationUtility.TangentMode.Linear); AnimationUtility.SetKeyRightTangentMode(curve, key, AnimationUtility.TangentMode.Linear); }
+                            AnimationUtility.SetEditorCurve(clip, EditorCurveBinding.FloatCurve(AnimationUtility.CalculateTransformPath(entry.Key, animator.transform), typeof(Transform), "m_LocalRotation." + "xyzw"[component]), curve);
+                        }
+                    clip.EnsureQuaternionContinuity();
+                    var existing = AssetDatabase.LoadAssetAtPath<AnimationClip>(ArmClipPath(name));
+                    if (existing == null) AssetDatabase.CreateAsset(clip, ArmClipPath(name));
+                    else { EditorUtility.CopySerialized(clip, existing); UnityEngine.Object.DestroyImmediate(clip); clip = existing; }
+                    controller.layers[0].stateMachine.states.Select(s => s.state).First(s => s.name == name).motion = clip;
+                    AssetDatabase.SaveAssetIfDirty(clip);
                 }
-                foreach(var entry in tracks)
-                    for(int component=0;component<4;component++)
-                    {
-                        var curve=new AnimationCurve(entry.Value[component]);
-                        for(int key=0;key<curve.length;key++) { AnimationUtility.SetKeyLeftTangentMode(curve,key,AnimationUtility.TangentMode.Linear); AnimationUtility.SetKeyRightTangentMode(curve,key,AnimationUtility.TangentMode.Linear); }
-                        AnimationUtility.SetEditorCurve(clip,EditorCurveBinding.FloatCurve(AnimationUtility.CalculateTransformPath(entry.Key,animator.transform),typeof(Transform),"m_LocalRotation."+"xyzw"[component]),curve);
-                    }
-                clip.EnsureQuaternionContinuity();
-                var existing=AssetDatabase.LoadAssetAtPath<AnimationClip>(RelaxedIdlePath);
-                if(existing==null) AssetDatabase.CreateAsset(clip,RelaxedIdlePath);
-                else { EditorUtility.CopySerialized(clip,existing); UnityEngine.Object.DestroyImmediate(clip); clip=existing; }
-                var controller=AssetDatabase.LoadAssetAtPath<AnimatorController>(ControllerPath);
-                controller.layers[0].stateMachine.states.Select(s=>s.state).First(s=>s.name=="Idle").motion=clip;
-                EditorUtility.SetDirty(controller); AssetDatabase.SaveAssetIfDirty(clip); AssetDatabase.SaveAssetIfDirty(controller);
-                return "Idle arms relaxed with stable elbow bend and inward palms; other animations preserved.";
+                EditorUtility.SetDirty(controller); AssetDatabase.SaveAssetIfDirty(controller);
+                return "Limb rotations saved for " + string.Join(", ", RepairedArmClips) + "; torso curves preserved.";
             }
             finally { preview.Cleanup(); }
+        }
+
+        static Vector3 LimbJoint(Vector3 start, Vector3 end, float a, float b, Vector3 pole, out Vector3 reachedEnd)
+        {
+            var offset = end - start;
+            float distance = Mathf.Clamp(offset.magnitude, Mathf.Abs(a - b) + .001f, a + b - .001f);
+            var axis = offset.normalized;
+            float along = (a * a - b * b + distance * distance) / (2f * distance);
+            var bend = Vector3.ProjectOnPlane(pole, axis).normalized;
+            reachedEnd = start + axis * distance;
+            return start + axis * along + bend * Mathf.Sqrt(Mathf.Max(0f, a * a - along * along));
+        }
+
+        static void PoseClimbingLimbs(Transform root, Dictionary<string, Transform> bones, string side)
+        {
+            var upper = bones["UpperArm." + side]; var lower = bones["Forearm." + side]; var hand = bones["Hand." + side];
+            var fingers = bones["Fingers." + side]; var thumb = bones["Thumb." + side];
+            float sign = Mathf.Sign(Vector3.Dot(upper.position - bones["Chest"].position, root.right));
+            var shoulder = root.InverseTransformPoint(upper.position);
+            var sourceWrist = root.InverseTransformPoint(hand.position);
+            var targetWrist = new Vector3(sourceWrist.x, shoulder.y + (sourceWrist.y - shoulder.y) * .55f + .025f,
+                .30f + (sourceWrist.z - .176f) * .8f);
+            var elbow = LimbJoint(upper.position, root.TransformPoint(targetWrist), Vector3.Distance(upper.position, lower.position),
+                Vector3.Distance(lower.position, hand.position), root.TransformDirection(new Vector3(sign * .65f, -.7f, -.2f)), out var wrist);
+            var hinge = Vector3.Cross(elbow - upper.position, wrist - elbow).normalized;
+            upper.rotation = Quaternion.LookRotation(elbow - upper.position, hinge) * Quaternion.Inverse(Quaternion.LookRotation(lower.localPosition, Vector3.right));
+            lower.rotation = Quaternion.LookRotation(wrist - lower.position, hinge) * Quaternion.Inverse(Quaternion.LookRotation(hand.localPosition, Vector3.right));
+            var palmDirection = root.TransformDirection(new Vector3(0f, .65f, .76f)).normalized;
+            var localFrame = Quaternion.LookRotation(fingers.localPosition, Vector3.ProjectOnPlane(thumb.localPosition, fingers.localPosition).normalized);
+            hand.rotation = Quaternion.LookRotation(palmDirection, -sign * root.right) * Quaternion.Inverse(localFrame);
+            fingers.rotation = Quaternion.AngleAxis(38f, Vector3.Cross(fingers.up, root.forward).normalized) * fingers.rotation;
+            var tuckedThumb = Vector3.Slerp(thumb.up, palmDirection, .3f);
+            thumb.rotation = Quaternion.FromToRotation(thumb.up, tuckedThumb) * thumb.rotation;
+
+            var thigh = bones["Thigh." + side]; var shin = bones["Shin." + side]; var foot = bones["Foot." + side];
+            var footRotation = foot.rotation;
+            var ankle = root.InverseTransformPoint(foot.position);
+            ankle.z = .255f + (ankle.z - .08f) * .6f;
+            var knee = LimbJoint(thigh.position, root.TransformPoint(ankle), Vector3.Distance(thigh.position, shin.position),
+                Vector3.Distance(shin.position, foot.position), root.TransformDirection(new Vector3(sign * .12f, 1f, .25f)), out var reachedAnkle);
+            thigh.rotation = Quaternion.FromToRotation(shin.position - thigh.position, knee - thigh.position) * thigh.rotation;
+            shin.rotation = Quaternion.FromToRotation(foot.position - shin.position, reachedAnkle - shin.position) * shin.rotation;
+            foot.rotation = footRotation;
+        }
+
+        static void PoseArm(Transform root, Dictionary<string, Transform> bones, string side, string name, float phase)
+        {
+            var upper = bones["UpperArm." + side]; var lower = bones["Forearm." + side]; var hand = bones["Hand." + side];
+            var fingers = bones["Fingers." + side]; var thumb = bones["Thumb." + side];
+            float sign = Mathf.Sign(Vector3.Dot(upper.position - bones["Chest"].position, root.right));
+            float a = Vector3.Distance(upper.position, lower.position), b = Vector3.Distance(lower.position, hand.position);
+            bool carry = name.StartsWith("Carry", StringComparison.Ordinal);
+            bool moving = name == "Walk" || name == "Run";
+            bool rail = name == "IdleRail" || name == "RailWalk";
+            float reach = name == "Pickup" ? Mathf.Pow(Mathf.Sin(Mathf.PI * phase), 2f) : carry ? 1f : 0f;
+            var sourceWrist = hand.position;
+            if (carry) sourceWrist -= root.up * .03f + root.forward * .025f;
+            float cycle = Mathf.Sin(phase * Mathf.PI * 2f);
+            float swing = moving ? Mathf.Clamp(Vector3.Dot(sourceWrist - upper.position, root.forward) * .8f, -.055f, .055f) : .004f * cycle;
+            float spread = name == "RailWalk" ? .14f : rail ? .095f : .035f;
+            float drop = name == "RailWalk" ? .72f : rail ? .79f : .83f;
+            float height = moving || name == "RailWalk" ? 0f : .003f * cycle;
+            var relaxedWrist = upper.position + root.TransformDirection(new Vector3(sign * spread, -(a + b) * drop + height, (rail ? .045f : .055f) + swing));
+            var wantedWrist = Vector3.Lerp(relaxedWrist, sourceWrist, reach);
+            var offset = wantedWrist - upper.position;
+            float distance = Mathf.Clamp(offset.magnitude, Mathf.Abs(a - b) + .001f, a + b - .001f);
+            var axis = offset.normalized;
+            float along = (a * a - b * b + distance * distance) / (2f * distance);
+            var pole = root.TransformDirection(Vector3.Lerp(new Vector3(sign * .12f, 0f, -1f), new Vector3(sign * .45f, -1f, -.12f), reach));
+            var bend = Vector3.ProjectOnPlane(pole, axis).normalized;
+            var elbow = upper.position + axis * along + bend * Mathf.Sqrt(Mathf.Max(0f, a * a - along * along));
+            var wrist = upper.position + axis * distance;
+            var hinge = Vector3.Cross(elbow - upper.position, wrist - elbow).normalized;
+            upper.rotation = Quaternion.LookRotation(elbow - upper.position, hinge) * Quaternion.Inverse(Quaternion.LookRotation(lower.localPosition, Vector3.right));
+            lower.rotation = Quaternion.LookRotation(wrist - lower.position, hinge) * Quaternion.Inverse(Quaternion.LookRotation(hand.localPosition, Vector3.right));
+            var forearmDirection = (wrist - lower.position).normalized;
+            var relaxedPalm = Vector3.Slerp(forearmDirection, root.TransformDirection(new Vector3(-sign * .12f, -1f, .22f)).normalized, .2f);
+            var palmDirection = Vector3.Slerp(relaxedPalm, root.TransformDirection(new Vector3(-sign * .65f, -.08f, 1f)).normalized, reach);
+            var thumbDirection = Vector3.Slerp(root.forward, root.up, reach);
+            var localFrame = Quaternion.LookRotation(fingers.localPosition, Vector3.ProjectOnPlane(thumb.localPosition, fingers.localPosition).normalized);
+            hand.rotation = Quaternion.LookRotation(palmDirection, thumbDirection) * Quaternion.Inverse(localFrame);
+            float curl = (moving ? 18f : 22f) * (1f - reach);
+            var fingerDirection = fingers.up;
+            var curlAxis = Vector3.Cross(fingerDirection, -sign * root.right).normalized;
+            fingers.rotation = Quaternion.AngleAxis(curl, curlAxis) * fingers.rotation;
+            var tuckedThumb = Vector3.Slerp(thumb.up, palmDirection, .18f * (1f - reach));
+            thumb.rotation = Quaternion.FromToRotation(thumb.up, tuckedThumb) * thumb.rotation;
         }
 
         public static void Configure(GameObject root)
@@ -505,7 +595,7 @@ namespace PirateSlop.EditorTools
                     for(int j=0;j<=steps;j++)
                     {
                         float height=ladder.Height*j/steps;
-                        Vector3 local=new Vector3(ladder.RopeSide(height),height,ladder.RopeDepth(height)+.18f);
+                        Vector3 local=new Vector3(ladder.RopeSide(height),height,ladder.RopeDepth(height)+Mathf.Abs(ladder.RopeStandOff));
                         Vector3 point=root.transform.InverseTransformPoint(ladder.transform.TransformPoint(local));
                         int next=Add(point,ShipMonkeySurface.Rigging,ladder.transform,ladder);
                         if(first<0)first=next;

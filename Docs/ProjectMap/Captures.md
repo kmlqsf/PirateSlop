@@ -27,6 +27,51 @@
 | [Captures/IslandBalanceReview/third-island-overview.png](<../../Captures/IslandBalanceReview/third-island-overview.png>) | Изображение / текстура |
 | [Captures/IslandBalanceReview/verification.json](<../../Captures/IslandBalanceReview/verification.json>) | Конфигурация / данные JSON |
 
+## Captures/Review/2026-10-12
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Captures/Review/2026-10-12/ClamLiftClosed.png](<../../Captures/Review/2026-10-12/ClamLiftClosed.png>) | Изображение / текстура |
+| [Captures/Review/2026-10-12/ClamLiftClosedFinal.png](<../../Captures/Review/2026-10-12/ClamLiftClosedFinal.png>) | Изображение / текстура |
+| [Captures/Review/2026-10-12/ClamLiftOpen.png](<../../Captures/Review/2026-10-12/ClamLiftOpen.png>) | Изображение / текстура |
+| [Captures/Review/2026-10-12/ClamLiftOpenFinal.png](<../../Captures/Review/2026-10-12/ClamLiftOpenFinal.png>) | Изображение / текстура |
+| [Captures/Review/2026-10-12/MonkeyIdleAfter.png](<../../Captures/Review/2026-10-12/MonkeyIdleAfter.png>) | Изображение / текстура |
+| [Captures/Review/2026-10-12/MonkeyIdleBefore.png](<../../Captures/Review/2026-10-12/MonkeyIdleBefore.png>) | Изображение / текстура |
+
+## Captures/RiggingVerification
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Captures/RiggingVerification/final_hull.png](<../../Captures/RiggingVerification/final_hull.png>) | Изображение / текстура |
+| [Captures/RiggingVerification/final_rigging_detail.png](<../../Captures/RiggingVerification/final_rigging_detail.png>) | Изображение / текстура |
+| [Captures/RiggingVerification/final_wide.png](<../../Captures/RiggingVerification/final_wide.png>) | Изображение / текстура |
+| [Captures/RiggingVerification/final_wreck_fresh.png](<../../Captures/RiggingVerification/final_wreck_fresh.png>) | Изображение / текстура |
+| [Captures/RiggingVerification/final_wreck_port.png](<../../Captures/RiggingVerification/final_wreck_port.png>) | Изображение / текстура |
+| [Captures/RiggingVerification/game_initial.png](<../../Captures/RiggingVerification/game_initial.png>) | Изображение / текстура |
+| [Captures/RiggingVerification/hull_flat.png](<../../Captures/RiggingVerification/hull_flat.png>) | Изображение / текстура |
+| [Captures/RiggingVerification/hull_no_lighting_shadows.png](<../../Captures/RiggingVerification/hull_no_lighting_shadows.png>) | Изображение / текстура |
+| [Captures/RiggingVerification/hull_no_normals.png](<../../Captures/RiggingVerification/hull_no_normals.png>) | Изображение / текстура |
+| [Captures/RiggingVerification/hull_no_ssao.png](<../../Captures/RiggingVerification/hull_no_ssao.png>) | Изображение / текстура |
+| [Captures/RiggingVerification/hull_without_shadows.png](<../../Captures/RiggingVerification/hull_without_shadows.png>) | Изображение / текстура |
+| [Captures/RiggingVerification/initial_0.png](<../../Captures/RiggingVerification/initial_0.png>) | Изображение / текстура |
+| [Captures/RiggingVerification/initial_1.png](<../../Captures/RiggingVerification/initial_1.png>) | Изображение / текстура |
+| [Captures/RiggingVerification/initial_2.png](<../../Captures/RiggingVerification/initial_2.png>) | Изображение / текстура |
+| [Captures/RiggingVerification/landed_chest_aim.png](<../../Captures/RiggingVerification/landed_chest_aim.png>) | Изображение / текстура |
+| [Captures/RiggingVerification/normal_ship_comparison.png](<../../Captures/RiggingVerification/normal_ship_comparison.png>) | Изображение / текстура |
+| [Captures/RiggingVerification/normal_ship_near.png](<../../Captures/RiggingVerification/normal_ship_near.png>) | Изображение / текстура |
+| [Captures/RiggingVerification/ropes_boarding_final.png](<../../Captures/RiggingVerification/ropes_boarding_final.png>) | Изображение / текстура |
+| [Captures/RiggingVerification/ropes_boarding_v2.png](<../../Captures/RiggingVerification/ropes_boarding_v2.png>) | Изображение / текстура |
+| [Captures/RiggingVerification/ropes_chest_final.png](<../../Captures/RiggingVerification/ropes_chest_final.png>) | Изображение / текстура |
+| [Captures/RiggingVerification/ropes_chest_v2.png](<../../Captures/RiggingVerification/ropes_chest_v2.png>) | Изображение / текстура |
+| [Captures/RiggingVerification/ropes_collapse_v2.png](<../../Captures/RiggingVerification/ropes_collapse_v2.png>) | Изображение / текстура |
+| [Captures/RiggingVerification/ropes_stage_114_clean.png](<../../Captures/RiggingVerification/ropes_stage_114_clean.png>) | Изображение / текстура |
+| [Captures/RiggingVerification/ropes_stage_114_final.png](<../../Captures/RiggingVerification/ropes_stage_114_final.png>) | Изображение / текстура |
+| [Captures/RiggingVerification/ropes_stage_28_final.png](<../../Captures/RiggingVerification/ropes_stage_28_final.png>) | Изображение / текстура |
+| [Captures/RiggingVerification/ropes_stage_78_final.png](<../../Captures/RiggingVerification/ropes_stage_78_final.png>) | Изображение / текстура |
+| [Captures/RiggingVerification/ropes_static_hull_debug.png](<../../Captures/RiggingVerification/ropes_static_hull_debug.png>) | Изображение / текстура |
+| [Captures/RiggingVerification/ropes_without_event_debug.png](<../../Captures/RiggingVerification/ropes_without_event_debug.png>) | Изображение / текстура |
+| [Captures/RiggingVerification/runtime_wide.png](<../../Captures/RiggingVerification/runtime_wide.png>) | Изображение / текстура |
+
 ## Captures/StormCloudDark20261009
 
 | Файл | Краткое описание |

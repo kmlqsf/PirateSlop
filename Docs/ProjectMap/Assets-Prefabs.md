@@ -164,7 +164,7 @@
 | [Assets/Prefabs/World/SandyIslands/BalanceSandyIsland.prefab](<../../Assets/Prefabs/World/SandyIslands/BalanceSandyIsland.prefab>) | Префаб Unity; Остров с весами и пятью камнями |
 | [Assets/Prefabs/World/SandyIslands/SingleLandingRockIsland.prefab](<../../Assets/Prefabs/World/SandyIslands/SingleLandingRockIsland.prefab>) | Префаб Unity; Мир, острова и океан, Тестовая карта и водоворот |
 | [Assets/Prefabs/World/SandyIslands/SmallSandyIsland.prefab](<../../Assets/Prefabs/World/SandyIslands/SmallSandyIsland.prefab>) | Префаб Unity; Мир, острова и океан, Тестовая карта и водоворот, Остров с весами и пятью камнями |
-| [Assets/Prefabs/World/SandyIslands/TwoLandingIsland.prefab](<../../Assets/Prefabs/World/SandyIslands/TwoLandingIsland.prefab>) | Префаб Unity; Мир, острова и океан, Тестовая карта и водоворот |
+| [Assets/Prefabs/World/SandyIslands/TwoLandingIsland.prefab](<../../Assets/Prefabs/World/SandyIslands/TwoLandingIsland.prefab>) | Префаб Unity; Мир, острова и океан, Тестовая карта и водоворот, Пушечный пролом |
 
 ## Assets/Prefabs/World/StarterIsland
 

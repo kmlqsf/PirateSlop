@@ -328,6 +328,7 @@ public class ShipController : MonoBehaviour
                 pushVelocity = Vector3.zero; pushYawVelocity = 0f;
             }
         }
+        GetComponent<PirateSlop.Networking.NetworkSternCargoEvent>()?.ConstrainMotion(ref next);
         ConstrainHullMotion(ref next, ref rotation);
         if (vortexBoost && isAnchored) anchorPoint += next - rb.position;
         motionVelocity=(next-rb.position)/Mathf.Max(.001f,dt);
@@ -342,6 +343,7 @@ public class ShipController : MonoBehaviour
     {
         if (collider == null || !collider.enabled || collider.isTrigger || collider.attachedRigidbody == rb || collider.transform.IsChildOf(transform)) return false;
         if (collider.GetComponentInParent<AdvancedPlayerController>() != null || collider.GetComponentInParent<PirateSlop.Networking.NetworkLootChest>() != null || collider.GetComponentInParent<PirateSlop.Networking.NetworkFish>() != null) return false;
+        if (collider.GetComponentInParent<PirateSlop.Networking.NetworkTowedCargo>() != null) return false;
         return collider.attachedRigidbody == null || collider.attachedRigidbody.isKinematic;
     }
     int HullOverlaps(Vector3 position, Quaternion rotation)

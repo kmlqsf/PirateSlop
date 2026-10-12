@@ -320,7 +320,7 @@ namespace PirateSlop.Networking
         }
         void SpawnDeveloperLootEvent(SeaLootKind kind)
         {
-            if ((kind < SeaLootKind.Capture || kind > SeaLootKind.Skull) && kind != SeaLootKind.Clam) return;
+            if ((kind < SeaLootKind.Capture || kind > SeaLootKind.Skull) && kind != SeaLootKind.Clam && kind != SeaLootKind.SeagullKey) return;
             var session = SessionController.Instance;
             var world = PirateSlop.World.ProceduralWorld.Instance;
             var catalog = session != null && session.Config != null ? session.Config.Loot : null;
@@ -332,7 +332,7 @@ namespace PirateSlop.Networking
             if (world == null || !world.Ready || catalog == null || catalog.ChestPrefab == null)
             { DeveloperResultTargetRpc(Owner, "Мир или каталог лута ещё не готовы."); return; }
             var forward = Vector3.ProjectOnPlane(ship.transform.forward, Vector3.up).normalized;
-            float clearance = kind == SeaLootKind.Capture ? catalog.CaptureRadius : kind == SeaLootKind.Skull && catalog.SkullEventPrefab != null ? catalog.SkullEventPrefab.PlatformRadius : kind == SeaLootKind.Clam && catalog.ClamEventPrefab != null ? catalog.ClamEventPrefab.PlatformRadius : 8f;
+            float clearance = kind == SeaLootKind.SeagullKey ? 30f : kind == SeaLootKind.Capture ? catalog.CaptureRadius : kind == SeaLootKind.Skull && catalog.SkullEventPrefab != null ? catalog.SkullEventPrefab.PlatformRadius : kind == SeaLootKind.Clam && catalog.ClamEventPrefab != null ? catalog.ClamEventPrefab.PlatformRadius : 8f;
             float distance = ship.Motor.HullFootprint.y * .5f + clearance + 15f;
             float depth = kind == SeaLootKind.Sunken ? catalog.SunkenDepth + 2f : 3f;
             for (int attempt = 0; attempt < 12; attempt++)
@@ -346,7 +346,7 @@ namespace PirateSlop.Networking
                     if (chest != null && chest.IsSpawned && chest.Carrier == null && chest.Kind != SeaLootKind.None &&
                         Vector3.Distance(point, chest.EventPoint) < clearance + (chest.Kind == SeaLootKind.Capture ? catalog.CaptureRadius : 8f))
                     { clear = false; break; }
-                if (kind == SeaLootKind.Capture)
+                if (kind == SeaLootKind.Capture || kind == SeaLootKind.SeagullKey)
                     for (int side = 0; clear && side < 8; side++)
                     {
                         float bearing = side * Mathf.PI / 4f;
@@ -359,6 +359,17 @@ namespace PirateSlop.Networking
                 foreach (var clam in NetworkClamEvent.ServerEvents)
                     if (clam != null && Vector3.Distance(point, clam.transform.position) < clearance + clam.PlatformRadius) { clear = false; break; }
                 if (!clear) continue;
+                foreach (var wreck in NetworkSeagullEvent.ServerEvents)
+                    if (wreck != null && Vector3.Distance(point, wreck.transform.position) < clearance + wreck.PlatformRadius) { clear = false; break; }
+                if (!clear) continue;
+                if (kind == SeaLootKind.SeagullKey)
+                {
+                    var wreck = NetworkSeagullEvent.SpawnEvent(catalog, NetworkManager, point, world.gameObject.scene);
+                    if (wreck == null) { DeveloperResultTargetRpc(Owner, "Префаб ивента «Чайка с ключом» не подключён."); return; }
+                    developerObjects.Add(wreck.NetworkObject);
+                    DeveloperResultTargetRpc(Owner, "Ивент «Чайка с ключом» создан перед кораблём.");
+                    return;
+                }
                 if (kind == SeaLootKind.Clam)
                 {
                     var clam = NetworkClamEvent.SpawnEvent(catalog, NetworkManager, point, world.gameObject.scene);

@@ -12,6 +12,7 @@
 | --- | --- |
 | [Docs/AmbientFish.md](<../AmbientFish.md>) | Документация; Фоновая рыба в океане |
 | [Docs/AmbientSeagulls.md](<../AmbientSeagulls.md>) | Документация; Чайки и фоновые стаи |
+| [Docs/CannonBreachEvent.md](<../CannonBreachEvent.md>) | Документация; Пушечный пролом |
 | [Docs/ClamChestEvent.md](<../ClamChestEvent.md>) | Документация; Раковина с сундуком и парные рычаги |
 | [Docs/IslandBalanceEvent.md](<../IslandBalanceEvent.md>) | Документация; Остров с весами и пятью камнями |
 | [Docs/RiggingChestEvent.md](<../RiggingChestEvent.md>) | Документация; Сундук в такелаже |
@@ -22,6 +23,7 @@
 | [Docs/ShipSlotMachine.md](<../ShipSlotMachine.md>) | Документация; Корабельная обезьянка, Корабельная слот-машина |
 | [Docs/SlotMachineAudio.json](<../SlotMachineAudio.json>) | Конфигурация / данные JSON; Корабельная слот-машина |
 | [Docs/SlotMachineReelArt.md](<../SlotMachineReelArt.md>) | Документация; Корабельная слот-машина |
+| [Docs/SternCargoEvent.md](<../SternCargoEvent.md>) | Документация; Груз за кормой |
 | [Docs/StormRain.md](<../StormRain.md>) | Документация; Шторм, зона, дождь и объёмный туман, Тестовая карта и водоворот |
 | [Docs/StormTestSmoke.md](<../StormTestSmoke.md>) | Документация; Мир, острова и океан, Шторм, зона, дождь и объёмный туман, Тестовая карта и водоворот |
 | [Docs/TestOcean.md](<../TestOcean.md>) | Документация; Мир, острова и океан, Тестовая карта и водоворот |

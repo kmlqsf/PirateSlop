@@ -53,7 +53,7 @@ namespace PirateSlop.World
             }
             foreach (var chest in NetworkLootChest.ServerChests)
             {
-                if (chest == null || !chest.IsSpawned || chest.gameObject.scene != scene || chest.SupportingShip != null || chest.Carrier != null || chest.OnWhale || chest.InClam || chest.OnBalance || chest.InRigging) continue;
+                if (chest == null || !chest.IsSpawned || chest.gameObject.scene != scene || chest.SupportingShip != null || chest.Carrier != null || chest.OnWhale || chest.InClam || chest.OnBalance || chest.InRigging || chest.InTow || chest.InFort) continue;
                 string title = chest.Kind switch { SeaLootKind.Capture => "Захват зоны", SeaLootKind.Raft => "Плот", SeaLootKind.Sunken => "Подводный сундук", SeaLootKind.Shark => "Стая акул", _ => null };
                 if (title != null) Add(places, "chest/" + chest.NetworkObject.ObjectId, title + " · " + chest.NetworkObject.ObjectId, 1, chest.Kind == SeaLootKind.Raft && chest.RaftBody != null ? chest.RaftBody.position : chest.EventPoint, 0);
             }
@@ -65,6 +65,12 @@ namespace PirateSlop.World
                 if (balance != null && balance.IsSpawned && balance.gameObject.scene == scene) Add(places, "balance/" + balance.NetworkObject.ObjectId, "Остров с весами · " + balance.NetworkObject.ObjectId, 1, balance.transform.position, 40);
             foreach (var rigging in NetworkRiggingEvent.ServerEvents)
                 if (rigging != null && rigging.IsSpawned && rigging.gameObject.scene == scene) Add(places, "rigging/" + rigging.NetworkObject.ObjectId, "Сундук в такелаже · " + rigging.NetworkObject.ObjectId, 1, rigging.transform.position, rigging.PlatformRadius);
+            foreach (var cargo in NetworkSternCargoEvent.Active)
+                if (cargo != null && cargo.IsServerInitialized && cargo.IsSpawned && cargo.gameObject.scene == scene) Add(places, "stern-cargo/" + cargo.NetworkObject.ObjectId, "Груз за кормой · " + cargo.NetworkObject.ObjectId, 1, cargo.transform.position, 30);
+            foreach (var fort in NetworkCannonBreachEvent.ServerEvents)
+                if (fort != null && fort.IsSpawned && fort.gameObject.scene == scene) Add(places, "cannon-breach/" + fort.NetworkObject.ObjectId, "Пушечный пролом · " + fort.NetworkObject.ObjectId, 1, fort.transform.position, fort.IslandRadius);
+            foreach (var wreck in NetworkSeagullEvent.ServerEvents)
+                if (wreck != null && wreck.IsSpawned && wreck.gameObject.scene == scene) Add(places, "seagull-key/" + wreck.NetworkObject.ObjectId, "Чайка с ключом · " + wreck.NetworkObject.ObjectId, 1, wreck.transform.position, wreck.PlatformRadius);
             foreach (var whale in UnityEngine.Object.FindObjectsByType<WhaleLootPoint>(FindObjectsSortMode.None))
                 if (whale.IsSpawned && whale.gameObject.scene == scene) Add(places, "whale/" + whale.NetworkObject.ObjectId, "Раненый кит · " + whale.NetworkObject.ObjectId, 1, whale.transform.position, 18);
             return places.OrderBy(p => p.Category).ThenBy(p => p.Name, StringComparer.Ordinal).ToArray();

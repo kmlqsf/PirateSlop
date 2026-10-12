@@ -36,8 +36,8 @@ namespace PirateSlop
         bool teleportLoading;
         static readonly string[] quantityNames = { "1", "5", "20" };
         int lootEvent;
-        static readonly string[] lootEventNames = { "Зона захвата", "Плот с закрытым сундуком", "Подводный тайник", "Сундук со стаей акул", "Огненный череп", "Раковина с сундуком" };
-        static readonly SeaLootKind[] lootEventKinds = { SeaLootKind.Capture, SeaLootKind.Raft, SeaLootKind.Sunken, SeaLootKind.Shark, SeaLootKind.Skull, SeaLootKind.Clam };
+        static readonly string[] lootEventNames = { "Зона захвата", "Плот с закрытым сундуком", "Подводный тайник", "Сундук со стаей акул", "Огненный череп", "Раковина с сундуком", "Чайка с ключом" };
+        static readonly SeaLootKind[] lootEventKinds = { SeaLootKind.Capture, SeaLootKind.Raft, SeaLootKind.Sunken, SeaLootKind.Shark, SeaLootKind.Skull, SeaLootKind.Clam, SeaLootKind.SeagullKey };
         float zoneSpeedMultiplier = 1f;
         float shipSpeedPercent = 100f, nextShipSpeedSend;
         bool shipSpeedPending;

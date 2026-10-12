@@ -12,7 +12,7 @@
 
 ## Полный каталог
 
-Учтено 11161 файлов без `.meta`. Ещё 10067 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
+Учтено 11395 файлов без `.meta`. Ещё 10267 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
 
 | Раздел | Назначение | Файлов |
 | --- | --- | ---: |
@@ -21,7 +21,7 @@
 | [.opencode](<Docs/ProjectMap/.opencode.md>) | Ресурсы раздела; точный состав — в каталоге | 4 |
 | [Art](<Docs/ProjectMap/Art.md>) | Исходники арта и Blender | 540 |
 | [Assets](<Docs/ProjectMap/Assets.md>) | Ресурсы раздела; точный состав — в каталоге | 2 |
-| [Assets/Animations](<Docs/ProjectMap/Assets-Animations.md>) | Анимации | 28 |
+| [Assets/Animations](<Docs/ProjectMap/Assets-Animations.md>) | Анимации | 37 |
 | [Assets/Audio](<Docs/ProjectMap/Assets-Audio.md>) | Звуковые ресурсы и лицензии | 407 |
 | [Assets/Branding](<Docs/ProjectMap/Assets-Branding.md>) | Оформление проекта | 1 |
 | [Assets/Editor](<Docs/ProjectMap/Assets-Editor.md>) | Редакторские ресурсы | 1 |
@@ -31,13 +31,13 @@
 | [Assets/JMO Assets](<Docs/ProjectMap/Assets-JMO Assets.md>) | Ресурсы раздела; точный состав — в каталоге | 18 |
 | [Assets/Materials](<Docs/ProjectMap/Assets-Materials.md>) | Материалы | 140 |
 | [Assets/Mirza](<Docs/ProjectMap/Assets-Mirza.md>) | Ресурсы раздела; точный состав — в каталоге | 1 |
-| [Assets/Models](<Docs/ProjectMap/Assets-Models.md>) | Модели и связанные ресурсы | 6931 |
+| [Assets/Models](<Docs/ProjectMap/Assets-Models.md>) | Модели и связанные ресурсы | 7098 |
 | [Assets/Plugins](<Docs/ProjectMap/Assets-Plugins.md>) | Плагины | 5 |
 | [Assets/Prefabs](<Docs/ProjectMap/Assets-Prefabs.md>) | Готовые игровые объекты | 125 |
-| [Assets/Resources](<Docs/ProjectMap/Assets-Resources.md>) | Ресурсы, доступные для загрузки по имени | 150 |
+| [Assets/Resources](<Docs/ProjectMap/Assets-Resources.md>) | Ресурсы, доступные для загрузки по имени | 154 |
 | [Assets/Scenes](<Docs/ProjectMap/Assets-Scenes.md>) | Сохранённые сцены | 3 |
-| [Assets/Scripts](<Docs/ProjectMap/Assets-Scripts.md>) | Игровой код и редакторские инструменты | 524 |
-| [Assets/Settings](<Docs/ProjectMap/Assets-Settings.md>) | Настройки игровых систем и рендеринга | 55 |
+| [Assets/Scripts](<Docs/ProjectMap/Assets-Scripts.md>) | Игровой код и редакторские инструменты | 540 |
+| [Assets/Settings](<Docs/ProjectMap/Assets-Settings.md>) | Настройки игровых систем и рендеринга | 56 |
 | [Assets/Shaders](<Docs/ProjectMap/Assets-Shaders.md>) | Шейдеры | 20 |
 | [Assets/StreamingAssets](<Docs/ProjectMap/Assets-StreamingAssets.md>) | Ресурсы раздела; точный состав — в каталоге | 5 |
 | [Assets/Tests](<Docs/ProjectMap/Assets-Tests.md>) | Исходники проверок | 19 |
@@ -45,8 +45,8 @@
 | [Assets/TutorialInfo](<Docs/ProjectMap/Assets-TutorialInfo.md>) | Ресурсы раздела; точный состав — в каталоге | 2 |
 | [Assets/UI](<Docs/ProjectMap/Assets-UI.md>) | Ресурсы интерфейса | 39 |
 | [Assets/_Recovery](<Docs/ProjectMap/Assets-_Recovery.md>) | Сохранённые восстановленные данные | 2 |
-| [Captures](<Docs/ProjectMap/Captures.md>) | Ресурсы раздела; точный состав — в каталоге | 975 |
-| [Docs](<Docs/ProjectMap/Docs.md>) | Документы и сохранённые отчёты | 44 |
+| [Captures](<Docs/ProjectMap/Captures.md>) | Ресурсы раздела; точный состав — в каталоге | 1010 |
+| [Docs](<Docs/ProjectMap/Docs.md>) | Документы и сохранённые отчёты | 46 |
 | [Packages](<Docs/ProjectMap/Packages.md>) | Манифест, lock-файл и встроенные пакеты | 922 |
 | [ProjectSettings](<Docs/ProjectMap/ProjectSettings.md>) | Настройки Unity | 28 |
 | [Root](<Docs/ProjectMap/Root.md>) | Корневые инструкции, планы и служебные файлы | 27 |
@@ -78,6 +78,8 @@ NetworkDeveloperTeleport переносит текущий корабль или
 - [Assets/Settings/Networking/SessionConfig.asset](<Assets/Settings/Networking/SessionConfig.asset>) — Настройки или данные Unity.
 - [Assets/Scripts/Networking/NetworkClamEvent.cs](<Assets/Scripts/Networking/NetworkClamEvent.cs>) — Исходник C#: ClamLeverStroke, ClamLeverHold, NetworkClamEvent.
 - [Assets/Scripts/Networking/NetworkRiggingEvent.cs](<Assets/Scripts/Networking/NetworkRiggingEvent.cs>) — Исходник C#: RiggingBreakPart, NetworkRiggingEvent.
+- [Assets/Scripts/Networking/NetworkCannonBreachEvent.cs](<Assets/Scripts/Networking/NetworkCannonBreachEvent.cs>) — Исходник C#: FortGateState, FortBreakState, FortGateFragment, FortBreachGate, NetworkCannonBreachEvent.
+- [Assets/Scripts/Networking/NetworkSeagullEvent.cs](<Assets/Scripts/Networking/NetworkSeagullEvent.cs>) — Исходник C#: NetworkSeagullEvent.
 
 ### Улучшения рогалика из сундуков (`roguelike-upgrades`)
 
@@ -1981,7 +1983,8 @@ NetworkLoadTest запускается из меню Тест нагрузки �
 
 Ключевые слова: обезьяна, обезьянка, миньон, monkey.
 
-2026-10-12: MonkeyIdleRelaxed.anim заменяет только состояние Idle контроллера. Плечевые, локтевые и кистевые повороты пересчитаны в исходной анимации: руки опущены с небольшим изгибом, большие пальцы направлены вперёд, ладони к корпусу. Остальные кривые тела и остальные анимации сохранены. ShipMonkeySetup.RepairIdleArms сохраняет отдельный клип; повторная подготовка использует его. Нативный изолированный просмотр стойки одобрен visual_reviewer на представленном ракурсе; без игрового прогона.
+2026-10-12: после повторных замечаний о руках исправлены Idle/IdleRail/Walk/Run/RailWalk/CarryIdle/CarryWalk/Pickup/ClimbUp/ClimbDown. ShipMonkeySetup.RepairArms сохраняет отдельные клипы: MonkeyIdleRelaxed и Monkey<состояние>Arms. Плечо и предплечье имеют согласованную ось сгиба. Свободные руки умеренно согнуты, кисти продолжают направление предплечий, пальцы слегка согнуты и большие пальцы поджаты; сохранён взмах ходьбы и добавлено мягкое движение стойки. IdleRail и RailWalk отводят согнутые руки для равновесия. Хват предметов сохранён. Кривые корпуса сохранены. PrepareVisual восстанавливает все десять исправленных клипов после настройки; прежний RepairIdleArms вызывает общую правку. Игровая и визуальная проверка оставлены пользователю, прежнее одобрение изолированной стойки не относится к этой версии.
+2026-10-12: лазание использует новые MonkeyClimbUpArms/MonkeyClimbDownArms: локти согнуты наружу/вниз, руки вынесены к ступеням, большие пальцы направлены внутрь, пальцы закрывают хват. Цели кистей ниже прежнего поднятого над головой раскрытого жеста; ноги вынесены к верёвкам с сохранением исходного чередования. ShipMonkey.Point разрешает старые Rigging-узлы через ShipLadder.RopeSide/RopeDepth и положительный RopeStandOff (текущие лестницы 0.38 м вместо прежних 0.18 м); новая подготовка маршрута использует тот же отступ. При подъёме и спуске сохраняется поворот к одной стороне лестницы, скорость обоих направлений ClimbSpeed. Старые префабы и дополнительные обезьянки используют исправленные точки без пересоздания графа; сетевой формат прежний. Без игрового прогона.
 Текущая локомоция двуногая: Idle/Walk/RailWalk/ClimbUp/ClimbDown точно копируют первоначальные Legacy actions, Run ускоряет LegacyWalk. Балансирование на бортах восстановлено. Четвероногие клипы и прежний прыжок убраны из игрового FBX ; архив Versions/V4-QuadrupedJump-2026-10-04 удалён при согласованной очистке 2026-10-05. Меню четвероногой локомоции удалено.
 Сидение, отдых у моря и редкие взгляды сохранены. Переходы посадки/подъёма и три прыжковых клипа переделаны под вертикальную стойку. Веса глаз/лица исходные, взгляд только головой/шеей с пределами 30°/15°. 29 action/состояние Animator.
 Маршруты: 1310 узлов, 3550 связей, семь предметных опор (якорь, край колокола, четыре фонаря, стол для костей). Серверный ответ на союзный выстрел: преследование, прыжок и отбрасывание с временным ragdoll 2.8 с без уменьшения здоровья. Протокол 120. Импорт/компиляция и исходные кривые проверены; Play Mode и второй клиент не запускались.
@@ -2041,6 +2044,15 @@ ShipMonkey.HeadRide.cs: редкая серверная прогулка к жи
 - [Assets/Scripts/Networking/NetworkShip.SlotMachine.cs](<Assets/Scripts/Networking/NetworkShip.SlotMachine.cs>) — Исходник C#: ShipSlotSnapshot, NetworkShip.
 - [Assets/Scripts/Ships/ShipSlotMachinePlayer.cs](<Assets/Scripts/Ships/ShipSlotMachinePlayer.cs>) — Исходник C#: ShipSlotMachinePlayer.
 - [Assets/Animations/ShipMonkey/MonkeyIdleRelaxed.anim](<Assets/Animations/ShipMonkey/MonkeyIdleRelaxed.anim>) — Клип анимации.
+- [Assets/Animations/ShipMonkey/MonkeyIdleRailArms.anim](<Assets/Animations/ShipMonkey/MonkeyIdleRailArms.anim>) — Клип анимации.
+- [Assets/Animations/ShipMonkey/MonkeyRailWalkArms.anim](<Assets/Animations/ShipMonkey/MonkeyRailWalkArms.anim>) — Клип анимации.
+- [Assets/Animations/ShipMonkey/MonkeyClimbUpArms.anim](<Assets/Animations/ShipMonkey/MonkeyClimbUpArms.anim>) — Клип анимации.
+- [Assets/Animations/ShipMonkey/MonkeyClimbDownArms.anim](<Assets/Animations/ShipMonkey/MonkeyClimbDownArms.anim>) — Клип анимации.
+- [Assets/Animations/ShipMonkey/MonkeyWalkArms.anim](<Assets/Animations/ShipMonkey/MonkeyWalkArms.anim>) — Клип анимации.
+- [Assets/Animations/ShipMonkey/MonkeyRunArms.anim](<Assets/Animations/ShipMonkey/MonkeyRunArms.anim>) — Клип анимации.
+- [Assets/Animations/ShipMonkey/MonkeyCarryIdleArms.anim](<Assets/Animations/ShipMonkey/MonkeyCarryIdleArms.anim>) — Клип анимации.
+- [Assets/Animations/ShipMonkey/MonkeyCarryWalkArms.anim](<Assets/Animations/ShipMonkey/MonkeyCarryWalkArms.anim>) — Клип анимации.
+- [Assets/Animations/ShipMonkey/MonkeyPickupArms.anim](<Assets/Animations/ShipMonkey/MonkeyPickupArms.anim>) — Клип анимации.
 - [Art/Blender/Creatures/ShipMonkey/README.md](<Art/Blender/Creatures/ShipMonkey/README.md>) — Документация.
 - [Art/Blender/Creatures/ShipMonkey/Versions/README.md](<Art/Blender/Creatures/ShipMonkey/Versions/README.md>) — Документация.
 - [Docs/ShipSlotMachine.md](<Docs/ShipSlotMachine.md>) — Документация.
@@ -2526,6 +2538,273 @@ Mystery допускает все включенные строки ChestLoot.js
 - [Assets/Models/SeaEvents/Rigging/BoardingRopeCleat_Climb_Boarding_Starboard_3.asset](<Assets/Models/SeaEvents/Rigging/BoardingRopeCleat_Climb_Boarding_Starboard_3.asset>) — Настройки или данные Unity.
 - [Assets/Models/SeaEvents/Rigging/RiggingHemp.mat](<Assets/Models/SeaEvents/Rigging/RiggingHemp.mat>) — Материал Unity.
 - [Docs/RiggingChestEvent.md](<Docs/RiggingChestEvent.md>) — Документация.
+
+### Груз за кормой (`stern-cargo-event`)
+
+Ключевые слова: груз за кормой, буксир, торговый корабль, VOC.
+
+2026-10-12, исправление укладки и хвата по новой игровой жалобе: фиксированный RopePileOrigin у кормы удалён. NetworkTowedCargo хранит SyncList<SternRopeFloorDeposit> в координатах корабля и свободную длину; новые участки укладываются у ног оператора, ранее оставленные места сохраняются. Расстояния между местами и свисание расходуют свободный канат; остаток образует местные витки, вся отрисованная ветвь ограничена доступной длиной, при натяжении лишние старые точки убираются. Старый ограничитель33м при InitialCable38м вызывал остановку около85–87%; CanReach расширенного удержания теперь проверяет настоящую опору на своё судно без выдуманного коридора. Возврат для следующего прохода возможен без отпусканияЛКМ. AimRope/FindReachableGrip обрабатывают достижимые сегменты натянутой палубной ветви и свободного маршрута; RPC передаёт локальную точку, сервер проверяет геометрию, расстояние и видимость. GripVersion/GripStart дают плавный подъём нового хвата из выбранной точки; прежний свободный маршрут сохраняется при хвате середины. Три действия сохранены. Protocol174, префабы подготовлены через Unity MCP, C# ошибок нет; без PlayMode, игровой/визуальной/сетевой приёмки и сборки. Предыдущие записи исторические.
+2026-10-12, упрощение по новому уточнению: только три действия — хаотичные движения мышью под ЛКМ заполняют прогресс узла, отход с канатом от кормы к носу на WASD выбирает груз1:1 по серверному перемещению в локальных координатах корабля, затем каждый новый захват ЛКМ и ход мышью вниз выбирает до2.4м подъёма. Возврат сохраняет выборку; начальная дальность не прерывает удержание по палубе. CargoRopeWalking разрешает только ходьбу до3.2м/с при остальных блокировках ввода. Отпущенный конец сохраняется и доступен для нового хвата рядом без повторного наведения на дальний узел. Проход над ограждением и посадка — завершающая анимация третьего действия со скоростью1.6м/с. Старые неподвижные бухты удалены. SternCargoRopeTail отображает сглаженное свисание и падение свободного конца, растущие нерегулярные витки по выбранной длине за вычетом участка до игрока, оседание новых витков; RiggingRopeVisual.LengthOffset двигает пеньковую текстуру по реальной выборке. Маршрут внутри палубы учитывает коллайдеры корабля. Protocol172, префабы сохранены через Unity MCP, C# ошибок нет; игровую/визуальную/сетевую приёмку выполняет пользователь. Старые записи ниже исторические.
+2026-10-12, повторная правка по игровым скриншотам: растянутая сложная рея заменена цельной BilgeBeam_Stern_Port_Intact с материалом дерева корпуса; согласована продольная ось и увеличена толщина стоек/поперечин до28см, подкосов22см. ЛКМ захватывает канат, четыре чередующихся движения вправо/влево развязывают узел, тяга вниз с возвратом вверх выбирает канат и поднимает груз. Проведение блока — вправо/обратно влево; спуск — вверх/обратно вниз. Полный рабочий ход выбирает2.8м буксира или0.75м пути подъёма; мышь без движения не даёт прогресса, обратный ход закрепляет выборку. Отпускание ЛКМ/Q сохраняет этап. UI показывает направление и ход рук, слишком резкая тяга ограничена; WeaponArmRig и конец каната следуют движениям. Сервер принимает ограниченные дельты с проверкой оператора/попытки/этапа. Protocol169. Ассеты сохранены через Unity MCP; компиляция без C# ошибок. PlayMode, игровая/визуальная/сетевая приёмка и сборка не запускались. Следующая запись описывает предыдущую версию с удержаниемE.
+2026-10-12: актуальная версия заменяет общий буксир и кабестан шестью независимыми канатами: пять бочек и сундук. Узлы привязаны к нижней кормовой перекладине в промежутках, найденных по реальной геометрии балясин. Сервер перемешивает правильный канат и дальние позиции, груз скрыт водой, тип и метки не раскрываются до появления предмета при подъёме. E сначала развязывает узел2.5с, потом выбирает канат20с; отпустить E или Q — закрепить и сохранить этап. Два игрока могут работать с двумя канатами. Груз поднимается в корзиночной стропе снаружи корпуса, проходит над ограждением на движущемся блоке грузовой рамы и опускается на палубу; мгновенной выдачи награды нет. Детальная бочка, балки и блоки взяты из Ship V3. Канаты круглые3см с пеньковой текстурой, обвязки бочек и узлы построены по поверхности исходных мешей. VOC назначен парусам и всем слотам материалов обоих верхних флагов. Гарпун срывает только выбранный груз за8с натяжения, подтягивает и поднимает к борту; сундук снимается руками с подвеса. Test: скорость3.5м/с, радиус130м, F8 / Телепортация / Ивенты сохранён; обычный мир250м. Общий текущий Protocol168 с параллельными изменениями проекта. GUID сохранены, ассеты подготовлены через Unity MCP; компиляция/ссылки проверены. PlayMode, визуальная/игровая/сетевая приёмка и сборка не выполнялись.
+
+- [Assets/Scripts/Networking/NetworkSternCargoEvent.cs](<Assets/Scripts/Networking/NetworkSternCargoEvent.cs>) — Исходник C#: SternRopeStation, NetworkSternCargoEvent.
+- [Assets/Scripts/Networking/NetworkTowedCargo.cs](<Assets/Scripts/Networking/NetworkTowedCargo.cs>) — Исходник C#: TowedCargoPose, SternRopeFloorDeposit, SternCargoPhase, NetworkTowedCargo.
+- [Assets/Scripts/Networking/NetworkLootChest.SternCargo.cs](<Assets/Scripts/Networking/NetworkLootChest.SternCargo.cs>) — Исходник C#: NetworkLootChest.
+- [Assets/Scripts/Networking/NetworkWeapon.SternCargo.cs](<Assets/Scripts/Networking/NetworkWeapon.SternCargo.cs>) — Исходник C#: NetworkWeapon.
+- [Assets/Scripts/Player/SternCargoPlayerInteraction.cs](<Assets/Scripts/Player/SternCargoPlayerInteraction.cs>) — Исходник C#: SternCargoPlayerInteraction.
+- [Assets/Scripts/AdvancedPlayerController.cs](<Assets/Scripts/AdvancedPlayerController.cs>) — Исходник C#: AdvancedPlayerController.
+- [Assets/Scripts/World/SternCargoRopeTail.cs](<Assets/Scripts/World/SternCargoRopeTail.cs>) — Исходник C#: SternCargoRopeTail.
+- [Assets/Scripts/Player/WeaponArmRig.cs](<Assets/Scripts/Player/WeaponArmRig.cs>) — Исходник C#: WeaponArmRig, Arm.
+- [Assets/Scripts/Editor/SternCargoEventSetup.cs](<Assets/Scripts/Editor/SternCargoEventSetup.cs>) — Исходник C#: SternCargoEventSetup.
+- [Assets/Scripts/Loot/LootCatalog.cs](<Assets/Scripts/Loot/LootCatalog.cs>) — Исходник C#: LootCatalog, Entry.
+- [Assets/Scripts/World/SeaLootSpawner.cs](<Assets/Scripts/World/SeaLootSpawner.cs>) — Исходник C#: SeaLootSpawner.
+- [Assets/Scripts/World/EnvironmentEventTestRow.cs](<Assets/Scripts/World/EnvironmentEventTestRow.cs>) — Исходник C#: EnvironmentEventTestRow.
+- [Assets/Scripts/World/DeveloperTeleportDestinations.cs](<Assets/Scripts/World/DeveloperTeleportDestinations.cs>) — Исходник C#: DeveloperTeleportDestination, DeveloperTeleportDestinations.
+- [Assets/Scripts/Harpoon/HarpoonProjectile.cs](<Assets/Scripts/Harpoon/HarpoonProjectile.cs>) — Исходник C#: HarpoonProjectile, HarpoonState.
+- [Assets/Scripts/ShipController.cs](<Assets/Scripts/ShipController.cs>) — Исходник C#: ShipController.
+- [Assets/Scripts/Networking/NetworkShip.cs](<Assets/Scripts/Networking/NetworkShip.cs>) — Исходник C#: NetworkShip.
+- [Assets/Scripts/Player/PlayerInventory.cs](<Assets/Scripts/Player/PlayerInventory.cs>) — Исходник C#: PlayerInventory.
+- [Assets/Scripts/Networking/NetworkLootChest.Ocean.cs](<Assets/Scripts/Networking/NetworkLootChest.Ocean.cs>) — Исходник C#: SeaLootKind, SeaLootState, NetworkLootChest.
+- [Assets/Scripts/Networking/NetworkLootChest.OceanVisual.cs](<Assets/Scripts/Networking/NetworkLootChest.OceanVisual.cs>) — Исходник C#: NetworkLootChest.
+- [Assets/Scripts/Networking/NetworkWeapon.cs](<Assets/Scripts/Networking/NetworkWeapon.cs>) — Исходник C#: NetworkWeapon.
+- [Assets/Scripts/Networking/SessionConfig.cs](<Assets/Scripts/Networking/SessionConfig.cs>) — Исходник C#: SessionConfig.
+- [Assets/Settings/Loot/DefaultLoot.asset](<Assets/Settings/Loot/DefaultLoot.asset>) — Настройки или данные Unity.
+- [Assets/Settings/Networking/NetworkPrefabs.asset](<Assets/Settings/Networking/NetworkPrefabs.asset>) — Настройки или данные Unity.
+- [Assets/Settings/Networking/SessionConfig.asset](<Assets/Settings/Networking/SessionConfig.asset>) — Настройки или данные Unity.
+- [Assets/Resources/SeaEvents/SternCargoShip.prefab](<Assets/Resources/SeaEvents/SternCargoShip.prefab>) — Префаб Unity.
+- [Assets/Resources/SeaEvents/TowedCargo.prefab](<Assets/Resources/SeaEvents/TowedCargo.prefab>) — Префаб Unity.
+- [Assets/Models/SeaEvents/SternCargo/VOC_Square_Canvas.png](<Assets/Models/SeaEvents/SternCargo/VOC_Square_Canvas.png>) — Изображение / текстура.
+- [Assets/Models/SeaEvents/SternCargo/VOC_Mizzen_Canvas.png](<Assets/Models/SeaEvents/SternCargo/VOC_Mizzen_Canvas.png>) — Изображение / текстура.
+- [Assets/Models/SeaEvents/SternCargo/VOC_Square_Canvas.mat](<Assets/Models/SeaEvents/SternCargo/VOC_Square_Canvas.mat>) — Материал Unity.
+- [Assets/Models/SeaEvents/SternCargo/VOC_Mizzen_Canvas.mat](<Assets/Models/SeaEvents/SternCargo/VOC_Mizzen_Canvas.mat>) — Материал Unity.
+- [Assets/Models/SeaEvents/SternCargo/Reused_Barrel.asset](<Assets/Models/SeaEvents/SternCargo/Reused_Barrel.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SternCargo/Reused_Spar.asset](<Assets/Models/SeaEvents/SternCargo/Reused_Spar.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SternCargo/Reused_Block.asset](<Assets/Models/SeaEvents/SternCargo/Reused_Block.asset>) — Настройки или данные Unity.
+- [Assets/Scripts/World/RiggingRopeVisual.cs](<Assets/Scripts/World/RiggingRopeVisual.cs>) — Исходник C#: RiggingRopeVisual, TubeBuffers.
+- [Assets/Scripts/Ships/ShipV3VisualRig.cs](<Assets/Scripts/Ships/ShipV3VisualRig.cs>) — Исходник C#: ShipV3Pose, ShipV3Motion, ShipV3VisualRig.
+- [Docs/SternCargoEvent.md](<Docs/SternCargoEvent.md>) — Документация.
+
+### Пушечный пролом (`cannon-breach-event`)
+
+Ключевые слова: пушечный пролом, форт, заколоченные входы.
+
+2026-10-12: отдельная уменьшенная копия TwoLandingIsland (30% горизонтального размера и 26% высоты суши) с собственным TerrainData CannonBreachIsland, каменным фортом, двумя входами и двумя окнами с решётками. Учитываются поворот и масштаб FBX. Массивные ворота: десять брусьев толщиной58см, железные обвязки и заклёпки. Шесть попаданий на вход; каждый удар выбивает ближайший целый участок из пяти фрагментов дерева с закреплённым железом. Три неровных фрагмента получены вырезанием корабельного меша с исходными UV. Видимый задний каркас из пяти опор и двух раскосов удерживает проход до шестого удара и затем обрушивается; невидимой сплошной стены нет. Rigidbody/ShipDebris, импульс древесины1.8–3м/с, каркаса0.35м/с, гравитация, затухание вращения, коллизия земли и форта; удаление через7с. Сервер хранит историю участков для клиентов и позднего подключения. Любой экипаж получает доступ к сундуку после пролома, перенос снимает привязку награды. Станция11 (2900, SeaLevel, 370), F8 / Телепортация / Ивенты, радиус32м. Обычный остров сохранён. Готовые каменные модели, PBR CoastalRock и детали Ship V3. FishNet/DefaultLoot связаны; Protocol170. Игровой, визуальный и сетевой прогон и сборка не запускались.
+
+- [Assets/Scripts/Networking/NetworkCannonBreachEvent.cs](<Assets/Scripts/Networking/NetworkCannonBreachEvent.cs>) — Исходник C#: FortGateState, FortBreakState, FortGateFragment, FortBreachGate, NetworkCannonBreachEvent.
+- [Assets/Scripts/Networking/NetworkLootChest.Fort.cs](<Assets/Scripts/Networking/NetworkLootChest.Fort.cs>) — Исходник C#: NetworkLootChest.
+- [Assets/Scripts/World/FortGateTarget.cs](<Assets/Scripts/World/FortGateTarget.cs>) — Исходник C#: FortGateTarget.
+- [Assets/Scripts/Editor/CannonBreachEventSetup.cs](<Assets/Scripts/Editor/CannonBreachEventSetup.cs>) — Исходник C#: CannonBreachEventSetup, Part, FractureVertex.
+- [Assets/Scripts/Cannons/CannonShotDamage.cs](<Assets/Scripts/Cannons/CannonShotDamage.cs>) — Исходник C#: CannonShotDamage.
+- [Assets/Scripts/Loot/LootCatalog.cs](<Assets/Scripts/Loot/LootCatalog.cs>) — Исходник C#: LootCatalog, Entry.
+- [Assets/Scripts/World/SeaLootSpawner.cs](<Assets/Scripts/World/SeaLootSpawner.cs>) — Исходник C#: SeaLootSpawner.
+- [Assets/Scripts/World/EnvironmentEventTestRow.cs](<Assets/Scripts/World/EnvironmentEventTestRow.cs>) — Исходник C#: EnvironmentEventTestRow.
+- [Assets/Scripts/World/DeveloperTeleportDestinations.cs](<Assets/Scripts/World/DeveloperTeleportDestinations.cs>) — Исходник C#: DeveloperTeleportDestination, DeveloperTeleportDestinations.
+- [Assets/Scripts/Networking/NetworkLootChest.Ocean.cs](<Assets/Scripts/Networking/NetworkLootChest.Ocean.cs>) — Исходник C#: SeaLootKind, SeaLootState, NetworkLootChest.
+- [Assets/Scripts/Networking/NetworkLootChest.OceanVisual.cs](<Assets/Scripts/Networking/NetworkLootChest.OceanVisual.cs>) — Исходник C#: NetworkLootChest.
+- [Assets/Scripts/Networking/SessionConfig.cs](<Assets/Scripts/Networking/SessionConfig.cs>) — Исходник C#: SessionConfig.
+- [Assets/Settings/Networking/SessionConfig.asset](<Assets/Settings/Networking/SessionConfig.asset>) — Настройки или данные Unity.
+- [Assets/Settings/Networking/NetworkPrefabs.asset](<Assets/Settings/Networking/NetworkPrefabs.asset>) — Настройки или данные Unity.
+- [Assets/Settings/Loot/DefaultLoot.asset](<Assets/Settings/Loot/DefaultLoot.asset>) — Настройки или данные Unity.
+- [Assets/Resources/SeaEvents/CannonBreachFort.prefab](<Assets/Resources/SeaEvents/CannonBreachFort.prefab>) — Префаб Unity.
+- [Assets/Prefabs/World/SandyIslands/TwoLandingIsland.prefab](<Assets/Prefabs/World/SandyIslands/TwoLandingIsland.prefab>) — Префаб Unity.
+- [Assets/Models/SeaEvents/CannonBreach/FortWeatheredStone.mat](<Assets/Models/SeaEvents/CannonBreach/FortWeatheredStone.mat>) — Материал Unity.
+- [Assets/Models/SeaEvents/CannonBreach/FortLimestoneTrim.mat](<Assets/Models/SeaEvents/CannonBreach/FortLimestoneTrim.mat>) — Материал Unity.
+- [Assets/Models/SeaEvents/CannonBreach/StoneWall.asset](<Assets/Models/SeaEvents/CannonBreach/StoneWall.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/CannonBreach/StonePillar.asset](<Assets/Models/SeaEvents/CannonBreach/StonePillar.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/CannonBreach/StoneFloor.asset](<Assets/Models/SeaEvents/CannonBreach/StoneFloor.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/CannonBreach/ShipOak.asset](<Assets/Models/SeaEvents/CannonBreach/ShipOak.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/CannonBreach/ForgedIron.asset](<Assets/Models/SeaEvents/CannonBreach/ForgedIron.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/CannonBreach/IronBolt.asset](<Assets/Models/SeaEvents/CannonBreach/IronBolt.asset>) — Настройки или данные Unity.
+- [Assets/Settings/World/SandyIslands/CannonBreachIsland.asset](<Assets/Settings/World/SandyIslands/CannonBreachIsland.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/CannonBreach/IronBand.asset](<Assets/Models/SeaEvents/CannonBreach/IronBand.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/CannonBreach/GateTimber_0.asset](<Assets/Models/SeaEvents/CannonBreach/GateTimber_0.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/CannonBreach/GateTimber_1.asset](<Assets/Models/SeaEvents/CannonBreach/GateTimber_1.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/CannonBreach/GateTimber_2.asset](<Assets/Models/SeaEvents/CannonBreach/GateTimber_2.asset>) — Настройки или данные Unity.
+- [Docs/CannonBreachEvent.md](<Docs/CannonBreachEvent.md>) — Документация.
+
+### Чайка с ключом (`seagull-key-event`)
+
+Ключевые слова: чайка с ключом, ключ, стая над крушением.
+
+2026-10-12: Над накренённым остовом Ship V3 кружат 28 чаек на разных орбитах и высотах; случайная птица несёт видимый латунный ключ. Штатные серверные попадания сбивают любую птицу; ключ появляется при реальном первом контакте её падения. На воде ключ держится на волнах, на движущейся опоре хранит локальную позицию. E подбирает его по серверной проверке дальности и препятствий; единственный владелец определяется первым принятым запросом. Ключ показывается на поясе и в HUD, выпадает при смерти или отключении. Только его владелец отпирает сундук; ключ расходуется, после чего награда доступна любой команде. До отпирания F блокируется, E слегка дёргает отдельный навесной замок и проигрывает LockpickJam. Первое E только отпирает замок с LockpickSuccess: дужка раскрывается, замок падает на найденную деревянную поверхность и остаётся на остове. Через 1.05 с игрок отдельно открывает сундук через E или берёт через F; очко улучшения начисляется только при штатном открытии. Положение и время падения замка сохраняются сервером для позднего клиента и не зависят от переноса/разбора сундука. Остов, рваный парус и две широкие дощатые рампы через настоящие проломы с соответствующей коллизией собраны из существующих корабельных ресурсов через Unity MCP. Двенадцатая станция тестовой карты, обычный морской спаун, F8 / Мир / спаун и F8 / Телепортация / Ивенты. Общий текущий протокол 175 с параллельными изменениями проекта. Компиляция в Unity подтверждена; Play Mode, сборка, игровая, визуальная и сетевая приёмка не выполнялись.
+2026-10-12: Нажатие колёсика мыши при наведении на чайку ставит отдельную метку экипажа ровно на 5 с. Сервер выбирает реальный хитбокс с проверкой препятствий; цель привязана к птице, а не к корню ивента. Общая система TargetMarks передаёт метку только владельцам игроков той же команды корабля. Бирюзовая рамка и маркер сопровождают птицу; для чаек ивента HUD берёт текущую клиентскую позу по объекту и индексу, остальные стаи следуют серверным позициям 10 Гц. Одновременно допускается только одна личная метка на игрока: повторное нажатие до исчезновения не заменяет цель и не продлевает срок. Сервер сохраняет автора и закреплённый за членом экипажа цвет: бирюзовый, оранжевый или фиолетовый. Другие члены экипажа независимо ставят собственные метки, включая ту же чайку; HUD разносит значки/подписи и рамки. Лимит обычных целей не удаляет активные личные метки. Поддержаны обычный вид, ручная и корабельная трубы; прежние метки кораблей сохраняют свой срок.
+
+- [Assets/Scripts/Networking/NetworkSeagullEvent.cs](<Assets/Scripts/Networking/NetworkSeagullEvent.cs>) — Исходник C#: NetworkSeagullEvent.
+- [Assets/Scripts/Networking/NetworkLootChest.SeagullKey.cs](<Assets/Scripts/Networking/NetworkLootChest.SeagullKey.cs>) — Исходник C#: NetworkLootChest.
+- [Assets/Scripts/Networking/NetworkWeapon.SeagullKey.cs](<Assets/Scripts/Networking/NetworkWeapon.SeagullKey.cs>) — Исходник C#: NetworkWeapon.
+- [Assets/Scripts/World/SeagullKeyTarget.cs](<Assets/Scripts/World/SeagullKeyTarget.cs>) — Исходник C#: SeagullKeyTarget.
+- [Assets/Scripts/Editor/SeagullKeyEventSetup.cs](<Assets/Scripts/Editor/SeagullKeyEventSetup.cs>) — Исходник C#: SeagullKeyEventSetup.
+- [Assets/Scripts/World/SeagullVisual.cs](<Assets/Scripts/World/SeagullVisual.cs>) — Исходник C#: SeagullFall, SeagullVisual.
+- [Assets/Scripts/Loot/LootCatalog.cs](<Assets/Scripts/Loot/LootCatalog.cs>) — Исходник C#: LootCatalog, Entry.
+- [Assets/Scripts/Player/PlayerInventory.cs](<Assets/Scripts/Player/PlayerInventory.cs>) — Исходник C#: PlayerInventory.
+- [Assets/Scripts/Networking/NetworkWeapon.cs](<Assets/Scripts/Networking/NetworkWeapon.cs>) — Исходник C#: NetworkWeapon.
+- [Assets/Scripts/Networking/NetworkLootChest.cs](<Assets/Scripts/Networking/NetworkLootChest.cs>) — Исходник C#: NetworkLootChest.
+- [Assets/Scripts/Networking/NetworkLootChest.Ocean.cs](<Assets/Scripts/Networking/NetworkLootChest.Ocean.cs>) — Исходник C#: SeaLootKind, SeaLootState, NetworkLootChest.
+- [Assets/Scripts/Networking/NetworkLootChest.OceanVisual.cs](<Assets/Scripts/Networking/NetworkLootChest.OceanVisual.cs>) — Исходник C#: NetworkLootChest.
+- [Assets/Scripts/World/SeaLootSpawner.cs](<Assets/Scripts/World/SeaLootSpawner.cs>) — Исходник C#: SeaLootSpawner.
+- [Assets/Scripts/World/EnvironmentEventTestRow.cs](<Assets/Scripts/World/EnvironmentEventTestRow.cs>) — Исходник C#: EnvironmentEventTestRow.
+- [Assets/Scripts/World/DeveloperTeleportDestinations.cs](<Assets/Scripts/World/DeveloperTeleportDestinations.cs>) — Исходник C#: DeveloperTeleportDestination, DeveloperTeleportDestinations.
+- [Assets/Scripts/Player/DeveloperMenu.cs](<Assets/Scripts/Player/DeveloperMenu.cs>) — Исходник C#: DeveloperMenu.
+- [Assets/Scripts/Networking/NetworkDeveloperTools.cs](<Assets/Scripts/Networking/NetworkDeveloperTools.cs>) — Исходник C#: NetworkWeapon.
+- [Assets/Scripts/Networking/SessionConfig.cs](<Assets/Scripts/Networking/SessionConfig.cs>) — Исходник C#: SessionConfig.
+- [Assets/Settings/Networking/SessionConfig.asset](<Assets/Settings/Networking/SessionConfig.asset>) — Настройки или данные Unity.
+- [Assets/Settings/Loot/DefaultLoot.asset](<Assets/Settings/Loot/DefaultLoot.asset>) — Настройки или данные Unity.
+- [Assets/Settings/Networking/NetworkPrefabs.asset](<Assets/Settings/Networking/NetworkPrefabs.asset>) — Настройки или данные Unity.
+- [Assets/Resources/SeaEvents/SeagullKeyEvent.prefab](<Assets/Resources/SeaEvents/SeagullKeyEvent.prefab>) — Префаб Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_0_0.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_0_0.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_0_1.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_0_1.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_0_2.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_0_2.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_0_3.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_0_3.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_0_4.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_0_4.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_1_0.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_1_0.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_1_1.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_1_1.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_1_2.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_1_2.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_1_3.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_1_3.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_1_4.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_1_4.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_2_0.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_2_0.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_2_1.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_2_1.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_2_2.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_2_2.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_2_3.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_2_3.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_2_4.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_2_4.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_3_0.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_3_0.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_3_1.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_3_1.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_3_2.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_3_2.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_3_3.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_3_3.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_3_4.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_3_4.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_4_0.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_4_0.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_4_1.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_4_1.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_4_2.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_4_2.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_4_3.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_4_3.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_4_4.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_4_4.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_5_0.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_5_0.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_5_1.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_5_1.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_5_2.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_5_2.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_5_3.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_5_3.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_5_4.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_5_4.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_6_0.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_6_0.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_6_1.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_6_1.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_6_2.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_6_2.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_6_3.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_6_3.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_6_4.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_6_4.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_7_0.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_7_0.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_7_1.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_7_1.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_7_2.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_7_2.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_7_3.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_7_3.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_7_4.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_-1_7_4.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_0_0.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_0_0.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_0_1.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_0_1.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_0_2.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_0_2.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_0_3.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_0_3.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_0_4.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_0_4.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_1_0.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_1_0.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_1_1.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_1_1.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_1_2.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_1_2.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_1_3.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_1_3.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_1_4.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_1_4.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_2_0.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_2_0.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_2_1.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_2_1.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_2_2.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_2_2.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_2_3.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_2_3.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_2_4.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_2_4.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_3_0.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_3_0.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_3_1.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_3_1.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_3_2.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_3_2.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_3_3.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_3_3.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_3_4.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_3_4.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_4_0.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_4_0.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_4_1.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_4_1.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_4_2.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_4_2.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_4_3.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_4_3.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_4_4.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_4_4.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_5_0.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_5_0.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_5_1.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_5_1.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_5_2.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_5_2.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_5_3.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_5_3.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_5_4.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_5_4.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_6_0.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_6_0.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_6_1.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_6_1.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_6_2.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_6_2.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_6_3.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_6_3.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_6_4.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_6_4.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_7_0.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_7_0.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_7_1.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_7_1.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_7_2.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_7_2.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_7_3.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_7_3.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_7_4.asset](<Assets/Models/SeaEvents/SeagullKey/BoardingRamp_1_7_4.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BrokenMast.asset](<Assets/Models/SeaEvents/SeagullKey/BrokenMast.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BrokenYard.asset](<Assets/Models/SeaEvents/SeagullKey/BrokenYard.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/ChestPlinthBoard_0.asset](<Assets/Models/SeaEvents/SeagullKey/ChestPlinthBoard_0.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/ChestPlinthBoard_1.asset](<Assets/Models/SeaEvents/SeagullKey/ChestPlinthBoard_1.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/ChestPlinthBoard_2.asset](<Assets/Models/SeaEvents/SeagullKey/ChestPlinthBoard_2.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/ChestPlinthBoard_3.asset](<Assets/Models/SeaEvents/SeagullKey/ChestPlinthBoard_3.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/DrapedSail.asset](<Assets/Models/SeaEvents/SeagullKey/DrapedSail.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/KeyBow.asset](<Assets/Models/SeaEvents/SeagullKey/KeyBow.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/KeyCollar.asset](<Assets/Models/SeaEvents/SeagullKey/KeyCollar.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/KeyShaft.asset](<Assets/Models/SeaEvents/SeagullKey/KeyShaft.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/KeyTooth.asset](<Assets/Models/SeaEvents/SeagullKey/KeyTooth.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/KeyholeStem.asset](<Assets/Models/SeaEvents/SeagullKey/KeyholeStem.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/LockBody.asset](<Assets/Models/SeaEvents/SeagullKey/LockBody.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/LockFace.asset](<Assets/Models/SeaEvents/SeagullKey/LockFace.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/LockKeyhole.mat](<Assets/Models/SeaEvents/SeagullKey/LockKeyhole.mat>) — Материал Unity.
+- [Assets/Models/SeaEvents/SeagullKey/LockShackle.asset](<Assets/Models/SeaEvents/SeagullKey/LockShackle.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/RampBrokenRib_-1.asset](<Assets/Models/SeaEvents/SeagullKey/RampBrokenRib_-1.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/RampBrokenRib_1.asset](<Assets/Models/SeaEvents/SeagullKey/RampBrokenRib_1.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/RampUnderbeam_-1_-1.asset](<Assets/Models/SeaEvents/SeagullKey/RampUnderbeam_-1_-1.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/RampUnderbeam_-1_1.asset](<Assets/Models/SeaEvents/SeagullKey/RampUnderbeam_-1_1.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/RampUnderbeam_1_-1.asset](<Assets/Models/SeaEvents/SeagullKey/RampUnderbeam_1_-1.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/RampUnderbeam_1_1.asset](<Assets/Models/SeaEvents/SeagullKey/RampUnderbeam_1_1.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/Splinter_0.asset](<Assets/Models/SeaEvents/SeagullKey/Splinter_0.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/Splinter_1.asset](<Assets/Models/SeaEvents/SeagullKey/Splinter_1.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/Splinter_2.asset](<Assets/Models/SeaEvents/SeagullKey/Splinter_2.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/WeatheredBrass.mat](<Assets/Models/SeaEvents/SeagullKey/WeatheredBrass.mat>) — Материал Unity.
+- [Assets/Models/SeaEvents/SeagullKey/WreckChestKey.prefab](<Assets/Models/SeaEvents/SeagullKey/WreckChestKey.prefab>) — Префаб Unity.
+- [Assets/Models/SeaEvents/SeagullKey/WreckChestPadlock.prefab](<Assets/Models/SeaEvents/SeagullKey/WreckChestPadlock.prefab>) — Префаб Unity.
+- [Assets/Models/SeaEvents/SeagullKey/WreckagePlank_0.asset](<Assets/Models/SeaEvents/SeagullKey/WreckagePlank_0.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/WreckagePlank_1.asset](<Assets/Models/SeaEvents/SeagullKey/WreckagePlank_1.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/WreckagePlank_2.asset](<Assets/Models/SeaEvents/SeagullKey/WreckagePlank_2.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/WreckagePlank_3.asset](<Assets/Models/SeaEvents/SeagullKey/WreckagePlank_3.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/WreckagePlank_4.asset](<Assets/Models/SeaEvents/SeagullKey/WreckagePlank_4.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/WreckagePlank_5.asset](<Assets/Models/SeaEvents/SeagullKey/WreckagePlank_5.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/WreckagePlank_6.asset](<Assets/Models/SeaEvents/SeagullKey/WreckagePlank_6.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BreachedHull_0.asset](<Assets/Models/SeaEvents/SeagullKey/BreachedHull_0.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BreachedHull_1.asset](<Assets/Models/SeaEvents/SeagullKey/BreachedHull_1.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BreachedHull_10.asset](<Assets/Models/SeaEvents/SeagullKey/BreachedHull_10.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BreachedHull_11.asset](<Assets/Models/SeaEvents/SeagullKey/BreachedHull_11.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BreachedHull_12.asset](<Assets/Models/SeaEvents/SeagullKey/BreachedHull_12.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BreachedHull_13.asset](<Assets/Models/SeaEvents/SeagullKey/BreachedHull_13.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BreachedHull_14.asset](<Assets/Models/SeaEvents/SeagullKey/BreachedHull_14.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BreachedHull_15.asset](<Assets/Models/SeaEvents/SeagullKey/BreachedHull_15.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BreachedHull_16.asset](<Assets/Models/SeaEvents/SeagullKey/BreachedHull_16.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BreachedHull_17.asset](<Assets/Models/SeaEvents/SeagullKey/BreachedHull_17.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BreachedHull_2.asset](<Assets/Models/SeaEvents/SeagullKey/BreachedHull_2.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BreachedHull_3.asset](<Assets/Models/SeaEvents/SeagullKey/BreachedHull_3.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BreachedHull_4.asset](<Assets/Models/SeaEvents/SeagullKey/BreachedHull_4.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BreachedHull_5.asset](<Assets/Models/SeaEvents/SeagullKey/BreachedHull_5.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BreachedHull_6.asset](<Assets/Models/SeaEvents/SeagullKey/BreachedHull_6.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BreachedHull_7.asset](<Assets/Models/SeaEvents/SeagullKey/BreachedHull_7.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BreachedHull_8.asset](<Assets/Models/SeaEvents/SeagullKey/BreachedHull_8.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/BreachedHull_9.asset](<Assets/Models/SeaEvents/SeagullKey/BreachedHull_9.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/WreckTimber_0.asset](<Assets/Models/SeaEvents/SeagullKey/WreckTimber_0.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/WreckTimber_1.asset](<Assets/Models/SeaEvents/SeagullKey/WreckTimber_1.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/WreckTimber_10.asset](<Assets/Models/SeaEvents/SeagullKey/WreckTimber_10.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/WreckTimber_2.asset](<Assets/Models/SeaEvents/SeagullKey/WreckTimber_2.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/WreckTimber_3.asset](<Assets/Models/SeaEvents/SeagullKey/WreckTimber_3.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/WreckTimber_4.asset](<Assets/Models/SeaEvents/SeagullKey/WreckTimber_4.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/WreckTimber_5.asset](<Assets/Models/SeaEvents/SeagullKey/WreckTimber_5.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/WreckTimber_6.asset](<Assets/Models/SeaEvents/SeagullKey/WreckTimber_6.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/WreckTimber_7.asset](<Assets/Models/SeaEvents/SeagullKey/WreckTimber_7.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/WreckTimber_8.asset](<Assets/Models/SeaEvents/SeagullKey/WreckTimber_8.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/WreckTimber_9.asset](<Assets/Models/SeaEvents/SeagullKey/WreckTimber_9.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/WreckTimber_11.asset](<Assets/Models/SeaEvents/SeagullKey/WreckTimber_11.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/WreckTimber_12.asset](<Assets/Models/SeaEvents/SeagullKey/WreckTimber_12.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/WreckTimber_13.asset](<Assets/Models/SeaEvents/SeagullKey/WreckTimber_13.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/WreckTimber_14.asset](<Assets/Models/SeaEvents/SeagullKey/WreckTimber_14.asset>) — Настройки или данные Unity.
+- [Assets/Scripts/Networking/NetworkPlayer.cs](<Assets/Scripts/Networking/NetworkPlayer.cs>) — Исходник C#: CaptainInput, CaptainState, NetworkPlayer.
+- [Assets/Scripts/Networking/NetworkPlayer.TargetMarks.cs](<Assets/Scripts/Networking/NetworkPlayer.TargetMarks.cs>) — Исходник C#: TargetMarkState, NetworkPlayer.
+- [Assets/Scripts/Networking/NetworkShip.TargetMarks.cs](<Assets/Scripts/Networking/NetworkShip.TargetMarks.cs>) — Исходник C#: NetworkShip, TargetMark.
+- [Assets/Scripts/UI/TargetMarkHud.cs](<Assets/Scripts/UI/TargetMarkHud.cs>) — Исходник C#: TargetMarkHud.
+- [Assets/Scripts/Player/ShipSpyglassView.cs](<Assets/Scripts/Player/ShipSpyglassView.cs>) — Исходник C#: ShipSpyglassView.
 
 ## Источники актуальных настроек
 

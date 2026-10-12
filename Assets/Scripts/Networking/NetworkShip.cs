@@ -102,6 +102,7 @@ namespace PirateSlop.Networking
                 return;
             }
             Helm.Simulate(default, null, (float)TimeManager.TickDelta);
+            GetComponent<NetworkSternCargoEvent>()?.BeforeShipTick((float)TimeManager.TickDelta);
             Motor.Simulate((float)TimeManager.TickDelta);
             if (VortexBoostActive.Value && AnchorDropped) anchorSeabedPoint.Value = Motor.AnchorPoint;
         }
