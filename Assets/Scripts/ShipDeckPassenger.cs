@@ -49,6 +49,7 @@ public class ShipDeckPassenger : MonoBehaviour
     }
     public void Carry(bool updateLook = false)
     {
+        if (player != null && player.DeveloperNoclip) { Attach(null); return; }
         var body = Support;
         if (body == null) return;
         if (bridge != null)
@@ -68,6 +69,7 @@ public class ShipDeckPassenger : MonoBehaviour
     }
     public void Detect()
     {
+        if (player != null && player.DeveloperNoclip) { Attach(null); return; }
         if (player != null && player.IsKnockedBack) { if (Support != null) Attach(null); return; }
         if (player != null && player.ShipActivityLocked && Support != null) return;
         if (player != null && player.IsClimbing) return;

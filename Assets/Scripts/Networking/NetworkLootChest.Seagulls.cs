@@ -6,10 +6,11 @@ namespace PirateSlop.Networking
 {
     public sealed partial class NetworkLootChest
     {
-        readonly SeagullVisual[] sunkenGulls = new SeagullVisual[2];
-        readonly SyncVar<SeagullFall> sunkenFallA = new(), sunkenFallB = new();
+        readonly SeagullVisual[] sunkenGulls = new SeagullVisual[3];
+        readonly SyncVar<SeagullFall> sunkenFallA = new(), sunkenFallB = new(), sunkenFallC = new();
         readonly SyncVar<byte> sunkenShotMask = new();
-        readonly float[] sunkenShotAt = new float[2];
+        readonly float[] sunkenShotAt = new float[3];
+        SyncVar<SeagullFall> SunkenFall(int index) => index == 0 ? sunkenFallA : index == 1 ? sunkenFallB : sunkenFallC;
         float nextSunkenFallSync;
 
         void CreateSunkenGulls()
@@ -36,7 +37,7 @@ namespace PirateSlop.Networking
                 if (bird == null) continue;
                 if ((sunkenShotMask.Value & (1 << i)) != 0)
                 {
-                    var synced = i == 0 ? sunkenFallA : sunkenFallB;
+                    var synced = SunkenFall(i);
                     var fall = synced.Value;
                     if (syncFalls && fall.Age < fall.Seconds + SeagullVisual.SinkSeconds)
                     {
@@ -49,20 +50,23 @@ namespace PirateSlop.Networking
                 bool show = phase.Value != SeaLootState.Ready;
                 bird.gameObject.SetActive(show);
                 if (!show) continue;
-                float angle = time * (.38f - i * .05f) + i * Mathf.PI + eventPoint.Value.x * .01f;
+                float angle = SunkenGullAngle(i, time);
                 bird.transform.position = SunkenGullPosition(i, time);
                 bird.transform.rotation = Quaternion.LookRotation(new Vector3(-Mathf.Sin(angle), 0, Mathf.Cos(angle))) * Quaternion.Euler(0, 0, -12f);
                 bird.Animate(time, SeagullVisual.FlightPower(time, i * 113), 0, 0);
             }
         }
 
+        float SunkenGullAngle(int index, float time) => time * .45f + index * Mathf.PI * 2f / 3f + eventPoint.Value.x * .01f;
+
         Vector3 SunkenGullPosition(int index, float time)
         {
-            float angle = time * (.38f - index * .05f) + index * Mathf.PI + eventPoint.Value.x * .01f;
-            float radius = 6f + index * 2f;
+            float angle = SunkenGullAngle(index, time);
+            float radius = 6f;
             var center = eventPoint.Value;
-            if (OceanSurface.Instance != null) center.y = OceanSurface.Instance.Height(center);
-            return center + new Vector3(Mathf.Cos(angle) * radius, 10f + index * 2f + Mathf.Sin(time * .7f + index) * .6f, Mathf.Sin(angle) * radius);
+            var point = center + new Vector3(Mathf.Cos(angle) * radius, 0f, Mathf.Sin(angle) * radius);
+            if (OceanSurface.Instance != null) point.y = OceanSurface.Instance.Height(point);
+            return point + Vector3.up * 3f;
         }
 
         void ShootSunkenGull(int index, Vector3 direction)
@@ -73,7 +77,7 @@ namespace PirateSlop.Networking
             if (bird == null || bird.Shot || !bird.gameObject.activeSelf) return;
             float time = OceanSurface.Instance != null ? OceanSurface.Instance.WaveTime : Time.time;
             var fall = bird.CaptureFall((SunkenGullPosition(index, time + .04f) - SunkenGullPosition(index, time)) / .04f, direction);
-            (index == 0 ? sunkenFallA : sunkenFallB).Value = fall;
+            SunkenFall(index).Value = fall;
             sunkenShotAt[index] = Time.time;
             sunkenShotMask.Value |= (byte)(1 << index);
             bird.BeginFall(fall);
@@ -84,7 +88,7 @@ namespace PirateSlop.Networking
             if (!IsServerInitialized || !IsSpawned || !fall.Landed || index < 0 || index >= sunkenGulls.Length
                 || (sunkenShotMask.Value & (1 << index)) == 0) return;
             fall.Age = Time.time - sunkenShotAt[index];
-            (index == 0 ? sunkenFallA : sunkenFallB).Value = fall;
+            SunkenFall(index).Value = fall;
             sunkenGulls[index].BeginFall(fall);
         }
     }

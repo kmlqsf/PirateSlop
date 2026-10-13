@@ -410,7 +410,7 @@ namespace PirateSlop
             RaycastHit nearest = default;
             float distance = 5;
             foreach (var hit in Physics.RaycastAll(camera.transform.position, camera.transform.forward, distance, ~0, QueryTriggerInteraction.Collide))
-                if (!hit.transform.IsChildOf(transform) && (!hit.collider.isTrigger || hit.collider.GetComponentInParent<PirateSlop.World.SeagullKeyTarget>() != null) && hit.distance < distance) { nearest = hit; distance = hit.distance; }
+                if (!hit.transform.IsChildOf(transform) && (!hit.collider.isTrigger || hit.collider.GetComponentInParent<PirateSlop.World.SeagullKeyTarget>() != null || hit.collider.GetComponentInParent<NetworkLootChest>() is { Kind: SeaLootKind.Sunken }) && hit.distance < distance) { nearest = hit; distance = hit.distance; }
             var key = nearest.collider != null ? nearest.collider.GetComponentInParent<PirateSlop.World.SeagullKeyTarget>() : null;
             if (key != null && key.Event != null && key.Event.KeyDropped)
             {

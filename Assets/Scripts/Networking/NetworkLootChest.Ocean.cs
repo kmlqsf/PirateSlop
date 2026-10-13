@@ -63,6 +63,8 @@ namespace PirateSlop.Networking
             get
             {
                 if (!IsSpawned || Kind == SeaLootKind.None || carrier.Value != null || supportId.Value != 0 || InTow && (TowedCargo == null || !TowedCargo.LootReady)) return false;
+                if (Kind == SeaLootKind.FloatingReward || phase.Value == SeaLootState.Ready &&
+                    (Kind == SeaLootKind.Sunken || Kind == SeaLootKind.Capture || Kind == SeaLootKind.Raft || Kind == SeaLootKind.Skull)) return false;
                 for (int i = 0; i < contents.Count; i++) if (contents[i].Count > 0) return true;
                 return false;
             }
@@ -158,16 +160,15 @@ namespace PirateSlop.Networking
             if (!IsServerInitialized || phase.Value != SeaLootState.Locked || occupied.Value || (Kind != SeaLootKind.Raft && Kind != SeaLootKind.Sunken)) return;
             var motor = player.GetComponent<AdvancedPlayerController>();
             if (Kind == SeaLootKind.Raft && (motor.IsSwimming || !motor.IsGrounded || RaftBody == null || player.GetComponent<ShipDeckPassenger>().Support != RaftBody || Vector3.Distance(player.transform.position, eventPoint.Value) > 4)) return;
-            if (Kind == SeaLootKind.Sunken && (!motor.IsSwimming || player.transform.position.y + 1.65f >= eventPoint.Value.y)) return;
             if (Kind == SeaLootKind.Sunken)
             {
-                if (!ValidSunkenPosition(player) || Vector3.Distance(player.transform.position + Vector3.up, SunkenFreeEnd) > 1.8f) return;
+                if (!ValidSunkenPosition(player) || Vector3.Distance(player.transform.position + Vector3.up, SunkenFreeEnd) > 3.5f) return;
             }
             worker = player;
             workPosition = Kind == SeaLootKind.Raft && RaftBody != null ? RaftBody.transform.InverseTransformPoint(player.transform.position) : player.transform.position;
             occupied.Value = true;
             if (Kind != SeaLootKind.Sunken) progress.Value = 0;
-            heartbeat = Time.time + 1.5f;
+            heartbeat = Time.time + (Kind == SeaLootKind.Sunken ? 2.5f : 1.5f);
             player.SetLootWork(this);
             if (Kind == SeaLootKind.Raft) BeginRaftLock();
             if (Kind == SeaLootKind.Sunken) BeginSunkenUnwrap();
@@ -176,7 +177,7 @@ namespace PirateSlop.Networking
         public void WorkInput(NetworkWeapon player, int key, int round)
         {
             if (!IsServerInitialized || player != worker || !ValidWork()) return;
-            heartbeat = Time.time + 1;
+            heartbeat = Time.time + (Kind == SeaLootKind.Sunken ? 2f : 1f);
         }
 
         bool ValidWork()
@@ -185,7 +186,7 @@ namespace PirateSlop.Networking
             var motor = worker.GetComponent<AdvancedPlayerController>();
             return Kind == SeaLootKind.Raft
                 ? !motor.IsSwimming && RaftBody != null && Vector3.Distance(RaftBody.transform.InverseTransformPoint(worker.transform.position), workPosition) < .6f
-                : ValidSunkenPosition(worker);
+                : CanKeepSunkenWork(worker);
         }
 
         public void StopWork()

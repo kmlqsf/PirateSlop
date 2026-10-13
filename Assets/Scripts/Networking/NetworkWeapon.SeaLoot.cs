@@ -36,6 +36,7 @@ namespace PirateSlop.Networking
             if (GetComponent<CannonHands>().HasHeldBall) return false;
             var fishing = inventory.Fishing;
             if (fishing != null && (fishing.HasFish || fishing.IsFishing || fishing.IsEating)) return false;
+            if (continuing && chest.Kind == SeaLootKind.Sunken) return !motor.IsFrozen && chest.CanKeepSunkenWork(this);
             return chest.OnWhale ? chest.CanReachWhaleChest(this) : CanReach(chest.WorkPoint(transform.position + Vector3.up), chest.transform);
         }
 

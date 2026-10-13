@@ -68,6 +68,14 @@ namespace PirateSlop.Networking
         readonly bool diagnostics = System.Array.IndexOf(System.Environment.GetCommandLineArgs(), "-netdiag") >= 0;
         public AdvancedPlayerController Motor => motor;
         public ShipDeckPassenger Passenger => passenger;
+        readonly SyncVar<bool> developerNoclip = new();
+        public bool DeveloperNoclip => developerNoclip.Value;
+        internal void SetDeveloperNoclip(bool enabled)
+        {
+            if (!IsServerInitialized) return;
+            developerNoclip.Value = enabled && !motor.IsDead;
+            motor.SetDeveloperNoclip(developerNoclip.Value);
+        }
         NetworkShip resolvedShip;
         public NetworkShip Ship
         {
@@ -101,6 +109,7 @@ namespace PirateSlop.Networking
         void Awake()
         {
             motor = GetComponent<AdvancedPlayerController>(); motor.ConfigureNetwork(false);
+            developerNoclip.OnChange += (_, next, asServer) => motor.SetDeveloperNoclip(next);
             if (GetComponent<PlayerKickVisual>() == null) gameObject.AddComponent<PlayerKickVisual>();
             InitializeUpgradeEffects();
             if (GetComponent<GunnersEyeView>() == null) gameObject.AddComponent<GunnersEyeView>();
@@ -194,6 +203,7 @@ namespace PirateSlop.Networking
             // and the server are allowed to simulate this player.
             if (!IsOwner && !IsServerInitialized) return;
             if (!TryBind()) return;
+            if (IsServerInitialized && developerNoclip.Value && motor.IsDead) SetDeveloperNoclip(false);
             if (IsTrainingDummy && IsServerInitialized)
             {
                 SimulateCommand(IsLoadTestParticipant ? LoadTestCommand() : new PlayerCommand { Yaw = motor.transform.eulerAngles.y });
@@ -290,7 +300,7 @@ namespace PirateSlop.Networking
             passenger.Detect();
             CaptureVisualAnchor();
             float homeHeight = Ship != null ? Ship.transform.position.y : GetComponent<CombatHealth>().SpawnPosition.y;
-            if (!IsBot.Value && !motor.IsSwimming && motor.transform.position.y < homeHeight - 30) ReturnHome();
+            if (!IsBot.Value && !motor.DeveloperNoclip && !motor.IsSwimming && motor.transform.position.y < homeHeight - 30) ReturnHome();
         }
         public override void CreateReconcile()
         {

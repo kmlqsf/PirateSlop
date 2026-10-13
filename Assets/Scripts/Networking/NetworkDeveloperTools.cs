@@ -30,6 +30,13 @@ namespace PirateSlop.Networking
             if (Time.time < nextDeveloperCommand) return;
             nextDeveloperCommand = Time.time + .3f;
             var session = SessionController.Instance;
+            if (command == 32)
+            {
+                var player = GetComponent<NetworkPlayer>();
+                player.SetDeveloperNoclip(count != 0);
+                DeveloperResultTargetRpc(Owner, player.DeveloperNoclip ? "Noclip-полёт включён." : "Noclip-полёт выключен.");
+                return;
+            }
             if (command == 31)
             {
                 bool enabled = count != 0;

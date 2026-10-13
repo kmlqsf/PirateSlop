@@ -91,6 +91,26 @@ public partial class AdvancedPlayerController : MonoBehaviour
             carriage.Push(this,cannonPushDirection,cannonPushDelta);
     }
     CharacterController controller;
+    public bool DeveloperNoclip { get; private set; }
+    public void SetDeveloperNoclip(bool enabled)
+    {
+        if (DeveloperNoclip == enabled) return;
+        DeveloperNoclip = enabled;
+        controller.enabled = !IsDead && !enabled;
+        verticalVelocity = slideTimer = jumpBuffer = groundGrace = knockbackTime = knockdownTime = 0f;
+        swimVelocity = knockbackVelocity = kickPushVelocity = Vector3.zero;
+        IsGrounded = IsSwimming = IsClimbing = false;
+        GetComponent<ShipDeckPassenger>()?.Attach(null);
+        if (!enabled) return;
+        SetHeight(false);
+        foreach (var helm in HelmInteraction.Active) if (helm.IsControlledBy(this)) helm.ReleaseControl();
+        ActiveCannon?.ReleaseControl();
+        ActiveHarpoon?.ReleaseControl();
+        lootNetwork?.CancelLootWork();
+        lootNetwork?.ReleaseGrapple();
+        BellPullLocked = ShipActivityLocked = SailPullLocked = PickupLocked = CargoRopeWalking = false;
+        if (local) SetThirdPerson(false);
+    }
     Camera playerCamera;
     [SerializeField, Range(.42f, 1.4f)] float cannonCameraHeight = .9f;
     [SerializeField, Range(0f, 10f)] float cannonCameraLookDown = 5f;
@@ -397,6 +417,20 @@ public partial class AdvancedPlayerController : MonoBehaviour
     public void AddPlatformYaw(float delta) { if (local) { lookYaw = Mathf.Repeat(lookYaw + delta, 360); bodyYaw = Mathf.Repeat(bodyYaw + delta, 360); } }
     public void Simulate(PlayerCommand command, float dt)
     {
+        if (DeveloperNoclip)
+        {
+            if (IsDead || IsFrozen || !command.IsValid || !float.IsFinite(dt) || dt <= 0f) return;
+            controller.enabled = false;
+            transform.rotation = Quaternion.Euler(0f, command.Yaw, 0f);
+            Vector3 flightForward = Quaternion.Euler(command.Pitch, command.Yaw, 0f) * Vector3.forward;
+            Vector3 flightDirection = flightForward * command.Move.y + transform.right * command.Move.x + Vector3.up * ((command.Rise ? 1f : 0f) - (command.Crouch ? 1f : 0f));
+            Vector3 flightVelocity = Vector3.ClampMagnitude(flightDirection, 1f) * (command.Sprint ? 30f : 12f);
+            transform.position += flightVelocity * dt;
+            PlanarSpeed = flightVelocity.magnitude;
+            IsGrounded = IsSwimming = IsClimbing = false;
+            Breath = breathSeconds;
+            return;
+        }
         if (IsDead || controller == null || !controller.enabled || !float.IsFinite(dt) || dt <= 0f) { jumpBuffer = groundGrace = 0f; return; }
         if (IsFrozen) { ClearFrozenMotion(); return; }
         if (!command.IsValid) command = default;
@@ -714,16 +748,17 @@ public partial class AdvancedPlayerController : MonoBehaviour
         verticalVelocity = 0; PlanarSpeed = ladderExiting ? climbSpeed : Mathf.Abs(rise * climbSpeed); ClimbVelocity = ladderExiting ? 0f : rise * climbSpeed;
         return true;
     }
-    public PlayerState Capture() => new PlayerState { Position = transform.position, Yaw = transform.eulerAngles.y, VerticalVelocity = verticalVelocity, SlideDirection = slideDirection, SlideTimer = slideTimer, Cooldown = cooldown, Crouched = crouched, CrouchBlend = crouchBlend, Locked = locomotionLocked, PlanarSpeed = PlanarSpeed, Grounded = IsGrounded, Swimming = IsSwimming, SwimVelocity = swimVelocity, Breath = Breath, Climbing = IsClimbing, LadderCooldown = ladderCooldown, KnockbackVelocity = knockbackVelocity, KickPushVelocity = kickPushVelocity, KnockbackTime = knockbackTime, KnockdownTime = knockdownTime, JumpBuffer = jumpBuffer, GroundGrace = groundGrace, LadderExiting = ladderExiting, AirJumpUsed = airJumpUsed, WaterReady = waterReady, WaterWasSolid = waterWasSolid, WaterRunRemaining = waterRunRemaining, WaterRecharge = waterRecharge };
+    public PlayerState Capture() => new PlayerState { DeveloperNoclip = DeveloperNoclip, Position = transform.position, Yaw = transform.eulerAngles.y, VerticalVelocity = verticalVelocity, SlideDirection = slideDirection, SlideTimer = slideTimer, Cooldown = cooldown, Crouched = crouched, CrouchBlend = crouchBlend, Locked = locomotionLocked, PlanarSpeed = PlanarSpeed, Grounded = IsGrounded, Swimming = IsSwimming, SwimVelocity = swimVelocity, Breath = Breath, Climbing = IsClimbing, LadderCooldown = ladderCooldown, KnockbackVelocity = knockbackVelocity, KickPushVelocity = kickPushVelocity, KnockbackTime = knockbackTime, KnockdownTime = knockdownTime, JumpBuffer = jumpBuffer, GroundGrace = groundGrace, LadderExiting = ladderExiting, AirJumpUsed = airJumpUsed, WaterReady = waterReady, WaterWasSolid = waterWasSolid, WaterRunRemaining = waterRunRemaining, WaterRecharge = waterRecharge };
     public void Restore(PlayerState s)
     {
-        controller.enabled = false; transform.SetPositionAndRotation(s.Position, Quaternion.Euler(0, s.Yaw, 0)); controller.enabled = !IsDead;
+        controller.enabled = false; transform.SetPositionAndRotation(s.Position, Quaternion.Euler(0, s.Yaw, 0)); controller.enabled = !IsDead && !s.DeveloperNoclip;
         jumpBuffer = s.JumpBuffer; groundGrace = s.GroundGrace;
         airJumpUsed = s.AirJumpUsed; waterReady = s.WaterReady; waterWasSolid = s.WaterWasSolid; waterRunRemaining = s.WaterRunRemaining; waterRecharge = s.WaterRecharge;
         verticalVelocity = s.VerticalVelocity; slideTimer = s.SlideTimer; cooldown = s.Cooldown; slideDirection = s.SlideDirection; ApplyAnimationState(s);
     }
     public void ApplyAnimationState(PlayerState s)
     {
+        SetDeveloperNoclip(s.DeveloperNoclip);
         PlanarSpeed = s.PlanarSpeed; IsGrounded = s.Grounded; verticalVelocity = s.VerticalVelocity;
         IsSwimming = s.Swimming; swimVelocity = s.SwimVelocity; Breath = s.Swimming ? s.Breath : breathSeconds;
         IsClimbing = s.Climbing; ladderCooldown = s.LadderCooldown; ladderExiting = s.LadderExiting;
@@ -735,7 +770,7 @@ public partial class AdvancedPlayerController : MonoBehaviour
     {
         controller.enabled = false;
         transform.SetPositionAndRotation(Vector3.Lerp(transform.position, position, blend), Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, yawValue, 0), blend));
-        controller.enabled = true;
+        controller.enabled = !IsDead && !DeveloperNoclip;
     }
     bool CanStand()
     {

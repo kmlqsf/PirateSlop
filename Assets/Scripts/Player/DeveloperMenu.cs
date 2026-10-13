@@ -58,6 +58,11 @@ namespace PirateSlop
         void Update()
         {
             if (!Available || BotDebugPanel.ConsumedInput || network == null || !network.IsOwner) return;
+            if (Keyboard.current != null && Keyboard.current.f3Key.wasPressedThisFrame)
+            {
+                var player = GetComponent<NetworkPlayer>();
+                if (player != null) network.DeveloperCommand(32, player.DeveloperNoclip ? 0 : 1);
+            }
             if (Keyboard.current != null && Keyboard.current.f8Key.wasPressedThisFrame)
             {
                 IsOpen = !IsOpen;
@@ -178,6 +183,12 @@ namespace PirateSlop
             }
             if (tab == 0)
             {
+                var player = GetComponent<NetworkPlayer>();
+                bool noclip = player != null && player.DeveloperNoclip;
+                bool nextNoclip = GUILayout.Toggle(noclip, "Noclip-полёт · F3 · сквозь препятствия");
+                if (nextNoclip != noclip) network.DeveloperCommand(32, nextNoclip ? 1 : 0);
+                GUILayout.Label("WASD — полёт · Space — вверх · Ctrl/C — вниз · Shift — быстрее");
+                GUILayout.Space(8);
                 GUILayout.Label("Здоровье");
                 GUILayout.BeginHorizontal();
                 Button("Восстановить здоровье", 6);

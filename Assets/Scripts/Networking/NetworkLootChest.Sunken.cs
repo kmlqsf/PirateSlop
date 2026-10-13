@@ -21,6 +21,10 @@ namespace PirateSlop.Networking
         readonly Quaternion[] sunkenShackleRotations = new Quaternion[4];
         BoxCollider sunkenBox;
         float nextSunkenRopeVisual;
+        float sunkenOutsideSince = -1f, nextSunkenMarker;
+        Transform sunkenMarkerBuoy;
+        SeaRopeVisual sunkenMarkerTether;
+        readonly Vector3[] sunkenMarkerPath = new Vector3[24];
         Vector3 SunkenFreeEnd
         {
             get
@@ -40,12 +44,22 @@ namespace PirateSlop.Networking
             sunkenRopeEnd.Value = SunkenFreeEnd;
         }
 
-        bool ValidSunkenPosition(NetworkWeapon player)
+        bool ValidSunkenPosition(NetworkWeapon player, bool continuing = false)
         {
             var motor = player.GetComponent<AdvancedPlayerController>();
             var offset = player.transform.position + Vector3.up - transform.position;
             float radius = new Vector2(offset.x, offset.z).magnitude;
-            return motor.IsSwimming && radius >= .9f && radius <= 3.3f && Mathf.Abs(offset.y - .4f) <= 1.4f && player.transform.position.y + 1.65f < eventPoint.Value.y;
+            float surface = OceanSurface.Instance != null ? OceanSurface.Instance.Height(player.transform.position) : eventPoint.Value.y;
+            return motor.IsSwimming && !motor.IsFrozen && radius >= .55f && radius <= (continuing ? 6.5f : 4.8f) &&
+                Mathf.Abs(offset.y - .4f) <= (continuing ? 3f : 2.2f) && player.transform.position.y + 1.4f < surface;
+        }
+
+        internal bool CanKeepSunkenWork(NetworkWeapon player)
+        {
+            if (player != worker || phase.Value != SeaLootState.Locked) return false;
+            if (ValidSunkenPosition(player, true)) { sunkenOutsideSince = -1f; return true; }
+            if (sunkenOutsideSince < 0f) sunkenOutsideSince = Time.time;
+            return Time.time - sunkenOutsideSince <= 1.25f;
         }
 
         float SunkenAngle(Vector3 position)
@@ -56,6 +70,7 @@ namespace PirateSlop.Networking
 
         void BeginSunkenUnwrap()
         {
+            sunkenOutsideSince = -1f;
             sunkenPreviousPosition = worker.transform.position;
             sunkenPreviousAngle = SunkenAngle(sunkenPreviousPosition);
             sunkenRopeEnd.Value = sunkenPreviousPosition + Vector3.up * 1.1f;
@@ -67,11 +82,11 @@ namespace PirateSlop.Networking
             float angle = SunkenAngle(position);
             float delta = Mathf.DeltaAngle(sunkenPreviousAngle, angle);
             float limit = Time.deltaTime * 8f + .2f;
-            if (Vector3.Distance(position, sunkenPreviousPosition) > limit)
-            { StopWork(); return; }
+            bool skipProgress = !ValidSunkenPosition(worker, true) || Vector3.Distance(position, sunkenPreviousPosition) > limit;
             sunkenPreviousPosition = position;
             sunkenPreviousAngle = angle;
             sunkenRopeEnd.Value = position + Vector3.up * 1.1f + worker.transform.forward * .2f;
+            if (skipProgress) return;
             if (sunkenDirection.Value == 0f && Mathf.Abs(delta) > .1f) sunkenDirection.Value = Mathf.Sign(delta);
             progress.Value = Mathf.Clamp01(progress.Value + delta * sunkenDirection.Value / (360f * Mathf.Clamp(Catalog.SunkenUnwrapTurns, 1, 5)));
             if (progress.Value >= 1f) Unlock();
@@ -96,6 +111,9 @@ namespace PirateSlop.Networking
             geometry.GetComponent<MeshRenderer>().sharedMaterial = seaArt.Hemp;
             sunkenGrip = Instantiate(seaArt.RopeGrip, transform, false);
             sunkenGrip.name = "SunkenRopeEnd";
+            var gripCollider = sunkenGrip.GetComponent<SphereCollider>();
+            if (gripCollider != null) { gripCollider.radius = .55f; gripCollider.isTrigger = true; }
+            CreateSunkenMarker();
             shownRopeEnd = occupied.Value ? sunkenRopeEnd.Value : SunkenFreeEnd;
             for (int i = 0; i < sunkenShackles.Length; i++)
             {
@@ -190,6 +208,7 @@ namespace PirateSlop.Networking
 
         void UpdateSunkenRope()
         {
+            UpdateSunkenMarker();
             if (sunkenRope == null) return;
             bool locked = phase.Value == SeaLootState.Locked;
             sunkenRope.gameObject.SetActive(locked);
@@ -228,6 +247,50 @@ namespace PirateSlop.Networking
         }
 
         void AddSunkenRopePoint(Vector3 world, ref int count) => sunkenRopePoints[count++] = eventVisual.transform.InverseTransformPoint(world);
+
+        void CreateSunkenMarker()
+        {
+            sunkenMarkerBuoy = Instantiate(seaArt.CaptureBuoy, eventVisual.transform, false).transform;
+            sunkenMarkerBuoy.name = "SunkenChestMarkerBuoy";
+            sunkenMarkerBuoy.localScale *= .25f;
+            var rig = sunkenMarkerBuoy.GetComponent<SeaSignalRig>();
+            rig.ShowLight(false, Color.white, 0f);
+            foreach (var part in new[] { rig.Flag, rig.Contest, rig.Carriage, rig.Counterweight, rig.Winch })
+                if (part != null) part.gameObject.SetActive(false);
+            rig.enabled = false;
+            foreach (var collider in sunkenMarkerBuoy.GetComponentsInChildren<Collider>()) collider.enabled = false;
+            var rope = new GameObject("SunkenMarkerMooring");
+            rope.transform.SetParent(eventVisual.transform, false);
+            sunkenMarkerTether = rope.AddComponent<SeaRopeVisual>();
+            rope.GetComponent<MeshRenderer>().sharedMaterial = seaArt.Hemp;
+        }
+
+        void UpdateSunkenMarker()
+        {
+            if (sunkenMarkerBuoy == null) return;
+            bool show = phase.Value == SeaLootState.Locked || phase.Value == SeaLootState.Rising;
+            sunkenMarkerBuoy.gameObject.SetActive(show);
+            sunkenMarkerTether.gameObject.SetActive(show);
+            if (!show) return;
+            var ocean = OceanSurface.Instance;
+            float time = ocean != null ? ocean.WaveTime : Time.time;
+            Vector3 point = transform.position;
+            point.y = (ocean != null ? ocean.Height(point) : eventPoint.Value.y) - .1f;
+            sunkenMarkerBuoy.SetPositionAndRotation(point, Quaternion.Euler(Mathf.Sin(time * .8f) * 4f, 0f, Mathf.Sin(time * 1.1f) * 5f));
+            if (Time.time < nextSunkenMarker) return;
+            nextSunkenMarker = Time.time + .1f;
+            if (sunkenBox == null) sunkenBox = GetComponent<BoxCollider>();
+            Vector3 attachment = sunkenBox != null ? sunkenBox.center + Vector3.Scale(sunkenBox.size, new Vector3(.3f, .5f, .3f)) : Vector3.up * .8f;
+            Vector3 start = transform.TransformPoint(attachment);
+            Vector3 end = sunkenMarkerBuoy.TransformPoint(Vector3.down * .08f);
+            for (int i = 0; i < sunkenMarkerPath.Length; i++)
+            {
+                float t = i / (float)(sunkenMarkerPath.Length - 1);
+                Vector3 world = Vector3.Lerp(start, end, t) + Vector3.right * (Mathf.Sin(t * Mathf.PI) * .35f);
+                sunkenMarkerPath[i] = eventVisual.transform.InverseTransformPoint(world);
+            }
+            sunkenMarkerTether.SetPath(sunkenMarkerPath, sunkenMarkerPath.Length, .035f);
+        }
 
         static Vector3 CubicRopePoint(Vector3 a, Vector3 b, Vector3 c, Vector3 d, float t)
         {
