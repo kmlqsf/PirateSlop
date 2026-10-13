@@ -271,6 +271,16 @@
 | [Assets/Audio/PiratePackVol1/steps_wood_slow_04.wav](<../../Assets/Audio/PiratePackVol1/steps_wood_slow_04.wav>) | Аудио |
 | [Assets/Audio/PiratePackVol1/steps_wood_slow_05.wav](<../../Assets/Audio/PiratePackVol1/steps_wood_slow_05.wav>) | Аудио |
 
+## Assets/Audio/SeaCapture
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Audio/SeaCapture/SOURCES.md](<../../Assets/Audio/SeaCapture/SOURCES.md>) | Документация; Предметы, лут и инвентарь |
+| [Assets/Audio/SeaCapture/feedback-level-up-65.wav](<../../Assets/Audio/SeaCapture/feedback-level-up-65.wav>) | Аудио; Предметы, лут и инвентарь |
+| [Assets/Audio/SeaCapture/feedback-success-01.wav](<../../Assets/Audio/SeaCapture/feedback-success-01.wav>) | Аудио; Предметы, лут и инвентарь |
+| [Assets/Audio/SeaCapture/instrument-bell-36.wav](<../../Assets/Audio/SeaCapture/instrument-bell-36.wav>) | Аудио; Предметы, лут и инвентарь |
+| [Assets/Audio/SeaCapture/ui-chime-57.wav](<../../Assets/Audio/SeaCapture/ui-chime-57.wav>) | Аудио; Предметы, лут и инвентарь |
+
 ## Assets/Audio/SelectedReview
 
 | Файл | Краткое описание |

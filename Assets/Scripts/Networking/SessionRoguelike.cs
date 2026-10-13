@@ -129,8 +129,48 @@ namespace PirateSlop.Networking
 
         public bool SlotUpgradeAvailable => upgradeCatalog != null;
 
-        internal bool CanAwardPersonalUpgrade(PlayerUpgradeState state) => upgradeCatalog != null && state != null &&
-            upgradeCatalog.Cards.Any(card => upgradeCatalog.Eligible(card, state.Taken));
+        HashSet<string> ExcludedTeamUpgrades(PlayerUpgradeState state)
+        {
+            var excluded = new HashSet<string>(state.Taken);
+            foreach (var teammate in upgradePlayers.Values)
+            {
+                if (teammate.Team != state.Team) continue;
+                foreach (string id in teammate.Taken)
+                    if (upgradeCatalog.Find(id)?.teamUnique == true) excluded.Add(id);
+            }
+            return excluded;
+        }
+
+        void RefreshTeamUpgradeOffers(PlayerUpgradeState chosen, UpgradeCard card)
+        {
+            if (!card.teamUnique) return;
+            foreach (var state in upgradePlayers.Values)
+            {
+                if (state.Team != chosen.Team) continue;
+                bool changed = false;
+                foreach (var reward in state.Rewards)
+                {
+                    if (reward.Offers == null || !reward.Offers.Contains(card.id)) continue;
+                    var kept = reward.Offers.Where(id => id != card.id).ToList();
+                    var excluded = ExcludedTeamUpgrades(state);
+                    foreach (string id in kept) excluded.Add(id);
+                    kept.AddRange(upgradeCatalog.Roll(excluded, reward.Weights, upgradeRandom).Take(3 - kept.Count));
+                    reward.Offers = kept.ToArray();
+                    changed = true;
+                }
+                if (!changed) continue;
+                state.Revision++;
+                EnsureUpgradeOffer(state);
+                if (state.Player != null && state.Player.IsSpawned) state.Player.SendUpgrades();
+            }
+        }
+
+        internal bool CanAwardPersonalUpgrade(PlayerUpgradeState state)
+        {
+            if (upgradeCatalog == null || state == null) return false;
+            var excluded = ExcludedTeamUpgrades(state);
+            return upgradeCatalog.Cards.Any(card => upgradeCatalog.Eligible(card, excluded));
+        }
 
         internal bool AwardPersonalUpgrade(PlayerUpgradeState state)
         {
@@ -155,7 +195,7 @@ namespace PirateSlop.Networking
                 if (player == null || !player.IsSpawned || player.TeamId.Value != team || player.Eliminated.Value) continue;
                 if (player.UpgradeState == null) AttachUpgrades(player, null, 0);
                 var state = player.UpgradeState;
-                if (!upgradeCatalog.Cards.Any(card => upgradeCatalog.Eligible(card, state.Taken))) continue;
+                if (!CanAwardPersonalUpgrade(state)) continue;
                 state.Rewards.Add(new UpgradeReward { ChestNumber = ordinal, Weights = upgradeCatalog.WeightsAt(ordinal) });
                 state.Revision++;
                 EnsureUpgradeOffer(state);
@@ -177,7 +217,13 @@ namespace PirateSlop.Networking
             while (upgradeCatalog != null && state.Rewards.Count > 0)
             {
                 var reward = state.Rewards[0];
-                if (reward.Offers == null) reward.Offers = upgradeCatalog.Roll(state.Taken, reward.Weights, upgradeRandom);
+                var excluded = ExcludedTeamUpgrades(state);
+                if (reward.Offers != null && reward.Offers.Any(id => !upgradeCatalog.Eligible(upgradeCatalog.Find(id), excluded)))
+                {
+                    reward.Offers = null;
+                    state.Revision++;
+                }
+                if (reward.Offers == null) reward.Offers = upgradeCatalog.Roll(excluded, reward.Weights, upgradeRandom);
                 if (reward.Offers.Length > 0) return;
                 state.Rewards.Clear();
                 state.Revision++;
@@ -191,12 +237,13 @@ namespace PirateSlop.Networking
             EnsureUpgradeOffer(state);
             if (state.Rewards.Count == 0 || !state.Rewards[0].Offers.Contains(id)) return;
             var card = upgradeCatalog.Find(id);
-            if (card == null || !upgradeCatalog.Eligible(card, state.Taken)) return;
+            if (card == null || !upgradeCatalog.Eligible(card, ExcludedTeamUpgrades(state))) return;
             state.Taken.Add(id);
             state.Rewards.RemoveAt(0);
             state.Revision++;
             EnsureUpgradeOffer(state);
             player.NotifyUpgradeChosen(card);
+            RefreshTeamUpgradeOffers(state, card);
         }
 
         internal string GrantDeveloperUpgrade(NetworkPlayer player, int index)
@@ -207,11 +254,13 @@ namespace PirateSlop.Networking
             if (index < 0 || index >= cards.Length) return "Улучшение не найдено.";
             var card = cards[index];
             var state = player.UpgradeState;
+            if (card.teamUnique && ExcludedTeamUpgrades(state).Contains(card.id)) return "Это улучшение уже получено командой.";
             if (!state.Taken.Add(card.id)) return "Это улучшение уже получено.";
             foreach (var reward in state.Rewards) reward.Offers = null;
             state.Revision++;
             EnsureUpgradeOffer(state);
             player.NotifyUpgradeChosen(card);
+            RefreshTeamUpgradeOffers(state, card);
             player.SendUpgrades();
             return "Получено: " + card.name;
         }
@@ -225,10 +274,10 @@ namespace PirateSlop.Networking
             EnsureUpgradeOffer(state);
             if (state.Rewards.Count == 0 || AvailableRerolls(state, state.Rewards[0]) <= 0) return;
             var reward = state.Rewards[0];
-            var excluded = new System.Collections.Generic.HashSet<string>(state.Taken);
+            var excluded = ExcludedTeamUpgrades(state);
             foreach (string id in reward.Offers) excluded.Add(id);
             var offers = upgradeCatalog.Roll(excluded, reward.Weights, upgradeRandom);
-            reward.Offers = offers.Length > 0 ? offers : upgradeCatalog.Roll(state.Taken, reward.Weights, upgradeRandom);
+            reward.Offers = offers.Length > 0 ? offers : upgradeCatalog.Roll(ExcludedTeamUpgrades(state), reward.Weights, upgradeRandom);
             reward.RerollsUsed++; state.Revision++;
         }
 

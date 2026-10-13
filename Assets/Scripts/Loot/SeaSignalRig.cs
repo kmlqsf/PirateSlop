@@ -7,6 +7,26 @@ namespace PirateSlop
         public Transform Flag, Carriage, Counterweight, Winch, Contest;
         public float Low = 1.35f, High = 6.55f, Head = 8f;
         public Material Hemp;
+        public Light SignalLight;
+        public Renderer SignalGlass;
+        public int SignalGlassSlot = 1;
+        public float SignalIntensity = 4f;
+        MaterialPropertyBlock signalBlock;
+
+        public void ShowLight(bool active, Color color, float pulse)
+        {
+            if (SignalLight != null)
+            {
+                SignalLight.enabled = active && pulse > .05f;
+                SignalLight.color = color;
+                SignalLight.intensity = SignalIntensity * pulse;
+            }
+            if (SignalGlass == null) return;
+            signalBlock ??= new MaterialPropertyBlock();
+            SignalGlass.GetPropertyBlock(signalBlock, SignalGlassSlot);
+            signalBlock.SetColor("_EmissionColor", active ? color * (3f * pulse) : Color.black);
+            SignalGlass.SetPropertyBlock(signalBlock, SignalGlassSlot);
+        }
         SeaRopeVisual halyard;
         readonly Vector3[] path = new Vector3[5];
         float previousProgress = -1f;

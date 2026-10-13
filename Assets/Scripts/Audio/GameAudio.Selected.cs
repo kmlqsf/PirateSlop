@@ -12,6 +12,32 @@ namespace PirateSlop
         }
         public static SoundCue ResolveCue(SoundCue cue, SoundCue fallback) => HasCue(cue) ? cue : fallback;
         public static void StopLoop(AudioSource source) { if (source != null) { source.Stop(); source.volume = 0f; } }
+        public static void Repeat(ref AudioSource source, ref float nextPlay, SoundCue cue, Transform parent, bool active, float interval)
+        {
+            var audio = Get();
+            if (!active || audio == null || !audio.entryMap.TryGetValue(cue, out var entry) || entry.Clips == null || entry.Clips.Length == 0 || audio.bank.Master * audio.bank.Effects <= .001f)
+            {
+                StopLoop(source);
+                nextPlay = 0f;
+                return;
+            }
+            if (source == null)
+            {
+                source = audio.Source(cue + " repeating", false);
+                source.transform.SetParent(parent, false);
+                source.transform.localPosition = Vector3.up * 4f;
+                source.volume = 0f;
+                source.pitch = 1f;
+                source.clip = entry.Clips[0];
+            }
+            source.spatialBlend = 1f;
+            source.minDistance = 2f;
+            source.maxDistance = entry.Distance;
+            source.volume = Mathf.Lerp(source.volume, entry.Volume * audio.bank.Master * audio.bank.Effects, 1f - Mathf.Exp(-8f * Time.unscaledDeltaTime));
+            if (Time.unscaledTime < nextPlay || source.isPlaying) return;
+            source.Play();
+            nextPlay = Time.unscaledTime + Mathf.Max(interval, source.clip.length + .1f);
+        }
         public static void Loop(ref AudioSource source, SoundCue cue, Transform parent, float scale, bool ui = false, bool ambience = false, int variant = 0)
         {
             var audio = Get();

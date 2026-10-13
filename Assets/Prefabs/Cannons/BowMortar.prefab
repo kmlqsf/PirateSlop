@@ -1466,11 +1466,13 @@ MonoBehaviour:
   fusePrefab: {fileID: 878318906978561882, guid: 432b1b34728f1ff448a962ff0d612f51, type: 3}
   IsMortar: 1
   LaunchSpeed: 30
+  MortarRangeMultiplier: 2
   BarrelPivot: {fileID: 1993436805694752459}
   Breech: {fileID: 1791221477346671850}
+  TraversePivot: {fileID: 0}
   MinElevation: 45
   MaxElevation: 80
-  MaxTraverse: 65
+  MaxTraverse: 180
   fuseDuration: 1.4
 --- !u!114 &7995665913988050189
 MonoBehaviour:

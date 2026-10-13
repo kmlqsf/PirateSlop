@@ -1608,6 +1608,33 @@ MonoBehaviour:
     DistantVolume: 0.65
     Volume: 0.14
     Distance: 6
+  - Cue: 157
+    Clips:
+    - {fileID: 8300000, guid: 6ac7c7280421dfc47adae8b2cba9e2bf, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
+    Volume: 0.18
+    Distance: 120
+  - Cue: 158
+    Clips:
+    - {fileID: 8300000, guid: 277ede3828f98fe47b2ac02fcde416f0, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
+    Volume: 0.22
+    Distance: 120
+  - Cue: 159
+    Clips:
+    - {fileID: 8300000, guid: 58cecbd24f2b47d42a1540909670aba8, type: 3}
+    DistantClips: []
+    DistantStart: 25
+    DistantEnd: 65
+    DistantVolume: 0.65
+    Volume: 0.25
+    Distance: 120
   Ocean: {fileID: 8300000, guid: 385ddaa5ad1a27148a313c3f3ac90d8b, type: 3}
   Wind: {fileID: 8300000, guid: 78aafbe2a5d44ac499fd27fe5bdf180f, type: 3}
   DeckCreaks: {fileID: 0}

@@ -14,6 +14,7 @@ namespace PirateSlop
         public bool IsMortar;
         public bool AcceptsAmmo(InventoryItem ammo) => CannonAmmo.IsBall(ammo);
         public float LaunchSpeed = 30f;
+        public float MortarRangeMultiplier = 2f;
         public float LoadSeconds => IsMortar ? 8f : .45f;
         public float ReloadSeconds => IsMortar ? 24f : 6f;
         public Transform BarrelPivot, Breech;
@@ -21,6 +22,8 @@ namespace PirateSlop
         public float MinElevation = -10f, MaxElevation = 25f;
         public float Elevation { get; private set; } = 3f;
         public float MaxTraverse = 15f;
+        public bool FullTraverse => IsMortar && MaxTraverse >= 180f;
+        public float ClampTraverse(float value) => FullTraverse ? Mathf.Repeat(value + 180f, 360f) - 180f : Mathf.Clamp(value, -MaxTraverse, MaxTraverse);
         public float Traverse { get; private set; }
         public AdvancedPlayerController Operator { get; private set; }
         float lastControl;
@@ -38,7 +41,35 @@ namespace PirateSlop
         {
             float multiplier = player != null && player.HasUpgrade(UpgradeEffect.LongRangeCharge) ? RoguelikeTuning.Current.cannonSpeedMultiplier : 1f;
             Vector3 forward = Quaternion.AngleAxis(angle, transform.up) * Muzzle.forward;
-            return forward * (LaunchSpeed * 1.15f * multiplier) + GetComponentInParent<ShipController>().CannonPointVelocity(Muzzle.position);
+            float speed = LaunchSpeed * 1.15f * multiplier;
+            if (IsMortar && MortarRangeMultiplier > 1f)
+            {
+                float water = OceanSurface.Instance != null ? OceanSurface.Instance.Height(ShotPosition) : 0f;
+                float height = Mathf.Max(.01f, ShotPosition.y - water - ProjectileRadius);
+                float target = MortarRange(speed, forward.y, height) * MortarRangeMultiplier;
+                float low = speed, high = speed * MortarRangeMultiplier;
+                for (int i = 0; i < 12; i++)
+                {
+                    float middle = (low + high) * .5f;
+                    if (MortarRange(middle, forward.y, height) < target) low = middle; else high = middle;
+                }
+                speed = (low + high) * .5f;
+            }
+            return forward * speed + GetComponentInParent<ShipController>().CannonPointVelocity(Muzzle.position);
+        }
+        static float MortarRange(float speed, float vertical, float height)
+        {
+            float dt = Mathf.Max(.005f, Time.fixedDeltaTime), decay = Mathf.Exp(-.015f * dt);
+            float vx = speed * Mathf.Sqrt(Mathf.Max(0f, 1f - vertical * vertical)), vy = speed * vertical;
+            float x = 0f, y = height;
+            for (float time = 0f; time < 20f; time += dt)
+            {
+                float nextX = vx * decay, nextY = (vy + Physics.gravity.y * dt) * decay;
+                float dx = (vx + nextX) * (.5f * dt), dy = (vy + nextY) * (.5f * dt);
+                if (y + dy <= 0f) return x + dx * Mathf.Clamp01(y / -dy);
+                x += dx; y += dy; vx = nextX; vy = nextY;
+            }
+            return x;
         }
         Cannonball loaded;
         float loadStarted = -1f;
@@ -108,7 +139,7 @@ namespace PirateSlop
         }
         public void SetAim(float elevation, float traverse)
         {
-            Traverse = Mathf.Clamp(traverse, -MaxTraverse, MaxTraverse);
+            Traverse = ClampTraverse(traverse);
             SetElevation(elevation);
         }
         public bool TakeControl(AdvancedPlayerController player)

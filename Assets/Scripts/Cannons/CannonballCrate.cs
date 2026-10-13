@@ -20,7 +20,7 @@ namespace PirateSlop
         public GameObject Kit;
         public SimpleCannon CannonPrefab;
         public SimpleCannon MortarPrefab;
-        public Vector3 MortarPosition = new(0f, 4.3f, 18f);
+        public Vector3 MortarPosition = new(2.3f, 7.02f, -17.3f);
         public readonly List<SimpleCannon> Cannons = new();
         public ShipController Ship => GetComponentInParent<ShipController>();
         public NetworkCannon Network => Ship != null ? Ship.GetComponent<NetworkCannon>() : null;

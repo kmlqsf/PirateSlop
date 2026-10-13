@@ -7496,6 +7496,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.ShipDamageSection
   SectionId: 1023
+  Indestructible: 0
+  HullSupports: []
+  ProtectedFragments: 0
   DamageColliders:
   - {fileID: 6598281837659527984}
   - {fileID: 1972106350580107785}
@@ -11439,6 +11442,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.ShipDamageSection
   SectionId: 1043
+  Indestructible: 0
+  HullSupports: []
+  ProtectedFragments: 0
   DamageColliders:
   - {fileID: 7087226671979105939}
   - {fileID: 4578004957069335925}
@@ -12006,6 +12012,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.ShipDamageSection
   SectionId: 1005
+  Indestructible: 0
+  HullSupports: []
+  ProtectedFragments: 0
   DamageColliders:
   - {fileID: 4271097825261569276}
   - {fileID: 3796582558523116351}
@@ -20392,6 +20401,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.ShipDamageSection
   SectionId: 1026
+  Indestructible: 0
+  HullSupports: []
+  ProtectedFragments: 0
   DamageColliders:
   - {fileID: 1186021419445228252}
   - {fileID: 9127471247949997579}
@@ -35004,6 +35016,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.ShipDamageSection
   SectionId: 1042
+  Indestructible: 0
+  HullSupports: []
+  ProtectedFragments: 0
   DamageColliders:
   - {fileID: 731649097516235348}
   - {fileID: 7324000127556256268}
@@ -35525,6 +35540,7 @@ MonoBehaviour:
   impulseMass: 15000
   hullLength: 46
   hullWidth: 13
+  InitialDraft: 0
   buoyancyResponse: 2.5
   floatLength: 18
   floatWidth: 5.5
@@ -35845,6 +35861,13 @@ MonoBehaviour:
   DrainDuration: 30
   WaterlineAllowance: 3.5
   FloodSecondsByHits: {x: 60, y: 40, z: 20, w: 10}
+  UseBilgeFlooding: 0
+  StrongHoleFillSeconds: 540
+  ReferenceBreachArea: 0.35
+  ReferencePressureHead: 1
+  UpperLeakPeriod: 3.2
+  UpperLeakBurstDuration: 0.8
+  UpperLeakAverage: 0.3
 --- !u!114 &4471622586789432815
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -44395,6 +44418,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.ShipDamageSection
   SectionId: 1033
+  Indestructible: 0
+  HullSupports: []
+  ProtectedFragments: 0
   DamageColliders:
   - {fileID: 1211894650107520386}
   - {fileID: 1790166398671650233}
@@ -45514,6 +45540,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.ShipDamageSection
   SectionId: 1018
+  Indestructible: 0
+  HullSupports: []
+  ProtectedFragments: 0
   DamageColliders:
   - {fileID: 3468170290582677009}
   - {fileID: 7666069241581662766}
@@ -48132,6 +48161,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.ShipDamageSection
   SectionId: 1051
+  Indestructible: 0
+  HullSupports: []
+  ProtectedFragments: 0
   DamageColliders:
   - {fileID: 997685985782218294}
   - {fileID: 1629908797345662035}
@@ -53939,6 +53971,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.ShipDamageSection
   SectionId: 1017
+  Indestructible: 0
+  HullSupports: []
+  ProtectedFragments: 0
   DamageColliders:
   - {fileID: 8492467007146982297}
   - {fileID: 8243666048562880918}
@@ -75923,6 +75958,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.ShipDamageSection
   SectionId: 1039
+  Indestructible: 0
+  HullSupports: []
+  ProtectedFragments: 0
   DamageColliders:
   - {fileID: 8315302758288466657}
   - {fileID: 8326874340736287627}
@@ -76680,6 +76718,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.ShipDamageSection
   SectionId: 1037
+  Indestructible: 0
+  HullSupports: []
+  ProtectedFragments: 0
   DamageColliders:
   - {fileID: 6754243120072857227}
   - {fileID: 8406247277870956282}
@@ -83389,6 +83430,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.ShipDamageSection
   SectionId: 1048
+  Indestructible: 0
+  HullSupports: []
+  ProtectedFragments: 0
   DamageColliders:
   - {fileID: 535094286854939700}
   - {fileID: 3940290564179645479}
@@ -85916,6 +85960,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.ShipDamageSection
   SectionId: 1012
+  Indestructible: 0
+  HullSupports: []
+  ProtectedFragments: 0
   DamageColliders:
   - {fileID: 1211132051875704783}
   - {fileID: 2034527586573160658}
@@ -97196,6 +97243,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.ShipDamageSection
   SectionId: 1038
+  Indestructible: 0
+  HullSupports: []
+  ProtectedFragments: 0
   DamageColliders:
   - {fileID: 3228339133029942298}
   - {fileID: 3970348629033351543}
@@ -103878,6 +103928,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.ShipDamageSection
   SectionId: 1031
+  Indestructible: 0
+  HullSupports: []
+  ProtectedFragments: 0
   DamageColliders:
   - {fileID: 4957530035869253555}
   - {fileID: 5037707479105833864}
@@ -107160,6 +107213,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.ShipDamageSection
   SectionId: 1041
+  Indestructible: 0
+  HullSupports: []
+  ProtectedFragments: 0
   DamageColliders:
   - {fileID: 5724717674122698817}
   - {fileID: 42276942349435992}
@@ -117494,6 +117550,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.ShipDamageSection
   SectionId: 1040
+  Indestructible: 0
+  HullSupports: []
+  ProtectedFragments: 0
   DamageColliders:
   - {fileID: 2701566216561343048}
   - {fileID: 4718615590294374040}
@@ -118193,6 +118252,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.ShipDamageSection
   SectionId: 1050
+  Indestructible: 0
+  HullSupports: []
+  ProtectedFragments: 0
   DamageColliders:
   - {fileID: 8408891451715583113}
   - {fileID: 828196203484612537}
@@ -122857,6 +122919,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.ShipDamageSection
   SectionId: 1059
+  Indestructible: 0
+  HullSupports: []
+  ProtectedFragments: 0
   DamageColliders:
   - {fileID: 4787512156075816949}
   - {fileID: 7409118496809331134}
@@ -124473,6 +124538,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.ShipDamageSection
   SectionId: 1025
+  Indestructible: 0
+  HullSupports: []
+  ProtectedFragments: 0
   DamageColliders:
   - {fileID: 9086571871519600819}
   - {fileID: 3191186796107636597}
@@ -128624,6 +128692,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.ShipDamageSection
   SectionId: 1003
+  Indestructible: 0
+  HullSupports: []
+  ProtectedFragments: 0
   DamageColliders:
   - {fileID: 6043185517299435046}
   - {fileID: 5342399274158349123}
@@ -135233,6 +135304,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.ShipDamageSection
   SectionId: 1055
+  Indestructible: 0
+  HullSupports: []
+  ProtectedFragments: 0
   DamageColliders:
   - {fileID: 7675806444767139918}
   - {fileID: 8152895159233173400}
@@ -136336,6 +136410,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.ShipDamageSection
   SectionId: 1057
+  Indestructible: 0
+  HullSupports: []
+  ProtectedFragments: 0
   DamageColliders:
   - {fileID: 2428656757807305721}
   - {fileID: 878274347783351988}
@@ -139525,6 +139602,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.ShipDamageSection
   SectionId: 1054
+  Indestructible: 0
+  HullSupports: []
+  ProtectedFragments: 0
   DamageColliders:
   - {fileID: 1653658637044216266}
   - {fileID: 1949203450433730920}
@@ -142345,6 +142425,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.ShipDamageSection
   SectionId: 1047
+  Indestructible: 0
+  HullSupports: []
+  ProtectedFragments: 0
   DamageColliders:
   - {fileID: 5907568877117188515}
   - {fileID: 3179367400143702832}
@@ -142786,6 +142869,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.ShipDamageSection
   SectionId: 1019
+  Indestructible: 0
+  HullSupports: []
+  ProtectedFragments: 0
   DamageColliders:
   - {fileID: 8659786347808339906}
   - {fileID: 6822900659208310777}
@@ -163622,6 +163708,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.ShipDamageSection
   SectionId: 1006
+  Indestructible: 0
+  HullSupports: []
+  ProtectedFragments: 0
   DamageColliders:
   - {fileID: 9151805574488326043}
   - {fileID: 7499615477955387280}
@@ -200423,6 +200512,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.ShipDamageSection
   SectionId: 1044
+  Indestructible: 0
+  HullSupports: []
+  ProtectedFragments: 0
   DamageColliders:
   - {fileID: 8947922668739887460}
   - {fileID: 4562281384819234142}
@@ -201793,6 +201885,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.ShipDamageSection
   SectionId: 1030
+  Indestructible: 0
+  HullSupports: []
+  ProtectedFragments: 0
   DamageColliders:
   - {fileID: 5613831510906951409}
   - {fileID: 2835890771843765782}
@@ -212521,6 +212616,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.ShipDamageSection
   SectionId: 1058
+  Indestructible: 0
+  HullSupports: []
+  ProtectedFragments: 0
   DamageColliders:
   - {fileID: 7478049978930469132}
   - {fileID: 1750741138138949369}
@@ -216601,6 +216699,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.ShipDamageSection
   SectionId: 1011
+  Indestructible: 0
+  HullSupports: []
+  ProtectedFragments: 0
   DamageColliders:
   - {fileID: 8648413274248810443}
   - {fileID: 9790817394683421}
@@ -226646,6 +226747,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.ShipDamageSection
   SectionId: 1052
+  Indestructible: 0
+  HullSupports: []
+  ProtectedFragments: 0
   DamageColliders:
   - {fileID: 3778677919951978830}
   - {fileID: 1281700094551971765}
@@ -228936,6 +229040,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.ShipDamageSection
   SectionId: 1045
+  Indestructible: 0
+  HullSupports: []
+  ProtectedFragments: 0
   DamageColliders:
   - {fileID: 7147437405443931867}
   - {fileID: 3621921348720481816}
@@ -230209,6 +230316,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.ShipDamageSection
   SectionId: 1010
+  Indestructible: 0
+  HullSupports: []
+  ProtectedFragments: 0
   DamageColliders:
   - {fileID: 318514834182578429}
   - {fileID: 4252434725812743743}
@@ -236197,6 +236307,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.ShipDamageSection
   SectionId: 1022
+  Indestructible: 0
+  HullSupports: []
+  ProtectedFragments: 0
   DamageColliders:
   - {fileID: 1775011834240912827}
   - {fileID: 1088164896441926544}
@@ -237850,6 +237963,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.ShipDamageSection
   SectionId: 1032
+  Indestructible: 0
+  HullSupports: []
+  ProtectedFragments: 0
   DamageColliders:
   - {fileID: 3439376660194846970}
   - {fileID: 3182264903382278512}
@@ -240581,6 +240697,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.ShipDamageSection
   SectionId: 1029
+  Indestructible: 0
+  HullSupports: []
+  ProtectedFragments: 0
   DamageColliders:
   - {fileID: 2475098566504355779}
   - {fileID: 6640612796134937071}
@@ -250237,6 +250356,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.ShipDamageSection
   SectionId: 1000
+  Indestructible: 0
+  HullSupports: []
+  ProtectedFragments: 0
   DamageColliders:
   - {fileID: 6849125407335579223}
   - {fileID: 4664645267964671349}
@@ -251855,6 +251977,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.ShipDamageSection
   SectionId: 1053
+  Indestructible: 0
+  HullSupports: []
+  ProtectedFragments: 0
   DamageColliders:
   - {fileID: 4409592535866127715}
   - {fileID: 4881323965997145066}
@@ -257889,6 +258014,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.ShipDamageSection
   SectionId: 1016
+  Indestructible: 0
+  HullSupports: []
+  ProtectedFragments: 0
   DamageColliders:
   - {fileID: 3730571698762011215}
   - {fileID: 98425053003515080}
@@ -259818,6 +259946,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.ShipDamageSection
   SectionId: 1046
+  Indestructible: 0
+  HullSupports: []
+  ProtectedFragments: 0
   DamageColliders:
   - {fileID: 7532072849797554465}
   - {fileID: 2418062407885536498}
@@ -264896,6 +265027,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.ShipDamageSection
   SectionId: 1028
+  Indestructible: 0
+  HullSupports: []
+  ProtectedFragments: 0
   DamageColliders:
   - {fileID: 2192312675137692153}
   - {fileID: 1943218343040871329}
@@ -273346,6 +273480,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.ShipDamageSection
   SectionId: 1034
+  Indestructible: 0
+  HullSupports: []
+  ProtectedFragments: 0
   DamageColliders:
   - {fileID: 1002052091847644073}
   - {fileID: 1745719003137626050}
@@ -275634,6 +275771,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.ShipDamageSection
   SectionId: 1036
+  Indestructible: 0
+  HullSupports: []
+  ProtectedFragments: 0
   DamageColliders:
   - {fileID: 8080308976284101377}
   - {fileID: 5807216946957963090}
@@ -277009,6 +277149,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.ShipDamageSection
   SectionId: 1007
+  Indestructible: 0
+  HullSupports: []
+  ProtectedFragments: 0
   DamageColliders:
   - {fileID: 1325891325100252976}
   - {fileID: 7862567118589070394}
@@ -279740,6 +279883,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.ShipDamageSection
   SectionId: 1013
+  Indestructible: 0
+  HullSupports: []
+  ProtectedFragments: 0
   DamageColliders:
   - {fileID: 5061017806448890142}
   - {fileID: 4753655692655535987}
@@ -284371,6 +284517,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.ShipDamageSection
   SectionId: 1056
+  Indestructible: 0
+  HullSupports: []
+  ProtectedFragments: 0
   DamageColliders:
   - {fileID: 2474449797519752848}
   - {fileID: 8362936419930204050}
@@ -292017,6 +292166,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.ShipDamageSection
   SectionId: 1015
+  Indestructible: 0
+  HullSupports: []
+  ProtectedFragments: 0
   DamageColliders:
   - {fileID: 1519486835656952886}
   - {fileID: 2488826461899550189}
@@ -292575,6 +292727,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.ShipDamageSection
   SectionId: 1014
+  Indestructible: 0
+  HullSupports: []
+  ProtectedFragments: 0
   DamageColliders:
   - {fileID: 366540856641833596}
   - {fileID: 3734291369537465933}
@@ -299507,6 +299662,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.ShipDamageSection
   SectionId: 1024
+  Indestructible: 0
+  HullSupports: []
+  ProtectedFragments: 0
   DamageColliders:
   - {fileID: 2453237405284627145}
   - {fileID: 2427392000383660247}
@@ -303787,6 +303945,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.ShipDamageSection
   SectionId: 1027
+  Indestructible: 0
+  HullSupports: []
+  ProtectedFragments: 0
   DamageColliders:
   - {fileID: 3619496860612346658}
   - {fileID: 6341278098420615015}
@@ -307555,6 +307716,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.ShipDamageSection
   SectionId: 1001
+  Indestructible: 0
+  HullSupports: []
+  ProtectedFragments: 0
   DamageColliders:
   - {fileID: 6282314359739018150}
   - {fileID: 2288769425398653291}
@@ -322455,6 +322619,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.ShipDamageSection
   SectionId: 1020
+  Indestructible: 0
+  HullSupports: []
+  ProtectedFragments: 0
   DamageColliders:
   - {fileID: 1948503271400900933}
   - {fileID: 1394202380946058411}
@@ -322649,6 +322816,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.ShipDamageSection
   SectionId: 1004
+  Indestructible: 0
+  HullSupports: []
+  ProtectedFragments: 0
   DamageColliders:
   - {fileID: 1087069261459768591}
   - {fileID: 53800428628407729}
@@ -326771,6 +326941,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.ShipDamageSection
   SectionId: 1008
+  Indestructible: 0
+  HullSupports: []
+  ProtectedFragments: 0
   DamageColliders:
   - {fileID: 674816686664853281}
   - {fileID: 1772732319879562001}
@@ -327810,6 +327983,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.ShipDamageSection
   SectionId: 1035
+  Indestructible: 0
+  HullSupports: []
+  ProtectedFragments: 0
   DamageColliders:
   - {fileID: 761529957168172479}
   - {fileID: 1614130168827993380}
@@ -328294,6 +328470,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.ShipDamageSection
   SectionId: 1002
+  Indestructible: 0
+  HullSupports: []
+  ProtectedFragments: 0
   DamageColliders:
   - {fileID: 6866332203245140010}
   - {fileID: 4229446938413174962}
@@ -330213,6 +330392,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.ShipDamageSection
   SectionId: 1021
+  Indestructible: 0
+  HullSupports: []
+  ProtectedFragments: 0
   DamageColliders:
   - {fileID: 2591390263339836073}
   - {fileID: 7740265068447274390}
@@ -331526,6 +331708,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.ShipDamageSection
   SectionId: 1009
+  Indestructible: 0
+  HullSupports: []
+  ProtectedFragments: 0
   DamageColliders:
   - {fileID: 1893079149106250867}
   - {fileID: 8791529519283985143}
@@ -338314,6 +338499,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.ShipDamageSection
   SectionId: 1049
+  Indestructible: 0
+  HullSupports: []
+  ProtectedFragments: 0
   DamageColliders:
   - {fileID: 4452834392999499988}
   - {fileID: 7993328615092667551}
@@ -339907,7 +340095,7 @@ MonoBehaviour:
   Kit: {fileID: 2801052612202003218}
   CannonPrefab: {fileID: 6766262252996742549, guid: a259d1526047caa44936b87a9a2dd31b, type: 3}
   MortarPrefab: {fileID: 1645166311162798735, guid: 29a2d9304ab3bc342a5e417a0d6dedbf, type: 3}
-  MortarPosition: {x: 0, y: 5.46, z: 18}
+  MortarPosition: {x: 2.3, y: 7.02, z: -17.3}
 --- !u!4 &7345172825833399922 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4324727194847729944, guid: efe21fdfec453d441b0ea9dc89274f1f, type: 3}

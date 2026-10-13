@@ -894,7 +894,10 @@ namespace PirateSlop.EditorTools
             features.CannonballPrefab = originalCrate.SpecialSupplyPrefab;
             var crate = Child(dispenser.parent, "DispenserSupplyManager").gameObject.AddComponent<CannonballCrate>();
             crate.DispenserManaged = true; crate.SpawnPoint = features.DispenserMouth;
-            crate.CannonPrefab = originalCrate.CannonPrefab; crate.MortarPrefab = null; crate.SpecialSupplyPrefab = originalCrate.SpecialSupplyPrefab;
+            crate.CannonPrefab = originalCrate.CannonPrefab;
+            crate.MortarPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Cannons/BowMortar.prefab").GetComponent<SimpleCannon>();
+            crate.MortarPosition = new Vector3(2.3f, 7.02f, -17.3f);
+            crate.SpecialSupplyPrefab = originalCrate.SpecialSupplyPrefab;
             var supply = UnityEngine.Object.Instantiate(originalCrate.Supply.gameObject, crate.transform);
             crate.Supply = supply.GetComponent<Cannonball>(); supply.SetActive(false);
             crate.Kit = UnityEngine.Object.Instantiate(originalCrate.Kit, crate.transform);

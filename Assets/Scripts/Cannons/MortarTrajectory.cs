@@ -1,4 +1,5 @@
 using UnityEngine;
+using PirateSlop.Networking;
 
 namespace PirateSlop
 {
@@ -12,7 +13,9 @@ namespace PirateSlop
         float nextPreview;
         int previewCount, visualFrame = -1;
         readonly Vector3[] displayed = new Vector3[128];
-        bool previewReady, previewImpact;
+        bool previewReady;
+        bool previewMarker, markerWater;
+        Vector3 markerTarget, markerPosition;
         Vector3 cameraPosition;
         Quaternion cameraRotation;
         bool cameraReady;
@@ -38,6 +41,9 @@ namespace PirateSlop
             cameraRotation = Quaternion.Slerp(cameraRotation, rotation, blend);
             cameraReady = true;
             camera.transform.SetPositionAndRotation(cameraPosition, cameraRotation);
+            float metersPerPixel = 2f * distance * Mathf.Tan(camera.fieldOfView * Mathf.Deg2Rad * .5f) / Mathf.Max(1, camera.pixelHeight);
+            arc.startWidth = arc.endWidth = Mathf.Max(.14f, metersPerPixel * 2.5f);
+            circle.startWidth = circle.endWidth = Mathf.Max(.18f, metersPerPixel * 3f);
         }
         void Awake()
         {
@@ -65,13 +71,14 @@ namespace PirateSlop
         {
             bool visible = cannon.Operator != null && cannon.Operator.InputActive && cannon.Operator.ActiveCannon == cannon;
             arc.enabled = visible;
-            if (!visible) { circle.enabled = false; cameraReady = previewReady = false; return; }
+            if (!visible) { circle.enabled = false; cameraReady = previewReady = previewMarker = false; return; }
             if (Time.unscaledTime < nextPreview) { DrawPreview(); return; }
             nextPreview = Time.unscaledTime + .05f;
             Vector3 position = cannon.ShotPosition, velocity = cannon.ShotVelocity;
             var source = cannon.GetComponentInParent<ShipController>().transform;
             int count = 1;
             points[0] = position;
+            previewMarker = markerWater = false;
             bool impact = false, waterEntered = ProjectileWaterFlight.IsSubmerged(position, cannon.ProjectileRadius);
             float waterAge = 0f, dt = Time.fixedDeltaTime;
             for (float t = 0f; t < 20f && count < points.Length - 2; t += dt)
@@ -94,6 +101,11 @@ namespace PirateSlop
                         (!found || delta.magnitude * fraction < Vector3.Distance(position, hit)))
                     {
                         position += delta * fraction - Vector3.up * .001f;
+                        if (!previewMarker)
+                        {
+                            markerTarget = position + Vector3.up * .15f;
+                            previewMarker = markerWater = true;
+                        }
                         velocity = Vector3.Lerp(velocity, next, fraction);
                         waterEntered = true;
                         points[count++] = position;
@@ -103,6 +115,11 @@ namespace PirateSlop
                     if (found)
                     {
                         position = hit;
+                        if (!previewMarker)
+                        {
+                            markerTarget = position + Vector3.up * .15f;
+                            previewMarker = true;
+                        }
                         points[count++] = position;
                         impact = true;
                         break;
@@ -115,7 +132,6 @@ namespace PirateSlop
                 if (impact) break;
             }
             previewCount = count;
-            previewImpact = impact;
             DrawPreview();
         }
 
@@ -133,13 +149,40 @@ namespace PirateSlop
                 displayed[i] = Vector3.Lerp(displayed[i], target, blend);
                 arc.SetPosition(i, displayed[i]);
             }
+            markerPosition = Vector3.Lerp(markerPosition, markerTarget, blend);
             previewReady = true;
-            circle.enabled = previewImpact;
-            Vector3 center = displayed[displayed.Length - 1];
+            circle.enabled = previewMarker;
+            Vector3 center = markerPosition;
             for (int i = 0; i < 64; i++)
             {
                 float angle = i * Mathf.PI * 2f / 64f;
-                circle.SetPosition(i, center + new Vector3(Mathf.Cos(angle) * BlastRadius, .15f, Mathf.Sin(angle) * BlastRadius));
+                circle.SetPosition(i, center + new Vector3(Mathf.Cos(angle) * BlastRadius, 0f, Mathf.Sin(angle) * BlastRadius));
+            }
+        }
+
+        void OnGUI()
+        {
+            var player = cannon != null ? cannon.Operator : null;
+            if (Event.current.type != EventType.Repaint || !previewMarker || player == null || !player.InputActive || player.ActiveCannon != cannon || SessionController.MenuOpen) return;
+            var camera = player.PlayerCamera;
+            if (camera == null || !camera.enabled) return;
+            Vector3 point = camera.WorldToScreenPoint(markerPosition);
+            if (point.z <= 0f) return;
+            float x = point.x, y = Screen.height - point.y;
+            var color = new Color(1f, .86f, .2f);
+            Stroke(new Rect(x - 22f, y - 1f, 14f, 2f));
+            Stroke(new Rect(x + 8f, y - 1f, 14f, 2f));
+            Stroke(new Rect(x - 1f, y - 22f, 2f, 14f));
+            Stroke(new Rect(x - 1f, y + 8f, 2f, 14f));
+            PirateHudStyle.Diamond(new Vector2(x, y), 4f, color);
+            float range = Vector3.ProjectOnPlane(markerPosition - cannon.ShotPosition, Vector3.up).magnitude;
+            PirateHudStyle.Brush(new Rect(x - 105f, y + 28f, 210f, 45f), PirateHudStyle.Ink);
+            PirateHudStyle.Label(new Rect(x - 100f, y + 29f, 200f, 22f), markerWater ? "ВХОД В ВОДУ" : "ТОЧКА ПОПАДАНИЯ", color);
+            PirateHudStyle.Label(new Rect(x - 100f, y + 49f, 200f, 22f), $"{range:0} м", PirateHudStyle.Paper);
+            void Stroke(Rect rect)
+            {
+                PirateHudStyle.Fill(new Rect(rect.x - 2f, rect.y - 2f, rect.width + 4f, rect.height + 4f), PirateHudStyle.Ink);
+                PirateHudStyle.Fill(rect, color);
             }
         }
 

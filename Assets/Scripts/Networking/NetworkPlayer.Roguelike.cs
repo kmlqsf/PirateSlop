@@ -20,7 +20,7 @@ namespace PirateSlop.Networking
         public int Team, SteamCrew;
         public NetworkPlayer Player;
         public int Revision;
-        public bool CoinUsed, PactUsed, PendingPact, PendingRum, PendingMonkey;
+        public bool CoinUsed, PactUsed, PendingPact, PendingRum, PendingMonkey, PendingMortar;
         public float PactAt, PactYaw;
         public Vector3 PactPosition, PactWorldPosition;
         public Transform PactPlatform;

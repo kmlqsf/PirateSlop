@@ -11,6 +11,7 @@ namespace PirateSlop
     public sealed class UpgradeCard
     {
         public string id, name, description, rarity, supersedes;
+        public bool teamUnique;
         [NonSerialized] public UpgradeRarity Rarity;
     }
 
@@ -102,6 +103,7 @@ namespace PirateSlop
 
         public bool Eligible(UpgradeCard card, HashSet<string> taken)
         {
+            if (card == null) return false;
             if (taken.Contains(card.id)) return false;
             foreach (string id in taken)
             {

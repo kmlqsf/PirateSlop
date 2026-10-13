@@ -154,7 +154,18 @@ namespace PirateSlop
             {
                 if(equipment!=null && equipment.Scoped && !inventory.ControlFocused) return;
                 float x = Screen.width / 2f, y = Screen.height / 2f;
+                if (motor.ActiveCannon != null && !motor.ActiveCannon.IsMortar && motor.ActiveCannon.Muzzle != null)
+                {
+                    Vector3 sight = motor.PlayerCamera.WorldToScreenPoint(motor.CannonSightPoint);
+                    if (sight.z <= 0f) return;
+                    x = sight.x;
+                    y = Screen.height - sight.y;
+                    PirateHudStyle.Fill(new Rect(x - 9, y - 1, 5, 2), PirateHudStyle.Paper);
+                    PirateHudStyle.Fill(new Rect(x + 4, y - 1, 5, 2), PirateHudStyle.Paper);
+                    PirateHudStyle.Fill(new Rect(x - 1, y - 9, 2, 5), PirateHudStyle.Paper);
+                }
                 PirateHudStyle.Fill(new Rect(x - 1, y - 1, 2, 2), PirateHudStyle.Paper);
+                if (motor.ActiveCannon != null) return;
                 if (inventory.ControlFocused) return;
                 if (inventory.PistolSelected)
                 {

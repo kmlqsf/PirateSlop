@@ -34,8 +34,6 @@
 | [Assets/Resources/KrakenTentacle.prefab](<../../Assets/Resources/KrakenTentacle.prefab>) | Префаб Unity; Кракен и щупальца |
 | [Assets/Resources/LootEventBeam.shader](<../../Assets/Resources/LootEventBeam.shader>) | Шейдер; Предметы, лут и инвентарь |
 | [Assets/Resources/ParticleSoft.asset](<../../Assets/Resources/ParticleSoft.asset>) | Настройки или данные Unity |
-| [Assets/Resources/PerformanceTestRunInfo.json](<../../Assets/Resources/PerformanceTestRunInfo.json>) | Конфигурация / данные JSON |
-| [Assets/Resources/PerformanceTestRunSettings.json](<../../Assets/Resources/PerformanceTestRunSettings.json>) | Конфигурация / данные JSON |
 | [Assets/Resources/SabreCut.mat](<../../Assets/Resources/SabreCut.mat>) | Материал Unity; Личное оружие и урон |
 | [Assets/Resources/SabreCut.shader](<../../Assets/Resources/SabreCut.shader>) | Шейдер; Личное оружие и урон |
 | [Assets/Resources/SabreWoodChip.mat](<../../Assets/Resources/SabreWoodChip.mat>) | Материал Unity; Личное оружие и урон |
@@ -100,6 +98,7 @@
 
 | Файл | Краткое описание |
 | --- | --- |
+| [Assets/Resources/RoguelikeUI/BowMortar.png](<../../Assets/Resources/RoguelikeUI/BowMortar.png>) | Изображение / текстура; Улучшения рогалика из сундуков |
 | [Assets/Resources/RoguelikeUI/CardArt.png](<../../Assets/Resources/RoguelikeUI/CardArt.png>) | Изображение / текстура; Улучшения рогалика из сундуков |
 | [Assets/Resources/RoguelikeUI/CardFace.png](<../../Assets/Resources/RoguelikeUI/CardFace.png>) | Изображение / текстура; Улучшения рогалика из сундуков |
 | [Assets/Resources/RoguelikeUI/RarityGlow.shader](<../../Assets/Resources/RoguelikeUI/RarityGlow.shader>) | Шейдер; Улучшения рогалика из сундуков |
@@ -127,6 +126,7 @@
 | [Assets/Resources/SeaEvents/CaptureBoundaryBuoyWeightGeometry0.asset](<../../Assets/Resources/SeaEvents/CaptureBoundaryBuoyWeightGeometry0.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |
 | [Assets/Resources/SeaEvents/CaptureBoundaryBuoyWinchGeometry0.asset](<../../Assets/Resources/SeaEvents/CaptureBoundaryBuoyWinchGeometry0.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |
 | [Assets/Resources/SeaEvents/CaptureBuoy.prefab](<../../Assets/Resources/SeaEvents/CaptureBuoy.prefab>) | Префаб Unity; Предметы, лут и инвентарь |
+| [Assets/Resources/SeaEvents/CaptureFlagInk.mat](<../../Assets/Resources/SeaEvents/CaptureFlagInk.mat>) | Материал Unity; Предметы, лут и инвентарь |
 | [Assets/Resources/SeaEvents/CaptureFlagMesh.asset](<../../Assets/Resources/SeaEvents/CaptureFlagMesh.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |
 | [Assets/Resources/SeaEvents/CaptureSignalStationCaptureFlagMesh.asset](<../../Assets/Resources/SeaEvents/CaptureSignalStationCaptureFlagMesh.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |
 | [Assets/Resources/SeaEvents/CaptureSignalStationCarriageGeometry0.asset](<../../Assets/Resources/SeaEvents/CaptureSignalStationCarriageGeometry0.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |

@@ -188,9 +188,59 @@ namespace PirateSlop.EditorTools
             }
             finally { UnityEngine.Object.DestroyImmediate(grip); }
             EditorUtility.SetDirty(art); AssetDatabase.SaveAssets();
+            ConfigureCaptureSignals();
             foreach (var mesh in temporary) if (mesh != null) UnityEngine.Object.DestroyImmediate(mesh);
             temporary.Clear();
             return "Saved ship raft, capture station, boundary buoys, rope shackles and hemp knot.";
+        }
+
+        public static string ConfigureCaptureSignals()
+        {
+            if (EditorApplication.isPlaying) throw new InvalidOperationException("Exit Play Mode first.");
+            var art = AssetDatabase.LoadAssetAtPath<SeaEventArt>(Folder + "SeaEventArt.asset");
+            var lantern = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Models/Loot/HandLantern/HandLanternVisual.prefab");
+            if (art == null || lantern == null) throw new InvalidOperationException("Sea event art and ship lantern are required.");
+            var ink = AssetDatabase.LoadAssetAtPath<Material>(Folder + "CaptureFlagInk.mat");
+            if (ink == null)
+            {
+                ink = new Material(Shader.Find("Universal Render Pipeline/Unlit"));
+                AssetDatabase.CreateAsset(ink, Folder + "CaptureFlagInk.mat");
+            }
+            ink.SetColor("_BaseColor", new Color(.025f, .018f, .01f));
+            ink.SetFloat("_Cull", 0f);
+            EditorUtility.SetDirty(ink);
+            art.FlagInk = ink;
+            foreach (var prefab in new[] { art.CaptureStation, art.CaptureBuoy })
+            {
+                string path = AssetDatabase.GetAssetPath(prefab);
+                var root = PrefabUtility.LoadPrefabContents(path);
+                try
+                {
+                    var rig = root.GetComponent<SeaSignalRig>();
+                    bool main = prefab == art.CaptureStation;
+                    var previous = root.transform.Find("CaptureLantern");
+                    if (previous != null) UnityEngine.Object.DestroyImmediate(previous.gameObject);
+                    var model = UnityEngine.Object.Instantiate(lantern, root.transform, false);
+                    model.name = "CaptureLantern";
+                    model.transform.localPosition = new Vector3(-.42f, rig.Head, 0f);
+                    model.transform.localScale = Vector3.one * (main ? 1.9f : 1f);
+                    var visual = model.GetComponent<HandLanternVisual>();
+                    rig.SignalGlass = visual.Glass;
+                    rig.SignalGlassSlot = visual.GlassSlot;
+                    rig.SignalLight = visual.Light;
+                    rig.SignalIntensity = main ? 7f : 4f;
+                    rig.SignalLight.range = main ? 16f : 10f;
+                    rig.SignalLight.shadows = LightShadows.None;
+                    rig.SignalLight.enabled = false;
+                    UnityEngine.Object.DestroyImmediate(visual);
+                    rig.ShowLight(false, Color.green, 0f);
+                    PrefabUtility.SaveAsPrefabAsset(root, path);
+                }
+                finally { PrefabUtility.UnloadPrefabContents(root); }
+            }
+            EditorUtility.SetDirty(art);
+            AssetDatabase.SaveAssets();
+            return "Saved capture lanterns and flag ink.";
         }
 
         static Mesh SaveMesh(Mesh mesh, string name)

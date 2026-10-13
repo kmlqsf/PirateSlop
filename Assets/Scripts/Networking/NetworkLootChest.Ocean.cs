@@ -21,6 +21,9 @@ namespace PirateSlop.Networking
         readonly SyncVar<float> progress = new();
         readonly SyncVar<bool> contested = new();
         readonly SyncVar<int> captureShip = new();
+        readonly SyncList<string> captureShipNames = new();
+        readonly SyncVar<string> captureOwnerName = new("");
+        readonly List<NetworkShip> captureParticipants = new();
         readonly SyncVar<int> lockRound = new();
         readonly SyncVar<bool> occupied = new();
         readonly SyncVar<bool> capturing = new();
@@ -222,6 +225,7 @@ namespace PirateSlop.Networking
 
         void TickCapture()
         {
+            captureParticipants.Clear();
             NetworkShip only = null;
             int count = 0;
             foreach (var ship in NetworkShip.ActiveShips)
@@ -231,8 +235,10 @@ namespace PirateSlop.Networking
                 delta.y = 0;
                 if (delta.sqrMagnitude > Catalog.CaptureRadius * Catalog.CaptureRadius) continue;
                 count++;
+                captureParticipants.Add(ship);
                 only = ship;
             }
+            PublishCaptureNames();
             contested.Value = count > 1;
             capturing.Value = count == 1;
             if (count > 1) return;
@@ -240,13 +246,33 @@ namespace PirateSlop.Networking
             {
                 capturing.Value = false;
                 progress.Value = Mathf.Max(0, progress.Value - .2f / Mathf.Max(1, Catalog.CaptureSeconds));
-                if (progress.Value == 0) { captureShip.Value = 0; captureTeam.Value = 0; }
+                if (progress.Value == 0) { captureShip.Value = 0; captureTeam.Value = 0; captureOwnerName.Value = ""; }
                 return;
             }
             captureShip.Value = only.ParticipantId.Value;
             captureTeam.Value = only.TeamId.Value;
+            captureOwnerName.Value = CaptureShipName(only);
             progress.Value = Mathf.Clamp01(progress.Value + .2f / Mathf.Max(1, Catalog.CaptureSeconds));
             if (progress.Value >= 1) Unlock();
+        }
+
+        static string CaptureShipName(NetworkShip ship)
+        {
+            var name = ship.GetComponent<PirateSlop.Customization.SailCustomizer>()?.CurrentData?.shipName;
+            name = PirateSlop.Customization.ShipCustomizationData.NormalizeName(name);
+            return string.IsNullOrEmpty(name) ? "Корабль " + ship.ParticipantId.Value : name;
+        }
+
+        void PublishCaptureNames()
+        {
+            captureParticipants.Sort((a, b) => a.ParticipantId.Value.CompareTo(b.ParticipantId.Value));
+            bool changed = captureShipNames.Count != captureParticipants.Count;
+            if (!changed)
+                for (int i = 0; i < captureParticipants.Count; i++)
+                    if (captureShipNames[i] != CaptureShipName(captureParticipants[i])) { changed = true; break; }
+            if (!changed) return;
+            captureShipNames.Clear();
+            foreach (var ship in captureParticipants) captureShipNames.Add(CaptureShipName(ship));
         }
 
         public void Carry(NetworkWeapon player)

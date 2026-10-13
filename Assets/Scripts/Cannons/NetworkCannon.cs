@@ -62,7 +62,7 @@ namespace PirateSlop.Networking
                 result.Position = Vector3.Lerp(from.Position, target.Position, blend);
                 result.Rotation = Quaternion.Slerp(from.Rotation, target.Rotation, blend);
                 result.Elevation = Mathf.Lerp(from.Elevation, target.Elevation, blend);
-                result.Traverse = Mathf.Lerp(from.Traverse, target.Traverse, blend);
+                result.Traverse = target.Mortar ? Mathf.LerpAngle(from.Traverse, target.Traverse, blend) : Mathf.Lerp(from.Traverse, target.Traverse, blend);
                 return result;
             }
         }
@@ -73,7 +73,15 @@ namespace PirateSlop.Networking
             shipBody = GetComponent<Rigidbody>();
             if (Crate != null) { ball = Crate.Supply; ball.Network = this; }
         }
-        public override void OnStartServer() { base.OnStartServer(); if (Crate != null) { Crate.ResetSupply(); if (Crate.MortarPrefab != null) { placements.Add(new CannonPlacement { Position = Crate.MortarPosition, Rotation = Quaternion.identity, Elevation = 60f, Fuse = -1f, Mortar = true }); ApplyState(); } } }
+        public override void OnStartServer() { base.OnStartServer(); if (Crate != null) Crate.ResetSupply(); }
+        public bool AddUpgradeMortar()
+        {
+            if (!IsServerInitialized || !IsSpawned || Crate == null || Crate.MortarPrefab == null) return false;
+            foreach (var placement in placements) if (placement.Mortar && !placement.Removed) return true;
+            placements.Add(new CannonPlacement { Position = Crate.MortarPosition, Rotation = Quaternion.identity, Elevation = 60f, Fuse = -1f, Mortar = true });
+            ApplyState();
+            return true;
+        }
         public override void OnStopServer() { if (Crate != null) Crate.ClearSpecialSupply(); base.OnStopServer(); }
         public override void OnStartClient() { base.OnStartClient(); ApplyState(); }
         public override void OnStopClient() { remoteCarriages.Clear(); remoteBallReady = false; base.OnStopClient(); }

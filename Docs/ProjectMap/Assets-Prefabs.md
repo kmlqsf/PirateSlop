@@ -17,7 +17,7 @@
 
 | Файл | Краткое описание |
 | --- | --- |
-| [Assets/Prefabs/Cannons/BowMortar.prefab](<../../Assets/Prefabs/Cannons/BowMortar.prefab>) | Префаб Unity |
+| [Assets/Prefabs/Cannons/BowMortar.prefab](<../../Assets/Prefabs/Cannons/BowMortar.prefab>) | Префаб Unity; Улучшения рогалика из сундуков |
 | [Assets/Prefabs/Cannons/CannonFuse.prefab](<../../Assets/Prefabs/Cannons/CannonFuse.prefab>) | Префаб Unity |
 | [Assets/Prefabs/Cannons/Cannonball.prefab](<../../Assets/Prefabs/Cannons/Cannonball.prefab>) | Префаб Unity |
 | [Assets/Prefabs/Cannons/CannonballCrate.prefab](<../../Assets/Prefabs/Cannons/CannonballCrate.prefab>) | Префаб Unity |

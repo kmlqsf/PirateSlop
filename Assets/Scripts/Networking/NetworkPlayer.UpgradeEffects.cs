@@ -44,6 +44,7 @@ namespace PirateSlop.Networking
             RestoreUpgradeEffects();
             if (card.id == "RumSupply") UpgradeState.PendingRum = true;
             if (card.id == "ExtraMonkey") UpgradeState.PendingMonkey = true;
+            if (card.id == "BowMortar") UpgradeState.PendingMortar = true;
             ApplyPendingShipUpgrades();
         }
 
@@ -52,6 +53,7 @@ namespace PirateSlop.Networking
             if (UpgradeState == null || Ship == null || Ship.IsSinking || !Ship.IsSpawned) return;
             if (UpgradeState.PendingRum && Ship.AddUpgradeRum()) UpgradeState.PendingRum = false;
             if (UpgradeState.PendingMonkey && Ship.AddUpgradeMonkey()) UpgradeState.PendingMonkey = false;
+            if (UpgradeState.PendingMortar && Ship.GetComponent<NetworkCannon>()?.AddUpgradeMortar() == true) UpgradeState.PendingMortar = false;
         }
 
         public float FilterUpgradeDamage(float amount)

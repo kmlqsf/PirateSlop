@@ -46,7 +46,8 @@ namespace PirateSlop
         RopeSprinter,
         RumSupply,
         LuckyDie,
-        ExtraMonkey
+        ExtraMonkey,
+        BowMortar
     }
 
     [Serializable]

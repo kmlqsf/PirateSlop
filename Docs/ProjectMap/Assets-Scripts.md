@@ -59,7 +59,7 @@
 | [Assets/Scripts/Cannons/Cannonball.cs](<../../Assets/Scripts/Cannons/Cannonball.cs>) | Исходник C#: Cannonball; Пушки, ядра и лафеты |
 | [Assets/Scripts/Cannons/CannonballCrate.cs](<../../Assets/Scripts/Cannons/CannonballCrate.cs>) | Исходник C#: CannonballCrate |
 | [Assets/Scripts/Cannons/MortarTrajectory.cs](<../../Assets/Scripts/Cannons/MortarTrajectory.cs>) | Исходник C#: MortarTrajectory; Пушки, ядра и лафеты |
-| [Assets/Scripts/Cannons/NetworkCannon.cs](<../../Assets/Scripts/Cannons/NetworkCannon.cs>) | Исходник C#: CannonPlacement, NetworkCannon, RemoteCarriagePose; Пушки, ядра и лафеты |
+| [Assets/Scripts/Cannons/NetworkCannon.cs](<../../Assets/Scripts/Cannons/NetworkCannon.cs>) | Исходник C#: CannonPlacement, NetworkCannon, RemoteCarriagePose; Улучшения рогалика из сундуков, Пушки, ядра и лафеты |
 | [Assets/Scripts/Cannons/ShipFireVfx.cs](<../../Assets/Scripts/Cannons/ShipFireVfx.cs>) | Исходник C#: ShipFireVfx; Пушки, ядра и лафеты |
 | [Assets/Scripts/Cannons/ShipFreezeVfx.cs](<../../Assets/Scripts/Cannons/ShipFreezeVfx.cs>) | Исходник C#: ShipFreezeVfx, IceSeed, Surface; Пушки, ядра и лафеты |
 | [Assets/Scripts/Cannons/SimpleCannon.cs](<../../Assets/Scripts/Cannons/SimpleCannon.cs>) | Исходник C#: SimpleCannon; Пушки, ядра и лафеты |
@@ -257,6 +257,7 @@
 | [Assets/Scripts/Loot/RoguelikeCatalog.cs](<../../Assets/Scripts/Loot/RoguelikeCatalog.cs>) | Исходник C#: UpgradeRarity, UpgradeCard, RoguelikeCatalog, CardFile, ChanceFile, Milestone; Улучшения рогалика из сундуков |
 | [Assets/Scripts/Loot/RoguelikeTuning.cs](<../../Assets/Scripts/Loot/RoguelikeTuning.cs>) | Исходник C#: UpgradeEffect, RoguelikeTuning; Улучшения рогалика из сундуков |
 | [Assets/Scripts/Loot/RumShelf.cs](<../../Assets/Scripts/Loot/RumShelf.cs>) | Исходник C#: RumShelf; Предметы, лут и инвентарь |
+| [Assets/Scripts/Loot/SeaCaptureFlagText.cs](<../../Assets/Scripts/Loot/SeaCaptureFlagText.cs>) | Исходник C#: SeaCaptureFlagText, FlatGlyph; Предметы, лут и инвентарь |
 | [Assets/Scripts/Loot/SeaEventArt.cs](<../../Assets/Scripts/Loot/SeaEventArt.cs>) | Исходник C#: SeaEventArt; Предметы, лут и инвентарь |
 | [Assets/Scripts/Loot/SeaRopeVisual.cs](<../../Assets/Scripts/Loot/SeaRopeVisual.cs>) | Исходник C#: SeaRopeVisual; Предметы, лут и инвентарь |
 | [Assets/Scripts/Loot/SeaSignalRig.cs](<../../Assets/Scripts/Loot/SeaSignalRig.cs>) | Исходник C#: SeaSignalRig; Предметы, лут и инвентарь |

@@ -22,9 +22,36 @@ namespace PirateSlop.Networking
                 Renderer = target.GetComponent<Renderer>();
             }
 
+            public void Resize(Vector2 size)
+            {
+                int columns = Mathf.Max(16, Mathf.CeilToInt(size.x / .18f));
+                int rows = Mathf.Max(6, Mathf.CeilToInt(size.y / .25f));
+                Rest = new Vector3[(columns + 1) * (rows + 1)];
+                Vertices = new Vector3[Rest.Length];
+                var uv = new Vector2[Rest.Length];
+                var triangles = new int[columns * rows * 6];
+                int next = 0;
+                for (int y = 0; y <= rows; y++)
+                    for (int x = 0; x <= columns; x++)
+                    {
+                        int i = y * (columns + 1) + x;
+                        float u = x / (float)columns, v = y / (float)rows;
+                        Rest[i] = new Vector3(u * size.x, v * size.y, 0f);
+                        uv[i] = new Vector2(u, v);
+                        if (y == rows || x == columns) continue;
+                        triangles[next++] = i; triangles[next++] = i + columns + 1; triangles[next++] = i + 1;
+                        triangles[next++] = i + 1; triangles[next++] = i + columns + 1; triangles[next++] = i + columns + 2;
+                    }
+                Mesh.Clear();
+                Mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
+                Mesh.vertices = Rest; Mesh.uv = uv; Mesh.triangles = triangles;
+                Mesh.RecalculateNormals(); Mesh.RecalculateBounds();
+            }
+
             public void Wave(float time, float phase)
             {
-                float width = Mesh.bounds.size.x;
+                float width = 0f;
+                foreach (var point in Rest) width = Mathf.Max(width, point.x);
                 for (int i = 0; i < Rest.Length; i++)
                 {
                     var p = Rest[i]; float edge = p.x / Mathf.Max(.1f, width);
@@ -54,16 +81,29 @@ namespace PirateSlop.Networking
         Quaternion[] stationDebrisRotations;
         Vector3[] stationDebrisScales;
         SignalFlag captureFlag, contestFlag, boundaryFlag, boundaryContestFlag;
+        SeaCaptureFlagText captureFlagText;
+        readonly System.Collections.Generic.List<string> shownCaptureNames = new();
         MaterialPropertyBlock signalColor;
         float shownCaptureProgress, nextCaptureWaves, nextFlagWave;
         Vector3 stationTarget, stationNormal = Vector3.up;
         Color captureColor;
         float shownBreakAge = -1f;
+        int captureAudioState = -1, pendingCaptureAudioState = -1;
+        float pendingCaptureAudioAt, nextCaptureStartAudio, nextCaptureContestedAudio;
+        AudioSource captureStartAudio, captureContestedAudio;
+        bool captureVictoryKnown, captureVictoryWasLocked;
 
         void CreateCaptureStation()
         {
+            captureAudioState = pendingCaptureAudioState = -1;
+            captureVictoryKnown = false;
+            nextCaptureStartAudio = nextCaptureContestedAudio = 0f;
             captureStation = Instantiate(seaArt.CaptureStation, eventVisual.transform, false).transform;
             captureFlag = new SignalFlag(captureStation.Find("CaptureFlag"));
+            var lettering = new GameObject("CapturingShips");
+            lettering.transform.SetParent(captureFlag.Transform, false);
+            captureFlagText = lettering.AddComponent<SeaCaptureFlagText>();
+            captureFlagText.Initialize(seaArt.FlagInk);
             contestFlag = new SignalFlag(captureStation.Find("ContestPennant"));
             stationRig = captureStation.GetComponent<SeaSignalRig>();
             var debris = new System.Collections.Generic.List<Transform>();
@@ -116,19 +156,19 @@ namespace PirateSlop.Networking
                 stationNormal = Vector3.Slerp(Vector3.up, stationNormal, .65f);
             }
             for (int i = 0; i < captureBuoys.Length; i++)
-                captureBuoyHeights[i] = ocean != null ? ocean.Height(captureBuoys[i].position) : eventPoint.Value.y;
+                if (captureBuoys[i] != null) captureBuoyHeights[i] = ocean != null ? ocean.Height(captureBuoys[i].position) : eventPoint.Value.y;
             nextCaptureWaves = Time.time + .15f;
         }
 
         Color CaptureSignalColor()
         {
-            if (contested.Value) return new Color(.95f, .57f, .13f);
-            if (captureShip.Value == 0) return new Color(.78f, .68f, .45f);
+            if (contested.Value) return new Color(.95f, .12f, .08f);
+            if (captureShip.Value == 0 || !capturing.Value && phase.Value == SeaLootState.Locked && captureShipNames.Count == 0) return new Color(.55f, .58f, .6f);
             int team = captureTeam.Value, viewerTeam = 0;
             foreach (var player in NetworkPlayer.Active)
                 if (player != null && player.IsOwner) { viewerTeam = player.TeamId.Value; break; }
             var color = team > 0 && viewerTeam > 0 && team != viewerTeam ? new Color(.76f, .19f, .12f) : new Color(.15f, .64f, .59f);
-            return !capturing.Value && phase.Value == SeaLootState.Locked ? Color.Lerp(color, new Color(.58f, .52f, .38f), .45f) : color;
+            return !capturing.Value && phase.Value == SeaLootState.Locked ? Color.Lerp(color, new Color(.45f, .48f, .5f), .45f) : color;
         }
 
         void UpdateCaptureStation()
@@ -142,12 +182,30 @@ namespace PirateSlop.Networking
             shownCaptureProgress = Mathf.MoveTowards(shownCaptureProgress, progress.Value, Time.deltaTime * 2f / Mathf.Max(1f, Catalog.CaptureSeconds));
             bool locked = phase.Value == SeaLootState.Locked;
             bool disputed = contested.Value && locked;
+            UpdateCaptureVictory(locked);
+            UpdateCaptureAudio(locked, disputed);
+            bool lightActive = locked && (disputed || capturing.Value || progress.Value > 0f && captureShipNames.Count > 0);
+            Color lightColor = capturing.Value && !disputed ? new Color(.1f, 1f, .2f) : new Color(1f, .08f, .03f);
+            float pulse = .5f + .5f * Mathf.Cos(time * Mathf.PI * 2f / (disputed ? 2.8f : 3.6f));
+            pulse = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01((pulse - .2f) / .6f));
+            stationRig.ShowLight(lightActive, lightColor, pulse);
+            UpdateCaptureFlagNames();
             if (locked) stationRig.Show(shownCaptureProgress, disputed);
+            float buoySinkAge = locked ? 0f : Mathf.Max(0f, Mathf.Max(captureBreakAge.Value, shownBreakAge));
+            float buoySinkDepth = 14f * Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(buoySinkAge / 5f));
             for (int i = 0; i < captureBuoys.Length; i++)
             {
                 var buoy = captureBuoys[i];
+                if (buoy == null) continue;
+                if (!locked && buoySinkAge >= 5f)
+                {
+                    Destroy(buoy.gameObject);
+                    captureBuoys[i] = null; boundaryRigs[i] = null; boundaryFlags[i] = null;
+                    continue;
+                }
                 boundaryRigs[i].Show(locked ? shownCaptureProgress : 1f, disputed);
-                var p = buoy.position; p.y = Mathf.Lerp(p.y, captureBuoyHeights[i], blend); buoy.position = p;
+                boundaryRigs[i].ShowLight(lightActive, lightColor, pulse);
+                var p = buoy.position; p.y = Mathf.Lerp(p.y, captureBuoyHeights[i] - buoySinkDepth, blend); buoy.position = p;
                 buoy.rotation = Quaternion.Euler(Mathf.Sin(time * .8f + i * 1.8f) * 4f, i * 137.5f, Mathf.Sin(time * 1.1f + i * 2.1f) * 5f);
             }
             var color = CaptureSignalColor();
@@ -155,17 +213,62 @@ namespace PirateSlop.Networking
             {
                 captureColor = color; signalColor.SetColor("_BaseColor", color);
                 captureFlag.Renderer.SetPropertyBlock(signalColor);
-                foreach (var flag in boundaryFlags) flag.SetPropertyBlock(signalColor);
-                signalColor.SetColor("_BaseColor", new Color(.95f, .57f, .13f)); contestFlag.Renderer.SetPropertyBlock(signalColor);
-                foreach (var rig in boundaryRigs) rig.Contest.GetComponent<Renderer>().SetPropertyBlock(signalColor);
+                foreach (var flag in boundaryFlags) if (flag != null) flag.SetPropertyBlock(signalColor);
+                signalColor.SetColor("_BaseColor", new Color(.95f, .12f, .08f)); contestFlag.Renderer.SetPropertyBlock(signalColor);
+                foreach (var rig in boundaryRigs) if (rig != null) rig.Contest.GetComponent<Renderer>().SetPropertyBlock(signalColor);
             }
             if (Time.time >= nextFlagWave)
             {
-                captureFlag.Wave(time, eventPoint.Value.x * .03f); contestFlag.Wave(time, 2.4f); boundaryFlag.Wave(time, 1.3f); boundaryContestFlag.Wave(time, 2.4f);
+                captureFlag.Wave(time, eventPoint.Value.x * .03f); contestFlag.Wave(time, 2.4f);
+                if (captureBuoys[0] != null) { boundaryFlag.Wave(time, 1.3f); boundaryContestFlag.Wave(time, 2.4f); }
+                captureFlagText.Wave(time, eventPoint.Value.x * .03f);
                 float distance = Camera.main != null ? Vector3.Distance(Camera.main.transform.position, eventPoint.Value) : 0f;
                 nextFlagWave = Time.time + (distance < 350f ? .05f : .2f);
             }
             UpdateCaptureRelease(locked);
+        }
+
+        void UpdateCaptureVictory(bool locked)
+        {
+            if (!IsClientInitialized) return;
+            bool won = captureVictoryKnown && captureVictoryWasLocked && !locked;
+            captureVictoryKnown = true;
+            captureVictoryWasLocked = locked;
+            if (!won) return;
+            GameAudio.StopLoop(captureStartAudio);
+            GameAudio.StopLoop(captureContestedAudio);
+            var listener = SpatialAudioTone.FindListener();
+            if (SessionController.MenuOpen || listener == null || Vector3.Distance(listener.transform.position, eventPoint.Value) > Mathf.Min(120f, Catalog.CaptureRadius + 35f)) return;
+            GameAudio.Play(SoundCue.CaptureVictory, eventPoint.Value + Vector3.up * 4f);
+        }
+
+        void UpdateCaptureAudio(bool locked, bool disputed)
+        {
+            if (!IsClientInitialized) return;
+            int state = !locked ? 0 : disputed ? 2 : capturing.Value ? 1 : 0;
+            float now = Time.unscaledTime;
+            if (pendingCaptureAudioState != state)
+            {
+                pendingCaptureAudioState = state;
+                pendingCaptureAudioAt = now;
+            }
+            bool stable = now - pendingCaptureAudioAt >= .5f;
+            if (stable) captureAudioState = state;
+            var listener = SpatialAudioTone.FindListener();
+            bool audible = stable && !SessionController.MenuOpen && listener != null &&
+                Vector3.Distance(listener.transform.position, eventPoint.Value) <= Mathf.Min(120f, Catalog.CaptureRadius + 35f);
+            GameAudio.Repeat(ref captureStartAudio, ref nextCaptureStartAudio, SoundCue.CaptureStart, eventVisual.transform, audible && captureAudioState == 1, 6f);
+            GameAudio.Repeat(ref captureContestedAudio, ref nextCaptureContestedAudio, SoundCue.CaptureContested, eventVisual.transform, audible && captureAudioState == 2, 4.5f);
+        }
+
+        void UpdateCaptureFlagNames()
+        {
+            shownCaptureNames.Clear();
+            foreach (string name in captureShipNames) shownCaptureNames.Add(name);
+            if (shownCaptureNames.Count == 0 && progress.Value > 0f && !string.IsNullOrEmpty(captureOwnerName.Value)) shownCaptureNames.Add(captureOwnerName.Value);
+            if (!captureFlagText.SetNames(shownCaptureNames)) return;
+            captureFlag.Resize(captureFlagText.Size);
+            nextFlagWave = 0f;
         }
 
         void UpdateCaptureRelease(bool locked)

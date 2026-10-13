@@ -59,7 +59,7 @@ namespace PirateSlop.EditorTools
                 var breech = new GameObject("Breech").transform; breech.SetParent(barrel, false); breech.localPosition = new Vector3(0,0,-.5f);
                 barrel.localRotation = Quaternion.Euler(-3,0,0);
                 var cannon = root.AddComponent<SimpleCannon>(); cannon.IsMortar = true; cannon.Muzzle = muzzle; cannon.BarrelPivot = barrel; cannon.Breech = breech;
-                cannon.LaunchSpeed = 30f; cannon.MinElevation = 45f; cannon.MaxElevation = 80f; cannon.MaxTraverse = 65f;
+                cannon.LaunchSpeed = 30f; cannon.MinElevation = 45f; cannon.MaxElevation = 80f; cannon.MaxTraverse = 180f;
                 root.AddComponent<MortarTrajectory>().PreviewMaterial = Material(folder + "/Materials/MortarPreview.mat", new Color(1f,.55f,.08f), true);
                 var prefab = PrefabUtility.SaveAsPrefabAsset(root, "Assets/Prefabs/Cannons/BowMortar.prefab");
                 const string shipPath = "Assets/Prefabs/Networking/NetworkShip.prefab";
@@ -67,7 +67,7 @@ namespace PirateSlop.EditorTools
                 try
                 {
                     var crate = ship.GetComponentInChildren<CannonballCrate>(true);
-                    crate.MortarPrefab = prefab.GetComponent<SimpleCannon>(); crate.MortarPosition = new Vector3(0,4.3f,18f);
+                    crate.MortarPrefab = prefab.GetComponent<SimpleCannon>(); crate.MortarPosition = new Vector3(2.3f,7.02f,-17.3f);
                     PrefabUtility.SaveAsPrefabAsset(ship, shipPath);
                 }
                 finally { PrefabUtility.UnloadPrefabContents(ship); }

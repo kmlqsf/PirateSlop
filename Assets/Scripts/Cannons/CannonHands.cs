@@ -66,14 +66,14 @@ namespace PirateSlop
             { LeaveCannon(); return; }
             var delta = mouse.delta.ReadValue() * aimSensitivity;
             bool limit = delta.y > .01f && elevation >= controlled.MaxElevation - .01f || delta.y < -.01f && elevation <= controlled.MinElevation + .01f
-                || delta.x > .01f && traverse >= controlled.MaxTraverse - .01f || delta.x < -.01f && traverse <= -controlled.MaxTraverse + .01f;
+                || !controlled.FullTraverse && (delta.x > .01f && traverse >= controlled.MaxTraverse - .01f || delta.x < -.01f && traverse <= -controlled.MaxTraverse + .01f);
             if (limit)
             {
                 limitUntil = Time.unscaledTime + .35f;
                 if (Time.unscaledTime >= nextLimitSound) { GameAudio.Play(SoundCue.Barrel, controlled.transform.position, .45f, true); nextLimitSound = Time.unscaledTime + .7f; }
             }
             elevation = Mathf.Clamp(elevation + delta.y, controlled.MinElevation, controlled.MaxElevation);
-            traverse = Mathf.Clamp(traverse + delta.x, -controlled.MaxTraverse, controlled.MaxTraverse);
+            traverse = controlled.ClampTraverse(traverse + delta.x);
             controlled.Aim(player, elevation, traverse);
             if (Time.unscaledTime >= nextAimSend || mouse.leftButton.wasPressedThisFrame)
             {

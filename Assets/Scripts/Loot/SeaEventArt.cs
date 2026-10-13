@@ -10,6 +10,7 @@ namespace PirateSlop
         public GameObject RopeShackle;
         public GameObject RopeGrip;
         public Material Hemp;
+        public Material FlagInk;
         public Vector3[] ChestRopeSurface, ChestRopeNormals;
         public float ChestRopeMinY, ChestRopeMaxY;
     }

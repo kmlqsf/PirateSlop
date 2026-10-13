@@ -19,7 +19,7 @@ namespace PirateSlop
         readonly Font serif, sans;
         readonly Sprite face, rounded, coin;
         readonly Texture2D roundedTexture, coinTexture;
-        readonly Texture2D atlas, cardMask;
+        readonly Texture2D atlas, cardMask, mortarArt;
         readonly Shader glowShader;
         readonly RectTransform menu, stage, collection, grid, hint, toast;
         readonly GameObject offers, empty;
@@ -55,6 +55,7 @@ namespace PirateSlop
             cardMask = texture;
             glowShader = Resources.Load<Shader>("RoguelikeUI/RarityGlow");
             atlas = Resources.Load<Texture2D>("RoguelikeUI/CardArt");
+            mortarArt = Resources.Load<Texture2D>("RoguelikeUI/BowMortar");
             if (texture != null) face = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(.5f, .5f), 100);
             roundedTexture = Shape(64, 10);
             coinTexture = Shape(64, 32);
@@ -355,6 +356,15 @@ namespace PirateSlop
 
         void SetArt(RawImage image, string id)
         {
+            if (id == "BowMortar" && mortarArt != null)
+            {
+                image.texture = mortarArt;
+                image.uvRect = new Rect(0, 0, 1, 1);
+                image.GetComponent<AspectRatioFitter>().aspectRatio = mortarArt.width / (float)mortarArt.height;
+                image.enabled = true;
+                return;
+            }
+            image.texture = atlas;
             int index = ArtIndex(id);
             var region = ArtRegion(index);
             image.uvRect = new Rect(region.x / 1448f, 1 - region.yMax / 1086f, region.width / 1448f, region.height / 1086f);

@@ -1,6 +1,6 @@
 # PirateSlop — карта проекта
 
-Снимок файлов: 2026-10-12. Корень: `D:\projects\Pirate_BR\PirateGame`.
+Снимок файлов: 2026-10-13. Корень: `C:\Users\K\Project`.
 
 ## Как пользоваться
 
@@ -12,23 +12,23 @@
 
 ## Полный каталог
 
-Учтено 11505 файлов без `.meta`. Ещё 10389 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
+Учтено 11523 файлов без `.meta`. Ещё 10398 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
 
 | Раздел | Назначение | Файлов |
 | --- | --- | ---: |
 | [.agents](<Docs/ProjectMap/.agents.md>) | Ресурсы раздела; точный состав — в каталоге | 1 |
 | [.cursor](<Docs/ProjectMap/.cursor.md>) | Ресурсы раздела; точный состав — в каталоге | 1 |
-| [.opencode](<Docs/ProjectMap/.opencode.md>) | Ресурсы раздела; точный состав — в каталоге | 4 |
-| [Art](<Docs/ProjectMap/Art.md>) | Исходники арта и Blender | 540 |
+| [.opencode](<Docs/ProjectMap/.opencode.md>) | Ресурсы раздела; точный состав — в каталоге | 1 |
+| [Art](<Docs/ProjectMap/Art.md>) | Исходники арта и Blender | 553 |
 | [Assets](<Docs/ProjectMap/Assets.md>) | Ресурсы раздела; точный состав — в каталоге | 2 |
 | [Assets/Animations](<Docs/ProjectMap/Assets-Animations.md>) | Анимации | 37 |
-| [Assets/Audio](<Docs/ProjectMap/Assets-Audio.md>) | Звуковые ресурсы и лицензии | 447 |
+| [Assets/Audio](<Docs/ProjectMap/Assets-Audio.md>) | Звуковые ресурсы и лицензии | 452 |
 | [Assets/Branding](<Docs/ProjectMap/Assets-Branding.md>) | Оформление проекта | 1 |
 | [Assets/Editor](<Docs/ProjectMap/Assets-Editor.md>) | Редакторские ресурсы | 1 |
 | [Assets/Fog Particles](<Docs/ProjectMap/Assets-Fog Particles.md>) | Ресурсы раздела; точный состав — в каталоге | 3 |
 | [Assets/Game](<Docs/ProjectMap/Assets-Game.md>) | Игровые подсистемы и эффекты | 83 |
 | [Assets/Houidisoft technology](<Docs/ProjectMap/Assets-Houidisoft technology.md>) | Ресурсы раздела; точный состав — в каталоге | 12 |
-| [Assets/JMO Assets](<Docs/ProjectMap/Assets-JMO Assets.md>) | Ресурсы раздела; точный состав — в каталоге | 18 |
+| [Assets/JMO Assets](<Docs/ProjectMap/Assets-JMO Assets.md>) | Ресурсы раздела; точный состав — в каталоге | 19 |
 | [Assets/Materials](<Docs/ProjectMap/Assets-Materials.md>) | Материалы | 140 |
 | [Assets/Mirza](<Docs/ProjectMap/Assets-Mirza.md>) | Ресурсы раздела; точный состав — в каталоге | 1 |
 | [Assets/Models](<Docs/ProjectMap/Assets-Models.md>) | Модели и связанные ресурсы | 7122 |
@@ -36,7 +36,7 @@
 | [Assets/Prefabs](<Docs/ProjectMap/Assets-Prefabs.md>) | Готовые игровые объекты | 137 |
 | [Assets/Resources](<Docs/ProjectMap/Assets-Resources.md>) | Ресурсы, доступные для загрузки по имени | 163 |
 | [Assets/Scenes](<Docs/ProjectMap/Assets-Scenes.md>) | Сохранённые сцены | 3 |
-| [Assets/Scripts](<Docs/ProjectMap/Assets-Scripts.md>) | Игровой код и редакторские инструменты | 558 |
+| [Assets/Scripts](<Docs/ProjectMap/Assets-Scripts.md>) | Игровой код и редакторские инструменты | 559 |
 | [Assets/Settings](<Docs/ProjectMap/Assets-Settings.md>) | Настройки игровых систем и рендеринга | 59 |
 | [Assets/Shaders](<Docs/ProjectMap/Assets-Shaders.md>) | Шейдеры | 21 |
 | [Assets/StreamingAssets](<Docs/ProjectMap/Assets-StreamingAssets.md>) | Ресурсы раздела; точный состав — в каталоге | 5 |
@@ -47,9 +47,9 @@
 | [Assets/_Recovery](<Docs/ProjectMap/Assets-_Recovery.md>) | Сохранённые восстановленные данные | 2 |
 | [Captures](<Docs/ProjectMap/Captures.md>) | Ресурсы раздела; точный состав — в каталоге | 1010 |
 | [Docs](<Docs/ProjectMap/Docs.md>) | Документы и сохранённые отчёты | 46 |
-| [Packages](<Docs/ProjectMap/Packages.md>) | Манифест, lock-файл и встроенные пакеты | 922 |
+| [Packages](<Docs/ProjectMap/Packages.md>) | Манифест, lock-файл и встроенные пакеты | 924 |
 | [ProjectSettings](<Docs/ProjectMap/ProjectSettings.md>) | Настройки Unity | 28 |
-| [Root](<Docs/ProjectMap/Root.md>) | Корневые инструкции, планы и служебные файлы | 27 |
+| [Root](<Docs/ProjectMap/Root.md>) | Корневые инструкции, планы и служебные файлы | 26 |
 | [ThirdParty](<Docs/ProjectMap/ThirdParty.md>) | Сторонние ресурсы | 2 |
 | [Tools](<Docs/ProjectMap/Tools.md>) | Инструменты разработки и загрузчик контекста | 21 |
 
@@ -85,6 +85,7 @@ NetworkDeveloperTeleport переносит текущий корабль или
 
 Ключевые слова: рогалик, улучшения.
 
+13.10.2026: BowMortar — 42-я карта, Legendary (всего 7 легендарных), teamUnique. Выбор одним участником исключает карту для всей его команды, включая открытые предложения и повторную выдачу F8; состояние сохраняется при reconnect. Сохраняются остальные предложенные карты и очки. NetworkCannon.AddUpgradeMortar однократно добавляет BowMortar.prefab в placements; обычный спаун корабля мортиру не выдаёт. ShipV3: MortarPosition (2.3, 7.02, -17.3), за задней мачтой, справа. Поворот на 360 градусов без горизонтального упора. ShipV3ImportSetup сохраняет ссылку при повторном импорте. Дальность до воды x2 через MortarRangeMultiplier=2 и подбор скорости по прежней баллистике. MortarTrajectory: дуга с толщиной по размеру экрана, контрастное перекрестие с дальностью и отдельная видимая отметка входа в воду. Отдельная прозрачная гравюра Resources/RoguelikeUI/BowMortar.png, созданная imagegen, показана на выборе и в коллекции с существующим легендарным оформлением. Игровую и сетевую приёмку выполняет пользователь.
 Основа рогалика: первое открытие наполненного сундука начисляет очко каждому участнику команды; V открывает три личные карты с названием, описанием и редкостью. Очередь наград, выбор и исключение повторов принадлежат серверу; шансы фиксируются при начислении. Переподключение восстанавливает состояние по серверному токену в текущем матче. Все 41 эффекта подключены к выбору: серверные боевые эффекты, предсказываемые модификаторы движения, два бонусных слота, корабельные выдачи, рыбалка, подзорная труба и рероллы. UpgradeEffects.json хранит параметры и передаётся сервером клиентам. Монета и договор расходуются один раз за матч; ром и обезьянка не повторяются при reconnect. Common 14, Rare 12, Epic 9, Legendary 6. Шансы и каталог — JSON в StreamingAssets/Roguelike, загрузка при запуске матча. В Тестовой карте каждый новый корабль получает один наполненный TestUpgradeChest рядом с PlayerLocalSpawn через серверный спаун и поиск поверхности по активным коллайдерам; сундук закреплён на корабле и сразу доступен. Обычные матчи не меняются. Голос перенесён с V на B; ProtocolVersion 127. Компиляция и логика каталога проверены через Unity MCP; Play Mode, сборка и второй клиент не запускались.
 UI рогалика построен на uGUI Canvas с CanvasScaler Expand: три физические игральные карты с бумажной фактурой, гравюрами, мастями и зеркальными мастями. При наведении карта поднимается и выпрямляется; клик по карте/кнопке или Enter выбирает её. Очки привлекают внимание плавным золотым сигналом с периодом 1,6 с до траты; пульсация отключается и настройка сохраняется. Коллекция — миниатюры карт с фильтрами, прокруткой и полным описанием при наведении. Resources/RoguelikeUI хранит два новых изображения, созданных imagegen; ссылки на референсы и гайдлайны в Docs/RoguelikeUIStyle.md. EnvironmentTestGallery скрывает подписи при открытом окне. Визуальная проверка — отдельная preview-сцена через Unity MCP, без Play Mode.
 Повторная проверка: основная анимация сабли использует SabreSpeed для Slash/Slash2; эхо сохраняет seed и разброс первоначального выстрела; PendingPact восстанавливает смерть до сетевого спауна; автоматическая отметка не сокращает более долгую ручную.
@@ -99,6 +100,9 @@ UI рогалика построен на uGUI Canvas с CanvasScaler Expand: т
 - [Assets/Resources/RoguelikeUI/RarityGlow.shader](<Assets/Resources/RoguelikeUI/RarityGlow.shader>) — Шейдер.
 - [Assets/Resources/RoguelikeUI/CardFace.png](<Assets/Resources/RoguelikeUI/CardFace.png>) — Изображение / текстура.
 - [Assets/Resources/RoguelikeUI/CardArt.png](<Assets/Resources/RoguelikeUI/CardArt.png>) — Изображение / текстура.
+- [Assets/Resources/RoguelikeUI/BowMortar.png](<Assets/Resources/RoguelikeUI/BowMortar.png>) — Изображение / текстура.
+- [Assets/Prefabs/Cannons/BowMortar.prefab](<Assets/Prefabs/Cannons/BowMortar.prefab>) — Префаб Unity.
+- [Assets/Scripts/Cannons/NetworkCannon.cs](<Assets/Scripts/Cannons/NetworkCannon.cs>) — Исходник C#: CannonPlacement, NetworkCannon, RemoteCarriagePose.
 - [Assets/Scripts/UI/UpgradeCardPresentation.cs](<Assets/Scripts/UI/UpgradeCardPresentation.cs>) — Исходник C#: UpgradeCardPresentation.
 - [Assets/StreamingAssets/Roguelike/UpgradeChances.json](<Assets/StreamingAssets/Roguelike/UpgradeChances.json>) — Конфигурация / данные JSON.
 - [Assets/StreamingAssets/Roguelike/UpgradeCatalog.json](<Assets/StreamingAssets/Roguelike/UpgradeCatalog.json>) — Конфигурация / данные JSON.
@@ -632,6 +636,9 @@ ExplosiveBall=28: отдельное ручное взрывное ядро из
 
 Ключевые слова: лут, предметы, инвентарь, inventory.
 
+13.10.2026, завершение захвата: оспаривание красное на фонарях, основных флагах и спорных вымпелах; жёлтого состояния нет. При пустом круге/откате фонари выключены, полотно нейтральное. CaptureVictory (выбранная пользователем фанфара SFXMint CC0 feedback-level-up-65.wav,2с,Volume0.25) играет единожды при завершении рядом с зоной, старый успех при late join не повторяется. Все24пограничных буя плавно уходят на14м под текущую воду за5с от captureBreakAge и удаляются; поздний клиент использует тот же серверный возраст и не оставляет завершённые буйки. Сундук и разрушение центральной стойки сохраняют прежнюю механику. Обработка волн/флагов учитывает удалённые объекты. Протокол183; игровая/визуальная/сетевая приёмка пользователем.
+13.10.2026, звук захвата: CaptureStart — короткие две ноты ui-chime-57.wav (1с), CaptureContested — низкий колокол instrument-bell-36.wav (2с). Оригиналы SFXMint CC0 в Audio/SeaCapture, источники и SHA256 в SOURCES.md, байты проверены. GameAudioBank: Volume0.18/0.22, Distance120м; Master/Effects и обычная пространственная обработка. Последнее уточнение: GameAudio.Repeat сопровождает всё активное состояние с паузами, захват каждые6с, спор каждые4.5с; при смене состояния, окончании, откате, меню и выходе из слышимости останавливается. Стабилизация состояния0.5с, отдельные источники у центра, без24дублей. Late join слышит текущее состояние. Мигание: захват3.6с, спор2.8с. SeaCaptureFlagText: обычная надпись на стороне -Z, отражённая копия на +Z для правильного чтения с обеих сторон. Ограничение слышимости: минимум120м и CaptureRadius+35м. Прослушивание/игровая приёмка остаются пользователю; субъективная мягкость оценена только по метаданным источника.
+13.10.2026: захват зоны показывает корабельный фонарь на каждом из24буйков и увеличенный на главной стойке. SeaSignalRig: выключен в пустой зоне, зелёное мигание при захвате, красное при споре; при пустом круге и откате без кораблей выключен; после завершения гаснет. Используется прежний HandLanternVisual без поведения ручного фонаря, shadows выключены. Сервер NetworkLootChest публикует отсортированный список имён всех кораблей внутри зоны; при отсутствии заданного имени используется Корабль и ParticipantId. SeaCaptureFlagText печатает весь список через VS с обеих сторон главного флага, расширяет полотно по длине имён и числу строк, колышет буквы вместе с тканью. Используется плоская часть существующих ShipNameGlyphs, без шрифтов ОС и обрезания списка. При откате без кораблей остаётся имя прежнего захватчика; после обнуления исчезает. При повторном Configure SeaEventVisualSetup восстанавливает фонари и FlagInk. Состояние и имена передаются late join через SyncVars/SyncList. Компиляция и ссылки ассетов проверяются отдельно от ручной игровой/визуальной/сетевой приёмки.
 2026-10-12: На ShipV3Test одна центральная точка Loot_Plank (0,4.11,-5.01) вместо пяти. Prefabs/Items/SpawnPoints сокращены согласованно, лишние маркеры удалены. ExperimentalShipEquipment также пропускает дубли источника Plank из старых массивов; пополнение одной точки остаётся штатным. Protocol164.
 2026-10-11, исправления по игровой проверке: центральная стойка увеличена в1.8раза, буйки в2.2раза. Сама модель буйка пересобрана из12 изогнутых дубовых клёпок ShipV3, дощатой крышки/днища, трёх плоских железных обручей с заклёпками, четырёх деревянных подкосов, крепёжного кольца и пеньковых обвязок; прежняя цельная оболочка удалена. Флаги на стойке и24буйках повторяют прогресс, цвет и спор; SeaSignalRig анимирует каретку, фал, противовес и лебёдку. Сундук привязан под стойкой на глубине2.4м; при100% стойка распадается, сундук всплывает и становится доступным, поднятые флаги на буйках остаются после разбора награды. Команда победителя сохранена сервером. Плот только в тестовом layout разворачивается с16м и ограничен22м от начальной станции. Контакт подводной верёвки запечён по настоящему ChestBase:17×256 точек/нормалей, прилегание между четырьмя скобами. Исходные правила захвата, взлома и разматывания сохранены. Префабы и меши сохранены через Unity MCP; Play Mode и игровая/визуальная/сетевая приёмка не выполнялись.
 2026-10-11, акулы: NetworkLootChest.Sharks симулирует три акулы на сервере30Гц и передаёт позы10Гц. Неровные орбиты меняют радиус, темп и глубину; преследование учитывает глубину игрока, поворот корпуса и скорость Swim дают погружение/подъём. Избегание и раздвижение капсул тела выполняются на сервере и при сглаживании клиентом. Урон25 наносится при реальном сближении морды, с общим перерывом1.2с. SharkHitTarget и FirearmDamageBatch связывают выстрел любого огнестрела, включая подводный снаряд, с отдельной акулой: уход на15–19м, ожидание7с после достижения глубины, атака из глубины при пловце в7м от сундука либо возврат в стаю. Рыба сохраняет отвлечение10/15с, открытие/перенос сундука рассеивает стаю. SharkVisual и существующие Swim/Bite сохранены; ProtocolVersion152.
@@ -794,6 +801,11 @@ FogBottle/VortexBottle: удержание ЛКМ показывает штат�
 - [Assets/Scripts/Loot/SeaEventArt.cs](<Assets/Scripts/Loot/SeaEventArt.cs>) — Исходник C#: SeaEventArt.
 - [Assets/Scripts/Loot/SeaRopeVisual.cs](<Assets/Scripts/Loot/SeaRopeVisual.cs>) — Исходник C#: SeaRopeVisual.
 - [Assets/Scripts/Networking/NetworkLootChest.CaptureVisual.cs](<Assets/Scripts/Networking/NetworkLootChest.CaptureVisual.cs>) — Исходник C#: NetworkLootChest, SignalFlag.
+- [Assets/Audio/SeaCapture/ui-chime-57.wav](<Assets/Audio/SeaCapture/ui-chime-57.wav>) — Аудио.
+- [Assets/Audio/SeaCapture/instrument-bell-36.wav](<Assets/Audio/SeaCapture/instrument-bell-36.wav>) — Аудио.
+- [Assets/Audio/SeaCapture/feedback-success-01.wav](<Assets/Audio/SeaCapture/feedback-success-01.wav>) — Аудио.
+- [Assets/Audio/SeaCapture/feedback-level-up-65.wav](<Assets/Audio/SeaCapture/feedback-level-up-65.wav>) — Аудио.
+- [Assets/Audio/SeaCapture/SOURCES.md](<Assets/Audio/SeaCapture/SOURCES.md>) — Документация.
 - [Assets/Scripts/Editor/SeaEventVisualSetup.cs](<Assets/Scripts/Editor/SeaEventVisualSetup.cs>) — Исходник C#: SeaEventVisualSetup.
 - [Assets/Resources/SeaEvents/BoundaryFlagMesh.asset](<Assets/Resources/SeaEvents/BoundaryFlagMesh.asset>) — Настройки или данные Unity.
 - [Assets/Resources/SeaEvents/BuoyGeometry0.asset](<Assets/Resources/SeaEvents/BuoyGeometry0.asset>) — Настройки или данные Unity.
@@ -825,6 +837,8 @@ FogBottle/VortexBottle: удержание ЛКМ показывает штат�
 - [Assets/Resources/SeaEvents/StationGeometry3.asset](<Assets/Resources/SeaEvents/StationGeometry3.asset>) — Настройки или данные Unity.
 - [Assets/Resources/SeaEvents/StationGeometry4.asset](<Assets/Resources/SeaEvents/StationGeometry4.asset>) — Настройки или данные Unity.
 - [Assets/Scripts/Loot/SeaSignalRig.cs](<Assets/Scripts/Loot/SeaSignalRig.cs>) — Исходник C#: SeaSignalRig.
+- [Assets/Scripts/Loot/SeaCaptureFlagText.cs](<Assets/Scripts/Loot/SeaCaptureFlagText.cs>) — Исходник C#: SeaCaptureFlagText, FlatGlyph.
+- [Assets/Resources/SeaEvents/CaptureFlagInk.mat](<Assets/Resources/SeaEvents/CaptureFlagInk.mat>) — Материал Unity.
 - [Assets/Scripts/Loot/SharkHitTarget.cs](<Assets/Scripts/Loot/SharkHitTarget.cs>) — Исходник C#: SharkHitTarget.
 - [Assets/Scripts/Networking/NetworkLootChest.Sharks.cs](<Assets/Scripts/Networking/NetworkLootChest.Sharks.cs>) — Исходник C#: SharkMotionState, SharkMotion, NetworkLootChest.
 - [Assets/Resources/SeaEvents/BuoyGeometry2.asset](<Assets/Resources/SeaEvents/BuoyGeometry2.asset>) — Настройки или данные Unity.
@@ -1195,7 +1209,7 @@ CoastalSandSetup.Apply создаёт в12каменных префабах от
 - [Art/Sources/CoastalEnvironment/SOURCES.md](<Art/Sources/CoastalEnvironment/SOURCES.md>) — Документация.
 - [Art/Sources/CoastalEnvironment/TRIPO_MODULAR_ROCK_BRIEF.md](<Art/Sources/CoastalEnvironment/TRIPO_MODULAR_ROCK_BRIEF.md>) — Документация.
 - [Art/Blender/World/CoastalEnvironment/README_TRIPO_ARCH.md](<Art/Blender/World/CoastalEnvironment/README_TRIPO_ARCH.md>) — Документация.
-- [../Blender/Скалы/README.md](<../Blender/Скалы/README.md>) — Документация.
+- `../Blender/Скалы/README.md` — отсутствует в текущем снимке; не использовать как готовый путь.
 - [Art/Blender/World/CoastalEnvironment/README_TRIPO_COLLECTION.md](<Art/Blender/World/CoastalEnvironment/README_TRIPO_COLLECTION.md>) — Документация.
 - [Docs/StormTestSmoke.md](<Docs/StormTestSmoke.md>) — Документация.
 
@@ -1334,7 +1348,7 @@ Whisky Bottle с бесплатной BlenderKit Royalty Free загружена
 - [Assets/Scripts/Editor/PirateCharacterImport.cs](<Assets/Scripts/Editor/PirateCharacterImport.cs>) — Исходник C#: PirateCharacterImport.
 - [Assets/Scripts/Editor/SailRiggingArtSetup.cs](<Assets/Scripts/Editor/SailRiggingArtSetup.cs>) — Исходник C#: SailRiggingArtSetup.
 - [Assets/Scripts/Editor/MainShipSetup.cs](<Assets/Scripts/Editor/MainShipSetup.cs>) — Исходник C#: MainShipSetup.
-- [../NewShip/Ship_V3_Fitted.blend](<../NewShip/Ship_V3_Fitted.blend>) — Редактируемая сцена Blender.
+- `../NewShip/Ship_V3_Fitted.blend` — отсутствует в текущем снимке; не использовать как готовый путь.
 - [Assets/Scripts/Editor/ShipV3ImportSetup.cs](<Assets/Scripts/Editor/ShipV3ImportSetup.cs>) — Исходник C#: ShipV3ImportSetup.
 - [Tools/ShipV3/ExportFromOpenBlender.py](<Tools/ShipV3/ExportFromOpenBlender.py>) — Инструмент Python.
 - [Assets/Models/Ships/ShipV3/ShipV3.fbx](<Assets/Models/Ships/ShipV3/ShipV3.fbx>) — Модель / анимации FBX.
@@ -1412,16 +1426,16 @@ Whisky Bottle с бесплатной BlenderKit Royalty Free загружена
 - [blender.md](<blender.md>) — Документация.
 - [unity.md](<unity.md>) — Документация.
 - [frigate.md](<frigate.md>) — Документация.
-- [../NewShip/V3Preparation/TelescopeAndAnchorControls.md](<../NewShip/V3Preparation/TelescopeAndAnchorControls.md>) — Документация.
-- [../NewShip/External/AnchorNikdane12/SOURCES.md](<../NewShip/External/AnchorNikdane12/SOURCES.md>) — Документация.
-- [../NewShip/V3Preparation/HarpoonControls.md](<../NewShip/V3Preparation/HarpoonControls.md>) — Документация.
-- [../NewShip/V3Preparation/BowTextureRestoreReport.json](<../NewShip/V3Preparation/BowTextureRestoreReport.json>) — Конфигурация / данные JSON.
-- [../NewShip/V3Preparation/HoldDispenserControls.md](<../NewShip/V3Preparation/HoldDispenserControls.md>) — Документация.
-- [../NewShip/V3Preparation/ShipDetailsControls.md](<../NewShip/V3Preparation/ShipDetailsControls.md>) — Документация.
-- [../NewShip/FreeAssets/CREDITS.md](<../NewShip/FreeAssets/CREDITS.md>) — Документация.
-- [../NewShip/V3Preparation/OptimizationAndDestructionControls.md](<../NewShip/V3Preparation/OptimizationAndDestructionControls.md>) — Документация.
-- [../NewShip/V3Preparation/V18Validation.json](<../NewShip/V3Preparation/V18Validation.json>) — Конфигурация / данные JSON.
-- [../NewShip/V3Preparation/V19Validation.json](<../NewShip/V3Preparation/V19Validation.json>) — Конфигурация / данные JSON.
+- `../NewShip/V3Preparation/TelescopeAndAnchorControls.md` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `../NewShip/External/AnchorNikdane12/SOURCES.md` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `../NewShip/V3Preparation/HarpoonControls.md` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `../NewShip/V3Preparation/BowTextureRestoreReport.json` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `../NewShip/V3Preparation/HoldDispenserControls.md` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `../NewShip/V3Preparation/ShipDetailsControls.md` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `../NewShip/FreeAssets/CREDITS.md` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `../NewShip/V3Preparation/OptimizationAndDestructionControls.md` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `../NewShip/V3Preparation/V18Validation.json` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `../NewShip/V3Preparation/V19Validation.json` — отсутствует в текущем снимке; не использовать как готовый путь.
 
 ### Звуки и голос (`audio`)
 
@@ -1690,7 +1704,7 @@ TestMap R4000м. После повторной жалобы CLEAR rays/planetcen
 - [Assets/Scripts/Ships/ShipV3HarpoonVisual.cs](<Assets/Scripts/Ships/ShipV3HarpoonVisual.cs>) — Исходник C#: ShipV3HarpoonVisual.
 - [Assets/Resources/Ships/ShipV3HarpoonPort.prefab](<Assets/Resources/Ships/ShipV3HarpoonPort.prefab>) — Префаб Unity.
 - [Assets/Resources/Ships/ShipV3HarpoonStarboard.prefab](<Assets/Resources/Ships/ShipV3HarpoonStarboard.prefab>) — Префаб Unity.
-- [../NewShip/V3Preparation/HarpoonControls.md](<../NewShip/V3Preparation/HarpoonControls.md>) — Документация.
+- `../NewShip/V3Preparation/HarpoonControls.md` — отсутствует в текущем снимке; не использовать как готовый путь.
 
 ### Кракен и щупальца (`kraken`)
 
@@ -1725,12 +1739,12 @@ TestMap R4000м. После повторной жалобы CLEAR rays/planetcen
 - [Assets/Scripts/World/WhirlpoolTentacleRing.cs](<Assets/Scripts/World/WhirlpoolTentacleRing.cs>) — Исходник C#: WhirlpoolTentacleRing.
 - [Assets/Scripts/Networking/SessionWhirlpoolTentacles.cs](<Assets/Scripts/Networking/SessionWhirlpoolTentacles.cs>) — Исходник C#: WhirlpoolTentacleState, WhirlpoolTentaclesMessage, SessionController.
 - [Assets/Scripts/World/EnvironmentTestGallery.cs](<Assets/Scripts/World/EnvironmentTestGallery.cs>) — Исходник C#: EnvironmentTestGallery.
-- [../Blender/KrakenTentacle_v1/README.md](<../Blender/KrakenTentacle_v1/README.md>) — Документация.
-- [../Blender/KrakenTentacle_v1/TRIPO.txt](<../Blender/KrakenTentacle_v1/TRIPO.txt>) — Текстовые данные.
-- [../Blender/KrakenTentacle_v1/front.png](<../Blender/KrakenTentacle_v1/front.png>) — Изображение / текстура.
-- [../Blender/KrakenTentacle_v1/back.png](<../Blender/KrakenTentacle_v1/back.png>) — Изображение / текстура.
-- [../Blender/KrakenTentacle_v1/left.png](<../Blender/KrakenTentacle_v1/left.png>) — Изображение / текстура.
-- [../Blender/KrakenTentacle_v1/right.png](<../Blender/KrakenTentacle_v1/right.png>) — Изображение / текстура.
+- `../Blender/KrakenTentacle_v1/README.md` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `../Blender/KrakenTentacle_v1/TRIPO.txt` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `../Blender/KrakenTentacle_v1/front.png` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `../Blender/KrakenTentacle_v1/back.png` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `../Blender/KrakenTentacle_v1/left.png` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `../Blender/KrakenTentacle_v1/right.png` — отсутствует в текущем снимке; не использовать как готовый путь.
 - [Art/Blender/Kraken/KrakenTripoRig.blend](<Art/Blender/Kraken/KrakenTripoRig.blend>) — Редактируемая сцена Blender.
 - [Art/Blender/Kraken/PrepareTripoTentacle.py](<Art/Blender/Kraken/PrepareTripoTentacle.py>) — Инструмент Python.
 - [Art/Blender/Kraken/README.md](<Art/Blender/Kraken/README.md>) — Документация.
@@ -2049,7 +2063,7 @@ NetworkLoadTest запускается из меню Тест нагрузки �
 - [Assets/Scripts/Ships/ShipDamagePreparation.cs](<Assets/Scripts/Ships/ShipDamagePreparation.cs>) — Исходник C#: ShipDamagePreparation, BakeJob.
 - [Assets/Models/Ships/ShipV3/Bilge/DamageWarmup.shadervariants](<Assets/Models/Ships/ShipV3/Bilge/DamageWarmup.shadervariants>) — Файл .shadervariants.
 - [Docs/Performance/NetworkLoadTest.md](<Docs/Performance/NetworkLoadTest.md>) — Документация.
-- [../output/CrashReview20261007/Spyglass_1628.md](<../output/CrashReview20261007/Spyglass_1628.md>) — Документация.
+- `../output/CrashReview20261007/Spyglass_1628.md` — отсутствует в текущем снимке; не использовать как готовый путь.
 
 ### Корабельная обезьянка (`ship-monkey`)
 
@@ -2136,7 +2150,7 @@ ShipMonkey.HeadRide.cs: редкая серверная прогулка к жи
 С 2026-10-08 профиль vfx_specialist удалён по указанию пользователя. Основной агент сам реализует VFX по согласованным этапам; не создавать и не продолжать прежнего субагента.
 По умолчанию игровой вид проверяет пользователь. Проверки компиляции не подтверждают внешний вид или производительность.
 
-- [../AGENTS.md](<../AGENTS.md>) — Документация.
+- `../AGENTS.md` — отсутствует в текущем снимке; не использовать как готовый путь.
 - [AGENTS.md](<AGENTS.md>) — Документация.
 
 ### Корабельная слот-машина (`ship-slot-machine`)

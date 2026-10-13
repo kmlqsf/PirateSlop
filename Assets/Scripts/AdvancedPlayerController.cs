@@ -92,6 +92,9 @@ public partial class AdvancedPlayerController : MonoBehaviour
     }
     CharacterController controller;
     Camera playerCamera;
+    [SerializeField, Range(.42f, 1.4f)] float cannonCameraHeight = .9f;
+    [SerializeField, Range(0f, 10f)] float cannonCameraLookDown = 5f;
+    public Vector3 CannonSightPoint => ActiveCannon.ShotPosition + ActiveCannon.Muzzle.forward * 75f;
     float pitch, verticalVelocity, slideTimer, cooldown, lookYaw, bodyYaw;
     Vector2 aimRecoil;
     public float AimSensitivityScale { get; set; } = 1;
@@ -335,8 +338,10 @@ public partial class AdvancedPlayerController : MonoBehaviour
                 cannon.GetComponent<MortarTrajectory>().PositionCamera(playerCamera);
                 return;
             }
-            Vector3 origin = cannon.Breech != null ? cannon.Breech.position : cannon.BarrelPivot.position;
-            playerCamera.transform.SetPositionAndRotation(origin - cannon.Muzzle.forward * .35f + cannon.Muzzle.up * .42f, cannon.Muzzle.rotation);
+            Vector3 origin = cannon.Breech != null ? cannon.Breech.position : cannon.BarrelPivot != null ? cannon.BarrelPivot.position : cannon.Muzzle.position;
+            Vector3 position = origin - cannon.Muzzle.forward * .35f + cannon.transform.up * cannonCameraHeight;
+            Quaternion rotation = Quaternion.LookRotation(CannonSightPoint - position, cannon.Muzzle.up) * Quaternion.Euler(cannonCameraLookDown, 0f, 0f);
+            playerCamera.transform.SetPositionAndRotation(position, rotation);
             return;
         }
         float interactionTarget=interactionCameraFrame==Time.frameCount && !IsDowned && !IsThirdPerson ? interactionCameraPull*6f : 0f;
