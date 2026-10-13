@@ -17,6 +17,7 @@ namespace PirateSlop
         }
         public NetworkLootChest ChestPrefab;
         public NetworkSkullEvent SkullEventPrefab;
+        public GameObject SkullInstructionSign;
         public WhaleLootPoint WhaleEventPrefab;
         public NetworkClamEvent ClamEventPrefab;
         public NetworkBalanceEvent BalanceEventPrefab;
@@ -27,6 +28,10 @@ namespace PirateSlop
         [Min(0)] public float SkullRotationSpeed = 8f;
         [Min(.1f)] public float SkullRewardDelay = 3f;
         [Min(.5f)] public float SkullRewardFlightSeconds = 2.5f;
+        [Min(0f)] public float SkullBreathClearance = 70f;
+        [Min(.2f)] public float SkullBreathWarning = 1.4f;
+        [Min(.2f)] public float SkullBreathSeconds = 3f;
+        [Min(.2f)] public float SkullBreathCooldown = 3f;
         public NetworkFish[] LoosePrefabs;
         public Vector2Int LooseItemsPerIsland = new(2, 4);
         public Vector2Int ChestsPerIsland = new(1, 3);

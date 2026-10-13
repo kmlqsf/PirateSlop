@@ -73,6 +73,7 @@
 | [Assets/Prefabs/Networking/HandMortarBall.prefab](<../../Assets/Prefabs/Networking/HandMortarBall.prefab>) | Префаб Unity; Личное оружие и урон |
 | [Assets/Prefabs/Networking/HandMortarPickup.prefab](<../../Assets/Prefabs/Networking/HandMortarPickup.prefab>) | Префаб Unity; Личное оружие и урон |
 | [Assets/Prefabs/Networking/LanternPickup.prefab](<../../Assets/Prefabs/Networking/LanternPickup.prefab>) | Префаб Unity; Предметы, лут и инвентарь |
+| [Assets/Prefabs/Networking/MortarKitPickup.prefab](<../../Assets/Prefabs/Networking/MortarKitPickup.prefab>) | Префаб Unity; Улучшения рогалика из сундуков |
 | [Assets/Prefabs/Networking/NetworkBalanceEvent.prefab](<../../Assets/Prefabs/Networking/NetworkBalanceEvent.prefab>) | Префаб Unity; Остров с весами и пятью камнями |
 | [Assets/Prefabs/Networking/NetworkFish.prefab](<../../Assets/Prefabs/Networking/NetworkFish.prefab>) | Префаб Unity |
 | [Assets/Prefabs/Networking/NetworkLootChest.prefab](<../../Assets/Prefabs/Networking/NetworkLootChest.prefab>) | Префаб Unity |

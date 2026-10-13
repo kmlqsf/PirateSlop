@@ -742,6 +742,25 @@
 | [Assets/Audio/SelectedReview/WineDrink/WineDrink_98375509_08.wav](<../../Assets/Audio/SelectedReview/WineDrink/WineDrink_98375509_08.wav>) | Аудио |
 | [Assets/Audio/SelectedReview/WineDrink/WineDrink_98375509_09.wav](<../../Assets/Audio/SelectedReview/WineDrink/WineDrink_98375509_09.wav>) | Аудио |
 
+## Assets/Audio/Sharks
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Audio/Sharks/SOURCES.json](<../../Assets/Audio/Sharks/SOURCES.json>) | Конфигурация / данные JSON; Предметы, лут и инвентарь |
+| [Assets/Audio/Sharks/SharkBite.wav](<../../Assets/Audio/Sharks/SharkBite.wav>) | Аудио; Предметы, лут и инвентарь |
+| [Assets/Audio/Sharks/SharkChase.wav](<../../Assets/Audio/Sharks/SharkChase.wav>) | Аудио; Предметы, лут и инвентарь |
+| [Assets/Audio/Sharks/SharkSplash.wav](<../../Assets/Audio/Sharks/SharkSplash.wav>) | Аудио; Предметы, лут и инвентарь |
+| [Assets/Audio/Sharks/SharkSwim.wav](<../../Assets/Audio/Sharks/SharkSwim.wav>) | Аудио; Предметы, лут и инвентарь |
+
+## Assets/Audio/Sharks/Originals
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Audio/Sharks/Originals/cartoon-chomp-01.wav](<../../Assets/Audio/Sharks/Originals/cartoon-chomp-01.wav>) | Аудио |
+| [Assets/Audio/Sharks/Originals/fronbondi_skegs-sfx-custom-version-of-jaws-theme-cinematic-sound-effect-461780.mp3](<../../Assets/Audio/Sharks/Originals/fronbondi_skegs-sfx-custom-version-of-jaws-theme-cinematic-sound-effect-461780.mp3>) | Аудио |
+| [Assets/Audio/Sharks/Originals/growth-d2bb5053136ce5a69e0403c1-part-1-v1.wav](<../../Assets/Audio/Sharks/Originals/growth-d2bb5053136ce5a69e0403c1-part-1-v1.wav>) | Аудио |
+| [Assets/Audio/Sharks/Originals/water-splash-42.wav](<../../Assets/Audio/Sharks/Originals/water-splash-42.wav>) | Аудио |
+
 ## Assets/Audio/ShipInteractions
 
 | Файл | Краткое описание |

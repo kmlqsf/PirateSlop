@@ -303,6 +303,35 @@ namespace PirateSlop
             return root;
         }
 
+        public static GameObject FireBreath()
+        {
+            var root = new GameObject("SkullFireBreath");
+            var fire = Particles(root.transform, "Flame", new Color(2.5f, .65f, .08f, .85f), 2.3f, 2f, 45f, 95f, 0);
+            var smoke = Particles(root.transform, "BreathSmoke", new Color(.18f, .12f, .1f, .3f), 4f, 2f, 45f, 30f, 0, true);
+            var embers = Particles(root.transform, "BreathEmbers", new Color(3f, 1f, .15f, .8f), .16f, 2f, 45f, 65f, 0, false, true);
+            foreach (var stream in new[] { fire, smoke, embers })
+            {
+                var main = stream.main; main.simulationSpace = ParticleSystemSimulationSpace.Local; main.startSpeed = 45f; main.maxParticles = 300;
+                var shape = stream.shape; shape.shapeType = ParticleSystemShapeType.Cone; shape.angle = 1.3f; shape.radius = 1.6f;
+                var noise = stream.noise; noise.enabled = true; noise.strength = stream == smoke ? 1.2f : .45f; noise.frequency = .65f; noise.scrollSpeed = .6f;
+                var velocity = stream.velocityOverLifetime; velocity.enabled = true; velocity.space = ParticleSystemSimulationSpace.Local; velocity.orbitalZ = .9f;
+            }
+            var contact = new GameObject("Contact"); contact.transform.SetParent(root.transform, false);
+            var hit = Particles(contact.transform, "Flame", new Color(2.4f, .8f, .1f, .7f), 3.5f, .45f, 5f, 35f, 0);
+            var hitMain = hit.main; hitMain.simulationSpace = ParticleSystemSimulationSpace.Local;
+            root.AddComponent<StaffIceBeamPresentation>().Initialize(fire, smoke, embers);
+            Light(root.transform, new Color(1f, .32f, .05f), 45f, 5f);
+            return root;
+        }
+
+        public static void UpdateFireBreath(GameObject root, Vector3 start, Vector3 end, bool hit)
+        {
+            var delta = end - start;
+            root.transform.SetPositionAndRotation(start, delta.sqrMagnitude > .001f ? Quaternion.LookRotation(delta) : Quaternion.identity);
+            root.GetComponent<StaffIceBeamPresentation>().SetLength(delta.magnitude);
+            var contact = root.transform.Find("Contact"); contact.position = end; contact.gameObject.SetActive(hit);
+        }
+
         public static void UpdateIceBeam(GameObject root, Vector3 start, Vector3 end, bool hit)
         {
             Vector3 delta = end - start;

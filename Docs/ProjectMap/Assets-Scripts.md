@@ -120,6 +120,7 @@
 | [Assets/Scripts/Editor/HookSetup.cs](<../../Assets/Scripts/Editor/HookSetup.cs>) | Исходник C#: HookSetup |
 | [Assets/Scripts/Editor/InventorySlotSetup.cs](<../../Assets/Scripts/Editor/InventorySlotSetup.cs>) | Исходник C#: InventorySlotSetup |
 | [Assets/Scripts/Editor/KrakenTripoSetup.cs](<../../Assets/Scripts/Editor/KrakenTripoSetup.cs>) | Исходник C#: KrakenTripoSetup; Кракен и щупальца |
+| [Assets/Scripts/Editor/LegendaryMortarSetup.cs](<../../Assets/Scripts/Editor/LegendaryMortarSetup.cs>) | Исходник C#: LegendaryMortarSetup; Улучшения рогалика из сундуков |
 | [Assets/Scripts/Editor/LocationExpansionSetup.cs](<../../Assets/Scripts/Editor/LocationExpansionSetup.cs>) | Исходник C#: LocationExpansionSetup |
 | [Assets/Scripts/Editor/LootModelGallery.cs](<../../Assets/Scripts/Editor/LootModelGallery.cs>) | Исходник C#: LootModelGallery |
 | [Assets/Scripts/Editor/LootModelReplacementSetup.cs](<../../Assets/Scripts/Editor/LootModelReplacementSetup.cs>) | Исходник C#: LootModelReplacementSetup; Пушки, ядра и лафеты, Предметы, лут и инвентарь |
@@ -263,6 +264,7 @@
 | [Assets/Scripts/Loot/SeaSignalRig.cs](<../../Assets/Scripts/Loot/SeaSignalRig.cs>) | Исходник C#: SeaSignalRig; Предметы, лут и инвентарь |
 | [Assets/Scripts/Loot/SharkHitTarget.cs](<../../Assets/Scripts/Loot/SharkHitTarget.cs>) | Исходник C#: SharkHitTarget; Предметы, лут и инвентарь |
 | [Assets/Scripts/Loot/SkullFireVfx.cs](<../../Assets/Scripts/Loot/SkullFireVfx.cs>) | Исходник C#: SkullFireVfx; Предметы, лут и инвентарь |
+| [Assets/Scripts/Loot/SkullMouthPresentation.cs](<../../Assets/Scripts/Loot/SkullMouthPresentation.cs>) | Исходник C#: SkullMouthPresentation; Предметы, лут и инвентарь |
 | [Assets/Scripts/Loot/VortexBottleVisual.cs](<../../Assets/Scripts/Loot/VortexBottleVisual.cs>) | Исходник C#: VortexBottleVisual; Предметы, лут и инвентарь |
 
 ## Assets/Scripts/Networking
@@ -380,6 +382,8 @@
 | [Assets/Scripts/Networking/NetworkShipAmmo.cs](<../../Assets/Scripts/Networking/NetworkShipAmmo.cs>) | Исходник C#: ShipFirePatch, ShipFreezeState, NetworkShip, FireExposure; Пушки, ядра и лафеты, Повреждения корпуса, ремонт и затопление |
 | [Assets/Scripts/Networking/NetworkShipPush.cs](<../../Assets/Scripts/Networking/NetworkShipPush.cs>) | Исходник C#: NetworkShipPush |
 | [Assets/Scripts/Networking/NetworkShipRum.cs](<../../Assets/Scripts/Networking/NetworkShipRum.cs>) | Исходник C#: NetworkShip; Сеть, сессия и Steam |
+| [Assets/Scripts/Networking/NetworkSkullEvent.Breath.cs](<../../Assets/Scripts/Networking/NetworkSkullEvent.Breath.cs>) | Исходник C#: NetworkSkullEvent; Предметы, лут и инвентарь |
+| [Assets/Scripts/Networking/NetworkSkullEvent.Presentation.cs](<../../Assets/Scripts/Networking/NetworkSkullEvent.Presentation.cs>) | Исходник C#: NetworkSkullEvent; Предметы, лут и инвентарь |
 | [Assets/Scripts/Networking/NetworkSkullEvent.cs](<../../Assets/Scripts/Networking/NetworkSkullEvent.cs>) | Исходник C#: NetworkSkullEvent; Предметы, лут и инвентарь |
 | [Assets/Scripts/Networking/NetworkStaffProjectile.cs](<../../Assets/Scripts/Networking/NetworkStaffProjectile.cs>) | Исходник C#: NetworkStaffProjectile, FlightState; Личное оружие и урон |
 | [Assets/Scripts/Networking/NetworkSternCargoEvent.cs](<../../Assets/Scripts/Networking/NetworkSternCargoEvent.cs>) | Исходник C#: SternRopeStation, NetworkSternCargoEvent; Груз за кормой |

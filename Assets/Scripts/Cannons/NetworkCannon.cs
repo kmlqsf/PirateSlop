@@ -32,6 +32,7 @@ namespace PirateSlop.Networking
         Rigidbody shipBody;
         int holder = -1;
         float nextSync;
+        bool upgradeMortarIssued;
         Vector3 remoteBallPosition;
         Quaternion remoteBallRotation;
         bool remoteBallReady;
@@ -76,11 +77,24 @@ namespace PirateSlop.Networking
         public override void OnStartServer() { base.OnStartServer(); if (Crate != null) Crate.ResetSupply(); }
         public bool AddUpgradeMortar()
         {
-            if (!IsServerInitialized || !IsSpawned || Crate == null || Crate.MortarPrefab == null) return false;
-            foreach (var placement in placements) if (placement.Mortar && !placement.Removed) return true;
-            placements.Add(new CannonPlacement { Position = Crate.MortarPosition, Rotation = Quaternion.identity, Elevation = 60f, Fuse = -1f, Mortar = true });
-            ApplyState();
-            return true;
+            if (!IsServerInitialized || !IsSpawned || Crate == null || Crate.MortarKitPrefab == null) return false;
+            if (upgradeMortarIssued) return true;
+            foreach (var offset in new[] { new Vector3(1.6f, 0, 0), new Vector3(-1.6f, 0, 0), new Vector3(0, 0, 2), new Vector3(0, 0, -2) })
+            {
+                RaycastHit deckHit = default;
+                float nearest = 40f;
+                foreach (var hit in Physics.RaycastAll(transform.TransformPoint(offset + Vector3.up * 25f), -transform.up, nearest, ~0, QueryTriggerInteraction.Ignore))
+                    if (hit.collider.attachedRigidbody == shipBody && hit.normal.y > .7f && hit.collider.GetComponentInParent<SimpleCannon>() == null && hit.distance < nearest)
+                    { deckHit = hit; nearest = hit.distance; }
+                if (deckHit.collider == null) continue;
+                var kit = Instantiate(Crate.MortarKitPrefab, deckHit.point + deckHit.normal * .03f, transform.rotation);
+                UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene(kit.gameObject, gameObject.scene);
+                kit.Place(NetworkObject, kit.transform.position, transform.rotation);
+                ServerManager.Spawn(kit.NetworkObject);
+                upgradeMortarIssued = true;
+                return true;
+            }
+            return false;
         }
         public override void OnStopServer() { if (Crate != null) Crate.ClearSpecialSupply(); base.OnStopServer(); }
         public override void OnStartClient() { base.OnStartClient(); ApplyState(); }
@@ -90,16 +104,17 @@ namespace PirateSlop.Networking
             if (!IsServerInitialized || Crate == null || kitTaken.Value || !Crate.KitAvailable) return false;
             kitTaken.Value = true; Crate.Kit.SetActive(false); return true;
         }
-        public void Place(Vector3 position, Quaternion rotation)
+        public void Place(Vector3 position, Quaternion rotation, bool mortar = false)
         {
             if (!IsServerInitialized) return;
-            placements.Add(new CannonPlacement { Position = position, Rotation = rotation.normalized, Elevation = 3f, Fuse = -1f });
+            placements.Add(new CannonPlacement { Position = position, Rotation = rotation.normalized, Elevation = mortar ? 45f : 3f, Fuse = -1f, Mortar = mortar });
             ApplyState();
         }
         public bool RemoveCannon(NetworkWeapon player, int index)
         {
             var cannon = Cannon(index);
-            if (!IsServerInitialized || cannon == null || cannon.IsMortar || cannon.Operator != null || HasBoarding(index) || cannon.IsIgnited || cannon.IsLoading || !player.CanAddItem(InventoryItem.Cannon)) return false;
+            var item = cannon != null && cannon.IsMortar ? InventoryItem.MortarKit : InventoryItem.Cannon;
+            if (!IsServerInitialized || cannon == null || cannon.Operator != null || HasBoarding(index) || cannon.IsIgnited || cannon.IsLoading || !player.CanAddItem(item)) return false;
             if (cannon.IsLoaded)
             {
                 if (Crate.SpecialSupplyPrefab == null) return false;
@@ -110,7 +125,7 @@ namespace PirateSlop.Networking
                 ServerManager.Spawn(dropped.NetworkObject);
                 cannon.ResetSupply();
             }
-            if (!player.AddItem(InventoryItem.Cannon)) return false;
+            if (!player.AddItem(item)) return false;
             var placement = placements[index]; placement.Removed = true; placements[index] = placement;
             cannon.gameObject.SetActive(false);
             return true;

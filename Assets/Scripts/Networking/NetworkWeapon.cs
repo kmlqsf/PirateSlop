@@ -49,7 +49,7 @@ namespace PirateSlop.Networking
         }
         public bool CanAddItem(InventoryItem item)
         {
-            if (!IsServerInitialized || item < InventoryItem.Fish || item > InventoryItem.IceStaff) return false;
+            if (!IsServerInitialized || item < InventoryItem.Fish || item > InventoryItem.MortarKit) return false;
             if (CannonAmmo.IsBall(item))
                 return inventory.FindAmmoSlot(item) >= 0;
             return inventory.CanFitItem(item);
@@ -329,11 +329,13 @@ namespace PirateSlop.Networking
 
         public bool TryPlaceCannon(NetworkObject ship, int slot, Vector3 localPosition, Quaternion rotation)
         {
-            if (!IsServerInitialized || inventory == null || ship == null || selectedSlot.Value != slot || !inventory.HasCannon(slot) ||
+            if (!IsServerInitialized || inventory == null || ship == null || selectedSlot.Value != slot || (!inventory.HasCannon(slot) && inventory.ItemAt(slot) != InventoryItem.MortarKit) ||
                 !CanHandleBall() || GetComponent<CannonHands>().HasHeldBall) return false;
             var cannon = ship.GetComponent<NetworkCannon>();
             if (cannon == null || !PlayerInventory.CanPlace(cannon.Crate, localPosition, rotation, GetComponent<AdvancedPlayerController>())) return false;
-            cannon.Place(localPosition, rotation);
+            bool mortar = inventory.ItemAt(slot) == InventoryItem.MortarKit;
+            if (mortar && cannon.Crate.MortarPrefab == null) return false;
+            cannon.Place(localPosition, rotation, mortar);
             RemoveStackedItem(slot, 1);
             ApplyInventory();
             return true;

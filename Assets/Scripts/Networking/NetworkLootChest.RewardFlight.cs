@@ -10,6 +10,7 @@ namespace PirateSlop.Networking
         readonly SyncVar<float> rewardDuration = new(2.5f);
         readonly SyncVar<float> rewardAge = new();
         float rewardStarted, receivedRewardAge = -1f, receivedRewardAt;
+        public event System.Action<NetworkLootChest> RewardDelivered;
 
         public void PlaceOnDeck(NetworkShip targetShip, Vector3 point)
         {
@@ -57,6 +58,7 @@ namespace PirateSlop.Networking
             eventPoint.Value = landing;
             transform.position = landing;
             RewardLandedRpc(landing);
+            RewardDelivered?.Invoke(this);
         }
 
         Vector3 RewardDestination() => deck != null && supportId.Value != 0 ? deck.transform.TransformPoint(anchor.Value) : rewardEnd.Value;

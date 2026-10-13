@@ -275,6 +275,12 @@ namespace PirateSlop
             }
             else
             {
+                bool sharkPursuit = false;
+                var player = listener != null ? listener.GetComponentInParent<Networking.NetworkPlayer>() : null;
+                if (player != null && player.IsOwner && !player.Motor.IsDead && !Networking.SessionController.MenuOpen)
+                    foreach (var chest in Networking.NetworkLootChest.ClientChests)
+                        if (chest != null && chest.IsSpawned && chest.SharkPursuedPlayer != null &&
+                            Vector3.Distance(player.transform.position, chest.SharkPursuedPlayer.transform.position) < 70f) { sharkPursuit = true; break; }
                 if (Time.time < LastDamageTime + 20f)
                 {
                     targetClip = bank.CombatMusic;
@@ -285,6 +291,7 @@ namespace PirateSlop
                     targetClip = bank.SailingMusic;
                     targetVolume *= bank.SailingMusicLevel;
                 }
+                if (sharkPursuit) targetVolume *= .25f;
             }
             
             if (music.clip != targetClip)

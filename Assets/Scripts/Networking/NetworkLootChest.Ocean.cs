@@ -294,6 +294,7 @@ namespace PirateSlop.Networking
             deck = null;
             opened.Value = false;
             player.SetCarriedLoot(this);
+            ChaseSharkCarrier(player.GetComponent<NetworkPlayer>());
         }
 
         public void Drop()

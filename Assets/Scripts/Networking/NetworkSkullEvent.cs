@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 
 namespace PirateSlop.Networking
 {
-    public sealed class NetworkSkullEvent : NetworkBehaviour
+    public sealed partial class NetworkSkullEvent : NetworkBehaviour
     {
         public static readonly List<NetworkSkullEvent> ClientEvents = new();
         public static readonly List<NetworkSkullEvent> ServerEvents = new();
@@ -17,7 +17,11 @@ namespace PirateSlop.Networking
         public float PlatformRadius = 50f;
         readonly SyncVar<bool> cleared = new();
         readonly SyncVar<float> yaw = new();
+        readonly SyncVar<float> yawSpeed = new(8f);
         readonly SyncVar<float> frozenYaw = new();
+        readonly SyncVar<uint> sinkingStarted = new();
+        readonly SyncVar<Vector3> sinkingOrigin = new();
+        const float SinkSeconds = 8f, SinkDepth = 80f;
         float serverYaw, nextYaw, rewardAt, observedYaw = float.NaN, observedAt;
         bool rewardCreated;
         NetworkLootChest rewardChest;
@@ -39,8 +43,13 @@ namespace PirateSlop.Networking
 
         void LateUpdate()
         {
-            if (IsSpawned) transform.position = fixedPosition;
+            if (!IsSpawned) return;
+            float progress = sinkingStarted.Value == 0 ? 0f : Mathf.Clamp01(SinkingAge / SinkSeconds);
+            var origin = sinkingStarted.Value == 0 ? fixedPosition : sinkingOrigin.Value;
+            transform.position = origin - Vector3.up * (SinkDepth * Mathf.SmoothStep(0f, 1f, progress));
         }
+
+        float SinkingAge => TimeManager != null ? Mathf.Max(0, unchecked((int)(TimeManager.Tick - sinkingStarted.Value))) * (float)TimeManager.TickDelta : 0f;
 
         public static NetworkSkullEvent SpawnEvent(LootCatalog catalog, FishNet.Managing.NetworkManager manager, Vector3 point, Scene scene)
         {
@@ -63,18 +72,20 @@ namespace PirateSlop.Networking
             base.OnStartClient();
             ClientEvents.Add(this);
             Fire.SetBurning(!Cleared, true);
+            CreateSkullPresentation();
         }
 
         public override void OnStopNetwork()
         {
             ClientEvents.Remove(this);
             ServerEvents.Remove(this);
+            ClearSkullPresentation();
             base.OnStopNetwork();
         }
 
         public override void OnStopServer()
         {
-            if (rewardChest != null && rewardChest.IsSpawned) ServerManager.Despawn(rewardChest.NetworkObject);
+            if (rewardChest != null) rewardChest.RewardDelivered -= BeginSinking;
             ServerEvents.Remove(this);
             base.OnStopServer();
         }
@@ -82,13 +93,24 @@ namespace PirateSlop.Networking
         void Update()
         {
             if (!IsSpawned || Catalog == null) return;
+            if (IsServerInitialized && sinkingStarted.Value != 0 && SinkingAge >= SinkSeconds)
+            {
+                ServerManager.Despawn(NetworkObject);
+                return;
+            }
             float angle;
             if (IsServerInitialized)
             {
                 if (!Cleared)
                 {
-                    serverYaw = Mathf.Repeat(serverYaw + Catalog.SkullRotationSpeed * Time.deltaTime, 360f);
-                    if (Time.time >= nextYaw) { yaw.Value = serverYaw; nextYaw = Time.time + .1f; }
+                    float beforeYaw = serverYaw;
+                    AimSkullBreath();
+                    if (Time.time >= nextYaw)
+                    {
+                        yaw.Value = serverYaw;
+                        yawSpeed.Value = Time.deltaTime > 0f ? Mathf.DeltaAngle(beforeYaw, serverYaw) / Time.deltaTime : 0f;
+                        nextYaw = Time.time + .1f;
+                    }
                 }
                 else if (!rewardCreated && Time.time >= rewardAt) EjectReward();
                 angle = Cleared ? frozenYaw.Value : serverYaw;
@@ -96,10 +118,12 @@ namespace PirateSlop.Networking
             else
             {
                 if (observedYaw != yaw.Value) { observedYaw = yaw.Value; observedAt = Time.time; }
-                angle = Cleared ? frozenYaw.Value : observedYaw + Catalog.SkullRotationSpeed * Mathf.Min(.3f, Time.time - observedAt);
+                angle = Cleared ? frozenYaw.Value : observedYaw + yawSpeed.Value * Mathf.Min(.15f, Time.time - observedAt);
             }
             RotatingRoot.localRotation = Quaternion.Euler(0f, angle, 0f);
+            if (IsServerInitialized) TickSkullBreath();
             if (IsClientInitialized) Fire.SetBurning(!Cleared);
+            if (IsClientInitialized) UpdateSkullPresentation();
         }
 
         public bool HitMouth(CannonShotDamage shot, Vector3 point)
@@ -123,6 +147,7 @@ namespace PirateSlop.Networking
             fallbackPoint = transform.position + Mouth.forward * (PlatformRadius + 8f);
             frozenYaw.Value = serverYaw;
             cleared.Value = true;
+            StopSkullBreath();
             rewardAt = Time.time + Catalog.SkullRewardDelay;
             return true;
         }
@@ -146,6 +171,7 @@ namespace PirateSlop.Networking
                 var random = new MapRandom(unchecked((uint)NetworkObject.ObjectId * 2654435761u ^ (uint)Random.Range(1, int.MaxValue)));
                 chest.Fill(ref random);
                 chest.LaunchReward(Mouth.position + Mouth.forward * (1.95f * Mouth.lossyScale.z), destination, Catalog.SkullRewardFlightSeconds, targetShip != null ? targetShip.transform.rotation : Mouth.rotation, targetShip);
+                chest.RewardDelivered += BeginSinking;
                 ServerManager.Spawn(chest.NetworkObject);
                 rewardChest = chest;
             }
@@ -154,6 +180,15 @@ namespace PirateSlop.Networking
                 Destroy(chest.gameObject);
                 Debug.LogError("Skull reward could not be filled: " + error.Message, this);
             }
+        }
+
+        void BeginSinking(NetworkLootChest chest)
+        {
+            if (!IsServerInitialized || !IsSpawned || sinkingStarted.Value != 0) return;
+            chest.RewardDelivered -= BeginSinking;
+            rewardChest = null;
+            sinkingOrigin.Value = fixedPosition;
+            sinkingStarted.Value = System.Math.Max(1u, TimeManager.Tick);
         }
 
         void OnGUI()

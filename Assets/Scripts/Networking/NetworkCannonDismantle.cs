@@ -17,7 +17,8 @@ namespace PirateSlop.Networking
                 ? cannonNetwork.Crate.Cannons[index] : null;
             bool valid = holding && cannon != null && cannon.gameObject.activeSelf && !cannon.IsIgnited && !cannon.IsLoading &&
                 CanHandleBall() && !GetComponent<CannonHands>().HasHeldBall && CanReachCannon(cannon);
-            if (!valid || !CanAddItem(InventoryItem.Cannon))
+            var item = cannon != null && cannon.IsMortar ? InventoryItem.MortarKit : InventoryItem.Cannon;
+            if (!valid || !CanAddItem(item))
             {
                 dismantleShip = null; dismantleIndex = -1;
                 DismantleProgressTargetRpc(Owner, 0f, valid ? "Нет свободного места в инвентаре" : null);
@@ -31,7 +32,7 @@ namespace PirateSlop.Networking
             {
                 bool removed = cannonNetwork.RemoveCannon(this, index);
                 dismantleShip = null; dismantleIndex = -1;
-                DismantleProgressTargetRpc(Owner, removed ? 1f : 0f, removed ? "Пушка в инвентаре" : "Снятие отменено");
+                DismantleProgressTargetRpc(Owner, removed ? 1f : 0f, removed ? item == InventoryItem.MortarKit ? "Мортира в инвентаре" : "Пушка в инвентаре" : "Снятие отменено");
             }
             else DismantleProgressTargetRpc(Owner, progress, null);
         }

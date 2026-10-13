@@ -91,6 +91,7 @@ namespace PirateSlop
             InventoryItem.FireStaff => "Посох огня",
             InventoryItem.LightningStaff => "Посох молнии",
             InventoryItem.IceStaff => "Посох льда",
+            InventoryItem.MortarKit => "Разобранная мортира",
             InventoryItem.GrapplingHook => "Крюк-кошка",
             InventoryItem.BoardingHook => "Абордажный крюк",
             InventoryItem.Pistol => "Пистолет",

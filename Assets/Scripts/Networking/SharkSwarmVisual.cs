@@ -10,6 +10,9 @@ namespace PirateSlop.Networking
         readonly Animator[] animators = new Animator[NetworkLootChest.SharkCount];
         readonly SharkMotion[] poses = new SharkMotion[NetworkLootChest.SharkCount];
         readonly int[] bites = new int[NetworkLootChest.SharkCount];
+        readonly AudioSource[] swimAudio = new AudioSource[NetworkLootChest.SharkCount];
+        readonly float[] nextSwim = new float[NetworkLootChest.SharkCount], nextSplash = new float[NetworkLootChest.SharkCount];
+        AudioSource chaseAudio;
 
         public void Initialize(NetworkLootChest owner)
         {
@@ -38,11 +41,13 @@ namespace PirateSlop.Networking
         void LateUpdate()
         {
             if (chest == null) return;
+            UpdateChaseAudio();
             float blend = 1f - Mathf.Exp(-14f * Time.deltaTime);
             for (int i = 0; i < sharks.Length; i++)
             {
                 if (sharks[i] == null) continue;
                 var target = chest.SharkPose(i);
+                UpdateSharkAudio(i, target);
                 if (target.Bite > bites[i]) Bite(i, target.Bite);
                 var pose = target;
                 if (!chest.IsServerInitialized)
@@ -65,6 +70,54 @@ namespace PirateSlop.Networking
                     sharks[i].gameObject.SetActive(poses[i].State != SharkMotionState.Dispersing || poses[i].Position.y > chest.EventPoint.y - 26f);
                     sharks[i].SetPositionAndRotation(poses[i].Position, poses[i].Rotation);
                 }
+        }
+
+        void UpdateChaseAudio()
+        {
+            if (!chest.IsClientInitialized) return;
+            var pursued = chest.SharkPursuedPlayer;
+            var ear = SpatialAudioTone.FindListener();
+            bool active = pursued != null && ear != null && !SessionController.MenuOpen &&
+                Vector3.Distance(ear.transform.position, pursued.transform.position) < 70f;
+            bool wasPlaying = chaseAudio != null && chaseAudio.isPlaying;
+            GameAudio.Loop(ref chaseAudio, SoundCue.SharkChase, transform, active ? 1f : 0f);
+            if (chaseAudio == null) return;
+            if (pursued != null) chaseAudio.transform.position = pursued.transform.position + Vector3.up * 1.5f;
+            chaseAudio.minDistance = 12f;
+            chaseAudio.priority = 40;
+            if (active && !wasPlaying && chaseAudio.clip != null)
+                chaseAudio.time = Mathf.Repeat(OceanSurface.Instance != null ? OceanSurface.Instance.WaveTime : Time.time, chaseAudio.clip.length);
+        }
+
+        void UpdateSharkAudio(int index, SharkMotion pose)
+        {
+            if (!chest.IsClientInitialized || sharks[index] == null) return;
+            var ocean = OceanSurface.Instance;
+            float surface = ocean != null ? ocean.Height(pose.Position) : chest.EventPoint.y;
+            float depth = surface - pose.Position.y;
+            var ear = SpatialAudioTone.FindListener();
+            bool audible = ear != null && !SessionController.MenuOpen && Vector3.Distance(ear.transform.position, pose.Position) < 36f;
+            bool swimming = audible && depth < 2.6f && (pose.State == SharkMotionState.Patrol || pose.State == SharkMotionState.Attacking || pose.State == SharkMotionState.Returning);
+            GameAudio.Repeat(ref swimAudio[index], ref nextSwim[index], SoundCue.SharkSwim, sharks[index], swimming, 5.5f + index * .7f);
+            if (swimAudio[index] != null) swimAudio[index].transform.localPosition = Vector3.zero;
+            var previous = poses[index];
+            float previousDepth = (ocean != null ? ocean.Height(previous.Position) : chest.EventPoint.y) - previous.Position.y;
+            bool diving = pose.State == SharkMotionState.Diving && previous.State != SharkMotionState.Diving && previousDepth < 3f;
+            bool surfacing = depth < 1.7f && previousDepth >= 1.7f && pose.State == SharkMotionState.Attacking;
+            if (audible && (diving || surfacing) && Time.time >= nextSplash[index])
+            {
+                var point = diving ? previous.Position : pose.Position;
+                point.y = ocean != null ? ocean.Height(point) : chest.EventPoint.y;
+                GameAudio.Play(SoundCue.SharkSplash, point, diving ? 1f : .6f);
+                CombatVfx.Splash(point);
+                nextSplash[index] = Time.time + 3f;
+            }
+        }
+
+        void OnDisable()
+        {
+            StaffAudio.Stop(ref chaseAudio);
+            for (int i = 0; i < swimAudio.Length; i++) StaffAudio.Stop(ref swimAudio[i]);
         }
     }
 }

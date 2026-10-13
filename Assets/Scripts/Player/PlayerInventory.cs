@@ -66,7 +66,7 @@ namespace PirateSlop
         public InventoryItem ItemAt(int slot) => EquipmentAt(slot) != InventoryItem.None ? EquipmentAt(slot) : HasSabre(slot) ? InventoryItem.Sabre : PistolAt(slot) ? InventoryItem.Pistol : RodAt(slot) ? InventoryItem.Rod : HasCannon(slot) ? InventoryItem.Cannon : FishCount(slot) > 0 ? InventoryItem.Fish : BallCount(slot) > 0 ? BallItem(slot) : HasMallet(slot) ? InventoryItem.Mallet : PlankCount(slot) > 0 ? InventoryItem.Plank : RumCount(slot) > 0 ? InventoryItem.Rum : InventoryItem.None;
         public bool CanFitItem(InventoryItem item)
         {
-            if (item < InventoryItem.Fish || item > InventoryItem.IceStaff) return false;
+            if (item < InventoryItem.Fish || item > InventoryItem.MortarKit) return false;
             if (CannonAmmo.IsBall(item)) return FindAmmoSlot(item) >= 0;
             return StackSlot(item) >= 0;
         }
@@ -119,6 +119,7 @@ namespace PirateSlop
         }
         public void CloseLootForUpgrades() => CloseLoot(false);
         public SimpleCannon CannonPrefab;
+        public SimpleCannon MortarPrefab;
         public Material PreviewMaterial;
         public int SelectedSlot { get; private set; }
         public int CannonSlots { get; private set; }
@@ -136,7 +137,8 @@ namespace PirateSlop
         public bool FishSelected => FishCount(SelectedSlot) > 0;
         public bool RodSelected => RodAt(SelectedSlot);
         public bool PistolSelected => PistolAt(SelectedSlot) && !HandsOccupied;
-        public bool Placing => HasCannon(SelectedSlot) || BarricadeSelected;
+        public bool Placing => HasCannon(SelectedSlot) || MortarSelected || BarricadeSelected;
+        public bool MortarSelected => ItemAt(SelectedSlot) == InventoryItem.MortarKit;
         public bool PlacementActive => Placing && !cancelled && !HandsOccupied && !ControlFocused && !lootWindow;
         public bool InteractionUsed { get; private set; }
         public bool ControlFocused => GetComponent<DirectShipControls>()?.BlocksPrimary ?? false;
@@ -360,6 +362,7 @@ namespace PirateSlop
             Quaternion localRotation = ship != null ? Quaternion.Inverse(ship.transform.rotation) * orientation : orientation;
             if (crate != null)
                 valid = CanPlace(crate, ship.transform.InverseTransformPoint(position), localRotation, motor);
+            if (preview != null && previewIsMortar != MortarSelected) { Destroy(preview); Destroy(previewMaterial); preview = null; }
             if (preview == null) CreatePreview();
             preview.SetActive(true);
             preview.transform.SetPositionAndRotation(position, orientation);
@@ -369,7 +372,7 @@ namespace PirateSlop
             if (Networked) network.PlaceCannon(crate.Network.NetworkObject, SelectedSlot, localPosition, localRotation);
             else
             {
-                crate.AddCannon(localPosition, localRotation);
+                crate.AddCannon(localPosition, localRotation, MortarSelected);
                 stackCounts[SelectedSlot] = Mathf.Max(0, ItemCount(SelectedSlot) - 1);
                 if (stackCounts[SelectedSlot] == 0) CannonSlots &= ~(1 << SelectedSlot);
             }
@@ -431,9 +434,12 @@ namespace PirateSlop
             return true;
         }
 
+        bool previewIsMortar;
         void CreatePreview()
         {
-            preview = Instantiate(CannonPrefab.gameObject);
+            previewIsMortar = MortarSelected;
+            preview = Instantiate((previewIsMortar ? MortarPrefab : CannonPrefab).gameObject);
+            if (previewIsMortar) preview.GetComponent<SimpleCannon>().SetAim(45f, 0f);
             preview.name = "CannonPlacementPreview";
             foreach (var collider in preview.GetComponentsInChildren<Collider>(true)) collider.enabled = false;
             foreach (var behaviour in preview.GetComponentsInChildren<MonoBehaviour>(true)) behaviour.enabled = false;

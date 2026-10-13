@@ -18,6 +18,13 @@
 | --- | --- |
 | [Art/Audio/Seagulls/SourceCall.mp3](<../../Art/Audio/Seagulls/SourceCall.mp3>) | Аудио |
 
+## Art/Audio/Sharks
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Audio/Sharks/GenerateSharkAudio.py](<../../Art/Audio/Sharks/GenerateSharkAudio.py>) | Инструмент Python; Предметы, лут и инвентарь |
+| [Art/Audio/Sharks/PrepareSharkChase.py](<../../Art/Audio/Sharks/PrepareSharkChase.py>) | Инструмент Python; Предметы, лут и инвентарь |
+
 ## Art/Audio/StormRain
 
 | Файл | Краткое описание |
@@ -379,6 +386,77 @@
 | [Art/Blender/Kraken/TripoSources/Tentacle_normal.PNG](<../../Art/Blender/Kraken/TripoSources/Tentacle_normal.PNG>) | Изображение / текстура |
 | [Art/Blender/Kraken/TripoSources/Tentacle_rm.JPEG](<../../Art/Blender/Kraken/TripoSources/Tentacle_rm.JPEG>) | Изображение / текстура |
 | [Art/Blender/Kraken/TripoSources/Tentacle_roughness.JPEG](<../../Art/Blender/Kraken/TripoSources/Tentacle_roughness.JPEG>) | Изображение / текстура |
+
+## Art/Blender/LegendaryMortar
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/LegendaryMortar/LegendaryMortarAssembly.blend](<../../Art/Blender/LegendaryMortar/LegendaryMortarAssembly.blend>) | Редактируемая сцена Blender; Улучшения рогалика из сундуков |
+| [Art/Blender/LegendaryMortar/LegendaryMortarAssembly.blend1](<../../Art/Blender/LegendaryMortar/LegendaryMortarAssembly.blend1>) | Файл .blend1 |
+
+## Art/Blender/LegendaryMortar/Source/Barrel
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/LegendaryMortar/Source/Barrel/tripo_convert_5a439cad-2353-457d-a5a6-359d9510d6e2.fbx](<../../Art/Blender/LegendaryMortar/Source/Barrel/tripo_convert_5a439cad-2353-457d-a5a6-359d9510d6e2.fbx>) | Модель / анимации FBX |
+
+## Art/Blender/LegendaryMortar/Source/Barrel/tripo_convert_5a439cad-2353-457d-a5a6-359d9510d6e2.fbm
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/LegendaryMortar/Source/Barrel/tripo_convert_5a439cad-2353-457d-a5a6-359d9510d6e2.fbm/пушка_basecolor.JPEG](<../../Art/Blender/LegendaryMortar/Source/Barrel/tripo_convert_5a439cad-2353-457d-a5a6-359d9510d6e2.fbm/пушка_basecolor.JPEG>) | Изображение / текстура |
+| [Art/Blender/LegendaryMortar/Source/Barrel/tripo_convert_5a439cad-2353-457d-a5a6-359d9510d6e2.fbm/пушка_metallic.JPEG](<../../Art/Blender/LegendaryMortar/Source/Barrel/tripo_convert_5a439cad-2353-457d-a5a6-359d9510d6e2.fbm/пушка_metallic.JPEG>) | Изображение / текстура |
+| [Art/Blender/LegendaryMortar/Source/Barrel/tripo_convert_5a439cad-2353-457d-a5a6-359d9510d6e2.fbm/пушка_normal.PNG](<../../Art/Blender/LegendaryMortar/Source/Barrel/tripo_convert_5a439cad-2353-457d-a5a6-359d9510d6e2.fbm/пушка_normal.PNG>) | Изображение / текстура |
+| [Art/Blender/LegendaryMortar/Source/Barrel/tripo_convert_5a439cad-2353-457d-a5a6-359d9510d6e2.fbm/пушка_rm.JPEG](<../../Art/Blender/LegendaryMortar/Source/Barrel/tripo_convert_5a439cad-2353-457d-a5a6-359d9510d6e2.fbm/пушка_rm.JPEG>) | Изображение / текстура |
+| [Art/Blender/LegendaryMortar/Source/Barrel/tripo_convert_5a439cad-2353-457d-a5a6-359d9510d6e2.fbm/пушка_roughness.JPEG](<../../Art/Blender/LegendaryMortar/Source/Barrel/tripo_convert_5a439cad-2353-457d-a5a6-359d9510d6e2.fbm/пушка_roughness.JPEG>) | Изображение / текстура |
+
+## Art/Blender/LegendaryMortar/Source/Base
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/LegendaryMortar/Source/Base/tripo_convert_018a5325-547f-45f8-afaa-9cf90e09600f.fbx](<../../Art/Blender/LegendaryMortar/Source/Base/tripo_convert_018a5325-547f-45f8-afaa-9cf90e09600f.fbx>) | Модель / анимации FBX |
+
+## Art/Blender/LegendaryMortar/Source/Base/tripo_convert_018a5325-547f-45f8-afaa-9cf90e09600f.fbm
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/LegendaryMortar/Source/Base/tripo_convert_018a5325-547f-45f8-afaa-9cf90e09600f.fbm/подставка_basecolor.JPEG](<../../Art/Blender/LegendaryMortar/Source/Base/tripo_convert_018a5325-547f-45f8-afaa-9cf90e09600f.fbm/подставка_basecolor.JPEG>) | Изображение / текстура |
+| [Art/Blender/LegendaryMortar/Source/Base/tripo_convert_018a5325-547f-45f8-afaa-9cf90e09600f.fbm/подставка_metallic.JPEG](<../../Art/Blender/LegendaryMortar/Source/Base/tripo_convert_018a5325-547f-45f8-afaa-9cf90e09600f.fbm/подставка_metallic.JPEG>) | Изображение / текстура |
+| [Art/Blender/LegendaryMortar/Source/Base/tripo_convert_018a5325-547f-45f8-afaa-9cf90e09600f.fbm/подставка_normal.PNG](<../../Art/Blender/LegendaryMortar/Source/Base/tripo_convert_018a5325-547f-45f8-afaa-9cf90e09600f.fbm/подставка_normal.PNG>) | Изображение / текстура |
+| [Art/Blender/LegendaryMortar/Source/Base/tripo_convert_018a5325-547f-45f8-afaa-9cf90e09600f.fbm/подставка_rm.JPEG](<../../Art/Blender/LegendaryMortar/Source/Base/tripo_convert_018a5325-547f-45f8-afaa-9cf90e09600f.fbm/подставка_rm.JPEG>) | Изображение / текстура |
+| [Art/Blender/LegendaryMortar/Source/Base/tripo_convert_018a5325-547f-45f8-afaa-9cf90e09600f.fbm/подставка_roughness.JPEG](<../../Art/Blender/LegendaryMortar/Source/Base/tripo_convert_018a5325-547f-45f8-afaa-9cf90e09600f.fbm/подставка_roughness.JPEG>) | Изображение / текстура |
+
+## Art/Blender/LegendaryMortar/Source/Kit
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/LegendaryMortar/Source/Kit/tripo_convert_bacea044-6c7b-4db6-97d1-6c46803abc3e.fbx](<../../Art/Blender/LegendaryMortar/Source/Kit/tripo_convert_bacea044-6c7b-4db6-97d1-6c46803abc3e.fbx>) | Модель / анимации FBX |
+
+## Art/Blender/LegendaryMortar/Source/Kit/tripo_convert_bacea044-6c7b-4db6-97d1-6c46803abc3e.fbm
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/LegendaryMortar/Source/Kit/tripo_convert_bacea044-6c7b-4db6-97d1-6c46803abc3e.fbm/разобранная_basecolor.JPEG](<../../Art/Blender/LegendaryMortar/Source/Kit/tripo_convert_bacea044-6c7b-4db6-97d1-6c46803abc3e.fbm/разобранная_basecolor.JPEG>) | Изображение / текстура |
+| [Art/Blender/LegendaryMortar/Source/Kit/tripo_convert_bacea044-6c7b-4db6-97d1-6c46803abc3e.fbm/разобранная_metallic.JPEG](<../../Art/Blender/LegendaryMortar/Source/Kit/tripo_convert_bacea044-6c7b-4db6-97d1-6c46803abc3e.fbm/разобранная_metallic.JPEG>) | Изображение / текстура |
+| [Art/Blender/LegendaryMortar/Source/Kit/tripo_convert_bacea044-6c7b-4db6-97d1-6c46803abc3e.fbm/разобранная_normal.PNG](<../../Art/Blender/LegendaryMortar/Source/Kit/tripo_convert_bacea044-6c7b-4db6-97d1-6c46803abc3e.fbm/разобранная_normal.PNG>) | Изображение / текстура |
+| [Art/Blender/LegendaryMortar/Source/Kit/tripo_convert_bacea044-6c7b-4db6-97d1-6c46803abc3e.fbm/разобранная_rm.JPEG](<../../Art/Blender/LegendaryMortar/Source/Kit/tripo_convert_bacea044-6c7b-4db6-97d1-6c46803abc3e.fbm/разобранная_rm.JPEG>) | Изображение / текстура |
+| [Art/Blender/LegendaryMortar/Source/Kit/tripo_convert_bacea044-6c7b-4db6-97d1-6c46803abc3e.fbm/разобранная_roughness.JPEG](<../../Art/Blender/LegendaryMortar/Source/Kit/tripo_convert_bacea044-6c7b-4db6-97d1-6c46803abc3e.fbm/разобранная_roughness.JPEG>) | Изображение / текстура |
+
+## Art/Blender/LegendaryMortar/Source/Mount
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/LegendaryMortar/Source/Mount/tripo_convert_3bdf5b39-d86f-4a7e-ae0a-8bf0665aae5c.fbx](<../../Art/Blender/LegendaryMortar/Source/Mount/tripo_convert_3bdf5b39-d86f-4a7e-ae0a-8bf0665aae5c.fbx>) | Модель / анимации FBX |
+
+## Art/Blender/LegendaryMortar/Source/Mount/tripo_convert_3bdf5b39-d86f-4a7e-ae0a-8bf0665aae5c.fbm
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/LegendaryMortar/Source/Mount/tripo_convert_3bdf5b39-d86f-4a7e-ae0a-8bf0665aae5c.fbm/крепёж_basecolor.JPEG](<../../Art/Blender/LegendaryMortar/Source/Mount/tripo_convert_3bdf5b39-d86f-4a7e-ae0a-8bf0665aae5c.fbm/крепёж_basecolor.JPEG>) | Изображение / текстура |
+| [Art/Blender/LegendaryMortar/Source/Mount/tripo_convert_3bdf5b39-d86f-4a7e-ae0a-8bf0665aae5c.fbm/крепёж_metallic.JPEG](<../../Art/Blender/LegendaryMortar/Source/Mount/tripo_convert_3bdf5b39-d86f-4a7e-ae0a-8bf0665aae5c.fbm/крепёж_metallic.JPEG>) | Изображение / текстура |
+| [Art/Blender/LegendaryMortar/Source/Mount/tripo_convert_3bdf5b39-d86f-4a7e-ae0a-8bf0665aae5c.fbm/крепёж_normal.PNG](<../../Art/Blender/LegendaryMortar/Source/Mount/tripo_convert_3bdf5b39-d86f-4a7e-ae0a-8bf0665aae5c.fbm/крепёж_normal.PNG>) | Изображение / текстура |
+| [Art/Blender/LegendaryMortar/Source/Mount/tripo_convert_3bdf5b39-d86f-4a7e-ae0a-8bf0665aae5c.fbm/крепёж_rm.JPEG](<../../Art/Blender/LegendaryMortar/Source/Mount/tripo_convert_3bdf5b39-d86f-4a7e-ae0a-8bf0665aae5c.fbm/крепёж_rm.JPEG>) | Изображение / текстура |
+| [Art/Blender/LegendaryMortar/Source/Mount/tripo_convert_3bdf5b39-d86f-4a7e-ae0a-8bf0665aae5c.fbm/крепёж_roughness.JPEG](<../../Art/Blender/LegendaryMortar/Source/Mount/tripo_convert_3bdf5b39-d86f-4a7e-ae0a-8bf0665aae5c.fbm/крепёж_roughness.JPEG>) | Изображение / текстура |
 
 ## Art/Blender/Loot/FishReplacement/Fish
 
@@ -749,6 +827,12 @@
 | Файл | Краткое описание |
 | --- | --- |
 | [Art/Blender/Ships/ShipV3/ShipV3_Fitted.blend](<../../Art/Blender/Ships/ShipV3/ShipV3_Fitted.blend>) | Редактируемая сцена Blender; Модели и Blender |
+
+## Art/Blender/SkullInstructionSign
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/SkullInstructionSign/SkullInstructionSign.blend](<../../Art/Blender/SkullInstructionSign/SkullInstructionSign.blend>) | Редактируемая сцена Blender; Предметы, лут и инвентарь |
 
 ## Art/Blender/SlotMachine
 

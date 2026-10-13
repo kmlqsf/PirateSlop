@@ -21,9 +21,12 @@ namespace PirateSlop.Networking
         readonly SharkMotion[] sharkSimulation = new SharkMotion[SharkCount];
         readonly float[] sharkModeAt = new float[SharkCount], sharkWaitUntil = new float[SharkCount], sharkLastShot = new float[SharkCount];
         readonly Vector3[] sharkVelocity = new Vector3[SharkCount], sharkDivePoint = new Vector3[SharkCount];
-        float sharkClock, sharkAccumulator, nextSharkSnapshot, nextSharkAttack;
-        int chargingShark = -1, nextChargingShark;
-        bool sharksInitialized, chargingFromDepth;
+        readonly float[] sharkNextAttack = new float[SharkCount];
+        NetworkPlayer sharkCarrierTarget;
+        readonly SyncVar<NetworkObject> sharkPursuedPlayer = new();
+        public NetworkObject SharkPursuedPlayer => sharkPursuedPlayer.Value;
+        float sharkClock, sharkAccumulator, nextSharkSnapshot;
+        bool sharksInitialized, sharkRewardSecured;
 
         public SharkMotion SharkPose(int index)
         {
@@ -47,26 +50,50 @@ namespace PirateSlop.Networking
 
         public void ShootShark(int index, GameObject shooter)
         {
-            if (!IsServerInitialized || Kind != SeaLootKind.Shark || !sharksInitialized || index < 0 || index >= SharkCount || opened.Value || carrier.Value != null || shooter == null || Time.time - sharkLastShot[index] < .25f) return;
+            if (!IsServerInitialized || Kind != SeaLootKind.Shark || !sharksInitialized || index < 0 || index >= SharkCount || sharkRewardSecured || shooter == null || Time.time - sharkLastShot[index] < .25f) return;
             sharkLastShot[index] = Time.time;
             var pose = sharkSimulation[index]; pose.State = SharkMotionState.Diving; sharkModeAt[index] = Time.time;
             var radial = Vector3.ProjectOnPlane(pose.Position - EventPoint, Vector3.up).normalized;
             if (radial.sqrMagnitude < .01f) radial = pose.Rotation * Vector3.right;
-            sharkDivePoint[index] = EventPoint + radial * (9f + index * 1.5f) + Vector3.down * (15f + index * 2f);
+            var center = sharkCarrierTarget != null ? sharkCarrierTarget.transform.position : EventPoint;
+            float surface = OceanSurface.Instance != null ? OceanSurface.Instance.Height(center) : EventPoint.y;
+            sharkDivePoint[index] = center + radial * (9f + index * 1.5f);
+            sharkDivePoint[index].y = Mathf.Min(surface - 15f - index * 2f, pose.Position.y - 8f);
             sharkSimulation[index] = pose;
-            if (chargingShark == index) { chargingShark = -1; chargingFromDepth = false; }
-            nextSharkAttack = Mathf.Max(nextSharkAttack, Time.time + .7f); PublishSharks();
+            PublishSharks();
         }
 
-        NetworkPlayer SharkPlayer(float radius)
+        void ChaseSharkCarrier(NetworkPlayer player)
         {
-            NetworkPlayer target = null; float best = radius * radius;
+            if (Kind != SeaLootKind.Shark || sharkRewardSecured || player == null) return;
+            if (!sharksInitialized) InitializeSharks();
+            sharkCarrierTarget = player;
+            sharkPursuedPlayer.Value = player.NetworkObject;
+            sharksDistractedUntil.Value = 0f;
+            for (int i = 0; i < SharkCount; i++)
+            {
+                var pose = sharkSimulation[i];
+                pose.State = SharkMotionState.Attacking;
+                sharkSimulation[i] = pose;
+                sharkModeAt[i] = Time.time;
+                sharkWaitUntil[i] = 0f;
+            }
+            sharkTargetPlayer.Value = player.NetworkObject;
+            PublishSharks();
+        }
+
+        NetworkPlayer SharkPlayer(int index, float radius)
+        {
+            if (sharkCarrierTarget != null) return sharkCarrierTarget;
+            NetworkPlayer target = null; float best = float.PositiveInfinity;
+            var nose = sharkSimulation[index].Position + sharkSimulation[index].Rotation * Vector3.forward * 3.35f;
             foreach (var player in NetworkPlayer.Active)
             {
-                if (player == null || !player.IsSpawned || player.Motor.IsDead || !player.Motor.IsSwimming) continue;
+                if (player == null || !player.IsSpawned || player.Motor.IsDead || player.Motor.DeveloperNoclip || !player.Motor.IsSwimming) continue;
                 var delta = player.transform.position - EventPoint;
-                float score = Vector3.ProjectOnPlane(delta, Vector3.up).sqrMagnitude;
-                if (score >= best || delta.y < -40f || delta.y > 3f) continue;
+                if (Vector3.ProjectOnPlane(delta, Vector3.up).sqrMagnitude > radius * radius || delta.y < -40f || delta.y > 3f) continue;
+                float score = (player.transform.position + Vector3.up * .9f - nose).sqrMagnitude;
+                if (score >= best) continue;
                 best = score; target = player;
             }
             return target;
@@ -75,51 +102,48 @@ namespace PirateSlop.Networking
         void UpdateSharkBehavior()
         {
             if (!sharksInitialized) InitializeSharks();
-            var target = opened.Value || carrier.Value != null || SharksDistracted ? null : SharkPlayer(16f);
-            var ambush = target != null && Vector3.ProjectOnPlane(target.transform.position - EventPoint, Vector3.up).sqrMagnitude <= 49f ? target : null;
+            if (sharkCarrierTarget != null)
+            {
+                if (!sharkCarrierTarget.IsSpawned || sharkCarrierTarget.Motor.IsDead) sharkCarrierTarget = null;
+                else if (sharkCarrierTarget.Passenger != null && sharkCarrierTarget.Passenger.Ship != null && !sharkCarrierTarget.Motor.IsSwimming && !sharkCarrierTarget.Motor.IsClimbing)
+                { sharkRewardSecured = true; sharkCarrierTarget = null; }
+            }
+            sharkPursuedPlayer.Value = sharkCarrierTarget != null ? sharkCarrierTarget.NetworkObject : null;
+            var target = sharkRewardSecured || SharksDistracted && sharkCarrierTarget == null ? null : SharkPlayer(0, 16f);
             sharkTargetPlayer.Value = target != null ? target.NetworkObject : null;
             sharkAccumulator = Mathf.Min(.15f, sharkAccumulator + Time.deltaTime);
-            while (sharkAccumulator >= 1f / 30f) { sharkAccumulator -= 1f / 30f; SimulateSharks(target, ambush, 1f / 30f); }
+            while (sharkAccumulator >= 1f / 30f) { sharkAccumulator -= 1f / 30f; SimulateSharks(1f / 30f); }
             if (Time.time >= nextSharkSnapshot) { nextSharkSnapshot = Time.time + .1f; PublishSharks(); }
         }
 
-        void SimulateSharks(NetworkPlayer target, NetworkPlayer ambush, float dt)
+        void SimulateSharks(float dt)
         {
             sharkClock += dt;
-            bool dispersing = opened.Value || carrier.Value != null;
-            if (!dispersing && !SharksDistracted && target != null && chargingShark < 0 && Time.time >= nextSharkAttack)
-                for (int n = 0; n < SharkCount; n++)
-                {
-                    int i = (nextChargingShark + n) % SharkCount;
-                    if (sharkSimulation[i].State != SharkMotionState.Patrol) continue;
-                    StartSharkCharge(i); break;
-                }
+            bool dispersing = sharkRewardSecured;
             for (int i = 0; i < SharkCount; i++)
             {
+                var target = dispersing || SharksDistracted && sharkCarrierTarget == null ? null : SharkPlayer(i, 16f);
                 var pose = sharkSimulation[i]; float age = Time.time - sharkModeAt[i];
                 if (dispersing && pose.State != SharkMotionState.Dispersing)
                 {
                     pose.State = SharkMotionState.Dispersing; sharkModeAt[i] = Time.time; age = 0;
-                    if (chargingShark == i) { chargingShark = -1; chargingFromDepth = false; }
                 }
+                if (!dispersing && target != null && (pose.State == SharkMotionState.Patrol || pose.State == SharkMotionState.Returning) && Time.time >= sharkNextAttack[i])
+                { pose.State = SharkMotionState.Attacking; sharkModeAt[i] = Time.time; age = 0f; }
                 Vector3 goal; float speed;
                 if (pose.State == SharkMotionState.Diving)
                 {
                     goal = sharkDivePoint[i]; speed = 9f;
                     if (age > 1f && (goal - pose.Position).sqrMagnitude < 2.25f)
                     {
-                        pose.State = SharkMotionState.Waiting; sharkModeAt[i] = Time.time; sharkWaitUntil[i] = Time.time + 7f;
+                        pose.State = SharkMotionState.Waiting; sharkModeAt[i] = Time.time; sharkWaitUntil[i] = Time.time + 5f;
                     }
                 }
                 else if (pose.State == SharkMotionState.Waiting)
                 {
                     float phase = sharkClock * .22f + i * 2.1f;
                     goal = sharkDivePoint[i] + new Vector3(Mathf.Sin(phase) * 2f, Mathf.Sin(phase * .7f) * .5f, Mathf.Cos(phase) * 2f); speed = 2.2f;
-                    if (ambush != null && !chargingFromDepth && !SharksDistracted)
-                    {
-                        sharkSimulation[i] = pose; StartSharkCharge(i, true); pose = sharkSimulation[i]; age = 0;
-                    }
-                    else if (Time.time >= sharkWaitUntil[i]) { pose.State = SharkMotionState.Returning; sharkModeAt[i] = Time.time; }
+                    if (Time.time >= sharkWaitUntil[i]) { pose.State = SharkMotionState.Returning; sharkModeAt[i] = Time.time; }
                 }
                 else if (pose.State == SharkMotionState.Dispersing)
                 {
@@ -133,11 +157,10 @@ namespace PirateSlop.Networking
                 }
                 if (pose.State == SharkMotionState.Attacking)
                 {
-                    if (target == null || SharksDistracted || age > 5.5f)
+                    if (target == null)
                     {
                         pose.State = SharkMotionState.Returning; sharkModeAt[i] = Time.time;
-                        if (chargingShark == i) { chargingShark = -1; chargingFromDepth = false; }
-                        nextSharkAttack = Time.time + .55f; goal = SharkOrbit(i, target); speed = 6.5f;
+                        goal = SharkOrbit(i, target); speed = 6.5f;
                     }
                     else
                     {
@@ -145,46 +168,35 @@ namespace PirateSlop.Networking
                         var direction = (body - pose.Position).normalized;
                         goal = body - direction * 2.8f; speed = 11f;
                         var nose = pose.Position + pose.Rotation * Vector3.forward * 3.35f;
-                        if ((nose - body).sqrMagnitude < 2.25f && Vector3.Dot(pose.Rotation * Vector3.forward, direction) > .6f && Time.time >= nextSharkAttack)
+                        if (target.Motor.IsSwimming && (nose - body).sqrMagnitude < 2.25f && Vector3.Dot(pose.Rotation * Vector3.forward, direction) > .6f && Time.time >= sharkNextAttack[i])
                         {
-                            target.GetComponent<CombatHealth>()?.Damage(25f); pose.Bite++; SharkAttackRpc(i, pose.Bite, body);
-                            pose.State = SharkMotionState.Returning; sharkModeAt[i] = Time.time;
-                            if (chargingShark == i) { chargingShark = -1; chargingFromDepth = false; }
-                            nextSharkAttack = Time.time + 1.2f; goal = SharkOrbit(i, target); speed = 7f;
+                            target.GetComponent<CombatHealth>()?.Damage(10f); pose.Bite++; SharkAttackRpc(i, pose.Bite, body);
+                            sharkNextAttack[i] = Time.time + 2f;
                         }
                     }
                 }
-                var desired = Vector3.ClampMagnitude((goal - pose.Position) * 2f, speed);
+                bool attacking = pose.State == SharkMotionState.Attacking && target != null;
+                var desired = Vector3.ClampMagnitude((goal - pose.Position) * (attacking ? 6f : 2f), speed);
                 for (int j = 0; j < SharkCount; j++)
                 {
                     if (j == i) continue;
-                    var delta = SharkBodyGap(pose.Position + sharkVelocity[i] * .3f, pose.Rotation, sharkSimulation[j].Position + sharkVelocity[j] * .3f, sharkSimulation[j].Rotation);
+                    float clearance = attacking && sharkSimulation[j].State == SharkMotionState.Attacking ? 1.6f : 3.8f;
+                    var delta = SharkBodyGap(pose.Position + sharkVelocity[i] * .1f, pose.Rotation, sharkSimulation[j].Position + sharkVelocity[j] * .1f, sharkSimulation[j].Rotation);
                     float distance = delta.magnitude;
-                    if (distance < 3.8f) desired += (distance > .001f ? delta / distance : (i < j ? Vector3.left : Vector3.right)) * ((3.8f - distance) * 4f);
+                    if (distance < clearance) desired += (distance > .001f ? delta / distance : (i < j ? Vector3.left : Vector3.right)) * ((clearance - distance) * 4f);
                 }
                 sharkVelocity[i] = Vector3.MoveTowards(sharkVelocity[i], Vector3.ClampMagnitude(desired, speed), dt * 18f);
                 pose.Position += sharkVelocity[i] * dt;
                 float surface = OceanSurface.Instance != null ? OceanSurface.Instance.Height(pose.Position) : EventPoint.y;
                 pose.Position.y = Mathf.Min(pose.Position.y, surface - .85f);
-                if (sharkVelocity[i].sqrMagnitude > .1f) pose.Rotation = Quaternion.RotateTowards(pose.Rotation, Quaternion.LookRotation(sharkVelocity[i].normalized, Vector3.up), (pose.State == SharkMotionState.Attacking ? 160f : 95f) * dt);
+                var heading = attacking ? target.transform.position + Vector3.up * .9f - pose.Position : sharkVelocity[i];
+                if (heading.sqrMagnitude > .1f) pose.Rotation = Quaternion.RotateTowards(pose.Rotation, Quaternion.LookRotation(heading.normalized, Vector3.up), (attacking ? 240f : 95f) * dt);
                 sharkSimulation[i] = pose;
             }
             for (int pass = 0; pass < 8; pass++) for (int i = 0; i < SharkCount; i++) for (int j = i + 1; j < SharkCount; j++)
             {
                 var a = sharkSimulation[i]; var b = sharkSimulation[j]; SeparateSharks(ref a, ref b); sharkSimulation[i] = a; sharkSimulation[j] = b;
             }
-        }
-
-        void StartSharkCharge(int i, bool fromDepth = false)
-        {
-            if (chargingShark >= 0 && chargingShark != i)
-            {
-                var previous = sharkSimulation[chargingShark]; previous.State = SharkMotionState.Returning;
-                sharkSimulation[chargingShark] = previous; sharkModeAt[chargingShark] = Time.time;
-            }
-            chargingFromDepth = fromDepth;
-            chargingShark = i; nextChargingShark = (i + 1) % SharkCount;
-            var pose = sharkSimulation[i]; pose.State = SharkMotionState.Attacking; sharkSimulation[i] = pose; sharkModeAt[i] = Time.time;
         }
 
         Vector3 SharkOrbit(int i, NetworkPlayer target)
@@ -206,8 +218,9 @@ namespace PirateSlop.Networking
         public static void SeparateSharks(ref SharkMotion a, ref SharkMotion b)
         {
             var delta = SharkBodyGap(a.Position, a.Rotation, b.Position, b.Rotation); float distance = delta.magnitude;
-            if (distance >= 3.1f) return;
-            var correction = (distance > .001f ? delta / distance : Vector3.right) * ((3.1f - distance) * .5f); a.Position += correction; b.Position -= correction;
+            float clearance = a.State == SharkMotionState.Attacking && b.State == SharkMotionState.Attacking ? 1.3f : 3.1f;
+            if (distance >= clearance) return;
+            var correction = (distance > .001f ? delta / distance : Vector3.right) * ((clearance - distance) * .5f); a.Position += correction; b.Position -= correction;
         }
 
         static Vector3 SharkBodyGap(Vector3 a, Quaternion ar, Vector3 b, Quaternion br)
@@ -223,7 +236,9 @@ namespace PirateSlop.Networking
         [ObserversRpc(RunLocally = true)]
         void SharkAttackRpc(int index, int sequence, Vector3 point)
         {
-            GameAudio.Play(SoundCue.BulletFlesh, point); CombatVfx.Impact(point, Vector3.up, false); if (swarm != null) swarm.Bite(index, sequence);
+            GameAudio.Play(SoundCue.SharkBite, point);
+            GameAudio.Play(SoundCue.SharkSplash, point, .45f);
+            CombatVfx.Impact(point, Vector3.up, false); if (swarm != null) swarm.Bite(index, sequence);
         }
     }
 }

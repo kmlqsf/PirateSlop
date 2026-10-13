@@ -14,6 +14,7 @@ namespace PirateSlop.Networking
         readonly SyncVar<float> slowMultiplier = new(1f);
         readonly SyncVar<uint> respawnUntil = new();
         float burnUntil, nextBurnDamage, wetUntil;
+        float burnDamagePerSecond = 15f;
         GameObject fireAttacker;
         ShipFireVfx fireVisual;
         GameObject frostVisual;
@@ -71,7 +72,7 @@ namespace PirateSlop.Networking
             if (IsServerInitialized) developerInvulnerable.Value = enabled;
         }
 
-        public void Ignite(GameObject attacker = null, float seconds = -1f)
+        public void Ignite(GameObject attacker = null, float seconds = -1f, float damagePerSecond = 15f)
         {
             if (!IsServerInitialized || target == null || target.IsDead || burning.Value || Time.time < wetUntil) return;
             var shooter = attacker != null ? attacker.GetComponent<NetworkPlayer>() : null;
@@ -80,6 +81,7 @@ namespace PirateSlop.Networking
             var motor = GetComponent<AdvancedPlayerController>();
             if (motor != null && motor.IsSwimming) return;
             burning.Value = true;
+            burnDamagePerSecond = float.IsFinite(damagePerSecond) ? Mathf.Max(0f, damagePerSecond) : 15f;
             burnUntil = Time.time + (float.IsFinite(seconds) && seconds > 0f ? seconds : Random.Range(5f, 9f));
             nextBurnDamage = Time.time;
             fireAttacker = attacker;
@@ -109,7 +111,7 @@ namespace PirateSlop.Networking
                 else if (Time.time >= nextBurnDamage)
                 {
                     nextBurnDamage = Time.time + .25f;
-                    target.Damage(15f * .25f, fireAttacker, true);
+                    target.Damage(burnDamagePerSecond * .25f, fireAttacker, true);
                 }
             }
             if (!IsClientInitialized || Application.isBatchMode) return;

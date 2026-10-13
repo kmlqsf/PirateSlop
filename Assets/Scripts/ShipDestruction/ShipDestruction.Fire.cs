@@ -82,12 +82,31 @@ namespace PirateSlop
             return anchor.TransformPoint(bounds.ClosestPoint(anchor.InverseTransformPoint(fallback)));
         }
 
-        public List<ShipFireTarget> PlanFire(Collider collider, Vector3 point, Vector3 normal)
+        public List<ShipFireTarget> PlanFire(Collider collider, Vector3 point, Vector3 normal, bool gentle = false)
         {
             var result = new List<ShipFireTarget>();
             if (!ready || !IsServerInitialized || ship.IsSinking) return result;
             var direct = Resolve(collider, point);
             if (direct == null) return result;
+            if (gentle)
+            {
+                int nearestFragment = -1;
+                float nearestDistance = float.PositiveInfinity;
+                Vector3 nearestPoint = point;
+                for (int i = 0; i < direct.RepairCount; i++)
+                {
+                    if (!FireTargetAlive(direct.SectionId, i) || !TryFireSurface(direct, i, out var anchor, out var bounds)) continue;
+                    var at = anchor.TransformPoint(bounds.ClosestPoint(anchor.InverseTransformPoint(point)));
+                    float distance = (at - point).sqrMagnitude;
+                    if (distance < nearestDistance) { nearestDistance = distance; nearestFragment = i; nearestPoint = at; }
+                }
+                if (nearestFragment < 0) return result;
+                ApplyDamage(direct.SectionId, 2f, point, normal, Vector3.zero, InventoryItem.FireCannonball, null, ShipDamageReason.Fire);
+                Publish();
+                result.Add(new ShipFireTarget { SectionId = direct.SectionId, Fragment = nearestFragment,
+                    Position = transform.InverseTransformPoint(nearestPoint + normal * .04f), Normal = transform.InverseTransformDirection(normal) });
+                return result;
+            }
             var affected = new Dictionary<int, float> { [direct.SectionId] = Profile.CannonDamage };
             var directDefinition = definitions[direct.SectionId];
             if (!string.IsNullOrEmpty(directDefinition.SourceGroup))

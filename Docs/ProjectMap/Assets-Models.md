@@ -402,6 +402,78 @@
 | [Assets/Models/Kraken/KrakenNormal.png](<../../Assets/Models/Kraken/KrakenNormal.png>) | Изображение / текстура; Кракен и щупальца |
 | [Assets/Models/Kraken/KrakenTripoSkin.mat](<../../Assets/Models/Kraken/KrakenTripoSkin.mat>) | Материал Unity; Кракен и щупальца |
 
+## Assets/Models/LegendaryMortar
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/LegendaryMortar/Barrel.mat](<../../Assets/Models/LegendaryMortar/Barrel.mat>) | Материал Unity |
+| [Assets/Models/LegendaryMortar/Base.mat](<../../Assets/Models/LegendaryMortar/Base.mat>) | Материал Unity |
+| [Assets/Models/LegendaryMortar/Cradle.mat](<../../Assets/Models/LegendaryMortar/Cradle.mat>) | Материал Unity |
+| [Assets/Models/LegendaryMortar/Kit.mat](<../../Assets/Models/LegendaryMortar/Kit.mat>) | Материал Unity |
+| [Assets/Models/LegendaryMortar/MortarAssembly.fbx](<../../Assets/Models/LegendaryMortar/MortarAssembly.fbx>) | Модель / анимации FBX; Улучшения рогалика из сундуков |
+| [Assets/Models/LegendaryMortar/MortarAssemblyRig.fbx](<../../Assets/Models/LegendaryMortar/MortarAssemblyRig.fbx>) | Модель / анимации FBX; Улучшения рогалика из сундуков |
+| [Assets/Models/LegendaryMortar/MortarKit.fbx](<../../Assets/Models/LegendaryMortar/MortarKit.fbx>) | Модель / анимации FBX; Улучшения рогалика из сундуков |
+
+## Assets/Models/LegendaryMortar/MortarAssembly.fbm
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/LegendaryMortar/MortarAssembly.fbm/крепёж_basecolor.JPEG](<../../Assets/Models/LegendaryMortar/MortarAssembly.fbm/крепёж_basecolor.JPEG>) | Изображение / текстура |
+| [Assets/Models/LegendaryMortar/MortarAssembly.fbm/крепёж_metallic.JPEG](<../../Assets/Models/LegendaryMortar/MortarAssembly.fbm/крепёж_metallic.JPEG>) | Изображение / текстура |
+| [Assets/Models/LegendaryMortar/MortarAssembly.fbm/крепёж_normal.PNG](<../../Assets/Models/LegendaryMortar/MortarAssembly.fbm/крепёж_normal.PNG>) | Изображение / текстура |
+| [Assets/Models/LegendaryMortar/MortarAssembly.fbm/крепёж_roughness.JPEG](<../../Assets/Models/LegendaryMortar/MortarAssembly.fbm/крепёж_roughness.JPEG>) | Изображение / текстура |
+| [Assets/Models/LegendaryMortar/MortarAssembly.fbm/подставка_basecolor.JPEG](<../../Assets/Models/LegendaryMortar/MortarAssembly.fbm/подставка_basecolor.JPEG>) | Изображение / текстура |
+| [Assets/Models/LegendaryMortar/MortarAssembly.fbm/подставка_metallic.JPEG](<../../Assets/Models/LegendaryMortar/MortarAssembly.fbm/подставка_metallic.JPEG>) | Изображение / текстура |
+| [Assets/Models/LegendaryMortar/MortarAssembly.fbm/подставка_normal.PNG](<../../Assets/Models/LegendaryMortar/MortarAssembly.fbm/подставка_normal.PNG>) | Изображение / текстура |
+| [Assets/Models/LegendaryMortar/MortarAssembly.fbm/подставка_roughness.JPEG](<../../Assets/Models/LegendaryMortar/MortarAssembly.fbm/подставка_roughness.JPEG>) | Изображение / текстура |
+| [Assets/Models/LegendaryMortar/MortarAssembly.fbm/пушка_basecolor.JPEG](<../../Assets/Models/LegendaryMortar/MortarAssembly.fbm/пушка_basecolor.JPEG>) | Изображение / текстура |
+| [Assets/Models/LegendaryMortar/MortarAssembly.fbm/пушка_metallic.JPEG](<../../Assets/Models/LegendaryMortar/MortarAssembly.fbm/пушка_metallic.JPEG>) | Изображение / текстура |
+| [Assets/Models/LegendaryMortar/MortarAssembly.fbm/пушка_normal.PNG](<../../Assets/Models/LegendaryMortar/MortarAssembly.fbm/пушка_normal.PNG>) | Изображение / текстура |
+| [Assets/Models/LegendaryMortar/MortarAssembly.fbm/пушка_roughness.JPEG](<../../Assets/Models/LegendaryMortar/MortarAssembly.fbm/пушка_roughness.JPEG>) | Изображение / текстура |
+
+## Assets/Models/LegendaryMortar/MortarAssemblyRig.fbm
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/LegendaryMortar/MortarAssemblyRig.fbm/крепёж_basecolor.JPEG](<../../Assets/Models/LegendaryMortar/MortarAssemblyRig.fbm/крепёж_basecolor.JPEG>) | Изображение / текстура |
+| [Assets/Models/LegendaryMortar/MortarAssemblyRig.fbm/крепёж_metallic.JPEG](<../../Assets/Models/LegendaryMortar/MortarAssemblyRig.fbm/крепёж_metallic.JPEG>) | Изображение / текстура |
+| [Assets/Models/LegendaryMortar/MortarAssemblyRig.fbm/крепёж_normal.PNG](<../../Assets/Models/LegendaryMortar/MortarAssemblyRig.fbm/крепёж_normal.PNG>) | Изображение / текстура |
+| [Assets/Models/LegendaryMortar/MortarAssemblyRig.fbm/крепёж_roughness.JPEG](<../../Assets/Models/LegendaryMortar/MortarAssemblyRig.fbm/крепёж_roughness.JPEG>) | Изображение / текстура |
+| [Assets/Models/LegendaryMortar/MortarAssemblyRig.fbm/подставка_basecolor.JPEG](<../../Assets/Models/LegendaryMortar/MortarAssemblyRig.fbm/подставка_basecolor.JPEG>) | Изображение / текстура |
+| [Assets/Models/LegendaryMortar/MortarAssemblyRig.fbm/подставка_metallic.JPEG](<../../Assets/Models/LegendaryMortar/MortarAssemblyRig.fbm/подставка_metallic.JPEG>) | Изображение / текстура |
+| [Assets/Models/LegendaryMortar/MortarAssemblyRig.fbm/подставка_normal.PNG](<../../Assets/Models/LegendaryMortar/MortarAssemblyRig.fbm/подставка_normal.PNG>) | Изображение / текстура |
+| [Assets/Models/LegendaryMortar/MortarAssemblyRig.fbm/подставка_roughness.JPEG](<../../Assets/Models/LegendaryMortar/MortarAssemblyRig.fbm/подставка_roughness.JPEG>) | Изображение / текстура |
+| [Assets/Models/LegendaryMortar/MortarAssemblyRig.fbm/пушка_basecolor.JPEG](<../../Assets/Models/LegendaryMortar/MortarAssemblyRig.fbm/пушка_basecolor.JPEG>) | Изображение / текстура |
+| [Assets/Models/LegendaryMortar/MortarAssemblyRig.fbm/пушка_metallic.JPEG](<../../Assets/Models/LegendaryMortar/MortarAssemblyRig.fbm/пушка_metallic.JPEG>) | Изображение / текстура |
+| [Assets/Models/LegendaryMortar/MortarAssemblyRig.fbm/пушка_normal.PNG](<../../Assets/Models/LegendaryMortar/MortarAssemblyRig.fbm/пушка_normal.PNG>) | Изображение / текстура |
+| [Assets/Models/LegendaryMortar/MortarAssemblyRig.fbm/пушка_roughness.JPEG](<../../Assets/Models/LegendaryMortar/MortarAssemblyRig.fbm/пушка_roughness.JPEG>) | Изображение / текстура |
+
+## Assets/Models/LegendaryMortar/MortarKit.fbm
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/LegendaryMortar/MortarKit.fbm/разобранная_basecolor.JPEG](<../../Assets/Models/LegendaryMortar/MortarKit.fbm/разобранная_basecolor.JPEG>) | Изображение / текстура |
+| [Assets/Models/LegendaryMortar/MortarKit.fbm/разобранная_metallic.JPEG](<../../Assets/Models/LegendaryMortar/MortarKit.fbm/разобранная_metallic.JPEG>) | Изображение / текстура |
+| [Assets/Models/LegendaryMortar/MortarKit.fbm/разобранная_normal.PNG](<../../Assets/Models/LegendaryMortar/MortarKit.fbm/разобранная_normal.PNG>) | Изображение / текстура |
+| [Assets/Models/LegendaryMortar/MortarKit.fbm/разобранная_roughness.JPEG](<../../Assets/Models/LegendaryMortar/MortarKit.fbm/разобранная_roughness.JPEG>) | Изображение / текстура |
+
+## Assets/Models/LegendaryMortar/Textures
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/LegendaryMortar/Textures/Barrel_BaseColor.jpeg](<../../Assets/Models/LegendaryMortar/Textures/Barrel_BaseColor.jpeg>) | Изображение / текстура |
+| [Assets/Models/LegendaryMortar/Textures/Barrel_MetallicSmoothness.png](<../../Assets/Models/LegendaryMortar/Textures/Barrel_MetallicSmoothness.png>) | Изображение / текстура |
+| [Assets/Models/LegendaryMortar/Textures/Barrel_Normal.png](<../../Assets/Models/LegendaryMortar/Textures/Barrel_Normal.png>) | Изображение / текстура |
+| [Assets/Models/LegendaryMortar/Textures/Base_BaseColor.jpeg](<../../Assets/Models/LegendaryMortar/Textures/Base_BaseColor.jpeg>) | Изображение / текстура |
+| [Assets/Models/LegendaryMortar/Textures/Base_MetallicSmoothness.png](<../../Assets/Models/LegendaryMortar/Textures/Base_MetallicSmoothness.png>) | Изображение / текстура |
+| [Assets/Models/LegendaryMortar/Textures/Base_Normal.png](<../../Assets/Models/LegendaryMortar/Textures/Base_Normal.png>) | Изображение / текстура |
+| [Assets/Models/LegendaryMortar/Textures/Cradle_BaseColor.jpeg](<../../Assets/Models/LegendaryMortar/Textures/Cradle_BaseColor.jpeg>) | Изображение / текстура |
+| [Assets/Models/LegendaryMortar/Textures/Cradle_MetallicSmoothness.png](<../../Assets/Models/LegendaryMortar/Textures/Cradle_MetallicSmoothness.png>) | Изображение / текстура |
+| [Assets/Models/LegendaryMortar/Textures/Cradle_Normal.png](<../../Assets/Models/LegendaryMortar/Textures/Cradle_Normal.png>) | Изображение / текстура |
+| [Assets/Models/LegendaryMortar/Textures/Kit_BaseColor.jpeg](<../../Assets/Models/LegendaryMortar/Textures/Kit_BaseColor.jpeg>) | Изображение / текстура |
+| [Assets/Models/LegendaryMortar/Textures/Kit_MetallicSmoothness.png](<../../Assets/Models/LegendaryMortar/Textures/Kit_MetallicSmoothness.png>) | Изображение / текстура |
+| [Assets/Models/LegendaryMortar/Textures/Kit_Normal.png](<../../Assets/Models/LegendaryMortar/Textures/Kit_Normal.png>) | Изображение / текстура |
+
 ## Assets/Models/Loot/Chest
 
 | Файл | Краткое описание |
@@ -7328,6 +7400,19 @@
 | [Assets/Models/Ships/ShipV3/Textures/fb8d2ae089b0.png](<../../Assets/Models/Ships/ShipV3/Textures/fb8d2ae089b0.png>) | Изображение / текстура |
 | [Assets/Models/Ships/ShipV3/Textures/fe58ba6fd853.png](<../../Assets/Models/Ships/ShipV3/Textures/fe58ba6fd853.png>) | Изображение / текстура |
 | [Assets/Models/Ships/ShipV3/Textures/tripo_mat_4c763aa7_MetallicSmoothness.png](<../../Assets/Models/Ships/ShipV3/Textures/tripo_mat_4c763aa7_MetallicSmoothness.png>) | Изображение / текстура |
+
+## Assets/Models/SkullInstructionSign
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/SkullInstructionSign/SignBrass.mat](<../../Assets/Models/SkullInstructionSign/SignBrass.mat>) | Материал Unity |
+| [Assets/Models/SkullInstructionSign/SignIron.mat](<../../Assets/Models/SkullInstructionSign/SignIron.mat>) | Материал Unity |
+| [Assets/Models/SkullInstructionSign/SignIvory.mat](<../../Assets/Models/SkullInstructionSign/SignIvory.mat>) | Материал Unity |
+| [Assets/Models/SkullInstructionSign/SignWood.mat](<../../Assets/Models/SkullInstructionSign/SignWood.mat>) | Материал Unity |
+| [Assets/Models/SkullInstructionSign/SignWoodGrain.png](<../../Assets/Models/SkullInstructionSign/SignWoodGrain.png>) | Изображение / текстура |
+| [Assets/Models/SkullInstructionSign/SignWoodLight.mat](<../../Assets/Models/SkullInstructionSign/SignWoodLight.mat>) | Материал Unity |
+| [Assets/Models/SkullInstructionSign/SkullInstructionSign.fbx](<../../Assets/Models/SkullInstructionSign/SkullInstructionSign.fbx>) | Модель / анимации FBX; Предметы, лут и инвентарь |
+| [Assets/Models/SkullInstructionSign/SkullInstructionSign.prefab](<../../Assets/Models/SkullInstructionSign/SkullInstructionSign.prefab>) | Префаб Unity; Предметы, лут и инвентарь |
 
 ## Assets/Models/SlotMachine
 

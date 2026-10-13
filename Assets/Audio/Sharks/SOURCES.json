@@ -1,0 +1,69 @@
+[
+  {
+    "file": "SharkSplash.wav",
+    "url": "https://sfxmint.com/dl/water-splash-42.wav",
+    "license": "CC0-1.0",
+    "original_sha256": "1e34685c3e2832e17c8a8da6c055c5b7bb4c9e05107c9aabc1859b8113e6eb9e",
+    "sha256": "f667eaae63672ea4641c41587051eed0f9a1f86e033789424b06a0f740833eba",
+    "recipe": {
+      "mono": true,
+      "start": 0,
+      "seconds": 1.8,
+      "speed": 0.88,
+      "peak": 0.72,
+      "fade_in": 0.008,
+      "fade_out": 0.045
+    }
+  },
+  {
+    "file": "SharkSwim.wav",
+    "url": "https://sfxmint.com/dl/growth-d2bb5053136ce5a69e0403c1-part-1-v1.wav",
+    "license": "CC0-1.0",
+    "original_sha256": "599078dc7834275e9c2f7ef88744cc6fcab09686aca7706c4c9dfd323f3ea223",
+    "sha256": "537d77668500611988d29d2bafbbf593783c4957027f637e27f04ae4978d6ac8",
+    "recipe": {
+      "mono": true,
+      "start": 0.15,
+      "seconds": 1.2,
+      "speed": 0.9,
+      "peak": 0.72,
+      "fade_in": 0.008,
+      "fade_out": 0.045
+    }
+  },
+  {
+    "file": "SharkBite.wav",
+    "url": "https://sfxmint.com/dl/cartoon-chomp-01.wav",
+    "license": "CC0-1.0",
+    "original_sha256": "9ec82e76102fd77ceb056ff5de5982432bc66ff670c375a629b9570906b9c59f",
+    "sha256": "ae9fea7224eba7a9d1f54335ecacf210ba6e7ecbd82c596d3e35acd93b6eeabf",
+    "recipe": {
+      "mono": true,
+      "start": 0,
+      "seconds": 1,
+      "speed": 0.82,
+      "peak": 0.72,
+      "fade_in": 0.008,
+      "fade_out": 0.045
+    }
+  },
+  {
+    "file": "SharkChase.wav",
+    "source": "Originals/fronbondi_skegs-sfx-custom-version-of-jaws-theme-cinematic-sound-effect-461780.mp3",
+    "license": "User-provided file; license not inferred from filename",
+    "original_sha256": "01e326a4f7bbb5c65216cb75577db23c831d6d47093d73c6bbf6d76162d73a56",
+    "sha256": "5c2d295141f30fff615140099045c3b97df5acea73913b8f4f76985c6c0271b2",
+    "recipe": {
+      "trim_start": 18.04,
+      "trim_end": 26.22,
+      "pitch_semitones": 4,
+      "tempo": 1,
+      "processing": "FFmpeg rubberband",
+      "mono": true,
+      "crossfade_seconds": 0.18,
+      "peak": 0.72
+    },
+    "duration": 8.0,
+    "seam_sample_step": 0.004669189453125
+  }
+]

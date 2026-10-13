@@ -23,6 +23,7 @@ namespace PirateSlop.Networking
             public float Start, Burn, End;
             public GameObject Attacker;
             public ulong Impact;
+            public bool Gentle;
         }
 
         readonly SyncList<ShipFirePatch> firePatches = new();
@@ -39,7 +40,7 @@ namespace PirateSlop.Networking
         float nextFireContact;
         const float FireDamagePerSecond = 15f;
 
-        public void Ignite(Vector3 point, GameObject attacker = null, float radius = 0f, Collider surface = null, Vector3 normal = default)
+        public void Ignite(Vector3 point, GameObject attacker = null, float radius = 0f, Collider surface = null, Vector3 normal = default, bool gentle = false)
         {
             if (!IsServerInitialized || IsSinking) return;
             if (Motor.IsFrozen || frozen.Value.Until != 0)
@@ -50,8 +51,8 @@ namespace PirateSlop.Networking
             if (fireDestruction == null) fireDestruction = GetComponent<ShipDestruction>();
             if (fireDestruction == null) return;
             if (normal.sqrMagnitude < .01f) normal = transform.up;
-            var targets = fireDestruction.PlanFire(surface, point, normal);
-            float duration = Random.Range(7f, 9f);
+            var targets = fireDestruction.PlanFire(surface, point, normal, gentle);
+            float duration = gentle ? 2f : Random.Range(7f, 9f);
             ulong impact = fireDestruction.BeginFireImpact();
             int initial = 1;
             for (int i = 0; i < targets.Count; i++)
@@ -65,7 +66,7 @@ namespace PirateSlop.Networking
                 if (present) continue;
                 if (fireExposure.Count >= 128) break;
                 float spread = i < initial ? 0f : Mathf.Lerp(.45f, 2f, (i - initial) / (float)Mathf.Max(1, targets.Count - initial - 1));
-                fireExposure[++nextFireId] = new FireExposure { Target = target, Attacker = attacker, Impact = impact,
+                fireExposure[++nextFireId] = new FireExposure { Target = target, Attacker = attacker, Impact = impact, Gentle = gentle,
                     Start = Time.time + spread, Burn = Time.time + duration, End = Time.time + duration };
             }
             FireImpactObserversRpc(point, normal);
@@ -148,7 +149,7 @@ namespace PirateSlop.Networking
                     if (Time.time >= fire.Burn)
                     {
                         fire.Burn = float.PositiveInfinity;
-                        try { fireDestruction.BurnFragment(target, fire.Attacker, fire.Impact); }
+                        try { if (!fire.Gentle) fireDestruction.BurnFragment(target, fire.Attacker, fire.Impact); }
                         catch (System.Exception error)
                         {
                             RemoveFire(id);
@@ -169,8 +170,8 @@ namespace PirateSlop.Networking
                             var health = collider.GetComponentInParent<CombatHealth>();
                             if (health == null || health.IsDead || !burnedPlayers.Add(health)) continue;
                             var network = health.GetComponent<NetworkHealth>();
-                            if (network != null) network.Ignite(exposure.Attacker);
-                            else health.Damage(FireDamagePerSecond * .25f, exposure.Attacker);
+                            if (network != null) network.Ignite(exposure.Attacker, exposure.Gentle ? 2f : -1f, exposure.Gentle ? 3f : FireDamagePerSecond);
+                            else health.Damage((exposure.Gentle ? 3f : FireDamagePerSecond) * .25f, exposure.Attacker);
                         }
                     }
                 }

@@ -4695,6 +4695,8 @@ MonoBehaviour:
   fastSwimSpeed: 4.5
   swimAcceleration: 6
   breathSeconds: 25
+  cannonCameraHeight: 0.9
+  cannonCameraLookDown: 5
 --- !u!114 &8718541801069254893
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4896,6 +4898,7 @@ MonoBehaviour:
   - {fileID: 5655365093800096483, guid: b3c500d2543af8049bb23abf4a6c29ff, type: 3}
   - {fileID: 6629551348885018589, guid: 505c92c13dd376e458071cdaa166d3f9, type: 3}
   - {fileID: 5234771085821387453, guid: 2b48b0abce75e774dbdb17e6ea03bf13, type: 3}
+  - {fileID: 531264587472475335, guid: 23fe5ef1b28d6494e86ae9dba2845848, type: 3}
 --- !u!114 &4694566103855019808
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4941,6 +4944,7 @@ MonoBehaviour:
   BarricadeConstructionMaterial: {fileID: 2100000, guid: 8501e683be5cb3547b1a08489749166b, type: 2}
   Icons: {fileID: 11400000, guid: 138143b299d2f364cb5e86e1e193c066, type: 2}
   CannonPrefab: {fileID: 6766262252996742549, guid: a259d1526047caa44936b87a9a2dd31b, type: 3}
+  MortarPrefab: {fileID: 1645166311162798735, guid: 29a2d9304ab3bc342a5e417a0d6dedbf, type: 3}
   PreviewMaterial: {fileID: 2100000, guid: 73d063623bebc964cb4a2985c85b685f, type: 2}
 --- !u!114 &3778352587046063499
 MonoBehaviour:
