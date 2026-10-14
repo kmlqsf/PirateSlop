@@ -13,6 +13,7 @@ namespace PirateSlop.Networking
         public bool Kick(Vector3 incoming)
         {
             if (!IsServerInitialized || !Available || MonkeyCarried || !float.IsFinite(incoming.sqrMagnitude)) return false;
+            seagullFloating = false;
             var loose = GetComponent<NetworkLooseCannonball>();
             if (loose != null)
             {
@@ -26,13 +27,18 @@ namespace PirateSlop.Networking
                 ball.Body.WakeUp();
                 return true;
             }
+            BeginKick(incoming);
+            return true;
+        }
+
+        void BeginKick(Vector3 incoming)
+        {
             kickBounds = LootPlacement.VisualBounds(this);
             resolvedPlatform = SupportingShip;
             kickSupportHeight = resolvedPlatform != null ? resolvedPlatform.transform.InverseTransformPoint(transform.position).y : 0f;
             kickVelocity = resolvedPlatform != null ? resolvedPlatform.transform.InverseTransformDirection(incoming) : incoming;
             airborne = false;
             kicked = true;
-            return true;
         }
 
         void SimulateKick(float dt)
@@ -91,6 +97,7 @@ namespace PirateSlop.Networking
                         {
                             Place(floorShip != null ? floorShip.NetworkObject : null, point, transform.rotation);
                             kicked = false; nextFlop = Time.time + Random.Range(3f, 6f);
+                            FinishSeagullLootLanding(floorShip);
                             return;
                         }
                     }
@@ -102,11 +109,13 @@ namespace PirateSlop.Networking
                 }
                 var rotation = transform.rotation;
                 Place(resolvedPlatform != null ? resolvedPlatform.NetworkObject : null, point, rotation);
+                if (seagullLoot && GetComponent<NetworkLooseCannonball>() != null) GetComponent<Rigidbody>().position = point;
                 kickVelocity = support != null ? support.InverseTransformDirection(velocity) : velocity;
                 var ocean = OceanSurface.Instance;
-                if (support == null && ocean != null && point.y < ocean.Height(point) - .3f)
+                if (support == null && ocean != null && (seagullLoot ? point.y + SeagullLootBottom(rotation) <= ocean.Height(point) : point.y < ocean.Height(point) - .3f))
                 {
                     kicked = false;
+                    if (seagullLoot) { FloatSeagullLoot(point); return; }
                     if (LivingFish) EnterWater(velocity);
                     else ServerManager.Despawn(NetworkObject);
                     return;

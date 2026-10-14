@@ -249,7 +249,7 @@
 | --- | --- |
 | [Assets/Scripts/Loot/BarricadeBreakAnimation.cs](<../../Assets/Scripts/Loot/BarricadeBreakAnimation.cs>) | Исходник C#: BarricadeBreakAnimation; Предметы, лут и инвентарь, Звуки и голос |
 | [Assets/Scripts/Loot/BottleBreakVfx.cs](<../../Assets/Scripts/Loot/BottleBreakVfx.cs>) | Исходник C#: BottleBreakVfx; Предметы, лут и инвентарь, Звуки и голос |
-| [Assets/Scripts/Loot/ChestLootTable.cs](<../../Assets/Scripts/Loot/ChestLootTable.cs>) | Исходник C#: ChestLootStack, ChestLootTable, Table, ChestSettings, Entry; Предметы, лут и инвентарь, Корабельная слот-машина |
+| [Assets/Scripts/Loot/ChestLootTable.cs](<../../Assets/Scripts/Loot/ChestLootTable.cs>) | Исходник C#: ChestLootStack, ChestLootTable, Table, ChestSettings, Entry; Предметы, лут и инвентарь, Чайки и фоновые стаи, Корабельная слот-машина |
 | [Assets/Scripts/Loot/ClamLeverTarget.cs](<../../Assets/Scripts/Loot/ClamLeverTarget.cs>) | Исходник C#: ClamLeverTarget; Раковина с сундуком и парные рычаги |
 | [Assets/Scripts/Loot/FogBottleVisual.cs](<../../Assets/Scripts/Loot/FogBottleVisual.cs>) | Исходник C#: FogBottleVisual; Предметы, лут и инвентарь |
 | [Assets/Scripts/Loot/FogCloudVisual.cs](<../../Assets/Scripts/Loot/FogCloudVisual.cs>) | Исходник C#: FogCloudVisual; Предметы, лут и инвентарь |
@@ -322,6 +322,7 @@
 | [Assets/Scripts/Networking/NetworkEquipment.cs](<../../Assets/Scripts/Networking/NetworkEquipment.cs>) | Исходник C#: NetworkEquipment; Личное оружие и урон |
 | [Assets/Scripts/Networking/NetworkFish.Kick.cs](<../../Assets/Scripts/Networking/NetworkFish.Kick.cs>) | Исходник C#: NetworkFish; Предметы, лут и инвентарь |
 | [Assets/Scripts/Networking/NetworkFish.Monkey.cs](<../../Assets/Scripts/Networking/NetworkFish.Monkey.cs>) | Исходник C#: NetworkFish; Корабельная обезьянка |
+| [Assets/Scripts/Networking/NetworkFish.SeagullLoot.cs](<../../Assets/Scripts/Networking/NetworkFish.SeagullLoot.cs>) | Исходник C#: NetworkFish; Чайки и фоновые стаи |
 | [Assets/Scripts/Networking/NetworkFish.cs](<../../Assets/Scripts/Networking/NetworkFish.cs>) | Исходник C#: InventoryItem, NetworkFish; Телепортация корабля через F8, Предметы, лут и инвентарь, Рыбалка и рыба, Корабельная обезьянка |
 | [Assets/Scripts/Networking/NetworkFishMotion.cs](<../../Assets/Scripts/Networking/NetworkFishMotion.cs>) | Исходник C#: NetworkFish, BodyMesh; Рыбалка и рыба |
 | [Assets/Scripts/Networking/NetworkFishProjectile.cs](<../../Assets/Scripts/Networking/NetworkFishProjectile.cs>) | Исходник C#: NetworkFishProjectile; Рыбалка и рыба |

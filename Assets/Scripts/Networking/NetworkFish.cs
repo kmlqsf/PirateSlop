@@ -58,6 +58,7 @@ namespace PirateSlop.Networking
         void OnDisable()
         {
             kicked = false;
+            seagullLoot = seagullFloating = false;
             visualReady = false;
             motionStarted = -1f;
             RestoreBodyMotion();
@@ -97,7 +98,9 @@ namespace PirateSlop.Networking
         void LateUpdate()
         {
             if (PresentMonkeyCarry()) return;
-            if (!IsSpawned || (Item == InventoryItem.Cannonball && GetComponent<NetworkLooseCannonball>() != null)) return;
+            if (!IsSpawned) return;
+            if (IsServerInitialized && TickSeagullLootFloat()) return;
+            if (Item == InventoryItem.Cannonball && GetComponent<NetworkLooseCannonball>() != null && !(IsServerInitialized && seagullLoot && kicked)) return;
             if (platformId.Value == 0) resolvedPlatform = null;
             if (platform.Value != null) resolvedPlatform = platform.Value.GetComponent<NetworkShip>();
             if (resolvedPlatform == null && platformId.Value > 0)

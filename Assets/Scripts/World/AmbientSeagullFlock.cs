@@ -19,6 +19,7 @@ namespace PirateSlop.World
         float receivedAt;
         float nextCallAge;
         int calls;
+        GameObject carriedLoot;
 
         public void Initialize(SeagullFlockMessage state)
         {
@@ -35,6 +36,8 @@ namespace PirateSlop.World
                 if ((state.ShotMask & (1 << i)) != 0 && state.Falls != null && i < state.Falls.Length)
                     birds[i].BeginFall(state.Falls[i]);
             }
+            if (state.LootBird >= 0 && state.LootBird < birds.Length && (state.ShotMask & (1 << state.LootBird)) == 0)
+                carriedLoot = CreateLootVisual(birds[state.LootBird].transform, state.LootItem);
             Apply(state.Age);
         }
 
@@ -44,6 +47,7 @@ namespace PirateSlop.World
         {
             var bird = Bird(index);
             if (bird == null) return;
+            if (index == message.LootBird && carriedLoot != null) { Destroy(carriedLoot); carriedLoot = null; }
             message.EndAge = Mathf.Max(message.EndAge, endAge);
             bird.BeginFall(fall);
         }
@@ -77,8 +81,52 @@ namespace PirateSlop.World
                 bird.gameObject.SetActive(pose.Visible);
                 if (!pose.Visible) continue;
                 bird.transform.SetPositionAndRotation(pose.Position, pose.Rotation);
-                bird.Animate(age, pose.Power, pose.Fold, pose.Feet, pose.Flare, pose.Resting);
+                bird.Animate(age, pose.Power, pose.Fold, i == message.LootBird ? 1f : pose.Feet, pose.Flare, pose.Resting);
             }
+        }
+
+        static GameObject CreateLootVisual(Transform parent, InventoryItem item)
+        {
+            var prefab = SessionController.Instance != null ? SessionController.Instance.SeagullLootPrefab(item) : null;
+            if (prefab == null) return null;
+            var source = prefab.transform;
+            if (CannonAmmo.IsBall(item))
+            {
+                var ball = prefab.GetComponent<Cannonball>();
+                int index = item == InventoryItem.Cannonball ? 0 : item == InventoryItem.BoardingHook ? 5 : (int)item - 7;
+                if (ball != null && ball.AmmoModels != null && index >= 0 && index < ball.AmmoModels.Length && ball.AmmoModels[index] != null)
+                    source = ball.AmmoModels[index].transform;
+            }
+            var root = new GameObject("CarriedSeagullLoot");
+            root.transform.SetParent(parent, false);
+            var bounds = new Bounds();
+            bool found = false;
+            foreach (var filter in source.GetComponentsInChildren<MeshFilter>(true))
+            {
+                var renderer = filter.GetComponent<MeshRenderer>();
+                if (filter.sharedMesh == null || renderer == null || !renderer.enabled || !filter.gameObject.activeSelf) continue;
+                var part = new GameObject(filter.name);
+                part.transform.SetParent(root.transform, false);
+                var matrix = source.worldToLocalMatrix * filter.transform.localToWorldMatrix;
+                part.transform.localPosition = matrix.MultiplyPoint3x4(Vector3.zero);
+                part.transform.localRotation = matrix.rotation;
+                part.transform.localScale = matrix.lossyScale;
+                part.AddComponent<MeshFilter>().sharedMesh = filter.sharedMesh;
+                part.AddComponent<MeshRenderer>().sharedMaterials = renderer.sharedMaterials;
+                var meshBounds = filter.sharedMesh.bounds;
+                for (int i = 0; i < 8; i++)
+                {
+                    var point = matrix.MultiplyPoint3x4(meshBounds.center + Vector3.Scale(meshBounds.extents,
+                        new Vector3((i & 1) == 0 ? -1 : 1, (i & 2) == 0 ? -1 : 1, (i & 4) == 0 ? -1 : 1)));
+                    if (!found) { bounds = new Bounds(point, Vector3.zero); found = true; }
+                    else bounds.Encapsulate(point);
+                }
+            }
+            if (!found) { Destroy(root); return null; }
+            float scale = .65f / Mathf.Max(.01f, Mathf.Max(bounds.size.x, Mathf.Max(bounds.size.y, bounds.size.z)));
+            root.transform.localScale = Vector3.one * scale;
+            root.transform.localPosition = new Vector3(0, -.27f - bounds.extents.y * scale, 0) - bounds.center * scale;
+            return root;
         }
 
         public static BirdPose Evaluate(SeagullFlockMessage state, int index, float age)

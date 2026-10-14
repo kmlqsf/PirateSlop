@@ -12,6 +12,8 @@ namespace PirateSlop.Networking
     public struct SeagullFlockMessage : IBroadcast
     {
         public int Id, Seed, Count;
+        public int LootBird;
+        public InventoryItem LootItem;
         public float Age;
         public float EndAge;
         public byte ShotMask;
@@ -37,6 +39,8 @@ namespace PirateSlop.Networking
         }
         readonly List<SeagullEvent> seagullEvents = new();
         readonly Dictionary<int, AmbientSeagullFlock> seagullVisuals = new();
+        readonly Dictionary<NetworkPlayer, float> seagullVisits = new();
+        readonly Dictionary<NetworkPlayer, float> seagullRetryAt = new();
         CoastalSeagullPerches[] seagullPerches;
         System.Random seagullRandom;
         float nextSeagullAt;
@@ -51,11 +55,25 @@ namespace PirateSlop.Networking
             if (nextSeagullAt == 0) { nextSeagullAt = Time.time + 18; return; }
             if (Time.time < nextSeagullAt) return;
             seagullRandom ??= new System.Random(ProceduralWorld.Instance.Layout.Seed ^ 73891);
-            nextSeagullAt = Time.time + seagullRandom.Next(45, 76);
+            nextSeagullAt = Time.time + seagullRandom.Next(30, 46);
             var humans = players.Values.Where(p => p != null && !p.IsBot.Value && p.Motor != null && !p.Motor.IsDead).ToArray();
             if (humans.Length == 0) return;
-            var player = humans[seagullRandom.Next(humans.Length)];
-            SpawnSeagulls(player.transform.position, player.transform.forward, seagullRandom.Next(3) == 0, false);
+            foreach (var departed in seagullVisits.Keys.Where(p => p == null || !players.Values.Contains(p)).ToArray()) seagullVisits.Remove(departed);
+            foreach (var departed in seagullRetryAt.Keys.Where(p => p == null || !players.Values.Contains(p)).ToArray()) seagullRetryAt.Remove(departed);
+            if (seagullEvents.Count >= 3) return;
+            var ordered = humans.Where(p => !seagullRetryAt.TryGetValue(p, out var retry) || Time.time >= retry)
+                .OrderBy(p => seagullVisits.TryGetValue(p, out var visited) ? visited : float.NegativeInfinity)
+                .ThenBy(p => seagullRandom.Next()).ToArray();
+            bool landing = seagullRandom.Next(3) == 0;
+            foreach (var player in ordered.Take(3))
+            {
+                int previous = nextSeagullId;
+                SpawnSeagulls(player.transform.position, player.transform.forward, landing, false);
+                if (previous == nextSeagullId) { seagullRetryAt[player] = Time.time + 90f; continue; }
+                seagullRetryAt.Remove(player);
+                seagullVisits[player] = Time.time;
+                break;
+            }
         }
 
         public string SpawnDeveloperSeagulls(Vector3 origin, Vector3 forward, bool landing)
@@ -97,6 +115,7 @@ namespace PirateSlop.Networking
             var message = new SeagullFlockMessage
             {
                 Id = nextSeagullId + 1, Seed = seagullRandom.Next(1, int.MaxValue), Count = seagullRandom.Next(6, 9),
+                LootBird = -1, LootItem = InventoryItem.None,
                 Start = origin - forward * 100 - right * 35,
                 Control = origin + right * 20,
                 End = origin + forward * 170 + right * 35,
@@ -139,6 +158,11 @@ namespace PirateSlop.Networking
             if (requiredLanding && landing && points.Count == 0) return "Рядом нет скалы со свободной площадкой для посадки.";
             message.Perches = points.ToArray(); message.Normals = normals.ToArray();
             message.Falls = new SeagullFall[message.Count];
+            if (seagullRandom.NextDouble() < .5 && ChestLootTable.TryRollItem(seagullRandom, item => SeagullLootPrefab(item) != null, out var loot))
+            {
+                message.LootBird = seagullRandom.Next(message.Count);
+                message.LootItem = loot;
+            }
             nextSeagullId = message.Id;
             seagullEvents.Add(new SeagullEvent { Message = message, Started = Time.time });
             manager.ServerManager.Broadcast(message);
@@ -187,6 +211,7 @@ namespace PirateSlop.Networking
             entry.Message.ShotMask |= (byte)(1 << index);
             entry.Message.Falls[index] = fall;
             entry.ShotAt[index] = Time.time;
+            if (entry.Message.LootBird == index) DropSeagullLoot(entry.Message.LootItem, bird, (next.Position - current.Position) / .04f, current.Resting);
             entry.Message.EndAge = Mathf.Max(AmbientSeagullFlock.Duration(entry.Message), age + fall.Seconds + SeagullVisual.SinkSeconds);
             var message = new SeagullHitMessage { Id = id, Index = index, Fall = fall, EndAge = entry.Message.EndAge };
             manager.ServerManager.Broadcast(message);
@@ -229,8 +254,34 @@ namespace PirateSlop.Networking
         void ClearSeagulls()
         {
             foreach (var flock in seagullVisuals.Values) if (flock != null) Destroy(flock.gameObject);
-            seagullVisuals.Clear(); seagullEvents.Clear();
+            seagullVisuals.Clear(); seagullEvents.Clear(); seagullVisits.Clear(); seagullRetryAt.Clear();
             seagullPerches = null; seagullRandom = null; nextSeagullAt = 0; nextSeagullId = 0;
+        }
+
+        public NetworkFish SeagullLootPrefab(InventoryItem item)
+        {
+            var weapon = PlayerPrefab != null ? PlayerPrefab.GetComponent<NetworkWeapon>() : null;
+            int index = CannonAmmo.IsBall(item) ? (int)InventoryItem.Cannonball : (int)item;
+            return weapon != null && weapon.DropPrefabs != null && index >= 0 && index < weapon.DropPrefabs.Length ? weapon.DropPrefabs[index] : null;
+        }
+
+        void DropSeagullLoot(InventoryItem item, SeagullVisual bird, Vector3 velocity, bool resting)
+        {
+            var prefab = SeagullLootPrefab(item);
+            if (prefab == null) return;
+            var point = bird.transform.TransformPoint(new Vector3(0, -.35f, 0));
+            if (resting)
+            {
+                var bounds = LootPlacement.VisualBounds(prefab);
+                float bottom = (bounds.center.y - bounds.extents.y) * prefab.transform.localScale.y;
+                point.y = bird.transform.position.y - SeagullVisual.FootHeight - bottom + .04f;
+            }
+            var dropped = Instantiate(prefab, point, Quaternion.Euler(0, bird.transform.eulerAngles.y, 0));
+            UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene(dropped.gameObject, bird.gameObject.scene);
+            if (CannonAmmo.IsBall(item)) dropped.SetAmmoItem(item);
+            dropped.Place(null, point, dropped.transform.rotation);
+            manager.ServerManager.Spawn(dropped.NetworkObject);
+            dropped.BeginSeagullLoot(Vector3.ProjectOnPlane(velocity, Vector3.up) * .25f);
         }
     }
 }

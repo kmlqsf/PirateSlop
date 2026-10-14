@@ -208,6 +208,7 @@ namespace PirateSlop.Networking
         public void EnterWater(Vector3 incomingVelocity)
         {
             if (!IsServerInitialized || diving.Value || !LivingFish) return;
+            if (seagullLoot && OceanSurface.Instance != null) { FloatSeagullLoot(transform.position); return; }
             var ocean = OceanSurface.Instance;
             var point = transform.position;
             var splash = point;

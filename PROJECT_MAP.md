@@ -12,7 +12,7 @@
 
 ## Полный каталог
 
-Учтено 11624 файлов без `.meta`. Ещё 10478 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
+Учтено 11625 файлов без `.meta`. Ещё 10479 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
 
 | Раздел | Назначение | Файлов |
 | --- | --- | ---: |
@@ -36,7 +36,7 @@
 | [Assets/Prefabs](<Docs/ProjectMap/Assets-Prefabs.md>) | Готовые игровые объекты | 138 |
 | [Assets/Resources](<Docs/ProjectMap/Assets-Resources.md>) | Ресурсы, доступные для загрузки по имени | 163 |
 | [Assets/Scenes](<Docs/ProjectMap/Assets-Scenes.md>) | Сохранённые сцены | 3 |
-| [Assets/Scripts](<Docs/ProjectMap/Assets-Scripts.md>) | Игровой код и редакторские инструменты | 563 |
+| [Assets/Scripts](<Docs/ProjectMap/Assets-Scripts.md>) | Игровой код и редакторские инструменты | 564 |
 | [Assets/Settings](<Docs/ProjectMap/Assets-Settings.md>) | Настройки игровых систем и рендеринга | 59 |
 | [Assets/Shaders](<Docs/ProjectMap/Assets-Shaders.md>) | Шейдеры | 21 |
 | [Assets/StreamingAssets](<Docs/ProjectMap/Assets-StreamingAssets.md>) | Ресурсы раздела; точный состав — в каталоге | 5 |
@@ -943,6 +943,7 @@ PlanFire: минимум 16, максимум 64 очага на выстрел,
 
 Ключевые слова: чайки, птицы, seagull, flock.
 
+2026-10-14: фоновые стаи каждые30–45с, до3стай; приоритет живым людям с самым давним успешным спавном, случайный порядок равных. До3попыток маршрута за событие; заблокированный игрок повторяется не раньше90с. У50% успешно созданных стай ровно одна случайная птица несёт один предмет по положительным весам ChestLoot.json через ChestLootTable.TryRollItem; используются штатные DropPrefabs, без изменения весов. В лапах только уменьшенные MeshRenderer без сетевых компонентов/коллайдеров. Подтверждённое серверное сбивание однократно создаёт полноценный NetworkFish с четвертью горизонтальной скорости птицы; палуба использует штатную привязку, вода — отдельный режим плавания только этой награды (включая рыбу и ядра). Поздний клиент получает птицу/предмет/ShotMask и существующий сетевой лут; птица без попадания уносит награду. Штатный NetworkFish не имеет таймера удаления; срок не добавлялся. Чайки подводного сундука и ключевого ивента не изменены. Protocol194. Play Mode и сетевую приёмку выполняет пользователь.
 2026-10-11, приземление сбитой птицы: SeagullVisual проверяет swept spherecast между кадрами и пересечение OceanSurface, выбирая первую поверхность. На корабле, острове, скале или другом твёрдом объекте чайка ложится и исчезает через3с от касания; погружение и всплеск только в воде. SeagullFall хранит подтверждённый контакт, точку, поворот и сетевую опору с локальной позой для движения/качки корабля и плота. SessionSeagulls и сундуковые SyncVar передают приземление и актуальное состояние позднему клиенту. ProtocolVersion157; игровой/визуальный и сетевой прогон не выполнялся.
 2026-10-11: любое подтверждённое попадание пистолета, мушкета/снайперки, дробины двустволки, ручной мортиры или пушечного ядра сбивает чайку из фоновой стаи либо над подводным сундуком. SeagullVisual содержит отдельные trigger-хитбоксы корпуса, головы и крыльев; FirearmCombat, FirearmDamageBatch, NetworkHandMortarBall и CannonShotDamage используют серверные callbacks. Падение сохраняет инерцию, плавно складывает и разворачивает крылья, переходит к всплеску на актуальной поверхности OceanSurface, затем чайка погружается и исчезает через3с после касания воды. SessionSeagulls передаёт отдельное сообщение попадания и снимок сбитых птиц позднему клиенту; срок стаи продлевается до конца последнего падения. Сундуковые чайки используют SyncVar состояния/возраста и не возвращаются при смене фазы ивента. ProtocolVersion156; игровой/визуальный и сетевой прогон не выполнялся.
 Общая процедурная модель SeagullVisual используется двумя чайками над подводным сундуком и фоновыми стаями. Общие меши/URP материалы, плечевые и концевые суставы крыльев; взмахи, планирование, раскрытие лап, посадка, складывание крыльев, отдых14–21с и взлёт. Орбиты сундуковых чаек сохранены.
@@ -951,6 +952,8 @@ F8 → Мир → Чайки: Вызвать стаю в небе (command25), �
 Редкий крик CC0 через GameAudioBank/SoundCue.Seagull, добавленный последним в enum. Не больше2криков настаю и общая пауза12–18с, 3D min8/max170м, Volume.55×Master×Ambience, priority200. Audio PCMmono безloop; без отдельных AudioSource накаждой птице. Звучание в игре не проверялось.
 Специалист осмотрел native Unity preview5поз и указал наскачки поворотов Cruise→Approach и Takeoff→Departure. Добавлены deterministic .85сSlerp и плавный Power. Native phase probe12границ: rotation/power jump0, контакт/rest без смещения. Повторная независимая визуальная приёмка не завершена из-за лимита сервиса агента; APPROVED не получен.
 
+- [Assets/Scripts/Networking/NetworkFish.SeagullLoot.cs](<Assets/Scripts/Networking/NetworkFish.SeagullLoot.cs>) — Исходник C#: NetworkFish.
+- [Assets/Scripts/Loot/ChestLootTable.cs](<Assets/Scripts/Loot/ChestLootTable.cs>) — Исходник C#: ChestLootStack, ChestLootTable, Table, ChestSettings, Entry.
 - [Assets/Scripts/World/SeagullVisual.cs](<Assets/Scripts/World/SeagullVisual.cs>) — Исходник C#: SeagullFall, SeagullVisual.
 - [Assets/Scripts/World/AmbientSeagullFlock.cs](<Assets/Scripts/World/AmbientSeagullFlock.cs>) — Исходник C#: AmbientSeagullFlock, BirdPose.
 - [Assets/Scripts/World/CoastalSeagullPerches.cs](<Assets/Scripts/World/CoastalSeagullPerches.cs>) — Исходник C#: CoastalSeagullPerches.
