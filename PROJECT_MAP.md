@@ -12,7 +12,7 @@
 
 ## Полный каталог
 
-Учтено 11625 файлов без `.meta`. Ещё 10479 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
+Учтено 11777 файлов без `.meta`. Ещё 10631 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
 
 | Раздел | Назначение | Файлов |
 | --- | --- | ---: |
@@ -31,12 +31,12 @@
 | [Assets/JMO Assets](<Docs/ProjectMap/Assets-JMO Assets.md>) | Ресурсы раздела; точный состав — в каталоге | 19 |
 | [Assets/Materials](<Docs/ProjectMap/Assets-Materials.md>) | Материалы | 140 |
 | [Assets/Mirza](<Docs/ProjectMap/Assets-Mirza.md>) | Ресурсы раздела; точный состав — в каталоге | 1 |
-| [Assets/Models](<Docs/ProjectMap/Assets-Models.md>) | Модели и связанные ресурсы | 7180 |
+| [Assets/Models](<Docs/ProjectMap/Assets-Models.md>) | Модели и связанные ресурсы | 7325 |
 | [Assets/Plugins](<Docs/ProjectMap/Assets-Plugins.md>) | Плагины | 5 |
 | [Assets/Prefabs](<Docs/ProjectMap/Assets-Prefabs.md>) | Готовые игровые объекты | 138 |
-| [Assets/Resources](<Docs/ProjectMap/Assets-Resources.md>) | Ресурсы, доступные для загрузки по имени | 163 |
+| [Assets/Resources](<Docs/ProjectMap/Assets-Resources.md>) | Ресурсы, доступные для загрузки по имени | 164 |
 | [Assets/Scenes](<Docs/ProjectMap/Assets-Scenes.md>) | Сохранённые сцены | 3 |
-| [Assets/Scripts](<Docs/ProjectMap/Assets-Scripts.md>) | Игровой код и редакторские инструменты | 564 |
+| [Assets/Scripts](<Docs/ProjectMap/Assets-Scripts.md>) | Игровой код и редакторские инструменты | 569 |
 | [Assets/Settings](<Docs/ProjectMap/Assets-Settings.md>) | Настройки игровых систем и рендеринга | 59 |
 | [Assets/Shaders](<Docs/ProjectMap/Assets-Shaders.md>) | Шейдеры | 21 |
 | [Assets/StreamingAssets](<Docs/ProjectMap/Assets-StreamingAssets.md>) | Ресурсы раздела; точный состав — в каталоге | 5 |
@@ -46,7 +46,7 @@
 | [Assets/UI](<Docs/ProjectMap/Assets-UI.md>) | Ресурсы интерфейса | 42 |
 | [Assets/_Recovery](<Docs/ProjectMap/Assets-_Recovery.md>) | Сохранённые восстановленные данные | 2 |
 | [Captures](<Docs/ProjectMap/Captures.md>) | Ресурсы раздела; точный состав — в каталоге | 1010 |
-| [Docs](<Docs/ProjectMap/Docs.md>) | Документы и сохранённые отчёты | 46 |
+| [Docs](<Docs/ProjectMap/Docs.md>) | Документы и сохранённые отчёты | 47 |
 | [Packages](<Docs/ProjectMap/Packages.md>) | Манифест, lock-файл и встроенные пакеты | 924 |
 | [ProjectSettings](<Docs/ProjectMap/ProjectSettings.md>) | Настройки Unity | 28 |
 | [Root](<Docs/ProjectMap/Root.md>) | Корневые инструкции, планы и служебные файлы | 26 |
@@ -943,6 +943,7 @@ PlanFire: минимум 16, максимум 64 очага на выстрел,
 
 Ключевые слова: чайки, птицы, seagull, flock.
 
+14.10.2026: визуальный лут в лапах фоновой чайки увеличен с0.65 до1.25м по самой длинной стороне (примерно×1.92). Bounds-нормализация и привязка верхней стороны предмета под лапами сохраняют правильное положение и не врезают модель в птицу. Изменён только локальный CarriedSeagullLoot; реальные выпавшие NetworkFish, веса ChestLoot.json и серверная награда прежние. AmbientSeagullFlock.CarriedLootSize задаёт размер.
 2026-10-14: фоновые стаи каждые30–45с, до3стай; приоритет живым людям с самым давним успешным спавном, случайный порядок равных. До3попыток маршрута за событие; заблокированный игрок повторяется не раньше90с. У50% успешно созданных стай ровно одна случайная птица несёт один предмет по положительным весам ChestLoot.json через ChestLootTable.TryRollItem; используются штатные DropPrefabs, без изменения весов. В лапах только уменьшенные MeshRenderer без сетевых компонентов/коллайдеров. Подтверждённое серверное сбивание однократно создаёт полноценный NetworkFish с четвертью горизонтальной скорости птицы; палуба использует штатную привязку, вода — отдельный режим плавания только этой награды (включая рыбу и ядра). Поздний клиент получает птицу/предмет/ShotMask и существующий сетевой лут; птица без попадания уносит награду. Штатный NetworkFish не имеет таймера удаления; срок не добавлялся. Чайки подводного сундука и ключевого ивента не изменены. Protocol194. Play Mode и сетевую приёмку выполняет пользователь.
 2026-10-11, приземление сбитой птицы: SeagullVisual проверяет swept spherecast между кадрами и пересечение OceanSurface, выбирая первую поверхность. На корабле, острове, скале или другом твёрдом объекте чайка ложится и исчезает через3с от касания; погружение и всплеск только в воде. SeagullFall хранит подтверждённый контакт, точку, поворот и сетевую опору с локальной позой для движения/качки корабля и плота. SessionSeagulls и сундуковые SyncVar передают приземление и актуальное состояние позднему клиенту. ProtocolVersion157; игровой/визуальный и сетевой прогон не выполнялся.
 2026-10-11: любое подтверждённое попадание пистолета, мушкета/снайперки, дробины двустволки, ручной мортиры или пушечного ядра сбивает чайку из фоновой стаи либо над подводным сундуком. SeagullVisual содержит отдельные trigger-хитбоксы корпуса, головы и крыльев; FirearmCombat, FirearmDamageBatch, NetworkHandMortarBall и CannonShotDamage используют серверные callbacks. Падение сохраняет инерцию, плавно складывает и разворачивает крылья, переходит к всплеску на актуальной поверхности OceanSurface, затем чайка погружается и исчезает через3с после касания воды. SessionSeagulls передаёт отдельное сообщение попадания и снимок сбитых птиц позднему клиенту; срок стаи продлевается до конца последнего падения. Сундуковые чайки используют SyncVar состояния/возраста и не возвращаются при смене фазы ивента. ProtocolVersion156; игровой/визуальный и сетевой прогон не выполнялся.
@@ -2921,6 +2922,180 @@ Mystery допускает все включенные строки ChestLoot.js
 - [Assets/Scripts/Networking/NetworkShip.TargetMarks.cs](<Assets/Scripts/Networking/NetworkShip.TargetMarks.cs>) — Исходник C#: NetworkShip, TargetMark.
 - [Assets/Scripts/UI/TargetMarkHud.cs](<Assets/Scripts/UI/TargetMarkHud.cs>) — Исходник C#: TargetMarkHud.
 - [Assets/Scripts/Player/ShipSpyglassView.cs](<Assets/Scripts/Player/ShipSpyglassView.cs>) — Исходник C#: ShipSpyglassView.
+
+### Лестница контрабандистов — морской платформинг (`platforming-event`)
+
+Ключевые слова: платформинг, паркур, прыжки, platforming, лестница контрабандистов.
+
+14.10.2026: 31 точка в пяти секциях с шестью типами поверхностей, высота2.2–20.05м. Финальный сундук в настоящих звеньевых цепях с замком. E на рычаге проходит серверные проверки дистанции/видимости/свободных рук; единственное срабатывание сохраняет общее сетевое время. За0.6с рычаг опускается и дужка отпирается; цепи отлетают, крышка открывается, все коллайдеры трассы отключаются, 118 отдельных визуальных частей рушатся и уходят под воду. Целая трасса использует13 объединённых групп; обломки включаются только после рычага и скрываются после падения. Сундук падает с гравитацией к текущему OceanSurface, затем отвязывается от ивента, плавает и доступен для обычного лута/переноса; очко рогалика начисляется только штатным взаимодействием игрока. Рычаг нельзя повторить, сундук не возрождается; поздний клиент восстанавливает актуальную стадию без повторных звуков. Обычный спавн, станция13 тестового ряда и F8 сохранены; радиус46м. Protocol196. Компиляция и редакторская проверка ассетов не заменяют игровую и сетевую проверку.
+
+- [Assets/Scripts/Networking/NetworkPlatformingEvent.cs](<Assets/Scripts/Networking/NetworkPlatformingEvent.cs>) — Исходник C#: NetworkPlatformingEvent.
+- [Assets/Scripts/Networking/NetworkLootChest.Platforming.cs](<Assets/Scripts/Networking/NetworkLootChest.Platforming.cs>) — Исходник C#: NetworkLootChest.
+- [Assets/Scripts/Editor/PlatformingEventSetup.cs](<Assets/Scripts/Editor/PlatformingEventSetup.cs>) — Исходник C#: PlatformingEventSetup, Surface, RouteNode.
+- [Assets/Scripts/World/SeaLootSpawner.cs](<Assets/Scripts/World/SeaLootSpawner.cs>) — Исходник C#: SeaLootSpawner.
+- [Assets/Scripts/World/EnvironmentEventTestRow.cs](<Assets/Scripts/World/EnvironmentEventTestRow.cs>) — Исходник C#: EnvironmentEventTestRow.
+- [Assets/Scripts/World/DeveloperTeleportDestinations.cs](<Assets/Scripts/World/DeveloperTeleportDestinations.cs>) — Исходник C#: DeveloperTeleportDestination, DeveloperTeleportDestinations.
+- [Assets/Scripts/Loot/LootCatalog.cs](<Assets/Scripts/Loot/LootCatalog.cs>) — Исходник C#: LootCatalog, Entry.
+- [Assets/Scripts/Networking/NetworkLootChest.Ocean.cs](<Assets/Scripts/Networking/NetworkLootChest.Ocean.cs>) — Исходник C#: SeaLootKind, SeaLootState, NetworkLootChest.
+- [Assets/Scripts/Networking/NetworkLootChest.OceanVisual.cs](<Assets/Scripts/Networking/NetworkLootChest.OceanVisual.cs>) — Исходник C#: NetworkLootChest.
+- [Assets/Scripts/Networking/NetworkDeveloperTools.cs](<Assets/Scripts/Networking/NetworkDeveloperTools.cs>) — Исходник C#: NetworkWeapon.
+- [Assets/Scripts/Player/DeveloperMenu.cs](<Assets/Scripts/Player/DeveloperMenu.cs>) — Исходник C#: DeveloperMenu.
+- [Assets/Scripts/Networking/SessionConfig.cs](<Assets/Scripts/Networking/SessionConfig.cs>) — Исходник C#: SessionConfig.
+- [Assets/Settings/Networking/SessionConfig.asset](<Assets/Settings/Networking/SessionConfig.asset>) — Настройки или данные Unity.
+- [Assets/Settings/Loot/DefaultLoot.asset](<Assets/Settings/Loot/DefaultLoot.asset>) — Настройки или данные Unity.
+- [Assets/Settings/Networking/NetworkPrefabs.asset](<Assets/Settings/Networking/NetworkPrefabs.asset>) — Настройки или данные Unity.
+- [Assets/Resources/SeaEvents/PlatformingEvent.prefab](<Assets/Resources/SeaEvents/PlatformingEvent.prefab>) — Префаб Unity.
+- [Assets/Models/SeaEvents/Platforming/FadedOchre.mat](<Assets/Models/SeaEvents/Platforming/FadedOchre.mat>) — Материал Unity.
+- [Assets/Models/SeaEvents/Platforming/ScaffoldBatch_0.asset](<Assets/Models/SeaEvents/Platforming/ScaffoldBatch_0.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/ScaffoldBatch_1.asset](<Assets/Models/SeaEvents/Platforming/ScaffoldBatch_1.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/ScaffoldBatch_10.asset](<Assets/Models/SeaEvents/Platforming/ScaffoldBatch_10.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/ScaffoldBatch_11.asset](<Assets/Models/SeaEvents/Platforming/ScaffoldBatch_11.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/ScaffoldBatch_12.asset](<Assets/Models/SeaEvents/Platforming/ScaffoldBatch_12.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/ScaffoldBatch_2.asset](<Assets/Models/SeaEvents/Platforming/ScaffoldBatch_2.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/ScaffoldBatch_3.asset](<Assets/Models/SeaEvents/Platforming/ScaffoldBatch_3.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/ScaffoldBatch_4.asset](<Assets/Models/SeaEvents/Platforming/ScaffoldBatch_4.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/ScaffoldBatch_5.asset](<Assets/Models/SeaEvents/Platforming/ScaffoldBatch_5.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/ScaffoldBatch_6.asset](<Assets/Models/SeaEvents/Platforming/ScaffoldBatch_6.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/ScaffoldBatch_7.asset](<Assets/Models/SeaEvents/Platforming/ScaffoldBatch_7.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/ScaffoldBatch_8.asset](<Assets/Models/SeaEvents/Platforming/ScaffoldBatch_8.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/ScaffoldBatch_9.asset](<Assets/Models/SeaEvents/Platforming/ScaffoldBatch_9.asset>) — Настройки или данные Unity.
+- [Assets/Scripts/World/PlatformingLeverTarget.cs](<Assets/Scripts/World/PlatformingLeverTarget.cs>) — Исходник C#: PlatformingLeverTarget.
+- [Assets/Scripts/Networking/NetworkWeapon.Platforming.cs](<Assets/Scripts/Networking/NetworkWeapon.Platforming.cs>) — Исходник C#: NetworkWeapon.
+- [Assets/Scripts/Player/PlayerInventory.cs](<Assets/Scripts/Player/PlayerInventory.cs>) — Исходник C#: PlayerInventory.
+- [Assets/Models/Ships/ShipV3/RuntimeMeshes/AnchorChainLink.asset](<Assets/Models/Ships/ShipV3/RuntimeMeshes/AnchorChainLink.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/SeagullKey/WreckChestPadlock.prefab](<Assets/Models/SeaEvents/SeagullKey/WreckChestPadlock.prefab>) — Префаб Unity.
+- [Assets/Models/SeaEvents/Platforming/IntactCourse_0.asset](<Assets/Models/SeaEvents/Platforming/IntactCourse_0.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/IntactCourse_1.asset](<Assets/Models/SeaEvents/Platforming/IntactCourse_1.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/IntactCourse_10.asset](<Assets/Models/SeaEvents/Platforming/IntactCourse_10.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/IntactCourse_11.asset](<Assets/Models/SeaEvents/Platforming/IntactCourse_11.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/IntactCourse_12.asset](<Assets/Models/SeaEvents/Platforming/IntactCourse_12.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/IntactCourse_2.asset](<Assets/Models/SeaEvents/Platforming/IntactCourse_2.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/IntactCourse_3.asset](<Assets/Models/SeaEvents/Platforming/IntactCourse_3.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/IntactCourse_4.asset](<Assets/Models/SeaEvents/Platforming/IntactCourse_4.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/IntactCourse_5.asset](<Assets/Models/SeaEvents/Platforming/IntactCourse_5.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/IntactCourse_6.asset](<Assets/Models/SeaEvents/Platforming/IntactCourse_6.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/IntactCourse_7.asset](<Assets/Models/SeaEvents/Platforming/IntactCourse_7.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/IntactCourse_8.asset](<Assets/Models/SeaEvents/Platforming/IntactCourse_8.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/IntactCourse_9.asset](<Assets/Models/SeaEvents/Platforming/IntactCourse_9.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing00_0.asset](<Assets/Models/SeaEvents/Platforming/Landing00_0.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing00_1.asset](<Assets/Models/SeaEvents/Platforming/Landing00_1.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing00_2.asset](<Assets/Models/SeaEvents/Platforming/Landing00_2.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing00_3.asset](<Assets/Models/SeaEvents/Platforming/Landing00_3.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing00_4.asset](<Assets/Models/SeaEvents/Platforming/Landing00_4.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing00_5.asset](<Assets/Models/SeaEvents/Platforming/Landing00_5.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing00_6.asset](<Assets/Models/SeaEvents/Platforming/Landing00_6.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing00_7.asset](<Assets/Models/SeaEvents/Platforming/Landing00_7.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing00_8.asset](<Assets/Models/SeaEvents/Platforming/Landing00_8.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing00_9.asset](<Assets/Models/SeaEvents/Platforming/Landing00_9.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing01_0.asset](<Assets/Models/SeaEvents/Platforming/Landing01_0.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing01_1.asset](<Assets/Models/SeaEvents/Platforming/Landing01_1.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing01_2.asset](<Assets/Models/SeaEvents/Platforming/Landing01_2.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing01_3.asset](<Assets/Models/SeaEvents/Platforming/Landing01_3.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing01_4.asset](<Assets/Models/SeaEvents/Platforming/Landing01_4.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing02_0.asset](<Assets/Models/SeaEvents/Platforming/Landing02_0.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing02_1.asset](<Assets/Models/SeaEvents/Platforming/Landing02_1.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing02_2.asset](<Assets/Models/SeaEvents/Platforming/Landing02_2.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing02_3.asset](<Assets/Models/SeaEvents/Platforming/Landing02_3.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing02_4.asset](<Assets/Models/SeaEvents/Platforming/Landing02_4.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing02_5.asset](<Assets/Models/SeaEvents/Platforming/Landing02_5.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing02_6.asset](<Assets/Models/SeaEvents/Platforming/Landing02_6.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing03_0.asset](<Assets/Models/SeaEvents/Platforming/Landing03_0.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing04_0.asset](<Assets/Models/SeaEvents/Platforming/Landing04_0.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing04_1.asset](<Assets/Models/SeaEvents/Platforming/Landing04_1.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing05_0.asset](<Assets/Models/SeaEvents/Platforming/Landing05_0.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing05_1.asset](<Assets/Models/SeaEvents/Platforming/Landing05_1.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing06_0.asset](<Assets/Models/SeaEvents/Platforming/Landing06_0.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing06_1.asset](<Assets/Models/SeaEvents/Platforming/Landing06_1.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing06_2.asset](<Assets/Models/SeaEvents/Platforming/Landing06_2.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing06_3.asset](<Assets/Models/SeaEvents/Platforming/Landing06_3.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing07_0.asset](<Assets/Models/SeaEvents/Platforming/Landing07_0.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing07_1.asset](<Assets/Models/SeaEvents/Platforming/Landing07_1.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing07_2.asset](<Assets/Models/SeaEvents/Platforming/Landing07_2.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing08_0.asset](<Assets/Models/SeaEvents/Platforming/Landing08_0.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing08_1.asset](<Assets/Models/SeaEvents/Platforming/Landing08_1.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing09_0.asset](<Assets/Models/SeaEvents/Platforming/Landing09_0.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing09_1.asset](<Assets/Models/SeaEvents/Platforming/Landing09_1.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing09_2.asset](<Assets/Models/SeaEvents/Platforming/Landing09_2.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing09_3.asset](<Assets/Models/SeaEvents/Platforming/Landing09_3.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing09_4.asset](<Assets/Models/SeaEvents/Platforming/Landing09_4.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing09_5.asset](<Assets/Models/SeaEvents/Platforming/Landing09_5.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing10_0.asset](<Assets/Models/SeaEvents/Platforming/Landing10_0.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing11_0.asset](<Assets/Models/SeaEvents/Platforming/Landing11_0.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing11_1.asset](<Assets/Models/SeaEvents/Platforming/Landing11_1.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing12_0.asset](<Assets/Models/SeaEvents/Platforming/Landing12_0.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing13_0.asset](<Assets/Models/SeaEvents/Platforming/Landing13_0.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing13_1.asset](<Assets/Models/SeaEvents/Platforming/Landing13_1.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing13_2.asset](<Assets/Models/SeaEvents/Platforming/Landing13_2.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing13_3.asset](<Assets/Models/SeaEvents/Platforming/Landing13_3.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing14_0.asset](<Assets/Models/SeaEvents/Platforming/Landing14_0.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing14_1.asset](<Assets/Models/SeaEvents/Platforming/Landing14_1.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing15_0.asset](<Assets/Models/SeaEvents/Platforming/Landing15_0.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing15_1.asset](<Assets/Models/SeaEvents/Platforming/Landing15_1.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing16_0.asset](<Assets/Models/SeaEvents/Platforming/Landing16_0.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing16_1.asset](<Assets/Models/SeaEvents/Platforming/Landing16_1.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing16_2.asset](<Assets/Models/SeaEvents/Platforming/Landing16_2.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing16_3.asset](<Assets/Models/SeaEvents/Platforming/Landing16_3.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing16_4.asset](<Assets/Models/SeaEvents/Platforming/Landing16_4.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing16_5.asset](<Assets/Models/SeaEvents/Platforming/Landing16_5.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing17_0.asset](<Assets/Models/SeaEvents/Platforming/Landing17_0.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing17_1.asset](<Assets/Models/SeaEvents/Platforming/Landing17_1.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing17_2.asset](<Assets/Models/SeaEvents/Platforming/Landing17_2.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing17_3.asset](<Assets/Models/SeaEvents/Platforming/Landing17_3.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing17_4.asset](<Assets/Models/SeaEvents/Platforming/Landing17_4.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing17_5.asset](<Assets/Models/SeaEvents/Platforming/Landing17_5.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing18_0.asset](<Assets/Models/SeaEvents/Platforming/Landing18_0.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing18_1.asset](<Assets/Models/SeaEvents/Platforming/Landing18_1.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing19_0.asset](<Assets/Models/SeaEvents/Platforming/Landing19_0.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing20_0.asset](<Assets/Models/SeaEvents/Platforming/Landing20_0.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing20_1.asset](<Assets/Models/SeaEvents/Platforming/Landing20_1.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing20_2.asset](<Assets/Models/SeaEvents/Platforming/Landing20_2.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing20_3.asset](<Assets/Models/SeaEvents/Platforming/Landing20_3.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing21_0.asset](<Assets/Models/SeaEvents/Platforming/Landing21_0.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing21_1.asset](<Assets/Models/SeaEvents/Platforming/Landing21_1.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing21_2.asset](<Assets/Models/SeaEvents/Platforming/Landing21_2.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing22_0.asset](<Assets/Models/SeaEvents/Platforming/Landing22_0.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing22_1.asset](<Assets/Models/SeaEvents/Platforming/Landing22_1.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing23_0.asset](<Assets/Models/SeaEvents/Platforming/Landing23_0.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing24_0.asset](<Assets/Models/SeaEvents/Platforming/Landing24_0.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing24_1.asset](<Assets/Models/SeaEvents/Platforming/Landing24_1.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing24_2.asset](<Assets/Models/SeaEvents/Platforming/Landing24_2.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing24_3.asset](<Assets/Models/SeaEvents/Platforming/Landing24_3.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing24_4.asset](<Assets/Models/SeaEvents/Platforming/Landing24_4.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing24_5.asset](<Assets/Models/SeaEvents/Platforming/Landing24_5.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing25_0.asset](<Assets/Models/SeaEvents/Platforming/Landing25_0.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing25_1.asset](<Assets/Models/SeaEvents/Platforming/Landing25_1.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing25_2.asset](<Assets/Models/SeaEvents/Platforming/Landing25_2.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing25_3.asset](<Assets/Models/SeaEvents/Platforming/Landing25_3.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing25_4.asset](<Assets/Models/SeaEvents/Platforming/Landing25_4.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing25_5.asset](<Assets/Models/SeaEvents/Platforming/Landing25_5.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing25_6.asset](<Assets/Models/SeaEvents/Platforming/Landing25_6.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing25_7.asset](<Assets/Models/SeaEvents/Platforming/Landing25_7.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing25_8.asset](<Assets/Models/SeaEvents/Platforming/Landing25_8.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing25_9.asset](<Assets/Models/SeaEvents/Platforming/Landing25_9.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing26_0.asset](<Assets/Models/SeaEvents/Platforming/Landing26_0.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing26_1.asset](<Assets/Models/SeaEvents/Platforming/Landing26_1.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing26_2.asset](<Assets/Models/SeaEvents/Platforming/Landing26_2.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing26_3.asset](<Assets/Models/SeaEvents/Platforming/Landing26_3.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing27_0.asset](<Assets/Models/SeaEvents/Platforming/Landing27_0.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing27_1.asset](<Assets/Models/SeaEvents/Platforming/Landing27_1.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing28_0.asset](<Assets/Models/SeaEvents/Platforming/Landing28_0.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing29_0.asset](<Assets/Models/SeaEvents/Platforming/Landing29_0.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing29_1.asset](<Assets/Models/SeaEvents/Platforming/Landing29_1.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing29_2.asset](<Assets/Models/SeaEvents/Platforming/Landing29_2.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing30_0.asset](<Assets/Models/SeaEvents/Platforming/Landing30_0.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing30_1.asset](<Assets/Models/SeaEvents/Platforming/Landing30_1.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing31_0.asset](<Assets/Models/SeaEvents/Platforming/Landing31_0.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing31_1.asset](<Assets/Models/SeaEvents/Platforming/Landing31_1.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing31_2.asset](<Assets/Models/SeaEvents/Platforming/Landing31_2.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing31_3.asset](<Assets/Models/SeaEvents/Platforming/Landing31_3.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing31_4.asset](<Assets/Models/SeaEvents/Platforming/Landing31_4.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing31_5.asset](<Assets/Models/SeaEvents/Platforming/Landing31_5.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing31_6.asset](<Assets/Models/SeaEvents/Platforming/Landing31_6.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing31_7.asset](<Assets/Models/SeaEvents/Platforming/Landing31_7.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing31_8.asset](<Assets/Models/SeaEvents/Platforming/Landing31_8.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/Landing31_9.asset](<Assets/Models/SeaEvents/Platforming/Landing31_9.asset>) — Настройки или данные Unity.
+- [Assets/Models/SeaEvents/Platforming/SummitChains_0.asset](<Assets/Models/SeaEvents/Platforming/SummitChains_0.asset>) — Настройки или данные Unity.
+- [Docs/PlatformingEvent.md](<Docs/PlatformingEvent.md>) — Документация.
 
 ## Источники актуальных настроек
 

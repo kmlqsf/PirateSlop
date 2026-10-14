@@ -327,7 +327,7 @@ namespace PirateSlop.Networking
         }
         void SpawnDeveloperLootEvent(SeaLootKind kind)
         {
-            if ((kind < SeaLootKind.Capture || kind > SeaLootKind.Skull) && kind != SeaLootKind.Clam && kind != SeaLootKind.SeagullKey) return;
+            if ((kind < SeaLootKind.Capture || kind > SeaLootKind.Skull) && kind != SeaLootKind.Clam && kind != SeaLootKind.SeagullKey && kind != SeaLootKind.Platforming) return;
             var session = SessionController.Instance;
             var world = PirateSlop.World.ProceduralWorld.Instance;
             var catalog = session != null && session.Config != null ? session.Config.Loot : null;
@@ -339,7 +339,7 @@ namespace PirateSlop.Networking
             if (world == null || !world.Ready || catalog == null || catalog.ChestPrefab == null)
             { DeveloperResultTargetRpc(Owner, "Мир или каталог лута ещё не готовы."); return; }
             var forward = Vector3.ProjectOnPlane(ship.transform.forward, Vector3.up).normalized;
-            float clearance = kind == SeaLootKind.SeagullKey ? 30f : kind == SeaLootKind.Capture ? catalog.CaptureRadius : kind == SeaLootKind.Skull && catalog.SkullEventPrefab != null ? catalog.SkullEventPrefab.PlatformRadius : kind == SeaLootKind.Clam && catalog.ClamEventPrefab != null ? catalog.ClamEventPrefab.PlatformRadius : 8f;
+            float clearance = kind == SeaLootKind.Platforming ? catalog.PlatformingEventPrefab != null ? catalog.PlatformingEventPrefab.PlatformRadius : 46f : kind == SeaLootKind.SeagullKey ? 30f : kind == SeaLootKind.Capture ? catalog.CaptureRadius : kind == SeaLootKind.Skull && catalog.SkullEventPrefab != null ? catalog.SkullEventPrefab.PlatformRadius : kind == SeaLootKind.Clam && catalog.ClamEventPrefab != null ? catalog.ClamEventPrefab.PlatformRadius : 8f;
             float distance = ship.Motor.HullFootprint.y * .5f + clearance + 15f;
             float depth = kind == SeaLootKind.Sunken ? catalog.SunkenDepth + 2f : 3f;
             for (int attempt = 0; attempt < 12; attempt++)
@@ -353,7 +353,7 @@ namespace PirateSlop.Networking
                     if (chest != null && chest.IsSpawned && chest.Carrier == null && chest.Kind != SeaLootKind.None &&
                         Vector3.Distance(point, chest.EventPoint) < clearance + (chest.Kind == SeaLootKind.Capture ? catalog.CaptureRadius : 8f))
                     { clear = false; break; }
-                if (kind == SeaLootKind.Capture || kind == SeaLootKind.SeagullKey)
+                if (kind == SeaLootKind.Capture || kind == SeaLootKind.SeagullKey || kind == SeaLootKind.Platforming)
                     for (int side = 0; clear && side < 8; side++)
                     {
                         float bearing = side * Mathf.PI / 4f;
@@ -368,7 +368,17 @@ namespace PirateSlop.Networking
                 if (!clear) continue;
                 foreach (var wreck in NetworkSeagullEvent.ServerEvents)
                     if (wreck != null && Vector3.Distance(point, wreck.transform.position) < clearance + wreck.PlatformRadius) { clear = false; break; }
+                foreach (var course in NetworkPlatformingEvent.ServerEvents)
+                    if (course != null && Vector3.Distance(point, course.transform.position) < clearance + course.PlatformRadius) { clear = false; break; }
                 if (!clear) continue;
+                if (kind == SeaLootKind.Platforming)
+                {
+                    var course = NetworkPlatformingEvent.SpawnEvent(catalog, NetworkManager, point, world.gameObject.scene);
+                    if (course == null) { DeveloperResultTargetRpc(Owner, "Префаб платформинга не подключён."); return; }
+                    developerObjects.Add(course.NetworkObject);
+                    DeveloperResultTargetRpc(Owner, "Лестница контрабандистов создана перед кораблём.");
+                    return;
+                }
                 if (kind == SeaLootKind.SeagullKey)
                 {
                     var wreck = NetworkSeagullEvent.SpawnEvent(catalog, NetworkManager, point, world.gameObject.scene);

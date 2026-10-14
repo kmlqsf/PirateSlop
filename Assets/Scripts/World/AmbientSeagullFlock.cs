@@ -5,6 +5,7 @@ namespace PirateSlop.World
 {
     public sealed class AmbientSeagullFlock : MonoBehaviour
     {
+        public const float CarriedLootSize = 1.25f;
         public const float Lifetime = 66;
         public static float Duration(SeagullFlockMessage state) => Mathf.Max(state.EndAge, state.Perches != null && state.Perches.Length > 0 ? Lifetime : 32);
         public struct BirdPose
@@ -123,7 +124,7 @@ namespace PirateSlop.World
                 }
             }
             if (!found) { Destroy(root); return null; }
-            float scale = .65f / Mathf.Max(.01f, Mathf.Max(bounds.size.x, Mathf.Max(bounds.size.y, bounds.size.z)));
+            float scale = CarriedLootSize / Mathf.Max(.01f, Mathf.Max(bounds.size.x, Mathf.Max(bounds.size.y, bounds.size.z)));
             root.transform.localScale = Vector3.one * scale;
             root.transform.localPosition = new Vector3(0, -.27f - bounds.extents.y * scale, 0) - bounds.center * scale;
             return root;

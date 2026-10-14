@@ -19,6 +19,7 @@ namespace PirateSlop.World
                 NetworkSternCargoEvent.SpawnEvent(catalog, manager, EnvironmentEventTestRow.Point(9, world.Layout.SeaLevel), world.gameObject.scene, true);
                 NetworkCannonBreachEvent.SpawnEvent(catalog, manager, EnvironmentEventTestRow.Point(10, world.Layout.SeaLevel), world.gameObject.scene);
                 NetworkSeagullEvent.SpawnEvent(catalog, manager, EnvironmentEventTestRow.Point(11, world.Layout.SeaLevel), world.gameObject.scene);
+                NetworkPlatformingEvent.SpawnEvent(catalog, manager, EnvironmentEventTestRow.Point(12, world.Layout.SeaLevel), world.gameObject.scene);
                 return;
             }
             var random = new MapRandom((uint)world.Layout.Seed ^ 0x79c526abu);
@@ -31,6 +32,7 @@ namespace PirateSlop.World
             if (catalog.SternCargoEventPrefab != null) eventTypes.Add(9);
             if (catalog.CannonBreachEventPrefab != null) eventTypes.Add(10);
             if (catalog.SeagullEventPrefab != null) eventTypes.Add(11);
+            if (catalog.PlatformingEventPrefab != null) eventTypes.Add(12);
             int types = eventTypes.Count;
             int count = Mathf.Clamp(catalog.SeaEventsPerType, 1, 20) * types;
             float separation = Mathf.Max(160, catalog.CaptureRadius * 2.5f);
@@ -78,6 +80,7 @@ namespace PirateSlop.World
 
         static void SpawnOne(ProceduralWorld world, NetworkManager manager, LootCatalog catalog, int index, Vector3 point)
         {
+            if (index == 12) { NetworkPlatformingEvent.SpawnEvent(catalog, manager, point, world.gameObject.scene); return; }
             if (index == 11) { NetworkSeagullEvent.SpawnEvent(catalog, manager, point, world.gameObject.scene); return; }
             if (index == 10) { NetworkCannonBreachEvent.SpawnEvent(catalog, manager, point, world.gameObject.scene); return; }
             if (index == 9) { NetworkSternCargoEvent.SpawnEvent(catalog, manager, point, world.gameObject.scene, false); return; }

@@ -138,6 +138,7 @@
 | [Assets/Resources/SeaEvents/ClamEvent.prefab](<../../Assets/Resources/SeaEvents/ClamEvent.prefab>) | Префаб Unity; Раковина с сундуком и парные рычаги |
 | [Assets/Resources/SeaEvents/ContestPennantMesh.asset](<../../Assets/Resources/SeaEvents/ContestPennantMesh.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |
 | [Assets/Resources/SeaEvents/GripGeometry0.asset](<../../Assets/Resources/SeaEvents/GripGeometry0.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |
+| [Assets/Resources/SeaEvents/PlatformingEvent.prefab](<../../Assets/Resources/SeaEvents/PlatformingEvent.prefab>) | Префаб Unity; Лестница контрабандистов — морской платформинг |
 | [Assets/Resources/SeaEvents/Raft.prefab](<../../Assets/Resources/SeaEvents/Raft.prefab>) | Префаб Unity; Предметы, лут и инвентарь |
 | [Assets/Resources/SeaEvents/RaftGeometry0.asset](<../../Assets/Resources/SeaEvents/RaftGeometry0.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |
 | [Assets/Resources/SeaEvents/RaftGeometry1.asset](<../../Assets/Resources/SeaEvents/RaftGeometry1.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |

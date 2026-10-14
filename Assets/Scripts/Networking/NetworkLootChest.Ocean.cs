@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace PirateSlop.Networking
 {
-    public enum SeaLootKind : byte { None, Capture, Raft, Sunken, Shark, Skull, FloatingReward, Clam, Balance, Rigging, SternCargo, CannonBreach, SeagullKey }
+    public enum SeaLootKind : byte { None, Capture, Raft, Sunken, Shark, Skull, FloatingReward, Clam, Balance, Rigging, SternCargo, CannonBreach, SeagullKey, Platforming }
     public enum SeaLootState : byte { Locked, Rising, Ready, Flying }
 
     public sealed partial class NetworkLootChest
@@ -41,7 +41,7 @@ namespace PirateSlop.Networking
         GameObject eventVisual;
         SharkSwarmVisual swarm;
         bool visualCreated;
-        internal bool BotLootCandidate => IsSpawned && !captureRewardTaken.Value && carrier.Value == null && supportId.Value == 0 && (!InSeagullWreck || SeagullChestAvailable) && (!InFort || Fort != null && Fort.ChestAvailable) && (!InTow || TowedCargo != null && TowedCargo.LootReady) && (!OnWhale || Whale != null && Whale.ChestAvailable) && (!InClam || Clam != null && Clam.ChestAvailable) && (!OnBalance || Balance != null && Balance.ChestAvailable) && (!InRigging || Rigging != null && Rigging.ChestAvailable);
+        internal bool BotLootCandidate => IsSpawned && !OnPlatforming && !captureRewardTaken.Value && carrier.Value == null && supportId.Value == 0 && (!InSeagullWreck || SeagullChestAvailable) && (!InFort || Fort != null && Fort.ChestAvailable) && (!InTow || TowedCargo != null && TowedCargo.LootReady) && (!OnWhale || Whale != null && Whale.ChestAvailable) && (!InClam || Clam != null && Clam.ChestAvailable) && (!OnBalance || Balance != null && Balance.ChestAvailable) && (!InRigging || Rigging != null && Rigging.ChestAvailable);
         internal bool BotCapturePending => Kind == SeaLootKind.Capture && phase.Value == SeaLootState.Locked;
         internal bool BotLootRising => phase.Value == SeaLootState.Rising || phase.Value == SeaLootState.Flying;
         internal Vector3 BotLootPoint => Kind == SeaLootKind.None ? transform.position : eventPoint.Value;
@@ -83,7 +83,7 @@ namespace PirateSlop.Networking
         public string WorkHint => Kind == SeaLootKind.Raft
             ? "Мышь — угол отмычки · ЛКМ — повернуть замок · Q / E / Esc — отменить"
             : $"Верёвка: {Mathf.RoundToInt(Progress * 100)}% · плыви вокруг сундука · E / Q — отпустить";
-        public string OceanHint => InFort ? FortHint : InTow ? TowedCargo != null && TowedCargo.LootReady ? "E — открыть · F — снять сундук со стропы" : "Груз закреплён на канате" : InRigging ? RiggingHint : OnBalance ? BalanceHint : InClam ? ClamHint : OnWhale ? WhaleHint : phase.Value == SeaLootState.Flying ? "Череп выплюнул сундук"
+        public string OceanHint => OnPlatforming ? PlatformingHint : InFort ? FortHint : InTow ? TowedCargo != null && TowedCargo.LootReady ? "E — открыть · F — снять сундук со стропы" : "Груз закреплён на канате" : InRigging ? RiggingHint : OnBalance ? BalanceHint : InClam ? ClamHint : OnWhale ? WhaleHint : phase.Value == SeaLootState.Flying ? "Череп выплюнул сундук"
             : phase.Value == SeaLootState.Rising ? "Ящик всплывает"
             : carrier.Value != null ? "Ящик несут"
             : phase.Value == SeaLootState.Ready ? (Kind == SeaLootKind.Shark && !SharksDistracted ? "E — открыть · F — нести ящик · Акулы агрессивны!" : "E — открыть · F — нести ящик")
@@ -285,6 +285,7 @@ namespace PirateSlop.Networking
             if (InRigging) riggingSupport.Value = null;
             if (InFort) fortSupport.Value = null;
             if (InSeagullWreck) seagullSupport.Value = null;
+            if (OnPlatforming) { platformingSupport.Value = null; platformingLinked.Value = false; }
             if (InTow) { TowedCargo?.ChestTaken(player.GetComponent<ShipDeckPassenger>()?.Ship?.GetComponent<NetworkShip>()); ReleaseTowChest(); }
             if (Kind == SeaLootKind.Raft) raftDetachedState.Value = true;
             carryingPlayer = player;
@@ -335,6 +336,7 @@ namespace PirateSlop.Networking
 
         void UpdateOceanLoot()
         {
+            if (UpdatePlatformingChest()) return;
             if (UpdateSeagullChest()) return;
             if (UpdateFortChest()) return;
             if (UpdateTowChest()) return;

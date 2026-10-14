@@ -142,6 +142,7 @@
 | [Assets/Scripts/Editor/PirateCharacterImport.cs](<../../Assets/Scripts/Editor/PirateCharacterImport.cs>) | Исходник C#: PirateCharacterImport; Модели и Blender |
 | [Assets/Scripts/Editor/PiratePlayerSceneSetup.cs](<../../Assets/Scripts/Editor/PiratePlayerSceneSetup.cs>) | Исходник C#: PiratePlayerSceneSetup |
 | [Assets/Scripts/Editor/PirateWeaponSetup.cs](<../../Assets/Scripts/Editor/PirateWeaponSetup.cs>) | Исходник C#: PirateWeaponSetup |
+| [Assets/Scripts/Editor/PlatformingEventSetup.cs](<../../Assets/Scripts/Editor/PlatformingEventSetup.cs>) | Исходник C#: PlatformingEventSetup, Surface, RouteNode; Лестница контрабандистов — морской платформинг |
 | [Assets/Scripts/Editor/PlayerAnimationSetup.cs](<../../Assets/Scripts/Editor/PlayerAnimationSetup.cs>) | Исходник C#: PlayerAnimationSetup |
 | [Assets/Scripts/Editor/PrototypeTools.cs](<../../Assets/Scripts/Editor/PrototypeTools.cs>) | Исходник C#: PrototypeTools |
 | [Assets/Scripts/Editor/RiggingEventSetup.cs](<../../Assets/Scripts/Editor/RiggingEventSetup.cs>) | Исходник C#: RiggingEventSetup, GeometryGroup; Сундук в такелаже |
@@ -254,7 +255,7 @@
 | [Assets/Scripts/Loot/FogBottleVisual.cs](<../../Assets/Scripts/Loot/FogBottleVisual.cs>) | Исходник C#: FogBottleVisual; Предметы, лут и инвентарь |
 | [Assets/Scripts/Loot/FogCloudVisual.cs](<../../Assets/Scripts/Loot/FogCloudVisual.cs>) | Исходник C#: FogCloudVisual; Предметы, лут и инвентарь |
 | [Assets/Scripts/Loot/InventoryIcons.cs](<../../Assets/Scripts/Loot/InventoryIcons.cs>) | Исходник C#: InventoryIcons; Предметы, лут и инвентарь |
-| [Assets/Scripts/Loot/LootCatalog.cs](<../../Assets/Scripts/Loot/LootCatalog.cs>) | Исходник C#: LootCatalog, Entry; Предметы, лут и инвентарь, Кит — точка интереса и сундук, Раковина с сундуком и парные рычаги, Остров с весами и пятью камнями, Сундук в такелаже, Груз за кормой, Пушечный пролом, Чайка с ключом |
+| [Assets/Scripts/Loot/LootCatalog.cs](<../../Assets/Scripts/Loot/LootCatalog.cs>) | Исходник C#: LootCatalog, Entry; Предметы, лут и инвентарь, Кит — точка интереса и сундук, Раковина с сундуком и парные рычаги, Остров с весами и пятью камнями, Сундук в такелаже, Груз за кормой, Пушечный пролом, Чайка с ключом, Лестница контрабандистов — морской платформинг |
 | [Assets/Scripts/Loot/RoguelikeCatalog.cs](<../../Assets/Scripts/Loot/RoguelikeCatalog.cs>) | Исходник C#: UpgradeRarity, UpgradeCard, RoguelikeCatalog, CardFile, ChanceFile, Milestone; Улучшения рогалика из сундуков |
 | [Assets/Scripts/Loot/RoguelikeTuning.cs](<../../Assets/Scripts/Loot/RoguelikeTuning.cs>) | Исходник C#: UpgradeEffect, RoguelikeTuning; Улучшения рогалика из сундуков |
 | [Assets/Scripts/Loot/RumShelf.cs](<../../Assets/Scripts/Loot/RumShelf.cs>) | Исходник C#: RumShelf; Предметы, лут и инвентарь |
@@ -312,7 +313,7 @@
 | [Assets/Scripts/Networking/NetworkClamEvent.cs](<../../Assets/Scripts/Networking/NetworkClamEvent.cs>) | Исходник C#: ClamLeverStroke, ClamLeverHold, NetworkClamEvent; Телепортация корабля через F8, Раковина с сундуком и парные рычаги |
 | [Assets/Scripts/Networking/NetworkCrewBell.cs](<../../Assets/Scripts/Networking/NetworkCrewBell.cs>) | Исходник C#: NetworkCrewBell; Сеть, сессия и Steam, Новая система ботов |
 | [Assets/Scripts/Networking/NetworkDeveloperTeleport.cs](<../../Assets/Scripts/Networking/NetworkDeveloperTeleport.cs>) | Исходник C#: NetworkWeapon, NetworkShip, NetworkPlayer; Телепортация корабля через F8 |
-| [Assets/Scripts/Networking/NetworkDeveloperTools.cs](<../../Assets/Scripts/Networking/NetworkDeveloperTools.cs>) | Исходник C#: NetworkWeapon; Предметы, лут и инвентарь, Чайки и фоновые стаи, Раковина с сундуком и парные рычаги, Чайка с ключом |
+| [Assets/Scripts/Networking/NetworkDeveloperTools.cs](<../../Assets/Scripts/Networking/NetworkDeveloperTools.cs>) | Исходник C#: NetworkWeapon; Предметы, лут и инвентарь, Чайки и фоновые стаи, Раковина с сундуком и парные рычаги, Чайка с ключом, Лестница контрабандистов — морской платформинг |
 | [Assets/Scripts/Networking/NetworkEquipment.BottleAim.cs](<../../Assets/Scripts/Networking/NetworkEquipment.BottleAim.cs>) | Исходник C#: NetworkEquipment; Предметы, лут и инвентарь |
 | [Assets/Scripts/Networking/NetworkEquipment.FrozenWater.cs](<../../Assets/Scripts/Networking/NetworkEquipment.FrozenWater.cs>) | Исходник C#: NetworkEquipment, FrozenCell; Личное оружие и урон |
 | [Assets/Scripts/Networking/NetworkEquipment.HandMortar.cs](<../../Assets/Scripts/Networking/NetworkEquipment.HandMortar.cs>) | Исходник C#: NetworkEquipment; Личное оружие и урон |
@@ -342,8 +343,9 @@
 | [Assets/Scripts/Networking/NetworkLootChest.Clam.cs](<../../Assets/Scripts/Networking/NetworkLootChest.Clam.cs>) | Исходник C#: NetworkLootChest; Раковина с сундуком и парные рычаги |
 | [Assets/Scripts/Networking/NetworkLootChest.Fort.cs](<../../Assets/Scripts/Networking/NetworkLootChest.Fort.cs>) | Исходник C#: NetworkLootChest; Пушечный пролом |
 | [Assets/Scripts/Networking/NetworkLootChest.ObjectivePresentation.cs](<../../Assets/Scripts/Networking/NetworkLootChest.ObjectivePresentation.cs>) | Исходник C#: NetworkLootChest; Предметы, лут и инвентарь |
-| [Assets/Scripts/Networking/NetworkLootChest.Ocean.cs](<../../Assets/Scripts/Networking/NetworkLootChest.Ocean.cs>) | Исходник C#: SeaLootKind, SeaLootState, NetworkLootChest; Телепортация корабля через F8, Предметы, лут и инвентарь, Чайки и фоновые стаи, Новая система ботов, Раковина с сундуком и парные рычаги, Остров с весами и пятью камнями, Сундук в такелаже, Груз за кормой, Пушечный пролом, Чайка с ключом |
-| [Assets/Scripts/Networking/NetworkLootChest.OceanVisual.cs](<../../Assets/Scripts/Networking/NetworkLootChest.OceanVisual.cs>) | Исходник C#: NetworkLootChest; Предметы, лут и инвентарь, Раковина с сундуком и парные рычаги, Сундук в такелаже, Груз за кормой, Пушечный пролом, Чайка с ключом |
+| [Assets/Scripts/Networking/NetworkLootChest.Ocean.cs](<../../Assets/Scripts/Networking/NetworkLootChest.Ocean.cs>) | Исходник C#: SeaLootKind, SeaLootState, NetworkLootChest; Телепортация корабля через F8, Предметы, лут и инвентарь, Чайки и фоновые стаи, Новая система ботов, Раковина с сундуком и парные рычаги, Остров с весами и пятью камнями, Сундук в такелаже, Груз за кормой, Пушечный пролом, Чайка с ключом, Лестница контрабандистов — морской платформинг |
+| [Assets/Scripts/Networking/NetworkLootChest.OceanVisual.cs](<../../Assets/Scripts/Networking/NetworkLootChest.OceanVisual.cs>) | Исходник C#: NetworkLootChest; Предметы, лут и инвентарь, Раковина с сундуком и парные рычаги, Сундук в такелаже, Груз за кормой, Пушечный пролом, Чайка с ключом, Лестница контрабандистов — морской платформинг |
+| [Assets/Scripts/Networking/NetworkLootChest.Platforming.cs](<../../Assets/Scripts/Networking/NetworkLootChest.Platforming.cs>) | Исходник C#: NetworkLootChest; Лестница контрабандистов — морской платформинг |
 | [Assets/Scripts/Networking/NetworkLootChest.Raft.cs](<../../Assets/Scripts/Networking/NetworkLootChest.Raft.cs>) | Исходник C#: NetworkLootChest; Предметы, лут и инвентарь, Звуки и голос |
 | [Assets/Scripts/Networking/NetworkLootChest.RewardFlight.cs](<../../Assets/Scripts/Networking/NetworkLootChest.RewardFlight.cs>) | Исходник C#: NetworkLootChest; Предметы, лут и инвентарь |
 | [Assets/Scripts/Networking/NetworkLootChest.Rigging.cs](<../../Assets/Scripts/Networking/NetworkLootChest.Rigging.cs>) | Исходник C#: NetworkLootChest; Сундук в такелаже |
@@ -355,6 +357,7 @@
 | [Assets/Scripts/Networking/NetworkLootChest.Whale.cs](<../../Assets/Scripts/Networking/NetworkLootChest.Whale.cs>) | Исходник C#: NetworkLootChest; Предметы, лут и инвентарь, Кит — точка интереса и сундук |
 | [Assets/Scripts/Networking/NetworkLootChest.cs](<../../Assets/Scripts/Networking/NetworkLootChest.cs>) | Исходник C#: NetworkLootChest; Предметы, лут и инвентарь, Чайка с ключом |
 | [Assets/Scripts/Networking/NetworkParrotDrone.cs](<../../Assets/Scripts/Networking/NetworkParrotDrone.cs>) | Исходник C#: NetworkParrotDrone |
+| [Assets/Scripts/Networking/NetworkPlatformingEvent.cs](<../../Assets/Scripts/Networking/NetworkPlatformingEvent.cs>) | Исходник C#: NetworkPlatformingEvent; Лестница контрабандистов — морской платформинг |
 | [Assets/Scripts/Networking/NetworkPlayer.BotDiagnostics.cs](<../../Assets/Scripts/Networking/NetworkPlayer.BotDiagnostics.cs>) | Исходник C#: NetworkPlayer; Новая система ботов |
 | [Assets/Scripts/Networking/NetworkPlayer.BotTasks.cs](<../../Assets/Scripts/Networking/NetworkPlayer.BotTasks.cs>) | Исходник C#: NetworkPlayer; Новая система ботов |
 | [Assets/Scripts/Networking/NetworkPlayer.Identity.cs](<../../Assets/Scripts/Networking/NetworkPlayer.Identity.cs>) | Исходник C#: NetworkPlayer; Персонаж, камера и анимации, Сеть, сессия и Steam, Меню и HUD |
@@ -396,6 +399,7 @@
 | [Assets/Scripts/Networking/NetworkWeapon.ExplosiveBall.cs](<../../Assets/Scripts/Networking/NetworkWeapon.ExplosiveBall.cs>) | Исходник C#: NetworkEquipment, NetworkWeapon; Личное оружие и урон |
 | [Assets/Scripts/Networking/NetworkWeapon.FishThrows.cs](<../../Assets/Scripts/Networking/NetworkWeapon.FishThrows.cs>) | Исходник C#: NetworkWeapon; Рыбалка и рыба |
 | [Assets/Scripts/Networking/NetworkWeapon.FogBottle.cs](<../../Assets/Scripts/Networking/NetworkWeapon.FogBottle.cs>) | Исходник C#: NetworkWeapon; Предметы, лут и инвентарь |
+| [Assets/Scripts/Networking/NetworkWeapon.Platforming.cs](<../../Assets/Scripts/Networking/NetworkWeapon.Platforming.cs>) | Исходник C#: NetworkWeapon; Лестница контрабандистов — морской платформинг |
 | [Assets/Scripts/Networking/NetworkWeapon.Rigging.cs](<../../Assets/Scripts/Networking/NetworkWeapon.Rigging.cs>) | Исходник C#: NetworkWeapon; Сундук в такелаже |
 | [Assets/Scripts/Networking/NetworkWeapon.Roster.cs](<../../Assets/Scripts/Networking/NetworkWeapon.Roster.cs>) | Исходник C#: NetworkWeapon; Предметы, лут и инвентарь, Новая система ботов |
 | [Assets/Scripts/Networking/NetworkWeapon.Sabre.cs](<../../Assets/Scripts/Networking/NetworkWeapon.Sabre.cs>) | Исходник C#: NetworkWeapon; Личное оружие и урон |
@@ -415,7 +419,7 @@
 | [Assets/Scripts/Networking/SessionBotRoster.cs](<../../Assets/Scripts/Networking/SessionBotRoster.cs>) | Исходник C#: SessionController; Новая система ботов |
 | [Assets/Scripts/Networking/SessionBotTasks.cs](<../../Assets/Scripts/Networking/SessionBotTasks.cs>) | Исходник C#: SessionController, BotCrew; Новая система ботов |
 | [Assets/Scripts/Networking/SessionCombatRules.cs](<../../Assets/Scripts/Networking/SessionCombatRules.cs>) | Исходник C#: CombatRulesMessage, SessionController; Персонаж, камера и анимации, Сеть, сессия и Steam, Тестовая карта и водоворот |
-| [Assets/Scripts/Networking/SessionConfig.cs](<../../Assets/Scripts/Networking/SessionConfig.cs>) | Исходник C#: SessionConfig; Телепортация корабля через F8, Проект и точки входа, Сеть, сессия и Steam, Кит — точка интереса и сундук, Сундук в такелаже, Груз за кормой, Пушечный пролом, Чайка с ключом |
+| [Assets/Scripts/Networking/SessionConfig.cs](<../../Assets/Scripts/Networking/SessionConfig.cs>) | Исходник C#: SessionConfig; Телепортация корабля через F8, Проект и точки входа, Сеть, сессия и Steam, Кит — точка интереса и сундук, Сундук в такелаже, Груз за кормой, Пушечный пролом, Чайка с ключом, Лестница контрабандистов — морской платформинг |
 | [Assets/Scripts/Networking/SessionController.cs](<../../Assets/Scripts/Networking/SessionController.cs>) | Исходник C#: SessionController; Проект и точки входа, Чайки и фоновые стаи, Сеть, сессия и Steam, Новая система ботов, Шторм, зона, дождь и объёмный туман |
 | [Assets/Scripts/Networking/SessionCrew.cs](<../../Assets/Scripts/Networking/SessionCrew.cs>) | Исходник C#: SessionController; Сеть, сессия и Steam, Новая система ботов |
 | [Assets/Scripts/Networking/SessionLoadTest.cs](<../../Assets/Scripts/Networking/SessionLoadTest.cs>) | Исходник C#: SessionController; Производительность и тест нагрузки без AI |
@@ -452,7 +456,7 @@
 | [Assets/Scripts/Player/CrewBellMotion.cs](<../../Assets/Scripts/Player/CrewBellMotion.cs>) | Исходник C#: CrewBellMotion |
 | [Assets/Scripts/Player/DamageFeedback.cs](<../../Assets/Scripts/Player/DamageFeedback.cs>) | Исходник C#: DamageFeedback |
 | [Assets/Scripts/Player/DeathRagdoll.cs](<../../Assets/Scripts/Player/DeathRagdoll.cs>) | Исходник C#: DeathRagdoll, RagdollRendererBounds; Персонаж, камера и анимации |
-| [Assets/Scripts/Player/DeveloperMenu.cs](<../../Assets/Scripts/Player/DeveloperMenu.cs>) | Исходник C#: DeveloperMenu; Телепортация корабля через F8, Предметы, лут и инвентарь, Чайки и фоновые стаи, Мир, острова и океан, Меню и HUD, Шторм, зона, дождь и объёмный туман, Тестовая карта и водоворот, Раковина с сундуком и парные рычаги, Чайка с ключом |
+| [Assets/Scripts/Player/DeveloperMenu.cs](<../../Assets/Scripts/Player/DeveloperMenu.cs>) | Исходник C#: DeveloperMenu; Телепортация корабля через F8, Предметы, лут и инвентарь, Чайки и фоновые стаи, Мир, острова и океан, Меню и HUD, Шторм, зона, дождь и объёмный туман, Тестовая карта и водоворот, Раковина с сундуком и парные рычаги, Чайка с ключом, Лестница контрабандистов — морской платформинг |
 | [Assets/Scripts/Player/ExplosiveBallFuse.cs](<../../Assets/Scripts/Player/ExplosiveBallFuse.cs>) | Исходник C#: ExplosiveBallFuse; Личное оружие и урон |
 | [Assets/Scripts/Player/FirearmDefinition.cs](<../../Assets/Scripts/Player/FirearmDefinition.cs>) | Исходник C#: FirearmDefinition, FirearmCombat; Личное оружие и урон, Чайки и фоновые стаи |
 | [Assets/Scripts/Player/FirearmHandling.cs](<../../Assets/Scripts/Player/FirearmHandling.cs>) | Исходник C#: FirearmHandling; Движение корабля и палуба, Личное оружие и урон |
@@ -485,7 +489,7 @@
 | [Assets/Scripts/Player/PlayerInventory.Barricade.cs](<../../Assets/Scripts/Player/PlayerInventory.Barricade.cs>) | Исходник C#: PlayerInventory; Предметы, лут и инвентарь |
 | [Assets/Scripts/Player/PlayerInventory.RaftLockpick.cs](<../../Assets/Scripts/Player/PlayerInventory.RaftLockpick.cs>) | Исходник C#: PlayerInventory; Предметы, лут и инвентарь, Звуки и голос |
 | [Assets/Scripts/Player/PlayerInventory.Upgrades.cs](<../../Assets/Scripts/Player/PlayerInventory.Upgrades.cs>) | Исходник C#: PlayerInventory; Улучшения рогалика из сундуков |
-| [Assets/Scripts/Player/PlayerInventory.cs](<../../Assets/Scripts/Player/PlayerInventory.cs>) | Исходник C#: PlayerInventory; Предметы, лут и инвентарь, Корабельная слот-машина, Раковина с сундуком и парные рычаги, Остров с весами и пятью камнями, Сундук в такелаже, Груз за кормой, Чайка с ключом |
+| [Assets/Scripts/Player/PlayerInventory.cs](<../../Assets/Scripts/Player/PlayerInventory.cs>) | Исходник C#: PlayerInventory; Предметы, лут и инвентарь, Корабельная слот-машина, Раковина с сундуком и парные рычаги, Остров с весами и пятью камнями, Сундук в такелаже, Груз за кормой, Чайка с ключом, Лестница контрабандистов — морской платформинг |
 | [Assets/Scripts/Player/PlayerKickVisual.cs](<../../Assets/Scripts/Player/PlayerKickVisual.cs>) | Исходник C#: PlayerKickVisual; Персонаж, камера и анимации |
 | [Assets/Scripts/Player/PlayerKnockdown.cs](<../../Assets/Scripts/Player/PlayerKnockdown.cs>) | Исходник C#: PlayerKnockdown; Персонаж, камера и анимации, Корабельная обезьянка |
 | [Assets/Scripts/Player/PlayerPresentation.cs](<../../Assets/Scripts/Player/PlayerPresentation.cs>) | Исходник C#: PlayerPresentation |
@@ -621,12 +625,13 @@
 | [Assets/Scripts/World/CoastalRockVisual.cs](<../../Assets/Scripts/World/CoastalRockVisual.cs>) | Исходник C#: CoastalShoreContour, CoastalRockVisual; Мир, острова и океан |
 | [Assets/Scripts/World/CoastalSeagullPerches.cs](<../../Assets/Scripts/World/CoastalSeagullPerches.cs>) | Исходник C#: CoastalSeagullPerches; Чайки и фоновые стаи |
 | [Assets/Scripts/World/CoastalShoreFoamVfx.cs](<../../Assets/Scripts/World/CoastalShoreFoamVfx.cs>) | Исходник C#: CoastalShoreFoamVfx, Source, Probe, Contact; Мир, острова и океан |
-| [Assets/Scripts/World/DeveloperTeleportDestinations.cs](<../../Assets/Scripts/World/DeveloperTeleportDestinations.cs>) | Исходник C#: DeveloperTeleportDestination, DeveloperTeleportDestinations; Телепортация корабля через F8, Раковина с сундуком и парные рычаги, Остров с весами и пятью камнями, Сундук в такелаже, Груз за кормой, Пушечный пролом, Чайка с ключом |
-| [Assets/Scripts/World/EnvironmentEventTestRow.cs](<../../Assets/Scripts/World/EnvironmentEventTestRow.cs>) | Исходник C#: EnvironmentEventTestRow; Тестовая карта и водоворот, Раковина с сундуком и парные рычаги, Сундук в такелаже, Груз за кормой, Пушечный пролом, Чайка с ключом |
+| [Assets/Scripts/World/DeveloperTeleportDestinations.cs](<../../Assets/Scripts/World/DeveloperTeleportDestinations.cs>) | Исходник C#: DeveloperTeleportDestination, DeveloperTeleportDestinations; Телепортация корабля через F8, Раковина с сундуком и парные рычаги, Остров с весами и пятью камнями, Сундук в такелаже, Груз за кормой, Пушечный пролом, Чайка с ключом, Лестница контрабандистов — морской платформинг |
+| [Assets/Scripts/World/EnvironmentEventTestRow.cs](<../../Assets/Scripts/World/EnvironmentEventTestRow.cs>) | Исходник C#: EnvironmentEventTestRow; Тестовая карта и водоворот, Раковина с сундуком и парные рычаги, Сундук в такелаже, Груз за кормой, Пушечный пролом, Чайка с ключом, Лестница контрабандистов — морской платформинг |
 | [Assets/Scripts/World/EnvironmentTestGallery.cs](<../../Assets/Scripts/World/EnvironmentTestGallery.cs>) | Исходник C#: EnvironmentTestGallery; Мир, острова и океан, Кракен и щупальца, Тестовая карта и водоворот |
 | [Assets/Scripts/World/FortGateTarget.cs](<../../Assets/Scripts/World/FortGateTarget.cs>) | Исходник C#: FortGateTarget; Пушечный пролом |
 | [Assets/Scripts/World/LocationDefinition.cs](<../../Assets/Scripts/World/LocationDefinition.cs>) | Исходник C#: Landform, LocationSettings, LocationPointRule, LocationDefinition |
 | [Assets/Scripts/World/OceanHeightSource.cs](<../../Assets/Scripts/World/OceanHeightSource.cs>) | Исходник C#: OceanHeightSource; Мир, острова и океан, Тестовая карта и водоворот |
+| [Assets/Scripts/World/PlatformingLeverTarget.cs](<../../Assets/Scripts/World/PlatformingLeverTarget.cs>) | Исходник C#: PlatformingLeverTarget; Лестница контрабандистов — морской платформинг |
 | [Assets/Scripts/World/ProceduralWorld.cs](<../../Assets/Scripts/World/ProceduralWorld.cs>) | Исходник C#: ProceduralWorld; Фоновая рыба в океане, Мир, острова и океан |
 | [Assets/Scripts/World/ProjectileWaterFlight.cs](<../../Assets/Scripts/World/ProjectileWaterFlight.cs>) | Исходник C#: ProjectileWaterFlight; Пушки, ядра и лафеты, Личное оружие и урон, Мир, острова и океан |
 | [Assets/Scripts/World/RiggingEditorPreview.cs](<../../Assets/Scripts/World/RiggingEditorPreview.cs>) | Исходник C#: RiggingEditorPreview; Сундук в такелаже |
@@ -634,7 +639,7 @@
 | [Assets/Scripts/World/RiggingRopeVisual.cs](<../../Assets/Scripts/World/RiggingRopeVisual.cs>) | Исходник C#: RiggingRopeVisual, TubeBuffers; Сундук в такелаже, Груз за кормой |
 | [Assets/Scripts/World/RiggingTornCloth.cs](<../../Assets/Scripts/World/RiggingTornCloth.cs>) | Исходник C#: RiggingTornCloth; Сундук в такелаже |
 | [Assets/Scripts/World/SandyIslandFoliageWind.cs](<../../Assets/Scripts/World/SandyIslandFoliageWind.cs>) | Исходник C#: SandyIslandFoliageWind; Мир, острова и океан, Тестовая карта и водоворот |
-| [Assets/Scripts/World/SeaLootSpawner.cs](<../../Assets/Scripts/World/SeaLootSpawner.cs>) | Исходник C#: SeaLootSpawner; Предметы, лут и инвентарь, Кит — точка интереса и сундук, Тестовая карта и водоворот, Раковина с сундуком и парные рычаги, Остров с весами и пятью камнями, Сундук в такелаже, Груз за кормой, Пушечный пролом, Чайка с ключом |
+| [Assets/Scripts/World/SeaLootSpawner.cs](<../../Assets/Scripts/World/SeaLootSpawner.cs>) | Исходник C#: SeaLootSpawner; Предметы, лут и инвентарь, Кит — точка интереса и сундук, Тестовая карта и водоворот, Раковина с сундуком и парные рычаги, Остров с весами и пятью камнями, Сундук в такелаже, Груз за кормой, Пушечный пролом, Чайка с ключом, Лестница контрабандистов — морской платформинг |
 | [Assets/Scripts/World/SeabedTerrain.cs](<../../Assets/Scripts/World/SeabedTerrain.cs>) | Исходник C#: SeabedTerrain; Тестовая карта и водоворот |
 | [Assets/Scripts/World/SeagullKeyTarget.cs](<../../Assets/Scripts/World/SeagullKeyTarget.cs>) | Исходник C#: SeagullKeyTarget; Чайка с ключом |
 | [Assets/Scripts/World/SeagullVisual.cs](<../../Assets/Scripts/World/SeagullVisual.cs>) | Исходник C#: SeagullFall, SeagullVisual; Чайки и фоновые стаи, Чайка с ключом |
