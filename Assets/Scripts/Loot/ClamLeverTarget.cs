@@ -63,7 +63,7 @@ namespace PirateSlop
 
         public void SetHandle(float pull) => HandlePivot.localRotation = Quaternion.Euler(-65f * Mathf.Clamp01(pull), 0, 0);
         public string Hint => Owner.SuccessfulPairs >= Owner.RequiredPairs
-            ? Owner.ChestAvailable ? "Раковина открыта · сундук внутри" : "Раковина открывается"
+            ? Owner.ChestAvailable ? "Раковина открыта · подлезьте вприсядку к сундуку" : "Раковина открывается"
             : Owner.Cooldown(Side) > 0 ? $"Рычаг возвращается: {Owner.Cooldown(Side):F1} с · {Owner.SuccessfulPairs}/{Owner.RequiredPairs}"
             : Owner.Hold(Side).Actor != null ? "Ручку держит другой игрок"
             : $"ЛКМ — взяться · мышь вниз — нажать · E — нажать · {Owner.SuccessfulPairs}/{Owner.RequiredPairs}";

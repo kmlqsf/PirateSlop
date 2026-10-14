@@ -31,9 +31,10 @@ namespace PirateSlop.Networking
         public SkinnedMeshRenderer ShellSkin;
         public MeshCollider ShellCollider;
         [Min(1)] public int RequiredPairs = 5;
-        [Range(.3f, 1.5f)] public float PairWindow = .8f;
+        [Range(.3f, 5f)] public float PairWindow = 3.5f;
         [Min(1)] public float LeverCooldown = 5f;
-        public float OpenAngle = 60f, OpeningSeconds = 1.1f, FailedLiftHeight = .08f;
+        public float OpenAngle = 4.5f, PartialOpenAngle = .75f, OpeningSeconds = 1.1f, FailedLiftHeight = .08f;
+        public GameObject PadlockPrefab;
         public float PlatformRadius = 11f;
         readonly SyncList<ClamLeverStroke> strokes = new();
         readonly SyncList<ClamLeverHold> holds = new();
@@ -50,6 +51,11 @@ namespace PirateSlop.Networking
         Mesh collisionMesh, collisionSource;
         Vector3[] collisionRest, collisionVertices, leftLift, rightLift;
         float previousLeft = -1, previousRight = -1;
+        readonly double[] heardPress = { -1, -1 };
+        readonly double[] returnSoundAt = { -1, -1 };
+        int heardPairs;
+        bool heardOpened;
+        AudioSource openingAudio;
         public double Clock => Application.isPlaying && IsSpawned && TimeManager != null ? TimeManager.TicksToTime(TimeManager.Tick) : Time.timeAsDouble;
         public int SuccessfulPairs => pairs.Value;
         public bool ChestAvailable => SuccessfulPairs >= RequiredPairs && Clock >= openingAt.Value + OpeningSeconds;
@@ -65,7 +71,8 @@ namespace PirateSlop.Networking
             return Hold(side).Pull;
         }
         public float Cooldown(int side) => Stroke(side).PressedAt < 0 ? 0 : Mathf.Max(0, LeverCooldown - (float)(Clock - Stroke(side).PressedAt));
-        public float Opening => openingAt.Value < 0 ? 0 : Mathf.Lerp(openingFrom.Value, OpenAngle * pairs.Value / RequiredPairs, Mathf.SmoothStep(0, 1, (float)(Clock - openingAt.Value) / OpeningSeconds));
+        float TargetOpening => pairs.Value >= RequiredPairs ? OpenAngle : PartialOpenAngle * pairs.Value / Mathf.Max(1, RequiredPairs - 1);
+        public float Opening => openingAt.Value < 0 ? 0 : Mathf.Lerp(openingFrom.Value, TargetOpening, Mathf.SmoothStep(0, 1, (float)(Clock - openingAt.Value) / OpeningSeconds));
 
         public static NetworkClamEvent SpawnEvent(LootCatalog catalog, NetworkManager manager, Vector3 point, Scene scene)
         {
@@ -113,7 +120,6 @@ namespace PirateSlop.Networking
             var fishing = actor.GetComponent<PlayerInventory>().Fishing;
             if (fishing != null && (fishing.CarryingCatch || fishing.IsFishing || fishing.IsEating)) return "Освободите руки";
             if (actor.gameObject.scene != gameObject.scene || !Levers[side].CanReach(actor)) return "Подойдите к ручке механизма";
-            if (waitingSide == 1 - side && Clock - Stroke(waitingSide).PressedAt <= PairWindow && Stroke(waitingSide).Actor == actor.NetworkObject) return "Второй рычаг должен нажать напарник";
             return null;
         }
 
@@ -148,7 +154,6 @@ namespace PirateSlop.Networking
             if (!IsServerInitialized || BlockReason(actor, side) != null) return;
             if (waitingSide >= 0 && (Clock - Stroke(waitingSide).PressedAt > PairWindow || Stroke(waitingSide).Actor == null || !Stroke(waitingSide).Actor.IsSpawned)) waitingSide = -1;
             var other = Stroke(1 - side);
-            if (waitingSide == 1 - side && other.Actor == actor.NetworkObject) return;
             bool leading = attemptSide < 0 || Clock - Stroke(attemptSide).PressedAt >= LeverCooldown;
             if (leading) attemptSide = side;
             strokes[side] = new ClamLeverStroke { Actor = actor.NetworkObject, PressedAt = Clock, PairedAt = -1, Pulled = pulled, Leading = leading };
@@ -223,6 +228,46 @@ namespace PirateSlop.Networking
                 }
             AnimateShell();
             foreach (var lever in Levers) lever.Animate();
+            if (IsClientInitialized && !Application.isBatchMode) UpdateAudio();
+        }
+
+        public override void OnStartClient()
+        {
+            base.OnStartClient();
+            for (int side = 0; side < 2; side++) heardPress[side] = Stroke(side).PressedAt;
+            heardPairs = SuccessfulPairs; heardOpened = ChestAvailable;
+        }
+
+        void UpdateAudio()
+        {
+            for (int side = 0; side < 2; side++)
+            {
+                var stroke = Stroke(side);
+                if (stroke.PressedAt > heardPress[side])
+                {
+                    heardPress[side] = stroke.PressedAt;
+                    returnSoundAt[side] = stroke.PressedAt + .35f;
+                    GameAudio.Play(SoundCue.ClamLeverPull, Levers[side].Grip.position);
+                }
+                if (returnSoundAt[side] >= 0 && Clock >= returnSoundAt[side])
+                {
+                    returnSoundAt[side] = -1;
+                    GameAudio.Play(SoundCue.ClamLeverReturn, Levers[side].Grip.position);
+                }
+            }
+            bool moving = openingAt.Value >= 0 && Clock < openingAt.Value + OpeningSeconds;
+            if (moving) GameAudio.Loop(ref openingAudio, SoundCue.ClamOpening, ShellPivot, .7f);
+            else GameAudio.StopLoop(openingAudio);
+            if (SuccessfulPairs > heardPairs)
+            {
+                heardPairs = SuccessfulPairs;
+                GameAudio.Play(SoundCue.ClamLift, ShellPivot.position);
+            }
+            if (ChestAvailable && !heardOpened)
+            {
+                heardOpened = true;
+                GameAudio.Play(SoundCue.ClamOpened, ChestSocket.position);
+            }
         }
 
         void ReleaseCollision()
@@ -231,7 +276,7 @@ namespace PirateSlop.Networking
             if (collisionMesh != null) Destroy(collisionMesh);
             collisionMesh = null; previousLeft = previousRight = -1;
         }
-        public override void OnStopClient() { ReleaseCollision(); base.OnStopClient(); }
+        public override void OnStopClient() { StaffAudio.Stop(ref openingAudio); ReleaseCollision(); base.OnStopClient(); }
 
         public override void OnStopServer()
         {

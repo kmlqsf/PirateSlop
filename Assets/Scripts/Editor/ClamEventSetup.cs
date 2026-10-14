@@ -59,6 +59,7 @@ namespace PirateSlop.EditorTools
                 net.SetAssetPathHash(new string((PrefabPath + root.name).ToLowerInvariant().Where(char.IsLetterOrDigit).ToArray()).GetStableHashU64());
                 var body = root.AddComponent<Rigidbody>(); body.isKinematic = true; body.useGravity = false; body.constraints = RigidbodyConstraints.FreezeAll;
                 var clam = root.AddComponent<NetworkClamEvent>(); clam.Catalog = catalog;
+                clam.PadlockPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Models/SeaEvents/SeagullKey/WreckChestPadlock.prefab");
                 var bowl = Child(root.transform, "LowerShell");
                 bowl.gameObject.AddComponent<MeshFilter>().sharedMesh = lower;
                 bowl.gameObject.AddComponent<MeshRenderer>().sharedMaterial = material;
@@ -94,6 +95,7 @@ namespace PirateSlop.EditorTools
                     BuildHook(hook);
                     clam.Levers[side] = BuildJack(root.transform, clam, side, new Vector3(sign * 6.2f, .425f, 3.1f), hook);
                 }
+                AddSoloWalkway(root.transform);
                 PrefabUtility.SaveAsPrefabAsset(root, PrefabPath);
             }
             finally
@@ -117,6 +119,21 @@ namespace PirateSlop.EditorTools
         {
             if (point.y < .425f) point.y = Mathf.Lerp(point.y, .425f, Mathf.SmoothStep(0, 1, Mathf.InverseLerp(-1.75f, -1.5f, point.y)));
             return point;
+        }
+
+        public static void AddSoloWalkway(Transform root)
+        {
+            if (root.Find("FrontLeverWalkway") != null) return;
+            var source = root.Find("LeftWoodenPlatform");
+            var walkway = Child(root, "FrontLeverWalkway");
+            for (int i = 0; i < 7; i++)
+            {
+                bool crossing = i < 5;
+                var part = Object.Instantiate(source.gameObject, walkway);
+                part.name = crossing ? "FrontDeck" + i : "SideDeck" + i;
+                part.transform.localPosition = crossing ? new Vector3((i - 2) * 2.8f, 0, 7.5f) : new Vector3(i == 5 ? -6.2f : 6.2f, 0, 5.9f);
+                part.transform.localScale = Vector3.Scale(source.localScale, crossing ? new Vector3(2.8f / 3.1f, 1, 1.4f / 3.6f) : new Vector3(1.4f / 3.1f, 1, 3.4f / 3.6f));
+            }
         }
 
         static float LipWeight(Vector3 point, int side) => Mathf.SmoothStep(0, 1, Mathf.InverseLerp(1.2f, 3.8f, point.x * (side == 0 ? -1 : 1)))

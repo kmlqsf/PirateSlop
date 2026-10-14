@@ -17,15 +17,23 @@ namespace PirateSlop.Networking
             balanceStoneIndex.Value = index; balanceEvent.Value = target != null ? target.NetworkObject : null;
         }
         public void TakeBalanceStone(NetworkObject target, int index) => TakeBalanceStoneServerRpc(target,index);
-        public void DepositBalanceStone() => DepositBalanceStoneServerRpc();
+        public void DepositBalanceStone(UnityEngine.Vector3 point) => DepositBalanceStoneServerRpc(point);
+        public void MoveBalanceStone(UnityEngine.Vector3 point) => MoveBalanceStoneServerRpc(point);
+        public void ReleaseBalanceStone(UnityEngine.Vector3 point, bool place) => ReleaseBalanceStoneServerRpc(point, place);
         public void DropBalanceStone() => DropBalanceStoneServerRpc();
+        [ServerRpc] void MoveBalanceStoneServerRpc(UnityEngine.Vector3 point) => BalanceEvent?.MoveStone(this, point);
+        [ServerRpc] void ReleaseBalanceStoneServerRpc(UnityEngine.Vector3 point, bool place)
+        {
+            BalanceEvent?.MoveStone(this, point);
+            BalanceEvent?.Drop(this, place);
+        }
         [ServerRpc] void TakeBalanceStoneServerRpc(NetworkObject target,int index) => target?.GetComponent<NetworkBalanceEvent>()?.Take(this,index);
         [ServerRpc]
-        void DepositBalanceStoneServerRpc()
+        void DepositBalanceStoneServerRpc(UnityEngine.Vector3 point)
         {
             var balance = BalanceEvent;
-            string reason = balance != null ? balance.DepositBlockReason(this) : "Сначала подберите камень";
-            if (reason == null) balance.Deposit(this);
+            string reason = balance != null ? balance.DepositBlockReason(this, point) : "Сначала подберите камень";
+            if (reason == null) balance.Deposit(this, point);
             else NotifyBalanceStone(reason);
         }
         [ServerRpc] void DropBalanceStoneServerRpc() => BalanceEvent?.Drop(this);

@@ -435,11 +435,6 @@ public partial class AdvancedPlayerController : MonoBehaviour
         if (IsFrozen) { ClearFrozenMotion(); return; }
         if (!command.IsValid) command = default;
         bool carryingStone = GetComponent<PirateSlop.Networking.NetworkWeapon>()?.CarryingBalanceStone == true;
-        if (carryingStone)
-        {
-            command.Sprint = command.Jump = command.Crouch = command.Slide = command.Use = command.Rise = false;
-            slideTimer = jumpBuffer = groundGrace = 0;
-        }
         bool downed = IsDowned;
         if (downed) command = new PlayerCommand { Yaw = transform.eulerAngles.y, Release = true };
         knockdownTime = Mathf.Max(0f, knockdownTime - dt);

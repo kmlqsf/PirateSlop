@@ -11,6 +11,8 @@ namespace PirateSlop
         public static bool IsOpen { get; private set; }
         static int closedFrame = -1;
         public static bool ConsumedInput => IsOpen || closedFrame == Time.frameCount;
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        static void ResetSessionState() { IsOpen = false; closedFrame = -1; }
         NetworkPlayer player;
         BotDebugRow[] rows = Array.Empty<BotDebugRow>();
         BotDebugSnapshot snapshot;

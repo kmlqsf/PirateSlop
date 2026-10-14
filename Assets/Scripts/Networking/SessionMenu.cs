@@ -244,7 +244,7 @@ namespace PirateSlop.Networking
         }
         void DrawSessionMenu()
         {
-            if(BotDebugPanel.ConsumedInput || DeveloperMenu.IsOpen || dedicated || Automated || !MenuOpen || (PirateSlop.Customization.SailCustomizationUI.IsOpen && PirateSlop.Customization.SailCustomizationUI.Instance != null)) { menuWasVisible=false; return; }
+            if(playing && (BotDebugPanel.ConsumedInput || DeveloperMenu.IsOpen) || dedicated || Automated || !MenuOpen || (PirateSlop.Customization.SailCustomizationUI.IsOpen && PirateSlop.Customization.SailCustomizationUI.Instance != null)) { menuWasVisible=false; return; }
             PrepareMenu();
             var oldMatrix=GUI.matrix; var oldColor=GUI.color;
             GUI.color=Color.white; GUI.DrawTexture(new Rect(0,0,Screen.width*.45f,Screen.height),menuShade);

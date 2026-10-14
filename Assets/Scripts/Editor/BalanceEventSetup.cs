@@ -56,10 +56,11 @@ namespace PirateSlop.Editor
                 balance.RewardHanger=BuildPan(beam,"ChestPan",-5.7f,new Vector2(1.58f,1.02f),true,out var chestSocket);
                 balance.WeightHanger=BuildPan(beam,"StonePan",2.75f,new Vector2(1.7f,1.36f),false,out var weightSocket);
                 balance.ChestSocket=chestSocket;balance.WeightSocket=weightSocket;
+                AddStoneBowl(root);
                 var deposit=weightSocket.parent.gameObject.AddComponent<BalanceEventTarget>();deposit.Owner=balance;
-                var depositCollider=weightSocket.gameObject.AddComponent<BoxCollider>();depositCollider.size=new Vector3(1.58f,.25f,1.24f);depositCollider.center=Vector3.up*.06f;
                 balance.DepositTarget=deposit;
                 balance.Stones=BuildStones(root.transform,balance,terrain,ground);
+                AddEventPresentation(root, ground);
                 balance.ApplyPose(balance.InitialAngle);
                 foreach(var node in root.GetComponentsInChildren<Transform>(true)) node.gameObject.layer=LayerMask.NameToLayer("WorldStatic");
                 var prefab=PrefabUtility.SaveAsPrefabAsset(root,PrefabPath);
@@ -71,6 +72,123 @@ namespace PirateSlop.Editor
                 Debug.Log("Saved island balance event: five stones, ship timber mechanism, network chest and player interaction.");
             }
             finally {Object.DestroyImmediate(root);}
+        }
+
+        public static void AddStoneBowl(GameObject root)
+        {
+            LoadParts();
+            var balance = root.GetComponent<NetworkBalanceEvent>();
+            var pan = balance.WeightSocket.parent;
+            if (pan.Find("IronStoneBowl") != null) return;
+            foreach (var child in pan.Cast<Transform>().ToArray())
+                if (child.name == "OakTrayPlank" || child.name.Contains("TraySideRail") || child.name.Contains("TrayEndRail")) Object.DestroyImmediate(child.gameObject);
+            var baseCollider = pan.GetComponent<BoxCollider>();
+            if (baseCollider != null) Object.DestroyImmediate(baseCollider);
+            const int sides = 48;
+            var profile = new[] { new Vector2(0,.015f), new Vector2(.60f,.015f), new Vector2(.72f,.08f), new Vector2(.88f,.25f), new Vector2(1,.48f), new Vector2(1.06f,.48f), new Vector2(.97f,.18f), new Vector2(.72f,-.07f), new Vector2(0,-.07f) };
+            var vertices = new Vector3[profile.Length * (sides + 1)];
+            var uv = new Vector2[vertices.Length]; var triangles = new List<int>();
+            for (int ring = 0; ring < profile.Length; ring++)
+                for (int i = 0; i <= sides; i++)
+                {
+                    float angle = i * Mathf.PI * 2 / sides; int index = ring * (sides + 1) + i;
+                    vertices[index] = new Vector3(Mathf.Cos(angle) * profile[ring].x * .95f, profile[ring].y, Mathf.Sin(angle) * profile[ring].x * .76f);
+                    uv[index] = new Vector2(i / (float)sides, ring / (float)(profile.Length - 1));
+                    if (ring == 0 || i == sides) continue;
+                    int previous = index - sides - 1;
+                    triangles.AddRange(new[] { previous, index + 1, index, previous, previous + 1, index + 1 });
+                }
+            var mesh = new Mesh { name = "BalanceStoneBowl" }; mesh.vertices = vertices; mesh.uv = uv; mesh.SetTriangles(triangles,0); mesh.RecalculateNormals(); mesh.RecalculateTangents(); mesh.RecalculateBounds();
+            string path = Folder + "BalanceStoneBowl.asset";
+            var saved = AssetDatabase.LoadAssetAtPath<Mesh>(path);
+            if (saved == null) { AssetDatabase.CreateAsset(mesh,path); saved = mesh; }
+            else { EditorUtility.CopySerialized(mesh,saved); Object.DestroyImmediate(mesh); EditorUtility.SetDirty(saved); }
+            var bowl = Child(pan,"IronStoneBowl",Vector3.zero);
+            bowl.gameObject.AddComponent<MeshFilter>().sharedMesh = saved;
+            bowl.gameObject.AddComponent<MeshRenderer>().sharedMaterials = parts["Band"].Materials;
+            bowl.gameObject.AddComponent<MeshCollider>().sharedMesh = saved;
+            foreach (var part in balance.WeightHanger.Cast<Transform>().ToArray())
+                if (part.name == "HempSuspensionRope" || part.name == "TrayRopeShackle") Object.DestroyImmediate(part.gameObject);
+            foreach (float x in new[] {-1f,1f}) foreach (float z in new[] {-1f,1f})
+            {
+                var corner = new Vector3(x * .67f, pan.localPosition.y + .48f, z * .54f);
+                Segment(balance.WeightHanger,"HempSuspensionRope",new Vector3(0,-.08f,0),corner,.026f,.026f,"Rope");
+                Model(balance.WeightHanger,"TrayRopeShackle","Shackle",corner,new Vector3(.08f,.13f,.06f),Quaternion.Euler(0,x*20,0));
+            }
+        }
+
+        public static void AddEventPresentation(GameObject root, float ground)
+        {
+            LoadParts();
+            var balance = root.GetComponent<NetworkBalanceEvent>();
+            balance.ShoreHeight = ground;
+            if (root.transform.Find("PitEscapeLadder") == null)
+            {
+                var ladderRoot = Child(root.transform, "PitEscapeLadder", new Vector3(-.27f, ground - 2.96f, 1.05f));
+                ladderRoot.localRotation = Quaternion.Euler(0, 180, 0);
+                var ladder = ladderRoot.gameObject.AddComponent<ShipLadder>();
+                ladder.Height = 2.96f; ladder.HalfWidth = .5f; ladder.BoardingAccess = true;
+                ladder.ExitClearance = .2f; ladder.ExitDepth = .95f; ladder.Speed = 2.8f;
+                foreach (float x in new[] { -.43f, .43f })
+                    Segment(ladderRoot, "WeatheredLadderRail", new Vector3(x, 0, 0), new Vector3(x, 3.15f, 0), .07f, .09f, "Timber");
+                for (int i = 0; i < 10; i++) Timber(ladderRoot, "LadderRung", new Vector3(0, .16f + i * .3f, .02f), new Vector3(.88f, .06f, .12f));
+            }
+            var button = balance.WeightSocket.GetComponent<BoxCollider>();
+            if (button != null) Object.DestroyImmediate(button);
+            if (balance.BuriedSand == null)
+            {
+                const int sides = 36, rings = 6;
+                var vertices = new List<Vector3> { Vector3.up * 1.15f };
+                var triangles = new List<int>(); var uv = new List<Vector2> { new(.5f,.5f) };
+                for (int ring = 0; ring < rings; ring++)
+                {
+                    float radius = (ring + 1f) / rings;
+                    for (int i = 0; i < sides; i++)
+                    {
+                        float angle = i * Mathf.PI * 2 / sides;
+                        float height = 1.15f * (1 - radius * radius) + Mathf.Sin(angle * 5 + ring) * .025f * radius;
+                        var v = new Vector3(Mathf.Cos(angle) * radius * 1.4f, height, Mathf.Sin(angle) * radius * 1.05f);
+                        vertices.Add(v); uv.Add(new Vector2(v.x / 3, v.z / 3));
+                        int current = 1 + ring * sides + i, next = 1 + ring * sides + (i + 1) % sides;
+                        if (ring == 0) { triangles.AddRange(new[] { 0, next, current }); }
+                        else
+                        {
+                            int previous = current - sides, previousNext = next - sides;
+                            triangles.AddRange(new[] { previous, next, current, previous, previousNext, next });
+                        }
+                    }
+                }
+                var mesh = new Mesh { name = "BalanceBuriedSand" }; mesh.SetVertices(vertices); mesh.SetTriangles(triangles, 0); mesh.SetUVs(0, uv); mesh.RecalculateNormals(); mesh.RecalculateBounds();
+                var path = Folder + "BalanceBuriedSand.asset";
+                var saved = AssetDatabase.LoadAssetAtPath<Mesh>(path);
+                if (saved == null) { AssetDatabase.CreateAsset(mesh, path); saved = mesh; }
+                else { EditorUtility.CopySerialized(mesh, saved); Object.DestroyImmediate(mesh); EditorUtility.SetDirty(saved); }
+                balance.BuriedSand = Child(balance.ChestSocket, "BuriedTreasureSand", Vector3.zero);
+                balance.BuriedSand.gameObject.AddComponent<MeshFilter>().sharedMesh = saved;
+                balance.BuriedSand.gameObject.AddComponent<MeshRenderer>().sharedMaterial = AssetDatabase.LoadAssetAtPath<Material>("Assets/Materials/SandyIslands/ExcavatedSand.mat");
+            }
+            if (balance.RevealDust == null)
+            {
+                var dust = Child(balance.ChestSocket, "TreasureSandFall", Vector3.up * .8f);
+                dust.localRotation = Quaternion.Euler(-90, 0, 0);
+                var particles = dust.gameObject.AddComponent<ParticleSystem>(); balance.RevealDust = particles;
+                var main = particles.main; main.playOnAwake = false; main.loop = false; main.duration = 1.1f;
+                main.startLifetime = new ParticleSystem.MinMaxCurve(.65f, 1.1f); main.startSpeed = new ParticleSystem.MinMaxCurve(.6f, 1.8f);
+                main.startSize = new ParticleSystem.MinMaxCurve(.025f, .055f); main.gravityModifier = 1f; main.simulationSpace = ParticleSystemSimulationSpace.World; main.maxParticles = 160;
+                var emission = particles.emission; emission.rateOverTime = 55f;
+                var shape = particles.shape; shape.shapeType = ParticleSystemShapeType.Cone; shape.angle = 55; shape.radius = .8f;
+                var materialPath = Folder + "BalanceSandGrains.mat";
+                var material = AssetDatabase.LoadAssetAtPath<Material>(materialPath);
+                if (material == null)
+                {
+                    material = new Material(Shader.Find("Universal Render Pipeline/Lit")); material.SetColor("_BaseColor", new Color(.62f,.43f,.21f));
+                    AssetDatabase.CreateAsset(material, materialPath);
+                }
+                var primitive = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                var renderer = particles.GetComponent<ParticleSystemRenderer>(); renderer.renderMode = ParticleSystemRenderMode.Mesh;
+                renderer.mesh = primitive.GetComponent<MeshFilter>().sharedMesh; renderer.sharedMaterial = material;
+                Object.DestroyImmediate(primitive); particles.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+            }
         }
 
         static void AddPlayerComponent()

@@ -7782,6 +7782,9 @@
 | Файл | Краткое описание |
 | --- | --- |
 | [Assets/Models/World/SandyIslands/Balance/Axle.asset](<../../Assets/Models/World/SandyIslands/Balance/Axle.asset>) | Настройки или данные Unity |
+| [Assets/Models/World/SandyIslands/Balance/BalanceBuriedSand.asset](<../../Assets/Models/World/SandyIslands/Balance/BalanceBuriedSand.asset>) | Настройки или данные Unity; Остров с весами и пятью камнями |
+| [Assets/Models/World/SandyIslands/Balance/BalanceSandGrains.mat](<../../Assets/Models/World/SandyIslands/Balance/BalanceSandGrains.mat>) | Материал Unity; Остров с весами и пятью камнями |
+| [Assets/Models/World/SandyIslands/Balance/BalanceStoneBowl.asset](<../../Assets/Models/World/SandyIslands/Balance/BalanceStoneBowl.asset>) | Настройки или данные Unity; Остров с весами и пятью камнями |
 | [Assets/Models/World/SandyIslands/Balance/Band.asset](<../../Assets/Models/World/SandyIslands/Balance/Band.asset>) | Настройки или данные Unity |
 | [Assets/Models/World/SandyIslands/Balance/Bearing.asset](<../../Assets/Models/World/SandyIslands/Balance/Bearing.asset>) | Настройки или данные Unity |
 | [Assets/Models/World/SandyIslands/Balance/Bolt.asset](<../../Assets/Models/World/SandyIslands/Balance/Bolt.asset>) | Настройки или данные Unity |

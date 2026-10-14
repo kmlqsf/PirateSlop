@@ -14,7 +14,11 @@ namespace PirateSlop
         public static bool AllowRemote;
         public static bool ShowLootEventLabels { get; private set; }
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-        static void ResetLootLabels() => ShowLootEventLabels = false;
+        static void ResetLootLabels()
+        {
+            IsOpen = false;
+            ShowLootEventLabels = false;
+        }
         NetworkWeapon network;
         string message = "";
         Vector2 scroll;

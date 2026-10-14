@@ -134,7 +134,7 @@ namespace PirateSlop
             bool whaleVisible = whaleGripWeight > .01f && camera == motor.PlayerCamera && camera.enabled && !motor.IsThirdPerson && !motor.IsDead;
             bool sternVisible = sternGripWeight > .01f && camera == motor.PlayerCamera && camera.enabled && !motor.IsThirdPerson && !motor.IsDead;
             bool stoneVisible = balanceStone != null && balanceStone.HeldVisual != null && balanceStone.GripWeight>.01f && camera == motor.PlayerCamera && camera.enabled && !motor.IsThirdPerson && !motor.IsDead;
-            foreach (var renderer in renderers) renderer.forceRenderingOff = !(plankVisible || whaleVisible || sternVisible || stoneVisible);
+            foreach (var renderer in renderers) renderer.forceRenderingOff = stoneVisible || !(plankVisible || whaleVisible || sternVisible);
         }
         void After(ScriptableRenderContext context, Camera camera) { if (renderers != null) foreach (var r in renderers) r.forceRenderingOff = true; }
         void LateUpdate()
@@ -143,16 +143,6 @@ namespace PirateSlop
             var stone = balanceStone != null ? balanceStone.HeldVisual : null;
             if (stone != null && !motor.IsDead)
             {
-                var network=GetComponent<PirateSlop.Networking.NetworkWeapon>();
-                var owner=network.BalanceEvent;var state=owner.Stone(network.BalanceStoneIndex);
-                float age=(float)(owner.Clock-state.Started);
-                float bend=state.Phase==1 && age<.48f ? Mathf.Sin(Mathf.Clamp01(age/.48f)*Mathf.PI) : 0;
-                if (balanceHips != null) balanceHips.position-=Vector3.up*(bend*.32f);
-                if (balanceSpine != null) balanceSpine.rotation=Quaternion.AngleAxis(bend*25,transform.right)*balanceSpine.rotation;
-                float stoneGrip=balanceStone.GripWeight;
-                if(state.Phase==2) {float shrug=stoneGrip*Mathf.Clamp01(age/.25f)*.05f;right.Upper.position+=Vector3.up*shrug;left.Upper.position+=Vector3.up*shrug;}
-                SolveStone(balanceStone.HandPoint,right,left,transform,stoneGrip);
-                SolveStone(balanceStone.HandPoint,viewRight,viewLeft,motor.PlayerCamera.transform,stoneGrip);
                 return;
             }
             if (sternInteraction == null) sternInteraction = GetComponent<SternCargoPlayerInteraction>();

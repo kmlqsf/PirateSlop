@@ -10,13 +10,14 @@ namespace PirateSlop.Networking
         public bool OnBalance => balanceSupport.Value != null;
         public void PlaceOnBalance(NetworkBalanceEvent owner)
         {
-            kind.Value = SeaLootKind.Balance; phase.Value = SeaLootState.Ready;
+            kind.Value = SeaLootKind.Balance; phase.Value = SeaLootState.Locked;
             balanceSupport.Value = owner.NetworkObject; eventPoint.Value = owner.transform.position;
         }
         bool UpdateBalanceChest()
         {
             if (!OnBalance) return false;
             var owner = Balance;
+            if (IsServerInitialized && owner != null && owner.ChestAvailable && phase.Value == SeaLootState.Locked) phase.Value = SeaLootState.Ready;
             if (owner != null) transform.SetPositionAndRotation(owner.ChestSocket.position,owner.ChestSocket.rotation);
             return true;
         }

@@ -11,84 +11,84 @@ namespace PirateSlop
         NetworkWeapon network;
         AdvancedPlayerController motor;
         BalanceEventTarget hovered;
+        bool pickupRequested, releasing;
         int consumedFrame = -1;
-        float requestAt = -1;
+        float requestAt = -10, distance = 1f, nextSend, messageUntil;
         string message;
-        float messageUntil;
-        public void Notify(string text) { message = text; messageUntil = Time.unscaledTime + 2.5f; }
-        public bool ConsumedInput => consumedFrame == Time.frameCount;
-        public bool BlocksInventory => network != null && network.CarryingBalanceStone || Time.unscaledTime < requestAt + .25f;
-        public Transform HeldVisual => network != null && network.BalanceEvent != null ? network.BalanceEvent.CarriedVisual(network) : null;
-        public float GripWeight
-        {
-            get
-            {
-                if(network == null || network.BalanceEvent == null) return 0;
-                var state=network.BalanceEvent.Stone(network.BalanceStoneIndex);
-                return state.Phase!=2 ? 1 : 1-Mathf.SmoothStep(0,1,((float)(network.BalanceEvent.Clock-state.Started)-NetworkBalanceEvent.DepositSeconds*NetworkBalanceEvent.ReleaseFraction)/.22f);
-            }
-        }
-        public Vector3 HandPoint
-        {
-            get
-            {
-                var state=network.BalanceEvent.Stone(network.BalanceStoneIndex);
-                return state.Phase==2 && network.BalanceEvent.Clock>=state.Started+NetworkBalanceEvent.DepositSeconds*NetworkBalanceEvent.ReleaseFraction ? state.ReleasePoint : HeldVisual.position;
-            }
-        }
         readonly RaycastHit[] hits = new RaycastHit[48];
+        public Vector3 DragPoint { get; private set; }
+        public void Notify(string text) { message = text; messageUntil = Time.unscaledTime + 2.5f; pickupRequested = false; }
+        public bool ConsumedInput => consumedFrame == Time.frameCount;
+        public bool BlocksInventory => network != null && network.CarryingBalanceStone || pickupRequested;
+        public Transform HeldVisual => network != null && network.BalanceEvent != null ? network.BalanceEvent.CarriedVisual(network) : null;
+        public float GripWeight => HeldVisual != null ? 1f : 0f;
+        public Vector3 HandPoint => DragPoint;
         void Awake() { network = GetComponent<NetworkWeapon>(); motor = GetComponent<AdvancedPlayerController>(); }
         void Update()
         {
             hovered = null;
-            if (network == null || !network.IsOwner || !network.IsClientInitialized || motor.IsDead || motor.PlayerCamera == null) return;
-            var keyboard = Keyboard.current;
-            if (network.CarryingBalanceStone && keyboard != null && keyboard.gKey.wasPressedThisFrame && motor.InputActive)
-            { consumedFrame = Time.frameCount; network.DropBalanceStone(); return; }
-            if (!motor.InputActive || motor.LocomotionLocked) return;
-            var camera = motor.PlayerCamera.transform;
-            int count = Physics.SphereCastNonAlloc(camera.position,.1f,camera.forward,hits,2.8f,~0,QueryTriggerInteraction.Ignore);
-            float nearest = float.MaxValue;
-            for (int i=0;i<count;i++)
+            if (network == null || !network.IsOwner || !network.IsClientInitialized || motor.PlayerCamera == null) return;
+            var mouse = Mouse.current; var keys = Keyboard.current;
+            bool carrying = network.CarryingBalanceStone;
+            if (!carrying) releasing = false;
+            if (mouse == null || !motor.InputActive || motor.IsSwimming || motor.IsClimbing || motor.IsDead || motor.IsDowned || motor.LocomotionLocked)
             {
-                if (hits[i].collider.transform.IsChildOf(transform) || hits[i].distance >= nearest) continue;
-                var candidate = BalanceEventTarget.FromCollider(hits[i].collider);
-                if (network.CarryingBalanceStone && candidate != null && candidate.StoneIndex == network.BalanceStoneIndex && candidate.Owner == network.BalanceEvent) continue;
-                nearest=hits[i].distance; hovered=candidate;
-            }
-            if (hovered == null || hovered.Owner == null) return;
-            bool usable = hovered.StoneIndex < 0 ? hovered.Owner.CanDeposit(network) : hovered.Owner.CanTake(network,hovered.StoneIndex);
-            if (keyboard == null || !keyboard.eKey.wasPressedThisFrame || Time.unscaledTime < requestAt + .25f) return;
-            if (!usable)
-            {
-                if (hovered.StoneIndex < 0 && network.CarryingBalanceStone)
-                {
-                    consumedFrame = Time.frameCount;
-                    Notify(hovered.Owner.DepositBlockReason(network));
-                }
+                if (carrying && !releasing) { network.DropBalanceStone(); releasing = true; }
+                if (Time.unscaledTime > requestAt + 1.5f) pickupRequested = false;
                 return;
             }
-            consumedFrame=Time.frameCount; requestAt=Time.unscaledTime;
-            if (hovered.StoneIndex < 0) network.DepositBalanceStone(); else network.TakeBalanceStone(hovered.Owner.NetworkObject,hovered.StoneIndex);
+            var camera = motor.PlayerCamera.transform;
+            var ray = new Ray(camera.position, camera.forward);
+            int count = Physics.RaycastNonAlloc(ray, hits, 4f, ~0, QueryTriggerInteraction.Ignore);
+            float best = 4f;
+            for (int i = 0; i < count; i++)
+            {
+                var hit = hits[i];
+                if (hit.collider.transform.IsChildOf(transform) || hit.distance >= best) continue;
+                var candidate = BalanceEventTarget.FromCollider(hit.collider);
+                if (carrying && candidate != null && candidate.StoneIndex == network.BalanceStoneIndex && candidate.Owner == network.BalanceEvent) continue;
+                best = hit.distance; hovered = candidate;
+            }
+            if (carrying)
+            {
+                pickupRequested = false; consumedFrame = Time.frameCount;
+                if (releasing) return;
+                float scroll = mouse.scroll.ReadValue().y;
+                if (Mathf.Abs(scroll) > .001f) distance = Mathf.Clamp(distance + Mathf.Sign(scroll) * .3f, .7f, 4f);
+                DragPoint = CannonHands.HeldPoint(ray, distance, best);
+                bool discard = keys != null && keys.gKey.wasPressedThisFrame;
+                if (!mouse.leftButton.isPressed || discard)
+                { network.ReleaseBalanceStone(DragPoint, !discard); releasing = true; return; }
+                if (Time.unscaledTime >= nextSend) { network.MoveBalanceStone(DragPoint); nextSend = Time.unscaledTime + .05f; }
+                return;
+            }
+            if (pickupRequested)
+            {
+                consumedFrame = Time.frameCount;
+                if (Time.unscaledTime > requestAt + 1.5f) Notify("Не удалось поднять камень. Попробуйте снова.");
+                return;
+            }
+            if (hovered == null || hovered.Owner == null || hovered.StoneIndex < 0 || !mouse.leftButton.wasPressedThisFrame) return;
+            consumedFrame = Time.frameCount;
+            if (!hovered.Owner.CanTake(network, hovered.StoneIndex)) return;
+            distance = Mathf.Clamp(best, .6f, 3f);
+            DragPoint = CannonHands.HeldPoint(ray, distance, best);
+            requestAt = Time.unscaledTime; pickupRequested = true; nextSend = 0;
+            network.TakeBalanceStone(hovered.Owner.NetworkObject, hovered.StoneIndex);
         }
         void OnGUI()
         {
             if (network == null || !network.IsOwner || motor.IsDead || RoguelikeUpgradeUI.WindowOpen) return;
-            string hint=null;
-            if (network.CarryingBalanceStone)
-            {
-                var state=network.BalanceEvent.Stone(network.BalanceStoneIndex);
-                hint=state.Phase==2 ? "Кладём камень на чашу…" : $"Камень в руках · G — бросить · Весы: {network.BalanceEvent.Deposited}/5";
-                if (hovered != null && hovered.StoneIndex<0 && state.Phase != 2)
-                {
-                    var reason = hovered.Owner.DepositBlockReason(network);
-                    hint = reason == null ? "E — положить камень на чашу · G — бросить" : reason + " · G — бросить";
-                }
-            }
-            else if (hovered != null && hovered.Owner != null && hovered.StoneIndex>=0 && hovered.Owner.CanTake(network,hovered.StoneIndex)) hint="E — поднять камень";
-            else if (hovered != null && hovered.StoneIndex<0) hint=$"Весы: {hovered.Owner.Deposited}/5 · найдите камни на острове";
+            string hint = network.CarryingBalanceStone ? "Удерживайте ЛКМ · колесо — ближе/дальше · отпустите камень над чашей · G — бросить" :
+                hovered != null && hovered.Owner != null && hovered.StoneIndex >= 0 ? "Зажмите ЛКМ — взять камень" : null;
+            if (hint == null && hovered != null && hovered.Owner != null && hovered.StoneIndex < 0)
+                hint = $"Чаша весов: {hovered.Owner.Deposited}/5 · отпустите камень внутрь";
+            if (hint == null && motor.PlayerCamera != null)
+                foreach (var ladder in ShipLadder.Active)
+                    if (ladder.name == "PitEscapeLadder" && ladder.gameObject.scene == gameObject.scene && ladder.CanGrab(transform.position, motor.PlayerCamera.transform.eulerAngles.y, motor.PlayerCamera.transform.eulerAngles.x))
+                    { hint = "E — взяться за лестницу · W — выбраться из ямы"; break; }
             if (Time.unscaledTime < messageUntil && !string.IsNullOrEmpty(message)) hint = message;
-            if (hint != null) PirateHudStyle.Panel(new Rect(Screen.width*.5f-330,Screen.height*.72f,660,34),hint);
+            if (hint != null) PirateHudStyle.Panel(new Rect(Screen.width * .5f - 350, Screen.height * .72f, 700, 34), hint);
         }
     }
 }

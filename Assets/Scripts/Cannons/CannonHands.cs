@@ -95,6 +95,8 @@ namespace PirateSlop
         SoundCue heldAudioCue = (SoundCue)(-1);
         public bool HasHeldBall => held != null;
         public Cannonball HeldBall => held;
+        public static Vector3 HeldPoint(Ray ray, float holdDistance, float obstacleDistance)
+            => ray.GetPoint(Mathf.Min(holdDistance, Mathf.Max(.2f, obstacleDistance - .26f)));
         public bool CanPickUpBall()
         {
             if (player == null || player.PlayerCamera == null) return false;
@@ -238,7 +240,7 @@ namespace PirateSlop
                 if (!mouse.leftButton.isPressed) { Drop(); return; }
                 float scroll = mouse.scroll.ReadValue().y;
                 if (Mathf.Abs(scroll) > .001f) distance = Mathf.Clamp(distance + Mathf.Sign(scroll) * .3f, .7f, 4f);
-                held.transform.position = ray.GetPoint(Mathf.Min(distance, Mathf.Max(.2f, best - .26f)));
+                held.transform.position = HeldPoint(ray, distance, best);
                 if (held.Network != null && held.Network.IsClientInitialized && Time.unscaledTime >= nextHeldSync)
                 { nextHeldSync = Time.unscaledTime + .05f; held.Network.RequestBall(true, held.transform.position); }
                 var loose = held.GetComponent<PirateSlop.Networking.NetworkLooseCannonball>();
