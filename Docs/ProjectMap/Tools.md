@@ -35,12 +35,17 @@
 | --- | --- |
 | [Tools/ShipV3/AddBilgeDeck.py](<../../Tools/ShipV3/AddBilgeDeck.py>) | Инструмент Python; Движение корабля и палуба |
 | [Tools/ShipV3/AddHoldSupports.py](<../../Tools/ShipV3/AddHoldSupports.py>) | Инструмент Python; Движение корабля и палуба |
+| [Tools/ShipV3/BuildShipInteriorLining.py](<../../Tools/ShipV3/BuildShipInteriorLining.py>) | Инструмент Python; Движение корабля и палуба |
 | [Tools/ShipV3/ClipHoldHullTrim.py](<../../Tools/ShipV3/ClipHoldHullTrim.py>) | Инструмент Python; Движение корабля и палуба |
 | [Tools/ShipV3/ClipHullTrimToSkin.py](<../../Tools/ShipV3/ClipHullTrimToSkin.py>) | Инструмент Python; Движение корабля и палуба |
 | [Tools/ShipV3/ExportBilgeFromOpenBlender.py](<../../Tools/ShipV3/ExportBilgeFromOpenBlender.py>) | Инструмент Python; Движение корабля и палуба |
 | [Tools/ShipV3/ExportFromOpenBlender.py](<../../Tools/ShipV3/ExportFromOpenBlender.py>) | Инструмент Python; Модели и Blender |
+| [Tools/ShipV3/FitBoardingNetAttachments.py](<../../Tools/ShipV3/FitBoardingNetAttachments.py>) | Инструмент Python; Движение корабля и палуба |
+| [Tools/ShipV3/FitBowHandrailJoints.py](<../../Tools/ShipV3/FitBowHandrailJoints.py>) | Инструмент Python; Движение корабля и палуба |
+| [Tools/ShipV3/RefineShipAppearance.py](<../../Tools/ShipV3/RefineShipAppearance.py>) | Инструмент Python; Движение корабля и палуба |
 | [Tools/ShipV3/RepairHoldInterior.py](<../../Tools/ShipV3/RepairHoldInterior.py>) | Инструмент Python; Движение корабля и палуба |
 | [Tools/ShipV3/RepairHoldStern.py](<../../Tools/ShipV3/RepairHoldStern.py>) | Инструмент Python; Движение корабля и палуба |
+| [Tools/ShipV3/RepairShipAppearance.py](<../../Tools/ShipV3/RepairShipAppearance.py>) | Инструмент Python; Движение корабля и палуба |
 | [Tools/ShipV3/SealHoldEndSeams.py](<../../Tools/ShipV3/SealHoldEndSeams.py>) | Инструмент Python; Движение корабля и палуба |
 | [Tools/ShipV3/SealInteriorShipSeams.py](<../../Tools/ShipV3/SealInteriorShipSeams.py>) | Инструмент Python; Движение корабля и палуба |
 

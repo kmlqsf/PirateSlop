@@ -91,6 +91,7 @@ namespace PirateSlop
 
         void MoveShot(Vector3 position)
         {
+            if (Authoritative) NetworkShip.PunctureSails(transform.position, position, Radius * 2f);
             if (smoke != null) smoke.Segment(transform.position, position);
             if (waterTrail != null) waterTrail.Segment(transform.position, position);
             transform.position = position;

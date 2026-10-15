@@ -57,6 +57,7 @@ namespace PirateSlop.Ships
             }
             weights = new float[rest.Length];
             var clothUV=mesh.uv;
+            bool boardingNet=PinTop && gameObject.name.StartsWith("V3_Transfer_Boarding_Net_", System.StringComparison.Ordinal);
             for (int i = 0; i < weights.Length; i++)
             {
                 float pin = Mathf.InverseLerp(pinMin, pinMax, Vector3.Dot(rest[i], pinAxis));
@@ -66,6 +67,7 @@ namespace PirateSlop.Ships
                     pin=height>.0001f ? Mathf.Clamp01(clothUV[i].y/height) : 0f;
                 }
                 weights[i] = SailIndex>=0 ? 4f*pin*(1f-pin) : 1f-pin;
+                if (boardingNet) weights[i]=1f-Mathf.SmoothStep(0f,1f,Mathf.Clamp01(pin/.82f));
             }
             if (skin != null)
             {
@@ -112,20 +114,10 @@ namespace PirateSlop.Ships
             if (visual != null && !visual.isVisible) return;
             if (Time.unscaledTime < nextVisualUpdate) return;
             nextVisualUpdate = Time.unscaledTime + (budget != null ? budget.VisualInterval : 0f);
-            uint tick = ship.TimeManager.Tick;
-            if (tick != windTick) { windTick = tick; tickTime = Time.unscaledTime; }
-            float time = (float)tick * (float)ship.TimeManager.TickDelta + Mathf.Min(Time.unscaledTime - tickTime, (float)ship.TimeManager.TickDelta);
+            float time = WindTime();
             if (skin != null)
             {
-                float deployed = SailIndex >= 0 && sails != null ? sails.Tension(SailIndex) : 1f;
-                if (SailIndex >= 0 && foldedShape >= 0) deployed = 1f - Mathf.Clamp01(skin.GetBlendShapeWeight(foldedShape) / 100f);
-                float speed = ship.Motor != null ? ship.Motor.CannonPointVelocity(ship.transform.position).magnitude : 0f;
-                float gust = .8f + .2f * Mathf.Sin(time * .73f + transform.position.x * .013f);
-                float flutter = (SailIndex >= 0 ? 72f : 82f) * Mathf.SmoothStep(0f, 1f, deployed) * gust * Mathf.Lerp(.75f, 1f, Mathf.Clamp01(speed / 12f));
-                float frequency = SailIndex >= 0 ? 2.2f : 3.7f;
-                for (int i = 0; i < windShapes.Length; i++)
-                    skin.SetBlendShapeWeight(windShapes[i], (Mathf.Sin(time * frequency - i * 2.094f)
-                        + .18f * Mathf.Sin(time * frequency * 1.8f - i * 1.3f)) * flutter);
+                ApplySailWind(time);
                 return;
             }
             Vector3 motion = transform.InverseTransformDirection(ship.Motor.MotionAngularVelocity);
@@ -139,6 +131,30 @@ namespace PirateSlop.Ships
                 work[i] = rest[i] + normals[i] * (wave * amplitude * weight) + Vector3.right * (Mathf.Clamp(motion.z * .015f, -.12f, .12f) / unitsScale) * weight;
             }
             mesh.vertices = work;
+        }
+        float WindTime()
+        {
+            uint tick = ship.TimeManager.Tick;
+            if (tick != windTick) { windTick = tick; tickTime = Time.unscaledTime; }
+            return (float)tick * (float)ship.TimeManager.TickDelta + Mathf.Min(Time.unscaledTime - tickTime, (float)ship.TimeManager.TickDelta);
+        }
+        public void PrepareSailRaycast()
+        {
+            if (SailIndex < 0 || ship == null || !ship.IsSpawned) return;
+            if (!initialized) Initialize();
+            if (mesh != null && skin != null) ApplySailWind(WindTime());
+        }
+        void ApplySailWind(float time)
+        {
+            float deployed = SailIndex >= 0 && sails != null ? sails.Tension(SailIndex) : 1f;
+            if (SailIndex >= 0 && foldedShape >= 0) deployed = 1f - Mathf.Clamp01(skin.GetBlendShapeWeight(foldedShape) / 100f);
+            float speed = ship.Motor != null ? ship.Motor.CannonPointVelocity(ship.transform.position).magnitude : 0f;
+            float gust = .8f + .2f * Mathf.Sin(time * .73f + transform.position.x * .013f);
+            float flutter = (SailIndex >= 0 ? 72f : 82f) * Mathf.SmoothStep(0f, 1f, deployed) * gust * Mathf.Lerp(.75f, 1f, Mathf.Clamp01(speed / 12f));
+            float frequency = SailIndex >= 0 ? 2.2f : 3.7f;
+            for (int i = 0; i < windShapes.Length; i++)
+                skin.SetBlendShapeWeight(windShapes[i], (Mathf.Sin(time * frequency - i * 2.094f)
+                    + .18f * Mathf.Sin(time * frequency * 1.8f - i * 1.3f)) * flutter);
         }
         void OnDestroy() { if (mesh != null) Destroy(mesh); }
     }

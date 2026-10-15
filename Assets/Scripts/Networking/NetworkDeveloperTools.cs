@@ -9,6 +9,7 @@ namespace PirateSlop.Networking
     {
         public NetworkObject DeveloperTargetPrefab;
         readonly List<NetworkObject> developerObjects = new();
+        NetworkShip developerDestructionShip, developerDestructionSource;
         float nextDeveloperCommand;
         float nextDeveloperSpeedCommand;
         public void DeveloperCommand(byte command, int count = 1) => DeveloperCommandServerRpc(command, count);
@@ -30,6 +31,16 @@ namespace PirateSlop.Networking
             if (Time.time < nextDeveloperCommand) return;
             nextDeveloperCommand = Time.time + .3f;
             var session = SessionController.Instance;
+            if (command == 129 || command == 130)
+            {
+                var player = GetComponent<NetworkPlayer>();
+                var destination = command == 129 ? developerDestructionShip : developerDestructionSource != null && developerDestructionSource.IsSpawned ? developerDestructionSource : player.Ship;
+                DeveloperResultTargetRpc(Owner, player.TryDeveloperBoardShip(destination, out var error)
+                    ? command == 129 ? "Вы на корабле-мишени." : "Вы на исходном корабле."
+                    : error);
+                return;
+            }
+            if (command == 131) { DeveloperResultTargetRpc(Owner, RemoveDeveloperDestructionShip()); return; }
             if (command == 32)
             {
                 var player = GetComponent<NetworkPlayer>();
@@ -174,11 +185,34 @@ namespace PirateSlop.Networking
             if (command == 8) { DeveloperResultTargetRpc(Owner, AddItem(InventoryItem.Cannon) ? "Пушка добавлена." : "Инвентарь заполнен."); return; }
             if (command == 9)
             {
+                if (developerDestructionShip != null && developerDestructionShip.IsSpawned)
+                {
+                    string result = RemoveDeveloperDestructionShip();
+                    if (developerDestructionShip != null && developerDestructionShip.IsSpawned) { DeveloperResultTargetRpc(Owner, result); return; }
+                }
                 foreach (var item in developerObjects) if (item != null && item.IsSpawned) ServerManager.Despawn(item);
                 developerObjects.Clear(); DeveloperResultTargetRpc(Owner, "Тестовые объекты удалены."); return;
             }
             developerObjects.RemoveAll(o => o == null || !o.IsSpawned);
             if (developerObjects.Count >= 20) { DeveloperResultTargetRpc(Owner, "Удалите тестовые объекты: достигнут лимит 20."); return; }
+            if (command == 128)
+            {
+                if (developerDestructionShip != null && developerDestructionShip.IsSpawned)
+                { DeveloperResultTargetRpc(Owner, "Мишень уже создана. Удалите её перед созданием новой."); return; }
+                var player = GetComponent<NetworkPlayer>();
+                var deck = player.Passenger != null ? player.Passenger.Ship : null;
+                var source = deck != null ? deck.GetComponent<NetworkShip>() : player.Ship;
+                var spawned = session != null ? session.SpawnDeveloperDestructionShip(source) : null;
+                if (spawned != null)
+                {
+                    developerDestructionSource = source;
+                    developerDestructionShip = spawned.GetComponent<NetworkShip>();
+                    developerObjects.Add(spawned);
+                }
+                DeveloperResultTargetRpc(Owner, spawned != null ? "Корабль-мишень создан справа: 10–20 м между бортами."
+                    : "Справа нет свободной воды или исходный корабль недоступен.");
+                return;
+            }
             if (command == 21)
             {
                 SpawnDeveloperChest();
@@ -242,6 +276,24 @@ namespace PirateSlop.Networking
             if (target != null) target.Place(support, position);
             ServerManager.Spawn(obj); developerObjects.Add(obj);
             DeveloperResultTargetRpc(Owner, "Объект создан.");
+        }
+        string RemoveDeveloperDestructionShip()
+        {
+            var target = developerDestructionShip;
+            if (target == null || !target.IsSpawned) { developerDestructionShip = null; return "Корабль-мишень уже отсутствует."; }
+            var requester = GetComponent<NetworkPlayer>();
+            foreach (var player in NetworkPlayer.Active)
+                if (player != null && player.IsSpawned && player != requester && player.Passenger.Support == target.Body)
+                    return "На мишени есть другой игрок. Сначала он должен покинуть корабль.";
+            if (requester.Passenger.Support == target.Body)
+            {
+                var destination = developerDestructionSource != null && developerDestructionSource.IsSpawned ? developerDestructionSource : requester.Ship;
+                if (!requester.TryDeveloperBoardShip(destination, out var error)) return error;
+            }
+            developerObjects.Remove(target.NetworkObject);
+            ServerManager.Despawn(target.NetworkObject);
+            developerDestructionShip = null;
+            return "Корабль-мишень удалён.";
         }
         void SpawnDeveloperBowChest()
         {

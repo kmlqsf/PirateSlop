@@ -436,4 +436,6 @@ end_script=BASE/'Tools/ShipV3/RepairHoldInterior.py'
 exec(compile(end_script.read_text(encoding='utf-8'),str(end_script),'exec'))
 skin_script=BASE/'Tools/ShipV3/ClipHullTrimToSkin.py'
 exec(compile(skin_script.read_text(encoding='utf-8'),str(skin_script),'exec'))
+appearance_script=BASE/'Tools/ShipV3/RepairShipAppearance.py'
+exec(compile(appearance_script.read_text(encoding='utf-8'),str(appearance_script),'exec'),dict(globals(),__file__=str(appearance_script)))
 result={'version':13,'floor_z':floor_z,'modified':len(manifest['modified_objects']),'new':len(new_objects),'protected_sections':len(set(protected)),'empty':len(manifest['empty_objects']),'manifest':str(OUT/'BilgeDeck.json')}

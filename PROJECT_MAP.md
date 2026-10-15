@@ -1,6 +1,6 @@
 # PirateSlop — карта проекта
 
-Снимок файлов: 2026-10-14. Корень: `C:\Users\K\Project`.
+Снимок файлов: 2026-10-15. Корень: `D:\projects\Pirate_BR\PirateGame`.
 
 ## Как пользоваться
 
@@ -12,14 +12,14 @@
 
 ## Полный каталог
 
-Учтено 11777 файлов без `.meta`. Ещё 10631 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
+Учтено 14098 файлов без `.meta`. Ещё 12940 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
 
 | Раздел | Назначение | Файлов |
 | --- | --- | ---: |
 | [.agents](<Docs/ProjectMap/.agents.md>) | Ресурсы раздела; точный состав — в каталоге | 1 |
 | [.cursor](<Docs/ProjectMap/.cursor.md>) | Ресурсы раздела; точный состав — в каталоге | 1 |
-| [.opencode](<Docs/ProjectMap/.opencode.md>) | Ресурсы раздела; точный состав — в каталоге | 1 |
-| [Art](<Docs/ProjectMap/Art.md>) | Исходники арта и Blender | 582 |
+| [.opencode](<Docs/ProjectMap/.opencode.md>) | Ресурсы раздела; точный состав — в каталоге | 4 |
+| [Art](<Docs/ProjectMap/Art.md>) | Исходники арта и Blender | 568 |
 | [Assets](<Docs/ProjectMap/Assets.md>) | Ресурсы раздела; точный состав — в каталоге | 2 |
 | [Assets/Animations](<Docs/ProjectMap/Assets-Animations.md>) | Анимации | 37 |
 | [Assets/Audio](<Docs/ProjectMap/Assets-Audio.md>) | Звуковые ресурсы и лицензии | 461 |
@@ -28,17 +28,17 @@
 | [Assets/Fog Particles](<Docs/ProjectMap/Assets-Fog Particles.md>) | Ресурсы раздела; точный состав — в каталоге | 3 |
 | [Assets/Game](<Docs/ProjectMap/Assets-Game.md>) | Игровые подсистемы и эффекты | 83 |
 | [Assets/Houidisoft technology](<Docs/ProjectMap/Assets-Houidisoft technology.md>) | Ресурсы раздела; точный состав — в каталоге | 12 |
-| [Assets/JMO Assets](<Docs/ProjectMap/Assets-JMO Assets.md>) | Ресурсы раздела; точный состав — в каталоге | 19 |
+| [Assets/JMO Assets](<Docs/ProjectMap/Assets-JMO Assets.md>) | Ресурсы раздела; точный состав — в каталоге | 18 |
 | [Assets/Materials](<Docs/ProjectMap/Assets-Materials.md>) | Материалы | 140 |
 | [Assets/Mirza](<Docs/ProjectMap/Assets-Mirza.md>) | Ресурсы раздела; точный состав — в каталоге | 1 |
-| [Assets/Models](<Docs/ProjectMap/Assets-Models.md>) | Модели и связанные ресурсы | 7325 |
+| [Assets/Models](<Docs/ProjectMap/Assets-Models.md>) | Модели и связанные ресурсы | 9632 |
 | [Assets/Plugins](<Docs/ProjectMap/Assets-Plugins.md>) | Плагины | 5 |
 | [Assets/Prefabs](<Docs/ProjectMap/Assets-Prefabs.md>) | Готовые игровые объекты | 138 |
-| [Assets/Resources](<Docs/ProjectMap/Assets-Resources.md>) | Ресурсы, доступные для загрузки по имени | 164 |
+| [Assets/Resources](<Docs/ProjectMap/Assets-Resources.md>) | Ресурсы, доступные для загрузки по имени | 165 |
 | [Assets/Scenes](<Docs/ProjectMap/Assets-Scenes.md>) | Сохранённые сцены | 3 |
-| [Assets/Scripts](<Docs/ProjectMap/Assets-Scripts.md>) | Игровой код и редакторские инструменты | 569 |
+| [Assets/Scripts](<Docs/ProjectMap/Assets-Scripts.md>) | Игровой код и редакторские инструменты | 571 |
 | [Assets/Settings](<Docs/ProjectMap/Assets-Settings.md>) | Настройки игровых систем и рендеринга | 59 |
-| [Assets/Shaders](<Docs/ProjectMap/Assets-Shaders.md>) | Шейдеры | 21 |
+| [Assets/Shaders](<Docs/ProjectMap/Assets-Shaders.md>) | Шейдеры | 22 |
 | [Assets/StreamingAssets](<Docs/ProjectMap/Assets-StreamingAssets.md>) | Ресурсы раздела; точный состав — в каталоге | 5 |
 | [Assets/Tests](<Docs/ProjectMap/Assets-Tests.md>) | Исходники проверок | 19 |
 | [Assets/ThirdParty](<Docs/ProjectMap/Assets-ThirdParty.md>) | Сторонние ресурсы | 20 |
@@ -47,11 +47,11 @@
 | [Assets/_Recovery](<Docs/ProjectMap/Assets-_Recovery.md>) | Сохранённые восстановленные данные | 2 |
 | [Captures](<Docs/ProjectMap/Captures.md>) | Ресурсы раздела; точный состав — в каталоге | 1010 |
 | [Docs](<Docs/ProjectMap/Docs.md>) | Документы и сохранённые отчёты | 47 |
-| [Packages](<Docs/ProjectMap/Packages.md>) | Манифест, lock-файл и встроенные пакеты | 924 |
+| [Packages](<Docs/ProjectMap/Packages.md>) | Манифест, lock-файл и встроенные пакеты | 922 |
 | [ProjectSettings](<Docs/ProjectMap/ProjectSettings.md>) | Настройки Unity | 28 |
-| [Root](<Docs/ProjectMap/Root.md>) | Корневые инструкции, планы и служебные файлы | 26 |
+| [Root](<Docs/ProjectMap/Root.md>) | Корневые инструкции, планы и служебные файлы | 45 |
 | [ThirdParty](<Docs/ProjectMap/ThirdParty.md>) | Сторонние ресурсы | 2 |
-| [Tools](<Docs/ProjectMap/Tools.md>) | Инструменты разработки и загрузчик контекста | 21 |
+| [Tools](<Docs/ProjectMap/Tools.md>) | Инструменты разработки и загрузчик контекста | 26 |
 
 Не индексируются генерируемые сборки, кэши и локальное состояние: `.git/`, `.idea/`, `.vs/`, `Builds/`, `Library/`, `Logs/`, `Temp/`, `UserSettings/`, `__pycache__/`, `bin/`, `node_modules/`, `obj/`. В Captures индексируются только отслеживаемые Git файлы; промежуточные резервные CoastalTripo_Pre*.blend не индексируются. Зависимости из Unity PackageCache представлены манифестом/lock-файлом; встроенные пакеты из `Packages/` перечислены полностью. Скрытые конфиги вне исключённых папок включены только как пути, их содержимое не копируется.
 
@@ -65,6 +65,7 @@
 DeveloperMenu содержит подменю Телепортация: категории Скалы, Ивенты, Острова, выпадающий список с поиском, кнопки Телепорт и Обновить список мест. Доступно в Editor/Development Build с существующим разрешением хоста. Сервер собирает места из ProceduralWorld, тестовой галереи и текущих морских ивентов, включая объекты вне радиуса видимости клиента; при нажатии заново разрешает ключ и подбирает свободную воду рядом с целью по глубине, геометрии и габаритам корабля.
 NetworkDeveloperTeleport переносит текущий корабль или домашний корабль игрока, самого игрока, пассажиров, закреплённые предметы, свободные ядра и сундуки, а также груз в руках. Сохраняет локальное размещение на палубе, состояние корабля, паруса и якорь; сбрасывает скорость, старые управляющие захваты и визуальное сглаживание. Ревизия телепорта в корабельных снимках и CaptainState отбрасывает старые сетевые позиции. ShipController.Restore принимает необязательную новую точку якоря. ProtocolVersion 154. Проверка ограничена компиляцией; Play Mode, сборка и игровой сетевой перенос не запускались.
 11.10.2026: обязательное правило — каждый новый тестовый ивент сразу получает телепорт в F8 / Телепортация / Ивенты. Раковина собирается из NetworkClamEvent.ServerEvents независимо от клиентской видимости, со штатным переносом корабля и груза. ProtocolVersion155.
+15.10.2026: F8 / Разрушение — корабль-мишень справа с параллельным курсом, приоритет 15 м между бортами и варианты 20/10 м при препятствиях. Сервер проверяет свободную воду штатным DeveloperTeleportDestinations.IsFreeShipPosition и создаёт текущий ShipPrefab; одна мишень на игрока, нейтральная команда, штатное разрушение/затопление. ShipController.DeveloperStationary подавляет горизонтальный ход, поворот рулём, дрейф и смещение столкновением, сохраняя плавучесть и волновую качку. Команды128–131: создать, перейти на мишень, вернуться к сохранённому исходному кораблю, удалить. Телепорт переносит только игрока и переносимый груз, выбирает сохранившуюся свободную палубу по текущим коллайдерам, освобождает управление и использует прежнюю ревизию телепорта. Удаление возвращает пользователя и запрещено при другом пассажире. ProtocolVersion197. Игровая и сетевая приёмка остаются за пользователем.
 
 - [Assets/Scripts/Player/DeveloperMenu.cs](<Assets/Scripts/Player/DeveloperMenu.cs>) — Исходник C#: DeveloperMenu.
 - [Assets/Scripts/World/DeveloperTeleportDestinations.cs](<Assets/Scripts/World/DeveloperTeleportDestinations.cs>) — Исходник C#: DeveloperTeleportDestination, DeveloperTeleportDestinations.
@@ -81,6 +82,8 @@ NetworkDeveloperTeleport переносит текущий корабль или
 - [Assets/Scripts/Networking/NetworkRiggingEvent.cs](<Assets/Scripts/Networking/NetworkRiggingEvent.cs>) — Исходник C#: RiggingBreakPart, NetworkRiggingEvent.
 - [Assets/Scripts/Networking/NetworkCannonBreachEvent.cs](<Assets/Scripts/Networking/NetworkCannonBreachEvent.cs>) — Исходник C#: FortGateState, FortBreakState, FortGateFragment, FortBreachGate, NetworkCannonBreachEvent.
 - [Assets/Scripts/Networking/NetworkSeagullEvent.cs](<Assets/Scripts/Networking/NetworkSeagullEvent.cs>) — Исходник C#: NetworkSeagullEvent.
+- [Assets/Scripts/Networking/NetworkDeveloperTools.cs](<Assets/Scripts/Networking/NetworkDeveloperTools.cs>) — Исходник C#: NetworkWeapon.
+- [Assets/Scripts/Networking/SessionController.cs](<Assets/Scripts/Networking/SessionController.cs>) — Исходник C#: SessionController.
 
 ### Улучшения рогалика из сундуков (`roguelike-upgrades`)
 
@@ -154,6 +157,7 @@ Windows, URP, FishNet; подключения по IP и Steam имеют отд
 Ship V3 теперь единственный игровой корабль: SessionController.ShipPrefab в NetworkMenu указывает на Assets/Resources/Ships/ShipV3Test.prefab. Старый NetworkShip.prefab сохранён как архивный ассет и не создаётся в игре. Историческое имя ShipV3Test сохранено вместе с GUID и регистрацией FishNet.
 Очистка 2026-10-05 по Git-аудиту, второй этап: удалены 1300 основных кандидатов средней уверенности и 3 сопутствующих инспектора удаляемых демо, с .meta — 2697 файлов (758.73 МиБ). Удалены неподключённые части прежних кораблей, старые локальные игровые скрипты, архивы версий обезьянки, старые анимации/иконки, демо FishNet/Cartoon FX/Mirza и отдельные отладочные материалы шторма. Все звуковые клипы и метаданные их папок сохранены, как и .meta папок с другими сохранёнными файлами. Низкие условные игровые кандидаты не удалялись. Сетевые коллекции не редактировались; игровой прогон не выполнялся.
 2026-10-10 общий ProtocolVersion143 после объединения локальных трюма/насоса/дружественного огня из141 и оружия/лобби/Steam-ников/обезьяны друга из142. Сохранены BilgeWater/BilgePermanent/BilgeDestructible и Loot_HandMortar/Loot_ExplosiveBall одного корабля; оба клиента должны использовать общий обновлённый проект/сборку. Статический дефолт SessionConfig также143. PlayMode, сборки и сетевой прогон не выполнялись.
+15.10.2026: проектный профиль субагента Исправитель (fixer) сохранён в ../.codex/agents/fixer.toml рабочего каталога Pirate_BR. Вызывается только по прямому указанию пользователя использовать именно Исправителя; создание профиля и обычная просьба исправить баг не разрешают запуск. Правила вызова и передачи профиля закреплены в AGENTS.md обоих корней; профиль требует минимального исправления первопричины, сохранения механик/сети, анализа стоимости кадра/тика, освобождения ресурсов и честного отчёта о проверках.
 
 - [Assets/Scripts/Networking/SessionController.cs](<Assets/Scripts/Networking/SessionController.cs>) — Исходник C#: SessionController.
 - [Assets/Scripts/Networking/SessionSpectator.cs](<Assets/Scripts/Networking/SessionSpectator.cs>) — Исходник C#: SessionController.
@@ -166,6 +170,7 @@ Ship V3 теперь единственный игровой корабль: Ses
 - [Assets/Prefabs/Networking/NetworkPlayer.prefab](<Assets/Prefabs/Networking/NetworkPlayer.prefab>) — Префаб Unity.
 - [project.md](<project.md>) — Документация.
 - [unity.md](<unity.md>) — Документация.
+- [AGENTS.md](<AGENTS.md>) — Документация.
 
 ### Движение корабля и палуба (`ship`)
 
@@ -216,6 +221,9 @@ ShipBilgeWater создаёт отдельную поверхность без �
 2026-10-10 сохранено исправление v13 внутренней обшивки в ShipV3_Fitted.blend и BilgeDeck.fbx через открытый Blender MCP, обновлён ShipV3Test.prefab через Unity MCP. RepairHoldInterior удаляет накладные кромки, подгоняет 1084 внутренних меша к наружной поверхности с максимальным сдвигом 0.0963м, триангулирует и сглаживает внутренние грани, сохраняет фрагменты и наружную форму корпуса. ClipHullTrimToSkin обрезает 245 мешей Wale по настоящей наружной поверхности вместо направленияX. Балки и их фрагменты используют Hull_Honey_Oak_V0 с волокнами вдоль высоты. AddBilgeDeck вызывает новые процедуры вместо SealHoldEndSeams. Игровую и визуальную приёмку выполняет пользователь.
 11.10.2026, исправление после игровой проверки: непрерывная плоскость изгиба и покадровое сглаживание сетевых часов/высоты щупалец. Урон кораблю один раз на волну: первый этап — шесть соседних блоков верхней обшивки трюма со стороны удара и случайные верхние секции; второй — большое разрушение корпуса, заполнение трюма за 3 с и быстрое погружение. Штурвал и минимум два живых паруса с их мачтами защищены. Урон людям прежний (50/100). Вместо повторных радиусных ударов и обхода графа — явные маски, максимум две секции за кадр, сетевые дельты; физика и меши готовятся заранее. ProtocolVersion146. Результат только в общей Builds/Windows/PirateSlop.exe; игровой FPS и новый баланс требуют ручной проверки.
 11.10.2026, повторный фриз при ударе кракена: ShipBilgeLeakGeometry.Builder.TryBuild копирует геометрию пробоин на основном потоке, объединяет и строит форму водяных струй в Task.Run, затем загружает Unity-меши по одному за кадр. ShipBilgeWater объединяет изменения за 0.06 с, оставляет старые струи до готовности и переиспользует неизменившиеся. Физический приток воды, этапы урона и сроки затопления сохранены. Игровой замер не выполнялся.
+14.10.2026: RepairShipAppearance/RefineShipAppearance/BuildShipInteriorLining/FitBowHandrailJoints исправляют щели каюты, выступы потолка, крепления сеток, поручни и опоры лестниц. V20_Interior — видимая оболочка дочерних intact/fragment, отдельные InteriorBatch; старый MeshFilter Hull сохранён для границ урона, коллайдеров и расчёта течи. Внутренняя текстура непрерывная, оконные проёмы согласованы с наличниками. ShipMastLit выравнивает крупный перепад цвета исходной текстуры мачт с сохранением резьбы и металла. ConfigureAppearance сохраняет префаб с контролем неизменности сериализованных Collider и игровых MonoBehaviour. Исходник BLEND и Bilge FBX обновлены; Play Mode и сборка не запускались.
+15.10.2026, повторные замечания по Ship V3: носовые поручни поворачивают к бортовому ограждению без обратного изгиба, верхняя UV следует длине поручня; двухвитковые крепления сеток облегают реальные стойки кнехтов. Перегородка Forecastle_Riser перекрывает шов под палубой. Наружная обшивка при Y>16 перестроена по согласованной поверхности полосами с сохранением владельцев intact/fragment. Оболочек1628; исходные MeshFilter Hull и привязка к секциям сохранены, новых коллайдеров на оболочке нет. ConfigureAppearance пропускает служебный материал пустых мешей и подтвердил неизменность сериализации игровых компонентов и коллайдеров. BLEND, FBX и ShipV3Test.prefab сохранены. Play Mode, игровой урон и сборка не запускались.
+15.10.2026, третий проход после новых скриншотов: FitBowHandrailJoints полностью заменяет прямые поручни и повороты единым профилем с непрерывной UV. FitBoardingNetAttachments хранит исходное тело сети, опирает нижние витки на поперечины кнехтов и связывает хвосты с верхними стойками сети. ShipV3ClothMotion сохраняет верхние18% сети неподвижными, поэтому крепление не расходится при качании; лазание и остальная механика не менялись. Сохранены BLEND, FBX, игровой и меню-префабы; Play и сборка не запускались.
 
 - [Assets/Scripts/ShipController.cs](<Assets/Scripts/ShipController.cs>) — Исходник C#: ShipController.
 - [Assets/Scripts/ShipDeckPassenger.cs](<Assets/Scripts/ShipDeckPassenger.cs>) — Исходник C#: ShipDeckPassenger.
@@ -294,6 +302,12 @@ ShipBilgeWater создаёт отдельную поверхность без �
 - [Tools/ShipV3/AddHoldSupports.py](<Tools/ShipV3/AddHoldSupports.py>) — Инструмент Python.
 - [Assets/Scripts/Editor/ShipV3HoldSupportsSetup.cs](<Assets/Scripts/Editor/ShipV3HoldSupportsSetup.cs>) — Исходник C#: ShipV3HoldSupportsSetup.
 - [Tools/ShipV3/RepairHoldInterior.py](<Tools/ShipV3/RepairHoldInterior.py>) — Инструмент Python.
+- [Tools/ShipV3/RepairShipAppearance.py](<Tools/ShipV3/RepairShipAppearance.py>) — Инструмент Python.
+- [Tools/ShipV3/RefineShipAppearance.py](<Tools/ShipV3/RefineShipAppearance.py>) — Инструмент Python.
+- [Tools/ShipV3/BuildShipInteriorLining.py](<Tools/ShipV3/BuildShipInteriorLining.py>) — Инструмент Python.
+- [Tools/ShipV3/FitBowHandrailJoints.py](<Tools/ShipV3/FitBowHandrailJoints.py>) — Инструмент Python.
+- [Tools/ShipV3/FitBoardingNetAttachments.py](<Tools/ShipV3/FitBoardingNetAttachments.py>) — Инструмент Python.
+- [Assets/Shaders/ShipMastLit.shader](<Assets/Shaders/ShipMastLit.shader>) — Шейдер.
 - [Tools/ShipV3/ClipHullTrimToSkin.py](<Tools/ShipV3/ClipHullTrimToSkin.py>) — Инструмент Python.
 - [Assets/Scripts/ShipDestruction/ShipDestruction.Kraken.cs](<Assets/Scripts/ShipDestruction/ShipDestruction.Kraken.cs>) — Исходник C#: ShipDestruction, KrakenBlock.
 - [unity.md](<unity.md>) — Документация.
@@ -304,6 +318,8 @@ ShipBilgeWater создаёт отдельную поверхность без �
 
 Ключевые слова: паруса, парус, канаты, rigging.
 
+15.10.2026, уточнение по ручной проверке: ядра оставляли видимые пробоины, пистолет и дробовик — нет. Чтение текущего корабля-мишени подтвердило 32 мелких попадания из 36 записей: проблема отображения, не отсутствие серверных попаданий. SailDamageSurface.Flush заменяет усредняющие GenerateMips на редукцию Max первых четырёх уровней и Min следующих: мелкие пробоины остаются видны вблизи/на средней дистанции, дальнее уменьшение сохраняет остаток ткани. Промежуточный R8 mipScratch переиспользуется, обновление только при новых повреждениях/восстановлении ресурса. Физический калибр сохранён; штамп добавляет короткие надрезы ткани от малых снарядов, минимум растрового радиуса1.2текселя. Постоянный неровный связный остаток из смещённой продольной полосы и двух верхних ответвлений вычисляется в UV при нанесении штампа; для бизани нормализуется высота1-u. Пробоины срастаются и выходят на края, но сохраняемые полосы связаны с верхним/нижним креплением с первого попадания, без последующего заживления. Скорость и эффективность не менялись. Компиляция C# подтверждена, все проходы Sail/SailDamageStamp активируются без ошибок шейдера. Play Mode не запускался агентом; игровой результат проверяет пользователь в новом матче.
+15.10.2026: декоративные пробоины парусов от серверных траекторий пуль и ядер. NetworkShip.SailDamage хранит добавляемую историю SailPuncture в SyncList без срока жизни и вытеснения; поздние наблюдатели восстанавливают все отверстия. SailDamageSurface пересекает фактический BakeMesh по запросу после проверки bounds, учитывает складки, UV и угол попадания; кэш вершин переиспользуется в пределах кадра. Пули продолжают штатную трассу через ткань. BulletDiameter: пистолет 18 мм, мушкет 20 мм, дробь 6 мм; ядра используют Radius*2. Маска R8 создаётся только для повреждённого паруса, штампы объединяются Max, mip-уровни обновляются после партии попаданий. UV0 сохраняет пробоины при ветре и складывании, рисунки и цвет ткани остаются. Sail.shader вырезает ткань в Forward/ShadowCaster/DepthOnly/DepthNormals и высветляет рваные волокна. Скорость, эффективность и ремонт парусов не изменяются. Маски до4096 по большей стороне сохраняют мелкую дробь, подпиксельный радиус ограничен минимальным растровым следом; потерянный GPU-ресурс восстанавливается из истории. ShipV3ClothMotion.PrepareSailRaycast обновляет ветер по запросу даже вне кадра сервера. Protocol198; компиляция C# и обоих шейдеров подтверждена через прямой Unity MCP без ошибок. Play Mode, сборка и игровая/визуальная/сетевая приёмка не запускались.
 2026-10-11: ShipV3VisualRig подключает ShipV3ClothMotion ко всем парусам. Три формы ShipWind добавляются без удаления складывания; крепления неподвижны, волны и нормали ткани меняются после визуального рига, амплитуда зависит от фактического раскрытия и порывов. Флаги колышутся сильнее, стойки не меняются. SailCustomizer убирает бежевый множитель исходной ткани, Sail.shader сохраняет выбранный оттенок фона, используя нейтральную AO и яркость освещения. Игровая проверка пользователем.
 Разделять управление натяжением и визуальную геометрию канатов. Изменение модели не должно менять сетевую занятость.
 Настройка канатов и обновление их арта — отдельные редакторские операции; перед повторным запуском изучить соответствующий setup.
@@ -314,7 +330,17 @@ Ship V3: RopeTubeVisual восстанавливает постоянное кр
 Название корабля собирается из настоящих мешей букв Georgia Bold, кириллица/латиница/цифры. Для читаемости с 5 м заполнение светло-золотистое, штрихи слегка утолщены, латунный кант расширен до 0.032 cap с ограничением по толщине штриха; отверстия реальные. Непрозрачный URP Lit закрывается геометрией корабля. ShipNameGlyphLibrary содержит меши, advance и kerning; ShipNameplate объединяет имя в два submesh, вписывает в 4.2×0.60 м, сжимает ширину глифов до 0.88 и обновляет только при изменении строки. Face/rim имеют металлическость 0.15/0.35, отдельный материал канта не меняет рамку доски. Бизань получает runtime-копию меша с ортогональной UV2, UV0/FBX/анимации сохранены. Обычные картинки сохраняют RGB при тёплом свете; размеры исходного изображения и физические размеры парусов задают правильные пропорции.
 11.10.2026: скрыты отдельные вертикальные меши _Seam_. ShipV3SailFootSetup сохраняет четыре SailPinned-меша с нижним краем у реальной нижней реи, исходной UV и morph Furled. ShipV3ClothMotion фиксирует верхний и нижний край по UV: 4v(1-v), для треугольной бизани высота колонки 1-u; изгибается середина, флаги сохраняют прежнее движение. Пять мешей FootLashings содержат по 7 видимых пеньковых привязок, с Deploy_0/25/50/75/100 для следования ткани и реям. В пустой Mizzen_FootBoom_Pivot добавлена видимая нижняя деревянная балка. Крепления включены в зависимые renderer секций повреждений. Одинаковые исправления сохранены в ShipV3Test и ShipV3Menu, повторный setup использует исходные FBX-меши и сохраняет GUID. Визуальная/игровая приёмка не запускалась.
 11.10.2026, исправление по повторным снимкам: квадратные FootLashings заменены тонкими круглыми петлями вокруг нижней реи (48 сегментов кольца, 8 по сечению, радиус троса 0.017 м). Сохранены пять Deploy-форм и зависимость от повреждений. Полосы _Seam_ удалены из префабов и RigMeshes; их Attachments также удалены, поскольку UpdateAttachments повторно включал поддерживаемые объекты. Оба префаба ShipV3Test/ShipV3Menu используют новые петли и закреплённую ткань. Визуальный прогон не выполнялся.
+15.10.2026: после переноса обшивки Ship V3 в новые батчи старый ShipV3Menu ссылался на опустевшие общие меши. CreateMenuPrefab запекает активные intact-источники в собственные Assets/Models/Ships/ShipV3/MenuMeshes до удаления игровых скриптов. ConfigureAppearance автоматически обновляет меню-префаб. Настройки сцены, камера и кастомизация не меняются; вид корпуса сверяется на статичном меню-префабе.
 
+- [Assets/Scripts/Networking/NetworkShip.SailDamage.cs](<Assets/Scripts/Networking/NetworkShip.SailDamage.cs>) — Исходник C#: SailPuncture, NetworkShip.
+- [Assets/Scripts/Ships/SailDamageSurface.cs](<Assets/Scripts/Ships/SailDamageSurface.cs>) — Исходник C#: SailDamageSurface.
+- [Assets/Resources/SailDamageStamp.shader](<Assets/Resources/SailDamageStamp.shader>) — Шейдер.
+- [Assets/Scripts/Player/FirearmDefinition.cs](<Assets/Scripts/Player/FirearmDefinition.cs>) — Исходник C#: FirearmDefinition, FirearmCombat.
+- [Assets/Scripts/Player/UnderwaterFirearmProjectile.cs](<Assets/Scripts/Player/UnderwaterFirearmProjectile.cs>) — Исходник C#: FirearmDamageBatch, UnderwaterFirearmProjectile.
+- [Assets/Scripts/Cannons/CannonShotDamage.cs](<Assets/Scripts/Cannons/CannonShotDamage.cs>) — Исходник C#: CannonShotDamage.
+- [Assets/Settings/Weapons/Pistol.asset](<Assets/Settings/Weapons/Pistol.asset>) — Настройки или данные Unity.
+- [Assets/Settings/Weapons/Musket.asset](<Assets/Settings/Weapons/Musket.asset>) — Настройки или данные Unity.
+- [Assets/Settings/Weapons/DoubleBarrel.asset](<Assets/Settings/Weapons/DoubleBarrel.asset>) — Настройки или данные Unity.
 - [Assets/Scripts/SailSystem.cs](<Assets/Scripts/SailSystem.cs>) — Исходник C#: SailSystem.
 - [Assets/Scripts/Interaction/DirectShipControls.cs](<Assets/Scripts/Interaction/DirectShipControls.cs>) — Исходник C#: DirectShipControls.
 - [Assets/Scripts/Interaction/ShipControlHandle.cs](<Assets/Scripts/Interaction/ShipControlHandle.cs>) — Исходник C#: ShipControlHandle.
@@ -1237,7 +1263,7 @@ CoastalSandSetup.Apply создаёт в12каменных префабах от
 - [Art/Sources/CoastalEnvironment/SOURCES.md](<Art/Sources/CoastalEnvironment/SOURCES.md>) — Документация.
 - [Art/Sources/CoastalEnvironment/TRIPO_MODULAR_ROCK_BRIEF.md](<Art/Sources/CoastalEnvironment/TRIPO_MODULAR_ROCK_BRIEF.md>) — Документация.
 - [Art/Blender/World/CoastalEnvironment/README_TRIPO_ARCH.md](<Art/Blender/World/CoastalEnvironment/README_TRIPO_ARCH.md>) — Документация.
-- `../Blender/Скалы/README.md` — отсутствует в текущем снимке; не использовать как готовый путь.
+- [../Blender/Скалы/README.md](<../Blender/Скалы/README.md>) — Документация.
 - [Art/Blender/World/CoastalEnvironment/README_TRIPO_COLLECTION.md](<Art/Blender/World/CoastalEnvironment/README_TRIPO_COLLECTION.md>) — Документация.
 - [Docs/StormTestSmoke.md](<Docs/StormTestSmoke.md>) — Документация.
 
@@ -1376,7 +1402,7 @@ Whisky Bottle с бесплатной BlenderKit Royalty Free загружена
 - [Assets/Scripts/Editor/PirateCharacterImport.cs](<Assets/Scripts/Editor/PirateCharacterImport.cs>) — Исходник C#: PirateCharacterImport.
 - [Assets/Scripts/Editor/SailRiggingArtSetup.cs](<Assets/Scripts/Editor/SailRiggingArtSetup.cs>) — Исходник C#: SailRiggingArtSetup.
 - [Assets/Scripts/Editor/MainShipSetup.cs](<Assets/Scripts/Editor/MainShipSetup.cs>) — Исходник C#: MainShipSetup.
-- `../NewShip/Ship_V3_Fitted.blend` — отсутствует в текущем снимке; не использовать как готовый путь.
+- [../NewShip/Ship_V3_Fitted.blend](<../NewShip/Ship_V3_Fitted.blend>) — Редактируемая сцена Blender.
 - [Assets/Scripts/Editor/ShipV3ImportSetup.cs](<Assets/Scripts/Editor/ShipV3ImportSetup.cs>) — Исходник C#: ShipV3ImportSetup.
 - [Tools/ShipV3/ExportFromOpenBlender.py](<Tools/ShipV3/ExportFromOpenBlender.py>) — Инструмент Python.
 - [Assets/Models/Ships/ShipV3/ShipV3.fbx](<Assets/Models/Ships/ShipV3/ShipV3.fbx>) — Модель / анимации FBX.
@@ -1454,16 +1480,16 @@ Whisky Bottle с бесплатной BlenderKit Royalty Free загружена
 - [blender.md](<blender.md>) — Документация.
 - [unity.md](<unity.md>) — Документация.
 - [frigate.md](<frigate.md>) — Документация.
-- `../NewShip/V3Preparation/TelescopeAndAnchorControls.md` — отсутствует в текущем снимке; не использовать как готовый путь.
-- `../NewShip/External/AnchorNikdane12/SOURCES.md` — отсутствует в текущем снимке; не использовать как готовый путь.
-- `../NewShip/V3Preparation/HarpoonControls.md` — отсутствует в текущем снимке; не использовать как готовый путь.
-- `../NewShip/V3Preparation/BowTextureRestoreReport.json` — отсутствует в текущем снимке; не использовать как готовый путь.
-- `../NewShip/V3Preparation/HoldDispenserControls.md` — отсутствует в текущем снимке; не использовать как готовый путь.
-- `../NewShip/V3Preparation/ShipDetailsControls.md` — отсутствует в текущем снимке; не использовать как готовый путь.
-- `../NewShip/FreeAssets/CREDITS.md` — отсутствует в текущем снимке; не использовать как готовый путь.
-- `../NewShip/V3Preparation/OptimizationAndDestructionControls.md` — отсутствует в текущем снимке; не использовать как готовый путь.
-- `../NewShip/V3Preparation/V18Validation.json` — отсутствует в текущем снимке; не использовать как готовый путь.
-- `../NewShip/V3Preparation/V19Validation.json` — отсутствует в текущем снимке; не использовать как готовый путь.
+- [../NewShip/V3Preparation/TelescopeAndAnchorControls.md](<../NewShip/V3Preparation/TelescopeAndAnchorControls.md>) — Документация.
+- [../NewShip/External/AnchorNikdane12/SOURCES.md](<../NewShip/External/AnchorNikdane12/SOURCES.md>) — Документация.
+- [../NewShip/V3Preparation/HarpoonControls.md](<../NewShip/V3Preparation/HarpoonControls.md>) — Документация.
+- [../NewShip/V3Preparation/BowTextureRestoreReport.json](<../NewShip/V3Preparation/BowTextureRestoreReport.json>) — Конфигурация / данные JSON.
+- [../NewShip/V3Preparation/HoldDispenserControls.md](<../NewShip/V3Preparation/HoldDispenserControls.md>) — Документация.
+- [../NewShip/V3Preparation/ShipDetailsControls.md](<../NewShip/V3Preparation/ShipDetailsControls.md>) — Документация.
+- [../NewShip/FreeAssets/CREDITS.md](<../NewShip/FreeAssets/CREDITS.md>) — Документация.
+- [../NewShip/V3Preparation/OptimizationAndDestructionControls.md](<../NewShip/V3Preparation/OptimizationAndDestructionControls.md>) — Документация.
+- [../NewShip/V3Preparation/V18Validation.json](<../NewShip/V3Preparation/V18Validation.json>) — Конфигурация / данные JSON.
+- [../NewShip/V3Preparation/V19Validation.json](<../NewShip/V3Preparation/V19Validation.json>) — Конфигурация / данные JSON.
 
 ### Звуки и голос (`audio`)
 
@@ -1732,7 +1758,7 @@ TestMap R4000м. После повторной жалобы CLEAR rays/planetcen
 - [Assets/Scripts/Ships/ShipV3HarpoonVisual.cs](<Assets/Scripts/Ships/ShipV3HarpoonVisual.cs>) — Исходник C#: ShipV3HarpoonVisual.
 - [Assets/Resources/Ships/ShipV3HarpoonPort.prefab](<Assets/Resources/Ships/ShipV3HarpoonPort.prefab>) — Префаб Unity.
 - [Assets/Resources/Ships/ShipV3HarpoonStarboard.prefab](<Assets/Resources/Ships/ShipV3HarpoonStarboard.prefab>) — Префаб Unity.
-- `../NewShip/V3Preparation/HarpoonControls.md` — отсутствует в текущем снимке; не использовать как готовый путь.
+- [../NewShip/V3Preparation/HarpoonControls.md](<../NewShip/V3Preparation/HarpoonControls.md>) — Документация.
 
 ### Кракен и щупальца (`kraken`)
 
@@ -1767,12 +1793,12 @@ TestMap R4000м. После повторной жалобы CLEAR rays/planetcen
 - [Assets/Scripts/World/WhirlpoolTentacleRing.cs](<Assets/Scripts/World/WhirlpoolTentacleRing.cs>) — Исходник C#: WhirlpoolTentacleRing.
 - [Assets/Scripts/Networking/SessionWhirlpoolTentacles.cs](<Assets/Scripts/Networking/SessionWhirlpoolTentacles.cs>) — Исходник C#: WhirlpoolTentacleState, WhirlpoolTentaclesMessage, SessionController.
 - [Assets/Scripts/World/EnvironmentTestGallery.cs](<Assets/Scripts/World/EnvironmentTestGallery.cs>) — Исходник C#: EnvironmentTestGallery.
-- `../Blender/KrakenTentacle_v1/README.md` — отсутствует в текущем снимке; не использовать как готовый путь.
-- `../Blender/KrakenTentacle_v1/TRIPO.txt` — отсутствует в текущем снимке; не использовать как готовый путь.
-- `../Blender/KrakenTentacle_v1/front.png` — отсутствует в текущем снимке; не использовать как готовый путь.
-- `../Blender/KrakenTentacle_v1/back.png` — отсутствует в текущем снимке; не использовать как готовый путь.
-- `../Blender/KrakenTentacle_v1/left.png` — отсутствует в текущем снимке; не использовать как готовый путь.
-- `../Blender/KrakenTentacle_v1/right.png` — отсутствует в текущем снимке; не использовать как готовый путь.
+- [../Blender/KrakenTentacle_v1/README.md](<../Blender/KrakenTentacle_v1/README.md>) — Документация.
+- [../Blender/KrakenTentacle_v1/TRIPO.txt](<../Blender/KrakenTentacle_v1/TRIPO.txt>) — Текстовые данные.
+- [../Blender/KrakenTentacle_v1/front.png](<../Blender/KrakenTentacle_v1/front.png>) — Изображение / текстура.
+- [../Blender/KrakenTentacle_v1/back.png](<../Blender/KrakenTentacle_v1/back.png>) — Изображение / текстура.
+- [../Blender/KrakenTentacle_v1/left.png](<../Blender/KrakenTentacle_v1/left.png>) — Изображение / текстура.
+- [../Blender/KrakenTentacle_v1/right.png](<../Blender/KrakenTentacle_v1/right.png>) — Изображение / текстура.
 - [Art/Blender/Kraken/KrakenTripoRig.blend](<Art/Blender/Kraken/KrakenTripoRig.blend>) — Редактируемая сцена Blender.
 - [Art/Blender/Kraken/PrepareTripoTentacle.py](<Art/Blender/Kraken/PrepareTripoTentacle.py>) — Инструмент Python.
 - [Art/Blender/Kraken/README.md](<Art/Blender/Kraken/README.md>) — Документация.
@@ -2091,7 +2117,7 @@ NetworkLoadTest запускается из меню Тест нагрузки �
 - [Assets/Scripts/Ships/ShipDamagePreparation.cs](<Assets/Scripts/Ships/ShipDamagePreparation.cs>) — Исходник C#: ShipDamagePreparation, BakeJob.
 - [Assets/Models/Ships/ShipV3/Bilge/DamageWarmup.shadervariants](<Assets/Models/Ships/ShipV3/Bilge/DamageWarmup.shadervariants>) — Файл .shadervariants.
 - [Docs/Performance/NetworkLoadTest.md](<Docs/Performance/NetworkLoadTest.md>) — Документация.
-- `../output/CrashReview20261007/Spyglass_1628.md` — отсутствует в текущем снимке; не использовать как готовый путь.
+- [../output/CrashReview20261007/Spyglass_1628.md](<../output/CrashReview20261007/Spyglass_1628.md>) — Документация.
 
 ### Корабельная обезьянка (`ship-monkey`)
 
@@ -2178,7 +2204,7 @@ ShipMonkey.HeadRide.cs: редкая серверная прогулка к жи
 С 2026-10-08 профиль vfx_specialist удалён по указанию пользователя. Основной агент сам реализует VFX по согласованным этапам; не создавать и не продолжать прежнего субагента.
 По умолчанию игровой вид проверяет пользователь. Проверки компиляции не подтверждают внешний вид или производительность.
 
-- `../AGENTS.md` — отсутствует в текущем снимке; не использовать как готовый путь.
+- [../AGENTS.md](<../AGENTS.md>) — Документация.
 - [AGENTS.md](<AGENTS.md>) — Документация.
 
 ### Корабельная слот-машина (`ship-slot-machine`)

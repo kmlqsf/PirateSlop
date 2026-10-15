@@ -465,6 +465,36 @@ namespace PirateSlop.Networking
             }
             return null;
         }
+        public NetworkObject SpawnDeveloperDestructionShip(NetworkShip source)
+        {
+            var world = ProceduralWorld.Instance;
+            if (!DeveloperMenu.Available || manager == null || !manager.IsServerStarted || ShipPrefab == null ||
+                source == null || !source.IsSpawned || source.IsSinking || world == null || !world.Ready) return null;
+            var template = ShipPrefab.GetComponent<NetworkShip>();
+            if (template == null) return null;
+            float yaw = source.transform.eulerAngles.y;
+            var rotation = Quaternion.Euler(0f, yaw, 0f);
+            var right = rotation * Vector3.right;
+            float height = 4f;
+            foreach (var collider in source.GetComponentsInChildren<Collider>())
+                if (collider.enabled && !collider.isTrigger) height = Mathf.Max(height, collider.bounds.max.y - source.transform.position.y);
+            for (int i = 0; i < 3; i++)
+            {
+                float gap = i == 0 ? 15f : i == 1 ? 20f : 10f;
+                var point = source.transform.position + right * (source.HullHalfExtents.x + template.HullHalfExtents.x + gap);
+                point.y = OceanSurface.Instance != null ? OceanSurface.Instance.SeaLevel : world.Layout.SeaLevel;
+                if (!DeveloperTeleportDestinations.IsFreeShipPosition(point, yaw, template, world, height)) continue;
+                var spawned = Instantiate(ShipPrefab, point, rotation);
+                var ship = spawned.GetComponent<NetworkShip>();
+                ship.ParticipantId.Value = nextParticipant++;
+                ship.TeamId.Value = int.MaxValue;
+                ship.Motor.DeveloperStationary = true;
+                SceneManager.MoveGameObjectToScene(spawned.gameObject, source.gameObject.scene);
+                manager.ServerManager.Spawn(spawned);
+                return spawned;
+            }
+            return null;
+        }
         void ResolveShipCollisions()
         {
             if (manager == null || !manager.IsServerStarted) return;
@@ -500,9 +530,11 @@ namespace PirateSlop.Networking
                 if (ocean != null) point.y = ocean.Height(point) + .15f;
                 float impactSpeed = Mathf.Abs(Vector3.Dot(a.Motor.CannonPointVelocity(point) - b.Motor.CannonPointVelocity(point), new Vector3(normal.x, 0f, normal.y)));
                 float impactStrength = Mathf.Clamp01(impactSpeed / Mathf.Max(1f, Mathf.Max(a.Motor.MaxSpeed, b.Motor.MaxSpeed)));
-                if (a.Motor.IsFrozen && b.Motor.IsFrozen) continue;
-                if (a.Motor.IsFrozen) b.Motor.ResolveCollision(correction, point, true, impactStrength);
-                else if (b.Motor.IsFrozen) a.Motor.ResolveCollision(-correction, point, true, impactStrength);
+                bool aFixed = a.Motor.IsFrozen || a.Motor.DeveloperStationary;
+                bool bFixed = b.Motor.IsFrozen || b.Motor.DeveloperStationary;
+                if (aFixed && bFixed) continue;
+                if (aFixed) b.Motor.ResolveCollision(correction, point, true, impactStrength);
+                else if (bFixed) a.Motor.ResolveCollision(-correction, point, true, impactStrength);
                 else { a.Motor.ResolveCollision(-correction*.5f, point, true, impactStrength); b.Motor.ResolveCollision(correction*.5f, point, false, impactStrength); }
             }
         }

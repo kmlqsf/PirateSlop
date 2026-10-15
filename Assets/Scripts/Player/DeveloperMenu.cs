@@ -300,6 +300,15 @@ namespace PirateSlop
             }
             if (tab == 4)
             {
+                GUILayout.Label("Корабль-мишень");
+                Button("Создать мишень справа · 15 м между бортами", 128);
+                GUILayout.Label("Качается на волнах, остаётся на месте и разрушается от попаданий.");
+                GUILayout.BeginHorizontal();
+                Button("На корабль-мишень", 129);
+                Button("На исходный корабль", 130);
+                GUILayout.EndHorizontal();
+                Button("Удалить корабль-мишень", 131);
+                GUILayout.Space(8);
                 var ship = SpeedShip;
                 var flooding = ship != null ? ship.GetComponent<ShipFlooding>() : null;
                 GUI.enabled = ship != null && ship.IsSpawned && !ship.IsSinking && flooding != null && flooding.UseBilgeFlooding;

@@ -32,11 +32,65 @@ Shader "PirateSlop/Sail"
         _SailUVBoundsBack ("Back Sail UV Bounds (Min XY, Size ZW)", Vector) = (0, 0, 1, 1)
         _MirrorBack ("Mirror Decal on Back", Float) = 1.0
         _HighlightColor ("Highlight / Emission", Color) = (0, 0, 0, 0)
+        _SailDamageMap ("Sail Damage", 2D) = "black" {}
     }
     SubShader
     {
-        Tags { "RenderPipeline"="UniversalPipeline" "RenderType"="Opaque" "Queue"="Geometry" }
+        Tags { "RenderPipeline"="UniversalPipeline" "RenderType"="TransparentCutout" "Queue"="AlphaTest" }
         Cull Off
+
+        HLSLINCLUDE
+        #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+        #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
+
+        TEXTURE2D(_SailDamageMap);
+        SAMPLER(sampler_SailDamageMap);
+        TEXTURE2D(_OcclusionMap);
+        SAMPLER(sampler_OcclusionMap);
+        TEXTURE2D(_DecalTex);
+        SAMPLER(sampler_DecalTex);
+        TEXTURE2D(_DecalTex2);
+        SAMPLER(sampler_DecalTex2);
+
+        CBUFFER_START(UnityPerMaterial)
+            half4 _BaseColor;
+            half4 _FabricTint;
+            float _UseFaceOrientation;
+            float _UseDecalUV2;
+            float4 _DecalCanvasScale;
+            float _PreserveDecalColor;
+            float _PreserveFabricColor;
+            half4 _DecalColor;
+            float4 _DecalTransform;
+            float _DecalRotation;
+            float4 _DecalImageScale;
+            float _BlendMode;
+
+            half4 _DecalColor2;
+            float4 _DecalTransform2;
+            float _DecalRotation2;
+            float4 _DecalImageScale2;
+            float _BlendMode2;
+
+            float4 _SailUVBoundsFront;
+            float4 _SailUVBoundsBack;
+            float _MirrorBack;
+            half4 _HighlightColor;
+            half _OcclusionStrength;
+            half _Weathering;
+            half _Grime;
+        CBUFFER_END
+
+        half SailDamage(float2 uv)
+        {
+            return SAMPLE_TEXTURE2D(_SailDamageMap, sampler_SailDamageMap, uv).r;
+        }
+
+        void ClipSailDamage(float2 uv)
+        {
+            clip(.5 - SailDamage(uv));
+        }
+        ENDHLSL
 
         Pass
         {
@@ -47,45 +101,6 @@ Shader "PirateSlop/Sail"
             #pragma multi_compile_fog
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _MAIN_LIGHT_SHADOWS_SCREEN
             #pragma multi_compile_fragment _ _SHADOWS_SOFT
-
-            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
-            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
-
-            TEXTURE2D(_OcclusionMap);
-            SAMPLER(sampler_OcclusionMap);
-            TEXTURE2D(_DecalTex);
-            SAMPLER(sampler_DecalTex);
-            TEXTURE2D(_DecalTex2);
-            SAMPLER(sampler_DecalTex2);
-
-            CBUFFER_START(UnityPerMaterial)
-                half4 _BaseColor;
-                half4 _FabricTint;
-                float _UseFaceOrientation;
-                float _UseDecalUV2;
-                float4 _DecalCanvasScale;
-                float _PreserveDecalColor;
-                float _PreserveFabricColor;
-                half4 _DecalColor;
-                float4 _DecalTransform;
-                float _DecalRotation;
-                float4 _DecalImageScale;
-                float _BlendMode;
-
-                half4 _DecalColor2;
-                float4 _DecalTransform2;
-                float _DecalRotation2;
-                float4 _DecalImageScale2;
-                float _BlendMode2;
-
-                float4 _SailUVBoundsFront;
-                float4 _SailUVBoundsBack;
-                float _MirrorBack;
-                half4 _HighlightColor;
-                half _OcclusionStrength;
-                half _Weathering;
-                half _Grime;
-            CBUFFER_END
 
             struct Attributes
             {
@@ -209,11 +224,15 @@ Shader "PirateSlop/Sail"
 
             half4 Frag(Varyings input, bool isFrontFace : SV_IsFrontFace) : SV_Target
             {
+                half damage = SailDamage(input.uv);
+                clip(.5 - damage);
                 float3 normal = normalize(isFrontFace ? input.normalWS : -input.normalWS);
 
                 half3 ao = SAMPLE_TEXTURE2D(_OcclusionMap, sampler_OcclusionMap, input.uv).rgb;
                 ao = lerp(ao, dot(ao, half3(.2126, .7152, .0722)).xxx, _PreserveFabricColor);
                 half3 clothColor = _BaseColor.rgb * _FabricTint.rgb * lerp(half3(1.0, 1.0, 1.0), ao, _OcclusionStrength);
+
+                half3 fiberColor = clothColor * 1.12;
 
                 float4 uvBounds = input.isBack > 0.5 ? _SailUVBoundsBack : _SailUVBoundsFront;
                 float2 uvSize = uvBounds.zw;
@@ -238,6 +257,8 @@ Shader "PirateSlop/Sail"
                     clothColor = lerp(clothColor, clothColor * dirtTint * 1.6, saturate(_Grime * grimeMask));
                 }
 
+                clothColor = lerp(clothColor, fiberColor, smoothstep(.015, .48, damage) * .8);
+
                 Light mainLight = GetMainLight(TransformWorldToShadowCoord(input.worldPos));
                 half NdotL = saturate(dot(normal, mainLight.direction));
                 half3 diffuse = mainLight.color * (NdotL * mainLight.shadowAttenuation);
@@ -254,8 +275,106 @@ Shader "PirateSlop/Sail"
             }
             ENDHLSL
         }
-        UsePass "Universal Render Pipeline/Lit/ShadowCaster"
-        UsePass "Universal Render Pipeline/Lit/DepthOnly"
-        UsePass "Universal Render Pipeline/Lit/DepthNormals"
+        Pass
+        {
+            Name "ShadowCaster"
+            Tags { "LightMode"="ShadowCaster" }
+            ZWrite On
+            ZTest LEqual
+            ColorMask 0
+            HLSLPROGRAM
+            #pragma vertex ShadowVert
+            #pragma fragment ShadowFrag
+            #pragma multi_compile_vertex _ _CASTING_PUNCTUAL_LIGHT_SHADOW
+            float3 _LightDirection;
+            float3 _LightPosition;
+            struct ShadowInput { float4 positionOS : POSITION; float3 normalOS : NORMAL; float2 uv : TEXCOORD0; };
+            struct ShadowOutput { float4 positionCS : SV_POSITION; float2 uv : TEXCOORD0; };
+            ShadowOutput ShadowVert(ShadowInput input)
+            {
+                ShadowOutput output;
+                float3 positionWS = TransformObjectToWorld(input.positionOS.xyz);
+                float3 normalWS = TransformObjectToWorldNormal(input.normalOS);
+                #if _CASTING_PUNCTUAL_LIGHT_SHADOW
+                    float3 lightDirection = normalize(_LightPosition - positionWS);
+                #else
+                    float3 lightDirection = _LightDirection;
+                #endif
+                output.positionCS = ApplyShadowClamping(TransformWorldToHClip(ApplyShadowBias(positionWS, normalWS, lightDirection)));
+                output.uv = input.uv;
+                return output;
+            }
+            half4 ShadowFrag(ShadowOutput input) : SV_Target
+            {
+                ClipSailDamage(input.uv);
+                return 0;
+            }
+            ENDHLSL
+        }
+        Pass
+        {
+            Name "DepthOnly"
+            Tags { "LightMode"="DepthOnly" }
+            ZWrite On
+            ColorMask R
+            HLSLPROGRAM
+            #pragma vertex DepthVert
+            #pragma fragment DepthFrag
+            struct DepthInput { float4 positionOS : POSITION; float2 uv : TEXCOORD0; };
+            struct DepthOutput { float4 positionCS : SV_POSITION; float2 uv : TEXCOORD0; };
+            DepthOutput DepthVert(DepthInput input)
+            {
+                DepthOutput output;
+                output.positionCS = TransformObjectToHClip(input.positionOS.xyz);
+                output.uv = input.uv;
+                return output;
+            }
+            half DepthFrag(DepthOutput input) : SV_Target
+            {
+                ClipSailDamage(input.uv);
+                return input.positionCS.z;
+            }
+            ENDHLSL
+        }
+        Pass
+        {
+            Name "DepthNormals"
+            Tags { "LightMode"="DepthNormals" }
+            ZWrite On
+            HLSLPROGRAM
+            #pragma vertex NormalsVert
+            #pragma fragment NormalsFrag
+            #pragma multi_compile_fragment _ _GBUFFER_NORMALS_OCT
+            #include_with_pragmas "Packages/com.unity.render-pipelines.universal/ShaderLibrary/RenderingLayers.hlsl"
+            struct NormalsInput { float4 positionOS : POSITION; float3 normalOS : NORMAL; float2 uv : TEXCOORD0; };
+            struct NormalsOutput { float4 positionCS : SV_POSITION; float3 normalWS : TEXCOORD0; float2 uv : TEXCOORD1; };
+            NormalsOutput NormalsVert(NormalsInput input)
+            {
+                NormalsOutput output;
+                output.positionCS = TransformObjectToHClip(input.positionOS.xyz);
+                output.normalWS = TransformObjectToWorldNormal(input.normalOS);
+                output.uv = input.uv;
+                return output;
+            }
+            void NormalsFrag(NormalsOutput input, bool isFrontFace : SV_IsFrontFace, out half4 normalOutput : SV_Target0
+                #ifdef _WRITE_RENDERING_LAYERS
+                    , out uint renderingLayers : SV_Target1
+                #endif
+                )
+            {
+                ClipSailDamage(input.uv);
+                float3 normal = normalize(isFrontFace ? input.normalWS : -input.normalWS);
+                #if defined(_GBUFFER_NORMALS_OCT)
+                    float2 octNormal = PackNormalOctQuadEncode(normal);
+                    normalOutput = half4(PackFloat2To888(saturate(octNormal * .5 + .5)), 0);
+                #else
+                    normalOutput = half4(normal, 0);
+                #endif
+                #ifdef _WRITE_RENDERING_LAYERS
+                    renderingLayers = EncodeMeshRenderingLayer();
+                #endif
+            }
+            ENDHLSL
+        }
     }
 }

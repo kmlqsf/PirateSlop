@@ -39,6 +39,7 @@
 | [Assets/Resources/SabreWoodChip.mat](<../../Assets/Resources/SabreWoodChip.mat>) | Материал Unity; Личное оружие и урон |
 | [Assets/Resources/SabreWoodChip.shader](<../../Assets/Resources/SabreWoodChip.shader>) | Шейдер; Личное оружие и урон |
 | [Assets/Resources/SailCustom.mat](<../../Assets/Resources/SailCustom.mat>) | Материал Unity |
+| [Assets/Resources/SailDamageStamp.shader](<../../Assets/Resources/SailDamageStamp.shader>) | Шейдер; Паруса и канаты |
 | [Assets/Resources/SeaObjective.shader](<../../Assets/Resources/SeaObjective.shader>) | Шейдер |
 | [Assets/Resources/SharkVisual.prefab](<../../Assets/Resources/SharkVisual.prefab>) | Префаб Unity; Предметы, лут и инвентарь |
 | [Assets/Resources/ShipFire.shader](<../../Assets/Resources/ShipFire.shader>) | Шейдер; Пушки, ядра и лафеты |

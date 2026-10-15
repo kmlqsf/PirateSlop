@@ -3,6 +3,7 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using PirateSlop.Customization;
+using PirateSlop.Ships;
 
 namespace PirateSlop.EditorTools
 {
@@ -206,6 +207,26 @@ namespace PirateSlop.EditorTools
             {
                 var source = AssetDatabase.LoadAssetAtPath<GameObject>(ShipPath);
                 root = (GameObject)PrefabUtility.InstantiatePrefab(source, scene);
+                const string menuMeshes="Assets/Models/Ships/ShipV3/MenuMeshes";
+                if (!AssetDatabase.IsValidFolder(menuMeshes)) AssetDatabase.CreateFolder("Assets/Models/Ships/ShipV3","MenuMeshes");
+                foreach (var batch in root.GetComponentsInChildren<ShipV3RenderBatch>(true))
+                {
+                    var mesh=ShipV3RenderBatch.BuildMesh(batch.Sources,batch.SharedMaterial,batch.transform,false);
+                    string meshPath=menuMeshes+"/"+batch.name+".asset";
+                    var saved=AssetDatabase.LoadAssetAtPath<Mesh>(meshPath);
+                    if (saved==null) { mesh.name=batch.name; AssetDatabase.CreateAsset(mesh,meshPath); saved=mesh; }
+                    else { EditorUtility.CopySerialized(mesh,saved); UnityEngine.Object.DestroyImmediate(mesh); EditorUtility.SetDirty(saved); }
+                    batch.GetComponent<MeshFilter>().sharedMesh=saved;
+                    var visual=batch.GetComponent<MeshRenderer>();
+                    visual.sharedMaterial=batch.SharedMaterial;
+                    visual.enabled=saved.vertexCount!=0;
+                    if (batch.ShadowProxy!=null)
+                    {
+                        batch.ShadowProxy.GetComponent<MeshFilter>().sharedMesh=saved;
+                        batch.ShadowProxy.enabled=saved.vertexCount!=0;
+                    }
+                    foreach (var member in batch.Sources) if (member!=null) member.enabled=false;
+                }
                 root.SetActive(false);
                 PrefabUtility.UnpackPrefabInstance(root, PrefabUnpackMode.Completely, InteractionMode.AutomatedAction);
                 var sourceNameplate = root.GetComponent<ShipNameplate>();
