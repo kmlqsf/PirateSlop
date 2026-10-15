@@ -34,8 +34,11 @@ namespace PirateSlop
             return Build(player, position, velocity, spin, 6f, true, true);
         }
 
+        static readonly Unity.Profiling.ProfilerMarker performanceRagdoll = new("Performance.Ragdoll");
         static GameObject Build(Transform player, Vector3 position, Vector3 velocity, Vector3 spin, float lifetime, bool simulate, bool gameplay = false)
         {
+            using var performanceSample = performanceRagdoll.Auto();
+            PirateSlop.Performance.PerformanceCapture.Event(gameplay ? "Ragdoll:gameplay" : "Ragdoll:cosmetic", player, position);
             var source = player.Find("PlayerGraphics");
             if (source == null) return null;
             var viewArms = player.GetComponent<WeaponArmRig>()?.ViewArms;

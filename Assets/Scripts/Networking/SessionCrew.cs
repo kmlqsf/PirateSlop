@@ -110,7 +110,9 @@ namespace PirateSlop.Networking
                 if (slots.ContainsValue(i)) continue;
                 Vector3 position = spawns[i].Position;
                 float yaw = spawns[i].Yaw;
-                if (clustered && !FindNearbySpawn(ref position, ref yaw))
+                if (PerformanceBenchmarkActive && !BenchmarkWhirlpoolStressActive)
+                    performanceBenchmark.FleetSpawn(spawns[0].Position, i, out position, out yaw);
+                else if (clustered && !FindNearbySpawn(ref position, ref yaw))
                 {
                     if (!LoadTestActive) continue;
                     position = spawns[i].Position;

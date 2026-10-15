@@ -59,6 +59,7 @@ namespace PirateSlop.World
 
         void OnGUI()
         {
+            if (PirateSlop.Performance.PerformanceBenchmarkController.HideTestLabels) return;
             if (RoguelikeUpgradeUI.WindowOpen) return;
             var camera = Camera.main;
             if (camera == null) return;

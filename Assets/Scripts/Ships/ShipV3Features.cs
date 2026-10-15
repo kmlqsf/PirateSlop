@@ -744,6 +744,7 @@ namespace PirateSlop.Ships
 
         void Update()
         {
+            using var cpuTiming = PirateSlop.Performance.PerformanceCpuTimings.Measure(PirateSlop.Performance.PerformanceCpuSection.ShipFeaturesUpdate);
             if (!IsSpawned) return;
             if (IsClientInitialized && !localInteractionReady)
                 foreach (var player in NetworkPlayer.Active)
@@ -845,6 +846,7 @@ namespace PirateSlop.Ships
         void UpdateAttachments()
         {
             using var sample = attachmentMarker.Auto();
+            using var cpuTiming = PirateSlop.Performance.PerformanceCpuTimings.Measure(PirateSlop.Performance.PerformanceCpuSection.ShipAttachments);
             foreach (var item in Attachments)
             {
                 if (item.Object == null || item.Detached) continue;
@@ -888,6 +890,7 @@ namespace PirateSlop.Ships
 
         void LateUpdate()
         {
+            using var cpuTiming = PirateSlop.Performance.PerformanceCpuTimings.Measure(PirateSlop.Performance.PerformanceCpuSection.ShipFeaturesLateUpdate);
             if (!IsSpawned) return;
             if (IsServerInitialized || remotePoses == null) { RenderDiceCups(); return; }
             float blend = 1f - Mathf.Exp(-30f * Time.deltaTime);

@@ -33,6 +33,7 @@ namespace PirateSlop.Networking
         public void BeginSinking(float duration = 12f)
         {
             if (!IsServerInitialized || IsSinking || GetComponent<ShipFlooding>() is not { Level: >= 1f }) return;
+            PirateSlop.Performance.PerformanceCapture.Event("ShipSinking", this, transform.position, 1f);
             sinking.Value = true;
             sinkingStarted = Time.time;
             sinkingDuration = Mathf.Max(.1f, duration);
@@ -90,6 +91,7 @@ namespace PirateSlop.Networking
         }
         void Tick()
         {
+            using var timing = PirateSlop.Performance.PerformanceCpuTimings.Measure(PirateSlop.Performance.PerformanceCpuSection.ShipTick);
             if (!IsServerInitialized) return;
             TickVortexBoost();
             if (IsSinking)
@@ -103,13 +105,14 @@ namespace PirateSlop.Networking
                 if (progress >= 1f) ServerManager.Despawn(NetworkObject);
                 return;
             }
-            Helm.Simulate(default, null, (float)TimeManager.TickDelta);
+            using (PirateSlop.Performance.PerformanceCpuTimings.Measure(PirateSlop.Performance.PerformanceCpuSection.ShipHelm)) Helm.Simulate(default, null, (float)TimeManager.TickDelta);
             GetComponent<NetworkSternCargoEvent>()?.BeforeShipTick((float)TimeManager.TickDelta);
             Motor.Simulate((float)TimeManager.TickDelta);
             if (VortexBoostActive.Value && AnchorDropped) anchorSeabedPoint.Value = Motor.AnchorPoint;
         }
         void Publish()
         {
+            using var timing = PirateSlop.Performance.PerformanceCpuTimings.Measure(PirateSlop.Performance.PerformanceCpuSection.ShipPublish);
             if (!IsServerInitialized) return;
             int driver = 0;
             if (Helm.Driver != null)

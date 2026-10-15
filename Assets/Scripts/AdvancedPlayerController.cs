@@ -188,19 +188,20 @@ public partial class AdvancedPlayerController : MonoBehaviour
         if (GetComponent<SwimPresentation>() == null) gameObject.AddComponent<SwimPresentation>();
     }
     void Start() { if (local) SetCursor(true); }
-    void ConfigureDistanceCulling()
+    void ConfigureDistanceCulling() => ConfigureDistanceCulling(playerCamera);
+    public void ConfigureDistanceCulling(Camera target)
     {
-        if (playerCamera == null) return;
-        var distances = playerCamera.layerCullDistances;
+        if (target == null) return;
+        var distances = target.layerCullDistances;
         float maximum = 0f;
         for (int i = 0; i < distances.Length; i++)
         {
             if (distances[i] <= 0f) distances[i] = viewDistance;
             maximum = Mathf.Max(maximum, distances[i]);
         }
-        playerCamera.layerCullDistances = distances;
-        playerCamera.layerCullSpherical = true;
-        playerCamera.farClipPlane = Mathf.Max(playerCamera.farClipPlane, Mathf.Max(5000f, maximum * 2f));
+        target.layerCullDistances = distances;
+        target.layerCullSpherical = true;
+        target.farClipPlane = Mathf.Max(target.farClipPlane, Mathf.Max(5000f, maximum * 2f));
     }
     void OnDisable() { if (local) SetCursor(false); }
     public static void SetCursor(bool locked) { Cursor.lockState = locked ? CursorLockMode.Locked : CursorLockMode.None; Cursor.visible = !locked; }

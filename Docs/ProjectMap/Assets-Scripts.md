@@ -20,7 +20,7 @@
 | [Assets/Scripts/OceanSurface.cs](<../../Assets/Scripts/OceanSurface.cs>) | Исходник C#: OceanSurface; Мир, острова и океан, Шторм, зона, дождь и объёмный туман, Тестовая карта и водоворот |
 | [Assets/Scripts/SailSystem.cs](<../../Assets/Scripts/SailSystem.cs>) | Исходник C#: SailSystem; Паруса и канаты, Корабельная обезьянка |
 | [Assets/Scripts/ShipBuoyancy.cs](<../../Assets/Scripts/ShipBuoyancy.cs>) | Исходник C#: ShipBuoyancy; Движение корабля и палуба, Мир, острова и океан, Тестовая карта и водоворот |
-| [Assets/Scripts/ShipController.cs](<../../Assets/Scripts/ShipController.cs>) | Исходник C#: ShipController; Телепортация корабля через F8, Движение корабля и палуба, Груз за кормой |
+| [Assets/Scripts/ShipController.cs](<../../Assets/Scripts/ShipController.cs>) | Исходник C#: ShipController; Телепортация корабля через F8, Движение корабля и палуба, Производительность и тест нагрузки без AI, Груз за кормой |
 | [Assets/Scripts/ShipDeckPassenger.cs](<../../Assets/Scripts/ShipDeckPassenger.cs>) | Исходник C#: ShipDeckPassenger; Движение корабля и палуба, Персонаж, камера и анимации, Предметы, лут и инвентарь, Кит — точка интереса и сундук, Раковина с сундуком и парные рычаги, Сундук в такелаже |
 | [Assets/Scripts/VfxPool.cs](<../../Assets/Scripts/VfxPool.cs>) | Исходник C#: VfxPool, Entry |
 | [Assets/Scripts/WaterGridGenerator.cs](<../../Assets/Scripts/WaterGridGenerator.cs>) | Исходник C#: WaterGridGenerator; Тестовая карта и водоворот |
@@ -130,7 +130,7 @@
 | [Assets/Scripts/Editor/MenuPresentationSetup.cs](<../../Assets/Scripts/Editor/MenuPresentationSetup.cs>) | Исходник C#: MenuPresentationSetup; Меню и HUD |
 | [Assets/Scripts/Editor/MenuScenerySetup.cs](<../../Assets/Scripts/Editor/MenuScenerySetup.cs>) | Исходник C#: MenuScenerySetup; Меню и HUD |
 | [Assets/Scripts/Editor/MortarSetup.cs](<../../Assets/Scripts/Editor/MortarSetup.cs>) | Исходник C#: MortarSetup |
-| [Assets/Scripts/Editor/MultiplayerSceneSetup.cs](<../../Assets/Scripts/Editor/MultiplayerSceneSetup.cs>) | Исходник C#: RuntimePipelineBuildPreparation, MultiplayerSceneSetup; Мир, острова и океан, Сеть, сессия и Steam, Тестовая карта и водоворот |
+| [Assets/Scripts/Editor/MultiplayerSceneSetup.cs](<../../Assets/Scripts/Editor/MultiplayerSceneSetup.cs>) | Исходник C#: RuntimePipelineBuildPreparation, MultiplayerSceneSetup; Мир, острова и океан, Сеть, сессия и Steam, Тестовая карта и водоворот, Производительность и тест нагрузки без AI |
 | [Assets/Scripts/Editor/MultiplayerStartup.cs](<../../Assets/Scripts/Editor/MultiplayerStartup.cs>) | Исходник C#: MultiplayerStartup |
 | [Assets/Scripts/Editor/MultiplayerWorkBridge.cs](<../../Assets/Scripts/Editor/MultiplayerWorkBridge.cs>) | Исходник C#: MultiplayerWorkBridge |
 | [Assets/Scripts/Editor/NetworkLoadTestSetup.cs](<../../Assets/Scripts/Editor/NetworkLoadTestSetup.cs>) | Исходник C#: NetworkLoadTestSetup; Производительность и тест нагрузки без AI |
@@ -422,16 +422,17 @@
 | [Assets/Scripts/Networking/SessionCombatRules.cs](<../../Assets/Scripts/Networking/SessionCombatRules.cs>) | Исходник C#: CombatRulesMessage, SessionController; Персонаж, камера и анимации, Сеть, сессия и Steam, Тестовая карта и водоворот |
 | [Assets/Scripts/Networking/SessionConfig.cs](<../../Assets/Scripts/Networking/SessionConfig.cs>) | Исходник C#: SessionConfig; Телепортация корабля через F8, Проект и точки входа, Сеть, сессия и Steam, Кит — точка интереса и сундук, Сундук в такелаже, Груз за кормой, Пушечный пролом, Чайка с ключом, Лестница контрабандистов — морской платформинг |
 | [Assets/Scripts/Networking/SessionController.cs](<../../Assets/Scripts/Networking/SessionController.cs>) | Исходник C#: SessionController; Телепортация корабля через F8, Проект и точки входа, Чайки и фоновые стаи, Сеть, сессия и Steam, Новая система ботов, Шторм, зона, дождь и объёмный туман |
-| [Assets/Scripts/Networking/SessionCrew.cs](<../../Assets/Scripts/Networking/SessionCrew.cs>) | Исходник C#: SessionController; Сеть, сессия и Steam, Новая система ботов |
+| [Assets/Scripts/Networking/SessionCrew.cs](<../../Assets/Scripts/Networking/SessionCrew.cs>) | Исходник C#: SessionController; Сеть, сессия и Steam, Новая система ботов, Производительность и тест нагрузки без AI |
 | [Assets/Scripts/Networking/SessionLoadTest.cs](<../../Assets/Scripts/Networking/SessionLoadTest.cs>) | Исходник C#: SessionController; Производительность и тест нагрузки без AI |
-| [Assets/Scripts/Networking/SessionMenu.cs](<../../Assets/Scripts/Networking/SessionMenu.cs>) | Исходник C#: SessionController, MenuAccent; Сеть, сессия и Steam, Меню и HUD |
+| [Assets/Scripts/Networking/SessionMenu.cs](<../../Assets/Scripts/Networking/SessionMenu.cs>) | Исходник C#: SessionController, MenuAccent; Сеть, сессия и Steam, Меню и HUD, Производительность и тест нагрузки без AI |
 | [Assets/Scripts/Networking/SessionMetrics.cs](<../../Assets/Scripts/Networking/SessionMetrics.cs>) | Исходник C#: SessionMetrics |
 | [Assets/Scripts/Networking/SessionOcean.cs](<../../Assets/Scripts/Networking/SessionOcean.cs>) | Исходник C#: TestOceanMessage, SessionController; Мир, острова и океан, Сеть, сессия и Steam, Тестовая карта и водоворот |
 | [Assets/Scripts/Networking/SessionPartyMenu.cs](<../../Assets/Scripts/Networking/SessionPartyMenu.cs>) | Исходник C#: SessionController; Сеть, сессия и Steam, Меню и HUD |
+| [Assets/Scripts/Networking/SessionPerformance.cs](<../../Assets/Scripts/Networking/SessionPerformance.cs>) | Исходник C#: SessionController; Производительность и тест нагрузки без AI |
 | [Assets/Scripts/Networking/SessionRoguelike.cs](<../../Assets/Scripts/Networking/SessionRoguelike.cs>) | Исходник C#: UpgradeIdentityMessage, SessionController; Улучшения рогалика из сундуков, Кракен и щупальца, Корабельная слот-машина |
 | [Assets/Scripts/Networking/SessionSceneLoading.cs](<../../Assets/Scripts/Networking/SessionSceneLoading.cs>) | Исходник C#: SessionController; Сеть, сессия и Steam |
 | [Assets/Scripts/Networking/SessionSeagulls.cs](<../../Assets/Scripts/Networking/SessionSeagulls.cs>) | Исходник C#: SeagullFlockMessage, SeagullHitMessage, SessionController, SeagullEvent; Чайки и фоновые стаи |
-| [Assets/Scripts/Networking/SessionSpectator.cs](<../../Assets/Scripts/Networking/SessionSpectator.cs>) | Исходник C#: SessionController; Проект и точки входа |
+| [Assets/Scripts/Networking/SessionSpectator.cs](<../../Assets/Scripts/Networking/SessionSpectator.cs>) | Исходник C#: SessionController; Проект и точки входа, Производительность и тест нагрузки без AI |
 | [Assets/Scripts/Networking/SessionStorm.cs](<../../Assets/Scripts/Networking/SessionStorm.cs>) | Исходник C#: StormMessage, SessionController; Мир, острова и океан, Шторм, зона, дождь и объёмный туман |
 | [Assets/Scripts/Networking/SessionVoiceMenu.cs](<../../Assets/Scripts/Networking/SessionVoiceMenu.cs>) | Исходник C#: SessionController; Звуки и голос, Меню и HUD |
 | [Assets/Scripts/Networking/SessionWhirlpoolTentacles.cs](<../../Assets/Scripts/Networking/SessionWhirlpoolTentacles.cs>) | Исходник C#: WhirlpoolTentacleState, WhirlpoolTentaclesMessage, SessionController; Мир, острова и океан, Сеть, сессия и Steam, Кракен и щупальца, Тестовая карта и водоворот |
@@ -443,6 +444,15 @@
 | [Assets/Scripts/Networking/SlotPrizeFlight.cs](<../../Assets/Scripts/Networking/SlotPrizeFlight.cs>) | Исходник C#: SlotPrizeFlight; Корабельная слот-машина |
 | [Assets/Scripts/Networking/SteamParty.cs](<../../Assets/Scripts/Networking/SteamParty.cs>) | Исходник C#: SteamParty; Сеть, сессия и Steam |
 | [Assets/Scripts/Networking/WorldMessages.cs](<../../Assets/Scripts/Networking/WorldMessages.cs>) | Исходник C#: WorldManifestMessage, WorldReadyMessage |
+
+## Assets/Scripts/Performance
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Scripts/Performance/PerformanceBenchmarkController.cs](<../../Assets/Scripts/Performance/PerformanceBenchmarkController.cs>) | Исходник C#: BenchmarkWaypoint, BenchmarkSegment, BenchmarkProfile, PerformanceBenchmarkController; Производительность и тест нагрузки без AI |
+| [Assets/Scripts/Performance/PerformanceCapture.cs](<../../Assets/Scripts/Performance/PerformanceCapture.cs>) | Исходник C#: PerformanceCounters, PerformanceMetadata, PerformanceFrame, PerformanceShipSample, PerformanceEvent, PerformanceSummary, PerformanceSecond, PerformanceReport, PerformanceStatistics, PerformanceCapture, SavedReport; Производительность и тест нагрузки без AI |
+| [Assets/Scripts/Performance/PerformanceCpuTimings.cs](<../../Assets/Scripts/Performance/PerformanceCpuTimings.cs>) | Исходник C#: PerformanceCpuSection, PerformanceCpuTimings, Scope, Probe; Производительность и тест нагрузки без AI |
+| [Assets/Scripts/Performance/PerformanceRenderOverrides.cs](<../../Assets/Scripts/Performance/PerformanceRenderOverrides.cs>) | Исходник C#: PerformanceRenderOverrides; Производительность и тест нагрузки без AI |
 
 ## Assets/Scripts/Player
 
@@ -493,7 +503,7 @@
 | [Assets/Scripts/Player/PlayerInventory.cs](<../../Assets/Scripts/Player/PlayerInventory.cs>) | Исходник C#: PlayerInventory; Предметы, лут и инвентарь, Корабельная слот-машина, Раковина с сундуком и парные рычаги, Остров с весами и пятью камнями, Сундук в такелаже, Груз за кормой, Чайка с ключом, Лестница контрабандистов — морской платформинг |
 | [Assets/Scripts/Player/PlayerKickVisual.cs](<../../Assets/Scripts/Player/PlayerKickVisual.cs>) | Исходник C#: PlayerKickVisual; Персонаж, камера и анимации |
 | [Assets/Scripts/Player/PlayerKnockdown.cs](<../../Assets/Scripts/Player/PlayerKnockdown.cs>) | Исходник C#: PlayerKnockdown; Персонаж, камера и анимации, Корабельная обезьянка |
-| [Assets/Scripts/Player/PlayerPresentation.cs](<../../Assets/Scripts/Player/PlayerPresentation.cs>) | Исходник C#: PlayerPresentation |
+| [Assets/Scripts/Player/PlayerPresentation.cs](<../../Assets/Scripts/Player/PlayerPresentation.cs>) | Исходник C#: PlayerPresentation; Производительность и тест нагрузки без AI |
 | [Assets/Scripts/Player/RiggingPlayerInteraction.cs](<../../Assets/Scripts/Player/RiggingPlayerInteraction.cs>) | Исходник C#: RiggingPlayerInteraction; Сундук в такелаже |
 | [Assets/Scripts/Player/SabreAnimation.cs](<../../Assets/Scripts/Player/SabreAnimation.cs>) | Исходник C#: SabreAnimation; Улучшения рогалика из сундуков, Личное оружие и урон |
 | [Assets/Scripts/Player/SabreWoodHit.cs](<../../Assets/Scripts/Player/SabreWoodHit.cs>) | Исходник C#: SabreWoodHit, PirateWeapon; Личное оружие и урон |
@@ -547,6 +557,7 @@
 | [Assets/Scripts/Ships/ShipBilgePumpPlayer.cs](<../../Assets/Scripts/Ships/ShipBilgePumpPlayer.cs>) | Исходник C#: ShipBilgePumpPlayer; Движение корабля и палуба |
 | [Assets/Scripts/Ships/ShipBilgeWater.cs](<../../Assets/Scripts/Ships/ShipBilgeWater.cs>) | Исходник C#: ShipBilgeWater; Движение корабля и палуба |
 | [Assets/Scripts/Ships/ShipDamagePreparation.cs](<../../Assets/Scripts/Ships/ShipDamagePreparation.cs>) | Исходник C#: ShipDamagePreparation, BakeJob; Движение корабля и палуба, Производительность и тест нагрузки без AI |
+| [Assets/Scripts/Ships/ShipHullQueryWorld.cs](<../../Assets/Scripts/Ships/ShipHullQueryWorld.cs>) | Исходник C#: ShipHullQueryWorld, Proxy; Производительность и тест нагрузки без AI |
 | [Assets/Scripts/Ships/ShipMonkey.Activities.cs](<../../Assets/Scripts/Ships/ShipMonkey.Activities.cs>) | Исходник C#: ShipMonkey, TaskKind; Корабельная обезьянка |
 | [Assets/Scripts/Ships/ShipMonkey.Defense.cs](<../../Assets/Scripts/Ships/ShipMonkey.Defense.cs>) | Исходник C#: ShipMonkey; Корабельная обезьянка |
 | [Assets/Scripts/Ships/ShipMonkey.HeadRide.cs](<../../Assets/Scripts/Ships/ShipMonkey.HeadRide.cs>) | Исходник C#: ShipMonkey; Корабельная обезьянка |
@@ -563,7 +574,7 @@
 | [Assets/Scripts/Ships/ShipSlotMachineTarget.cs](<../../Assets/Scripts/Ships/ShipSlotMachineTarget.cs>) | Исходник C#: ShipSlotMachineTarget; Корабельная слот-машина |
 | [Assets/Scripts/Ships/ShipV3BellContact.cs](<../../Assets/Scripts/Ships/ShipV3BellContact.cs>) | Исходник C#: ShipV3BellContact; Тестовая карта и водоворот |
 | [Assets/Scripts/Ships/ShipV3ChainInstances.cs](<../../Assets/Scripts/Ships/ShipV3ChainInstances.cs>) | Исходник C#: ShipV3ChainInstances; Движение корабля и палуба |
-| [Assets/Scripts/Ships/ShipV3ClothMotion.cs](<../../Assets/Scripts/Ships/ShipV3ClothMotion.cs>) | Исходник C#: ShipV3ClothMotion; Паруса и канаты, Тестовая карта и водоворот |
+| [Assets/Scripts/Ships/ShipV3ClothMotion.cs](<../../Assets/Scripts/Ships/ShipV3ClothMotion.cs>) | Исходник C#: ShipV3ClothMotion; Паруса и канаты, Тестовая карта и водоворот, Производительность и тест нагрузки без AI |
 | [Assets/Scripts/Ships/ShipV3CollisionBatch.cs](<../../Assets/Scripts/Ships/ShipV3CollisionBatch.cs>) | Исходник C#: ShipV3CollisionBatch; Движение корабля и палуба, Повреждения корпуса, ремонт и затопление, Производительность и тест нагрузки без AI |
 | [Assets/Scripts/Ships/ShipV3DiceContact.cs](<../../Assets/Scripts/Ships/ShipV3DiceContact.cs>) | Исходник C#: ShipV3DiceContact; Движение корабля и палуба, Звуки и голос |
 | [Assets/Scripts/Ships/ShipV3Features.cs](<../../Assets/Scripts/Ships/ShipV3Features.cs>) | Исходник C#: ShipV3TargetKind, ShipV3Lantern, ShipV3DiceSlot, ShipV3PhysicsPose, ShipV3Support, ShipV3Attachment, ShipV3Features; Движение корабля и палуба, Повреждения корпуса, ремонт и затопление, Производительность и тест нагрузки без AI |
@@ -580,7 +591,7 @@
 | Файл | Краткое описание |
 | --- | --- |
 | [Assets/Scripts/Stations/AnchorCableVisual.cs](<../../Assets/Scripts/Stations/AnchorCableVisual.cs>) | Исходник C#: AnchorCableVisual |
-| [Assets/Scripts/Stations/CapstanStation.cs](<../../Assets/Scripts/Stations/CapstanStation.cs>) | Исходник C#: CapstanStation; Движение корабля и палуба |
+| [Assets/Scripts/Stations/CapstanStation.cs](<../../Assets/Scripts/Stations/CapstanStation.cs>) | Исходник C#: CapstanStation; Движение корабля и палуба, Производительность и тест нагрузки без AI |
 | [Assets/Scripts/Stations/SailStation.cs](<../../Assets/Scripts/Stations/SailStation.cs>) | Исходник C#: SailStation, Mode |
 | [Assets/Scripts/Stations/StationInteractable.cs](<../../Assets/Scripts/Stations/StationInteractable.cs>) | Исходник C#: StationInteractable |
 
@@ -638,7 +649,7 @@
 | [Assets/Scripts/World/ProjectileWaterFlight.cs](<../../Assets/Scripts/World/ProjectileWaterFlight.cs>) | Исходник C#: ProjectileWaterFlight; Пушки, ядра и лафеты, Личное оружие и урон, Мир, острова и океан |
 | [Assets/Scripts/World/RiggingEditorPreview.cs](<../../Assets/Scripts/World/RiggingEditorPreview.cs>) | Исходник C#: RiggingEditorPreview; Сундук в такелаже |
 | [Assets/Scripts/World/RiggingLooseRope.cs](<../../Assets/Scripts/World/RiggingLooseRope.cs>) | Исходник C#: RiggingLooseRope; Сундук в такелаже |
-| [Assets/Scripts/World/RiggingRopeVisual.cs](<../../Assets/Scripts/World/RiggingRopeVisual.cs>) | Исходник C#: RiggingRopeVisual, TubeBuffers; Сундук в такелаже, Груз за кормой |
+| [Assets/Scripts/World/RiggingRopeVisual.cs](<../../Assets/Scripts/World/RiggingRopeVisual.cs>) | Исходник C#: RiggingRopeVisual, TubeBuffers; Производительность и тест нагрузки без AI, Сундук в такелаже, Груз за кормой |
 | [Assets/Scripts/World/RiggingTornCloth.cs](<../../Assets/Scripts/World/RiggingTornCloth.cs>) | Исходник C#: RiggingTornCloth; Сундук в такелаже |
 | [Assets/Scripts/World/SandyIslandFoliageWind.cs](<../../Assets/Scripts/World/SandyIslandFoliageWind.cs>) | Исходник C#: SandyIslandFoliageWind; Мир, острова и океан, Тестовая карта и водоворот |
 | [Assets/Scripts/World/SeaLootSpawner.cs](<../../Assets/Scripts/World/SeaLootSpawner.cs>) | Исходник C#: SeaLootSpawner; Предметы, лут и инвентарь, Кит — точка интереса и сундук, Тестовая карта и водоворот, Раковина с сундуком и парные рычаги, Остров с весами и пятью камнями, Сундук в такелаже, Груз за кормой, Пушечный пролом, Чайка с ключом, Лестница контрабандистов — морской платформинг |

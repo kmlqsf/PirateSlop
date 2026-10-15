@@ -199,6 +199,7 @@ namespace PirateSlop.Networking
         }
         void Tick()
         {
+            using var timing = PirateSlop.Performance.PerformanceCpuTimings.Measure(PirateSlop.Performance.PerformanceCpuSection.PlayerTick);
             // State-forwarding may invoke prediction on observers.  Only the owner
             // and the server are allowed to simulate this player.
             if (!IsOwner && !IsServerInitialized) return;
@@ -233,7 +234,8 @@ namespace PirateSlop.Networking
             var session = SessionController.Instance;
             var platform = Ship;
             if (session == null || !session.LoadTestMoving || platform == null || motor.IsDead || motor.IsSwimming) return command;
-            float time = (float)TimeManager.Tick * (float)TimeManager.TickDelta + ParticipantId.Value * 1.7f;
+            if (session.PerformanceBenchmarkActive && !session.BenchmarkMotionEnabled) return command;
+            float time = (session.PerformanceBenchmarkActive ? session.BenchmarkSimulationTime : (float)TimeManager.Tick * (float)TimeManager.TickDelta) + ParticipantId.Value * 1.7f;
             Vector3 target = loadTestOrigin + new Vector3(Mathf.Sin(time * .7f) * .55f, 0f, Mathf.Cos(time * .7f) * .55f);
             Vector3 local = platform.transform.InverseTransformPoint(transform.position);
             Vector3 direction = target - local;
@@ -260,6 +262,7 @@ namespace PirateSlop.Networking
         }
         void PostTick()
         {
+            using var timing = PirateSlop.Performance.PerformanceCpuTimings.Measure(PirateSlop.Performance.PerformanceCpuSection.PlayerPublish);
             PublishTargetMarks();
             if (!TryBind()) return;
             if (!IsBot.Value && (IsOwner || IsServerInitialized)) CreateReconcile();
@@ -294,10 +297,11 @@ namespace PirateSlop.Networking
         {
             if (motor.IsDead) return;
             float dt = (float)TimeManager.TickDelta;
-            if (!carried) passenger.Carry();
-            Physics.SyncTransforms();
-            motor.Simulate(command, dt);
-            passenger.Detect();
+            using (PirateSlop.Performance.PerformanceCpuTimings.Measure(PirateSlop.Performance.PerformanceCpuSection.PlayerCarry))
+                if (!carried) passenger.Carry();
+            using (PirateSlop.Performance.PerformanceCpuTimings.Measure(PirateSlop.Performance.PerformanceCpuSection.PlayerSyncTransforms)) Physics.SyncTransforms();
+            using (PirateSlop.Performance.PerformanceCpuTimings.Measure(PirateSlop.Performance.PerformanceCpuSection.PlayerMotor)) motor.Simulate(command, dt);
+            using (PirateSlop.Performance.PerformanceCpuTimings.Measure(PirateSlop.Performance.PerformanceCpuSection.PlayerSupport)) passenger.Detect();
             CaptureVisualAnchor();
             float homeHeight = Ship != null ? Ship.transform.position.y : GetComponent<CombatHealth>().SpawnPosition.y;
             if (!IsBot.Value && !motor.DeveloperNoclip && !motor.IsSwimming && motor.transform.position.y < homeHeight - 30) ReturnHome();

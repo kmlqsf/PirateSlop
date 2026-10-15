@@ -38,6 +38,13 @@ namespace PirateSlop
         float lastClickAngle;
         float pinRestZ;
         float currentPinLift;
+        float appliedAngle = float.NaN, appliedPinLift = float.NaN;
+        bool spokePoseReady, appliedSpokeDamage;
+        static int localPlayerFrame = -1;
+        static AdvancedPlayerController localPlayerMotor;
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        static void ResetLocalPlayer() { localPlayerFrame = -1; localPlayerMotor = null; }
 
         public float Progress => networkShip != null && networkShip.IsSpawned ? (isPushing ? Mathf.Max(networkShip.AnchorRaiseProgress, progress) : networkShip.AnchorRaiseProgress) : progress;
         public bool IsAnchored => networkShip != null && networkShip.IsSpawned ? networkShip.AnchorDropped : (ship != null && ship.IsAnchored);
@@ -233,9 +240,14 @@ namespace PirateSlop
                 reverseSpinSpeed = Mathf.Max(240f, reverseSpinSpeed - 600f * Time.deltaTime);
             }
 
-            if (rotor != null)
+            if (appliedAngle != localAngle)
             {
-                rotor.localRotation = Quaternion.Euler(0, 0, localAngle);
+                appliedAngle = localAngle;
+                if (rotor != null) rotor.localRotation = Quaternion.Euler(0, 0, localAngle);
+                float phase = Mathf.Repeat(localAngle, 30f) / 30f;
+                float lift = phase < 0.75f ? phase * 8f : (1f - phase) * 24f;
+                if (pawlLeft != null) pawlLeft.localRotation = Quaternion.Euler(0, 0, 48.7f + lift);
+                if (pawlRight != null) pawlRight.localRotation = Quaternion.Euler(0, 0, 131.3f - lift);
             }
 
             if (anchorPin != null)
@@ -258,27 +270,25 @@ namespace PirateSlop
 
                 float liftSpeed = (reverseSpinRemaining > 0f || isPushing) ? 0.45f : 0.20f;
                 currentPinLift = Mathf.MoveTowards(currentPinLift, targetLift, liftSpeed * Time.deltaTime);
-                anchorPin.localPosition = new Vector3(0f, 0f, pinRestZ + currentPinLift);
+                if (appliedPinLift != currentPinLift)
+                {
+                    appliedPinLift = currentPinLift;
+                    anchorPin.localPosition = new Vector3(0f, 0f, pinRestZ + currentPinLift);
+                }
             }
 
-            if (coil2 != null) coil2.SetActive(curProgress >= 0.33f);
-            if (coil3 != null) coil3.SetActive(curProgress >= 0.66f);
-
-            if (pawlLeft != null || pawlRight != null)
-            {
-                float phase = Mathf.Repeat(localAngle, 30f) / 30f;
-                float lift = phase < 0.75f ? phase * 8f : (1f - phase) * 24f;
-                if (pawlLeft != null) pawlLeft.localRotation = Quaternion.Euler(0, 0, 48.7f + lift);
-                if (pawlRight != null) pawlRight.localRotation = Quaternion.Euler(0, 0, 131.3f - lift);
-            }
+            if (coil2 != null && coil2.activeSelf != (curProgress >= .33f)) coil2.SetActive(curProgress >= .33f);
+            if (coil3 != null && coil3.activeSelf != (curProgress >= .66f)) coil3.SetActive(curProgress >= .66f);
 
             bool damaged = !StructurallyAvailable || (capstanSection != null && capstanSection.State != ShipSectionState.Intact);
             if (rotorFilter != null && damagedRotorMesh != null && intactRotorMesh != null)
             {
-                rotorFilter.sharedMesh = damaged ? damagedRotorMesh : intactRotorMesh;
+                var desired = damaged ? damagedRotorMesh : intactRotorMesh;
+                if (rotorFilter.sharedMesh != desired) rotorFilter.sharedMesh = desired;
             }
-            if (spokeHandleEast != null)
+            if (spokeHandleEast != null && (!spokePoseReady || appliedSpokeDamage != damaged))
             {
+                spokePoseReady = true; appliedSpokeDamage = damaged;
                 spokeHandleEast.transform.localEulerAngles = damaged ? new Vector3(0, 0, -28f) : Vector3.zero;
                 spokeHandleEast.transform.localPosition = damaged ? new Vector3(0.70f, 0, 0.75f) : new Vector3(0.75f, 0, 0.94f);
             }
@@ -375,13 +385,16 @@ namespace PirateSlop
 
         AdvancedPlayerController FindLocalPlayerMotor()
         {
+            if (localPlayerFrame == Time.frameCount) return localPlayerMotor;
+            localPlayerFrame = Time.frameCount; localPlayerMotor = null;
             foreach (var p in NetworkPlayer.Active)
             {
-                if (p != null && p.IsOwner && !p.IsBot.Value && p.Motor != null) return p.Motor;
+                if (p != null && p.IsOwner && !p.IsBot.Value && p.Motor != null) return localPlayerMotor = p.Motor;
             }
+            if (NetworkPlayer.Active.Count > 0) return null;
             foreach (var apc in FindObjectsByType<AdvancedPlayerController>(FindObjectsSortMode.None))
             {
-                if (apc != null && apc.InputActive && !apc.IsDead) return apc;
+                if (apc != null && apc.InputActive && !apc.IsDead) return localPlayerMotor = apc;
             }
             return null;
         }

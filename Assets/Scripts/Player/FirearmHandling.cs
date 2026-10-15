@@ -60,6 +60,7 @@ namespace PirateSlop
         }
         public void Fire(Transform muzzle,Vector3 direction,bool cameraRecoil=true)
         {
+            PirateSlop.Performance.PerformanceCapture.Event("FirearmShot:visual", this, muzzle != null ? muzzle.position : transform.position);
             var definition=Definition;if(definition==null) return;
             lastShot=Time.time;bloom=1;
             Vector3 point=muzzle!=null?muzzle.position:motor.PlayerCamera.transform.position+direction*.65f;

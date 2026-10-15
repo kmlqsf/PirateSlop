@@ -186,13 +186,16 @@ namespace PirateSlop
             }
             return nearest ?? sections[Profile.FallbackSectionId];
         }
+        static readonly Unity.Profiling.ProfilerMarker performanceDamage = new("Performance.ShipDamage");
         public void Damage(Collider collider, Vector3 point, Vector3 normal, Vector3 velocity, InventoryItem ammo, GameObject attacker, float radius = 0f)
         {
+            using var performanceSample = performanceDamage.Auto();
             if (Profile != null && Profile.OrdinaryCannonballsOnly && ammo != InventoryItem.Cannonball) return;
             if (!ready || !IsServerInitialized || ship.IsSinking || !float.IsFinite(point.sqrMagnitude) || !float.IsFinite(velocity.sqrMagnitude)) return;
             var shooter = attacker != null ? attacker.GetComponent<NetworkPlayer>() : null;
             if (!SessionController.FriendlyFire && shooter != null && shooter.TeamId.Value > 0 && shooter.TeamId.Value == ship.TeamId.Value) return;
             var direct = DamageReceiver(Resolve(collider, point), point);
+            PirateSlop.Performance.PerformanceCapture.Event("ShipDamage", this, point);
             ApplyCannonHit(direct, point, normal, velocity, ammo, attacker, radius);
         }
         void ApplyCannonHit(ShipDamageSection direct, Vector3 point, Vector3 normal, Vector3 velocity, InventoryItem ammo, GameObject attacker, float radius)
@@ -525,6 +528,7 @@ namespace PirateSlop
             if (attachedTrim.TryGetValue(key, out var trim))
                 foreach (var attached in trim) RepairFragment(attached.SectionId, attached.Fragment, false);
             if (publish) Publish();
+            PirateSlop.Performance.PerformanceCapture.Event("ShipRepair", this, section.transform.position, fragment);
             return true;
         }
         public void RepairNearby(int id, int fragment, Vector3 point, float areaMultiplier = 1f)
@@ -542,8 +546,10 @@ namespace PirateSlop
             if (candidates.Count == 0) { RepairFragment(id, fragment); return; }
             foreach (var candidate in candidates) RepairFragment(candidate.SectionId, candidate.Fragment);
         }
+        static readonly Unity.Profiling.ProfilerMarker performancePublish = new("Performance.ShipPublish");
         void Publish()
         {
+            using var performanceSample = performancePublish.Auto();
             ApplyModifiers();
             ReceiveState(Snapshot(), flooding.Level, revision);
         }
@@ -570,6 +576,7 @@ namespace PirateSlop
         }
         void Update()
         {
+            using var cpuTiming = PirateSlop.Performance.PerformanceCpuTimings.Measure(PirateSlop.Performance.PerformanceCpuSection.ShipDestructionUpdate);
             if (flooding != null)
             {
                 if (IsServerInitialized) openImpacts.Value = flooding.OpenImpactCount;

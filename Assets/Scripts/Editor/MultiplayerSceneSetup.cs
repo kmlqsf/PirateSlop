@@ -128,11 +128,20 @@ namespace PirateSlop.EditorTools
             BuildWindows(BuildOptions.DetailedBuildReport);
         }
 
-        static void BuildWindows(BuildOptions additionalOptions)
+        [MenuItem("Windows Build/Release", false, 1)]
+        public static void BuildRelease()
+        {
+            BuildWindows(BuildOptions.None, false);
+        }
+
+        static void BuildWindows(BuildOptions additionalOptions, bool development = true)
         {
             if (!File.Exists(MenuPath)) throw new InvalidOperationException("Configure multiplayer scenes first.");
-            Directory.CreateDirectory("Builds/Windows");
-            var report = BuildPipeline.BuildPlayer(new BuildPlayerOptions { scenes = GetBuildScenePaths(), locationPathName = "Builds/Windows/PirateSlop.exe", target = BuildTarget.StandaloneWindows64, options = BuildOptions.Development | BuildOptions.StrictMode | additionalOptions });
+            string directory = development ? "Builds/Windows" : "Builds/WindowsRelease";
+            Directory.CreateDirectory(directory);
+            var options = BuildOptions.StrictMode | additionalOptions;
+            if (development) options |= BuildOptions.Development;
+            var report = BuildPipeline.BuildPlayer(new BuildPlayerOptions { scenes = GetBuildScenePaths(), locationPathName = directory + "/PirateSlop.exe", target = BuildTarget.StandaloneWindows64, options = options });
             var summary = report.summary;
             var result = new System.Text.StringBuilder();
             result.AppendLine(summary.result + " errors=" + summary.totalErrors + " size=" + summary.totalSize + " elapsed=" + summary.totalTime.ToString("c") + " options=" + summary.options);

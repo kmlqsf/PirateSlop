@@ -72,3 +72,4 @@
 | Файл | Краткое описание |
 | --- | --- |
 | [Docs/Performance/NetworkLoadTest.md](<../Performance/NetworkLoadTest.md>) | Документация; Производительность и тест нагрузки без AI |
+| [Docs/Performance/OptimizationPlan.md](<../Performance/OptimizationPlan.md>) | Документация; Производительность и тест нагрузки без AI |

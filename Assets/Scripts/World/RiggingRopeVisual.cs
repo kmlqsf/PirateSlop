@@ -15,15 +15,24 @@ namespace PirateSlop.World
         MeshRenderer output;
         readonly List<Vector3> points = new();
         readonly TubeBuffers buffers = new();
+        static readonly Vector2[] circle = CreateCircle();
+        static Vector2[] CreateCircle()
+        {
+            var result = new Vector2[13];
+            for (int i = 0; i < result.Length; i++) { float angle = i * Mathf.PI * 2 / 12; result[i] = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)); }
+            return result;
+        }
         sealed class TubeBuffers
         {
             public readonly List<Vector3> Rounded=new(),Path=new(),Vertices=new(),Normals=new(),Directions=new();
             public readonly List<Vector4> Tangents=new();
             public readonly List<Vector2> UV=new();
             public readonly List<int> Triangles=new();
+            public int PathCount;
+            public bool Closed;
         }
         Vector3[] previous;
-        float previousRadius, previousOffset;
+        float previousRadius, previousOffset, previousTiles;
         void Awake()
         {
             line = GetComponent<LineRenderer>();
@@ -39,7 +48,7 @@ namespace PirateSlop.World
             if (!output.enabled) return;
             line.forceRenderingOff = true; output.sharedMaterial = line.sharedMaterial;
             int count = line.positionCount; float radius = line.widthMultiplier*.5f;
-            bool changed = previous == null || previous.Length != count || !Mathf.Approximately(radius,previousRadius) || !Mathf.Approximately(LengthOffset,previousOffset);
+            bool changed = previous == null || previous.Length != count || !Mathf.Approximately(radius,previousRadius) || !Mathf.Approximately(LengthOffset,previousOffset) || !Mathf.Approximately(TilesPerMeter,previousTiles);
             if (previous == null || previous.Length != count) previous = new Vector3[count];
             points.Clear();
             for (int i=0;i<count;i++)
@@ -50,7 +59,7 @@ namespace PirateSlop.World
                 points.Add(point); previous[i] = point;
             }
             if (!changed) return;
-            previousRadius = radius; previousOffset = LengthOffset; BuildTube(mesh,points,radius,TilesPerMeter,buffers,LengthOffset);
+            previousRadius = radius; previousOffset = LengthOffset; previousTiles = TilesPerMeter; BuildTube(mesh,points,radius,TilesPerMeter,buffers,LengthOffset);
         }
         public static Mesh CreateTube(IReadOnlyList<Vector3> points,float radius)
         {
@@ -82,15 +91,24 @@ namespace PirateSlop.World
                 var a=rounded[i-1];var b=rounded[i];float length=Vector3.Distance(a,b);
                 if (length < .00001f) continue;
                 int steps=Mathf.Max(1,Mathf.CeilToInt(length/.35f));
-                for(int j=1;j<=steps;j++) path.Add(Vector3.Lerp(a,b,j/(float)steps));
+                if (steps <= 3)
+                    for(int j=1;j<=steps;j++) path.Add(Vector3.Lerp(a,b,j/(float)steps));
+                else
+                {
+                    path.Add(Vector3.Lerp(a,b,1f/steps));
+                    path.Add(Vector3.Lerp(a,b,(steps-1f)/steps));
+                    path.Add(b);
+                }
             }
             if(path.Count<2){mesh.Clear();return;}
             const int sides=12,ring=sides+1;
             int surfaceCount=path.Count*ring;
             int vertexCount=surfaceCount+(closed?0:2*ring+2);
+            bool topologyChanged = mesh.vertexCount != vertexCount || buffers.PathCount != path.Count || buffers.Closed != closed;
             if(mesh.vertexCount!=vertexCount)mesh.Clear();
+            buffers.PathCount = path.Count; buffers.Closed = closed;
             var vertices=buffers.Vertices;var normals=buffers.Normals;var tangents=buffers.Tangents;var uv=buffers.UV;var triangles=buffers.Triangles;
-            vertices.Clear();normals.Clear();tangents.Clear();uv.Clear();triangles.Clear();
+            vertices.Clear();normals.Clear();tangents.Clear();uv.Clear();if(topologyChanged)triangles.Clear();
             Vector3 across=Vector3.right;float distance=0;
             var directions=buffers.Directions;directions.Clear();
             for(int i=0;i<path.Count;i++)
@@ -104,9 +122,9 @@ namespace PirateSlop.World
                 var other=Vector3.Cross(direction,across).normalized;
                 for(int side=0;side<=sides;side++)
                 {
-                    float angle=side*Mathf.PI*2/sides;var normal=across*Mathf.Cos(angle)+other*Mathf.Sin(angle);
+                    var normal=across*circle[side].x+other*circle[side].y;
                     vertices.Add(path[i]+normal*radius);normals.Add(normal);tangents.Add(new Vector4(direction.x,direction.y,direction.z,-1));uv.Add(new Vector2((distance+offset)*tiles,side/(float)sides));
-                    if(i==0||side==sides)continue;
+                    if(i==0||side==sides||!topologyChanged)continue;
                     int a=(i-1)*ring+side,b=i*ring+side;
                     triangles.Add(a);triangles.Add(a+1);triangles.Add(b);triangles.Add(a+1);triangles.Add(b+1);triangles.Add(b);
                 }
@@ -119,11 +137,11 @@ namespace PirateSlop.World
                     for(int side=0;side<=sides;side++)
                     {
                         vertices.Add(vertices[index*ring+side]);normals.Add(normal);tangents.Add(new Vector4(1,0,0,1));uv.Add(new Vector2(.5f,.5f));
-                        if(side==sides)continue;
+                        if(side==sides||!topologyChanged)continue;
                         triangles.Add(baseIndex);triangles.Add(baseIndex+side+(end==0?2:1));triangles.Add(baseIndex+side+(end==0?1:2));
                     }
                 }
-            mesh.SetVertices(vertices);mesh.SetNormals(normals);mesh.SetTangents(tangents);mesh.SetUVs(0,uv);mesh.SetTriangles(triangles,0);mesh.RecalculateBounds();
+            mesh.SetVertices(vertices);mesh.SetNormals(normals);mesh.SetTangents(tangents);mesh.SetUVs(0,uv);if(topologyChanged)mesh.SetTriangles(triangles,0,false);mesh.RecalculateBounds();
         }
         void OnDestroy()
         {

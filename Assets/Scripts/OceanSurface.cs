@@ -65,7 +65,7 @@ namespace PirateSlop
         readonly float[] wakeStrength = new float[32];
         readonly ShipController[] wakeShips = new ShipController[32];
         float refreshAt;
-        public float WaveTime => Time.time + timeOffset;
+        public float WaveTime => Networking.SessionController.Instance != null && Networking.SessionController.Instance.PerformanceBenchmarkActive ? Networking.SessionController.Instance.BenchmarkSimulationTime : Time.time + timeOffset;
         public void Synchronize(float serverTime)
         {
             float offset = serverTime - Time.time;

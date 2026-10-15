@@ -20,6 +20,7 @@ namespace PirateSlop
 
         void LateUpdate()
         {
+            using var cpuTiming = PirateSlop.Performance.PerformanceCpuTimings.Measure(PirateSlop.Performance.PerformanceCpuSection.PlayerPresentation);
             if (synchronizedFrame != Time.frameCount)
             {
                 Physics.SyncTransforms();

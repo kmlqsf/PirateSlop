@@ -69,8 +69,10 @@ namespace PirateSlop
             surfaces.Add(source, body);
         }
 
+        static readonly Unity.Profiling.ProfilerMarker performancePhysics = new("Performance.CorpsePhysics");
         void FixedUpdate()
         {
+            using var performanceSample = performancePhysics.Auto();
             corpses.RemoveAll(c => c == null);
             gameplayCorpses.RemoveWhere(c => c == null);
             if (corpses.Count == 0) { Destroy(gameObject); return; }
@@ -85,7 +87,7 @@ namespace PirateSlop
                 pair.Value.MoveRotation(pair.Key.transform.rotation);
             }
             foreach (var key in expired) surfaces.Remove(key);
-            if (physicsScene.IsValid()) physicsScene.Simulate(Time.fixedDeltaTime);
+            if (physicsScene.IsValid()) { PirateSlop.Performance.PerformanceCapture.SecondaryPhysicsStep(); physicsScene.Simulate(Time.fixedDeltaTime); }
         }
 
         void OnDestroy()
