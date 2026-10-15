@@ -81,13 +81,7 @@ namespace PirateSlop
 
         static ProfilerRecorder Record(List<ProfilerRecorderHandle> handles, ProfilerCategory category, string name)
         {
-            foreach (var handle in handles)
-            {
-                var description = ProfilerRecorderHandle.GetDescription(handle);
-                if (description.Name == name && description.Category == category)
-                    return ProfilerRecorder.StartNew(category, name, 1);
-            }
-            return default;
+            return Performance.PerformanceCounters.Record(handles, category, name);
         }
 
         void Update()
@@ -110,6 +104,7 @@ namespace PirateSlop
 
         void RefreshReport()
         {
+            using var timing = Performance.PerformanceCpuTimings.Measure(Performance.PerformanceCpuSection.Telemetry);
             report.Clear();
             report.AppendLine(Application.isEditor ? "ТЕЛЕМЕТРИЯ · Unity Editor" : "ТЕЛЕМЕТРИЯ");
             report.AppendLine($"FPS {frames / elapsed:F0}   ·   кадр {elapsed * 1000 / frames:F1} мс");

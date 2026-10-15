@@ -72,3 +72,49 @@
 | Файл | Краткое описание |
 | --- | --- |
 | [Docs/Performance/NetworkLoadTest.md](<../Performance/NetworkLoadTest.md>) | Документация; Производительность и тест нагрузки без AI |
+| [Docs/Performance/OptimizationPlan.md](<../Performance/OptimizationPlan.md>) | Документация; Производительность и тест нагрузки без AI |
+
+## Docs/Performance/Reports
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Docs/Performance/Reports/20261014-232504-127-benchmark.json](<../Performance/Reports/20261014-232504-127-benchmark.json>) | Конфигурация / данные JSON; Производительность и тест нагрузки без AI |
+| [Docs/Performance/Reports/20261014-232504-127-benchmark.txt](<../Performance/Reports/20261014-232504-127-benchmark.txt>) | Текстовые данные; Производительность и тест нагрузки без AI |
+| [Docs/Performance/Reports/20261014-233947-869-benchmark.json](<../Performance/Reports/20261014-233947-869-benchmark.json>) | Конфигурация / данные JSON; Производительность и тест нагрузки без AI |
+| [Docs/Performance/Reports/20261014-233947-869-benchmark.txt](<../Performance/Reports/20261014-233947-869-benchmark.txt>) | Текстовые данные; Производительность и тест нагрузки без AI |
+| [Docs/Performance/Reports/20261014-234517-949-benchmark.json](<../Performance/Reports/20261014-234517-949-benchmark.json>) | Конфигурация / данные JSON; Производительность и тест нагрузки без AI |
+| [Docs/Performance/Reports/20261014-234517-949-benchmark.txt](<../Performance/Reports/20261014-234517-949-benchmark.txt>) | Текстовые данные; Производительность и тест нагрузки без AI |
+| [Docs/Performance/Reports/20261014-235834-386-benchmark.json](<../Performance/Reports/20261014-235834-386-benchmark.json>) | Конфигурация / данные JSON; Производительность и тест нагрузки без AI |
+| [Docs/Performance/Reports/20261014-235834-386-benchmark.txt](<../Performance/Reports/20261014-235834-386-benchmark.txt>) | Текстовые данные; Производительность и тест нагрузки без AI |
+| [Docs/Performance/Reports/20261015-000416-705-benchmark.json](<../Performance/Reports/20261015-000416-705-benchmark.json>) | Конфигурация / данные JSON; Производительность и тест нагрузки без AI |
+| [Docs/Performance/Reports/20261015-000416-705-benchmark.txt](<../Performance/Reports/20261015-000416-705-benchmark.txt>) | Текстовые данные; Производительность и тест нагрузки без AI |
+| [Docs/Performance/Reports/20261015-000935-446-benchmark.json](<../Performance/Reports/20261015-000935-446-benchmark.json>) | Конфигурация / данные JSON; Производительность и тест нагрузки без AI |
+| [Docs/Performance/Reports/20261015-000935-446-benchmark.txt](<../Performance/Reports/20261015-000935-446-benchmark.txt>) | Текстовые данные; Производительность и тест нагрузки без AI |
+| [Docs/Performance/Reports/20261015-140352-763-benchmark.json](<../Performance/Reports/20261015-140352-763-benchmark.json>) | Конфигурация / данные JSON; Производительность и тест нагрузки без AI |
+| [Docs/Performance/Reports/20261015-140352-763-benchmark.txt](<../Performance/Reports/20261015-140352-763-benchmark.txt>) | Текстовые данные; Производительность и тест нагрузки без AI |
+| [Docs/Performance/Reports/20261015-140907-441-benchmark.json](<../Performance/Reports/20261015-140907-441-benchmark.json>) | Конфигурация / данные JSON; Производительность и тест нагрузки без AI |
+| [Docs/Performance/Reports/20261015-140907-441-benchmark.txt](<../Performance/Reports/20261015-140907-441-benchmark.txt>) | Текстовые данные; Производительность и тест нагрузки без AI |
+| [Docs/Performance/Reports/20261015-141403-786-benchmark.json](<../Performance/Reports/20261015-141403-786-benchmark.json>) | Конфигурация / данные JSON; Производительность и тест нагрузки без AI |
+| [Docs/Performance/Reports/20261015-141403-786-benchmark.txt](<../Performance/Reports/20261015-141403-786-benchmark.txt>) | Текстовые данные; Производительность и тест нагрузки без AI |
+| [Docs/Performance/Reports/20261015-141903-033-benchmark.json](<../Performance/Reports/20261015-141903-033-benchmark.json>) | Конфигурация / данные JSON; Производительность и тест нагрузки без AI |
+| [Docs/Performance/Reports/20261015-141903-033-benchmark.txt](<../Performance/Reports/20261015-141903-033-benchmark.txt>) | Текстовые данные; Производительность и тест нагрузки без AI |
+| [Docs/Performance/Reports/20261015-143012-267-character-hits-editor.json](<../Performance/Reports/20261015-143012-267-character-hits-editor.json>) | Конфигурация / данные JSON; Производительность и тест нагрузки без AI |
+| [Docs/Performance/Reports/20261015-143012-267-character-hits-editor.txt](<../Performance/Reports/20261015-143012-267-character-hits-editor.txt>) | Текстовые данные; Производительность и тест нагрузки без AI |
+| [Docs/Performance/Reports/20261015-character-hit-before-analysis.json](<../Performance/Reports/20261015-character-hit-before-analysis.json>) | Конфигурация / данные JSON; Производительность и тест нагрузки без AI |
+| [Docs/Performance/Reports/20261015-cpu-series.json](<../Performance/Reports/20261015-cpu-series.json>) | Конфигурация / данные JSON; Производительность и тест нагрузки без AI |
+| [Docs/Performance/Reports/20261015-editor-cpu-after.txt](<../Performance/Reports/20261015-editor-cpu-after.txt>) | Текстовые данные; Производительность и тест нагрузки без AI |
+| [Docs/Performance/Reports/20261015-editor-cpu-profile.txt](<../Performance/Reports/20261015-editor-cpu-profile.txt>) | Текстовые данные; Производительность и тест нагрузки без AI |
+| [Docs/Performance/Reports/20261015-editor-gpu-hierarchy.txt](<../Performance/Reports/20261015-editor-gpu-hierarchy.txt>) | Текстовые данные; Производительность и тест нагрузки без AI |
+| [Docs/Performance/Reports/20261015-editor-gpu-outside.txt](<../Performance/Reports/20261015-editor-gpu-outside.txt>) | Текстовые данные; Производительность и тест нагрузки без AI |
+| [Docs/Performance/Reports/20261015-editor-gpu-reference-repeat.txt](<../Performance/Reports/20261015-editor-gpu-reference-repeat.txt>) | Текстовые данные; Производительность и тест нагрузки без AI |
+| [Docs/Performance/Reports/20261015-editor-gpu-scale040-sky025.txt](<../Performance/Reports/20261015-editor-gpu-scale040-sky025.txt>) | Текстовые данные; Производительность и тест нагрузки без AI |
+| [Docs/Performance/Reports/20261015-editor-gpu-scale050-sky030.txt](<../Performance/Reports/20261015-editor-gpu-scale050-sky030.txt>) | Текстовые данные; Производительность и тест нагрузки без AI |
+| [Docs/Performance/Reports/20261015-render-scale-experiment.json](<../Performance/Reports/20261015-render-scale-experiment.json>) | Конфигурация / данные JSON; Производительность и тест нагрузки без AI |
+
+## Docs/Performance/Visuals
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Docs/Performance/Visuals/storm-reference-outside.png](<../Performance/Visuals/storm-reference-outside.png>) | Изображение / текстура; Производительность и тест нагрузки без AI |
+| [Docs/Performance/Visuals/storm-scale040-sky025-outside.png](<../Performance/Visuals/storm-scale040-sky025-outside.png>) | Изображение / текстура; Производительность и тест нагрузки без AI |
+| [Docs/Performance/Visuals/storm-scale050-sky030-outside.png](<../Performance/Visuals/storm-scale050-sky030-outside.png>) | Изображение / текстура; Производительность и тест нагрузки без AI |

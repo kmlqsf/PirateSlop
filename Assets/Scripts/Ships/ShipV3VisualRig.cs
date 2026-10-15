@@ -108,6 +108,7 @@ namespace PirateSlop.Ships
             float delta = Mathf.Max(0f, Time.time - lastVisualUpdate);
             lastVisualUpdate = Time.time;
             using var sample = marker.Auto();
+            using var cpuTiming = PirateSlop.Performance.PerformanceCpuTimings.Measure(PirateSlop.Performance.PerformanceCpuSection.ShipVisualRig);
             for (int i = 0; i < deploy.Length; i++)
             {
                 deploy[i] = Mathf.MoveTowards(deploy[i], sails.Tension(i), delta * 1.5f);

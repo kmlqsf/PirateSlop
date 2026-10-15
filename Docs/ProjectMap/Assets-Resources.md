@@ -94,6 +94,12 @@
 | [Assets/Resources/Menu/TitlePrint.SOURCES.md](<../../Assets/Resources/Menu/TitlePrint.SOURCES.md>) | Документация; Меню и HUD |
 | [Assets/Resources/Menu/TitlePrint.png](<../../Assets/Resources/Menu/TitlePrint.png>) | Изображение / текстура; Меню и HUD |
 
+## Assets/Resources/Performance
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Resources/Performance/BenchmarkRoute.json](<../../Assets/Resources/Performance/BenchmarkRoute.json>) | Конфигурация / данные JSON; Производительность и тест нагрузки без AI |
+
 ## Assets/Resources/RoguelikeUI
 
 | Файл | Краткое описание |

@@ -24,12 +24,15 @@ namespace PirateSlop
             instance.material=Resources.Load<Material>("BulletMark");
             return instance;
         }
+        static readonly Unity.Profiling.ProfilerMarker performanceImpact = new("Performance.FirearmImpact");
         public static void Present(FirearmShot shot,bool detailed)
         {
+            using var performanceSample = performanceImpact.Auto();
             if(Application.isBatchMode || !Application.isPlaying) return;
             ResolvePoint(ref shot);
             if(shot.Water) { if(detailed) CombatVfx.Splash(shot.End,.18f);return; }
             if(!shot.Hit) return;
+            PirateSlop.Performance.PerformanceCapture.Event("FirearmImpact:visual", shot.Anchor, shot.End);
             if (shot.Surface == BulletSurfaceKind.Glass) return;
             var pool=Get();
             var listener = SpatialAudioTone.FindListener();

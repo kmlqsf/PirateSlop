@@ -112,7 +112,8 @@ namespace PirateSlop.Networking
             if (float.TryParse(Value(args, "-duration"), out var duration)) quitAt = Time.realtimeSinceStartup + duration;
             string port = Value(args, "-port") ?? Config.Port.ToString();
             seedInput = Value(args, "-seed") ?? "";
-            if (LoadTestOnStart || Has(args, "-loadtest")) BeginLoadTest();
+            if (Has(args, "-performanceBenchmark")) StartCoroutine(RunPerformanceCommandLine(args));
+            else if (LoadTestOnStart || Has(args, "-loadtest")) BeginLoadTest();
             else if (Has(args, "-environmenttest")) Begin(true, "127.0.0.1:" + port, true);
             else if (dedicated || Has(args, "-host")) Begin(true, "127.0.0.1:" + port);
             else if (Has(args, "-connect")) Begin(false, Value(args, "-connect"));
@@ -144,10 +145,10 @@ namespace PirateSlop.Networking
             if (!ParseEndpoint(endpoint, out var ip, out var port)) { SetError("Введите IPv4:порт, например 192.168.1.10:7777"); return; }
             environmentTestRequested = host && environmentTest;
             bool testRequested = environmentTestRequested;
-            observerSession = !testRequested && host && fillWithBots && observerSelected && !dedicated && !Automated;
+            observerSession = host && (PerformanceBenchmarkActive || !testRequested && fillWithBots && observerSelected) && !dedicated && !Automated;
             error = ""; address = endpoint; startedAt = Time.realtimeSinceStartup; connecting = true; starting = true; hostRequested = host;
             status = host ? "Создание сессии…" : "Подключение…";
-            botRosterPolicy = host ? new InitialFillBotRosterPolicy(fillWithBots && !testRequested) : null;
+            botRosterPolicy = host ? new InitialFillBotRosterPolicy(fillWithBots && (!testRequested || PerformanceBenchmarkActive)) : null;
             StartCoroutine(StartSession(host, ip, port));
         }
         IEnumerator StartSession(bool host, string ip, ushort port)
@@ -183,7 +184,7 @@ namespace PirateSlop.Networking
             // The host's local client must connect through loopback; remote clients
             // continue to use the address entered in the menu.
             transport.SetClientAddress(host ? "127.0.0.1" : ip);
-            transport.SetServerBindAddress("0.0.0.0", IPAddressType.IPv4);
+            transport.SetServerBindAddress(PerformanceBenchmarkActive ? "127.0.0.1" : "0.0.0.0", IPAddressType.IPv4);
             // Reserve a few transport slots so the application can return a meaningful full-session rejection.
             transport.SetMaximumClients(MaxPlayers + 8);
             var multipass = manager.TransportManager.Transport as FishNet.Transporting.Multipass.Multipass;
@@ -239,6 +240,7 @@ namespace PirateSlop.Networking
         void Loaded(NetworkConnection conn, bool asServer)
         {
             if (!asServer || !conn.IsAuthenticated || players.ContainsKey(conn.ClientId)) return;
+            if (PerformanceBenchmarkActive && (manager.ClientManager.Connection == null || conn.ClientId != manager.ClientManager.Connection.ClientId)) { conn.Disconnect(true); return; }
             if (string.IsNullOrEmpty(worldJson) || ProceduralWorld.Instance == null || !ProceduralWorld.Instance.Ready) { conn.Disconnect(true); return; }
             awaitingWorld[conn.ClientId] = Time.realtimeSinceStartup;
             manager.ServerManager.Broadcast(conn, new WorldManifestMessage { Json = worldJson, Checksum = worldChecksum });
@@ -400,6 +402,8 @@ namespace PirateSlop.Networking
         public void SetError(string message) { error = message; status = message; Debug.LogWarning("SESSION_ERROR " + message); }
         public void Disconnect()
         {
+            if (PerformanceBenchmarkActive && performanceBenchmark != null && performanceBenchmark.ActiveRun) { performanceBenchmark.Finish("CANCELLED", "Session disconnected."); return; }
+            if (!PerformanceBenchmarkActive && PirateSlop.Performance.PerformanceCapture.Active != null) PirateSlop.Performance.PerformanceCapture.Active.Finish("CANCELLED", "Session disconnected.", new[] { "Manual gameplay" });
             ClearSeagulls();
             StopObserver();
             playing = connecting = false; hostRequested = false;

@@ -79,6 +79,7 @@ namespace PirateSlop
 
         void Start()
         {
+            PirateSlop.Performance.PerformanceCapture.Event("CannonShot", this, transform.position);
             launchPoint = transform.position;
             launchLocal = Source != null ? Source.InverseTransformPoint(launchPoint) : launchPoint;
             forward = Vector3.ProjectOnPlane(Velocity, Vector3.up).normalized;
@@ -326,8 +327,11 @@ namespace PirateSlop
             returnControl = point + normal * 8f + Vector3.up * BoomerangHeight;
         }
 
+        static readonly Unity.Profiling.ProfilerMarker performanceImpact = new("Performance.CannonImpact");
         void Impact(Collider collider, Vector3 point, Vector3 normal)
         {
+            using var performanceSample = performanceImpact.Auto();
+            PirateSlop.Performance.PerformanceCapture.Event(Authoritative ? "CannonImpact:server" : "CannonImpact:visual", collider, point);
             if (Ammo == InventoryItem.BoardingHook)
             {
                 if (Authoritative && Source != null)

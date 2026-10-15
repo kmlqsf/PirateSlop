@@ -52,9 +52,12 @@ namespace PirateSlop.Ships
 
         bool Visible(int index) => HasGeometry(Sources[index]) && Sources[index].gameObject.activeInHierarchy;
 
+        static readonly Unity.Profiling.ProfilerMarker performanceCollision = new("Performance.CollisionBatch");
         void LateUpdate()
         {
             if (!dirty) return;
+            using var performanceSample = performanceCollision.Auto();
+            using var cpuTiming = PirateSlop.Performance.PerformanceCpuTimings.Measure(PirateSlop.Performance.PerformanceCpuSection.ShipCollisionBatch);
             dirty = false;
             bool all = true;
             for (int i = 0; i < Sources.Length; i++) all &= Visible(i);

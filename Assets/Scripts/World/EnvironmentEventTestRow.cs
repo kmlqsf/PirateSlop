@@ -10,6 +10,7 @@ namespace PirateSlop.World
         public static Vector3 Point(int index, float seaLevel) => new(-600 + index * 350, seaLevel, 370);
         void OnGUI()
         {
+            if (PirateSlop.Performance.PerformanceBenchmarkController.HideTestLabels) return;
             if (RoguelikeUpgradeUI.WindowOpen || Camera.main == null) return;
             style ??= new GUIStyle(GUI.skin.box) { fontSize = 18, alignment = TextAnchor.MiddleCenter, normal = { textColor = new Color(1, .88f, .55f) } };
             for (int i = 0; i < titles.Length; i++)

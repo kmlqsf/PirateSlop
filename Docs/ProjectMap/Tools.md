@@ -29,6 +29,16 @@
 | [Tools/Context/topics.json](<../../Tools/Context/topics.json>) | Конфигурация / данные JSON |
 | [Tools/Context/update_project_map.py](<../../Tools/Context/update_project_map.py>) | Инструмент Python |
 
+## Tools/Performance
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Tools/Performance/analyze_impacts.py](<../../Tools/Performance/analyze_impacts.py>) | Инструмент Python; Производительность и тест нагрузки без AI |
+| [Tools/Performance/analyze_report.py](<../../Tools/Performance/analyze_report.py>) | Инструмент Python; Производительность и тест нагрузки без AI |
+| [Tools/Performance/character_hit_probe.cs](<../../Tools/Performance/character_hit_probe.cs>) | Исходник C#; Производительность и тест нагрузки без AI |
+| [Tools/Performance/compare_reports.py](<../../Tools/Performance/compare_reports.py>) | Инструмент Python; Производительность и тест нагрузки без AI |
+| [Tools/Performance/run_benchmark.ps1](<../../Tools/Performance/run_benchmark.ps1>) | Инструмент PowerShell; Производительность и тест нагрузки без AI |
+
 ## Tools/ShipV3
 
 | Файл | Краткое описание |

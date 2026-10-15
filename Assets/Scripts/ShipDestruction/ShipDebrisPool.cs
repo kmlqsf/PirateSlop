@@ -21,6 +21,7 @@ namespace PirateSlop
         }
         ObjectPool<Chunk> pool;
         readonly List<Chunk> active = new();
+        public int ActiveCount => active.Count;
         ShipDestruction owner;
         Transform root;
         int available;

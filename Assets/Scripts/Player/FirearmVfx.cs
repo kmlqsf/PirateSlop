@@ -6,6 +6,10 @@ namespace PirateSlop
     {
         static readonly ParticleSystem[] bursts=new ParticleSystem[96];
         static int nextBurst;
+        public static int ActiveCount
+        {
+            get { int count = 0; foreach (var burst in bursts) if (burst != null && burst.gameObject.activeInHierarchy) count++; return count; }
+        }
         public static void Impact(Vector3 point,Vector3 normal,BulletSurfaceKind surface)
         {
             var smoke=Resources.Load<Material>("CombatParticles");

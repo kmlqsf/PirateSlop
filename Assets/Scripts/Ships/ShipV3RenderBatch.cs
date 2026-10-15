@@ -114,6 +114,7 @@ namespace PirateSlop.Ships
             }
             if (!dirty && Time.unscaledTime < nextVisibilityCheck) return;
             using var sample = marker.Auto();
+            using var cpuTiming = PirateSlop.Performance.PerformanceCpuTimings.Measure(PirateSlop.Performance.PerformanceCpuSection.ShipRenderBatch);
             dirty = false;
             nextVisibilityCheck = Time.unscaledTime + 2f;
             bool changed = false;
@@ -140,8 +141,10 @@ namespace PirateSlop.Ships
             runtimeMesh.MarkDynamic();
         }
 
+        static readonly Unity.Profiling.ProfilerMarker performanceRebuild = new("Performance.RenderRebuild");
         void Rebuild()
         {
+            using var performanceSample = performanceRebuild.Auto();
             try
             {
                 bool allVisible = true;

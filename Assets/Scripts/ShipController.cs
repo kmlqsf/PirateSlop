@@ -27,7 +27,8 @@ public class ShipController : MonoBehaviour
     public bool IsFlooded => floodLevel >= 1f;
     public static readonly System.Collections.Generic.List<ShipController> ActiveControllers = new();
     void OnEnable() { ActiveControllers.Add(this); }
-    void OnDisable() { ActiveControllers.Remove(this); }
+    void OnDisable() { ActiveControllers.Remove(this); PirateSlop.Ships.ShipHullQueryWorld.Release(this); }
+    void OnDestroy() { PirateSlop.Ships.ShipHullQueryWorld.Release(this); }
     public void SetFlooding(float level, float waterline, float bowPitch)
     {
         floodLevel = Mathf.Clamp01(level);
@@ -270,6 +271,7 @@ public class ShipController : MonoBehaviour
         var ocean = OceanSurface.Instance;
         if (ocean != null)
         {
+            using var buoyancyTiming = PirateSlop.Performance.PerformanceCpuTimings.Measure(PirateSlop.Performance.PerformanceCpuSection.ShipBuoyancy);
             if (buoyancyOcean != ocean)
             {
                 buoyancyOcean = ocean;
@@ -317,6 +319,7 @@ public class ShipController : MonoBehaviour
         PirateSlop.Networking.NetworkCannon.ConstrainBoarding(this, ref next, rotation);
         PirateSlop.Harpoon.HarpoonProjectile.ConstrainHarpoons(this, ref next, rotation);
         var world = PirateSlop.World.ProceduralWorld.Instance;
+        using (PirateSlop.Performance.PerformanceCpuTimings.Measure(PirateSlop.Performance.PerformanceCpuSection.ShipWorldChecks))
         if (world != null && world.Ready && !world.CanSail(next, yaw))
         {
             bool canEscape=Time.time<manualPushUntil && world.SailingObstruction(next,yaw)<world.SailingObstruction(rb.position,yaw)-.001f;
@@ -336,9 +339,51 @@ public class ShipController : MonoBehaviour
         rotationDelta.ToAngleAxis(out float angle,out Vector3 axis);
         if(angle>180f) angle-=360f;
         motionAngularVelocity=float.IsFinite(axis.sqrMagnitude) ? axis*(angle*Mathf.Deg2Rad/Mathf.Max(.001f,dt)) : Vector3.zero;
+        using var transformTiming = PirateSlop.Performance.PerformanceCpuTimings.Measure(PirateSlop.Performance.PerformanceCpuSection.ShipTransformWrite);
         if (Networked) { rb.position = next; rb.rotation = rotation; transform.SetPositionAndRotation(next, rotation); }
         else { rb.MoveRotation(rotation); rb.MovePosition(next); transform.SetPositionAndRotation(next, rotation); }
     }
+    public static bool HullSweepFastPathEnabled { get; set; } = true;
+    double nextHullQueryWarning;
+    static Bounds HullSweepBounds(Vector3 start, Vector3 destination, Vector3 localCenter, Vector3 halfExtents, Quaternion initial, Quaternion final)
+    {
+        var delta = destination - start;
+        var localDelta = Quaternion.Inverse(initial) * delta;
+        float radius = localCenter.magnitude + halfExtents.magnitude;
+        var change = Quaternion.Inverse(initial) * final;
+        float vectorSquared = change.x * change.x + change.y * change.y + change.z * change.z;
+        float magnitude = Mathf.Sqrt(vectorSquared + change.w * change.w);
+        float sineHalf = magnitude > .000001f ? Mathf.Sqrt(vectorSquared) / magnitude : 1f;
+        float rotationMargin = 2f * radius * Mathf.Min(1f, sineHalf) + .05f;
+        var size = halfExtents * 2f + new Vector3(Mathf.Abs(localDelta.x), Mathf.Abs(localDelta.y), Mathf.Abs(localDelta.z)) + Vector3.one * (rotationMargin * 2f);
+        return new Bounds((start + destination) * .5f + initial * localCenter, size);
+    }
+
+    int HullSweepCandidates(Vector3 start, Vector3 destination, Quaternion initial, Quaternion final)
+    {
+        using var timing = PirateSlop.Performance.PerformanceCpuTimings.Measure(PirateSlop.Performance.PerformanceCpuSection.ShipHullBroadphase);
+        var bounds = HullSweepBounds(start, destination, hullMotionCenter, hullMotionExtents, initial, final);
+        int count;
+        while (true)
+        {
+            count = Physics.OverlapBoxNonAlloc(bounds.center, bounds.extents, hullOverlapHits, initial, ~0, QueryTriggerInteraction.Ignore);
+            if (count < hullOverlapHits.Length) break;
+            if (hullOverlapHits.Length >= 4096)
+            {
+                if (PirateSlop.Performance.PerformanceCapture.Active != null && Time.realtimeSinceStartupAsDouble >= nextHullQueryWarning)
+                {
+                    nextHullQueryWarning = Time.realtimeSinceStartupAsDouble + 1;
+                    PirateSlop.Performance.PerformanceCapture.Event("HullQueryFallback:broadphase-capacity", this, start, count);
+                }
+                return -1;
+            }
+            System.Array.Resize(ref hullOverlapHits, hullOverlapHits.Length * 2);
+        }
+        int blockers = 0;
+        for (int i = 0; i < count; i++) if (HullBlocker(hullOverlapHits[i])) hullOverlapHits[blockers++] = hullOverlapHits[i];
+        return blockers;
+    }
+
     bool HullBlocker(Collider collider)
     {
         if (collider == null || !collider.enabled || collider.isTrigger || collider.attachedRigidbody == rb || collider.transform.IsChildOf(transform)) return false;
@@ -348,6 +393,7 @@ public class ShipController : MonoBehaviour
     }
     int HullOverlaps(Vector3 position, Quaternion rotation)
     {
+        using var timing = PirateSlop.Performance.PerformanceCpuTimings.Measure(PirateSlop.Performance.PerformanceCpuSection.ShipHullOverlaps);
         int count;
         while (true)
         {
@@ -363,7 +409,9 @@ public class ShipController : MonoBehaviour
     }
     void ConstrainHullMotion(ref Vector3 next, ref Quaternion rotation)
     {
-        Physics.SyncTransforms();
+        using var timing = PirateSlop.Performance.PerformanceCpuTimings.Measure(PirateSlop.Performance.PerformanceCpuSection.ShipHullMotion);
+        using (PirateSlop.Performance.PerformanceCpuTimings.Measure(PirateSlop.Performance.PerformanceCpuSection.ShipPhysicsSync)) Physics.SyncTransforms();
+        if (HullSweepFastPathEnabled && HullSweepCandidates(rb.position, next, rb.rotation, rotation) == 0) return;
         var start = rb.position;
         var startRotation = rb.rotation;
         var recovery = Vector3.zero;
@@ -389,6 +437,12 @@ public class ShipController : MonoBehaviour
             if (!moved) break;
         }
         var destination = next + recovery;
+        bool queryWorld = false;
+        if (HullSweepFastPathEnabled)
+        {
+            int candidates = HullSweepCandidates(start, destination, startRotation, rotation);
+            if (candidates >= 0) queryWorld = PirateSlop.Ships.ShipHullQueryWorld.Prepare(this, hullOverlapHits, candidates);
+        }
         var accepted = start;
         var acceptedRotation = startRotation;
         int steps = Mathf.Max(1, Mathf.CeilToInt(Mathf.Max(Vector3.Distance(start, destination) / .75f, Quaternion.Angle(startRotation, rotation) / 2f)));
@@ -405,14 +459,16 @@ public class ShipController : MonoBehaviour
                 int count;
                 while (true)
                 {
-                    count = Physics.BoxCastNonAlloc(center, hullMotionExtents, movement / distance, hullCastHits, acceptedRotation, distance + .03f, ~0, QueryTriggerInteraction.Ignore);
+                    using (PirateSlop.Performance.PerformanceCpuTimings.Measure(PirateSlop.Performance.PerformanceCpuSection.ShipHullCasts))
+                        count = queryWorld ? PirateSlop.Ships.ShipHullQueryWorld.Cast(center, hullMotionExtents, movement / distance, hullCastHits, acceptedRotation, distance + .03f) : Physics.BoxCastNonAlloc(center, hullMotionExtents, movement / distance, hullCastHits, acceptedRotation, distance + .03f, ~0, QueryTriggerInteraction.Ignore);
                     if (count < hullCastHits.Length || hullCastHits.Length >= 4096) break;
                     System.Array.Resize(ref hullCastHits, hullCastHits.Length * 2);
                 }
                 for (int i = 0; i < count; i++)
                 {
                     var hit = hullCastHits[i];
-                    if (!HullBlocker(hit.collider) || Vector3.Dot(movement, hit.normal) >= -.0001f || hit.distance > allowed + .03f) continue;
+                    var obstacle = queryWorld ? PirateSlop.Ships.ShipHullQueryWorld.Source(hit.collider) : hit.collider;
+                    if (!HullBlocker(obstacle) || Vector3.Dot(movement, hit.normal) >= -.0001f || hit.distance > allowed + .03f) continue;
                     allowed = Mathf.Max(0, hit.distance - .03f);
                     normal = hit.normal; contact = hit.point; blocked = true;
                 }

@@ -103,7 +103,7 @@
 | [Assets/Game/BRZoneVolumetric/StormSpray.mat](<../../Assets/Game/BRZoneVolumetric/StormSpray.mat>) | Материал Unity |
 | [Assets/Game/BRZoneVolumetric/StormVolumeController.Smoke.cs](<../../Assets/Game/BRZoneVolumetric/StormVolumeController.Smoke.cs>) | Исходник C#: StormVolumeController; Мир, острова и океан, Шторм, зона, дождь и объёмный туман, Тестовая карта и водоворот |
 | [Assets/Game/BRZoneVolumetric/StormVolumeController.cs](<../../Assets/Game/BRZoneVolumetric/StormVolumeController.cs>) | Исходник C#: StormVolumeController; Мир, острова и океан, Шторм, зона, дождь и объёмный туман |
-| [Assets/Game/BRZoneVolumetric/StormVolumeRendererFeature.cs](<../../Assets/Game/BRZoneVolumetric/StormVolumeRendererFeature.cs>) | Исходник C#: StormVolumeRendererFeature, LightningCapturePass, Data; Мир, острова и океан, Шторм, зона, дождь и объёмный туман |
+| [Assets/Game/BRZoneVolumetric/StormVolumeRendererFeature.cs](<../../Assets/Game/BRZoneVolumetric/StormVolumeRendererFeature.cs>) | Исходник C#: StormVolumeRendererFeature, LightningCapturePass, Data; Мир, острова и океан, Шторм, зона, дождь и объёмный туман, Производительность и тест нагрузки без AI |
 | [Assets/Game/BRZoneVolumetric/StormWaterline.mat](<../../Assets/Game/BRZoneVolumetric/StormWaterline.mat>) | Материал Unity |
 | [Assets/Game/BRZoneVolumetric/StormWaterlineController.cs](<../../Assets/Game/BRZoneVolumetric/StormWaterlineController.cs>) | Исходник C#: StormWaterlineController; Шторм, зона, дождь и объёмный туман |
 | [Assets/Game/BRZoneVolumetric/StormWeatherController.TestLightning.cs](<../../Assets/Game/BRZoneVolumetric/StormWeatherController.TestLightning.cs>) | Исходник C#: StormWeatherController; Звуки и голос, Шторм, зона, дождь и объёмный туман |

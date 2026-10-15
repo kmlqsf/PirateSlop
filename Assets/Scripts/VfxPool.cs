@@ -34,6 +34,11 @@ public sealed class VfxPool : MonoBehaviour
     public Entry[] Entries;
     readonly Dictionary<string, Queue<GameObject>> pools = new();
     readonly Dictionary<string, GameObject> prefabMap = new();
+    readonly HashSet<GameObject> leased = new();
+    public static int ActiveCount
+    {
+        get { if (instance == null) return 0; instance.leased.RemoveWhere(item => item == null); int count = 0; foreach (var item in instance.leased) if (item.activeInHierarchy) count++; return count; }
+    }
 
     void Awake()
     {
@@ -99,6 +104,7 @@ public sealed class VfxPool : MonoBehaviour
 
         go.transform.SetPositionAndRotation(position, rotation);
         go.SetActive(true);
+        leased.Add(go);
         return go;
     }
 
@@ -111,6 +117,7 @@ public sealed class VfxPool : MonoBehaviour
             return;
         }
 
+        leased.Remove(go);
         go.SetActive(false);
         go.transform.SetParent(transform);
         if (pools.TryGetValue(key, out var q))

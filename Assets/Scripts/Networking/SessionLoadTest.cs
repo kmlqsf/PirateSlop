@@ -47,7 +47,7 @@ namespace PirateSlop.Networking
         void TickLoadTest()
         {
             if (!LoadTestActive || manager == null || !manager.ServerManager.Started) return;
-            if (Keyboard.current != null && Keyboard.current.f7Key.wasPressedThisFrame) ToggleLoadTestMotion();
+            if (!PerformanceBenchmarkActive && Keyboard.current != null && Keyboard.current.f7Key.wasPressedThisFrame) ToggleLoadTestMotion();
             if (Time.unscaledTime < nextLoadTestMotion) return;
             using var sample = loadTestMarker.Auto();
             nextLoadTestMotion = Time.unscaledTime + .2f;
@@ -55,13 +55,15 @@ namespace PirateSlop.Networking
             foreach (var ship in NetworkShip.ActiveShips)
             {
                 if (ship == null || !ship.IsServerInitialized || ship.IsSinking) continue;
+                if (ship.TeamId.Value <= 0) continue;
                 bool scripted = true;
                 foreach (var player in NetworkPlayer.Active)
                     if (player != null && !player.IsBot.Value && player.Ship == ship) { scripted = false; break; }
                 if (!scripted) continue;
-                float phase = (float)manager.TimeManager.Tick * (float)manager.TimeManager.TickDelta + ship.TeamId.Value;
-                ship.GetComponent<SailSystem>().SetDeploy(LoadTestMoving ? .35f + .1f * Mathf.Sin(phase * .15f) : 0f);
-                if (ship.Helm.Driver == null) ship.Helm.Restore(LoadTestMoving ? Mathf.Sin(phase * .07f) * .08f : 0f, false, null);
+                float phase = (PerformanceBenchmarkActive ? BenchmarkSimulationTime : (float)manager.TimeManager.Tick * (float)manager.TimeManager.TickDelta) + ship.TeamId.Value;
+                bool moving = LoadTestMoving && (!PerformanceBenchmarkActive || BenchmarkMotionEnabled);
+                ship.GetComponent<SailSystem>().SetDeploy(moving ? PerformanceBenchmarkActive ? BenchmarkSail : .35f + .1f * Mathf.Sin(phase * .15f) : 0f);
+                if (ship.Helm.Driver == null) ship.Helm.Restore(moving && !PerformanceBenchmarkActive ? Mathf.Sin(phase * .07f) * .08f : 0f, false, null);
             }
         }
 
@@ -75,7 +77,7 @@ namespace PirateSlop.Networking
         {
             int ships = 0;
             foreach (var ship in NetworkShip.ActiveShips)
-                if (ship != null && ship.IsSpawned && ship.IsServerInitialized && !ship.IsSinking) ships++;
+                if (ship != null && ship.IsSpawned && ship.IsServerInitialized && !ship.IsSinking && ship.TeamId.Value > 0) ships++;
             if (reportedLoadTestPlayers == players.Count && reportedLoadTestShips == ships) return;
             reportedLoadTestPlayers = players.Count;
             reportedLoadTestShips = ships;

@@ -244,6 +244,7 @@ namespace PirateSlop.Networking
         }
         void DrawSessionMenu()
         {
+            if (PerformanceBenchmarkActive) return;
             if(playing && (BotDebugPanel.ConsumedInput || DeveloperMenu.IsOpen) || dedicated || Automated || !MenuOpen || (PirateSlop.Customization.SailCustomizationUI.IsOpen && PirateSlop.Customization.SailCustomizationUI.Instance != null)) { menuWasVisible=false; return; }
             PrepareMenu();
             var oldMatrix=GUI.matrix; var oldColor=GUI.color;
@@ -294,6 +295,7 @@ namespace PirateSlop.Networking
                 if(MenuAction(x,y+180,panelWidth,"Да · наблюдать за ботами",true)) { observerSelected=true; chooseObserver=false; }
                 if(MenuAction(x,y+250,panelWidth,"Нет · играть на своём корабле")) { observerSelected=false; chooseObserver=false; }
             }
+            else if(menuPage==10) DrawPerformanceMenu(x,y,panelWidth);
             else if(menuPage==5) { DrawSteamParty(x,y-42,panelWidth); }
             else if(menuPage==1)
             {
@@ -402,6 +404,8 @@ namespace PirateSlop.Networking
                     int q = (QualitySettings.GetQualityLevel() + 1) % QualitySettings.names.Length;
                     QualitySettings.SetQualityLevel(q); PlayerPrefs.SetInt("QualityLevel", q);
                 }
+                bool optimizedClouds = MenuToggle(x, y+270, panelWidth, PirateSlop.Performance.PerformanceRenderOverrides.OptimizedClouds, "Оптимизация облаков и зоны");
+                if (optimizedClouds != PirateSlop.Performance.PerformanceRenderOverrides.OptimizedClouds) PirateSlop.Performance.PerformanceRenderOverrides.SetOptimizedClouds(optimizedClouds);
                 if(MenuAction(x,y+345,panelWidth,"Назад")) menuPage=7;
             }
             else if(menuPage==9)
@@ -438,13 +442,14 @@ namespace PirateSlop.Networking
                 bool isLeader = party == null || !party.InLobby || party.IsLeader;
                 if(isLeader && MenuAction(x,y+198,panelWidth,"Кастомизация")) PirateSlop.Customization.SailCustomizationUI.Open();
                 if(MenuAction(x,y+250,panelWidth,"Настройки")) menuPage=7;
-                if(MenuAction(x,y+326,panelWidth,"Выйти из игры")) Application.Quit();
+                if(MenuAction(x,y+304,panelWidth,"Диагностика")) menuPage=10;
+                if(MenuAction(x,y+362,panelWidth,"Выйти из игры")) Application.Quit();
                 if(MenuDeveloperTools && (!playing || LoadTestActive))
                 {
-                    MenuRule(x+32,y+395,112);
-                    GUI.Label(new Rect(x+32,y+408,panelWidth,20),"ДЛЯ РАЗРАБОТЧИКА",menuFooter);
-                    if(!playing && MenuAction(x,y+434,panelWidth,"Тестовая карта",secondary:true)) Begin(true,"127.0.0.1:"+Config.Port,true);
-                    if(!playing && MenuAction(x,y+476,panelWidth,"Тест нагрузки · без AI",secondary:true)) BeginLoadTest();
+                    MenuRule(x+32,y+430,112);
+                    GUI.Label(new Rect(x+32,y+443,panelWidth,20),"ДЛЯ РАЗРАБОТЧИКА",menuFooter);
+                    if(!playing && MenuAction(x,y+467,panelWidth,"Тестовая карта",secondary:true)) Begin(true,"127.0.0.1:"+Config.Port,true);
+                    if(!playing && MenuAction(x,y+509,panelWidth,"Тест нагрузки · без AI",secondary:true)) BeginLoadTest();
                     if(playing && LoadTestActive && MenuAction(x,y+434,panelWidth,"Движение нагрузки · F7",secondary:true)) ToggleLoadTestMotion();
                 }
             }

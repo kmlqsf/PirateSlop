@@ -1,6 +1,6 @@
 # PirateSlop — карта проекта
 
-Снимок файлов: 2026-10-14. Корень: `C:\Users\K\Project`.
+Снимок файлов: 2026-10-15. Корень: `C:\Users\K\Project`.
 
 ## Как пользоваться
 
@@ -12,7 +12,7 @@
 
 ## Полный каталог
 
-Учтено 11777 файлов без `.meta`. Ещё 10631 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
+Учтено 11825 файлов без `.meta`. Ещё 10640 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
 
 | Раздел | Назначение | Файлов |
 | --- | --- | ---: |
@@ -34,9 +34,9 @@
 | [Assets/Models](<Docs/ProjectMap/Assets-Models.md>) | Модели и связанные ресурсы | 7325 |
 | [Assets/Plugins](<Docs/ProjectMap/Assets-Plugins.md>) | Плагины | 5 |
 | [Assets/Prefabs](<Docs/ProjectMap/Assets-Prefabs.md>) | Готовые игровые объекты | 138 |
-| [Assets/Resources](<Docs/ProjectMap/Assets-Resources.md>) | Ресурсы, доступные для загрузки по имени | 164 |
+| [Assets/Resources](<Docs/ProjectMap/Assets-Resources.md>) | Ресурсы, доступные для загрузки по имени | 165 |
 | [Assets/Scenes](<Docs/ProjectMap/Assets-Scenes.md>) | Сохранённые сцены | 3 |
-| [Assets/Scripts](<Docs/ProjectMap/Assets-Scripts.md>) | Игровой код и редакторские инструменты | 569 |
+| [Assets/Scripts](<Docs/ProjectMap/Assets-Scripts.md>) | Игровой код и редакторские инструменты | 575 |
 | [Assets/Settings](<Docs/ProjectMap/Assets-Settings.md>) | Настройки игровых систем и рендеринга | 59 |
 | [Assets/Shaders](<Docs/ProjectMap/Assets-Shaders.md>) | Шейдеры | 21 |
 | [Assets/StreamingAssets](<Docs/ProjectMap/Assets-StreamingAssets.md>) | Ресурсы раздела; точный состав — в каталоге | 5 |
@@ -46,12 +46,12 @@
 | [Assets/UI](<Docs/ProjectMap/Assets-UI.md>) | Ресурсы интерфейса | 42 |
 | [Assets/_Recovery](<Docs/ProjectMap/Assets-_Recovery.md>) | Сохранённые восстановленные данные | 2 |
 | [Captures](<Docs/ProjectMap/Captures.md>) | Ресурсы раздела; точный состав — в каталоге | 1010 |
-| [Docs](<Docs/ProjectMap/Docs.md>) | Документы и сохранённые отчёты | 47 |
+| [Docs](<Docs/ProjectMap/Docs.md>) | Документы и сохранённые отчёты | 83 |
 | [Packages](<Docs/ProjectMap/Packages.md>) | Манифест, lock-файл и встроенные пакеты | 924 |
 | [ProjectSettings](<Docs/ProjectMap/ProjectSettings.md>) | Настройки Unity | 28 |
 | [Root](<Docs/ProjectMap/Root.md>) | Корневые инструкции, планы и служебные файлы | 26 |
 | [ThirdParty](<Docs/ProjectMap/ThirdParty.md>) | Сторонние ресурсы | 2 |
-| [Tools](<Docs/ProjectMap/Tools.md>) | Инструменты разработки и загрузчик контекста | 21 |
+| [Tools](<Docs/ProjectMap/Tools.md>) | Инструменты разработки и загрузчик контекста | 26 |
 
 Не индексируются генерируемые сборки, кэши и локальное состояние: `.git/`, `.idea/`, `.vs/`, `Builds/`, `Library/`, `Logs/`, `Temp/`, `UserSettings/`, `__pycache__/`, `bin/`, `node_modules/`, `obj/`. В Captures индексируются только отслеживаемые Git файлы; промежуточные резервные CoastalTripo_Pre*.blend не индексируются. Зависимости из Unity PackageCache представлены манифестом/lock-файлом; встроенные пакеты из `Packages/` перечислены полностью. Скрытые конфиги вне исключённых папок включены только как пути, их содержимое не копируется.
 
@@ -2067,6 +2067,16 @@ WaterImpactPhysics/WaterImpactBody: общие локальные всплеск
 
 Ключевые слова: оптимизация, FPS, профайлер, NetworkLoadTest.
 
+15.10.2026 текущий запрос: фризы попаданий по кораблю и человеку отложены, не продолжать до возобновления. CPU/capstan/rigging/hull optimizations работают во всех сборках. Проверенный дым0.50/небо0.30 перенесён в обычную игру, Настройки/Графика/Оптимизация облаков и зоны, defaultON, PlayerPrefs, оригинал приOFF; фон меню сохранён. CloudQuality включён в environmentSignature, смена во время benchmark INVALID. Compile0errors/11native-инвариантов безPlay. Обычный DevelopmentPlayer Builds/Windows/PirateSlop.exe собран успешно native job build-0116a86016,0errors/67warnings; глобальный переключатель включён, полный Player/визуальный тест оставлен пользователю. Четыре предшествующих Release-эксперимента78.56/81.91/84.14/87.88FPS, один на вариант. Editor character probe COMPLETE9shots/3deaths/0errors: ragdoll20.81–22.12мс, исходники урона/ragdoll не менялись. OptimizationPlan.md содержит полный актуальный статус и историю.
+15.10.2026 итог автономной CPU-серии: исходный COMPLETE45.348FPS; после Capstan/Rigging три COMPLETE79.541/78.573/79.456FPS, среднее79.190, диапазон1.232%,P99 28.353–28.788мс. Настройки совпадают, до правок один полный прогон. GPU-эксперимент отдельно от Release: trace дыма11.75мс/неба6.26мс; разрешение0.5/0.3 дало4.43/2.26мс,0.4/0.25 —2.71/1.50мс; возвратный контроль11.78/6.22мс. High/обычная графика не изменены. CLI scales и uncapped исправление скомпилированы, нового Release ещё нет.120FPS/фризы попаданий/стресс SyncTransforms/сеть остаются открытыми.
+15.10.2026 автономно: CLI -performanceBenchmark/-performanceQuit и Tools/Performance/run_benchmark.ps1 + Computer Use focus обеспечили первый COMPLETE test-map-v3/wallclock-v5:45.348FPS/P99 33.633мс, флот4/4,flood0. Первый unfocused запуск INVALID и не используется. Отдельный Editor RawFrameData30кадров выявил CapstanStation.Update self9.325мс/5вызовов и RiggingRopeVisual.LateUpdate3.616мс/66. Добавлены guards неизменных поз/меша кабестана и frame-cache локального игрока с исключением scene scan для сетевого observer; rope сохраняет концы/изгибы, удаляет средние кольца прямых, кэширует sin/cos/индексы.9native-инвариантов прошли; идёт Release A/B, выигрыш пока не подтверждён. Tools/Performance/analyze_report.py собирает CPU/флот/временную шкалу из JSON.
+15.10.2026: пятый профиль20261014-232504-127 wallclock-v4 INVALID230.76с.1140shipSamples подтвердили вход флота в воронку0–27с, сближение/затопление, ShipSinking команды3;200–210с5.78FPS/ShipSync55.875мс/PlayerSync26.392мс. Проблема SyncTransforms остаётся открытой. test-map-v3 фиксирует флот offset(-250,0,240),yaw270°,spacing65,sail.2; старыйкурс/кластер сохранены отдельным выключенным стресс-флагом и версией/hash/fleetScenario. Новый baseline несопоставим со старым. wallclock-v5/51категория добавляет rig/cloth/ropes/features/destruction/render/collision/presentation/ship sampling. Compile/import0errors, без Play/билда/проверкиFPS.
+15.10.2026: четвёртый Release wallclock-v3: ивенты48.75FPS/океан43.07FPS, ShipHullCasts почти снят. INVALID на224с, флот3/4; ShipRepair в центре воронки наY=-125. Это не полный baseline. Архив 20261014-224737-581-benchmark JSON/TXT. wallclock-v4 добавляет shipSamples1Гц/16384лимит с позой/затоплением/состоянием водоворота, ShipSinking и точные причины INVALID; изображения не записывает. Нужны диагностика траекторий/устойчивый сценарий, затем оставшийся CPU и отдельные A/B GPU по облакам/зоне/воде/моделям. Ручные контакты проверяются в обычной сессии, не в пролёте.
+15.10.2026: третий Release-профиль22.053FPS;0–65с39.06FPS/BoxCast0мс,150–240с7.24FPS/BoxCast84.96мс. Архив Reports/20261014-220546-226-benchmark.json/.txt. ShipController использует ориентированный объём отбора и ShipHullQueryWorld с512переиспользуемыми внешними collider-копиями в отдельной несмоделируемой physics scene, hit→source mapping, fallback для shear/неподдерживаемой формы/переполнения; собственные поверхности исключены до BoxCast. CookingOptions и обход UseFastMidphase не менялись. wallclock-v3 добавляетProxySetup (40категорий).7native-case preview-проверок и176000углов прошли; Runtime/FPS/контакты/latejoin и освобождение в Player ещё не проверены.
+15.10.2026: второй Release-профиль8.362FPS локализовал Code.ShipTick79.046мс из119.582мс/кадр; Capture.Update0.01055мс. Архив оригиналов Docs/Performance/Reports/20261014-213819-433-benchmark.json/.txt. ShipController.HullSweepClear добавляет консервативный ранний выход в свободном пространстве, иначе прежние hull queries; переключатель в диагностике, metadata.hullSweepFastPath. wallclock-v2 имеет39категорий для дальнейшего разделения ShipTick. Compile0, чистая геометрия88000точек/таймеры/сравнение проверены; Player-выигрыш и реальные столкновения пока не проверены.
+14.10.2026: отчёт v2 включает посекундную шкалу, направление камеры, радиус/расстояние зоны, дождь и погружение, длинные кадры с CPU-метками. Benchmark проверяет обязательные облака/дым/дождь/молнии и renderer features; signature окружения участвует в сравнении. Журнал описывает поиск причин и будущие контролируемые A/B/A-варианты; переключателей изоляции пока нет. Обычный load test сохраняет штатную погоду; торговые суда исключены из управления/состава экипажей. Компиляция не подтверждает игровой прогон.
+15.10.2026: первый Release-отчёт test-map-v1 дал7.81FPS/CPU127.85мс/GPU19.29мс, VSync0/FPSlimit500. Подробные Profiler markers и GC allocations недоступны; причина постоянной CPU-задержки пока не выделена. Отчётv3 добавляет независимые Stopwatch-замеры PlayerLoop/физики/персонажей/кораблей/измерителя и coverage GC вместо ложного0. Маршрутtest-map-v2 переносит подводную часть за пределы воронки500м и требует≥10с погружения. Новый Player-прогон и накладные расходы не проверены.
+14.10.2026: меню Диагностика доступно в Release; автоматический benchmark текущей тестовой карты:4корабля экипажей/12синтетических персонажей безAI плюс штатные ивенты,30сwarmup/240сroute,JSON+TXT,ручная запись попаданий,сравнение последних COMPLETE из меню/Python. Маршрут Resources/Performance/BenchmarkRoute.json; журнал Docs/Performance/OptimizationPlan.md. Торговый корабль учитывается отдельно от состава экипажей. Windows Build/Release сохраняет отдельный exe без Development. Компиляция и pure расчёты/JSON проверены; игровой маршрут/PlayerFPS/накладные расходы/сеть не проверены.
 NetworkLoadTest запускается из меню Тест нагрузки · без AI, отдельной сцены или аргумента -loadtest. Использует текущий MaxPlayers, реальные корабли и персонажей, seed 41719, близкие спавны, простые движения без принятия решений и поиска пути; F7 переключает движение. Локальный человек заменяет одного синтетического участника. Зона не сужается. Это нагрузка локального хоста, а не эмуляция 30 сетевых соединений.
 Общие оптимизации: активный реестр кораблей вместо поиска всей сцены в снимках персонажей; кэш blend shapes и неизменных поз; центры канатов вместо BakeMesh для простых blend shapes; визуальный такт 10/4 Гц дальше 80/200 м; локальные фонари до 100 м; повторное использование сетевых массивов; проверки визуала по событиям с редким распределённым fallback. Формат RPC и ProtocolVersion сохранены. Компиляция и сохранение сцены не доказывают FPS и мультиплеер.
 Сборка Windows07.10 02:26–02:27: два подтверждённых игровых nativeMonoпадения 02:28:53/02:37:08, C0000005, mono offsets1c3c60/147800. Второй стек содержит exitCancellationToken, но пользователь подтвердил вылет во время игры; это не установленная первопричина. До сбоя нет managedException с игровым C#; DXGI device-removal/OOM не найдены. Пакеты/движок не обновлялись; crash не объявлен исправленным. Копии дампов/логов и выводы: ../output/CrashReview20261007/README.md. Старый Windows билд не перезаписывался.
@@ -2076,6 +2086,17 @@ NetworkLoadTest запускается из меню Тест нагрузки �
 11.10.2026, повторный фриз кракена: расчёт геометрии течей (растр до 224 ячеек, сглаживание, кольца и капли) вынесен в фоновую задачу без Unity-объектных API; исходные массивы копируются на основном потоке, загрузка готовых мешей ограничена одним за кадр. Новые ревизии пробоин собираются за 0.06 с, устаревшие результаты отбрасываются, временные загруженные меши освобождаются. Синхронный расчёт струй в UpdateLeaks устранён; исчезновение фриза без игрового замера не подтверждено.
 
 - [Assets/Scripts/Networking/SessionLoadTest.cs](<Assets/Scripts/Networking/SessionLoadTest.cs>) — Исходник C#: SessionController.
+- [Assets/Scripts/Networking/SessionPerformance.cs](<Assets/Scripts/Networking/SessionPerformance.cs>) — Исходник C#: SessionController.
+- [Assets/Scripts/Networking/SessionMenu.cs](<Assets/Scripts/Networking/SessionMenu.cs>) — Исходник C#: SessionController, MenuAccent.
+- [Assets/Scripts/Networking/SessionSpectator.cs](<Assets/Scripts/Networking/SessionSpectator.cs>) — Исходник C#: SessionController.
+- [Assets/Scripts/Editor/MultiplayerSceneSetup.cs](<Assets/Scripts/Editor/MultiplayerSceneSetup.cs>) — Исходник C#: RuntimePipelineBuildPreparation, MultiplayerSceneSetup.
+- [Assets/Scripts/Performance/PerformanceCapture.cs](<Assets/Scripts/Performance/PerformanceCapture.cs>) — Исходник C#: PerformanceCounters, PerformanceMetadata, PerformanceFrame, PerformanceShipSample, PerformanceEvent, PerformanceSummary, PerformanceSecond, PerformanceReport, PerformanceStatistics, PerformanceCapture, SavedReport.
+- [Assets/Scripts/Performance/PerformanceCpuTimings.cs](<Assets/Scripts/Performance/PerformanceCpuTimings.cs>) — Исходник C#: PerformanceCpuSection, PerformanceCpuTimings, Scope, Probe.
+- [Assets/Scripts/ShipController.cs](<Assets/Scripts/ShipController.cs>) — Исходник C#: ShipController.
+- [Assets/Scripts/Ships/ShipHullQueryWorld.cs](<Assets/Scripts/Ships/ShipHullQueryWorld.cs>) — Исходник C#: ShipHullQueryWorld, Proxy.
+- [Assets/Scripts/Performance/PerformanceBenchmarkController.cs](<Assets/Scripts/Performance/PerformanceBenchmarkController.cs>) — Исходник C#: BenchmarkWaypoint, BenchmarkSegment, BenchmarkProfile, PerformanceBenchmarkController.
+- [Assets/Resources/Performance/BenchmarkRoute.json](<Assets/Resources/Performance/BenchmarkRoute.json>) — Конфигурация / данные JSON.
+- [Tools/Performance/compare_reports.py](<Tools/Performance/compare_reports.py>) — Инструмент Python.
 - [Assets/Scripts/Editor/NetworkLoadTestSetup.cs](<Assets/Scripts/Editor/NetworkLoadTestSetup.cs>) — Исходник C#: NetworkLoadTestSetup.
 - [Assets/Scenes/NetworkLoadTest.unity](<Assets/Scenes/NetworkLoadTest.unity>) — Сцена Unity.
 - [Assets/Scripts/Networking/NetworkPlayer.cs](<Assets/Scripts/Networking/NetworkPlayer.cs>) — Исходник C#: CaptainInput, CaptainState, NetworkPlayer.
@@ -2090,8 +2111,56 @@ NetworkLoadTest запускается из меню Тест нагрузки �
 - [Assets/Scripts/Ships/ShipBilgeLeakGeometry.cs](<Assets/Scripts/Ships/ShipBilgeLeakGeometry.cs>) — Исходник C#: ShipBilgeLeakGeometry, Surface, Aperture, Patch, Builder, SurfaceData.
 - [Assets/Scripts/Ships/ShipDamagePreparation.cs](<Assets/Scripts/Ships/ShipDamagePreparation.cs>) — Исходник C#: ShipDamagePreparation, BakeJob.
 - [Assets/Models/Ships/ShipV3/Bilge/DamageWarmup.shadervariants](<Assets/Models/Ships/ShipV3/Bilge/DamageWarmup.shadervariants>) — Файл .shadervariants.
+- [Assets/Scripts/Networking/SessionCrew.cs](<Assets/Scripts/Networking/SessionCrew.cs>) — Исходник C#: SessionController.
+- [Assets/Scripts/Ships/ShipV3ClothMotion.cs](<Assets/Scripts/Ships/ShipV3ClothMotion.cs>) — Исходник C#: ShipV3ClothMotion.
+- [Assets/Scripts/Player/PlayerPresentation.cs](<Assets/Scripts/Player/PlayerPresentation.cs>) — Исходник C#: PlayerPresentation.
+- [Assets/Scripts/Stations/CapstanStation.cs](<Assets/Scripts/Stations/CapstanStation.cs>) — Исходник C#: CapstanStation.
+- [Assets/Scripts/World/RiggingRopeVisual.cs](<Assets/Scripts/World/RiggingRopeVisual.cs>) — Исходник C#: RiggingRopeVisual, TubeBuffers.
+- [Tools/Performance/run_benchmark.ps1](<Tools/Performance/run_benchmark.ps1>) — Инструмент PowerShell.
+- [Tools/Performance/analyze_report.py](<Tools/Performance/analyze_report.py>) — Инструмент Python.
+- [Assets/Scripts/Performance/PerformanceRenderOverrides.cs](<Assets/Scripts/Performance/PerformanceRenderOverrides.cs>) — Исходник C#: PerformanceRenderOverrides.
+- [Assets/Game/BRZoneVolumetric/StormVolumeRendererFeature.cs](<Assets/Game/BRZoneVolumetric/StormVolumeRendererFeature.cs>) — Исходник C#: StormVolumeRendererFeature, LightningCapturePass, Data.
+- [Assets/Tests/StormCloudBakeoff/CandidateA/VolumetricClouds/VolumetricCloudsURP.cs](<Assets/Tests/StormCloudBakeoff/CandidateA/VolumetricClouds/VolumetricCloudsURP.cs>) — Исходник C#: VolumetricCloudsURP, CloudsRenderMode, CloudsAmbientMode, CloudsUpscaleMode, VolumetricCloudsPass, CameraCloudHistory, stores, PassData, StormLightningFrameData, RasterPassData, VolumetricCloudsAmbientPass, VolumetricCloudsShadowsPass, LightCookieShaderFormat.
+- [Tools/Performance/analyze_impacts.py](<Tools/Performance/analyze_impacts.py>) — Инструмент Python.
+- [Tools/Performance/character_hit_probe.cs](<Tools/Performance/character_hit_probe.cs>) — Исходник C#.
 - [Docs/Performance/NetworkLoadTest.md](<Docs/Performance/NetworkLoadTest.md>) — Документация.
+- [Docs/Performance/OptimizationPlan.md](<Docs/Performance/OptimizationPlan.md>) — Документация.
 - `../output/CrashReview20261007/Spyglass_1628.md` — отсутствует в текущем снимке; не использовать как готовый путь.
+- [Docs/Performance/Reports/20261014-232504-127-benchmark.json](<Docs/Performance/Reports/20261014-232504-127-benchmark.json>) — Конфигурация / данные JSON.
+- [Docs/Performance/Reports/20261014-232504-127-benchmark.txt](<Docs/Performance/Reports/20261014-232504-127-benchmark.txt>) — Текстовые данные.
+- [Docs/Performance/Reports/20261014-233947-869-benchmark.json](<Docs/Performance/Reports/20261014-233947-869-benchmark.json>) — Конфигурация / данные JSON.
+- [Docs/Performance/Reports/20261014-233947-869-benchmark.txt](<Docs/Performance/Reports/20261014-233947-869-benchmark.txt>) — Текстовые данные.
+- [Docs/Performance/Reports/20261014-234517-949-benchmark.json](<Docs/Performance/Reports/20261014-234517-949-benchmark.json>) — Конфигурация / данные JSON.
+- [Docs/Performance/Reports/20261014-234517-949-benchmark.txt](<Docs/Performance/Reports/20261014-234517-949-benchmark.txt>) — Текстовые данные.
+- [Docs/Performance/Reports/20261015-editor-cpu-profile.txt](<Docs/Performance/Reports/20261015-editor-cpu-profile.txt>) — Текстовые данные.
+- [Docs/Performance/Reports/20261014-235834-386-benchmark.json](<Docs/Performance/Reports/20261014-235834-386-benchmark.json>) — Конфигурация / данные JSON.
+- [Docs/Performance/Reports/20261014-235834-386-benchmark.txt](<Docs/Performance/Reports/20261014-235834-386-benchmark.txt>) — Текстовые данные.
+- [Docs/Performance/Reports/20261015-000416-705-benchmark.json](<Docs/Performance/Reports/20261015-000416-705-benchmark.json>) — Конфигурация / данные JSON.
+- [Docs/Performance/Reports/20261015-000416-705-benchmark.txt](<Docs/Performance/Reports/20261015-000416-705-benchmark.txt>) — Текстовые данные.
+- [Docs/Performance/Reports/20261015-000935-446-benchmark.json](<Docs/Performance/Reports/20261015-000935-446-benchmark.json>) — Конфигурация / данные JSON.
+- [Docs/Performance/Reports/20261015-000935-446-benchmark.txt](<Docs/Performance/Reports/20261015-000935-446-benchmark.txt>) — Текстовые данные.
+- [Docs/Performance/Reports/20261015-cpu-series.json](<Docs/Performance/Reports/20261015-cpu-series.json>) — Конфигурация / данные JSON.
+- [Docs/Performance/Reports/20261015-editor-cpu-after.txt](<Docs/Performance/Reports/20261015-editor-cpu-after.txt>) — Текстовые данные.
+- [Docs/Performance/Reports/20261015-editor-gpu-hierarchy.txt](<Docs/Performance/Reports/20261015-editor-gpu-hierarchy.txt>) — Текстовые данные.
+- [Docs/Performance/Reports/20261015-editor-gpu-outside.txt](<Docs/Performance/Reports/20261015-editor-gpu-outside.txt>) — Текстовые данные.
+- [Docs/Performance/Reports/20261015-editor-gpu-reference-repeat.txt](<Docs/Performance/Reports/20261015-editor-gpu-reference-repeat.txt>) — Текстовые данные.
+- [Docs/Performance/Reports/20261015-editor-gpu-scale040-sky025.txt](<Docs/Performance/Reports/20261015-editor-gpu-scale040-sky025.txt>) — Текстовые данные.
+- [Docs/Performance/Reports/20261015-editor-gpu-scale050-sky030.txt](<Docs/Performance/Reports/20261015-editor-gpu-scale050-sky030.txt>) — Текстовые данные.
+- [Docs/Performance/Visuals/storm-reference-outside.png](<Docs/Performance/Visuals/storm-reference-outside.png>) — Изображение / текстура.
+- [Docs/Performance/Visuals/storm-scale040-sky025-outside.png](<Docs/Performance/Visuals/storm-scale040-sky025-outside.png>) — Изображение / текстура.
+- [Docs/Performance/Visuals/storm-scale050-sky030-outside.png](<Docs/Performance/Visuals/storm-scale050-sky030-outside.png>) — Изображение / текстура.
+- [Docs/Performance/Reports/20261015-140352-763-benchmark.json](<Docs/Performance/Reports/20261015-140352-763-benchmark.json>) — Конфигурация / данные JSON.
+- [Docs/Performance/Reports/20261015-140352-763-benchmark.txt](<Docs/Performance/Reports/20261015-140352-763-benchmark.txt>) — Текстовые данные.
+- [Docs/Performance/Reports/20261015-140907-441-benchmark.json](<Docs/Performance/Reports/20261015-140907-441-benchmark.json>) — Конфигурация / данные JSON.
+- [Docs/Performance/Reports/20261015-140907-441-benchmark.txt](<Docs/Performance/Reports/20261015-140907-441-benchmark.txt>) — Текстовые данные.
+- [Docs/Performance/Reports/20261015-141403-786-benchmark.json](<Docs/Performance/Reports/20261015-141403-786-benchmark.json>) — Конфигурация / данные JSON.
+- [Docs/Performance/Reports/20261015-141403-786-benchmark.txt](<Docs/Performance/Reports/20261015-141403-786-benchmark.txt>) — Текстовые данные.
+- [Docs/Performance/Reports/20261015-141903-033-benchmark.json](<Docs/Performance/Reports/20261015-141903-033-benchmark.json>) — Конфигурация / данные JSON.
+- [Docs/Performance/Reports/20261015-141903-033-benchmark.txt](<Docs/Performance/Reports/20261015-141903-033-benchmark.txt>) — Текстовые данные.
+- [Docs/Performance/Reports/20261015-143012-267-character-hits-editor.json](<Docs/Performance/Reports/20261015-143012-267-character-hits-editor.json>) — Конфигурация / данные JSON.
+- [Docs/Performance/Reports/20261015-143012-267-character-hits-editor.txt](<Docs/Performance/Reports/20261015-143012-267-character-hits-editor.txt>) — Текстовые данные.
+- [Docs/Performance/Reports/20261015-render-scale-experiment.json](<Docs/Performance/Reports/20261015-render-scale-experiment.json>) — Конфигурация / данные JSON.
+- [Docs/Performance/Reports/20261015-character-hit-before-analysis.json](<Docs/Performance/Reports/20261015-character-hit-before-analysis.json>) — Конфигурация / данные JSON.
 
 ### Корабельная обезьянка (`ship-monkey`)
 

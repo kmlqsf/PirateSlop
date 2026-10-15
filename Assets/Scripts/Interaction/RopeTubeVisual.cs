@@ -92,6 +92,7 @@ namespace PirateSlop
         void LateUpdate()
         {
             using var sample = marker.Auto();
+            using var cpuTiming = PirateSlop.Performance.PerformanceCpuTimings.Measure(PirateSlop.Performance.PerformanceCpuSection.ShipRopes);
             if (Line == null && Skin == null) { output.enabled = false; return; }
             bool visible = Line != null ? Line.enabled : Skin.enabled;
             output.enabled = visible;

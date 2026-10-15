@@ -19,6 +19,7 @@ using UnityEngine.Rendering.RenderGraphModule;
 [HelpURL("https://github.com/jiaozi158/UnityVolumetricCloudsURP/tree/main")]
 public class VolumetricCloudsURP : ScriptableRendererFeature
 {
+    public static Func<float, float> ResolutionScaleFilter;
     [Header("Setup")]
     [Tooltip("The material of volumetric clouds shader.")]
     [SerializeField] private Material material;
@@ -331,6 +332,7 @@ public class VolumetricCloudsURP : ScriptableRendererFeature
         #endif
             bool gameBudget = material.IsKeywordEnabled("_PIRATESLOP_CLEAR_CLOUDS") && (Shader.GetGlobalVector("_PirateStormWeather").w > 0f || Shader.GetGlobalVector("_PirateStormTestSkyWeather").w > 0f) && Shader.GetGlobalVector("_PirateStormBackdrop").x < .5f;
             volumetricCloudsPass.resolutionScale = gameBudget ? Mathf.Min(resolutionScale, Shader.GetGlobalVector("_PirateStormTestSkyWeather").w > 0f ? .5f : .4f) : resolutionScale;
+            if (ResolutionScaleFilter != null) volumetricCloudsPass.resolutionScale = Mathf.Clamp(ResolutionScaleFilter(volumetricCloudsPass.resolutionScale), .25f, 1f);
             volumetricCloudsPass.cloudsVolume = cloudsVolume;
             volumetricCloudsPass.colorAdjustments = colorAdjustments;
             volumetricCloudsPass.dynamicAmbientProbe = dynamicAmbientProbe;
@@ -391,9 +393,9 @@ public class VolumetricCloudsURP : ScriptableRendererFeature
 
     public class VolumetricCloudsPass : ScriptableRenderPass
     {
-        private const string rasterPassProfilerTag = "Trace Volumetric Clouds";
-        private const string profilerTag = "Volumetric Clouds";
-        private readonly ProfilingSampler m_ProfilingSampler = new ProfilingSampler(profilerTag);
+        public string TraceLabel = "Trace sky clouds";
+        public string CompositeLabel = "Composite sky clouds";
+        private readonly ProfilingSampler m_ProfilingSampler = new ProfilingSampler("Volumetric Clouds");
 
         public VolumetricClouds cloudsVolume;
         public ColorAdjustments colorAdjustments;
@@ -1150,7 +1152,7 @@ public class VolumetricCloudsURP : ScriptableRendererFeature
             }
 
             // add a raster render pass to the render graph, specifying the name and the data type that will be passed to the ExecuteRasterPass function
-            using (var builder = renderGraph.AddRasterRenderPass<RasterPassData>(rasterPassProfilerTag, out var rasterPassData))
+            using (var builder = renderGraph.AddRasterRenderPass<RasterPassData>(TraceLabel, out var rasterPassData))
             {
                 Light mainLight = GetMainLight(lightData);
                 UpdateClouds(mainLight, cameraData.camera);
@@ -1216,7 +1218,7 @@ public class VolumetricCloudsURP : ScriptableRendererFeature
             }
 
             // add an unsafe render pass to the render graph, specifying the name and the data type that will be passed to the ExecutePass function
-            using (var builder = renderGraph.AddUnsafePass<PassData>(profilerTag, out var passData))
+            using (var builder = renderGraph.AddUnsafePass<PassData>(CompositeLabel, out var passData))
             {
                 // Get the active color texture through the frame data, and set it as the source texture for the blit
                 passData.cameraColorHandle = resourceData.activeColorTexture;

@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 namespace PirateSlop.Networking
 {
@@ -33,6 +34,17 @@ namespace PirateSlop.Networking
             camera.targetTexture = null;
             camera.rect = new Rect(0, 0, 1, 1);
             camera.enabled = true;
+            if (PerformanceBenchmarkActive && gameplayCamera != null)
+            {
+                PlayerPrefab.GetComponent<AdvancedPlayerController>()?.ConfigureDistanceCulling(camera);
+                if (gameplayCamera.TryGetComponent<UniversalAdditionalCameraData>(out var sourceData))
+                {
+                    var data = camera.GetUniversalAdditionalCameraData();
+                    data.antialiasing = sourceData.antialiasing; data.antialiasingQuality = sourceData.antialiasingQuality;
+                    data.renderShadows = sourceData.renderShadows; data.renderPostProcessing = sourceData.renderPostProcessing;
+                    data.volumeLayerMask = sourceData.volumeLayerMask;
+                }
+            }
             observerCamera.tag = "MainCamera";
             observerCamera.AddComponent<AudioListener>();
             var position = new Vector3(0, 30, 0);
@@ -40,8 +52,11 @@ namespace PirateSlop.Networking
             foreach (var ship in NetworkShip.ActiveShips)
                 if (ship != null) { position = ship.transform.position + Vector3.up * 20f - ship.transform.forward * 35f; yaw = ship.transform.eulerAngles.y; break; }
             observerCamera.transform.SetPositionAndRotation(position, Quaternion.Euler(20f, yaw, 0));
-            observerCamera.AddComponent<BotSpectatorCamera>();
-            observerCamera.AddComponent<BotDebugPanel>();
+            if (!PerformanceBenchmarkActive)
+            {
+                observerCamera.AddComponent<BotSpectatorCamera>();
+                observerCamera.AddComponent<BotDebugPanel>();
+            }
             AdvancedPlayerController.SetCursor(true);
         }
 

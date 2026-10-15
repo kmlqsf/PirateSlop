@@ -132,8 +132,10 @@ namespace PirateSlop
             ApplySnapshot(Current + amount, false);
             if (network != null) network.Publish(Current);
         }
+        static readonly Unity.Profiling.ProfilerMarker performanceDamage = new("Performance.PlayerDamage");
         public void Damage(float amount, GameObject attacker = null, bool environmental = false, bool drowning = false)
         {
+            using var performanceSample = performanceDamage.Auto();
             if (network != null && (!network.IsServerInitialized || network.DeveloperInvulnerable)) return;
             if (!environmental && attacker != null && attacker != gameObject)
             {
@@ -146,9 +148,11 @@ namespace PirateSlop
             amount = GetComponent<NetworkPlayer>()?.FilterUpgradeDamage(amount) ?? amount;
             if (amount <= 0f) return;
             float dealt = Mathf.Min(Current, amount);
+            PirateSlop.Performance.PerformanceCapture.Event("PlayerDamage", this, transform.position, dealt);
             GetComponent<NetworkWeapon>()?.CancelLootWork();
             if (amount >= Current && controller != null)
             {
+                PirateSlop.Performance.PerformanceCapture.Event("PlayerDeath", this, transform.position);
                 Vector3 direction = attacker != null ? transform.position - attacker.transform.position : -transform.forward;
                 direction = Vector3.ProjectOnPlane(direction, Vector3.up);
                 if (direction.sqrMagnitude < .01f) direction = -transform.forward;

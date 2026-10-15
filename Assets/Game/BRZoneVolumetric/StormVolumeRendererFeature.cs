@@ -16,7 +16,7 @@ namespace PirateSlop
         public static Vector4 TestSmokeVisibilityRange(float fieldOfView)
         {
             float zoom = Mathf.Clamp(Mathf.Tan(65f * Mathf.Deg2Rad * .5f) / Mathf.Tan(Mathf.Clamp(fieldOfView, 5f, 170f) * Mathf.Deg2Rad * .5f), 1f, 8f);
-            return new Vector4(650f * zoom, 1000f * zoom, 1f / .75f, 0f);
+            return new Vector4(650f * zoom, 1000f * zoom, 1f / PirateSlop.Performance.PerformanceRenderOverrides.StormResolution(.75f), 0f);
         }
         public override void Create()
         {
@@ -42,6 +42,8 @@ namespace PirateSlop
                 hasAtmosphericScattering = false,
                 resetWindOnStart = true,
                 renderMode = VolumetricCloudsURP.CloudsRenderMode.BlitTexture,
+                TraceLabel = "Trace storm smoke",
+                CompositeLabel = "Composite storm smoke",
                 upscaleMode = VolumetricCloudsURP.CloudsUpscaleMode.Bilinear
             };
         }
@@ -104,7 +106,8 @@ namespace PirateSlop
             pass.cloudsVolume = storm.CloudSettings;
             pass.afterTransparentDepth = storm.TestCloudWall;
             pass.colorAdjustments = null;
-            pass.resolutionScale = storm.TestCloudWall ? .75f : Mathf.Clamp(ResolutionScale, .25f, storm.IsMenuPreview ? .67f : .4f);
+            pass.resolutionScale = storm.TestCloudWall ? PirateSlop.Performance.PerformanceRenderOverrides.StormResolution(.75f) : Mathf.Clamp(ResolutionScale, .25f, storm.IsMenuPreview ? .67f : .4f);
+            if (!storm.TestCloudWall && !storm.IsMenuPreview) pass.resolutionScale = PirateSlop.Performance.PerformanceRenderOverrides.StormResolution(pass.resolutionScale);
             pass.ConfigureInput(ScriptableRenderPassInput.Depth);
             if (storm.TestCloudWall) renderer.EnqueuePass(lightning);
             renderer.EnqueuePass(pass);

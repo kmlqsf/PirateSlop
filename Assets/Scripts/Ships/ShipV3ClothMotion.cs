@@ -106,6 +106,7 @@ namespace PirateSlop.Ships
         }
         void LateUpdate()
         {
+            using var cpuTiming = PirateSlop.Performance.PerformanceCpuTimings.Measure(PirateSlop.Performance.PerformanceCpuSection.ShipCloth);
             if (ship == null || !ship.IsSpawned) return;
             if (!initialized) Initialize();
             if (mesh == null) return;
