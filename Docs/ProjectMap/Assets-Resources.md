@@ -99,6 +99,7 @@
 | Файл | Краткое описание |
 | --- | --- |
 | [Assets/Resources/Performance/BenchmarkRoute.json](<../../Assets/Resources/Performance/BenchmarkRoute.json>) | Конфигурация / данные JSON; Производительность и тест нагрузки без AI |
+| [Assets/Resources/Performance/FleetBenchmarkRoute.json](<../../Assets/Resources/Performance/FleetBenchmarkRoute.json>) | Конфигурация / данные JSON; Производительность и тест нагрузки без AI |
 
 ## Assets/Resources/RoguelikeUI
 

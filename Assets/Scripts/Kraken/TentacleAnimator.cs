@@ -96,12 +96,14 @@ namespace PirateSlop
         public void EvaluatePose(double now)
         {
             if (restPositions == null || bones.Length < 2) return;
+            Vector3 right = transform.right, forward = transform.forward;
+            Quaternion rotation = transform.rotation;
             Vector3 start = transform.TransformPoint(restPositions[0]);
             float length = Vector3.Distance(start,transform.TransformPoint(restPositions[^1]));
             double time = now*idleFrequency+phase;
-            Vector3 idleTip = start+Vector3.up*(length*.87f)+transform.right*(lean+(float)Math.Sin(time*.55)*sway*idleMotionScale)+transform.forward*(curl+(float)Math.Sin(time*.7)*sway*idleMotionScale);
+            Vector3 idleTip = start+Vector3.up*(length*.87f)+right*(lean+(float)Math.Sin(time*.55)*sway*idleMotionScale)+forward*(curl+(float)Math.Sin(time*.7)*sway*idleMotionScale);
             Vector3 tip = idleTip;
-            Vector3 strikeForward = transform.forward;
+            Vector3 strikeForward = forward;
             float progress = isAttacking ? Mathf.Clamp01((float)(now-attackStartTime)/attackDuration) : 0;
             if (isAttacking)
             {
@@ -111,11 +113,11 @@ namespace PirateSlop
                     Vector3 direction = Vector3.ProjectOnPlane(aim-start,Vector3.up);
                     if (direction.sqrMagnitude > .0001f)
                     {
-                        strikeHeading += Mathf.DeltaAngle(strikeHeading,Vector3.SignedAngle(transform.forward,direction,Vector3.up));
-                        strikeForward = Quaternion.AngleAxis(strikeHeading,Vector3.up)*transform.forward;
+                        strikeHeading += Mathf.DeltaAngle(strikeHeading,Vector3.SignedAngle(forward,direction,Vector3.up));
+                        strikeForward = Quaternion.AngleAxis(strikeHeading,Vector3.up)*forward;
                     }
                 }
-                Vector3 windup = start+Vector3.up*(length*.94f)-strikeForward*(length*.16f)+transform.right*lean;
+                Vector3 windup = start+Vector3.up*(length*.94f)-strikeForward*(length*.16f)+right*lean;
                 if (progress < .32f) tip = Vector3.Lerp(idleTip,windup,Mathf.SmoothStep(0,1,progress/.32f));
                 else if (progress < .52f) { float t=(progress-.32f)/.2f; tip=Vector3.Lerp(windup,aim,t*t); }
                 else if (progress < .6f) tip = aim;
@@ -124,9 +126,9 @@ namespace PirateSlop
             Vector3 offset = tip-start;
             if (offset.magnitude > length*.98f) tip=start+offset.normalized*(length*.98f);
             float strikeBlend = directionalStrikes && isAttacking ? Mathf.SmoothStep(0,1,Mathf.Min(progress/.32f,(1-progress)/.4f)) : 0;
-            Vector3 bendForward = Quaternion.AngleAxis(strikeHeading*strikeBlend,Vector3.up)*transform.forward;
+            Vector3 bendForward = Quaternion.AngleAxis(strikeHeading*strikeBlend,Vector3.up)*forward;
             Vector3 bend = Vector3.ProjectOnPlane(-bendForward,(tip-start).normalized);
-            if (bend.sqrMagnitude < .000001f) bend=Vector3.ProjectOnPlane(transform.right,(tip-start).normalized);
+            if (bend.sqrMagnitude < .000001f) bend=Vector3.ProjectOnPlane(right,(tip-start).normalized);
             bend.Normalize();
             float idleBlend = !isAttacking ? 1f : progress < .32f ? 1f-Mathf.SmoothStep(0,1,progress/.32f) : progress > .6f ? Mathf.SmoothStep(0,1,(progress-.6f)/.4f) : 0f;
             float amplitude = sway*.7f*Mathf.Clamp(length/24f,1f,1.7f)*idleMotionScale*idleBlend;
@@ -134,8 +136,8 @@ namespace PirateSlop
             {
                 float t=i/(float)(waveOffsets.Length-1);
                 float envelope=Mathf.Sin(t*Mathf.PI);
-                waveOffsets[i]=envelope*amplitude*(transform.right*(float)Math.Sin(t*Math.PI*3.2-time*.8)
-                    +transform.forward*(.5f*(float)Math.Sin(t*Math.PI*4.2+time*.63+phase)));
+                waveOffsets[i]=envelope*amplitude*(right*(float)Math.Sin(t*Math.PI*3.2-time*.8)
+                    +forward*(.5f*(float)Math.Sin(t*Math.PI*4.2+time*.63+phase)));
             }
             float low=0, high=length;
             Vector3 middle=(start+tip)*.5f;
@@ -157,7 +159,7 @@ namespace PirateSlop
                 Vector3 direction=i==bones.Length-1 ? point-previous : curve[Mathf.Min(cursor+1,curve.Length-1)]-point;
                 if (direction.sqrMagnitude < .0001f) direction=Vector3.up;
                 bones[i].position=point;
-                bones[i].rotation=Quaternion.FromToRotation(transform.TransformDirection(restDirections[i]),direction.normalized)*transform.rotation*restRotations[i];
+                bones[i].rotation=Quaternion.FromToRotation(rotation * restDirections[i],direction.normalized)*rotation*restRotations[i];
                 previous=point;
             }
             if (isAttacking && !impactTriggered && progress >= .52f)

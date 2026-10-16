@@ -41,12 +41,14 @@ namespace PirateSlop.Performance
         public string antialiasing, fleetScenario, renderExperiment;
         public string instrumentationVersion;
         public bool profilerEnabled, editor, telemetryVisible, hullSweepFastPath;
+        public bool shipBodyPoseFastPath, worldVisualBudget, playerGuiLayoutBudget;
     }
 
     [Serializable]
     public struct PerformanceFrame
     {
         public int unityFrame, segment, ships, crewShips, players, debris, effects, physicsSteps, secondaryPhysicsSteps, networkSteps;
+        public int frustumCrewShips, frustumPlayers;
         public double time;
         public float frameMs, cpuMs, renderMs, gpuMs, x, y, z, qx, qy, qz, qw, stormRadius, stormDistance, rainIntensity;
         public bool cameraAvailable, stormReady, rainReady, submerged;
@@ -227,6 +229,10 @@ namespace PirateSlop.Performance
             text.AppendLine("Environment: " + m.environmentSignature);
             text.AppendLine("Instrumentation: " + m.instrumentationVersion);
             text.AppendLine("Hull sweep fast path: " + m.hullSweepFastPath);
+            text.AppendLine("Ship body pose fast path: " + m.shipBodyPoseFastPath);
+            text.AppendLine("World visual budget: " + m.worldVisualBudget);
+            text.AppendLine("Player GUI layout budget: " + m.playerGuiLayoutBudget);
+            if (m.mode == "isolation") text.AppendLine("DIAGNOSTIC ISOLATION: total FPS mixes disabled systems and is not gameplay FPS. Analyze stages separately, excluding the first 2 seconds of each stage.");
             text.AppendLine("Fleet scenario: " + (m.fleetScenario ?? "N/A (older report)"));
             text.AppendLine("Render experiment: " + (string.IsNullOrEmpty(m.renderExperiment) ? "reference" : m.renderExperiment));
             text.AppendLine($"Expected {m.expectedShips} ships / {m.expectedPlayers} players | warmup {m.warmupSeconds}s | buffer {report.captureBufferBytes / 1048576d:F1} MB");
@@ -300,6 +306,9 @@ namespace PirateSlop.Performance
             output.AppendLine(mismatches.Count == 0 ? "COMPARABLE" : "NOT COMPARABLE — do not claim a performance improvement");
             foreach (var mismatch in mismatches) output.AppendLine(mismatch);
             output.AppendLine("Hull sweep fast path (intentional optimization A/B): " + before.metadata.hullSweepFastPath + " -> " + after.metadata.hullSweepFastPath);
+            output.AppendLine("Ship body pose fast path (intentional optimization A/B): " + before.metadata.shipBodyPoseFastPath + " -> " + after.metadata.shipBodyPoseFastPath);
+            output.AppendLine("World visual budget (intentional optimization A/B): " + before.metadata.worldVisualBudget + " -> " + after.metadata.worldVisualBudget);
+            output.AppendLine("Player GUI layout budget (intentional optimization A/B): " + before.metadata.playerGuiLayoutBudget + " -> " + after.metadata.playerGuiLayoutBudget);
             output.AppendLine("Segment | avg FPS before/after | 1% low before/after | mean ms change | P99 before/after");
             void Add(PerformanceSummary a, PerformanceSummary b)
             {
@@ -338,6 +347,8 @@ namespace PirateSlop.Performance
         ProfilerRecorder cpu, render, gpu, drawsTotal, triangles, setPass, gc;
         ProfilerRecorder[] draws, markers;
         readonly FrameTiming[] timings = new FrameTiming[1];
+        readonly Plane[] frustumPlanes = new Plane[6];
+        int cachedFrustumShips = -1, cachedFrustumPlayers = -1;
         ulong lastTimingTimestamp;
         NetworkManager manager;
         PerformanceMetadata metadata;
@@ -475,6 +486,11 @@ namespace PirateSlop.Performance
             if (Active != this) return;
             FrameTimingManager.CaptureFrameTimings();
             if (!Recording || count >= Capacity) return;
+            if (!metadata.profilerEnabled && Profiler.enabled)
+            {
+                metadata.profilerEnabled = true;
+                Event("ProfilerObservedDuringCapture");
+            }
             SampleShips();
             var delta = Time.unscaledDeltaTime;
             if (!float.IsFinite(delta) || delta <= 0) return;
@@ -489,8 +505,26 @@ namespace PirateSlop.Performance
                 foreach (var ship in NetworkShip.ActiveShips)
                     if (ship != null) { if (ship.TeamId.Value > 0 && ship.IsSpawned) cachedCrewShips++; if (ship.TryGetComponent<ShipDebrisPool>(out var pool)) cachedDebris += pool.ActiveCount; }
                 cachedEffects = FirearmVfx.ActiveCount + VfxPool.ActiveCount;
+                cachedFrustumShips = cachedFrustumPlayers = -1;
+                if (View != null)
+                {
+                    GeometryUtility.CalculateFrustumPlanes(View, frustumPlanes);
+                    cachedFrustumShips = cachedFrustumPlayers = 0;
+                    foreach (var ship in NetworkShip.ActiveShips)
+                    {
+                        if (ship == null || !ship.IsSpawned || ship.TeamId.Value <= 0) continue;
+                        var half = ship.HullHalfExtents;
+                        var right = ship.transform.right * half.x;
+                        var forward = ship.transform.forward * half.y;
+                        var size = new Vector3((Mathf.Abs(right.x) + Mathf.Abs(forward.x)) * 2, 45, (Mathf.Abs(right.z) + Mathf.Abs(forward.z)) * 2);
+                        if (GeometryUtility.TestPlanesAABB(frustumPlanes, new Bounds(ship.transform.position + Vector3.up * 18, size))) cachedFrustumShips++;
+                    }
+                    foreach (var player in NetworkPlayer.Active)
+                        if (player != null && GeometryUtility.TestPlanesAABB(frustumPlanes, new Bounds(player.transform.position + Vector3.up, new Vector3(2, 2, 2)))) cachedFrustumPlayers++;
+                }
             }
             var frame = new PerformanceFrame { unityFrame = Time.frameCount - 1, segment = Segment, time = Math.Max(0, time), frameMs = delta * 1000, cpuMs = Ms(cpu), renderMs = Ms(render), gpuMs = Ms(gpu), draws = PerformanceCounters.Value(drawsTotal), setPass = PerformanceCounters.Value(setPass), triangles = PerformanceCounters.Value(triangles), gcBytes = PerformanceCounters.Value(gc), usedBytes = cachedUsed, reservedBytes = cachedReserved, monoBytes = cachedMono, ships = NetworkShip.ActiveShips.Count, crewShips = cachedCrewShips, players = NetworkPlayer.Active.Count, debris = cachedDebris, effects = cachedEffects, physicsSteps = fixedSteps, secondaryPhysicsSteps = secondarySteps, networkSteps = networkSteps };
+            frame.frustumCrewShips = cachedFrustumShips; frame.frustumPlayers = cachedFrustumPlayers;
             if (FrameTimingManager.GetLatestTimings(1, timings) > 0 && timings[0].frameStartTimestamp != lastTimingTimestamp)
             {
                 lastTimingTimestamp = timings[0].frameStartTimestamp;
@@ -569,7 +603,7 @@ namespace PirateSlop.Performance
                 string json = JsonUtility.ToJson(report, false);
                 string temporary = path + ".tmp"; File.WriteAllText(temporary, json, new UTF8Encoding(false)); File.Move(temporary, path);
                 File.WriteAllText(Path.Combine(directory, basename + ".txt"), PerformanceStatistics.Text(report), new UTF8Encoding(false));
-                return new SavedReport { Path = path, Result = report.status + " · FPS " + report.total.averageFps.ToString("F1", CultureInfo.InvariantCulture) + " · P99 " + report.total.p99Ms.ToString("F2", CultureInfo.InvariantCulture) + " мс\n" + (string.IsNullOrEmpty(report.reason) ? Path.GetFileName(path) : report.reason) };
+                return new SavedReport { Path = path, Result = report.status + (metadata.mode == "isolation" ? " · Разбор нагрузки: результаты по участкам\n" : " · FPS " + report.total.averageFps.ToString("F1", CultureInfo.InvariantCulture) + " · P99 " + report.total.p99Ms.ToString("F2", CultureInfo.InvariantCulture) + " мс\n") + (string.IsNullOrEmpty(report.reason) ? Path.GetFileName(path) : report.reason) };
             });
         }
 

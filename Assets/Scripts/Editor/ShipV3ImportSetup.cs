@@ -266,6 +266,7 @@ namespace PirateSlop.EditorTools
                     foreach (var source in chunk) source.enabled = false;
                 }
             }
+            ShipV3FixtureOptimization.Configure(prefabRoot);
             ConfigureChainInstances(prefabRoot, rig);
             foreach (var light in prefabRoot.GetComponentsInChildren<Light>(true)) ConfigureLanternShadowBudget(light);
             File.WriteAllText("Tools/ShipV3/GeometryBudgetStatus.txt", "Batched " + batchedSources + " stationary renderers into " + number + " groups; fragment colliders are lazy; " + rig.ChainLinks.Length + " chain links are instanced.");

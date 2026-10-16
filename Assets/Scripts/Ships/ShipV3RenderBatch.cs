@@ -26,6 +26,8 @@ namespace PirateSlop.Ships
         IndexLayout layout;
         List<int> activeIndices;
         static readonly Dictionary<Mesh, IndexLayout> layouts = new();
+        static readonly Dictionary<MeshRenderer, int> sourceOwners = new();
+        bool ownsSources;
         readonly HashSet<ShipDamageSection> trackedSections = new();
         bool dirty;
         float nextVisibilityCheck;
@@ -37,7 +39,11 @@ namespace PirateSlop.Ships
         }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-        static void ResetLayouts() => layouts.Clear();
+        static void ResetLayouts()
+        {
+            layouts.Clear();
+            sourceOwners.Clear();
+        }
 
         IndexLayout PrepareLayout()
         {
@@ -64,6 +70,7 @@ namespace PirateSlop.Ships
 
         void OnEnable()
         {
+            RestoreSources();
             Unsubscribe();
             outputFilter = GetComponent<MeshFilter>();
             outputRenderer = GetComponent<MeshRenderer>();
@@ -84,11 +91,17 @@ namespace PirateSlop.Ships
                 var source = trackedSources[i];
                 visible[i] = source != null && source.gameObject.activeInHierarchy && !source.forceRenderingOff;
                 allVisible &= visible[i];
-                if (source != null) source.enabled = false;
+                if (source != null)
+                {
+                    sourceOwners.TryGetValue(source, out int count);
+                    sourceOwners[source] = count + 1;
+                    source.enabled = false;
+                }
                 sourceMeshes[i] = source != null ? source.GetComponent<MeshFilter>()?.sharedMesh : null;
                 var section = source != null ? owner != null ? owner.SectionFor(source) : source.GetComponentInParent<ShipDamageSection>() : null;
                 if (section != null && trackedSections.Add(section)) section.VisualChanged += Invalidate;
             }
+            ownsSources = true;
             outputRenderer.sharedMaterial = SharedMaterial;
             layout = PrepareLayout();
             if (ShadowProxy != null) outputRenderer.shadowCastingMode = ShadowCastingMode.Off;
@@ -106,6 +119,7 @@ namespace PirateSlop.Ships
 
         void LateUpdate()
         {
+            if (PirateSlop.Performance.PerformanceIsolation.SkipBatchPolling && PirateSlop.Performance.PerformanceBenchmarkController.Running) return;
             if (!ReferenceEquals(trackedSources, Sources))
             {
                 RestoreSources();
@@ -198,9 +212,19 @@ namespace PirateSlop.Ships
 
         void RestoreSources()
         {
-            if (trackedSources == null) return;
+            if (!ownsSources || trackedSources == null) return;
+            ownsSources = false;
             for (int i = 0; i < trackedSources.Length; i++)
-                if (trackedSources[i] != null) trackedSources[i].enabled = true;
+            {
+                var source = trackedSources[i];
+                if (ReferenceEquals(source, null) || !sourceOwners.TryGetValue(source, out int count)) continue;
+                if (count > 1) sourceOwners[source] = count - 1;
+                else
+                {
+                    sourceOwners.Remove(source);
+                    if (source != null) source.enabled = true;
+                }
+            }
         }
 
         void SetShadow(Mesh mesh)

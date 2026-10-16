@@ -11,4 +11,6 @@
 | Файл | Краткое описание |
 | --- | --- |
 | [Assets/_Recovery/0 (1).unity](<../../Assets/_Recovery/0 (1).unity>) | Сцена Unity |
+| [Assets/_Recovery/0 (2).unity](<../../Assets/_Recovery/0 (2).unity>) | Сцена Unity |
+| [Assets/_Recovery/0 (3).unity](<../../Assets/_Recovery/0 (3).unity>) | Сцена Unity |
 | [Assets/_Recovery/0.unity](<../../Assets/_Recovery/0.unity>) | Сцена Unity |

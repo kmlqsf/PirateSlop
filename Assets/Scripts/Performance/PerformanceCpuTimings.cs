@@ -10,13 +10,13 @@ namespace PirateSlop.Performance
     {
         Capture, Telemetry, PlayerTick, PlayerCarry, PlayerSyncTransforms, PlayerMotor, PlayerSupport, PlayerPublish, ShipTick, ShipPublish,
         ShipHelm, ShipBuoyancy, ShipWorldChecks, ShipHullMotion, ShipHullBroadphase, ShipHullOverlaps, ShipHullCasts, ShipPhysicsSync, ShipTransformWrite, ShipHullProxySetup,
-        ShipVisualRig, ShipCloth, ShipRopes, ShipFeaturesUpdate, ShipFeaturesLateUpdate, ShipAttachments, ShipDestructionUpdate, ShipRenderBatch, ShipCollisionBatch, PlayerPresentation, ShipStateSampling
+        ShipVisualRig, ShipCloth, ShipRopes, ShipFeaturesUpdate, ShipFeaturesLateUpdate, ShipAttachments, ShipDestructionUpdate, ShipRenderBatch, ShipCollisionBatch, PlayerPresentation, ShipStateSampling, ShipBodyPoseFast
     }
 
     public static class PerformanceCpuTimings
     {
         const int Slots = 4;
-        public const string Version = "wallclock-v5";
+        public const string Version = "wallclock-v7";
         public static string[] Names { get; private set; } = Array.Empty<string>();
         static bool active;
         static int roots, width;
@@ -29,20 +29,49 @@ namespace PirateSlop.Performance
             "PostLateUpdate.UpdateAllRenderers", "PostLateUpdate.UpdateAllSkinnedMeshes", "PostLateUpdate.FinishFrameRendering", "PostLateUpdate.PresentAfterDraw"
         };
         static double[] values;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        static Unity.Profiling.ProfilerMarker[] nativeMarkers;
+        static bool nativeProfiling;
+#endif
 
         public readonly struct Scope : IDisposable
         {
             readonly int index;
             readonly long started;
-            internal Scope(int value) { index = active ? value : -1; started = index >= 0 ? Stopwatch.GetTimestamp() : 0; }
-            public void Dispose() { if (index >= 0 && active) Add(index, started); }
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            readonly Unity.Profiling.ProfilerMarker nativeMarker;
+            readonly bool sampled;
+#endif
+            internal Scope(int value)
+            {
+                index = active ? value : -1;
+                started = index >= 0 ? Stopwatch.GetTimestamp() : 0;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+                sampled = index >= 0 && nativeProfiling;
+                nativeMarker = sampled ? nativeMarkers[value - roots] : default;
+                if (sampled) nativeMarker.Begin();
+#endif
+            }
+            public void Dispose()
+            {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+                if (sampled) nativeMarker.End();
+#endif
+                if (index >= 0 && active) Add(index, started);
+            }
         }
 
         sealed class Probe
         {
             public int Index;
             long started;
-            public void Begin() { started = Stopwatch.GetTimestamp(); }
+            public void Begin()
+            {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+                if (Index == 0) nativeProfiling = UnityEngine.Profiling.Profiler.enabled;
+#endif
+                started = Stopwatch.GetTimestamp();
+            }
             public void End() { if (active) Add(Index, started); }
         }
 
@@ -84,6 +113,10 @@ namespace PirateSlop.Performance
                 }
             roots = names.Count;
             var sections = Enum.GetNames(typeof(PerformanceCpuSection));
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            nativeMarkers = new Unity.Profiling.ProfilerMarker[sections.Length];
+            for (int i = 0; i < sections.Length; i++) nativeMarkers[i] = new Unity.Profiling.ProfilerMarker("Code." + sections[i]);
+#endif
             width = roots + sections.Length;
             Names = new string[width]; values = new double[width * Slots];
             names.CopyTo(Names);
@@ -131,6 +164,9 @@ namespace PirateSlop.Performance
 
         public static void Stop()
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            nativeProfiling = false;
+#endif
             if (!active) return;
             active = false;
             var loop = PlayerLoop.GetCurrentPlayerLoop();

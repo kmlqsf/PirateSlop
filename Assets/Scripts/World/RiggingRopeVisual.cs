@@ -33,6 +33,7 @@ namespace PirateSlop.World
         }
         Vector3[] previous;
         float previousRadius, previousOffset, previousTiles;
+        float nextVisualUpdate;
         void Awake()
         {
             line = GetComponent<LineRenderer>();
@@ -47,6 +48,7 @@ namespace PirateSlop.World
             output.enabled = line != null && line.enabled;
             if (!output.enabled) return;
             line.forceRenderingOff = true; output.sharedMaterial = line.sharedMaterial;
+            if (previous != null && !PirateSlop.Performance.WorldVisualBudget.Due(output, ref nextVisualUpdate)) return;
             int count = line.positionCount; float radius = line.widthMultiplier*.5f;
             bool changed = previous == null || previous.Length != count || !Mathf.Approximately(radius,previousRadius) || !Mathf.Approximately(LengthOffset,previousOffset) || !Mathf.Approximately(TilesPerMeter,previousTiles);
             if (previous == null || previous.Length != count) previous = new Vector3[count];

@@ -9,6 +9,7 @@ namespace PirateSlop.Ships
         public bool PinTop;
         public float Strength = .15f;
         public int SailIndex = -1;
+        public bool GpuPinnedMotion;
         Mesh mesh;
         Vector3[] rest, work, normals;
         NetworkShip ship;
@@ -27,6 +28,7 @@ namespace PirateSlop.Ships
         float amplitude;
         bool initialized;
         int foldedShape = -1;
+        Transform pinnedBone, windRoot;
         void Awake()
         {
             skin = GetComponent<SkinnedMeshRenderer>();
@@ -66,6 +68,27 @@ namespace PirateSlop.Ships
                     pin=height>.0001f ? Mathf.Clamp01(clothUV[i].y/height) : 0f;
                 }
                 weights[i] = SailIndex>=0 ? 4f*pin*(1f-pin) : 1f-pin;
+            }
+            if (skin != null && GpuPinnedMotion && PinTop && SailIndex < 0)
+            {
+                windRoot = new GameObject("ClothWindBones").transform;
+                windRoot.SetParent(transform, false);
+                var fixedBone = new GameObject("ClothFixed").transform;
+                fixedBone.SetParent(windRoot, false);
+                pinnedBone = new GameObject("ClothSway").transform;
+                pinnedBone.SetParent(windRoot, false);
+                var boneWeights = new BoneWeight[weights.Length];
+                for (int i = 0; i < boneWeights.Length; i++)
+                    boneWeights[i] = new BoneWeight { boneIndex0 = 0, boneIndex1 = 1, weight0 = 1f - weights[i], weight1 = weights[i] };
+                mesh.boneWeights = boneWeights;
+                mesh.bindposes = new[] { Matrix4x4.identity, Matrix4x4.identity };
+                skin.bones = new[] { fixedBone, pinnedBone };
+                skin.rootBone = transform;
+                skin.quality = SkinQuality.Bone2;
+                skin.localBounds = new Bounds(bounds.center, bounds.size + Vector3.one * (amplitude * 4f));
+                rest = work = normals = null;
+                weights = null;
+                return;
             }
             if (skin != null)
             {
@@ -116,6 +139,11 @@ namespace PirateSlop.Ships
             uint tick = ship.TimeManager.Tick;
             if (tick != windTick) { windTick = tick; tickTime = Time.unscaledTime; }
             float time = (float)tick * (float)ship.TimeManager.TickDelta + Mathf.Min(Time.unscaledTime - tickTime, (float)ship.TimeManager.TickDelta);
+            if (pinnedBone != null)
+            {
+                pinnedBone.localPosition = PinnedSway(time);
+                return;
+            }
             if (skin != null)
             {
                 float deployed = SailIndex >= 0 && sails != null ? sails.Tension(SailIndex) : 1f;
@@ -130,8 +158,7 @@ namespace PirateSlop.Ships
                 return;
             }
             Vector3 motion = transform.InverseTransformDirection(ship.Motor.MotionAngularVelocity);
-            Vector3 sway = transform.InverseTransformVector(ship.transform.right * ((Mathf.Sin(time * 1.8f) * .65f + Mathf.Sin(time * 2.6f) * .15f) * amplitude * unitsScale
-                + Mathf.Clamp(ship.Motor.MotionAngularVelocity.z * .025f, -.06f, .06f)));
+            Vector3 sway = PinnedSway(time);
             for (int i = 0; i < rest.Length; i++)
             {
                 if (PinTop) { work[i] = rest[i] + sway * weights[i]; continue; }
@@ -141,6 +168,14 @@ namespace PirateSlop.Ships
             }
             mesh.vertices = work;
         }
-        void OnDestroy() { if (mesh != null) Destroy(mesh); }
+        Vector3 PinnedSway(float time) => transform.InverseTransformVector(ship.transform.right *
+            ((Mathf.Sin(time * 1.8f) * .65f + Mathf.Sin(time * 2.6f) * .15f) * amplitude * unitsScale
+            + Mathf.Clamp(ship.Motor.MotionAngularVelocity.z * .025f, -.06f, .06f)));
+
+        void OnDestroy()
+        {
+            if (mesh != null) Destroy(mesh);
+            if (windRoot != null) Destroy(windRoot.gameObject);
+        }
     }
 }

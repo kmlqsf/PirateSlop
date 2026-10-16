@@ -12,7 +12,7 @@
 | --- | --- |
 | [Assets/Scripts/AdvancedPlayerController.Spectator.cs](<../../Assets/Scripts/AdvancedPlayerController.Spectator.cs>) | Исходник C#: AdvancedPlayerController; Персонаж, камера и анимации |
 | [Assets/Scripts/AdvancedPlayerController.Upgrades.cs](<../../Assets/Scripts/AdvancedPlayerController.Upgrades.cs>) | Исходник C#: AdvancedPlayerController; Улучшения рогалика из сундуков |
-| [Assets/Scripts/AdvancedPlayerController.cs](<../../Assets/Scripts/AdvancedPlayerController.cs>) | Исходник C#: AdvancedPlayerController; Персонаж, камера и анимации, Остров с весами и пятью камнями, Сундук в такелаже, Груз за кормой |
+| [Assets/Scripts/AdvancedPlayerController.cs](<../../Assets/Scripts/AdvancedPlayerController.cs>) | Исходник C#: AdvancedPlayerController; Персонаж, камера и анимации, Производительность и тест нагрузки без AI, Остров с весами и пятью камнями, Сундук в такелаже, Груз за кормой |
 | [Assets/Scripts/CannonballDropper.cs](<../../Assets/Scripts/CannonballDropper.cs>) | Исходник C#: CannonballDropper |
 | [Assets/Scripts/CombatVfx.cs](<../../Assets/Scripts/CombatVfx.cs>) | Исходник C#: CombatVfx |
 | [Assets/Scripts/GpuWaterSpray.cs](<../../Assets/Scripts/GpuWaterSpray.cs>) | Исходник C#: GpuWaterSpray |
@@ -172,9 +172,10 @@
 | [Assets/Scripts/Editor/ShipV3BilgeSetup.cs](<../../Assets/Scripts/Editor/ShipV3BilgeSetup.cs>) | Исходник C#: ShipV3BilgeSetup; Движение корабля и палуба |
 | [Assets/Scripts/Editor/ShipV3BindingRepair.cs](<../../Assets/Scripts/Editor/ShipV3BindingRepair.cs>) | Исходник C#: ShipV3BindingRepair; Движение корабля и палуба, Модели и Blender |
 | [Assets/Scripts/Editor/ShipV3DiceRepair.cs](<../../Assets/Scripts/Editor/ShipV3DiceRepair.cs>) | Исходник C#: ShipV3DiceRepair; Движение корабля и палуба |
+| [Assets/Scripts/Editor/ShipV3FixtureOptimization.cs](<../../Assets/Scripts/Editor/ShipV3FixtureOptimization.cs>) | Исходник C#: ShipV3FixtureOptimization; Производительность и тест нагрузки без AI |
 | [Assets/Scripts/Editor/ShipV3GameplayRepair.cs](<../../Assets/Scripts/Editor/ShipV3GameplayRepair.cs>) | Исходник C#: ShipV3GameplayRepair; Движение корабля и палуба, Тестовая карта и водоворот |
 | [Assets/Scripts/Editor/ShipV3HoldSupportsSetup.cs](<../../Assets/Scripts/Editor/ShipV3HoldSupportsSetup.cs>) | Исходник C#: ShipV3HoldSupportsSetup; Движение корабля и палуба |
-| [Assets/Scripts/Editor/ShipV3ImportSetup.cs](<../../Assets/Scripts/Editor/ShipV3ImportSetup.cs>) | Исходник C#: ShipV3ImportSetup; Модели и Blender |
+| [Assets/Scripts/Editor/ShipV3ImportSetup.cs](<../../Assets/Scripts/Editor/ShipV3ImportSetup.cs>) | Исходник C#: ShipV3ImportSetup; Модели и Blender, Производительность и тест нагрузки без AI |
 | [Assets/Scripts/Editor/ShipV3InteractionAudioSetup.cs](<../../Assets/Scripts/Editor/ShipV3InteractionAudioSetup.cs>) | Исходник C#: ShipV3InteractionAudioSetup; Движение корабля и палуба, Звуки и голос |
 | [Assets/Scripts/Editor/ShipV3PerformanceSetup.cs](<../../Assets/Scripts/Editor/ShipV3PerformanceSetup.cs>) | Исходник C#: ShipV3PerformanceSetup; Движение корабля и палуба |
 | [Assets/Scripts/Editor/ShipV3SailFootSetup.cs](<../../Assets/Scripts/Editor/ShipV3SailFootSetup.cs>) | Исходник C#: ShipV3SailFootSetup; Паруса и канаты |
@@ -451,7 +452,9 @@
 | [Assets/Scripts/Performance/PerformanceBenchmarkController.cs](<../../Assets/Scripts/Performance/PerformanceBenchmarkController.cs>) | Исходник C#: BenchmarkWaypoint, BenchmarkSegment, BenchmarkProfile, PerformanceBenchmarkController; Производительность и тест нагрузки без AI |
 | [Assets/Scripts/Performance/PerformanceCapture.cs](<../../Assets/Scripts/Performance/PerformanceCapture.cs>) | Исходник C#: PerformanceCounters, PerformanceMetadata, PerformanceFrame, PerformanceShipSample, PerformanceEvent, PerformanceSummary, PerformanceSecond, PerformanceReport, PerformanceStatistics, PerformanceCapture, SavedReport; Производительность и тест нагрузки без AI |
 | [Assets/Scripts/Performance/PerformanceCpuTimings.cs](<../../Assets/Scripts/Performance/PerformanceCpuTimings.cs>) | Исходник C#: PerformanceCpuSection, PerformanceCpuTimings, Scope, Probe; Производительность и тест нагрузки без AI |
+| [Assets/Scripts/Performance/PerformanceIsolation.cs](<../../Assets/Scripts/Performance/PerformanceIsolation.cs>) | Исходник C#: PerformanceIsolation; Производительность и тест нагрузки без AI |
 | [Assets/Scripts/Performance/PerformanceRenderOverrides.cs](<../../Assets/Scripts/Performance/PerformanceRenderOverrides.cs>) | Исходник C#: PerformanceRenderOverrides; Производительность и тест нагрузки без AI |
+| [Assets/Scripts/Performance/WorldVisualBudget.cs](<../../Assets/Scripts/Performance/WorldVisualBudget.cs>) | Исходник C#: WorldVisualBudget; Производительность и тест нагрузки без AI |
 
 ## Assets/Scripts/Player
 
@@ -554,6 +557,7 @@
 | [Assets/Scripts/Ships/ShipBilgePump.cs](<../../Assets/Scripts/Ships/ShipBilgePump.cs>) | Исходник C#: ShipBilgePump; Движение корабля и палуба |
 | [Assets/Scripts/Ships/ShipBilgePumpPlayer.cs](<../../Assets/Scripts/Ships/ShipBilgePumpPlayer.cs>) | Исходник C#: ShipBilgePumpPlayer; Движение корабля и палуба |
 | [Assets/Scripts/Ships/ShipBilgeWater.cs](<../../Assets/Scripts/Ships/ShipBilgeWater.cs>) | Исходник C#: ShipBilgeWater; Движение корабля и палуба |
+| [Assets/Scripts/Ships/ShipBodyPose.cs](<../../Assets/Scripts/Ships/ShipBodyPose.cs>) | Исходник C#: ShipBodyPose; Производительность и тест нагрузки без AI |
 | [Assets/Scripts/Ships/ShipDamagePreparation.cs](<../../Assets/Scripts/Ships/ShipDamagePreparation.cs>) | Исходник C#: ShipDamagePreparation, BakeJob; Движение корабля и палуба, Производительность и тест нагрузки без AI |
 | [Assets/Scripts/Ships/ShipHullQueryWorld.cs](<../../Assets/Scripts/Ships/ShipHullQueryWorld.cs>) | Исходник C#: ShipHullQueryWorld, Proxy; Производительность и тест нагрузки без AI |
 | [Assets/Scripts/Ships/ShipMonkey.Activities.cs](<../../Assets/Scripts/Ships/ShipMonkey.Activities.cs>) | Исходник C#: ShipMonkey, TaskKind; Корабельная обезьянка |
@@ -605,6 +609,7 @@
 | [Assets/Scripts/UI/GameVersionOverlay.cs](<../../Assets/Scripts/UI/GameVersionOverlay.cs>) | Исходник C#: GameVersionOverlay; Меню и HUD |
 | [Assets/Scripts/UI/HudLayout.cs](<../../Assets/Scripts/UI/HudLayout.cs>) | Исходник C#: HudLayout, Scope; Меню и HUD |
 | [Assets/Scripts/UI/PirateHudStyle.cs](<../../Assets/Scripts/UI/PirateHudStyle.cs>) | Исходник C#: PirateHudStyle; Повреждения корпуса, ремонт и затопление, Меню и HUD |
+| [Assets/Scripts/UI/PlayerGuiBudget.cs](<../../Assets/Scripts/UI/PlayerGuiBudget.cs>) | Исходник C#: PlayerGuiBudget; Производительность и тест нагрузки без AI |
 | [Assets/Scripts/UI/PlayerHud.cs](<../../Assets/Scripts/UI/PlayerHud.cs>) | Исходник C#: PlayerHud; Личное оружие и урон, Меню и HUD |
 | [Assets/Scripts/UI/RoguelikeUpgradeUI.Presentation.cs](<../../Assets/Scripts/UI/RoguelikeUpgradeUI.Presentation.cs>) | Исходник C#: RoguelikeUpgradeUI; Улучшения рогалика из сундуков |
 | [Assets/Scripts/UI/RoguelikeUpgradeUI.cs](<../../Assets/Scripts/UI/RoguelikeUpgradeUI.cs>) | Исходник C#: RoguelikeUpgradeUI; Улучшения рогалика из сундуков, Корабельная слот-машина |

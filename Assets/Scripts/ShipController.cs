@@ -15,6 +15,8 @@ public class ShipController : MonoBehaviour
     Vector3 hullMotionCenter, hullMotionExtents;
     Collider[] hullOverlapHits = new Collider[512];
     RaycastHit[] hullCastHits = new RaycastHit[512];
+    readonly System.Collections.Generic.List<Rigidbody> poseBodies = new(64);
+    bool hullContact;
     [SerializeField] float pushImpulse = 450000f, pushLinearDrag = .55f, pushAngularDrag = .7f;
     [SerializeField] float impulseMass = 15000f, hullLength = 46f, hullWidth = 13f;
     public Vector2 HullFootprint => new Vector2(hullWidth, hullLength);
@@ -340,7 +342,7 @@ public class ShipController : MonoBehaviour
         if(angle>180f) angle-=360f;
         motionAngularVelocity=float.IsFinite(axis.sqrMagnitude) ? axis*(angle*Mathf.Deg2Rad/Mathf.Max(.001f,dt)) : Vector3.zero;
         using var transformTiming = PirateSlop.Performance.PerformanceCpuTimings.Measure(PirateSlop.Performance.PerformanceCpuSection.ShipTransformWrite);
-        if (Networked) { rb.position = next; rb.rotation = rotation; transform.SetPositionAndRotation(next, rotation); }
+        if (Networked) PirateSlop.Ships.ShipBodyPose.Apply(rb, next, rotation, poseBodies, hullContact);
         else { rb.MoveRotation(rotation); rb.MovePosition(next); transform.SetPositionAndRotation(next, rotation); }
     }
     public static bool HullSweepFastPathEnabled { get; set; } = true;
@@ -411,7 +413,9 @@ public class ShipController : MonoBehaviour
     {
         using var timing = PirateSlop.Performance.PerformanceCpuTimings.Measure(PirateSlop.Performance.PerformanceCpuSection.ShipHullMotion);
         using (PirateSlop.Performance.PerformanceCpuTimings.Measure(PirateSlop.Performance.PerformanceCpuSection.ShipPhysicsSync)) Physics.SyncTransforms();
+        hullContact = false;
         if (HullSweepFastPathEnabled && HullSweepCandidates(rb.position, next, rb.rotation, rotation) == 0) return;
+        hullContact = true;
         var start = rb.position;
         var startRotation = rb.rotation;
         var recovery = Vector3.zero;
@@ -510,7 +514,7 @@ public class ShipController : MonoBehaviour
         buoyantVelocity = buoyantTargetVelocity = Vector3.zero; buoyantResponseReady = false;
         speed = s.Speed; yaw = s.Yaw; bank = s.Bank; pitch = s.Pitch; waveRoll = s.WaveRoll;
         if (relocatedAnchor.HasValue) anchorPoint = relocatedAnchor.Value;
-        rb.position = s.Position; rb.rotation = Quaternion.Euler(pitch + cannonTilt.x, yaw, bank + waveRoll + cannonTilt.y); transform.SetPositionAndRotation(rb.position, rb.rotation);
+        PirateSlop.Ships.ShipBodyPose.Apply(rb, s.Position, Quaternion.Euler(pitch + cannonTilt.x, yaw, bank + waveRoll + cannonTilt.y), poseBodies, false);
         sailSystem.ApplyAggregate(s.Sail); helm.Restore(s.Rudder, s.Controlling, driver);
     }
     public void ApplyRemoteState(ShipState s, float blend, AdvancedPlayerController driver = null)
@@ -525,8 +529,7 @@ public class ShipController : MonoBehaviour
         rotationDelta.ToAngleAxis(out float angle, out Vector3 axis);
         if (angle > 180f) angle -= 360f;
         motionAngularVelocity = float.IsFinite(axis.sqrMagnitude) ? axis * (angle * Mathf.Deg2Rad / dt) : Vector3.zero;
-        rb.position = position; rb.rotation = rotation;
-        transform.SetPositionAndRotation(position, rotation);
+        PirateSlop.Ships.ShipBodyPose.Apply(rb, position, rotation, poseBodies, Mathf.Abs(s.Pitch) > 15f || Mathf.Abs(s.Bank + s.WaveRoll) > 15f);
         sailSystem.ApplyAggregate(s.Sail); helm.Restore(s.Rudder, s.Controlling, driver);
     }
     public void ResolveCollision(Vector3 displacement, Vector3? contact = null, bool showEffect = true, float impactStrength = -1f)
@@ -540,8 +543,7 @@ public class ShipController : MonoBehaviour
         }
         RegisterCollision(displacement, contact, showEffect, impactStrength);
         var position = rb.position + displacement; position.y = rb.position.y;
-        rb.position = position;
-        transform.position = position;
+        PirateSlop.Ships.ShipBodyPose.Apply(rb, position, rb.rotation, poseBodies, true);
         speed *= .35f;
     }
     void RegisterCollision(Vector3 displacement, Vector3? contact, bool showEffect, float impactStrength)

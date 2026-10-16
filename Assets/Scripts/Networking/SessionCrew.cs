@@ -119,7 +119,7 @@ namespace PirateSlop.Networking
                     yaw = spawns[i].Yaw;
                 }
                 if (!world.CanSail(position, yaw)) continue;
-                if (!ShipSpawnClear(position, 52f)) continue;
+                if (!ShipSpawnClear(position, BenchmarkFleetShipsActive > 0 ? 35f : 52f)) continue;
                 ship = Instantiate(ShipPrefab, position, Quaternion.Euler(0, yaw, 0)).GetComponent<NetworkShip>();
                 ship.ParticipantId.Value = nextParticipant++;
                 ship.TeamId.Value = team;

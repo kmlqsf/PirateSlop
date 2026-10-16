@@ -296,6 +296,7 @@ namespace PirateSlop.Networking
                 if(MenuAction(x,y+250,panelWidth,"Нет · играть на своём корабле")) { observerSelected=false; chooseObserver=false; }
             }
             else if(menuPage==10) DrawPerformanceMenu(x,y,panelWidth);
+            else if(menuPage==11) DrawFleetPerformanceMenu(x,y,panelWidth);
             else if(menuPage==5) { DrawSteamParty(x,y-42,panelWidth); }
             else if(menuPage==1)
             {

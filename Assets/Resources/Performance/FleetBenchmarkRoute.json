@@ -1,0 +1,51 @@
+{
+  "version": "fleet-v2",
+  "scenario": "fleet",
+  "fleetOffset": { "x": -650, "y": 0, "z": 240 },
+  "fleetYaw": 270,
+  "fleetSpacing": 40,
+  "fleetSail": 0.2,
+  "warmup": 30,
+  "fov": 80,
+  "stormRadius": 3000,
+  "ships": 4,
+  "players": 12,
+  "segments": [
+    {
+      "name": "Fleet close",
+      "anchor": "fleet",
+      "duration": 30,
+      "waypoints": [
+        { "time": 0, "position": { "x": -8, "y": 16, "z": -75 }, "target": { "x": 0, "y": 8, "z": 0 } },
+        { "time": 30, "position": { "x": 8, "y": 16, "z": -75 }, "target": { "x": 0, "y": 8, "z": 0 } }
+      ]
+    },
+    {
+      "name": "Fleet medium",
+      "anchor": "fleet",
+      "duration": 30,
+      "waypoints": [
+        { "time": 0, "position": { "x": -12, "y": 24, "z": -150 }, "target": { "x": 0, "y": 8, "z": 0 } },
+        { "time": 30, "position": { "x": 12, "y": 24, "z": -150 }, "target": { "x": 0, "y": 8, "z": 0 } }
+      ]
+    },
+    {
+      "name": "Fleet from deck",
+      "anchor": "ship",
+      "duration": 30,
+      "waypoints": [
+        { "time": 0, "position": { "x": -2, "y": 6, "z": -4 }, "target": { "x": -45, "y": 9, "z": 0 } },
+        { "time": 30, "position": { "x": -2, "y": 6, "z": 4 }, "target": { "x": -45, "y": 9, "z": 0 } }
+      ]
+    },
+    {
+      "name": "Fleet behind camera",
+      "anchor": "fleet",
+      "duration": 30,
+      "waypoints": [
+        { "time": 0, "position": { "x": 0, "y": 16, "z": 75 }, "target": { "x": 0, "y": 8, "z": 300 } },
+        { "time": 30, "position": { "x": 0, "y": 16, "z": 85 }, "target": { "x": 0, "y": 8, "z": 310 } }
+      ]
+    }
+  ]
+}

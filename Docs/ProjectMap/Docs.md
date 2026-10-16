@@ -71,8 +71,13 @@
 
 | Файл | Краткое описание |
 | --- | --- |
+| [Docs/Performance/ColleagueBenchmark_20261015.md](<../Performance/ColleagueBenchmark_20261015.md>) | Документация; Производительность и тест нагрузки без AI |
+| [Docs/Performance/ColleagueFleet4Test.md](<../Performance/ColleagueFleet4Test.md>) | Документация; Производительность и тест нагрузки без AI |
+| [Docs/Performance/Delivery_20261016.md](<../Performance/Delivery_20261016.md>) | Документация; Производительность и тест нагрузки без AI |
+| [Docs/Performance/FleetCostBreakdown_20261016.md](<../Performance/FleetCostBreakdown_20261016.md>) | Документация; Производительность и тест нагрузки без AI |
 | [Docs/Performance/NetworkLoadTest.md](<../Performance/NetworkLoadTest.md>) | Документация; Производительность и тест нагрузки без AI |
 | [Docs/Performance/OptimizationPlan.md](<../Performance/OptimizationPlan.md>) | Документация; Производительность и тест нагрузки без AI |
+| [Docs/Performance/ShipPresentationOptimization_20261016.md](<../Performance/ShipPresentationOptimization_20261016.md>) | Документация; Производительность и тест нагрузки без AI |
 
 ## Docs/Performance/Reports
 
@@ -100,6 +105,38 @@
 | [Docs/Performance/Reports/20261015-141903-033-benchmark.txt](<../Performance/Reports/20261015-141903-033-benchmark.txt>) | Текстовые данные; Производительность и тест нагрузки без AI |
 | [Docs/Performance/Reports/20261015-143012-267-character-hits-editor.json](<../Performance/Reports/20261015-143012-267-character-hits-editor.json>) | Конфигурация / данные JSON; Производительность и тест нагрузки без AI |
 | [Docs/Performance/Reports/20261015-143012-267-character-hits-editor.txt](<../Performance/Reports/20261015-143012-267-character-hits-editor.txt>) | Текстовые данные; Производительность и тест нагрузки без AI |
+| [Docs/Performance/Reports/20261015-153304-141-benchmark.json](<../Performance/Reports/20261015-153304-141-benchmark.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261015-153304-141-benchmark.txt](<../Performance/Reports/20261015-153304-141-benchmark.txt>) | Текстовые данные |
+| [Docs/Performance/Reports/20261015-153611-623-benchmark.json](<../Performance/Reports/20261015-153611-623-benchmark.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261015-153611-623-benchmark.txt](<../Performance/Reports/20261015-153611-623-benchmark.txt>) | Текстовые данные |
+| [Docs/Performance/Reports/20261015-154623-532-benchmark.json](<../Performance/Reports/20261015-154623-532-benchmark.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261015-154623-532-benchmark.txt](<../Performance/Reports/20261015-154623-532-benchmark.txt>) | Текстовые данные |
+| [Docs/Performance/Reports/20261015-154924-039-benchmark.json](<../Performance/Reports/20261015-154924-039-benchmark.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261015-154924-039-benchmark.txt](<../Performance/Reports/20261015-154924-039-benchmark.txt>) | Текстовые данные |
+| [Docs/Performance/Reports/20261015-161131-972-benchmark.json](<../Performance/Reports/20261015-161131-972-benchmark.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261015-161131-972-benchmark.txt](<../Performance/Reports/20261015-161131-972-benchmark.txt>) | Текстовые данные |
+| [Docs/Performance/Reports/20261015-161425-092-benchmark.json](<../Performance/Reports/20261015-161425-092-benchmark.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261015-161425-092-benchmark.txt](<../Performance/Reports/20261015-161425-092-benchmark.txt>) | Текстовые данные |
+| [Docs/Performance/Reports/20261015-174707-155-benchmark.json](<../Performance/Reports/20261015-174707-155-benchmark.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261015-174707-155-benchmark.txt](<../Performance/Reports/20261015-174707-155-benchmark.txt>) | Текстовые данные |
+| [Docs/Performance/Reports/20261015-192323-866-benchmark.json](<../Performance/Reports/20261015-192323-866-benchmark.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261015-192323-866-benchmark.txt](<../Performance/Reports/20261015-192323-866-benchmark.txt>) | Текстовые данные |
+| [Docs/Performance/Reports/20261015-192634-242-benchmark.json](<../Performance/Reports/20261015-192634-242-benchmark.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261015-192634-242-benchmark.txt](<../Performance/Reports/20261015-192634-242-benchmark.txt>) | Текстовые данные |
+| [Docs/Performance/Reports/20261015-222021-429-isolation.json](<../Performance/Reports/20261015-222021-429-isolation.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261015-222021-429-isolation.txt](<../Performance/Reports/20261015-222021-429-isolation.txt>) | Текстовые данные |
+| [Docs/Performance/Reports/20261015-222540-939-isolation.json](<../Performance/Reports/20261015-222540-939-isolation.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261015-222540-939-isolation.txt](<../Performance/Reports/20261015-222540-939-isolation.txt>) | Текстовые данные |
+| [Docs/Performance/Reports/20261015-223025-942-isolation.json](<../Performance/Reports/20261015-223025-942-isolation.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261015-223025-942-isolation.txt](<../Performance/Reports/20261015-223025-942-isolation.txt>) | Текстовые данные |
+| [Docs/Performance/Reports/20261015-223317-631-isolation.json](<../Performance/Reports/20261015-223317-631-isolation.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261015-223317-631-isolation.txt](<../Performance/Reports/20261015-223317-631-isolation.txt>) | Текстовые данные |
+| [Docs/Performance/Reports/20261015-223529-116-isolation.json](<../Performance/Reports/20261015-223529-116-isolation.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261015-223529-116-isolation.txt](<../Performance/Reports/20261015-223529-116-isolation.txt>) | Текстовые данные |
+| [Docs/Performance/Reports/20261015-225254-937-benchmark.json](<../Performance/Reports/20261015-225254-937-benchmark.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261015-225254-937-benchmark.txt](<../Performance/Reports/20261015-225254-937-benchmark.txt>) | Текстовые данные |
+| [Docs/Performance/Reports/20261015-230032-649-isolation.json](<../Performance/Reports/20261015-230032-649-isolation.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261015-230032-649-isolation.txt](<../Performance/Reports/20261015-230032-649-isolation.txt>) | Текстовые данные |
 | [Docs/Performance/Reports/20261015-character-hit-before-analysis.json](<../Performance/Reports/20261015-character-hit-before-analysis.json>) | Конфигурация / данные JSON; Производительность и тест нагрузки без AI |
 | [Docs/Performance/Reports/20261015-cpu-series.json](<../Performance/Reports/20261015-cpu-series.json>) | Конфигурация / данные JSON; Производительность и тест нагрузки без AI |
 | [Docs/Performance/Reports/20261015-editor-cpu-after.txt](<../Performance/Reports/20261015-editor-cpu-after.txt>) | Текстовые данные; Производительность и тест нагрузки без AI |
@@ -109,12 +146,117 @@
 | [Docs/Performance/Reports/20261015-editor-gpu-reference-repeat.txt](<../Performance/Reports/20261015-editor-gpu-reference-repeat.txt>) | Текстовые данные; Производительность и тест нагрузки без AI |
 | [Docs/Performance/Reports/20261015-editor-gpu-scale040-sky025.txt](<../Performance/Reports/20261015-editor-gpu-scale040-sky025.txt>) | Текстовые данные; Производительность и тест нагрузки без AI |
 | [Docs/Performance/Reports/20261015-editor-gpu-scale050-sky030.txt](<../Performance/Reports/20261015-editor-gpu-scale050-sky030.txt>) | Текстовые данные; Производительность и тест нагрузки без AI |
+| [Docs/Performance/Reports/20261015-fleet-cpu-before.txt](<../Performance/Reports/20261015-fleet-cpu-before.txt>) | Текстовые данные |
+| [Docs/Performance/Reports/20261015-fleet-mesh-audit.txt](<../Performance/Reports/20261015-fleet-mesh-audit.txt>) | Текстовые данные |
+| [Docs/Performance/Reports/20261015-fleet-player-cpu.raw](<../Performance/Reports/20261015-fleet-player-cpu.raw>) | Файл .raw |
+| [Docs/Performance/Reports/20261015-fleet-player-cpu.txt](<../Performance/Reports/20261015-fleet-player-cpu.txt>) | Текстовые данные |
 | [Docs/Performance/Reports/20261015-render-scale-experiment.json](<../Performance/Reports/20261015-render-scale-experiment.json>) | Конфигурация / данные JSON; Производительность и тест нагрузки без AI |
+| [Docs/Performance/Reports/20261016-001234-864-isolation.json](<../Performance/Reports/20261016-001234-864-isolation.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261016-001234-864-isolation.txt](<../Performance/Reports/20261016-001234-864-isolation.txt>) | Текстовые данные |
+| [Docs/Performance/Reports/20261016-002457-740-isolation.json](<../Performance/Reports/20261016-002457-740-isolation.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261016-002457-740-isolation.txt](<../Performance/Reports/20261016-002457-740-isolation.txt>) | Текстовые данные |
+| [Docs/Performance/Reports/20261016-002815-015-isolation.json](<../Performance/Reports/20261016-002815-015-isolation.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261016-002815-015-isolation.txt](<../Performance/Reports/20261016-002815-015-isolation.txt>) | Текстовые данные |
+| [Docs/Performance/Reports/20261016-003921-912-isolation.json](<../Performance/Reports/20261016-003921-912-isolation.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261016-003921-912-isolation.txt](<../Performance/Reports/20261016-003921-912-isolation.txt>) | Текстовые данные |
+| [Docs/Performance/Reports/20261016-004142-594-isolation.json](<../Performance/Reports/20261016-004142-594-isolation.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261016-004142-594-isolation.txt](<../Performance/Reports/20261016-004142-594-isolation.txt>) | Текстовые данные |
+| [Docs/Performance/Reports/20261016-004418-480-isolation.json](<../Performance/Reports/20261016-004418-480-isolation.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261016-004418-480-isolation.txt](<../Performance/Reports/20261016-004418-480-isolation.txt>) | Текстовые данные |
+| [Docs/Performance/Reports/20261016-004604-996-isolation.json](<../Performance/Reports/20261016-004604-996-isolation.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261016-004604-996-isolation.txt](<../Performance/Reports/20261016-004604-996-isolation.txt>) | Текстовые данные |
+| [Docs/Performance/Reports/20261016-004809-023-isolation.json](<../Performance/Reports/20261016-004809-023-isolation.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261016-004809-023-isolation.txt](<../Performance/Reports/20261016-004809-023-isolation.txt>) | Текстовые данные |
+| [Docs/Performance/Reports/20261016-005049-525-isolation.json](<../Performance/Reports/20261016-005049-525-isolation.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261016-005049-525-isolation.txt](<../Performance/Reports/20261016-005049-525-isolation.txt>) | Текстовые данные |
+| [Docs/Performance/Reports/20261016-010225-887-benchmark.json](<../Performance/Reports/20261016-010225-887-benchmark.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261016-010225-887-benchmark.txt](<../Performance/Reports/20261016-010225-887-benchmark.txt>) | Текстовые данные |
+| [Docs/Performance/Reports/20261016-012117-555-isolation.json](<../Performance/Reports/20261016-012117-555-isolation.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261016-012117-555-isolation.txt](<../Performance/Reports/20261016-012117-555-isolation.txt>) | Текстовые данные |
+| [Docs/Performance/Reports/20261016-012308-306-isolation.json](<../Performance/Reports/20261016-012308-306-isolation.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261016-012308-306-isolation.txt](<../Performance/Reports/20261016-012308-306-isolation.txt>) | Текстовые данные |
+| [Docs/Performance/Reports/20261016-012601-899-isolation.json](<../Performance/Reports/20261016-012601-899-isolation.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261016-012601-899-isolation.txt](<../Performance/Reports/20261016-012601-899-isolation.txt>) | Текстовые данные |
+| [Docs/Performance/Reports/20261016-013030-023-isolation.json](<../Performance/Reports/20261016-013030-023-isolation.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261016-013030-023-isolation.txt](<../Performance/Reports/20261016-013030-023-isolation.txt>) | Текстовые данные |
+| [Docs/Performance/Reports/20261016-013417-672-isolation.json](<../Performance/Reports/20261016-013417-672-isolation.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261016-013417-672-isolation.txt](<../Performance/Reports/20261016-013417-672-isolation.txt>) | Текстовые данные |
+| [Docs/Performance/Reports/20261016-014539-569-benchmark.json](<../Performance/Reports/20261016-014539-569-benchmark.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261016-014539-569-benchmark.txt](<../Performance/Reports/20261016-014539-569-benchmark.txt>) | Текстовые данные |
+| [Docs/Performance/Reports/20261016-current-n4-priority-audit.json](<../Performance/Reports/20261016-current-n4-priority-audit.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261016-current-n4-priority-audit.md](<../Performance/Reports/20261016-current-n4-priority-audit.md>) | Документация |
+| [Docs/Performance/Reports/20261016-d3d12-n4.json](<../Performance/Reports/20261016-d3d12-n4.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261016-d3d12-n4.md](<../Performance/Reports/20261016-d3d12-n4.md>) | Документация |
+| [Docs/Performance/Reports/20261016-fixture-batch-cache-check.json](<../Performance/Reports/20261016-fixture-batch-cache-check.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261016-fixture-lifecycle-check.json](<../Performance/Reports/20261016-fixture-lifecycle-check.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261016-gpu-net-authoring-integrity.json](<../Performance/Reports/20261016-gpu-net-authoring-integrity.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261016-gui-budget-n10.json](<../Performance/Reports/20261016-gui-budget-n10.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261016-gui-budget-n10.md](<../Performance/Reports/20261016-gui-budget-n10.md>) | Документация |
+| [Docs/Performance/Reports/20261016-gui-budget-n4.json](<../Performance/Reports/20261016-gui-budget-n4.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261016-gui-budget-n4.md](<../Performance/Reports/20261016-gui-budget-n4.md>) | Документация |
+| [Docs/Performance/Reports/20261016-gui-layout-aba.json](<../Performance/Reports/20261016-gui-layout-aba.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261016-gui-layout-check.json](<../Performance/Reports/20261016-gui-layout-check.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261016-gui-legacy-n10.json](<../Performance/Reports/20261016-gui-legacy-n10.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261016-gui-legacy-n10.md](<../Performance/Reports/20261016-gui-legacy-n10.md>) | Документация |
+| [Docs/Performance/Reports/20261016-gui-legacy-return-n10.json](<../Performance/Reports/20261016-gui-legacy-return-n10.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261016-gui-legacy-return-n10.md](<../Performance/Reports/20261016-gui-legacy-return-n10.md>) | Документация |
+| [Docs/Performance/Reports/20261016-isolation-n1-budget-analysis.json](<../Performance/Reports/20261016-isolation-n1-budget-analysis.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261016-isolation-n1-budget-analysis.md](<../Performance/Reports/20261016-isolation-n1-budget-analysis.md>) | Документация |
+| [Docs/Performance/Reports/20261016-isolation-n10-analysis.json](<../Performance/Reports/20261016-isolation-n10-analysis.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261016-isolation-n10-analysis.md](<../Performance/Reports/20261016-isolation-n10-analysis.md>) | Документация |
+| [Docs/Performance/Reports/20261016-isolation-n10-budget-analysis.json](<../Performance/Reports/20261016-isolation-n10-budget-analysis.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261016-isolation-n10-budget-analysis.md](<../Performance/Reports/20261016-isolation-n10-budget-analysis.md>) | Документация |
+| [Docs/Performance/Reports/20261016-isolation-n4-analysis.json](<../Performance/Reports/20261016-isolation-n4-analysis.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261016-isolation-n4-analysis.md](<../Performance/Reports/20261016-isolation-n4-analysis.md>) | Документация |
+| [Docs/Performance/Reports/20261016-isolation-n4-budget-analysis.json](<../Performance/Reports/20261016-isolation-n4-budget-analysis.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261016-isolation-n4-budget-analysis.md](<../Performance/Reports/20261016-isolation-n4-budget-analysis.md>) | Документация |
+| [Docs/Performance/Reports/20261016-n10-imgui-callbacks.txt](<../Performance/Reports/20261016-n10-imgui-callbacks.txt>) | Текстовые данные |
+| [Docs/Performance/Reports/20261016-n10-native-code-scopes.txt](<../Performance/Reports/20261016-n10-native-code-scopes.txt>) | Текстовые данные |
+| [Docs/Performance/Reports/20261016-n10-physics-callers.txt](<../Performance/Reports/20261016-n10-physics-callers.txt>) | Текстовые данные |
+| [Docs/Performance/Reports/20261016-n10-player-sync-distribution.txt](<../Performance/Reports/20261016-n10-player-sync-distribution.txt>) | Текстовые данные |
+| [Docs/Performance/Reports/20261016-night-after-ship-repeat.json](<../Performance/Reports/20261016-night-after-ship-repeat.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261016-night-after-ship-repeat.md](<../Performance/Reports/20261016-night-after-ship-repeat.md>) | Документация |
+| [Docs/Performance/Reports/20261016-night-after-ship.json](<../Performance/Reports/20261016-night-after-ship.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261016-night-after-ship.md](<../Performance/Reports/20261016-night-after-ship.md>) | Документация |
+| [Docs/Performance/Reports/20261016-night-baseline-comparison.json](<../Performance/Reports/20261016-night-baseline-comparison.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261016-night-before-ship.json](<../Performance/Reports/20261016-night-before-ship.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261016-night-before-ship.md](<../Performance/Reports/20261016-night-before-ship.md>) | Документация |
+| [Docs/Performance/Reports/20261016-night-fixtures-integrity.json](<../Performance/Reports/20261016-night-fixtures-integrity.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261016-night-gpu-nets-n10-repeat.json](<../Performance/Reports/20261016-night-gpu-nets-n10-repeat.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261016-night-gpu-nets-n10-repeat.md](<../Performance/Reports/20261016-night-gpu-nets-n10-repeat.md>) | Документация |
+| [Docs/Performance/Reports/20261016-night-gpu-nets-n10.json](<../Performance/Reports/20261016-night-gpu-nets-n10.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261016-night-gpu-nets-n10.md](<../Performance/Reports/20261016-night-gpu-nets-n10.md>) | Документация |
+| [Docs/Performance/Reports/20261016-night-gpu-nets-ship-repeat2.json](<../Performance/Reports/20261016-night-gpu-nets-ship-repeat2.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261016-night-gpu-nets-ship-repeat2.md](<../Performance/Reports/20261016-night-gpu-nets-ship-repeat2.md>) | Документация |
+| [Docs/Performance/Reports/20261016-night-gpu-nets-ship-repeat3.json](<../Performance/Reports/20261016-night-gpu-nets-ship-repeat3.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261016-night-gpu-nets-ship-repeat3.md](<../Performance/Reports/20261016-night-gpu-nets-ship-repeat3.md>) | Документация |
+| [Docs/Performance/Reports/20261016-night-gpu-nets-ship.json](<../Performance/Reports/20261016-night-gpu-nets-ship.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261016-night-gpu-nets-ship.md](<../Performance/Reports/20261016-night-gpu-nets-ship.md>) | Документация |
+| [Docs/Performance/Reports/20261016-pinned-cloth-prototype.json](<../Performance/Reports/20261016-pinned-cloth-prototype.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261016-pinned-cloth-runtime-check.json](<../Performance/Reports/20261016-pinned-cloth-runtime-check.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261016-post-package-n10-cpu.txt](<../Performance/Reports/20261016-post-package-n10-cpu.txt>) | Текстовые данные |
+| [Docs/Performance/Reports/20261016-ship-fixtures-audit.json](<../Performance/Reports/20261016-ship-fixtures-audit.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261016-ship-isolation-n4-analysis.json](<../Performance/Reports/20261016-ship-isolation-n4-analysis.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261016-ship-isolation-n4-analysis.md](<../Performance/Reports/20261016-ship-isolation-n4-analysis.md>) | Документация |
+| [Docs/Performance/Reports/20261016-ship-player-cpu-gpu.raw](<../Performance/Reports/20261016-ship-player-cpu-gpu.raw>) | Файл .raw |
+| [Docs/Performance/Reports/20261016-ship-player-cpu.txt](<../Performance/Reports/20261016-ship-player-cpu.txt>) | Текстовые данные |
+| [Docs/Performance/Reports/20261016-ship-player-gpu.txt](<../Performance/Reports/20261016-ship-player-gpu.txt>) | Текстовые данные |
+| [Docs/Performance/Reports/20261016-tentacle-pose-check.json](<../Performance/Reports/20261016-tentacle-pose-check.json>) | Конфигурация / данные JSON |
 
 ## Docs/Performance/Visuals
 
 | Файл | Краткое описание |
 | --- | --- |
+| [Docs/Performance/Visuals/DiceCandle-after.png](<../Performance/Visuals/DiceCandle-after.png>) | Изображение / текстура |
+| [Docs/Performance/Visuals/DiceCandle-before.png](<../Performance/Visuals/DiceCandle-before.png>) | Изображение / текстура |
+| [Docs/Performance/Visuals/V10_Port_Reel_Winding_Strand_01-after.png](<../Performance/Visuals/V10_Port_Reel_Winding_Strand_01-after.png>) | Изображение / текстура |
+| [Docs/Performance/Visuals/V10_Port_Reel_Winding_Strand_01-before.png](<../Performance/Visuals/V10_Port_Reel_Winding_Strand_01-before.png>) | Изображение / текстура |
+| [Docs/Performance/Visuals/candle-original.png](<../Performance/Visuals/candle-original.png>) | Изображение / текстура |
+| [Docs/Performance/Visuals/coil-after-final.png](<../Performance/Visuals/coil-after-final.png>) | Изображение / текстура |
+| [Docs/Performance/Visuals/coil-after-revised.png](<../Performance/Visuals/coil-after-revised.png>) | Изображение / текстура |
+| [Docs/Performance/Visuals/fleet-before-four-ships.png](<../Performance/Visuals/fleet-before-four-ships.png>) | Изображение / текстура |
+| [Docs/Performance/Visuals/net-cpu.png](<../Performance/Visuals/net-cpu.png>) | Изображение / текстура |
+| [Docs/Performance/Visuals/net-gpu.png](<../Performance/Visuals/net-gpu.png>) | Изображение / текстура |
 | [Docs/Performance/Visuals/storm-reference-outside.png](<../Performance/Visuals/storm-reference-outside.png>) | Изображение / текстура; Производительность и тест нагрузки без AI |
 | [Docs/Performance/Visuals/storm-scale040-sky025-outside.png](<../Performance/Visuals/storm-scale040-sky025-outside.png>) | Изображение / текстура; Производительность и тест нагрузки без AI |
 | [Docs/Performance/Visuals/storm-scale050-sky030-outside.png](<../Performance/Visuals/storm-scale050-sky030-outside.png>) | Изображение / текстура; Производительность и тест нагрузки без AI |

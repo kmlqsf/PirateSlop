@@ -7340,6 +7340,36 @@
 | [Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_8.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_8.asset>) | Настройки или данные Unity |
 | [Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_9.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_9.asset>) | Настройки или данные Unity |
 
+## Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/DiceCandle.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/DiceCandle.asset>) | Настройки или данные Unity; Производительность и тест нагрузки без AI |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_0.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_0.asset>) | Настройки или данные Unity; Производительность и тест нагрузки без AI |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_1.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_1.asset>) | Настройки или данные Unity; Производительность и тест нагрузки без AI |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_10.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_10.asset>) | Настройки или данные Unity; Производительность и тест нагрузки без AI |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_11.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_11.asset>) | Настройки или данные Unity; Производительность и тест нагрузки без AI |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_12.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_12.asset>) | Настройки или данные Unity; Производительность и тест нагрузки без AI |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_13.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_13.asset>) | Настройки или данные Unity; Производительность и тест нагрузки без AI |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_14.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_14.asset>) | Настройки или данные Unity; Производительность и тест нагрузки без AI |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_15.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_15.asset>) | Настройки или данные Unity; Производительность и тест нагрузки без AI |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_16.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_16.asset>) | Настройки или данные Unity; Производительность и тест нагрузки без AI |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_17.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_17.asset>) | Настройки или данные Unity; Производительность и тест нагрузки без AI |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_2.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_2.asset>) | Настройки или данные Unity; Производительность и тест нагрузки без AI |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_3.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_3.asset>) | Настройки или данные Unity; Производительность и тест нагрузки без AI |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_4.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_4.asset>) | Настройки или данные Unity; Производительность и тест нагрузки без AI |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_5.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_5.asset>) | Настройки или данные Unity; Производительность и тест нагрузки без AI |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_6.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_6.asset>) | Настройки или данные Unity; Производительность и тест нагрузки без AI |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_7.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_7.asset>) | Настройки или данные Unity; Производительность и тест нагрузки без AI |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_8.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_8.asset>) | Настройки или данные Unity; Производительность и тест нагрузки без AI |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_9.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_9.asset>) | Настройки или данные Unity; Производительность и тест нагрузки без AI |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/V10_Port_Reel_Winding_Strand_01.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/V10_Port_Reel_Winding_Strand_01.asset>) | Настройки или данные Unity; Производительность и тест нагрузки без AI |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/V10_Port_Reel_Winding_Strand_02.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/V10_Port_Reel_Winding_Strand_02.asset>) | Настройки или данные Unity; Производительность и тест нагрузки без AI |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/V10_Port_Reel_Winding_Strand_03.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/V10_Port_Reel_Winding_Strand_03.asset>) | Настройки или данные Unity; Производительность и тест нагрузки без AI |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/V10_Starboard_Reel_Winding_Strand_01.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/V10_Starboard_Reel_Winding_Strand_01.asset>) | Настройки или данные Unity; Производительность и тест нагрузки без AI |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/V10_Starboard_Reel_Winding_Strand_02.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/V10_Starboard_Reel_Winding_Strand_02.asset>) | Настройки или данные Unity; Производительность и тест нагрузки без AI |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/V10_Starboard_Reel_Winding_Strand_03.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/V10_Starboard_Reel_Winding_Strand_03.asset>) | Настройки или данные Unity; Производительность и тест нагрузки без AI |
+
 ## Assets/Models/Ships/ShipV3/RuntimeMeshes/Lanterns
 
 | Файл | Краткое описание |

@@ -50,14 +50,25 @@ def compare(baseline, candidate):
             previous, current = old.get(metric, -1), new.get(metric, -1)
             row[metric] = {"before": previous, "after": current, "changePercent": (current / previous - 1) * 100 if previous > 0 and current >= 0 else None}
         rows.append(row)
-    return {"comparable": not differences, "differences": differences, "segments": rows, "hullSweepFastPath": {"before": a.get("hullSweepFastPath", False), "after": b.get("hullSweepFastPath", False)}}
+    return {"comparable": not differences, "differences": differences, "segments": rows, "playerGuiLayoutBudget": {"before": a.get("playerGuiLayoutBudget", False), "after": b.get("playerGuiLayoutBudget", False)}, "worldVisualBudget": {"before": a.get("worldVisualBudget", False), "after": b.get("worldVisualBudget", False)}, "shipBodyPoseFastPath": {"before": a.get("shipBodyPoseFastPath", False), "after": b.get("shipBodyPoseFastPath", False)}, "hullSweepFastPath": {"before": a.get("hullSweepFastPath", False), "after": b.get("hullSweepFastPath", False)}, "ropeReadbackFastPath": {"before": a.get("ropeReadbackFastPath", False), "after": b.get("ropeReadbackFastPath", False)}, "shipMeshLods": {"before": a.get("shipMeshLods", False), "after": b.get("shipMeshLods", False)}, "fixedRopeShapes": {"before": a.get("fixedRopeShapes", False), "after": b.get("fixedRopeShapes", False)}}
 
 
 def format_result(result):
     lines = ["COMPARABLE" if result["comparable"] else "NOT COMPARABLE — do not claim a performance improvement"]
     lines.extend(result["differences"])
+    gui = result["playerGuiLayoutBudget"]
+    lines.append(f"Player GUI layout budget (intentional optimization A/B): {gui['before']} -> {gui['after']}")
+    budget = result["worldVisualBudget"]
+    lines.append(f"World visual budget (intentional optimization A/B): {budget['before']} -> {budget['after']}")
+    body = result["shipBodyPoseFastPath"]
+    lines.append(f"Ship body pose fast path (intentional optimization A/B): {body['before']} -> {body['after']}")
     hull = result["hullSweepFastPath"]
     lines.append(f"Hull sweep fast path (intentional optimization A/B): {hull['before']} -> {hull['after']}")
+    rope = result["ropeReadbackFastPath"]
+    lines.append(f"Rope readback fast path (intentional optimization A/B): {rope['before']} -> {rope['after']}")
+    lod = result["shipMeshLods"]
+    lines.append(f"Ship Mesh LODs (intentional optimization A/B): {lod['before']} -> {lod['after']}")
+    lines.append("Fixed local rope shapes (intentional optimization A/B): " + str(result.get("fixedRopeShapes", {}).get("before", False)) + " -> " + str(result.get("fixedRopeShapes", {}).get("after", False)))
     lines.append("Segment | avg FPS before/after | 1% low before/after | mean ms change | P99 ms before/after | P99 change")
     for row in result["segments"]:
         fps, low, mean, p99 = (row[key] for key in ("averageFps", "low1Fps", "meanMs", "p99Ms"))

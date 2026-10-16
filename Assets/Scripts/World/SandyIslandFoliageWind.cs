@@ -13,11 +13,16 @@ namespace PirateSlop.World
         Transform visual;
         Quaternion restRotation;
         Vector3 appliedPosition;
+        Renderer[] visuals;
+        bool visualOnly;
+        float nextVisualUpdate;
 
         void OnEnable()
         {
             visual = transform.Find("CoastalVisual");
             if (visual != null) restRotation = visual.localRotation;
+            visuals = visual != null ? visual.GetComponentsInChildren<Renderer>(true) : null;
+            visualOnly = visual != null && visual.GetComponentsInChildren<Collider>(true).Length == 0;
             Apply();
         }
         void Start() => Apply();
@@ -26,6 +31,7 @@ namespace PirateSlop.World
         {
             if (transform.position != appliedPosition) Apply();
             if (!Application.isPlaying || visual == null) return;
+            if (visualOnly && !PirateSlop.Performance.WorldVisualBudget.Due(visuals, ref nextVisualUpdate)) return;
             float time = (float)(Time.timeAsDouble % 4096);
             float phase = Phase + transform.position.x * .071f + transform.position.z * .053f;
             float gust = Mathf.Sin(time * .83f + phase) + .23f * Mathf.Sin(time * 1.37f + phase * .7f);

@@ -29,6 +29,11 @@ namespace PirateSlop.Performance
     public sealed class BenchmarkProfile
     {
         public string version;
+        public string scenario;
+        public bool IsShipIsolation => scenario == "ship-isolation";
+        public bool IsIsolation => scenario == "fleet-isolation" || IsShipIsolation;
+        public string[] IsolationStages => IsShipIsolation ? PerformanceIsolation.ShipStages : PerformanceIsolation.Stages;
+        public bool IsFleet => scenario == "fleet" || IsIsolation;
         public float warmup = 30, fov = 80, stormRadius = 3000;
         public int ships = 4, players = 12;
         public Vector3 fleetOffset = new(-250, 0, 240);
@@ -39,11 +44,12 @@ namespace PirateSlop.Performance
 
         public void Validate()
         {
-            if (!float.IsFinite(fleetOffset.sqrMagnitude) || !float.IsFinite(fleetYaw) || !float.IsFinite(fleetSpacing) || fleetSpacing < 60 || !float.IsFinite(fleetSail) || fleetSail < 0 || fleetSail > .35f) throw new InvalidOperationException("Invalid benchmark fleet profile.");
-            if (string.IsNullOrWhiteSpace(version) || ships != 4 || players != 12 || !float.IsFinite(warmup) || warmup < 30 || !float.IsFinite(fov) || fov < 40 || fov > 100 || !float.IsFinite(stormRadius) || stormRadius <= 0 || segments == null || segments.Length != 6) throw new InvalidOperationException("Invalid benchmark profile.");
+            if (!float.IsFinite(fleetOffset.sqrMagnitude) || !float.IsFinite(fleetYaw) || !float.IsFinite(fleetSpacing) || fleetSpacing < (IsFleet ? 40 : 60) || !float.IsFinite(fleetSail) || fleetSail < 0 || fleetSail > .35f) throw new InvalidOperationException("Invalid benchmark fleet profile.");
+            bool populationValid = IsFleet ? (ships == 1 || ships == 2 || ships == 4 || ships == 10) && players == ships * 3 : ships == 4 && players == 12;
+            if (string.IsNullOrWhiteSpace(version) || !populationValid || !float.IsFinite(warmup) || warmup < (IsIsolation ? 20 : 30) || !float.IsFinite(fov) || fov < 40 || fov > 100 || !float.IsFinite(stormRadius) || stormRadius <= 0 || segments == null || segments.Length != (IsIsolation ? IsolationStages.Length : IsFleet ? 4 : 6)) throw new InvalidOperationException("Invalid benchmark profile.");
             foreach (var s in segments)
             {
-                if (s == null || string.IsNullOrEmpty(s.name) || !float.IsFinite(s.duration) || s.duration <= 0 || s.anchor != "ship" && s.anchor != "world" && s.anchor != "whirlpool" && s.anchor != "storm" || s.waypoints == null || s.waypoints.Length < 2) throw new InvalidOperationException("Invalid benchmark segment.");
+                if (s == null || string.IsNullOrEmpty(s.name) || !float.IsFinite(s.duration) || s.duration <= 0 || s.anchor != "ship" && s.anchor != "world" && s.anchor != "whirlpool" && s.anchor != "storm" && !(IsFleet && s.anchor == "fleet") || s.waypoints == null || s.waypoints.Length < 2) throw new InvalidOperationException("Invalid benchmark segment.");
                 float last = -1;
                 foreach (var w in s.waypoints)
                 {
@@ -52,7 +58,7 @@ namespace PirateSlop.Performance
                 }
                 if (s.waypoints[0].time != 0 || Mathf.Abs(last - s.duration) > .001f) throw new InvalidOperationException("Benchmark waypoints must cover each segment.");
             }
-            if (Mathf.Abs(Duration - 240) > .001f) throw new InvalidOperationException("Benchmark duration must be 240 seconds.");
+            if (Mathf.Abs(Duration - (IsIsolation ? IsolationStages.Length * 6 : IsFleet ? 120 : 240)) > .001f) throw new InvalidOperationException("Unexpected benchmark duration.");
         }
     }
 
@@ -75,6 +81,7 @@ namespace PirateSlop.Performance
         PerformanceCapture capture;
         BenchmarkProfile profile;
         PerformanceMetadata metadata;
+        PerformanceIsolation isolation;
         Camera view;
         NetworkShip primary;
         string[] segmentNames;
@@ -93,7 +100,7 @@ namespace PirateSlop.Performance
             session = owner; profile = route;
             capture = GetComponent<PerformanceCapture>();
             if (capture == null) capture = gameObject.AddComponent<PerformanceCapture>();
-            metadata = CreateMetadata("benchmark");
+            metadata = CreateMetadata(route.IsIsolation ? "isolation" : "benchmark");
             metadata.routeVersion = profile.version;
             using (var hash = SHA256.Create()) metadata.routeHash = BitConverter.ToString(hash.ComputeHash(Encoding.UTF8.GetBytes(source))).Replace("-", "");
             metadata.expectedShips = profile.ships; metadata.expectedPlayers = profile.players;
@@ -119,8 +126,10 @@ namespace PirateSlop.Performance
                 quality = QualitySettings.names[QualitySettings.GetQualityLevel()], renderScale = pipeline != null ? pipeline.renderScale : 1,
                 pipeline = pipeline != null ? pipeline.name : "N/A", telemetryVisible = GameTelemetry.Visible, role = "local-host / synthetic participants; no remote connections",
                 environmentSignature = EnvironmentSignature(Camera.main), hullSweepFastPath = ShipController.HullSweepFastPathEnabled,
-                fleetScenario = mode == "benchmark" ? SessionController.Instance != null && SessionController.Instance.BenchmarkWhirlpoolStressActive ? "whirlpool-convergence-stress" : "parallel-open-water-v1" : "user-controlled",
-                renderExperiment = mode == "benchmark" ? PerformanceRenderOverrides.Signature : ""
+                fleetScenario = mode == "benchmark" ? SessionController.Instance != null && SessionController.Instance.BenchmarkFleetShipsActive > 0 ? "fleet-scaling-v1;ships=" + SessionController.Instance.BenchmarkFleetShipsActive : SessionController.Instance != null && SessionController.Instance.BenchmarkWhirlpoolStressActive ? "whirlpool-convergence-stress" : "parallel-open-water-v1" : "user-controlled",
+                renderExperiment = mode == "benchmark" ? PerformanceRenderOverrides.Signature : "",
+                shipBodyPoseFastPath = PirateSlop.Ships.ShipBodyPose.Enabled, worldVisualBudget = WorldVisualBudget.Enabled,
+                playerGuiLayoutBudget = PlayerGuiBudget.Enabled
             };
         }
 
@@ -212,6 +221,12 @@ namespace PirateSlop.Performance
                 }
                 session.ConfigureBenchmarkStorm(profile.stormRadius);
                 session.ApplyBenchmarkFramePacing();
+                if (profile.IsIsolation)
+                {
+                    isolation = new PerformanceIsolation(view, GraphicsSettings.currentRenderPipeline as UniversalRenderPipelineAsset, profile.IsShipIsolation);
+                    metadata.telemetryVisible = GameTelemetry.Visible;
+                    metadata.fleetScenario = (profile.IsShipIsolation ? "stationary-ship-isolation-v1;ships=" : "stationary-fleet-isolation-v1;ships=") + profile.ships;
+                }
                 readyAt = now;
                 view.fieldOfView = profile.fov;
                 PerformanceCapture.Event("WorldReady", primary);
@@ -234,7 +249,7 @@ namespace PirateSlop.Performance
             if (recordingAt == 0)
             {
                 double remaining = profile.warmup - (now - readyAt);
-                Progress = "Прогрев · " + Mathf.CeilToInt((float)Math.Max(0, remaining)) + " с · 4 корабля / 12 персонажей";
+                Progress = "Прогрев · " + Mathf.CeilToInt((float)Math.Max(0, remaining)) + $" с · {profile.ships} кораблей / {profile.players} персонажей";
                 Position(0, 0);
                 if (remaining > 0) return;
                 session.ApplyBenchmarkFramePacing();
@@ -246,6 +261,7 @@ namespace PirateSlop.Performance
                 metadata.nearClip = view.nearClipPlane; metadata.farClip = view.farClipPlane;
                 metadata.antialiasing = view.GetUniversalAdditionalCameraData().antialiasing.ToString();
                 metadata.environmentSignature = EnvironmentSignature(view);
+                metadata.profilerEnabled = UnityEngine.Profiling.Profiler.enabled;
                 frozenWidth = Screen.width; frozenHeight = Screen.height; frozenVSync = QualitySettings.vSyncCount; frozenLimit = Application.targetFrameRate;
                 frozenScale = metadata.renderScale; frozenQuality = QualitySettings.GetQualityLevel();
                 metadata.width = frozenWidth; metadata.height = frozenHeight; metadata.vSync = frozenVSync; metadata.fpsLimit = frozenLimit;
@@ -254,27 +270,32 @@ namespace PirateSlop.Performance
                 capture.StartRecording(); recordingAt = now;
             }
             var currentPipeline = GraphicsSettings.currentRenderPipeline as UniversalRenderPipelineAsset;
+            if (WorldVisualBudget.Enabled != metadata.worldVisualBudget) { Finish("INVALID", "World visual budget changed during capture."); return; }
+            if (PlayerGuiBudget.Enabled != metadata.playerGuiLayoutBudget) { Finish("INVALID", "Player GUI layout budget changed during capture."); return; }
             if (ShipController.HullSweepFastPathEnabled != metadata.hullSweepFastPath) { Finish("INVALID", "Hull collision optimization changed during capture."); return; }
+            if (PirateSlop.Ships.ShipBodyPose.Enabled != metadata.shipBodyPoseFastPath) { Finish("INVALID", "Ship body pose optimization changed during capture."); return; }
             if ((metadata.renderExperiment ?? "") != PerformanceRenderOverrides.Signature) { Finish("INVALID", "Render experiment changed during capture."); return; }
             if (frozenCloudQuality != PerformanceRenderOverrides.QualitySignature) { Finish("INVALID", "Cloud quality changed during capture."); return; }
             if (!Application.isEditor && !Application.isFocused) { Finish("INVALID", "Player window lost focus during capture."); return; }
-            if (Screen.width != frozenWidth || Screen.height != frozenHeight || QualitySettings.vSyncCount != frozenVSync || Application.targetFrameRate != frozenLimit || QualitySettings.GetQualityLevel() != frozenQuality || currentPipeline == null || Mathf.Abs(currentPipeline.renderScale - frozenScale) > .0001f || Mathf.Abs(view.fieldOfView - profile.fov) > .001f)
+            if (Screen.width != frozenWidth || Screen.height != frozenHeight || QualitySettings.vSyncCount != frozenVSync || Application.targetFrameRate != frozenLimit || QualitySettings.GetQualityLevel() != frozenQuality || currentPipeline == null || Mathf.Abs(currentPipeline.renderScale - (isolation != null ? isolation.ExpectedScale : frozenScale)) > .0001f || Mathf.Abs(view.fieldOfView - profile.fov) > .001f)
             { Finish("INVALID", "Graphics settings changed during capture."); return; }
             double elapsed = now - recordingAt;
             if (elapsed >= profile.Duration)
             {
+                isolation?.Restore();
                 string weatherFailure = WeatherFailure();
                 if (weatherFailure != null) { Finish("INVALID", weatherFailure); return; }
                 if (EnvironmentSignature(view) != metadata.environmentSignature) { Finish("INVALID", "Weather or renderer features changed during capture."); return; }
-                if (capture.SubmergedSeconds < 10) { Finish("INVALID", "Underwater segment did not record at least 10 submerged seconds."); return; }
+                if (!profile.IsFleet && capture.SubmergedSeconds < 10) { Finish("INVALID", "Underwater segment did not record at least 10 submerged seconds."); return; }
                 Finish("COMPLETE", ""); return;
             }
             float local = (float)elapsed; int index = 0;
             while (index < profile.segments.Length - 1 && local >= profile.segments[index].duration) local -= profile.segments[index++].duration;
             if (index != activeSegment) { activeSegment = index; PerformanceCapture.Event("Segment:" + segmentNames[index]); }
+            isolation?.Apply(index);
             capture.Segment = index;
             Position(index, local);
-            if (now >= nextProgress) { nextProgress = now + .5; Progress = segmentNames[index] + " · " + ((int)elapsed) + " / 240 с · Escape — отмена"; }
+            if (now >= nextProgress) { nextProgress = now + .5; Progress = segmentNames[index] + " · " + ((int)elapsed) + $" / {profile.Duration:0} с · Escape — отмена"; }
         }
 
         void Position(int index, float time)
@@ -285,7 +306,20 @@ namespace PirateSlop.Performance
             Vector3 position = Vector3.Lerp(points[at].position, points[at + 1].position, t);
             Vector3 target = Vector3.Lerp(points[at].target, points[at + 1].target, t);
             Vector3 anchor = Vector3.up * OceanSurface.Instance.SeaLevel;
-            if (segment.anchor == "ship") { position = primary.transform.TransformPoint(position); target = primary.transform.TransformPoint(target); }
+            if (segment.anchor == "ship" || segment.anchor == "fleet")
+            {
+                if (segment.anchor == "fleet")
+                {
+                    var center = Vector3.left * ((profile.ships - 1) * profile.fleetSpacing * .5f);
+                    float fit = Mathf.Max(1, (profile.ships - 1) * profile.fleetSpacing / 120f);
+                    position = center + new Vector3(position.x * fit, position.y, position.z * fit);
+                    target += center;
+                    var yaw = Quaternion.Euler(0, primary.transform.eulerAngles.y, 0);
+                    position = primary.transform.position + yaw * position;
+                    target = primary.transform.position + yaw * target;
+                }
+                else { position = primary.transform.TransformPoint(position); target = primary.transform.TransformPoint(target); }
+            }
             else
             {
                 if (segment.anchor == "whirlpool") anchor = EnvironmentTestGallery.WhirlpoolCenter(ProceduralWorld.Instance.Layout);
@@ -299,9 +333,12 @@ namespace PirateSlop.Performance
         {
             if (!ActiveRun) return;
             ActiveRun = false;
+            isolation?.Dispose(); isolation = null;
             capture.Finish(status, reason, segmentNames);
             session.EndPerformanceBenchmark();
         }
+
+        void OnDisable() { isolation?.Dispose(); isolation = null; }
 
         void OnGUI()
         {

@@ -33,10 +33,20 @@
 
 | Файл | Краткое описание |
 | --- | --- |
+| [Tools/Performance/RunFleet4.cmd](<../../Tools/Performance/RunFleet4.cmd>) | Файл .cmd; Производительность и тест нагрузки без AI |
 | [Tools/Performance/analyze_impacts.py](<../../Tools/Performance/analyze_impacts.py>) | Инструмент Python; Производительность и тест нагрузки без AI |
+| [Tools/Performance/analyze_isolation.py](<../../Tools/Performance/analyze_isolation.py>) | Инструмент Python; Производительность и тест нагрузки без AI |
 | [Tools/Performance/analyze_report.py](<../../Tools/Performance/analyze_report.py>) | Инструмент Python; Производительность и тест нагрузки без AI |
 | [Tools/Performance/character_hit_probe.cs](<../../Tools/Performance/character_hit_probe.cs>) | Исходник C#; Производительность и тест нагрузки без AI |
+| [Tools/Performance/check_body_publish.cs](<../../Tools/Performance/check_body_publish.cs>) | Исходник C#; Производительность и тест нагрузки без AI |
+| [Tools/Performance/check_fixture_batches.cs](<../../Tools/Performance/check_fixture_batches.cs>) | Исходник C#; Производительность и тест нагрузки без AI |
+| [Tools/Performance/check_gui_layout.cs](<../../Tools/Performance/check_gui_layout.cs>) | Исходник C#; Производительность и тест нагрузки без AI |
+| [Tools/Performance/check_pinned_cloth_gpu.cs](<../../Tools/Performance/check_pinned_cloth_gpu.cs>) | Исходник C#; Производительность и тест нагрузки без AI |
+| [Tools/Performance/check_pinned_cloth_runtime.cs](<../../Tools/Performance/check_pinned_cloth_runtime.cs>) | Исходник C#; Производительность и тест нагрузки без AI |
+| [Tools/Performance/check_real_ship_pose.cs](<../../Tools/Performance/check_real_ship_pose.cs>) | Исходник C#; Производительность и тест нагрузки без AI |
 | [Tools/Performance/compare_reports.py](<../../Tools/Performance/compare_reports.py>) | Инструмент Python; Производительность и тест нагрузки без AI |
+| [Tools/Performance/read_cpu_profile.cs](<../../Tools/Performance/read_cpu_profile.cs>) | Исходник C#; Производительность и тест нагрузки без AI |
+| [Tools/Performance/read_physics_callers.cs](<../../Tools/Performance/read_physics_callers.cs>) | Исходник C#; Производительность и тест нагрузки без AI |
 | [Tools/Performance/run_benchmark.ps1](<../../Tools/Performance/run_benchmark.ps1>) | Инструмент PowerShell; Производительность и тест нагрузки без AI |
 
 ## Tools/ShipV3

@@ -1596,7 +1596,7 @@
 
 | Файл | Краткое описание |
 | --- | --- |
-| [Packages/com.unity.urp-water-system/Runtime/Bodies/Water.cs](<../../Packages/com.unity.urp-water-system/Runtime/Bodies/Water.cs>) | Исходник C#: Water, Settings, TempData; Мир, острова и океан |
+| [Packages/com.unity.urp-water-system/Runtime/Bodies/Water.cs](<../../Packages/com.unity.urp-water-system/Runtime/Bodies/Water.cs>) | Исходник C#: Water, Settings, TempData; Мир, острова и океан, Производительность и тест нагрузки без AI |
 | [Packages/com.unity.urp-water-system/Runtime/Bodies/WaterBody.cs](<../../Packages/com.unity.urp-water-system/Runtime/Bodies/WaterBody.cs>) | Исходник C#: for, WaterBody, WaterShape, WaterShapeType |
 
 ## Packages/com.unity.urp-water-system/Runtime/Data

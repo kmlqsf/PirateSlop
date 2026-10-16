@@ -1,6 +1,6 @@
 # PirateSlop — карта проекта
 
-Снимок файлов: 2026-10-15. Корень: `C:\Users\K\Project`.
+Снимок файлов: 2026-10-16. Корень: `C:\Users\K\Project`.
 
 ## Как пользоваться
 
@@ -12,7 +12,7 @@
 
 ## Полный каталог
 
-Учтено 11825 файлов без `.meta`. Ещё 10640 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
+Учтено 12010 файлов без `.meta`. Ещё 10674 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
 
 | Раздел | Назначение | Файлов |
 | --- | --- | ---: |
@@ -31,12 +31,12 @@
 | [Assets/JMO Assets](<Docs/ProjectMap/Assets-JMO Assets.md>) | Ресурсы раздела; точный состав — в каталоге | 19 |
 | [Assets/Materials](<Docs/ProjectMap/Assets-Materials.md>) | Материалы | 140 |
 | [Assets/Mirza](<Docs/ProjectMap/Assets-Mirza.md>) | Ресурсы раздела; точный состав — в каталоге | 1 |
-| [Assets/Models](<Docs/ProjectMap/Assets-Models.md>) | Модели и связанные ресурсы | 7325 |
+| [Assets/Models](<Docs/ProjectMap/Assets-Models.md>) | Модели и связанные ресурсы | 7350 |
 | [Assets/Plugins](<Docs/ProjectMap/Assets-Plugins.md>) | Плагины | 5 |
 | [Assets/Prefabs](<Docs/ProjectMap/Assets-Prefabs.md>) | Готовые игровые объекты | 138 |
-| [Assets/Resources](<Docs/ProjectMap/Assets-Resources.md>) | Ресурсы, доступные для загрузки по имени | 165 |
+| [Assets/Resources](<Docs/ProjectMap/Assets-Resources.md>) | Ресурсы, доступные для загрузки по имени | 166 |
 | [Assets/Scenes](<Docs/ProjectMap/Assets-Scenes.md>) | Сохранённые сцены | 3 |
-| [Assets/Scripts](<Docs/ProjectMap/Assets-Scripts.md>) | Игровой код и редакторские инструменты | 575 |
+| [Assets/Scripts](<Docs/ProjectMap/Assets-Scripts.md>) | Игровой код и редакторские инструменты | 580 |
 | [Assets/Settings](<Docs/ProjectMap/Assets-Settings.md>) | Настройки игровых систем и рендеринга | 59 |
 | [Assets/Shaders](<Docs/ProjectMap/Assets-Shaders.md>) | Шейдеры | 21 |
 | [Assets/StreamingAssets](<Docs/ProjectMap/Assets-StreamingAssets.md>) | Ресурсы раздела; точный состав — в каталоге | 5 |
@@ -44,14 +44,14 @@
 | [Assets/ThirdParty](<Docs/ProjectMap/Assets-ThirdParty.md>) | Сторонние ресурсы | 20 |
 | [Assets/TutorialInfo](<Docs/ProjectMap/Assets-TutorialInfo.md>) | Ресурсы раздела; точный состав — в каталоге | 2 |
 | [Assets/UI](<Docs/ProjectMap/Assets-UI.md>) | Ресурсы интерфейса | 42 |
-| [Assets/_Recovery](<Docs/ProjectMap/Assets-_Recovery.md>) | Сохранённые восстановленные данные | 2 |
+| [Assets/_Recovery](<Docs/ProjectMap/Assets-_Recovery.md>) | Сохранённые восстановленные данные | 4 |
 | [Captures](<Docs/ProjectMap/Captures.md>) | Ресурсы раздела; точный состав — в каталоге | 1010 |
-| [Docs](<Docs/ProjectMap/Docs.md>) | Документы и сохранённые отчёты | 83 |
+| [Docs](<Docs/ProjectMap/Docs.md>) | Документы и сохранённые отчёты | 225 |
 | [Packages](<Docs/ProjectMap/Packages.md>) | Манифест, lock-файл и встроенные пакеты | 924 |
 | [ProjectSettings](<Docs/ProjectMap/ProjectSettings.md>) | Настройки Unity | 28 |
 | [Root](<Docs/ProjectMap/Root.md>) | Корневые инструкции, планы и служебные файлы | 26 |
 | [ThirdParty](<Docs/ProjectMap/ThirdParty.md>) | Сторонние ресурсы | 2 |
-| [Tools](<Docs/ProjectMap/Tools.md>) | Инструменты разработки и загрузчик контекста | 26 |
+| [Tools](<Docs/ProjectMap/Tools.md>) | Инструменты разработки и загрузчик контекста | 36 |
 
 Не индексируются генерируемые сборки, кэши и локальное состояние: `.git/`, `.idea/`, `.vs/`, `Builds/`, `Library/`, `Logs/`, `Temp/`, `UserSettings/`, `__pycache__/`, `bin/`, `node_modules/`, `obj/`. В Captures индексируются только отслеживаемые Git файлы; промежуточные резервные CoastalTripo_Pre*.blend не индексируются. Зависимости из Unity PackageCache представлены манифестом/lock-файлом; встроенные пакеты из `Packages/` перечислены полностью. Скрытые конфиги вне исключённых папок включены только как пути, их содержимое не копируется.
 
@@ -2067,6 +2067,18 @@ WaterImpactPhysics/WaterImpactBody: общие локальные всплеск
 
 Ключевые слова: оптимизация, FPS, профайлер, NetworkLoadTest.
 
+16.10.2026 PlayerGuiBudget: Release A/B/A10/30 однойсборки42.57→46.20→42.44FPS,23.49→21.65→23.56мс.25fixedRectтипов,useGUILayout=false,DeveloperMenu/BotDebugPanel исключены. Native20типов/legacy прошли; основнойHUD обычнойтестовойсессии показан, F8/сеть непроверены. CLI -performanceLegacyGuiLayout,runner -LegacyGuiLayout,metadata.playerGuiLayoutBudget. Release c3e5a910f1,Development75e8eab743. Code.*ProfilerMarker толькоEditor/Development приCapture+Profiler; native31кадр014539-569:colliderposes1.86мс,PlayerMotor1.51self,buoyancy1.08;GUI.BeginGUI1794→1164. D3D12 улучшилGPU,ухудшилобщийкадр,defaultD3D11. Подробности/точкапродолжения OptimizationPlan.md.
+16.10.2026 ночной пакет проверен на Release4/12:77.68→93.18/93.88/95.75FPS по обычным baseline трёх запусков, GPU11.85→10.12–10.18мс, P9919.81→17.05–17.71мс; Draw9644→≈5517.206multi-material renderers→18batches, свеча4094tris/намотки7614каждая, GPU-покачивание2сеток без CPU mesh.vertices. Native18cache/lifecycle и24позы/439080вершин(2микрометра) прошли;2634Collider/Rigidbodyнеизменны.10/30двановыхсреза37.5–42.5FPS/GPU14.7мс противпрежних28–30/17.8, drift7–10%ограничиваетточный%. Shared ShipV3Test используетсяобычнойсессией, всеbuildtypes. Открытысеть/свободнаяигра/бой/15мин/коллега/120FPS. ОтчётShipPresentationOptimization_20261016.md; попаданияпауза.
+16.10.2026 GPU-pinned net candidate: два MeshRenderer заменены SkinnedMeshRenderer с переносом сериализованных renderer-ссылок, формула покачивания rest+sway*weight через2кости. ShipV3ClothMotion.GpuPinnedMotion только PinTop/SailIndex<0. Native реальныйInitialize24поз/439080вершин дал максимум2микрометра отклонения; BakeMesh(useScale=true) учитывает импортныйscale.2634Collider/Rigidbodyнеизменны. Player-выигрыш пока не измерен, кандидат не принят.
+16.10.2026 ночной пакет в проверке: ShipV3FixtureOptimization сохраняет обычные компактные render meshes свечи4094tris и шести намоток7614каждая, не LOD-копии в runtime. Дополнительные18material batches объединяют206ранее пропущенных multi-material renderers. ShipV3RenderBatch считает владельцев общего источника для корректного OnDisable/повторного освобождения. Исходные FBX/физика/механика урона не меняются;2634Collider/Rigidbody сериализованно неизменны. Проверки: Tools/Performance/check_fixture_batches.cs. ЗамерFPS ещё впереди; не считать кандидата принятым.
+16.10.2026 ship-isolation-v1-n4 COMPLETE: fixturesGPU≈3.25мс, batchcolour≈1.82мс, shipshadows≈1.15мс; batchpollingCPU≈0.02мс, нетоснованиямикрооптимизировать. Приscale1/.5GPUдельтаshipON/OFF5.29/5.51мс: сигналгеометрии/числадraw, непростоpixelquality. Prefab-nativeаудит600включённыхfixtures/716736tris:свеча212992,6намотокпо15224,2сеткипо22944. Этоавторскийпрефаб,неruntimeсчётчик; per-objectGPUещёнеизмерен. Парус0,небой. ИтогвFleetCostBreakdown_20261016.md. Следующийпакетгеометрия+batching/instancingоборудования. НоваядиагностикавRelease5aa2914163/Deve48d30edbc0errors, production-моделинеменялись.
+16.10.2026: добавлен ship-isolation-v1, CLI -performanceShipIsolation/runner -ShipIsolation и менюРазборкорабля66с.11состоянийпо6с:baseline,batchcolour,отдельныеfixtures,skinnedrender,clothupdates,shipshadows,batchpolling,halfscale,halfscaleNoShips,NoShipsfull,baseline. Shader/materialинтерпретация черезпарныедельтыприrenderScale1/.5, геометрияодинаковая. ShadowOnlyпрокси скрываютсяforceRenderingOff, анепревращаютсявобычныйвидимыйrenderer. SkipBatchPollingтолькоиздиагностики, defaultfalse/Restore. ProfilerпосредиCaptureтеперьпомечаетmetadata.profilerEnabled=true; старыйпрофилированныйDevreport225254перенесёнвDocsReports,неэталонFPS. NativeGPUtimestampsPlayerнеполучены, невыдаватьнулевыеколонкиза0затрат.
+16.10.2026: короткиеPlayerisolation1/4/10COMPLETE. CPU-пакетWorldVisualBudget+cachedaxesTentacle уменьшилLateUpdate4кораблей6.55–6.88→4.50–4.69мс; первичныйbaseline57–63→75–77FPS. На10Late7.75–7.78→6.11–6.50мс, нообщийFPS28–30vs29неподтверждён; неиспользоватьобщийFPSisolation.1корабльbaseline≈141FPSнепарныйприрост. Добавлено менюДиагностика/Тестыфлота1/4/10,120с/60с; UI/TXTisolationотмечаетсмешанныесостояния. Release build-a7064be452 успешен. ИтогFleetCostBreakdown_20261016.md; следующийприоритетпредставлениекораблейCPU/GPU, дляколлегинуженновый60сJSON.
+16.10.2026: isolation4/10COMPLETE локализовал большие расходы: ship renderGPU≈5.8/9.1мс, idle-worldLateUpdate≈3мс, облакаGPU≈3/2.7мс. На10корабляхCPU-bound34мс приGPU18мс; не путать мс/tick и мс/frame при разномFPS. Кандидат WorldVisualBudget:5Гцдлянепросматриваемыхrope/foliage, без collider подCoastalVisual; TentacleAnimator только кешкорневыхнаправлений, беззаморозкикостей/атак.204nativeпозкостей/callback проверены,0ошибоккомпиляции,Release build-bbfa400c8e успешен. Player-выигрыш ещё проверяется. CLI -performanceLegacyWorldVisuals выключает budget, но не математический cache щупалец;metadata.worldVisualBudget.
+16.10.2026: короткий режим -performanceIsolation / run_benchmark.ps1 -Isolation -FleetShips1/4/10. fleet-isolation-v1:20сwarmup/60с, фиксированный ракурс/парус0,10состояний по6с:baseline,ship render,cloth+ropes,player presentation,idle world,water tracking,clouds,water surface,shadows,baseline. Каждый вариант независим, состояния восстанавливаются при завершении/отмене/OnDisable. mode=isolation, отчёты не эталон оптимизации; analyze_isolation.py исключает первые2с и показывает отдельные CPU/GPU/кадр, drift. Water.RenderingEnabled отключает только DrawMesh/InfiniteWater, физика и WaterManager buffers остаются. Release build-972896a8b9 успешен,0errors; эксперимент body pose выключен. Причинный Player-срез в работе, результатов пока нет.
+16.10.2026: пересмотр по требованию пользователя. ShipBodyPose отложен и выключен в исходниках по умолчанию/CLI/после benchmark; последний Release build-04657c455f содержит прежний включённый эксперимент, не итоговая сборка. Нет валидного полного A/B: control INVALID потерял корабль, candidate CANCELLED/выход с native crash неизвестной причины. Приоритет — короткая причинная разбивка обычного флота1/4/10 по крупным CPU/GPU-группам; 240с маршрут только регрессия, три повтора только приёмка полезного изменения. Подробности и известный барьер GPU10.99–12.90мс в OptimizationPlan.md.
+15.10.2026: ShipBodyPose — кандидат ускорения синхронизации физических поз при контактах; kinematic root PublishTransform с явной публикацией активных дочерних Rigidbody, fallback для интерполяции/CharacterController. Native synthetic и 2988 сравнений bounds настоящего префаба прошли; Player A/B ещё требуется. wallclock-v7,52CPU-колонки,metadata.shipBodyPoseFastPath,CLI -performanceLegacyBodyPose. run_benchmark.ps1 принимает Width/Height и проверяет фактическое разрешение; меню использует текущие настройки.
+15.10.2026 этап флота: fleet-v2 на1/2/4/10кораблей и3персонажа на корабль,30с прогрев+4ракурса по30с; кнопка теста4кораблей, CLI FleetShips, wallclock-v6/frustum counts. Получены Player CPU/GPU-профили и Release A/B. Пакетное чтение канатов73.94→72.79FPS, Mesh LOD71.33→70.51FPS при дополнительной памяти193MiB, FixedLocalShape67.38→67.80FPS — общего подтверждённого выигрыша нет, кандидаты и их ассеты удалены. Старые успешные CPU/cloud оптимизации сохранены. СлабыйПК i5-9400F/RTX3050:21.32FPS в Development whirlpool-stress,190–200с4.50FPS/ShipPhysicsSync67.18мс. Это другой сценарий, прямое сравнениеПК запрещено. Подробности/следующий контроль в ColleagueBenchmark_20261015.md и OptimizationPlan.md. Попадания на паузе,120FPS/физика/сеть не завершены.
 15.10.2026 текущий запрос: фризы попаданий по кораблю и человеку отложены, не продолжать до возобновления. CPU/capstan/rigging/hull optimizations работают во всех сборках. Проверенный дым0.50/небо0.30 перенесён в обычную игру, Настройки/Графика/Оптимизация облаков и зоны, defaultON, PlayerPrefs, оригинал приOFF; фон меню сохранён. CloudQuality включён в environmentSignature, смена во время benchmark INVALID. Compile0errors/11native-инвариантов безPlay. Обычный DevelopmentPlayer Builds/Windows/PirateSlop.exe собран успешно native job build-0116a86016,0errors/67warnings; глобальный переключатель включён, полный Player/визуальный тест оставлен пользователю. Четыре предшествующих Release-эксперимента78.56/81.91/84.14/87.88FPS, один на вариант. Editor character probe COMPLETE9shots/3deaths/0errors: ragdoll20.81–22.12мс, исходники урона/ragdoll не менялись. OptimizationPlan.md содержит полный актуальный статус и историю.
 15.10.2026 итог автономной CPU-серии: исходный COMPLETE45.348FPS; после Capstan/Rigging три COMPLETE79.541/78.573/79.456FPS, среднее79.190, диапазон1.232%,P99 28.353–28.788мс. Настройки совпадают, до правок один полный прогон. GPU-эксперимент отдельно от Release: trace дыма11.75мс/неба6.26мс; разрешение0.5/0.3 дало4.43/2.26мс,0.4/0.25 —2.71/1.50мс; возвратный контроль11.78/6.22мс. High/обычная графика не изменены. CLI scales и uncapped исправление скомпилированы, нового Release ещё нет.120FPS/фризы попаданий/стресс SyncTransforms/сеть остаются открытыми.
 15.10.2026 автономно: CLI -performanceBenchmark/-performanceQuit и Tools/Performance/run_benchmark.ps1 + Computer Use focus обеспечили первый COMPLETE test-map-v3/wallclock-v5:45.348FPS/P99 33.633мс, флот4/4,flood0. Первый unfocused запуск INVALID и не используется. Отдельный Editor RawFrameData30кадров выявил CapstanStation.Update self9.325мс/5вызовов и RiggingRopeVisual.LateUpdate3.616мс/66. Добавлены guards неизменных поз/меша кабестана и frame-cache локального игрока с исключением scene scan для сетевого observer; rope сохраняет концы/изгибы, удаляет средние кольца прямых, кэширует sin/cos/индексы.9native-инвариантов прошли; идёт Release A/B, выигрыш пока не подтверждён. Tools/Performance/analyze_report.py собирает CPU/флот/временную шкалу из JSON.
@@ -2123,6 +2135,51 @@ NetworkLoadTest запускается из меню Тест нагрузки �
 - [Assets/Tests/StormCloudBakeoff/CandidateA/VolumetricClouds/VolumetricCloudsURP.cs](<Assets/Tests/StormCloudBakeoff/CandidateA/VolumetricClouds/VolumetricCloudsURP.cs>) — Исходник C#: VolumetricCloudsURP, CloudsRenderMode, CloudsAmbientMode, CloudsUpscaleMode, VolumetricCloudsPass, CameraCloudHistory, stores, PassData, StormLightningFrameData, RasterPassData, VolumetricCloudsAmbientPass, VolumetricCloudsShadowsPass, LightCookieShaderFormat.
 - [Tools/Performance/analyze_impacts.py](<Tools/Performance/analyze_impacts.py>) — Инструмент Python.
 - [Tools/Performance/character_hit_probe.cs](<Tools/Performance/character_hit_probe.cs>) — Исходник C#.
+- [Assets/Resources/Performance/FleetBenchmarkRoute.json](<Assets/Resources/Performance/FleetBenchmarkRoute.json>) — Конфигурация / данные JSON.
+- [Tools/Performance/read_cpu_profile.cs](<Tools/Performance/read_cpu_profile.cs>) — Исходник C#.
+- [Assets/Scripts/Ships/ShipBodyPose.cs](<Assets/Scripts/Ships/ShipBodyPose.cs>) — Исходник C#: ShipBodyPose.
+- [Tools/Performance/check_body_publish.cs](<Tools/Performance/check_body_publish.cs>) — Исходник C#.
+- [Tools/Performance/check_real_ship_pose.cs](<Tools/Performance/check_real_ship_pose.cs>) — Исходник C#.
+- [Assets/Scripts/Performance/PerformanceIsolation.cs](<Assets/Scripts/Performance/PerformanceIsolation.cs>) — Исходник C#: PerformanceIsolation.
+- [Tools/Performance/analyze_isolation.py](<Tools/Performance/analyze_isolation.py>) — Инструмент Python.
+- [Packages/com.unity.urp-water-system/Runtime/Bodies/Water.cs](<Packages/com.unity.urp-water-system/Runtime/Bodies/Water.cs>) — Исходник C#: Water, Settings, TempData.
+- [Assets/Scripts/Performance/WorldVisualBudget.cs](<Assets/Scripts/Performance/WorldVisualBudget.cs>) — Исходник C#: WorldVisualBudget.
+- [Assets/Scripts/Editor/ShipV3FixtureOptimization.cs](<Assets/Scripts/Editor/ShipV3FixtureOptimization.cs>) — Исходник C#: ShipV3FixtureOptimization.
+- [Assets/Scripts/Editor/ShipV3ImportSetup.cs](<Assets/Scripts/Editor/ShipV3ImportSetup.cs>) — Исходник C#: ShipV3ImportSetup.
+- [Tools/Performance/check_fixture_batches.cs](<Tools/Performance/check_fixture_batches.cs>) — Исходник C#.
+- [Tools/Performance/check_pinned_cloth_gpu.cs](<Tools/Performance/check_pinned_cloth_gpu.cs>) — Исходник C#.
+- [Tools/Performance/check_pinned_cloth_runtime.cs](<Tools/Performance/check_pinned_cloth_runtime.cs>) — Исходник C#.
+- [Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/DiceCandle.asset](<Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/DiceCandle.asset>) — Настройки или данные Unity.
+- [Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_0.asset](<Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_0.asset>) — Настройки или данные Unity.
+- [Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_1.asset](<Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_1.asset>) — Настройки или данные Unity.
+- [Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_10.asset](<Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_10.asset>) — Настройки или данные Unity.
+- [Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_11.asset](<Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_11.asset>) — Настройки или данные Unity.
+- [Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_12.asset](<Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_12.asset>) — Настройки или данные Unity.
+- [Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_13.asset](<Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_13.asset>) — Настройки или данные Unity.
+- [Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_14.asset](<Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_14.asset>) — Настройки или данные Unity.
+- [Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_15.asset](<Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_15.asset>) — Настройки или данные Unity.
+- [Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_16.asset](<Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_16.asset>) — Настройки или данные Unity.
+- [Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_17.asset](<Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_17.asset>) — Настройки или данные Unity.
+- [Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_2.asset](<Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_2.asset>) — Настройки или данные Unity.
+- [Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_3.asset](<Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_3.asset>) — Настройки или данные Unity.
+- [Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_4.asset](<Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_4.asset>) — Настройки или данные Unity.
+- [Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_5.asset](<Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_5.asset>) — Настройки или данные Unity.
+- [Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_6.asset](<Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_6.asset>) — Настройки или данные Unity.
+- [Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_7.asset](<Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_7.asset>) — Настройки или данные Unity.
+- [Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_8.asset](<Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_8.asset>) — Настройки или данные Unity.
+- [Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_9.asset](<Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_9.asset>) — Настройки или данные Unity.
+- [Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/V10_Port_Reel_Winding_Strand_01.asset](<Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/V10_Port_Reel_Winding_Strand_01.asset>) — Настройки или данные Unity.
+- [Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/V10_Port_Reel_Winding_Strand_02.asset](<Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/V10_Port_Reel_Winding_Strand_02.asset>) — Настройки или данные Unity.
+- [Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/V10_Port_Reel_Winding_Strand_03.asset](<Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/V10_Port_Reel_Winding_Strand_03.asset>) — Настройки или данные Unity.
+- [Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/V10_Starboard_Reel_Winding_Strand_01.asset](<Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/V10_Starboard_Reel_Winding_Strand_01.asset>) — Настройки или данные Unity.
+- [Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/V10_Starboard_Reel_Winding_Strand_02.asset](<Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/V10_Starboard_Reel_Winding_Strand_02.asset>) — Настройки или данные Unity.
+- [Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/V10_Starboard_Reel_Winding_Strand_03.asset](<Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/V10_Starboard_Reel_Winding_Strand_03.asset>) — Настройки или данные Unity.
+- [Docs/Performance/ShipPresentationOptimization_20261016.md](<Docs/Performance/ShipPresentationOptimization_20261016.md>) — Документация.
+- [Assets/Scripts/UI/PlayerGuiBudget.cs](<Assets/Scripts/UI/PlayerGuiBudget.cs>) — Исходник C#: PlayerGuiBudget.
+- [Tools/Performance/check_gui_layout.cs](<Tools/Performance/check_gui_layout.cs>) — Исходник C#.
+- [Assets/Scripts/AdvancedPlayerController.cs](<Assets/Scripts/AdvancedPlayerController.cs>) — Исходник C#: AdvancedPlayerController.
+- [Tools/Performance/read_physics_callers.cs](<Tools/Performance/read_physics_callers.cs>) — Исходник C#.
+- [Tools/Performance/RunFleet4.cmd](<Tools/Performance/RunFleet4.cmd>) — Файл .cmd.
 - [Docs/Performance/NetworkLoadTest.md](<Docs/Performance/NetworkLoadTest.md>) — Документация.
 - [Docs/Performance/OptimizationPlan.md](<Docs/Performance/OptimizationPlan.md>) — Документация.
 - `../output/CrashReview20261007/Spyglass_1628.md` — отсутствует в текущем снимке; не использовать как готовый путь.
@@ -2161,6 +2218,10 @@ NetworkLoadTest запускается из меню Тест нагрузки �
 - [Docs/Performance/Reports/20261015-143012-267-character-hits-editor.txt](<Docs/Performance/Reports/20261015-143012-267-character-hits-editor.txt>) — Текстовые данные.
 - [Docs/Performance/Reports/20261015-render-scale-experiment.json](<Docs/Performance/Reports/20261015-render-scale-experiment.json>) — Конфигурация / данные JSON.
 - [Docs/Performance/Reports/20261015-character-hit-before-analysis.json](<Docs/Performance/Reports/20261015-character-hit-before-analysis.json>) — Конфигурация / данные JSON.
+- [Docs/Performance/ColleagueBenchmark_20261015.md](<Docs/Performance/ColleagueBenchmark_20261015.md>) — Документация.
+- [Docs/Performance/FleetCostBreakdown_20261016.md](<Docs/Performance/FleetCostBreakdown_20261016.md>) — Документация.
+- [Docs/Performance/ColleagueFleet4Test.md](<Docs/Performance/ColleagueFleet4Test.md>) — Документация.
+- [Docs/Performance/Delivery_20261016.md](<Docs/Performance/Delivery_20261016.md>) — Документация.
 
 ### Корабельная обезьянка (`ship-monkey`)
 

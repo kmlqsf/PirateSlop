@@ -34,6 +34,7 @@ namespace WaterSystem
         public Material surfaceMaterial;
         public Material RuntimeMaterial => _waterMaterial;
         public Material RuntimeInfiniteMaterial => _infiniteWaterPlanePass?.Material;
+        [NonSerialized] public bool RenderingEnabled = true;
         
         // Passes
         private InfiniteWaterPlane _infiniteWaterPlanePass;
@@ -72,6 +73,7 @@ namespace WaterSystem
 
         public override void Render(Camera cam, ScriptableRenderer scriptableRenderer)
         {
+            if (!RenderingEnabled) return;
             if(shape.type == WaterShapeType.Infinite)
                 DrawInfiniteWaterPlane(scriptableRenderer);
             

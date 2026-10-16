@@ -186,6 +186,7 @@ public partial class AdvancedPlayerController : MonoBehaviour
         cameraHeight = standingHeight - .15f;
         Breath = breathSeconds;
         if (GetComponent<SwimPresentation>() == null) gameObject.AddComponent<SwimPresentation>();
+        PlayerGuiBudget.Configure(gameObject);
     }
     void Start() { if (local) SetCursor(true); }
     void ConfigureDistanceCulling() => ConfigureDistanceCulling(playerCamera);
