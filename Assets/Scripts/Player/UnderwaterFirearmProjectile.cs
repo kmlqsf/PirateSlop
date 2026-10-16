@@ -59,7 +59,7 @@ namespace PirateSlop
         FirearmDamageBatch damage;
         FirearmShot shot;
         Vector3 position, velocity;
-        float delay, age, distance;
+        float delay, age, distance, bulletDiameter;
         public static void Spawn(GameObject owner, FirearmDefinition definition, FirearmDamageBatch batch, ref FirearmShot result)
         {
             result.ProjectileId = ++nextId;
@@ -67,6 +67,7 @@ namespace PirateSlop
             projectile.shooter = owner;
             projectile.network = owner.GetComponent<NetworkWeapon>();
             projectile.damage = batch;
+            projectile.bulletDiameter = definition.BulletDiameter;
             projectile.shot = result;
             projectile.position = result.End;
             projectile.velocity = result.WaterVelocity;
@@ -90,6 +91,7 @@ namespace PirateSlop
                 ? ProjectileWaterFlight.Step(ref velocity, dt, ProjectileWaterFlight.BulletDrag) : velocity * dt;
             if (FirearmTrace.Cast(shooter, position, position + delta, out var hit))
             {
+                NetworkShip.PunctureSails(position, hit.point, bulletDiameter);
                 distance += hit.distance;
                 damage.Apply(hit, distance);
                 shot.End = hit.point;
@@ -100,6 +102,7 @@ namespace PirateSlop
                 Finish();
                 return;
             }
+            NetworkShip.PunctureSails(position, position + delta, bulletDiameter);
             position += delta;
             distance += delta.magnitude;
             age += dt;

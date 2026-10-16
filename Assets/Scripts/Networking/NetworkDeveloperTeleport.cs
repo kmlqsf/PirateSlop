@@ -125,6 +125,79 @@ namespace PirateSlop.Networking
     public sealed partial class NetworkPlayer
     {
         public uint DeveloperTeleportRevision { get; private set; }
+        internal bool TryDeveloperBoardShip(NetworkShip ship, out string error)
+        {
+            error = "Корабль недоступен. Сначала создайте мишень или вернитесь к живому кораблю.";
+            if (!DeveloperMenu.Available || !IsServerInitialized || !IsSpawned || motor == null || motor.IsDead ||
+                ship == null || !ship.IsSpawned || ship.IsSinking || ship.gameObject.scene != gameObject.scene) return false;
+            if (!TryDeveloperDeckPoint(ship, out var point)) { error = "На корабле не найден свободный участок палубы."; return false; }
+            var state = motor.Capture();
+            state.Position = point; state.Yaw = ship.transform.eulerAngles.y;
+            state.Locked = state.Grounded = state.Swimming = state.Climbing = state.LadderExiting = false;
+            state.VerticalVelocity = state.PlanarSpeed = state.SlideTimer = state.KnockbackTime = state.JumpBuffer = state.GroundGrace = 0f;
+            state.SwimVelocity = state.KnockbackVelocity = state.KickPushVelocity = Vector3.zero;
+            var weapon = GetComponent<NetworkWeapon>();
+            var pin = weapon != null ? weapon.WhalePin : null;
+            if (pin != null) pin.Owner.InputHarpoon(weapon, pin.Index, false, 0, 0);
+            GetComponent<NetworkFishing>()?.CancelBotFishing();
+            DeveloperBoardShipObserversRpc(state, ship.NetworkObject, ship.transform.InverseTransformPoint(point), DeveloperTeleportRevision + 1);
+            foreach (var chest in NetworkLootChest.ServerChests)
+                if (chest != null && chest.Carrier == NetworkObject) chest.RefreshDeveloperShipPose();
+            error = null;
+            return true;
+        }
+
+        bool TryDeveloperDeckPoint(NetworkShip ship, out Vector3 point)
+        {
+            point = default;
+            var controller = GetComponent<CharacterController>();
+            var features = ship.GetComponent<PirateSlop.Ships.ShipV3Features>();
+            var seed = features != null && features.RespawnPoint != null ? ship.transform.InverseTransformPoint(features.RespawnPoint.position)
+                : SessionController.Instance.Config.PlayerLocalSpawn;
+            float radius = controller.radius;
+            Physics.SyncTransforms();
+            for (int i = 0; i < 25; i++)
+            {
+                var offset = i == 0 ? Vector3.zero : Quaternion.Euler(0f, (i - 1) % 8 * 45f, 0f) * Vector3.forward * (((i - 1) / 8 + 1) * 2f);
+                var origin = ship.transform.TransformPoint(seed + offset) + Vector3.up * 2f;
+                RaycastHit floor = default;
+                float distance = 10f;
+                foreach (var hit in Physics.RaycastAll(origin, Vector3.down, distance, ~0, QueryTriggerInteraction.Ignore))
+                    if (hit.rigidbody == ship.Body && hit.normal.y > .55f && hit.distance < distance)
+                    { floor = hit; distance = hit.distance; }
+                if (floor.collider == null) continue;
+                var candidate = floor.point + Vector3.up * .08f;
+                bool clear = true;
+                foreach (var obstacle in Physics.OverlapCapsule(candidate + Vector3.up * radius, candidate + Vector3.up * (controller.height - radius), radius, ~0, QueryTriggerInteraction.Ignore))
+                    if (!obstacle.transform.IsChildOf(transform)) { clear = false; break; }
+                if (!clear) continue;
+                point = candidate;
+                return true;
+            }
+            return false;
+        }
+
+        [ObserversRpc(RunLocally = true)]
+        void DeveloperBoardShipObserversRpc(PlayerState state, NetworkObject platform, Vector3 localPosition, uint revision)
+        {
+            if (platform == null || revision < DeveloperTeleportRevision) return;
+            var hands = GetComponent<CannonHands>();
+            var held = hands != null ? hands.HeldBall : null;
+            var previousPosition = transform.position;
+            float previousYaw = transform.eulerAngles.y;
+            motor.BeginFreeze();
+            motor.CargoRopeWalking = false;
+            state.Position = platform.transform.TransformPoint(localPosition);
+            ApplyDeveloperTeleport(state, platform, revision);
+            if (held != null)
+            {
+                var delta = Quaternion.Euler(0f, Mathf.DeltaAngle(previousYaw, state.Yaw), 0f);
+                held.Body.position = state.Position + delta * (held.transform.position - previousPosition);
+                held.Body.rotation = delta * held.transform.rotation;
+            }
+            Physics.SyncTransforms();
+        }
+
         public void ApplyDeveloperTeleport(PlayerState state, NetworkObject platform, uint revision)
         {
             if (revision < DeveloperTeleportRevision) return;

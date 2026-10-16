@@ -126,6 +126,7 @@ public class ShipController : MonoBehaviour
         cannonShove*=Mathf.Exp(-2f*dt);
     }
     public bool Networked { get; set; }
+    public bool DeveloperStationary { get; set; }
         [SerializeField] bool isAnchored;
     Vector3 anchorPoint;
     float anchorCableLength = 6f;
@@ -203,8 +204,9 @@ public class ShipController : MonoBehaviour
     public void Simulate(float dt)
     {
         bool immobilized = IsFrozen;
-        bool vortexBoost = VortexBoosted;
-        bool anchorHolds = isAnchored && !vortexBoost;
+        bool stationary = DeveloperStationary;
+        bool vortexBoost = VortexBoosted && !stationary;
+        bool anchorHolds = (isAnchored || stationary) && !vortexBoost;
         if (IsFrozen)
         {
             freezeRemaining = Mathf.Max(0f, freezeRemaining - dt);
@@ -212,6 +214,7 @@ public class ShipController : MonoBehaviour
             if (floodLevel <= 0f) return;
         }
         SimulateCannonRock(dt);
+        if (stationary) { pushVelocity = cannonShove = Vector3.zero; pushYawVelocity = 0f; }
         pushVelocity *= Mathf.Exp(-pushLinearDrag * dt);
         pushYawVelocity *= Mathf.Exp(-pushAngularDrag * dt);
         yaw += pushYawVelocity * dt;
@@ -222,7 +225,7 @@ public class ShipController : MonoBehaviour
         towingSpeedLimit = -1f;
         float speedResponse = vortexBoost ? maxSpeed * PirateSlop.Networking.NetworkShip.VortexSpeedMultiplier / PirateSlop.Networking.NetworkShip.VortexBoostRampSeconds : (target > speed ? acceleration * destructionAcceleration * mobility : deceleration) * SpeedMultiplier;
         speed = (immobilized || anchorHolds) ? 0f : Mathf.MoveTowards(speed, target, speedResponse * dt);
-        float rudder = !immobilized && helm != null ? helm.CurrentRudderNormalized * mobility : 0;
+        float rudder = !immobilized && !stationary && helm != null ? helm.CurrentRudderNormalized * mobility : 0;
         float factor = Mathf.Clamp01(speed / Mathf.Max(.1f, MaxSpeed * mobility));
         float yawDelta = (anchorHolds ? rudder * turnSpeed * .35f : rudder * turnSpeed * destructionRudder * Mathf.Lerp(.15f, 1, factor)) * dt;
         yaw += yawDelta;
@@ -251,7 +254,7 @@ public class ShipController : MonoBehaviour
                   yaw = Mathf.MoveTowardsAngle(yaw, targetYaw, (1f - w_t) * 10f * dt);
             }
         }
-        if (anchorHolds)
+        if (anchorHolds && !stationary)
         {
             Vector3 anchorFlat = new Vector3(anchorPoint.x, 0, anchorPoint.z);
             Vector3 shipFlat = new Vector3(next.x, 0, next.z);
@@ -334,7 +337,8 @@ public class ShipController : MonoBehaviour
             }
         }
         GetComponent<PirateSlop.Networking.NetworkSternCargoEvent>()?.ConstrainMotion(ref next);
-        ConstrainHullMotion(ref next, ref rotation);
+        if (stationary) { next.x = rb.position.x; next.z = rb.position.z; }
+        else ConstrainHullMotion(ref next, ref rotation);
         if (vortexBoost && isAnchored) anchorPoint += next - rb.position;
         motionVelocity=(next-rb.position)/Mathf.Max(.001f,dt);
         var rotationDelta=rotation*Quaternion.Inverse(rb.rotation);
@@ -534,7 +538,7 @@ public class ShipController : MonoBehaviour
     }
     public void ResolveCollision(Vector3 displacement, Vector3? contact = null, bool showEffect = true, float impactStrength = -1f)
     {
-        if (IsFrozen) return;
+        if (IsFrozen || DeveloperStationary) return;
         if (displacement.sqrMagnitude > .00001f)
         {
             Vector3 normal = displacement.normalized;

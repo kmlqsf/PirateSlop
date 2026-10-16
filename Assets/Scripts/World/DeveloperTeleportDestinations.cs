@@ -101,7 +101,7 @@ namespace PirateSlop.World
             {
                 string prefix = place.Key.Substring(9) + "/";
                 foreach (var point in world.Points("ship_approach"))
-                    if (point.Id.StartsWith(prefix, StringComparison.Ordinal) && Free(point.Position, point.Yaw, ship, world, height)) { position = point.Position; yaw = point.Yaw; return true; }
+                    if (point.Id.StartsWith(prefix, StringComparison.Ordinal) && IsFreeShipPosition(point.Position, point.Yaw, ship, world, height)) { position = point.Position; yaw = point.Yaw; return true; }
             }
             float clearance = place.Radius + ship.HullHalfExtents.y + 12f;
             for (int ring = 0; ring < 12; ring++) for (int side = 0; side < 16; side++)
@@ -110,13 +110,13 @@ namespace PirateSlop.World
                 var candidate = place.Position + new Vector3(Mathf.Sin(angle), 0, -Mathf.Cos(angle)) * (clearance + ring * 15f);
                 candidate.y = world.Layout.SeaLevel;
                 float heading = Mathf.Atan2(place.Position.x - candidate.x, place.Position.z - candidate.z) * Mathf.Rad2Deg;
-                if (!Free(candidate, heading, ship, world, height)) continue;
+                if (!IsFreeShipPosition(candidate, heading, ship, world, height)) continue;
                 position = candidate; yaw = heading; return true;
             }
             return false;
         }
 
-        static bool Free(Vector3 point, float yaw, NetworkShip ship, ProceduralWorld world, float height)
+        public static bool IsFreeShipPosition(Vector3 point, float yaw, NetworkShip ship, ProceduralWorld world, float height)
         {
             if (!world.CanSail(point, yaw)) return false;
             var rotation = Quaternion.Euler(0, yaw, 0);
@@ -127,7 +127,7 @@ namespace PirateSlop.World
                 var fish = collider.GetComponentInParent<NetworkFish>();
                 if (fish != null && fish.SupportingShip == ship) continue;
                 var ball = collider.GetComponentInParent<Cannonball>();
-                if (ball != null && ball.PlatformBody == ship.Body) continue;
+                if (ball != null && ship.Body != null && ball.PlatformBody == ship.Body) continue;
                 var chest = collider.GetComponentInParent<NetworkLootChest>();
                 if (chest != null && chest.SupportingShip == ship) continue;
                 return false;

@@ -15,7 +15,12 @@ try
         var axis = motion.transform.InverseTransformDirection(root.transform.up).normalized;
         float minimum = rest.Min(v => UnityEngine.Vector3.Dot(v, axis));
         float maximum = rest.Max(v => UnityEngine.Vector3.Dot(v, axis));
-        var weights = rest.Select(v => 1f - UnityEngine.Mathf.InverseLerp(minimum, maximum, UnityEngine.Vector3.Dot(v, axis))).ToArray();
+        bool boardingNet = motion.PinTop && motion.name.StartsWith("V3_Transfer_Boarding_Net_", System.StringComparison.Ordinal);
+        var weights = rest.Select(v =>
+        {
+            float pin = UnityEngine.Mathf.InverseLerp(minimum, maximum, UnityEngine.Vector3.Dot(v, axis));
+            return boardingNet ? 1f - UnityEngine.Mathf.SmoothStep(0f, 1f, UnityEngine.Mathf.Clamp01(pin / .82f)) : 1f - pin;
+        }).ToArray();
         UnityEngine.Mesh baked = null;
         try
         {

@@ -68,14 +68,14 @@
 
 | Файл | Краткое описание |
 | --- | --- |
-| [Assets/Settings/Weapons/DoubleBarrel.asset](<../../Assets/Settings/Weapons/DoubleBarrel.asset>) | Настройки или данные Unity |
+| [Assets/Settings/Weapons/DoubleBarrel.asset](<../../Assets/Settings/Weapons/DoubleBarrel.asset>) | Настройки или данные Unity; Паруса и канаты |
 | [Assets/Settings/Weapons/ExplosiveBall.asset](<../../Assets/Settings/Weapons/ExplosiveBall.asset>) | Настройки или данные Unity; Личное оружие и урон |
 | [Assets/Settings/Weapons/FireStaff.asset](<../../Assets/Settings/Weapons/FireStaff.asset>) | Настройки или данные Unity; Личное оружие и урон |
 | [Assets/Settings/Weapons/HandMortar.asset](<../../Assets/Settings/Weapons/HandMortar.asset>) | Настройки или данные Unity; Личное оружие и урон |
 | [Assets/Settings/Weapons/IceStaff.asset](<../../Assets/Settings/Weapons/IceStaff.asset>) | Настройки или данные Unity; Личное оружие и урон |
 | [Assets/Settings/Weapons/LightningStaff.asset](<../../Assets/Settings/Weapons/LightningStaff.asset>) | Настройки или данные Unity; Личное оружие и урон |
-| [Assets/Settings/Weapons/Musket.asset](<../../Assets/Settings/Weapons/Musket.asset>) | Настройки или данные Unity |
-| [Assets/Settings/Weapons/Pistol.asset](<../../Assets/Settings/Weapons/Pistol.asset>) | Настройки или данные Unity |
+| [Assets/Settings/Weapons/Musket.asset](<../../Assets/Settings/Weapons/Musket.asset>) | Настройки или данные Unity; Паруса и канаты |
+| [Assets/Settings/Weapons/Pistol.asset](<../../Assets/Settings/Weapons/Pistol.asset>) | Настройки или данные Unity; Паруса и канаты |
 
 ## Assets/Settings/World
 

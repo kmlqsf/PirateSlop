@@ -15,6 +15,166 @@ namespace PirateSlop.EditorTools
     {
         const string Folder = "Assets/Models/Ships/ShipV3/Bilge";
         const string ShipPath = "Assets/Resources/Ships/ShipV3Test.prefab";
+        [MenuItem("PirateSlop/Repair Ship V3 Appearance")]
+        public static void ConfigureAppearance()
+        {
+            if (EditorApplication.isPlaying) throw new InvalidOperationException("Exit Play Mode first.");
+            AssetDatabase.ImportAsset(Folder + "/BilgeDeck.fbx", ImportAssetOptions.ForceUpdate);
+            var root = PrefabUtility.LoadPrefabContents(ShipPath);
+            var scene = EditorSceneManager.NewPreviewScene();
+            GameObject model = null;
+            try
+            {
+                var protectedComponents = root.GetComponentsInChildren<Component>(true).Where(c => c is Collider || c is MonoBehaviour && !(c is ShipV3RenderBatch)).ToArray();
+                var protectedState = protectedComponents.Select(EditorJsonUtility.ToJson).ToArray();
+                var manifest = JObject.Parse(File.ReadAllText(Folder + "/BilgeDeck.json"));
+                model = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(Folder + "/BilgeDeck.fbx"), scene);
+                var sources = model.GetComponentsInChildren<Transform>(true).ToDictionary(t => t.name);
+                var origin = sources["BilgeOrigin"];
+                var forward = (sources["BilgeForward"].position - origin.position).normalized;
+                var up = (sources["BilgeUp"].position - origin.position).normalized;
+                model.transform.rotation = Quaternion.Inverse(Quaternion.LookRotation(forward, up)) * model.transform.rotation;
+                if (Vector3.Dot(sources["BilgeRight"].position - origin.position, Vector3.right) < 0f)
+                    model.transform.localScale = new Vector3(-model.transform.localScale.x, model.transform.localScale.y, model.transform.localScale.z);
+                model.transform.position -= origin.position + Vector3.up * (float)manifest["waterline"];
+                model.transform.SetParent(root.transform, false);
+                ApplyAppearance(root, sources, manifest);
+                UnityEngine.Object.DestroyImmediate(model);
+                model = null;
+                for (int i = 0; i < protectedComponents.Length; i++)
+                    if (EditorJsonUtility.ToJson(protectedComponents[i]) != protectedState[i])
+                        throw new InvalidOperationException("Gameplay component changed during appearance repair: " + protectedComponents[i].name + " " + protectedComponents[i].GetType().Name);
+                PrefabUtility.SaveAsPrefabAsset(root, ShipPath);
+                ConfigureMastMaterials();
+                AssetDatabase.SaveAssets();
+                ShipCustomizationSetup.CreateMenuPrefab();
+                AssetDatabase.SaveAssets();
+                Debug.Log("Ship V3 appearance saved; collider and gameplay component serialization unchanged.");
+            }
+            finally
+            {
+                if (model != null) UnityEngine.Object.DestroyImmediate(model);
+                EditorSceneManager.ClosePreviewScene(scene);
+                PrefabUtility.UnloadPrefabContents(root);
+            }
+        }
+        static void ConfigureMastMaterials()
+        {
+            var shader = Shader.Find("PirateSlop/Ship Mast Lit");
+            if (shader == null) throw new InvalidOperationException("Mast shader unavailable.");
+            foreach (string version in new[] { "V5", "V6" })
+                foreach (string part in new[] { "Base", "Shaft" })
+                {
+                    var material = AssetDatabase.LoadAssetAtPath<Material>("Assets/Models/Ships/ShipV3/Materials/" + version + "_Ship_Art_Mast_Carved_" + part + ".mat");
+                    material.shader = shader;
+                    EditorUtility.SetDirty(material);
+                }
+        }
+        static void ApplyAppearance(GameObject root, Dictionary<string, Transform> sources, JObject manifest)
+        {
+            if (manifest["appearance_objects"] == null) return;
+            var sourceNodes = new HashSet<Transform>(sources.Values);
+            var targets = root.GetComponentsInChildren<Transform>(true).Where(t => !sourceNodes.Contains(t)).GroupBy(t => t.name).ToDictionary(g => g.Key, g => g.First());
+            var changed = new HashSet<MeshRenderer>();
+            var original = JObject.Parse(File.ReadAllText("Assets/Models/Ships/ShipV3/ShipV3.json"));
+            var hull = new HashSet<string>(original["pieces"].Where(p => (string)p["family"] == "Hull" || ((string)p["intact"]).Contains("Quarterdeck_Sidewall")).SelectMany(p => new[] { (string)p["intact"] }.Concat(p["fragment_names"].Values<string>())));
+            var baseMeshes = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Models/Ships/ShipV3/ShipV3.fbx").GetComponentsInChildren<MeshFilter>(true).GroupBy(f => f.name).ToDictionary(g => g.Key, g => g.First().sharedMesh);
+            AssetDatabase.StartAssetEditing();
+            try
+            {
+            foreach (string name in manifest["appearance_objects"].Values<string>())
+            {
+                if (!targets.TryGetValue(name, out var target)) throw new InvalidOperationException("Appearance target missing: " + name);
+                if (hull.Contains(name) && manifest["appearance_lining"] != null)
+                {
+                    var gameplayMesh = AssetDatabase.LoadAssetAtPath<Mesh>(Folder + "/Meshes/" + name + ".asset");
+                    if (gameplayMesh == null) gameplayMesh = baseMeshes[name];
+                    target.GetComponent<MeshFilter>().sharedMesh = gameplayMesh;
+                    target.GetComponent<MeshRenderer>().enabled = false;
+                    target.GetComponent<MeshRenderer>().shadowCastingMode = ShadowCastingMode.ShadowsOnly;
+                    changed.Add(target.GetComponent<MeshRenderer>());
+                    continue;
+                }
+                var mesh = TransformMesh(sources[name].GetComponent<MeshFilter>().sharedMesh, target.worldToLocalMatrix * sources[name].localToWorldMatrix);
+                target.GetComponent<MeshFilter>().sharedMesh = SaveMesh(mesh, "Appearance_" + name);
+                var renderer = target.GetComponent<MeshRenderer>();
+                if (name.Contains("Stair_RailReturn") || name.Contains("Bow_Stair_Handrail") || name.Contains("Boarding_Net") || name.Contains("Forecastle_Riser_Plank"))
+                    renderer.sharedMaterials = sources[name].GetComponent<MeshRenderer>().sharedMaterials.Select(m => MaterialFor(m, name, renderer.sharedMaterials)).ToArray();
+                changed.Add(renderer);
+            }
+            }
+            finally { AssetDatabase.StopAssetEditing(); }
+            if (manifest["appearance_lining"] != null)
+            {
+                var lineSources = new List<MeshRenderer>();
+                AssetDatabase.StartAssetEditing();
+                try
+                {
+                    var liningNames = new HashSet<string>(manifest["appearance_lining"].Select(e => (string)e["name"]));
+                    foreach (var priorChild in targets.Values.Where(t => t.name.StartsWith("V20_Interior_") && !liningNames.Contains(t.name)).ToArray()) UnityEngine.Object.DestroyImmediate(priorChild.gameObject);
+                    foreach (var entry in manifest["appearance_lining"])
+                    {
+                        string name = (string)entry["name"];
+                        var parent = targets[(string)entry["parent"]];
+                        var child = parent.Find(name);
+                        if (child == null)
+                        {
+                            child = new GameObject(name).transform;
+                            child.SetParent(parent, false);
+                            child.gameObject.AddComponent<MeshFilter>();
+                            child.gameObject.AddComponent<MeshRenderer>();
+                        }
+                        var source = sources[name];
+                        var sourceMesh = source.GetComponent<MeshFilter>().sharedMesh;
+                        var visualMesh = TransformMesh(sourceMesh, child.worldToLocalMatrix * source.localToWorldMatrix);
+                        var encodedZ = new List<Vector2>();
+                        sourceMesh.GetUVs(2, encodedZ);
+                        var encodedXY = sourceMesh.uv2;
+                        if (encodedXY.Length == visualMesh.vertexCount && encodedZ.Count == visualMesh.vertexCount)
+                        {
+                            var normalMatrix = child.localToWorldMatrix.transpose;
+                            visualMesh.normals = encodedXY.Select((n, i) => normalMatrix.MultiplyVector(new Vector3(n.x, encodedZ[i].x, n.y)).normalized).ToArray();
+                            visualMesh.RecalculateTangents();
+                        }
+                        child.GetComponent<MeshFilter>().sharedMesh = SaveMesh(visualMesh, name);
+                        var renderer = child.GetComponent<MeshRenderer>();
+                        renderer.sharedMaterials = sourceMesh.vertexCount == 0 ? Array.Empty<Material>() : source.GetComponent<MeshRenderer>().sharedMaterials.Select(m => MaterialFor(m, name)).ToArray();
+                        lineSources.Add(renderer);
+                    }
+                    var prior = root.transform.Find("ShipAppearanceInteriorBatches");
+                    if (prior != null) UnityEngine.Object.DestroyImmediate(prior.gameObject);
+                    var batches = new GameObject("ShipAppearanceInteriorBatches");
+                    batches.transform.SetParent(root.transform, false);
+                    int index = 0;
+                    foreach (var group in lineSources.SelectMany(r => r.sharedMaterials.Where(m => m != null).Distinct().Select(m => new { Source = r, Material = m })).GroupBy(v => v.Material))
+                    {
+                        var members = group.Select(v => v.Source).Distinct().ToArray();
+                        var node = new GameObject("InteriorBatch_" + index);
+                        node.transform.SetParent(batches.transform, false);
+                        var mesh = ShipV3RenderBatch.BuildMesh(members, group.Key, node.transform, true);
+                        var saved = SaveMesh(mesh, "InteriorBatch_" + index++);
+                        node.AddComponent<MeshFilter>().sharedMesh = saved;
+                        node.AddComponent<MeshRenderer>().sharedMaterial = group.Key;
+                        var batch = node.AddComponent<ShipV3RenderBatch>();
+                        batch.Sources = members;
+                        batch.CachedMesh = saved;
+                        batch.SharedMaterial = group.Key;
+                        batch.BatchAnchor = node.transform;
+                        foreach (var member in members) member.enabled = false;
+                    }
+                }
+                finally { AssetDatabase.StopAssetEditing(); }
+            }
+            foreach (var batch in root.GetComponentsInChildren<ShipV3RenderBatch>(true))
+            {
+                var detached = batch.Sources.Where(r => changed.Contains(r) && (!r.sharedMaterials.Contains(batch.SharedMaterial) || r.name.Contains("Boarding_Net") || manifest["appearance_lining"] != null && hull.Contains(r.name))).ToArray();
+                if (detached.Length == 0) continue;
+                batch.Sources = batch.Sources.Except(detached).ToArray();
+                changed.Add(batch.GetComponent<MeshRenderer>());
+                foreach (var renderer in detached) renderer.enabled = !hull.Contains(renderer.name);
+            }
+            RebuildCaches(root, changed, false);
+        }
         [MenuItem("PirateSlop/Add Bilge Deck And Pump To Ship V3")]
         public static void Configure()
         {
@@ -141,6 +301,7 @@ namespace PirateSlop.EditorTools
                 var emptyNames = new HashSet<string>(manifest["empty_objects"].Values<string>());
                 foreach (string name in manifest["modified_objects"].Values<string>())
                 {
+                    if (name.StartsWith("V20_Interior_")) continue;
                     if (!targets.TryGetValue(name, out var target)) throw new InvalidOperationException("Ship part not found: " + name);
                     var filter = target.GetComponent<MeshFilter>();
                     bool wasEmpty = filter.sharedMesh == null || filter.sharedMesh.vertexCount == 0;
@@ -278,6 +439,7 @@ namespace PirateSlop.EditorTools
                     if (instances != null) instances.Links = rig.ChainLinks;
                 }
                 ConfigureFlooding(root);
+                if (manifest["appearance_objects"] != null) ApplyAppearance(root, sources, manifest);
                 RebuildCaches(root, changed);
                 foreach (var collider in emptyColliders) if (collider != null) UnityEngine.Object.DestroyImmediate(collider);
                 BatchPermanent(staticSources, permanent.transform);
@@ -458,13 +620,14 @@ namespace PirateSlop.EditorTools
             target.subMeshCount = source.subMeshCount;
             for (int i = 0; i < source.subMeshCount; i++) target.SetTriangles(source.GetTriangles(i), i);
             target.RecalculateBounds();
+            target.UploadMeshData(false);
             EditorUtility.SetDirty(target);
         }
-        static void RebuildCaches(GameObject root, HashSet<MeshRenderer> changed)
+        static void RebuildCaches(GameObject root, HashSet<MeshRenderer> changed, bool rebuildCollision = true)
         {
             foreach (var batch in root.GetComponentsInChildren<ShipV3RenderBatch>(true))
             {
-                if (!batch.Sources.Any(changed.Contains)) continue;
+                if (!changed.Contains(batch.GetComponent<MeshRenderer>()) && !batch.Sources.Any(changed.Contains)) continue;
                 var mesh = ShipV3RenderBatch.BuildMesh(batch.Sources, batch.SharedMaterial, batch.transform, true);
                 CopyMesh(mesh, batch.CachedMesh);
                 batch.GetComponent<MeshFilter>().sharedMesh = batch.CachedMesh;
@@ -472,6 +635,7 @@ namespace PirateSlop.EditorTools
                 if (batch.ShadowProxy != null) batch.ShadowProxy.GetComponent<MeshFilter>().sharedMesh = batch.CachedShadowMesh != null ? batch.CachedShadowMesh : batch.CachedMesh;
                 UnityEngine.Object.DestroyImmediate(mesh);
             }
+            if (!rebuildCollision) return;
             foreach (var batch in root.GetComponentsInChildren<ShipV3CollisionBatch>(true))
             {
                 var sources = batch.Sources.Where(c => c != null && c.sharedMesh != null && c.sharedMesh.vertexCount > 0 && (c.GetComponent<MeshFilter>() == null || c.GetComponent<MeshFilter>().sharedMesh != null && c.GetComponent<MeshFilter>().sharedMesh.vertexCount > 0)).ToArray();

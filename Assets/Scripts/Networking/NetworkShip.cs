@@ -10,7 +10,7 @@ namespace PirateSlop.Networking
         public static readonly System.Collections.Generic.List<NetworkShip> ActiveShips = new();
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         static void ResetActiveShips() => ActiveShips.Clear();
-        void OnDestroy() => ActiveShips.Remove(this);
+        void OnDestroy() { ActiveShips.Remove(this); StopSailDamage(); }
         [SerializeField] Vector2 hullHalfExtents = new(6.5f, 23f);
         public Vector2 HullHalfExtents => hullHalfExtents;
         public readonly SyncVar<int> ParticipantId = new();
@@ -67,6 +67,7 @@ namespace PirateSlop.Networking
         {
             developerTeleportRevision = 0;
             if (!ActiveShips.Contains(this)) ActiveShips.Add(this);
+            BeginSailDamage();
             InitializeKraken();
             BeginMonkey();
             Body.interpolation = RigidbodyInterpolation.None;
@@ -81,6 +82,7 @@ namespace PirateSlop.Networking
                 TimeManager.OnPostTick -= Publish;
             }
             ActiveShips.Remove(this);
+            StopSailDamage();
             StopKraken();
             ClearAmmo();
             if (monkey != null) monkey.End();
@@ -170,6 +172,7 @@ namespace PirateSlop.Networking
         }
         void Update()
         {
+            UpdateSailDamage();
             UpdatePump();
             UpdateMonkey();
             UpdateAmmo();

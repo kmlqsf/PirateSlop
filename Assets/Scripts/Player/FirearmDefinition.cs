@@ -15,6 +15,7 @@ namespace PirateSlop
         public float AimSeconds = .18f, AimFov = 55, CameraKick = 1.4f, CameraYaw = .25f;
         public float KickDegrees = 12, KickDistance = .075f, KickRecovery = .28f, FlashPower = 1;
         public float TracerWidth = .022f, TracerSpeed = 450;
+        [Min(.001f)] public float BulletDiameter = .018f;
         public Vector3 HipPosition = new(.28f,-.28f,.55f), AimPosition = new(0,-.18f,.4f);
         public Vector3 MuzzleOffset = new(0,.075f,.75f);
         public float ShooterKnockback;
@@ -26,6 +27,7 @@ namespace PirateSlop
             HipSpread=Mathf.Clamp(HipSpread,0,25);AimSpread=Mathf.Clamp(AimSpread,0,25);MovingSpread=Mathf.Max(0,MovingSpread);
             AimSeconds=Mathf.Max(.08f,AimSeconds);AimFov=Mathf.Clamp(AimFov,10,90);KickRecovery=Mathf.Max(.05f,KickRecovery);
             DamageCap=Mathf.Max(0,DamageCap);TracerWidth=Mathf.Clamp(TracerWidth,.005f,.08f);TracerSpeed=Mathf.Max(50,TracerSpeed);
+            BulletDiameter = Mathf.Clamp(BulletDiameter, .001f, .1f);
             if(Ballistics==null) Ballistics=new FirearmSettings();
             Ballistics.Range=Mathf.Clamp(Ballistics.Range,1,500);Ballistics.ShotInterval=Mathf.Max(.06f,Ballistics.ShotInterval);Ballistics.ReloadDuration=Mathf.Max(.2f,Ballistics.ReloadDuration);
         }
@@ -70,6 +72,7 @@ namespace PirateSlop
                 Vector3 barrel = muzzle + (count > 1 ? Quaternion.LookRotation(direction) * Vector3.right * (i < count / 2 ? -.049f : .049f) : Vector3.zero);
                 shots[i] = FirearmTrace.Resolve(shooter, eye, barrel, ray, settings.Range, out var hit, definition.TracerSpeed);
                 if (!damage) continue;
+                PirateSlop.Networking.NetworkShip.PunctureSails(shots[i].Start, shots[i].End, definition.BulletDiameter);
                 if (shots[i].Water)
                 {
                     UnderwaterFirearmProjectile.Spawn(shooter, definition, batch, ref shots[i]);
