@@ -307,8 +307,8 @@ namespace PirateSlop.Networking
                 address=GUI.TextField(new Rect(x,y+68,panelWidth,48),address,64,menuInput);
                 MenuText(new Rect(x,y+124,panelWidth,25),"Карта",true);
                 float halfW=(panelWidth-10)*.5f;
-                if(MenuChoice(x,y+150,MenuDeveloperTools?halfW:panelWidth,"Обычная карта",!useTestMap)) useTestMap=false;
-                if(MenuDeveloperTools && MenuChoice(x+halfW+10,y+150,halfW,"Тестовая карта",useTestMap)) useTestMap=true;
+                if(MenuChoice(x,y+150,halfW,"Обычная карта",!useTestMap)) useTestMap=false;
+                if(MenuChoice(x+halfW+10,y+150,halfW,"Тестовая карта",useTestMap)) useTestMap=true;
                 if(!useTestMap)
                 {
                     MenuText(new Rect(x,y+204,panelWidth,25),"Номер карты · пусто — случайная",true);
@@ -445,13 +445,13 @@ namespace PirateSlop.Networking
                 if(MenuAction(x,y+250,panelWidth,"Настройки")) menuPage=7;
                 if(MenuAction(x,y+304,panelWidth,"Диагностика")) menuPage=10;
                 if(MenuAction(x,y+362,panelWidth,"Выйти из игры")) Application.Quit();
-                if(MenuDeveloperTools && (!playing || LoadTestActive))
+                if(!playing || MenuDeveloperTools && LoadTestActive)
                 {
                     MenuRule(x+32,y+430,112);
-                    GUI.Label(new Rect(x+32,y+443,panelWidth,20),"ДЛЯ РАЗРАБОТЧИКА",menuFooter);
+                    GUI.Label(new Rect(x+32,y+443,panelWidth,20),!playing?"ТЕСТИРОВАНИЕ":"ДЛЯ РАЗРАБОТЧИКА",menuFooter);
                     if(!playing && MenuAction(x,y+467,panelWidth,"Тестовая карта",secondary:true)) Begin(true,"127.0.0.1:"+Config.Port,true);
-                    if(!playing && MenuAction(x,y+509,panelWidth,"Тест нагрузки · без AI",secondary:true)) BeginLoadTest();
-                    if(playing && LoadTestActive && MenuAction(x,y+434,panelWidth,"Движение нагрузки · F7",secondary:true)) ToggleLoadTestMotion();
+                    if(MenuDeveloperTools && !playing && MenuAction(x,y+509,panelWidth,"Тест нагрузки · без AI",secondary:true)) BeginLoadTest();
+                    if(MenuDeveloperTools && playing && LoadTestActive && MenuAction(x,y+434,panelWidth,"Движение нагрузки · F7",secondary:true)) ToggleLoadTestMotion();
                 }
             }
             if(!string.IsNullOrEmpty(error))
