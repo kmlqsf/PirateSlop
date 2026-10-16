@@ -129,7 +129,7 @@ namespace PirateSlop.Performance
                 fleetScenario = mode == "benchmark" ? SessionController.Instance != null && SessionController.Instance.BenchmarkFleetShipsActive > 0 ? "fleet-scaling-v1;ships=" + SessionController.Instance.BenchmarkFleetShipsActive : SessionController.Instance != null && SessionController.Instance.BenchmarkWhirlpoolStressActive ? "whirlpool-convergence-stress" : "parallel-open-water-v1" : "user-controlled",
                 renderExperiment = mode == "benchmark" ? PerformanceRenderOverrides.Signature : "",
                 shipBodyPoseFastPath = PirateSlop.Ships.ShipBodyPose.Enabled, worldVisualBudget = WorldVisualBudget.Enabled,
-                playerGuiLayoutBudget = PlayerGuiBudget.Enabled
+                playerGuiLayoutBudget = PlayerGuiBudget.Enabled, cpuOptimizationVersion = "cpu-work-v1"
             };
         }
 

@@ -9,25 +9,28 @@ namespace PirateSlop
         struct Thaw { public Vector3 Point; public Scene Scene; public float End; }
         static readonly HashSet<FrozenWaterTile> tiles = new();
         static readonly List<Thaw> thawing = new();
+        public static bool HasSurfaces => tiles.Count > 0 || thawing.Count > 0;
         static Texture2D atlas;
         static Color[] pixels;
         static float uploadAt;
+        static bool emptyUploaded;
         const int Resolution = 256;
         const float Size = 128f;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         static void ResetState()
         {
-            tiles.Clear(); thawing.Clear(); uploadAt = 0;
+            tiles.Clear(); thawing.Clear(); uploadAt = 0; emptyUploaded = false;
             Shader.SetGlobalVector("_FrozenWaterMapping", Vector4.zero);
         }
 
-        public static void Add(FrozenWaterTile tile) { tiles.Add(tile); uploadAt = 0; }
+        public static void Add(FrozenWaterTile tile) { tiles.Add(tile); uploadAt = 0; emptyUploaded = false; }
         public static void Remove(FrozenWaterTile tile)
         {
             if (!tiles.Remove(tile)) return;
             if (Application.isPlaying) thawing.Add(new Thaw { Point = tile.transform.position, Scene = tile.gameObject.scene, End = Time.time + .8f });
             uploadAt = 0;
+            emptyUploaded = false;
         }
 
         static float Weight(Vector2 delta)
@@ -61,6 +64,10 @@ namespace PirateSlop
         {
             if (Application.isBatchMode || focusPosition == null && Time.time < uploadAt) return;
             uploadAt = Time.time + .05f;
+            for (int i = thawing.Count - 1; i >= 0; i--)
+                if (thawing[i].End <= Time.time) thawing.RemoveAt(i);
+            bool empty = tiles.Count == 0 && thawing.Count == 0;
+            if (empty && emptyUploaded) return;
             if (atlas == null)
             {
                 atlas = new Texture2D(Resolution, Resolution, TextureFormat.RGBAFloat, false, true) { name = "FrozenWaterSurfaceMask", filterMode = FilterMode.Bilinear, wrapMode = TextureWrapMode.Clamp, hideFlags = HideFlags.HideAndDontSave };
@@ -81,6 +88,7 @@ namespace PirateSlop
             atlas.SetPixels(pixels); atlas.Apply(false, false);
             Shader.SetGlobalTexture("_FrozenWaterMask", atlas);
             Shader.SetGlobalVector("_FrozenWaterMapping", new Vector4(origin.x, origin.y, 1f / Size, 1f / Size));
+            emptyUploaded = empty;
         }
 
         static void Paint(Vector3 point, Vector2 origin, float strength, bool solid, float formation = 1f)

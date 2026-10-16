@@ -122,8 +122,14 @@ namespace PirateSlop
             pistolWorldGrip = weapon.WorldPivot.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "GripSocket_Firearm");
             pistolViewGrip = weapon.ViewPivot.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "GripSocket_Firearm");
         }
-        void OnEnable() { RenderPipelineManager.beginCameraRendering += Before; RenderPipelineManager.endCameraRendering += After; }
-        void OnDisable() { RenderPipelineManager.beginCameraRendering -= Before; RenderPipelineManager.endCameraRendering -= After; }
+        void OnEnable() { SetViewHidden(true); RenderPipelineManager.beginCameraRendering += Before; RenderPipelineManager.endCameraRendering += After; }
+        void OnDisable() { RenderPipelineManager.beginCameraRendering -= Before; RenderPipelineManager.endCameraRendering -= After; SetViewHidden(true); }
+        void SetViewHidden(bool hidden)
+        {
+            if (renderers == null) return;
+            foreach (var renderer in renderers)
+                if (renderer != null && renderer.forceRenderingOff != hidden) renderer.forceRenderingOff = hidden;
+        }
         void Before(ScriptableRenderContext context, Camera camera)
         {
             if (renderers == null) return;
@@ -134,11 +140,12 @@ namespace PirateSlop
             bool whaleVisible = whaleGripWeight > .01f && camera == motor.PlayerCamera && camera.enabled && !motor.IsThirdPerson && !motor.IsDead;
             bool sternVisible = sternGripWeight > .01f && camera == motor.PlayerCamera && camera.enabled && !motor.IsThirdPerson && !motor.IsDead;
             bool stoneVisible = balanceStone != null && balanceStone.HeldVisual != null && balanceStone.GripWeight>.01f && camera == motor.PlayerCamera && camera.enabled && !motor.IsThirdPerson && !motor.IsDead;
-            foreach (var renderer in renderers) renderer.forceRenderingOff = stoneVisible || !(plankVisible || whaleVisible || sternVisible);
+            SetViewHidden(stoneVisible || !(plankVisible || whaleVisible || sternVisible));
         }
-        void After(ScriptableRenderContext context, Camera camera) { if (renderers != null) foreach (var r in renderers) r.forceRenderingOff = true; }
+        void After(ScriptableRenderContext context, Camera camera) => SetViewHidden(true);
         void LateUpdate()
         {
+            bool viewPose = motor.PlayerCamera != null && motor.PlayerCamera.isActiveAndEnabled && !motor.IsThirdPerson;
             if (balanceStone == null) balanceStone = GetComponent<BalanceStonePlayer>();
             var stone = balanceStone != null ? balanceStone.HeldVisual : null;
             if (stone != null && !motor.IsDead)
@@ -164,8 +171,11 @@ namespace PirateSlop
             {
                 right.Solve(sternRightPoint,sternWrist,transform.TransformPoint(new Vector3(.6f,1,.15f)),sternGripWeight,true);
                 left.Solve(sternLeftPoint,sternWrist,transform.TransformPoint(new Vector3(-.6f,1,.15f)),sternGripWeight,true);
-                viewRight.Solve(sternRightPoint,sternWrist,motor.PlayerCamera.transform.TransformPoint(new Vector3(.55f,-.4f,.3f)),sternGripWeight,true);
-                viewLeft.Solve(sternLeftPoint,sternWrist,motor.PlayerCamera.transform.TransformPoint(new Vector3(-.55f,-.4f,.3f)),sternGripWeight,true);
+                if (viewPose)
+                {
+                    viewRight.Solve(sternRightPoint,sternWrist,motor.PlayerCamera.transform.TransformPoint(new Vector3(.55f,-.4f,.3f)),sternGripWeight,true);
+                    viewLeft.Solve(sternLeftPoint,sternWrist,motor.PlayerCamera.transform.TransformPoint(new Vector3(-.55f,-.4f,.3f)),sternGripWeight,true);
+                }
                 return;
             }
             if (whaleInteraction == null) whaleInteraction = GetComponent<WhalePlayerInteraction>();
@@ -182,8 +192,11 @@ namespace PirateSlop
             {
                 right.Solve(whaleRightPoint, whaleWrist, transform.TransformPoint(new Vector3(.6f, .95f, .1f)), whaleGripWeight, true);
                 left.Solve(whaleLeftPoint, whaleWrist, transform.TransformPoint(new Vector3(-.6f, .95f, .1f)), whaleGripWeight, true);
-                viewRight.Solve(whaleRightPoint, whaleWrist, motor.PlayerCamera.transform.TransformPoint(new Vector3(.55f, -.45f, .3f)), whaleGripWeight, true);
-                viewLeft.Solve(whaleLeftPoint, whaleWrist, motor.PlayerCamera.transform.TransformPoint(new Vector3(-.55f, -.45f, .3f)), whaleGripWeight, true);
+                if (viewPose)
+                {
+                    viewRight.Solve(whaleRightPoint, whaleWrist, motor.PlayerCamera.transform.TransformPoint(new Vector3(.55f, -.45f, .3f)), whaleGripWeight, true);
+                    viewLeft.Solve(whaleLeftPoint, whaleWrist, motor.PlayerCamera.transform.TransformPoint(new Vector3(-.55f, -.45f, .3f)), whaleGripWeight, true);
+                }
                 return;
             }
             if (bell != null && bell.IsPulling)
@@ -191,8 +204,11 @@ namespace PirateSlop
                 var point = bell.HandPoint;
                 right.Solve(point, transform.rotation * gripRotation, transform.TransformPoint(new Vector3(.6f, 1.2f, .3f)), 1);
                 left.Solve(point + Vector3.up * .12f, transform.rotation * gripRotation, transform.TransformPoint(new Vector3(-.6f, 1.2f, .3f)), 1);
-                viewRight.Solve(point, motor.PlayerCamera.transform.rotation * gripRotation, motor.PlayerCamera.transform.TransformPoint(new Vector3(.55f, -.35f, .3f)), 1);
-                viewLeft.Solve(point + Vector3.up * .12f, motor.PlayerCamera.transform.rotation * gripRotation, motor.PlayerCamera.transform.TransformPoint(new Vector3(-.55f, -.35f, .3f)), 1);
+                if (viewPose)
+                {
+                    viewRight.Solve(point, motor.PlayerCamera.transform.rotation * gripRotation, motor.PlayerCamera.transform.TransformPoint(new Vector3(.55f, -.35f, .3f)), 1);
+                    viewLeft.Solve(point + Vector3.up * .12f, motor.PlayerCamera.transform.rotation * gripRotation, motor.PlayerCamera.transform.TransformPoint(new Vector3(-.55f, -.35f, .3f)), 1);
+                }
                 return;
             }
             if (GetComponent<PirateSlop.Networking.NetworkFishing>()?.IsPickingUp == true) return;
@@ -200,19 +216,19 @@ namespace PirateSlop
             if (repair != null && repair.HeldPlank != null)
             {
                 SolvePlank(repair.HeldPlank, right, left, transform);
-                SolvePlank(repair.HeldPlank, viewRight, viewLeft, motor.PlayerCamera.transform);
+                if (viewPose) SolvePlank(repair.HeldPlank, viewRight, viewLeft, motor.PlayerCamera.transform);
                 return;
             }
             if (equipment != null && equipment.Active && equipment.View != null && equipment.World != null)
             {
-                SolveEquipment(equipment.View, viewRight, viewLeft, motor.PlayerCamera.transform);
+                if (viewPose) SolveEquipment(equipment.View, viewRight, viewLeft, motor.PlayerCamera.transform);
                 SolveEquipment(equipment.World, right, left, transform);
                 return;
             }
             if (sabreAnimation != null && sabreAnimation.Active) return;
             weight = Mathf.MoveTowards(weight, weapon.AnimationEquipped ? 1 : 0, Time.deltaTime * 8);
             if (weight <= 0) return;
-            for (int i = 0; i < triggerFingers.Length; i++)
+            for (int i = 0; viewPose && i < triggerFingers.Length; i++)
                 triggerFingers[i].localRotation = triggerRest[i] * Quaternion.Euler(inventory.PistolSelected ? (i == 0 ? 30 : i == 1 ? 20 : -10) : 0, 0, 0);
             var view = weapon.ActiveView;
             var world = weapon.ActiveWorld;
@@ -227,18 +243,24 @@ namespace PirateSlop
                 right.Solve(gripPoint - wristRotation * right.Palm, wristRotation, transform.TransformPoint(new Vector3(.6f, 1.0f, .1f)), weight, true);
                 world.SetPositionAndRotation(right.Hand.TransformPoint(right.Palm), bodyRotation);
                 world.position += right.Hand.TransformPoint(right.Palm) - pistolWorldGrip.position;
-                var viewRotation = view.rotation * palmRotation;
-                viewRight.Solve(pistolViewGrip.position - viewRotation * viewRight.Palm, viewRotation, motor.PlayerCamera.transform.TransformPoint(new Vector3(.55f, -.5f, .15f)), 1, true);
-                Vector3 otherHand = weapon.Reloading ? weapon.ReloadHandPoint : motor.PlayerCamera.transform.TransformPoint(new Vector3(-.25f, -.4f, .32f));
-                viewLeft.Solve(otherHand, motor.PlayerCamera.transform.rotation * gripRotation, motor.PlayerCamera.transform.TransformPoint(new Vector3(-.6f, -.5f, .15f)), 1);
+                if (viewPose)
+                {
+                    var viewRotation = view.rotation * palmRotation;
+                    viewRight.Solve(pistolViewGrip.position - viewRotation * viewRight.Palm, viewRotation, motor.PlayerCamera.transform.TransformPoint(new Vector3(.55f, -.5f, .15f)), 1, true);
+                    Vector3 otherHand = weapon.Reloading ? weapon.ReloadHandPoint : motor.PlayerCamera.transform.TransformPoint(new Vector3(-.25f, -.4f, .32f));
+                    viewLeft.Solve(otherHand, motor.PlayerCamera.transform.rotation * gripRotation, motor.PlayerCamera.transform.TransformPoint(new Vector3(-.6f, -.5f, .15f)), 1);
+                }
                 if (weapon.Reloading) left.Solve(world.TransformPoint(weapon.ReloadHandOffset), transform.rotation * gripRotation, transform.TransformPoint(new Vector3(-.65f, 1.05f, .1f)), weight);
                 return;
             }
-            Quaternion viewHand = view.rotation * gripRotation;
-            viewRight.Solve(view.position - viewHand * Vector3.up * .075f, viewHand, motor.PlayerCamera.transform.TransformPoint(new Vector3(.55f, -.5f, .15f)), 1);
-            if (!inventory.PistolSelected) view.position = viewRight.Hand.TransformPoint(new Vector3(0, .065f, .025f));
-            Vector3 viewLeftTarget = weapon.Reloading ? weapon.ReloadHandPoint : motor.PlayerCamera.transform.TransformPoint(new Vector3(-.25f, -.4f, .32f));
-            viewLeft.Solve(viewLeftTarget, motor.PlayerCamera.transform.rotation * gripRotation, motor.PlayerCamera.transform.TransformPoint(new Vector3(-.6f, -.5f, .15f)), 1);
+            if (viewPose)
+            {
+                Quaternion viewHand = view.rotation * gripRotation;
+                viewRight.Solve(view.position - viewHand * Vector3.up * .075f, viewHand, motor.PlayerCamera.transform.TransformPoint(new Vector3(.55f, -.5f, .15f)), 1);
+                if (!inventory.PistolSelected) view.position = viewRight.Hand.TransformPoint(new Vector3(0, .065f, .025f));
+                Vector3 viewLeftTarget = weapon.Reloading ? weapon.ReloadHandPoint : motor.PlayerCamera.transform.TransformPoint(new Vector3(-.25f, -.4f, .32f));
+                viewLeft.Solve(viewLeftTarget, motor.PlayerCamera.transform.rotation * gripRotation, motor.PlayerCamera.transform.TransformPoint(new Vector3(-.6f, -.5f, .15f)), 1);
+            }
             Vector3 position = transform.TransformPoint(weapon.BodyWeaponPosition);
             Quaternion rotation = transform.rotation * weapon.BodyWeaponRotation;
             Quaternion handRotation = rotation * gripRotation;

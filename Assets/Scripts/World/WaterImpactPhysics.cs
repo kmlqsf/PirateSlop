@@ -19,7 +19,7 @@ namespace PirateSlop
         public static WaterImpactPhysics Instance { get; private set; }
         public int ImpactCount { get; private set; }
         public WaterImpactEvent LastImpact { get; private set; }
-        readonly Collider[] nearby = new Collider[512];
+        Collider[] nearby = new Collider[512];
         Camera focus;
         float scanAt;
         int scanSector;
@@ -53,11 +53,17 @@ namespace PirateSlop
             int sector = scanSector++ % 4;
             Vector3 center = focus.transform.position + new Vector3((sector & 1) == 0 ? -45f : 45f, 0f, (sector & 2) == 0 ? -45f : 45f);
             int count = Physics.OverlapSphereNonAlloc(center, 70f, nearby, ~0, QueryTriggerInteraction.Ignore);
+            while (count == nearby.Length && nearby.Length < 65536)
+            {
+                System.Array.Resize(ref nearby, nearby.Length * 2);
+                count = Physics.OverlapSphereNonAlloc(center, 70f, nearby, ~0, QueryTriggerInteraction.Ignore);
+            }
             var found = count < nearby.Length ? nearby : Physics.OverlapSphere(center, 70f, ~0, QueryTriggerInteraction.Ignore);
             if (found != nearby) count = found.Length;
             for (int i = 0; i < count; i++)
             {
                 var collider = found[i];
+                found[i] = null;
                 if (collider == null || collider.GetComponentInParent<CannonShotDamage>() != null) continue;
                 var body = collider.attachedRigidbody;
                 var motor = collider.GetComponentInParent<AdvancedPlayerController>();
@@ -89,7 +95,7 @@ namespace PirateSlop
             return Vector3.zero;
         }
 
-        public static bool Cross(OceanSurface ocean, Vector3 start, Vector3 end, float radius, out Vector3 point, out float fraction, float previousGap = float.NaN)
+        public static bool Cross(OceanSurface ocean, Vector3 start, Vector3 end, float radius, out Vector3 point, out float fraction, float previousGap = float.NaN, float endGap = float.NaN)
         {
             point = end;
             fraction = 1f;
@@ -102,7 +108,8 @@ namespace PirateSlop
             {
                 float high = i / (float)steps;
                 Vector3 sample = Vector3.Lerp(start, end, high);
-                if (sample.y - radius > ocean.Height(sample)) { low = high; continue; }
+                float sampleGap = i == steps && sample.Equals(end) && !float.IsNaN(endGap) ? endGap : sample.y - radius - ocean.Height(sample);
+                if (sampleGap > 0f) { low = high; continue; }
                 for (int j = 0; j < 9; j++)
                 {
                     float middle = (low + high) * .5f;

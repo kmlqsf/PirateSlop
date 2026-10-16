@@ -43,6 +43,7 @@ namespace PirateSlop
         }
         void Update()
         {
+            if (!motor.IsLocal) { initialized = false; return; }
             bool active = motor.InputActive && !motor.IsThirdPerson && !motor.IsSwimming && !motor.IsClimbing && !motor.LocomotionLocked;
             float dt = Mathf.Min(Time.deltaTime, .05f);
             var aim = motor.AimEuler;

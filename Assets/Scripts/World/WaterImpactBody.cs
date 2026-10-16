@@ -89,6 +89,14 @@ namespace PirateSlop
             return found;
         }
 
+        bool AboveSurface(OceanSurface ocean, Vector3 point)
+        {
+            if (ocean.HeightSource is not BoatAttackOcean boat || FrozenWaterSurface.HasSurfaces) return false;
+            float bowHeight = WaterShipFoam.Instance != null ? Mathf.Max(0f, WaterShipFoam.Instance.BowWaveHeight) : 0f;
+            float ceiling = ocean.SeaLevel + boat.MaximumWaveHeight + bowHeight + Mathf.Max(0f, -ocean.WhirlpoolDepth) + .251f;
+            return float.IsFinite(ceiling) && point.y > ceiling && (!ready || previous.y > ceiling);
+        }
+
         void LateUpdate()
         {
             var ocean = OceanSurface.Instance;
@@ -98,7 +106,8 @@ namespace PirateSlop
             if (focus == null || (transform.position - focus.transform.position).sqrMagnitude > 19600f) { ready = false; return; }
             if (!Bounds(out var bounds)) { ready = false; return; }
             Vector3 point = new Vector3(bounds.center.x, bounds.min.y, bounds.center.z);
-            float gap = point.y - ocean.Height(point);
+            bool safelyDry = AboveSurface(ocean, point);
+            float gap = safelyDry ? 1f : point.y - ocean.Height(point);
             float now = Time.time, dt = now - sampledAt;
             if (!ready || dt <= .0001f || dt > .3f || (character != null && Vector3.Distance(previous, point) > 12f))
             {
@@ -119,7 +128,7 @@ namespace PirateSlop
                 if (now - dryAt >= .25f) { armed = true; emitted = false; }
             }
             else dryAt = -1f;
-            if (armed && WaterImpactPhysics.Cross(ocean, previous, point, 0f, out var contact, out _, previousGap))
+            if (armed && !safelyDry && WaterImpactPhysics.Cross(ocean, previous, point, 0f, out var contact, out _, previousGap, gap))
             {
                 float radius = Mathf.Clamp(Mathf.Sqrt(bounds.extents.x * bounds.extents.z), .025f, 4f);
                 float mass = Mass > 0f ? Mass : body != null ? body.mass : 1f;

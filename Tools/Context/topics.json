@@ -2300,6 +2300,7 @@
         "NetworkLoadTest"
       ],
       "notes": [
+        "16.10.2026 CPU-пакет cpu-work-v1 по существующему профилю4/12: безопасный пропуск сухих WaterImpactBody, переиспользуемый overlap-буфер, TentacleAnimator без повторного заполнения кривых, невидимые first-person IK/headbob, неизменные крышки/пустая маска льда/HUD. Компиляция0errors;2048 численных случаев кривой совпали. Release build-19ddf51b42 иDevelopment build-b6f02c8450 собраны, CPU-маркер и SHA256 исходников/DLL проверены. FPS/Play/сеть ожидают одного пользовательского Release4/12разбора60с. Новый120FPSнеподтверждён; попадания/ragdoll на паузе; CompactLOD удалён. СтарыйZIP142933 неактуален. Полный статус в OptimizationPlan.md.",
         "16.10.2026 PlayerGuiBudget: Release A/B/A10/30 однойсборки42.57→46.20→42.44FPS,23.49→21.65→23.56мс.25fixedRectтипов,useGUILayout=false,DeveloperMenu/BotDebugPanel исключены. Native20типов/legacy прошли; основнойHUD обычнойтестовойсессии показан, F8/сеть непроверены. CLI -performanceLegacyGuiLayout,runner -LegacyGuiLayout,metadata.playerGuiLayoutBudget. Release c3e5a910f1,Development75e8eab743. Code.*ProfilerMarker толькоEditor/Development приCapture+Profiler; native31кадр014539-569:colliderposes1.86мс,PlayerMotor1.51self,buoyancy1.08;GUI.BeginGUI1794→1164. D3D12 улучшилGPU,ухудшилобщийкадр,defaultD3D11. Подробности/точкапродолжения OptimizationPlan.md.",
         "16.10.2026 ночной пакет проверен на Release4/12:77.68→93.18/93.88/95.75FPS по обычным baseline трёх запусков, GPU11.85→10.12–10.18мс, P9919.81→17.05–17.71мс; Draw9644→≈5517.206multi-material renderers→18batches, свеча4094tris/намотки7614каждая, GPU-покачивание2сеток без CPU mesh.vertices. Native18cache/lifecycle и24позы/439080вершин(2микрометра) прошли;2634Collider/Rigidbodyнеизменны.10/30двановыхсреза37.5–42.5FPS/GPU14.7мс противпрежних28–30/17.8, drift7–10%ограничиваетточный%. Shared ShipV3Test используетсяобычнойсессией, всеbuildtypes. Открытысеть/свободнаяигра/бой/15мин/коллега/120FPS. ОтчётShipPresentationOptimization_20261016.md; попаданияпауза.",
         "16.10.2026 GPU-pinned net candidate: два MeshRenderer заменены SkinnedMeshRenderer с переносом сериализованных renderer-ссылок, формула покачивания rest+sway*weight через2кости. ShipV3ClothMotion.GpuPinnedMotion только PinTop/SailIndex<0. Native реальныйInitialize24поз/439080вершин дал максимум2микрометра отклонения; BakeMesh(useScale=true) учитывает импортныйscale.2634Collider/Rigidbodyнеизменны. Player-выигрыш пока не измерен, кандидат не принят.",
@@ -2413,7 +2414,8 @@
         "Tools/Performance/check_gui_layout.cs",
         "Assets/Scripts/AdvancedPlayerController.cs",
         "Tools/Performance/read_physics_callers.cs",
-        "Tools/Performance/RunFleet4.cmd"
+        "Tools/Performance/RunFleet4.cmd",
+        "Tools/Performance/RunFleet4-FullHD.cmd"
       ],
       "docs": [
         "Docs/Performance/NetworkLoadTest.md",

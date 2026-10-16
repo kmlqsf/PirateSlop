@@ -183,6 +183,21 @@
 | [Docs/Performance/Reports/20261016-013417-672-isolation.txt](<../Performance/Reports/20261016-013417-672-isolation.txt>) | Текстовые данные |
 | [Docs/Performance/Reports/20261016-014539-569-benchmark.json](<../Performance/Reports/20261016-014539-569-benchmark.json>) | Конфигурация / данные JSON |
 | [Docs/Performance/Reports/20261016-014539-569-benchmark.txt](<../Performance/Reports/20261016-014539-569-benchmark.txt>) | Текстовые данные |
+| [Docs/Performance/Reports/20261016-164827-241-isolation.json](<../Performance/Reports/20261016-164827-241-isolation.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261016-164827-241-isolation.txt](<../Performance/Reports/20261016-164827-241-isolation.txt>) | Текстовые данные |
+| [Docs/Performance/Reports/20261016-165445-306-isolation.json](<../Performance/Reports/20261016-165445-306-isolation.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261016-165445-306-isolation.txt](<../Performance/Reports/20261016-165445-306-isolation.txt>) | Текстовые данные |
+| [Docs/Performance/Reports/20261016-170046-675-isolation.json](<../Performance/Reports/20261016-170046-675-isolation.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261016-170046-675-isolation.txt](<../Performance/Reports/20261016-170046-675-isolation.txt>) | Текстовые данные |
+| [Docs/Performance/Reports/20261016-172148-984-isolation.json](<../Performance/Reports/20261016-172148-984-isolation.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261016-172148-984-isolation.txt](<../Performance/Reports/20261016-172148-984-isolation.txt>) | Текстовые данные |
+| [Docs/Performance/Reports/20261016-173233-174-isolation.json](<../Performance/Reports/20261016-173233-174-isolation.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261016-173233-174-isolation.txt](<../Performance/Reports/20261016-173233-174-isolation.txt>) | Текстовые данные |
+| [Docs/Performance/Reports/20261016-compact-lod-comparison.json](<../Performance/Reports/20261016-compact-lod-comparison.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261016-compact-lod-native-check.txt](<../Performance/Reports/20261016-compact-lod-native-check.txt>) | Текстовые данные |
+| [Docs/Performance/Reports/20261016-compact-lod-prefab-proof.json](<../Performance/Reports/20261016-compact-lod-prefab-proof.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261016-compact-lod-prototype.json](<../Performance/Reports/20261016-compact-lod-prototype.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261016-cpu-work-v1-math-check.txt](<../Performance/Reports/20261016-cpu-work-v1-math-check.txt>) | Текстовые данные |
 | [Docs/Performance/Reports/20261016-current-n4-priority-audit.json](<../Performance/Reports/20261016-current-n4-priority-audit.json>) | Конфигурация / данные JSON |
 | [Docs/Performance/Reports/20261016-current-n4-priority-audit.md](<../Performance/Reports/20261016-current-n4-priority-audit.md>) | Документация |
 | [Docs/Performance/Reports/20261016-d3d12-n4.json](<../Performance/Reports/20261016-d3d12-n4.json>) | Конфигурация / данные JSON |
@@ -210,10 +225,14 @@
 | [Docs/Performance/Reports/20261016-isolation-n4-analysis.md](<../Performance/Reports/20261016-isolation-n4-analysis.md>) | Документация |
 | [Docs/Performance/Reports/20261016-isolation-n4-budget-analysis.json](<../Performance/Reports/20261016-isolation-n4-budget-analysis.json>) | Конфигурация / данные JSON |
 | [Docs/Performance/Reports/20261016-isolation-n4-budget-analysis.md](<../Performance/Reports/20261016-isolation-n4-budget-analysis.md>) | Документация |
+| [Docs/Performance/Reports/20261016-merged-renderer-budget.json](<../Performance/Reports/20261016-merged-renderer-budget.json>) | Конфигурация / данные JSON |
 | [Docs/Performance/Reports/20261016-n10-imgui-callbacks.txt](<../Performance/Reports/20261016-n10-imgui-callbacks.txt>) | Текстовые данные |
 | [Docs/Performance/Reports/20261016-n10-native-code-scopes.txt](<../Performance/Reports/20261016-n10-native-code-scopes.txt>) | Текстовые данные |
 | [Docs/Performance/Reports/20261016-n10-physics-callers.txt](<../Performance/Reports/20261016-n10-physics-callers.txt>) | Текстовые данные |
 | [Docs/Performance/Reports/20261016-n10-player-sync-distribution.txt](<../Performance/Reports/20261016-n10-player-sync-distribution.txt>) | Текстовые данные |
+| [Docs/Performance/Reports/20261016-n4-native-main.txt](<../Performance/Reports/20261016-n4-native-main.txt>) | Текстовые данные |
+| [Docs/Performance/Reports/20261016-n4-native-render.txt](<../Performance/Reports/20261016-n4-native-render.txt>) | Текстовые данные |
+| [Docs/Performance/Reports/20261016-n4-profile-alignment.json](<../Performance/Reports/20261016-n4-profile-alignment.json>) | Конфигурация / данные JSON |
 | [Docs/Performance/Reports/20261016-night-after-ship-repeat.json](<../Performance/Reports/20261016-night-after-ship-repeat.json>) | Конфигурация / данные JSON |
 | [Docs/Performance/Reports/20261016-night-after-ship-repeat.md](<../Performance/Reports/20261016-night-after-ship-repeat.md>) | Документация |
 | [Docs/Performance/Reports/20261016-night-after-ship.json](<../Performance/Reports/20261016-night-after-ship.json>) | Конфигурация / данные JSON |
@@ -242,6 +261,9 @@
 | [Docs/Performance/Reports/20261016-ship-player-cpu.txt](<../Performance/Reports/20261016-ship-player-cpu.txt>) | Текстовые данные |
 | [Docs/Performance/Reports/20261016-ship-player-gpu.txt](<../Performance/Reports/20261016-ship-player-gpu.txt>) | Текстовые данные |
 | [Docs/Performance/Reports/20261016-tentacle-pose-check.json](<../Performance/Reports/20261016-tentacle-pose-check.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261016-wave-candidate-analysis.json](<../Performance/Reports/20261016-wave-candidate-analysis.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261016-wave-candidate-decision.json](<../Performance/Reports/20261016-wave-candidate-decision.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261016-wave-solver-exact-check.json](<../Performance/Reports/20261016-wave-solver-exact-check.json>) | Конфигурация / данные JSON |
 
 ## Docs/Performance/Visuals
 
@@ -249,6 +271,12 @@
 | --- | --- |
 | [Docs/Performance/Visuals/DiceCandle-after.png](<../Performance/Visuals/DiceCandle-after.png>) | Изображение / текстура |
 | [Docs/Performance/Visuals/DiceCandle-before.png](<../Performance/Visuals/DiceCandle-before.png>) | Изображение / текстура |
+| [Docs/Performance/Visuals/ShipV3Batch_12-compact.png](<../Performance/Visuals/ShipV3Batch_12-compact.png>) | Изображение / текстура |
+| [Docs/Performance/Visuals/ShipV3Batch_12-original.png](<../Performance/Visuals/ShipV3Batch_12-original.png>) | Изображение / текстура |
+| [Docs/Performance/Visuals/ShipV3Batch_13-compact.png](<../Performance/Visuals/ShipV3Batch_13-compact.png>) | Изображение / текстура |
+| [Docs/Performance/Visuals/ShipV3Batch_13-original.png](<../Performance/Visuals/ShipV3Batch_13-original.png>) | Изображение / текстура |
+| [Docs/Performance/Visuals/ShipV3Batch_2-compact.png](<../Performance/Visuals/ShipV3Batch_2-compact.png>) | Изображение / текстура |
+| [Docs/Performance/Visuals/ShipV3Batch_2-original.png](<../Performance/Visuals/ShipV3Batch_2-original.png>) | Изображение / текстура |
 | [Docs/Performance/Visuals/V10_Port_Reel_Winding_Strand_01-after.png](<../Performance/Visuals/V10_Port_Reel_Winding_Strand_01-after.png>) | Изображение / текстура |
 | [Docs/Performance/Visuals/V10_Port_Reel_Winding_Strand_01-before.png](<../Performance/Visuals/V10_Port_Reel_Winding_Strand_01-before.png>) | Изображение / текстура |
 | [Docs/Performance/Visuals/candle-original.png](<../Performance/Visuals/candle-original.png>) | Изображение / текстура |

@@ -33,6 +33,7 @@
 
 | Файл | Краткое описание |
 | --- | --- |
+| [Tools/Performance/RunFleet4-FullHD.cmd](<../../Tools/Performance/RunFleet4-FullHD.cmd>) | Файл .cmd; Производительность и тест нагрузки без AI |
 | [Tools/Performance/RunFleet4.cmd](<../../Tools/Performance/RunFleet4.cmd>) | Файл .cmd; Производительность и тест нагрузки без AI |
 | [Tools/Performance/analyze_impacts.py](<../../Tools/Performance/analyze_impacts.py>) | Инструмент Python; Производительность и тест нагрузки без AI |
 | [Tools/Performance/analyze_isolation.py](<../../Tools/Performance/analyze_isolation.py>) | Инструмент Python; Производительность и тест нагрузки без AI |

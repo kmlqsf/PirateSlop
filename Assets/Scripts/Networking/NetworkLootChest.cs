@@ -27,6 +27,7 @@ namespace PirateSlop.Networking
         public float LidOpenAngle = 105f;
         Quaternion lidClosedRotation;
         float lidProgress;
+        float appliedLidAngle = float.NaN;
         bool lidOpened;
         AudioSource lidSound;
         void Awake() { if (Lid != null) lidClosedRotation = Lid.localRotation; }
@@ -85,12 +86,16 @@ namespace PirateSlop.Networking
                 lidOpened = opened.Value;
                 if (lidOpened && IsClientInitialized) GameAudio.Attached(ref lidSound, SoundCue.ChestLidCreak, Lid);
             }
-            lidProgress = Mathf.MoveTowards(lidProgress, lidOpened ? 1f : 0f, Time.deltaTime / Mathf.Max(.05f, LidOpenSeconds));
-            ApplyLidRotation();
+            float next = Mathf.MoveTowards(lidProgress, lidOpened ? 1f : 0f, Time.deltaTime / Mathf.Max(.05f, LidOpenSeconds));
+            if (next != lidProgress || appliedLidAngle != LidOpenAngle) { lidProgress = next; ApplyLidRotation(); }
         }
         void ApplyLidRotation()
         {
-            if (Lid != null) Lid.localRotation = lidClosedRotation * Quaternion.Euler(LidOpenAngle * Mathf.SmoothStep(0f, 1f, lidProgress), 0f, 0f);
+            if (Lid != null)
+            {
+                Lid.localRotation = lidClosedRotation * Quaternion.Euler(LidOpenAngle * Mathf.SmoothStep(0f, 1f, lidProgress), 0f, 0f);
+                appliedLidAngle = LidOpenAngle;
+            }
         }
     }
 }

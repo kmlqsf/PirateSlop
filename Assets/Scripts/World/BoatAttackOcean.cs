@@ -10,6 +10,7 @@ namespace PirateSlop
         public Water Water;
         public OceanSurface Surface;
         SpectralWave[] waves;
+        float maximumWaveHeight;
 
         struct SpectralWave
         {
@@ -26,9 +27,7 @@ namespace PirateSlop
             get
             {
                 if (waves == null) CacheWaves();
-                float maximum = 0;
-                foreach (var wave in waves) maximum += Mathf.Abs(wave.Amplitude);
-                return maximum * WaveStrength;
+                return maximumWaveHeight * WaveStrength;
             }
         }
         float clockAnchor, clockValue;
@@ -102,6 +101,7 @@ namespace PirateSlop
         {
             var source = GerstnerWaves.GetWaveArray(Water.gerstnerData);
             waves = new SpectralWave[source.Length];
+            maximumWaveHeight = 0f;
             for (int i = 0; i < source.Length; i++)
             {
                 float angle = source[i].direction * Mathf.Deg2Rad;
@@ -113,6 +113,7 @@ namespace PirateSlop
                     Amplitude = source[i].amplitude / source.Length,
                     Horizontal = source[i].amplitude > 0f ? .85f / (frequency * source.Length) : 0f
                 };
+                maximumWaveHeight += Mathf.Abs(waves[i].Amplitude);
             }
         }
 

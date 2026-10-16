@@ -50,12 +50,14 @@ def compare(baseline, candidate):
             previous, current = old.get(metric, -1), new.get(metric, -1)
             row[metric] = {"before": previous, "after": current, "changePercent": (current / previous - 1) * 100 if previous > 0 and current >= 0 else None}
         rows.append(row)
-    return {"comparable": not differences, "differences": differences, "segments": rows, "playerGuiLayoutBudget": {"before": a.get("playerGuiLayoutBudget", False), "after": b.get("playerGuiLayoutBudget", False)}, "worldVisualBudget": {"before": a.get("worldVisualBudget", False), "after": b.get("worldVisualBudget", False)}, "shipBodyPoseFastPath": {"before": a.get("shipBodyPoseFastPath", False), "after": b.get("shipBodyPoseFastPath", False)}, "hullSweepFastPath": {"before": a.get("hullSweepFastPath", False), "after": b.get("hullSweepFastPath", False)}, "ropeReadbackFastPath": {"before": a.get("ropeReadbackFastPath", False), "after": b.get("ropeReadbackFastPath", False)}, "shipMeshLods": {"before": a.get("shipMeshLods", False), "after": b.get("shipMeshLods", False)}, "fixedRopeShapes": {"before": a.get("fixedRopeShapes", False), "after": b.get("fixedRopeShapes", False)}}
+    return {"shipCompactLod": {"before": a.get("shipCompactLod", False), "after": b.get("shipCompactLod", False)}, "comparable": not differences, "differences": differences, "segments": rows, "playerGuiLayoutBudget": {"before": a.get("playerGuiLayoutBudget", False), "after": b.get("playerGuiLayoutBudget", False)}, "worldVisualBudget": {"before": a.get("worldVisualBudget", False), "after": b.get("worldVisualBudget", False)}, "shipBodyPoseFastPath": {"before": a.get("shipBodyPoseFastPath", False), "after": b.get("shipBodyPoseFastPath", False)}, "hullSweepFastPath": {"before": a.get("hullSweepFastPath", False), "after": b.get("hullSweepFastPath", False)}, "ropeReadbackFastPath": {"before": a.get("ropeReadbackFastPath", False), "after": b.get("ropeReadbackFastPath", False)}, "shipMeshLods": {"before": a.get("shipMeshLods", False), "after": b.get("shipMeshLods", False)}, "fixedRopeShapes": {"before": a.get("fixedRopeShapes", False), "after": b.get("fixedRopeShapes", False)}}
 
 
 def format_result(result):
     lines = ["COMPARABLE" if result["comparable"] else "NOT COMPARABLE — do not claim a performance improvement"]
     lines.extend(result["differences"])
+    compact = result["shipCompactLod"]
+    lines.append(f"Compact ship LOD (intentional optimization A/B): {compact['before']} -> {compact['after']}")
     gui = result["playerGuiLayoutBudget"]
     lines.append(f"Player GUI layout budget (intentional optimization A/B): {gui['before']} -> {gui['after']}")
     budget = result["worldVisualBudget"]

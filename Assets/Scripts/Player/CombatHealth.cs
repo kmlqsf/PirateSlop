@@ -206,6 +206,7 @@ namespace PirateSlop
         string cachedHealthLabel; float cachedHealthValue = -1;
         void OnGUI()
         {
+            if (Event.current.type != EventType.Repaint) return;
             var owner = GetComponent<NetworkPlayer>();
             if (owner != null && owner.IsOwner) return;
             if (IsDead) return;
@@ -215,6 +216,7 @@ namespace PirateSlop
             if (screen.z <= 0) return;
             float width = 80f;
             Rect bar = new Rect(screen.x - width / 2, Screen.height - screen.y, width, 10);
+            if (bar.xMax < 0f || bar.x > Screen.width || bar.yMax < 0f || bar.y - 21f > Screen.height) return;
             Color old = GUI.color;
             GUI.color = Color.black; GUI.DrawTexture(bar, Texture2D.whiteTexture);
             var viewer = camera.GetComponentInParent<NetworkPlayer>();

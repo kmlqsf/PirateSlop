@@ -15,6 +15,18 @@ namespace PirateSlop
         readonly Vector3[] curve = new Vector3[65];
         readonly float[] arcLengths = new float[65];
         readonly Vector3[] waveOffsets = new Vector3[65];
+        static readonly Vector3[] curveWeights = CreateCurveWeights();
+
+        static Vector3[] CreateCurveWeights()
+        {
+            var weights = new Vector3[65];
+            for (int i = 0; i < weights.Length; i++)
+            {
+                float t = i / (float)(weights.Length - 1), s = 1f - t;
+                weights[i] = new Vector3(s * s, 2f * s * t, t * t);
+            }
+            return weights;
+        }
         NetworkShip ship;
         float phase, lean, curl, sway;
         bool isAttacking, impactTriggered;
@@ -144,7 +156,7 @@ namespace PirateSlop
             for (int iteration=0; iteration<12; iteration++)
             {
                 float height=(low+high)*.5f;
-                float arc=BuildCurve(start,middle+bend*height,tip);
+                float arc=MeasureCurve(start,middle+bend*height,tip);
                 if (arc < length) low=height; else high=height;
             }
             float total=BuildCurve(start,middle+bend*((low+high)*.5f),tip);
@@ -158,8 +170,7 @@ namespace PirateSlop
                 Vector3 point=Vector3.Lerp(curve[cursor-1],curve[cursor],blend);
                 Vector3 direction=i==bones.Length-1 ? point-previous : curve[Mathf.Min(cursor+1,curve.Length-1)]-point;
                 if (direction.sqrMagnitude < .0001f) direction=Vector3.up;
-                bones[i].position=point;
-                bones[i].rotation=Quaternion.FromToRotation(rotation * restDirections[i],direction.normalized)*rotation*restRotations[i];
+                bones[i].SetPositionAndRotation(point,Quaternion.FromToRotation(rotation * restDirections[i],direction.normalized)*rotation*restRotations[i]);
                 previous=point;
             }
             if (isAttacking && !impactTriggered && progress >= .52f)
@@ -175,11 +186,25 @@ namespace PirateSlop
             arcLengths[0]=0;
             for (int i=0; i<curve.Length; i++)
             {
-                float t=i/(float)(curve.Length-1), s=1-t;
-                curve[i]=s*s*start+2*s*t*control+t*t*end+waveOffsets[i];
+                var weights=curveWeights[i];
+                curve[i]=weights.x*start+weights.y*control+weights.z*end+waveOffsets[i];
                 if (i>0) arcLengths[i]=arcLengths[i-1]+Vector3.Distance(curve[i-1],curve[i]);
             }
             return arcLengths[^1];
+        }
+
+        float MeasureCurve(Vector3 start, Vector3 control, Vector3 end)
+        {
+            Vector3 previous=curveWeights[0].x*start+curveWeights[0].y*control+curveWeights[0].z*end+waveOffsets[0];
+            float length=0f;
+            for (int i=1; i<curveWeights.Length; i++)
+            {
+                var weights=curveWeights[i];
+                Vector3 point=weights.x*start+weights.y*control+weights.z*end+waveOffsets[i];
+                length+=Vector3.Distance(previous,point);
+                previous=point;
+            }
+            return length;
         }
     }
 }

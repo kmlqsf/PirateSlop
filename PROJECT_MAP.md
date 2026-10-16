@@ -12,7 +12,7 @@
 
 ## Полный каталог
 
-Учтено 14326 файлов без `.meta`. Ещё 12986 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
+Учтено 14355 файлов без `.meta`. Ещё 12986 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
 
 | Раздел | Назначение | Файлов |
 | --- | --- | ---: |
@@ -46,12 +46,12 @@
 | [Assets/UI](<Docs/ProjectMap/Assets-UI.md>) | Ресурсы интерфейса | 42 |
 | [Assets/_Recovery](<Docs/ProjectMap/Assets-_Recovery.md>) | Сохранённые восстановленные данные | 4 |
 | [Captures](<Docs/ProjectMap/Captures.md>) | Ресурсы раздела; точный состав — в каталоге | 1010 |
-| [Docs](<Docs/ProjectMap/Docs.md>) | Документы и сохранённые отчёты | 225 |
+| [Docs](<Docs/ProjectMap/Docs.md>) | Документы и сохранённые отчёты | 253 |
 | [Packages](<Docs/ProjectMap/Packages.md>) | Манифест, lock-файл и встроенные пакеты | 924 |
 | [ProjectSettings](<Docs/ProjectMap/ProjectSettings.md>) | Настройки Unity | 28 |
 | [Root](<Docs/ProjectMap/Root.md>) | Корневые инструкции, планы и служебные файлы | 26 |
 | [ThirdParty](<Docs/ProjectMap/ThirdParty.md>) | Сторонние ресурсы | 2 |
-| [Tools](<Docs/ProjectMap/Tools.md>) | Инструменты разработки и загрузчик контекста | 41 |
+| [Tools](<Docs/ProjectMap/Tools.md>) | Инструменты разработки и загрузчик контекста | 42 |
 
 Не индексируются генерируемые сборки, кэши и локальное состояние: `.git/`, `.idea/`, `.vs/`, `Builds/`, `Library/`, `Logs/`, `Temp/`, `UserSettings/`, `__pycache__/`, `bin/`, `node_modules/`, `obj/`. В Captures индексируются только отслеживаемые Git файлы; промежуточные резервные CoastalTripo_Pre*.blend не индексируются. Зависимости из Unity PackageCache представлены манифестом/lock-файлом; встроенные пакеты из `Packages/` перечислены полностью. Скрытые конфиги вне исключённых папок включены только как пути, их содержимое не копируется.
 
@@ -2093,6 +2093,7 @@ WaterImpactPhysics/WaterImpactBody: общие локальные всплеск
 
 Ключевые слова: оптимизация, FPS, профайлер, NetworkLoadTest.
 
+16.10.2026 CPU-пакет cpu-work-v1 по существующему профилю4/12: безопасный пропуск сухих WaterImpactBody, переиспользуемый overlap-буфер, TentacleAnimator без повторного заполнения кривых, невидимые first-person IK/headbob, неизменные крышки/пустая маска льда/HUD. Компиляция0errors;2048 численных случаев кривой совпали. Release build-19ddf51b42 иDevelopment build-b6f02c8450 собраны, CPU-маркер и SHA256 исходников/DLL проверены. FPS/Play/сеть ожидают одного пользовательского Release4/12разбора60с. Новый120FPSнеподтверждён; попадания/ragdoll на паузе; CompactLOD удалён. СтарыйZIP142933 неактуален. Полный статус в OptimizationPlan.md.
 16.10.2026 PlayerGuiBudget: Release A/B/A10/30 однойсборки42.57→46.20→42.44FPS,23.49→21.65→23.56мс.25fixedRectтипов,useGUILayout=false,DeveloperMenu/BotDebugPanel исключены. Native20типов/legacy прошли; основнойHUD обычнойтестовойсессии показан, F8/сеть непроверены. CLI -performanceLegacyGuiLayout,runner -LegacyGuiLayout,metadata.playerGuiLayoutBudget. Release c3e5a910f1,Development75e8eab743. Code.*ProfilerMarker толькоEditor/Development приCapture+Profiler; native31кадр014539-569:colliderposes1.86мс,PlayerMotor1.51self,buoyancy1.08;GUI.BeginGUI1794→1164. D3D12 улучшилGPU,ухудшилобщийкадр,defaultD3D11. Подробности/точкапродолжения OptimizationPlan.md.
 16.10.2026 ночной пакет проверен на Release4/12:77.68→93.18/93.88/95.75FPS по обычным baseline трёх запусков, GPU11.85→10.12–10.18мс, P9919.81→17.05–17.71мс; Draw9644→≈5517.206multi-material renderers→18batches, свеча4094tris/намотки7614каждая, GPU-покачивание2сеток без CPU mesh.vertices. Native18cache/lifecycle и24позы/439080вершин(2микрометра) прошли;2634Collider/Rigidbodyнеизменны.10/30двановыхсреза37.5–42.5FPS/GPU14.7мс противпрежних28–30/17.8, drift7–10%ограничиваетточный%. Shared ShipV3Test используетсяобычнойсессией, всеbuildtypes. Открытысеть/свободнаяигра/бой/15мин/коллега/120FPS. ОтчётShipPresentationOptimization_20261016.md; попаданияпауза.
 16.10.2026 GPU-pinned net candidate: два MeshRenderer заменены SkinnedMeshRenderer с переносом сериализованных renderer-ссылок, формула покачивания rest+sway*weight через2кости. ShipV3ClothMotion.GpuPinnedMotion только PinTop/SailIndex<0. Native реальныйInitialize24поз/439080вершин дал максимум2микрометра отклонения; BakeMesh(useScale=true) учитывает импортныйscale.2634Collider/Rigidbodyнеизменны. Player-выигрыш пока не измерен, кандидат не принят.
@@ -2206,6 +2207,7 @@ NetworkLoadTest запускается из меню Тест нагрузки �
 - [Assets/Scripts/AdvancedPlayerController.cs](<Assets/Scripts/AdvancedPlayerController.cs>) — Исходник C#: AdvancedPlayerController.
 - [Tools/Performance/read_physics_callers.cs](<Tools/Performance/read_physics_callers.cs>) — Исходник C#.
 - [Tools/Performance/RunFleet4.cmd](<Tools/Performance/RunFleet4.cmd>) — Файл .cmd.
+- [Tools/Performance/RunFleet4-FullHD.cmd](<Tools/Performance/RunFleet4-FullHD.cmd>) — Файл .cmd.
 - [Docs/Performance/NetworkLoadTest.md](<Docs/Performance/NetworkLoadTest.md>) — Документация.
 - [Docs/Performance/OptimizationPlan.md](<Docs/Performance/OptimizationPlan.md>) — Документация.
 - `../output/CrashReview20261007/Spyglass_1628.md` — отсутствует в текущем снимке; не использовать как готовый путь.

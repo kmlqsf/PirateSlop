@@ -40,8 +40,9 @@ namespace PirateSlop.Performance
         public float renderScale, fov, nearClip, farClip, warmupSeconds, requestedSeconds, waveStrength, waveSteepness, waveSpeed, stormRadius;
         public string antialiasing, fleetScenario, renderExperiment;
         public string instrumentationVersion;
+        public string cpuOptimizationVersion;
         public bool profilerEnabled, editor, telemetryVisible, hullSweepFastPath;
-        public bool shipBodyPoseFastPath, worldVisualBudget, playerGuiLayoutBudget;
+        public bool shipBodyPoseFastPath, worldVisualBudget, playerGuiLayoutBudget, shipCompactLod;
     }
 
     [Serializable]
@@ -232,6 +233,8 @@ namespace PirateSlop.Performance
             text.AppendLine("Ship body pose fast path: " + m.shipBodyPoseFastPath);
             text.AppendLine("World visual budget: " + m.worldVisualBudget);
             text.AppendLine("Player GUI layout budget: " + m.playerGuiLayoutBudget);
+            text.AppendLine("CPU optimization package: " + (m.cpuOptimizationVersion ?? "baseline"));
+            text.AppendLine("Compact ship LOD: " + m.shipCompactLod);
             if (m.mode == "isolation") text.AppendLine("DIAGNOSTIC ISOLATION: total FPS mixes disabled systems and is not gameplay FPS. Analyze stages separately, excluding the first 2 seconds of each stage.");
             text.AppendLine("Fleet scenario: " + (m.fleetScenario ?? "N/A (older report)"));
             text.AppendLine("Render experiment: " + (string.IsNullOrEmpty(m.renderExperiment) ? "reference" : m.renderExperiment));
@@ -309,6 +312,8 @@ namespace PirateSlop.Performance
             output.AppendLine("Ship body pose fast path (intentional optimization A/B): " + before.metadata.shipBodyPoseFastPath + " -> " + after.metadata.shipBodyPoseFastPath);
             output.AppendLine("World visual budget (intentional optimization A/B): " + before.metadata.worldVisualBudget + " -> " + after.metadata.worldVisualBudget);
             output.AppendLine("Player GUI layout budget (intentional optimization A/B): " + before.metadata.playerGuiLayoutBudget + " -> " + after.metadata.playerGuiLayoutBudget);
+            output.AppendLine("CPU optimization package: " + (before.metadata.cpuOptimizationVersion ?? "baseline") + " -> " + (after.metadata.cpuOptimizationVersion ?? "baseline"));
+            output.AppendLine("Compact ship LOD (intentional optimization A/B): " + before.metadata.shipCompactLod + " -> " + after.metadata.shipCompactLod);
             output.AppendLine("Segment | avg FPS before/after | 1% low before/after | mean ms change | P99 before/after");
             void Add(PerformanceSummary a, PerformanceSummary b)
             {
