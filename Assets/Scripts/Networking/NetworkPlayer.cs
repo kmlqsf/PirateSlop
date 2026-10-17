@@ -242,6 +242,7 @@ namespace PirateSlop.Networking
             command.Yaw = platform.transform.eulerAngles.y;
             command.Move = Vector2.ClampMagnitude(new Vector2(direction.x, direction.z), .3f);
             command.Crouch = Mathf.Repeat(time, 18f) < 3f;
+            if (session.BenchmarkCombatActive) session.AimCombatParticipant(this, ref command);
             return command;
         }
         PlayerCommand AutomatedCommand()

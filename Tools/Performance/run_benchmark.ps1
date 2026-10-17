@@ -1,4 +1,5 @@
 param(
+    [switch]$Combat,
     [switch]$Stress,
     [switch]$Isolation,
     [switch]$ShipIsolation,
@@ -13,9 +14,13 @@ param(
     [ValidateRange(640, 7680)][int]$Width = 2560,
     [ValidateRange(480, 4320)][int]$Height = 1440,
     [ValidateSet('default', 'd3d11', 'd3d12')][string]$GraphicsApi = 'default',
-    [ValidateSet(0, 1, 2, 4, 10)][int]$FleetShips = 0
+    [ValidateSet(0, 1, 2, 4, 6, 10)][int]$FleetShips = 0
 )
 $ErrorActionPreference = 'Stop'
+if ($Combat) {
+    if ($Stress -or $Isolation -or $ShipIsolation -or $FleetShips -notin @(0, 6)) { throw 'Combat requires six ships and cannot combine isolation or whirlpool stress.' }
+    $FleetShips = 6
+}
 if ($Stress -and ($FleetShips -gt 0 -or $Isolation -or $ShipIsolation)) { throw 'Stress uses the world route; do not combine it with FleetShips.' }
 $taskProjectRoot = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..'))
 $taskExecutable = Join-Path $taskProjectRoot $(if ($Development) { 'Builds/Windows/PirateSlop.exe' } else { 'Builds/WindowsRelease/PirateSlop.exe' })
@@ -26,6 +31,7 @@ $taskStamp = $taskStarted.ToString('yyyyMMdd-HHmmss-fff')
 $taskLog = Join-Path $taskProjectRoot "Temp/performance-autorun-$taskStamp.log"
 $taskArguments = @('-performanceBenchmark', '-performanceQuit', '-performanceUncapped', '-screen-width', $Width.ToString(), '-screen-height', $Height.ToString(), '-screen-fullscreen', '1', '-logFile', $taskLog)
 if ($GraphicsApi -ne 'default') { $taskArguments += "-force-$GraphicsApi" }
+if ($Combat) { $taskArguments += '-performanceCombat' }
 if ($Stress) { $taskArguments += '-performanceStress' }
 if ($Isolation) { $taskArguments += '-performanceIsolation' }
 if ($ShipIsolation) { $taskArguments += '-performanceShipIsolation' }
@@ -49,7 +55,7 @@ while (!$taskProcess.WaitForExit(1000)) {
 }
 $taskProcess.Refresh()
 $taskReportDirectory = Join-Path $env:USERPROFILE 'AppData/LocalLow/DefaultCompany/PirateSlop/PerformanceReports'
-$taskReportPattern = if ($Isolation -or $ShipIsolation) { '*-isolation.json' } else { '*-benchmark.json' }
+$taskReportPattern = if ($Combat) { '*-combat.json' } elseif ($Isolation -or $ShipIsolation) { '*-isolation.json' } else { '*-benchmark.json' }
 $taskReportFile = Get-ChildItem -LiteralPath $taskReportDirectory -Filter $taskReportPattern | Where-Object LastWriteTimeUtc -ge $taskStarted | Sort-Object LastWriteTimeUtc -Descending | Select-Object -First 1
 $taskManifest = [ordered]@{ startedUtc = $taskStarted.ToString('O'); finishedUtc = [DateTime]::UtcNow.ToString('O'); pid = $taskProcess.Id; exitCode = $taskProcess.ExitCode; timedOut = $taskTimedOut; stress = $Stress.IsPresent; legacyHull = $LegacyHull.IsPresent; stormScale = $StormScale; skyScale = $SkyScale; log = $taskLog; report = $null }
 if ($taskReportFile) {
@@ -69,6 +75,7 @@ if ($taskReportFile) {
     $taskManifest.graphicsApiMatches = $GraphicsApi -eq 'default' -or $taskReport.metadata.graphicsApi -eq $taskExpectedGraphicsApi
 }
 $taskManifest.isolation = $Isolation.IsPresent -or $ShipIsolation.IsPresent
+$taskManifest.combat = $Combat.IsPresent
 $taskManifest.shipIsolation = $ShipIsolation.IsPresent
 $taskManifest.legacyWorldVisuals = $LegacyWorldVisuals.IsPresent
 $taskManifest.legacyGuiLayout = $LegacyGuiLayout.IsPresent

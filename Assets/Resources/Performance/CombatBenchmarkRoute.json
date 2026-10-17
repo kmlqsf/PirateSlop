@@ -1,0 +1,319 @@
+{
+  "version": "combat-six-v5-circle-six-c12-p5-v5-attrition",
+  "scenario": "combat-six",
+  "fleetOffset": {
+    "x": -650,
+    "y": 0,
+    "z": 240
+  },
+  "fleetYaw": 90,
+  "fleetSpacing": 80,
+  "fleetSail": 0.3,
+  "warmup": 30,
+  "fov": 80,
+  "stormRadius": 3000,
+  "ships": 6,
+  "players": 18,
+  "segments": [
+    {
+      "name": "Movement / Overview",
+      "anchor": "fleet",
+      "duration": 20,
+      "waypoints": [
+        {
+          "time": 0,
+          "position": {
+            "x": 0,
+            "y": 28,
+            "z": -180
+          },
+          "target": {
+            "x": 0,
+            "y": 6,
+            "z": 0
+          }
+        },
+        {
+          "time": 20,
+          "position": {
+            "x": 0,
+            "y": 28,
+            "z": -180
+          },
+          "target": {
+            "x": 0,
+            "y": 6,
+            "z": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "Movement / Participant POV",
+      "anchor": "fleet",
+      "duration": 20,
+      "waypoints": [
+        {
+          "time": 0,
+          "position": {
+            "x": 0,
+            "y": 28,
+            "z": -180
+          },
+          "target": {
+            "x": 0,
+            "y": 6,
+            "z": 0
+          }
+        },
+        {
+          "time": 20,
+          "position": {
+            "x": 0,
+            "y": 28,
+            "z": -180
+          },
+          "target": {
+            "x": 0,
+            "y": 6,
+            "z": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "Movement / Flyover",
+      "anchor": "fleet",
+      "duration": 20,
+      "waypoints": [
+        {
+          "time": 0,
+          "position": {
+            "x": 0,
+            "y": 28,
+            "z": -180
+          },
+          "target": {
+            "x": 0,
+            "y": 6,
+            "z": 0
+          }
+        },
+        {
+          "time": 20,
+          "position": {
+            "x": 0,
+            "y": 28,
+            "z": -180
+          },
+          "target": {
+            "x": 0,
+            "y": 6,
+            "z": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "Opening battle / Overview",
+      "anchor": "fleet",
+      "duration": 20,
+      "waypoints": [
+        {
+          "time": 0,
+          "position": {
+            "x": 0,
+            "y": 28,
+            "z": -180
+          },
+          "target": {
+            "x": 0,
+            "y": 6,
+            "z": 0
+          }
+        },
+        {
+          "time": 20,
+          "position": {
+            "x": 0,
+            "y": 28,
+            "z": -180
+          },
+          "target": {
+            "x": 0,
+            "y": 6,
+            "z": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "Opening battle / Participant POV",
+      "anchor": "fleet",
+      "duration": 20,
+      "waypoints": [
+        {
+          "time": 0,
+          "position": {
+            "x": 0,
+            "y": 28,
+            "z": -180
+          },
+          "target": {
+            "x": 0,
+            "y": 6,
+            "z": 0
+          }
+        },
+        {
+          "time": 20,
+          "position": {
+            "x": 0,
+            "y": 28,
+            "z": -180
+          },
+          "target": {
+            "x": 0,
+            "y": 6,
+            "z": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "Opening battle / Flyover",
+      "anchor": "fleet",
+      "duration": 20,
+      "waypoints": [
+        {
+          "time": 0,
+          "position": {
+            "x": 0,
+            "y": 28,
+            "z": -180
+          },
+          "target": {
+            "x": 0,
+            "y": 6,
+            "z": 0
+          }
+        },
+        {
+          "time": 20,
+          "position": {
+            "x": 0,
+            "y": 28,
+            "z": -180
+          },
+          "target": {
+            "x": 0,
+            "y": 6,
+            "z": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "Damaged battle / Overview",
+      "anchor": "fleet",
+      "duration": 20,
+      "waypoints": [
+        {
+          "time": 0,
+          "position": {
+            "x": 0,
+            "y": 28,
+            "z": -180
+          },
+          "target": {
+            "x": 0,
+            "y": 6,
+            "z": 0
+          }
+        },
+        {
+          "time": 20,
+          "position": {
+            "x": 0,
+            "y": 28,
+            "z": -180
+          },
+          "target": {
+            "x": 0,
+            "y": 6,
+            "z": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "Damaged battle / Participant POV",
+      "anchor": "fleet",
+      "duration": 20,
+      "waypoints": [
+        {
+          "time": 0,
+          "position": {
+            "x": 0,
+            "y": 28,
+            "z": -180
+          },
+          "target": {
+            "x": 0,
+            "y": 6,
+            "z": 0
+          }
+        },
+        {
+          "time": 20,
+          "position": {
+            "x": 0,
+            "y": 28,
+            "z": -180
+          },
+          "target": {
+            "x": 0,
+            "y": 6,
+            "z": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "Damaged battle / Flyover",
+      "anchor": "fleet",
+      "duration": 20,
+      "waypoints": [
+        {
+          "time": 0,
+          "position": {
+            "x": 0,
+            "y": 28,
+            "z": -180
+          },
+          "target": {
+            "x": 0,
+            "y": 6,
+            "z": 0
+          }
+        },
+        {
+          "time": 20,
+          "position": {
+            "x": 0,
+            "y": 28,
+            "z": -180
+          },
+          "target": {
+            "x": 0,
+            "y": 6,
+            "z": 0
+          }
+        }
+      ]
+    }
+  ]
+}
+
+
+

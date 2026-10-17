@@ -10,6 +10,7 @@ CONDITIONS = (
     "expectedShips", "expectedPlayers", "warmupSeconds", "requestedSeconds",
     "warmState", "waveStrength", "waveSteepness", "waveSpeed", "stormRadius",
     "telemetryVisible", "profilerEnabled", "environmentSignature", "fleetScenario", "renderExperiment",
+    "benchmarkHudVisible", "benchmarkHudVersion",
 )
 
 
@@ -22,8 +23,8 @@ def compare(baseline, candidate):
     for title, report in (("baseline", baseline), ("candidate", candidate)):
         if report.get("status") != "COMPLETE":
             differences.append(f"{title}: status={report.get('status')}")
-        if report.get("metadata", {}).get("mode") != "benchmark":
-            differences.append(f"{title}: manual recordings are not benchmark baselines")
+        if report.get("metadata", {}).get("mode") not in ("benchmark", "isolation", "combat"):
+            differences.append(f"{title}: only automated benchmark/isolation/combat reports are baselines")
     a, b = baseline.get("metadata", {}), candidate.get("metadata", {})
     if a.get("instrumentationVersion", "") != b.get("instrumentationVersion", ""):
         differences.append(f"instrumentationVersion: {a.get('instrumentationVersion', '')!r} -> {b.get('instrumentationVersion', '')!r}")
@@ -36,6 +37,26 @@ def compare(baseline, candidate):
             differences.append(f"{key}: missing")
         elif a[key] != b[key]:
             differences.append(f"{key}: {a[key]!r} -> {b[key]!r}")
+    old_combat, new_combat = baseline.get("combat"), candidate.get("combat")
+    if old_combat is not None or new_combat is not None:
+        if old_combat is None or new_combat is None:
+            differences.append("Combat workload is missing in one report")
+        else:
+            if old_combat.get("schedule") != new_combat.get("schedule"):
+                differences.append("Combat control schedules differ")
+            if any(old_combat.get(key) != new_combat.get(key) for key in ("shipsLost", "minAliveShips")):
+                differences.append("Combat ship losses differ")
+            old_times, new_times = old_combat.get("firstSinkingSeconds"), new_combat.get("firstSinkingSeconds")
+            if old_times is None or new_times is None or len(old_times) != 6 or len(new_times) != 6:
+                differences.append("Combat sinking timeline missing")
+            elif any((a < 0) != (b < 0) or abs(a - b) > 5 for a, b in zip(old_times, new_times)):
+                differences.append("Combat sinking timing differs materially")
+            for key, tolerance, minimum in (("cannonShots", .05, 2), ("firearmShots", .05, 3), ("cannonImpacts", .2, 2)):
+                before_value, after_value = old_combat.get(key, 0), new_combat.get(key, 0)
+                if abs(after_value - before_value) > max(minimum, before_value * tolerance):
+                    differences.append(f"Actual combat workload differs: {key} {before_value} -> {after_value}")
+            if any(abs(old_combat.get(key, 0) - new_combat.get(key, 0)) > 3 for key in ("deaths", "minAlivePlayers")) or old_combat.get("cameraFallbacks") != new_combat.get("cameraFallbacks"):
+                differences.append("Combat casualties or POV fallbacks differ materially")
     rows = []
     before = {item["segment"]: item for item in [baseline["total"], *baseline["segments"]]}
     after = {item["segment"]: item for item in [candidate["total"], *candidate["segments"]]}
@@ -77,7 +98,7 @@ def format_result(result):
         def change(value):
             return "N/A" if value is None else f"{value:+.2f}%"
         lines.append(f"{row['segment']} | {fps['before']:.2f}/{fps['after']:.2f} | {low['before']:.2f}/{low['after']:.2f} | {change(mean['changePercent'])} | {p99['before']:.3f}/{p99['after']:.3f} | {change(p99['changePercent'])}")
-    lines.append("Negative ms change is faster. Changes within run-to-run variation are inconclusive. Compare three runs per stage.")
+    lines.append("Negative ms change is faster. Changes within run-to-run variation are inconclusive; repeat only when the result needs confirmation.")
     return "\n".join(lines)
 
 

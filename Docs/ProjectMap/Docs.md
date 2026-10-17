@@ -73,6 +73,7 @@
 | --- | --- |
 | [Docs/Performance/ColleagueBenchmark_20261015.md](<../Performance/ColleagueBenchmark_20261015.md>) | Документация; Производительность и тест нагрузки без AI |
 | [Docs/Performance/ColleagueFleet4Test.md](<../Performance/ColleagueFleet4Test.md>) | Документация; Производительность и тест нагрузки без AI |
+| [Docs/Performance/CombatSixBenchmark.md](<../Performance/CombatSixBenchmark.md>) | Документация; Производительность и тест нагрузки без AI |
 | [Docs/Performance/Delivery_20261016.md](<../Performance/Delivery_20261016.md>) | Документация; Производительность и тест нагрузки без AI |
 | [Docs/Performance/FleetCostBreakdown_20261016.md](<../Performance/FleetCostBreakdown_20261016.md>) | Документация; Производительность и тест нагрузки без AI |
 | [Docs/Performance/NetworkLoadTest.md](<../Performance/NetworkLoadTest.md>) | Документация; Производительность и тест нагрузки без AI |
@@ -288,11 +289,28 @@
 | [Docs/Performance/Reports/20261017-014304-732-isolation.txt](<../Performance/Reports/20261017-014304-732-isolation.txt>) | Текстовые данные |
 | [Docs/Performance/Reports/20261017-065850-299-isolation.json](<../Performance/Reports/20261017-065850-299-isolation.json>) | Конфигурация / данные JSON |
 | [Docs/Performance/Reports/20261017-065850-299-isolation.txt](<../Performance/Reports/20261017-065850-299-isolation.txt>) | Текстовые данные |
+| [Docs/Performance/Reports/20261017-074521-438-combat.json](<../Performance/Reports/20261017-074521-438-combat.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261017-074521-438-combat.txt](<../Performance/Reports/20261017-074521-438-combat.txt>) | Текстовые данные |
+| [Docs/Performance/Reports/20261017-075458-939-combat-probe.json](<../Performance/Reports/20261017-075458-939-combat-probe.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261017-075458-939-combat-probe.txt](<../Performance/Reports/20261017-075458-939-combat-probe.txt>) | Текстовые данные |
+| [Docs/Performance/Reports/20261017-080154-184-combat-probe.json](<../Performance/Reports/20261017-080154-184-combat-probe.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261017-080154-184-combat-probe.txt](<../Performance/Reports/20261017-080154-184-combat-probe.txt>) | Текстовые данные |
+| [Docs/Performance/Reports/20261017-080738-248-combat-Player.log](<../Performance/Reports/20261017-080738-248-combat-Player.log>) | Файл .log |
+| [Docs/Performance/Reports/20261017-080738-248-combat.json](<../Performance/Reports/20261017-080738-248-combat.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261017-080738-248-combat.txt](<../Performance/Reports/20261017-080738-248-combat.txt>) | Текстовые данные |
+| [Docs/Performance/Reports/20261017-081613-548-combat-Player.log](<../Performance/Reports/20261017-081613-548-combat-Player.log>) | Файл .log |
+| [Docs/Performance/Reports/20261017-081613-548-combat.json](<../Performance/Reports/20261017-081613-548-combat.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261017-081613-548-combat.txt](<../Performance/Reports/20261017-081613-548-combat.txt>) | Текстовые данные |
+| [Docs/Performance/Reports/20261017-082826-740-combat-Player.log](<../Performance/Reports/20261017-082826-740-combat-Player.log>) | Файл .log |
+| [Docs/Performance/Reports/20261017-082826-740-combat.json](<../Performance/Reports/20261017-082826-740-combat.json>) | Конфигурация / данные JSON |
+| [Docs/Performance/Reports/20261017-082826-740-combat.txt](<../Performance/Reports/20261017-082826-740-combat.txt>) | Текстовые данные |
 | [Docs/Performance/Reports/20261017-batch-phase-check.txt](<../Performance/Reports/20261017-batch-phase-check.txt>) | Текстовые данные |
 | [Docs/Performance/Reports/20261017-burst-curve-check.txt](<../Performance/Reports/20261017-burst-curve-check.txt>) | Текстовые данные |
 | [Docs/Performance/Reports/20261017-burst-full-pose-check.txt](<../Performance/Reports/20261017-burst-full-pose-check.txt>) | Текстовые данные |
 | [Docs/Performance/Reports/20261017-cloud-bounds-gpu-check.txt](<../Performance/Reports/20261017-cloud-bounds-gpu-check.txt>) | Текстовые данные |
 | [Docs/Performance/Reports/20261017-cloud-bounds-math-check.txt](<../Performance/Reports/20261017-cloud-bounds-math-check.txt>) | Текстовые данные |
+| [Docs/Performance/Reports/20261017-combat-deck-probe.txt](<../Performance/Reports/20261017-combat-deck-probe.txt>) | Текстовые данные |
+| [Docs/Performance/Reports/20261017-combat-drowning-regression.json](<../Performance/Reports/20261017-combat-drowning-regression.json>) | Конфигурация / данные JSON |
 | [Docs/Performance/Reports/20261017-cpu-periodic-costs.txt](<../Performance/Reports/20261017-cpu-periodic-costs.txt>) | Текстовые данные |
 | [Docs/Performance/Reports/20261017-cpu-tail-details.txt](<../Performance/Reports/20261017-cpu-tail-details.txt>) | Текстовые данные |
 | [Docs/Performance/Reports/20261017-cpu-tail-scan.txt](<../Performance/Reports/20261017-cpu-tail-scan.txt>) | Текстовые данные |

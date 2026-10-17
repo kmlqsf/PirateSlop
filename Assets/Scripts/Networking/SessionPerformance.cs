@@ -10,15 +10,20 @@ namespace PirateSlop.Networking
     public sealed partial class SessionController
     {
         public bool PerformanceBenchmarkActive { get; private set; }
+        public bool BenchmarkCombatActive { get; private set; }
+        bool benchmarkCombatSelected;
+        bool benchmarkCombatProbeSelected;
+        public void AimCombatParticipant(NetworkPlayer player, ref PlayerCommand command) => performanceBenchmark?.AimCombatParticipant(player, ref command);
         public bool BenchmarkWhirlpoolStressActive { get; private set; }
         public int BenchmarkFleetShipsActive { get; private set; }
         int benchmarkFleetShipsSelected;
         bool benchmarkWhirlpoolStressSelected;
         bool benchmarkIsolationSelected, benchmarkShipIsolationSelected;
-        int diagnosticFleetShips = 4;
+        int diagnosticFleetShips = 6;
         bool benchmarkUncappedRequested, benchmarkPacingApplied;
         int benchmarkPreviousFrameLimit, benchmarkPreviousVSync;
-        public bool BenchmarkReady => PerformanceBenchmarkActive && playing && manager != null && manager.ServerManager.Started && ProceduralWorld.Instance != null && ProceduralWorld.Instance.Ready && EnvironmentTestActive && LoadTestPopulationReady;
+        public bool BenchmarkWorldReady => PerformanceBenchmarkActive && playing && manager != null && manager.ServerManager.Started && ProceduralWorld.Instance != null && ProceduralWorld.Instance.Ready && EnvironmentTestActive;
+        public bool BenchmarkReady => BenchmarkWorldReady && LoadTestPopulationReady;
         public string BenchmarkFailure => error;
         PerformanceBenchmarkController performanceBenchmark;
         int benchmarkPreviousCapacity;
@@ -31,7 +36,10 @@ namespace PirateSlop.Networking
         IEnumerator RunPerformanceCommandLine(string[] args)
         {
             yield return new WaitForSecondsRealtime(2);
+            benchmarkCombatProbeSelected = Has(args, "-performanceCombatProbe");
+            benchmarkCombatSelected = benchmarkCombatProbeSelected || Has(args, "-performanceCombat");
             benchmarkWhirlpoolStressSelected = Has(args, "-performanceStress");
+            if (benchmarkCombatSelected && (benchmarkWhirlpoolStressSelected || Has(args, "-performanceIsolation") || Has(args, "-performanceShipIsolation"))) { Debug.LogError("Combat cannot be combined with isolation or whirlpool stress."); if (Has(args, "-performanceQuit")) Application.Quit(2); yield break; }
             benchmarkShipIsolationSelected = Has(args, "-performanceShipIsolation");
             benchmarkIsolationSelected = benchmarkShipIsolationSelected || Has(args, "-performanceIsolation");
             try { PerformanceRenderOverrides.Configure(Value(args, "-performanceStormScale"), Value(args, "-performanceSkyScale")); }
@@ -40,11 +48,12 @@ namespace PirateSlop.Networking
             ShipController.HullSweepFastPathEnabled = !Has(args, "-performanceLegacyHull");
             PirateSlop.Ships.ShipBodyPose.Enabled = false;
             WorldVisualBudget.Enabled = !Has(args, "-performanceLegacyWorldVisuals");
-            string fleetArgument = Value(args, "-performanceFleetShips") ?? (benchmarkIsolationSelected ? "4" : null);
+            string fleetArgument = Value(args, "-performanceFleetShips") ?? (benchmarkCombatSelected ? "6" : benchmarkIsolationSelected ? "4" : null);
+            if (benchmarkCombatSelected && fleetArgument != "6") { Debug.LogError("Combat-six requires six ships."); if (Has(args, "-performanceQuit")) Application.Quit(2); yield break; }
             if (fleetArgument != null)
             {
-                if (!int.TryParse(fleetArgument, out int fleetShips) || fleetShips != 1 && fleetShips != 2 && fleetShips != 4 && fleetShips != 10)
-                { Debug.LogError("performanceFleetShips must be 1, 2, 4 or 10."); if (Has(args, "-performanceQuit")) Application.Quit(2); yield break; }
+                if (!int.TryParse(fleetArgument, out int fleetShips) || fleetShips != 1 && fleetShips != 2 && fleetShips != 4 && fleetShips != 6 && fleetShips != 10)
+                { Debug.LogError("performanceFleetShips must be 1, 2, 4, 6 or 10."); if (Has(args, "-performanceQuit")) Application.Quit(2); yield break; }
                 BeginFleetPerformanceBenchmark(fleetShips);
             }
             else BeginPerformanceBenchmark();
@@ -78,21 +87,36 @@ namespace PirateSlop.Networking
 
         public void BeginFleetPerformanceBenchmark(int ships = 4)
         {
-            if (ships != 1 && ships != 2 && ships != 4 && ships != 10) throw new ArgumentOutOfRangeException(nameof(ships));
+            if (ships != 1 && ships != 2 && ships != 4 && ships != 6 && ships != 10) throw new ArgumentOutOfRangeException(nameof(ships));
             benchmarkFleetShipsSelected = ships;
             try { BeginPerformanceBenchmark(); }
             finally { benchmarkFleetShipsSelected = 0; }
         }
 
+        public void BeginCombatPerformanceBenchmark()
+        {
+            if (SessionBusy || PerformanceCapture.Active != null || PerformanceCapture.Saving) return;
+            benchmarkUncappedRequested = true;
+            benchmarkCombatSelected = true;
+            try { BeginFleetPerformanceBenchmark(6); }
+            finally { benchmarkCombatSelected = false; }
+        }
+
         public void BeginPerformanceBenchmark()
         {
             if (SessionBusy || PerformanceCapture.Active != null || PerformanceCapture.Saving) return;
-            var source = Resources.Load<TextAsset>(benchmarkFleetShipsSelected > 0 ? "Performance/FleetBenchmarkRoute" : "Performance/BenchmarkRoute");
+            var source = Resources.Load<TextAsset>(benchmarkCombatSelected ? "Performance/CombatBenchmarkRoute" : benchmarkFleetShipsSelected > 0 ? "Performance/FleetBenchmarkRoute" : "Performance/BenchmarkRoute");
             BenchmarkProfile profile;
             try
             {
                 if (source == null) throw new InvalidOperationException("Benchmark route is missing.");
                 profile = JsonUtility.FromJson<BenchmarkProfile>(source.text);
+                if (benchmarkCombatProbeSelected)
+                {
+                    profile.scenario = "combat-probe"; profile.version += "-probe20";
+                    var segment = profile.segments[3]; segment.name = "Cannon functionality probe";
+                    profile.segments = new[] { segment };
+                }
                 if (benchmarkFleetShipsSelected > 0) { profile.ships = benchmarkFleetShipsSelected; profile.players = profile.ships * CrewSize; profile.version += "-n" + profile.ships; }
                 if (benchmarkIsolationSelected)
                 {
@@ -109,6 +133,7 @@ namespace PirateSlop.Networking
             }
             catch (Exception ex) { SetError(ex.Message); return; }
             string routeSource = source.text;
+            BenchmarkCombatActive = profile.IsCombat;
             BenchmarkFleetShipsActive = benchmarkFleetShipsSelected;
             if (BenchmarkFleetShipsActive > 0 || profile.IsIsolation) routeSource = JsonUtility.ToJson(profile);
             BenchmarkWhirlpoolStressActive = benchmarkFleetShipsSelected == 0 && benchmarkWhirlpoolStressSelected;
@@ -145,7 +170,7 @@ namespace PirateSlop.Networking
             Disconnect();
             if (ProceduralWorld.Instance != null) ProceduralWorld.Instance.Clear();
             PerformanceBenchmarkActive = false; benchmarkIsolationSelected = benchmarkShipIsolationSelected = false; MaxPlayers = benchmarkPreviousCapacity;
-            BenchmarkWhirlpoolStressActive = false;
+            BenchmarkWhirlpoolStressActive = BenchmarkCombatActive = benchmarkCombatSelected = benchmarkCombatProbeSelected = false;
             BenchmarkFleetShipsActive = 0;
             PirateSlop.Ships.ShipBodyPose.Enabled = false;
             WorldVisualBudget.Enabled = true;
@@ -183,26 +208,28 @@ namespace PirateSlop.Networking
             bool previous = GUI.enabled;
             GUI.enabled = previous && !SessionBusy && !PerformanceCapture.Saving;
             MenuText(new Rect(x + 32, y + 50, width - 40, 24), "Корабли / персонажи");
-            float part = width / 3;
+            float part = width / 4;
             if (MenuAction(x, y + 86, part, (diagnosticFleetShips == 1 ? "● " : "") + "1 / 3")) diagnosticFleetShips = 1;
             if (MenuAction(x + part, y + 86, part, (diagnosticFleetShips == 4 ? "● " : "") + "4 / 12")) diagnosticFleetShips = 4;
-            if (MenuAction(x + part * 2, y + 86, part, (diagnosticFleetShips == 10 ? "● " : "") + "10 / 30")) diagnosticFleetShips = 10;
-            if (MenuAction(x, y + 156, width, "Тест флота · 120 с")) BeginFleetPerformanceBenchmark(diagnosticFleetShips);
-            if (MenuAction(x, y + 224, width, "Разбор нагрузки · 60 с"))
+            if (MenuAction(x + part * 2, y + 86, part, (diagnosticFleetShips == 6 ? "● " : "") + "6 / 18")) diagnosticFleetShips = 6;
+            if (MenuAction(x + part * 3, y + 86, part, (diagnosticFleetShips == 10 ? "● " : "") + "10 / 30")) diagnosticFleetShips = 10;
+            if (MenuAction(x, y + 146, width, "Боевой стресс · 6 кораблей · 180 с", true)) BeginCombatPerformanceBenchmark();
+            if (MenuAction(x, y + 210, width, "Тест флота · 120 с")) BeginFleetPerformanceBenchmark(diagnosticFleetShips);
+            if (MenuAction(x, y + 274, width, "Разбор нагрузки · 60 с"))
             {
                 benchmarkIsolationSelected = true;
                 try { BeginFleetPerformanceBenchmark(diagnosticFleetShips); }
                 finally { benchmarkIsolationSelected = false; }
             }
             GUI.enabled = previous;
-            if (MenuAction(x, y + 292, width, "Разбор корабля · 66 с"))
+            if (MenuAction(x, y + 338, width, "Разбор корабля · 66 с"))
             {
                 benchmarkIsolationSelected = benchmarkShipIsolationSelected = true;
                 try { BeginFleetPerformanceBenchmark(diagnosticFleetShips); }
                 finally { benchmarkIsolationSelected = benchmarkShipIsolationSelected = false; }
             }
-            MenuText(new Rect(x + 32, y + 350, width - 40, 60), "Разбор: 20 с подготовки, затем поочерёдное\nотключение отдельных групп нагрузки.\nОтчёт содержит результаты каждого участка.", true);
-            if (MenuAction(x, y + 420, width, "Назад")) menuPage = 10;
+            MenuText(new Rect(x + 32, y + 396, width - 40, 60), "Разбор: 20 с подготовки, затем поочерёдное\nотключение отдельных групп нагрузки.\nОтчёт содержит результаты каждого участка.", true);
+            if (MenuAction(x, y + 470, width, "Назад")) menuPage = 10;
         }
 
         void DrawPerformanceMenu(float x, float y, float width)
@@ -212,13 +239,14 @@ namespace PirateSlop.Networking
             {
                 bool previous = GUI.enabled;
                 GUI.enabled = previous && !SessionBusy && !PerformanceCapture.Saving;
-                if (MenuAction(x, y + 60, width, "Тест производительности", true)) BeginPerformanceBenchmark();
+                if (MenuAction(x, y + 60, width, "Боевой стресс · 6 кораблей", true)) BeginCombatPerformanceBenchmark();
+                if (MenuAction(x, y + 120, width, "Пролёт карты · 240 с")) BeginPerformanceBenchmark();
                 GUI.enabled = previous;
                 GUI.enabled = previous && !SessionBusy && !PerformanceCapture.Saving;
-                if (MenuAction(x, y + 120, width, "Тесты флота")) menuPage = 11;
+                if (MenuAction(x, y + 180, width, "Тесты флота")) menuPage = 11;
                 GUI.enabled = previous && !SessionBusy && PerformanceCapture.Active == null && !PerformanceCapture.Saving;
-                ShipController.HullSweepFastPathEnabled = GUI.Toggle(new Rect(x + 32, y + 190, width - 40, 22), ShipController.HullSweepFastPathEnabled, "Быстрая проверка пути корпуса");
-                benchmarkWhirlpoolStressSelected = GUI.Toggle(new Rect(x + 32, y + 214, width - 40, 22), benchmarkWhirlpoolStressSelected, "Сближение флота в водовороте (стресс)");
+                ShipController.HullSweepFastPathEnabled = GUI.Toggle(new Rect(x + 32, y + 250, width - 40, 22), ShipController.HullSweepFastPathEnabled, "Быстрая проверка пути корпуса");
+                benchmarkWhirlpoolStressSelected = GUI.Toggle(new Rect(x + 32, y + 274, width - 40, 22), benchmarkWhirlpoolStressSelected, "Сближение флота в водовороте (стресс)");
                 GUI.enabled = previous;
             }
             else
@@ -226,22 +254,22 @@ namespace PirateSlop.Networking
                 if (MenuAction(x, y + 60, width, PerformanceCapture.Active != null ? "Остановить запись" : "Запись игры и попаданий", true)) TogglePerformanceRecording();
                 MenuText(new Rect(x + 32, y + 116, width - 40, 74), "Продолжите игру и выполните серию попаданий.\nДля сохранения вернитесь в это меню.", true);
             }
-            MenuText(new Rect(x + 32, y + 242, width - 40, 65), PerformanceCapture.LastResult, true);
+            MenuText(new Rect(x + 32, y + 308, width - 40, 65), PerformanceCapture.LastResult, true);
             bool enabled = GUI.enabled;
             GUI.enabled = enabled && PerformanceCapture.Active == null && !PerformanceCapture.Saving;
-            if (MenuAction(x, y + 320, width, "Сравнить последние два теста"))
+            if (MenuAction(x, y + 386, width, "Сравнить последние два теста"))
             {
                 var capture = GetComponent<PerformanceCapture>();
                 if (capture == null) capture = gameObject.AddComponent<PerformanceCapture>();
                 capture.CompareRecentReports();
             }
             GUI.enabled = enabled;
-            if (MenuAction(x, y + 380, width, "Открыть папку отчётов"))
+            if (MenuAction(x, y + 446, width, "Открыть папку отчётов"))
             {
                 var directory = Path.Combine(Application.persistentDataPath, "PerformanceReports"); Directory.CreateDirectory(directory);
                 Application.OpenURL(new Uri(directory).AbsoluteUri);
             }
-            if (MenuAction(x, y + 445, width, "Назад")) menuPage = 0;
+            if (MenuAction(x, y + 511, width, "Назад")) menuPage = 0;
         }
     }
 }

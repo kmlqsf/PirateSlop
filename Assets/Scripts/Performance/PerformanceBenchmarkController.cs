@@ -33,7 +33,9 @@ namespace PirateSlop.Performance
         public bool IsShipIsolation => scenario == "ship-isolation";
         public bool IsIsolation => scenario == "fleet-isolation" || IsShipIsolation;
         public string[] IsolationStages => IsShipIsolation ? PerformanceIsolation.ShipStages : PerformanceIsolation.Stages;
-        public bool IsFleet => scenario == "fleet" || IsIsolation;
+        public bool IsCombatProbe => scenario == "combat-probe";
+        public bool IsCombat => scenario == "combat-six" || IsCombatProbe;
+        public bool IsFleet => scenario == "fleet" || IsIsolation || IsCombat;
         public float warmup = 30, fov = 80, stormRadius = 3000;
         public int ships = 4, players = 12;
         public Vector3 fleetOffset = new(-250, 0, 240);
@@ -45,8 +47,9 @@ namespace PirateSlop.Performance
         public void Validate()
         {
             if (!float.IsFinite(fleetOffset.sqrMagnitude) || !float.IsFinite(fleetYaw) || !float.IsFinite(fleetSpacing) || fleetSpacing < (IsFleet ? 40 : 60) || !float.IsFinite(fleetSail) || fleetSail < 0 || fleetSail > .35f) throw new InvalidOperationException("Invalid benchmark fleet profile.");
-            bool populationValid = IsFleet ? (ships == 1 || ships == 2 || ships == 4 || ships == 10) && players == ships * 3 : ships == 4 && players == 12;
-            if (string.IsNullOrWhiteSpace(version) || !populationValid || !float.IsFinite(warmup) || warmup < (IsIsolation ? 20 : 30) || !float.IsFinite(fov) || fov < 40 || fov > 100 || !float.IsFinite(stormRadius) || stormRadius <= 0 || segments == null || segments.Length != (IsIsolation ? IsolationStages.Length : IsFleet ? 4 : 6)) throw new InvalidOperationException("Invalid benchmark profile.");
+            bool populationValid = IsFleet ? (ships == 1 || ships == 2 || ships == 4 || ships == 6 || ships == 10) && players == ships * 3 : ships == 4 && players == 12;
+            if (string.IsNullOrWhiteSpace(version) || !populationValid || !float.IsFinite(warmup) || warmup < (IsIsolation ? 20 : 30) || !float.IsFinite(fov) || fov < 40 || fov > 100 || !float.IsFinite(stormRadius) || stormRadius <= 0 || segments == null || segments.Length != (IsIsolation ? IsolationStages.Length : IsCombatProbe ? 1 : IsCombat ? 9 : IsFleet ? 4 : 6)) throw new InvalidOperationException("Invalid benchmark profile.");
+            if (IsCombat && (ships != 6 || players != 18 || fleetSpacing != 80 || fleetSail != .3f)) throw new InvalidOperationException("Combat-six profile conditions changed; create a new route version.");
             foreach (var s in segments)
             {
                 if (s == null || string.IsNullOrEmpty(s.name) || !float.IsFinite(s.duration) || s.duration <= 0 || s.anchor != "ship" && s.anchor != "world" && s.anchor != "whirlpool" && s.anchor != "storm" && !(IsFleet && s.anchor == "fleet") || s.waypoints == null || s.waypoints.Length < 2) throw new InvalidOperationException("Invalid benchmark segment.");
@@ -58,7 +61,7 @@ namespace PirateSlop.Performance
                 }
                 if (s.waypoints[0].time != 0 || Mathf.Abs(last - s.duration) > .001f) throw new InvalidOperationException("Benchmark waypoints must cover each segment.");
             }
-            if (Mathf.Abs(Duration - (IsIsolation ? IsolationStages.Length * 6 : IsFleet ? 120 : 240)) > .001f) throw new InvalidOperationException("Unexpected benchmark duration.");
+            if (Mathf.Abs(Duration - (IsIsolation ? IsolationStages.Length * 6 : IsCombatProbe ? 20 : IsCombat ? 180 : IsFleet ? 120 : 240)) > .001f) throw new InvalidOperationException("Unexpected benchmark duration.");
         }
     }
 
@@ -74,6 +77,13 @@ namespace PirateSlop.Performance
         public float FleetSail => profile.fleetSail;
         public void FleetSpawn(Vector3 origin, int slot, out Vector3 position, out float yaw)
         {
+            if (profile.IsCombat)
+            {
+                combatCenter = origin + profile.fleetOffset;
+                float angle = slot * Mathf.PI / 3;
+                position = combatCenter + new Vector3(Mathf.Sin(angle), 0, Mathf.Cos(angle)) * profile.fleetSpacing;
+                yaw = angle * Mathf.Rad2Deg + 90; return;
+            }
             yaw = profile.fleetYaw;
             position = origin + profile.fleetOffset + Quaternion.Euler(0, yaw, 0) * Vector3.left * (profile.fleetSpacing * slot);
         }
@@ -84,6 +94,9 @@ namespace PirateSlop.Performance
         BenchmarkProfile profile;
         PerformanceMetadata metadata;
         PerformanceIsolation isolation;
+        PerformanceCombatScenario combat;
+        Vector3 combatCenter;
+        public void AimCombatParticipant(NetworkPlayer player, ref PlayerCommand command) => combat?.AimParticipant(player, ref command);
         Camera view;
         NetworkShip primary;
         string[] segmentNames;
@@ -107,7 +120,8 @@ namespace PirateSlop.Performance
             session = owner; profile = route;
             capture = GetComponent<PerformanceCapture>();
             if (capture == null) capture = gameObject.AddComponent<PerformanceCapture>();
-            metadata = CreateMetadata(route.IsIsolation ? "isolation" : "benchmark");
+            metadata = CreateMetadata(route.IsCombatProbe ? "combat-probe" : route.IsCombat ? "combat" : route.IsIsolation ? "isolation" : "benchmark");
+            if (route.IsCombat) metadata.fleetScenario = PerformanceCombatScenario.ScheduleVersion + ";ships=6;players=18;local-host";
             metadata.benchmarkHudVisible = LiveHudEnabled;
             metadata.benchmarkHudVersion = LiveHudVersion;
             metadata.routeVersion = profile.version;
@@ -138,7 +152,7 @@ namespace PirateSlop.Performance
                 pipeline = pipeline != null ? pipeline.name : "N/A", telemetryVisible = GameTelemetry.Visible, role = "local-host / synthetic participants; no remote connections",
                 environmentSignature = EnvironmentSignature(Camera.main), hullSweepFastPath = ShipController.HullSweepFastPathEnabled,
                 fleetScenario = mode == "benchmark" ? SessionController.Instance != null && SessionController.Instance.BenchmarkFleetShipsActive > 0 ? "fleet-scaling-v1;ships=" + SessionController.Instance.BenchmarkFleetShipsActive : SessionController.Instance != null && SessionController.Instance.BenchmarkWhirlpoolStressActive ? "whirlpool-convergence-stress" : "parallel-open-water-v1" : "user-controlled",
-                renderExperiment = mode == "benchmark" ? PerformanceRenderOverrides.Signature : "",
+                renderExperiment = mode != "manual" ? PerformanceRenderOverrides.Signature : "",
                 shipBodyPoseFastPath = PirateSlop.Ships.ShipBodyPose.Enabled, worldVisualBudget = WorldVisualBudget.Enabled,
                 playerGuiLayoutBudget = PlayerGuiBudget.Enabled, cpuOptimizationVersion = "cpu-work-v3", tentacleBurstCurve = TentacleAnimator.BurstCurveEnabled,
                 shipVisibilityPhases = PirateSlop.Ships.ShipV3RenderBatch.StaggerVisibilityPolling, waterAsyncDiscovery = WaterImpactPhysics.AsyncDiscoveryEnabled,
@@ -241,14 +255,19 @@ namespace PirateSlop.Performance
                     metadata.telemetryVisible = GameTelemetry.Visible;
                     metadata.fleetScenario = (profile.IsShipIsolation ? "stationary-ship-isolation-v1;ships=" : "stationary-fleet-isolation-v1;ships=") + profile.ships;
                 }
+                if (profile.IsCombat)
+                {
+                    try { combat = new PerformanceCombatScenario(combatCenter, profile.fleetSpacing, profile.fleetSail); capture.CombatScenario = combat; }
+                    catch (Exception ex) { Finish("INVALID", ex.Message); return; }
+                }
                 readyAt = now;
                 view.fieldOfView = profile.fov;
                 PerformanceCapture.Event("WorldReady", primary);
             }
             if (view == null) { Finish("INVALID", "Benchmark camera is missing."); return; }
-            if (primary == null) { Finish("INVALID", "Primary benchmark ship is missing."); return; }
-            if (primary.IsSinking) { Finish("INVALID", "Primary benchmark ship started sinking."); return; }
-            if (!session.BenchmarkReady) { Finish("INVALID", "Benchmark population changed: " + session.LoadTestPopulationStatus); return; }
+            if (!profile.IsCombat && primary == null) { Finish("INVALID", "Primary benchmark ship is missing."); return; }
+            if (!profile.IsCombat && primary.IsSinking) { Finish("INVALID", "Primary benchmark ship started sinking."); return; }
+            if (!session.BenchmarkWorldReady || !profile.IsCombat && !session.LoadTestPopulationReady) { Finish("INVALID", "Benchmark population/world changed: " + session.LoadTestPopulationStatus); return; }
             if (!session.BenchmarkWhirlpoolStressActive)
                 foreach (var ship in NetworkShip.ActiveShips)
                 {
@@ -257,7 +276,7 @@ namespace PirateSlop.Performance
                     if (ocean != null && ocean.WhirlpoolDepth > 0 && Vector2.Distance(new Vector2(ship.transform.position.x, ship.transform.position.z), new Vector2(ocean.WhirlpoolCenter.x, ocean.WhirlpoolCenter.z)) < ocean.WhirlpoolRadius)
                     { Finish("INVALID", "Open-water fleet entered whirlpool; team " + ship.TeamId.Value); return; }
                     var flood = ship.GetComponent<PirateSlop.ShipFlooding>();
-                    if (flood != null && flood.Level > .01f)
+                    if (!profile.IsCombat && flood != null && flood.Level > .01f)
                     { Finish("INVALID", "Open-water fleet unexpectedly flooded; team " + ship.TeamId.Value); return; }
                 }
             if (recordingAt == 0)
@@ -294,8 +313,11 @@ namespace PirateSlop.Performance
             if (Screen.width != frozenWidth || Screen.height != frozenHeight || QualitySettings.vSyncCount != frozenVSync || Application.targetFrameRate != frozenLimit || QualitySettings.GetQualityLevel() != frozenQuality || currentPipeline == null || Mathf.Abs(currentPipeline.renderScale - (isolation != null ? isolation.ExpectedScale : frozenScale)) > .0001f || Mathf.Abs(view.fieldOfView - profile.fov) > .001f)
             { Finish("INVALID", "Graphics settings changed during capture."); return; }
             double elapsed = now - recordingAt;
+            combat?.Step((float)elapsed + (profile.IsCombatProbe ? 60 : 0), capture.Recording);
             if (elapsed >= profile.Duration)
             {
+                string combatFailure = combat?.ValidateResult();
+                if (combatFailure != null) { Finish("INVALID", combatFailure); return; }
                 isolation?.Restore();
                 string weatherFailure = WeatherFailure();
                 if (weatherFailure != null) { Finish("INVALID", weatherFailure); return; }
@@ -314,6 +336,7 @@ namespace PirateSlop.Performance
 
         void Position(int index, float time)
         {
+            if (combat != null) { combat.PositionCamera(view, index, time); return; }
             var segment = profile.segments[index]; var points = segment.waypoints;
             int at = 0; while (at < points.Length - 2 && time > points[at + 1].time) at++;
             float t = Mathf.InverseLerp(points[at].time, points[at + 1].time, time);
@@ -347,12 +370,14 @@ namespace PirateSlop.Performance
         {
             if (!ActiveRun) return;
             ActiveRun = false;
+            combat?.Dispose();
             isolation?.Dispose(); isolation = null;
             capture.Finish(status, reason, segmentNames);
+            combat = null;
             session.EndPerformanceBenchmark();
         }
 
-        void OnDisable() { isolation?.Dispose(); isolation = null; }
+        void OnDisable() { combat?.Dispose(); combat = null; isolation?.Dispose(); isolation = null; }
 
         void OnGUI()
         {
@@ -370,7 +395,7 @@ namespace PirateSlop.Performance
                 GUI.matrix = Matrix4x4.Scale(new Vector3(scale, scale, 1));
                 GUI.color = new Color(.02f, .04f, .05f, .9f); GUI.depth = -100;
                 float width = Mathf.Min(460, Screen.width / scale - 24);
-                var panel = new Rect(12, 58 / scale, width, 222);
+                var panel = new Rect(12, 58 / scale, width, combat != null ? 266 : 222);
                 GUI.DrawTexture(panel, Texture2D.whiteTexture);
                 GUI.color = Color.white;
                 GUI.Label(new Rect(panel.x + 10, panel.y + 8, panel.width - 20, panel.height - 16), liveReport, liveStyle);
@@ -400,7 +425,13 @@ namespace PirateSlop.Performance
             liveText.AppendLine(capture.Recording ? $">16.67 мс: {sample.over1667} · >33.33 мс: {sample.over3333}" : "Длинные кадры: после начала записи");
             liveText.AppendLine($"Draw {LiveCount(frame.draws)} · SetPass {LiveCount(frame.setPass)} · tris {LiveCount(frame.triangles)}");
             liveText.AppendLine($"Unity память {frame.usedBytes / (1024d * 1024):F0} МБ · GC {LiveCount(frame.gcBytes)} Б/кадр");
-            liveText.AppendLine($"Флот {profile.ships} / игроки {frame.players} · {Screen.width}×{Screen.height}");
+            liveText.AppendLine($"Флот {(combat != null ? combat.Summary.minAliveShips : profile.ships)} из {profile.ships} / игроки {frame.players} · {Screen.width}×{Screen.height}");
+            if (combat != null)
+            {
+                var stats = combat.Summary;
+                liveText.AppendLine($"Ядра: {stats.cannonShots} выстр. / {stats.cannonImpacts} попад. · пистолет: {stats.firearmShots}");
+                liveText.AppendLine($"Урон игрокам: {stats.playerDamageEvents} · смерти: {stats.deaths} · мин. живых: {stats.minAlivePlayers}");
+            }
             liveText.Append($"{metadata.buildType} · {metadata.cpuOptimizationVersion} · {metadata.graphicsApi}");
             liveReport = liveText.ToString();
             liveFrames = 0; liveSeconds = liveWorst = 0;

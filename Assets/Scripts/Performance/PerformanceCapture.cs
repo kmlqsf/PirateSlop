@@ -111,6 +111,7 @@ namespace PirateSlop.Performance
         public string status, reason;
         public PerformanceMetadata metadata;
         public PerformanceSummary total;
+        public PerformanceCombatSummary combat;
         public PerformanceSummary[] segments;
         public PerformanceSecond[] seconds;
         public string secondsLayout = "Frames grouped by floor(time) and segment, using frame start time; a frame crossing a second boundary stays in its starting bucket. Frame indices reference frames[]. Camera quaternion and weather state describe the completed view, not an image or proof of visible objects.";
@@ -239,6 +240,15 @@ namespace PirateSlop.Performance
             text.AppendLine($"Route {m.routeVersion} / {m.routeHash} | map {m.mapRevision} | {m.role} | tick {m.tickRate}");
             text.AppendLine("Environment: " + m.environmentSignature);
             text.AppendLine("Instrumentation: " + m.instrumentationVersion);
+            if (report.combat != null)
+            {
+                var combat = report.combat;
+                text.AppendLine($"Combat attrition: ships lost={combat.shipsLost}, min afloat={combat.minAliveShips}; sinking times are scenario seconds (-1 means survived).");
+                text.AppendLine("COMBAT: compare matched camera/phase segments, not TOTAL against stationary isolation.");
+                text.AppendLine("Combat schedule: " + combat.schedule + " | " + combat.limitations);
+                text.AppendLine($"Actual cannon shots/hits: {combat.cannonShots}/{combat.cannonImpacts}; pistol shots/visual hits: {combat.firearmShots}/{combat.firearmImpacts}; player damage/deaths: {combat.playerDamageEvents}/{combat.deaths}; min alive: {combat.minAlivePlayers}; POV fallbacks: {combat.cameraFallbacks}");
+                for (int i = 0; i < 6; i++) text.AppendLine($"Combat ship {i}: shots={combat.shotsByShip[i]}, hits received={combat.hitsByShip[i]}, travelled={combat.distanceByShip[i]:F1}m, sinking at={combat.firstSinkingSeconds[i]:F2}s");
+            }
             text.AppendLine("Benchmark HUD: " + m.benchmarkHudVisible + " / " + (m.benchmarkHudVersion ?? "none"));
             text.AppendLine("Hull sweep fast path: " + m.hullSweepFastPath);
             text.AppendLine("Ship body pose fast path: " + m.shipBodyPoseFastPath);
@@ -309,7 +319,7 @@ namespace PirateSlop.Performance
             var mismatches = new List<string>();
             if (before.schemaVersion != after.schemaVersion) mismatches.Add("Report schema changed: repeat baseline with the same instrumentation.");
             if (before.status != "COMPLETE" || after.status != "COMPLETE") mismatches.Add("Only COMPLETE reports are accepted.");
-            if (before.metadata.mode != "benchmark" || after.metadata.mode != "benchmark") mismatches.Add("Manual recordings are not benchmark baselines.");
+            if (before.metadata.mode != "benchmark" && before.metadata.mode != "isolation" && before.metadata.mode != "combat" || after.metadata.mode != "benchmark" && after.metadata.mode != "isolation" && after.metadata.mode != "combat") mismatches.Add("Only automated benchmark/isolation/combat reports are baselines; manual recordings and functionality probes are excluded.");
             string[] conditions = { "mode", "routeVersion", "routeHash", "mapRevision", "mapChecksum", "buildType", "unityVersion", "cpu", "gpu", "graphicsApi", "width", "height", "quality", "pipeline", "renderScale", "fov", "nearClip", "farClip", "antialiasing", "vSync", "fpsLimit", "tickRate", "role", "expectedShips", "expectedPlayers", "warmupSeconds", "requestedSeconds", "warmState", "waveStrength", "waveSteepness", "waveSpeed", "stormRadius", "telemetryVisible", "profilerEnabled", "environmentSignature", "fleetScenario", "renderExperiment", "benchmarkHudVisible", "benchmarkHudVersion" };
             if ((before.metadata.instrumentationVersion ?? "") != (after.metadata.instrumentationVersion ?? "")) mismatches.Add("instrumentationVersion: " + before.metadata.instrumentationVersion + " -> " + after.metadata.instrumentationVersion);
             foreach (string key in conditions)
@@ -321,6 +331,22 @@ namespace PirateSlop.Performance
             }
             if (before.segments.Length != after.segments.Length) mismatches.Add("Segment counts differ.");
             else for (int i = 0; i < before.segments.Length; i++) if (before.segments[i].segment != after.segments[i].segment) mismatches.Add("Segment names/order differ.");
+            if (before.combat != null || after.combat != null)
+            {
+                var a = before.combat; var b = after.combat;
+                if (a == null || b == null) mismatches.Add("Combat workload is missing in one report.");
+                else
+                {
+                    if (a.schedule != b.schedule) mismatches.Add("Combat control schedules differ.");
+                    if (a.shipsLost != b.shipsLost || a.minAliveShips != b.minAliveShips) mismatches.Add("Combat ship losses differ.");
+                    if (a.firstSinkingSeconds == null || b.firstSinkingSeconds == null || a.firstSinkingSeconds.Length != 6 || b.firstSinkingSeconds.Length != 6) mismatches.Add("Combat sinking timeline missing.");
+                    else for (int i = 0; i < 6; i++)
+                        if ((a.firstSinkingSeconds[i] < 0) != (b.firstSinkingSeconds[i] < 0) || Math.Abs(a.firstSinkingSeconds[i] - b.firstSinkingSeconds[i]) > 5) mismatches.Add("Combat sinking timing differs materially for ship " + i);
+                    if (Math.Abs(a.cannonShots - b.cannonShots) > Math.Max(2, a.cannonShots * .05) || Math.Abs(a.firearmShots - b.firearmShots) > Math.Max(3, a.firearmShots * .05)) mismatches.Add("Actual combat shot workload differs by more than 5%.");
+                    if (Math.Abs(a.cannonImpacts - b.cannonImpacts) > Math.Max(2, a.cannonImpacts * .2)) mismatches.Add("Actual cannon impact workload differs by more than 20%.");
+                    if (Math.Abs(a.deaths - b.deaths) > 3 || Math.Abs(a.minAlivePlayers - b.minAlivePlayers) > 3 || a.cameraFallbacks != b.cameraFallbacks) mismatches.Add("Combat casualties or POV fallbacks differ materially.");
+                }
+            }
             var output = new StringBuilder(2048);
             output.AppendLine(mismatches.Count == 0 ? "COMPARABLE" : "NOT COMPARABLE — do not claim a performance improvement");
             foreach (var mismatch in mismatches) output.AppendLine(mismatch);
@@ -361,6 +387,7 @@ namespace PirateSlop.Performance
         public int Segment;
         public Camera View;
         public int Errors { get; private set; }
+        public PerformanceCombatScenario CombatScenario { get; set; }
         readonly string[] markerNames = { "Ships.VisualRig", "Ships.RopeTubes", "Ships.Attachments", "Ships.PhysicsPublish", "Ships.RenderBatchVisibility", "Performance.CannonImpact", "Performance.ShipDamage", "Performance.ShipPublish", "Performance.RenderRebuild", "Performance.CollisionBatch", "Performance.FirearmImpact", "Performance.PlayerDamage", "Performance.Ragdoll", "Performance.CorpsePhysics", "Storm rain update", "LoadTest.ScriptedMotion" };
         PerformanceFrame[] frames;
         float[] markerValues;
@@ -389,6 +416,7 @@ namespace PirateSlop.Performance
         {
             var capture = Active;
             if (capture == null) return;
+            if (capture.Recording) capture.CombatScenario?.Observe(kind, target);
             if (capture.events.Count >= EventCapacity) { capture.droppedEvents++; return; }
             capture.events.Add(new PerformanceEvent { time = Time.realtimeSinceStartupAsDouble - capture.origin, unityFrame = Time.frameCount, kind = kind, target = target != null ? target.name : "", x = point.x, y = point.y, z = point.z, value = value });
         }
@@ -398,7 +426,7 @@ namespace PirateSlop.Performance
         public void Prepare(PerformanceMetadata value)
         {
             if (Active != null) throw new InvalidOperationException("A performance capture is already active.");
-            metadata = value; count = Errors = warnings = droppedEvents = 0; SubmergedSeconds = 0; events.Clear();
+            metadata = value; CombatScenario = null; count = Errors = warnings = droppedEvents = 0; SubmergedSeconds = 0; events.Clear();
             shipSamples.Clear(); droppedShipSamples = 0; nextShipSample = 0;
             frames = new PerformanceFrame[Capacity]; markerValues = new float[Capacity * markerNames.Length];
             var handles = new List<ProfilerRecorderHandle>(); ProfilerRecorderHandle.GetAvailable(handles);
@@ -487,7 +515,8 @@ namespace PirateSlop.Performance
                 for (int i = files.Length - 1; i >= 0; i--)
                 {
                     var candidate = JsonUtility.FromJson<PerformanceReport>(File.ReadAllText(files[i], Encoding.UTF8));
-                    if (candidate == null || candidate.status != "COMPLETE" || candidate.metadata == null || candidate.metadata.mode != "benchmark") continue;
+                    if (candidate == null || candidate.status != "COMPLETE" || candidate.metadata == null || candidate.metadata.mode != "benchmark" && candidate.metadata.mode != "isolation" && candidate.metadata.mode != "combat") continue;
+                    if (after != null && (candidate.metadata.mode != after.metadata.mode || candidate.metadata.routeVersion != after.metadata.routeVersion)) continue;
                     if (after == null) { after = candidate; afterPath = files[i]; }
                     else { before = candidate; beforePath = files[i]; break; }
                 }
@@ -651,7 +680,7 @@ namespace PirateSlop.Performance
             var recorded = new PerformanceFrame[count]; Array.Copy(frames, recorded, count);
             var recordedMarkers = new float[count * markerNames.Length]; Array.Copy(markerValues, recordedMarkers, recordedMarkers.Length);
             var recordedCpu = new float[count * PerformanceCpuTimings.Names.Length]; Array.Copy(cpuStageValues, recordedCpu, recordedCpu.Length);
-            var report = new PerformanceReport { status = status, reason = reason, metadata = metadata, markerNames = markerNames, markerMilliseconds = recordedMarkers, cpuStageNames = PerformanceCpuTimings.Names, cpuStageMilliseconds = recordedCpu, frames = recorded, events = events.ToArray(), errors = Errors, warnings = warnings, droppedEvents = droppedEvents, captureBufferBytes = (long)Capacity * System.Runtime.InteropServices.Marshal.SizeOf<PerformanceFrame>() + ((long)markerValues.Length + cpuStageValues.Length) * sizeof(float) };
+            var report = new PerformanceReport { combat = CombatScenario?.Summary, status = status, reason = reason, metadata = metadata, markerNames = markerNames, markerMilliseconds = recordedMarkers, cpuStageNames = PerformanceCpuTimings.Names, cpuStageMilliseconds = recordedCpu, frames = recorded, events = events.ToArray(), errors = Errors, warnings = warnings, droppedEvents = droppedEvents, captureBufferBytes = (long)Capacity * System.Runtime.InteropServices.Marshal.SizeOf<PerformanceFrame>() + ((long)markerValues.Length + cpuStageValues.Length) * sizeof(float) };
             if (status == "COMPLETE" && Errors > 0) { report.status = "INVALID"; report.reason = "Errors occurred during the capture."; }
             report.shipSamples = shipSamples.ToArray(); report.droppedShipSamples = droppedShipSamples;
             report.captureBufferBytes += (long)shipSamples.Capacity * System.Runtime.InteropServices.Marshal.SizeOf<PerformanceShipSample>();
@@ -684,6 +713,7 @@ namespace PirateSlop.Performance
             frames = null; markerValues = null; cpuStageValues = null;
             if (Active == this) Active = null;
             Recording = false;
+            CombatScenario = null;
         }
 
         void OnApplicationQuit()

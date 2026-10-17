@@ -52,6 +52,7 @@ namespace PirateSlop.Networking
             using var sample = loadTestMarker.Auto();
             nextLoadTestMotion = Time.unscaledTime + .2f;
             if (loadTestFillFinished) CheckLoadTestPopulation();
+            if (BenchmarkCombatActive) return;
             foreach (var ship in NetworkShip.ActiveShips)
             {
                 if (ship == null || !ship.IsServerInitialized || ship.IsSinking) continue;
@@ -85,12 +86,13 @@ namespace PirateSlop.Networking
             LoadTestPopulationReady = players.Count == MaxPlayers && ships == expectedShips;
             LoadTestPopulationStatus = $"{(LoadTestPopulationReady ? "Состав готов" : "НЕПОЛНЫЙ ТЕСТ")}: персонажи {players.Count}/{MaxPlayers} · корабли {ships}/{expectedShips}";
             if (LoadTestPopulationReady) Debug.Log("LOAD_TEST_READY " + LoadTestPopulationStatus);
+            else if (BenchmarkCombatActive) Debug.Log("LOAD_TEST_COMBAT_FLEET_CHANGED " + LoadTestPopulationStatus);
             else Debug.LogWarning("LOAD_TEST_INCOMPLETE " + LoadTestPopulationStatus);
         }
 
         void DrawLoadTestWarning()
         {
-            if (!LoadTestActive || !loadTestFillFinished || LoadTestPopulationReady || !playing) return;
+            if (!LoadTestActive || !loadTestFillFinished || LoadTestPopulationReady || !playing || BenchmarkCombatActive) return;
             loadTestWarningStyle ??= new GUIStyle(GUI.skin.box) { fontSize = 15, wordWrap = true, alignment = TextAnchor.MiddleCenter, normal = { textColor = new Color(1f, .65f, .35f) } };
             GUI.Box(new Rect(16f, Screen.height - 88f, Mathf.Min(760f, Screen.width - 32f), 64f), LoadTestPopulationStatus + "\nЭтот состав не подходит для замера полного матча.", loadTestWarningStyle);
         }

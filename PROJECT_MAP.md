@@ -12,7 +12,7 @@
 
 ## Полный каталог
 
-Учтено 14396 файлов без `.meta`. Ещё 12986 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
+Учтено 14418 файлов без `.meta`. Ещё 12988 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
 
 | Раздел | Назначение | Файлов |
 | --- | --- | ---: |
@@ -34,9 +34,9 @@
 | [Assets/Models](<Docs/ProjectMap/Assets-Models.md>) | Модели и связанные ресурсы | 9657 |
 | [Assets/Plugins](<Docs/ProjectMap/Assets-Plugins.md>) | Плагины | 5 |
 | [Assets/Prefabs](<Docs/ProjectMap/Assets-Prefabs.md>) | Готовые игровые объекты | 138 |
-| [Assets/Resources](<Docs/ProjectMap/Assets-Resources.md>) | Ресурсы, доступные для загрузки по имени | 167 |
+| [Assets/Resources](<Docs/ProjectMap/Assets-Resources.md>) | Ресурсы, доступные для загрузки по имени | 168 |
 | [Assets/Scenes](<Docs/ProjectMap/Assets-Scenes.md>) | Сохранённые сцены | 3 |
-| [Assets/Scripts](<Docs/ProjectMap/Assets-Scripts.md>) | Игровой код и редакторские инструменты | 582 |
+| [Assets/Scripts](<Docs/ProjectMap/Assets-Scripts.md>) | Игровой код и редакторские инструменты | 583 |
 | [Assets/Settings](<Docs/ProjectMap/Assets-Settings.md>) | Настройки игровых систем и рендеринга | 59 |
 | [Assets/Shaders](<Docs/ProjectMap/Assets-Shaders.md>) | Шейдеры | 22 |
 | [Assets/StreamingAssets](<Docs/ProjectMap/Assets-StreamingAssets.md>) | Ресурсы раздела; точный состав — в каталоге | 5 |
@@ -46,12 +46,12 @@
 | [Assets/UI](<Docs/ProjectMap/Assets-UI.md>) | Ресурсы интерфейса | 42 |
 | [Assets/_Recovery](<Docs/ProjectMap/Assets-_Recovery.md>) | Сохранённые восстановленные данные | 4 |
 | [Captures](<Docs/ProjectMap/Captures.md>) | Ресурсы раздела; точный состав — в каталоге | 1010 |
-| [Docs](<Docs/ProjectMap/Docs.md>) | Документы и сохранённые отчёты | 294 |
+| [Docs](<Docs/ProjectMap/Docs.md>) | Документы и сохранённые отчёты | 312 |
 | [Packages](<Docs/ProjectMap/Packages.md>) | Манифест, lock-файл и встроенные пакеты | 924 |
 | [ProjectSettings](<Docs/ProjectMap/ProjectSettings.md>) | Настройки Unity | 28 |
 | [Root](<Docs/ProjectMap/Root.md>) | Корневые инструкции, планы и служебные файлы | 26 |
 | [ThirdParty](<Docs/ProjectMap/ThirdParty.md>) | Сторонние ресурсы | 2 |
-| [Tools](<Docs/ProjectMap/Tools.md>) | Инструменты разработки и загрузчик контекста | 42 |
+| [Tools](<Docs/ProjectMap/Tools.md>) | Инструменты разработки и загрузчик контекста | 44 |
 
 Не индексируются генерируемые сборки, кэши и локальное состояние: `.git/`, `.idea/`, `.vs/`, `Builds/`, `Library/`, `Logs/`, `Temp/`, `UserSettings/`, `__pycache__/`, `bin/`, `node_modules/`, `obj/`. В Captures индексируются только отслеживаемые Git файлы; промежуточные резервные CoastalTripo_Pre*.blend не индексируются. Зависимости из Unity PackageCache представлены манифестом/lock-файлом; встроенные пакеты из `Packages/` перечислены полностью. Скрытые конфиги вне исключённых папок включены только как пути, их содержимое не копируется.
 
@@ -2093,6 +2093,7 @@ WaterImpactPhysics/WaterImpactBody: общие локальные всплеск
 
 Ключевые слова: оптимизация, FPS, профайлер, NetworkLoadTest.
 
+17.10.2026 combat v5-attrition принят: Release aa20d2a963, Dev197a216ee4,22общих source hashes. COMPLETE082826-740:180с,0errors,53ядра/44попадания,2потопления147.81/164.50с без прерывания. ПрицелV3, естественные потери;V4отклонён. Сравнение учитывает потери/время. Новый приоритет CPU: повреждённый POV15.85FPS, PlayerSyncTransforms8.311мс/network step против1.795в движении. Визуальная/remote/DevPlay/15мин pending. Сборки/следующий шаг вверху OptimizationPlan.md.
 17.10.2026 завершение этапа: live-v1 HUD по умолчанию во всех benchmark/fleet/isolation, окно до1с текущего участка,2Гц, существующий capture без новых recorders; -performanceNoHud; metadata/comparator фиксируют HUD. Release75827fcf4e0/55 и Dev0f63285a070/91 содержатcpu-work-v3/cloud-bounds-v1/HUD. Функциональный Release COMPLETE, расчёты окна проверены; визуальная/сетевая/15мин и слабыйПК pending. Актуальный статус вверхуOptimizationPlan.md.
 17.10.2026 cpu-work-v3 принят: распределены 695 visibility polls по устойчивым фазам, async OverlapSphereCommand и порционная обработка discovery всплесков. Native1696кадров: waterUpdate max0.3214мс, batch max0.4471мс/13polls. Один Release A/B014125-603→014304-732: FPS110.07→109.69 (без среднего прироста), P9914.27→13.83, max16.98→15.63мс. Рабочие Release837750c597/Dev28fc95c7e6 обновлены; manifest16sourcehashes. Cloud-bounds-v1 сохранён. Визуальная/сеть/15мин/коллега pending. Подробности в начале OptimizationPlan.md; старые build IDs ниже исторические.
 17.10.2026 cloud-bounds-v1 принят поGPU/среднемукадру:одинReleaseA/Bоднойсборки08111cb865,QHD4/12,010726-231legacy→010905-098fast,GPU9.90/9.95→8.84/8.90мс,FPS100.09/98.97→110.41/108.99,безсменыкачества. GPU589824точкипогодыmaxError0,uniformactive;2.25млнCPUmathcases/250kокон. P99≈14мснеулучшен,120FPSнеподтверждены. LegacyCLI-performanceLegacyCloudBounds,metadata.cloudBoundsFastPath/renderOptimizationVersion. Release dad9e9609b0errors/55warnings,Dev fcc87d75c20/89 содержатcpu-work-v2/cloud-bounds-v1/фиксразрешения(уникальныедименсии,Screen.width/height). Manifest15sourcehashes+managed/nativeDLL. Коллегановыйпакетнепроверял. GRDвыключен,попадания/ragdollнапаузе. СледующийприоритетCPUдлинныхкадров/крупныерасходы,неповторыбезпричины.
@@ -2212,6 +2213,11 @@ NetworkLoadTest запускается из меню Тест нагрузки �
 - [Tools/Performance/read_physics_callers.cs](<Tools/Performance/read_physics_callers.cs>) — Исходник C#.
 - [Tools/Performance/RunFleet4.cmd](<Tools/Performance/RunFleet4.cmd>) — Файл .cmd.
 - [Tools/Performance/RunFleet4-FullHD.cmd](<Tools/Performance/RunFleet4-FullHD.cmd>) — Файл .cmd.
+- [Assets/Scripts/Performance/PerformanceCombatScenario.cs](<Assets/Scripts/Performance/PerformanceCombatScenario.cs>) — Исходник C#: PerformanceCombatSummary, PerformanceCombatScenario.
+- [Assets/Resources/Performance/CombatBenchmarkRoute.json](<Assets/Resources/Performance/CombatBenchmarkRoute.json>) — Конфигурация / данные JSON.
+- [Tools/Performance/RunCombat6.cmd](<Tools/Performance/RunCombat6.cmd>) — Файл .cmd.
+- [Tools/Performance/RunCombat6-FullHD.cmd](<Tools/Performance/RunCombat6-FullHD.cmd>) — Файл .cmd.
+- [Docs/Performance/CombatSixBenchmark.md](<Docs/Performance/CombatSixBenchmark.md>) — Документация.
 - [Docs/Performance/NetworkLoadTest.md](<Docs/Performance/NetworkLoadTest.md>) — Документация.
 - [Docs/Performance/OptimizationPlan.md](<Docs/Performance/OptimizationPlan.md>) — Документация.
 - `../output/CrashReview20261007/Spyglass_1628.md` — отсутствует в текущем снимке; не использовать как готовый путь.

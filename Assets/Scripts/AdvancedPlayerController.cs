@@ -539,6 +539,7 @@ public partial class AdvancedPlayerController : MonoBehaviour
         bool submerged = depth > .1f;
         Breath = Mathf.Clamp(Breath + dt * (submerged ? -1 : 8), 0, breathSeconds);
         if (Breath <= 0 && health != null && (!networked || GetComponent<PirateSlop.Networking.NetworkPlayer>().IsServerInitialized)) health.Damage(12f * dt, drowning: true);
+        if (IsDead || !controller.enabled || !gameObject.activeInHierarchy) return;
         var direction = transform.right * command.Move.x + transform.forward * command.Move.y;
         float vertical = command.Rise ? 1f : command.Crouch ? -1f : 0f;
         if (submerged && vertical == 0 && command.Move.y != 0)
