@@ -67,6 +67,8 @@ namespace PirateSlop.Performance
     {
         public static bool Running => SessionController.Instance != null && SessionController.Instance.PerformanceBenchmarkActive;
         public static bool HideTestLabels => Running;
+        public static bool LiveHudEnabled { get; } = !Array.Exists(Environment.GetCommandLineArgs(), a => a == "-performanceNoHud");
+        public const string LiveHudVersion = "live-v1";
         public double EnvironmentTime => readyAt > 0 ? Time.realtimeSinceStartupAsDouble - readyAt : 0;
         public bool MotionEnabled => capture != null && capture.Recording;
         public float FleetSail => profile.fleetSail;
@@ -93,6 +95,11 @@ namespace PirateSlop.Performance
         string frozenCloudQuality;
         double nextProgress;
         GUIStyle progressStyle;
+        GUIStyle liveStyle;
+        readonly StringBuilder liveText = new(512);
+        string liveReport = "Телеметрия · сбор данных…";
+        double nextLiveRefresh, liveSeconds, liveWorst;
+        int liveFrames;
         static int processRuns;
 
         public void Begin(SessionController owner, BenchmarkProfile route, string source)
@@ -101,6 +108,8 @@ namespace PirateSlop.Performance
             capture = GetComponent<PerformanceCapture>();
             if (capture == null) capture = gameObject.AddComponent<PerformanceCapture>();
             metadata = CreateMetadata(route.IsIsolation ? "isolation" : "benchmark");
+            metadata.benchmarkHudVisible = LiveHudEnabled;
+            metadata.benchmarkHudVersion = LiveHudVersion;
             metadata.routeVersion = profile.version;
             using (var hash = SHA256.Create()) metadata.routeHash = BitConverter.ToString(hash.ComputeHash(Encoding.UTF8.GetBytes(source))).Replace("-", "");
             metadata.expectedShips = profile.ships; metadata.expectedPlayers = profile.players;
@@ -111,6 +120,8 @@ namespace PirateSlop.Performance
             capture.Prepare(metadata);
             startedAt = Time.realtimeSinceStartupAsDouble; readyAt = recordingAt = 0;
             activeSegment = 0; ActiveRun = true; Progress = "Подготовка тестовой карты…";
+            nextLiveRefresh = liveSeconds = liveWorst = 0; liveFrames = 0;
+            useGUILayout = false;
         }
 
         public static PerformanceMetadata CreateMetadata(string mode)
@@ -129,7 +140,9 @@ namespace PirateSlop.Performance
                 fleetScenario = mode == "benchmark" ? SessionController.Instance != null && SessionController.Instance.BenchmarkFleetShipsActive > 0 ? "fleet-scaling-v1;ships=" + SessionController.Instance.BenchmarkFleetShipsActive : SessionController.Instance != null && SessionController.Instance.BenchmarkWhirlpoolStressActive ? "whirlpool-convergence-stress" : "parallel-open-water-v1" : "user-controlled",
                 renderExperiment = mode == "benchmark" ? PerformanceRenderOverrides.Signature : "",
                 shipBodyPoseFastPath = PirateSlop.Ships.ShipBodyPose.Enabled, worldVisualBudget = WorldVisualBudget.Enabled,
-                playerGuiLayoutBudget = PlayerGuiBudget.Enabled, cpuOptimizationVersion = "cpu-work-v1"
+                playerGuiLayoutBudget = PlayerGuiBudget.Enabled, cpuOptimizationVersion = "cpu-work-v3", tentacleBurstCurve = TentacleAnimator.BurstCurveEnabled,
+                shipVisibilityPhases = PirateSlop.Ships.ShipV3RenderBatch.StaggerVisibilityPolling, waterAsyncDiscovery = WaterImpactPhysics.AsyncDiscoveryEnabled,
+                renderOptimizationVersion = "cloud-bounds-v1", cloudBoundsFastPath = PerformanceRenderOverrides.CloudBoundsFastPath
             };
         }
 
@@ -196,6 +209,7 @@ namespace PirateSlop.Performance
         void LateUpdate()
         {
             if (!ActiveRun) return;
+            RefreshLiveTelemetry();
             if (!string.IsNullOrEmpty(session.BenchmarkFailure)) { Finish("INVALID", session.BenchmarkFailure); return; }
             if (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame) { Finish("CANCELLED", "Cancelled by user."); return; }
             if (capture.Errors > 0) { Finish("INVALID", "Errors occurred during benchmark setup or capture."); return; }
@@ -345,6 +359,54 @@ namespace PirateSlop.Performance
             if (!ActiveRun || Event.current.type != EventType.Repaint) return;
             progressStyle ??= new GUIStyle(GUI.skin.box) { fontSize = 15, alignment = TextAnchor.MiddleCenter, wordWrap = true };
             GUI.Box(new Rect(12, 12, Mathf.Min(700, Screen.width - 24), 38), Progress, progressStyle);
+            if (!LiveHudEnabled) return;
+            liveStyle ??= new GUIStyle(GUI.skin.label) { fontSize = 15, alignment = TextAnchor.UpperLeft, wordWrap = false, normal = { textColor = new Color(.94f, .93f, .84f) } };
+            float scale = Mathf.Clamp(Screen.height / 1080f, .65f, 1.25f);
+            var matrix = GUI.matrix;
+            var color = GUI.color;
+            int depth = GUI.depth;
+            try
+            {
+                GUI.matrix = Matrix4x4.Scale(new Vector3(scale, scale, 1));
+                GUI.color = new Color(.02f, .04f, .05f, .9f); GUI.depth = -100;
+                float width = Mathf.Min(460, Screen.width / scale - 24);
+                var panel = new Rect(12, 58 / scale, width, 222);
+                GUI.DrawTexture(panel, Texture2D.whiteTexture);
+                GUI.color = Color.white;
+                GUI.Label(new Rect(panel.x + 10, panel.y + 8, panel.width - 20, panel.height - 16), liveReport, liveStyle);
+            }
+            finally { GUI.matrix = matrix; GUI.color = color; GUI.depth = depth; }
         }
+
+        void RefreshLiveTelemetry()
+        {
+            if (!LiveHudEnabled || capture == null) return;
+            using var timing = PerformanceCpuTimings.Measure(PerformanceCpuSection.Telemetry);
+            double delta = Time.unscaledDeltaTime;
+            if (double.IsFinite(delta) && delta > 0) { liveSeconds += delta; liveWorst = Math.Max(liveWorst, delta * 1000); liveFrames++; }
+            double now = Time.realtimeSinceStartupAsDouble;
+            if (now < nextLiveRefresh) return;
+            nextLiveRefresh = now + .5;
+            var sample = capture.ReadLiveSnapshot();
+            var frame = sample.latest;
+            double fps = sample.frames > 0 ? sample.fps : liveSeconds > 0 ? liveFrames / liveSeconds : 0;
+            double worst = sample.frames > 0 ? sample.maxMs : liveWorst;
+            liveText.Clear();
+            liveText.AppendLine(capture.Recording ? "ЗАПИСЬ · окно до 1 с текущего участка" : "ПОДГОТОВКА · в итоговые FPS не входит");
+            liveText.AppendLine($"FPS {fps:F1} · кадр {(fps > 0 ? 1000 / fps : 0):F2} мс");
+            liveText.AppendLine($"CPU main {LiveMs(sample.cpuMs)} · render {LiveMs(sample.renderMs)}");
+            liveText.AppendLine($"GPU {LiveMs(sample.gpuMs)} мс · CPU может включать ожидание");
+            liveText.AppendLine($"P99 {LiveMs(sample.p99Ms)} · max {worst:F2} мс");
+            liveText.AppendLine(capture.Recording ? $">16.67 мс: {sample.over1667} · >33.33 мс: {sample.over3333}" : "Длинные кадры: после начала записи");
+            liveText.AppendLine($"Draw {LiveCount(frame.draws)} · SetPass {LiveCount(frame.setPass)} · tris {LiveCount(frame.triangles)}");
+            liveText.AppendLine($"Unity память {frame.usedBytes / (1024d * 1024):F0} МБ · GC {LiveCount(frame.gcBytes)} Б/кадр");
+            liveText.AppendLine($"Флот {profile.ships} / игроки {frame.players} · {Screen.width}×{Screen.height}");
+            liveText.Append($"{metadata.buildType} · {metadata.cpuOptimizationVersion} · {metadata.graphicsApi}");
+            liveReport = liveText.ToString();
+            liveFrames = 0; liveSeconds = liveWorst = 0;
+        }
+
+        static string LiveMs(double value) => value >= 0 ? value.ToString("F2") : "N/A";
+        static string LiveCount(long value) => value >= 0 ? value.ToString("N0") : "N/A";
     }
 }

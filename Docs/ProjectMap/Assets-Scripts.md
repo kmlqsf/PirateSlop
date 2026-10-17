@@ -243,7 +243,7 @@
 | [Assets/Scripts/Kraken/KrakenEncounterManager.cs](<../../Assets/Scripts/Kraken/KrakenEncounterManager.cs>) | Исходник C#: KrakenEncounterManager; Кракен и щупальца |
 | [Assets/Scripts/Kraken/KrakenNetworkProbe.cs](<../../Assets/Scripts/Kraken/KrakenNetworkProbe.cs>) | Исходник C#: KrakenNetworkProbe; Кракен и щупальца |
 | [Assets/Scripts/Kraken/KrakenTentacle.cs](<../../Assets/Scripts/Kraken/KrakenTentacle.cs>) | Исходник C#: KrakenTentacle; Кракен и щупальца |
-| [Assets/Scripts/Kraken/TentacleAnimator.cs](<../../Assets/Scripts/Kraken/TentacleAnimator.cs>) | Исходник C#: TentacleAnimator; Кракен и щупальца |
+| [Assets/Scripts/Kraken/TentacleAnimator.cs](<../../Assets/Scripts/Kraken/TentacleAnimator.cs>) | Исходник C#: TentacleAnimator, CurveJob; Кракен и щупальца |
 
 ## Assets/Scripts/Loot
 
@@ -451,7 +451,7 @@
 | Файл | Краткое описание |
 | --- | --- |
 | [Assets/Scripts/Performance/PerformanceBenchmarkController.cs](<../../Assets/Scripts/Performance/PerformanceBenchmarkController.cs>) | Исходник C#: BenchmarkWaypoint, BenchmarkSegment, BenchmarkProfile, PerformanceBenchmarkController; Производительность и тест нагрузки без AI |
-| [Assets/Scripts/Performance/PerformanceCapture.cs](<../../Assets/Scripts/Performance/PerformanceCapture.cs>) | Исходник C#: PerformanceCounters, PerformanceMetadata, PerformanceFrame, PerformanceShipSample, PerformanceEvent, PerformanceSummary, PerformanceSecond, PerformanceReport, PerformanceStatistics, PerformanceCapture, SavedReport; Производительность и тест нагрузки без AI |
+| [Assets/Scripts/Performance/PerformanceCapture.cs](<../../Assets/Scripts/Performance/PerformanceCapture.cs>) | Исходник C#: PerformanceCounters, PerformanceMetadata, PerformanceFrame, PerformanceLiveSnapshot, PerformanceShipSample, PerformanceEvent, PerformanceSummary, PerformanceSecond, PerformanceReport, PerformanceStatistics, PerformanceCapture, SavedReport; Производительность и тест нагрузки без AI |
 | [Assets/Scripts/Performance/PerformanceCpuTimings.cs](<../../Assets/Scripts/Performance/PerformanceCpuTimings.cs>) | Исходник C#: PerformanceCpuSection, PerformanceCpuTimings, Scope, Probe; Производительность и тест нагрузки без AI |
 | [Assets/Scripts/Performance/PerformanceIsolation.cs](<../../Assets/Scripts/Performance/PerformanceIsolation.cs>) | Исходник C#: PerformanceIsolation; Производительность и тест нагрузки без AI |
 | [Assets/Scripts/Performance/PerformanceRenderOverrides.cs](<../../Assets/Scripts/Performance/PerformanceRenderOverrides.cs>) | Исходник C#: PerformanceRenderOverrides; Производительность и тест нагрузки без AI |

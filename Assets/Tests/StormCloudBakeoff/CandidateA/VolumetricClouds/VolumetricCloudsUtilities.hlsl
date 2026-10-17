@@ -427,6 +427,18 @@ void PirateCloudCoverage(float3 positionPS,out CloudCoverageData data)
 {
     ZERO_INITIALIZE(CloudCoverageData,data);
     bool gameStorm=(_PirateStormWeather.w>0.0 || _PirateStormTestSkyWeather.w>0.0) && _PirateStormBackdrop.x<.5;
+    float3 world=positionPS+_PlanetCenterPosition;
+    bool testWeather=_PirateStormTestSkyWeather.w>0.0;
+    bool fastTest=_PirateCloudBoundsFast>.5 && testWeather && gameStorm;
+    float height=world.y-_PirateStormCloudBoundary.x;
+    if(fastTest)
+    {
+        data.cloudType=.25;
+        data.maxCloudHeight=1.0;
+        if(height<=400.0 || height>=2180.0)return;
+    }
+    float stormWeather=testWeather?StormTestSkyWeather(float3(world.x,_PirateStormTestClouds.z+600.0,world.z)):PirateStormWeather(world);
+    if(fastTest && ((stormWeather<=0.0 && height<=1200.0) || (stormWeather>=1.0 && height>=1500.0)))return;
     float cellSize=max(gameStorm?min(4200.0,_ClearCloudCellSize):_ClearCloudCellSize,1000.0);
     float2 position=AnimateShapeNoisePosition(positionPS).xz/cellSize+float2(.2381,.4044);
     float2 warp=PirateCloudNoise2(position*.18+float2(_ClearCloudSeed,_ClearCloudSeed+46.2));
@@ -435,15 +447,11 @@ void PirateCloudCoverage(float3 positionPS,out CloudCoverageData data)
     float coverageStart=clamp(_ClearCloudCoverageStart,0.0,.95);
     float coverageEnd=clamp(_ClearCloudCoverageEnd,coverageStart+.01,1.0);
     float coverage=smoothstep(coverageStart,coverageEnd,weather.x);
-    float3 world=positionPS+_PlanetCenterPosition;
-    bool testWeather=_PirateStormTestSkyWeather.w>0.0;
-    float stormWeather=testWeather?StormTestSkyWeather(float3(world.x,_PirateStormTestClouds.z+600.0,world.z)):PirateStormWeather(world);
     float2 stormPattern=PirateCloudNoise2(AnimateShapeNoisePosition(positionPS).xz/(testWeather?2200.0:1350.0)+float2(_ClearCloudSeed+151.3,_ClearCloudSeed+69.4));
     float stormCoverage=gameStorm?lerp(.28,.92,smoothstep(.26,.58,stormPattern.x)):lerp(.75,.96,weather.y);
     if(testWeather)stormCoverage=lerp(.12,.65,smoothstep(.37,.73,stormPattern.x));
     if(testWeather && gameStorm)
     {
-        float height=world.y-_PirateStormCloudBoundary.x;
         float clearBottom=1200.0+warp.y*120.0;
         float clearTop=2000.0+weather.y*180.0;
         float stormBottom=400.0+warp.y*150.0;

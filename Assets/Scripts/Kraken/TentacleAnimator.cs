@@ -1,4 +1,7 @@
 using System;
+using Unity.Burst;
+using Unity.Collections;
+using Unity.Jobs;
 using UnityEngine;
 using PirateSlop.Networking;
 
@@ -16,6 +19,102 @@ namespace PirateSlop
         readonly float[] arcLengths = new float[65];
         readonly Vector3[] waveOffsets = new Vector3[65];
         static readonly Vector3[] curveWeights = CreateCurveWeights();
+        NativeArray<Vector3> nativeWeights, nativeOffsets, nativeCurve;
+        NativeArray<float> nativeLengths;
+        public static bool BurstCurveEnabled { get; private set; } = true;
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        static void ResetCurveMode() => BurstCurveEnabled = !Array.Exists(Environment.GetCommandLineArgs(), a => a == "-performanceLegacyTentacleCurve");
+
+        void OnDisable() => ReleaseCurveBuffers();
+        void OnDestroy() => ReleaseCurveBuffers();
+
+        void ReleaseCurveBuffers()
+        {
+            if (nativeWeights.IsCreated) nativeWeights.Dispose();
+            if (nativeOffsets.IsCreated) nativeOffsets.Dispose();
+            if (nativeCurve.IsCreated) nativeCurve.Dispose();
+            if (nativeLengths.IsCreated) nativeLengths.Dispose();
+        }
+
+        [BurstCompile(FloatMode = FloatMode.Strict, FloatPrecision = FloatPrecision.Standard, CompileSynchronously = true)]
+        struct CurveJob : IJob
+        {
+            [ReadOnly] public NativeArray<Vector3> Weights, Offsets;
+            [WriteOnly] public NativeArray<Vector3> Curve;
+            public NativeArray<float> Lengths;
+            public Vector3 Start, Middle, Bend, End;
+            public float TargetLength;
+
+            Vector3 Point(int index, Vector3 control)
+            {
+                var weights = Weights[index];
+                return weights.x * Start + weights.y * control + weights.z * End + Offsets[index];
+            }
+
+            float Measure(Vector3 control)
+            {
+                Vector3 previous = Point(0, control);
+                float length = 0f;
+                for (int i = 1; i < Weights.Length; i++)
+                {
+                    Vector3 point = Point(i, control);
+                    length += Vector3.Distance(previous, point);
+                    previous = point;
+                }
+                return length;
+            }
+
+            public void Execute()
+            {
+                float low = 0f, high = TargetLength;
+                for (int iteration = 0; iteration < 12; iteration++)
+                {
+                    float height = (low + high) * .5f;
+                    if (Measure(Middle + Bend * height) < TargetLength) low = height; else high = height;
+                }
+                Vector3 control = Middle + Bend * ((low + high) * .5f);
+                Vector3 previous = Point(0, control);
+                Curve[0] = previous;
+                Lengths[0] = 0f;
+                float length = 0f;
+                for (int i = 1; i < Weights.Length; i++)
+                {
+                    Vector3 point = Point(i, control);
+                    length += Vector3.Distance(previous, point);
+                    Curve[i] = point;
+                    Lengths[i] = length;
+                    previous = point;
+                }
+            }
+        }
+
+        float SolveCurve(Vector3 start, Vector3 middle, Vector3 bend, Vector3 tip, float length)
+        {
+            if (!BurstCurveEnabled)
+            {
+                float low = 0f, high = length;
+                for (int iteration = 0; iteration < 12; iteration++)
+                {
+                    float height = (low + high) * .5f;
+                    if (MeasureCurve(start, middle + bend * height, tip) < length) low = height; else high = height;
+                }
+                return BuildCurve(start, middle + bend * ((low + high) * .5f), tip);
+            }
+            if (!nativeWeights.IsCreated)
+            {
+                nativeWeights = new NativeArray<Vector3>(curveWeights, Allocator.Persistent);
+                nativeOffsets = new NativeArray<Vector3>(waveOffsets.Length, Allocator.Persistent);
+                nativeCurve = new NativeArray<Vector3>(curve.Length, Allocator.Persistent);
+                nativeLengths = new NativeArray<float>(arcLengths.Length, Allocator.Persistent);
+            }
+            nativeOffsets.CopyFrom(waveOffsets);
+            new CurveJob { Weights = nativeWeights, Offsets = nativeOffsets, Curve = nativeCurve, Lengths = nativeLengths,
+                Start = start, Middle = middle, Bend = bend, End = tip, TargetLength = length }.Run();
+            nativeCurve.CopyTo(curve);
+            nativeLengths.CopyTo(arcLengths);
+            return arcLengths[^1];
+        }
 
         static Vector3[] CreateCurveWeights()
         {
@@ -151,15 +250,8 @@ namespace PirateSlop
                 waveOffsets[i]=envelope*amplitude*(right*(float)Math.Sin(t*Math.PI*3.2-time*.8)
                     +forward*(.5f*(float)Math.Sin(t*Math.PI*4.2+time*.63+phase)));
             }
-            float low=0, high=length;
             Vector3 middle=(start+tip)*.5f;
-            for (int iteration=0; iteration<12; iteration++)
-            {
-                float height=(low+high)*.5f;
-                float arc=MeasureCurve(start,middle+bend*height,tip);
-                if (arc < length) low=height; else high=height;
-            }
-            float total=BuildCurve(start,middle+bend*((low+high)*.5f),tip);
+            float total=SolveCurve(start,middle,bend,tip,length);
             int cursor=1;
             Vector3 previous=start;
             for (int i=0; i<bones.Length; i++)

@@ -11,6 +11,7 @@ namespace PirateSlop.Performance
         static string signature = "";
         public static string Signature => signature;
         public static bool OptimizedClouds => optimizedClouds;
+        public static bool CloudBoundsFastPath => Shader.GetGlobalFloat("_PirateCloudBoundsFast") > .5f;
         public static string QualitySignature => optimizedClouds ? "clouds-balanced-v1(0.50/0.30)" : "clouds-original-v1";
         public static float StormResolution(float original) => PerformanceBenchmarkController.Running && stormScale > 0 ? stormScale : optimizedClouds ? Mathf.Min(original, .5f) : original;
         public static float SkyResolution(float original)
@@ -44,6 +45,7 @@ namespace PirateSlop.Performance
         static void Reset()
         {
             optimizedClouds = PlayerPrefs.GetInt("OptimizedClouds", 1) != 0;
+            Shader.SetGlobalFloat("_PirateCloudBoundsFast", Array.Exists(Environment.GetCommandLineArgs(), a => a == "-performanceLegacyCloudBounds") ? 0f : 1f);
             Set(-1, -1);
         }
     }

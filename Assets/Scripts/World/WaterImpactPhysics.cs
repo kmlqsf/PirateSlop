@@ -1,4 +1,6 @@
 using UnityEngine;
+using Unity.Collections;
+using Unity.Jobs;
 using PirateSlop.Networking;
 
 namespace PirateSlop
@@ -23,6 +25,18 @@ namespace PirateSlop
         Camera focus;
         float scanAt;
         int scanSector;
+        NativeArray<OverlapSphereCommand> scanCommands;
+        NativeArray<ColliderHit> scanResults;
+        JobHandle scanJob;
+        bool scanPending, retryScan;
+        Vector3 scanCenter;
+        PhysicsScene scanScene;
+        int resultCount, resultCursor;
+        Collider[] overflowResults;
+        public static bool AsyncDiscoveryEnabled { get; private set; } = true;
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        static void ResetDiscovery() => AsyncDiscoveryEnabled = !System.Array.Exists(System.Environment.GetCommandLineArgs(), a => a == "-performanceLegacyWaterDiscovery");
 
         public static WaterImpactPhysics Ensure(GameObject owner)
         {
@@ -41,10 +55,79 @@ namespace PirateSlop
 
         void OnDisable()
         {
+            if (scanPending) scanJob.Complete();
+            scanPending = retryScan = false;
+            resultCount = resultCursor = 0;
+            overflowResults = null;
+            if (scanCommands.IsCreated) scanCommands.Dispose();
+            if (scanResults.IsCreated) scanResults.Dispose();
             if (Instance == this) Instance = null;
         }
 
         void Update()
+        {
+            if (!AsyncDiscoveryEnabled) { LegacyScan(); return; }
+            if (scanPending)
+            {
+                if (!scanJob.IsCompleted) return;
+                scanJob.Complete();
+                scanPending = false;
+                resultCount = resultCursor = 0;
+                while (resultCount < scanResults.Length && scanResults[resultCount].entityId != EntityId.None) resultCount++;
+                if (resultCount == scanResults.Length && scanResults.Length < 65536)
+                {
+                    int capacity = scanResults.Length * 2;
+                    scanResults.Dispose();
+                    scanResults = new NativeArray<ColliderHit>(capacity, Allocator.Persistent);
+                    resultCount = 0;
+                    retryScan = true;
+                    return;
+                }
+                if (resultCount == scanResults.Length)
+                {
+                    overflowResults = Physics.OverlapSphere(scanCenter, 70f, ~0, QueryTriggerInteraction.Ignore);
+                    resultCount = overflowResults.Length;
+                }
+            }
+            if (resultCursor >= resultCount) return;
+            long deadline = System.Diagnostics.Stopwatch.GetTimestamp() + System.Diagnostics.Stopwatch.Frequency / 4000;
+            while (resultCursor < resultCount)
+            {
+                var collider = overflowResults != null ? overflowResults[resultCursor] : scanResults[resultCursor].collider;
+                if (overflowResults != null) overflowResults[resultCursor] = null;
+                resultCursor++;
+                Register(collider);
+                if ((resultCursor & 15) == 0 && System.Diagnostics.Stopwatch.GetTimestamp() >= deadline) break;
+            }
+            if (resultCursor >= resultCount) { resultCursor = resultCount = 0; overflowResults = null; }
+        }
+
+        void LateUpdate()
+        {
+            if (!AsyncDiscoveryEnabled || scanPending || resultCursor < resultCount || OceanSurface.Instance == null) return;
+            if (retryScan) { retryScan = false; ScheduleScan(scanScene, scanCenter); return; }
+            if (Time.time < scanAt) return;
+            if (focus == null || !focus.isActiveAndEnabled) focus = Camera.main;
+            if (focus == null) return;
+            int sector = scanSector++ % 4;
+            var center = focus.transform.position + new Vector3((sector & 1) == 0 ? -45f : 45f, 0f, (sector & 2) == 0 ? -45f : 45f);
+            scanAt = Time.time + .25f;
+            ScheduleScan(Physics.defaultPhysicsScene, center);
+        }
+
+        void ScheduleScan(PhysicsScene scene, Vector3 center)
+        {
+            if (!scanCommands.IsCreated) scanCommands = new NativeArray<OverlapSphereCommand>(1, Allocator.Persistent);
+            if (!scanResults.IsCreated) scanResults = new NativeArray<ColliderHit>(512, Allocator.Persistent);
+            for (int i = 0; i < scanResults.Length; i++) scanResults[i] = default;
+            scanCenter = center; scanScene = scene;
+            scanCommands[0] = new OverlapSphereCommand(scene, center, 70f, new QueryParameters(~0, false, QueryTriggerInteraction.Ignore, Physics.queriesHitBackfaces));
+            scanJob = OverlapSphereCommand.ScheduleBatch(scanCommands, scanResults, 1, scanResults.Length, default);
+            scanPending = true;
+            JobHandle.ScheduleBatchedJobs();
+        }
+
+        void LegacyScan()
         {
             if (Time.time < scanAt || OceanSurface.Instance == null) return;
             scanAt = Time.time + .25f;
@@ -64,17 +147,22 @@ namespace PirateSlop
             {
                 var collider = found[i];
                 found[i] = null;
-                if (collider == null || collider.GetComponentInParent<CannonShotDamage>() != null) continue;
-                var body = collider.attachedRigidbody;
-                var motor = collider.GetComponentInParent<AdvancedPlayerController>();
-                var item = collider.GetComponentInParent<NetworkFish>();
-                var chest = collider.GetComponentInParent<NetworkLootChest>();
-                var creature = collider.GetComponentInParent<CombatHealth>();
-                Transform owner = motor != null ? motor.transform : item != null ? item.transform : chest != null ? chest.transform : body != null ? body.transform : creature != null ? creature.transform : null;
-                if (owner == null || owner.GetComponent<ShipController>() != null) continue;
-                if (motor == null && item == null && chest == null && (body == null || body.isKinematic) && owner.GetComponentInParent<ShipController>() != null) continue;
-                WaterImpactBody.Ensure(owner.gameObject);
+                Register(collider);
             }
+        }
+
+        static void Register(Collider collider)
+        {
+            if (collider == null || collider.GetComponentInParent<CannonShotDamage>() != null) return;
+            var body = collider.attachedRigidbody;
+            var motor = collider.GetComponentInParent<AdvancedPlayerController>();
+            var item = collider.GetComponentInParent<NetworkFish>();
+            var chest = collider.GetComponentInParent<NetworkLootChest>();
+            var creature = collider.GetComponentInParent<CombatHealth>();
+            Transform owner = motor != null ? motor.transform : item != null ? item.transform : chest != null ? chest.transform : body != null ? body.transform : creature != null ? creature.transform : null;
+            if (owner == null || owner.GetComponent<ShipController>() != null) return;
+            if (motor == null && item == null && chest == null && (body == null || body.isKinematic) && owner.GetComponentInParent<ShipController>() != null) return;
+            WaterImpactBody.Ensure(owner.gameObject);
         }
 
         public static Vector3 SurfaceNormal(OceanSurface ocean, Vector3 point)

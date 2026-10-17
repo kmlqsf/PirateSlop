@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Linq;
 using PirateSlop.World;
 
 namespace PirateSlop.Networking
@@ -391,13 +392,15 @@ namespace PirateSlop.Networking
                 bool isVSync = MenuToggle(x, y+100, panelWidth, QualitySettings.vSyncCount > 0, "Вертикальная синхронизация");
                 if (isVSync != (QualitySettings.vSyncCount > 0)) { QualitySettings.vSyncCount = isVSync ? 1 : 0; PlayerPrefs.SetInt("VSync", isVSync ? 1 : 0); }
                 
-                if(MenuAction(x, y+150, panelWidth, "Разрешение: " + Screen.currentResolution.width + "x" + Screen.currentResolution.height))
+                if(MenuAction(x, y+150, panelWidth, "Разрешение: " + Screen.width + "x" + Screen.height))
                 {
-                    int resIndex = -1; var res = Screen.resolutions;
+                    int resIndex = -1;
+                    var res = Screen.resolutions.Select(r => new Vector2Int(r.width, r.height)).Distinct()
+                        .OrderByDescending(r => (long)r.x * r.y).ThenByDescending(r => r.x).ToArray();
                     if(res.Length > 0) {
-                        for(int i=0; i<res.Length; i++) { if (res[i].width == Screen.currentResolution.width && res[i].height == Screen.currentResolution.height) { resIndex = i; break; } }
+                        for(int i=0; i<res.Length; i++) { if (res[i].x == Screen.width && res[i].y == Screen.height) { resIndex = i; break; } }
                         resIndex = (resIndex + 1) % res.Length;
-                        Screen.SetResolution(res[resIndex].width, res[resIndex].height, Screen.fullScreen);
+                        Screen.SetResolution(res[resIndex].x, res[resIndex].y, Screen.fullScreenMode);
                     }
                 }
                 if(MenuAction(x, y+218, panelWidth, "Качество: " + QualitySettings.names[QualitySettings.GetQualityLevel()]))

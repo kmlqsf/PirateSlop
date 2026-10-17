@@ -1,6 +1,6 @@
 # PirateSlop — карта проекта
 
-Снимок файлов: 2026-10-16. Корень: `C:\Users\K\Project`.
+Снимок файлов: 2026-10-17. Корень: `C:\Users\K\Project`.
 
 ## Как пользоваться
 
@@ -12,7 +12,7 @@
 
 ## Полный каталог
 
-Учтено 14355 файлов без `.meta`. Ещё 12986 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
+Учтено 14396 файлов без `.meta`. Ещё 12986 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
 
 | Раздел | Назначение | Файлов |
 | --- | --- | ---: |
@@ -46,7 +46,7 @@
 | [Assets/UI](<Docs/ProjectMap/Assets-UI.md>) | Ресурсы интерфейса | 42 |
 | [Assets/_Recovery](<Docs/ProjectMap/Assets-_Recovery.md>) | Сохранённые восстановленные данные | 4 |
 | [Captures](<Docs/ProjectMap/Captures.md>) | Ресурсы раздела; точный состав — в каталоге | 1010 |
-| [Docs](<Docs/ProjectMap/Docs.md>) | Документы и сохранённые отчёты | 253 |
+| [Docs](<Docs/ProjectMap/Docs.md>) | Документы и сохранённые отчёты | 294 |
 | [Packages](<Docs/ProjectMap/Packages.md>) | Манифест, lock-файл и встроенные пакеты | 924 |
 | [ProjectSettings](<Docs/ProjectMap/ProjectSettings.md>) | Настройки Unity | 28 |
 | [Root](<Docs/ProjectMap/Root.md>) | Корневые инструкции, планы и служебные файлы | 26 |
@@ -1776,7 +1776,7 @@ TestMap R4000м. После повторной жалобы CLEAR rays/planetcen
 - [Assets/Scripts/Kraken/KrakenEncounter.cs](<Assets/Scripts/Kraken/KrakenEncounter.cs>) — Исходник C#: KrakenEncounter.
 - [Assets/Scripts/Kraken/KrakenAttackSystem.cs](<Assets/Scripts/Kraken/KrakenAttackSystem.cs>) — Исходник C#: KrakenAttackSystem.
 - [Assets/Scripts/Kraken/KrakenTentacle.cs](<Assets/Scripts/Kraken/KrakenTentacle.cs>) — Исходник C#: KrakenTentacle.
-- [Assets/Scripts/Kraken/TentacleAnimator.cs](<Assets/Scripts/Kraken/TentacleAnimator.cs>) — Исходник C#: TentacleAnimator.
+- [Assets/Scripts/Kraken/TentacleAnimator.cs](<Assets/Scripts/Kraken/TentacleAnimator.cs>) — Исходник C#: TentacleAnimator, CurveJob.
 - [Assets/Scripts/Networking/NetworkShip.Kraken.cs](<Assets/Scripts/Networking/NetworkShip.Kraken.cs>) — Исходник C#: NetworkShip.
 - [Assets/Resources/KrakenTentacle.prefab](<Assets/Resources/KrakenTentacle.prefab>) — Префаб Unity.
 - [Assets/Resources/KrakenEncounter.prefab](<Assets/Resources/KrakenEncounter.prefab>) — Префаб Unity.
@@ -2093,6 +2093,10 @@ WaterImpactPhysics/WaterImpactBody: общие локальные всплеск
 
 Ключевые слова: оптимизация, FPS, профайлер, NetworkLoadTest.
 
+17.10.2026 завершение этапа: live-v1 HUD по умолчанию во всех benchmark/fleet/isolation, окно до1с текущего участка,2Гц, существующий capture без новых recorders; -performanceNoHud; metadata/comparator фиксируют HUD. Release75827fcf4e0/55 и Dev0f63285a070/91 содержатcpu-work-v3/cloud-bounds-v1/HUD. Функциональный Release COMPLETE, расчёты окна проверены; визуальная/сетевая/15мин и слабыйПК pending. Актуальный статус вверхуOptimizationPlan.md.
+17.10.2026 cpu-work-v3 принят: распределены 695 visibility polls по устойчивым фазам, async OverlapSphereCommand и порционная обработка discovery всплесков. Native1696кадров: waterUpdate max0.3214мс, batch max0.4471мс/13polls. Один Release A/B014125-603→014304-732: FPS110.07→109.69 (без среднего прироста), P9914.27→13.83, max16.98→15.63мс. Рабочие Release837750c597/Dev28fc95c7e6 обновлены; manifest16sourcehashes. Cloud-bounds-v1 сохранён. Визуальная/сеть/15мин/коллега pending. Подробности в начале OptimizationPlan.md; старые build IDs ниже исторические.
+17.10.2026 cloud-bounds-v1 принят поGPU/среднемукадру:одинReleaseA/Bоднойсборки08111cb865,QHD4/12,010726-231legacy→010905-098fast,GPU9.90/9.95→8.84/8.90мс,FPS100.09/98.97→110.41/108.99,безсменыкачества. GPU589824точкипогодыmaxError0,uniformactive;2.25млнCPUmathcases/250kокон. P99≈14мснеулучшен,120FPSнеподтверждены. LegacyCLI-performanceLegacyCloudBounds,metadata.cloudBoundsFastPath/renderOptimizationVersion. Release dad9e9609b0errors/55warnings,Dev fcc87d75c20/89 содержатcpu-work-v2/cloud-bounds-v1/фиксразрешения(уникальныедименсии,Screen.width/height). Manifest15sourcehashes+managed/nativeDLL. Коллегановыйпакетнепроверял. GRDвыключен,попадания/ragdollнапаузе. СледующийприоритетCPUдлинныхкадров/крупныерасходы,неповторыбезпричины.
+17.10.2026: последние194817-603(QHDпользователь) и213510-336(FullHDколлега)cpu-work-v1 COMPLETE:≈100/45FPS. Внедрёнcpu-work-v2 Burst-решатель щупалец без снижения частоты/точек:2048численныхслучаев,2295поз,Player0.544→0.146мс/8объектов. Releasecd4be98548/Development42440fea68 собраны;Release003351-589≈100FPS,CPU8.86мс/GPU9.8,общегоFPSприростанет. GRDкандидат36c81f74c3 отклонён:GPUResidentDrawercreated затемnativecrash0xC0000005;sourcepipeline/globalresources восстановлены,обычныесборкинеподменены. CLI-forceGRD толькоEditor,невалиденкакPlayerA/B. Следующийприоритеткрупныеграфические/CPU-renderзатраты,неLOD/batchpolling/GRD. Урон/ragdollнапаузе. ПолныйжурналOptimizationPlan.md.
 16.10.2026 CPU-пакет cpu-work-v1 по существующему профилю4/12: безопасный пропуск сухих WaterImpactBody, переиспользуемый overlap-буфер, TentacleAnimator без повторного заполнения кривых, невидимые first-person IK/headbob, неизменные крышки/пустая маска льда/HUD. Компиляция0errors;2048 численных случаев кривой совпали. Release build-19ddf51b42 иDevelopment build-b6f02c8450 собраны, CPU-маркер и SHA256 исходников/DLL проверены. FPS/Play/сеть ожидают одного пользовательского Release4/12разбора60с. Новый120FPSнеподтверждён; попадания/ragdoll на паузе; CompactLOD удалён. СтарыйZIP142933 неактуален. Полный статус в OptimizationPlan.md.
 16.10.2026 PlayerGuiBudget: Release A/B/A10/30 однойсборки42.57→46.20→42.44FPS,23.49→21.65→23.56мс.25fixedRectтипов,useGUILayout=false,DeveloperMenu/BotDebugPanel исключены. Native20типов/legacy прошли; основнойHUD обычнойтестовойсессии показан, F8/сеть непроверены. CLI -performanceLegacyGuiLayout,runner -LegacyGuiLayout,metadata.playerGuiLayoutBudget. Release c3e5a910f1,Development75e8eab743. Code.*ProfilerMarker толькоEditor/Development приCapture+Profiler; native31кадр014539-569:colliderposes1.86мс,PlayerMotor1.51self,buoyancy1.08;GUI.BeginGUI1794→1164. D3D12 улучшилGPU,ухудшилобщийкадр,defaultD3D11. Подробности/точкапродолжения OptimizationPlan.md.
 16.10.2026 ночной пакет проверен на Release4/12:77.68→93.18/93.88/95.75FPS по обычным baseline трёх запусков, GPU11.85→10.12–10.18мс, P9919.81→17.05–17.71мс; Draw9644→≈5517.206multi-material renderers→18batches, свеча4094tris/намотки7614каждая, GPU-покачивание2сеток без CPU mesh.vertices. Native18cache/lifecycle и24позы/439080вершин(2микрометра) прошли;2634Collider/Rigidbodyнеизменны.10/30двановыхсреза37.5–42.5FPS/GPU14.7мс противпрежних28–30/17.8, drift7–10%ограничиваетточный%. Shared ShipV3Test используетсяобычнойсессией, всеbuildtypes. Открытысеть/свободнаяигра/бой/15мин/коллега/120FPS. ОтчётShipPresentationOptimization_20261016.md; попаданияпауза.
@@ -2129,7 +2133,7 @@ NetworkLoadTest запускается из меню Тест нагрузки �
 - [Assets/Scripts/Networking/SessionMenu.cs](<Assets/Scripts/Networking/SessionMenu.cs>) — Исходник C#: SessionController, MenuAccent.
 - [Assets/Scripts/Networking/SessionSpectator.cs](<Assets/Scripts/Networking/SessionSpectator.cs>) — Исходник C#: SessionController.
 - [Assets/Scripts/Editor/MultiplayerSceneSetup.cs](<Assets/Scripts/Editor/MultiplayerSceneSetup.cs>) — Исходник C#: RuntimePipelineBuildPreparation, MultiplayerSceneSetup.
-- [Assets/Scripts/Performance/PerformanceCapture.cs](<Assets/Scripts/Performance/PerformanceCapture.cs>) — Исходник C#: PerformanceCounters, PerformanceMetadata, PerformanceFrame, PerformanceShipSample, PerformanceEvent, PerformanceSummary, PerformanceSecond, PerformanceReport, PerformanceStatistics, PerformanceCapture, SavedReport.
+- [Assets/Scripts/Performance/PerformanceCapture.cs](<Assets/Scripts/Performance/PerformanceCapture.cs>) — Исходник C#: PerformanceCounters, PerformanceMetadata, PerformanceFrame, PerformanceLiveSnapshot, PerformanceShipSample, PerformanceEvent, PerformanceSummary, PerformanceSecond, PerformanceReport, PerformanceStatistics, PerformanceCapture, SavedReport.
 - [Assets/Scripts/Performance/PerformanceCpuTimings.cs](<Assets/Scripts/Performance/PerformanceCpuTimings.cs>) — Исходник C#: PerformanceCpuSection, PerformanceCpuTimings, Scope, Probe.
 - [Assets/Scripts/ShipController.cs](<Assets/Scripts/ShipController.cs>) — Исходник C#: ShipController.
 - [Assets/Scripts/Ships/ShipHullQueryWorld.cs](<Assets/Scripts/Ships/ShipHullQueryWorld.cs>) — Исходник C#: ShipHullQueryWorld, Proxy.

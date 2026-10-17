@@ -41,8 +41,11 @@ namespace PirateSlop.Performance
         public string antialiasing, fleetScenario, renderExperiment;
         public string instrumentationVersion;
         public string cpuOptimizationVersion;
+        public string renderOptimizationVersion, benchmarkHudVersion;
+        public bool benchmarkHudVisible;
         public bool profilerEnabled, editor, telemetryVisible, hullSweepFastPath;
-        public bool shipBodyPoseFastPath, worldVisualBudget, playerGuiLayoutBudget, shipCompactLod;
+        public bool shipBodyPoseFastPath, worldVisualBudget, playerGuiLayoutBudget, shipCompactLod, tentacleBurstCurve, cloudBoundsFastPath,
+            shipVisibilityPhases, waterAsyncDiscovery;
     }
 
     [Serializable]
@@ -55,6 +58,13 @@ namespace PirateSlop.Performance
         public bool cameraAvailable, stormReady, rainReady, submerged;
         public long draws, setPass, triangles, gcBytes, usedBytes, reservedBytes, monoBytes;
         public int gc0, gc1, gc2;
+    }
+
+    public struct PerformanceLiveSnapshot
+    {
+        public PerformanceFrame latest;
+        public int frames, over1667, over3333;
+        public double fps, p99Ms, maxMs, cpuMs, renderMs, gpuMs;
     }
 
     [Serializable]
@@ -229,11 +239,17 @@ namespace PirateSlop.Performance
             text.AppendLine($"Route {m.routeVersion} / {m.routeHash} | map {m.mapRevision} | {m.role} | tick {m.tickRate}");
             text.AppendLine("Environment: " + m.environmentSignature);
             text.AppendLine("Instrumentation: " + m.instrumentationVersion);
+            text.AppendLine("Benchmark HUD: " + m.benchmarkHudVisible + " / " + (m.benchmarkHudVersion ?? "none"));
             text.AppendLine("Hull sweep fast path: " + m.hullSweepFastPath);
             text.AppendLine("Ship body pose fast path: " + m.shipBodyPoseFastPath);
             text.AppendLine("World visual budget: " + m.worldVisualBudget);
             text.AppendLine("Player GUI layout budget: " + m.playerGuiLayoutBudget);
             text.AppendLine("CPU optimization package: " + (m.cpuOptimizationVersion ?? "baseline"));
+            text.AppendLine("Render optimization package: " + (m.renderOptimizationVersion ?? "baseline"));
+            text.AppendLine("Cloud bounds fast path: " + m.cloudBoundsFastPath);
+            text.AppendLine("Tentacle Burst curve: " + m.tentacleBurstCurve);
+            text.AppendLine("Ship visibility phases: " + m.shipVisibilityPhases);
+            text.AppendLine("Water async discovery: " + m.waterAsyncDiscovery);
             text.AppendLine("Compact ship LOD: " + m.shipCompactLod);
             if (m.mode == "isolation") text.AppendLine("DIAGNOSTIC ISOLATION: total FPS mixes disabled systems and is not gameplay FPS. Analyze stages separately, excluding the first 2 seconds of each stage.");
             text.AppendLine("Fleet scenario: " + (m.fleetScenario ?? "N/A (older report)"));
@@ -294,7 +310,7 @@ namespace PirateSlop.Performance
             if (before.schemaVersion != after.schemaVersion) mismatches.Add("Report schema changed: repeat baseline with the same instrumentation.");
             if (before.status != "COMPLETE" || after.status != "COMPLETE") mismatches.Add("Only COMPLETE reports are accepted.");
             if (before.metadata.mode != "benchmark" || after.metadata.mode != "benchmark") mismatches.Add("Manual recordings are not benchmark baselines.");
-            string[] conditions = { "mode", "routeVersion", "routeHash", "mapRevision", "mapChecksum", "buildType", "unityVersion", "cpu", "gpu", "graphicsApi", "width", "height", "quality", "pipeline", "renderScale", "fov", "nearClip", "farClip", "antialiasing", "vSync", "fpsLimit", "tickRate", "role", "expectedShips", "expectedPlayers", "warmupSeconds", "requestedSeconds", "warmState", "waveStrength", "waveSteepness", "waveSpeed", "stormRadius", "telemetryVisible", "profilerEnabled", "environmentSignature", "fleetScenario", "renderExperiment" };
+            string[] conditions = { "mode", "routeVersion", "routeHash", "mapRevision", "mapChecksum", "buildType", "unityVersion", "cpu", "gpu", "graphicsApi", "width", "height", "quality", "pipeline", "renderScale", "fov", "nearClip", "farClip", "antialiasing", "vSync", "fpsLimit", "tickRate", "role", "expectedShips", "expectedPlayers", "warmupSeconds", "requestedSeconds", "warmState", "waveStrength", "waveSteepness", "waveSpeed", "stormRadius", "telemetryVisible", "profilerEnabled", "environmentSignature", "fleetScenario", "renderExperiment", "benchmarkHudVisible", "benchmarkHudVersion" };
             if ((before.metadata.instrumentationVersion ?? "") != (after.metadata.instrumentationVersion ?? "")) mismatches.Add("instrumentationVersion: " + before.metadata.instrumentationVersion + " -> " + after.metadata.instrumentationVersion);
             foreach (string key in conditions)
             {
@@ -313,6 +329,10 @@ namespace PirateSlop.Performance
             output.AppendLine("World visual budget (intentional optimization A/B): " + before.metadata.worldVisualBudget + " -> " + after.metadata.worldVisualBudget);
             output.AppendLine("Player GUI layout budget (intentional optimization A/B): " + before.metadata.playerGuiLayoutBudget + " -> " + after.metadata.playerGuiLayoutBudget);
             output.AppendLine("CPU optimization package: " + (before.metadata.cpuOptimizationVersion ?? "baseline") + " -> " + (after.metadata.cpuOptimizationVersion ?? "baseline"));
+            output.AppendLine("Cloud bounds fast path: " + before.metadata.cloudBoundsFastPath + " -> " + after.metadata.cloudBoundsFastPath);
+            output.AppendLine("Tentacle Burst curve: " + before.metadata.tentacleBurstCurve + " -> " + after.metadata.tentacleBurstCurve);
+            output.AppendLine("Ship visibility phases: " + before.metadata.shipVisibilityPhases + " -> " + after.metadata.shipVisibilityPhases);
+            output.AppendLine("Water async discovery: " + before.metadata.waterAsyncDiscovery + " -> " + after.metadata.waterAsyncDiscovery);
             output.AppendLine("Compact ship LOD (intentional optimization A/B): " + before.metadata.shipCompactLod + " -> " + after.metadata.shipCompactLod);
             output.AppendLine("Segment | avg FPS before/after | 1% low before/after | mean ms change | P99 before/after");
             void Add(PerformanceSummary a, PerformanceSummary b)
@@ -345,6 +365,7 @@ namespace PirateSlop.Performance
         PerformanceFrame[] frames;
         float[] markerValues;
         float[] cpuStageValues;
+        readonly float[] liveScratch = new float[2048];
         readonly List<PerformanceEvent> events = new(EventCapacity);
         readonly List<PerformanceShipSample> shipSamples = new(16384);
         double nextShipSample;
@@ -570,6 +591,46 @@ namespace PirateSlop.Performance
         {
             long value = PerformanceCounters.Value(recorder);
             return value < 0 || positive && value == 0 ? -1 : value / 1000000f;
+        }
+
+        public PerformanceLiveSnapshot ReadLiveSnapshot()
+        {
+            var result = new PerformanceLiveSnapshot { cpuMs = -1, renderMs = -1, gpuMs = -1, p99Ms = -1 };
+            if (!Recording || count == 0)
+            {
+                result.latest = new PerformanceFrame { cpuMs = Ms(cpu), renderMs = Ms(render), gpuMs = Ms(gpu), draws = PerformanceCounters.Value(drawsTotal), setPass = PerformanceCounters.Value(setPass), triangles = PerformanceCounters.Value(triangles), gcBytes = PerformanceCounters.Value(gc), usedBytes = Profiler.GetTotalAllocatedMemoryLong(), crewShips = NetworkShip.ActiveShips.Count, players = NetworkPlayer.Active.Count };
+                result.cpuMs = result.latest.cpuMs; result.renderMs = result.latest.renderMs; result.gpuMs = result.latest.gpuMs;
+                return result;
+            }
+            result.latest = frames[count - 1];
+            double total = 0, cpuTotal = 0, renderTotal = 0, gpuTotal = 0;
+            int cpuCount = 0, renderCount = 0, gpuCount = 0;
+            for (int i = count - 1; i >= 0 && result.frames < liveScratch.Length; i--)
+            {
+                var frame = frames[i];
+                if (frame.segment != result.latest.segment || result.latest.time - frame.time >= 1) break;
+                if (!float.IsFinite(frame.frameMs) || frame.frameMs <= 0) continue;
+                liveScratch[result.frames++] = frame.frameMs;
+                total += frame.frameMs;
+                result.maxMs = Math.Max(result.maxMs, frame.frameMs);
+                if (frame.frameMs > 1000d / 60) result.over1667++;
+                if (frame.frameMs > 1000d / 30) result.over3333++;
+                if (frame.cpuMs >= 0) { cpuTotal += frame.cpuMs; cpuCount++; }
+                if (frame.renderMs >= 0) { renderTotal += frame.renderMs; renderCount++; }
+                if (frame.gpuMs >= 0) { gpuTotal += frame.gpuMs; gpuCount++; }
+            }
+            result.fps = total > 0 ? result.frames * 1000d / total : 0;
+            result.cpuMs = cpuCount > 0 ? cpuTotal / cpuCount : -1;
+            result.renderMs = renderCount > 0 ? renderTotal / renderCount : -1;
+            result.gpuMs = gpuCount > 0 ? gpuTotal / gpuCount : -1;
+            if (result.frames >= 20)
+            {
+                Array.Sort(liveScratch, 0, result.frames);
+                double rank = (result.frames - 1) * .99;
+                int lo = (int)rank, hi = Math.Min(lo + 1, result.frames - 1);
+                result.p99Ms = liveScratch[lo] + (liveScratch[hi] - liveScratch[lo]) * (rank - lo);
+            }
+            return result;
         }
 
         void Log(string message, string stack, LogType type)

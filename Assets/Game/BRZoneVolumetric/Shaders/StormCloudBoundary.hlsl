@@ -8,6 +8,7 @@ float _PirateStormVolume3D;
 float4 _PirateStormTestClouds;
 float _PirateStormTestCloudBase;
 float4 _PirateStormTestSkyWeather;
+float _PirateCloudBoundsFast;
 float3 StormBoundaryHash(float2 cell)
 {
     float3 value = frac(float3(cell.xyx) * float3(0.1031, 0.1030, 0.0973));
@@ -27,9 +28,19 @@ float StormTestSkyWeatherAtWidth(float3 positionWS,float projectedWidth)
     if(_PirateStormTestSkyWeather.w<=0.0)return 0.0;
     float height=max(0.0,positionWS.y-_PirateStormTestClouds.z);
     float width=_PirateStormTestSkyWeather.w+sqrt(height)*8.0;
+    float radial=length(positionWS.xz-_PirateStormTestSkyWeather.xy)-_PirateStormTestSkyWeather.z;
+    if(_PirateCloudBoundsFast>.5)
+    {
+        float maximumWidth=sqrt(width*width*1.44+projectedWidth*projectedWidth);
+        float bound=width*.3+maximumWidth*.5;
+        bound+=max(.05,(abs(radial)+height*.4+bound)*.000002);
+        float distance=radial-height*.4;
+        if(distance<=-bound)return 0.0;
+        if(distance>=bound)return 1.0;
+    }
     float macro=StormBoundaryNoise(positionWS.xz/520.0+float2(37.13,83.71))*.65
         +StormBoundaryNoise(positionWS.xz/180.0-float2(19.23,57.31))*.35;
-    float sd=length(positionWS.xz-_PirateStormTestSkyWeather.xy)-_PirateStormTestSkyWeather.z;
+    float sd=radial;
     sd-=height*.4+(macro-.5)*width*.6;
     width*=lerp(.85,1.2,StormBoundaryNoise(positionWS.xz/950.0+71.39));
     width=sqrt(width*width+projectedWidth*projectedWidth);

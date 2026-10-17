@@ -30,7 +30,9 @@ namespace PirateSlop.Ships
         bool ownsSources;
         readonly HashSet<ShipDamageSection> trackedSections = new();
         bool dirty;
-        float nextVisibilityCheck;
+        double nextVisibilityCheck;
+        double visibilityPhase;
+        public static bool StaggerVisibilityPolling { get; private set; } = true;
         static readonly Unity.Profiling.ProfilerMarker marker = new("Ships.RenderBatchVisibility");
 
         sealed class IndexLayout
@@ -43,6 +45,7 @@ namespace PirateSlop.Ships
         {
             layouts.Clear();
             sourceOwners.Clear();
+            StaggerVisibilityPolling = !Array.Exists(Environment.GetCommandLineArgs(), a => a == "-performanceLegacyVisibilityPhases");
         }
 
         IndexLayout PrepareLayout()
@@ -114,8 +117,15 @@ namespace PirateSlop.Ships
             }
             else Rebuild();
             dirty = false;
-            nextVisibilityCheck = Time.unscaledTime + .5f + (GetEntityId().GetHashCode() & 255) / 128f;
+            uint hash = unchecked((uint)GetEntityId().GetHashCode());
+            hash ^= hash >> 16; hash *= 0x7feb352d; hash ^= hash >> 15; hash *= 0x846ca68b; hash ^= hash >> 16;
+            visibilityPhase = (hash & 0xffffff) * (2.0 / 16777216.0);
+            nextVisibilityCheck = StaggerVisibilityPolling ? NextVisibilityPoll(Time.unscaledTimeAsDouble)
+                : Time.unscaledTime + .5f + (GetEntityId().GetHashCode() & 255) / 128f;
         }
+
+        double NextVisibilityPoll(double now) => StaggerVisibilityPolling
+            ? visibilityPhase + (Math.Floor((now - visibilityPhase) * .5) + 1) * 2.0 : now + 2.0;
 
         void LateUpdate()
         {
@@ -126,11 +136,11 @@ namespace PirateSlop.Ships
                 OnEnable();
                 return;
             }
-            if (!dirty && Time.unscaledTime < nextVisibilityCheck) return;
+            if (!dirty && Time.unscaledTimeAsDouble < nextVisibilityCheck) return;
             using var sample = marker.Auto();
             using var cpuTiming = PirateSlop.Performance.PerformanceCpuTimings.Measure(PirateSlop.Performance.PerformanceCpuSection.ShipRenderBatch);
             dirty = false;
-            nextVisibilityCheck = Time.unscaledTime + 2f;
+            nextVisibilityCheck = NextVisibilityPoll(Time.unscaledTimeAsDouble);
             bool changed = false;
             for (int i = 0; i < trackedSources.Length; i++)
             {
