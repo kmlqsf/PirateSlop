@@ -140,6 +140,15 @@ namespace PirateSlop.Ships
             repairWork -= NetworkHullRepair.StrikeInterval;
             motionTime = 0f; shownState = -1;
             ActivitySound(SoundCue.BulletWood, point);
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+            if (repairFragment < 0 && repairOwner.Upper != null && repairOwner.Upper.MastAssembly(repairSection.SectionId, out int mastIndex))
+            {
+                repairOwner.Upper.StrikeMastRepair(repairSection.SectionId);
+                if (repairOwner.Upper.MastRepairProgress(mastIndex) >= Experimental.UpperDestructionV2.MastRepairStrikes)
+                { repairSection = null; CancelActivities(); }
+                return true;
+            }
+#endif
             repairStrikes++;
             int required = repairFragment < 0 && repairOwner.IsMastCollapsed(repairSection.SectionId) ? NetworkHullRepair.MastStrikes : NetworkHullRepair.FragmentStrikes;
             if (repairStrikes < required) return true;

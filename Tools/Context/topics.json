@@ -16,6 +16,72 @@
   ],
   "topics": [
     {
+      "id": "upper-destruction-v2",
+      "title": "Экспериментальные верхние разрушения корабля",
+      "aliases": [
+        "верхние разрушения",
+        "UpperDestructionV2",
+        "протокол 199",
+        "ядра из игрока"
+      ],
+      "notes": [
+        "19.10, инструмент тестирования: F8 / Разрушение / Ядра из игрока — переключатель132, по одному обычному ядру на клик ЛКМ без перезарядки/расхода инвентаря. Выстрел идёт через существующий ActionServerRpc с действием3, сервер проверяет права разработчика и режим; полёт/попадания использует CannonShotDamage и стандартную модель ядра. Source — сам игрок, поэтому мишень под ногами не исключается; собственное тело исключено даже при дружественном огне. Режим временно забирает ЛКМ у предметов и управления механизмами только локального игрока. Кнопка, состояние и новые RPC исключены из Release символом UpperDestructionV2. Unity MCP недоступен: сохранён код, компиляция/игровая проверка и обновление exe не выполнены.",
+        "19.10.2026: эксперимент ограничен Editor и обычными Windows Build/Build, Clean Build, Diagnostics. PIRATESLOP_UPPER_DESTRUCTION_V2 передаётся только через BuildPlayerOptions.extraScriptingDefines; глобальный символ запрещён. Release сохраняет прежний профиль, реестр, протокол198 и исключает экспериментальные классы, поля и сообщения. Экспериментальные копии находятся вне Resources в Assets/Experimental/UpperDestructionV2; ссылки заменяются только в собираемых сценах и экземпляре SessionController в Play Mode, протокол199. Принятые cpu-work-v3/cloud-bounds-v1 и объединения рендера/коллизий общие для обоих вариантов.",
+        "UpperDestructionAssetSetup.Prepare создаёт отдельные корабль/профиль/SessionConfig/реестр, сохраняет старые индексы и добавляет корабль и два выпавших орудия. Обломки заранее разрезаются из настоящих MeshFilter; позы парусов и снастей запекаются в Editor. Центральная мачта и её снасти защищены, боковые имеют три попадания и общий ремонт у основания; механизмы80/35/0%. Порядок SailSystem/VisualRig в текущем корабле: MainCourse, MainTopsail, ForeCourse, ForeTopsail, Mizzen; защищены индексы0/1.",
+        "Временный отказ орудий15с хранится сервером и передаётся наблюдателям. Визуальная копия ствола проседает без движения коллайдеров; фитиль и очередь отменяются без расхода заряда. Выпавшие пушка/мортира используют NetworkFish и сохраняют остаток срока в серверных метаданных при подборе/передаче/установке. Реестр проверяет конкретные NetworkObject-корни выпавших орудий до сборки. Прямой урон людям60, конус5м/70градусов или верхний удар2.5м, спад зонального урона30–0; укрытия проверяются по сохранённым треугольникам живых фрагментов с общим кешем геометрии. Серверные проверки ремонта/стадий, падения/подбора/установки обоих орудий, срока отказа и прямого урона прошли. Итоговый цикл обычная/Release/обычная прошёл без ошибок; headless-проверка подтвердила двух клиентов199, поздний вход и отклонение198. Полная визуальная/сетевая приёмка, предупреждения о ссылках FishNet и производительность описаны в журнале оптимизации. Производительность ожидает проверки; наличие кода и компиляция не подтверждают FPS.",
+        "19.10: исправлены пустые материалы MastChip, отдельно пересобраны затронутые кеши верхнего рендера. Гнездо и дочерние механизмы включены в сборку. Вместо плоского квадрата ремонта используются два заранее подготовленных общих меша силуэта; доска возвращает один блок снизу вверх. Первое исправление с десятью ударами и временными обломками заменено следующим уточнением пользователя.",
+        "19.10, последнее уточнение: мачта постоянно лежит на боку и следует кораблю; шесть ударов киянкой плавно поднимают всю сборку через углы 75/60/45/30/15/0 градусов. UpperMastPresentation рисует общую заранее подготовленную геометрию (Fore15, Mizzen8 частей), без анимации коллайдеров. Сторона падения и общий прогресс ремонта кодируются в существующем байте UpperStage.Hits; Stage возвращает только два младших бита, сетевой формат и протокол199 не меняются. Рабочее состояние возвращается после последнего шага анимации. Проверены три попадания на F8-мишени, сохранение мачты спустя10сек при0временных обломков, восстановление представления из текущего состояния, расход доски и шесть настоящих TryRepair с последовательными углами; игровые изображения просмотрены. Это локальный Editor host, не проверка двух клиентов и не замер FPS. Release198 сохраняет прежнюю механику.",
+        "19.10, исправления по повторной ручной проверке: AssetRevision3, автоматическая подготовка устаревшего экспериментального префаба перед обычной сборкой. Связи опор охватывают существующие Attachments и дополнительную геометрию; обновление по ревизии, включая немедленное уведомление render batches. Стадии механизмов определяются попаданиями, обратный пересчёт по фрагментам допускается при ремонте. Отдельные захваты управления переживают скрытие Intact. Пеньки боковых мачт и два ближайших блока палубы сохраняются; ремонтная область находится у основания. Срезы боковых стволов подготавливаются отдельными закрытыми мешами; снасти имеют запечённую провисшую позу и ограниченную по времени деформацию без анимации коллайдеров. Все новые поля/поведение остаются в Editor/UpperDestructionV2; Release198 сохраняется. При включённых ядрах из игрока экранная подсказка объясняет, что для ремонта режим надо выключить. Результаты фактических проверок и оставшиеся ограничения см. журнал оптимизации."
+      ],
+      "files": [
+        "Assets/Scripts/Player/DeveloperMenu.cs",
+        "Assets/Scripts/Networking/NetworkDeveloperTools.cs",
+        "Assets/Scripts/Networking/NetworkWeapon.cs",
+        "Assets/Scripts/Networking/NetworkFishing.cs",
+        "Assets/Scripts/Interaction/DirectShipControls.cs",
+        "Assets/Scripts/Player/PlayerInventory.cs",
+        "Assets/Scripts/Cannons/SimpleCannon.cs",
+        "Assets/Scripts/Cannons/CannonShotDamage.cs",
+        "Assets/Scripts/Cannons/CannonHands.cs",
+        "Assets/Scripts/Experimental/UpperDestructionSettings.cs",
+        "Assets/Scripts/Experimental/UpperDestructionV2.cs",
+        "Assets/Scripts/Experimental/UpperDestructionV2.Weapons.cs",
+        "Assets/Scripts/Experimental/UpperCannonImpact.cs",
+        "Assets/Scripts/Experimental/UpperWeaponVisual.cs",
+        "Assets/Scripts/Experimental/UpperDroppedWeapon.cs",
+        "Assets/Scripts/Experimental/UpperDebrisGeometry.cs",
+        "Assets/Scripts/Experimental/UpperDebrisPresentation.cs",
+        "Assets/Scripts/Experimental/UpperMastPresentation.cs",
+        "Assets/Scripts/Experimental/UpperImpactPresentation.cs",
+        "Assets/Scripts/Editor/UpperDestructionAssetSetup.cs",
+        "Assets/Scripts/Editor/UpperDestructionBuildProcessor.cs",
+        "Assets/Scripts/ShipDestruction/ShipDestruction.Upper.cs",
+        "Assets/Scripts/ShipDestruction/ShipDestruction.Masts.cs",
+        "Assets/Scripts/Networking/NetworkHullRepair.cs",
+        "Assets/Scripts/Ships/ShipMonkey.Repair.cs",
+        "Assets/Scripts/Cannons/NetworkCannon.Upper.cs",
+        "Assets/Scripts/Networking/NetworkWeapon.UpperDestruction.cs",
+        "Assets/Experimental/UpperDestructionV2/Settings.asset",
+        "Assets/Experimental/UpperDestructionV2/Ship.prefab",
+        "Assets/Experimental/UpperDestructionV2/Destruction.asset",
+        "Assets/Experimental/UpperDestructionV2/Session.asset",
+        "Assets/Experimental/UpperDestructionV2/NetworkPrefabs.asset",
+        "Assets/Experimental/UpperDestructionV2/FallenCannon.prefab",
+        "Assets/Experimental/UpperDestructionV2/FallenMortar.prefab",
+        "Assets/Experimental/UpperDestructionV2/DebrisGeometry.asset",
+        "Assets/Experimental/UpperDestructionV2/ImpactDust.mat",
+        "Assets/Experimental/UpperDestructionV2/ImpactSparks.mat",
+        "Assets/Scripts/Editor/UpperDestructionAssetSetup.Supports.cs",
+        "Assets/Scripts/Editor/UpperDestructionAssetSetup.Geometry.cs",
+        "Assets/Scripts/Editor/UpperMeshCut.cs",
+        "Assets/Scripts/ShipDestruction/ShipDamageSection.cs",
+        "Assets/Scripts/Ships/ShipV3RenderBatch.cs"
+      ],
+      "docs": [
+        "Docs/Performance/OptimizationPlan.md"
+      ]
+    },
+    {
       "id": "developer-teleport",
       "title": "Телепортация корабля через F8",
       "aliases": [

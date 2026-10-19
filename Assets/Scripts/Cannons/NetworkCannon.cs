@@ -125,7 +125,12 @@ namespace PirateSlop.Networking
                 ServerManager.Spawn(dropped.NetworkObject);
                 cannon.ResetSupply();
             }
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+            var upper = GetComponent<PirateSlop.Experimental.UpperDestructionV2>();
+            if (!player.AddUpperItem(item, upper != null ? upper.Weapon(index).DisabledUntil : 0d)) return false;
+#else
             if (!player.AddItem(item)) return false;
+#endif
             var placement = placements[index]; placement.Removed = true; placements[index] = placement;
             cannon.gameObject.SetActive(false);
             return true;

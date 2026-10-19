@@ -13,13 +13,22 @@ namespace PirateSlop
         public static bool Available => Application.isEditor || Debug.isDebugBuild;
         public static bool AllowRemote;
         public static bool ShowLootEventLabels { get; private set; }
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+        public static bool CannonFireActive { get; private set; }
+#endif
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         static void ResetLootLabels()
         {
             IsOpen = false;
             ShowLootEventLabels = false;
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+            CannonFireActive = false;
+#endif
         }
         NetworkWeapon network;
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+        AdvancedPlayerController motor;
+#endif
         string message = "";
         Vector2 scroll;
         int quantity;
@@ -58,10 +67,20 @@ namespace PirateSlop
         static readonly int[] quantities = { 1, 5, 20 };
         static readonly InventoryItem[] items = { InventoryItem.Cannon, InventoryItem.Pistol, InventoryItem.Sabre, InventoryItem.Rod, InventoryItem.Fish, InventoryItem.Swordfish, InventoryItem.Pufferfish, InventoryItem.Cannonball, InventoryItem.FireCannonball, InventoryItem.IceCannonball, InventoryItem.PushCannonball, InventoryItem.BoomerangCannonball, InventoryItem.HandMortar, InventoryItem.ExplosiveBall, InventoryItem.FireStaff, InventoryItem.LightningStaff, InventoryItem.IceStaff };
         static readonly string[] names = { "Пушка", "Пистолет", "Сабля", "Удочка", "Рыба", "Рыба-меч", "Рыба-фугу", "Обычное ядро", "Огненное ядро", "Ледяное ядро", "Отталкивающее ядро", "Бумеранг", "Ручная мортира", "Взрывное ядро", "Посох огня", "Посох молнии", "Посох льда" };
-        void Awake() => network = GetComponent<NetworkWeapon>();
+        void Awake()
+        {
+            network = GetComponent<NetworkWeapon>();
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+            motor = GetComponent<AdvancedPlayerController>();
+#endif
+        }
         void Update()
         {
-            if (!Available || BotDebugPanel.ConsumedInput || network == null || !network.IsOwner) return;
+            if (!Available || network == null || !network.IsOwner) return;
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+            CannonFireActive = network.DeveloperCannonEnabled && !motor.IsDead;
+#endif
+            if (BotDebugPanel.ConsumedInput) return;
             if (Keyboard.current != null && Keyboard.current.f3Key.wasPressedThisFrame)
             {
                 var player = GetComponent<NetworkPlayer>();
@@ -94,9 +113,28 @@ namespace PirateSlop
                 nextShipSpeedSend = Time.unscaledTime + .25f;
             }
         }
-        void OnDisable() { if (network != null && network.IsOwner) IsOpen = false; }
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+        void LateUpdate()
+        {
+            if (!CannonFireActive || network == null || !network.IsOwner || !motor.InputActive || motor.LocomotionLocked ||
+                PlayerInventory.LootWindowOpen || Mouse.current == null || !Mouse.current.leftButton.wasPressedThisFrame) return;
+            network.Request(3, motor.AimDirection, motor.PlayerCamera.transform.position - transform.position);
+        }
+#endif
+        void OnDisable()
+        {
+            if (network == null || !network.IsOwner) return;
+            IsOpen = false;
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+            CannonFireActive = false;
+#endif
+        }
         void OnGUI()
         {
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+            if (CannonFireActive && network != null && network.IsOwner && !IsOpen)
+                GUI.Box(new Rect(Screen.width * .5f - 250f, Screen.height - 145f, 500f, 32f), "ЛКМ — ядро · Для ремонта выключите «Ядра из игрока» в F8");
+#endif
             if (!Available || !IsOpen || network == null || !network.IsOwner) return;
             descriptionStyle ??= new GUIStyle(GUI.skin.box) { wordWrap = true, alignment = TextAnchor.MiddleLeft };
             GUILayout.BeginArea(new Rect(20, 30, Mathf.Min(480, Screen.width - 40), Mathf.Min(760, Screen.height - 60)), "Инструменты разработчика · F8", GUI.skin.window);
@@ -300,6 +338,12 @@ namespace PirateSlop
             }
             if (tab == 4)
             {
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+                if (GUILayout.Button(network.DeveloperCannonEnabled ? "Ядра из игрока: ВКЛ · выключить" : "Ядра из игрока: ВЫКЛ · включить", GUILayout.Height(29)))
+                    network.DeveloperCommand(132, network.DeveloperCannonEnabled ? 0 : 1);
+                GUILayout.Label("ЛКМ — одно обычное ядро по направлению взгляда. Без перезарядки и расхода боеприпасов.");
+                GUILayout.Space(8);
+#endif
                 GUILayout.Label("Корабль-мишень");
                 Button("Создать мишень справа · 15 м между бортами", 128);
                 GUILayout.Label("Качается на волнах, остаётся на месте и разрушается от попаданий.");

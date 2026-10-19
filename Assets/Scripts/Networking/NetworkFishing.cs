@@ -76,6 +76,9 @@ namespace PirateSlop.Networking
             if (IsServerInitialized) TickFishing();
             UpdateChewing();
             if (!IsOwner || !motor.InputActive || !Available) return;
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+            if (DeveloperMenu.CannonFireActive) return;
+#endif
             var slotInput = GetComponent<PirateSlop.Ships.ShipSlotMachinePlayer>();
             if (slotInput != null && slotInput.ConsumedInput) return;
             var mouse = Mouse.current; var keys = Keyboard.current;
@@ -260,7 +263,12 @@ namespace PirateSlop.Networking
             if (!equipment.CanAddItem(kind) && (!swap || !equipment.PrepareSwap(kind, slot, expected, expectedCount))) return false;
             int destination = inventory.StackSlot(kind);
             bool lanternLit = kind == InventoryItem.Lantern && (target.GetComponent<NetworkLantern>()?.Lit ?? false);
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+            double upperDeadline = target.GetComponent<NetworkFish>().UpperDisabledUntil;
+            if (equipment.CanAddItem(kind) && target.GetComponent<NetworkFish>().Take() && equipment.AddUpperItem(kind, upperDeadline))
+#else
             if (equipment.CanAddItem(kind) && target.GetComponent<NetworkFish>().Take() && equipment.AddItem(kind))
+#endif
             {
                 if (kind == InventoryItem.Lantern) GetComponent<NetworkEquipment>().SetLanternLit(destination, lanternLit);
                 SoundObserversRpc(SoundCue.Pickup, transform.position); return true;

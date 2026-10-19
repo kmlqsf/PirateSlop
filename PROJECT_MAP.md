@@ -1,6 +1,6 @@
 # PirateSlop — карта проекта
 
-Снимок файлов: 2026-10-17. Корень: `C:\Users\K\Project`.
+Снимок файлов: 2026-10-19. Корень: `D:\projects\Pirate_BR\PirateGame`.
 
 ## Как пользоваться
 
@@ -12,23 +12,24 @@
 
 ## Полный каталог
 
-Учтено 14418 файлов без `.meta`. Ещё 12988 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
+Учтено 14196 файлов без `.meta`. Ещё 13018 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
 
 | Раздел | Назначение | Файлов |
 | --- | --- | ---: |
 | [.agents](<Docs/ProjectMap/.agents.md>) | Ресурсы раздела; точный состав — в каталоге | 1 |
 | [.cursor](<Docs/ProjectMap/.cursor.md>) | Ресурсы раздела; точный состав — в каталоге | 1 |
-| [.opencode](<Docs/ProjectMap/.opencode.md>) | Ресурсы раздела; точный состав — в каталоге | 1 |
-| [Art](<Docs/ProjectMap/Art.md>) | Исходники арта и Blender | 582 |
+| [.opencode](<Docs/ProjectMap/.opencode.md>) | Ресурсы раздела; точный состав — в каталоге | 4 |
+| [Art](<Docs/ProjectMap/Art.md>) | Исходники арта и Blender | 568 |
 | [Assets](<Docs/ProjectMap/Assets.md>) | Ресурсы раздела; точный состав — в каталоге | 2 |
 | [Assets/Animations](<Docs/ProjectMap/Assets-Animations.md>) | Анимации | 37 |
 | [Assets/Audio](<Docs/ProjectMap/Assets-Audio.md>) | Звуковые ресурсы и лицензии | 461 |
 | [Assets/Branding](<Docs/ProjectMap/Assets-Branding.md>) | Оформление проекта | 1 |
 | [Assets/Editor](<Docs/ProjectMap/Assets-Editor.md>) | Редакторские ресурсы | 1 |
+| [Assets/Experimental](<Docs/ProjectMap/Assets-Experimental.md>) | Ресурсы раздела; точный состав — в каталоге | 11 |
 | [Assets/Fog Particles](<Docs/ProjectMap/Assets-Fog Particles.md>) | Ресурсы раздела; точный состав — в каталоге | 3 |
 | [Assets/Game](<Docs/ProjectMap/Assets-Game.md>) | Игровые подсистемы и эффекты | 83 |
 | [Assets/Houidisoft technology](<Docs/ProjectMap/Assets-Houidisoft technology.md>) | Ресурсы раздела; точный состав — в каталоге | 12 |
-| [Assets/JMO Assets](<Docs/ProjectMap/Assets-JMO Assets.md>) | Ресурсы раздела; точный состав — в каталоге | 19 |
+| [Assets/JMO Assets](<Docs/ProjectMap/Assets-JMO Assets.md>) | Ресурсы раздела; точный состав — в каталоге | 18 |
 | [Assets/Materials](<Docs/ProjectMap/Assets-Materials.md>) | Материалы | 140 |
 | [Assets/Mirza](<Docs/ProjectMap/Assets-Mirza.md>) | Ресурсы раздела; точный состав — в каталоге | 1 |
 | [Assets/Models](<Docs/ProjectMap/Assets-Models.md>) | Модели и связанные ресурсы | 9657 |
@@ -36,7 +37,7 @@
 | [Assets/Prefabs](<Docs/ProjectMap/Assets-Prefabs.md>) | Готовые игровые объекты | 138 |
 | [Assets/Resources](<Docs/ProjectMap/Assets-Resources.md>) | Ресурсы, доступные для загрузки по имени | 168 |
 | [Assets/Scenes](<Docs/ProjectMap/Assets-Scenes.md>) | Сохранённые сцены | 3 |
-| [Assets/Scripts](<Docs/ProjectMap/Assets-Scripts.md>) | Игровой код и редакторские инструменты | 583 |
+| [Assets/Scripts](<Docs/ProjectMap/Assets-Scripts.md>) | Игровой код и редакторские инструменты | 601 |
 | [Assets/Settings](<Docs/ProjectMap/Assets-Settings.md>) | Настройки игровых систем и рендеринга | 59 |
 | [Assets/Shaders](<Docs/ProjectMap/Assets-Shaders.md>) | Шейдеры | 22 |
 | [Assets/StreamingAssets](<Docs/ProjectMap/Assets-StreamingAssets.md>) | Ресурсы раздела; точный состав — в каталоге | 5 |
@@ -44,18 +45,74 @@
 | [Assets/ThirdParty](<Docs/ProjectMap/Assets-ThirdParty.md>) | Сторонние ресурсы | 20 |
 | [Assets/TutorialInfo](<Docs/ProjectMap/Assets-TutorialInfo.md>) | Ресурсы раздела; точный состав — в каталоге | 2 |
 | [Assets/UI](<Docs/ProjectMap/Assets-UI.md>) | Ресурсы интерфейса | 42 |
-| [Assets/_Recovery](<Docs/ProjectMap/Assets-_Recovery.md>) | Сохранённые восстановленные данные | 4 |
+| [Assets/_Recovery](<Docs/ProjectMap/Assets-_Recovery.md>) | Сохранённые восстановленные данные | 5 |
 | [Captures](<Docs/ProjectMap/Captures.md>) | Ресурсы раздела; точный состав — в каталоге | 1010 |
-| [Docs](<Docs/ProjectMap/Docs.md>) | Документы и сохранённые отчёты | 312 |
-| [Packages](<Docs/ProjectMap/Packages.md>) | Манифест, lock-файл и встроенные пакеты | 924 |
-| [ProjectSettings](<Docs/ProjectMap/ProjectSettings.md>) | Настройки Unity | 28 |
-| [Root](<Docs/ProjectMap/Root.md>) | Корневые инструкции, планы и служебные файлы | 26 |
+| [Docs](<Docs/ProjectMap/Docs.md>) | Документы и сохранённые отчёты | 54 |
+| [Packages](<Docs/ProjectMap/Packages.md>) | Манифест, lock-файл и встроенные пакеты | 922 |
+| [ProjectSettings](<Docs/ProjectMap/ProjectSettings.md>) | Настройки Unity | 29 |
+| [Root](<Docs/ProjectMap/Root.md>) | Корневые инструкции, планы и служебные файлы | 45 |
 | [ThirdParty](<Docs/ProjectMap/ThirdParty.md>) | Сторонние ресурсы | 2 |
 | [Tools](<Docs/ProjectMap/Tools.md>) | Инструменты разработки и загрузчик контекста | 44 |
 
 Не индексируются генерируемые сборки, кэши и локальное состояние: `.git/`, `.idea/`, `.vs/`, `Builds/`, `Library/`, `Logs/`, `Temp/`, `UserSettings/`, `__pycache__/`, `bin/`, `node_modules/`, `obj/`. В Captures индексируются только отслеживаемые Git файлы; промежуточные резервные CoastalTripo_Pre*.blend не индексируются. Зависимости из Unity PackageCache представлены манифестом/lock-файлом; встроенные пакеты из `Packages/` перечислены полностью. Скрытые конфиги вне исключённых папок включены только как пути, их содержимое не копируется.
 
 ## Механики и точки входа
+
+### Экспериментальные верхние разрушения корабля (`upper-destruction-v2`)
+
+Ключевые слова: верхние разрушения, UpperDestructionV2, протокол 199, ядра из игрока.
+
+19.10, инструмент тестирования: F8 / Разрушение / Ядра из игрока — переключатель132, по одному обычному ядру на клик ЛКМ без перезарядки/расхода инвентаря. Выстрел идёт через существующий ActionServerRpc с действием3, сервер проверяет права разработчика и режим; полёт/попадания использует CannonShotDamage и стандартную модель ядра. Source — сам игрок, поэтому мишень под ногами не исключается; собственное тело исключено даже при дружественном огне. Режим временно забирает ЛКМ у предметов и управления механизмами только локального игрока. Кнопка, состояние и новые RPC исключены из Release символом UpperDestructionV2. Unity MCP недоступен: сохранён код, компиляция/игровая проверка и обновление exe не выполнены.
+19.10.2026: эксперимент ограничен Editor и обычными Windows Build/Build, Clean Build, Diagnostics. PIRATESLOP_UPPER_DESTRUCTION_V2 передаётся только через BuildPlayerOptions.extraScriptingDefines; глобальный символ запрещён. Release сохраняет прежний профиль, реестр, протокол198 и исключает экспериментальные классы, поля и сообщения. Экспериментальные копии находятся вне Resources в Assets/Experimental/UpperDestructionV2; ссылки заменяются только в собираемых сценах и экземпляре SessionController в Play Mode, протокол199. Принятые cpu-work-v3/cloud-bounds-v1 и объединения рендера/коллизий общие для обоих вариантов.
+UpperDestructionAssetSetup.Prepare создаёт отдельные корабль/профиль/SessionConfig/реестр, сохраняет старые индексы и добавляет корабль и два выпавших орудия. Обломки заранее разрезаются из настоящих MeshFilter; позы парусов и снастей запекаются в Editor. Центральная мачта и её снасти защищены, боковые имеют три попадания и общий ремонт у основания; механизмы80/35/0%. Порядок SailSystem/VisualRig в текущем корабле: MainCourse, MainTopsail, ForeCourse, ForeTopsail, Mizzen; защищены индексы0/1.
+Временный отказ орудий15с хранится сервером и передаётся наблюдателям. Визуальная копия ствола проседает без движения коллайдеров; фитиль и очередь отменяются без расхода заряда. Выпавшие пушка/мортира используют NetworkFish и сохраняют остаток срока в серверных метаданных при подборе/передаче/установке. Реестр проверяет конкретные NetworkObject-корни выпавших орудий до сборки. Прямой урон людям60, конус5м/70градусов или верхний удар2.5м, спад зонального урона30–0; укрытия проверяются по сохранённым треугольникам живых фрагментов с общим кешем геометрии. Серверные проверки ремонта/стадий, падения/подбора/установки обоих орудий, срока отказа и прямого урона прошли. Итоговый цикл обычная/Release/обычная прошёл без ошибок; headless-проверка подтвердила двух клиентов199, поздний вход и отклонение198. Полная визуальная/сетевая приёмка, предупреждения о ссылках FishNet и производительность описаны в журнале оптимизации. Производительность ожидает проверки; наличие кода и компиляция не подтверждают FPS.
+19.10: исправлены пустые материалы MastChip, отдельно пересобраны затронутые кеши верхнего рендера. Гнездо и дочерние механизмы включены в сборку. Вместо плоского квадрата ремонта используются два заранее подготовленных общих меша силуэта; доска возвращает один блок снизу вверх. Первое исправление с десятью ударами и временными обломками заменено следующим уточнением пользователя.
+19.10, последнее уточнение: мачта постоянно лежит на боку и следует кораблю; шесть ударов киянкой плавно поднимают всю сборку через углы 75/60/45/30/15/0 градусов. UpperMastPresentation рисует общую заранее подготовленную геометрию (Fore15, Mizzen8 частей), без анимации коллайдеров. Сторона падения и общий прогресс ремонта кодируются в существующем байте UpperStage.Hits; Stage возвращает только два младших бита, сетевой формат и протокол199 не меняются. Рабочее состояние возвращается после последнего шага анимации. Проверены три попадания на F8-мишени, сохранение мачты спустя10сек при0временных обломков, восстановление представления из текущего состояния, расход доски и шесть настоящих TryRepair с последовательными углами; игровые изображения просмотрены. Это локальный Editor host, не проверка двух клиентов и не замер FPS. Release198 сохраняет прежнюю механику.
+19.10, исправления по повторной ручной проверке: AssetRevision3, автоматическая подготовка устаревшего экспериментального префаба перед обычной сборкой. Связи опор охватывают существующие Attachments и дополнительную геометрию; обновление по ревизии, включая немедленное уведомление render batches. Стадии механизмов определяются попаданиями, обратный пересчёт по фрагментам допускается при ремонте. Отдельные захваты управления переживают скрытие Intact. Пеньки боковых мачт и два ближайших блока палубы сохраняются; ремонтная область находится у основания. Срезы боковых стволов подготавливаются отдельными закрытыми мешами; снасти имеют запечённую провисшую позу и ограниченную по времени деформацию без анимации коллайдеров. Все новые поля/поведение остаются в Editor/UpperDestructionV2; Release198 сохраняется. При включённых ядрах из игрока экранная подсказка объясняет, что для ремонта режим надо выключить. Результаты фактических проверок и оставшиеся ограничения см. журнал оптимизации.
+
+- [Assets/Scripts/Player/DeveloperMenu.cs](<Assets/Scripts/Player/DeveloperMenu.cs>) — Исходник C#: DeveloperMenu.
+- [Assets/Scripts/Networking/NetworkDeveloperTools.cs](<Assets/Scripts/Networking/NetworkDeveloperTools.cs>) — Исходник C#: NetworkWeapon.
+- [Assets/Scripts/Networking/NetworkWeapon.cs](<Assets/Scripts/Networking/NetworkWeapon.cs>) — Исходник C#: NetworkWeapon.
+- [Assets/Scripts/Networking/NetworkFishing.cs](<Assets/Scripts/Networking/NetworkFishing.cs>) — Исходник C#: NetworkFishing.
+- [Assets/Scripts/Interaction/DirectShipControls.cs](<Assets/Scripts/Interaction/DirectShipControls.cs>) — Исходник C#: DirectShipControls.
+- [Assets/Scripts/Player/PlayerInventory.cs](<Assets/Scripts/Player/PlayerInventory.cs>) — Исходник C#: PlayerInventory.
+- [Assets/Scripts/Cannons/SimpleCannon.cs](<Assets/Scripts/Cannons/SimpleCannon.cs>) — Исходник C#: SimpleCannon.
+- [Assets/Scripts/Cannons/CannonShotDamage.cs](<Assets/Scripts/Cannons/CannonShotDamage.cs>) — Исходник C#: CannonShotDamage.
+- [Assets/Scripts/Cannons/CannonHands.cs](<Assets/Scripts/Cannons/CannonHands.cs>) — Исходник C#: CannonHands.
+- [Assets/Scripts/Experimental/UpperDestructionSettings.cs](<Assets/Scripts/Experimental/UpperDestructionSettings.cs>) — Исходник C#: UpperDestructionSettings.
+- [Assets/Scripts/Experimental/UpperDestructionV2.cs](<Assets/Scripts/Experimental/UpperDestructionV2.cs>) — Исходник C#: UpperAssemblyKind, UpperAssembly, UpperStage, UpperDebrisRecipe, UpperAttachmentLink, UpperAttachmentRecipe, UpperDestructionV2, RayMesh.
+- [Assets/Scripts/Experimental/UpperDestructionV2.Weapons.cs](<Assets/Scripts/Experimental/UpperDestructionV2.Weapons.cs>) — Исходник C#: UpperWeaponState, UpperDestructionV2, WeaponSupport.
+- [Assets/Scripts/Experimental/UpperCannonImpact.cs](<Assets/Scripts/Experimental/UpperCannonImpact.cs>) — Исходник C#: UpperImpactShape, UpperCannonImpact, UpperDestructionV2.
+- [Assets/Scripts/Experimental/UpperWeaponVisual.cs](<Assets/Scripts/Experimental/UpperWeaponVisual.cs>) — Исходник C#: UpperWeaponVisual.
+- [Assets/Scripts/Experimental/UpperDroppedWeapon.cs](<Assets/Scripts/Experimental/UpperDroppedWeapon.cs>) — Исходник C#: UpperDroppedWeapon.
+- [Assets/Scripts/Experimental/UpperDebrisGeometry.cs](<Assets/Scripts/Experimental/UpperDebrisGeometry.cs>) — Исходник C#: UpperDebrisGeometry.
+- [Assets/Scripts/Experimental/UpperDebrisPresentation.cs](<Assets/Scripts/Experimental/UpperDebrisPresentation.cs>) — Исходник C#: UpperDebrisPresentation, Piece, DrawGroup.
+- [Assets/Scripts/Experimental/UpperMastPresentation.cs](<Assets/Scripts/Experimental/UpperMastPresentation.cs>) — Исходник C#: UpperMastPresentation, Motion, Flex, Geometry.
+- [Assets/Scripts/Experimental/UpperImpactPresentation.cs](<Assets/Scripts/Experimental/UpperImpactPresentation.cs>) — Исходник C#: UpperImpactPresentation.
+- [Assets/Scripts/Editor/UpperDestructionAssetSetup.cs](<Assets/Scripts/Editor/UpperDestructionAssetSetup.cs>) — Исходник C#: UpperDestructionAssetSetup, Vertex.
+- [Assets/Scripts/Editor/UpperDestructionBuildProcessor.cs](<Assets/Scripts/Editor/UpperDestructionBuildProcessor.cs>) — Исходник C#: UpperDestructionBuildProcessor.
+- [Assets/Scripts/ShipDestruction/ShipDestruction.Upper.cs](<Assets/Scripts/ShipDestruction/ShipDestruction.Upper.cs>) — Исходник C#: ShipDestruction.
+- [Assets/Scripts/ShipDestruction/ShipDestruction.Masts.cs](<Assets/Scripts/ShipDestruction/ShipDestruction.Masts.cs>) — Исходник C#: ShipDestruction, MastAssembly.
+- [Assets/Scripts/Networking/NetworkHullRepair.cs](<Assets/Scripts/Networking/NetworkHullRepair.cs>) — Исходник C#: NetworkHullRepair.
+- [Assets/Scripts/Ships/ShipMonkey.Repair.cs](<Assets/Scripts/Ships/ShipMonkey.Repair.cs>) — Исходник C#: ShipMonkey.
+- [Assets/Scripts/Cannons/NetworkCannon.Upper.cs](<Assets/Scripts/Cannons/NetworkCannon.Upper.cs>) — Исходник C#: NetworkCannon.
+- [Assets/Scripts/Networking/NetworkWeapon.UpperDestruction.cs](<Assets/Scripts/Networking/NetworkWeapon.UpperDestruction.cs>) — Исходник C#: NetworkWeapon, NetworkFish.
+- [Assets/Experimental/UpperDestructionV2/Settings.asset](<Assets/Experimental/UpperDestructionV2/Settings.asset>) — Настройки или данные Unity.
+- [Assets/Experimental/UpperDestructionV2/Ship.prefab](<Assets/Experimental/UpperDestructionV2/Ship.prefab>) — Префаб Unity.
+- [Assets/Experimental/UpperDestructionV2/Destruction.asset](<Assets/Experimental/UpperDestructionV2/Destruction.asset>) — Настройки или данные Unity.
+- [Assets/Experimental/UpperDestructionV2/Session.asset](<Assets/Experimental/UpperDestructionV2/Session.asset>) — Настройки или данные Unity.
+- [Assets/Experimental/UpperDestructionV2/NetworkPrefabs.asset](<Assets/Experimental/UpperDestructionV2/NetworkPrefabs.asset>) — Настройки или данные Unity.
+- [Assets/Experimental/UpperDestructionV2/FallenCannon.prefab](<Assets/Experimental/UpperDestructionV2/FallenCannon.prefab>) — Префаб Unity.
+- [Assets/Experimental/UpperDestructionV2/FallenMortar.prefab](<Assets/Experimental/UpperDestructionV2/FallenMortar.prefab>) — Префаб Unity.
+- [Assets/Experimental/UpperDestructionV2/DebrisGeometry.asset](<Assets/Experimental/UpperDestructionV2/DebrisGeometry.asset>) — Настройки или данные Unity.
+- [Assets/Experimental/UpperDestructionV2/ImpactDust.mat](<Assets/Experimental/UpperDestructionV2/ImpactDust.mat>) — Материал Unity.
+- [Assets/Experimental/UpperDestructionV2/ImpactSparks.mat](<Assets/Experimental/UpperDestructionV2/ImpactSparks.mat>) — Материал Unity.
+- [Assets/Scripts/Editor/UpperDestructionAssetSetup.Supports.cs](<Assets/Scripts/Editor/UpperDestructionAssetSetup.Supports.cs>) — Исходник C#: UpperDestructionAssetSetup.
+- [Assets/Scripts/Editor/UpperDestructionAssetSetup.Geometry.cs](<Assets/Scripts/Editor/UpperDestructionAssetSetup.Geometry.cs>) — Исходник C#: UpperDestructionAssetSetup.
+- [Assets/Scripts/Editor/UpperMeshCut.cs](<Assets/Scripts/Editor/UpperMeshCut.cs>) — Исходник C#: UpperMeshCut, Vertex, Polygon.
+- [Assets/Scripts/ShipDestruction/ShipDamageSection.cs](<Assets/Scripts/ShipDestruction/ShipDamageSection.cs>) — Исходник C#: ShipDamageSection.
+- [Assets/Scripts/Ships/ShipV3RenderBatch.cs](<Assets/Scripts/Ships/ShipV3RenderBatch.cs>) — Исходник C#: ShipV3RenderBatch, IndexLayout.
+- [Docs/Performance/OptimizationPlan.md](<Docs/Performance/OptimizationPlan.md>) — Документация.
 
 ### Телепортация корабля через F8 (`developer-teleport`)
 
@@ -1263,7 +1320,7 @@ CoastalSandSetup.Apply создаёт в12каменных префабах от
 - [Art/Sources/CoastalEnvironment/SOURCES.md](<Art/Sources/CoastalEnvironment/SOURCES.md>) — Документация.
 - [Art/Sources/CoastalEnvironment/TRIPO_MODULAR_ROCK_BRIEF.md](<Art/Sources/CoastalEnvironment/TRIPO_MODULAR_ROCK_BRIEF.md>) — Документация.
 - [Art/Blender/World/CoastalEnvironment/README_TRIPO_ARCH.md](<Art/Blender/World/CoastalEnvironment/README_TRIPO_ARCH.md>) — Документация.
-- `../Blender/Скалы/README.md` — отсутствует в текущем снимке; не использовать как готовый путь.
+- [../Blender/Скалы/README.md](<../Blender/Скалы/README.md>) — Документация.
 - [Art/Blender/World/CoastalEnvironment/README_TRIPO_COLLECTION.md](<Art/Blender/World/CoastalEnvironment/README_TRIPO_COLLECTION.md>) — Документация.
 - [Docs/StormTestSmoke.md](<Docs/StormTestSmoke.md>) — Документация.
 
@@ -1402,7 +1459,7 @@ Whisky Bottle с бесплатной BlenderKit Royalty Free загружена
 - [Assets/Scripts/Editor/PirateCharacterImport.cs](<Assets/Scripts/Editor/PirateCharacterImport.cs>) — Исходник C#: PirateCharacterImport.
 - [Assets/Scripts/Editor/SailRiggingArtSetup.cs](<Assets/Scripts/Editor/SailRiggingArtSetup.cs>) — Исходник C#: SailRiggingArtSetup.
 - [Assets/Scripts/Editor/MainShipSetup.cs](<Assets/Scripts/Editor/MainShipSetup.cs>) — Исходник C#: MainShipSetup.
-- `../NewShip/Ship_V3_Fitted.blend` — отсутствует в текущем снимке; не использовать как готовый путь.
+- [../NewShip/Ship_V3_Fitted.blend](<../NewShip/Ship_V3_Fitted.blend>) — Редактируемая сцена Blender.
 - [Assets/Scripts/Editor/ShipV3ImportSetup.cs](<Assets/Scripts/Editor/ShipV3ImportSetup.cs>) — Исходник C#: ShipV3ImportSetup.
 - [Tools/ShipV3/ExportFromOpenBlender.py](<Tools/ShipV3/ExportFromOpenBlender.py>) — Инструмент Python.
 - [Assets/Models/Ships/ShipV3/ShipV3.fbx](<Assets/Models/Ships/ShipV3/ShipV3.fbx>) — Модель / анимации FBX.
@@ -1480,16 +1537,16 @@ Whisky Bottle с бесплатной BlenderKit Royalty Free загружена
 - [blender.md](<blender.md>) — Документация.
 - [unity.md](<unity.md>) — Документация.
 - [frigate.md](<frigate.md>) — Документация.
-- `../NewShip/V3Preparation/TelescopeAndAnchorControls.md` — отсутствует в текущем снимке; не использовать как готовый путь.
-- `../NewShip/External/AnchorNikdane12/SOURCES.md` — отсутствует в текущем снимке; не использовать как готовый путь.
-- `../NewShip/V3Preparation/HarpoonControls.md` — отсутствует в текущем снимке; не использовать как готовый путь.
-- `../NewShip/V3Preparation/BowTextureRestoreReport.json` — отсутствует в текущем снимке; не использовать как готовый путь.
-- `../NewShip/V3Preparation/HoldDispenserControls.md` — отсутствует в текущем снимке; не использовать как готовый путь.
-- `../NewShip/V3Preparation/ShipDetailsControls.md` — отсутствует в текущем снимке; не использовать как готовый путь.
-- `../NewShip/FreeAssets/CREDITS.md` — отсутствует в текущем снимке; не использовать как готовый путь.
-- `../NewShip/V3Preparation/OptimizationAndDestructionControls.md` — отсутствует в текущем снимке; не использовать как готовый путь.
-- `../NewShip/V3Preparation/V18Validation.json` — отсутствует в текущем снимке; не использовать как готовый путь.
-- `../NewShip/V3Preparation/V19Validation.json` — отсутствует в текущем снимке; не использовать как готовый путь.
+- [../NewShip/V3Preparation/TelescopeAndAnchorControls.md](<../NewShip/V3Preparation/TelescopeAndAnchorControls.md>) — Документация.
+- [../NewShip/External/AnchorNikdane12/SOURCES.md](<../NewShip/External/AnchorNikdane12/SOURCES.md>) — Документация.
+- [../NewShip/V3Preparation/HarpoonControls.md](<../NewShip/V3Preparation/HarpoonControls.md>) — Документация.
+- [../NewShip/V3Preparation/BowTextureRestoreReport.json](<../NewShip/V3Preparation/BowTextureRestoreReport.json>) — Конфигурация / данные JSON.
+- [../NewShip/V3Preparation/HoldDispenserControls.md](<../NewShip/V3Preparation/HoldDispenserControls.md>) — Документация.
+- [../NewShip/V3Preparation/ShipDetailsControls.md](<../NewShip/V3Preparation/ShipDetailsControls.md>) — Документация.
+- [../NewShip/FreeAssets/CREDITS.md](<../NewShip/FreeAssets/CREDITS.md>) — Документация.
+- [../NewShip/V3Preparation/OptimizationAndDestructionControls.md](<../NewShip/V3Preparation/OptimizationAndDestructionControls.md>) — Документация.
+- [../NewShip/V3Preparation/V18Validation.json](<../NewShip/V3Preparation/V18Validation.json>) — Конфигурация / данные JSON.
+- [../NewShip/V3Preparation/V19Validation.json](<../NewShip/V3Preparation/V19Validation.json>) — Конфигурация / данные JSON.
 
 ### Звуки и голос (`audio`)
 
@@ -1758,7 +1815,7 @@ TestMap R4000м. После повторной жалобы CLEAR rays/planetcen
 - [Assets/Scripts/Ships/ShipV3HarpoonVisual.cs](<Assets/Scripts/Ships/ShipV3HarpoonVisual.cs>) — Исходник C#: ShipV3HarpoonVisual.
 - [Assets/Resources/Ships/ShipV3HarpoonPort.prefab](<Assets/Resources/Ships/ShipV3HarpoonPort.prefab>) — Префаб Unity.
 - [Assets/Resources/Ships/ShipV3HarpoonStarboard.prefab](<Assets/Resources/Ships/ShipV3HarpoonStarboard.prefab>) — Префаб Unity.
-- `../NewShip/V3Preparation/HarpoonControls.md` — отсутствует в текущем снимке; не использовать как готовый путь.
+- [../NewShip/V3Preparation/HarpoonControls.md](<../NewShip/V3Preparation/HarpoonControls.md>) — Документация.
 
 ### Кракен и щупальца (`kraken`)
 
@@ -1793,12 +1850,12 @@ TestMap R4000м. После повторной жалобы CLEAR rays/planetcen
 - [Assets/Scripts/World/WhirlpoolTentacleRing.cs](<Assets/Scripts/World/WhirlpoolTentacleRing.cs>) — Исходник C#: WhirlpoolTentacleRing.
 - [Assets/Scripts/Networking/SessionWhirlpoolTentacles.cs](<Assets/Scripts/Networking/SessionWhirlpoolTentacles.cs>) — Исходник C#: WhirlpoolTentacleState, WhirlpoolTentaclesMessage, SessionController.
 - [Assets/Scripts/World/EnvironmentTestGallery.cs](<Assets/Scripts/World/EnvironmentTestGallery.cs>) — Исходник C#: EnvironmentTestGallery.
-- `../Blender/KrakenTentacle_v1/README.md` — отсутствует в текущем снимке; не использовать как готовый путь.
-- `../Blender/KrakenTentacle_v1/TRIPO.txt` — отсутствует в текущем снимке; не использовать как готовый путь.
-- `../Blender/KrakenTentacle_v1/front.png` — отсутствует в текущем снимке; не использовать как готовый путь.
-- `../Blender/KrakenTentacle_v1/back.png` — отсутствует в текущем снимке; не использовать как готовый путь.
-- `../Blender/KrakenTentacle_v1/left.png` — отсутствует в текущем снимке; не использовать как готовый путь.
-- `../Blender/KrakenTentacle_v1/right.png` — отсутствует в текущем снимке; не использовать как готовый путь.
+- [../Blender/KrakenTentacle_v1/README.md](<../Blender/KrakenTentacle_v1/README.md>) — Документация.
+- [../Blender/KrakenTentacle_v1/TRIPO.txt](<../Blender/KrakenTentacle_v1/TRIPO.txt>) — Текстовые данные.
+- [../Blender/KrakenTentacle_v1/front.png](<../Blender/KrakenTentacle_v1/front.png>) — Изображение / текстура.
+- [../Blender/KrakenTentacle_v1/back.png](<../Blender/KrakenTentacle_v1/back.png>) — Изображение / текстура.
+- [../Blender/KrakenTentacle_v1/left.png](<../Blender/KrakenTentacle_v1/left.png>) — Изображение / текстура.
+- [../Blender/KrakenTentacle_v1/right.png](<../Blender/KrakenTentacle_v1/right.png>) — Изображение / текстура.
 - [Art/Blender/Kraken/KrakenTripoRig.blend](<Art/Blender/Kraken/KrakenTripoRig.blend>) — Редактируемая сцена Blender.
 - [Art/Blender/Kraken/PrepareTripoTentacle.py](<Art/Blender/Kraken/PrepareTripoTentacle.py>) — Инструмент Python.
 - [Art/Blender/Kraken/README.md](<Art/Blender/Kraken/README.md>) — Документация.
@@ -2220,42 +2277,42 @@ NetworkLoadTest запускается из меню Тест нагрузки �
 - [Docs/Performance/CombatSixBenchmark.md](<Docs/Performance/CombatSixBenchmark.md>) — Документация.
 - [Docs/Performance/NetworkLoadTest.md](<Docs/Performance/NetworkLoadTest.md>) — Документация.
 - [Docs/Performance/OptimizationPlan.md](<Docs/Performance/OptimizationPlan.md>) — Документация.
-- `../output/CrashReview20261007/Spyglass_1628.md` — отсутствует в текущем снимке; не использовать как готовый путь.
-- [Docs/Performance/Reports/20261014-232504-127-benchmark.json](<Docs/Performance/Reports/20261014-232504-127-benchmark.json>) — Конфигурация / данные JSON.
-- [Docs/Performance/Reports/20261014-232504-127-benchmark.txt](<Docs/Performance/Reports/20261014-232504-127-benchmark.txt>) — Текстовые данные.
-- [Docs/Performance/Reports/20261014-233947-869-benchmark.json](<Docs/Performance/Reports/20261014-233947-869-benchmark.json>) — Конфигурация / данные JSON.
-- [Docs/Performance/Reports/20261014-233947-869-benchmark.txt](<Docs/Performance/Reports/20261014-233947-869-benchmark.txt>) — Текстовые данные.
-- [Docs/Performance/Reports/20261014-234517-949-benchmark.json](<Docs/Performance/Reports/20261014-234517-949-benchmark.json>) — Конфигурация / данные JSON.
-- [Docs/Performance/Reports/20261014-234517-949-benchmark.txt](<Docs/Performance/Reports/20261014-234517-949-benchmark.txt>) — Текстовые данные.
-- [Docs/Performance/Reports/20261015-editor-cpu-profile.txt](<Docs/Performance/Reports/20261015-editor-cpu-profile.txt>) — Текстовые данные.
-- [Docs/Performance/Reports/20261014-235834-386-benchmark.json](<Docs/Performance/Reports/20261014-235834-386-benchmark.json>) — Конфигурация / данные JSON.
-- [Docs/Performance/Reports/20261014-235834-386-benchmark.txt](<Docs/Performance/Reports/20261014-235834-386-benchmark.txt>) — Текстовые данные.
-- [Docs/Performance/Reports/20261015-000416-705-benchmark.json](<Docs/Performance/Reports/20261015-000416-705-benchmark.json>) — Конфигурация / данные JSON.
-- [Docs/Performance/Reports/20261015-000416-705-benchmark.txt](<Docs/Performance/Reports/20261015-000416-705-benchmark.txt>) — Текстовые данные.
-- [Docs/Performance/Reports/20261015-000935-446-benchmark.json](<Docs/Performance/Reports/20261015-000935-446-benchmark.json>) — Конфигурация / данные JSON.
-- [Docs/Performance/Reports/20261015-000935-446-benchmark.txt](<Docs/Performance/Reports/20261015-000935-446-benchmark.txt>) — Текстовые данные.
-- [Docs/Performance/Reports/20261015-cpu-series.json](<Docs/Performance/Reports/20261015-cpu-series.json>) — Конфигурация / данные JSON.
-- [Docs/Performance/Reports/20261015-editor-cpu-after.txt](<Docs/Performance/Reports/20261015-editor-cpu-after.txt>) — Текстовые данные.
-- [Docs/Performance/Reports/20261015-editor-gpu-hierarchy.txt](<Docs/Performance/Reports/20261015-editor-gpu-hierarchy.txt>) — Текстовые данные.
-- [Docs/Performance/Reports/20261015-editor-gpu-outside.txt](<Docs/Performance/Reports/20261015-editor-gpu-outside.txt>) — Текстовые данные.
-- [Docs/Performance/Reports/20261015-editor-gpu-reference-repeat.txt](<Docs/Performance/Reports/20261015-editor-gpu-reference-repeat.txt>) — Текстовые данные.
-- [Docs/Performance/Reports/20261015-editor-gpu-scale040-sky025.txt](<Docs/Performance/Reports/20261015-editor-gpu-scale040-sky025.txt>) — Текстовые данные.
-- [Docs/Performance/Reports/20261015-editor-gpu-scale050-sky030.txt](<Docs/Performance/Reports/20261015-editor-gpu-scale050-sky030.txt>) — Текстовые данные.
-- [Docs/Performance/Visuals/storm-reference-outside.png](<Docs/Performance/Visuals/storm-reference-outside.png>) — Изображение / текстура.
-- [Docs/Performance/Visuals/storm-scale040-sky025-outside.png](<Docs/Performance/Visuals/storm-scale040-sky025-outside.png>) — Изображение / текстура.
-- [Docs/Performance/Visuals/storm-scale050-sky030-outside.png](<Docs/Performance/Visuals/storm-scale050-sky030-outside.png>) — Изображение / текстура.
-- [Docs/Performance/Reports/20261015-140352-763-benchmark.json](<Docs/Performance/Reports/20261015-140352-763-benchmark.json>) — Конфигурация / данные JSON.
-- [Docs/Performance/Reports/20261015-140352-763-benchmark.txt](<Docs/Performance/Reports/20261015-140352-763-benchmark.txt>) — Текстовые данные.
-- [Docs/Performance/Reports/20261015-140907-441-benchmark.json](<Docs/Performance/Reports/20261015-140907-441-benchmark.json>) — Конфигурация / данные JSON.
-- [Docs/Performance/Reports/20261015-140907-441-benchmark.txt](<Docs/Performance/Reports/20261015-140907-441-benchmark.txt>) — Текстовые данные.
-- [Docs/Performance/Reports/20261015-141403-786-benchmark.json](<Docs/Performance/Reports/20261015-141403-786-benchmark.json>) — Конфигурация / данные JSON.
-- [Docs/Performance/Reports/20261015-141403-786-benchmark.txt](<Docs/Performance/Reports/20261015-141403-786-benchmark.txt>) — Текстовые данные.
-- [Docs/Performance/Reports/20261015-141903-033-benchmark.json](<Docs/Performance/Reports/20261015-141903-033-benchmark.json>) — Конфигурация / данные JSON.
-- [Docs/Performance/Reports/20261015-141903-033-benchmark.txt](<Docs/Performance/Reports/20261015-141903-033-benchmark.txt>) — Текстовые данные.
-- [Docs/Performance/Reports/20261015-143012-267-character-hits-editor.json](<Docs/Performance/Reports/20261015-143012-267-character-hits-editor.json>) — Конфигурация / данные JSON.
-- [Docs/Performance/Reports/20261015-143012-267-character-hits-editor.txt](<Docs/Performance/Reports/20261015-143012-267-character-hits-editor.txt>) — Текстовые данные.
-- [Docs/Performance/Reports/20261015-render-scale-experiment.json](<Docs/Performance/Reports/20261015-render-scale-experiment.json>) — Конфигурация / данные JSON.
-- [Docs/Performance/Reports/20261015-character-hit-before-analysis.json](<Docs/Performance/Reports/20261015-character-hit-before-analysis.json>) — Конфигурация / данные JSON.
+- [../output/CrashReview20261007/Spyglass_1628.md](<../output/CrashReview20261007/Spyglass_1628.md>) — Документация.
+- `Docs/Performance/Reports/20261014-232504-127-benchmark.json` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `Docs/Performance/Reports/20261014-232504-127-benchmark.txt` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `Docs/Performance/Reports/20261014-233947-869-benchmark.json` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `Docs/Performance/Reports/20261014-233947-869-benchmark.txt` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `Docs/Performance/Reports/20261014-234517-949-benchmark.json` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `Docs/Performance/Reports/20261014-234517-949-benchmark.txt` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `Docs/Performance/Reports/20261015-editor-cpu-profile.txt` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `Docs/Performance/Reports/20261014-235834-386-benchmark.json` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `Docs/Performance/Reports/20261014-235834-386-benchmark.txt` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `Docs/Performance/Reports/20261015-000416-705-benchmark.json` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `Docs/Performance/Reports/20261015-000416-705-benchmark.txt` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `Docs/Performance/Reports/20261015-000935-446-benchmark.json` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `Docs/Performance/Reports/20261015-000935-446-benchmark.txt` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `Docs/Performance/Reports/20261015-cpu-series.json` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `Docs/Performance/Reports/20261015-editor-cpu-after.txt` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `Docs/Performance/Reports/20261015-editor-gpu-hierarchy.txt` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `Docs/Performance/Reports/20261015-editor-gpu-outside.txt` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `Docs/Performance/Reports/20261015-editor-gpu-reference-repeat.txt` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `Docs/Performance/Reports/20261015-editor-gpu-scale040-sky025.txt` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `Docs/Performance/Reports/20261015-editor-gpu-scale050-sky030.txt` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `Docs/Performance/Visuals/storm-reference-outside.png` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `Docs/Performance/Visuals/storm-scale040-sky025-outside.png` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `Docs/Performance/Visuals/storm-scale050-sky030-outside.png` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `Docs/Performance/Reports/20261015-140352-763-benchmark.json` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `Docs/Performance/Reports/20261015-140352-763-benchmark.txt` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `Docs/Performance/Reports/20261015-140907-441-benchmark.json` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `Docs/Performance/Reports/20261015-140907-441-benchmark.txt` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `Docs/Performance/Reports/20261015-141403-786-benchmark.json` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `Docs/Performance/Reports/20261015-141403-786-benchmark.txt` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `Docs/Performance/Reports/20261015-141903-033-benchmark.json` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `Docs/Performance/Reports/20261015-141903-033-benchmark.txt` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `Docs/Performance/Reports/20261015-143012-267-character-hits-editor.json` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `Docs/Performance/Reports/20261015-143012-267-character-hits-editor.txt` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `Docs/Performance/Reports/20261015-render-scale-experiment.json` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `Docs/Performance/Reports/20261015-character-hit-before-analysis.json` — отсутствует в текущем снимке; не использовать как готовый путь.
 - [Docs/Performance/ColleagueBenchmark_20261015.md](<Docs/Performance/ColleagueBenchmark_20261015.md>) — Документация.
 - [Docs/Performance/FleetCostBreakdown_20261016.md](<Docs/Performance/FleetCostBreakdown_20261016.md>) — Документация.
 - [Docs/Performance/ColleagueFleet4Test.md](<Docs/Performance/ColleagueFleet4Test.md>) — Документация.
@@ -2346,7 +2403,7 @@ ShipMonkey.HeadRide.cs: редкая серверная прогулка к жи
 С 2026-10-08 профиль vfx_specialist удалён по указанию пользователя. Основной агент сам реализует VFX по согласованным этапам; не создавать и не продолжать прежнего субагента.
 По умолчанию игровой вид проверяет пользователь. Проверки компиляции не подтверждают внешний вид или производительность.
 
-- `../AGENTS.md` — отсутствует в текущем снимке; не использовать как готовый путь.
+- [../AGENTS.md](<../AGENTS.md>) — Документация.
 - [AGENTS.md](<AGENTS.md>) — Документация.
 
 ### Корабельная слот-машина (`ship-slot-machine`)

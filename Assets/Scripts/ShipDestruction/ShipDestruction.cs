@@ -30,6 +30,9 @@ namespace PirateSlop
         public int AttackerId;
         public ShipDamageReason Reason;
         public ulong RemovedFragments, DetachedFragments;
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+        public byte UpperStage;
+#endif
     }
     public sealed partial class ShipDestruction : NetworkBehaviour
     {
@@ -65,6 +68,9 @@ namespace PirateSlop
             ship = GetComponent<NetworkShip>();
             flooding = GetComponent<ShipFlooding>();
             visuals = GetComponent<ShipDestructionVisuals>();
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+            Upper = GetComponent<PirateSlop.Experimental.UpperDestructionV2>();
+#endif
             if (Profile == null || flooding == null || ship == null) return;
             graph = new ShipStructuralGraph(Profile);
             foreach (var definition in Profile.Sections) definitions.Add(definition.SectionId, definition);
@@ -190,6 +196,9 @@ namespace PirateSlop
         public void Damage(Collider collider, Vector3 point, Vector3 normal, Vector3 velocity, InventoryItem ammo, GameObject attacker, float radius = 0f)
         {
             using var performanceSample = performanceDamage.Auto();
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+            if (TryUpperDamage(collider, point, normal, velocity, ammo, attacker, radius)) return;
+#endif
             if (Profile != null && Profile.OrdinaryCannonballsOnly && ammo != InventoryItem.Cannonball) return;
             if (!ready || !IsServerInitialized || ship.IsSinking || !float.IsFinite(point.sqrMagnitude) || !float.IsFinite(velocity.sqrMagnitude)) return;
             var shooter = attacker != null ? attacker.GetComponent<NetworkPlayer>() : null;
@@ -393,9 +402,13 @@ namespace PirateSlop
         }
         void DetachUnsupported(Vector3 point, Vector3 normal, Vector3 velocity, InventoryItem ammo, GameObject attacker, ulong? floodingImpactId = null)
         {
-            foreach (var entry in graph.Unsupported(id => state[id].RemovedFragments))
+            var unsupported = graph.Unsupported(id => state[id].RemovedFragments);
+            foreach (var entry in unsupported)
             {
                 if (ProtectedMast(entry.Key)) continue;
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+                if (Upper != null && Upper.PreserveMechanism(entry.Key, unsupported)) continue;
+#endif
                 Change(entry.Key, 0f, ShipSectionState.Destroyed, point, normal, velocity, ammo, attacker, ShipDamageReason.SupportLost, 0f, state[entry.Key].RemovedFragments | entry.Value, floodingImpactId);
             }
         }
@@ -444,6 +457,14 @@ namespace PirateSlop
                     else flooding.RegisterImpact(id, openings);
                 }
             }
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+            MastAssembly collapsedUpperMast = null;
+            if (Upper != null && next == ShipSectionState.Destroyed && previous != next && Upper.IsMast(Upper.AssemblyFor(id)) && mastParts.TryGetValue(id, out var rootMast) && rootMast.Stem.SectionId == id && !Upper.IsMain(id))
+            {
+                int index = Upper.AssemblyFor(id);
+                if (Upper.Stage(index) < 3) { Upper.SetStage(index, 3); collapsedUpperMast = rootMast; }
+            }
+#endif
             state[id] = current;
             if (sections.TryGetValue(id, out var section))
             {
@@ -460,10 +481,16 @@ namespace PirateSlop
                 Impulse = Mathf.Clamp(velocity.magnitude / 40f, 0f, 2f), Seed = unchecked((int)(sequence * 2654435761UL) ^ ObjectId),
                 AngularVelocity = ship.Motor.MotionAngularVelocity,
                 RemovedFragments = current.RemovedFragments, DetachedFragments = current.RemovedFragments & ~previousFragments,
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+                UpperStage = (byte)(Upper != null ? Upper.Stage(Upper.AssemblyFor(id)) : 0),
+#endif
                 Ammo = ammo, AttackerId = player != null ? player.ParticipantId.Value : 0, Reason = reason, BaseDamage = damage
             };
             if (IsClientInitialized) Present(impact);
             ReceiveEvent(impact);
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+            if (collapsedUpperMast != null) CollapseMast(collapsedUpperMast, point, normal, velocity, ammo, attacker, reason, floodingImpactId);
+#endif
         }
         [ObserversRpc]
         void ReceiveEvent(ShipDestructionEvent impact)
@@ -505,6 +532,9 @@ namespace PirateSlop
         {
             if (!ready || !IsServerInitialized || ship.IsSinking || !state.TryGetValue(id, out var entry) || !sections.TryGetValue(id, out var section)) return false;
             if (fragment < 0 || fragment >= section.RepairCount || fragment >= 64) return false;
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+            if (Upper != null && !Upper.CanRepairSection(id)) return false;
+#endif
             long key = ((long)id << 6) | (uint)fragment;
             if (trimSupports.TryGetValue(key, out var support) && state.TryGetValue(support.SectionId, out var supporting) && (supporting.RemovedFragments & (1UL << support.Fragment)) != 0) return false;
             ulong bit = 1UL << fragment;
@@ -550,6 +580,9 @@ namespace PirateSlop
         void Publish()
         {
             using var performanceSample = performancePublish.Auto();
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+            Upper?.ReconcileRepair();
+#endif
             ApplyModifiers();
             ReceiveState(Snapshot(), flooding.Level, revision);
         }
@@ -610,6 +643,14 @@ namespace PirateSlop
             foreach (var entry in state)
             {
                 var definition = definitions[entry.Key]; float efficiency = definition.Efficiency(entry.Value.State);
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+                if (Upper != null)
+                {
+                    int assembly = Upper.AssemblyFor(entry.Key);
+                    if (Upper.IsMast(assembly)) efficiency = Upper.Stage(assembly) >= 3 ? 0f : 1f;
+                    else if (assembly >= 0 && Upper.Assemblies[assembly].Kind == PirateSlop.Experimental.UpperAssemblyKind.SailControl) efficiency = 1f;
+                }
+#endif
                 if (definition.Type == ShipSectionType.Rudder) rudder = Mathf.Min(rudder, efficiency);
                 if (definition.Type == ShipSectionType.Helm && entry.Value.State == ShipSectionState.Destroyed) helmAvailable = false;
                 if (definition.Type == ShipSectionType.Capstan && entry.Value.State == ShipSectionState.Destroyed) capstanAvailable = false;
@@ -617,6 +658,13 @@ namespace PirateSlop
                     sailEfficiency[sail] = sailEfficiency.TryGetValue(sail, out float existing) ? Mathf.Min(existing, efficiency) : efficiency;
             }
             var sails = GetComponent<SailSystem>();
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+            if (Upper != null)
+            {
+                helmAvailable = Upper.Efficiency(PirateSlop.Experimental.UpperAssemblyKind.Helm) > 0f;
+                capstanAvailable = Upper.Efficiency(PirateSlop.Experimental.UpperAssemblyKind.Capstan) > 0f;
+            }
+#endif
             if (ship.Helm != null)
             {
                 ship.Helm.StructurallyAvailable = helmAvailable;

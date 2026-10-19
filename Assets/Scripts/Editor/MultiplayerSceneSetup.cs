@@ -141,7 +141,14 @@ namespace PirateSlop.EditorTools
             Directory.CreateDirectory(directory);
             var options = BuildOptions.StrictMode | additionalOptions;
             if (development) options |= BuildOptions.Development;
-            var report = BuildPipeline.BuildPlayer(new BuildPlayerOptions { scenes = GetBuildScenePaths(), locationPathName = directory + "/PirateSlop.exe", target = BuildTarget.StandaloneWindows64, options = options });
+            UpperDestructionBuildProcessor.Prepare(development);
+            UnityEditor.Build.Reporting.BuildReport report;
+            try
+            {
+                report = BuildPipeline.BuildPlayer(new BuildPlayerOptions { scenes = GetBuildScenePaths(), locationPathName = directory + "/PirateSlop.exe", target = BuildTarget.StandaloneWindows64, options = options,
+                    extraScriptingDefines = development ? new[] { UpperDestructionBuildProcessor.Define } : Array.Empty<string>() });
+            }
+            finally { UpperDestructionBuildProcessor.Finish(); }
             var summary = report.summary;
             var result = new System.Text.StringBuilder();
             result.AppendLine(summary.result + " errors=" + summary.totalErrors + " size=" + summary.totalSize + " elapsed=" + summary.totalTime.ToString("c") + " options=" + summary.options);

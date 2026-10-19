@@ -1,0 +1,51 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ffea1a2f49cc4a43b896fb4680a070b, type: 3}
+  m_Name: UpperDestructionSession
+  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.Networking.SessionConfig
+  Loot: {fileID: 11400000, guid: 042c2934844dcd546a82e80071b0a132, type: 2}
+  BotMotion:
+    PathNodesPerFrame: 48
+    PathMillisecondsPerFrame: 1.5
+    MaxPathNodes: 1000
+    CellSize: 0.6
+    SearchRadius: 35
+    RetryAfter: 3
+    RecoveryAfter: 12
+    TaskTimeout: 90
+    AllowEmergencyTeleport: 1
+    HumanStationGrace: 30
+    FailedTaskRetry: 15
+    CruiseSails: 1
+    CannonSites:
+    - {x: -3.8, y: 4.5, z: -1}
+    - {x: 3.8, y: 4.5, z: -1}
+    - {x: -3.8, y: 4.5, z: 2}
+    - {x: 3.8, y: 4.5, z: 2}
+    - {x: -3.8, y: 4.5, z: 5}
+    - {x: 3.8, y: 4.5, z: 5}
+    TeleportCooldown: 60
+    RecoveryRadius: 2
+  ShipComparisonEnabled: 0
+  ComparisonShips: []
+  Port: 7777
+  MaxPlayers: 30
+  TickRate: 30
+  ProtocolVersion: 199
+  ConnectTimeout: 15
+  ObserverRadius: 1000
+  ObserverHysteresis: 0.2
+  ClusteredTestSpawns: 1
+  SpawnSpacing: 52
+  ShipOrigin: {x: 0, y: 0, z: 0}
+  PlayerLocalSpawn: {x: -0.1800001, y: 4.309999, z: 0.5166676}
+  GameScene: NetworkOcean

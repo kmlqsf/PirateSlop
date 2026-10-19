@@ -41,6 +41,23 @@ namespace PirateSlop.Harpoon
         public float CurrentHealth => currentHealth;
         public float MaxHealth => maxHealth;
         public bool IsBroken => isBroken;
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+        public PirateSlop.Experimental.UpperDestructionV2 UpperController { get; set; }
+        public Transform UpperPitchPivot => barrelPitch;
+        public bool UpperDisabled => UpperController != null && UpperController.WeaponDisabled(-1 - MountIndex);
+        public void ApplyUpperState(float health, bool broken)
+        {
+            currentHealth = health;
+            if (isBroken == broken) return;
+            isBroken = broken; repairStrikes = 0;
+            if (broken)
+            {
+                ReleaseControl(false);
+                if (activeProjectile != null) activeProjectile.DetachAndRewind();
+            }
+            else ApplyAimRotation();
+        }
+#endif
         public bool StructurallyAvailable => !isBroken && (mountSection == null || mountSection.State != ShipSectionState.Destroyed);
         public int RepairStrikes => repairStrikes;
 
@@ -68,11 +85,17 @@ namespace PirateSlop.Harpoon
         {
             if (isBroken) return;
             isBroken = true;
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+            UpperController?.NotifyBrokenHarpoon(this);
+#endif
             currentHealth = 0f;
             repairStrikes = 0;
             ReleaseControl();
             if (activeProjectile != null) activeProjectile.DetachAndRewind();
-            if (barrelPitch != null) barrelPitch.localRotation = Quaternion.Euler(-25f, 0, 15f);
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+            if (UpperController == null)
+#endif
+                if (barrelPitch != null) barrelPitch.localRotation = Quaternion.Euler(-25f, 0, 15f);
             GameAudio.Play(SoundCue.ShipCollision, transform.position, 1.0f);
             CombatVfx.Impact(transform.position + Vector3.up * 0.4f, Vector3.up, true, true);
         }
@@ -93,10 +116,17 @@ namespace PirateSlop.Harpoon
 
         public void RepairFully()
         {
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+            if (UpperController != null && !UpperController.RepairHarpoon(this)) return;
+#endif
             isBroken = false;
             currentHealth = maxHealth;
             repairStrikes = 0;
-            if (barrelPitch != null) barrelPitch.localRotation = Quaternion.Euler(currentPitch, 0, 0);
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+            if (UpperController != null) ApplyAimRotation();
+            else
+#endif
+                if (barrelPitch != null) barrelPitch.localRotation = Quaternion.Euler(currentPitch, 0, 0);
             GameAudio.Play(SoundCue.ReloadReady, transform.position, 1.0f);
             RepairReveal.Show(gameObject);
         }
@@ -182,6 +212,9 @@ namespace PirateSlop.Harpoon
 
         public bool TakeControl(AdvancedPlayerController player)
         {
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+            if (UpperDisabled) return false;
+#endif
             if (Time.frameCount == exitedFrame || isBroken || !StructurallyAvailable || player == null || player.IsDead || !InRange(player) || (operatorPlayer != null && operatorPlayer != player))
                 return false;
 
@@ -321,6 +354,9 @@ namespace PirateSlop.Harpoon
 
         public void Fire()
         {
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+            if (UpperDisabled || isBroken) return;
+#endif
             if (projectilePrefab == null || muzzle == null) return;
 
             Vector3 spawnPos = muzzle.position;

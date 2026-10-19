@@ -9,12 +9,18 @@ namespace PirateSlop
         public void Initialize(ShipDestruction value)
         {
             owner = value;
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+            if (owner.GetComponent<PirateSlop.Experimental.UpperDestructionV2>() != null) return;
+#endif
             pool = GetComponent<ShipDebrisPool>();
             pool?.Initialize(value);
         }
         public void Present(ShipDestructionEvent impact)
         {
             if (owner == null) return;
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+            if (owner.Upper != null) { owner.Upper.Present(impact); return; }
+#endif
             var section = owner.Section(impact.SectionId);
             var point = transform.TransformPoint(impact.LocalPoint);
             if (impact.Reason == ShipDamageReason.Hit) pool?.SpawnSplinters(impact);

@@ -12,11 +12,94 @@ namespace PirateSlop.Networking
         NetworkShip developerDestructionShip, developerDestructionSource;
         float nextDeveloperCommand;
         float nextDeveloperSpeedCommand;
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+        public bool DeveloperCannonEnabled { get; private set; }
+        Cannonball developerCannonPrefab;
+        float developerCannonSpeed;
+
+        public override void OnStopNetwork()
+        {
+            DeveloperCannonEnabled = false;
+            developerCannonPrefab = null;
+            base.OnStopNetwork();
+        }
+
+        bool ResolveDeveloperCannon()
+        {
+            if (developerCannonPrefab != null) return true;
+            var ship = SessionController.Instance != null ? SessionController.Instance.ShipPrefab : null;
+            var crate = ship != null ? ship.GetComponentInChildren<CannonballCrate>(true) : null;
+            if (crate == null || crate.CannonPrefab == null) return false;
+            developerCannonPrefab = crate.CannonPrefab.ProjectilePrefab != null ? crate.CannonPrefab.ProjectilePrefab : crate.Supply;
+            developerCannonSpeed = crate.CannonPrefab.LaunchSpeed * 1.15f;
+            return developerCannonPrefab != null;
+        }
+
+        bool TryDeveloperCannonFire(Vector3 direction, Vector3 eyeOffset)
+        {
+            if (!DeveloperCannonEnabled || !DeveloperMenu.Available || (!IsOwner && !DeveloperMenu.AllowRemote)) return false;
+            var motor = GetComponent<AdvancedPlayerController>();
+            if (motor.IsDead || motor.IsDowned || motor.LocomotionLocked || !float.IsFinite(direction.sqrMagnitude) || direction.sqrMagnitude < .5f ||
+                !float.IsFinite(eyeOffset.sqrMagnitude) || eyeOffset.sqrMagnitude > 16f) return false;
+            direction.Normalize();
+            var bodyEye = transform.position + Vector3.up * (motor.IsCrouched ? .75f : 1.65f);
+            var origin = transform.position + eyeOffset;
+            if (FirearmTrace.Cast(gameObject, bodyEye, origin, out var obstruction)) origin = obstruction.point + (bodyEye - origin).normalized * .02f;
+            if (!ResolveDeveloperCannon()) return false;
+            var velocity = direction * developerCannonSpeed;
+            SpawnDeveloperCannonShot(origin, velocity, true);
+            DeveloperCannonShotObserversRpc(origin, velocity);
+            return true;
+        }
+
+        void SpawnDeveloperCannonShot(Vector3 origin, Vector3 velocity, bool authoritative)
+        {
+            if (!ResolveDeveloperCannon()) return;
+            var shot = Instantiate(developerCannonPrefab, origin, Quaternion.identity);
+            UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene(shot.gameObject, gameObject.scene);
+            shot.name = "DeveloperFiredCannonball";
+            shot.Network = null; shot.Loaded = shot.Held = false; shot.Ammo = InventoryItem.Cannonball;
+            shot.transform.SetParent(null, true); shot.AttachToPlatform(null); shot.gameObject.SetActive(true); shot.RefreshVisual();
+            shot.GetComponent<Collider>().enabled = false;
+            shot.Body.isKinematic = true; shot.Body.useGravity = false;
+            var projectile = shot.GetComponent<CannonShotDamage>();
+            if (projectile == null) projectile = shot.gameObject.AddComponent<CannonShotDamage>();
+            projectile.Authoritative = authoritative; projectile.Source = transform; projectile.Attacker = gameObject;
+            projectile.Velocity = velocity; projectile.Ammo = InventoryItem.Cannonball; projectile.DeveloperShot = true;
+            projectile.SourceCannonIndex = -1; projectile.MortarShot = false;
+            projectile.Radius = shot.SphereCol.radius * Mathf.Max(shot.transform.lossyScale.x, shot.transform.lossyScale.y, shot.transform.lossyScale.z);
+            var trail = shot.GetComponent<TrailRenderer>();
+            if (trail != null) trail.enabled = false;
+            GameAudio.Play(SoundCue.Cannon, origin);
+            CombatVfx.Fire(origin, velocity.normalized, true);
+        }
+
+        [ObserversRpc]
+        void DeveloperCannonShotObserversRpc(Vector3 origin, Vector3 velocity)
+        {
+            if (!IsServerInitialized) SpawnDeveloperCannonShot(origin, velocity, false);
+        }
+
+        [TargetRpc]
+        void DeveloperCannonModeTargetRpc(NetworkConnection connection, bool enabled)
+        {
+            DeveloperCannonEnabled = enabled;
+            GetComponent<DeveloperMenu>().Report(enabled ? "Ядра из игрока включены. Закройте F8 и стреляйте ЛКМ." : "Ядра из игрока выключены.");
+        }
+#endif
         public void DeveloperCommand(byte command, int count = 1) => DeveloperCommandServerRpc(command, count);
         [ServerRpc]
         void DeveloperCommandServerRpc(byte command, int count)
         {
             if (!DeveloperMenu.Available || (!IsOwner && !DeveloperMenu.AllowRemote)) { DeveloperResultTargetRpc(Owner, "Нужно разрешение хоста."); return; }
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+            if (command == 132)
+            {
+                DeveloperCannonEnabled = count != 0 && !GetComponent<AdvancedPlayerController>().IsDead && ResolveDeveloperCannon();
+                DeveloperCannonModeTargetRpc(Owner, DeveloperCannonEnabled);
+                return;
+            }
+#endif
             if (command == 20)
             {
                 if (Time.unscaledTime < nextDeveloperSpeedCommand) return;

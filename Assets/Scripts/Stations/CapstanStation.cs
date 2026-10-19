@@ -142,6 +142,9 @@ namespace PirateSlop
 
         void ApplyRotationDelta(float delta)
         {
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+            delta *= UpperResponse;
+#endif
             localAngle += delta;
             accumulatedDelta += delta;
 
@@ -184,6 +187,10 @@ namespace PirateSlop
         {
             ApplyRotationDelta(delta);
         }
+
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+        public float UpperResponse { get; set; } = 1f;
+#endif
 
         public void DropAnchor()
         {

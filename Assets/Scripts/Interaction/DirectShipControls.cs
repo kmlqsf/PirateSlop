@@ -29,7 +29,11 @@ namespace PirateSlop
         const float HoverRadius = .14f;
         float focusStarted, focusLostAt = -10f, lowerAmount;
         bool awaitPrimaryRelease;
-        public bool BlocksPrimary => grabbed != null || hovered != null || awaitPrimaryRelease;
+        public bool BlocksPrimary => grabbed != null || hovered != null || awaitPrimaryRelease
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+            || motor != null && motor.IsLocal && DeveloperMenu.CannonFireActive
+#endif
+            ;
         public float LowerAmount => Mathf.SmoothStep(0f, 1f, lowerAmount);
         public bool ItemHidden => lowerAmount >= .999f;
 
@@ -64,6 +68,9 @@ namespace PirateSlop
         }
         void Update()
         {
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+            if (DeveloperMenu.CannonFireActive && motor.IsLocal) { Release(); Hover(null); return; }
+#endif
             if (Mouse.current == null || !Mouse.current.leftButton.isPressed) awaitPrimaryRelease = false;
             if ((hovered != null || grabbed != null) && Mouse.current != null && Mouse.current.leftButton.isPressed) awaitPrimaryRelease = true;
             if (grabbed == null && ropeLockOwned) Release();

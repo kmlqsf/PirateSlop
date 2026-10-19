@@ -59,6 +59,9 @@ namespace PirateSlop
         public bool FireTargetAlive(int id, int fragment)
         {
             return sections.TryGetValue(id, out var section) && section != null && section.gameObject.activeInHierarchy
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+                && (Upper == null || !Upper.IsMain(id))
+#endif
                 && section.State != ShipSectionState.Destroyed && fragment >= 0 && fragment < section.RepairCount
                 && (section.RemovedFragments & (1UL << fragment)) == 0 && TryFireSurface(section, fragment, out _, out _);
         }
@@ -253,7 +256,7 @@ namespace PirateSlop
             if (definition.Type == ShipSectionType.Mast)
             {
                 if (!mastParts.TryGetValue(target.SectionId, out var mast)) return;
-                if (mastHits.TryGetValue(mast.Key, out int hits) && hits >= 2)
+                if (mastHits.TryGetValue(mast.Key, out int hits) && hits >= MastHitLimitFor(mast.Stem.SectionId))
                 {
                     CollapseMast(mast, transform.TransformPoint(target.Position), transform.TransformDirection(target.Normal), Vector3.zero, InventoryItem.FireCannonball, attacker, ShipDamageReason.Fire, impactId);
                     DetachUnsupported(transform.TransformPoint(target.Position), transform.up, Vector3.zero, InventoryItem.FireCannonball, attacker, impactId);

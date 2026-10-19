@@ -74,6 +74,9 @@ namespace PirateSlop.Networking
         }
         void ResolveShipPrefab()
         {
+#if UNITY_EDITOR
+            PirateSlop.Experimental.UpperDestructionSettings.SelectInEditor(this);
+#endif
             if (ShipPrefab != null) return;
             var prefab = Resources.Load<GameObject>("Ships/ShipV3Test");
             if (prefab != null) ShipPrefab = prefab.GetComponent<NetworkObject>();
@@ -108,6 +111,10 @@ namespace PirateSlop.Networking
             if (int.TryParse(Value(args, "-maxPlayers"), out var max)) MaxPlayers = Mathf.Clamp(max, 1, 128);
             MaxPlayers = Mathf.Max(CrewSize, MaxPlayers / CrewSize * CrewSize);
             if (int.TryParse(Value(args, "-protocol"), out var protocol)) ProtocolVersion = protocol;
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+            if (ShipPrefab != null && ShipPrefab.GetComponent<PirateSlop.Experimental.UpperDestructionV2>() != null && ProtocolVersion != Config.ProtocolVersion)
+                ProtocolVersion = Config.ProtocolVersion;
+#endif
             if (!string.IsNullOrEmpty(Value(args, "-sessionId"))) SessionId = Value(args, "-sessionId");
             if (float.TryParse(Value(args, "-duration"), out var duration)) quitAt = Time.realtimeSinceStartup + duration;
             string port = Value(args, "-port") ?? Config.Port.ToString();

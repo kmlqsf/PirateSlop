@@ -111,6 +111,9 @@ namespace PirateSlop.Ships
         Quaternion[][] restingDiceRotation;
         NetworkShip ship;
         ShipDestruction destruction;
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+        PirateSlop.Experimental.UpperDestructionV2 upper;
+#endif
         ShipV3RenderBudget renderBudget;
         float[] slotHeartbeat, collectionStart, settledFor, rollStart;
         Vector3[][] collectionFrom;
@@ -164,7 +167,11 @@ namespace PirateSlop.Ships
             for (int i = 0; i < diceResults.Count; i++) lines.Add((i + 1) + ": " + (string.IsNullOrEmpty(diceResults[i]) ? "—" : diceResults[i]));
             return string.Join("\n", lines);
         }
-        public bool CanUseDice => DiceTable != null && DiceTable.gameObject.activeInHierarchy && (DiceSupport == null || DiceSupport.activeInHierarchy);
+        public bool CanUseDice => DiceTable != null && DiceTable.gameObject.activeInHierarchy && (DiceSupport == null || DiceSupport.activeInHierarchy)
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+            && (upper == null || upper.Efficiency(PirateSlop.Experimental.UpperAssemblyKind.Dice) > 0f)
+#endif
+            ;
         public bool DispenserCooling => dispenserReturnAt.Value > 0f;
         public bool CandleBurning => candleLit.Value;
 
@@ -232,6 +239,9 @@ namespace PirateSlop.Ships
         {
             ship = GetComponent<NetworkShip>();
             destruction = GetComponent<ShipDestruction>();
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+            upper = GetComponent<PirateSlop.Experimental.UpperDestructionV2>();
+#endif
             renderBudget = GetComponent<ShipV3RenderBudget>();
             doorRest = DoorHinge != null ? DoorHinge.localRotation : Quaternion.identity;
             clapperRest = BellClapper != null ? BellClapper.transform.localRotation : Quaternion.identity;
@@ -372,6 +382,9 @@ namespace PirateSlop.Ships
             if (!float.IsFinite(delta) || !ReachDoor(player) || doorHolder.Value != -1 && doorHolder.Value != sender.ClientId) return;
             bool first = doorHolder.Value == -1;
             float allowed = first ? 0f : Mathf.Clamp(Time.time - doorHeartbeat, 0f, .15f) * 110f;
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+            if (upper != null && upper.Efficiency(PirateSlop.Experimental.UpperAssemblyKind.Door) <= 0f) allowed = 0f;
+#endif
             doorHolder.Value = sender.ClientId; doorHeartbeat = Time.time;
             door.Value = Mathf.Clamp(door.Value + Mathf.Clamp(delta, -allowed, allowed), -100f, 0f);
         }
@@ -849,6 +862,9 @@ namespace PirateSlop.Ships
             using var cpuTiming = PirateSlop.Performance.PerformanceCpuTimings.Measure(PirateSlop.Performance.PerformanceCpuSection.ShipAttachments);
             foreach (var item in Attachments)
             {
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+                if (upper != null && upper.OwnsAttachment(item.Object)) continue;
+#endif
                 if (item.Object == null || item.Detached) continue;
                 bool supported = true;
                 foreach (var group in item.Supports) if (!group.Alive()) supported = false;

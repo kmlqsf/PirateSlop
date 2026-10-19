@@ -10,6 +10,9 @@ namespace PirateSlop
 
         public Transform Muzzle;
         [SerializeField] Cannonball cannonballPrefab;
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+        public Cannonball ProjectilePrefab => cannonballPrefab;
+#endif
         [SerializeField] GameObject fusePrefab;
         public bool IsMortar;
         public bool AcceptsAmmo(InventoryItem ammo) => CannonAmmo.IsBall(ammo);
@@ -34,6 +37,17 @@ namespace PirateSlop
         public NetworkCannon Network { get; set; }
         public CannonballCrate Crate { get; set; }
         public int Index { get; set; }
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+        public PirateSlop.Experimental.UpperDestructionV2 UpperController { get; set; }
+        public bool UpperDisabled => UpperController != null && UpperController.WeaponDisabled(Index);
+        public void CancelUpperFire()
+        {
+            ignitionTime = visibleFuse = -1f;
+            firingPlayer = null; IsFireQueued = false;
+            ShowFuse(-1f); ReleaseControl();
+            Network?.NotifyUpperCancelled(Index);
+        }
+#endif
         public const float LoadRadius = 3f;
         public Vector3 ShotPosition => Muzzle.position + Muzzle.forward * .35f;
         public Vector3 ShotVelocity => UpgradeShotVelocity(Operator != null ? Operator.GetComponent<NetworkPlayer>() : null);
@@ -144,6 +158,9 @@ namespace PirateSlop
         }
         public bool TakeControl(AdvancedPlayerController player)
         {
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+            if (UpperDisabled) return false;
+#endif
             if (InBreechRange(player) && !player.IsSwimming && !player.IsClimbing && !player.IsKnockedBack && !player.LocomotionLocked && Operator != null && Operator != player)
             {
                 var incoming = player.GetComponent<NetworkPlayer>();
@@ -175,6 +192,9 @@ namespace PirateSlop
         }
         public bool DragBreech(AdvancedPlayerController player, float degrees, bool holding)
         {
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+            if (UpperDisabled) return false;
+#endif
             if (Operator != null) return false;
             if (grip != null && (!InBreechRange(grip) || Time.time - lastGrip > .75f)) grip = null;
             if (!holding) { if (grip == player) grip = null; return false; }
@@ -271,6 +291,9 @@ namespace PirateSlop
         }
         public void Fire(GameObject attacker = null)
         {
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+            if (UpperDisabled) { CancelUpperFire(); return; }
+#endif
             if (Network != null && Network.HasBoarding(Index)) return;
             if (Network != null && Network.IsClientInitialized && !Network.IsServerInitialized) { Network.RequestFire(Index); return; }
             if (!IsLoaded || IsIgnited) return;
@@ -283,6 +306,9 @@ namespace PirateSlop
         }
         void Update()
         {
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+            if (UpperDisabled && (IsIgnited || IsFireQueued || Operator != null)) CancelUpperFire();
+#endif
             if (Operator != null && (!gameObject.activeInHierarchy || !InBreechRange(Operator) || Operator.IsSwimming || Operator.IsClimbing || Operator.IsKnockedBack || Time.time - lastControl > 2f)) ReleaseControl();
             if (IsLoading && loaded != null)
             {
@@ -291,6 +317,9 @@ namespace PirateSlop
                 loaded.transform.localPosition = t < .7f
                     ? Vector3.Lerp(loadStart, Vector3.forward * .45f, approach) + Muzzle.InverseTransformVector(Vector3.up * (Mathf.Sin(approach * Mathf.PI) * .18f))
                     : Vector3.Lerp(Vector3.forward * .45f, Vector3.back * .5f, Mathf.SmoothStep(0f, 1f, (t - .7f) / .3f));
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+                if (UpperController != null) loaded.transform.position = Vector3.Lerp(loaded.transform.position, UpperController.WeaponVisualPoint(Index, loaded.transform.position), approach);
+#endif
                 if (t >= 1f)
                 {
                     loaded.gameObject.SetActive(false);

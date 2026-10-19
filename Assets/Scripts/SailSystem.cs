@@ -14,6 +14,9 @@ public class SailSystem : MonoBehaviour
     public Collider[] MastControls;
     public ShipControlHandle[] RopeHandles;
     public string[] RopeNames;
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+    public readonly float[] UpperControlResponse = { 1f, 1f, 1f, 1f, 1f };
+#endif
     float[] tensions, visualDeploy, lastGrip;
     int[] owners;
     AdvancedPlayerController[] drivers;
@@ -61,6 +64,9 @@ public class SailSystem : MonoBehaviour
     public bool InRange(AdvancedPlayerController player, int index)
     {
         if (player == null || player.IsDead || index < 0 || index >= RopeCount || Efficiency(index) <= 0f) return false;
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+        if (index < UpperControlResponse.Length && UpperControlResponse[index] <= 0f) return false;
+#endif
         var handle = RopeHandles[index];
         return handle != null && handle.gameObject.activeInHierarchy && Vector3.Distance(player.transform.position + Vector3.up, handle.transform.position) <= 2.8f;
     }
@@ -84,7 +90,14 @@ public class SailSystem : MonoBehaviour
         if (!holding)
         {
             if (drivers[index] != player) return;
-            if (CanUse(player, index)) tensions[index] = Mathf.Clamp01(tensions[index] + Mathf.Clamp(amount, -.15f, .15f));
+            if (CanUse(player, index))
+            {
+                float limit = .15f;
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+                if (index < UpperControlResponse.Length) limit *= UpperControlResponse[index];
+#endif
+                tensions[index] = Mathf.Clamp01(tensions[index] + Mathf.Clamp(amount, -limit, limit));
+            }
             Release(index); Aggregate(); return;
         }
         if (!CanUse(player, index)) return;
@@ -102,6 +115,9 @@ public class SailSystem : MonoBehaviour
         var participant = player.GetComponent<NetworkPlayer>();
         owners[index] = participant != null ? participant.ParticipantId.Value : -1;
         float allowed = first ? 0f : Mathf.Clamp(Time.time - lastGrip[index], 0f, .2f) * 2f;
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+        if (index < UpperControlResponse.Length) allowed *= UpperControlResponse[index];
+#endif
         lastGrip[index] = Time.time;
         player.SailPullLocked = true;
         tensions[index] = Mathf.Clamp01(tensions[index] + Mathf.Clamp(amount, -allowed, allowed));

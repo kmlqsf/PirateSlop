@@ -38,6 +38,12 @@
 | [ProjectSettings/VersionControlSettings.asset](<../../ProjectSettings/VersionControlSettings.asset>) | Настройки или данные Unity |
 | [ProjectSettings/XRSettings.asset](<../../ProjectSettings/XRSettings.asset>) | Настройки или данные Unity |
 
+## ProjectSettings/Packages/com.unity.ai.assistant
+
+| Файл | Краткое описание |
+| --- | --- |
+| [ProjectSettings/Packages/com.unity.ai.assistant/Settings.json](<../../ProjectSettings/Packages/com.unity.ai.assistant/Settings.json>) | Конфигурация / данные JSON |
+
 ## ProjectSettings/Packages/com.unity.probuilder
 
 | Файл | Краткое описание |

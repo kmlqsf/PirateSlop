@@ -64,6 +64,22 @@ namespace PirateSlop
             bool rebuilt = State == ShipSectionState.Destroyed && state != ShipSectionState.Destroyed;
             State = state;
             RemovedFragments = removedFragments;
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+            if (Owner != null && Owner.Upper != null && Owner.Upper.HideStandingMastPart(SectionId))
+            {
+                foreach (var visual in new[] { Intact, Damaged, Critical, Destroyed, Repaired }) if (visual != null) visual.SetActive(false);
+                foreach (var fragment in Fragments) fragment.SetActive(false);
+                foreach (var collider in DamageColliders) SetColliderEnabled(collider, false);
+                foreach (var collider in GameplayColliders) SetColliderEnabled(collider, false);
+                foreach (var collider in DamagedColliders) SetColliderEnabled(collider, false);
+                foreach (var collider in CriticalColliders) SetColliderEnabled(collider, false);
+                foreach (var collider in ReplacementColliders) SetColliderEnabled(collider, false);
+                foreach (var collider in DisabledControls) SetColliderEnabled(collider, false);
+                foreach (var renderer in DependentRenderers) if (renderer != null) renderer.enabled = false;
+                NotifyVisualChanged();
+                return;
+            }
+#endif
             if (SurfaceDamage && Fragments.Length == 0)
             {
                 ApplySurface(removedFragments);
@@ -121,6 +137,13 @@ namespace PirateSlop
             if (LazyFragmentColliders && State == ShipSectionState.Intact && index >= 0 && index < Fragments.Length)
                 EnsureFragmentCollider(Fragments[index], false);
         }
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+        public void RefreshUpperVisibility()
+        {
+            presentationApplied = false;
+            Apply(State, RemovedFragments);
+        }
+#endif
         void EnsureFragmentCollider(GameObject fragment, bool enable = true)
         {
             var collider = fragment.GetComponent<MeshCollider>();

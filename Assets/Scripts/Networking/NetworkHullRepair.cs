@@ -33,7 +33,17 @@ namespace PirateSlop.Networking
         NetworkObject lastShip;
         Vector3 aimedPoint;
         float nextStrike, swingAt = -10f, lastStrikeAt;
-        bool Available => IsSpawned && (inventory.MalletSelected || inventory.PlankSelected) && !inventory.HandsOccupied && !motor.IsDead && !motor.IsClimbing && !motor.LocomotionLocked && !GetComponent<CannonHands>().HasHeldBall && !weapon.LootHandsBusy && !inventory.Fishing.IsFishing && !inventory.Fishing.IsEating;
+        bool Available => IsSpawned && (inventory.MalletSelected || inventory.PlankSelected) && !inventory.HandsOccupied && !motor.IsDead && !motor.IsClimbing && !motor.LocomotionLocked && !GetComponent<CannonHands>().HasHeldBall && !weapon.LootHandsBusy && !inventory.Fishing.IsFishing && !inventory.Fishing.IsEating
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+            && !weapon.DeveloperCannonEnabled
+#endif
+            ;
+        bool PlankTargetAvailable => aimed != null && (aimedFragment >= 0
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+            || aimedFragment == -1 && aimed.Owner.Upper != null && aimed.Owner.Upper.DirectMastAssembly(aimed.SectionId, out _)
+            || aimedFragment == -2 && aimed.Owner.Upper != null && aimed.Owner.Upper.RepairableMechanism(aimed.SectionId, out _)
+#endif
+            );
         void Awake()
         {
             inventory = GetComponent<PlayerInventory>();
@@ -48,7 +58,7 @@ namespace PirateSlop.Networking
             { CancelLocalPlank(); return; }
             if (inventory.PlankSelected)
             {
-                if (aimed == null || aimedFragment < 0 || Mouse.current == null || !Mouse.current.leftButton.isPressed)
+                if (!PlankTargetAvailable || Mouse.current == null || !Mouse.current.leftButton.isPressed)
                 { CancelLocalPlank(); return; }
                 var target = aimed.Owner.NetworkObject;
                 if (localPlankShip != target || localPlankSection != aimed.SectionId || localPlankFragment != aimedFragment || localPlankSlot != inventory.SelectedSlot)
@@ -134,12 +144,52 @@ namespace PirateSlop.Networking
                 var mastGroups = new System.Collections.Generic.HashSet<string>();
                 foreach (var section in destruction.Sections)
                 {
-                    if (inventory.MalletSelected && section != null && destruction.Definition(section.SectionId).Type == ShipSectionType.Mast && destruction.MastRepairPoint(section.SectionId, out var basePoint))
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+                    if (section != null && destruction.UpperRepairTarget(section.SectionId, out int targetIndex, out var targetBounds, out int targetFragment))
+                    {
+                        var assembly = destruction.Upper.Assemblies[targetIndex];
+                        if (!mastGroups.Add(assembly.Key)) continue;
+                        var preview = assembly.RepairPreview;
+                        if (preview != null && Vector3.Distance(ray.origin, ship.transform.TransformPoint(targetBounds.center)) <= 12f)
+                            Graphics.DrawMesh(preview, ship.transform.localToWorldMatrix, highlight, 0, camera, 0, null, ShadowCastingMode.Off, false);
+                        var localRay = new Ray(ship.transform.InverseTransformPoint(ray.origin), ship.transform.InverseTransformDirection(ray.direction));
+                        if (targetBounds.IntersectRay(localRay, out float distance))
+                        {
+                            var point = ship.transform.TransformPoint(localRay.GetPoint(distance));
+                            float worldDistance = Vector3.Distance(ray.origin, point);
+                            if (worldDistance < nearest && ReachableAssembly(destruction, section.SectionId, point))
+                            { nearest = worldDistance; aimed = section; aimedFragment = targetFragment; aimedPoint = point; }
+                        }
+                        continue;
+                    }
+                    if (section != null && destruction.Upper != null && destruction.Upper.MastAssembly(section.SectionId, out int collapsedIndex) && destruction.Upper.Stage(collapsedIndex) >= 3)
+                        continue;
+#endif
+                    bool mastTarget = inventory.MalletSelected && section != null && destruction.Definition(section.SectionId).Type == ShipSectionType.Mast;
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+                    int mastIndex = -1;
+                    bool upperMast = section != null && destruction.Upper != null && destruction.Upper.DirectMastAssembly(section.SectionId, out mastIndex);
+                    if (upperMast) mastTarget = (inventory.MalletSelected || inventory.PlankSelected) && mastGroups.Add(destruction.Upper.Assemblies[mastIndex].Key);
+#endif
+                    if (mastTarget && destruction.MastRepairPoint(section.SectionId, out var basePoint))
                     {
                         string group = destruction.MastGroupKey(section.SectionId);
-                        if (mastGroups.Add(group))
+                        if (
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+                            upperMast ||
+#endif
+                            mastGroups.Add(group))
                         {
-                            Graphics.DrawMesh(surfaceHighlight, Matrix4x4.TRS(basePoint, ship.transform.rotation * Quaternion.Euler(90,0,0), Vector3.one * 1.3f), highlight, 0, camera, 0, null, ShadowCastingMode.Off, false);
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+                            if (upperMast)
+                            {
+                                var preview = destruction.MastRepairPreview(section.SectionId);
+                                if (preview != null && Vector3.Distance(ray.origin, basePoint) <= 12f)
+                                    Graphics.DrawMesh(preview, ship.transform.localToWorldMatrix, highlight, 0, camera, 0, null, ShadowCastingMode.Off, false);
+                            }
+                            else
+#endif
+                                Graphics.DrawMesh(surfaceHighlight, Matrix4x4.TRS(basePoint, ship.transform.rotation * Quaternion.Euler(90,0,0), Vector3.one * 1.3f), highlight, 0, camera, 0, null, ShadowCastingMode.Off, false);
                             var bounds = new Bounds(basePoint, Vector3.one * 1.4f);
                             if (bounds.IntersectRay(ray, out float distance) && distance < nearest)
                             {
@@ -149,6 +199,9 @@ namespace PirateSlop.Networking
                         }
                         if (destruction.IsMastCollapsed(section.SectionId)) continue;
                     }
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+                    if (upperMast && destruction.Upper.Stage(mastIndex) >= 3) continue;
+#endif
                     if (section == null || section.RemovedFragments == 0) continue;
                     for (int i = 0; i < section.RepairCount; i++)
                     {
@@ -195,6 +248,18 @@ namespace PirateSlop.Networking
             Vector3 delta = point - origin;
             return delta.magnitude <= 3.5f * UpgradeRepair && !FirearmTrace.Cast(gameObject, origin, point - delta.normalized * .08f, out _);
         }
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+        bool ReachableAssembly(ShipDestruction owner, int id, Vector3 point)
+        {
+            Vector3 origin = transform.position + Vector3.up * (motor.IsCrouched ? .8f : 1.5f);
+            Vector3 delta = point - origin;
+            if (delta.magnitude > 3.5f * UpgradeRepair) return false;
+            if (!FirearmTrace.Cast(gameObject, origin, point - delta.normalized * .08f, out var hit)) return true;
+            if (hit.collider == null || !hit.collider.transform.IsChildOf(owner.transform)) return false;
+            var section = Ships.ShipV3CollisionBatch.ResolveSection(hit.collider, hit.point);
+            return section != null && owner.Upper.AssemblyFor(section.SectionId) == owner.Upper.AssemblyFor(id);
+        }
+#endif
         void CancelLocalPlank()
         {
             if (localPlankShip == null) return;
@@ -208,6 +273,15 @@ namespace PirateSlop.Networking
             destruction = target != null ? target.GetComponent<ShipDestruction>() : null;
             if (!Available || !inventory.PlankSelected || destruction == null || !destruction.IsSpawned || !float.IsFinite(localPoint.sqrMagnitude) || target.GetComponent<NetworkShip>() is not { IsSinking: false }) return false;
             var section = destruction.Section(sectionId);
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+            if (fragmentId == -2 && destruction.Upper != null)
+                return destruction.UpperRepairTarget(sectionId, out _, out var bounds, out int targetFragment) && targetFragment == -2 &&
+                    bounds.SqrDistance(localPoint) <= .025f && destruction.UpperRepairFragment(sectionId, target.transform.TransformPoint(localPoint), out _, out _) &&
+                    ReachableAssembly(destruction, sectionId, target.transform.TransformPoint(localPoint));
+            if (fragmentId == -1 && destruction.Upper != null && destruction.Upper.DirectMastAssembly(sectionId, out _))
+                return destruction.MastRepairPoint(sectionId, out var basePoint) && Vector3.Distance(target.transform.TransformPoint(localPoint), basePoint) <= 1.3f &&
+                    destruction.MastRepairFragment(sectionId, out _, out _) && ReachableAssembly(destruction, sectionId, target.transform.TransformPoint(localPoint));
+#endif
             if (section == null || fragmentId < 0 || fragmentId >= Mathf.Min(64, section.RepairCount) || (section.RemovedFragments & (1UL << fragmentId)) == 0) return false;
             Vector3 point = target.transform.TransformPoint(localPoint);
             var fragment = section.RepairTransform(fragmentId);
@@ -231,7 +305,12 @@ namespace PirateSlop.Networking
             { plankShip = null; return; }
             if (Time.time - plankStarted < PlankRepairSeconds) return;
             Vector3 point = plankShip.transform.TransformPoint(plankPoint);
-            if (destruction.RepairFragment(plankSection, plankFragment))
+            int sectionId = plankSection, fragmentId = plankFragment;
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+            if (fragmentId == -1 && !destruction.MastRepairFragment(sectionId, out sectionId, out fragmentId)) { plankShip = null; return; }
+            if (fragmentId == -2 && !destruction.UpperRepairFragment(sectionId, point, out sectionId, out fragmentId)) { plankShip = null; return; }
+#endif
+            if (destruction.RepairFragment(sectionId, fragmentId))
             {
                 weapon.ConsumePlank(plankSlot);
                 StrikeObserversRpc(point);
@@ -266,8 +345,38 @@ namespace PirateSlop.Networking
             var destruction = target.GetComponent<ShipDestruction>();
             if (destruction == null || !destruction.IsSpawned || target.GetComponent<NetworkShip>().IsSinking) return false;
             var section = destruction.Section(sectionId);
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+            if (fragmentId == -2 && destruction.Upper != null)
+            {
+                var mechanismPoint = target.transform.TransformPoint(localPoint);
+                if (!destruction.UpperRepairTarget(sectionId, out _, out var bounds, out int kind) || kind != -2 || bounds.SqrDistance(localPoint) > .025f ||
+                    !ReachableAssembly(destruction, sectionId, mechanismPoint) || !destruction.UpperRepairFragment(sectionId, mechanismPoint, out int repairId, out int repairBit)) return false;
+                if (target != lastShip || repairId != lastSection || repairBit != lastFragment) strikes = 0;
+                lastShip = target; lastSection = repairId; lastFragment = repairBit;
+                nextStrike = Time.time + StrikeInterval / UpgradeRepair; lastStrikeAt = Time.time;
+                if (++strikes >= FragmentStrikes)
+                {
+                    if (!destruction.RepairFragment(repairId, repairBit)) return false;
+                    strikes = 0;
+                }
+                StrikeObserversRpc(mechanismPoint);
+                return true;
+            }
+#endif
             if (fragmentId == -1)
             {
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+                if (destruction.Upper != null && destruction.Upper.DirectMastAssembly(sectionId, out _))
+                {
+                    if (!destruction.MastRepairPoint(sectionId, out var mastBase)) return false;
+                    var position = target.transform.TransformPoint(localPoint);
+                    if (Vector3.Distance(position, mastBase) > 1.3f || !ReachableAssembly(destruction, sectionId, position)) return false;
+                    if (!destruction.Upper.StrikeMastRepair(sectionId)) return false;
+                    nextStrike = Time.time + StrikeInterval / UpgradeRepair; lastStrikeAt = Time.time;
+                    StrikeObserversRpc(position);
+                    return true;
+                }
+#endif
                 if (!destruction.MastRepairPoint(sectionId, out var basePoint) || !destruction.MastRepairFragment(sectionId, out int repairSection, out int repairFragment)) return false;
                 Vector3 hitPoint = target.transform.TransformPoint(localPoint);
                 if (Vector3.Distance(hitPoint, basePoint) > 1.3f || !Reachable(hitPoint)) return false;
@@ -298,7 +407,11 @@ namespace PirateSlop.Networking
             {
                 if (inventory.PlankSelected)
                 {
-                    ContextPrompt.Offer(aimed != null && aimedFragment >= 0 ? "Зажмите ЛКМ на пробоине на 0,8 с · 1 доска за 1 блок" : "Наведитесь на подсвеченную пробоину", aimed != null ? 50 : 5);
+                    string hint = PlankTargetAvailable ? "Зажмите ЛКМ на пробоине на 0,8 с · 1 доска за 1 блок" : "Наведитесь на подсвеченную пробоину";
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+                    if (PlankTargetAvailable && aimedFragment == -1) hint = "Зажмите ЛКМ у основания · 1 доска за 1 блок мачты";
+#endif
+                    ContextPrompt.Offer(hint, aimed != null ? 50 : 5);
                     if (localPlankShip != null)
                     {
                         PirateHudStyle.RepairRing(new Vector2(Screen.width * .5f, Screen.height * .5f), (Time.time - localPlankStarted) / PlankRepairSeconds);
@@ -307,6 +420,11 @@ namespace PirateSlop.Networking
                 else if (aimedHarpoon != null)
                     ContextPrompt.Offer($"ЛКМ — починить гарпунную пушку ({3 - aimedHarpoon.RepairStrikes} удара)", 50);
                 else
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+                    if (aimed != null && aimedFragment == -1 && aimed.Owner.Upper != null && aimed.Owner.Upper.MastAssembly(aimed.SectionId, out int mastIndex))
+                        ContextPrompt.Offer($"ЛКМ у основания — поднять мачту ({Experimental.UpperDestructionV2.MastRepairStrikes - aimed.Owner.Upper.MastRepairProgress(mastIndex)} ударов)", 50);
+                    else
+#endif
                     ContextPrompt.Offer(aimed != null ? "ЛКМ — починить 1 блок за 3 удара" : "Наведитесь на подсвеченную повреждённую часть", aimed != null ? 50 : 5);
             }
         }

@@ -10,6 +10,9 @@ namespace PirateSlop
         public bool MortarShot;
         public Transform Source;
         public int SourceCannonIndex = -1;
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+        public bool DeveloperShot;
+#endif
         public GameObject Attacker;
         public Vector3 Velocity;
         public InventoryItem Ammo = InventoryItem.Cannonball;
@@ -26,9 +29,15 @@ namespace PirateSlop
         }
         public float StandardBlastRadius = .8f, StandardBlastDamage = 30f;
         public float StandardPushRadius = 3f;
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+        internal void PushUpperImpact(CombatHealth health, Vector3 point) => PushPlayer(health, ImpactPushVelocity(health, point));
+#endif
 
         bool IgnoreSource(Collider collider)
         {
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+            if (DeveloperShot && Attacker != null && collider.transform.IsChildOf(Attacker.transform)) return true;
+#endif
             if (Source == null || !collider.transform.IsChildOf(Source)) return false;
             if (!SessionController.FriendlyFire) return true;
             var cannon = collider.GetComponentInParent<SimpleCannon>();
@@ -281,6 +290,9 @@ namespace PirateSlop
 
         void ExplodeArea(Vector3 point, Vector3 normal, Collider surface)
         {
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+            if (PirateSlop.Experimental.UpperCannonImpact.Resolve(this, surface, point, normal)) return;
+#endif
             CombatVfx.Impact(point, normal, true);
             if (surface == null) { WaterImpactPhysics.Report(point, Velocity, 8f, Radius, WaterImpactKind.Projectile, gameObject); GameAudio.Play(SoundCue.Splash, point); }
             if (!Authoritative) return;
@@ -343,6 +355,13 @@ namespace PirateSlop
             var damageSection = PirateSlop.Ships.ShipV3CollisionBatch.ResolveSection(collider, point);
             if (damageSection != null) hitSections.Add(damageSection);
             hitTargets.Add(health != null ? health.transform : collider.transform);
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+            if (PirateSlop.Experimental.UpperCannonImpact.Resolve(this, collider, point, normal))
+            {
+                if (Ammo != InventoryItem.BoomerangCannonball) { spent = true; Destroy(gameObject); }
+                return;
+            }
+#endif
             var directHarpoon = collider.GetComponentInParent<Harpoon.HarpoonGun>();
             var directTentacle = collider.GetComponentInParent<KrakenTentacle>();
             if (Authoritative)

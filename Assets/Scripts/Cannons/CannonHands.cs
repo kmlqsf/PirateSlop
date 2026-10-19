@@ -53,6 +53,9 @@ namespace PirateSlop
         }
         void Update()
         {
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+            if (DeveloperMenu.CannonFireActive && player.IsLocal) { if (controlled != null) LeaveCannon(); return; }
+#endif
             if (controlled == null)
             {
                 if (viewing) SetCannonView(null);

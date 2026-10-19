@@ -60,6 +60,9 @@ namespace PirateSlop.Networking
             {
                 int slot = CannonAmmo.IsBall(item) ? inventory.FindAmmoSlot(item) : inventory.StackSlot(item);
                 bool fresh = inventory.ItemAt(slot) == InventoryItem.None;
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+                RecordUpperItem(slot, item);
+#endif
                 if (!CannonAmmo.IsBall(item) && item != InventoryItem.Fish && item != InventoryItem.Rum && item != InventoryItem.Plank)
                     stackCounts[slot] = fresh ? 1 : inventory.ItemCount(slot) + 1;
                 if (item >= InventoryItem.Wine && !CannonAmmo.IsBall(item)) { equipmentItems[slot] = item; if (fresh) GetComponent<NetworkEquipment>()?.ResetSlot(slot, item); }
@@ -167,6 +170,9 @@ namespace PirateSlop.Networking
                 {
                     var dropped = Instantiate(prefab, placement.point, placement.rotation);
                     spawned.Add(dropped);
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+                    dropped.UpperDisabledUntil = UpperDeadline(slot, spawned.Count - 1);
+#endif
                     if (CannonAmmo.IsBall(item)) dropped.SetAmmoItem(item);
                     if (item == InventoryItem.Lantern) dropped.GetComponent<NetworkLantern>()?.SetLit(GetComponent<NetworkEquipment>().LanternLit(slot));
                     UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene(dropped.gameObject, gameObject.scene);
@@ -203,6 +209,9 @@ namespace PirateSlop.Networking
         }
         void RemoveStackedItem(int slot, int amount)
         {
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+            ConsumeUpperItem(slot, amount);
+#endif
             stackCounts[slot] = Mathf.Max(0, inventory.ItemCount(slot) - amount);
             if (stackCounts[slot] > 0) return;
             equipmentItems[slot] = InventoryItem.None;
@@ -335,7 +344,14 @@ namespace PirateSlop.Networking
             if (cannon == null || !PlayerInventory.CanPlace(cannon.Crate, localPosition, rotation, GetComponent<AdvancedPlayerController>())) return false;
             bool mortar = inventory.ItemAt(slot) == InventoryItem.MortarKit;
             if (mortar && cannon.Crate.MortarPrefab == null) return false;
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+            double upperDeadline = UpperDeadline(slot);
+            int upperIndex = cannon.Crate.Cannons.Count;
+#endif
             cannon.Place(localPosition, rotation, mortar);
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+            cannon.GetComponent<PirateSlop.Experimental.UpperDestructionV2>()?.RestoreWeaponDeadline(upperIndex, upperDeadline);
+#endif
             RemoveStackedItem(slot, 1);
             ApplyInventory();
             return true;
@@ -351,6 +367,9 @@ namespace PirateSlop.Networking
         public bool TryAct(byte action, Vector3 direction, Vector3 eyeOffset, bool aimed = false, int seed = -1)
         {
             if (!IsServerInitialized) return false;
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+            if (action == 3) return TryDeveloperCannonFire(direction, eyeOffset);
+#endif
             if (GetComponent<AdvancedPlayerController>().IsDowned)
             {
                 if (action == 0 && Owner != null && Owner.IsActive) RejectShotTargetRpc(Owner);

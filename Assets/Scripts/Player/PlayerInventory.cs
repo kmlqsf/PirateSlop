@@ -213,6 +213,9 @@ namespace PirateSlop
                 else if (Keyboard.current != null && (Keyboard.current.escapeKey.wasPressedThisFrame || Keyboard.current.eKey.wasPressedThisFrame)) CloseLoot(true);
                 return;
             }
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+            if (DeveloperMenu.CannonFireActive && motor.IsLocal) { InteractionUsed = true; return; }
+#endif
             if (HandleSeaLoot()) return;
             if (!motor.InputActive || motor.LocomotionLocked || (motor.IsSwimming || motor.IsClimbing)) return;
             var shipInteraction = GetComponent<PirateSlop.Ships.ShipV3PlayerInteraction>();

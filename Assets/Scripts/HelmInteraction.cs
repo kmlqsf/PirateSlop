@@ -17,6 +17,9 @@ public class HelmInteraction : MonoBehaviour
     float rudder, lastGrip, monkeyGripUntil, visualRudder;
     public bool Networked { get; set; }
     public bool StructurallyAvailable { get; set; } = true;
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+    public float UpperResponse { get; set; } = 1f;
+#endif
     public float CurrentRudderNormalized => rudder;
     public float LastHumanControlTime { get; private set; } = float.NegativeInfinity;
     float UpgradeResponse => player != null && player.GetComponent<PirateSlop.Networking.NetworkPlayer>() is { } owner && owner.HasUpgrade(UpgradeEffect.Helmsman) ? RoguelikeTuning.Current.helmMultiplier : 1f;
@@ -52,6 +55,9 @@ public class HelmInteraction : MonoBehaviour
     {
         if (!holding) { if (IsControlledBy(candidate)) ReleaseControl(); return; }
         if (!float.IsFinite(degrees) || !TryTakeControl(candidate)) return;
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+        degrees *= UpperResponse;
+#endif
         rudder = Mathf.Clamp(rudder - Mathf.Clamp(degrees, -180f, 180f) * UpgradeResponse / (360f * wheelTurnsToFullSteer), -1f, 1f);
     }
     public void ReleaseControl() { IsControlling = false; player = null; }
@@ -59,6 +65,9 @@ public class HelmInteraction : MonoBehaviour
     {
         var ship = GetComponentInParent<PirateSlop.Networking.NetworkShip>();
         if (ship == null || !ship.IsServerInitialized || ship.IsSinking || IsControlling || !StructurallyAvailable || !float.IsFinite(delta)) return false;
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+        delta *= UpperResponse;
+#endif
         rudder = Mathf.Clamp(rudder + Mathf.Clamp(delta, -.1f, .1f), -1f, 1f);
         monkeyGripUntil = Time.time + .2f;
         UpdateWheel(); return true;

@@ -71,6 +71,9 @@ namespace PirateSlop.Networking
             if (sender != null && SessionController.Instance.GetPlayer(sender.ClientId)?.Motor.IsFrozen == true) return;
             var gun = HarpoonMount != null ? HarpoonMount.GetGun(index) : null;
             if (gun == null || gun.IsBroken) return;
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+            if (gun.UpperDisabled) return;
+#endif
             gun.LaunchFromNetwork(spawnPos, velocity);
             HarpoonFireObserversRpc(index, spawnPos, velocity);
         }

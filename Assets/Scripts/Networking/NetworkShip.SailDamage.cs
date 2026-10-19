@@ -35,8 +35,14 @@ namespace PirateSlop.Networking
             foreach (var ship in ActiveShips)
             {
                 if (ship == null || !ship.IsServerInitialized || ship.sailDamageSurfaces == null) continue;
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+                var upper = ship.GetComponent<PirateSlop.Experimental.UpperDestructionV2>();
+#endif
                 for (int i = 0; i < ship.sailDamageSurfaces.Length; i++)
                 {
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+                    if (upper != null && upper.IsProtectedSail(i)) continue;
+#endif
                     var surface = ship.sailDamageSurfaces[i];
                     if (surface == null) continue;
                     ushort seed = (ushort)(++ship.sailDamageSequence * 40503u + (uint)i * 7919u);

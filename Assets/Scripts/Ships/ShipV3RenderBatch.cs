@@ -264,6 +264,9 @@ namespace PirateSlop.Ships
 
         void OnDestroy() => OnDisable();
         void Invalidate(ShipDamageSection section) => dirty = true;
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+        public void InvalidateVisibility() => dirty = true;
+#endif
         void Unsubscribe()
         {
             foreach (var section in trackedSections) if (section != null) section.VisualChanged -= Invalidate;
