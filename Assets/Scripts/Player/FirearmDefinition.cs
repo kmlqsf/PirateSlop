@@ -79,6 +79,7 @@ namespace PirateSlop
                     continue;
                 }
                 if (hit.collider == null) continue;
+                if (batch.ApplyKamikazeHit(hit, Vector3.Distance(eye, hit.point), weaponMultiplier * damageScale)) continue;
                 var seagull = hit.collider.GetComponentInParent<PirateSlop.World.SeagullVisual>();
                 if (seagull != null) { seagullHits.Add(seagull); continue; }
                 var monkey = hit.collider.GetComponent<PirateSlop.Ships.ShipMonkeyHitbox>();

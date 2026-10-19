@@ -205,6 +205,7 @@ namespace PirateSlop
                     {
                         spent = true; Destroy(gameObject); return;
                     }
+                    nearest.collider.GetComponent<PirateSlop.World.KamikazeHitbox>()?.HitCannon(this);
                     if (Authoritative && Ammo != InventoryItem.BoardingHook)
                         nearest.collider.GetComponentInParent<PirateSlop.World.SeagullVisual>()?.ReceiveFirearmHit(Velocity);
                     if (explosive)
@@ -301,6 +302,7 @@ namespace PirateSlop
             var damaged = new HashSet<CombatHealth>();
             var ships = new HashSet<NetworkShip>();
             float blastRadius = Ammo == InventoryItem.FireCannonball ? StandardBlastRadius : CannonAmmo.MortarBlastRadius(Ammo);
+            NetworkKamikazeEvent.DamageNearby(gameObject.scene, point, blastRadius, Ammo == InventoryItem.Cannonball ? StandardBlastDamage : PlayerDamage, Attacker);
             foreach (var hit in Physics.OverlapSphere(point, blastRadius, ~0, QueryTriggerInteraction.Ignore))
             {
                 if (IgnoreSource(hit)) continue;

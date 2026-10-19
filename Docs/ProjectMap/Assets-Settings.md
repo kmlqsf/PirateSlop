@@ -24,14 +24,14 @@
 
 | Файл | Краткое описание |
 | --- | --- |
-| [Assets/Settings/Loot/DefaultLoot.asset](<../../Assets/Settings/Loot/DefaultLoot.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь, Раковина с сундуком и парные рычаги, Остров с весами и пятью камнями, Сундук в такелаже, Груз за кормой, Пушечный пролом, Чайка с ключом, Лестница контрабандистов — морской платформинг |
+| [Assets/Settings/Loot/DefaultLoot.asset](<../../Assets/Settings/Loot/DefaultLoot.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь, Раковина с сундуком и парные рычаги, Остров с весами и пятью камнями, Сундук в такелаже, Груз за кормой, Пушечный пролом, Чайка с ключом, Лестница контрабандистов — морской платформинг, Rock Ring — ивент камикадзе |
 
 ## Assets/Settings/Networking
 
 | Файл | Краткое описание |
 | --- | --- |
-| [Assets/Settings/Networking/NetworkPrefabs.asset](<../../Assets/Settings/Networking/NetworkPrefabs.asset>) | Настройки или данные Unity; Раковина с сундуком и парные рычаги, Остров с весами и пятью камнями, Сундук в такелаже, Груз за кормой, Пушечный пролом, Чайка с ключом, Лестница контрабандистов — морской платформинг |
-| [Assets/Settings/Networking/SessionConfig.asset](<../../Assets/Settings/Networking/SessionConfig.asset>) | Настройки или данные Unity; Телепортация корабля через F8, Сеть, сессия и Steam, Сундук в такелаже, Груз за кормой, Пушечный пролом, Чайка с ключом, Лестница контрабандистов — морской платформинг |
+| [Assets/Settings/Networking/NetworkPrefabs.asset](<../../Assets/Settings/Networking/NetworkPrefabs.asset>) | Настройки или данные Unity; Раковина с сундуком и парные рычаги, Остров с весами и пятью камнями, Сундук в такелаже, Груз за кормой, Пушечный пролом, Чайка с ключом, Лестница контрабандистов — морской платформинг, Rock Ring — ивент камикадзе |
+| [Assets/Settings/Networking/SessionConfig.asset](<../../Assets/Settings/Networking/SessionConfig.asset>) | Настройки или данные Unity; Телепортация корабля через F8, Сеть, сессия и Steam, Сундук в такелаже, Груз за кормой, Пушечный пролом, Чайка с ключом, Лестница контрабандистов — морской платформинг, Rock Ring — ивент камикадзе |
 | [Assets/Settings/Networking/ShipObserver.asset](<../../Assets/Settings/Networking/ShipObserver.asset>) | Настройки или данные Unity |
 
 ## Assets/Settings/ShipDestruction
@@ -85,6 +85,7 @@
 | [Assets/Settings/World/CrescentBay.asset](<../../Assets/Settings/World/CrescentBay.asset>) | Настройки или данные Unity |
 | [Assets/Settings/World/DefaultWorld.asset](<../../Assets/Settings/World/DefaultWorld.asset>) | Настройки или данные Unity |
 | [Assets/Settings/World/HighIsland.asset](<../../Assets/Settings/World/HighIsland.asset>) | Настройки или данные Unity |
+| [Assets/Settings/World/KamikazeRockRingNavigation.asset](<../../Assets/Settings/World/KamikazeRockRingNavigation.asset>) | Настройки или данные Unity; Rock Ring — ивент камикадзе |
 | [Assets/Settings/World/PassageRock.asset](<../../Assets/Settings/World/PassageRock.asset>) | Настройки или данные Unity |
 | [Assets/Settings/World/PassageRock.mat](<../../Assets/Settings/World/PassageRock.mat>) | Материал Unity |
 | [Assets/Settings/World/PassageRock.prefab](<../../Assets/Settings/World/PassageRock.prefab>) | Префаб Unity |

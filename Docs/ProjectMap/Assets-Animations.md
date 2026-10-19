@@ -6,6 +6,12 @@
 
 Автоматический каталог. Описания обозначают тип файла и известную тему, а не подтверждение использования в игре.
 
+## Assets/Animations/Enemies
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Animations/Enemies/Kamikaze.controller](<../../Assets/Animations/Enemies/Kamikaze.controller>) | Контроллер анимации; Rock Ring — ивент камикадзе |
+
 ## Assets/Animations/Player
 
 | Файл | Краткое описание |

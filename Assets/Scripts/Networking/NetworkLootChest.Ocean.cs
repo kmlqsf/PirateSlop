@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace PirateSlop.Networking
 {
-    public enum SeaLootKind : byte { None, Capture, Raft, Sunken, Shark, Skull, FloatingReward, Clam, Balance, Rigging, SternCargo, CannonBreach, SeagullKey, Platforming }
+    public enum SeaLootKind : byte { None, Capture, Raft, Sunken, Shark, Skull, FloatingReward, Clam, Balance, Rigging, SternCargo, CannonBreach, SeagullKey, Platforming, Kamikaze }
     public enum SeaLootState : byte { Locked, Rising, Ready, Flying }
 
     public sealed partial class NetworkLootChest
@@ -36,7 +36,7 @@ namespace PirateSlop.Networking
         float heartbeat, riseStarted, nextCapture;
         NetworkShip deck;
         Collider chestCollider;
-        Collider[] captureChestColliders;
+        Collider[] chestColliders;
         Renderer[] chestRenderers;
         GameObject eventVisual;
         SharkSwarmVisual swarm;
@@ -51,7 +51,7 @@ namespace PirateSlop.Networking
         public NetworkShip SupportingShip => support.Value != null ? support.Value.GetComponent<NetworkShip>() : deck;
         public void RefreshDeveloperShipPose()
         {
-            if (Carrier != null) transform.SetPositionAndRotation(Carrier.transform.position + Carrier.transform.forward * .9f + Carrier.transform.right * .35f + Vector3.up * .65f, Carrier.transform.rotation);
+            if (Carrier != null) UpdateCarriedChestPose();
             else if (SupportingShip != null) transform.SetPositionAndRotation(SupportingShip.transform.TransformPoint(anchor.Value), SupportingShip.transform.rotation * facing.Value);
         }
         public bool SharksDistracted => Time.time < sharksDistractedUntil.Value;
@@ -279,6 +279,8 @@ namespace PirateSlop.Networking
         public void Carry(NetworkWeapon player)
         {
             if (!IsServerInitialized || !Available || Kind == SeaLootKind.None) return;
+            ResetLooseChestMotion();
+            if (InKamikazeEvent) kamikazeSupport.Value = null;
             if (OnWhale) { whaleAttached.Value = false; whaleSupport.Value = null; }
             if (InClam) { inClam.Value = false; clamSupport.Value = null; }
             if (OnBalance) balanceSupport.Value = null;
@@ -301,6 +303,7 @@ namespace PirateSlop.Networking
         public void Drop()
         {
             if (!IsServerInitialized) return;
+            ResetLooseChestMotion();
             wasCarried = false;
             var player = carryingPlayer;
             Vector3 point = player != null ? player.transform.position + Vector3.up * .65f : transform.position;
@@ -321,9 +324,8 @@ namespace PirateSlop.Networking
             RaycastHit floor = default;
             foreach (var hit in Physics.RaycastAll(point + Vector3.up * .3f, Vector3.down, 4, ~0, QueryTriggerInteraction.Ignore))
             {
-                if (hit.transform.IsChildOf(transform) || (player != null && hit.transform.IsChildOf(player.transform)) || hit.normal.y < .7f) continue;
+                if (!IsLooseChestFloor(hit) || hit.distance >= nearest) continue;
                 var ship = hit.collider.GetComponentInParent<NetworkShip>();
-                if (ship == null || ship.IsSinking || hit.distance >= nearest) continue;
                 nearest = hit.distance;
                 floor = hit;
                 deck = ship;
@@ -336,6 +338,7 @@ namespace PirateSlop.Networking
 
         void UpdateOceanLoot()
         {
+            if (UpdateKamikazeChest()) return;
             if (UpdatePlatformingChest()) return;
             if (UpdateSeagullChest()) return;
             if (UpdateFortChest()) return;
@@ -383,6 +386,7 @@ namespace PirateSlop.Networking
                 if (carryingPlayer == null && carrier.Value != null) Drop();
                 if (carryingPlayer == null && carrier.Value == null && wasCarried) Drop();
             }
+            if (wasCarried != (carrier.Value != null)) ResetLooseChestMotion();
             wasCarried = carrier.Value != null;
             if (Kind == SeaLootKind.Raft) UpdateRaftVisual();
             if (support.Value != null) deck = support.Value.GetComponent<NetworkShip>();
@@ -401,8 +405,7 @@ namespace PirateSlop.Networking
                 transform.SetPositionAndRotation(RewardFlightPoint(), deck != null ? deck.transform.rotation * facing.Value : facing.Value);
             else if (carrier.Value != null)
             {
-                var holder = carrier.Value.transform;
-                transform.SetPositionAndRotation(holder.position + holder.forward * .9f + holder.right * .35f + Vector3.up * .65f, holder.rotation);
+                UpdateCarriedChestPose();
             }
             else if (deck != null && supportId.Value != 0)
                 transform.SetPositionAndRotation(deck.transform.TransformPoint(anchor.Value), deck.transform.rotation * facing.Value);
@@ -418,9 +421,9 @@ namespace PirateSlop.Networking
             }
             bool show = !captureRewardTaken.Value;
             foreach (var renderer in chestRenderers) if (renderer != null) renderer.enabled = show;
-            if (chestCollider != null) chestCollider.enabled = show && carrier.Value == null && phase.Value != SeaLootState.Flying && !(Kind == SeaLootKind.Capture && phase.Value != SeaLootState.Ready);
-            if (Kind == SeaLootKind.Capture && captureChestColliders != null)
-                foreach (var collider in captureChestColliders) collider.enabled = show && carrier.Value == null && phase.Value == SeaLootState.Ready;
+            if (chestColliders != null)
+                foreach (var collider in chestColliders)
+                    if (collider != null) collider.enabled = show && carrier.Value == null && phase.Value != SeaLootState.Flying && !(Kind == SeaLootKind.Capture && phase.Value != SeaLootState.Ready);
             UpdateObjectivePresentation();
         }
 
@@ -437,6 +440,10 @@ namespace PirateSlop.Networking
 
         public override void OnStopNetwork()
         {
+            ResetLooseChestMotion();
+            presentedCarrier = null;
+            presentedCarrierPlayer = null;
+            wasCarried = false;
             ClientChests.Remove(this);
             if (eventVisual != null) Destroy(eventVisual);
             DestroyCaptureMeshes();

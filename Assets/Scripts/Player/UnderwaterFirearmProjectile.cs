@@ -11,10 +11,32 @@ namespace PirateSlop
         readonly Dictionary<CombatHealth, float> totals = new();
         readonly Dictionary<IWeaponTarget, float> others = new();
         readonly HashSet<PirateSlop.Ships.ShipMonkey> monkeys = new();
+        Dictionary<PirateSlop.World.KamikazeUnit, float> kamikazeDamage;
         public FirearmDamageBatch(GameObject owner, FirearmDefinition firearm) { shooter = owner; definition = firearm; }
+        public bool ApplyKamikazeHit(RaycastHit hit, float distance, float damageScale = 1f)
+        {
+            if (hit.collider == null) return false;
+            var box = hit.collider.GetComponent<PirateSlop.World.KamikazeHitbox>();
+            if (box == null || box.Unit == null || box.Unit.Event == null) return false;
+            if (box.Bomb) { box.Unit.ReceiveHit(2f, shooter); return true; }
+            kamikazeDamage ??= new Dictionary<PirateSlop.World.KamikazeUnit, float>();
+            kamikazeDamage.TryGetValue(box.Unit, out float previous);
+            if (definition.Pellets <= 1)
+            {
+                if (previous == 0 && damageScale > 0) { kamikazeDamage[box.Unit] = 1f; box.Unit.ReceiveHit(1f, shooter); }
+                return true;
+            }
+            var settings = definition.Ballistics;
+            float falloff = Mathf.InverseLerp(settings.FalloffStart, settings.FalloffEnd, distance);
+            float amount = Mathf.Min(Mathf.Lerp(settings.NearDamage, settings.FarDamage, falloff), Mathf.Max(0f, definition.DamageCap - previous));
+            kamikazeDamage[box.Unit] = previous + amount;
+            box.Unit.ReceiveHit(amount * damageScale / Mathf.Max(1f, box.Unit.Event.BodyHitDamage), shooter);
+            return true;
+        }
         public void Apply(RaycastHit hit, float distance)
         {
             if (hit.collider == null || shooter == null) return;
+            if (ApplyKamikazeHit(hit, distance)) return;
             var seagull = hit.collider.GetComponentInParent<PirateSlop.World.SeagullVisual>();
             if (seagull != null) { seagull.ReceiveFirearmHit((hit.point - shooter.transform.position).normalized); return; }
             var shark = hit.collider.GetComponentInParent<SharkHitTarget>();

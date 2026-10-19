@@ -73,6 +73,8 @@ namespace PirateSlop.World
                 if (wreck != null && wreck.IsSpawned && wreck.gameObject.scene == scene) Add(places, "seagull-key/" + wreck.NetworkObject.ObjectId, "Чайка с ключом · " + wreck.NetworkObject.ObjectId, 1, wreck.transform.position, wreck.PlatformRadius);
             foreach (var course in NetworkPlatformingEvent.ServerEvents)
                 if (course != null && course.IsSpawned && course.gameObject.scene == scene) Add(places, "platforming/" + course.NetworkObject.ObjectId, "Лестница контрабандистов · " + course.NetworkObject.ObjectId, 1, course.transform.position, course.PlatformRadius);
+            foreach (var kamikaze in NetworkKamikazeEvent.ServerEvents)
+                if (kamikaze != null && kamikaze.IsSpawned && kamikaze.Ready && kamikaze.gameObject.scene == scene) Add(places, "kamikaze/" + kamikaze.NetworkObject.ObjectId, "Кольцо камикадзе · " + kamikaze.NetworkObject.ObjectId, 1, kamikaze.transform.position, kamikaze.IslandRadius);
             foreach (var whale in UnityEngine.Object.FindObjectsByType<WhaleLootPoint>(FindObjectsSortMode.None))
                 if (whale.IsSpawned && whale.gameObject.scene == scene) Add(places, "whale/" + whale.NetworkObject.ObjectId, "Раненый кит · " + whale.NetworkObject.ObjectId, 1, whale.transform.position, 18);
             return places.OrderBy(p => p.Category).ThenBy(p => p.Name, StringComparer.Ordinal).ToArray();

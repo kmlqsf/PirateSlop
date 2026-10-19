@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace PirateSlop.Networking
 {
+    [DefaultExecutionOrder(10)]
     public sealed partial class NetworkLootChest : NetworkBehaviour
     {
         public static readonly System.Collections.Generic.List<NetworkLootChest> ServerChests = new();

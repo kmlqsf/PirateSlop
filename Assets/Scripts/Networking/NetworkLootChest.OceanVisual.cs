@@ -11,7 +11,7 @@ namespace PirateSlop.Networking
             visualCreated = true;
             chestCollider = GetComponent<Collider>();
             chestRenderers = GetComponentsInChildren<Renderer>(true);
-            if (Kind == SeaLootKind.Capture) captureChestColliders = GetComponentsInChildren<Collider>(true);
+            chestColliders = GetComponentsInChildren<Collider>(true);
             eventVisual = new GameObject("SeaLootObjective");
             UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene(eventVisual, gameObject.scene);
             eventVisual.transform.position = eventPoint.Value;

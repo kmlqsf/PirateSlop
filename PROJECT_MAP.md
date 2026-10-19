@@ -1,6 +1,6 @@
 # PirateSlop — карта проекта
 
-Снимок файлов: 2026-10-19. Корень: `D:\projects\Pirate_BR\PirateGame`.
+Снимок файлов: 2026-10-20. Корень: `D:\projects\Pirate_BR\PirateGame`.
 
 ## Как пользоваться
 
@@ -12,17 +12,17 @@
 
 ## Полный каталог
 
-Учтено 14196 файлов без `.meta`. Ещё 13018 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
+Учтено 14226 файлов без `.meta`. Ещё 13042 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
 
 | Раздел | Назначение | Файлов |
 | --- | --- | ---: |
 | [.agents](<Docs/ProjectMap/.agents.md>) | Ресурсы раздела; точный состав — в каталоге | 1 |
 | [.cursor](<Docs/ProjectMap/.cursor.md>) | Ресурсы раздела; точный состав — в каталоге | 1 |
 | [.opencode](<Docs/ProjectMap/.opencode.md>) | Ресурсы раздела; точный состав — в каталоге | 4 |
-| [Art](<Docs/ProjectMap/Art.md>) | Исходники арта и Blender | 568 |
+| [Art](<Docs/ProjectMap/Art.md>) | Исходники арта и Blender | 578 |
 | [Assets](<Docs/ProjectMap/Assets.md>) | Ресурсы раздела; точный состав — в каталоге | 2 |
-| [Assets/Animations](<Docs/ProjectMap/Assets-Animations.md>) | Анимации | 37 |
-| [Assets/Audio](<Docs/ProjectMap/Assets-Audio.md>) | Звуковые ресурсы и лицензии | 461 |
+| [Assets/Animations](<Docs/ProjectMap/Assets-Animations.md>) | Анимации | 38 |
+| [Assets/Audio](<Docs/ProjectMap/Assets-Audio.md>) | Звуковые ресурсы и лицензии | 465 |
 | [Assets/Branding](<Docs/ProjectMap/Assets-Branding.md>) | Оформление проекта | 1 |
 | [Assets/Editor](<Docs/ProjectMap/Assets-Editor.md>) | Редакторские ресурсы | 1 |
 | [Assets/Experimental](<Docs/ProjectMap/Assets-Experimental.md>) | Ресурсы раздела; точный состав — в каталоге | 11 |
@@ -30,15 +30,15 @@
 | [Assets/Game](<Docs/ProjectMap/Assets-Game.md>) | Игровые подсистемы и эффекты | 83 |
 | [Assets/Houidisoft technology](<Docs/ProjectMap/Assets-Houidisoft technology.md>) | Ресурсы раздела; точный состав — в каталоге | 12 |
 | [Assets/JMO Assets](<Docs/ProjectMap/Assets-JMO Assets.md>) | Ресурсы раздела; точный состав — в каталоге | 18 |
-| [Assets/Materials](<Docs/ProjectMap/Assets-Materials.md>) | Материалы | 140 |
+| [Assets/Materials](<Docs/ProjectMap/Assets-Materials.md>) | Материалы | 141 |
 | [Assets/Mirza](<Docs/ProjectMap/Assets-Mirza.md>) | Ресурсы раздела; точный состав — в каталоге | 1 |
-| [Assets/Models](<Docs/ProjectMap/Assets-Models.md>) | Модели и связанные ресурсы | 9657 |
+| [Assets/Models](<Docs/ProjectMap/Assets-Models.md>) | Модели и связанные ресурсы | 9659 |
 | [Assets/Plugins](<Docs/ProjectMap/Assets-Plugins.md>) | Плагины | 5 |
-| [Assets/Prefabs](<Docs/ProjectMap/Assets-Prefabs.md>) | Готовые игровые объекты | 138 |
-| [Assets/Resources](<Docs/ProjectMap/Assets-Resources.md>) | Ресурсы, доступные для загрузки по имени | 168 |
+| [Assets/Prefabs](<Docs/ProjectMap/Assets-Prefabs.md>) | Готовые игровые объекты | 139 |
+| [Assets/Resources](<Docs/ProjectMap/Assets-Resources.md>) | Ресурсы, доступные для загрузки по имени | 170 |
 | [Assets/Scenes](<Docs/ProjectMap/Assets-Scenes.md>) | Сохранённые сцены | 3 |
-| [Assets/Scripts](<Docs/ProjectMap/Assets-Scripts.md>) | Игровой код и редакторские инструменты | 601 |
-| [Assets/Settings](<Docs/ProjectMap/Assets-Settings.md>) | Настройки игровых систем и рендеринга | 59 |
+| [Assets/Scripts](<Docs/ProjectMap/Assets-Scripts.md>) | Игровой код и редакторские инструменты | 608 |
+| [Assets/Settings](<Docs/ProjectMap/Assets-Settings.md>) | Настройки игровых систем и рендеринга | 60 |
 | [Assets/Shaders](<Docs/ProjectMap/Assets-Shaders.md>) | Шейдеры | 22 |
 | [Assets/StreamingAssets](<Docs/ProjectMap/Assets-StreamingAssets.md>) | Ресурсы раздела; точный состав — в каталоге | 5 |
 | [Assets/Tests](<Docs/ProjectMap/Assets-Tests.md>) | Исходники проверок | 19 |
@@ -47,7 +47,7 @@
 | [Assets/UI](<Docs/ProjectMap/Assets-UI.md>) | Ресурсы интерфейса | 42 |
 | [Assets/_Recovery](<Docs/ProjectMap/Assets-_Recovery.md>) | Сохранённые восстановленные данные | 5 |
 | [Captures](<Docs/ProjectMap/Captures.md>) | Ресурсы раздела; точный состав — в каталоге | 1010 |
-| [Docs](<Docs/ProjectMap/Docs.md>) | Документы и сохранённые отчёты | 54 |
+| [Docs](<Docs/ProjectMap/Docs.md>) | Документы и сохранённые отчёты | 55 |
 | [Packages](<Docs/ProjectMap/Packages.md>) | Манифест, lock-файл и встроенные пакеты | 922 |
 | [ProjectSettings](<Docs/ProjectMap/ProjectSettings.md>) | Настройки Unity | 29 |
 | [Root](<Docs/ProjectMap/Root.md>) | Корневые инструкции, планы и служебные файлы | 45 |
@@ -3321,6 +3321,62 @@ Mystery допускает все включенные строки ChestLoot.js
 - [Assets/Models/SeaEvents/Platforming/Landing31_9.asset](<Assets/Models/SeaEvents/Platforming/Landing31_9.asset>) — Настройки или данные Unity.
 - [Assets/Models/SeaEvents/Platforming/SummitChains_0.asset](<Assets/Models/SeaEvents/Platforming/SummitChains_0.asset>) — Настройки или данные Unity.
 - [Docs/PlatformingEvent.md](<Docs/PlatformingEvent.md>) — Документация.
+
+### Rock Ring — ивент камикадзе (`kamikaze-rock-ring-event`)
+
+Ключевые слова: kamikaze, камикадзе, rock ring, one landing.
+
+19.10.2026: согласованы триггер3м,12врагов и доступный сразу сундук; бомба1попадание, тело2, ядро убивает сразу, взрыв при сближении/смерти. Пользователь поручил собственную близкую модель Classic/HD. Игровая механика ещё не реализована; следующий этап — выбор imagegen-концепта до моделирования. Оригинальные крик/idle получены, происхождение и хеши сохранены; подключение к игре ожидается после модели.
+19.10.2026: сохранён код серверной основы (12 состояний, NavMeshAgent на сервере, клиентская интерполяция/крик, очередь цепных взрывов), хитбоксы включены в огнестрел/ядра/ручную мортиру и F8. Модель, nav data, префабы и SeaLootSpawner ещё не подключены; выбор A/B обязателен. Финальная компиляция не подтверждена: refresh потерял Unity MCP session, требуется восстановление и проверка консоли.
+19.10.2026, после восстановленияUnityMCP: последняя версия серверной основы скомпилирована, Console0errors; reflectionподтверждает MarkExploded и отложенное создание batch-словаря только при попадании в камикадзе. Playfalse, NetworkMenuостаётсяdirty. Следующий необходимый ввод — выбор концептаA/B; до него модели/анимации нет. NavData/префабы/спавн ещё не подключены; игровая, сетевая и FPS-проверки не выполнялись.
+19.10.2026: пользователь утвердил A; собственная Generic-модель проходит Blender-ревизию/визуальное ревью. В коде подключены существующие SingleLandingRockIsland и доступный сразу переносимый сундук, подготовка nav data и префабов. NavData уже запечены из реальных коллайдеров: центр доступен,72из72проверенных позиций имеют путь,6553треугольника. Explosion02 и pooledVFX36частиц получены/сохранены. Полный Configure ожидает финальную модель; игровая, сетевая и FPS-приёмка не выполнялись.
+19.10.2026 финалсохранения: модельA9888tris/24bones/1skin/1материал, BlenderR3 и реальныйUnitypreview APPROVED. GenericIdle2s/Run.6s,15хитбоксов(2bomb), фронт+Z исправленVisual180послеbakeAxisConversion; RootXZdrift0, опорнаястопа−7м/с. Boundsпересчитаныповсемклипам,1,867,520vertexsamples/0outside. ИвентназначенDefaultLoot,1регистрацияFishNet, Protocol199; FocusedInspector missing0/unassigned0, C#errors0. Сценаостаётсяdirty/несохранена. F8→Телепортация→Ивенты→Кольцокамикадзе. Первыйигровойэтап/2peer/latejoin/звук/FPS ожидаютручнойпроверки.
+19.10.2026 уточнение: взаимный урон и цепные взрывы камикадзе отключены. Бег8.24м/с при спринте8 (+3%), LightBoots учитывается через SprintTopSpeed. Память о живом участнике сохраняется вне острова, очищается после смерти/отключения. Вода/выход/недоступный маршрут запускают серверный homingпрыжок0.55с с дугой по7лучам и CapsuleCast;2старта/кадр, до4подшагов, existingSyncList flag8. Prefab/Protocol200 сохранены. C#проверен; новая игровая/сетевая/FPS-проверка ожидается.
+
+- [Assets/Prefabs/World/SandyIslands/SingleLandingRockIsland.prefab](<Assets/Prefabs/World/SandyIslands/SingleLandingRockIsland.prefab>) — Префаб Unity.
+- [Assets/Audio/Enemies/Kamikaze/KamikazeScream.wav](<Assets/Audio/Enemies/Kamikaze/KamikazeScream.wav>) — Аудио.
+- [Assets/Audio/Enemies/Kamikaze/KamikazeIdle.wav](<Assets/Audio/Enemies/Kamikaze/KamikazeIdle.wav>) — Аудио.
+- [Art/Audio/Kamikaze/AttackKamikaze.wav](<Art/Audio/Kamikaze/AttackKamikaze.wav>) — Аудио.
+- [Art/Audio/Kamikaze/IdleKamikaze.wav](<Art/Audio/Kamikaze/IdleKamikaze.wav>) — Аудио.
+- [Art/Audio/Kamikaze/SourceManifest.json](<Art/Audio/Kamikaze/SourceManifest.json>) — Конфигурация / данные JSON.
+- [Assets/Scripts/Networking/NetworkKamikazeEvent.cs](<Assets/Scripts/Networking/NetworkKamikazeEvent.cs>) — Исходник C#: KamikazeState, NetworkKamikazeEvent.
+- [Assets/Scripts/World/KamikazeUnit.cs](<Assets/Scripts/World/KamikazeUnit.cs>) — Исходник C#: KamikazeUnit.
+- [Assets/Scripts/World/KamikazeHitbox.cs](<Assets/Scripts/World/KamikazeHitbox.cs>) — Исходник C#: KamikazeHitbox.
+- [Assets/Scripts/Audio/GameAudio.Kamikaze.cs](<Assets/Scripts/Audio/GameAudio.Kamikaze.cs>) — Исходник C#: GameAudio.
+- [Assets/Scripts/Player/PlayerHitbox.cs](<Assets/Scripts/Player/PlayerHitbox.cs>) — Исходник C#: PlayerHitbox.
+- [Assets/Scripts/Player/UnderwaterFirearmProjectile.cs](<Assets/Scripts/Player/UnderwaterFirearmProjectile.cs>) — Исходник C#: FirearmDamageBatch, UnderwaterFirearmProjectile.
+- [Assets/Scripts/Player/FirearmDefinition.cs](<Assets/Scripts/Player/FirearmDefinition.cs>) — Исходник C#: FirearmDefinition, FirearmCombat.
+- [Assets/Scripts/Cannons/CannonShotDamage.cs](<Assets/Scripts/Cannons/CannonShotDamage.cs>) — Исходник C#: CannonShotDamage.
+- [Assets/Scripts/Networking/NetworkHandMortarBall.cs](<Assets/Scripts/Networking/NetworkHandMortarBall.cs>) — Исходник C#: NetworkHandMortarBall.
+- [Assets/Scripts/Loot/LootCatalog.cs](<Assets/Scripts/Loot/LootCatalog.cs>) — Исходник C#: LootCatalog, Entry.
+- [Assets/Scripts/World/DeveloperTeleportDestinations.cs](<Assets/Scripts/World/DeveloperTeleportDestinations.cs>) — Исходник C#: DeveloperTeleportDestination, DeveloperTeleportDestinations.
+- [Assets/Scripts/Networking/NetworkLootChest.Kamikaze.cs](<Assets/Scripts/Networking/NetworkLootChest.Kamikaze.cs>) — Исходник C#: NetworkLootChest.
+- [Assets/Scripts/Editor/KamikazeEventSetup.cs](<Assets/Scripts/Editor/KamikazeEventSetup.cs>) — Исходник C#: KamikazeEventSetup.
+- [Assets/Scripts/World/SeaLootSpawner.cs](<Assets/Scripts/World/SeaLootSpawner.cs>) — Исходник C#: SeaLootSpawner.
+- [Assets/Scripts/Networking/NetworkLootChest.Ocean.cs](<Assets/Scripts/Networking/NetworkLootChest.Ocean.cs>) — Исходник C#: SeaLootKind, SeaLootState, NetworkLootChest.
+- [Assets/Scripts/VfxPool.cs](<Assets/Scripts/VfxPool.cs>) — Исходник C#: VfxPool, Entry.
+- [Assets/Scripts/Networking/SessionConfig.cs](<Assets/Scripts/Networking/SessionConfig.cs>) — Исходник C#: SessionConfig.
+- [Assets/Audio/Enemies/Kamikaze/KamikazeExplosion.wav](<Assets/Audio/Enemies/Kamikaze/KamikazeExplosion.wav>) — Аудио.
+- [Assets/Audio/Enemies/Kamikaze/SOURCES.md](<Assets/Audio/Enemies/Kamikaze/SOURCES.md>) — Документация.
+- [Art/Audio/Kamikaze/Explosion02.wav](<Art/Audio/Kamikaze/Explosion02.wav>) — Аудио.
+- [Assets/Resources/CombatVfx/KamikazeExplosion.prefab](<Assets/Resources/CombatVfx/KamikazeExplosion.prefab>) — Префаб Unity.
+- [Assets/Settings/World/KamikazeRockRingNavigation.asset](<Assets/Settings/World/KamikazeRockRingNavigation.asset>) — Настройки или данные Unity.
+- [Assets/Models/Characters/Kamikaze/Kamikaze.fbx](<Assets/Models/Characters/Kamikaze/Kamikaze.fbx>) — Модель / анимации FBX.
+- [Assets/Models/Characters/Kamikaze/KamikazePalette.png](<Assets/Models/Characters/Kamikaze/KamikazePalette.png>) — Изображение / текстура.
+- [Assets/Prefabs/Enemies/Kamikaze.prefab](<Assets/Prefabs/Enemies/Kamikaze.prefab>) — Префаб Unity.
+- [Assets/Resources/SeaEvents/KamikazeEvent.prefab](<Assets/Resources/SeaEvents/KamikazeEvent.prefab>) — Префаб Unity.
+- [Assets/Animations/Enemies/Kamikaze.controller](<Assets/Animations/Enemies/Kamikaze.controller>) — Контроллер анимации.
+- [Assets/Materials/Characters/Kamikaze.mat](<Assets/Materials/Characters/Kamikaze.mat>) — Материал Unity.
+- [Art/Blender/Characters/Kamikaze/Kamikaze.blend](<Art/Blender/Characters/Kamikaze/Kamikaze.blend>) — Редактируемая сцена Blender.
+- [Art/Blender/Characters/Kamikaze/KamikazeManifest.json](<Art/Blender/Characters/Kamikaze/KamikazeManifest.json>) — Конфигурация / данные JSON.
+- [Art/Blender/Characters/Kamikaze/build_kamikaze.py](<Art/Blender/Characters/Kamikaze/build_kamikaze.py>) — Инструмент Python.
+- [Assets/Settings/Loot/DefaultLoot.asset](<Assets/Settings/Loot/DefaultLoot.asset>) — Настройки или данные Unity.
+- [Assets/Settings/Networking/NetworkPrefabs.asset](<Assets/Settings/Networking/NetworkPrefabs.asset>) — Настройки или данные Unity.
+- [Assets/Settings/Networking/SessionConfig.asset](<Assets/Settings/Networking/SessionConfig.asset>) — Настройки или данные Unity.
+- [Assets/Scripts/World/KamikazeUnit.Pursuit.cs](<Assets/Scripts/World/KamikazeUnit.Pursuit.cs>) — Исходник C#: KamikazeUnit.
+- [Assets/Scripts/AdvancedPlayerController.cs](<Assets/Scripts/AdvancedPlayerController.cs>) — Исходник C#: AdvancedPlayerController.
+- [Docs/KamikazeRockRingEvent.md](<Docs/KamikazeRockRingEvent.md>) — Документация.
+- [Assets/Audio/Enemies/Kamikaze/SOURCES.md](<Assets/Audio/Enemies/Kamikaze/SOURCES.md>) — Документация.
 
 ## Источники актуальных настроек
 
