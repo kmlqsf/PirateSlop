@@ -11,6 +11,7 @@ namespace PirateSlop.World
         public static void Spawn(ProceduralWorld world, NetworkManager manager, LootCatalog catalog)
         {
             if (world == null || !world.Ready || catalog == null || catalog.ChestPrefab == null) return;
+            NetworkKamikazeEvent.SpawnForIslands(world, manager, catalog);
             if (EnvironmentTestGallery.IsTest(world.Layout))
             {
                 for (int i = 0; i < 7; i++) SpawnOne(world, manager, catalog, i, EnvironmentEventTestRow.Point(i, world.Layout.SeaLevel));

@@ -15,6 +15,7 @@
 | [Docs/CannonBreachEvent.md](<../CannonBreachEvent.md>) | Документация; Пушечный пролом |
 | [Docs/ClamChestEvent.md](<../ClamChestEvent.md>) | Документация; Раковина с сундуком и парные рычаги |
 | [Docs/IslandBalanceEvent.md](<../IslandBalanceEvent.md>) | Документация; Остров с весами и пятью камнями |
+| [Docs/KamikazeRockRingEvent.md](<../KamikazeRockRingEvent.md>) | Документация; Rock Ring — ивент камикадзе |
 | [Docs/PlatformingEvent.md](<../PlatformingEvent.md>) | Документация; Лестница контрабандистов — морской платформинг |
 | [Docs/RiggingChestEvent.md](<../RiggingChestEvent.md>) | Документация; Сундук в такелаже |
 | [Docs/RoguelikeApprovedUpgrades.md](<../RoguelikeApprovedUpgrades.md>) | Документация; Улучшения рогалика из сундуков |

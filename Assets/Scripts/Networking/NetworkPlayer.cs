@@ -67,6 +67,7 @@ namespace PirateSlop.Networking
         float nextDiagnostic;
         readonly bool diagnostics = System.Array.IndexOf(System.Environment.GetCommandLineArgs(), "-netdiag") >= 0;
         public AdvancedPlayerController Motor => motor;
+        public Vector3 RenderPosition => graphicsRoot != null ? graphicsRoot.position : transform.position;
         public ShipDeckPassenger Passenger => passenger;
         readonly SyncVar<bool> developerNoclip = new();
         public bool DeveloperNoclip => developerNoclip.Value;

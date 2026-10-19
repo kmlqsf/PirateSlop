@@ -130,6 +130,7 @@ public partial class AdvancedPlayerController : MonoBehaviour
     float jumpBuffer, groundGrace;
     public Vector2 LocalMove => pending.Move;
     public bool IsSprinting => pending.Sprint && !crouched;
+    public float SprintTopSpeed => sprintSpeed * (Upgrade(UpgradeEffect.LightBoots) ? RoguelikeTuning.Current.runMultiplier : 1f);
     public FirstPersonMotion ViewMotion { get; private set; }
     Vector3 slideDirection;
     bool crouched, networked, local = true;

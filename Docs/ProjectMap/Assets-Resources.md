@@ -62,6 +62,7 @@
 | [Assets/Resources/CombatVfx/CombatParticles.prefab](<../../Assets/Resources/CombatVfx/CombatParticles.prefab>) | Префаб Unity |
 | [Assets/Resources/CombatVfx/CrewRespawnMist.prefab](<../../Assets/Resources/CombatVfx/CrewRespawnMist.prefab>) | Префаб Unity |
 | [Assets/Resources/CombatVfx/HullSplinters.prefab](<../../Assets/Resources/CombatVfx/HullSplinters.prefab>) | Префаб Unity |
+| [Assets/Resources/CombatVfx/KamikazeExplosion.prefab](<../../Assets/Resources/CombatVfx/KamikazeExplosion.prefab>) | Префаб Unity; Rock Ring — ивент камикадзе |
 | [Assets/Resources/CombatVfx/MuzzleFlash.prefab](<../../Assets/Resources/CombatVfx/MuzzleFlash.prefab>) | Префаб Unity |
 | [Assets/Resources/CombatVfx/WaterSpray.vfx](<../../Assets/Resources/CombatVfx/WaterSpray.vfx>) | Граф визуального эффекта |
 | [Assets/Resources/CombatVfx/WoodChip.asset](<../../Assets/Resources/CombatVfx/WoodChip.asset>) | Настройки или данные Unity |
@@ -147,6 +148,7 @@
 | [Assets/Resources/SeaEvents/ClamEvent.prefab](<../../Assets/Resources/SeaEvents/ClamEvent.prefab>) | Префаб Unity; Раковина с сундуком и парные рычаги |
 | [Assets/Resources/SeaEvents/ContestPennantMesh.asset](<../../Assets/Resources/SeaEvents/ContestPennantMesh.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |
 | [Assets/Resources/SeaEvents/GripGeometry0.asset](<../../Assets/Resources/SeaEvents/GripGeometry0.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |
+| [Assets/Resources/SeaEvents/KamikazeEvent.prefab](<../../Assets/Resources/SeaEvents/KamikazeEvent.prefab>) | Префаб Unity; Rock Ring — ивент камикадзе |
 | [Assets/Resources/SeaEvents/PlatformingEvent.prefab](<../../Assets/Resources/SeaEvents/PlatformingEvent.prefab>) | Префаб Unity; Лестница контрабандистов — морской платформинг |
 | [Assets/Resources/SeaEvents/Raft.prefab](<../../Assets/Resources/SeaEvents/Raft.prefab>) | Префаб Unity; Предметы, лут и инвентарь |
 | [Assets/Resources/SeaEvents/RaftGeometry0.asset](<../../Assets/Resources/SeaEvents/RaftGeometry0.asset>) | Настройки или данные Unity; Предметы, лут и инвентарь |

@@ -3573,6 +3573,72 @@
       "docs": [
         "Docs/PlatformingEvent.md"
       ]
+    },
+    {
+      "id": "kamikaze-rock-ring-event",
+      "title": "Rock Ring — ивент камикадзе",
+      "aliases": [
+        "kamikaze",
+        "камикадзе",
+        "rock ring",
+        "one landing"
+      ],
+      "notes": [
+        "19.10.2026: согласованы триггер3м,12врагов и доступный сразу сундук; бомба1попадание, тело2, ядро убивает сразу, взрыв при сближении/смерти. Пользователь поручил собственную близкую модель Classic/HD. Игровая механика ещё не реализована; следующий этап — выбор imagegen-концепта до моделирования. Оригинальные крик/idle получены, происхождение и хеши сохранены; подключение к игре ожидается после модели.",
+        "19.10.2026: сохранён код серверной основы (12 состояний, NavMeshAgent на сервере, клиентская интерполяция/крик, очередь цепных взрывов), хитбоксы включены в огнестрел/ядра/ручную мортиру и F8. Модель, nav data, префабы и SeaLootSpawner ещё не подключены; выбор A/B обязателен. Финальная компиляция не подтверждена: refresh потерял Unity MCP session, требуется восстановление и проверка консоли.",
+        "19.10.2026, после восстановленияUnityMCP: последняя версия серверной основы скомпилирована, Console0errors; reflectionподтверждает MarkExploded и отложенное создание batch-словаря только при попадании в камикадзе. Playfalse, NetworkMenuостаётсяdirty. Следующий необходимый ввод — выбор концептаA/B; до него модели/анимации нет. NavData/префабы/спавн ещё не подключены; игровая, сетевая и FPS-проверки не выполнялись.",
+        "19.10.2026: пользователь утвердил A; собственная Generic-модель проходит Blender-ревизию/визуальное ревью. В коде подключены существующие SingleLandingRockIsland и доступный сразу переносимый сундук, подготовка nav data и префабов. NavData уже запечены из реальных коллайдеров: центр доступен,72из72проверенных позиций имеют путь,6553треугольника. Explosion02 и pooledVFX36частиц получены/сохранены. Полный Configure ожидает финальную модель; игровая, сетевая и FPS-приёмка не выполнялись.",
+        "19.10.2026 финалсохранения: модельA9888tris/24bones/1skin/1материал, BlenderR3 и реальныйUnitypreview APPROVED. GenericIdle2s/Run.6s,15хитбоксов(2bomb), фронт+Z исправленVisual180послеbakeAxisConversion; RootXZdrift0, опорнаястопа−7м/с. Boundsпересчитаныповсемклипам,1,867,520vertexsamples/0outside. ИвентназначенDefaultLoot,1регистрацияFishNet, Protocol199; FocusedInspector missing0/unassigned0, C#errors0. Сценаостаётсяdirty/несохранена. F8→Телепортация→Ивенты→Кольцокамикадзе. Первыйигровойэтап/2peer/latejoin/звук/FPS ожидаютручнойпроверки.",
+        "19.10.2026 уточнение: взаимный урон и цепные взрывы камикадзе отключены. Бег8.24м/с при спринте8 (+3%), LightBoots учитывается через SprintTopSpeed. Память о живом участнике сохраняется вне острова, очищается после смерти/отключения. Вода/выход/недоступный маршрут запускают серверный homingпрыжок0.55с с дугой по7лучам и CapsuleCast;2старта/кадр, до4подшагов, existingSyncList flag8. Prefab/Protocol200 сохранены. C#проверен; новая игровая/сетевая/FPS-проверка ожидается."
+      ],
+      "files": [
+        "Assets/Prefabs/World/SandyIslands/SingleLandingRockIsland.prefab",
+        "Assets/Audio/Enemies/Kamikaze/KamikazeScream.wav",
+        "Assets/Audio/Enemies/Kamikaze/KamikazeIdle.wav",
+        "Art/Audio/Kamikaze/AttackKamikaze.wav",
+        "Art/Audio/Kamikaze/IdleKamikaze.wav",
+        "Art/Audio/Kamikaze/SourceManifest.json",
+        "Assets/Scripts/Networking/NetworkKamikazeEvent.cs",
+        "Assets/Scripts/World/KamikazeUnit.cs",
+        "Assets/Scripts/World/KamikazeHitbox.cs",
+        "Assets/Scripts/Audio/GameAudio.Kamikaze.cs",
+        "Assets/Scripts/Player/PlayerHitbox.cs",
+        "Assets/Scripts/Player/UnderwaterFirearmProjectile.cs",
+        "Assets/Scripts/Player/FirearmDefinition.cs",
+        "Assets/Scripts/Cannons/CannonShotDamage.cs",
+        "Assets/Scripts/Networking/NetworkHandMortarBall.cs",
+        "Assets/Scripts/Loot/LootCatalog.cs",
+        "Assets/Scripts/World/DeveloperTeleportDestinations.cs",
+        "Assets/Scripts/Networking/NetworkLootChest.Kamikaze.cs",
+        "Assets/Scripts/Editor/KamikazeEventSetup.cs",
+        "Assets/Scripts/World/SeaLootSpawner.cs",
+        "Assets/Scripts/Networking/NetworkLootChest.Ocean.cs",
+        "Assets/Scripts/VfxPool.cs",
+        "Assets/Scripts/Networking/SessionConfig.cs",
+        "Assets/Audio/Enemies/Kamikaze/KamikazeExplosion.wav",
+        "Assets/Audio/Enemies/Kamikaze/SOURCES.md",
+        "Art/Audio/Kamikaze/Explosion02.wav",
+        "Assets/Resources/CombatVfx/KamikazeExplosion.prefab",
+        "Assets/Settings/World/KamikazeRockRingNavigation.asset",
+        "Assets/Models/Characters/Kamikaze/Kamikaze.fbx",
+        "Assets/Models/Characters/Kamikaze/KamikazePalette.png",
+        "Assets/Prefabs/Enemies/Kamikaze.prefab",
+        "Assets/Resources/SeaEvents/KamikazeEvent.prefab",
+        "Assets/Animations/Enemies/Kamikaze.controller",
+        "Assets/Materials/Characters/Kamikaze.mat",
+        "Art/Blender/Characters/Kamikaze/Kamikaze.blend",
+        "Art/Blender/Characters/Kamikaze/KamikazeManifest.json",
+        "Art/Blender/Characters/Kamikaze/build_kamikaze.py",
+        "Assets/Settings/Loot/DefaultLoot.asset",
+        "Assets/Settings/Networking/NetworkPrefabs.asset",
+        "Assets/Settings/Networking/SessionConfig.asset",
+        "Assets/Scripts/World/KamikazeUnit.Pursuit.cs",
+        "Assets/Scripts/AdvancedPlayerController.cs"
+      ],
+      "docs": [
+        "Docs/KamikazeRockRingEvent.md",
+        "Assets/Audio/Enemies/Kamikaze/SOURCES.md"
+      ]
     }
   ]
 }

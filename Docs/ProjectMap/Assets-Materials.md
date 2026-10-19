@@ -51,6 +51,12 @@
 | [Assets/Materials/Cannons/Harpoon_Steel.mat](<../../Assets/Materials/Cannons/Harpoon_Steel.mat>) | Материал Unity |
 | [Assets/Materials/Cannons/PlacementPreview.mat](<../../Assets/Materials/Cannons/PlacementPreview.mat>) | Материал Unity |
 
+## Assets/Materials/Characters
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Materials/Characters/Kamikaze.mat](<../../Assets/Materials/Characters/Kamikaze.mat>) | Материал Unity; Rock Ring — ивент камикадзе |
+
 ## Assets/Materials/Characters/NewPirate
 
 | Файл | Краткое описание |

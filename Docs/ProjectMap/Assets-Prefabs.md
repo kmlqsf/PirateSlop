@@ -34,6 +34,12 @@
 | [Assets/Prefabs/Creatures/MonkeyBat.prefab](<../../Assets/Prefabs/Creatures/MonkeyBat.prefab>) | Префаб Unity; Корабельная обезьянка |
 | [Assets/Prefabs/Creatures/ShipMonkey.prefab](<../../Assets/Prefabs/Creatures/ShipMonkey.prefab>) | Префаб Unity; Корабельная обезьянка |
 
+## Assets/Prefabs/Enemies
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Prefabs/Enemies/Kamikaze.prefab](<../../Assets/Prefabs/Enemies/Kamikaze.prefab>) | Префаб Unity; Rock Ring — ивент камикадзе |
+
 ## Assets/Prefabs/Environment
 
 | Файл | Краткое описание |
@@ -180,7 +186,7 @@
 | Файл | Краткое описание |
 | --- | --- |
 | [Assets/Prefabs/World/SandyIslands/BalanceSandyIsland.prefab](<../../Assets/Prefabs/World/SandyIslands/BalanceSandyIsland.prefab>) | Префаб Unity; Остров с весами и пятью камнями |
-| [Assets/Prefabs/World/SandyIslands/SingleLandingRockIsland.prefab](<../../Assets/Prefabs/World/SandyIslands/SingleLandingRockIsland.prefab>) | Префаб Unity; Мир, острова и океан, Тестовая карта и водоворот |
+| [Assets/Prefabs/World/SandyIslands/SingleLandingRockIsland.prefab](<../../Assets/Prefabs/World/SandyIslands/SingleLandingRockIsland.prefab>) | Префаб Unity; Мир, острова и океан, Тестовая карта и водоворот, Rock Ring — ивент камикадзе |
 | [Assets/Prefabs/World/SandyIslands/SmallSandyIsland.prefab](<../../Assets/Prefabs/World/SandyIslands/SmallSandyIsland.prefab>) | Префаб Unity; Мир, острова и океан, Тестовая карта и водоворот, Остров с весами и пятью камнями |
 | [Assets/Prefabs/World/SandyIslands/TwoLandingIsland.prefab](<../../Assets/Prefabs/World/SandyIslands/TwoLandingIsland.prefab>) | Префаб Unity; Мир, острова и океан, Тестовая карта и водоворот, Пушечный пролом |
 

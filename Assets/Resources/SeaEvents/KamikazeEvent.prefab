@@ -1,0 +1,239 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1689499399884848100
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2213298461693577897}
+  m_Layer: 0
+  m_Name: ChestSocket
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2213298461693577897
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1689499399884848100}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 4.795915, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3818186651065210342}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &8505288998481306815
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3818186651065210342}
+  - component: {fileID: 4468544578449383229}
+  - component: {fileID: 3941317909430170260}
+  m_Layer: 0
+  m_Name: KamikazeEvent
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3818186651065210342
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8505288998481306815}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 2213298461693577897}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4468544578449383229
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8505288998481306815}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26b716c41e9b56b4baafaf13a523ba2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FishNet.Runtime::FishNet.Object.NetworkObject
+  _localLevelOfDetailCalculationType: 0
+  _useLevelOfDetail: 0
+  _useRootLevelOfDetail: 1
+  NetworkObserver: {fileID: 0}
+  _enablePrediction: 0
+  _predictionType: 0
+  _localReconcileCorrectionType: 2
+  _graphicalObject: {fileID: 0}
+  _detachGraphicalObject: 0
+  _enableStateForwarding: 1
+  _networkTransform: {fileID: 0}
+  _ownerInterpolation: 1
+  _ownerSmoothedProperties: 255
+  _adaptiveInterpolation: 3
+  _spectatorSmoothedProperties: 255
+  _spectatorInterpolation: 2
+  _enableTeleport: 0
+  _teleportThreshold: 1
+  <PrefabId>k__BackingField: 65535
+  <SpawnableCollectionId>k__BackingField: 0
+  <AssetPathHash>k__BackingField: 15783498124182935489
+  SceneId: 0
+  SerializedTransformProperties:
+    Position: {x: 0, y: 0, z: 0}
+    Rotation: {x: 0, y: 0, z: 0, w: 0}
+    Scale: {x: 0, y: 0, z: 0}
+    IsValid: 0
+  <IsNested>k__BackingField: 0
+  WasActiveDuringEdit: 0
+  WasActiveDuringEdit_Set1: 1
+  <ComponentIndex>k__BackingField: 0
+  <PredictedSpawn>k__BackingField: {fileID: 0}
+  <PredictedOwner>k__BackingField: {fileID: 0}
+  NetworkBehaviours: []
+  InitializedParentNetworkBehaviour: {fileID: 0}
+  InitializedNestedNetworkObjects: []
+  RuntimeParentNetworkBehaviour: {fileID: 0}
+  RuntimeChildNetworkBehaviours: []
+  _isNetworked: 1
+  _isSpawnable: 1
+  _isGlobal: 0
+  _initializeOrder: 0
+  _preventDespawnOnDisconnect: 0
+  _defaultDespawnType: 0
+  _initializedTimestamp: 0
+--- !u!114 &3941317909430170260
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8505288998481306815}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f30ebe84eaf746944b4f7d9e444b3e7b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.Networking.NetworkKamikazeEvent
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 4468544578449383229}
+  _networkObjectCache: {fileID: 0}
+  Catalog: {fileID: 11400000, guid: 042c2934844dcd546a82e80071b0a132, type: 2}
+  ChestSocket: {fileID: 2213298461693577897}
+  UnitPrefab: {fileID: 7669530545753109720, guid: eccf0566fc3adb849b722c87cba93969, type: 3}
+  Navigation: {fileID: 23800000, guid: 1b3c9c5d5a9ce2f43be2390fb6a2350e, type: 2}
+  SpawnPoints:
+  - {x: 0, y: 4.766875, z: 20}
+  - {x: 5.176381, y: 4.5907435, z: 19.318516}
+  - {x: 10, y: 4.4343457, z: 17.320507}
+  - {x: 14.142136, y: 4.3999996, z: 14.142136}
+  - {x: 17.320509, y: 4.457418, z: 9.999999}
+  - {x: 19.318516, y: 4.6567464, z: 5.1763816}
+  - {x: 20, y: 4.8708925, z: -0.0000008742278}
+  - {x: 19.318516, y: 4.989759, z: -5.176383}
+  - {x: 17.320507, y: 4.908879, z: -10.000001}
+  - {x: 14.142136, y: 4.7750797, z: -14.142136}
+  - {x: 10.000001, y: 4.861591, z: -17.320507}
+  - {x: 5.1763783, y: 4.9037843, z: -19.318518}
+  - {x: 0, y: 4.8562493, z: -20}
+  - {x: -5.1763816, y: 4.7304068, z: -19.318516}
+  - {x: -10.000004, y: 4.7389107, z: -17.320505}
+  - {x: -14.142138, y: 4.8402543, z: -14.142133}
+  - {x: -17.320509, y: 4.7941523, z: -9.999998}
+  - {x: -19.318518, y: 4.767811, z: -5.1763797}
+  - {x: -20, y: 4.825625, z: 0}
+  - {x: -19.318516, y: 4.9471364, z: 5.17638}
+  - {x: -17.320509, y: 5.0566807, z: 9.999998}
+  - {x: -14.142131, y: 5.0622563, z: 14.14214}
+  - {x: -9.999995, y: 5.066475, z: 17.32051}
+  - {x: -5.176377, y: 4.954214, z: 19.318518}
+  - {x: 0, y: 5.0403123, z: 30}
+  - {x: 7.764571, y: 4.909416, z: 28.977774}
+  - {x: 15, y: 4.700261, z: 25.980762}
+  - {x: 21.213203, y: 4.713325, z: 21.213203}
+  - {x: 25.980762, y: 4.6838417, z: 14.999999}
+  - {x: 28.977774, y: 4.6676106, z: 7.764572}
+  - {x: 30, y: 4.824125, z: -0.0000013113416}
+  - {x: 28.977774, y: 5.047012, z: -7.764575}
+  - {x: 25.980762, y: 5.02601, z: -15.000002}
+  - {x: 21.213203, y: 4.8111773, z: -21.213203}
+  - {x: 15.000002, y: 4.7266, z: -25.980762}
+  - {x: 7.764568, y: 4.965493, z: -28.977776}
+  - {x: -0.0000026226833, y: 4.934375, z: -30}
+  - {x: -7.764572, y: 4.704722, z: -28.977774}
+  - {x: -15.000006, y: 4.6550694, z: -25.980759}
+  - {x: -21.213207, y: 4.8946085, z: -21.2132}
+  - {x: -25.980762, y: 4.9259543, z: -14.999997}
+  - {x: -28.977776, y: 4.676404, z: -7.7645693}
+  - {x: -30, y: 4.7084374, z: 0}
+  - {x: -28.977774, y: 4.921574, z: 7.76457}
+  - {x: -25.980762, y: 4.7860274, z: 14.999997}
+  - {x: -21.213196, y: 4.8519993, z: 21.213211}
+  - {x: -14.999992, y: 5.0932765, z: 25.980766}
+  - {x: -7.764565, y: 5.265646, z: 28.977776}
+  - {x: 0, y: 4.9133983, z: 42}
+  - {x: 10.870399, y: 4.9851303, z: 40.568886}
+  - {x: 21, y: 4.8970885, z: 36.373066}
+  - {x: 29.698484, y: 5, z: 29.698484}
+  - {x: 36.37307, y: 4.911723, z: 20.999998}
+  - {x: 40.568886, y: 4.825658, z: 10.870401}
+  - {x: 42, y: 4.8199997, z: -0.0000018358783}
+  - {x: 40.568886, y: 4.8609843, z: -10.870405}
+  - {x: 36.373066, y: 4.9077706, z: -21.000002}
+  - {x: 29.698484, y: 4.8997297, z: -29.698484}
+  - {x: 21.000002, y: 4.661964, z: -36.373066}
+  - {x: 10.870395, y: 4.883033, z: -40.568886}
+  - {x: -0.0000036717565, y: 4.915833, z: -42}
+  - {x: -10.870401, y: 4.8585515, z: -40.568886}
+  - {x: -21.000008, y: 4.5789514, z: -36.373062}
+  - {x: -29.69849, y: 4.5667324, z: -29.698479}
+  - {x: -36.37307, y: 4.6574244, z: -20.999996}
+  - {x: -40.568886, y: 4.4312606, z: -10.870398}
+  - {x: -42, y: 4.784375, z: 0}
+  - {x: -40.568886, y: 4.9000955, z: 10.8703985}
+  - {x: -36.37307, y: 4.5209374, z: 20.999996}
+  - {x: -29.698475, y: 4.7009983, z: 29.698494}
+  - {x: -20.99999, y: 5.027219, z: 36.373074}
+  - {x: -10.870391, y: 4.95663, z: 40.568886}
+  Scream: {fileID: 8300000, guid: 82ea64c526078ce4f9f4cc7af2effdc3, type: 3}
+  ExplosionSound: {fileID: 8300000, guid: 1f4972c5955eca240a7b29ba89edda45, type: 3}
+  ExplosionPrefab: {fileID: 6117369743085271606, guid: 4036dda925fcf4c42964605d848c78c2, type: 3}
+  ObstructionMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  AgentTypeID: 0
+  NavigationAreas: -1
+  TriggerDistance: 3
+  IslandRadius: 78
+  RunSpeed: 8.24
+  SprintSpeedMultiplier: 1.03
+  LeapSeconds: 0.55
+  LeapHeight: 6
+  DetonationDistance: 2.5
+  BlastDamage: 30
+  BlastInnerRadius: 2.75
+  BlastRadius: 8
+  BodyHitDamage: 45
+  MinimumSpawnDistance: 12
+  SnapshotInterval: 0.1
+  ScreamVolume: 0.22
+  ScreamDistance: 140

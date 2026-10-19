@@ -108,6 +108,20 @@ public sealed class VfxPool : MonoBehaviour
         return go;
     }
 
+    public void Register(string key, GameObject prefab, int warmup = 0)
+    {
+        if (string.IsNullOrEmpty(key) || prefab == null || prefabMap.ContainsKey(key)) return;
+        prefabMap[key] = prefab;
+        var queue = new Queue<GameObject>();
+        pools[key] = queue;
+        for (int i = 0; i < warmup; i++)
+        {
+            var item = Instantiate(prefab, transform);
+            item.SetActive(false);
+            queue.Enqueue(item);
+        }
+    }
+
     public void Return(string key, GameObject go, float delay = 0f)
     {
         if (go == null) return;

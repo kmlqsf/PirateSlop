@@ -101,6 +101,15 @@
 | [Assets/Audio/Combat/Kick/KickSwing.wav](<../../Assets/Audio/Combat/Kick/KickSwing.wav>) | Аудио; Звуки и голос |
 | [Assets/Audio/Combat/Kick/Sources.md](<../../Assets/Audio/Combat/Kick/Sources.md>) | Документация; Звуки и голос |
 
+## Assets/Audio/Enemies/Kamikaze
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Audio/Enemies/Kamikaze/KamikazeExplosion.wav](<../../Assets/Audio/Enemies/Kamikaze/KamikazeExplosion.wav>) | Аудио; Rock Ring — ивент камикадзе |
+| [Assets/Audio/Enemies/Kamikaze/KamikazeIdle.wav](<../../Assets/Audio/Enemies/Kamikaze/KamikazeIdle.wav>) | Аудио; Rock Ring — ивент камикадзе |
+| [Assets/Audio/Enemies/Kamikaze/KamikazeScream.wav](<../../Assets/Audio/Enemies/Kamikaze/KamikazeScream.wav>) | Аудио; Rock Ring — ивент камикадзе |
+| [Assets/Audio/Enemies/Kamikaze/SOURCES.md](<../../Assets/Audio/Enemies/Kamikaze/SOURCES.md>) | Документация; Rock Ring — ивент камикадзе, Rock Ring — ивент камикадзе |
+
 ## Assets/Audio/Fishing
 
 | Файл | Краткое описание |

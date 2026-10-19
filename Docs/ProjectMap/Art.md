@@ -12,6 +12,15 @@
 | --- | --- |
 | [Art/Audio/BottleBreak/GenerateBottleBreak.py](<../../Art/Audio/BottleBreak/GenerateBottleBreak.py>) | Инструмент Python; Звуки и голос |
 
+## Art/Audio/Kamikaze
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Audio/Kamikaze/AttackKamikaze.wav](<../../Art/Audio/Kamikaze/AttackKamikaze.wav>) | Аудио; Rock Ring — ивент камикадзе |
+| [Art/Audio/Kamikaze/Explosion02.wav](<../../Art/Audio/Kamikaze/Explosion02.wav>) | Аудио; Rock Ring — ивент камикадзе |
+| [Art/Audio/Kamikaze/IdleKamikaze.wav](<../../Art/Audio/Kamikaze/IdleKamikaze.wav>) | Аудио; Rock Ring — ивент камикадзе |
+| [Art/Audio/Kamikaze/SourceManifest.json](<../../Art/Audio/Kamikaze/SourceManifest.json>) | Конфигурация / данные JSON; Rock Ring — ивент камикадзе |
+
 ## Art/Audio/Seagulls
 
 | Файл | Краткое описание |
@@ -99,6 +108,17 @@
 | [Art/Blender/Characters/pose_studio.py](<../../Art/Blender/Characters/pose_studio.py>) | Инструмент Python |
 | [Art/Blender/Characters/sabre_attack.py](<../../Art/Blender/Characters/sabre_attack.py>) | Инструмент Python |
 | [Art/Blender/Characters/shotgun_actions.py](<../../Art/Blender/Characters/shotgun_actions.py>) | Инструмент Python |
+
+## Art/Blender/Characters/Kamikaze
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Art/Blender/Characters/Kamikaze/Kamikaze.blend](<../../Art/Blender/Characters/Kamikaze/Kamikaze.blend>) | Редактируемая сцена Blender; Rock Ring — ивент камикадзе |
+| [Art/Blender/Characters/Kamikaze/KamikazeBuildStats.json](<../../Art/Blender/Characters/Kamikaze/KamikazeBuildStats.json>) | Конфигурация / данные JSON |
+| [Art/Blender/Characters/Kamikaze/KamikazeExportRoundtrip.json](<../../Art/Blender/Characters/Kamikaze/KamikazeExportRoundtrip.json>) | Конфигурация / данные JSON |
+| [Art/Blender/Characters/Kamikaze/KamikazeManifest.json](<../../Art/Blender/Characters/Kamikaze/KamikazeManifest.json>) | Конфигурация / данные JSON; Rock Ring — ивент камикадзе |
+| [Art/Blender/Characters/Kamikaze/build_kamikaze.py](<../../Art/Blender/Characters/Kamikaze/build_kamikaze.py>) | Инструмент Python; Rock Ring — ивент камикадзе |
+| [Art/Blender/Characters/Kamikaze/render_kamikaze_previews.py](<../../Art/Blender/Characters/Kamikaze/render_kamikaze_previews.py>) | Инструмент Python |
 
 ## Art/Blender/Characters/NewPirate
 

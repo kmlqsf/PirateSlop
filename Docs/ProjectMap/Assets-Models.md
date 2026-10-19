@@ -59,6 +59,13 @@
 | --- | --- |
 | [Assets/Models/Cannons/Ammo/SM_CannonballBoomerang.fbx](<../../Assets/Models/Cannons/Ammo/SM_CannonballBoomerang.fbx>) | Модель / анимации FBX |
 
+## Assets/Models/Characters/Kamikaze
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/Characters/Kamikaze/Kamikaze.fbx](<../../Assets/Models/Characters/Kamikaze/Kamikaze.fbx>) | Модель / анимации FBX; Rock Ring — ивент камикадзе |
+| [Assets/Models/Characters/Kamikaze/KamikazePalette.png](<../../Assets/Models/Characters/Kamikaze/KamikazePalette.png>) | Изображение / текстура; Rock Ring — ивент камикадзе |
+
 ## Assets/Models/Characters/NewPirate
 
 | Файл | Краткое описание |

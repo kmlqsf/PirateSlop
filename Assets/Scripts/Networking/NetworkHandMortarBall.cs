@@ -103,6 +103,12 @@ namespace PirateSlop.Networking
                 return;
             }
             var health = nearest.collider.GetComponentInParent<CombatHealth>();
+            var kamikaze = nearest.collider.GetComponent<PirateSlop.World.KamikazeHitbox>();
+            if (kamikaze != null && kamikaze.Unit != null && settings.ExplodeOnLivingHit)
+            {
+                kamikaze.Unit.ReceiveHit(2f, shooter != null ? shooter.gameObject : null);
+                Explode(null); remaining = 0; return;
+            }
             if (settings.ExplodeOnLivingHit && health != null && health.GetComponent<NetworkPlayer>() != null && !health.IsDead) { Explode(health); remaining = 0; return; }
             var ship = nearest.collider.GetComponentInParent<NetworkShip>();
             Vector3 platformVelocity = ship != null ? ship.GetComponent<ShipController>().CannonPointVelocity(transform.position) : Vector3.zero;
@@ -130,6 +136,7 @@ namespace PirateSlop.Networking
             spent = true;
             var damaged = new HashSet<CombatHealth>();
             if (direct != null && direct.GetComponent<NetworkPlayer>() != null) { damaged.Add(direct); direct.Damage(settings.DirectDamage, shooter != null ? shooter.gameObject : null); }
+            NetworkKamikazeEvent.DamageNearby(gameObject.scene, transform.position, settings.BlastRadius, settings.BlastDamage, shooter != null ? shooter.gameObject : null);
             foreach (var hit in Physics.OverlapSphere(transform.position, settings.BlastRadius, ~0, QueryTriggerInteraction.Ignore))
             {
                 if (hit.gameObject.scene != gameObject.scene || hit.transform.IsChildOf(transform)) continue;
