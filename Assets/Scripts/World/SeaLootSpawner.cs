@@ -11,6 +11,23 @@ namespace PirateSlop.World
         public static void Spawn(ProceduralWorld world, NetworkManager manager, LootCatalog catalog)
         {
             if (world == null || !world.Ready || catalog == null || catalog.ChestPrefab == null) return;
+            if (MainOceanMap.IsMain(world.Layout))
+            {
+                MainOceanEvents.ValidateCatalog(catalog);
+                foreach (var point in world.Layout.Points)
+                    if (point.Tag == MainOceanEvents.Tag)
+                    {
+                        if (point.Rule == (int)MainOceanEventKind.Kamikaze)
+                        {
+                            var instance = Object.Instantiate(catalog.KamikazeEventPrefab, point.Position, Quaternion.Euler(0, point.Yaw, 0));
+                            SceneManager.MoveGameObjectToScene(instance.gameObject, world.gameObject.scene);
+                            instance.Catalog = catalog;
+                            manager.ServerManager.Spawn(instance.NetworkObject);
+                        }
+                        else SpawnOne(world, manager, catalog, point.Rule, point.Position);
+                    }
+                return;
+            }
             NetworkKamikazeEvent.SpawnForIslands(world, manager, catalog);
             if (EnvironmentTestGallery.IsTest(world.Layout))
             {
@@ -81,6 +98,7 @@ namespace PirateSlop.World
 
         static void SpawnOne(ProceduralWorld world, NetworkManager manager, LootCatalog catalog, int index, Vector3 point)
         {
+            if (index == 7) { NetworkBalanceEvent.SpawnEvent(catalog, manager, point, world.gameObject.scene); return; }
             if (index == 12) { NetworkPlatformingEvent.SpawnEvent(catalog, manager, point, world.gameObject.scene); return; }
             if (index == 11) { NetworkSeagullEvent.SpawnEvent(catalog, manager, point, world.gameObject.scene); return; }
             if (index == 10) { NetworkCannonBreachEvent.SpawnEvent(catalog, manager, point, world.gameObject.scene); return; }

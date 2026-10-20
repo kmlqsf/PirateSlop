@@ -31,6 +31,7 @@ namespace PirateSlop.World
             Clear(); Layout = layout;
             content = new GameObject("GeneratedMap"); content.transform.SetParent(transform, false);
             if (EnvironmentTestGallery.IsTest(layout)) EnvironmentTestGallery.SpawnInto(layout, content.transform);
+            else if (MainOceanMap.IsMain(layout)) MainOceanMap.SpawnInto(layout, content.transform);
             using var data = new MemoryStream();
             using var writer = new BinaryWriter(data);
             writer.Write(layout.ToJson());
@@ -40,15 +41,24 @@ namespace PirateSlop.World
                 Progress = (i + 1f) / Mathf.Max(1, layout.Locations.Count);
                 yield return null;
             }
+            var scenery = MainOceanMap.IsMain(layout) ? Resources.Load<MainOceanScenery>(MainOceanScenery.ResourcePath) : null;
+            int sceneryCount = 0;
             foreach (var point in layout.Points)
             {
                 var go = new GameObject(point.Id); go.transform.SetParent(content.transform, false);
                 var pointPosition = point.Position;
                 var pointDefinition = Profile.Locations.FirstOrDefault(d => d.Settings.Id == point.TypeId);
                 bool atOrigin = pointDefinition != null && point.Rule >= 0 && point.Rule < pointDefinition.Points.Length && pointDefinition.Points[point.Rule].AtLocationOrigin;
-                if (point.Tag != "ship_spawn" && point.Tag != "ship_approach" && point.Tag != "sea_route" && point.Tag != WorldDecorationPlacer.Tag && !atOrigin) pointPosition.y = GroundHeight(pointPosition) + .15f;
+                if (point.Tag != "ship_spawn" && point.Tag != "ship_approach" && point.Tag != "sea_route" && point.Tag != WorldDecorationPlacer.Tag && point.Tag != MainOceanEvents.Tag && point.Tag != MainOceanScenery.Tag && !atOrigin) pointPosition.y = GroundHeight(pointPosition) + .15f;
                 go.transform.SetPositionAndRotation(pointPosition, Quaternion.Euler(0, point.Yaw, 0));
                 var marker = go.AddComponent<WorldSpawnPoint>(); marker.Id = point.Id; marker.Tag = point.Tag;
+                if (point.Tag == MainOceanScenery.Tag)
+                {
+                    if (scenery == null) throw new InvalidOperationException("The main ocean scenery catalog is missing.");
+                    scenery.Spawn(point, go.transform);
+                    if (++sceneryCount % 8 == 0) yield return null;
+                    continue;
+                }
                 if (point.Tag == WorldDecorationPlacer.Tag)
                 {
                     if (Profile.Decorations == null || point.Rule < 0 || point.Rule >= Profile.Decorations.Length || Profile.Decorations[point.Rule].Prefab == null)

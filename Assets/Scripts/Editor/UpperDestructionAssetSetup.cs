@@ -62,9 +62,8 @@ namespace PirateSlop.EditorTools
                 SetExperimentalHash(root, Folder + "/Ship.prefab");
                 var saved = PrefabUtility.SaveAsPrefabAsset(root, Folder + "/Ship.prefab");
                 if (saved == null) throw new InvalidOperationException("Experimental ship could not be saved.");
-                var session = UnityEngine.Object.Instantiate(AssetDatabase.LoadAssetAtPath<SessionConfig>("Assets/Settings/Networking/SessionConfig.asset"));
-                session.ProtocolVersion = 199; session.name = "UpperDestructionSession";
-                session = Save(session, Folder + "/Session.asset");
+                var session = AssetDatabase.LoadAssetAtPath<SessionConfig>(UpperDestructionSettings.SessionPath);
+                if (session == null) throw new InvalidOperationException("The shared session config is missing.");
                 var original = AssetDatabase.LoadAssetAtPath<SinglePrefabObjects>("Assets/Settings/Networking/NetworkPrefabs.asset");
                 var collection = ScriptableObject.CreateInstance<SinglePrefabObjects>(); collection.name = "UpperDestructionPrefabs";
                 collection.AddObjects(original.Prefabs.ToArray(), false, false);

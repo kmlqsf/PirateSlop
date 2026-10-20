@@ -139,6 +139,7 @@ namespace PirateSlop.Networking
         }
         bool environmentTestRequested;
         bool EnvironmentTestActive => EnvironmentTestGallery.IsTest(ProceduralWorld.Instance != null ? ProceduralWorld.Instance.Layout : null);
+        bool ModernOceanActive => MainOceanMap.UsesModernOcean(ProceduralWorld.Instance != null ? ProceduralWorld.Instance.Layout : null);
         public void Begin(bool host, string endpoint, bool environmentTest = false)
         {
             ResolveShipPrefab();
@@ -175,7 +176,8 @@ namespace PirateSlop.Networking
                 {
                     int seed = int.TryParse(seedInput, out var requestedSeed) ? requestedSeed : world.Profile.RandomSeed ? BitConverter.ToInt32(Guid.NewGuid().ToByteArray(), 0) : world.Profile.Seed;
                     float seaLevel = OceanSurface.Instance != null ? OceanSurface.Instance.SeaLevel : 0;
-                    layout = environmentTestRequested ? EnvironmentTestGallery.CreateLayout(world.Profile, seaLevel) : WorldGenerator.Generate(world.Profile, seed, MaxPlayers, seaLevel);
+                    if (!environmentTestRequested) MainOceanEvents.ValidateCatalog(Config.Loot);
+                    layout = environmentTestRequested ? EnvironmentTestGallery.CreateLayout(world.Profile, seaLevel) : MainOceanMap.CreateLayout(world.Profile, seed, Mathf.Max(1, MaxPlayers / CrewSize), seaLevel);
                 }
                 catch (Exception ex) { SetError("Генерация карты: " + ex.Message); }
                 if (layout == null) { starting = connecting = false; yield break; }
@@ -266,7 +268,7 @@ namespace PirateSlop.Networking
                 yield return builder.Current;
             }
             (builder as IDisposable)?.Dispose();
-            if (world.Ready && !EnvironmentTestActive) ShipComparison.Spawn(world, Config);
+            if (world.Ready && !ModernOceanActive) ShipComparison.Spawn(world, Config);
         }
         void WorldManifest(WorldManifestMessage message, Channel channel)
         {

@@ -141,14 +141,8 @@ namespace PirateSlop.EditorTools
             Directory.CreateDirectory(directory);
             var options = BuildOptions.StrictMode | additionalOptions;
             if (development) options |= BuildOptions.Development;
-            UpperDestructionBuildProcessor.Prepare(development);
-            UnityEditor.Build.Reporting.BuildReport report;
-            try
-            {
-                report = BuildPipeline.BuildPlayer(new BuildPlayerOptions { scenes = GetBuildScenePaths(), locationPathName = directory + "/PirateSlop.exe", target = BuildTarget.StandaloneWindows64, options = options,
-                    extraScriptingDefines = development ? new[] { UpperDestructionBuildProcessor.Define } : Array.Empty<string>() });
-            }
-            finally { UpperDestructionBuildProcessor.Finish(); }
+            UpperDestructionBuildProcessor.Prepare();
+            var report = BuildPipeline.BuildPlayer(new BuildPlayerOptions { scenes = GetBuildScenePaths(), locationPathName = directory + "/PirateSlop.exe", target = BuildTarget.StandaloneWindows64, options = options });
             var summary = report.summary;
             var result = new System.Text.StringBuilder();
             result.AppendLine(summary.result + " errors=" + summary.totalErrors + " size=" + summary.totalSize + " elapsed=" + summary.totalTime.ToString("c") + " options=" + summary.options);
@@ -156,6 +150,7 @@ namespace PirateSlop.EditorTools
                 result.AppendLine(step.name + ": " + step.duration.ToString("c"));
             Directory.CreateDirectory("Temp");
             File.WriteAllText("Temp/multiplayer-build-result.txt", result.ToString());
+            File.WriteAllText("Temp/multiplayer-build-" + (development ? "development" : "release") + "-result.txt", result.ToString());
             Debug.Log("MULTIPLAYER_BUILD_REPORT\n" + result);
             if (report.summary.result != UnityEditor.Build.Reporting.BuildResult.Succeeded) throw new InvalidOperationException("Multiplayer build failed.");
             Debug.Log("MULTIPLAYER_BUILD_OK");

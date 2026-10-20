@@ -19,6 +19,8 @@
 | [Assets/Resources/BulletMark.mat](<../../Assets/Resources/BulletMark.mat>) | Материал Unity |
 | [Assets/Resources/BulletMark.shader](<../../Assets/Resources/BulletMark.shader>) | Шейдер |
 | [Assets/Resources/CombatParticles.mat](<../../Assets/Resources/CombatParticles.mat>) | Материал Unity |
+| [Assets/Resources/DistantScenery.mat](<../../Assets/Resources/DistantScenery.mat>) | Материал Unity; Мир, острова и океан |
+| [Assets/Resources/DistantScenery.shader](<../../Assets/Resources/DistantScenery.shader>) | Шейдер; Мир, острова и океан |
 | [Assets/Resources/FirearmGlow.mat](<../../Assets/Resources/FirearmGlow.mat>) | Материал Unity |
 | [Assets/Resources/FirearmGlow.shader](<../../Assets/Resources/FirearmGlow.shader>) | Шейдер |
 | [Assets/Resources/FrozenWaterIce.shader](<../../Assets/Resources/FrozenWaterIce.shader>) | Шейдер; Личное оружие и урон |
@@ -86,6 +88,12 @@
 | [Assets/Resources/EnvironmentTest/UnderwaterSuspension.shader](<../../Assets/Resources/EnvironmentTest/UnderwaterSuspension.shader>) | Шейдер; Мир, острова и океан, Тестовая карта и водоворот |
 | [Assets/Resources/EnvironmentTest/WaterBowSpray.shader](<../../Assets/Resources/EnvironmentTest/WaterBowSpray.shader>) | Шейдер; Мир, острова и океан, Тестовая карта и водоворот |
 | [Assets/Resources/EnvironmentTest/WaterWetMark.shader](<../../Assets/Resources/EnvironmentTest/WaterWetMark.shader>) | Шейдер; Мир, острова и океан, Тестовая карта и водоворот |
+
+## Assets/Resources/MainOcean
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Resources/MainOcean/Scenery.prefab](<../../Assets/Resources/MainOcean/Scenery.prefab>) | Префаб Unity; Мир, острова и океан |
 
 ## Assets/Resources/Menu
 

@@ -432,6 +432,7 @@ namespace PirateSlop.Editor
                 PrefabUtility.SaveAsPrefabAsset(gallery, Gallery);
             }
             finally { PrefabUtility.UnloadPrefabContents(gallery); }
+            if (File.Exists("Assets/Resources/MainOcean/Scenery.prefab")) MainOceanScenerySetup.Prepare();
         }
 
         static string GalleryRevision()

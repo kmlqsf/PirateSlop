@@ -33,6 +33,7 @@ namespace PirateSlop.Networking
         AudioSource lidSound;
         void Awake() { if (Lid != null) lidClosedRotation = Lid.localRotation; }
         readonly SyncVar<bool> opened = new();
+        readonly SyncVar<bool> lootHintClaimed = new();
         bool upgradeRewardEligible, upgradeRewardClaimed;
         public bool Opened => opened.Value;
         readonly SyncList<ChestLootStack> contents = new();
@@ -42,8 +43,8 @@ namespace PirateSlop.Networking
         public string Hint(PlayerInventory inventory) => InSeagullWreck ? SeagullChestHint(inventory) : Kind == SeaLootKind.Raft && !Available && inventory.GetComponent<AdvancedPlayerController>().IsSwimming ? "E — забраться на плот" : OceanHint;
         public void Fill(ref MapRandom random)
         {
-            var rolled = ChestLootTable.RollContents(ref random);
-            contents.Clear(); opened.Value = false;
+            var rolled = ChestLootTable.RollContents(ref random, MainOceanEvents.RewardItemTypes(transform.position));
+            contents.Clear(); opened.Value = false; lootHintClaimed.Value = false;
             foreach (var stack in rolled) contents.Add(stack);
             upgradeRewardEligible = true;
         }
@@ -52,6 +53,7 @@ namespace PirateSlop.Networking
             if (!IsServerInitialized || !IsSpawned || !Available) return;
             if (contents.Count == 0) { if (!PreserveCapturedBuoys()) ServerManager.Despawn(NetworkObject); return; }
             opened.Value = true;
+            lootHintClaimed.Value = true;
             if (!upgradeRewardEligible || upgradeRewardClaimed || opener == null) return;
             var player = opener.GetComponent<NetworkPlayer>();
             if (player == null || player.TeamId.Value <= 0) return;

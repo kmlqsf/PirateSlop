@@ -88,6 +88,7 @@ namespace PirateSlop.Networking
         }
 #endif
         public void DeveloperCommand(byte command, int count = 1) => DeveloperCommandServerRpc(command, count);
+        public void DeveloperGrantItem(InventoryItem item, int count = 1) => DeveloperCommand(133, ((int)item << 8) | Mathf.Clamp(count, 1, 20));
         [ServerRpc]
         void DeveloperCommandServerRpc(byte command, int count)
         {
@@ -114,6 +115,15 @@ namespace PirateSlop.Networking
             if (Time.time < nextDeveloperCommand) return;
             nextDeveloperCommand = Time.time + .3f;
             var session = SessionController.Instance;
+            if (command == 133)
+            {
+                var item = (InventoryItem)(count >> 8);
+                if (item < InventoryItem.Fish || item > InventoryItem.MortarKit) return;
+                int added = 0, requested = Mathf.Clamp(count & 255, 1, 20);
+                while (added < requested && AddItem(item)) added++;
+                DeveloperResultTargetRpc(Owner, "Добавлено: " + added + " / " + requested + (added < requested ? " · Инвентарь заполнен или предмет недоступен." : ""));
+                return;
+            }
             if (command == 129 || command == 130)
             {
                 var player = GetComponent<NetworkPlayer>();
@@ -318,9 +328,9 @@ namespace PirateSlop.Networking
                 if (spawned != null) developerObjects.Add(spawned);
                 DeveloperResultTargetRpc(Owner, spawned != null ? "Корабль создан рядом." : "Рядом нет свободного места на воде."); return;
             }
-            var itemType = command >= 64 ? (InventoryItem)(command - 64) : command == 2 ? InventoryItem.Cannon : command == 3 ? InventoryItem.Pistol : command == 4 ? InventoryItem.Sabre : InventoryItem.Cannonball;
+            var itemType = command == 134 ? (InventoryItem)count : command >= 64 ? (InventoryItem)(command - 64) : command == 2 ? InventoryItem.Cannon : command == 3 ? InventoryItem.Pistol : command == 4 ? InventoryItem.Sabre : InventoryItem.Cannonball;
             if (command > 5 && command < 64 && command != 13) return;
-            if (itemType < InventoryItem.Fish || (itemType > InventoryItem.BoomerangCannonball && itemType != InventoryItem.Pufferfish && itemType != InventoryItem.Swordfish && itemType != InventoryItem.HandMortar && itemType != InventoryItem.ExplosiveBall && itemType != InventoryItem.FireStaff && itemType != InventoryItem.LightningStaff && itemType != InventoryItem.IceStaff) || itemType == InventoryItem.Mallet || itemType == InventoryItem.Plank) return;
+            if (itemType < InventoryItem.Fish || itemType > InventoryItem.MortarKit) return;
             int prefabIndex = CannonAmmo.IsBall(itemType) ? (int)InventoryItem.Cannonball : (int)itemType;
             if (command != 1 && command != 13 && (DropPrefabs == null || prefabIndex >= DropPrefabs.Length || DropPrefabs[prefabIndex] == null))
             { DeveloperResultTargetRpc(Owner, "Префаб предмета не назначен."); return; }

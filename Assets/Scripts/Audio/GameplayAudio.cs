@@ -87,7 +87,8 @@ namespace PirateSlop
                 if (local)
                 {
                     var passenger = GetComponent<ShipDeckPassenger>();
-                    var platform = player.ActiveParrot == null && passenger != null && passenger.Ship != null ? passenger.Ship.GetComponent<ShipController>() : null;
+                    var ambienceSupport = player.ActiveParrot == null && passenger != null ? passenger.PresentationSupport : null;
+                    var platform = ambienceSupport != null ? ambienceSupport.GetComponent<ShipController>() : null;
                     var flooding = platform != null ? platform.GetComponent<ShipFlooding>() : null;
                     GameAudio.Ambience(platform != null ? platform.Speed / Mathf.Max(.01f, platform.MaxSpeed) : 0f, platform != null, flooding != null ? flooding.Level : 0f);
                 }

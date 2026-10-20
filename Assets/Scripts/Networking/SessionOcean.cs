@@ -11,7 +11,7 @@ namespace PirateSlop.Networking
 
     public sealed partial class SessionController
     {
-        public bool CanAdjustTestOcean => DeveloperMenu.Available && manager != null && manager.ServerManager.Started && EnvironmentTestActive;
+        public bool CanAdjustTestOcean => DeveloperMenu.Available && manager != null && manager.ServerManager.Started && ModernOceanActive;
 
         TestOceanMessage CurrentTestOcean()
         {
@@ -29,7 +29,7 @@ namespace PirateSlop.Networking
 
         void SendTestOcean(NetworkConnection connection)
         {
-            if (EnvironmentTestActive && OceanSurface.Instance != null && OceanSurface.Instance.HeightSource is BoatAttackOcean)
+            if (ModernOceanActive && OceanSurface.Instance != null && OceanSurface.Instance.HeightSource is BoatAttackOcean)
                 manager.ServerManager.Broadcast(connection, CurrentTestOcean());
         }
 

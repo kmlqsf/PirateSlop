@@ -52,13 +52,16 @@ namespace PirateSlop
             loadedJson = rejectedJson = lastWarning = null;
         }
 
-        public static ChestLootStack[] RollContents(ref MapRandom random)
+        public static ChestLootStack[] RollContents(ref MapRandom random, Vector2Int itemTypes = default)
         {
             var table = Load();
-            int count = table.chest.minItemTypes + (int)(random.Next() % (uint)(table.chest.maxItemTypes - table.chest.minItemTypes + 1));
+            int min = itemTypes.x > 0 ? itemTypes.x : table.chest.minItemTypes;
+            int max = itemTypes.x > 0 ? Mathf.Max(min, itemTypes.y) : table.chest.maxItemTypes;
+            int count = min + (int)(random.Next() % (uint)(max - min + 1));
             var candidates = new List<Entry>();
             foreach (var entry in table.entries)
                 if (entry.chancePercent > 0) candidates.Add(entry);
+            count = Mathf.Min(count, candidates.Count);
             var result = new ChestLootStack[count];
             for (int slot = 0; slot < count; slot++)
             {

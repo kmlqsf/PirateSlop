@@ -376,7 +376,7 @@ namespace PirateSlop.Networking
         }
         void CaptureVisualAnchor()
         {
-            visualPlatform = passenger.Support;
+            visualPlatform = passenger.PresentationSupport;
             var grapple = GetComponent<NetworkWeapon>();
             if (visualPlatform == null && grapple != null && grapple.GrappleActive)
                 visualPlatform = grapple.GrappleBody;

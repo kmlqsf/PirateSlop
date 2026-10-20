@@ -11,13 +11,14 @@ namespace PirateSlop.Experimental
     {
         public const string Root = "Assets/Experimental/UpperDestructionV2";
         public const string AssetPath = Root + "/Settings.asset";
+        public const string SessionPath = "Assets/Settings/Networking/SessionConfig.asset";
         public SessionConfig Session;
         public NetworkObject Ship;
         public SinglePrefabObjects Prefabs;
 
         public void Apply(SessionController controller)
         {
-            if (Session == null || Session.ProtocolVersion != 199 || Ship == null || Prefabs == null)
+            if (Session == null || Session.ProtocolVersion <= 0 || Ship == null || Prefabs == null)
                 throw new System.InvalidOperationException("Upper destruction assets are incomplete.");
             controller.Config = Session;
             controller.ShipPrefab = Ship;
