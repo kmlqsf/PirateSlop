@@ -77,13 +77,26 @@ namespace PirateSlop
             lootBeamRenderer.sharedMaterial = lootBeamMaterial;
             lootBeamRenderer.shadowCastingMode = ShadowCastingMode.Off;
             lootBeamRenderer.receiveShadows = false;
+            lootBeamRenderer.allowOcclusionWhenDynamic = false;
             lootBeamRenderer.enabled = false;
         }
 
         void ShowLootBeam(Camera camera)
         {
-            if (lootBeamRenderer != null) lootBeamRenderer.enabled = player.IsOwner && !player.Motor.IsDead && !RoguelikeUpgradeUI.BlocksInput && (engaged || player.HasUpgrade(UpgradeEffect.Seeker)) && camera == player.Motor.PlayerCamera &&
+            if (lootBeamRenderer == null) return;
+            bool visible = player.IsOwner && !player.Motor.IsDead && !RoguelikeUpgradeUI.BlocksInput && (engaged || player.HasUpgrade(UpgradeEffect.Seeker)) && camera == player.Motor.PlayerCamera &&
                 ((lootHint != null && lootHint.LootHintEligible) || (skullHint != null && skullHint.LootHintEligible));
+            lootBeamRenderer.enabled = visible;
+            if (!visible) return;
+            Vector3 target = (skullHint != null ? skullHint.LootHintPoint : lootHint.LootHintPoint) - Vector3.up * 1.85f;
+            Vector3 offset = target - camera.transform.position;
+            float distance = Mathf.Max(.01f, offset.magnitude);
+            float limit = Mathf.Max(camera.nearClipPlane * 4f, Mathf.Min(200f, camera.farClipPlane * .25f));
+            float scale = Mathf.Min(1f, limit / distance);
+            float pixelWidth = distance * 2f * Mathf.Tan(camera.fieldOfView * Mathf.Deg2Rad * .5f) * 2f / Mathf.Max(1, camera.pixelHeight);
+            float width = Mathf.Max(lootBeamWidth, pixelWidth) * scale;
+            lootBeam.transform.position = camera.transform.position + offset * scale;
+            lootBeam.transform.localScale = new Vector3(width, lootBeamHeight * scale, width);
         }
 
         void HideLootBeam()

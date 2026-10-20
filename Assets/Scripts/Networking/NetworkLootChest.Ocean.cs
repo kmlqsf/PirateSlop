@@ -62,7 +62,7 @@ namespace PirateSlop.Networking
         {
             get
             {
-                if (!IsSpawned || Kind == SeaLootKind.None || carrier.Value != null || supportId.Value != 0 || InTow && (TowedCargo == null || !TowedCargo.LootReady)) return false;
+                if (!IsSpawned || opened.Value || lootHintClaimed.Value || Kind == SeaLootKind.None || carrier.Value != null || supportId.Value != 0 || InTow && (TowedCargo == null || !TowedCargo.LootReady)) return false;
                 if (Kind == SeaLootKind.FloatingReward || phase.Value == SeaLootState.Ready &&
                     (Kind == SeaLootKind.Sunken || Kind == SeaLootKind.Capture || Kind == SeaLootKind.Raft || Kind == SeaLootKind.Skull)) return false;
                 for (int i = 0; i < contents.Count; i++) if (contents[i].Count > 0) return true;
@@ -291,6 +291,7 @@ namespace PirateSlop.Networking
             if (InTow) { TowedCargo?.ChestTaken(player.GetComponent<ShipDeckPassenger>()?.Ship?.GetComponent<NetworkShip>()); ReleaseTowChest(); }
             if (Kind == SeaLootKind.Raft) raftDetachedState.Value = true;
             carryingPlayer = player;
+            lootHintClaimed.Value = true;
             carrier.Value = player.NetworkObject;
             support.Value = null;
             supportId.Value = 0;

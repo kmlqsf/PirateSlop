@@ -30,7 +30,7 @@
 | [ProjectSettings/QualitySettings.asset](<../../ProjectSettings/QualitySettings.asset>) | Настройки или данные Unity |
 | [ProjectSettings/SceneTemplateSettings.json](<../../ProjectSettings/SceneTemplateSettings.json>) | Конфигурация / данные JSON |
 | [ProjectSettings/ShaderGraphSettings.asset](<../../ProjectSettings/ShaderGraphSettings.asset>) | Настройки или данные Unity |
-| [ProjectSettings/TagManager.asset](<../../ProjectSettings/TagManager.asset>) | Настройки или данные Unity |
+| [ProjectSettings/TagManager.asset](<../../ProjectSettings/TagManager.asset>) | Настройки или данные Unity; Мир, острова и океан |
 | [ProjectSettings/TimeManager.asset](<../../ProjectSettings/TimeManager.asset>) | Настройки или данные Unity |
 | [ProjectSettings/URPProjectSettings.asset](<../../ProjectSettings/URPProjectSettings.asset>) | Настройки или данные Unity |
 | [ProjectSettings/UnityConnectSettings.asset](<../../ProjectSettings/UnityConnectSettings.asset>) | Настройки или данные Unity |

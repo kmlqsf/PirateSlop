@@ -10265,6 +10265,20 @@
 | [Assets/Models/World/LocationExpansion/WreckMast.fbx](<../../Assets/Models/World/LocationExpansion/WreckMast.fbx>) | Модель / анимации FBX |
 | [Assets/Models/World/LocationExpansion/WreckStern.fbx](<../../Assets/Models/World/LocationExpansion/WreckStern.fbx>) | Модель / анимации FBX |
 
+## Assets/Models/World/MainOceanHorizon
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Models/World/MainOceanHorizon/Reef_Moai_A.asset](<../../Assets/Models/World/MainOceanHorizon/Reef_Moai_A.asset>) | Настройки или данные Unity; Мир, острова и океан |
+| [Assets/Models/World/MainOceanHorizon/Reef_ShallowField_A.asset](<../../Assets/Models/World/MainOceanHorizon/Reef_ShallowField_A.asset>) | Настройки или данные Unity; Мир, острова и океан |
+| [Assets/Models/World/MainOceanHorizon/Reef_Spires_A.asset](<../../Assets/Models/World/MainOceanHorizon/Reef_Spires_A.asset>) | Настройки или данные Unity; Мир, острова и океан |
+| [Assets/Models/World/MainOceanHorizon/Reef_Spires_B.asset](<../../Assets/Models/World/MainOceanHorizon/Reef_Spires_B.asset>) | Настройки или данные Unity; Мир, острова и океан |
+| [Assets/Models/World/MainOceanHorizon/Reef_Spires_C.asset](<../../Assets/Models/World/MainOceanHorizon/Reef_Spires_C.asset>) | Настройки или данные Unity; Мир, острова и океан |
+| [Assets/Models/World/MainOceanHorizon/SeaArch_Huge_A.asset](<../../Assets/Models/World/MainOceanHorizon/SeaArch_Huge_A.asset>) | Настройки или данные Unity; Мир, острова и океан |
+| [Assets/Models/World/MainOceanHorizon/Sea_Lagoon_Cave.asset](<../../Assets/Models/World/MainOceanHorizon/Sea_Lagoon_Cave.asset>) | Настройки или данные Unity; Мир, острова и океан |
+| [Assets/Models/World/MainOceanHorizon/SmallSandyIsland.asset](<../../Assets/Models/World/MainOceanHorizon/SmallSandyIsland.asset>) | Настройки или данные Unity; Мир, острова и океан |
+| [Assets/Models/World/MainOceanHorizon/TwoLandingIsland.asset](<../../Assets/Models/World/MainOceanHorizon/TwoLandingIsland.asset>) | Настройки или данные Unity; Мир, острова и океан |
+
 ## Assets/Models/World/SandyIslands
 
 | Файл | Краткое описание |

@@ -9,7 +9,7 @@ Shader "PirateSlop/LootEventBeam"
             Tags { "LightMode"="SRPDefaultUnlit" }
             Blend SrcAlpha One
             ZWrite Off
-            ZTest LEqual
+            ZTest Always
             Cull Off
             HLSLPROGRAM
             #pragma vertex Vert

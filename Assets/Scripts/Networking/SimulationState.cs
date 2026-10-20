@@ -13,7 +13,7 @@ namespace PirateSlop
     [System.Serializable]
     public struct PlayerState
     {
-        public Vector3 Position, SlideDirection, KnockbackVelocity, KickPushVelocity;
+        public Vector3 Position, SlideDirection, KnockbackVelocity, KickPushVelocity, PlatformVelocity;
         public float Yaw, VerticalVelocity, SlideTimer, Cooldown;
         public bool Crouched, Locked, Grounded, DeveloperNoclip;
         public float PlanarSpeed, CrouchBlend;

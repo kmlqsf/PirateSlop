@@ -176,7 +176,8 @@ namespace PirateSlop.Networking
                 {
                     int seed = int.TryParse(seedInput, out var requestedSeed) ? requestedSeed : world.Profile.RandomSeed ? BitConverter.ToInt32(Guid.NewGuid().ToByteArray(), 0) : world.Profile.Seed;
                     float seaLevel = OceanSurface.Instance != null ? OceanSurface.Instance.SeaLevel : 0;
-                    layout = environmentTestRequested ? EnvironmentTestGallery.CreateLayout(world.Profile, seaLevel) : MainOceanMap.CreateLayout(world.Profile, seed, MaxPlayers, seaLevel);
+                    if (!environmentTestRequested) MainOceanEvents.ValidateCatalog(Config.Loot);
+                    layout = environmentTestRequested ? EnvironmentTestGallery.CreateLayout(world.Profile, seaLevel) : MainOceanMap.CreateLayout(world.Profile, seed, Mathf.Max(1, MaxPlayers / CrewSize), seaLevel);
                 }
                 catch (Exception ex) { SetError("Генерация карты: " + ex.Message); }
                 if (layout == null) { starting = connecting = false; yield break; }

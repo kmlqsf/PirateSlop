@@ -1,0 +1,102 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &7686322687499094888
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1063183227553911728}
+  - component: {fileID: 140892654486955458}
+  m_Layer: 0
+  m_Name: Scenery
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1063183227553911728
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7686322687499094888}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &140892654486955458
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7686322687499094888}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d631c869e11237247adfdcbbf9c0a0bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.World.MainOceanScenery
+  Revision: B000564F1A2129B439788EEEDA527A8D7ECC107D896FDB83171A178DBB4E2CF3
+  Assets:
+  - Key: Sea_Lagoon_Cave
+    Prefab: {fileID: 5231348972684006522, guid: 377d287456916304f94e2c263175d292, type: 3}
+    HorizonMesh: {fileID: 4300000, guid: 30772acbb9ed0084a8e2427eeaf28dd7, type: 2}
+    Radius: 177
+    MinScale: 0.88
+    MaxScale: 1.16
+  - Key: Reef_Moai_A
+    Prefab: {fileID: 7782841081735753353, guid: 2395b2485acf8b04bb4e82e6260a9053, type: 3}
+    HorizonMesh: {fileID: 4300000, guid: 2553e33e7a129a84d9cb885b2cc8570c, type: 2}
+    Radius: 44
+    MinScale: 0.88
+    MaxScale: 1.16
+  - Key: Reef_Spires_A
+    Prefab: {fileID: 6069779577392107521, guid: c771590765e955845a1267b99676d201, type: 3}
+    HorizonMesh: {fileID: 4300000, guid: 1cdf550690bbb0a47a538c92e4b0c9b0, type: 2}
+    Radius: 26
+    MinScale: 0.78
+    MaxScale: 1.28
+  - Key: Reef_Spires_B
+    Prefab: {fileID: 178923617029726008, guid: 8963025a34121824da352ca8c5fcbea6, type: 3}
+    HorizonMesh: {fileID: 4300000, guid: 50148fd9db5b5e948b28d4f81a57b7bc, type: 2}
+    Radius: 49
+    MinScale: 0.88
+    MaxScale: 1.16
+  - Key: Reef_Spires_C
+    Prefab: {fileID: 383911720981368521, guid: e08cf59bdc0e68a4b8a8b2d4851e25fa, type: 3}
+    HorizonMesh: {fileID: 4300000, guid: 627e9a78dbe91b14a9c99b965cc5dba4, type: 2}
+    Radius: 80
+    MinScale: 0.88
+    MaxScale: 1.16
+  - Key: SeaArch_Huge_A
+    Prefab: {fileID: 1159517191757354780, guid: 7e459818d793cc1458cc8856a562cc01, type: 3}
+    HorizonMesh: {fileID: 4300000, guid: bf79a353805215843b40466933bea932, type: 2}
+    Radius: 118
+    MinScale: 0.88
+    MaxScale: 1.16
+  - Key: Reef_ShallowField_A
+    Prefab: {fileID: 816557115258466517, guid: 4bb63a96f0552e44f9adef527b1df99d, type: 3}
+    HorizonMesh: {fileID: 4300000, guid: cda122aea12143c49ac6951b3b9fec89, type: 2}
+    Radius: 30
+    MinScale: 0.88
+    MaxScale: 1.16
+  - Key: SmallSandyIsland
+    Prefab: {fileID: 6271364365488821030, guid: 2499ed529453933469dfa1bce214734d, type: 3}
+    HorizonMesh: {fileID: 4300000, guid: d03d3d15af2a045448e6f189a1e364b4, type: 2}
+    Radius: 96
+    MinScale: 1
+    MaxScale: 1
+  - Key: TwoLandingIsland
+    Prefab: {fileID: 3481398972838188153, guid: 457771097f544a74c913e8a14c8bee84, type: 3}
+    HorizonMesh: {fileID: 4300000, guid: 449e6cb60fcbe4b4ca43ff9618b97c68, type: 2}
+    Radius: 175
+    MinScale: 1
+    MaxScale: 1

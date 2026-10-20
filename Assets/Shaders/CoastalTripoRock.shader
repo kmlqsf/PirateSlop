@@ -20,6 +20,7 @@ Shader "PirateSlop/CoastalTripoRock"
         _CapRepair ("Exposed underside repair", Range(0,1)) = 0
         _CapMap ("Cap stone detail", 2D) = "white" {}
         [Normal] _CapBumpMap ("Cap stone normal", 2D) = "bump" {}
+        _HorizonNearFade ("Horizon transition", Float) = 0
         _CapUVRect ("Cap detail atlas rectangle", Vector) = (.257,.34,.061,.085)
     }
     SubShader
@@ -45,6 +46,7 @@ Shader "PirateSlop/CoastalTripoRock"
         SAMPLER(sampler_CapBumpMap);
 
         float _CoastalSeaLevel;
+        float4 _WorldHorizonStone, _WorldHorizonHaze;
 
         CBUFFER_START(UnityPerMaterial)
             float4 _BaseMap_ST;
@@ -62,6 +64,7 @@ Shader "PirateSlop/CoastalTripoRock"
             half _StreakStrength;
             half _CapRepair;
             float4 _CapUVRect;
+            float _HorizonNearFade;
         CBUFFER_END
 
         struct Attributes
@@ -248,6 +251,12 @@ Shader "PirateSlop/CoastalTripoRock"
                 data.shadowMask = SAMPLE_SHADOWMASK(input.staticLightmapUV);
             #endif
             outColor = UniversalFragmentPBR(data, surface);
+            if (_HorizonNearFade > .5)
+            {
+                float distance = length(input.positionWS - GetCameraPositionWS());
+                half3 tint = lerp(_WorldHorizonStone.rgb, _WorldHorizonHaze.rgb, 1 - exp(-distance / 3400));
+                outColor.rgb = lerp(outColor.rgb, tint, smoothstep(500, 950, distance));
+            }
             outColor.rgb = MixFog(outColor.rgb, data.fogCoord);
             #if defined(_WRITE_RENDERING_LAYERS)
                 outRenderingLayers = EncodeMeshRenderingLayer();

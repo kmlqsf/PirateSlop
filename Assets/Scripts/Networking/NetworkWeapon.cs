@@ -35,6 +35,7 @@ namespace PirateSlop.Networking
             if (equipmentItems.Count == 0) for (int i = 0; i < PlayerInventory.NormalSlotStorage; i++) equipmentItems.Add(InventoryItem.None);
             if (stackCounts.Count == 0) for (int i = 0; i < PlayerInventory.NormalSlotStorage; i++) stackCounts.Add(i < 4 ? 1 : 0);
             ApplyInventory();
+            if (PirateSlop.World.MainOceanMap.IsMain(PirateSlop.World.ProceduralWorld.Instance != null ? PirateSlop.World.ProceduralWorld.Instance.Layout : null)) AddItem(InventoryItem.Fish);
         }
         void ApplyInventory()
         {

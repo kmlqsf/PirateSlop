@@ -65,8 +65,8 @@ namespace PirateSlop
         }
         float fogMultiplier => SeaMistRendererFeature.DensityMultiplier;
         static readonly int[] quantities = { 1, 5, 20 };
-        static readonly InventoryItem[] items = { InventoryItem.Cannon, InventoryItem.Pistol, InventoryItem.Sabre, InventoryItem.Rod, InventoryItem.Fish, InventoryItem.Swordfish, InventoryItem.Pufferfish, InventoryItem.Cannonball, InventoryItem.FireCannonball, InventoryItem.IceCannonball, InventoryItem.PushCannonball, InventoryItem.BoomerangCannonball, InventoryItem.HandMortar, InventoryItem.ExplosiveBall, InventoryItem.FireStaff, InventoryItem.LightningStaff, InventoryItem.IceStaff };
-        static readonly string[] names = { "Пушка", "Пистолет", "Сабля", "Удочка", "Рыба", "Рыба-меч", "Рыба-фугу", "Обычное ядро", "Огненное ядро", "Ледяное ядро", "Отталкивающее ядро", "Бумеранг", "Ручная мортира", "Взрывное ядро", "Посох огня", "Посох молнии", "Посох льда" };
+        static readonly InventoryItem[] items = Enum.GetValues(typeof(InventoryItem)).Cast<InventoryItem>().Where(value => value >= InventoryItem.Fish && value <= InventoryItem.MortarKit).ToArray();
+        static readonly string[] names = items.Select(InventoryIcons.ItemName).ToArray();
         void Awake()
         {
             network = GetComponent<NetworkWeapon>();
@@ -277,8 +277,8 @@ namespace PirateSlop
                 quantity = GUILayout.Toolbar(quantity, quantityNames);
                 GUILayout.EndHorizontal();
                 GUILayout.BeginHorizontal();
-                if (GUILayout.Button("Выдать себе", GUILayout.Height(29))) network.DeveloperCommand((byte)(32 + (int)items[item]), quantities[quantity]);
-                if (GUILayout.Button("На землю · 1 шт.", GUILayout.Height(29))) network.DeveloperCommand((byte)(64 + (int)items[item]));
+                if (GUILayout.Button("Выдать себе", GUILayout.Height(29))) network.DeveloperGrantItem(items[item], quantities[quantity]);
+                if (GUILayout.Button("На землю · 1 шт.", GUILayout.Height(29))) network.DeveloperCommand(134, (int)items[item]);
                 GUILayout.EndHorizontal();
                 GUILayout.Space(10);
                 GUILayout.Label("Улучшения");
