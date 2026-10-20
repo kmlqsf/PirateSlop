@@ -63,7 +63,7 @@ namespace PirateSlop.World
             {
                 var prefab = i < 18 ? common : i == 18 ? puffer : sword;
                 var visual = Object.Instantiate(prefab, parent);
-                visual.ConfigureForTest(EnvironmentTestGallery.IsTest(world.Layout));
+                visual.ConfigureForTest(MainOceanMap.UsesModernOcean(world.Layout));
                 visual.gameObject.SetActive(false);
                 fish[i] = new Fish
                 {

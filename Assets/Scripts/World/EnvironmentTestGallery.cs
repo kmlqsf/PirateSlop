@@ -45,11 +45,7 @@ namespace PirateSlop.World
                     Destroy(instance.gameObject);
                     throw new InvalidOperationException("Данные островов повреждены или отсутствуют. Обновите файлы игры.");
                 }
-            var ocean = Resources.Load<GameObject>("EnvironmentTest/Ocean");
-            if (ocean == null) throw new InvalidOperationException("The environment test ocean is missing.");
-            Instantiate(ocean, parent);
-            var sky = Resources.Load<GameObject>("EnvironmentTest/SkyDayNight");
-            if (sky != null) Instantiate(sky, parent);
+            MainOceanMap.SpawnEnvironment(parent);
             instance.transform.localPosition = Vector3.up * layout.SeaLevel; var wp = instance.gameObject.AddComponent<WhirlpoolTest>(); wp.Center = WhirlpoolCenter(layout); wp.Depth = OceanSurface.CentralWhirlpoolDepth;
             instance.gameObject.AddComponent<EnvironmentEventTestRow>().SeaLevel = layout.SeaLevel;
             var tentacles = new GameObject("WhirlpoolTentacles");

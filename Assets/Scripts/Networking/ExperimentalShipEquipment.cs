@@ -15,24 +15,24 @@ namespace PirateSlop.Networking
         float nextSpawn;
         readonly RaycastHit[] deckHits = new RaycastHit[64];
         NetworkShip ship;
+        bool TestItemsActive => Enabled && EnvironmentTestGallery.IsTest(ProceduralWorld.Instance != null ? ProceduralWorld.Instance.Layout : null);
         public override void OnStartServer()
         {
             spawned = new NetworkFish[Prefabs.Length];
             bottleRespawnAt = new float[Prefabs.Length];
             ship = GetComponent<NetworkShip>();
             nextSpawn = Time.time;
-            if (!EnvironmentTestGallery.IsTest(ProceduralWorld.Instance != null ? ProceduralWorld.Instance.Layout : null)) SpawnItems();
         }
         void Update()
         {
-            if (!IsServerInitialized || !Enabled) return;
+            if (!IsServerInitialized || !TestItemsActive) return;
             bool restock = Time.time >= nextSpawn;
             SpawnItems(!restock);
         }
         void SpawnItems(bool bottlesOnly = false)
         {
             if (!bottlesOnly) nextSpawn = Time.time + 20;
-            if (!Enabled) return;
+            if (!TestItemsActive) return;
             bool testItems = EnvironmentTestGallery.IsTest(ProceduralWorld.Instance != null ? ProceduralWorld.Instance.Layout : null);
             if (testItems && (ship == null || !ship.IsSpawned)) return;
             bool synced = false;

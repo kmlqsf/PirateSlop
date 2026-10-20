@@ -679,6 +679,7 @@
 | [Assets/Scripts/World/KamikazeUnit.Pursuit.cs](<../../Assets/Scripts/World/KamikazeUnit.Pursuit.cs>) | Исходник C#: KamikazeUnit; Rock Ring — ивент камикадзе |
 | [Assets/Scripts/World/KamikazeUnit.cs](<../../Assets/Scripts/World/KamikazeUnit.cs>) | Исходник C#: KamikazeUnit; Rock Ring — ивент камикадзе |
 | [Assets/Scripts/World/LocationDefinition.cs](<../../Assets/Scripts/World/LocationDefinition.cs>) | Исходник C#: Landform, LocationSettings, LocationPointRule, LocationDefinition |
+| [Assets/Scripts/World/MainOceanMap.cs](<../../Assets/Scripts/World/MainOceanMap.cs>) | Исходник C#: MainOceanMap; Мир, острова и океан |
 | [Assets/Scripts/World/OceanHeightSource.cs](<../../Assets/Scripts/World/OceanHeightSource.cs>) | Исходник C#: OceanHeightSource; Мир, острова и океан, Тестовая карта и водоворот |
 | [Assets/Scripts/World/PlatformingLeverTarget.cs](<../../Assets/Scripts/World/PlatformingLeverTarget.cs>) | Исходник C#: PlatformingLeverTarget; Лестница контрабандистов — морской платформинг |
 | [Assets/Scripts/World/ProceduralWorld.cs](<../../Assets/Scripts/World/ProceduralWorld.cs>) | Исходник C#: ProceduralWorld; Фоновая рыба в океане, Мир, острова и океан |

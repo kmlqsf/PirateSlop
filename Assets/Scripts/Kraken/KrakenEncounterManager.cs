@@ -35,7 +35,7 @@ namespace PirateSlop
             var netShip = GetComponent<PirateSlop.Networking.NetworkShip>();
             if (netShip != null && !netShip.IsServerInitialized) return;
 
-            if (!AutoEncounterEnabled || PirateSlop.World.EnvironmentTestGallery.IsTest(PirateSlop.World.ProceduralWorld.Instance!=null ? PirateSlop.World.ProceduralWorld.Instance.Layout : null))
+            if (!AutoEncounterEnabled || PirateSlop.World.MainOceanMap.UsesModernOcean(PirateSlop.World.ProceduralWorld.Instance!=null ? PirateSlop.World.ProceduralWorld.Instance.Layout : null))
             {
                 anchorPosition = transform.position;
                 stationaryTimer = 0f;

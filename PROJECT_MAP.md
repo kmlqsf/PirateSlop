@@ -1,6 +1,6 @@
 # PirateSlop — карта проекта
 
-Снимок файлов: 2026-10-20. Корень: `D:\projects\Pirate_BR\PirateGame`.
+Снимок файлов: 2026-10-20. Корень: `C:\Users\K\Project`.
 
 ## Как пользоваться
 
@@ -12,14 +12,14 @@
 
 ## Полный каталог
 
-Учтено 14226 файлов без `.meta`. Ещё 13042 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
+Учтено 14483 файлов без `.meta`. Ещё 13048 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
 
 | Раздел | Назначение | Файлов |
 | --- | --- | ---: |
 | [.agents](<Docs/ProjectMap/.agents.md>) | Ресурсы раздела; точный состав — в каталоге | 1 |
 | [.cursor](<Docs/ProjectMap/.cursor.md>) | Ресурсы раздела; точный состав — в каталоге | 1 |
-| [.opencode](<Docs/ProjectMap/.opencode.md>) | Ресурсы раздела; точный состав — в каталоге | 4 |
-| [Art](<Docs/ProjectMap/Art.md>) | Исходники арта и Blender | 578 |
+| [.opencode](<Docs/ProjectMap/.opencode.md>) | Ресурсы раздела; точный состав — в каталоге | 1 |
+| [Art](<Docs/ProjectMap/Art.md>) | Исходники арта и Blender | 592 |
 | [Assets](<Docs/ProjectMap/Assets.md>) | Ресурсы раздела; точный состав — в каталоге | 2 |
 | [Assets/Animations](<Docs/ProjectMap/Assets-Animations.md>) | Анимации | 38 |
 | [Assets/Audio](<Docs/ProjectMap/Assets-Audio.md>) | Звуковые ресурсы и лицензии | 465 |
@@ -29,7 +29,7 @@
 | [Assets/Fog Particles](<Docs/ProjectMap/Assets-Fog Particles.md>) | Ресурсы раздела; точный состав — в каталоге | 3 |
 | [Assets/Game](<Docs/ProjectMap/Assets-Game.md>) | Игровые подсистемы и эффекты | 83 |
 | [Assets/Houidisoft technology](<Docs/ProjectMap/Assets-Houidisoft technology.md>) | Ресурсы раздела; точный состав — в каталоге | 12 |
-| [Assets/JMO Assets](<Docs/ProjectMap/Assets-JMO Assets.md>) | Ресурсы раздела; точный состав — в каталоге | 18 |
+| [Assets/JMO Assets](<Docs/ProjectMap/Assets-JMO Assets.md>) | Ресурсы раздела; точный состав — в каталоге | 19 |
 | [Assets/Materials](<Docs/ProjectMap/Assets-Materials.md>) | Материалы | 141 |
 | [Assets/Mirza](<Docs/ProjectMap/Assets-Mirza.md>) | Ресурсы раздела; точный состав — в каталоге | 1 |
 | [Assets/Models](<Docs/ProjectMap/Assets-Models.md>) | Модели и связанные ресурсы | 9659 |
@@ -37,7 +37,7 @@
 | [Assets/Prefabs](<Docs/ProjectMap/Assets-Prefabs.md>) | Готовые игровые объекты | 139 |
 | [Assets/Resources](<Docs/ProjectMap/Assets-Resources.md>) | Ресурсы, доступные для загрузки по имени | 170 |
 | [Assets/Scenes](<Docs/ProjectMap/Assets-Scenes.md>) | Сохранённые сцены | 3 |
-| [Assets/Scripts](<Docs/ProjectMap/Assets-Scripts.md>) | Игровой код и редакторские инструменты | 608 |
+| [Assets/Scripts](<Docs/ProjectMap/Assets-Scripts.md>) | Игровой код и редакторские инструменты | 609 |
 | [Assets/Settings](<Docs/ProjectMap/Assets-Settings.md>) | Настройки игровых систем и рендеринга | 60 |
 | [Assets/Shaders](<Docs/ProjectMap/Assets-Shaders.md>) | Шейдеры | 22 |
 | [Assets/StreamingAssets](<Docs/ProjectMap/Assets-StreamingAssets.md>) | Ресурсы раздела; точный состав — в каталоге | 5 |
@@ -45,12 +45,12 @@
 | [Assets/ThirdParty](<Docs/ProjectMap/Assets-ThirdParty.md>) | Сторонние ресурсы | 20 |
 | [Assets/TutorialInfo](<Docs/ProjectMap/Assets-TutorialInfo.md>) | Ресурсы раздела; точный состав — в каталоге | 2 |
 | [Assets/UI](<Docs/ProjectMap/Assets-UI.md>) | Ресурсы интерфейса | 42 |
-| [Assets/_Recovery](<Docs/ProjectMap/Assets-_Recovery.md>) | Сохранённые восстановленные данные | 5 |
+| [Assets/_Recovery](<Docs/ProjectMap/Assets-_Recovery.md>) | Сохранённые восстановленные данные | 7 |
 | [Captures](<Docs/ProjectMap/Captures.md>) | Ресурсы раздела; точный состав — в каталоге | 1010 |
-| [Docs](<Docs/ProjectMap/Docs.md>) | Документы и сохранённые отчёты | 55 |
-| [Packages](<Docs/ProjectMap/Packages.md>) | Манифест, lock-файл и встроенные пакеты | 922 |
+| [Docs](<Docs/ProjectMap/Docs.md>) | Документы и сохранённые отчёты | 313 |
+| [Packages](<Docs/ProjectMap/Packages.md>) | Манифест, lock-файл и встроенные пакеты | 924 |
 | [ProjectSettings](<Docs/ProjectMap/ProjectSettings.md>) | Настройки Unity | 29 |
-| [Root](<Docs/ProjectMap/Root.md>) | Корневые инструкции, планы и служебные файлы | 45 |
+| [Root](<Docs/ProjectMap/Root.md>) | Корневые инструкции, планы и служебные файлы | 27 |
 | [ThirdParty](<Docs/ProjectMap/ThirdParty.md>) | Сторонние ресурсы | 2 |
 | [Tools](<Docs/ProjectMap/Tools.md>) | Инструменты разработки и загрузчик контекста | 44 |
 
@@ -62,6 +62,7 @@
 
 Ключевые слова: верхние разрушения, UpperDestructionV2, протокол 199, ядра из игрока.
 
+20.10.2026: по запросу пользователя отменено разделение игрового содержимого Development/Release. PIRATESLOP_UPPER_DESTRUCTION_V2 — общий Standalone define. Windows Build/Build, Clean Build, Diagnostics и Release используют одинаковые корабль, механику, реестр и общий Assets/Settings/Networking/SessionConfig.asset (текущий протокол200). Верхние разрушения включены в Release. Отдельная Session.asset с протоколом199 больше не используется и не пересоздаётся; Settings ссылается на общий конфиг. Подготовка и подмена копии собираемой сцены одинаковы для всех билдов, проверка Release198 удалена. Старые заметки про раздельные варианты описывают отменённый режим.
 19.10, инструмент тестирования: F8 / Разрушение / Ядра из игрока — переключатель132, по одному обычному ядру на клик ЛКМ без перезарядки/расхода инвентаря. Выстрел идёт через существующий ActionServerRpc с действием3, сервер проверяет права разработчика и режим; полёт/попадания использует CannonShotDamage и стандартную модель ядра. Source — сам игрок, поэтому мишень под ногами не исключается; собственное тело исключено даже при дружественном огне. Режим временно забирает ЛКМ у предметов и управления механизмами только локального игрока. Кнопка, состояние и новые RPC исключены из Release символом UpperDestructionV2. Unity MCP недоступен: сохранён код, компиляция/игровая проверка и обновление exe не выполнены.
 19.10.2026: эксперимент ограничен Editor и обычными Windows Build/Build, Clean Build, Diagnostics. PIRATESLOP_UPPER_DESTRUCTION_V2 передаётся только через BuildPlayerOptions.extraScriptingDefines; глобальный символ запрещён. Release сохраняет прежний профиль, реестр, протокол198 и исключает экспериментальные классы, поля и сообщения. Экспериментальные копии находятся вне Resources в Assets/Experimental/UpperDestructionV2; ссылки заменяются только в собираемых сценах и экземпляре SessionController в Play Mode, протокол199. Принятые cpu-work-v3/cloud-bounds-v1 и объединения рендера/коллизий общие для обоих вариантов.
 UpperDestructionAssetSetup.Prepare создаёт отдельные корабль/профиль/SessionConfig/реестр, сохраняет старые индексы и добавляет корабль и два выпавших орудия. Обломки заранее разрезаются из настоящих MeshFilter; позы парусов и снастей запекаются в Editor. Центральная мачта и её снасти защищены, боковые имеют три попадания и общий ремонт у основания; механизмы80/35/0%. Порядок SailSystem/VisualRig в текущем корабле: MainCourse, MainTopsail, ForeCourse, ForeTopsail, Mizzen; защищены индексы0/1.
@@ -1095,6 +1096,7 @@ AmbientFishSetup создаёт отдельные Resources/Underwater/Ambient*
 
 Ключевые слова: мир, острова, карта, океан, water.
 
+2026-10-20: обычная сессия создаёт MainOceanMap вместо старой процедурной карты: радиус4000м/глубина200м из тестового окружения, общие Ocean и SkyDayNight, тестовая стена зоны, воронка и кольцо кракена строго в центре. Ивенты, острова, скалы, галерейные надписи, автоматические чайки с лутом и случайный кракен отключены только для основной карты. Тестовая карта сохранена отдельно. ExperimentalShipEquipment и автоматический TestUpgradeChest доступны только в тестовой карте; в основной игре их спавн и пополнение запрещены сервером. Совместимость окружения включена в CatalogHash; волны и кольцо кракена синхронизируются также в основной игре. Игровая и сетевая проверка остаются пользователю.
 2026-10-10 после очередного отклонения дыма: только environment_test. Самостоятельный шум128³ RGBAHalf с аналитическим градиентом и mip-цепочкой готовится GPU один раз при подготовке зоны; три выборки64/29/9м, полный вывод1.0, без столбов14м и деформации ячеек32³. До160 геометрических шагов1–2.5м, пустота до10м, уточнение4проб, ранний выход.003; огромные оптические интервалы отклонены после нативного просмотра как источник колец. Перед фронтом реальные падающие объёмные массы12–16с со шлейфом, затем уплощение/рост45%/растекание3м/исчезновение3с; соседство3×3 без отсечения краёв. GPU-карта реальных Gerstner-волн128²/512м/4м, с текущим временем/управлением и водоворотом. Наступление сохраняет возврат низа под массу; высота+15м, заполненная глубина и ориентир10м сохранены, нижний запас SeaLevel−12м. По отдельному запросу добавлены6групп молний у границы: тройки0.6–0.75с, отдельный случайный поток; старые6групп/тройки0.75–1.05с внутри сохранены. Подсветка расширена48→58м/край22–36м/перенос.155 без повышения интенсивности. Массивы StormSmokeFlashVolumes/ChannelStarts/Ends12/72 имеют новые имена для сброса старого ограничения длины. Нативный изолированный предпросмотр включает тот же TraceTestSmoke: просмотрены дальний/ближний/касательный/увеличенный вид, пауза/наступление10/12с и вспышки. Без Play/изменения сцены/игрового FPS. Небо, дождь, рыбы, корабль и обезьяна не менялись. Подробности Docs/StormTestSmoke.md; старые заметки32³/.67 описывают отклонённые итерации.
 Референсы универсального Tripo-набора готовы: ../Blender/Скалы содержит 15 папок и 60 PNG спереди.png/сзаде.png/справа.png/слева.png, TRIPO.txt и README.md с бюджетами. Пользователь предоставил все GLB и затем одобрил фактическую арку, разрешив заменить остальные игровые формы в том же стиле.
 Пользователь предоставил 15 Tripo GLB, 44860 исходных треугольников и встроенные UV/PBR2K. CoastalTripoCollection.blend:12скал+5растений. После игровой жалобы все6больших форм, включая арку, перестроены из целых модулей: rooted Monolith/Mass, природные боковые поверхности сводов вместо плоских днищ. Lagoon имеет8широких плеч с реальным пересечением поверхностей опор и сводов. Spires без Lower/Upperэтажей; Shallow без12отдельных полностью подводных кусков. Малые5скал и5растений визуально сохранены. GLB/UV/нативные карты не менялись. Новые формы проверяются низкими корабельными кадрами снаружи и из проходов, не только AABB.
@@ -1139,6 +1141,7 @@ CoastalSandSetup.Apply создаёт в12каменных префабах от
 11.10.2026, уточнение пользователя: EnvironmentEventTestRow содержит только шесть станций (захват, плот, затонувший сундук, акулы, череп, кит). Автозапуск кракена рядом со станцией удалён; KrakenEncounterManager запрещает таймер ожидания на EnvironmentTestGallery, ручной запуск F8 сохраняется. EnvironmentTestGallery.WhirlpoolCenter получает test_ship_0 и смещает Z на -550 м, возвращая прежнюю позицию (-635.41,SeaLevel,-788.4); вода, SeabedTerrain и кольцо используют единый центр. Водоворот не относится к ряду ивентов. ProtocolVersion151.
 2026-10-11: SandyIslandTestSetup.Prepare сохраняет три песчаных острова в отдельный SandyIslandTestRow ресурса EnvironmentTest/Gallery: X=-520/-130/340, Z=700, параллельно скалам и за рядом ивентов Z=370, вдали от водоворота. SmallSandyIsland: обычный пологий берег, радиус28м. TwoLandingIsland: радиус59м, песчаное плато8.2м, цельные непроходимые с воды скальные плечи12м и два пляжных прохода по ±Z. SingleLandingRockIsland: радиус78м, песчаная середина4.8м, один проход с -Z, замкнутый неровный скальный пояс с минимумом гребня50м, выше верхнего корабельного коллайдера28.29м и прыжка1.2м с запасом. Грунт — редактируемые TerrainData513, TerrainCollider; скальные пояса — закрытые MeshCollider, совпадающие с видимыми поверхностями, без невидимых стен. Четыре CC0 PolyHaven PBR2K TerrainLayer: CoastSand01/LeafyGrass/BrownMud03/CoastSandRocks02, преимущественно песок и локальные травянистые пятна. StarterIsland Palm/PalmBent/PalmYoung/Bush/Fern расставлены группами, проходы свободны; SandyIslandFoliageWind задаёт шейдерное покачивание0.2м для пальм и0.065м для кустов/папоротников с неподвижным корнем, включая тени/глубину, без изменения коллайдеров. Исходные растения имеют WindStrength0. ArrangeTestGallery сохраняет новый ряд через Attach; версия галереи учитывает зависимости островов. Префабы/материалы сохранены через Unity MCP; компиляция без новых ошибок, Play/визуальная игровая приёмка не запускались.
 
+- [Assets/Scripts/World/MainOceanMap.cs](<Assets/Scripts/World/MainOceanMap.cs>) — Исходник C#: MainOceanMap.
 - [Assets/Game/BRZoneVolumetric/StormVolumeController.Smoke.cs](<Assets/Game/BRZoneVolumetric/StormVolumeController.Smoke.cs>) — Исходник C#: StormVolumeController.
 - [Assets/Game/BRZoneVolumetric/Resources/StormSmokeFields.compute](<Assets/Game/BRZoneVolumetric/Resources/StormSmokeFields.compute>) — Вычислительный шейдер.
 - [Assets/Scripts/Editor/StormSmokePreview.cs](<Assets/Scripts/Editor/StormSmokePreview.cs>) — Исходник C#: StormSmokePreview.
@@ -1320,7 +1323,7 @@ CoastalSandSetup.Apply создаёт в12каменных префабах от
 - [Art/Sources/CoastalEnvironment/SOURCES.md](<Art/Sources/CoastalEnvironment/SOURCES.md>) — Документация.
 - [Art/Sources/CoastalEnvironment/TRIPO_MODULAR_ROCK_BRIEF.md](<Art/Sources/CoastalEnvironment/TRIPO_MODULAR_ROCK_BRIEF.md>) — Документация.
 - [Art/Blender/World/CoastalEnvironment/README_TRIPO_ARCH.md](<Art/Blender/World/CoastalEnvironment/README_TRIPO_ARCH.md>) — Документация.
-- [../Blender/Скалы/README.md](<../Blender/Скалы/README.md>) — Документация.
+- `../Blender/Скалы/README.md` — отсутствует в текущем снимке; не использовать как готовый путь.
 - [Art/Blender/World/CoastalEnvironment/README_TRIPO_COLLECTION.md](<Art/Blender/World/CoastalEnvironment/README_TRIPO_COLLECTION.md>) — Документация.
 - [Docs/StormTestSmoke.md](<Docs/StormTestSmoke.md>) — Документация.
 
@@ -1328,6 +1331,8 @@ CoastalSandSetup.Apply создаёт в12каменных префабах от
 
 Ключевые слова: сеть, мультиплеер, steam, network.
 
+20.10.2026, проверка Unity MCP: Release build-96393073e8 и Development build-3cc19220b7 успешно собраны в Builds/WindowsRelease и Builds/Windows, по0ошибок. PackedAssets обоих включают одинаковые новый корабль, общий SessionConfig200 и сетевой реестр. Подробные предупреждения/время и оставшаяся игровая/FPS-приёмка — в OptimizationPlan.md.
+20.10.2026: Development и Release собираются через одну подготовку игрового содержимого и общий SessionConfig/протокол200. Отличаются Development-флагом/отладкой и каталогом вывода. Верхние разрушения — общий Standalone define; legacy Release198 больше не поддерживается. Результаты отдельно записываются в Temp/multiplayer-build-development-result.txt и Temp/multiplayer-build-release-result.txt. Готовые exe обновляются только пересборкой.
 2026-10-11: весь экипаж может быть мёртв без поражения и без запуска затопления. BeginSinking разрешён только при уровне воды 100%; живой экипаж защищён от урона до серверного выбывания через 2–2.5 с после начала затопления, затем принудительно погибает и получает сообщение о поражении. Оба пути колокола используют общий NetworkShip.RingForRescue: три звонка своей команды возвращают одного игрока за один ром. ProtocolVersion144 из-за нового SyncVar таймера и RPC удержания доски; компиляция проверяется отдельно, игровые проверки выполняет пользователь.
 FishNet: серверный авторитет. Изменения формата сообщений согласовывать с ProtocolVersion; не повышать его автоматически без изменения протокола.
 IP/Tugboat и Steam — отдельные способы подключения. localhost не подтверждает работу через интернет; позднее подключение и отключение требуют отдельной приёмки.
@@ -1459,7 +1464,7 @@ Whisky Bottle с бесплатной BlenderKit Royalty Free загружена
 - [Assets/Scripts/Editor/PirateCharacterImport.cs](<Assets/Scripts/Editor/PirateCharacterImport.cs>) — Исходник C#: PirateCharacterImport.
 - [Assets/Scripts/Editor/SailRiggingArtSetup.cs](<Assets/Scripts/Editor/SailRiggingArtSetup.cs>) — Исходник C#: SailRiggingArtSetup.
 - [Assets/Scripts/Editor/MainShipSetup.cs](<Assets/Scripts/Editor/MainShipSetup.cs>) — Исходник C#: MainShipSetup.
-- [../NewShip/Ship_V3_Fitted.blend](<../NewShip/Ship_V3_Fitted.blend>) — Редактируемая сцена Blender.
+- `../NewShip/Ship_V3_Fitted.blend` — отсутствует в текущем снимке; не использовать как готовый путь.
 - [Assets/Scripts/Editor/ShipV3ImportSetup.cs](<Assets/Scripts/Editor/ShipV3ImportSetup.cs>) — Исходник C#: ShipV3ImportSetup.
 - [Tools/ShipV3/ExportFromOpenBlender.py](<Tools/ShipV3/ExportFromOpenBlender.py>) — Инструмент Python.
 - [Assets/Models/Ships/ShipV3/ShipV3.fbx](<Assets/Models/Ships/ShipV3/ShipV3.fbx>) — Модель / анимации FBX.
@@ -1537,16 +1542,16 @@ Whisky Bottle с бесплатной BlenderKit Royalty Free загружена
 - [blender.md](<blender.md>) — Документация.
 - [unity.md](<unity.md>) — Документация.
 - [frigate.md](<frigate.md>) — Документация.
-- [../NewShip/V3Preparation/TelescopeAndAnchorControls.md](<../NewShip/V3Preparation/TelescopeAndAnchorControls.md>) — Документация.
-- [../NewShip/External/AnchorNikdane12/SOURCES.md](<../NewShip/External/AnchorNikdane12/SOURCES.md>) — Документация.
-- [../NewShip/V3Preparation/HarpoonControls.md](<../NewShip/V3Preparation/HarpoonControls.md>) — Документация.
-- [../NewShip/V3Preparation/BowTextureRestoreReport.json](<../NewShip/V3Preparation/BowTextureRestoreReport.json>) — Конфигурация / данные JSON.
-- [../NewShip/V3Preparation/HoldDispenserControls.md](<../NewShip/V3Preparation/HoldDispenserControls.md>) — Документация.
-- [../NewShip/V3Preparation/ShipDetailsControls.md](<../NewShip/V3Preparation/ShipDetailsControls.md>) — Документация.
-- [../NewShip/FreeAssets/CREDITS.md](<../NewShip/FreeAssets/CREDITS.md>) — Документация.
-- [../NewShip/V3Preparation/OptimizationAndDestructionControls.md](<../NewShip/V3Preparation/OptimizationAndDestructionControls.md>) — Документация.
-- [../NewShip/V3Preparation/V18Validation.json](<../NewShip/V3Preparation/V18Validation.json>) — Конфигурация / данные JSON.
-- [../NewShip/V3Preparation/V19Validation.json](<../NewShip/V3Preparation/V19Validation.json>) — Конфигурация / данные JSON.
+- `../NewShip/V3Preparation/TelescopeAndAnchorControls.md` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `../NewShip/External/AnchorNikdane12/SOURCES.md` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `../NewShip/V3Preparation/HarpoonControls.md` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `../NewShip/V3Preparation/BowTextureRestoreReport.json` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `../NewShip/V3Preparation/HoldDispenserControls.md` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `../NewShip/V3Preparation/ShipDetailsControls.md` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `../NewShip/FreeAssets/CREDITS.md` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `../NewShip/V3Preparation/OptimizationAndDestructionControls.md` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `../NewShip/V3Preparation/V18Validation.json` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `../NewShip/V3Preparation/V19Validation.json` — отсутствует в текущем снимке; не использовать как готовый путь.
 
 ### Звуки и голос (`audio`)
 
@@ -1815,7 +1820,7 @@ TestMap R4000м. После повторной жалобы CLEAR rays/planetcen
 - [Assets/Scripts/Ships/ShipV3HarpoonVisual.cs](<Assets/Scripts/Ships/ShipV3HarpoonVisual.cs>) — Исходник C#: ShipV3HarpoonVisual.
 - [Assets/Resources/Ships/ShipV3HarpoonPort.prefab](<Assets/Resources/Ships/ShipV3HarpoonPort.prefab>) — Префаб Unity.
 - [Assets/Resources/Ships/ShipV3HarpoonStarboard.prefab](<Assets/Resources/Ships/ShipV3HarpoonStarboard.prefab>) — Префаб Unity.
-- [../NewShip/V3Preparation/HarpoonControls.md](<../NewShip/V3Preparation/HarpoonControls.md>) — Документация.
+- `../NewShip/V3Preparation/HarpoonControls.md` — отсутствует в текущем снимке; не использовать как готовый путь.
 
 ### Кракен и щупальца (`kraken`)
 
@@ -1850,12 +1855,12 @@ TestMap R4000м. После повторной жалобы CLEAR rays/planetcen
 - [Assets/Scripts/World/WhirlpoolTentacleRing.cs](<Assets/Scripts/World/WhirlpoolTentacleRing.cs>) — Исходник C#: WhirlpoolTentacleRing.
 - [Assets/Scripts/Networking/SessionWhirlpoolTentacles.cs](<Assets/Scripts/Networking/SessionWhirlpoolTentacles.cs>) — Исходник C#: WhirlpoolTentacleState, WhirlpoolTentaclesMessage, SessionController.
 - [Assets/Scripts/World/EnvironmentTestGallery.cs](<Assets/Scripts/World/EnvironmentTestGallery.cs>) — Исходник C#: EnvironmentTestGallery.
-- [../Blender/KrakenTentacle_v1/README.md](<../Blender/KrakenTentacle_v1/README.md>) — Документация.
-- [../Blender/KrakenTentacle_v1/TRIPO.txt](<../Blender/KrakenTentacle_v1/TRIPO.txt>) — Текстовые данные.
-- [../Blender/KrakenTentacle_v1/front.png](<../Blender/KrakenTentacle_v1/front.png>) — Изображение / текстура.
-- [../Blender/KrakenTentacle_v1/back.png](<../Blender/KrakenTentacle_v1/back.png>) — Изображение / текстура.
-- [../Blender/KrakenTentacle_v1/left.png](<../Blender/KrakenTentacle_v1/left.png>) — Изображение / текстура.
-- [../Blender/KrakenTentacle_v1/right.png](<../Blender/KrakenTentacle_v1/right.png>) — Изображение / текстура.
+- `../Blender/KrakenTentacle_v1/README.md` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `../Blender/KrakenTentacle_v1/TRIPO.txt` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `../Blender/KrakenTentacle_v1/front.png` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `../Blender/KrakenTentacle_v1/back.png` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `../Blender/KrakenTentacle_v1/left.png` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `../Blender/KrakenTentacle_v1/right.png` — отсутствует в текущем снимке; не использовать как готовый путь.
 - [Art/Blender/Kraken/KrakenTripoRig.blend](<Art/Blender/Kraken/KrakenTripoRig.blend>) — Редактируемая сцена Blender.
 - [Art/Blender/Kraken/PrepareTripoTentacle.py](<Art/Blender/Kraken/PrepareTripoTentacle.py>) — Инструмент Python.
 - [Art/Blender/Kraken/README.md](<Art/Blender/Kraken/README.md>) — Документация.
@@ -1999,6 +2004,7 @@ NetworkFishMotion: обычная рыба, фугу и рыба-меч на п�
 
 Ключевые слова: тестовая карта, галерея, водоворот, whirlpool.
 
+20.10.2026, уточнение пользователя: на тестовой карте сохранить тестовые предметы на полу корабля, их пополнение и TestUpgradeChest. Оба общих префаба имеют ExperimentalShipEquipment.Enabled=true; серверный TestItemsActive разрешает старт и пополнение только при EnvironmentTestGallery.IsTest(layout). В основной игре тестовый лут и автосундук не создаются.
 2026-10-12: отсутствие поверхностей островов после Git вызвано eol=lf для двоичных TerrainData: опубликованные четыре .asset были короче на 2–7 байт. Assets/Settings/World/SandyIslands/*.asset теперь binary -eol; исправные данные пересохранены через Unity с прежними GUID. При отсутствующем TerrainData галерея останавливает загрузку с сообщением об обновлении файлов. WorldStructureCollision revision 4 пропускает выключенные рендереры и неактивные заглушки, поэтому кусты/папоротники не становятся препятствиями. SandyIslandFoliageWind подключён к Palm/PalmBent/PalmYoung/Bush/Fern и унаследован всеми четырьмя островами без дублирования: небольшое движение CoastalVisual, фактическая высота маски листьев, обновление мировой точки основания; коллизии стволов остаются неподвижными. Подтверждены неизменность байтов при фильтрации Git, отсутствие коллайдеров кустов/папоротников и компиляция; отдельный клиент друга и игровой прогон не выполнялись.
 2026-10-11: Скальные берега островов2/3 заменены исходными CliffWallA/B/C вместо гладкой кольцевой сетки. Главный пол гнезда26.75м, максимум третьего берега28.75м. Обычный маленький остров сохранён без ямы; отдельный остров с весами стоит восьмым в ряду ивентов; сохранены Terrain, песчаные PBR и растительность с ветром.
 2026-10-11: Горизонтальные уступы Sea_Lagoon_Cave и SeaArch_Huge_A используют TripoNative_11_RockElongated_A с коричневыми текстурными крышками. CoastalTripoRock включает _CapRepair только у этого материала: затемнённые коричневые участки обращённых вверх граней плавно заменяются деталью камня/нормали из заданного прямоугольника родного атласа. Геометрия, поворот, UV и коллизия скал сохраняются. Проверка в игре пользователем.
@@ -2277,42 +2283,42 @@ NetworkLoadTest запускается из меню Тест нагрузки �
 - [Docs/Performance/CombatSixBenchmark.md](<Docs/Performance/CombatSixBenchmark.md>) — Документация.
 - [Docs/Performance/NetworkLoadTest.md](<Docs/Performance/NetworkLoadTest.md>) — Документация.
 - [Docs/Performance/OptimizationPlan.md](<Docs/Performance/OptimizationPlan.md>) — Документация.
-- [../output/CrashReview20261007/Spyglass_1628.md](<../output/CrashReview20261007/Spyglass_1628.md>) — Документация.
-- `Docs/Performance/Reports/20261014-232504-127-benchmark.json` — отсутствует в текущем снимке; не использовать как готовый путь.
-- `Docs/Performance/Reports/20261014-232504-127-benchmark.txt` — отсутствует в текущем снимке; не использовать как готовый путь.
-- `Docs/Performance/Reports/20261014-233947-869-benchmark.json` — отсутствует в текущем снимке; не использовать как готовый путь.
-- `Docs/Performance/Reports/20261014-233947-869-benchmark.txt` — отсутствует в текущем снимке; не использовать как готовый путь.
-- `Docs/Performance/Reports/20261014-234517-949-benchmark.json` — отсутствует в текущем снимке; не использовать как готовый путь.
-- `Docs/Performance/Reports/20261014-234517-949-benchmark.txt` — отсутствует в текущем снимке; не использовать как готовый путь.
-- `Docs/Performance/Reports/20261015-editor-cpu-profile.txt` — отсутствует в текущем снимке; не использовать как готовый путь.
-- `Docs/Performance/Reports/20261014-235834-386-benchmark.json` — отсутствует в текущем снимке; не использовать как готовый путь.
-- `Docs/Performance/Reports/20261014-235834-386-benchmark.txt` — отсутствует в текущем снимке; не использовать как готовый путь.
-- `Docs/Performance/Reports/20261015-000416-705-benchmark.json` — отсутствует в текущем снимке; не использовать как готовый путь.
-- `Docs/Performance/Reports/20261015-000416-705-benchmark.txt` — отсутствует в текущем снимке; не использовать как готовый путь.
-- `Docs/Performance/Reports/20261015-000935-446-benchmark.json` — отсутствует в текущем снимке; не использовать как готовый путь.
-- `Docs/Performance/Reports/20261015-000935-446-benchmark.txt` — отсутствует в текущем снимке; не использовать как готовый путь.
-- `Docs/Performance/Reports/20261015-cpu-series.json` — отсутствует в текущем снимке; не использовать как готовый путь.
-- `Docs/Performance/Reports/20261015-editor-cpu-after.txt` — отсутствует в текущем снимке; не использовать как готовый путь.
-- `Docs/Performance/Reports/20261015-editor-gpu-hierarchy.txt` — отсутствует в текущем снимке; не использовать как готовый путь.
-- `Docs/Performance/Reports/20261015-editor-gpu-outside.txt` — отсутствует в текущем снимке; не использовать как готовый путь.
-- `Docs/Performance/Reports/20261015-editor-gpu-reference-repeat.txt` — отсутствует в текущем снимке; не использовать как готовый путь.
-- `Docs/Performance/Reports/20261015-editor-gpu-scale040-sky025.txt` — отсутствует в текущем снимке; не использовать как готовый путь.
-- `Docs/Performance/Reports/20261015-editor-gpu-scale050-sky030.txt` — отсутствует в текущем снимке; не использовать как готовый путь.
-- `Docs/Performance/Visuals/storm-reference-outside.png` — отсутствует в текущем снимке; не использовать как готовый путь.
-- `Docs/Performance/Visuals/storm-scale040-sky025-outside.png` — отсутствует в текущем снимке; не использовать как готовый путь.
-- `Docs/Performance/Visuals/storm-scale050-sky030-outside.png` — отсутствует в текущем снимке; не использовать как готовый путь.
-- `Docs/Performance/Reports/20261015-140352-763-benchmark.json` — отсутствует в текущем снимке; не использовать как готовый путь.
-- `Docs/Performance/Reports/20261015-140352-763-benchmark.txt` — отсутствует в текущем снимке; не использовать как готовый путь.
-- `Docs/Performance/Reports/20261015-140907-441-benchmark.json` — отсутствует в текущем снимке; не использовать как готовый путь.
-- `Docs/Performance/Reports/20261015-140907-441-benchmark.txt` — отсутствует в текущем снимке; не использовать как готовый путь.
-- `Docs/Performance/Reports/20261015-141403-786-benchmark.json` — отсутствует в текущем снимке; не использовать как готовый путь.
-- `Docs/Performance/Reports/20261015-141403-786-benchmark.txt` — отсутствует в текущем снимке; не использовать как готовый путь.
-- `Docs/Performance/Reports/20261015-141903-033-benchmark.json` — отсутствует в текущем снимке; не использовать как готовый путь.
-- `Docs/Performance/Reports/20261015-141903-033-benchmark.txt` — отсутствует в текущем снимке; не использовать как готовый путь.
-- `Docs/Performance/Reports/20261015-143012-267-character-hits-editor.json` — отсутствует в текущем снимке; не использовать как готовый путь.
-- `Docs/Performance/Reports/20261015-143012-267-character-hits-editor.txt` — отсутствует в текущем снимке; не использовать как готовый путь.
-- `Docs/Performance/Reports/20261015-render-scale-experiment.json` — отсутствует в текущем снимке; не использовать как готовый путь.
-- `Docs/Performance/Reports/20261015-character-hit-before-analysis.json` — отсутствует в текущем снимке; не использовать как готовый путь.
+- `../output/CrashReview20261007/Spyglass_1628.md` — отсутствует в текущем снимке; не использовать как готовый путь.
+- [Docs/Performance/Reports/20261014-232504-127-benchmark.json](<Docs/Performance/Reports/20261014-232504-127-benchmark.json>) — Конфигурация / данные JSON.
+- [Docs/Performance/Reports/20261014-232504-127-benchmark.txt](<Docs/Performance/Reports/20261014-232504-127-benchmark.txt>) — Текстовые данные.
+- [Docs/Performance/Reports/20261014-233947-869-benchmark.json](<Docs/Performance/Reports/20261014-233947-869-benchmark.json>) — Конфигурация / данные JSON.
+- [Docs/Performance/Reports/20261014-233947-869-benchmark.txt](<Docs/Performance/Reports/20261014-233947-869-benchmark.txt>) — Текстовые данные.
+- [Docs/Performance/Reports/20261014-234517-949-benchmark.json](<Docs/Performance/Reports/20261014-234517-949-benchmark.json>) — Конфигурация / данные JSON.
+- [Docs/Performance/Reports/20261014-234517-949-benchmark.txt](<Docs/Performance/Reports/20261014-234517-949-benchmark.txt>) — Текстовые данные.
+- [Docs/Performance/Reports/20261015-editor-cpu-profile.txt](<Docs/Performance/Reports/20261015-editor-cpu-profile.txt>) — Текстовые данные.
+- [Docs/Performance/Reports/20261014-235834-386-benchmark.json](<Docs/Performance/Reports/20261014-235834-386-benchmark.json>) — Конфигурация / данные JSON.
+- [Docs/Performance/Reports/20261014-235834-386-benchmark.txt](<Docs/Performance/Reports/20261014-235834-386-benchmark.txt>) — Текстовые данные.
+- [Docs/Performance/Reports/20261015-000416-705-benchmark.json](<Docs/Performance/Reports/20261015-000416-705-benchmark.json>) — Конфигурация / данные JSON.
+- [Docs/Performance/Reports/20261015-000416-705-benchmark.txt](<Docs/Performance/Reports/20261015-000416-705-benchmark.txt>) — Текстовые данные.
+- [Docs/Performance/Reports/20261015-000935-446-benchmark.json](<Docs/Performance/Reports/20261015-000935-446-benchmark.json>) — Конфигурация / данные JSON.
+- [Docs/Performance/Reports/20261015-000935-446-benchmark.txt](<Docs/Performance/Reports/20261015-000935-446-benchmark.txt>) — Текстовые данные.
+- [Docs/Performance/Reports/20261015-cpu-series.json](<Docs/Performance/Reports/20261015-cpu-series.json>) — Конфигурация / данные JSON.
+- [Docs/Performance/Reports/20261015-editor-cpu-after.txt](<Docs/Performance/Reports/20261015-editor-cpu-after.txt>) — Текстовые данные.
+- [Docs/Performance/Reports/20261015-editor-gpu-hierarchy.txt](<Docs/Performance/Reports/20261015-editor-gpu-hierarchy.txt>) — Текстовые данные.
+- [Docs/Performance/Reports/20261015-editor-gpu-outside.txt](<Docs/Performance/Reports/20261015-editor-gpu-outside.txt>) — Текстовые данные.
+- [Docs/Performance/Reports/20261015-editor-gpu-reference-repeat.txt](<Docs/Performance/Reports/20261015-editor-gpu-reference-repeat.txt>) — Текстовые данные.
+- [Docs/Performance/Reports/20261015-editor-gpu-scale040-sky025.txt](<Docs/Performance/Reports/20261015-editor-gpu-scale040-sky025.txt>) — Текстовые данные.
+- [Docs/Performance/Reports/20261015-editor-gpu-scale050-sky030.txt](<Docs/Performance/Reports/20261015-editor-gpu-scale050-sky030.txt>) — Текстовые данные.
+- [Docs/Performance/Visuals/storm-reference-outside.png](<Docs/Performance/Visuals/storm-reference-outside.png>) — Изображение / текстура.
+- [Docs/Performance/Visuals/storm-scale040-sky025-outside.png](<Docs/Performance/Visuals/storm-scale040-sky025-outside.png>) — Изображение / текстура.
+- [Docs/Performance/Visuals/storm-scale050-sky030-outside.png](<Docs/Performance/Visuals/storm-scale050-sky030-outside.png>) — Изображение / текстура.
+- [Docs/Performance/Reports/20261015-140352-763-benchmark.json](<Docs/Performance/Reports/20261015-140352-763-benchmark.json>) — Конфигурация / данные JSON.
+- [Docs/Performance/Reports/20261015-140352-763-benchmark.txt](<Docs/Performance/Reports/20261015-140352-763-benchmark.txt>) — Текстовые данные.
+- [Docs/Performance/Reports/20261015-140907-441-benchmark.json](<Docs/Performance/Reports/20261015-140907-441-benchmark.json>) — Конфигурация / данные JSON.
+- [Docs/Performance/Reports/20261015-140907-441-benchmark.txt](<Docs/Performance/Reports/20261015-140907-441-benchmark.txt>) — Текстовые данные.
+- [Docs/Performance/Reports/20261015-141403-786-benchmark.json](<Docs/Performance/Reports/20261015-141403-786-benchmark.json>) — Конфигурация / данные JSON.
+- [Docs/Performance/Reports/20261015-141403-786-benchmark.txt](<Docs/Performance/Reports/20261015-141403-786-benchmark.txt>) — Текстовые данные.
+- [Docs/Performance/Reports/20261015-141903-033-benchmark.json](<Docs/Performance/Reports/20261015-141903-033-benchmark.json>) — Конфигурация / данные JSON.
+- [Docs/Performance/Reports/20261015-141903-033-benchmark.txt](<Docs/Performance/Reports/20261015-141903-033-benchmark.txt>) — Текстовые данные.
+- [Docs/Performance/Reports/20261015-143012-267-character-hits-editor.json](<Docs/Performance/Reports/20261015-143012-267-character-hits-editor.json>) — Конфигурация / данные JSON.
+- [Docs/Performance/Reports/20261015-143012-267-character-hits-editor.txt](<Docs/Performance/Reports/20261015-143012-267-character-hits-editor.txt>) — Текстовые данные.
+- [Docs/Performance/Reports/20261015-render-scale-experiment.json](<Docs/Performance/Reports/20261015-render-scale-experiment.json>) — Конфигурация / данные JSON.
+- [Docs/Performance/Reports/20261015-character-hit-before-analysis.json](<Docs/Performance/Reports/20261015-character-hit-before-analysis.json>) — Конфигурация / данные JSON.
 - [Docs/Performance/ColleagueBenchmark_20261015.md](<Docs/Performance/ColleagueBenchmark_20261015.md>) — Документация.
 - [Docs/Performance/FleetCostBreakdown_20261016.md](<Docs/Performance/FleetCostBreakdown_20261016.md>) — Документация.
 - [Docs/Performance/ColleagueFleet4Test.md](<Docs/Performance/ColleagueFleet4Test.md>) — Документация.
@@ -2403,7 +2409,7 @@ ShipMonkey.HeadRide.cs: редкая серверная прогулка к жи
 С 2026-10-08 профиль vfx_specialist удалён по указанию пользователя. Основной агент сам реализует VFX по согласованным этапам; не создавать и не продолжать прежнего субагента.
 По умолчанию игровой вид проверяет пользователь. Проверки компиляции не подтверждают внешний вид или производительность.
 
-- [../AGENTS.md](<../AGENTS.md>) — Документация.
+- `../AGENTS.md` — отсутствует в текущем снимке; не использовать как готовый путь.
 - [AGENTS.md](<AGENTS.md>) — Документация.
 
 ### Корабельная слот-машина (`ship-slot-machine`)

@@ -31,6 +31,7 @@ namespace PirateSlop.World
             Clear(); Layout = layout;
             content = new GameObject("GeneratedMap"); content.transform.SetParent(transform, false);
             if (EnvironmentTestGallery.IsTest(layout)) EnvironmentTestGallery.SpawnInto(layout, content.transform);
+            else if (MainOceanMap.IsMain(layout)) MainOceanMap.SpawnInto(layout, content.transform);
             using var data = new MemoryStream();
             using var writer = new BinaryWriter(data);
             writer.Write(layout.ToJson());

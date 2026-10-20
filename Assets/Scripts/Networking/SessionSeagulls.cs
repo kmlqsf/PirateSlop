@@ -51,6 +51,7 @@ namespace PirateSlop.Networking
             if (manager == null) return;
             if (!manager.ServerManager.Started && !manager.ClientManager.Started) { ClearSeagulls(); return; }
             if (!manager.ServerManager.Started || ProceduralWorld.Instance == null || !ProceduralWorld.Instance.Ready) return;
+            if (MainOceanMap.IsMain(ProceduralWorld.Instance.Layout)) return;
             seagullEvents.RemoveAll(e => Time.time - e.Started >= AmbientSeagullFlock.Duration(e.Message));
             if (nextSeagullAt == 0) { nextSeagullAt = Time.time + 18; return; }
             if (Time.time < nextSeagullAt) return;

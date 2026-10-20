@@ -7,6 +7,7 @@ namespace PirateSlop.World
         public Vector3 Center;
         public float Radius = OceanSurface.CentralWhirlpoolRadius;
         public float Depth = 45f;
+        public bool ShowLabel = true;
 
         void Update()
         {
@@ -21,6 +22,7 @@ namespace PirateSlop.World
 
         void OnGUI()
         {
+            if (!ShowLabel) return;
             var camera = Camera.main;
             if (camera == null) return;
             var point = camera.WorldToScreenPoint(Center + Vector3.up * 50f);

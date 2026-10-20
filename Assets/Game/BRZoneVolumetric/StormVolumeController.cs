@@ -38,7 +38,7 @@ namespace PirateSlop
         public float EffectiveInwardOffset { get; private set; }
         public bool Ready => isActiveAndEnabled && EnableStormVolume && CurrentRadius > 0 && CloudSettings != null && (!TestCloudWall || testWallDensity != null && testWallNormals != null && smokeNoise != null);
         public bool IsMenuPreview { get; private set; }
-        public bool TestCloudWall => !IsMenuPreview && EnvironmentTestGallery.IsTest(ProceduralWorld.Instance != null ? ProceduralWorld.Instance.Layout : null);
+        public bool TestCloudWall => !IsMenuPreview && MainOceanMap.UsesModernOcean(ProceduralWorld.Instance != null ? ProceduralWorld.Instance.Layout : null);
         public Camera PreviewCamera { get; private set; }
         Vector3 previewCenter;
         float previewRadius, previewWaterLevel;
