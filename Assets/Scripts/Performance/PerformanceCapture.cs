@@ -583,7 +583,7 @@ namespace PirateSlop.Performance
             }
             var frame = new PerformanceFrame { unityFrame = Time.frameCount - 1, segment = Segment, time = Math.Max(0, time), frameMs = delta * 1000, cpuMs = Ms(cpu), renderMs = Ms(render), gpuMs = Ms(gpu), draws = PerformanceCounters.Value(drawsTotal), setPass = PerformanceCounters.Value(setPass), triangles = PerformanceCounters.Value(triangles), gcBytes = PerformanceCounters.Value(gc), usedBytes = cachedUsed, reservedBytes = cachedReserved, monoBytes = cachedMono, ships = NetworkShip.ActiveShips.Count, crewShips = cachedCrewShips, players = NetworkPlayer.Active.Count, debris = cachedDebris, effects = cachedEffects, physicsSteps = fixedSteps, secondaryPhysicsSteps = secondarySteps, networkSteps = networkSteps };
 #if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
-            frame.upperPhysicalDebris = PirateSlop.Experimental.UpperDebrisPresentation.ActivePhysicalCount;
+            frame.upperPhysicalDebris = PirateSlop.Experimental.UpperDebrisPresentation.ActivePhysicalCount + PirateSlop.Experimental.UpperDroppedWeapon.ActivePhysicalCount;
             foreach (var upper in PirateSlop.Experimental.UpperDestructionV2.Active)
                 if (upper != null && upper.isActiveAndEnabled && upper.TryGetComponent<PirateSlop.Experimental.UpperDebrisPresentation>(out var debris)) frame.upperCosmeticDebris += debris.ActiveCosmeticCount;
 #endif

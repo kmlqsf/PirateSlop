@@ -67,7 +67,7 @@ namespace PirateSlop.Ships
     }
 
     [DefaultExecutionOrder(-30)]
-    public sealed class ShipV3Features : NetworkBehaviour
+    public sealed partial class ShipV3Features : NetworkBehaviour
     {
         public const float LanternIntensity = 1.05f;
         public const float LanternRange = 7.2f;
@@ -647,6 +647,9 @@ namespace PirateSlop.Ships
             for (int index = 0; index < DiceSlots.Length; index++)
             {
                 var slot = DiceSlots[index];
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+                if (upperDiceDetached) { SimulateUpperDice(index); continue; }
+#endif
                 bool owned = diceOwners[index] >= 0;
                 byte phase = diceMode[index];
                 Vector2 axis = SectorDirection(index);
@@ -939,6 +942,9 @@ namespace PirateSlop.Ships
             for (int i = 0; i < DiceSlots.Length; i++)
             {
                 var slot = DiceSlots[i];
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+                if (upperDiceDetached) { RenderUpperDice(i, blend); continue; }
+#endif
                 if (slot.Cup == null || slot.CupVisual == null || !slot.Cup.gameObject.activeInHierarchy) continue;
                 var cupPose = DiceBodyPose(cupBodyIndices[i], slot.Cup);
                 int phase = IsServerInitialized ? diceMode[i] : cupPose.Phase;

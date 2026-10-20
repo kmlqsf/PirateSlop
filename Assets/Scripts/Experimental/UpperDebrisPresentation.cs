@@ -32,6 +32,7 @@ namespace PirateSlop.Experimental
         UpperDestructionV2 owner;
         UpperImpactPresentation impacts;
         UpperMastPresentation masts;
+        UpperLooseRopePresentation ropes;
         const int PhysicalLimit = 12;
         static int physicalActive;
         public static int ActivePhysicalCount => physicalActive;
@@ -42,7 +43,8 @@ namespace PirateSlop.Experimental
         public void Initialize(UpperDestructionV2 value)
         {
             owner = value;
-            masts = new UpperMastPresentation(owner);
+            masts = owner.MastMotion;
+            ropes = new UpperLooseRopePresentation(owner.transform);
             impacts = gameObject.AddComponent<UpperImpactPresentation>();
             impacts.Initialize(owner.DustMaterial, owner.SparkMaterial);
             foreach (var recipe in owner.Debris)
@@ -162,6 +164,8 @@ namespace PirateSlop.Experimental
         public void EmitAttachment(Transform source, int assembly)
         {
             if (assembly >= 0) return;
+            if (source.name.Contains("Free_Rope") || source.name.Contains("Harpoon_Rope_Knot")) return;
+            if (owner.DiceTopLost && Array.Exists(owner.GetComponent<PirateSlop.Ships.ShipV3Features>().DiceSlots, slot => source == slot.Cup.transform.parent)) return;
             var filters = source.GetComponentsInChildren<MeshFilter>(true);
             foreach (var filter in filters)
             {
@@ -169,6 +173,11 @@ namespace PirateSlop.Experimental
                 var renderer = filter.GetComponent<MeshRenderer>();
                 if (renderer == null) continue;
                 var materials = renderer.sharedMaterials;
+                if (attachmentRecipes.TryGetValue(filter.transform, out var flexible) && flexible.Flexible)
+                {
+                    ropes.Emit(flexible, 0);
+                    continue;
+                }
                 PrepareGroups(filter.sharedMesh, materials);
                 pieces.Add(new Piece { Mesh = filter.sharedMesh, Materials = materials, Origin = filter.transform.position,
                     Rotation = filter.transform.rotation, Scale = filter.transform.lossyScale, Velocity = owner.GetComponent<Networking.NetworkShip>().Motor.CannonPointVelocity(filter.transform.position),
@@ -178,6 +187,7 @@ namespace PirateSlop.Experimental
             {
                 if (!renderer.gameObject.activeInHierarchy || !attachmentRecipes.TryGetValue(renderer.transform, out var recipe)) continue;
                 int pose = Mathf.Clamp(Mathf.RoundToInt(owner.GetComponent<SailSystem>().Tension(recipe.SailIndex) * (recipe.Poses.Length - 1)), 0, recipe.Poses.Length - 1);
+                if (recipe.Flexible) { ropes.Emit(recipe, pose); continue; }
                 pieces.Add(new Piece { Mesh = recipe.Poses[pose], Materials = recipe.Materials, Origin = renderer.transform.TransformPoint(recipe.Offsets[pose]), Rotation = renderer.transform.rotation,
                     Scale = renderer.transform.lossyScale, Born = Time.time, Lifetime = 3.5f });
             }
@@ -209,6 +219,7 @@ namespace PirateSlop.Experimental
                 }
             }
             foreach (var group in activeGroups) if (group.Count > 0) Flush(group);
+            ropes?.Render();
             masts?.Render();
         }
 
@@ -222,8 +233,8 @@ namespace PirateSlop.Experimental
 
         void OnDestroy()
         {
-            masts?.Dispose();
             StopAllCoroutines(); pieces.Clear(); groups.Clear(); recipes.Clear();
+            ropes?.Dispose();
             foreach (var body in physical) if (body != null)
             {
                 if (body.gameObject.activeSelf) physicalActive = Mathf.Max(0, physicalActive - 1);

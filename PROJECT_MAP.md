@@ -1,6 +1,6 @@
 # PirateSlop — карта проекта
 
-Снимок файлов: 2026-10-20. Корень: `D:\projects\Pirate_BR\PirateGame`.
+Снимок файлов: 2026-10-21. Корень: `D:\projects\Pirate_BR\PirateGame`.
 
 ## Как пользоваться
 
@@ -12,7 +12,7 @@
 
 ## Полный каталог
 
-Учтено 14226 файлов без `.meta`. Ещё 13042 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
+Учтено 14240 файлов без `.meta`. Ещё 13056 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
 
 | Раздел | Назначение | Файлов |
 | --- | --- | ---: |
@@ -25,7 +25,7 @@
 | [Assets/Audio](<Docs/ProjectMap/Assets-Audio.md>) | Звуковые ресурсы и лицензии | 465 |
 | [Assets/Branding](<Docs/ProjectMap/Assets-Branding.md>) | Оформление проекта | 1 |
 | [Assets/Editor](<Docs/ProjectMap/Assets-Editor.md>) | Редакторские ресурсы | 1 |
-| [Assets/Experimental](<Docs/ProjectMap/Assets-Experimental.md>) | Ресурсы раздела; точный состав — в каталоге | 11 |
+| [Assets/Experimental](<Docs/ProjectMap/Assets-Experimental.md>) | Ресурсы раздела; точный состав — в каталоге | 14 |
 | [Assets/Fog Particles](<Docs/ProjectMap/Assets-Fog Particles.md>) | Ресурсы раздела; точный состав — в каталоге | 3 |
 | [Assets/Game](<Docs/ProjectMap/Assets-Game.md>) | Игровые подсистемы и эффекты | 83 |
 | [Assets/Houidisoft technology](<Docs/ProjectMap/Assets-Houidisoft technology.md>) | Ресурсы раздела; точный состав — в каталоге | 12 |
@@ -37,7 +37,7 @@
 | [Assets/Prefabs](<Docs/ProjectMap/Assets-Prefabs.md>) | Готовые игровые объекты | 139 |
 | [Assets/Resources](<Docs/ProjectMap/Assets-Resources.md>) | Ресурсы, доступные для загрузки по имени | 170 |
 | [Assets/Scenes](<Docs/ProjectMap/Assets-Scenes.md>) | Сохранённые сцены | 3 |
-| [Assets/Scripts](<Docs/ProjectMap/Assets-Scripts.md>) | Игровой код и редакторские инструменты | 608 |
+| [Assets/Scripts](<Docs/ProjectMap/Assets-Scripts.md>) | Игровой код и редакторские инструменты | 617 |
 | [Assets/Settings](<Docs/ProjectMap/Assets-Settings.md>) | Настройки игровых систем и рендеринга | 60 |
 | [Assets/Shaders](<Docs/ProjectMap/Assets-Shaders.md>) | Шейдеры | 22 |
 | [Assets/StreamingAssets](<Docs/ProjectMap/Assets-StreamingAssets.md>) | Ресурсы раздела; точный состав — в каталоге | 5 |
@@ -45,7 +45,7 @@
 | [Assets/ThirdParty](<Docs/ProjectMap/Assets-ThirdParty.md>) | Сторонние ресурсы | 20 |
 | [Assets/TutorialInfo](<Docs/ProjectMap/Assets-TutorialInfo.md>) | Ресурсы раздела; точный состав — в каталоге | 2 |
 | [Assets/UI](<Docs/ProjectMap/Assets-UI.md>) | Ресурсы интерфейса | 42 |
-| [Assets/_Recovery](<Docs/ProjectMap/Assets-_Recovery.md>) | Сохранённые восстановленные данные | 5 |
+| [Assets/_Recovery](<Docs/ProjectMap/Assets-_Recovery.md>) | Сохранённые восстановленные данные | 7 |
 | [Captures](<Docs/ProjectMap/Captures.md>) | Ресурсы раздела; точный состав — в каталоге | 1010 |
 | [Docs](<Docs/ProjectMap/Docs.md>) | Документы и сохранённые отчёты | 55 |
 | [Packages](<Docs/ProjectMap/Packages.md>) | Манифест, lock-файл и встроенные пакеты | 922 |
@@ -62,6 +62,9 @@
 
 Ключевые слова: верхние разрушения, UpperDestructionV2, протокол 199, ядра из игрока.
 
+21.10.2026, AssetRevision6: стол костей разделён на крышку и восемь участков стенок; потеря крышки скрывает чашки целиком с ручками, 15 существующих кубиков разлетаются и через ограниченное время фиксируются на палубе, ремонт возвращает исходные позиции. Захват остатков штурвала передаёт точку попадания и проверяется сервером по сохранённой геометрии. Принадлежность вложенных креплений выдачи ядер проверяется по предкам. Свободная верёвка гарпуна исключена из сломанного представления и обломков. Гибкие снасти имеют отдельные деформированные позы с сохранением сечения; YardLashing принадлежит мачте и зависит от механизма. Лежащая мачта использует постоянные MeshRenderer без покадрового DrawMesh после завершения движения. Срезы используют процедурный материал UpperFractureWood без растяжения UV. Пушка имеет выпуклые колёсные контакты, ContinuousDynamic, ограничение депенетрации и остановку физики после устойчивого контакта; новая потеря опоры будит её по ревизии. Игровые проверки и замеры запрещены текущим указанием пользователя; производительность ожидает проверки.
+20.10.2026 актуальное уточнение пользователя, AssetRevision5: механизм парусов ломается за одно попадание вместе с управляющими снастями, сохраняет натяжение; его палубная часть не принадлежит падающей мачте. Общая коллизия упавшей мачты следует её позе. У штурвала захват по сохранённым секторам, UploadMeshData перед назначением обновлённого MeshCollider. Ворот повреждается локально, полный обвал скрывает якорь и AnimatedAnchorChain. Dice — вертикальные секторы по реальной оси модели; казино — три видимые стадии. Выдача ядер вместе с рычагом неразрушаема напрямую и зависит от всех блоков переборки. Пушка теряет статичное крепление при потере любой колёсной опоры, выпавшая модель имеет Rigidbody и четыре колёсных контакта. Точные проверки и ограничения FPS см. последнюю запись журнала оптимизации; наличие выпавшего объекта не заменяет проверку динамики. Новые runtime поля и jobs ограничены Editor/UpperDestructionV2, исходный SessionConfig200 не менялся.
+20.10, AssetRevision4: фрагменты перенесённых верхних моделей заново вырезаются из актуального Intact с совпадающей позой и материалами; внутренние связи учитывают контакт геометрии. Штурвал состоит из трёх секторов, крепёж защищён и связан с одной конкретной половицей. Промежуточные попадания сохраняют корень механизма и снимают крайние части. Бортовые площадки/нижние крепления снастей отделены от падающей мачты; длинные снасти требуют сохранения обоих креплений. Подсветка сборки показывается только выбранной цели, серия ударов ремонта не сбрасывается при небольшом смещении точки. Потеря палубной опоры разрушает механизм независимо от обходных связей структурного графа. Локально проверены наведение и ремонт девяти механизмов, три сектора штурвала, крепёж с половицей и шесть ударов подъёма мачты; результаты и пределы проверки — в журнале оптимизации.
 19.10, инструмент тестирования: F8 / Разрушение / Ядра из игрока — переключатель132, по одному обычному ядру на клик ЛКМ без перезарядки/расхода инвентаря. Выстрел идёт через существующий ActionServerRpc с действием3, сервер проверяет права разработчика и режим; полёт/попадания использует CannonShotDamage и стандартную модель ядра. Source — сам игрок, поэтому мишень под ногами не исключается; собственное тело исключено даже при дружественном огне. Режим временно забирает ЛКМ у предметов и управления механизмами только локального игрока. Кнопка, состояние и новые RPC исключены из Release символом UpperDestructionV2. Unity MCP недоступен: сохранён код, компиляция/игровая проверка и обновление exe не выполнены.
 19.10.2026: эксперимент ограничен Editor и обычными Windows Build/Build, Clean Build, Diagnostics. PIRATESLOP_UPPER_DESTRUCTION_V2 передаётся только через BuildPlayerOptions.extraScriptingDefines; глобальный символ запрещён. Release сохраняет прежний профиль, реестр, протокол198 и исключает экспериментальные классы, поля и сообщения. Экспериментальные копии находятся вне Resources в Assets/Experimental/UpperDestructionV2; ссылки заменяются только в собираемых сценах и экземпляре SessionController в Play Mode, протокол199. Принятые cpu-work-v3/cloud-bounds-v1 и объединения рендера/коллизий общие для обоих вариантов.
 UpperDestructionAssetSetup.Prepare создаёт отдельные корабль/профиль/SessionConfig/реестр, сохраняет старые индексы и добавляет корабль и два выпавших орудия. Обломки заранее разрезаются из настоящих MeshFilter; позы парусов и снастей запекаются в Editor. Центральная мачта и её снасти защищены, боковые имеют три попадания и общий ремонт у основания; механизмы80/35/0%. Порядок SailSystem/VisualRig в текущем корабле: MainCourse, MainTopsail, ForeCourse, ForeTopsail, Mizzen; защищены индексы0/1.
@@ -80,16 +83,30 @@ UpperDestructionAssetSetup.Prepare создаёт отдельные кораб�
 - [Assets/Scripts/Cannons/CannonShotDamage.cs](<Assets/Scripts/Cannons/CannonShotDamage.cs>) — Исходник C#: CannonShotDamage.
 - [Assets/Scripts/Cannons/CannonHands.cs](<Assets/Scripts/Cannons/CannonHands.cs>) — Исходник C#: CannonHands.
 - [Assets/Scripts/Experimental/UpperDestructionSettings.cs](<Assets/Scripts/Experimental/UpperDestructionSettings.cs>) — Исходник C#: UpperDestructionSettings.
-- [Assets/Scripts/Experimental/UpperDestructionV2.cs](<Assets/Scripts/Experimental/UpperDestructionV2.cs>) — Исходник C#: UpperAssemblyKind, UpperAssembly, UpperStage, UpperDebrisRecipe, UpperAttachmentLink, UpperAttachmentRecipe, UpperDestructionV2, RayMesh.
+- [Assets/Scripts/Experimental/UpperDestructionV2.cs](<Assets/Scripts/Experimental/UpperDestructionV2.cs>) — Исходник C#: UpperAssemblyKind, UpperAssembly, UpperGripBinding, UpperStage, UpperDebrisRecipe, UpperAttachmentLink, UpperAttachmentRecipe, UpperDestructionV2, RayMesh.
 - [Assets/Scripts/Experimental/UpperDestructionV2.Weapons.cs](<Assets/Scripts/Experimental/UpperDestructionV2.Weapons.cs>) — Исходник C#: UpperWeaponState, UpperDestructionV2, WeaponSupport.
+- [Assets/Scripts/Experimental/UpperDestructionV2.Grips.cs](<Assets/Scripts/Experimental/UpperDestructionV2.Grips.cs>) — Исходник C#: UpperDestructionV2.
+- [Assets/Scripts/Experimental/UpperWeaponGeometry.cs](<Assets/Scripts/Experimental/UpperWeaponGeometry.cs>) — Исходник C#: UpperWeaponGeometry.
 - [Assets/Scripts/Experimental/UpperCannonImpact.cs](<Assets/Scripts/Experimental/UpperCannonImpact.cs>) — Исходник C#: UpperImpactShape, UpperCannonImpact, UpperDestructionV2.
 - [Assets/Scripts/Experimental/UpperWeaponVisual.cs](<Assets/Scripts/Experimental/UpperWeaponVisual.cs>) — Исходник C#: UpperWeaponVisual.
 - [Assets/Scripts/Experimental/UpperDroppedWeapon.cs](<Assets/Scripts/Experimental/UpperDroppedWeapon.cs>) — Исходник C#: UpperDroppedWeapon.
 - [Assets/Scripts/Experimental/UpperDebrisGeometry.cs](<Assets/Scripts/Experimental/UpperDebrisGeometry.cs>) — Исходник C#: UpperDebrisGeometry.
 - [Assets/Scripts/Experimental/UpperDebrisPresentation.cs](<Assets/Scripts/Experimental/UpperDebrisPresentation.cs>) — Исходник C#: UpperDebrisPresentation, Piece, DrawGroup.
 - [Assets/Scripts/Experimental/UpperMastPresentation.cs](<Assets/Scripts/Experimental/UpperMastPresentation.cs>) — Исходник C#: UpperMastPresentation, Motion, Flex, Geometry.
+- [Assets/Scripts/Experimental/UpperLooseRopePresentation.cs](<Assets/Scripts/Experimental/UpperLooseRopePresentation.cs>) — Исходник C#: UpperLooseRopePresentation, Rope.
+- [Assets/Scripts/Ships/ShipV3Features.UpperDice.cs](<Assets/Scripts/Ships/ShipV3Features.UpperDice.cs>) — Исходник C#: ShipV3Features.
 - [Assets/Scripts/Experimental/UpperImpactPresentation.cs](<Assets/Scripts/Experimental/UpperImpactPresentation.cs>) — Исходник C#: UpperImpactPresentation.
 - [Assets/Scripts/Editor/UpperDestructionAssetSetup.cs](<Assets/Scripts/Editor/UpperDestructionAssetSetup.cs>) — Исходник C#: UpperDestructionAssetSetup, Vertex.
+- [Assets/Scripts/Editor/UpperDestructionAssetSetup.Assemblies.cs](<Assets/Scripts/Editor/UpperDestructionAssetSetup.Assemblies.cs>) — Исходник C#: UpperDestructionAssetSetup.
+- [Assets/Scripts/Editor/UpperDestructionAssetSetup.Objects.cs](<Assets/Scripts/Editor/UpperDestructionAssetSetup.Objects.cs>) — Исходник C#: UpperDestructionAssetSetup.
+- [Assets/Scripts/Editor/UpperDestructionAssetSetup.Supports.cs](<Assets/Scripts/Editor/UpperDestructionAssetSetup.Supports.cs>) — Исходник C#: UpperDestructionAssetSetup.
+- [Assets/Scripts/Editor/UpperDestructionAssetSetup.Geometry.cs](<Assets/Scripts/Editor/UpperDestructionAssetSetup.Geometry.cs>) — Исходник C#: UpperDestructionAssetSetup.
+- [Assets/Scripts/Editor/UpperMeshCut.cs](<Assets/Scripts/Editor/UpperMeshCut.cs>) — Исходник C#: UpperMeshCut, Vertex, Polygon.
+- [Assets/Scripts/Editor/UpperFlexibleGeometry.cs](<Assets/Scripts/Editor/UpperFlexibleGeometry.cs>) — Исходник C#: UpperFlexibleGeometry.
+- [Assets/Scripts/Editor/UpperDestructionAssetSetup.Wheels.cs](<Assets/Scripts/Editor/UpperDestructionAssetSetup.Wheels.cs>) — Исходник C#: UpperDestructionAssetSetup.
+- [Assets/Experimental/UpperDestructionV2/UpperFractureWood.shader](<Assets/Experimental/UpperDestructionV2/UpperFractureWood.shader>) — Шейдер.
+- [Assets/Experimental/UpperDestructionV2/FractureWood.mat](<Assets/Experimental/UpperDestructionV2/FractureWood.mat>) — Материал Unity.
+- [Assets/Experimental/UpperDestructionV2/CannonContact.physicMaterial](<Assets/Experimental/UpperDestructionV2/CannonContact.physicMaterial>) — Файл .physicMaterial.
 - [Assets/Scripts/Editor/UpperDestructionBuildProcessor.cs](<Assets/Scripts/Editor/UpperDestructionBuildProcessor.cs>) — Исходник C#: UpperDestructionBuildProcessor.
 - [Assets/Scripts/ShipDestruction/ShipDestruction.Upper.cs](<Assets/Scripts/ShipDestruction/ShipDestruction.Upper.cs>) — Исходник C#: ShipDestruction.
 - [Assets/Scripts/ShipDestruction/ShipDestruction.Masts.cs](<Assets/Scripts/ShipDestruction/ShipDestruction.Masts.cs>) — Исходник C#: ShipDestruction, MastAssembly.
@@ -97,6 +114,11 @@ UpperDestructionAssetSetup.Prepare создаёт отдельные кораб�
 - [Assets/Scripts/Ships/ShipMonkey.Repair.cs](<Assets/Scripts/Ships/ShipMonkey.Repair.cs>) — Исходник C#: ShipMonkey.
 - [Assets/Scripts/Cannons/NetworkCannon.Upper.cs](<Assets/Scripts/Cannons/NetworkCannon.Upper.cs>) — Исходник C#: NetworkCannon.
 - [Assets/Scripts/Networking/NetworkWeapon.UpperDestruction.cs](<Assets/Scripts/Networking/NetworkWeapon.UpperDestruction.cs>) — Исходник C#: NetworkWeapon, NetworkFish.
+- [Assets/Scripts/Networking/NetworkFish.UpperPhysics.cs](<Assets/Scripts/Networking/NetworkFish.UpperPhysics.cs>) — Исходник C#: NetworkFish.
+- [Assets/Scripts/Networking/NetworkFish.cs](<Assets/Scripts/Networking/NetworkFish.cs>) — Исходник C#: InventoryItem, NetworkFish.
+- [Assets/Scripts/Ships/ShipV3CollisionBatch.cs](<Assets/Scripts/Ships/ShipV3CollisionBatch.cs>) — Исходник C#: ShipV3CollisionBatch, BakeCollision.
+- [Assets/Scripts/Harpoon/HarpoonGun.cs](<Assets/Scripts/Harpoon/HarpoonGun.cs>) — Исходник C#: HarpoonGun.
+- [Assets/Scripts/HelmInteraction.cs](<Assets/Scripts/HelmInteraction.cs>) — Исходник C#: HelmInteraction.
 - [Assets/Experimental/UpperDestructionV2/Settings.asset](<Assets/Experimental/UpperDestructionV2/Settings.asset>) — Настройки или данные Unity.
 - [Assets/Experimental/UpperDestructionV2/Ship.prefab](<Assets/Experimental/UpperDestructionV2/Ship.prefab>) — Префаб Unity.
 - [Assets/Experimental/UpperDestructionV2/Destruction.asset](<Assets/Experimental/UpperDestructionV2/Destruction.asset>) — Настройки или данные Unity.
@@ -293,7 +315,7 @@ ShipBilgeWater создаёт отдельную поверхность без �
 - [Assets/Scripts/Ships/ShipV3VisualRig.cs](<Assets/Scripts/Ships/ShipV3VisualRig.cs>) — Исходник C#: ShipV3Pose, ShipV3Motion, ShipV3VisualRig.
 - [Assets/Scripts/Ships/ShipV3Features.cs](<Assets/Scripts/Ships/ShipV3Features.cs>) — Исходник C#: ShipV3TargetKind, ShipV3Lantern, ShipV3DiceSlot, ShipV3PhysicsPose, ShipV3Support, ShipV3Attachment, ShipV3Features.
 - [Assets/Scripts/Ships/ShipV3RenderBatch.cs](<Assets/Scripts/Ships/ShipV3RenderBatch.cs>) — Исходник C#: ShipV3RenderBatch, IndexLayout.
-- [Assets/Scripts/Ships/ShipV3CollisionBatch.cs](<Assets/Scripts/Ships/ShipV3CollisionBatch.cs>) — Исходник C#: ShipV3CollisionBatch.
+- [Assets/Scripts/Ships/ShipV3CollisionBatch.cs](<Assets/Scripts/Ships/ShipV3CollisionBatch.cs>) — Исходник C#: ShipV3CollisionBatch, BakeCollision.
 - [Assets/Scripts/Ships/ShipV3RenderBudget.cs](<Assets/Scripts/Ships/ShipV3RenderBudget.cs>) — Исходник C#: ShipV3RenderBudget.
 - [Assets/Scripts/Editor/ShipV3PerformanceSetup.cs](<Assets/Scripts/Editor/ShipV3PerformanceSetup.cs>) — Исходник C#: ShipV3PerformanceSetup.
 - [Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_0.asset](<Assets/Models/Ships/ShipV3/RuntimeMeshes/Collision/ShipV3Collision_0.asset>) — Настройки или данные Unity.
@@ -1006,7 +1028,7 @@ PlanFire: минимум 16, максимум 64 очага на выстрел,
 - [Assets/Scripts/Ships/ShipMonkey.Repair.cs](<Assets/Scripts/Ships/ShipMonkey.Repair.cs>) — Исходник C#: ShipMonkey.
 - [Assets/Scripts/ShipDestruction/ShipDestruction.Fire.cs](<Assets/Scripts/ShipDestruction/ShipDestruction.Fire.cs>) — Исходник C#: ShipFireTarget, ShipDestruction, FireSurface.
 - [Assets/Scripts/Networking/NetworkShipAmmo.cs](<Assets/Scripts/Networking/NetworkShipAmmo.cs>) — Исходник C#: ShipFirePatch, ShipFreezeState, NetworkShip, FireExposure.
-- [Assets/Scripts/Ships/ShipV3CollisionBatch.cs](<Assets/Scripts/Ships/ShipV3CollisionBatch.cs>) — Исходник C#: ShipV3CollisionBatch.
+- [Assets/Scripts/Ships/ShipV3CollisionBatch.cs](<Assets/Scripts/Ships/ShipV3CollisionBatch.cs>) — Исходник C#: ShipV3CollisionBatch, BakeCollision.
 - [Assets/Scripts/Ships/ShipV3RenderBatch.cs](<Assets/Scripts/Ships/ShipV3RenderBatch.cs>) — Исходник C#: ShipV3RenderBatch, IndexLayout.
 - [Assets/Scripts/ShipDestruction/RepairReveal.cs](<Assets/Scripts/ShipDestruction/RepairReveal.cs>) — Исходник C#: RepairReveal.
 - [Assets/Scripts/ShipDestruction/ShipDestruction.Masts.cs](<Assets/Scripts/ShipDestruction/ShipDestruction.Masts.cs>) — Исходник C#: ShipDestruction, MastAssembly.
@@ -2208,7 +2230,7 @@ NetworkLoadTest запускается из меню Тест нагрузки �
 - [Assets/Scripts/Ships/ShipV3Features.cs](<Assets/Scripts/Ships/ShipV3Features.cs>) — Исходник C#: ShipV3TargetKind, ShipV3Lantern, ShipV3DiceSlot, ShipV3PhysicsPose, ShipV3Support, ShipV3Attachment, ShipV3Features.
 - [Assets/Scripts/Ships/ShipV3RenderBatch.cs](<Assets/Scripts/Ships/ShipV3RenderBatch.cs>) — Исходник C#: ShipV3RenderBatch, IndexLayout.
 - [Assets/Scripts/UI/GameTelemetry.cs](<Assets/Scripts/UI/GameTelemetry.cs>) — Исходник C#: GameTelemetry.
-- [Assets/Scripts/Ships/ShipV3CollisionBatch.cs](<Assets/Scripts/Ships/ShipV3CollisionBatch.cs>) — Исходник C#: ShipV3CollisionBatch.
+- [Assets/Scripts/Ships/ShipV3CollisionBatch.cs](<Assets/Scripts/Ships/ShipV3CollisionBatch.cs>) — Исходник C#: ShipV3CollisionBatch, BakeCollision.
 - [Assets/Scripts/Ships/ShipBilgeLeakGeometry.cs](<Assets/Scripts/Ships/ShipBilgeLeakGeometry.cs>) — Исходник C#: ShipBilgeLeakGeometry, Surface, Aperture, Patch, Builder, SurfaceData.
 - [Assets/Scripts/Ships/ShipDamagePreparation.cs](<Assets/Scripts/Ships/ShipDamagePreparation.cs>) — Исходник C#: ShipDamagePreparation, BakeJob.
 - [Assets/Models/Ships/ShipV3/Bilge/DamageWarmup.shadervariants](<Assets/Models/Ships/ShipV3/Bilge/DamageWarmup.shadervariants>) — Файл .shadervariants.

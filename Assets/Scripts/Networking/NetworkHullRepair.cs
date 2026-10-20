@@ -149,9 +149,6 @@ namespace PirateSlop.Networking
                     {
                         var assembly = destruction.Upper.Assemblies[targetIndex];
                         if (!mastGroups.Add(assembly.Key)) continue;
-                        var preview = assembly.RepairPreview;
-                        if (preview != null && Vector3.Distance(ray.origin, ship.transform.TransformPoint(targetBounds.center)) <= 12f)
-                            Graphics.DrawMesh(preview, ship.transform.localToWorldMatrix, highlight, 0, camera, 0, null, ShadowCastingMode.Off, false);
                         var localRay = new Ray(ship.transform.InverseTransformPoint(ray.origin), ship.transform.InverseTransformDirection(ray.direction));
                         if (targetBounds.IntersectRay(localRay, out float distance))
                         {
@@ -227,6 +224,23 @@ namespace PirateSlop.Networking
                     }
                 }
             }
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+            if (aimed != null && aimedFragment < 0 && aimed.Owner.Upper != null && aimed.Owner.Upper.AssemblyFor(aimed.SectionId) is int assemblyIndex && assemblyIndex >= 0)
+            {
+                var assembly = aimed.Owner.Upper.Assemblies[assemblyIndex];
+                if (aimedFragment == -1 && aimed.Owner.Upper.Stage(assemblyIndex) >= 3 && assembly.RepairPreview != null)
+                    Graphics.DrawMesh(assembly.RepairPreview, aimed.Owner.transform.localToWorldMatrix, highlight, 0, camera, 0, null, ShadowCastingMode.Off, false);
+                else foreach (var part in assembly.Sections)
+                    for (int bit = 0; bit < part.Fragments.Length; bit++)
+                    {
+                        if ((part.RemovedFragments & (1UL << bit)) == 0) continue;
+                        var filter = part.Fragments[bit].GetComponent<MeshFilter>();
+                        if (filter == null || filter.sharedMesh == null) continue;
+                        for (int sub = 0; sub < filter.sharedMesh.subMeshCount; sub++)
+                            Graphics.DrawMesh(filter.sharedMesh, filter.transform.localToWorldMatrix, highlight, 0, camera, sub, null, ShadowCastingMode.Off, false);
+                    }
+            }
+#endif
             if (aimed == null && inventory.MalletSelected)
             {
                 foreach (var hit in Physics.RaycastAll(ray, 3.5f * UpgradeRepair, ~0, QueryTriggerInteraction.Ignore))
@@ -351,6 +365,10 @@ namespace PirateSlop.Networking
                 var mechanismPoint = target.transform.TransformPoint(localPoint);
                 if (!destruction.UpperRepairTarget(sectionId, out _, out var bounds, out int kind) || kind != -2 || bounds.SqrDistance(localPoint) > .025f ||
                     !ReachableAssembly(destruction, sectionId, mechanismPoint) || !destruction.UpperRepairFragment(sectionId, mechanismPoint, out int repairId, out int repairBit)) return false;
+                var pending = target == lastShip ? destruction.Section(lastSection) : null;
+                if (strikes > 0 && pending != null && lastFragment >= 0 && destruction.Upper.AssemblyFor(lastSection) == destruction.Upper.AssemblyFor(sectionId) &&
+                    (pending.RemovedFragments & (1UL << lastFragment)) != 0 && destruction.Upper.CanRepairSection(lastSection))
+                { repairId = lastSection; repairBit = lastFragment; }
                 if (target != lastShip || repairId != lastSection || repairBit != lastFragment) strikes = 0;
                 lastShip = target; lastSection = repairId; lastFragment = repairBit;
                 nextStrike = Time.time + StrikeInterval / UpgradeRepair; lastStrikeAt = Time.time;

@@ -100,7 +100,11 @@ namespace PirateSlop
                     for (int i = 0; i < Fragments.Length; i++)
                     {
                         bool fragmentVisible = fractured && state != ShipSectionState.Destroyed && (removedFragments & (1UL << i)) == 0;
-                        if (fragmentVisible) EnsureFragmentCollider(Fragments[i]);
+                        if (fragmentVisible
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+                            && (CollisionBatch == null || !CollisionBatch.CombinesFragments)
+#endif
+                            ) EnsureFragmentCollider(Fragments[i]);
                         Fragments[i].SetActive(fragmentVisible);
                     }
                 }

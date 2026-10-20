@@ -75,9 +75,27 @@ namespace PirateSlop
             return complete;
         }
 
+        public void DetachUpperMechanisms()
+        {
+            if (Upper == null || !IsServerInitialized) return;
+            bool changed = false;
+            for (int index = 0; index < Upper.Assemblies.Length; index++)
+            {
+                if (!Upper.MechanismLostSupport(index)) continue;
+                Upper.SetStage(index, 3);
+                foreach (var section in Upper.Assemblies[index].Sections)
+                    if (!section.Indestructible)
+                        Change(section.SectionId, 0f, ShipSectionState.Destroyed, section.Intact.transform.position, transform.up, Vector3.zero,
+                            InventoryItem.Cannonball, null, ShipDamageReason.SupportLost, 0f, section.AllFragments);
+                changed = true;
+            }
+            if (changed) Publish();
+        }
+
         bool TryUpperDamage(Collider collider, Vector3 point, Vector3 normal, Vector3 velocity, InventoryItem ammo, GameObject attacker, float radius)
         {
             if (Upper == null || ammo == InventoryItem.BoardingHook || !CannonAmmo.IsBall(ammo)) return false;
+            if (collider != null && Upper.ProtectedDispenser != null && collider.transform.IsChildOf(Upper.ProtectedDispenser)) return true;
             var direct = Resolve(collider, point);
             if (direct == null || !Upper.IsUpper(direct.SectionId)) return false;
             if (!ready || !IsServerInitialized || ship.IsSinking || !float.IsFinite(point.sqrMagnitude) || !float.IsFinite(velocity.sqrMagnitude)) return true;
@@ -86,6 +104,16 @@ namespace PirateSlop
             Upper.MarkImpact(); struckMasts.Clear();
             var assemblies = new HashSet<int>();
             DamageUpperSection(direct, point, normal, velocity, ammo, attacker, assemblies);
+            if (definitions[direct.SectionId].Type == ShipSectionType.Railing)
+            {
+                int neighbours = 0;
+                foreach (var section in Sections)
+                {
+                    if (section == direct || section.Indestructible || definitions[section.SectionId].Type != ShipSectionType.Railing || section.RemovedFragments == section.AllFragments || section.Distance(point) > .45f) continue;
+                    DamageUpperSection(section, point, normal, velocity, ammo, attacker, assemblies);
+                    if (++neighbours >= 2) break;
+                }
+            }
             if (radius > 0f)
                 foreach (var section in Sections)
                     if (section != direct && !section.Indestructible && Upper.IsUpper(section.SectionId) && section.Distance(point) <= radius)
@@ -97,8 +125,8 @@ namespace PirateSlop
 
         void DamageUpperSection(ShipDamageSection section, Vector3 point, Vector3 normal, Vector3 velocity, InventoryItem ammo, GameObject attacker, HashSet<int> affected)
         {
-            if (section.Indestructible) return;
-            int index = Upper.AssemblyFor(section.SectionId);
+            int index = Upper.HitAssemblyFor(section.SectionId);
+            if (section.Indestructible && index == Upper.AssemblyFor(section.SectionId)) return;
             if (index >= 0)
             {
                 if (!affected.Add(index)) return;
@@ -112,7 +140,7 @@ namespace PirateSlop
                     HitMast(mast, point, normal, velocity, ammo, attacker);
                     return;
                 }
-                int hits = Mathf.Min(3, Upper.Stage(index) + 1);
+                int hits = assembly.Kind == UpperAssemblyKind.SailControl ? 3 : Mathf.Min(3, Upper.Stage(index) + 1);
                 Upper.SetStage(index, hits);
                 if (hits == 3)
                 {
@@ -121,32 +149,67 @@ namespace PirateSlop
                             ShipDamageReason.Hit, Profile.CannonDamage, part.AllFragments);
                     return;
                 }
+                if (assembly.Kind == UpperAssemblyKind.Capstan)
+                {
+                    ShipDamageSection selected = null; float nearest = float.PositiveInfinity;
+                    foreach (var part in assembly.Sections)
+                    {
+                        var source = part.Intact.GetComponent<MeshFilter>();
+                        float distance = (source.transform.TransformPoint(source.sharedMesh.bounds.ClosestPoint(source.transform.InverseTransformPoint(point))) - point).sqrMagnitude;
+                        if (distance < nearest) { nearest = distance; selected = part; }
+                    }
+                    if (selected != null)
+                    {
+                        ulong mask = selected.RemovedFragments;
+                        bool beam = selected.Intact.name.Contains("Capstan_Beam_");
+                        int count = beam ? selected.Fragments.Length : selected.Fragments.Length > 3 ? 3 : 1;
+                        for (int chip = 0; chip < count; chip++)
+                        {
+                            int chosen = -1; float best = float.PositiveInfinity;
+                            for (int bit = 0; bit < selected.Fragments.Length; bit++)
+                            {
+                                if ((mask & (1UL << bit)) != 0 || !beam && !Upper.CanChipFragment(index, selected, bit)) continue;
+                                var source = selected.RepairTransform(bit);
+                                float distance = (source.TransformPoint(selected.RepairBounds(bit).ClosestPoint(source.InverseTransformPoint(point))) - point).sqrMagnitude;
+                                if (distance < best) { best = distance; chosen = bit; }
+                            }
+                            if (chosen < 0) break;
+                            mask |= 1UL << chosen;
+                        }
+                        Change(selected.SectionId, 0f, ShipSectionState.Damaged, point, normal, velocity, ammo, attacker, ShipDamageReason.Hit, Profile.CannonDamage, mask);
+                    }
+                    return;
+                }
                 int total = 0, removed = 0;
                 foreach (var part in assembly.Sections) { total += part.RepairCount; removed += CountBits(part.RemovedFragments); }
                 int wanted = Mathf.CeilToInt(total * hits / 3f);
                 while (removed < wanted)
                 {
-                    ShipDamageSection closest = null; float best = float.PositiveInfinity;
+                    ShipDamageSection closest = null; int closestBit = -1; float best = float.PositiveInfinity;
                     foreach (var part in assembly.Sections)
                     {
                         if (part.Indestructible || part.RemovedFragments == part.AllFragments) continue;
                         for (int fragment = 0; fragment < part.Fragments.Length; fragment++)
                         {
                             if (((part.RemovedFragments | part.ProtectedFragments) & (1UL << fragment)) != 0) continue;
+                            if (!Upper.CanChipFragment(index, part, fragment)) continue;
                             var anchor = part.RepairTransform(fragment);
                             float distance = (anchor.TransformPoint(part.RepairBounds(fragment).ClosestPoint(anchor.InverseTransformPoint(point))) - point).sqrMagnitude;
-                            if (distance < best) { best = distance; closest = part; }
+                            if (distance < best) { best = distance; closest = part; closestBit = fragment; }
                         }
                     }
                     if (closest == null) break;
-                    ulong mask = closest.BreakSingleNear(point);
+                    ulong mask = closest.RemovedFragments | (1UL << closestBit);
                     if (mask == closest.RemovedFragments) break;
                     Change(closest.SectionId, 0f, ShipSectionState.Damaged, point, normal, velocity, ammo, attacker, ShipDamageReason.Hit, Profile.CannonDamage, mask);
                     removed++;
                 }
                 return;
             }
-            ApplyDamage(section.SectionId, Profile.CannonDamage, point, normal, velocity, ammo, attacker, ShipDamageReason.Hit);
+            if (section.Fragments.Length > 0)
+                Change(section.SectionId, 0f, ShipSectionState.Damaged, point, normal, velocity, ammo, attacker, ShipDamageReason.Hit, Profile.CannonDamage,
+                    section.BreakNear(point, Mathf.Max(84f, Profile.CannonDamage), false));
+            else ApplyDamage(section.SectionId, Profile.CannonDamage, point, normal, velocity, ammo, attacker, ShipDamageReason.Hit);
         }
     }
 }

@@ -2,6 +2,9 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+using Unity.Jobs;
+#endif
 
 namespace PirateSlop.Ships
 {
@@ -17,6 +20,27 @@ namespace PirateSlop.Ships
         readonly HashSet<ShipDamageSection> trackedSections = new();
         readonly Dictionary<ShipDamageSection, List<int>> sectionSources = new();
         bool dirty;
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+        bool upper;
+        Mesh upperMesh;
+        Mesh spareMesh;
+        JobHandle bake;
+        bool baking;
+        static int activeBakes;
+        struct BakeCollision : IJob
+        {
+            public EntityId MeshId;
+            public MeshColliderCookingOptions Options;
+            public void Execute() => Physics.BakeMesh(MeshId, false, Options);
+        }
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        static void ResetBakes() => activeBakes = 0;
+        readonly List<Vector3> upperVertices = new();
+        readonly List<int> upperIndices = new();
+        readonly List<Vector3> sourceVertices = new();
+        readonly List<int> sourceIndices = new();
+        public bool CombinesFragments => upper;
+#endif
 
         void OnEnable()
         {
@@ -24,6 +48,9 @@ namespace PirateSlop.Ships
             output.cookingOptions &= ~MeshColliderCookingOptions.UseFastMidphase;
             sections = new ShipDamageSection[Sources.Length];
             var owner = GetComponentInParent<ShipDestruction>();
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+            upper = owner != null && owner.Upper != null;
+#endif
             for (int i = 0; i < Sources.Length; i++)
             {
                 if (Sources[i] == null) continue;
@@ -55,10 +82,21 @@ namespace PirateSlop.Ships
         static readonly Unity.Profiling.ProfilerMarker performanceCollision = new("Performance.CollisionBatch");
         void LateUpdate()
         {
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+            if (baking)
+            {
+                if (!bake.IsCompleted) return;
+                CompleteBake(true);
+            }
+            if (upper && activeBakes >= 2) return;
+#endif
             if (!dirty) return;
             using var performanceSample = performanceCollision.Auto();
             using var cpuTiming = PirateSlop.Performance.PerformanceCpuTimings.Measure(PirateSlop.Performance.PerformanceCpuSection.ShipCollisionBatch);
             dirty = false;
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+            if (upper) { RebuildUpper(); return; }
+#endif
             bool all = true;
             for (int i = 0; i < Sources.Length; i++) all &= Visible(i);
             bool batched = all && CachedMesh != null && CachedMesh.vertexCount > 0;
@@ -75,6 +113,16 @@ namespace PirateSlop.Ships
             ShipDamageSection nearest = null;
             for (int i = 0; i < sections.Length; i++)
             {
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+                if (upper)
+                {
+                    var part = sections[i];
+                    if (part == null) continue;
+                    float distance = UpperDistance(part, point);
+                    if (distance < best) { best = distance; nearest = part; }
+                    continue;
+                }
+#endif
                 if (sections[i] == null || !Visible(i)) continue;
                 var bounds = SourceBounds[i];
                 float score = (bounds.ClosestPoint(local) - local).sqrMagnitude + (bounds.center - local).sqrMagnitude * .00001f;
@@ -87,6 +135,9 @@ namespace PirateSlop.Ships
 
         public float Distance(ShipDamageSection section, Vector3 point)
         {
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+            if (upper) return UpperDistance(section, point);
+#endif
             if (!sectionSources.TryGetValue(section, out var members)) return float.MaxValue;
             Vector3 local = transform.InverseTransformPoint(point);
             float distance = float.MaxValue;
@@ -95,6 +146,81 @@ namespace PirateSlop.Ships
                     distance = Mathf.Min(distance, Vector3.Distance(transform.TransformPoint(SourceBounds[i].ClosestPoint(local)), point));
             return distance;
         }
+
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+        static float UpperDistance(ShipDamageSection part, Vector3 point)
+        {
+            float nearest = float.MaxValue;
+            void Measure(GameObject source)
+            {
+                if (source == null || !source.activeInHierarchy) return;
+                var filter = source.GetComponent<MeshFilter>();
+                if (filter == null || filter.sharedMesh == null || filter.sharedMesh.vertexCount == 0) return;
+                var closest = filter.transform.TransformPoint(filter.sharedMesh.bounds.ClosestPoint(filter.transform.InverseTransformPoint(point)));
+                nearest = Mathf.Min(nearest, Vector3.Distance(point, closest));
+            }
+            if (part.RemovedFragments == 0 || part.Fragments.Length == 0) Measure(part.Intact);
+            else foreach (var fragment in part.Fragments) Measure(fragment);
+            return nearest;
+        }
+
+        void RebuildUpper()
+        {
+            upperVertices.Clear(); upperIndices.Clear();
+            bool intact = true;
+            foreach (var section in trackedSections) intact &= section.RemovedFragments == 0 && section.Intact != null && section.Intact.activeInHierarchy;
+            foreach (var source in Sources) if (source != null) source.enabled = false;
+            foreach (var section in trackedSections)
+            {
+                if (intact) continue;
+                void Append(GameObject source)
+                {
+                    if (source == null || !source.activeInHierarchy) return;
+                    var filter = source.GetComponent<MeshFilter>();
+                    var mesh = filter != null ? filter.sharedMesh : null;
+                    if (mesh == null || mesh.vertexCount == 0) return;
+                    int offset = upperVertices.Count;
+                    mesh.GetVertices(sourceVertices);
+                    var matrix = transform.worldToLocalMatrix * filter.transform.localToWorldMatrix;
+                    foreach (var vertex in sourceVertices) upperVertices.Add(matrix.MultiplyPoint3x4(vertex));
+                    for (int sub = 0; sub < mesh.subMeshCount; sub++)
+                    {
+                        mesh.GetTriangles(sourceIndices, sub);
+                        foreach (int index in sourceIndices) upperIndices.Add(offset + index);
+                    }
+                }
+                if (section.RemovedFragments == 0 || section.Fragments.Length == 0) Append(section.Intact);
+                else foreach (var fragment in section.Fragments) Append(fragment);
+                foreach (var fragment in section.Fragments)
+                    foreach (var collider in fragment.GetComponents<Collider>()) collider.enabled = false;
+            }
+            if (intact) output.sharedMesh = CachedMesh;
+            else if (upperIndices.Count > 0)
+            {
+                if (spareMesh == null) spareMesh = new Mesh { name = "UpperCollisionBatch", indexFormat = IndexFormat.UInt32 };
+                spareMesh.Clear(); spareMesh.SetVertices(upperVertices); spareMesh.SetTriangles(upperIndices, 0); spareMesh.RecalculateBounds();
+                bake = new BakeCollision { MeshId = spareMesh.GetEntityId(), Options = output.cookingOptions }.Schedule();
+                baking = true; activeBakes++;
+                JobHandle.ScheduleBatchedJobs();
+            }
+            else output.sharedMesh = null;
+            output.enabled = output.sharedMesh != null;
+        }
+        void CompleteBake(bool apply)
+        {
+            if (!baking) return;
+            bake.Complete(); baking = false; activeBakes = Mathf.Max(0, activeBakes - 1);
+            if (!apply) return;
+            output.sharedMesh = spareMesh; output.enabled = true;
+            (upperMesh, spareMesh) = (spareMesh, upperMesh);
+        }
+        void OnDestroy()
+        {
+            CompleteBake(false);
+            if (upperMesh != null) Destroy(upperMesh);
+            if (spareMesh != null) Destroy(spareMesh);
+        }
+#endif
 
         public static ShipDamageSection ResolveSection(Collider collider, Vector3 point)
         {
@@ -138,6 +264,9 @@ namespace PirateSlop.Ships
 
         void OnDisable()
         {
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+            CompleteBake(false);
+#endif
             if (output != null) output.enabled = false;
             if (sections != null)
                 for (int i = 0; i < sections.Length; i++)

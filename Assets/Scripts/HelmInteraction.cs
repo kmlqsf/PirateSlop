@@ -19,6 +19,14 @@ public class HelmInteraction : MonoBehaviour
     public bool StructurallyAvailable { get; set; } = true;
 #if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
     public float UpperResponse { get; set; } = 1f;
+    AdvancedPlayerController upperGripDriver;
+    public void DragAtUpperGrip(AdvancedPlayerController candidate, float degrees, bool holding, Vector3 point)
+    {
+        if (holding && !IsControlledBy(candidate) && GetComponentInParent<PirateSlop.Experimental.UpperDestructionV2>() is { } upper && !upper.CanGrabHelmAt(candidate, point)) return;
+        upperGripDriver = candidate;
+        try { Drag(candidate, degrees, holding); }
+        finally { upperGripDriver = null; }
+    }
 #endif
     public float CurrentRudderNormalized => rudder;
     public float LastHumanControlTime { get; private set; } = float.NegativeInfinity;
@@ -46,6 +54,9 @@ public class HelmInteraction : MonoBehaviour
             }
         }
         if (candidate == null || candidate.IsDead || candidate.IsFrozen || !InRange(candidate) || (IsControlling && player != candidate)) return false;
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+        if (!IsControlledBy(candidate) && upperGripDriver != candidate && GetComponentInParent<PirateSlop.Experimental.UpperDestructionV2>() is { } upper && !upper.CanGrabHelm(candidate)) return false;
+#endif
         player = candidate; IsControlling = true; lastGrip = Time.time;
         var participant = candidate.GetComponent<PirateSlop.Networking.NetworkPlayer>();
         if (participant != null && participant.IsServerInitialized && !participant.IsBot.Value) LastHumanControlTime = Time.time;

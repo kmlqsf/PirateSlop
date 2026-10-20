@@ -11,6 +11,7 @@ namespace PirateSlop.Experimental
         readonly List<MeshRenderer> sources = new();
         readonly List<MeshRenderer> displays = new();
         readonly List<bool> originalVisibility = new();
+        readonly List<bool> freeRopes = new();
         bool showing;
         bool wasDisabled;
         float hitAt = -100f;
@@ -28,6 +29,7 @@ namespace PirateSlop.Experimental
                 var filter = renderer.GetComponent<MeshFilter>();
                 if (filter == null || filter.sharedMesh == null) continue;
                 sources.Add(renderer); originalVisibility.Add(renderer.forceRenderingOff);
+                freeRopes.Add(renderer.name.Contains("Free_Rope") || renderer.name.Contains("Harpoon_Rope_Knot") || renderer.name.EndsWith("_Harpoon"));
                 var copy = new GameObject(renderer.name);
                 copy.transform.SetParent(visual, false);
                 copy.transform.SetPositionAndRotation(renderer.transform.position, renderer.transform.rotation);
@@ -61,7 +63,11 @@ namespace PirateSlop.Experimental
             if (wasDisabled && !disabled && !broken) GameAudio.Play(SoundCue.ReloadReady, transform.position, .75f);
             wasDisabled = disabled;
             if (!show || pivot == null) return;
-            for (int i = 0; i < sources.Count; i++) displays[i].enabled = sources[i] != null && sources[i].enabled && sources[i].gameObject.activeInHierarchy;
+            for (int i = 0; i < sources.Count; i++)
+            {
+                if (sources[i] != null) sources[i].forceRenderingOff = true;
+                displays[i].enabled = !freeRopes[i] && sources[i] != null && sources[i].enabled && sources[i].gameObject.activeInHierarchy;
+            }
             float age = Mathf.Max(0f, 15f - (float)(until - clock));
             float remaining = Mathf.Max(0f, (float)(until - clock));
             float sag = broken ? 32f : 18f * Mathf.SmoothStep(0f, 1f, age / .3f) * Mathf.SmoothStep(0f, 1f, remaining / .6f);

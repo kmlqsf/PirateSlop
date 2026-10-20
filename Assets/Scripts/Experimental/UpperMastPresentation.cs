@@ -16,6 +16,14 @@ namespace PirateSlop.Experimental
             public float Angle, From, Target, ChangedAt, Duration;
             public float CollapseAt, NextFlex;
             public Flex[] Flexible;
+            public Transform Collision;
+            public MeshCollider Collider;
+            public float ColliderAngle = -1f;
+            public Transform Visual;
+            public MeshFilter[] Filters;
+            public MeshRenderer[] Renderers;
+            public uint VisualRevision = uint.MaxValue;
+            public float VisualAngle = -1f;
         }
 
         sealed class Flex
@@ -58,6 +66,15 @@ namespace PirateSlop.Experimental
                 if (assembly.Kind != UpperAssemblyKind.ForeMast && assembly.Kind != UpperAssemblyKind.MizzenMast) continue;
                 var motion = new Motion { Assembly = assembly, LocalMatrices = new Matrix4x4[assembly.MastVisuals.Length], Poses = new int[assembly.MastVisuals.Length], Flexible = new Flex[assembly.MastVisuals.Length] };
                 motions[i] = motion;
+                if (assembly.MastCollision != null)
+                {
+                    motion.Collision = new GameObject("FallenMastCollision_" + assembly.Key).transform;
+                    motion.Collision.SetParent(owner.transform, false);
+                    motion.Collider = motion.Collision.gameObject.AddComponent<MeshCollider>();
+                    motion.Collider.enabled = false;
+                    motion.Collider.cookingOptions &= ~MeshColliderCookingOptions.UseFastMidphase;
+                    motion.Collider.sharedMesh = assembly.MastCollision;
+                }
             }
         }
 
@@ -85,6 +102,25 @@ namespace PirateSlop.Experimental
             }
         }
 
+        void PrepareVisual(Motion motion)
+        {
+            if (motion.Visual != null) return;
+            motion.Visual = new GameObject("FallenMastVisual_" + motion.Assembly.Key).transform;
+            motion.Visual.SetParent(owner.transform, false);
+            motion.Filters = new MeshFilter[motion.Poses.Length];
+            motion.Renderers = new MeshRenderer[motion.Poses.Length];
+            for (int i = 0; i < motion.Poses.Length; i++)
+            {
+                var node = new GameObject("MastPart_" + i);
+                node.transform.SetParent(motion.Visual, false);
+                motion.Filters[i] = node.AddComponent<MeshFilter>();
+                var renderer = node.AddComponent<MeshRenderer>();
+                renderer.sharedMaterials = motion.Assembly.MastVisuals[i].Materials;
+                renderer.shadowCastingMode = ShadowCastingMode.Off; renderer.receiveShadows = false;
+                motion.Renderers[i] = renderer;
+            }
+        }
+
         public void Collapse(int index)
         {
             if (index < 0 || index >= motions.Length || motions[index] is not { } motion || motion.Active) return;
@@ -98,7 +134,7 @@ namespace PirateSlop.Experimental
             motion.CollapseAt = Time.time;
         }
 
-        public void Render()
+        public void Render(bool draw = true)
         {
             for (int index = 0; index < motions.Length; index++)
             {
@@ -128,17 +164,44 @@ namespace PirateSlop.Experimental
                 if (!collapsed && motion.ObservedCollapse && motion.Angle <= .01f)
                 {
                     motion.Active = false;
+                    if (motion.Collider != null) motion.Collider.enabled = false;
+                    if (motion.Visual != null) motion.Visual.gameObject.SetActive(false);
                     continue;
                 }
                 var pivot = motion.Assembly.CollapsePivot;
                 var rotation = Quaternion.AngleAxis(motion.Angle, owner.MastFallsRight(index) ? Vector3.back : Vector3.forward) * Quaternion.AngleAxis(motion.Angle, Vector3.up);
                 float fallen = Mathf.Sin(motion.Angle * Mathf.Deg2Rad);
                 var matrix = owner.transform.localToWorldMatrix * Matrix4x4.Translate(Vector3.down * motion.Assembly.CollapseDrop * fallen * fallen) * Matrix4x4.Translate(pivot) * Matrix4x4.Rotate(rotation) * Matrix4x4.Translate(-pivot);
+                if (motion.Collider != null)
+                {
+                    if (!Mathf.Approximately(motion.ColliderAngle, motion.Angle))
+                    {
+                        var local = owner.transform.worldToLocalMatrix * matrix;
+                        motion.Collision.SetLocalPositionAndRotation(local.MultiplyPoint3x4(Vector3.zero), rotation);
+                        motion.ColliderAngle = motion.Angle;
+                    }
+                    motion.Collider.enabled = true;
+                }
+                if (!draw) continue;
+                PrepareVisual(motion);
+                motion.Visual.gameObject.SetActive(true);
+                bool angleChanged = !Mathf.Approximately(motion.VisualAngle, motion.Angle);
+                if (angleChanged)
+                {
+                    var local = owner.transform.worldToLocalMatrix * matrix;
+                    motion.Visual.SetLocalPositionAndRotation(local.MultiplyPoint3x4(Vector3.zero), rotation);
+                    motion.VisualAngle = motion.Angle;
+                }
+                if (!angleChanged && Time.time - motion.CollapseAt >= 3f && motion.VisualRevision == owner.Destruction.Revision) continue;
+                motion.VisualRevision = owner.Destruction.Revision;
                 bool flexTick = Time.time >= motion.NextFlex;
                 if (flexTick) motion.NextFlex = Time.time + .04f;
                 for (int partIndex = 0; partIndex < motion.Assembly.MastVisuals.Length; partIndex++)
                 {
                     var part = motion.Assembly.MastVisuals[partIndex];
+                    bool visible = part.RequiredAssembly < 0 || owner.Stage(part.RequiredAssembly) < 3;
+                    motion.Renderers[partIndex].enabled = visible;
+                    if (!visible) continue;
                     var mesh = part.Poses[motion.Poses[partIndex]];
                     if (motion.Flexible[partIndex] is { } flexible)
                     {
@@ -158,12 +221,11 @@ namespace PirateSlop.Experimental
                         }
                         mesh = flexible.Mesh;
                     }
-                    var poseMatrix = matrix * motion.LocalMatrices[partIndex];
-                    for (int sub = 0; sub < mesh.subMeshCount; sub++)
-                    {
-                        var material = part.Materials[Mathf.Min(sub, part.Materials.Length - 1)];
-                        Graphics.DrawMesh(mesh, poseMatrix, material, 0, null, sub, null, ShadowCastingMode.Off, false);
-                    }
+                    var poseMatrix = motion.LocalMatrices[partIndex];
+                    var display = motion.Filters[partIndex].transform;
+                    display.SetLocalPositionAndRotation(poseMatrix.MultiplyPoint3x4(Vector3.zero), poseMatrix.rotation);
+                    display.localScale = poseMatrix.lossyScale;
+                    motion.Filters[partIndex].sharedMesh = mesh;
                 }
             }
         }
@@ -173,7 +235,12 @@ namespace PirateSlop.Experimental
             if (disposed) return;
             disposed = true;
             foreach (var motion in motions)
-                if (motion != null) foreach (var flexible in motion.Flexible) if (flexible?.Mesh != null) Object.Destroy(flexible.Mesh);
+                if (motion != null)
+                {
+                    if (motion.Collision != null) Object.Destroy(motion.Collision.gameObject);
+                    if (motion.Visual != null) Object.Destroy(motion.Visual.gameObject);
+                    foreach (var flexible in motion.Flexible) if (flexible?.Mesh != null) Object.Destroy(flexible.Mesh);
+                }
             if (--instances <= 0) { instances = 0; geometry.Clear(); }
         }
     }

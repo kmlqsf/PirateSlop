@@ -23,6 +23,89 @@ namespace PirateSlop.EditorTools
 
         public static Mesh Box(Mesh source, Matrix4x4 toShip, Bounds bounds)
         {
+            var axes = new List<Vector3>(); var thresholds = new List<float>();
+            for (int axis = 0; axis < 3; axis++)
+            {
+                var direction = Vector3.zero; direction[axis] = 1f;
+                axes.Add(direction); thresholds.Add(bounds.min[axis]);
+                axes.Add(-direction); thresholds.Add(-bounds.max[axis]);
+            }
+            return Cut(source, toShip, axes.ToArray(), thresholds.ToArray());
+        }
+
+        public static Mesh Sector(Mesh source, int axis, int sector, int count = 3)
+        {
+            var original = source;
+            source = UnityEngine.Object.Instantiate(source);
+            var warped = source.vertices;
+            Vector3 Twist(Vector3 point, float sign)
+            {
+                var center = original.bounds.center;
+                var delta = point - center;
+                var normalAxis = Vector3.zero; normalAxis[axis] = 1f;
+                float radius = Vector3.ProjectOnPlane(delta, normalAxis).magnitude;
+                float wave = Mathf.Sin(radius * 4100f) * 4f + Mathf.Sin(radius * 1750f + delta[axis] * 8200f) * 3f;
+                return center + Quaternion.AngleAxis(sign * wave, normalAxis) * delta;
+            }
+            for (int i = 0; i < warped.Length; i++) warped[i] = Twist(warped[i], 1f);
+            source.vertices = warped;
+            var normal = Vector3.zero; normal[axis] = 1f;
+            var radial = Vector3.zero; radial[(axis + 1) % 3] = 1f;
+            var start = Quaternion.AngleAxis(sector * 360f / count, normal) * radial;
+            var end = Quaternion.AngleAxis((sector + 1) * 360f / count, normal) * radial;
+            var axes = new[] { Vector3.Cross(normal, start), Vector3.Cross(end, normal) };
+            var mesh = Cut(source, Matrix4x4.Scale(Vector3.one * 100f), axes, axes.Select(a => Vector3.Dot(a, original.bounds.center * 100f)).ToArray());
+            warped = mesh.vertices;
+            for (int i = 0; i < warped.Length; i++) warped[i] = Twist(warped[i], -1f);
+            mesh.vertices = warped; SmoothCaps(mesh, original.subMeshCount); mesh.RecalculateBounds();
+            UnityEngine.Object.DestroyImmediate(source);
+            return mesh;
+        }
+
+        public static Mesh Band(Mesh source, int axis, float min, float max, float roughness)
+        {
+            var warped = UnityEngine.Object.Instantiate(source);
+            float Offset(Vector3 point) => roughness * (.65f * Mathf.Sin(point[(axis + 1) % 3] * 4700f + point[(axis + 2) % 3] * 1900f) + .35f * Mathf.Sin(point[(axis + 1) % 3] * 9900f - point[(axis + 2) % 3] * 5600f));
+            var vertices = source.vertices;
+            for (int i = 0; i < vertices.Length; i++) vertices[i][axis] += Offset(vertices[i]);
+            warped.vertices = vertices;
+            var direction = Vector3.zero; direction[axis] = 1f;
+            var axes = new List<Vector3>(); var thresholds = new List<float>();
+            if (!float.IsNegativeInfinity(min)) { axes.Add(direction); thresholds.Add(min * 100f); }
+            if (!float.IsPositiveInfinity(max)) { axes.Add(-direction); thresholds.Add(-max * 100f); }
+            var mesh = Cut(warped, Matrix4x4.Scale(Vector3.one * 100f), axes.ToArray(), thresholds.ToArray());
+            vertices = mesh.vertices;
+            for (int i = 0; i < vertices.Length; i++) vertices[i][axis] -= Offset(vertices[i]);
+            mesh.vertices = vertices; SmoothCaps(mesh, source.subMeshCount); mesh.RecalculateBounds();
+            UnityEngine.Object.DestroyImmediate(warped);
+            return mesh;
+        }
+
+        static void SmoothCaps(Mesh mesh, int firstCap)
+        {
+            var points = mesh.vertices; var normals = mesh.normals;
+            var sums = new Dictionary<Vector3Int, Vector3>();
+            var cap = new HashSet<int>();
+            for (int sub = firstCap; sub < mesh.subMeshCount; sub++)
+            {
+                var triangles = mesh.GetTriangles(sub);
+                for (int at = 0; at < triangles.Length; at += 3)
+                {
+                    int a = triangles[at], b = triangles[at + 1], c = triangles[at + 2];
+                    var normal = Vector3.Cross((points[b] - points[a]) * 100f, (points[c] - points[a]) * 100f).normalized;
+                    foreach (int vertex in new[] { a, b, c })
+                    {
+                        var key = Vector3Int.RoundToInt(points[vertex] * 10000000f);
+                        sums.TryGetValue(key, out var sum); sums[key] = sum + normal; cap.Add(vertex);
+                    }
+                }
+            }
+            foreach (int vertex in cap) normals[vertex] = sums[Vector3Int.RoundToInt(points[vertex] * 10000000f)].normalized;
+            mesh.normals = normals;
+        }
+
+        static Mesh Cut(Mesh source, Matrix4x4 toShip, Vector3[] axes, float[] thresholds)
+        {
             var vertices = source.vertices; var normals = source.normals; var uv = source.uv; var tangents = source.tangents;
             var polygons = new List<Polygon>();
             for (int slot = 0; slot < source.subMeshCount; slot++)
@@ -39,12 +122,7 @@ namespace PirateSlop.EditorTools
                     polygons.Add(new Polygon { Slot = slot, Vertices = triangle });
                 }
             }
-            for (int axis = 0; axis < 3; axis++)
-            {
-                var direction = Vector3.zero; direction[axis] = 1f;
-                polygons = Clip(polygons, toShip, direction, bounds.min[axis], source.subMeshCount);
-                polygons = Clip(polygons, toShip, -direction, -bounds.max[axis], source.subMeshCount);
-            }
+            for (int plane = 0; plane < axes.Length; plane++) polygons = Clip(polygons, toShip, axes[plane], thresholds[plane], source.subMeshCount);
             var points = new List<Vector3>(); var ns = new List<Vector3>(); var uvs = new List<Vector2>(); var ts = new List<Vector4>();
             var triangles = Enumerable.Range(0, source.subMeshCount + 1).Select(_ => new List<int>()).ToArray();
             foreach (var polygon in polygons)
@@ -95,69 +173,104 @@ namespace PirateSlop.EditorTools
                     if (a != b) segments.Add(a < b ? (a, b) : (b, a));
                 }
             }
-            var adjacent = new List<int>[positions.Count];
-            for (int i = 0; i < adjacent.Length; i++) adjacent[i] = new List<int>();
-            foreach (var segment in segments) { adjacent[segment.A].Add(segment.B); adjacent[segment.B].Add(segment.A); }
             var normal = -matrix.transpose.MultiplyVector(axis).normalized;
-            var tangent = Vector3.Cross(normal, Mathf.Abs(normal.y) < .8f ? Vector3.up : Vector3.right).normalized;
-            var bitangent = Vector3.Cross(normal, tangent);
-            while (segments.Count > 0)
+            var tangent = Vector3.Cross(-axis, Mathf.Abs(axis.y) < .8f ? Vector3.up : Vector3.right).normalized;
+            var bitangent = Vector3.Cross(-axis, tangent);
+            Vector2 Project(Vector3 p) { var point = matrix.MultiplyPoint3x4(p); return new(Vector3.Dot(point, tangent), Vector3.Dot(point, bitangent)); }
+            var projected = positions.Select(Project).ToArray();
+            var adjacent = Enumerable.Range(0, positions.Count).Select(_ => new List<int>()).ToArray();
+            foreach (var edge in segments) { adjacent[edge.A].Add(edge.B); adjacent[edge.B].Add(edge.A); }
+            var compact = new List<Polygon>();
+            bool Compact()
             {
-                var first = segments.First();
-                var loop = new List<int> { first.A }; int previous = first.A, current = first.B;
-                segments.Remove(first);
-                for (int guard = 0; guard <= positions.Count; guard++)
+                if (adjacent.Any(a => a.Count != 2)) return false;
+                var visited = new HashSet<int>(); var loops = new List<List<int>>();
+                for (int start = 0; start < positions.Count; start++)
                 {
-                    if (current == loop[0]) break;
-                    int repeated = loop.IndexOf(current);
-                    if (repeated >= 0)
+                    if (visited.Contains(start)) continue;
+                    var loop = new List<int>(); int previous = -1, current = start;
+                    do
                     {
-                        for (int i = 0; i < repeated; i++) { int a = loop[i], b = loop[i + 1]; segments.Add(a < b ? (a, b) : (b, a)); }
-                        loop = loop.Skip(repeated).ToList();
-                        break;
-                    }
-                    loop.Add(current); int next = -1;
-                    foreach (int candidate in adjacent[current])
-                        if (candidate != previous && segments.Contains(current < candidate ? (current, candidate) : (candidate, current))) { next = candidate; break; }
-                    if (next < 0) break;
-                    segments.Remove(current < next ? (current, next) : (next, current)); previous = current; current = next;
+                        if (!visited.Add(current)) return false;
+                        loop.Add(current); int next = adjacent[current][0] == previous ? adjacent[current][1] : adjacent[current][0];
+                        previous = current; current = next;
+                    } while (current != start);
+                    loops.Add(loop);
                 }
-                if (loop.Count < 3) continue;
-                var contour = loop.Select(i => positions[i]).ToList();
-                float area = 0f;
-                for (int i = 0; i < contour.Count; i++) area += Vector3.Dot(Vector3.Cross(contour[i], contour[(i + 1) % contour.Count]), normal);
-                if (area < 0f) contour.Reverse();
-                var remaining = Enumerable.Range(0, contour.Count).ToList();
-                Vector2 Project(Vector3 p) => new(Vector3.Dot(p, tangent), Vector3.Dot(p, bitangent));
-                float Cross(Vector2 a, Vector2 b) => a.x * b.y - a.y * b.x;
-                while (remaining.Count > 2)
+                bool Inside(Vector2 point, List<int> loop)
                 {
-                    if (remaining.Count == 3)
+                    bool inside = false;
+                    for (int i = 0, j = loop.Count - 1; i < loop.Count; j = i++)
                     {
-                        if (Vector3.Dot(Vector3.Cross(contour[remaining[1]] - contour[remaining[0]], contour[remaining[2]] - contour[remaining[0]]), normal) < 0f) remaining.Reverse();
-                        result.Add(new Polygon { Slot = cap, Vertices = remaining.Select(j => new Vertex { Point = contour[j], Normal = normal, Uv = Project(contour[j]) * 2f, Tangent = new Vector4(tangent.x, tangent.y, tangent.z, 1) }).ToList() });
-                        break;
+                        var a = projected[loop[i]]; var b = projected[loop[j]];
+                        if ((a.y > point.y) != (b.y > point.y) && point.x < (b.x - a.x) * (point.y - a.y) / (b.y - a.y) + a.x) inside = !inside;
                     }
-                    bool found = false;
-                    for (int i = 0; i < remaining.Count; i++)
+                    return inside;
+                }
+                foreach (var loop in loops)
+                    foreach (var other in loops) if (other != loop && Inside(projected[loop[0]], other)) return false;
+                float Cross2(Vector2 a, Vector2 b) => a.x * b.y - a.y * b.x;
+                foreach (var original in loops)
+                {
+                    var loop = new List<int>(original); float area = 0;
+                    for (int i = 0; i < loop.Count; i++) area += Cross2(projected[loop[i]], projected[loop[(i + 1) % loop.Count]]);
+                    if (area < 0) loop.Reverse();
+                    while (loop.Count > 2)
                     {
-                        int ai = remaining[(i + remaining.Count - 1) % remaining.Count], bi = remaining[i], ci = remaining[(i + 1) % remaining.Count];
-                        var a = Project(contour[ai]); var b = Project(contour[bi]); var c = Project(contour[ci]);
-                        if (Cross(b - a, c - b) < 1e-12f) continue;
-                        bool occupied = remaining.Any(j => j != ai && j != bi && j != ci && Cross(b - a, Project(contour[j]) - a) > 1e-12f && Cross(c - b, Project(contour[j]) - b) > 1e-12f && Cross(a - c, Project(contour[j]) - c) > 1e-12f);
-                        if (occupied) continue;
-                        result.Add(new Polygon { Slot = cap, Vertices = new[] { ai, bi, ci }.Select(j => new Vertex { Point = contour[j], Normal = normal, Uv = Project(contour[j]) * 2f, Tangent = new Vector4(tangent.x, tangent.y, tangent.z, 1) }).ToList() });
-                        remaining.RemoveAt(i); found = true; break;
+                        int ear = -1;
+                        for (int i = 0; i < loop.Count; i++)
+                        {
+                            int ai = loop[(i + loop.Count - 1) % loop.Count], bi = loop[i], ci = loop[(i + 1) % loop.Count];
+                            var a = projected[ai]; var b = projected[bi]; var c = projected[ci];
+                            if (Cross2(b - a, c - b) <= 1e-9f) continue;
+                            if (loop.Any(v => v != ai && v != bi && v != ci && Cross2(b - a, projected[v] - a) > 1e-9f && Cross2(c - b, projected[v] - b) > 1e-9f && Cross2(a - c, projected[v] - c) > 1e-9f)) continue;
+                            var triangle = new[] { ai, bi, ci }.Select(v => new Vertex { Point = positions[v], Normal = normal, Uv = projected[v] * 2f, Tangent = new Vector4(tangent.x, tangent.y, tangent.z, 1f) }).ToList();
+                            if (Vector3.Dot(Vector3.Cross(triangle[1].Point - triangle[0].Point, triangle[2].Point - triangle[0].Point), normal) < 0) triangle.Reverse();
+                            compact.Add(new Polygon { Slot = cap, Vertices = triangle }); ear = i; break;
+                        }
+                        if (ear < 0)
+                        {
+                            int collinear = loop.FindIndex(v => { int at = loop.IndexOf(v); return Mathf.Abs(Cross2(projected[v] - projected[loop[(at + loop.Count - 1) % loop.Count]], projected[loop[(at + 1) % loop.Count]] - projected[v])) < 1e-9f; });
+                            if (collinear < 0) return false;
+                            loop.RemoveAt(collinear);
+                        }
+                        else loop.RemoveAt(ear);
                     }
-                    if (!found)
-                    {
-                        int collinear = remaining.FindIndex(i => {
-                            int at = remaining.IndexOf(i); var a = Project(contour[remaining[(at + remaining.Count - 1) % remaining.Count]]); var b = Project(contour[i]); var c = Project(contour[remaining[(at + 1) % remaining.Count]]);
-                            return Mathf.Abs(Cross(b - a, c - b)) < 1e-12f;
-                        });
-                        if (collinear < 0) throw new InvalidOperationException("A mast cut contour could not be triangulated: " + string.Join(";", remaining.Select(i => Project(contour[i]).ToString("F6"))));
-                        remaining.RemoveAt(collinear);
-                    }
+                }
+                return true;
+            }
+            if (Compact()) { result.AddRange(compact); return result; }
+            var edges = segments.Select(s => (A: s.A, B: s.B)).ToArray();
+            var cuts = projected.Select(p => p.x).ToList();
+            float Cross(Vector2 p, Vector2 q) => p.x * q.y - p.y * q.x;
+            for (int first = 0; first < edges.Length; first++)
+                for (int second = first + 1; second < edges.Length; second++)
+                {
+                    var a = projected[edges[first].A]; var ab = projected[edges[first].B] - a;
+                    var c = projected[edges[second].A]; var cd = projected[edges[second].B] - c;
+                    float denominator = Cross(ab, cd);
+                    if (Mathf.Abs(denominator) < 1e-10f) continue;
+                    float t = Cross(c - a, cd) / denominator, u = Cross(c - a, ab) / denominator;
+                    if (t > 0f && t < 1f && u > 0f && u < 1f) cuts.Add(a.x + ab.x * t);
+                }
+            cuts.Sort();
+            Vertex At((int A, int B) edge, float x)
+            {
+                float t = Mathf.Clamp01((x - projected[edge.A].x) / (projected[edge.B].x - projected[edge.A].x));
+                var point = Vector3.Lerp(positions[edge.A], positions[edge.B], t);
+                return new Vertex { Point = point, Normal = normal, Uv = Project(point) * 2f, Tangent = new Vector4(tangent.x, tangent.y, tangent.z, 1f) };
+            }
+            for (int strip = 0; strip + 1 < cuts.Count; strip++)
+            {
+                float left = cuts[strip], right = cuts[strip + 1], middle = (left + right) * .5f;
+                if (right - left < 1e-6f) continue;
+                var crossings = edges.Where(e => Mathf.Min(projected[e.A].x, projected[e.B].x) < middle && Mathf.Max(projected[e.A].x, projected[e.B].x) > middle)
+                    .OrderBy(e => Mathf.Lerp(projected[e.A].y, projected[e.B].y, (middle - projected[e.A].x) / (projected[e.B].x - projected[e.A].x))).ToArray();
+                for (int at = 0; at + 1 < crossings.Length; at += 2)
+                {
+                    var quad = new List<Vertex> { At(crossings[at], left), At(crossings[at], right), At(crossings[at + 1], right), At(crossings[at + 1], left) };
+                    if (Vector3.Dot(Vector3.Cross(quad[1].Point - quad[0].Point, quad[2].Point - quad[0].Point), normal) < 0f) quad.Reverse();
+                    result.Add(new Polygon { Slot = cap, Vertices = quad });
                 }
             }
             return result;

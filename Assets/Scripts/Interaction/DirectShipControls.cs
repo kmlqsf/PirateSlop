@@ -16,6 +16,9 @@ namespace PirateSlop
         float wheelFieldOfView;
         float pendingDrag, nextSend;
         float cameraDrag;
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+        Vector3 upperHelmGrip;
+#endif
         float grabStarted, savedUntil;
         SailSystem savedSails;
         int savedRope;
@@ -166,6 +169,14 @@ namespace PirateSlop
             Hover(handle != null && handle.Cannon == null && InRange(handle) ? handle : null);
             if (hovered != null && mouse.leftButton.wasPressedThisFrame)
             {
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+                if (hovered.Helm != null && hovered.Helm.GetComponentInParent<PirateSlop.Experimental.UpperDestructionV2>() is { } upper)
+                {
+                    var collider = hovered.GetComponent<Collider>();
+                    if (collider == null || !collider.Raycast(new Ray(camera.transform.position, camera.transform.forward), out var gripHit, 3.5f)) return;
+                    upperHelmGrip = upper.transform.InverseTransformPoint(gripHit.point);
+                }
+#endif
                 awaitPrimaryRelease = true;
                 if (hovered.Sails != null && hovered.Sails.Owner(hovered.RopeIndex) != 0 && hovered.Sails.Owner(hovered.RopeIndex) != Participant) return;
                 grabbed = hovered; pointer = new Vector2(Screen.width * .5f, Screen.height * .5f); pendingDrag = 0;
@@ -215,7 +226,14 @@ namespace PirateSlop
             else if (grabbed.Helm != null)
             {
                 var network = grabbed.Helm.GetComponentInParent<NetworkShip>();
-                if (network != null) network.DragWheel(pendingDrag, holding);
+                if (network != null)
+                {
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+                    if (network.GetComponent<PirateSlop.Experimental.UpperDestructionV2>() != null) network.DragUpperWheel(pendingDrag, holding, upperHelmGrip);
+                    else
+#endif
+                        network.DragWheel(pendingDrag, holding);
+                }
                 else grabbed.Helm.Drag(motor, pendingDrag, holding);
             }
             else if (grabbed.Cannon != null)

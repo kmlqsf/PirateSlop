@@ -17,11 +17,13 @@ namespace PirateSlop.EditorTools
         const string BaseShip = "Assets/Resources/Ships/ShipV3Test.prefab";
         const string Folder = UpperDestructionSettings.Root;
         static readonly string[] sailTags = { "Main_Course", "Main_Topsail", "Fore_Course", "Fore_Topsail", "Mizzen" };
+        static Dictionary<string, Mesh> preparedMeshes;
 
         public static string Prepare()
         {
             if (EditorApplication.isPlaying || EditorApplication.isCompiling) throw new InvalidOperationException("Unity must be idle outside Play Mode.");
             EnsureFolder("Assets/Experimental"); EnsureFolder(Folder);
+            preparedMeshes = null;
             var root = PrefabUtility.LoadPrefabContents(BaseShip);
             try
             {
@@ -32,9 +34,16 @@ namespace PirateSlop.EditorTools
                 if (profile.SplinterMaterial == null)
                     profile.SplinterMaterial = root.GetComponentsInChildren<MeshRenderer>(true).SelectMany(r => r.sharedMaterials).FirstOrDefault(m => m != null && m.name == "Ship_Art_Fracture_Fresh_Wood");
                 if (profile.SplinterMaterial == null) throw new InvalidOperationException("The existing fresh wood material is missing.");
+                var fractureShader = Shader.Find("PirateSlop/UpperFractureWood");
+                if (fractureShader == null) throw new InvalidOperationException("UpperFractureWood shader is missing.");
+                var fractureMaterial = new Material(fractureShader) { name = "UpperFractureWood", enableInstancing = true };
+                fractureMaterial.SetColor("_BaseColor", new Color(.43f, .31f, .17f));
+                profile.SplinterMaterial = Save(fractureMaterial, Folder + "/FractureWood.mat");
                 damage.Profile = Save(profile, Folder + "/Destruction.asset");
                 var upper = root.AddComponent<UpperDestructionV2>();
+                PrepareAdditionalObjects(root, damage);
                 ConfigureAssemblies(root, upper, damage);
+                PrepareAssemblyGeometry(root, upper, damage);
                 PrepareSupportBindings(root, upper, damage);
                 PrepareClosedMastFragments(root, upper, damage);
                 PrepareUpperMaterials(damage);
@@ -44,12 +53,13 @@ namespace PirateSlop.EditorTools
                 PrepareMastRepairPreviews(root, upper);
                 PrepareMastVisuals(root, upper);
                 PrepareDrapedRigging(root, upper);
-                upper.AssetRevision = 3;
+                upper.AssetRevision = 6;
                 var player = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Networking/NetworkPlayer.prefab").GetComponent<NetworkWeapon>();
                 var crate = root.GetComponentInChildren<CannonballCrate>(true);
                 upper.FallenCannon = PrepareDroppedWeapon(player.DropPrefabs[(int)InventoryItem.Cannon], crate.CannonPrefab, false);
                 upper.FallenMortar = PrepareDroppedWeapon(player.DropPrefabs[(int)InventoryItem.MortarKit], crate.MortarPrefab, true);
                 EditorUtility.SetDirty(damage.Profile);
+                SetExperimentalHash(root, Folder + "/Ship.prefab");
                 var saved = PrefabUtility.SaveAsPrefabAsset(root, Folder + "/Ship.prefab");
                 if (saved == null) throw new InvalidOperationException("Experimental ship could not be saved.");
                 var session = UnityEngine.Object.Instantiate(AssetDatabase.LoadAssetAtPath<SessionConfig>("Assets/Settings/Networking/SessionConfig.asset"));
@@ -81,6 +91,7 @@ namespace PirateSlop.EditorTools
             groups.Add(new UpperAssembly { Key = "Capstan", Kind = UpperAssemblyKind.Capstan });
             groups.Add(new UpperAssembly { Key = "Door", Kind = UpperAssemblyKind.Door });
             groups.Add(new UpperAssembly { Key = "Dice", Kind = UpperAssemblyKind.Dice });
+            groups.Add(new UpperAssembly { Key = "Casino", Kind = UpperAssemblyKind.Casino });
             for (int i = 0; i < sailTags.Length; i++) groups.Add(new UpperAssembly { Key = "Control_" + sailTags[i], Kind = UpperAssemblyKind.SailControl, SailIndex = i });
             groups.Add(new UpperAssembly { Key = "HarpoonPort", Kind = UpperAssemblyKind.Harpoon, SailIndex = 0 });
             groups.Add(new UpperAssembly { Key = "HarpoonStarboard", Kind = UpperAssemblyKind.Harpoon, SailIndex = 1 });
@@ -97,7 +108,9 @@ namespace PirateSlop.EditorTools
                 else if (name.Contains("V10_Port_")) key = "HarpoonPort";
                 else if (name.Contains("V10_Starboard_")) key = "HarpoonStarboard";
                 else if (name.Contains("Door_Leaf")) key = "Door";
-                else if (name.Contains("Dice_Game") || name.Contains("Player_") && name.Contains("Wooden_Cup")) key = "Dice";
+                else if (name == "UpperCasino") key = "Casino";
+                else if (name.Contains("Dice_Game_Barrel")) key = "Dice";
+                else if (name.Contains("Player_") && name.Contains("Wooden_Cup")) { section.Indestructible = true; continue; }
                 else if (name.Contains("_Control_") && !name.EndsWith("_UpperBlock", StringComparison.Ordinal))
                     foreach (var tag in sailTags) if (name.Contains("_Control_" + tag + "_")) { key = "Control_" + tag; break; }
                 if (key == null && d.Type != ShipSectionType.Deck && d.Type != ShipSectionType.Stairs) key = MastKey(name);
@@ -124,9 +137,8 @@ namespace PirateSlop.EditorTools
                 {
                     var sails = root.GetComponent<SailSystem>();
                     group.Controls = sails.RopeHandles[group.SailIndex].GetComponentsInChildren<Collider>(true);
-                    group.ParentMast = groups.FindIndex(x => x.Key == MastKey(sailTags[group.SailIndex]));
+                    group.ParentMast = -1;
                     group.Attachments = features.Attachments.Where(x => x.Object != null && x.Object.name.Contains("_Control_" + sailTags[group.SailIndex] + "_")).Select(x => x.Object).Distinct().ToArray();
-                    if (group.ParentMast >= 0 && groups[group.ParentMast].Kind == UpperAssemblyKind.MainMast) group.Attachments = Array.Empty<Transform>();
                 }
             }
             upper.Assemblies = groups.ToArray();
@@ -207,9 +219,9 @@ namespace PirateSlop.EditorTools
                     if (renderer == null || mesh == null) continue;
                     if (mastSections.Contains(section)) changed.Add(renderer);
                     var materials = renderer.sharedMaterials;
-                    if (materials.Length >= mesh.subMeshCount && materials.All(m => m != null)) continue;
+                    if (materials.Length >= mesh.subMeshCount && materials.All(m => m != null && m.name != "Ship_Art_Fracture_Fresh_Wood")) continue;
                     if (materials.Length < mesh.subMeshCount) Array.Resize(ref materials, mesh.subMeshCount);
-                    for (int i = 0; i < materials.Length; i++) if (materials[i] == null) materials[i] = damage.Profile.SplinterMaterial;
+                    for (int i = 0; i < materials.Length; i++) if (materials[i] == null || materials[i].name == "Ship_Art_Fracture_Fresh_Wood") materials[i] = damage.Profile.SplinterMaterial;
                     renderer.sharedMaterials = materials;
                     changed.Add(renderer);
                 }
@@ -265,13 +277,20 @@ namespace PirateSlop.EditorTools
                     if (!assembly.BaseSections.Contains(section))
                     if (section.Intact != null && section.Intact.TryGetComponent<MeshFilter>(out var filter)) filters.Add(filter);
                 var rigidFilters = new HashSet<MeshFilter>(filters);
+                var fittings = rigidFilters.Where(f => f.name.EndsWith("_UpperBlock", StringComparison.Ordinal)).ToArray();
+                foreach (var fitting in fittings) { filters.Remove(fitting); rigidFilters.Remove(fitting); }
+                var collision = new Mesh { name = "MastCollision_" + assembly.Key, indexFormat = IndexFormat.UInt32 };
+                collision.CombineMeshes(rigidFilters.SelectMany(f => Enumerable.Range(0, f.sharedMesh.subMeshCount).Select(sub => new CombineInstance { mesh = f.sharedMesh, subMeshIndex = sub, transform = root.transform.worldToLocalMatrix * f.transform.localToWorldMatrix })).ToArray(), true, true);
+                assembly.MastCollision = SavePreparedMesh(collision, container);
                 foreach (var attachment in attachments)
                     if (attachment != null)
                         foreach (var filter in attachment.GetComponentsInChildren<MeshFilter>(true))
-                            if (filter.gameObject.activeInHierarchy && filter.GetComponent<ShipV3RenderBatch>() == null) filters.Add(filter);
+                            if (filter.gameObject.activeInHierarchy && filter.GetComponent<ShipV3RenderBatch>() == null && !DeckRig(filter.name) && !fittings.Contains(filter)) filters.Add(filter);
                 var materials = new Dictionary<(Material Material, bool Flexible), List<CombineInstance>>();
+                var dependent = filters.Where(f => upper.AttachmentLinks.Any(l => l.RequiredAssembly >= 0 && (f.transform == l.Source || f.transform.IsChildOf(l.Source)))).ToArray();
                 foreach (var filter in filters)
                 {
+                    if (dependent.Contains(filter)) continue;
                     var renderer = filter.GetComponent<MeshRenderer>();
                     if (filter.sharedMesh == null || renderer == null) continue;
                     var slots = renderer.sharedMaterials;
@@ -280,7 +299,7 @@ namespace PirateSlop.EditorTools
                         if (filter.sharedMesh.GetIndexCount(sub) == 0 || slots.Length == 0) continue;
                         var material = slots[Mathf.Min(sub, slots.Length - 1)];
                         if (material == null) throw new InvalidOperationException("Missing mast material: " + filter.name);
-                        var key = (material, !rigidFilters.Contains(filter) && (material.name.Contains("Rope") || IsFlexible(filter.name)));
+                        var key = (material, material.name.Contains("Rope") || !rigidFilters.Contains(filter) && IsFlexible(filter.name) || filter.name.Contains("Deadeye_Upper"));
                         if (!materials.TryGetValue(key, out var entries)) materials[key] = entries = new List<CombineInstance>();
                         entries.Add(new CombineInstance { mesh = filter.sharedMesh, subMeshIndex = sub, transform = root.transform.worldToLocalMatrix * filter.transform.localToWorldMatrix });
                     }
@@ -294,7 +313,19 @@ namespace PirateSlop.EditorTools
                     visuals.Add(new UpperAttachmentRecipe { Source = root.transform, Poses = new[] { mesh }, Offsets = new[] { Vector3.zero }, Materials = new[] { pair.Key.Material }, SailIndex = -1, Flexible = pair.Key.Flexible });
                 }
                 foreach (var recipe in upper.AttachmentDebris)
-                    if (attachments.Any(a => a != null && (recipe.Source == a || recipe.Source.IsChildOf(a)))) visuals.Add(recipe);
+                    if (recipe.Source.GetComponent<SkinnedMeshRenderer>() != null && attachments.Any(a => a != null && (recipe.Source == a || recipe.Source.IsChildOf(a))))
+                        visuals.Add(new UpperAttachmentRecipe { Source = recipe.Source, Poses = recipe.Poses, Offsets = recipe.Offsets, Materials = recipe.Materials, SailIndex = recipe.SailIndex, Flexible = recipe.Flexible, RequiredAssembly = recipe.RequiredAssembly });
+                foreach (var filter in dependent)
+                {
+                    var link = upper.AttachmentLinks.First(l => l.RequiredAssembly >= 0 && (filter.transform == l.Source || filter.transform.IsChildOf(l.Source)));
+                    var renderer = filter.GetComponent<MeshRenderer>();
+                    visuals.Add(new UpperAttachmentRecipe { Source = filter.transform, Poses = new[] { filter.sharedMesh }, Offsets = new[] { Vector3.zero }, Materials = renderer.sharedMaterials, SailIndex = -1, Flexible = IsFlexible(filter.name), RequiredAssembly = link.RequiredAssembly });
+                }
+                foreach (var fitting in fittings)
+                {
+                    int control = Array.FindIndex(upper.Assemblies, a => a.Kind == UpperAssemblyKind.SailControl && fitting.name.Contains("_Control_" + sailTags[a.SailIndex] + "_"));
+                    visuals.Add(new UpperAttachmentRecipe { Source = fitting.transform, Poses = new[] { fitting.sharedMesh }, Offsets = new[] { Vector3.zero }, Materials = fitting.GetComponent<MeshRenderer>().sharedMaterials, SailIndex = -1, RequiredAssembly = control });
+                }
                 assembly.MastVisuals = visuals.ToArray();
                 int stemId = definitions.Values.First(d => d.SourceGroup == "V3_Mast_" + assembly.Key).SectionId;
                 var stem = assembly.Sections.First(s => s.SectionId == stemId);
@@ -312,8 +343,9 @@ namespace PirateSlop.EditorTools
 
         static Mesh SavePreparedMesh(Mesh mesh, UpperDebrisGeometry container)
         {
-            var existing = AssetDatabase.LoadAllAssetsAtPath(Folder + "/DebrisGeometry.asset").OfType<Mesh>().FirstOrDefault(m => m.name == mesh.name);
-            if (existing == null) { AssetDatabase.AddObjectToAsset(mesh, container); return mesh; }
+            preparedMeshes ??= AssetDatabase.LoadAllAssetsAtPath(Folder + "/DebrisGeometry.asset").OfType<Mesh>().GroupBy(m => m.name).ToDictionary(g => g.Key, g => g.First());
+            preparedMeshes.TryGetValue(mesh.name, out var existing);
+            if (existing == null) { AssetDatabase.AddObjectToAsset(mesh, container); preparedMeshes[mesh.name] = mesh; return mesh; }
             existing.Clear(); existing.indexFormat = mesh.indexFormat;
             existing.vertices = mesh.vertices; existing.normals = mesh.normals; existing.tangents = mesh.tangents; existing.colors32 = mesh.colors32;
             var coordinates = new List<Vector4>();
@@ -368,6 +400,13 @@ namespace PirateSlop.EditorTools
                 foreach (var collider in model.GetComponentsInChildren<Collider>(true)) UnityEngine.Object.DestroyImmediate(collider);
                 foreach (var body in model.GetComponentsInChildren<Rigidbody>(true)) UnityEngine.Object.DestroyImmediate(body);
                 foreach (var collider in root.GetComponents<Collider>()) UnityEngine.Object.DestroyImmediate(collider);
+                var physicsBody = root.GetComponent<Rigidbody>();
+                if (physicsBody == null) physicsBody = root.AddComponent<Rigidbody>();
+                physicsBody.mass = mortar ? 150f : 250f;
+                physicsBody.isKinematic = true; physicsBody.useGravity = false;
+                physicsBody.interpolation = RigidbodyInterpolation.Interpolate;
+                physicsBody.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
+                physicsBody.solverIterations = 8; physicsBody.solverVelocityIterations = 4;
                 var bounds = new Bounds(Vector3.zero, Vector3.zero); bool any = false;
                 foreach (var filter in model.GetComponentsInChildren<MeshFilter>(true))
                 {
@@ -380,8 +419,30 @@ namespace PirateSlop.EditorTools
                     }
                 }
                 var box = root.AddComponent<BoxCollider>(); box.center = bounds.center; box.size = Vector3.Max(bounds.size, Vector3.one * .05f);
+                var wheels = mortar ? Array.Empty<Bounds>() : UpperWeaponGeometry.Wheels(root.transform);
+                foreach (var wheelBounds in wheels)
+                {
+                    var wheel = new GameObject("FallenWheelContact"); wheel.transform.SetParent(root.transform, false);
+                    var contact = wheel.AddComponent<MeshCollider>(); contact.convex = true;
+                    contact.sharedMesh = SavePreparedMesh(UpperWheelMesh(wheelBounds), AssetDatabase.LoadAssetAtPath<UpperDebrisGeometry>(Folder + "/DebrisGeometry.asset"));
+                }
+                if (wheels.Length > 0)
+                {
+                    var min = bounds.min; var max = bounds.max;
+                    min.y += Mathf.Min(.28f, bounds.size.y * .3f);
+                    box.center = (min + max) * .5f; box.size = max - min;
+                }
+                physicsBody.centerOfMass = bounds.center - Vector3.up * bounds.extents.y * .25f;
+                var material = AssetDatabase.LoadAssetAtPath<PhysicsMaterial>(Folder + "/CannonContact.physicMaterial");
+                if (material == null) { material = new PhysicsMaterial("CannonContact"); AssetDatabase.CreateAsset(material, Folder + "/CannonContact.physicMaterial"); }
+                material.dynamicFriction = .55f; material.staticFriction = .65f; material.bounciness = 0f;
+                material.frictionCombine = PhysicsMaterialCombine.Average; material.bounceCombine = PhysicsMaterialCombine.Minimum;
+                EditorUtility.SetDirty(material);
+                foreach (var collider in root.GetComponentsInChildren<Collider>(true)) { collider.sharedMaterial = material; collider.contactOffset = .01f; }
                 var dropped = root.AddComponent<UpperDroppedWeapon>(); dropped.Barrel = barrel; dropped.Traverse = traverse;
+                dropped.GroundPoints = wheels.Select(b => new Vector3(b.center.x, b.min.y, b.center.z)).ToArray();
                 var fish = root.GetComponent<NetworkFish>(); fish.Item = mortar ? InventoryItem.MortarKit : InventoryItem.Cannon;
+                SetExperimentalHash(root, Folder + (mortar ? "/FallenMortar.prefab" : "/FallenCannon.prefab"));
                 return PrefabUtility.SaveAsPrefabAsset(root, Folder + (mortar ? "/FallenMortar.prefab" : "/FallenCannon.prefab")).GetComponent<NetworkFish>();
             }
             finally { PrefabUtility.UnloadPrefabContents(root); }
@@ -430,13 +491,25 @@ namespace PirateSlop.EditorTools
             var keep = new HashSet<Mesh>();
             foreach (var recipe in upper.Debris) { keep.Add(recipe.First); keep.Add(recipe.Second); }
             foreach (var recipe in upper.AttachmentDebris) foreach (var mesh in recipe.Poses) keep.Add(mesh);
+            foreach (var recipe in upper.AttachmentDebris) foreach (var mesh in recipe.DrapedPoses) keep.Add(mesh);
+            foreach (var weapon in new[] { upper.FallenCannon, upper.FallenMortar })
+                if (weapon != null) foreach (var collider in weapon.GetComponentsInChildren<MeshCollider>(true)) if (collider.sharedMesh != null) keep.Add(collider.sharedMesh);
             foreach (var assembly in upper.Assemblies) if (assembly.RepairPreview != null) keep.Add(assembly.RepairPreview);
+            foreach (var assembly in upper.Assemblies) if (assembly.MastCollision != null) keep.Add(assembly.MastCollision);
+            foreach (var assembly in upper.Assemblies) foreach (var grip in assembly.Grips) if (grip.Collider != null && grip.Collider.sharedMesh != null) keep.Add(grip.Collider.sharedMesh);
             foreach (var assembly in upper.Assemblies) foreach (var recipe in assembly.MastVisuals) foreach (var mesh in recipe.Poses) keep.Add(mesh);
             foreach (var assembly in upper.Assemblies) foreach (var recipe in assembly.MastVisuals) foreach (var mesh in recipe.DrapedPoses) keep.Add(mesh);
             foreach (var filter in upper.GetComponentsInChildren<MeshFilter>(true)) if (filter.sharedMesh != null) keep.Add(filter.sharedMesh);
             foreach (var batch in upper.GetComponentsInChildren<ShipV3RenderBatch>(true)) if (batch.CachedMesh != null) keep.Add(batch.CachedMesh);
             foreach (var asset in AssetDatabase.LoadAllAssetsAtPath(Folder + "/DebrisGeometry.asset"))
                 if (asset is Mesh mesh && !keep.Contains(mesh)) UnityEngine.Object.DestroyImmediate(mesh, true);
+        }
+
+        static void SetExperimentalHash(GameObject root, string path)
+        {
+            root.name = System.IO.Path.GetFileNameWithoutExtension(path);
+            string key = new string((path + root.name).Trim().ToLowerInvariant().Where(c => c >= 'a' && c <= 'z' || c >= '0' && c <= '9').ToArray());
+            root.GetComponent<NetworkObject>().SetAssetPathHash(GameKit.Dependencies.Utilities.Hashing.GetStableHashU64(key));
         }
 
         static UpperAttachmentRecipe[] PrepareAttachmentDebris(GameObject root, UpperDestructionV2 upper)
@@ -479,6 +552,26 @@ namespace PirateSlop.EditorTools
                         finally { if (furl >= 0) renderer.SetBlendShapeWeight(furl, rest); }
                         result.Add(new UpperAttachmentRecipe { Source = renderer.transform, Poses = meshes, Offsets = offsets, Materials = renderer.sharedMaterials, SailIndex = index });
                     }
+                }
+            }
+            foreach (var link in upper.AttachmentLinks)
+                foreach (var filter in link.Source.GetComponentsInChildren<MeshFilter>(true))
+                {
+                    var renderer = filter.GetComponent<MeshRenderer>();
+                    if (filter.sharedMesh == null || renderer == null || result.Any(r => r.Source == filter.transform)) continue;
+                    if (!IsFlexible(filter.name) && !renderer.sharedMaterials.Any(m => m != null && (m.name.Contains("Rope") || m.name.Contains("Hemp")))) continue;
+                    result.Add(new UpperAttachmentRecipe { Source = filter.transform, Poses = new[] { filter.sharedMesh }, Offsets = new[] { Vector3.zero }, Materials = renderer.sharedMaterials, SailIndex = -1, Flexible = true });
+                }
+            foreach (var recipe in result)
+            {
+                recipe.Flexible = true;
+                recipe.DrapedPoses = new Mesh[recipe.Poses.Length];
+                for (int pose = 0; pose < recipe.Poses.Length; pose++)
+                {
+                    var matrix = root.transform.worldToLocalMatrix * recipe.Source.localToWorldMatrix * Matrix4x4.Translate(recipe.Offsets[pose]);
+                    var folded = UpperFlexibleGeometry.Fold(recipe.Poses[pose], matrix, Vector3.zero, false);
+                    folded.name = "Loose_" + recipe.Source.name + "_" + pose;
+                    recipe.DrapedPoses[pose] = SavePreparedMesh(folded, container);
                 }
             }
             EditorUtility.SetDirty(container);

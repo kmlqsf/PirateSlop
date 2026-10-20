@@ -23,6 +23,9 @@ namespace PirateSlop
         ShipController ship;
         NetworkShip networkShip;
         ShipDamageSection capstanSection;
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+        PirateSlop.Experimental.UpperDestructionV2 upper;
+#endif
         MeshFilter rotorFilter;
 
         float localAngle;
@@ -56,6 +59,9 @@ namespace PirateSlop
         {
             ship = GetComponentInParent<ShipController>();
             networkShip = GetComponentInParent<NetworkShip>();
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+            upper = GetComponentInParent<PirateSlop.Experimental.UpperDestructionV2>();
+#endif
             if (rotor == null) rotor = transform.Find("CapstanVisual/Capstan_Rotor");
             if (anchorPin == null && rotor != null) anchorPin = rotor.Find("Capstan_AnchorPin");
             if (coil2 == null && rotor != null) coil2 = rotor.Find("Capstan_Chain_Coil2")?.gameObject;
@@ -284,10 +290,21 @@ namespace PirateSlop
                 }
             }
 
-            if (coil2 != null && coil2.activeSelf != (curProgress >= .33f)) coil2.SetActive(curProgress >= .33f);
-            if (coil3 != null && coil3.activeSelf != (curProgress >= .66f)) coil3.SetActive(curProgress >= .66f);
+            bool showCoil2 = curProgress >= .33f, showCoil3 = curProgress >= .66f;
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+            if (upper != null)
+            {
+                showCoil2 &= coil2 != null && upper.AttachmentSupported(coil2.transform) && upper.Efficiency(PirateSlop.Experimental.UpperAssemblyKind.Capstan) > 0f;
+                showCoil3 &= coil3 != null && upper.AttachmentSupported(coil3.transform) && upper.Efficiency(PirateSlop.Experimental.UpperAssemblyKind.Capstan) > 0f;
+            }
+#endif
+            if (coil2 != null && coil2.activeSelf != showCoil2) coil2.SetActive(showCoil2);
+            if (coil3 != null && coil3.activeSelf != showCoil3) coil3.SetActive(showCoil3);
 
             bool damaged = !StructurallyAvailable || (capstanSection != null && capstanSection.State != ShipSectionState.Intact);
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+            if (upper != null) damaged = false;
+#endif
             if (rotorFilter != null && damagedRotorMesh != null && intactRotorMesh != null)
             {
                 var desired = damaged ? damagedRotorMesh : intactRotorMesh;

@@ -125,6 +125,15 @@ namespace PirateSlop.Networking
             ReceiveState(Motor.Capture(), driver, publishedTensions, publishedOwners, developerTeleportRevision);
         }
         public void DragWheel(float degrees, bool holding) => DragWheelServerRpc(degrees, holding);
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+        public void DragUpperWheel(float degrees, bool holding, Vector3 localGrip) => DragUpperWheelServerRpc(degrees, holding, localGrip);
+        [ServerRpc(RequireOwnership = false)]
+        void DragUpperWheelServerRpc(float degrees, bool holding, Vector3 localGrip, FishNet.Connection.NetworkConnection sender = null)
+        {
+            var player = sender != null ? SessionController.Instance.GetPlayer(sender.ClientId) : null;
+            if (player != null && !IsSinking && float.IsFinite(degrees) && float.IsFinite(localGrip.sqrMagnitude)) Helm.DragAtUpperGrip(player.Motor, degrees, holding, transform.TransformPoint(localGrip));
+        }
+#endif
         public void CollisionAudio(float strength, Vector3 point, bool showEffect) { if (IsServerInitialized) CollisionAudioObserversRpc(strength, point, showEffect); }
         public void ImpactVfx(Vector3 point, Vector3 normal) { if (IsServerInitialized) ImpactVfxObserversRpc(point, normal); }
         [ObserversRpc(RunLocally = true)]

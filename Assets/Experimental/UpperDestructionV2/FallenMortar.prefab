@@ -101,6 +101,7 @@ GameObject:
   - component: {fileID: 2814454483212996255}
   - component: {fileID: 1417421170784815684}
   - component: {fileID: 6159443180936548022}
+  - component: {fileID: 3996841459338868117}
   - component: {fileID: 1369393259068234407}
   - component: {fileID: 7786203660277308592}
   m_Layer: 0
@@ -156,24 +157,22 @@ MonoBehaviour:
   _spectatorInterpolation: 2
   _enableTeleport: 0
   _teleportThreshold: 1
-  <PrefabId>k__BackingField: 56
+  <PrefabId>k__BackingField: 65535
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 11358008500490528938
   SceneId: 0
   SerializedTransformProperties:
     Position: {x: 0, y: 0, z: 0}
-    Rotation: {x: 0, y: 0, z: 0, w: 1}
-    Scale: {x: 1, y: 1, z: 1}
-    IsValid: 1
+    Rotation: {x: 0, y: 0, z: 0, w: 0}
+    Scale: {x: 0, y: 0, z: 0}
+    IsValid: 0
   <IsNested>k__BackingField: 0
   WasActiveDuringEdit: 0
   WasActiveDuringEdit_Set1: 1
   <ComponentIndex>k__BackingField: 0
   <PredictedSpawn>k__BackingField: {fileID: 0}
   <PredictedOwner>k__BackingField: {fileID: 0}
-  NetworkBehaviours:
-  - {fileID: 6159443180936548022}
-  - {fileID: 7786203660277308592}
+  NetworkBehaviours: []
   InitializedParentNetworkBehaviour: {fileID: 0}
   InitializedNestedNetworkObjects: []
   RuntimeParentNetworkBehaviour: {fileID: 0}
@@ -184,7 +183,7 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: -8584091650455674448
+  _initializedTimestamp: 0
 --- !u!114 &6159443180936548022
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -197,10 +196,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3407b7a938de7fb4097fb7555ab34020, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.Networking.NetworkFish
-  _componentIndexCache: 0
+  _componentIndexCache: 255
   _addedNetworkObject: {fileID: 1417421170784815684}
-  _networkObjectCache: {fileID: 1417421170784815684}
+  _networkObjectCache: {fileID: 0}
   Item: 32
+--- !u!54 &3996841459338868117
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1592922641698415569}
+  serializedVersion: 5
+  m_Mass: 150
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0.54287314, z: -0.060981333}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 0
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 1
+  m_Constraints: 0
+  m_CollisionDetection: 3
 --- !u!65 &1369393259068234407
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -208,7 +234,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1592922641698415569}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 0eb0c09a3e3ab23408b8d23cd60c687d, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -234,11 +260,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6cae27d952593348ae57b5375ddffa6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PirateSlop.Experimental.UpperDroppedWeapon
-  _componentIndexCache: 1
+  _componentIndexCache: 255
   _addedNetworkObject: {fileID: 1417421170784815684}
-  _networkObjectCache: {fileID: 1417421170784815684}
+  _networkObjectCache: {fileID: 0}
   Barrel: {fileID: 5109772778007326479}
   Traverse: {fileID: 5617323566144098710}
+  GroundPoints: []
 --- !u!1 &3014736458484465149
 GameObject:
   m_ObjectHideFlags: 0

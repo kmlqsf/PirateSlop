@@ -57,6 +57,9 @@ namespace PirateSlop.Networking
         NetworkFishProjectile projectile;
         void OnDisable()
         {
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+            upperPhysics = false;
+#endif
             kicked = false;
             seagullLoot = seagullFloating = false;
             visualReady = false;
@@ -71,6 +74,10 @@ namespace PirateSlop.Networking
         NetworkShip resolvedPlatform;
         public void Place(NetworkObject support, Vector3 point, Quaternion orientation)
         {
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+            if (upperBody != null) upperBody.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
+            upperPhysics = false;
+#endif
             var body = GetComponent<Rigidbody>();
             if (body != null && GetComponent<NetworkLooseCannonball>() == null) { body.isKinematic = true; body.useGravity = false; }
             platform.Value = support;
@@ -99,6 +106,9 @@ namespace PirateSlop.Networking
         {
             if (PresentMonkeyCarry()) return;
             if (!IsSpawned) return;
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+            if (IsServerInitialized && TickUpperPhysics()) return;
+#endif
             if (IsServerInitialized && TickSeagullLootFloat()) return;
             if (Item == InventoryItem.Cannonball && GetComponent<NetworkLooseCannonball>() != null && !(IsServerInitialized && seagullLoot && kicked)) return;
             if (platformId.Value == 0) resolvedPlatform = null;

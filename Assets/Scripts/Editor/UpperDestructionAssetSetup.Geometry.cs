@@ -19,7 +19,6 @@ namespace PirateSlop.EditorTools
                 var upper = root.GetComponent<UpperDestructionV2>();
                 PrepareMastVisuals(root, upper);
                 PrepareDrapedRigging(root, upper);
-                upper.AssetRevision = 3;
                 PrefabUtility.SaveAsPrefabAsset(root, Folder + "/Ship.prefab");
                 PruneGeometry(upper);
                 AssetDatabase.SaveAssets();
@@ -66,23 +65,9 @@ namespace PirateSlop.EditorTools
                     recipe.DrapedPoses = new Mesh[recipe.Poses.Length];
                     for (int pose = 0; pose < recipe.Poses.Length; pose++)
                     {
-                        var mesh = UnityEngine.Object.Instantiate(recipe.Poses[pose]);
-                        mesh.name = "Draped_" + assembly.Key + "_" + recipe.Poses[pose].name;
                         var matrix = root.transform.worldToLocalMatrix * recipe.Source.localToWorldMatrix * Matrix4x4.Translate(recipe.Offsets[pose]);
-                        var inverse = matrix.inverse; var vertices = mesh.vertices; var pivot = assembly.CollapsePivot;
-                        var bounds = ShapeBounds(root.transform, recipe.Source, recipe.Poses[pose].bounds);
-                        float width = Mathf.Clamp(bounds.size.x * .12f, .2f, .85f);
-                        for (int i = 0; i < vertices.Length; i++)
-                        {
-                            var point = matrix.MultiplyPoint3x4(vertices[i]);
-                            float height = Mathf.Max(0f, point.y - pivot.y);
-                            float phase = height * 1.35f + (point.z - pivot.z) * .7f;
-                            point.x = pivot.x + Mathf.Clamp(point.x - pivot.x, -width, width) * .5f + Mathf.Sin(phase) * .22f;
-                            point.z = pivot.z + (point.z - pivot.z) * .18f + Mathf.Cos(phase * .8f) * .3f;
-                            point.y = Mathf.Max(pivot.y, point.y - .15f * Mathf.Abs(Mathf.Sin(phase)));
-                            vertices[i] = inverse.MultiplyPoint3x4(point);
-                        }
-                        mesh.vertices = vertices; mesh.RecalculateNormals(); mesh.RecalculateBounds();
+                        var mesh = UpperFlexibleGeometry.Fold(recipe.Poses[pose], matrix, assembly.CollapsePivot, true);
+                        mesh.name = "Draped_" + assembly.Key + "_" + recipe.Poses[pose].name;
                         recipe.DrapedPoses[pose] = SavePreparedMesh(mesh, container);
                     }
                 }

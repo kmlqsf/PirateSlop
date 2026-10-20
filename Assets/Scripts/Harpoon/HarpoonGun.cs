@@ -439,6 +439,13 @@ namespace PirateSlop.Harpoon
 
         void UpdateDrumAndRope()
         {
+#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
+            if (UpperController != null)
+            {
+                if (ropeRenderer != null) ropeRenderer.enabled = !isBroken;
+                if (isBroken) { SetRestingHarpoonVisible(false); return; }
+            }
+#endif
             SetRestingHarpoonVisible(activeProjectile == null);
             if (ExternalVisualRig) return;
 

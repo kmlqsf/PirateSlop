@@ -23,7 +23,7 @@ namespace PirateSlop.EditorTools
             IncludeExperimental = experimental;
             if (!experimental) return;
             var settings = AssetDatabase.LoadAssetAtPath<UpperDestructionSettings>(UpperDestructionSettings.AssetPath);
-            if (settings != null && settings.Ship != null && settings.Ship.GetComponent<UpperDestructionV2>() is { } prepared && prepared.AssetRevision < 3)
+            if (settings != null && settings.Ship != null && settings.Ship.GetComponent<UpperDestructionV2>() is { } prepared && prepared.AssetRevision < 6)
             {
                 UpperDestructionAssetSetup.Prepare();
                 settings = AssetDatabase.LoadAssetAtPath<UpperDestructionSettings>(UpperDestructionSettings.AssetPath);

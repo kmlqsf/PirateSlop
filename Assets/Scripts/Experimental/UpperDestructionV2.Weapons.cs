@@ -33,6 +33,7 @@ namespace PirateSlop.Experimental
             public Quaternion Rotation;
             public ShipDamageSection[] Sections = new ShipDamageSection[4];
             public int[] Fragments = new int[4];
+            public Vector3[] Points;
         }
 
         static readonly Vector3[] supportCorners = { new(-.5f, .05f, -.55f), new(.5f, .05f, -.55f), new(-.5f, .05f, .55f), new(.5f, .05f, .55f) };
@@ -197,21 +198,23 @@ namespace PirateSlop.Experimental
                     support = CaptureSupport(cannon); supports[i] = support;
                 }
                 bool alive = true;
+                Vector3 missing = cannon.transform.position;
                 for (int p = 0; p < 4; p++)
                 {
-                    var section = support.Sections[p];
-                    if (section == null || support.Fragments[p] >= 0 && (section.RemovedFragments & (1UL << support.Fragments[p])) != 0 || section.State == ShipSectionState.Destroyed) alive = false;
+                    if (!WheelSupported(cannon, support.Points[p])) { alive = false; missing = cannon.transform.TransformPoint(support.Points[p]); }
                 }
-                if (!alive) DropCannon(cannon);
+                if (!alive) DropCannon(cannon, missing);
             }
         }
 
         WeaponSupport CaptureSupport(SimpleCannon cannon)
         {
-            var support = new WeaponSupport { Position = cannon.transform.localPosition, Rotation = cannon.transform.localRotation };
+            var support = new WeaponSupport { Position = cannon.transform.localPosition, Rotation = cannon.transform.localRotation, Points = (Vector3[])supportCorners.Clone() };
+            var wheels = cannon.IsMortar ? Array.Empty<Bounds>() : UpperWeaponGeometry.Wheels(cannon.transform);
+            for (int wheel = 0; wheel < wheels.Length; wheel++) support.Points[wheel] = new Vector3(wheels[wheel].center.x, wheels[wheel].min.y + .025f, wheels[wheel].center.z);
             for (int p = 0; p < 4; p++)
             {
-                var point = cannon.transform.TransformPoint(supportCorners[p]);
+                var point = cannon.transform.TransformPoint(support.Points[p]);
                 int count = Physics.RaycastNonAlloc(point + transform.up * .25f, -transform.up, supportHits, .7f, ~0, QueryTriggerInteraction.Ignore);
                 float best = float.PositiveInfinity;
                 for (int n = 0; n < count; n++)
@@ -224,6 +227,20 @@ namespace PirateSlop.Experimental
                 }
             }
             return support;
+        }
+
+        bool WheelSupported(SimpleCannon cannon, Vector3 local)
+        {
+            var point = cannon.transform.TransformPoint(local);
+            int count = Physics.RaycastNonAlloc(point + transform.up * .15f, -transform.up, supportHits, .35f, ~0, QueryTriggerInteraction.Ignore);
+            for (int i = 0; i < count; i++)
+            {
+                var hit = supportHits[i];
+                if (!hit.transform.IsChildOf(transform) || hit.collider.GetComponentInParent<SimpleCannon>() != null || hit.collider.GetComponentInParent<Cannonball>() != null) continue;
+                var section = PirateSlop.Ships.ShipV3CollisionBatch.ResolveSection(hit.collider, hit.point);
+                if (section != null && destruction.Definition(section.SectionId).Type == ShipSectionType.Deck) return true;
+            }
+            return false;
         }
 
         static int NearestFragment(ShipDamageSection section, Vector3 point)
@@ -239,7 +256,7 @@ namespace PirateSlop.Experimental
             return result;
         }
 
-        void DropCannon(SimpleCannon cannon)
+        void DropCannon(SimpleCannon cannon, Vector3 missing)
         {
             var prefab = cannon.IsMortar ? FallenMortar : FallenCannon;
             if (prefab == null) return;
@@ -252,7 +269,8 @@ namespace PirateSlop.Experimental
             if (!cannons.RemoveUpperCannon(cannon.Index)) { Destroy(dropped.gameObject); return; }
             dropped.Place(null, position, rotation);
             ServerManager.Spawn(dropped.NetworkObject);
-            dropped.Kick(ship.Motor.CannonPointVelocity(position) + Vector3.down * .1f);
+            if (pose != null) pose.BeginFall(ship.Motor.CannonPointVelocity(position), ship);
+            else dropped.Kick(ship.Motor.CannonPointVelocity(position) + Vector3.down * .1f);
             supports.Remove(cannon.Index);
         }
 

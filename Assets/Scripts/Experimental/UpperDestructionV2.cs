@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace PirateSlop.Experimental
 {
-    public enum UpperAssemblyKind : byte { MainMast, ForeMast, MizzenMast, Helm, Capstan, SailControl, Door, Dice, Harpoon }
+    public enum UpperAssemblyKind : byte { MainMast, ForeMast, MizzenMast, Helm, Capstan, SailControl, Door, Dice, Harpoon, Casino }
 
     [Serializable]
     public sealed class UpperAssembly
@@ -28,6 +28,18 @@ namespace PirateSlop.Experimental
         public ShipDamageSection[] BaseSections = Array.Empty<ShipDamageSection>();
         public Bounds RepairBounds;
         public ShipFragmentConnection[] DeckSupports = Array.Empty<ShipFragmentConnection>();
+        public Mesh MastCollision;
+        public UpperGripBinding[] Grips = Array.Empty<UpperGripBinding>();
+    }
+
+    [Serializable]
+    public sealed class UpperGripBinding
+    {
+        public MeshCollider Collider;
+        public ShipDamageSection Section;
+        [NonSerialized] public Mesh Mesh;
+        [NonSerialized] public ulong AppliedMask = ulong.MaxValue;
+        [NonSerialized] public bool AppliedVisible;
     }
 
     public struct UpperStage
@@ -54,6 +66,7 @@ namespace PirateSlop.Experimental
         public Transform[] Dependencies = Array.Empty<Transform>();
         public int Assembly = -1;
         public bool Protected;
+        public int RequiredAssembly = -1;
     }
 
     [Serializable]
@@ -65,6 +78,7 @@ namespace PirateSlop.Experimental
         public Material[] Materials;
         public int SailIndex;
         public bool Flexible;
+        public int RequiredAssembly = -1;
         public Mesh[] DrapedPoses = Array.Empty<Mesh>();
     }
 
@@ -77,8 +91,13 @@ namespace PirateSlop.Experimental
         public UpperAttachmentLink[] AttachmentLinks = Array.Empty<UpperAttachmentLink>();
         public int AssetRevision;
         public Material DustMaterial, SparkMaterial;
+        public Transform ProtectedDispenser;
+        public ShipDamageSection DiceTopSection;
+        public int DiceTopFragment;
+        public bool DiceTopLost => DiceTopSection != null && (DiceTopSection.RemovedFragments & (1UL << DiceTopFragment)) != 0;
         readonly SyncList<UpperStage> stages = new();
         readonly Dictionary<int, int> sectionAssembly = new();
+        readonly Dictionary<int, int> hitAssembly = new();
         readonly Dictionary<Vector3Int, List<ShipDamageSection>> grid = new();
         readonly HashSet<ShipDamageSection> raySections = new();
         readonly Dictionary<int, ShipSectionDefinition> definitions = new();
@@ -94,6 +113,7 @@ namespace PirateSlop.Experimental
         ShipDestruction destruction;
         NetworkShip ship;
         UpperDebrisPresentation presentation;
+        internal UpperMastPresentation MastMotion;
         uint appliedStructureRevision = uint.MaxValue;
         float nextSupportCheck;
         int impactFrame = -1;
@@ -125,7 +145,8 @@ namespace PirateSlop.Experimental
                     var edge2 = vertices[triangles[i + 2]] - a;
                     var p = Vector3.Cross(delta, edge2);
                     float determinant = Vector3.Dot(edge1, p);
-                    if (Mathf.Abs(determinant) < .0000001f) continue;
+                    float scale = Mathf.Sqrt(edge1.sqrMagnitude * edge2.sqrMagnitude * delta.sqrMagnitude);
+                    if (scale <= 0f || Mathf.Abs(determinant) <= scale * .0000001f) continue;
                     float inverse = 1f / determinant;
                     var offset = origin - a;
                     float u = Vector3.Dot(offset, p) * inverse;
@@ -193,11 +214,13 @@ namespace PirateSlop.Experimental
             foreach (var link in AttachmentLinks)
                 if (link.Source != null)
                 {
+                    if (link.RequiredAssembly >= 0 && link.Source.TryGetComponent<ShipDamageSection>(out var controlled)) hitAssembly[controlled.SectionId] = link.RequiredAssembly;
                     attachmentRest.TryAdd(link.Source, (link.Source.localPosition, link.Source.localRotation));
                     attachmentVisible[link.Source] = link.Source.gameObject.activeSelf;
                 }
             attachmentBatches = GetComponentsInChildren<ShipV3RenderBatch>(true);
             InitializeWeapons();
+            MastMotion = new UpperMastPresentation(this);
         }
 
         public override void OnStartServer()
@@ -228,6 +251,8 @@ namespace PirateSlop.Experimental
         }
         void OnDestroy()
         {
+            MastMotion?.Dispose();
+            foreach (var assembly in Assemblies) foreach (var grip in assembly.Grips) if (grip.Mesh != null) Destroy(grip.Mesh);
             Active.Remove(this);
             if (Active.Count == 0) rayMeshes.Clear();
         }
@@ -235,6 +260,7 @@ namespace PirateSlop.Experimental
         public bool IsUpper(int sectionId) => definitions.TryGetValue(sectionId, out var d) && d.Type != ShipSectionType.Hull && d.Type != ShipSectionType.Rudder && !d.SourceGroup.StartsWith("BilgeBeam_", StringComparison.Ordinal);
         public bool IsProtectedSail(int index) => index == 0 || index == 1;
         public int AssemblyFor(int sectionId) => sectionAssembly.TryGetValue(sectionId, out int index) ? index : -1;
+        public int HitAssemblyFor(int sectionId) => hitAssembly.TryGetValue(sectionId, out int index) ? index : AssemblyFor(sectionId);
         public int Stage(int index) => index >= 0 && index < stages.Count ? stages[index].Hits & 3 : 0;
         public int MastRepairProgress(int index) => index >= 0 && index < stages.Count ? (stages[index].Hits >> 2) & 7 : 0;
         public bool MastFallsRight(int index) => index >= 0 && index < stages.Count && (stages[index].Hits & 32) != 0;
@@ -242,7 +268,12 @@ namespace PirateSlop.Experimental
         public bool IsMain(int sectionId) => AssemblyFor(sectionId) is var index && index >= 0 && Assemblies[index].Kind == UpperAssemblyKind.MainMast;
         public bool IsMast(int index) => index >= 0 && (Assemblies[index].Kind == UpperAssemblyKind.ForeMast || Assemblies[index].Kind == UpperAssemblyKind.MizzenMast || Assemblies[index].Kind == UpperAssemblyKind.MainMast);
         public bool IsMechanism(int index) => index >= 0 && !IsMast(index);
-        public bool OwnsAttachment(Transform target) => target != null && attachmentRest.ContainsKey(target);
+        public bool OwnsAttachment(Transform target)
+        {
+            for (var current = target; current != null && current != transform; current = current.parent)
+                if (attachmentRest.ContainsKey(current)) return true;
+            return false;
+        }
         void InitializeAssemblySupports()
         {
             assemblySupports = new List<ShipFragmentConnection>[Assemblies.Length];
@@ -286,11 +317,34 @@ namespace PirateSlop.Experimental
             return false;
         }
 
+        public bool MechanismLostSupport(int index) => IsMechanism(index) && Stage(index) < 3 && Assemblies[index].DeckSupports.Length > 0 && !HasAssemblySupport(index);
+
         public bool CanRepairSection(int sectionId)
         {
             int index = AssemblyFor(sectionId);
             return index < 0 || IsMast(index) || (Assemblies[index].ParentMast < 0 || Stage(Assemblies[index].ParentMast) < 3) && HasAssemblySupport(index);
         }
+
+        public bool CanChipFragment(int index, ShipDamageSection section, int fragment)
+        {
+            if (Assemblies[index].Kind is UpperAssemblyKind.Helm or UpperAssemblyKind.Dice) return true;
+            if (section.Intact.name.Contains("Rotating_Drum") && section.Fragments.Length == 18) return fragment % 9 != 4;
+            var point = Assemblies[index].RepairBounds.center;
+            point.y = Assemblies[index].RepairBounds.min.y;
+            int root = 0; float nearest = float.PositiveInfinity;
+            for (int bit = 0; bit < section.Fragments.Length; bit++)
+            {
+                var source = section.RepairTransform(bit);
+                var center = transform.InverseTransformPoint(source.TransformPoint(section.RepairBounds(bit).center));
+                float distance = (center - point).sqrMagnitude;
+                if (distance < nearest) { nearest = distance; root = bit; }
+            }
+            if (fragment == root) return false;
+            int outside = fragment < root ? fragment - 1 : fragment + 1;
+            return outside < 0 || outside >= section.Fragments.Length || (section.RemovedFragments & (1UL << outside)) != 0;
+        }
+
+        public bool AttachmentSupported(Transform source) => source == null || !attachmentVisible.TryGetValue(source, out bool supported) || supported;
 
         public float Efficiency(UpperAssemblyKind kind, int sail = -1)
         {
@@ -413,13 +467,16 @@ namespace PirateSlop.Experimental
 
         void Update()
         {
+            MastMotion?.Render(false);
             ApplyStages();
+            RefreshGrips();
             ApplyAttachments();
             TickWeapons();
             TickMastRepair();
             if (!IsServerInitialized || Time.frameCount <= impactFrame) return;
             if (destruction.Revision == appliedStructureRevision && Time.time < nextSupportCheck) return;
             appliedStructureRevision = destruction.Revision; nextSupportCheck = Time.time + .5f;
+            destruction.DetachUpperMechanisms();
             CheckWeaponSupports();
         }
 
@@ -467,18 +524,20 @@ namespace PirateSlop.Experimental
         {
             if (attachmentRevision == destruction.Revision) return;
             attachmentRevision = destruction.Revision;
+            GetComponent<ShipV3Features>().UpdateUpperDice(DiceTopLost);
             bool changed = false;
             foreach (var link in AttachmentLinks)
             {
                 var source = link.Source;
                 if (source == null) continue;
                 bool supported = link.Protected || link.Assembly < 0 || EffectiveStage(link.Assembly) < 3;
+                if (link.RequiredAssembly >= 0) supported &= EffectiveStage(link.RequiredAssembly) < 3;
                 if (!link.Protected)
                 {
                     foreach (var support in link.Supports) supported &= support.Alive();
                     foreach (var dependency in link.Dependencies) supported &= dependency != null && dependency.gameObject.activeInHierarchy;
                 }
-                if (attachmentVisible.TryGetValue(source, out bool previous) && previous == supported) continue;
+                if (attachmentVisible.TryGetValue(source, out bool previous) && previous == supported && source.gameObject.activeSelf == supported) continue;
                 attachmentVisible[source] = supported;
                 if (supported && attachmentRest.TryGetValue(source, out var rest)) source.SetLocalPositionAndRotation(rest.Position, rest.Rotation);
                 int mast = link.Assembly;
