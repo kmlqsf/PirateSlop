@@ -48,6 +48,7 @@ namespace PirateSlop.EditorTools
                 PrepareClosedMastFragments(root, upper, damage);
                 PrepareUpperMaterials(damage);
                 PrepareImpactMaterials(upper);
+                PrepareImpactSplinter();
                 upper.Debris = PrepareDebris(damage);
                 upper.AttachmentDebris = PrepareAttachmentDebris(root, upper);
                 PrepareMastRepairPreviews(root, upper);

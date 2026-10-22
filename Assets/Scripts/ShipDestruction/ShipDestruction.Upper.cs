@@ -9,6 +9,7 @@ namespace PirateSlop
     public sealed partial class ShipDestruction
     {
         public UpperDestructionV2 Upper { get; private set; }
+        readonly HashSet<ShipDamageSection> upperImpactSections = new();
 
         public bool UpperRepairTarget(int id, out int index, out Bounds bounds, out int fragment)
         {
@@ -103,20 +104,23 @@ namespace PirateSlop
             if (!SessionController.FriendlyFire && player != null && player.TeamId.Value > 0 && player.TeamId.Value == ship.TeamId.Value) return true;
             Upper.MarkImpact(); struckMasts.Clear();
             var assemblies = new HashSet<int>();
-            DamageUpperSection(direct, point, normal, velocity, ammo, attacker, assemblies);
-            if (definitions[direct.SectionId].Type == ShipSectionType.Railing)
+            bool structural = Upper.ImpactStructure(direct);
+            if (!structural) DamageUpperSection(direct, point, normal, velocity, ammo, attacker, assemblies);
+            if (structural || radius > 0f)
             {
-                int neighbours = 0;
-                foreach (var section in Sections)
+                float spread = Mathf.Max(radius, structural ? Upper.StructureImpactRadius(direct) : 0f);
+                Upper.CollectImpactSections(point, spread * 1.15f, upperImpactSections);
+                foreach (var section in upperImpactSections)
                 {
-                    if (section == direct || section.Indestructible || definitions[section.SectionId].Type != ShipSectionType.Railing || section.RemovedFragments == section.AllFragments || section.Distance(point) > .45f) continue;
-                    DamageUpperSection(section, point, normal, velocity, ammo, attacker, assemblies);
-                    if (++neighbours >= 2) break;
+                    ulong mask = Upper.StructureImpactMask(section, point, spread);
+                    if (section == direct && !section.Indestructible && mask == section.RemovedFragments) mask = section.BreakSingleNear(point);
+                    if (mask == section.RemovedFragments) continue;
+                    Change(section.SectionId, 0f, ShipSectionState.Damaged, point, normal, velocity, ammo, attacker, ShipDamageReason.Hit, Profile.CannonDamage, mask);
                 }
             }
             if (radius > 0f)
                 foreach (var section in Sections)
-                    if (section != direct && !section.Indestructible && Upper.IsUpper(section.SectionId) && section.Distance(point) <= radius)
+                    if (section != direct && !section.Indestructible && !Upper.ImpactStructure(section) && Upper.IsUpper(section.SectionId) && section.Distance(point) <= radius)
                         DamageUpperSection(section, point, normal, velocity, ammo, attacker, assemblies);
             DetachUnsupported(point, normal, velocity, ammo, attacker);
             Publish();

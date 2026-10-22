@@ -66,6 +66,7 @@
 | [Assets/Resources/CombatVfx/HullSplinters.prefab](<../../Assets/Resources/CombatVfx/HullSplinters.prefab>) | Префаб Unity |
 | [Assets/Resources/CombatVfx/KamikazeExplosion.prefab](<../../Assets/Resources/CombatVfx/KamikazeExplosion.prefab>) | Префаб Unity; Rock Ring — ивент камикадзе |
 | [Assets/Resources/CombatVfx/MuzzleFlash.prefab](<../../Assets/Resources/CombatVfx/MuzzleFlash.prefab>) | Префаб Unity |
+| [Assets/Resources/CombatVfx/UpperSplinter.asset](<../../Assets/Resources/CombatVfx/UpperSplinter.asset>) | Настройки или данные Unity; Экспериментальные верхние разрушения корабля |
 | [Assets/Resources/CombatVfx/WaterSpray.vfx](<../../Assets/Resources/CombatVfx/WaterSpray.vfx>) | Граф визуального эффекта |
 | [Assets/Resources/CombatVfx/WoodChip.asset](<../../Assets/Resources/CombatVfx/WoodChip.asset>) | Настройки или данные Unity |
 | [Assets/Resources/CombatVfx/WoodChip.mat](<../../Assets/Resources/CombatVfx/WoodChip.mat>) | Материал Unity |

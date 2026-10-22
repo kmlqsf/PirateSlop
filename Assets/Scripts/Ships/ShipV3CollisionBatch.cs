@@ -40,6 +40,7 @@ namespace PirateSlop.Ships
         readonly List<Vector3> sourceVertices = new();
         readonly List<int> sourceIndices = new();
         public bool CombinesFragments => upper;
+        public bool ReadyForParticles => !dirty && !baking;
 #endif
 
         void OnEnable()

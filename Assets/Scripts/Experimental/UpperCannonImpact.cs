@@ -10,12 +10,12 @@ namespace PirateSlop.Experimental
     {
         public Vector3 Point, Normal, Direction;
         public bool Radial, Metal;
-        public const float Length = 5f, Radius = 2.5f;
+        public const float Length = 9f, Radius = 6f, ConeCosine = .5f;
         public static UpperImpactShape Create(Vector3 point, Vector3 normal, Vector3 velocity, Vector3 up, bool metal)
         {
             var direction = velocity.sqrMagnitude > .001f ? velocity.normalized : -normal;
             bool grazing = Mathf.Abs(Vector3.Dot(direction, normal)) < .342f;
-            bool radial = !grazing && Vector3.Dot(normal, up) > .65f && Vector3.Dot(direction, up) < -.2f;
+            bool radial = Vector3.Dot(normal, up) > .65f;
             if (grazing)
             {
                 var tangent = Vector3.ProjectOnPlane(direction, normal);
@@ -30,10 +30,21 @@ namespace PirateSlop.Experimental
             if (Radial) return Mathf.Clamp01(1f - distance / Radius);
             float forward = Vector3.Dot(delta, Direction);
             if (forward < -.15f || forward > Length || distance > Length) return 0f;
-            if (distance > .2f && forward / distance < .819152f) return 0f;
+            if (distance > .2f && forward / distance < ConeCosine) return 0f;
             return Mathf.Clamp01(1f - distance / Length);
         }
         public Vector3 Origin => Point + Normal * .035f;
+
+        public Vector3 SampleDirection(int index, int count, uint seed)
+        {
+            uint mixed = unchecked(seed + (uint)index * 747796405u + 2891336453u);
+            mixed = unchecked((mixed ^ (mixed >> 16)) * 2246822519u);
+            float fraction = (index + (mixed & 65535) / 65536f) / count;
+            float cosine = Mathf.Lerp(1f, Radial ? -1f : ConeCosine, fraction);
+            float sine = Mathf.Sqrt(Mathf.Max(0f, 1f - cosine * cosine));
+            float angle = (index * 137.50776f + seed % 360) * Mathf.Deg2Rad;
+            return Quaternion.FromToRotation(Vector3.forward, Radial ? Normal : Direction) * new Vector3(Mathf.Cos(angle) * sine, Mathf.Sin(angle) * sine, cosine);
+        }
     }
 
     public static class UpperCannonImpact
@@ -52,9 +63,7 @@ namespace PirateSlop.Experimental
             if (upper == null && sourceUpper == null || targetShip == null && direct == null) return false;
             if (!shot.Authoritative) return true;
             bool weapon = upper != null && upper.HitWeapon(collider, point, normal, shot.Velocity, shot.Ammo, shot.Attacker);
-            var surface = collider != null ? ShipV3CollisionBatch.ResolveSection(collider, point) : null;
-            bool protectedMast = upper != null && surface != null && upper.IsMain(surface.SectionId);
-            var shape = UpperImpactShape.Create(point, normal, shot.Velocity, targetShip != null ? targetShip.transform.up : Vector3.up, weapon || protectedMast);
+            var shape = UpperImpactShape.Create(point, normal, shot.Velocity, targetShip != null ? targetShip.transform.up : Vector3.up, weapon);
             if (targetShip != null)
             {
                 float radius = shot.MortarShot || shot.Ammo == InventoryItem.FireCannonball ? CannonAmmo.MortarBlastRadius(shot.Ammo) : 0f;
@@ -72,10 +81,12 @@ namespace PirateSlop.Experimental
                 if (health == null || health.IsDead) continue;
                 bool hitDirectly = health == direct;
                 Vector3 target = health.transform.position + Vector3.up * .9f;
-                float fraction = hitDirectly ? 1f : targetShip != null ? shape.Fraction(target) : 0f;
-                if (fraction <= 0f || !hitDirectly && !Visible(shape.Origin, target, health)) continue;
-                health.Damage(hitDirectly ? 60f : 30f * fraction, shot.Attacker);
-                shot.PushUpperImpact(health, point);
+                var closest = CannonShotDamage.ClosestPlayerPoint(health, point);
+                bool nearby = !hitDirectly && targetShip != null && (closest - point).sqrMagnitude < shot.NearbyImpactRadius * shot.NearbyImpactRadius && Visible(shape.Origin, closest, health);
+                float fraction = targetShip != null && !shape.Metal ? shape.Fraction(target) : 0f;
+                if (!hitDirectly && !nearby && (fraction <= 0f || !Visible(shape.Origin, target, health))) continue;
+                health.Damage(hitDirectly ? 60f : nearby ? shot.StandardBlastDamage : 30f * fraction, shot.Attacker);
+                if (hitDirectly || nearby) shot.PushUpperImpact(health, point, hitDirectly);
                 if (shot.Ammo == InventoryItem.FireCannonball) health.GetComponent<NetworkHealth>()?.Ignite(shot.Attacker);
                 if (shot.Ammo == InventoryItem.IceCannonball) health.GetComponent<NetworkHealth>()?.Extinguish();
             }

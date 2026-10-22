@@ -100,6 +100,8 @@ namespace PirateSlop.Experimental
         readonly Dictionary<int, int> hitAssembly = new();
         readonly Dictionary<Vector3Int, List<ShipDamageSection>> grid = new();
         readonly HashSet<ShipDamageSection> raySections = new();
+        readonly Dictionary<int, Bounds[]> impactBounds = new();
+        readonly Dictionary<int, float> stairImpactRadii = new();
         readonly Dictionary<int, ShipSectionDefinition> definitions = new();
         readonly Dictionary<Transform, (Vector3 Position, Quaternion Rotation)> attachmentRest = new();
         readonly Dictionary<Transform, List<int>> attachmentOwners = new();
@@ -210,6 +212,7 @@ namespace PirateSlop.Experimental
                     entries.Add(section);
                 }
             }
+            InitializeImpactGeometry();
             InitializeAssemblySupports();
             foreach (var link in AttachmentLinks)
                 if (link.Source != null)
@@ -557,6 +560,68 @@ namespace PirateSlop.Experimental
             var value = new Bounds(matrix.MultiplyPoint3x4(bounds.center), Vector3.zero);
             for (int i = 0; i < 8; i++) value.Encapsulate(matrix.MultiplyPoint3x4(bounds.center + Vector3.Scale(bounds.extents, new Vector3((i & 1) == 0 ? -1 : 1, (i & 2) == 0 ? -1 : 1, (i & 4) == 0 ? -1 : 1))));
             return value;
+        }
+
+        void InitializeImpactGeometry()
+        {
+            var stairs = new Dictionary<int, Bounds>();
+            foreach (var section in destruction.Sections)
+            {
+                if (section == null || section.Intact == null || !definitions.TryGetValue(section.SectionId, out var definition) ||
+                    definition.Type is not (ShipSectionType.Deck or ShipSectionType.Stairs or ShipSectionType.Railing)) continue;
+                var bounds = new Bounds[section.Fragments.Length];
+                for (int i = 0; i < bounds.Length; i++) bounds[i] = LocalBounds(section.RepairTransform(i), section.RepairBounds(i));
+                impactBounds[section.SectionId] = bounds;
+                if (definition.Type == ShipSectionType.Stairs)
+                {
+                    var filter = section.Intact.GetComponent<MeshFilter>();
+                    stairs[section.SectionId] = LocalBounds(filter.transform, filter.sharedMesh.bounds);
+                }
+            }
+            foreach (var entry in stairs)
+            {
+                var center = entry.Value.center;
+                var low = center; var high = center;
+                foreach (var candidate in stairs)
+                {
+                    var point = candidate.Value.center;
+                    if (!definitions[candidate.Key].SourceGroup.Contains("_Step") || Mathf.Abs(point.x - center.x) > 1f || Mathf.Abs(point.z - center.z) > 6f) continue;
+                    low = Vector3.Min(low, point); high = Vector3.Max(high, point);
+                }
+                stairImpactRadii[entry.Key] = Mathf.Clamp((high - low).magnitude * .28f, .7f, 1.6f);
+            }
+        }
+
+        public bool ImpactStructure(ShipDamageSection section) => impactBounds.ContainsKey(section.SectionId);
+        public float StructureImpactRadius(ShipDamageSection section) => stairImpactRadii.TryGetValue(section.SectionId, out float radius) ? radius : 1.4f;
+
+        public void CollectImpactSections(Vector3 point, float radius, HashSet<ShipDamageSection> result)
+        {
+            result.Clear();
+            var local = transform.InverseTransformPoint(point);
+            var low = Cell(local - Vector3.one * radius); var high = Cell(local + Vector3.one * radius);
+            for (int x = low.x; x <= high.x; x++) for (int y = low.y; y <= high.y; y++) for (int z = low.z; z <= high.z; z++)
+                if (grid.TryGetValue(new Vector3Int(x, y, z), out var entries))
+                    foreach (var section in entries) if (ImpactStructure(section)) result.Add(section);
+        }
+
+        public ulong StructureImpactMask(ShipDamageSection section, Vector3 point, float radius)
+        {
+            ulong mask = section.RemovedFragments;
+            if (section.Indestructible || !impactBounds.TryGetValue(section.SectionId, out var bounds)) return mask;
+            var local = transform.InverseTransformPoint(point);
+            bool deck = definitions[section.SectionId].Type == ShipSectionType.Deck;
+            for (int i = 0; i < bounds.Length; i++)
+            {
+                if (((mask | section.ProtectedFragments) & (1UL << i)) != 0) continue;
+                var closest = bounds[i].ClosestPoint(local) - local;
+                var center = bounds[i].center - local;
+                if (deck) { closest.y *= 3f; center.y *= 3f; }
+                uint seed = unchecked((uint)(section.SectionId * 73856093 ^ i * 19349663));
+                float edge = radius * (.85f + .3f * ((seed >> 8) & 255) / 255f);
+                if (closest.sqrMagnitude + .2f * center.sqrMagnitude <= edge * edge) mask |= 1UL << i;
+            }
+            return mask;
         }
 
         public bool BlocksRay(Vector3 start, Vector3 end) => BlockDistance(start, end) < Vector3.Distance(start, end) - .025f;

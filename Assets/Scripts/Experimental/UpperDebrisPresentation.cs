@@ -46,7 +46,7 @@ namespace PirateSlop.Experimental
             masts = owner.MastMotion;
             ropes = new UpperLooseRopePresentation(owner.transform);
             impacts = gameObject.AddComponent<UpperImpactPresentation>();
-            impacts.Initialize(owner.DustMaterial, owner.SparkMaterial);
+            impacts.Initialize(owner.DustMaterial, owner.SparkMaterial, owner.Destruction.Profile.SplinterMaterial);
             foreach (var recipe in owner.Debris)
             {
                 recipes[((long)recipe.Section << 7) | (uint)(recipe.Fragment + 1)] = recipe;
@@ -115,8 +115,10 @@ namespace PirateSlop.Experimental
                 var axis = Vector3.Cross(shape.Direction, owner.transform.up);
                 if (axis.sqrMagnitude < .01f) axis = owner.transform.right;
                 var spread = shape.Radial ? Quaternion.AngleAxis((impact.Seed % 360) + n * 180f, shape.Normal) * owner.transform.right : (shape.Direction + axis.normalized * side).normalized;
+                bool struck = impact.Reason == ShipDamageReason.Hit;
+                if (struck) spread = shape.SampleDirection(n, 2, unchecked((uint)impact.Seed + (uint)(recipe.Section * 31 + recipe.Fragment)));
                 var origin = recipe.Source.TransformPoint(n == 0 ? recipe.FirstOffset : recipe.SecondOffset);
-                var velocity = impact.PointVelocity + spread * 7f + owner.transform.up * 1.8f;
+                var velocity = impact.PointVelocity + spread * (struck ? 11f : 5f) + owner.transform.up * (struck ? 0f : 1.8f);
                 float lifetime = 3.5f;
                 if (impact.Reason == ShipDamageReason.Hit)
                 {
@@ -127,8 +129,7 @@ namespace PirateSlop.Experimental
                 }
                 bool solid = !owner.MastAssembly(recipe.Section, out _) && impact.Reason == ShipDamageReason.SupportLost && n == 0 && TryPhysical(mesh, recipe.Materials, recipe.Source, origin, velocity);
                 if (solid) continue;
-                if (pieces.Count >= 8192) pieces.RemoveAt(0);
-                pieces.Add(new Piece { Mesh = mesh, Materials = recipe.Materials, Origin = origin, Rotation = recipe.Source.rotation,
+                AddPiece(new Piece { Mesh = mesh, Materials = recipe.Materials, Origin = origin, Rotation = recipe.Source.rotation,
                     Scale = recipe.Source.lossyScale, Velocity = velocity, Spin = new Vector3(85f + n * 40f, 120f, 60f), Born = Time.time, Lifetime = lifetime });
             }
         }
@@ -179,7 +180,7 @@ namespace PirateSlop.Experimental
                     continue;
                 }
                 PrepareGroups(filter.sharedMesh, materials);
-                pieces.Add(new Piece { Mesh = filter.sharedMesh, Materials = materials, Origin = filter.transform.position,
+                AddPiece(new Piece { Mesh = filter.sharedMesh, Materials = materials, Origin = filter.transform.position,
                     Rotation = filter.transform.rotation, Scale = filter.transform.lossyScale, Velocity = owner.GetComponent<Networking.NetworkShip>().Motor.CannonPointVelocity(filter.transform.position),
                     Spin = new Vector3(18f, 0f, 12f), Born = Time.time, Lifetime = 3.5f });
             }
@@ -188,9 +189,15 @@ namespace PirateSlop.Experimental
                 if (!renderer.gameObject.activeInHierarchy || !attachmentRecipes.TryGetValue(renderer.transform, out var recipe)) continue;
                 int pose = Mathf.Clamp(Mathf.RoundToInt(owner.GetComponent<SailSystem>().Tension(recipe.SailIndex) * (recipe.Poses.Length - 1)), 0, recipe.Poses.Length - 1);
                 if (recipe.Flexible) { ropes.Emit(recipe, pose); continue; }
-                pieces.Add(new Piece { Mesh = recipe.Poses[pose], Materials = recipe.Materials, Origin = renderer.transform.TransformPoint(recipe.Offsets[pose]), Rotation = renderer.transform.rotation,
+                AddPiece(new Piece { Mesh = recipe.Poses[pose], Materials = recipe.Materials, Origin = renderer.transform.TransformPoint(recipe.Offsets[pose]), Rotation = renderer.transform.rotation,
                     Scale = renderer.transform.lossyScale, Born = Time.time, Lifetime = 3.5f });
             }
+        }
+
+        void AddPiece(Piece piece)
+        {
+            if (pieces.Count >= 128) pieces.RemoveAt(0);
+            pieces.Add(piece);
         }
 
         public void EmitImpact(UpperImpactShape shape, uint seed)

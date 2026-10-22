@@ -10,6 +10,33 @@ namespace PirateSlop.EditorTools
     {
         static bool IsFlexible(string name) => name.Contains("Rope") || name.Contains("Rig_") || name.Contains("Stay") || name.Contains("Shroud") || name.Contains("Ratline") || name.Contains("Lashing") || name.Contains("Lanyard") || name.Contains("Bridle") || name.Contains("Halyard") || name.Contains("Net") || name.Contains("Tie");
 
+        public static Mesh PrepareImpactSplinter()
+        {
+            if (EditorApplication.isPlaying || EditorApplication.isCompiling) throw new InvalidOperationException("Unity must be idle outside Play Mode.");
+            var outline = new[] { new Vector2(-.36f, -.5f), new Vector2(.18f, -.43f), new Vector2(.43f, -.12f), new Vector2(.2f, .5f), new Vector2(-.17f, .32f), new Vector2(-.4f, .08f) };
+            var ring = new Vector3[12];
+            for (int i = 0; i < 6; i++)
+            {
+                ring[i] = new Vector3(outline[i].x, -.065f + .018f * Mathf.Sin(i * 2.1f), outline[i].y);
+                ring[i + 6] = new Vector3(outline[i].x * .88f, .055f + .025f * Mathf.Cos(i * 1.7f), outline[i].y * .94f);
+            }
+            var vertices = new System.Collections.Generic.List<Vector3>();
+            void Triangle(int a, int b, int c) { vertices.Add(ring[a]); vertices.Add(ring[b]); vertices.Add(ring[c]); }
+            for (int i = 1; i < 5; i++) { Triangle(0, i, i + 1); Triangle(6, i + 7, i + 6); }
+            for (int i = 0; i < 6; i++)
+            {
+                int next = (i + 1) % 6;
+                Triangle(i, i + 6, next); Triangle(next, i + 6, next + 6);
+            }
+            var mesh = new Mesh { name = "UpperSplinter" };
+            mesh.SetVertices(vertices); mesh.SetTriangles(Enumerable.Range(0, vertices.Count).ToArray(), 0);
+            mesh.RecalculateNormals(); mesh.RecalculateBounds();
+            EnsureFolder("Assets/Resources/CombatVfx");
+            var saved = Save(mesh, "Assets/Resources/CombatVfx/UpperSplinter.asset");
+            AssetDatabase.SaveAssetIfDirty(saved);
+            return saved;
+        }
+
         public static string RefreshMastPresentation()
         {
             if (EditorApplication.isPlaying || EditorApplication.isCompiling) throw new InvalidOperationException("Unity must be idle outside Play Mode.");

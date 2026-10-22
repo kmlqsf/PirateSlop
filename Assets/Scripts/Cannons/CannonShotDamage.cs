@@ -29,9 +29,25 @@ namespace PirateSlop
         }
         public float StandardBlastRadius = .8f, StandardBlastDamage = 30f;
         public float StandardPushRadius = 3f;
-#if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
-        internal void PushUpperImpact(CombatHealth health, Vector3 point) => PushPlayer(health, ImpactPushVelocity(health, point));
-#endif
+        internal float NearbyImpactRadius => Mathf.Clamp(StandardPushRadius, .1f, 1.25f);
+        internal static Vector3 ClosestPlayerPoint(CombatHealth health, Vector3 point)
+        {
+            var controller = health.GetComponent<CharacterController>();
+            return controller != null && controller.enabled ? controller.bounds.ClosestPoint(point) : health.transform.position + Vector3.up * .9f;
+        }
+
+        internal void PushUpperImpact(CombatHealth health, Vector3 point, bool direct)
+        {
+            if (direct) { PushPlayer(health, ImpactPushVelocity(health, point)); return; }
+            var player = health.GetComponent<NetworkPlayer>();
+            if (!Authoritative || player == null || health.IsDead) return;
+            var shooter = Attacker != null ? Attacker.GetComponent<NetworkPlayer>() : null;
+            if (!SessionController.FriendlyFire && shooter != null && shooter.TeamId.Value == player.TeamId.Value) return;
+            float fraction = 1f - Vector3.Distance(ClosestPlayerPoint(health, point), point) / NearbyImpactRadius;
+            if (fraction <= 0f) return;
+            var direction = Vector3.ProjectOnPlane(ImpactPushVelocity(health, point), Vector3.up).normalized;
+            player.PushFromCannonImpact(direction * (2.5f * fraction));
+        }
 
         bool IgnoreSource(Collider collider)
         {
@@ -52,17 +68,24 @@ namespace PirateSlop
             return direction.normalized * PlayerPushSpeed + Vector3.up * 8f;
         }
 
-        void PushPlayersNearImpact(Vector3 point, float radius)
+        void PushPlayersNearImpact(Vector3 point, float radius, CombatHealth direct = null)
         {
             if (!Authoritative) return;
             foreach (var health in CombatHealth.Active)
             {
                 if (health == null || health.IsDead) continue;
-                var controller = health.GetComponent<CharacterController>();
-                Vector3 closest = controller != null && controller.enabled ? controller.bounds.ClosestPoint(point) : health.transform.position + Vector3.up * .9f;
-                if ((closest - point).sqrMagnitude > radius * radius) continue;
-                PushPlayer(health, ImpactPushVelocity(health, point));
+                bool hitDirectly = health == direct;
+                float nearby = Mathf.Min(radius, NearbyImpactRadius);
+                if (!hitDirectly && (ClosestPlayerPoint(health, point) - point).sqrMagnitude > nearby * nearby) continue;
+                PushUpperImpact(health, point, hitDirectly);
             }
+        }
+
+        void DamageNearbyPlayers(Vector3 point, HashSet<CombatHealth> damaged)
+        {
+            foreach (var health in CombatHealth.Active)
+                if (health != null && !health.IsDead && (ClosestPlayerPoint(health, point) - point).sqrMagnitude <= NearbyImpactRadius * NearbyImpactRadius && damaged.Add(health))
+                    health.Damage(StandardBlastDamage, Attacker);
         }
         public float WorldRestitution = .55f, WorldTangentialRetention = .82f;
         public const float DefaultBoomerangDuration = 6f, DefaultBoomerangWidth = 16f, DefaultBoomerangHeight = 8f, DefaultBoomerangOutboundTime = 2f;
@@ -314,7 +337,7 @@ namespace PirateSlop
                     if (Ammo == InventoryItem.IceCannonball) health.GetComponent<NetworkHealth>()?.Extinguish();
                     if (Ammo == InventoryItem.PushCannonball)
                     {
-                        PushPlayer(health, ImpactPushVelocity(health, point));
+                        PushUpperImpact(health, point, surface != null && surface.GetComponentInParent<CombatHealth>() == health);
                     }
                 }
                 var harpoon = hit.GetComponentInParent<Harpoon.HarpoonGun>();
@@ -331,7 +354,11 @@ namespace PirateSlop
                     if (Ammo == InventoryItem.PushCannonball) ship.GetComponent<ShipController>()?.ApplyPushImpulse(point, Velocity);
                 }
             }
-            if (Ammo == InventoryItem.Cannonball) PushPlayersNearImpact(point, Mathf.Max(blastRadius, StandardPushRadius));
+            if (Ammo == InventoryItem.Cannonball)
+            {
+                DamageNearbyPlayers(point, damaged);
+                PushPlayersNearImpact(point, NearbyImpactRadius, surface != null ? surface.GetComponentInParent<CombatHealth>() : null);
+            }
         }
 
         void BeginReturn(Vector3 point, Vector3 normal)
@@ -395,8 +422,9 @@ namespace PirateSlop
                         var t = hit.GetComponentInParent<KrakenTentacle>();
                         if (t != null && t != directTentacle) t.TakeDamage(StandardBlastDamage, Attacker);
                     }
+                    DamageNearbyPlayers(point, damaged);
                     if (health != null && damaged.Add(health)) health.Damage(StandardBlastDamage, Attacker);
-                    PushPlayersNearImpact(point, StandardPushRadius);
+                    PushPlayersNearImpact(point, NearbyImpactRadius, health);
                 }
                 if (health != null)
                 {
