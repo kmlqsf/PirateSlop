@@ -23,6 +23,7 @@ namespace PirateSlop.Networking
                 var ship = NetworkShip.ActiveShips[shipIndex];
                 if (ship == null || !ship.IsSpawned || !ship.IsSinking || ship.SinkingElapsed < 2f || ship.TeamId.Value <= 0 || TeamEliminated(ship.TeamId.Value)) continue;
                 eliminatedTeams.Add(ship.TeamId.Value);
+                RecordTeamEliminated(ship);
                 foreach (var member in players.Values)
                 {
                     if (member == null || member.HomeShipId.Value != ship.ParticipantId.Value) continue;
@@ -43,6 +44,7 @@ namespace PirateSlop.Networking
                 }
                 BroadcastPopulation();
             }
+            TickMatchEnd();
         }
         readonly Dictionary<int, int> crewTeams = new();
         int HumanTeam(int crew)
@@ -91,6 +93,7 @@ namespace PirateSlop.Networking
             nextBotDiagnosticSample = 0;
             botRosterPolicy = null;
             eliminatedTeams.Clear(); nextCrewCheck = 0f;
+            ResetMatch();
 
             crewTeams.Clear();
             nextTeam = 1; nextBotKey = -1;

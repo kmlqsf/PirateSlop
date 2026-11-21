@@ -461,6 +461,7 @@
 | [Assets/Scripts/Networking/SessionController.cs](<../../Assets/Scripts/Networking/SessionController.cs>) | Исходник C#: SessionController; Телепортация корабля через F8, Проект и точки входа, Чайки и фоновые стаи, Сеть, сессия и Steam, Новая система ботов, Шторм, зона, дождь и объёмный туман |
 | [Assets/Scripts/Networking/SessionCrew.cs](<../../Assets/Scripts/Networking/SessionCrew.cs>) | Исходник C#: SessionController; Мир, острова и океан, Сеть, сессия и Steam, Новая система ботов, Производительность и тест нагрузки без AI |
 | [Assets/Scripts/Networking/SessionLoadTest.cs](<../../Assets/Scripts/Networking/SessionLoadTest.cs>) | Исходник C#: SessionController; Производительность и тест нагрузки без AI |
+| [Assets/Scripts/Networking/SessionMatch.cs](<../../Assets/Scripts/Networking/SessionMatch.cs>) | Исходник C#: MatchTeamResult, MatchResultMessage, SessionController, MatchTeamRecord; Сеть, сессия и Steam |
 | [Assets/Scripts/Networking/SessionMenu.cs](<../../Assets/Scripts/Networking/SessionMenu.cs>) | Исходник C#: SessionController, MenuAccent; Сеть, сессия и Steam, Меню и HUD, Производительность и тест нагрузки без AI |
 | [Assets/Scripts/Networking/SessionMetrics.cs](<../../Assets/Scripts/Networking/SessionMetrics.cs>) | Исходник C#: SessionMetrics |
 | [Assets/Scripts/Networking/SessionOcean.cs](<../../Assets/Scripts/Networking/SessionOcean.cs>) | Исходник C#: TestOceanMessage, SessionController; Мир, острова и океан, Сеть, сессия и Steam, Тестовая карта и водоворот |

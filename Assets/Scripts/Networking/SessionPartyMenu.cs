@@ -6,8 +6,6 @@ namespace PirateSlop.Networking
     public sealed partial class SessionController
     {
         string lobbyInput = "";
-        string matchInput = "";
-        bool joinOtherSession;
         GUIStyle crewNameStyle, crewHeadingStyle;
         void DrawSteamParty(float x, float y, float width)
         {
@@ -15,13 +13,34 @@ namespace PirateSlop.Networking
             MenuText(new Rect(x,y,width,48), party.Status, true);
             GUI.enabled = party.Available && !party.Busy;
             if (MenuAction(x,y+55,width,"Создать лобби",true)) party.Create();
-            MenuText(new Rect(x,y+120,width,40),"Примите приглашение через Steam или вставьте ID лобби:",true);
-            RegisterMenuControl(new Rect(x,y+165,width,45),"menu_lobby");
+            if (party.Available && party.ListStale) party.FindLobbies();
+            MenuText(new Rect(x,y+118,width-120,32),"Открытые лобби",true);
+            if (MenuLink(new Rect(x+width-110,y+118,110,30),party.Searching?"Поиск…":"Обновить")) party.FindLobbies();
+            const int rows=5;
+            for(int i=0;i<rows;i++)
+            {
+                float ry=y+154+i*46;
+                if(i>=party.PublicLobbies.Count)
+                {
+                    if(i==0) MenuText(new Rect(x,ry,width,40),party.Searching?"Ищем лобби…":"Открытых лобби нет — создайте своё",true);
+                    continue;
+                }
+                var lobby=party.PublicLobbies[i];
+                int count=party.LobbyPlayers(lobby), limit=party.LobbyLimit(lobby);
+                PirateHudStyle.Fill(new Rect(x,ry,width,40),new Color(.035f,.066f,.079f,.9f));
+                MenuText(new Rect(x+12,ry+5,width-170,32),party.LobbyHost(lobby),true);
+                MenuText(new Rect(x+width-160,ry+5,70,32),count+" / "+limit,true);
+                GUI.enabled=party.Available && !party.Busy && count<limit;
+                if(MenuLink(new Rect(x+width-82,ry+5,80,30),"Войти")) party.Join(lobby);
+                GUI.enabled=party.Available && !party.Busy;
+            }
+            float by=y+154+rows*46+10;
+            RegisterMenuControl(new Rect(x,by,width,45),"menu_lobby");
             GUI.SetNextControlName("menu_lobby");
-            lobbyInput=GUI.TextField(new Rect(x,y+165,width,45),lobbyInput,20,menuInput);
-            if(MenuAction(x,y+225,width,"Войти по ID") && ulong.TryParse(lobbyInput,out var id)) party.Join(new CSteamID(id));
+            lobbyInput=GUI.TextField(new Rect(x,by,width,45),lobbyInput,20,menuInput);
+            if(MenuAction(x,by+55,width,"Войти по ID лобби") && ulong.TryParse(lobbyInput,out var id)) party.Join(new CSteamID(id));
             GUI.enabled=true;
-            if(menuPage==5 && MenuAction(x,y+300,width,"Назад")) menuPage=0;
+            if(menuPage==5 && MenuAction(x,by+120,width,"Назад")) menuPage=0;
         }
         void DrawCrewLobby(float screenWidth)
         {
@@ -36,7 +55,6 @@ namespace PirateSlop.Networking
             MenuText(new Rect(x,110,1000,30),"10 кораблей · до 3 пиратов в экипаже · переходите между командами до старта",true);
             MenuText(new Rect(x+920,70,260,35),party.Count+" / "+SteamParty.LobbyCapacity+" игроков",true);
             if(MenuLink(new Rect(x+900,116,280,28),"Копировать ID лобби")) GUIUtility.systemCopyBuffer=party.Lobby.ToString();
-            if(MenuLink(new Rect(x+610,116,250,28),"Сессия другого капитана")) joinOtherSession=!joinOtherSession;
             MenuRule(x,164,1180);
             var me=SteamUser.GetSteamID();
             int myTeam=party.Team(me);
@@ -83,14 +101,7 @@ namespace PirateSlop.Networking
                 GUI.enabled=unlocked;
                 if(MenuChoice(x,688,220,"Обычная карта",!useTestMap)) useTestMap=false;
                 if(MenuDeveloperTools && MenuChoice(x+230,688,220,"Тестовая карта",useTestMap)) useTestMap=true;
-                if(!useTestMap && !joinOtherSession) fillWithBots=MenuToggle(x+475,695,430,fillWithBots,"Заполнить свободные места ботами");
-                if(joinOtherSession)
-                {
-                    RegisterMenuControl(new Rect(x+480,689,400,45),"menu_match");
-                    GUI.SetNextControlName("menu_match");
-                    matchInput=GUI.TextField(new Rect(x+480,689,400,45),matchInput,20,menuInput);
-                    if(MenuAction(x+900,687,275,"Войти по ID") && ulong.TryParse(matchInput,out var match)) party.JoinSession(match);
-                }
+                if(!useTestMap) fillWithBots=MenuToggle(x+475,695,430,fillWithBots,"Заполнить свободные места ботами");
                 if(fillWithBots) observerSelected=false;
             }
             else MenuText(new Rect(x,688,900,46),"Выберите экипаж и нажмите «Я готов». Карту и начало экспедиции выбирает хост.",true);

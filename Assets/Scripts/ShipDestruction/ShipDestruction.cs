@@ -196,6 +196,7 @@ namespace PirateSlop
         public void Damage(Collider collider, Vector3 point, Vector3 normal, Vector3 velocity, InventoryItem ammo, GameObject attacker, float radius = 0f)
         {
             using var performanceSample = performanceDamage.Auto();
+            if (IsServerInitialized) SessionController.Instance?.RecordShipHit(ship, attacker);
 #if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
             if (TryUpperDamage(collider, point, normal, velocity, ammo, attacker, radius)) return;
 #endif
@@ -276,6 +277,7 @@ namespace PirateSlop
         {
             if (Profile != null && Profile.OrdinaryCannonballsOnly) return;
             if (!ready || !IsServerInitialized || ship.IsSinking) return;
+            SessionController.Instance?.RecordShipHit(ship, attacker, false);
             ShipDamageSection nearest = null; float distance = 3f;
             foreach (var section in sections.Values)
             {

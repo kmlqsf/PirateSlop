@@ -4,8 +4,8 @@ namespace PirateSlop.World
 {
     public sealed class StormZone : MonoBehaviour
     {
-        float elapsed, receivedAt, duration = 600, startRadius;
-        public const float FinalRadius = 250f;
+        float elapsed, receivedAt, duration = Networking.SessionController.DefaultStormDuration, startRadius;
+        public const float FinalRadius = OceanSurface.CentralWhirlpoolRadius;
         public static StormZone Instance { get; private set; }
         Networking.NetworkPlayer localPlayer;
         public Networking.NetworkShip LocalShip => localPlayer != null ? localPlayer.Ship : null;

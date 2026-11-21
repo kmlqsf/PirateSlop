@@ -103,6 +103,7 @@ namespace PirateSlop.Networking
             manager.ClientManager.RegisterBroadcast<CombatRulesMessage>(ReceiveCombatRules);
             manager.ClientManager.RegisterBroadcast<SeagullFlockMessage>(ReceiveSeagulls);
             manager.ClientManager.RegisterBroadcast<SeagullHitMessage>(ReceiveSeagullHit);
+            manager.ClientManager.RegisterBroadcast<MatchResultMessage>(ReceiveMatchResult);
             manager.ServerManager.RegisterBroadcast<WorldReadyMessage>(WorldReady);
             var args = Environment.GetCommandLineArgs();
             dedicated = Has(args, "-server"); Automated = Has(args, "-autoclient");
@@ -300,6 +301,7 @@ namespace PirateSlop.Networking
             SendWhirlpoolTentacles(conn);
             SendCombatRules(conn);
             SendSeagulls(conn);
+            SendMatchResult(conn);
             SpawnPlayer(conn, message.UpgradeToken);
         }
         void SpawnPlayer(NetworkConnection conn, string upgradeToken = null)
@@ -415,6 +417,7 @@ namespace PirateSlop.Networking
             if (!PerformanceBenchmarkActive && PirateSlop.Performance.PerformanceCapture.Active != null) PirateSlop.Performance.PerformanceCapture.Active.Finish("CANCELLED", "Session disconnected.", new[] { "Manual gameplay" });
             ClearSeagulls();
             StopObserver();
+            ResetMatch();
             playing = connecting = false; hostRequested = false;
             if (worldLoading != null) { StopCoroutine(worldLoading); worldLoading = null; }
             manager.ClientManager.StopConnection(); if (manager.ServerManager.Started) manager.ServerManager.StopConnection(true);
@@ -562,6 +565,7 @@ namespace PirateSlop.Networking
         }
         void OnGUI()
         {
+            DrawMatchResult();
             DrawSessionMenu();
             DrawLoadTestWarning();
         }

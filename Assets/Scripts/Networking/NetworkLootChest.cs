@@ -52,6 +52,7 @@ namespace PirateSlop.Networking
         {
             if (!IsServerInitialized || !IsSpawned || !Available) return;
             if (contents.Count == 0) { if (!PreserveCapturedBuoys()) ServerManager.Despawn(NetworkObject); return; }
+            if (!opened.Value) SessionController.Instance?.RecordChestOpened(opener);
             opened.Value = true;
             lootHintClaimed.Value = true;
             if (!upgradeRewardEligible || upgradeRewardClaimed || opener == null) return;

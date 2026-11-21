@@ -20,7 +20,8 @@ namespace PirateSlop.Networking
         public float StormProgress => manager != null && manager.ServerManager.Started && stormRunning
             ? Mathf.Clamp01(StormElapsed / Mathf.Max(1f, stormDuration)) : storm != null ? storm.Progress : 0f;
         float StormElapsed => (stormPaused ? stormPausedAt : Time.time) - stormStarted;
-                public float stormDuration = 600f;
+        public const float DefaultStormDuration = 900f;
+        float stormDuration = DefaultStormDuration;
         float stormStarted, stormTick, stormRadius;
 
         public void SetStormDuration(float newDuration)

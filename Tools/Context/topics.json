@@ -1504,9 +1504,17 @@
         "сеть",
         "мультиплеер",
         "steam",
-        "network"
+        "network",
+        "конец матча",
+        "победа",
+        "итоги матча",
+        "протокол 202",
+        "список лобби",
+        "публичное лобби"
       ],
       "notes": [
+        "22.11.2026, протокол202: SessionMatch завершает матч на сервере, когда из ≥2 участвовавших экипажей на плаву остался один; при одновременном потоплении побеждает затонувший позже, полное совпадение — ничья. Статистика команды: потоплено (последний вражеский удар ≤90с до потопления), попаданий по кораблям (ShipDestruction.Damage), сундуков (первое NetworkLootChest.Open), время жизни. MatchResultMessage рассылается всем и новым подключениям; экран итогов (OnGUI) с одной кнопкой «В меню» = Disconnect, выход хоста возвращает всех в Steam-лобби. Не работает в тестовой карте, нагрузочном тесте и бенчмарке. Решения этапа — Docs/ReleaseAudit.md §12. Зона: одна фаза 900 с (SessionController.DefaultStormDuration, поле больше не сериализуется в сцене) до StormZone.FinalRadius = радиус воронки 500 м. Игровая проверка не выполнялась.",
+        "22.11.2026, протокол202: Steam-лобби группы (kind=party) создаётся публичным, данные host_name; SteamParty.FindLobbies ищет лобби той же игры/протокола в состоянии waiting, меню «Лобби · Steam» показывает до 5 открытых лобби с кнопкой «Войти» и обновлением раз в 10 с, вход по ID лобби сохранён. После «Начать экспедицию» лобби закрывается (state starting, joinable=false) и снова открывается после выхода из сессии. Вход в идущий матч закрыт: «Сессия другого капитана»/JoinSession удалены, MatchLobby хранит party, UpdateAdmissions допускает только участников группы хоста, чужая группа получает «Матч уже идёт — вход закрыт». Игровая проверка через Steam не выполнялась.",
         "20.10.2026, проверка Unity MCP: Release build-96393073e8 и Development build-3cc19220b7 успешно собраны в Builds/WindowsRelease и Builds/Windows, по0ошибок. PackedAssets обоих включают одинаковые новый корабль, общий SessionConfig200 и сетевой реестр. Подробные предупреждения/время и оставшаяся игровая/FPS-приёмка — в OptimizationPlan.md.",
         "20.10.2026: Development и Release собираются через одну подготовку игрового содержимого и общий SessionConfig/протокол200. Отличаются Development-флагом/отладкой и каталогом вывода. Верхние разрушения — общий Standalone define; legacy Release198 больше не поддерживается. Результаты отдельно записываются в Temp/multiplayer-build-development-result.txt и Temp/multiplayer-build-release-result.txt. Готовые exe обновляются только пересборкой.",
         "2026-10-11: весь экипаж может быть мёртв без поражения и без запуска затопления. BeginSinking разрешён только при уровне воды 100%; живой экипаж защищён от урона до серверного выбывания через 2–2.5 с после начала затопления, затем принудительно погибает и получает сообщение о поражении. Оба пути колокола используют общий NetworkShip.RingForRescue: три звонка своей команды возвращают одного игрока за один ром. ProtocolVersion144 из-за нового SyncVar таймера и RPC удержания доски; компиляция проверяется отдельно, игровые проверки выполняет пользователь.",
@@ -1544,6 +1552,7 @@
         "Assets/Scripts/Networking/NetworkPlayer.Identity.cs",
         "Assets/Scripts/UI/CrewPresentation.cs",
         "Assets/Scripts/Networking/SessionCrew.cs",
+        "Assets/Scripts/Networking/SessionMatch.cs",
         "Assets/Scripts/Networking/NetworkShipRum.cs",
         "Assets/Scripts/Networking/NetworkCrewBell.cs",
         "Assets/Scripts/Player/CombatHealth.cs",
@@ -1553,7 +1562,8 @@
       ],
       "docs": [
         "multiplayer-plan.md",
-        "unity.md"
+        "unity.md",
+        "Docs/ReleaseAudit.md"
       ]
     },
     {
