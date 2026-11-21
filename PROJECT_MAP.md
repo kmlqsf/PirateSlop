@@ -12,7 +12,7 @@
 
 ## Полный каталог
 
-Учтено 14518 файлов без `.meta`. Ещё 13081 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
+Учтено 14519 файлов без `.meta`. Ещё 13082 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
 
 | Раздел | Назначение | Файлов |
 | --- | --- | ---: |
@@ -37,7 +37,7 @@
 | [Assets/Prefabs](<Docs/ProjectMap/Assets-Prefabs.md>) | Готовые игровые объекты | 139 |
 | [Assets/Resources](<Docs/ProjectMap/Assets-Resources.md>) | Ресурсы, доступные для загрузки по имени | 174 |
 | [Assets/Scenes](<Docs/ProjectMap/Assets-Scenes.md>) | Сохранённые сцены | 3 |
-| [Assets/Scripts](<Docs/ProjectMap/Assets-Scripts.md>) | Игровой код и редакторские инструменты | 624 |
+| [Assets/Scripts](<Docs/ProjectMap/Assets-Scripts.md>) | Игровой код и редакторские инструменты | 625 |
 | [Assets/Settings](<Docs/ProjectMap/Assets-Settings.md>) | Настройки игровых систем и рендеринга | 60 |
 | [Assets/Shaders](<Docs/ProjectMap/Assets-Shaders.md>) | Шейдеры | 22 |
 | [Assets/StreamingAssets](<Docs/ProjectMap/Assets-StreamingAssets.md>) | Ресурсы раздела; точный состав — в каталоге | 5 |
@@ -1389,8 +1389,9 @@ CoastalSandSetup.Apply создаёт в12каменных префабах от
 
 ### Сеть, сессия и Steam (`networking`)
 
-Ключевые слова: сеть, мультиплеер, steam, network, конец матча, победа, итоги матча, протокол 202, список лобби, публичное лобби.
+Ключевые слова: сеть, мультиплеер, steam, network, конец матча, победа, итоги матча, протокол 202, список лобби, публичное лобби, AppID 5671450, RestartAppIfNecessary.
 
+22.11.2026: Steam переведён на Playtest AppID 5671450 (SteamParty.LaunchAppId; steam_appid.txt проекта и SteamTestBuild пишут его же рядом с exe). AppID 480/Spacewar больше не принимается, ключ лобби game=PirateSlop.v1. Вне Editor перед SteamAPI.Init вызывается RestartAppIfNecessary — работает только без steam_appid.txt, поэтому в депо Steam этот файл не загружать. Принимаются 5671420 и 5671450.
 22.11.2026, протокол202: SessionMatch завершает матч на сервере, когда из ≥2 участвовавших экипажей на плаву остался один; при одновременном потоплении побеждает затонувший позже, полное совпадение — ничья. Статистика команды: потоплено (последний вражеский удар ≤90с до потопления), попаданий по кораблям (ShipDestruction.Damage), сундуков (первое NetworkLootChest.Open), время жизни. MatchResultMessage рассылается всем и новым подключениям; экран итогов (OnGUI) с одной кнопкой «В меню» = Disconnect, выход хоста возвращает всех в Steam-лобби. Не работает в тестовой карте, нагрузочном тесте и бенчмарке. Решения этапа — Docs/ReleaseAudit.md §12. Зона: одна фаза 900 с (SessionController.DefaultStormDuration, поле больше не сериализуется в сцене) до StormZone.FinalRadius = радиус воронки 500 м. Игровая проверка не выполнялась.
 22.11.2026, протокол202: Steam-лобби группы (kind=party) создаётся публичным, данные host_name; SteamParty.FindLobbies ищет лобби той же игры/протокола в состоянии waiting, меню «Лобби · Steam» показывает до 5 открытых лобби с кнопкой «Войти» и обновлением раз в 10 с, вход по ID лобби сохранён. После «Начать экспедицию» лобби закрывается (state starting, joinable=false) и снова открывается после выхода из сессии. Вход в идущий матч закрыт: «Сессия другого капитана»/JoinSession удалены, MatchLobby хранит party, UpdateAdmissions допускает только участников группы хоста, чужая группа получает «Матч уже идёт — вход закрыт». Игровая проверка через Steam не выполнялась.
 20.10.2026, проверка Unity MCP: Release build-96393073e8 и Development build-3cc19220b7 успешно собраны в Builds/WindowsRelease и Builds/Windows, по0ошибок. PackedAssets обоих включают одинаковые новый корабль, общий SessionConfig200 и сетевой реестр. Подробные предупреждения/время и оставшаяся игровая/FPS-приёмка — в OptimizationPlan.md.
@@ -1692,8 +1693,10 @@ SelectedReview: выбор звуков revision 132 (80 файлов, 55 соб
 
 ### Меню и HUD (`ui`)
 
-Ключевые слова: интерфейс, меню, hud.
+Ключевые слова: интерфейс, меню, hud, лог ошибок, errors.log.
 
+22.11.2026: ErrorLog (только Player, не Editor) пишет ошибки/исключения/assert в Application.persistentDataPath/errors.log: заголовок сессии с версией, ОС, GPU, RAM и путём Player.log; повтор одного сообщения не чаще 5 с, максимум 300 записей за сессию, при >2 МБ файл переносится в errors.prev.log. Настройки → «Папка логов и ошибок» открывает эту папку (там же Player.log).
+22.11.2026: DeveloperMenu.Available = Editor || Development build || аргумент запуска -developer. SessionMenu.MenuDeveloperTools использует его же: в Release без флага скрыты «Тестовая карта» (создание экспедиции, лобби Steam, блок «Тестирование»), «Диагностика» и тест нагрузки; F8 и серверные команды разработчика уже были закрыты этим условием.
 SessionController разделён на partial-файлы меню. Различать меню сессии и игровой HUD.
 Сохранённое оформление меню и его runtime-поведение имеют разные точки входа.
 Главное меню 2026-10-07: сохранён IMGUI SessionMenu и существующие callbacks. TitlePrint — цельная PNG-надпись из установленной Georgia Bold с потёртостью, без файлов шрифтов в проекте; SOURCES фиксирует ссылку на Microsoft FAQ. Ivory/латунь, прозрачное navy-затемнение заканчивается на45% ширины, убраны вертикальная рамка и лишние лозунги, слоган Порох. Ром. Последний корабль. Hover/selected ромб и короткая линия, масштаб1.015 и переход.16с в OnGUI без декоративного Update. Dev-раздел и выбор тестовой карты в host/Steam скрыты вне UNITY_EDITOR/DEVELOPMENT_BUILD. Ненавязчивая версия остаётся в нижнем углу. Добавлены стрелки/Tab/Enter и D-pad/stick/A/B через Input System, текстовые поля именованы для сохранения ввода. После проверки UI камера только MenuBackdrop повёрнута примерно11градусов к борту, существующие drift/покачивание сохранены; океан/небо/острова/игровая камера не менялись.
@@ -1735,6 +1738,7 @@ F8 в основной тестовой карте содержит ползун
 - [Assets/Resources/Menu/TitlePrint.SOURCES.md](<Assets/Resources/Menu/TitlePrint.SOURCES.md>) — Документация.
 - [Assets/Scripts/Networking/NetworkPlayer.Identity.cs](<Assets/Scripts/Networking/NetworkPlayer.Identity.cs>) — Исходник C#: NetworkPlayer.
 - [Assets/Scripts/UI/CrewPresentation.cs](<Assets/Scripts/UI/CrewPresentation.cs>) — Исходник C#: CrewPresentation, Plate.
+- [Assets/Scripts/ErrorLog.cs](<Assets/Scripts/ErrorLog.cs>) — Исходник C#: ErrorLog.
 - [unity.md](<unity.md>) — Документация.
 - [qol-roadmap.md](<qol-roadmap.md>) — Документация.
 

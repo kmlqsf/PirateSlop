@@ -41,10 +41,10 @@ namespace PirateSlop.Networking
         float searchedAt = -999f;
         bool joiningMatch;
         float pendingAt;
-        const string Game = "PirateSlop.Spacewar.v1";
-        const uint SpacewarAppId = 480;
+        const string Game = "PirateSlop.v1";
         const uint PirateSlopAppId = 5671420;
         const uint PirateSlopPlaytestAppId = 5671450;
+        public const uint LaunchAppId = PirateSlopPlaytestAppId;
 
         void Start()
         {
@@ -52,10 +52,11 @@ namespace PirateSlop.Networking
             if (Application.isBatchMode) return;
             try
             {
+                if (!Application.isEditor && SteamAPI.RestartAppIfNecessary(new AppId_t(LaunchAppId))) { Application.Quit(); return; }
                 Available = SteamAPI.Init();
                 if (!Available) { Status = "Запустите Steam и перезапустите игру"; return; }
                 uint appId = SteamUtils.GetAppID().m_AppId;
-                if (appId != SpacewarAppId && appId != PirateSlopAppId && appId != PirateSlopPlaytestAppId)
+                if (appId != PirateSlopAppId && appId != PirateSlopPlaytestAppId)
                 {
                     SteamAPI.Shutdown();
                     Available = false;

@@ -15,6 +15,7 @@
 | [Assets/Scripts/AdvancedPlayerController.cs](<../../Assets/Scripts/AdvancedPlayerController.cs>) | Исходник C#: AdvancedPlayerController; Персонаж, камера и анимации, Производительность и тест нагрузки без AI, Остров с весами и пятью камнями, Сундук в такелаже, Груз за кормой, Rock Ring — ивент камикадзе |
 | [Assets/Scripts/CannonballDropper.cs](<../../Assets/Scripts/CannonballDropper.cs>) | Исходник C#: CannonballDropper |
 | [Assets/Scripts/CombatVfx.cs](<../../Assets/Scripts/CombatVfx.cs>) | Исходник C#: CombatVfx |
+| [Assets/Scripts/ErrorLog.cs](<../../Assets/Scripts/ErrorLog.cs>) | Исходник C#: ErrorLog; Меню и HUD |
 | [Assets/Scripts/GpuWaterSpray.cs](<../../Assets/Scripts/GpuWaterSpray.cs>) | Исходник C#: GpuWaterSpray |
 | [Assets/Scripts/HelmInteraction.cs](<../../Assets/Scripts/HelmInteraction.cs>) | Исходник C#: HelmInteraction; Экспериментальные верхние разрушения корабля, Движение корабля и палуба, Корабельная обезьянка |
 | [Assets/Scripts/OceanSurface.cs](<../../Assets/Scripts/OceanSurface.cs>) | Исходник C#: OceanSurface; Мир, острова и океан, Шторм, зона, дождь и объёмный туман, Тестовая карта и водоворот |

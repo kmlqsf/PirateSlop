@@ -28,17 +28,7 @@ namespace PirateSlop.Networking
             public float From, Target, Started;
             public float Value => Mathf.Lerp(From, Target, Mathf.SmoothStep(0, 1, Mathf.Clamp01((Time.unscaledTime - Started) / .16f)));
         }
-        static bool MenuDeveloperTools
-        {
-            get
-            {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-                return true;
-#else
-                return false;
-#endif
-            }
-        }
+        static bool MenuDeveloperTools => DeveloperMenu.Available;
         void PrepareMenu()
         {
             if(menuTitle!=null) return;
@@ -308,8 +298,9 @@ namespace PirateSlop.Networking
                 address=GUI.TextField(new Rect(x,y+68,panelWidth,48),address,64,menuInput);
                 MenuText(new Rect(x,y+124,panelWidth,25),"Карта",true);
                 float halfW=(panelWidth-10)*.5f;
-                if(MenuChoice(x,y+150,halfW,"Обычная карта",!useTestMap)) useTestMap=false;
-                if(MenuChoice(x+halfW+10,y+150,halfW,"Тестовая карта",useTestMap)) useTestMap=true;
+                if(!MenuDeveloperTools) useTestMap=false;
+                if(MenuChoice(x,y+150,MenuDeveloperTools?halfW:panelWidth,"Обычная карта",!useTestMap)) useTestMap=false;
+                if(MenuDeveloperTools && MenuChoice(x+halfW+10,y+150,halfW,"Тестовая карта",useTestMap)) useTestMap=true;
                 if(!useTestMap)
                 {
                     MenuText(new Rect(x,y+204,panelWidth,25),"Номер карты · пусто — случайная",true);
@@ -382,7 +373,8 @@ namespace PirateSlop.Networking
                 if(MenuAction(x,y+128,panelWidth,"Звук")) menuPage=3;
                 if(MenuAction(x,y+196,panelWidth,"Управление")) menuPage=4;
                 if(MenuAction(x,y+264,panelWidth,"Игра и Интерфейс")) menuPage=9;
-                if(MenuAction(x,y+345,panelWidth,"Назад")) menuPage=0;
+                if(MenuAction(x,y+328,panelWidth,"Папка логов и ошибок",secondary:true)) PirateSlop.ErrorLog.OpenFolder();
+                if(MenuAction(x,y+390,panelWidth,"Назад")) menuPage=0;
             }
             else if(menuPage==8)
             {
@@ -446,9 +438,9 @@ namespace PirateSlop.Networking
                 bool isLeader = party == null || !party.InLobby || party.IsLeader;
                 if(isLeader && MenuAction(x,y+198,panelWidth,"Кастомизация")) PirateSlop.Customization.SailCustomizationUI.Open();
                 if(MenuAction(x,y+250,panelWidth,"Настройки")) menuPage=7;
-                if(MenuAction(x,y+304,panelWidth,"Диагностика")) menuPage=10;
-                if(MenuAction(x,y+362,panelWidth,"Выйти из игры")) Application.Quit();
-                if(!playing || MenuDeveloperTools && LoadTestActive)
+                if(MenuDeveloperTools && MenuAction(x,y+304,panelWidth,"Диагностика")) menuPage=10;
+                if(MenuAction(x,MenuDeveloperTools?y+362:y+304,panelWidth,"Выйти из игры")) Application.Quit();
+                if(MenuDeveloperTools && (!playing || LoadTestActive))
                 {
                     MenuRule(x+32,y+430,112);
                     GUI.Label(new Rect(x+32,y+443,panelWidth,20),!playing?"ТЕСТИРОВАНИЕ":"ДЛЯ РАЗРАБОТЧИКА",menuFooter);

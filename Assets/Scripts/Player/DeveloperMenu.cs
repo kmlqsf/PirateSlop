@@ -10,7 +10,16 @@ namespace PirateSlop
     public sealed class DeveloperMenu : MonoBehaviour
     {
         public static bool IsOpen { get; private set; }
-        public static bool Available => Application.isEditor || Debug.isDebugBuild;
+        static int launchFlag = -1;
+        public static bool Available => Application.isEditor || Debug.isDebugBuild || LaunchFlag;
+        static bool LaunchFlag
+        {
+            get
+            {
+                if (launchFlag < 0) launchFlag = Array.IndexOf(Environment.GetCommandLineArgs(), "-developer") >= 0 ? 1 : 0;
+                return launchFlag == 1;
+            }
+        }
         public static bool AllowRemote;
         public static bool ShowLootEventLabels { get; private set; }
 #if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2

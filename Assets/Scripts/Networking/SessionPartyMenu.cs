@@ -99,6 +99,7 @@ namespace PirateSlop.Networking
             if(party.IsLeader)
             {
                 GUI.enabled=unlocked;
+                if(!MenuDeveloperTools) useTestMap=false;
                 if(MenuChoice(x,688,220,"Обычная карта",!useTestMap)) useTestMap=false;
                 if(MenuDeveloperTools && MenuChoice(x+230,688,220,"Тестовая карта",useTestMap)) useTestMap=true;
                 if(!useTestMap) fillWithBots=MenuToggle(x+475,695,430,fillWithBots,"Заполнить свободные места ботами");
