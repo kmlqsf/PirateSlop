@@ -38,6 +38,9 @@ namespace PirateSlop.Networking
         bool joiningMatch;
         float pendingAt;
         const string Game = "PirateSlop.Spacewar.v1";
+        const uint SpacewarAppId = 480;
+        const uint PirateSlopAppId = 5671420;
+        const uint PirateSlopPlaytestAppId = 5671450;
 
         void Start()
         {
@@ -47,7 +50,14 @@ namespace PirateSlop.Networking
             {
                 Available = SteamAPI.Init();
                 if (!Available) { Status = "Запустите Steam и перезапустите игру"; return; }
-                if (SteamUtils.GetAppID().m_AppId != 480) { SteamAPI.Shutdown(); Available = false; Status = "Нужен тестовый AppID 480"; return; }
+                uint appId = SteamUtils.GetAppID().m_AppId;
+                if (appId != SpacewarAppId && appId != PirateSlopAppId && appId != PirateSlopPlaytestAppId)
+                {
+                    SteamAPI.Shutdown();
+                    Available = false;
+                    Status = $"Неподдерживаемый Steam AppID {appId}";
+                    return;
+                }
                 SteamNetworkingUtils.InitRelayNetworkAccess();
                 invitation = Callback<GameLobbyJoinRequested_t>.Create(m => Join(m.m_steamIDLobby));
                 presenceInvitation = Callback<GameRichPresenceJoinRequested_t>.Create(m => JoinConnection(m.m_rgchConnect));
