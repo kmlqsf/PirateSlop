@@ -54,13 +54,13 @@ namespace PirateSlop.Networking
             {
                 if (!Application.isEditor && SteamAPI.RestartAppIfNecessary(new AppId_t(LaunchAppId))) { Application.Quit(); return; }
                 Available = SteamAPI.Init();
-                if (!Available) { Status = "Запустите Steam и перезапустите игру"; return; }
+                if (!Available) { Status = Localization.T("Запустите Steam и перезапустите игру"); return; }
                 uint appId = SteamUtils.GetAppID().m_AppId;
                 if (appId != PirateSlopAppId && appId != PirateSlopPlaytestAppId)
                 {
                     SteamAPI.Shutdown();
                     Available = false;
-                    Status = $"Неподдерживаемый Steam AppID {appId}";
+                    Status = Localization.F("Неподдерживаемый Steam AppID {0}", appId);
                     return;
                 }
                 SteamNetworkingUtils.InitRelayNetworkAccess();
@@ -86,7 +86,7 @@ namespace PirateSlop.Networking
             SteamAPI.RunCallbacks();
             if (Time.unscaledTime >= nextCheck) { nextCheck = Time.unscaledTime + .5f; CheckMatch(); }
             if (Searching && Time.unscaledTime - searchedAt > 15) { listed.Cancel(); Searching = false; }
-            if (Busy && Time.unscaledTime - pendingAt > 30) { created.Cancel(); entered.Cancel(); LeaveSession(); Status = "Steam не ответил. Попробуйте снова."; }
+            if (Busy && Time.unscaledTime - pendingAt > 30) { created.Cancel(); entered.Cancel(); LeaveSession(); Status = Localization.T("Steam не ответил. Попробуйте снова."); }
         }
         public void Create()
         {
@@ -97,7 +97,7 @@ namespace PirateSlop.Networking
         void Created(LobbyCreated_t result, bool failed)
         {
             Busy = false;
-            if (failed || result.m_eResult != EResult.k_EResultOK) { Status = "Не удалось создать лобби: " + result.m_eResult; return; }
+            if (failed || result.m_eResult != EResult.k_EResultOK) { Status = Localization.T("Не удалось создать лобби: ") + result.m_eResult; return; }
             Lobby = new CSteamID(result.m_ulSteamIDLobby); leader = SteamUser.GetSteamID();
             SteamMatchmaking.SetLobbyData(Lobby, "game", Game);
             SteamMatchmaking.SetLobbyData(Lobby, "kind", "party");
@@ -109,7 +109,7 @@ namespace PirateSlop.Networking
             SteamMatchmaking.SetLobbyJoinable(Lobby, true);
             SteamMatchmaking.SetLobbyData(Lobby, "roster_revision", "0");
             ResolveTeams(); session.ShowSteamParty();
-            Ready(false); PublishPresence(); Status = "Лобби открыто — выберите экипаж";
+            Ready(false); PublishPresence(); Status = Localization.T("Лобби открыто — выберите экипаж");
         }
         public void FindLobbies()
         {
@@ -127,7 +127,7 @@ namespace PirateSlop.Networking
         void Listed(LobbyMatchList_t result, bool failed)
         {
             Searching = false; PublicLobbies.Clear();
-            if (failed) { Status = "Не удалось получить список лобби"; return; }
+            if (failed) { Status = Localization.T("Не удалось получить список лобби"); return; }
             for (int i = 0; i < result.m_nLobbiesMatching; i++)
             {
                 var id = SteamMatchmaking.GetLobbyByIndex(i);
@@ -137,13 +137,13 @@ namespace PirateSlop.Networking
         public string LobbyHost(CSteamID id)
         {
             string name = SteamMatchmaking.GetLobbyData(id, "host_name");
-            return string.IsNullOrEmpty(name) ? "Лобби " + id : name;
+            return string.IsNullOrEmpty(name) ? Localization.T("Лобби ") + id : name;
         }
         public int LobbyPlayers(CSteamID id) => SteamMatchmaking.GetNumLobbyMembers(id);
         public int LobbyLimit(CSteamID id) => SteamMatchmaking.GetLobbyMemberLimit(id);
         public void Join(CSteamID id)
         {
-            if (!Available || Busy || session.SessionBusy) { Status = "Сначала покиньте текущую сессию"; return; }
+            if (!Available || Busy || session.SessionBusy) { Status = Localization.T("Сначала покиньте текущую сессию"); return; }
             if (id == Lobby) return;
             Leave(); Busy = true; pendingAt = Time.unscaledTime;
             entered.Set(SteamMatchmaking.JoinLobby(id));
@@ -151,15 +151,26 @@ namespace PirateSlop.Networking
         void Entered(LobbyEnter_t result, bool failed)
         {
             Busy = false;
-            if (failed || result.m_EChatRoomEnterResponse != (uint)EChatRoomEnterResponse.k_EChatRoomEnterResponseSuccess) { Status = "Лобби недоступно или заполнено"; return; }
+            if (failed || result.m_EChatRoomEnterResponse != (uint)EChatRoomEnterResponse.k_EChatRoomEnterResponseSuccess) { Status = Localization.T("Лобби недоступно или заполнено"); return; }
             Lobby = new CSteamID(result.m_ulSteamIDLobby);
             if (SteamMatchmaking.GetLobbyData(Lobby, "kind") != "party" || SteamMatchmaking.GetLobbyData(Lobby, "game") != Game || SteamMatchmaking.GetLobbyData(Lobby, "protocol") != session.ProtocolVersion.ToString())
-            { Leave(); Status = "Другая игра или версия сборки"; return; }
+            { Leave(); Status = Localization.T("Другая игра или версия сборки"); return; }
+            if (Banned(SteamUser.GetSteamID())) { Leave(); Status = Localization.T("Вы исключены из этого лобби"); return; }
             leader = SteamMatchmaking.GetLobbyOwner(Lobby);
             session.ShowSteamParty();
             Ready(false); joiningMatch = false; CheckMatch();
         }
         public int Count => InLobby ? SteamMatchmaking.GetNumLobbyMembers(Lobby) : 0;
+        public bool Banned(CSteamID id) => InLobby && SteamMatchmaking.GetLobbyData(Lobby, "ban_" + id) == "1";
+        public void Kick(CSteamID id)
+        {
+            if (!IsLeader || id == SteamUser.GetSteamID()) return;
+            SteamMatchmaking.SetLobbyData(Lobby, "ban_" + id, "1");
+            SteamMatchmaking.SetLobbyData(Lobby, "slot_" + id, "");
+            matchTeams.Remove(id.m_SteamID);
+            session.KickConnection(id.m_SteamID);
+            Status = Localization.T("Исключён: ") + Name(id);
+        }
         public CSteamID Member(int index) => SteamMatchmaking.GetLobbyMemberByIndex(Lobby, index);
         public string Name(CSteamID id) => SteamFriends.GetFriendPersonaName(id);
         public int Team(CSteamID id) => InLobby && int.TryParse(SteamMatchmaking.GetLobbyData(Lobby, "slot_" + id), out var team) && team >= 1 && team <= TeamCount ? team : 0;
@@ -185,10 +196,10 @@ namespace PirateSlop.Networking
         public void SelectTeam(int team)
         {
             if (!Waiting || Busy || session.SessionBusy || team < 1 || team > TeamCount || TeamPending(SteamUser.GetSteamID()) || Team(SteamUser.GetSteamID()) == team) return;
-            if (TeamMembers(team) >= SessionController.CrewSize) { Status = "Этот экипаж уже заполнен"; return; }
+            if (TeamMembers(team) >= SessionController.CrewSize) { Status = Localization.T("Этот экипаж уже заполнен"); return; }
             Ready(false);
             SteamMatchmaking.SetLobbyMemberData(Lobby, "team_request", team + ":" + Guid.NewGuid().ToString("N"));
-            Status = "Переход в экипаж " + team + "…";
+            Status = Localization.T("Переход в экипаж ") + team + "…";
             ResolveTeams();
         }
         void ResolveTeams()
@@ -206,6 +217,7 @@ namespace PirateSlop.Networking
             for (int i = 0; i < count; i++)
             {
                 var member = Member(i);
+                if (Banned(member)) continue;
                 int team = assignments[i];
                 string request = SteamMatchmaking.GetLobbyMemberData(Lobby, member, "team_request");
                 bool requested = !string.IsNullOrEmpty(request) && request != SteamMatchmaking.GetLobbyData(Lobby, "ack_" + member);
@@ -216,7 +228,7 @@ namespace PirateSlop.Networking
                     {
                         if (team != target) { if (team > 0) occupants[team]--; occupants[target]++; team = target; }
                     }
-                    else rejection = "Экипаж заполнен — выберите другой";
+                    else rejection = Localization.T("Экипаж заполнен — выберите другой");
                 }
                 if (team == 0)
                     for (int candidate = 1; candidate <= TeamCount; candidate++)
@@ -249,7 +261,7 @@ namespace PirateSlop.Networking
             if (ack == lastTeamAck) return;
             lastTeamAck = ack;
             string rejection = SteamMatchmaking.GetLobbyData(Lobby, "error_" + me);
-            Status = string.IsNullOrEmpty(rejection) ? "Вы в экипаже " + Team(me) : rejection;
+            Status = string.IsNullOrEmpty(rejection) ? Localization.T("Вы в экипаже ") + Team(me) : rejection;
         }
         void PublishMembership()
         {
@@ -280,7 +292,7 @@ namespace PirateSlop.Networking
             int oldDepth = GUI.depth;
             GUI.depth = -100;
             float width = Mathf.Min(440, Screen.width - 24), height = Mathf.Min(460, Screen.height - 24);
-            GUI.ModalWindow(734921, new Rect((Screen.width - width) * .5f, (Screen.height - height) * .5f, width, height), DrawInvites, "Пригласить друзей");
+            GUI.ModalWindow(734921, new Rect((Screen.width - width) * .5f, (Screen.height - height) * .5f, width, height), DrawInvites, Localization.T("Пригласить друзей"));
             GUI.depth = oldDepth;
         }
         void DrawInvites(int id)
@@ -288,12 +300,12 @@ namespace PirateSlop.Networking
             GUILayout.Space(8);
             if (SteamUtils.IsOverlayEnabled())
             {
-                if (GUILayout.Button("Открыть приглашения Steam", GUILayout.Height(30))) SteamFriends.ActivateGameOverlayInviteDialog(Lobby);
+                if (GUILayout.Button(Localization.T("Открыть приглашения Steam"), GUILayout.Height(30))) SteamFriends.ActivateGameOverlayInviteDialog(Lobby);
             }
-            else GUILayout.Label("Оверлей недоступен — пригласите друга из списка.");
+            else GUILayout.Label(Localization.T("Оверлей недоступен — пригласите друга из списка."));
             friendScroll = GUILayout.BeginScrollView(friendScroll);
             int count = SteamFriends.GetFriendCount(EFriendFlags.k_EFriendFlagImmediate);
-            if (count == 0) GUILayout.Label("В списке Steam пока нет друзей.");
+            if (count == 0) GUILayout.Label(Localization.T("В списке Steam пока нет друзей."));
             for (int i = 0; i < count; i++)
             {
                 var friend = SteamFriends.GetFriendByIndex(i, EFriendFlags.k_EFriendFlagImmediate);
@@ -304,18 +316,18 @@ namespace PirateSlop.Networking
                 GUILayout.Label(Name(friend), GUILayout.MinWidth(140));
                 bool enabled = GUI.enabled;
                 GUI.enabled = enabled && !present && !sent && Count < LobbyCapacity;
-                if (GUILayout.Button(present ? "В лобби" : sent ? "Отправлено" : "Пригласить", GUILayout.Width(115)))
+                if (GUILayout.Button(present ? Localization.T("В лобби") : sent ? Localization.T("Отправлено") : Localization.T("Пригласить"), GUILayout.Width(115)))
                 {
                     bool success = SteamMatchmaking.InviteUserToLobby(Lobby, friend);
                     if (success) invitedAt[friend.m_SteamID] = Time.unscaledTime;
-                    Status = success ? "Приглашение отправлено: " + Name(friend) : "Не удалось отправить приглашение";
+                    Status = success ? Localization.T("Приглашение отправлено: ") + Name(friend) : Localization.T("Не удалось отправить приглашение");
                 }
                 GUI.enabled = enabled;
                 GUILayout.EndHorizontal();
             }
             GUILayout.EndScrollView();
             GUILayout.Label(Status);
-            if (GUILayout.Button("Закрыть", GUILayout.Height(30))) inviteVisible = false;
+            if (GUILayout.Button(Localization.T("Закрыть"), GUILayout.Height(30))) inviteVisible = false;
         }
         bool launchEnvironmentTest;
         public void Launch(bool environmentTest = false)
@@ -330,18 +342,18 @@ namespace PirateSlop.Networking
         {
             if (!IsLeader || !Waiting || Busy || session.SessionBusy) return false;
             ResolveTeams();
-            if (Count > session.MaxPlayers) { Status = "В сессии недостаточно мест"; return false; }
+            if (Count > session.MaxPlayers) { Status = Localization.T("В сессии недостаточно мест"); return false; }
             int occupied = 0;
             for (int team = 1; team <= TeamCount; team++) if (TeamMembers(team) > 0) occupied++;
-            if (occupied > session.MaxPlayers / SessionController.CrewSize) { Status = "В сессии недостаточно кораблей"; return false; }
-            for (int i = 0; i < Count; i++) if (TeamPending(Member(i))) { Status = "Дождитесь распределения экипажей"; return false; }
-            for (int i = 0; i < Count; i++) if (!IsReady(Member(i))) { Status = "Дождитесь готовности всех участников"; return false; }
+            if (occupied > session.MaxPlayers / SessionController.CrewSize) { Status = Localization.T("В сессии недостаточно кораблей"); return false; }
+            for (int i = 0; i < Count; i++) if (!Banned(Member(i)) && TeamPending(Member(i))) { Status = Localization.T("Дождитесь распределения экипажей"); return false; }
+            for (int i = 0; i < Count; i++) if (!Banned(Member(i)) && !IsReady(Member(i))) { Status = Localization.T("Дождитесь готовности всех участников"); return false; }
             return true;
         }
         void MatchCreated(LobbyCreated_t result, bool failed)
         {
             Busy = false;
-            if (failed || result.m_eResult != EResult.k_EResultOK) { LeaveSession(); Status = "Не удалось создать сессию"; return; }
+            if (failed || result.m_eResult != EResult.k_EResultOK) { LeaveSession(); Status = Localization.T("Не удалось создать сессию"); return; }
             MatchLobby = new CSteamID(result.m_ulSteamIDLobby);
             SteamMatchmaking.SetLobbyData(MatchLobby, "game", Game);
             SteamMatchmaking.SetLobbyData(MatchLobby, "kind", "session");
@@ -373,14 +385,14 @@ namespace PirateSlop.Networking
         {
             Busy = false;
             if (failed || result.m_EChatRoomEnterResponse != (uint)EChatRoomEnterResponse.k_EChatRoomEnterResponseSuccess)
-            { LeaveSession(); ignoredMatch = result.m_ulSteamIDLobby; Status = "Сессия недоступна или заполнена"; return; }
+            { LeaveSession(); ignoredMatch = result.m_ulSteamIDLobby; Status = Localization.T("Сессия недоступна или заполнена"); return; }
             MatchLobby = new CSteamID(result.m_ulSteamIDLobby);
             if (SteamMatchmaking.GetLobbyData(MatchLobby, "game") != Game || SteamMatchmaking.GetLobbyData(MatchLobby, "kind") != "session" || SteamMatchmaking.GetLobbyData(MatchLobby, "protocol") != session.ProtocolVersion.ToString())
-            { LeaveSession(); Status = "Другая игра или версия сессии"; return; }
+            { LeaveSession(); Status = Localization.T("Другая игра или версия сессии"); return; }
             if (SteamMatchmaking.GetLobbyData(MatchLobby, "party") != Lobby.ToString())
-            { LeaveSession(); ignoredMatch = result.m_ulSteamIDLobby; Status = "Матч уже идёт — вход закрыт"; return; }
+            { LeaveSession(); ignoredMatch = result.m_ulSteamIDLobby; Status = Localization.T("Матч уже идёт — вход закрыт"); return; }
             if (IsLeader && SteamMatchmaking.GetNumLobbyMembers(MatchLobby) + Count - 1 > SteamMatchmaking.GetLobbyMemberLimit(MatchLobby))
-            { LeaveSession(); Status = "В сессии недостаточно мест для всей команды"; return; }
+            { LeaveSession(); Status = Localization.T("В сессии недостаточно мест для всей команды"); return; }
             PublishMembership();
             if (IsLeader) PublishSession();
             Busy = true; pendingAt = Time.unscaledTime;
@@ -401,6 +413,11 @@ namespace PirateSlop.Networking
         void CheckMatch()
         {
             if (!InLobby) return;
+            if (Banned(SteamUser.GetSteamID()))
+            {
+                if (session.SessionBusy) session.Disconnect();
+                Leave(); Status = Localization.T("Хост исключил вас из лобби"); return;
+            }
             PublishPresence();
             var owner = SteamMatchmaking.GetLobbyOwner(Lobby);
             bool ownerChanged = owner != leader;
@@ -410,7 +427,7 @@ namespace PirateSlop.Networking
                 SteamMatchmaking.SetLobbyData(Lobby, "state", "waiting");
                 SteamMatchmaking.SetLobbyJoinable(Lobby, true);
                 SteamMatchmaking.SetLobbyData(Lobby, "host_name", SteamFriends.GetPersonaName());
-                Status = "Хост вышел — вы управляете лобби";
+                Status = Localization.T("Хост вышел — вы управляете лобби");
             }
             ResolveTeams(); UpdateTeamStatus();
             ulong.TryParse(SteamMatchmaking.GetLobbyData(Lobby, "session"), out var requested);
@@ -421,7 +438,7 @@ namespace PirateSlop.Networking
                 return;
             }
             if (!ulong.TryParse(SteamMatchmaking.GetLobbyData(MatchLobby, "host"), out var host) || SteamMatchmaking.GetLobbyOwner(MatchLobby).m_SteamID != host)
-            { session.Disconnect(); LeaveSession(); Status = "Хост сессии вышел"; return; }
+            { session.Disconnect(); LeaveSession(); Status = Localization.T("Хост сессии вышел"); return; }
             if (host == SteamUser.GetSteamID().m_SteamID) UpdateAdmissions();
             if (!joiningMatch && MatchStarted && !session.SessionBusy && SteamMatchmaking.GetLobbyData(MatchLobby, "crew_" + SteamUser.GetSteamID()) == Lobby.ToString() && int.TryParse(SteamMatchmaking.GetLobbyData(MatchLobby, "team_" + SteamUser.GetSteamID()), out var team) && team > 0)
             { Busy = false; joiningMatch = true; session.BeginSteam(false, host); }
@@ -431,6 +448,7 @@ namespace PirateSlop.Networking
             for (int i = 0; i < SteamMatchmaking.GetNumLobbyMembers(MatchLobby); i++)
             {
                 var member = SteamMatchmaking.GetLobbyMemberByIndex(MatchLobby, i);
+                if (Banned(member)) continue;
                 if (!ulong.TryParse(SteamMatchmaking.GetLobbyMemberData(MatchLobby, member, "party"), out var crew) || crew == 0) continue;
                 string mode = SteamMatchmaking.GetLobbyMemberData(MatchLobby, member, "team_mode");
                 if (mode != "selected") continue;
@@ -453,7 +471,7 @@ namespace PirateSlop.Networking
         }
         public int AdmittedTeam(string address)
         {
-            if (MatchLobby.m_SteamID == 0 || !ulong.TryParse(address, out var id)) return 0;
+            if (MatchLobby.m_SteamID == 0 || !ulong.TryParse(address, out var id) || Banned(new CSteamID(id))) return 0;
             UpdateAdmissions();
             for (int i = 0; i < SteamMatchmaking.GetNumLobbyMembers(MatchLobby); i++)
                 if (SteamMatchmaking.GetLobbyMemberByIndex(MatchLobby, i).m_SteamID == id && matchTeams.TryGetValue(id, out var team)) return team;

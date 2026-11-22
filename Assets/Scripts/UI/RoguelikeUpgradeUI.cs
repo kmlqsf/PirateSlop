@@ -104,7 +104,7 @@ namespace PirateSlop
             if (open)
             {
                 if (DeveloperMenu.IsOpen || BotDebugPanel.ConsumedInput) { Close(false); return; }
-                if (keys.vKey.wasPressedThisFrame || keys.escapeKey.wasPressedThisFrame) { Close(true); return; }
+                if (keys[KeyBindings.Upgrades].wasPressedThisFrame || keys.escapeKey.wasPressedThisFrame) { Close(true); return; }
                 if (!showOwned && !awaiting && player.Upgrades.offers.Length > 0)
                 {
                     int count = player.Upgrades.offers.Length;
@@ -113,12 +113,12 @@ namespace PirateSlop
                     if (keys.digit1Key.wasPressedThisFrame) focusedCard = 0;
                     if (keys.digit2Key.wasPressedThisFrame && count > 1) focusedCard = 1;
                     if (keys.digit3Key.wasPressedThisFrame && count > 2) focusedCard = 2;
-                    if (keys.rKey.wasPressedThisFrame) SubmitReroll();
+                    if (keys[KeyBindings.Reload].wasPressedThisFrame) SubmitReroll();
                     if (keys.enterKey.wasPressedThisFrame || keys.numpadEnterKey.wasPressedThisFrame) SubmitChoice(focusedCard);
                 }
                 return;
             }
-            if (!keys.vKey.wasPressedThisFrame || SessionController.MenuOpen ||
+            if (!keys[KeyBindings.Upgrades].wasPressedThisFrame || SessionController.MenuOpen ||
                 DeveloperMenu.IsOpen || motor.ShipActivityLocked || motor.ActiveParrot != null || ShipSpyglassView.IsViewing ||
                 motor.IsClimbing || motor.BellPullLocked || motor.LocomotionLocked) return;
             active = this;

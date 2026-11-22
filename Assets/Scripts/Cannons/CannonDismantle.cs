@@ -42,10 +42,10 @@ namespace PirateSlop
                 if (!hit.transform.IsChildOf(transform) && hit.distance < range) { nearest = hit; range = hit.distance; }
             var aimed = nearest.collider != null ? nearest.collider.GetComponentInParent<SimpleCannon>() : null;
             if (target != null && aimed != target) { Cancel(); return; }
-            if (key.eKey.wasPressedThisFrame && (key.leftShiftKey.isPressed || key.rightShiftKey.isPressed) && aimed != null && aimed.Network != null && !aimed.IsIgnited && !aimed.IsLoading)
+            if (key[KeyBindings.Use].wasPressedThisFrame && (key.leftShiftKey.isPressed || key.rightShiftKey.isPressed) && aimed != null && aimed.Network != null && !aimed.IsIgnited && !aimed.IsLoading)
             { target = aimed; started = Time.unscaledTime; nextSend = 0f; message = null; }
             if (target == null) return;
-            if (!key.eKey.isPressed || (!key.leftShiftKey.isPressed && !key.rightShiftKey.isPressed))
+            if (!key[KeyBindings.Use].isPressed || (!key.leftShiftKey.isPressed && !key.rightShiftKey.isPressed))
             {
                 Cancel();
                 return;

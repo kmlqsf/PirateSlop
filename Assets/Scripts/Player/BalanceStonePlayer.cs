@@ -56,7 +56,7 @@ namespace PirateSlop
                 float scroll = mouse.scroll.ReadValue().y;
                 if (Mathf.Abs(scroll) > .001f) distance = Mathf.Clamp(distance + Mathf.Sign(scroll) * .3f, .7f, 4f);
                 DragPoint = CannonHands.HeldPoint(ray, distance, best);
-                bool discard = keys != null && keys.gKey.wasPressedThisFrame;
+                bool discard = keys != null && keys[KeyBindings.Drop].wasPressedThisFrame;
                 if (!mouse.leftButton.isPressed || discard)
                 { network.ReleaseBalanceStone(DragPoint, !discard); releasing = true; return; }
                 if (Time.unscaledTime >= nextSend) { network.MoveBalanceStone(DragPoint); nextSend = Time.unscaledTime + .05f; }

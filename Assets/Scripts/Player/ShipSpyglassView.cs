@@ -105,7 +105,7 @@ namespace PirateSlop
             if (engaged)
             {
                 if (player.Motor.IsDead || player.Motor.IsFrozen || player.Motor.IsSwimming || player.Motor.IsClimbing || Cursor.lockState != CursorLockMode.Locked ||
-                    (portable ? equipment == null || !equipment.Active || inventory.ItemAt(inventory.SelectedSlot) != InventoryItem.Spyglass || Mouse.current == null || !Mouse.current.rightButton.isPressed : Vector3.Distance(transform.position, station.transform.position) > 3.5f) || keys.eKey.wasPressedThisFrame || keys.escapeKey.wasPressedThisFrame)
+                    (portable ? equipment == null || !equipment.Active || inventory.ItemAt(inventory.SelectedSlot) != InventoryItem.Spyglass || Mouse.current == null || !Mouse.current.rightButton.isPressed : Vector3.Distance(transform.position, station.transform.position) > 3.5f) || keys[KeyBindings.Use].wasPressedThisFrame || keys.escapeKey.wasPressedThisFrame)
                 { Exit(); return; }
                 if (Mouse.current != null)
                 {
@@ -137,7 +137,7 @@ namespace PirateSlop
             if (Physics.Raycast(cameraView.transform.position, cameraView.transform.forward, out var hit, 3f, ~0, QueryTriggerInteraction.Ignore))
                 aimed = hit.collider.GetComponentInParent<ShipSpyglass>();
             if (aimed != null && aimed.GetComponentInParent<NetworkShip>() == player.Ship) ContextPrompt.Offer("E — смотреть в подзорную трубу", 60);
-            if (aimed == null || aimed.Viewpoint == null || aimed.GetComponentInParent<NetworkShip>() != player.Ship || !keys.eKey.wasPressedThisFrame) return;
+            if (aimed == null || aimed.Viewpoint == null || aimed.GetComponentInParent<NetworkShip>() != player.Ship || !keys[KeyBindings.Use].wasPressedThisFrame) return;
             station = aimed; originalFov = cameraView.fieldOfView; angles = Vector2.zero; zoom = 48f;
             engaged = IsViewing = true; nextPreview = 0f;
             viewingStarted = Time.unscaledTime;

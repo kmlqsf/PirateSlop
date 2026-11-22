@@ -169,7 +169,7 @@ namespace PirateSlop.Networking
             if (Item == InventoryItem.Lantern) { ReadLanternInput(keyboard); return; }
             if (Item == InventoryItem.HolyGrenade || Item == InventoryItem.Spyglass) return;
             Vector3 eyeOffset = motor.PlayerCamera.transform.position-transform.position;
-            if (keyboard != null && keyboard.rKey.wasPressedThisFrame && (Firearm || HandMortar)) UseServerRpc(1, motor.AimDirection, eyeOffset,++localSequence,aim);
+            if (keyboard != null && keyboard[KeyBindings.Reload].wasPressedThisFrame && (Firearm || HandMortar)) UseServerRpc(1, motor.AimDirection, eyeOffset,++localSequence,aim);
             if (mouse.leftButton.wasPressedThisFrame && !pendingShot && !inventory.InteractionUsed && !hands.CanPickUpBall() && Time.time>=nextLocalFire && (!Firearm || handling.Ready))
             {
                 int sequence=++localSequence;

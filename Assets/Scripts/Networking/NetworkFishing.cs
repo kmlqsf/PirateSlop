@@ -87,17 +87,17 @@ namespace PirateSlop.Networking
             if (IsPickingUp) return;
             aimed = FindFish();
             if (aimed != null && !aimed.Available) aimed = null;
-            if (aimed != null && !IsFishing && !CarryingCatch && keys.eKey.wasPressedThisFrame) { PickupServerRpc(aimed.NetworkObject, keys.leftShiftKey.isPressed || keys.rightShiftKey.isPressed, inventory.SelectedSlot, inventory.ItemAt(inventory.SelectedSlot), inventory.ItemCount(inventory.SelectedSlot)); return; }
+            if (aimed != null && !IsFishing && !CarryingCatch && keys[KeyBindings.Use].wasPressedThisFrame) { PickupServerRpc(aimed.NetworkObject, keys.leftShiftKey.isPressed || keys.rightShiftKey.isPressed, inventory.SelectedSlot, inventory.ItemAt(inventory.SelectedSlot), inventory.ItemCount(inventory.SelectedSlot)); return; }
             if (CarryingCatch)
             {
-                if (keys.gKey.wasPressedThisFrame) DropServerRpc();
+                if (keys[KeyBindings.Drop].wasPressedThisFrame) DropServerRpc();
                 else if (mouse.leftButton.wasPressedThisFrame) ThrowCatchServerRpc(motor.AimDirection);
                 else if (mouse.rightButton.wasPressedThisFrame && HasFish) EatServerRpc();
                 return;
             }
             if (HasFish)
             {
-                if (keys.gKey.wasPressedThisFrame && CarryingCatch) DropServerRpc();
+                if (keys[KeyBindings.Drop].wasPressedThisFrame && CarryingCatch) DropServerRpc();
                 else if (mouse.rightButton.wasPressedThisFrame) EatServerRpc();
                 return;
             }

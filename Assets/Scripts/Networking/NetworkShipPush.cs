@@ -22,7 +22,7 @@ namespace PirateSlop.Networking
                 var ship=hit.collider.GetComponentInParent<NetworkShip>();
                 if(ship!=null && Outside(ship)) { aimed=ship; break; }
             }
-            if (aimed != null && Keyboard.current != null && Keyboard.current.eKey.wasPressedThisFrame) PushServerRpc(aimed.NetworkObject);
+            if (aimed != null && Keyboard.current != null && Keyboard.current[KeyBindings.Use].wasPressedThisFrame) PushServerRpc(aimed.NetworkObject);
         }
         bool Outside(NetworkShip ship)
         {

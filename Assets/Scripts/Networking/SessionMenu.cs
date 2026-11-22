@@ -265,7 +265,7 @@ namespace PirateSlop.Networking
                 GUI.color=Color.white;
             }
             else MenuInk(new Rect(x-4,75,610,90),"PIRATE SLOP",menuTitle);
-            MenuText(new Rect(x,180,panelWidth,30),playing ? "Ваше приключение продолжается" : "Порох. Ром. Последний корабль.",true);
+            MenuText(new Rect(x,180,panelWidth,30),playing ? L("Ваше приключение продолжается") : L("Порох. Ром. Последний корабль."),true);
             MenuRule(x,230,76);
             MenuDiamond(new Vector2(x+84,231),3,new Color(menuGold.r,menuGold.g,menuGold.b,.55f));
             float y=274;
@@ -276,34 +276,36 @@ namespace PirateSlop.Networking
                 float progress=ProceduralWorld.Instance!=null ? ProceduralWorld.Instance.Progress : 0f;
                 GUI.color=new Color(.1f,.2f,.22f); GUI.DrawTexture(new Rect(x,y+95,panelWidth,5),Texture2D.whiteTexture);
                 GUI.color=menuGold; GUI.DrawTexture(new Rect(x,y+95,panelWidth*Mathf.Clamp01(progress),5),Texture2D.whiteTexture); GUI.color=Color.white;
-                MenuText(new Rect(x,y+115,panelWidth,30),"Подготовка моря и островов…",true);
-                if(MenuAction(x,y+180,panelWidth,"Отменить подключение")) Disconnect();
+                MenuText(new Rect(x,y+115,panelWidth,30),L("Подготовка моря и островов…"),true);
+                if(MenuAction(x,y+180,panelWidth,L("Отменить подключение"))) Disconnect();
             }
             else if(chooseObserver)
             {
-                MenuText(new Rect(x,y,panelWidth,50),"СВОБОДНАЯ КАМЕРА?");
-                MenuText(new Rect(x,y+60,panelWidth,100),"На карте будут только боты. Ваш корабль не появится.\nWASD и мышь — полёт, Q / E — высота.",true);
-                if(MenuAction(x,y+180,panelWidth,"Да · наблюдать за ботами",true)) { observerSelected=true; chooseObserver=false; }
-                if(MenuAction(x,y+250,panelWidth,"Нет · играть на своём корабле")) { observerSelected=false; chooseObserver=false; }
+                MenuText(new Rect(x,y,panelWidth,50),L("СВОБОДНАЯ КАМЕРА?"));
+                MenuText(new Rect(x,y+60,panelWidth,100),L("На карте будут только боты. Ваш корабль не появится.\nWASD и мышь — полёт, Q / E — высота."),true);
+                if(MenuAction(x,y+180,panelWidth,L("Да · наблюдать за ботами"),true)) { observerSelected=true; chooseObserver=false; }
+                if(MenuAction(x,y+250,panelWidth,L("Нет · играть на своём корабле"))) { observerSelected=false; chooseObserver=false; }
             }
             else if(menuPage==10) DrawPerformanceMenu(x,y,panelWidth);
             else if(menuPage==11) DrawFleetPerformanceMenu(x,y,panelWidth);
+            else if(menuPage==12) DrawPlayersMenu(x,y,panelWidth);
+            else if(menuPage==13) DrawBindingsMenu(x,y,panelWidth);
             else if(menuPage==5) { DrawSteamParty(x,y-42,panelWidth); }
             else if(menuPage==1)
             {
-                MenuText(new Rect(x,y,panelWidth,35),"СОЗДАТЬ ЭКСПЕДИЦИЮ");
-                MenuText(new Rect(x,y+42,panelWidth,25),"Адрес IPv4:порт",true);
+                MenuText(new Rect(x,y,panelWidth,35),L("СОЗДАТЬ ЭКСПЕДИЦИЮ"));
+                MenuText(new Rect(x,y+42,panelWidth,25),L("Адрес IPv4:порт"),true);
                 RegisterMenuControl(new Rect(x,y+68,panelWidth,48),"menu_endpoint");
                 GUI.SetNextControlName("menu_endpoint");
                 address=GUI.TextField(new Rect(x,y+68,panelWidth,48),address,64,menuInput);
-                MenuText(new Rect(x,y+124,panelWidth,25),"Карта",true);
+                MenuText(new Rect(x,y+124,panelWidth,25),L("Карта"),true);
                 float halfW=(panelWidth-10)*.5f;
                 if(!MenuDeveloperTools) useTestMap=false;
-                if(MenuChoice(x,y+150,MenuDeveloperTools?halfW:panelWidth,"Обычная карта",!useTestMap)) useTestMap=false;
-                if(MenuDeveloperTools && MenuChoice(x+halfW+10,y+150,halfW,"Тестовая карта",useTestMap)) useTestMap=true;
+                if(MenuChoice(x,y+150,MenuDeveloperTools?halfW:panelWidth,L("Обычная карта"),!useTestMap)) useTestMap=false;
+                if(MenuDeveloperTools && MenuChoice(x+halfW+10,y+150,halfW,L("Тестовая карта"),useTestMap)) useTestMap=true;
                 if(!useTestMap)
                 {
-                    MenuText(new Rect(x,y+204,panelWidth,25),"Номер карты · пусто — случайная",true);
+                    MenuText(new Rect(x,y+204,panelWidth,25),L("Номер карты · пусто — случайная"),true);
                     RegisterMenuControl(new Rect(x,y+230,panelWidth,48),"menu_seed");
                     GUI.SetNextControlName("menu_seed");
                     seedInput=GUI.TextField(new Rect(x,y+230,panelWidth,48),seedInput,12,menuInput);
@@ -311,80 +313,81 @@ namespace PirateSlop.Networking
                 }
                 else
                 {
-                    MenuText(new Rect(x,y+208,panelWidth,45),"Галерея объектов, водоворот и спавны.\nЗона шторма и боты отключены.",true);
+                    MenuText(new Rect(x,y+208,panelWidth,45),L("Галерея объектов, водоворот и спавны.\nЗона шторма и боты отключены."),true);
                 }
                 float actionY=!useTestMap?y+330:y+265;
-                string actionText=!useTestMap && fillWithBots && observerSelected?"Наблюдать за ботами":"Выйти в море";
+                string actionText=!useTestMap && fillWithBots && observerSelected?L("Наблюдать за ботами"):L("Выйти в море");
                 if(MenuAction(x,actionY,panelWidth,actionText,true))
                 {
                     PlayerPrefs.SetString("LastEndpoint",address);
                     PlayerPrefs.Save();
                     Begin(true,address,useTestMap);
                 }
-                if(MenuAction(x,actionY+65,panelWidth,"Назад")) menuPage=0;
+                if(MenuAction(x,actionY+65,panelWidth,L("Назад"))) menuPage=0;
             }
             else if(menuPage==2)
             {
-                MenuText(new Rect(x,y,panelWidth,35),"ПРИСОЕДИНИТЬСЯ");
-                MenuText(new Rect(x,y+48,panelWidth,25),"Адрес IPv4:порт",true);
+                MenuText(new Rect(x,y,panelWidth,35),L("ПРИСОЕДИНИТЬСЯ"));
+                MenuText(new Rect(x,y+48,panelWidth,25),L("Адрес IPv4:порт"),true);
                 RegisterMenuControl(new Rect(x,y+78,panelWidth,52),"menu_endpoint");
                 GUI.SetNextControlName("menu_endpoint");
                 address=GUI.TextField(new Rect(x,y+78,panelWidth,52),address,64,menuInput);
-                MenuText(new Rect(x,y+150,panelWidth,70),"Введите адрес, который сообщил капитан вашей сессии.",true);
-                if(MenuAction(x,y+285,panelWidth,"Подключиться",true))
+                MenuText(new Rect(x,y+150,panelWidth,70),L("Введите адрес, который сообщил капитан вашей сессии."),true);
+                if(MenuAction(x,y+285,panelWidth,L("Подключиться"),true))
                 {
                     PlayerPrefs.SetString("LastEndpoint",address);
                     PlayerPrefs.Save();
                     Begin(false,address);
                 }
-                if(MenuAction(x,y+350,panelWidth,"Назад")) menuPage=0;
+                if(MenuAction(x,y+350,panelWidth,L("Назад"))) menuPage=0;
             }
             else if(menuPage==3)
             {
                 var bank=Resources.Load<GameAudioBank>("GameAudioBank");
-                MenuText(new Rect(x,y,panelWidth,32),"ЗВУК");
+                MenuText(new Rect(x,y,panelWidth,32),L("ЗВУК"));
                 if(bank!=null)
                 {
-                    bank.Master=MenuVolume(x,y+50,panelWidth,"Общая громкость",bank.Master,"AudioMaster");
-                    bank.Music=MenuVolume(x,y+110,panelWidth,"Музыка",bank.Music,"AudioMusic");
-                    bank.Effects=MenuVolume(x,y+170,panelWidth,"Эффекты",bank.Effects,"AudioEffects");
-                    bank.Ambience=MenuVolume(x,y+230,panelWidth,"Море и ветер",bank.Ambience,"AudioAmbience");
-                    bank.Interface=MenuVolume(x,y+290,panelWidth,"Интерфейс",bank.Interface,"AudioInterface");
+                    bank.Master=MenuVolume(x,y+50,panelWidth,L("Общая громкость"),bank.Master,"AudioMaster");
+                    bank.Music=MenuVolume(x,y+110,panelWidth,L("Музыка"),bank.Music,"AudioMusic");
+                    bank.Effects=MenuVolume(x,y+170,panelWidth,L("Эффекты"),bank.Effects,"AudioEffects");
+                    bank.Ambience=MenuVolume(x,y+230,panelWidth,L("Море и ветер"),bank.Ambience,"AudioAmbience");
+                    bank.Interface=MenuVolume(x,y+290,panelWidth,L("Интерфейс"),bank.Interface,"AudioInterface");
                 }
-                if(MenuAction(x,y+350,panelWidth,"Голосовой чат")) menuPage=6;
-                if(MenuAction(x,y+415,panelWidth,"Назад")) { PlayerPrefs.Save(); menuPage=7; }
+                if(MenuAction(x,y+350,panelWidth,L("Голосовой чат"))) menuPage=6;
+                if(MenuAction(x,y+415,panelWidth,L("Назад"))) { PlayerPrefs.Save(); menuPage=7; }
             }
             else if(menuPage==6) DrawVoiceMenu(x,y,panelWidth);
             else if(menuPage==4)
             {
-                MenuText(new Rect(x,y,panelWidth,35),"УПРАВЛЕНИЕ");
-                MenuText(new Rect(x,y+55,panelWidth,280),"WASD — движение · E — взаимодействие\nShift + E — снять пушку\nЛКМ — огонь / действие\nПКМ — отмена / еда\n1–6 — предметы · G — бросить\nF1 — вид от третьего лица\nТруба: колесо — зум, нажатие — метка\nПушка: мышь — наведение\nE / Esc — выйти из прицела");
-                
-                float sens = PlayerPrefs.GetFloat("MouseSensitivity", 1.0f);
-                float nextSens = MenuVolume(x, y+270, panelWidth, "Чувствительность мыши", sens / 5f, "MouseSens_UI") * 5f;
-                if(!Mathf.Approximately(sens, nextSens)) PlayerPrefs.SetFloat("MouseSensitivity", nextSens);
-                
-                if(MenuAction(x,y+345,panelWidth,"Назад")) menuPage=7;
+                MenuText(new Rect(x,y,panelWidth,35),L("УПРАВЛЕНИЕ"));
+                float sens = GameSettings.MouseSensitivity;
+                float nextSens = MenuSlider(x, y+50, panelWidth, L("Чувствительность мыши")+"  "+sens.ToString("0.00"), sens / 5f) * 5f;
+                if(!Mathf.Approximately(sens, nextSens)) GameSettings.MouseSensitivity = nextSens;
+                bool invert = MenuToggle(x, y+115, panelWidth, GameSettings.InvertY, L("Инверсия мыши (ось Y)"));
+                if(invert != GameSettings.InvertY) GameSettings.InvertY = invert;
+                if(MenuAction(x,y+165,panelWidth,L("Назначение клавиш"))) { menuPage=13; listeningAction=-1; }
+                MenuText(new Rect(x,y+228,panelWidth,120),L("ЛКМ — огонь / действие · ПКМ — отмена / еда\n1–6 — предметы · F1 — вид от третьего лица\nShift + взаимодействие — снять пушку\nТруба: колесо — зум, нажатие — метка"),true);
+                if(MenuAction(x,y+360,panelWidth,L("Назад"))) { PlayerPrefs.Save(); menuPage=7; }
             }
             else if(menuPage==7)
             {
-                MenuText(new Rect(x,y,panelWidth,35),"НАСТРОЙКИ");
-                if(MenuAction(x,y+60,panelWidth,"Графика")) menuPage=8;
-                if(MenuAction(x,y+128,panelWidth,"Звук")) menuPage=3;
-                if(MenuAction(x,y+196,panelWidth,"Управление")) menuPage=4;
-                if(MenuAction(x,y+264,panelWidth,"Игра и Интерфейс")) menuPage=9;
-                if(MenuAction(x,y+328,panelWidth,"Папка логов и ошибок",secondary:true)) PirateSlop.ErrorLog.OpenFolder();
-                if(MenuAction(x,y+390,panelWidth,"Назад")) menuPage=0;
+                MenuText(new Rect(x,y,panelWidth,35),L("НАСТРОЙКИ"));
+                if(MenuAction(x,y+60,panelWidth,L("Графика"))) menuPage=8;
+                if(MenuAction(x,y+128,panelWidth,L("Звук"))) menuPage=3;
+                if(MenuAction(x,y+196,panelWidth,L("Управление"))) menuPage=4;
+                if(MenuAction(x,y+264,panelWidth,L("Игра и Интерфейс"))) menuPage=9;
+                if(MenuAction(x,y+328,panelWidth,L("Папка логов и ошибок"),secondary:true)) PirateSlop.ErrorLog.OpenFolder();
+                if(MenuAction(x,y+390,panelWidth,L("Назад"))) menuPage=0;
             }
             else if(menuPage==8)
             {
-                MenuText(new Rect(x,y,panelWidth,35),"ГРАФИКА");
-                bool isFullscreen = MenuToggle(x, y+60, panelWidth, Screen.fullScreen, "Полноэкранный режим");
+                MenuText(new Rect(x,y,panelWidth,35),L("ГРАФИКА"));
+                bool isFullscreen = MenuToggle(x, y+60, panelWidth, Screen.fullScreen, L("Полноэкранный режим"));
                 if(isFullscreen != Screen.fullScreen) { Screen.fullScreen = isFullscreen; PlayerPrefs.SetInt("Fullscreen", isFullscreen ? 1 : 0); }
-                bool isVSync = MenuToggle(x, y+100, panelWidth, QualitySettings.vSyncCount > 0, "Вертикальная синхронизация");
+                bool isVSync = MenuToggle(x, y+100, panelWidth, QualitySettings.vSyncCount > 0, L("Вертикальная синхронизация"));
                 if (isVSync != (QualitySettings.vSyncCount > 0)) { QualitySettings.vSyncCount = isVSync ? 1 : 0; PlayerPrefs.SetInt("VSync", isVSync ? 1 : 0); }
                 
-                if(MenuAction(x, y+150, panelWidth, "Разрешение: " + Screen.width + "x" + Screen.height))
+                if(MenuAction(x, y+150, panelWidth, L("Разрешение: ") + Screen.width + "x" + Screen.height))
                 {
                     int resIndex = -1;
                     var res = Screen.resolutions.Select(r => new Vector2Int(r.width, r.height)).Distinct()
@@ -395,58 +398,67 @@ namespace PirateSlop.Networking
                         Screen.SetResolution(res[resIndex].x, res[resIndex].y, Screen.fullScreenMode);
                     }
                 }
-                if(MenuAction(x, y+218, panelWidth, "Качество: " + QualitySettings.names[QualitySettings.GetQualityLevel()]))
+                if(MenuAction(x, y+218, panelWidth, L("Качество: ") + QualitySettings.names[QualitySettings.GetQualityLevel()]))
                 {
                     int q = (QualitySettings.GetQualityLevel() + 1) % QualitySettings.names.Length;
                     QualitySettings.SetQualityLevel(q); PlayerPrefs.SetInt("QualityLevel", q);
                 }
-                bool optimizedClouds = MenuToggle(x, y+270, panelWidth, PirateSlop.Performance.PerformanceRenderOverrides.OptimizedClouds, "Оптимизация облаков и зоны");
+                bool optimizedClouds = MenuToggle(x, y+270, panelWidth, PirateSlop.Performance.PerformanceRenderOverrides.OptimizedClouds, L("Оптимизация облаков и зоны"));
                 if (optimizedClouds != PirateSlop.Performance.PerformanceRenderOverrides.OptimizedClouds) PirateSlop.Performance.PerformanceRenderOverrides.SetOptimizedClouds(optimizedClouds);
-                if(MenuAction(x,y+345,panelWidth,"Назад")) menuPage=7;
+                float fov = GameSettings.Fov;
+                float nextFov = 60f + MenuSlider(x, y+315, panelWidth, L("Поле зрения")+"  "+Mathf.RoundToInt(fov)+"°", (fov-60f)/50f) * 50f;
+                if(!Mathf.Approximately(fov, Mathf.Round(nextFov))) GameSettings.Fov = nextFov;
+                float bright = GameSettings.Brightness;
+                float nextBright = MenuSlider(x, y+375, panelWidth, L("Яркость")+"  "+(bright>=0?"+":"")+bright.ToString("0.00"), (bright+1f)*.5f) * 2f - 1f;
+                if(!Mathf.Approximately(bright, nextBright)) GameSettings.Brightness = nextBright;
+                if(MenuAction(x, y+435, panelWidth, L("Режим для дальтоников")+": "+GameSettings.ColorblindName(GameSettings.Colorblind), secondary:true))
+                    GameSettings.Colorblind = (ColorblindMode)(((int)GameSettings.Colorblind + 1) % 4);
+                if(MenuAction(x,y+490,panelWidth,L("Назад"))) { PlayerPrefs.Save(); menuPage=7; }
             }
             else if(menuPage==9)
             {
-                MenuText(new Rect(x,y,panelWidth,35),"ИГРА И ИНТЕРФЕЙС");
-                bool hm = MenuToggle(x, y+60, panelWidth, PlayerPrefs.GetInt("ShowHitmarkers", 1) == 1, "Хитмаркеры");
-                PlayerPrefs.SetInt("ShowHitmarkers", hm ? 1 : 0);
-                bool di = MenuToggle(x, y+100, panelWidth, PlayerPrefs.GetInt("ShowDamageIndicators", 1) == 1, "Индикаторы урона");
-                PlayerPrefs.SetInt("ShowDamageIndicators", di ? 1 : 0);
-                bool kf = MenuToggle(x, y+140, panelWidth, PlayerPrefs.GetInt("ShowKillFeed", 1) == 1, "Журнал убийств");
-                PlayerPrefs.SetInt("ShowKillFeed", kf ? 1 : 0);
-                bool cp = MenuToggle(x, y+180, panelWidth, PlayerPrefs.GetInt("ShowCompass", 1) == 1, "Компас");
-                PlayerPrefs.SetInt("ShowCompass", cp ? 1 : 0);
-                bool iy = MenuToggle(x, y+220, panelWidth, PlayerPrefs.GetInt("InvertY", 0) == 1, "Инверсия мыши (ось Y)");
-                PlayerPrefs.SetInt("InvertY", iy ? 1 : 0);
-                bool telemetry = MenuToggle(x, y+260, panelWidth, GameTelemetry.Visible, "Полная телеметрия");
+                MenuText(new Rect(x,y,panelWidth,35),L("ИГРА И ИНТЕРФЕЙС"));
+                bool hm = MenuToggle(x, y+60, panelWidth, GameSettings.Hitmarkers, L("Хитмаркеры"));
+                if(hm != GameSettings.Hitmarkers) GameSettings.Hitmarkers = hm;
+                bool di = MenuToggle(x, y+100, panelWidth, GameSettings.DamageIndicators, L("Индикаторы урона"));
+                if(di != GameSettings.DamageIndicators) GameSettings.DamageIndicators = di;
+                bool cp = MenuToggle(x, y+140, panelWidth, GameSettings.Compass, L("Компас"));
+                if(cp != GameSettings.Compass) GameSettings.Compass = cp;
+                bool cc = MenuToggle(x, y+180, panelWidth, GameSettings.Captions, L("Субтитры звуковых сигналов"));
+                if(cc != GameSettings.Captions) GameSettings.Captions = cc;
+                bool telemetry = MenuToggle(x, y+220, panelWidth, GameTelemetry.Visible, L("Полная телеметрия"));
                 if (telemetry != GameTelemetry.Visible) GameTelemetry.SetVisible(telemetry);
-                if(MenuAction(x,y+345,panelWidth,"Назад")) menuPage=7;
+                if(MenuAction(x,y+270,panelWidth,L("Язык")+": "+(Localization.Current==GameLanguage.Russian?L("Русский"):"English"),secondary:true))
+                    Localization.Current = Localization.Current==GameLanguage.Russian?GameLanguage.English:GameLanguage.Russian;
+                if(MenuAction(x,y+345,panelWidth,L("Назад"))) { PlayerPrefs.Save(); menuPage=7; }
             }
             else
             {
                 if(playing)
                 {
-                    if(MenuAction(x,y,panelWidth,"Вернуться на палубу",true)) AdvancedPlayerController.SetCursor(true);
-                    if(MenuAction(x,y+58,panelWidth,"Покинуть сессию")) Disconnect();
-                    if(steamSession && party.MatchLobby.m_SteamID != 0 && MenuLink(new Rect(x,y-35,panelWidth,32),"Копировать ID Steam-сессии: "+party.MatchLobby)) GUIUtility.systemCopyBuffer=party.MatchLobby.ToString();
+                    if(MenuAction(x,y,panelWidth,L("Вернуться на палубу"),true)) AdvancedPlayerController.SetCursor(true);
+                    if(MenuAction(x,y+58,panelWidth,L("Покинуть сессию"))) Disconnect();
+                    if(HostingSession && MenuAction(x,y+104,panelWidth,L("Игроки сессии"),secondary:true)) menuPage=12;
+                    if(steamSession && party.MatchLobby.m_SteamID != 0 && MenuLink(new Rect(x,y-35,panelWidth,32),L("Копировать ID Steam-сессии: ")+party.MatchLobby)) GUIUtility.systemCopyBuffer=party.MatchLobby.ToString();
                 }
                 else
                 {
-                    if(MenuAction(x,y,panelWidth,"ВЫЙТИ В МОРЕ",true)) menuPage=party != null && party.InLobby ? 5 : 1;
-                    if(MenuAction(x,y+58,panelWidth,"Присоединиться к сессии")) menuPage=party != null && party.InLobby ? 5 : 2;
+                    if(MenuAction(x,y,panelWidth,L("ВЫЙТИ В МОРЕ"),true)) menuPage=party != null && party.InLobby ? 5 : 1;
+                    if(MenuAction(x,y+58,panelWidth,L("Присоединиться к сессии"))) menuPage=party != null && party.InLobby ? 5 : 2;
                 }
-                if(MenuAction(x,y+146,panelWidth,"Лобби · Steam")) menuPage=5;
+                if(MenuAction(x,y+146,panelWidth,L("Лобби · Steam"))) menuPage=5;
                 bool isLeader = party == null || !party.InLobby || party.IsLeader;
-                if(isLeader && MenuAction(x,y+198,panelWidth,"Кастомизация")) PirateSlop.Customization.SailCustomizationUI.Open();
-                if(MenuAction(x,y+250,panelWidth,"Настройки")) menuPage=7;
-                if(MenuDeveloperTools && MenuAction(x,y+304,panelWidth,"Диагностика")) menuPage=10;
-                if(MenuAction(x,MenuDeveloperTools?y+362:y+304,panelWidth,"Выйти из игры")) Application.Quit();
+                if(isLeader && MenuAction(x,y+198,panelWidth,L("Кастомизация"))) PirateSlop.Customization.SailCustomizationUI.Open();
+                if(MenuAction(x,y+250,panelWidth,L("Настройки"))) menuPage=7;
+                if(MenuDeveloperTools && MenuAction(x,y+304,panelWidth,L("Диагностика"))) menuPage=10;
+                if(MenuAction(x,MenuDeveloperTools?y+362:y+304,panelWidth,L("Выйти из игры"))) Application.Quit();
                 if(MenuDeveloperTools && (!playing || LoadTestActive))
                 {
                     MenuRule(x+32,y+430,112);
-                    GUI.Label(new Rect(x+32,y+443,panelWidth,20),!playing?"ТЕСТИРОВАНИЕ":"ДЛЯ РАЗРАБОТЧИКА",menuFooter);
-                    if(!playing && MenuAction(x,y+467,panelWidth,"Тестовая карта",secondary:true)) Begin(true,"127.0.0.1:"+Config.Port,true);
-                    if(MenuDeveloperTools && !playing && MenuAction(x,y+509,panelWidth,"Тест нагрузки · без AI",secondary:true)) BeginLoadTest();
-                    if(MenuDeveloperTools && playing && LoadTestActive && MenuAction(x,y+434,panelWidth,"Движение нагрузки · F7",secondary:true)) ToggleLoadTestMotion();
+                    GUI.Label(new Rect(x+32,y+443,panelWidth,20),!playing?L("ТЕСТИРОВАНИЕ"):L("ДЛЯ РАЗРАБОТЧИКА"),menuFooter);
+                    if(!playing && MenuAction(x,y+467,panelWidth,L("Тестовая карта"),secondary:true)) Begin(true,"127.0.0.1:"+Config.Port,true);
+                    if(MenuDeveloperTools && !playing && MenuAction(x,y+509,panelWidth,L("Тест нагрузки · без AI"),secondary:true)) BeginLoadTest();
+                    if(MenuDeveloperTools && playing && LoadTestActive && MenuAction(x,y+434,panelWidth,L("Движение нагрузки · F7"),secondary:true)) ToggleLoadTestMotion();
                 }
             }
             if(!string.IsNullOrEmpty(error))
@@ -458,7 +470,7 @@ namespace PirateSlop.Networking
                 MenuText(new Rect(errorRect.x+12,errorRect.y+6,errorRect.width-24,errorRect.height-12),error,true);
                 menuSmall.normal.textColor=previous;
             }
-            if(playing) GUI.Label(new Rect(x,868,width-128,22),"Игроки: "+(population-botPopulation)+" · Боты: "+botPopulation+" · Команды: "+teamPopulation+" · Мест: "+population+" / "+MaxPlayers,menuFooter);
+            if(playing) GUI.Label(new Rect(x,868,width-128,22),L("Игроки: ")+(population-botPopulation)+L(" · Боты: ")+botPopulation+L(" · Команды: ")+teamPopulation+L(" · Мест: ")+population+" / "+MaxPlayers,menuFooter);
             CompleteMenuNavigation();
             GUI.matrix=oldMatrix; GUI.color=oldColor;
         }
@@ -472,8 +484,9 @@ namespace PirateSlop.Networking
         }
         void DrawBotToggle(float x, float y, float width)
         {
+            if (!MenuDeveloperTools) { fillWithBots = false; observerSelected = false; chooseObserver = false; return; }
             bool previous = fillWithBots;
-            fillWithBots = MenuToggle(x,y,width,fillWithBots,"Заполнить свободные места ботами");
+            fillWithBots = MenuToggle(x,y,width,fillWithBots,L("Заполнить свободные места ботами"));
             if (fillWithBots && !previous) chooseObserver = true;
             if (!fillWithBots) { observerSelected = false; chooseObserver = false; }
         }
@@ -523,6 +536,38 @@ namespace PirateSlop.Networking
             }
         }
         float nextSliderAudio;
+        static string L(string text) => Localization.T(text);
+        int listeningAction = -1;
+        float MenuSlider(float x,float y,float width,string label,float value)
+        {
+            MenuText(new Rect(x,y,width,28),label,true);
+            PirateHudStyle.Brush(new Rect(x,y+42,width*Mathf.Clamp01(value),3),menuGold,true);
+            float next=GUI.HorizontalSlider(new Rect(x,y+35,width,22),value,0f,1f,menuSlider,menuThumb);
+            if(!Mathf.Approximately(value,next) && Time.unscaledTime >= nextSliderAudio) { GameAudio.Play(SoundCue.UISlider, Vector3.zero, .35f, true); nextSliderAudio = Time.unscaledTime + .1f; }
+            return next;
+        }
+        void DrawBindingsMenu(float x,float y,float width)
+        {
+            MenuText(new Rect(x,y,width,35),L("НАЗНАЧЕНИЕ КЛАВИШ"));
+            var keyboard=UnityEngine.InputSystem.Keyboard.current;
+            if(listeningAction>=0 && keyboard!=null)
+            {
+                if(keyboard.escapeKey.wasPressedThisFrame) listeningAction=-1;
+                else foreach(var control in keyboard.allKeys)
+                    if(control!=null && control.wasPressedThisFrame && control.keyCode!=UnityEngine.InputSystem.Key.Escape)
+                    { KeyBindings.Set((GameAction)listeningAction,control.keyCode); listeningAction=-1; break; }
+            }
+            for(int i=0;i<KeyBindings.Count;i++)
+            {
+                var action=(GameAction)i;
+                float row=y+45+i*30;
+                MenuText(new Rect(x,row,width-150,28),KeyBindings.Name(action),true);
+                string value=listeningAction==i?L("Нажмите клавишу…"):"[ "+KeyBindings.Label(action)+" ]";
+                if(MenuLink(new Rect(x+width-150,row,150,28),value)) listeningAction=i;
+            }
+            if(MenuAction(x,y+540,width,L("Сбросить по умолчанию"),secondary:true)) { KeyBindings.Reset(); listeningAction=-1; }
+            if(MenuAction(x,y+590,width,L("Назад"))) { listeningAction=-1; menuPage=4; }
+        }
         float MenuVolume(float x,float y,float width,string label,float value,string key)
         {
             MenuText(new Rect(x,y,width,28),label+"  "+Mathf.RoundToInt(value*100)+"%",true);

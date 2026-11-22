@@ -22,7 +22,7 @@ namespace PirateSlop.Networking
 
         void ReadLanternInput(Keyboard keyboard)
         {
-            if (keyboard == null || !keyboard.eKey.wasPressedThisFrame || inventory.InteractionUsed ||
+            if (keyboard == null || !keyboard[KeyBindings.Use].wasPressedThisFrame || inventory.InteractionUsed ||
                 (inventory.Fishing != null && inventory.Fishing.PickupFocused) ||
                 (GetComponent<PirateSlop.Ships.ShipV3PlayerInteraction>()?.ConsumedInput ?? false)) return;
             ToggleLanternServerRpc(inventory.SelectedSlot);

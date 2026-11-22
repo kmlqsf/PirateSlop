@@ -31,16 +31,16 @@ namespace PirateSlop
             var kb = Keyboard.current;
             if (kb != null)
             {
-                if (kb.wKey.isPressed || kb.upArrowKey.isPressed) move.y += 1f;
-                if (kb.sKey.isPressed || kb.downArrowKey.isPressed) move.y -= 1f;
-                if (kb.aKey.isPressed || kb.leftArrowKey.isPressed) move.x -= 1f;
-                if (kb.dKey.isPressed || kb.rightArrowKey.isPressed) move.x += 1f;
+                if (kb[KeyBindings.Forward].isPressed || kb.upArrowKey.isPressed) move.y += 1f;
+                if (kb[KeyBindings.Back].isPressed || kb.downArrowKey.isPressed) move.y -= 1f;
+                if (kb[KeyBindings.Left].isPressed || kb.leftArrowKey.isPressed) move.x -= 1f;
+                if (kb[KeyBindings.Right].isPressed || kb.rightArrowKey.isPressed) move.x += 1f;
                 if (move.sqrMagnitude > 1f) move.Normalize();
 
-                jump = kb.spaceKey.wasPressedThisFrame;
-                interactPressed = kb.eKey.wasPressedThisFrame;
-                interactHeld = kb.eKey.isPressed;
-                cancel = kb.escapeKey.wasPressedThisFrame || kb.qKey.wasPressedThisFrame;
+                jump = kb[KeyBindings.Jump].wasPressedThisFrame;
+                interactPressed = kb[KeyBindings.Use].wasPressedThisFrame;
+                interactHeld = kb[KeyBindings.Use].isPressed;
+                cancel = kb.escapeKey.wasPressedThisFrame || kb[KeyBindings.Cancel].wasPressedThisFrame;
             }
 
             var mouse = Mouse.current;

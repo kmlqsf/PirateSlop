@@ -146,17 +146,17 @@ namespace PirateSlop.Networking
             ResolveShipPrefab();
             if (ShipPrefab == null)
             {
-                SetError("Не удалось загрузить игровой корабль. Проверьте импорт ShipV3Test.");
+                SetError(L("Не удалось загрузить игровой корабль. Проверьте импорт ShipV3Test."));
                 return;
             }
             if (starting || connecting || playing || manager.ServerManager.Started) return;
-            if (host && !environmentTest && !string.IsNullOrWhiteSpace(seedInput) && !int.TryParse(seedInput, out _)) { SetError("Seed должен быть целым числом."); return; }
-            if (!ParseEndpoint(endpoint, out var ip, out var port)) { SetError("Введите IPv4:порт, например 192.168.1.10:7777"); return; }
+            if (host && !environmentTest && !string.IsNullOrWhiteSpace(seedInput) && !int.TryParse(seedInput, out _)) { SetError(L("Seed должен быть целым числом.")); return; }
+            if (!ParseEndpoint(endpoint, out var ip, out var port)) { SetError(L("Введите IPv4:порт, например 192.168.1.10:7777")); return; }
             environmentTestRequested = host && environmentTest;
             bool testRequested = environmentTestRequested;
             observerSession = host && (PerformanceBenchmarkActive || !testRequested && fillWithBots && observerSelected) && !dedicated && !Automated;
             error = ""; address = endpoint; startedAt = Time.realtimeSinceStartup; connecting = true; starting = true; hostRequested = host;
-            status = host ? "Создание сессии…" : "Подключение…";
+            status = host ? L("Создание сессии…") : L("Подключение…");
             botRosterPolicy = host ? new InitialFillBotRosterPolicy(fillWithBots && (!testRequested || PerformanceBenchmarkActive)) : null;
             StartCoroutine(StartSession(host, ip, port));
         }
@@ -165,7 +165,7 @@ namespace PirateSlop.Networking
             yield return LoadGameScene();
             if (!connecting) { starting = false; yield break; }
             var world = ProceduralWorld.Instance;
-            if (world == null) { starting = false; connecting = false; SetError("В игровой сцене отсутствует ProceduralWorld."); yield break; }
+            if (world == null) { starting = false; connecting = false; SetError(L("В игровой сцене отсутствует ProceduralWorld.")); yield break; }
             stormRunning = stormPaused = false;
             ClearSeagulls();
             if (storm != null) Destroy(storm.gameObject);
@@ -180,7 +180,7 @@ namespace PirateSlop.Networking
                     if (!environmentTestRequested) MainOceanEvents.ValidateCatalog(Config.Loot);
                     layout = environmentTestRequested ? EnvironmentTestGallery.CreateLayout(world.Profile, seaLevel) : MainOceanMap.CreateLayout(world.Profile, seed, Mathf.Max(1, MaxPlayers / CrewSize), seaLevel);
                 }
-                catch (Exception ex) { SetError("Генерация карты: " + ex.Message); }
+                catch (Exception ex) { SetError(L("Генерация карты: ") + ex.Message); }
                 if (layout == null) { starting = connecting = false; yield break; }
                 yield return GenerateWorld(world, layout);
                 if (!world.Ready || !connecting) { starting = connecting = false; yield break; }
@@ -208,8 +208,8 @@ namespace PirateSlop.Networking
                 }
             }
             starting = false;
-            if (host) { if (!(multipass != null ? multipass.StartConnection(true, steamSession ? 1 : 0) : manager.ServerManager.StartConnection())) { connecting = false; SetError("Не удалось запустить сервер"); if (steamSession) party.Leave(); } }
-            else if (!manager.ClientManager.StartConnection()) SetError("Не удалось начать подключение");
+            if (host) { if (!(multipass != null ? multipass.StartConnection(true, steamSession ? 1 : 0) : manager.ServerManager.StartConnection())) { connecting = false; SetError(L("Не удалось запустить сервер")); if (steamSession) party.Leave(); } }
+            else if (!manager.ClientManager.StartConnection()) SetError(L("Не удалось начать подключение"));
         }
         void ServerState(ServerConnectionStateArgs args)
         {
@@ -222,13 +222,13 @@ namespace PirateSlop.Networking
                 SeaLootSpawner.Spawn(ProceduralWorld.Instance, manager, Config.Loot);
                 InitializeBotRoster();
                 if (steamSession) party.ServerReady();
-                if (dedicated) { connecting = false; status = "Сервер запущен"; }
+                if (dedicated) { connecting = false; status = L("Сервер запущен"); }
                 else if (hostRequested) manager.ClientManager.StartConnection();
             }
             else if (args.ConnectionState == LocalConnectionState.Stopped)
             {
                 FriendlyFireEnabled = false;
-                if (connecting && error == "") SetError("Сервер не запущен: порт занят или недоступен");
+                if (connecting && error == "") SetError(L("Сервер не запущен: порт занят или недоступен"));
                 players.Clear(); slots.Clear(); awaitingWorld.Clear(); population = 0;
                 ResetUpgrades();
                 ResetRoster();
@@ -242,7 +242,7 @@ namespace PirateSlop.Networking
             bool unexpected = playing || connecting;
             playing = connecting = false;
             if (steamSession && unexpected) { party?.LeaveSession(); steamSession = false; }
-            if (unexpected && error == "") SetError("Соединение закрыто: хост вышел или адрес недоступен");
+            if (unexpected && error == "") SetError(L("Соединение закрыто: хост вышел или адрес недоступен"));
             AdvancedPlayerController.SetCursor(false);
             if (MenuCamera != null && !Automated && !dedicated) MenuCamera.gameObject.SetActive(true);
             if (manager.ServerManager.Started && !dedicated) manager.ServerManager.StopConnection(true);
@@ -257,13 +257,13 @@ namespace PirateSlop.Networking
         }
         IEnumerator GenerateWorld(ProceduralWorld world, WorldLayout layout)
         {
-            status = "Генерация карты…";
+            status = L("Генерация карты…");
             var builder = world.Build(layout);
             while (connecting || manager.ServerManager.Started)
             {
                 bool more;
                 try { more = builder.MoveNext(); }
-                catch (Exception ex) { world.Clear(); SetError("Карта: " + ex.Message); break; }
+                catch (Exception ex) { world.Clear(); SetError(L("Карта: ") + ex.Message); break; }
                 if (!more) break;
                 startedAt = Time.realtimeSinceStartup;
                 yield return builder.Current;
@@ -276,7 +276,7 @@ namespace PirateSlop.Networking
             if (worldLoading != null || playing) return;
             WorldLayout layout;
             try { layout = WorldLayout.FromJson(message.Json); }
-            catch (Exception ex) { Disconnect(); SetError("Карта: " + ex.Message); return; }
+            catch (Exception ex) { Disconnect(); SetError(L("Карта: ") + ex.Message); return; }
             worldLoading = StartCoroutine(ReceiveWorld(layout, message.Checksum));
         }
         IEnumerator ReceiveWorld(WorldLayout layout, string checksum)
@@ -286,7 +286,7 @@ namespace PirateSlop.Networking
             if (!manager.ServerManager.Started) yield return GenerateWorld(world, layout);
             if (world == null || !world.Ready || world.Checksum != checksum)
             {
-                worldLoading = null; Disconnect(); SetError("Карта не совпадает с сервером. Обновите обе игры."); yield break;
+                worldLoading = null; Disconnect(); SetError(L("Карта не совпадает с сервером. Обновите обе игры.")); yield break;
             }
             manager.ClientManager.Broadcast(new WorldReadyMessage { Checksum = checksum, UpgradeToken = UpgradeResumeToken });
             startedAt = Time.realtimeSinceStartup; worldLoading = null;
@@ -406,7 +406,7 @@ namespace PirateSlop.Networking
         void Population(PopulationMessage message, Channel channel) { population = message.Count; botPopulation = message.Bots; teamPopulation = message.Teams; SessionId = message.SessionId; }
         public void PlayerReady(NetworkPlayer player)
         {
-            connecting = false; playing = true; status = "В сессии";
+            connecting = false; playing = true; status = L("В сессии");
             if (MenuCamera != null) MenuCamera.gameObject.SetActive(false);
             Debug.Log($"CLIENT_READY participant={player.ParticipantId.Value} session={SessionId}");
         }
@@ -424,7 +424,7 @@ namespace PirateSlop.Networking
             EndLoadTest();
             if (steamSession) party?.LeaveSession();
             steamSession = false;
-            AdvancedPlayerController.SetCursor(false); status = "Отключено";
+            AdvancedPlayerController.SetCursor(false); status = L("Отключено");
             if (MenuCamera != null && !Automated && !dedicated) MenuCamera.gameObject.SetActive(true);
         }
         void Update()
@@ -454,7 +454,7 @@ namespace PirateSlop.Networking
                 }
             }
             if (quitAt > 0 && Time.realtimeSinceStartup >= quitAt) { Disconnect(); Application.Quit(); }
-            if (connecting && Time.realtimeSinceStartup - startedAt >= Config.ConnectTimeout) { var reason = error == "" ? "Тайм-аут подключения (15 с): проверьте IP, UDP-порт и Firewall" : error; Disconnect(); SetError(reason); }
+            if (connecting && Time.realtimeSinceStartup - startedAt >= Config.ConnectTimeout) { var reason = error == "" ? L("Тайм-аут подключения (15 с): проверьте IP, UDP-порт и Firewall") : error; Disconnect(); SetError(reason); }
         }
         void OnDestroy()
         {

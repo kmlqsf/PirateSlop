@@ -25,7 +25,7 @@ namespace PirateSlop.Networking
             }
             if (!IsOwner || !CanKick || !motor.InputActive || SessionController.MenuOpen ||
                 PlayerInventory.LootWindowOpen || (GetComponent<PlayerInventory>()?.ControlFocused ?? false) ||
-                Time.time < nextLocalKick || Keyboard.current == null || !Keyboard.current.xKey.wasPressedThisFrame) return;
+                Time.time < nextLocalKick || Keyboard.current == null || !Keyboard.current[KeyBindings.Kick].wasPressedThisFrame) return;
             nextLocalKick = Time.time + KickCooldown;
             kickDirection = motor.AimDirection;
             PresentKick();

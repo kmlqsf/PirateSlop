@@ -90,7 +90,7 @@ namespace PirateSlop
         void Update()
         {
             if (!started) return;
-            bool talk = CanTransmit && (VoiceActivation || (Keyboard.current != null && Keyboard.current.bKey.isPressed));
+            bool talk = CanTransmit && (VoiceActivation || (Keyboard.current != null && Keyboard.current[KeyBindings.Voice].isPressed));
             bool recording = input.Mic != null && input.Mic.IsRecording;
             if (!talk || !recording) Transmitting = false;
             else if (!VoiceActivation) Transmitting = true;

@@ -378,7 +378,7 @@ namespace PirateSlop
             {
                 if (!IsAnchored && curProgress >= 1f)
                 {
-                    if (kb != null && kb.eKey.isPressed)
+                    if (kb != null && kb[KeyBindings.Use].isPressed)
                     {
                         dropHoldTime += Time.deltaTime;
                         int pct = Mathf.RoundToInt(Mathf.Clamp01(dropHoldTime / 1.5f) * 100f);

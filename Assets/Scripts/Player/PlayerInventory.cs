@@ -210,7 +210,7 @@ namespace PirateSlop
                 InteractionUsed = true;
                 if (openChest == null || !openChest.Available || motor.IsDead || motor.IsFrozen || !Networked || network.LootHandsBusy || Vector3.Distance(transform.position, openChest.transform.position) > 5f)
                     CloseLoot(Networked && network.IsOwner && !motor.IsDead);
-                else if (Keyboard.current != null && (Keyboard.current.escapeKey.wasPressedThisFrame || Keyboard.current.eKey.wasPressedThisFrame)) CloseLoot(true);
+                else if (Keyboard.current != null && (Keyboard.current.escapeKey.wasPressedThisFrame || Keyboard.current[KeyBindings.Use].wasPressedThisFrame)) CloseLoot(true);
                 return;
             }
 #if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
@@ -229,13 +229,13 @@ namespace PirateSlop
                     SetSelection(i); rotation = tilt = roll = 0;
                     if (Networked) network.SelectSlot(i);
                 }
-            if (keyboard.gKey.wasPressedThisFrame && Networked && (Fishing == null || !Fishing.CarryingCatch))
+            if (keyboard[KeyBindings.Drop].wasPressedThisFrame && Networked && (Fishing == null || !Fishing.CarryingCatch))
             { network.DropSelected(); InteractionUsed = true; return; }
             if (hands != null && hands.HasHeldBall)
             {
                 var loose = hands.HeldBall.GetComponent<NetworkLooseCannonball>();
-                if (keyboard.eKey.wasPressedThisFrame && Networked && loose != null) loose.Store();
-                else if (keyboard.eKey.wasPressedThisFrame && Networked && hands.HeldBall.Network != null)
+                if (keyboard[KeyBindings.Use].wasPressedThisFrame && Networked && loose != null) loose.Store();
+                else if (keyboard[KeyBindings.Use].wasPressedThisFrame && Networked && hands.HeldBall.Network != null)
                     network.StoreBall(hands.HeldBall.Network.NetworkObject);
                 return;
             }
@@ -254,7 +254,7 @@ namespace PirateSlop
                 aimedRumShelf = nearest.collider.GetComponentInParent<RumShelf>();
             }
             if (HandleBarricadeInteraction(nearest)) return;
-            if (keyboard.eKey.wasPressedThisFrame && aimedHarpoon != null && motor.ActiveHarpoon == null)
+            if (keyboard[KeyBindings.Use].wasPressedThisFrame && aimedHarpoon != null && motor.ActiveHarpoon == null)
             {
                 InteractionUsed = true;
                 if (aimedHarpoon.IsBroken)
@@ -285,7 +285,7 @@ namespace PirateSlop
             }
             if (aimedRumShelf != null && Networked)
             {
-                if (keyboard.eKey.wasPressedThisFrame)
+                if (keyboard[KeyBindings.Use].wasPressedThisFrame)
                 {
                     InteractionUsed = true;
                     network.DepositRum(aimedRumShelf.GetComponentInParent<NetworkShip>().NetworkObject, SelectedSlot, nearest.point);
@@ -293,9 +293,9 @@ namespace PirateSlop
                 return;
             }
             if (Networked && aimedBall != null && !aimedBall.Loaded && aimedBall.Network != null &&
-                (keyboard.eKey.wasPressedThisFrame || mouse.leftButton.wasPressedThisFrame))
+                (keyboard[KeyBindings.Use].wasPressedThisFrame || mouse.leftButton.wasPressedThisFrame))
             { InteractionUsed = true; network.StoreBall(aimedBall.Network.NetworkObject); return; }
-            if (keyboard.eKey.wasPressedThisFrame && aimedCannon != null && !keyboard.leftShiftKey.isPressed && !keyboard.rightShiftKey.isPressed)
+            if (keyboard[KeyBindings.Use].wasPressedThisFrame && aimedCannon != null && !keyboard.leftShiftKey.isPressed && !keyboard.rightShiftKey.isPressed)
             {
                 InteractionUsed = true;
                 if (Networked && aimedCannon.Network != null && BallSelected && aimedCannon.AcceptsAmmo(BallItem(SelectedSlot)) && !aimedCannon.IsLoaded)
@@ -306,14 +306,14 @@ namespace PirateSlop
             if (nearest.collider != null) chest = nearest.collider.GetComponentInParent<NetworkLootChest>();
             if (chest != null && Networked && (Fishing == null || (!Fishing.IsFishing && !Fishing.IsEating)))
             {
-                if (keyboard.eKey.wasPressedThisFrame)
+                if (keyboard[KeyBindings.Use].wasPressedThisFrame)
                 {
                     InteractionUsed = true;
                     network.UseChest(chest.NetworkObject);
                 }
                 return;
             }
-            if (pickup != null && pickup.Crate.KitAvailable && keyboard.eKey.wasPressedThisFrame)
+            if (pickup != null && pickup.Crate.KitAvailable && keyboard[KeyBindings.Use].wasPressedThisFrame)
             {
                 InteractionUsed = true;
                 int slot = EmptySlot();
@@ -355,7 +355,7 @@ namespace PirateSlop
             if (mouse.rightButton.wasPressedThisFrame) cancelled = true;
             if (cancelled) return;
             RotatePlacement(mouse);
-            float lean = ((keyboard.eKey.isPressed ? 1f : 0f) - (keyboard.qKey.isPressed ? 1f : 0f)) * 60f * Time.deltaTime;
+            float lean = ((keyboard[KeyBindings.Use].isPressed ? 1f : 0f) - (keyboard[KeyBindings.Cancel].isPressed ? 1f : 0f)) * 60f * Time.deltaTime;
             if (keyboard.leftShiftKey.isPressed || keyboard.rightShiftKey.isPressed) roll += lean;
             else tilt += lean;
             var ship = nearest.collider != null ? nearest.collider.GetComponentInParent<ShipController>() : null;
@@ -392,8 +392,8 @@ namespace PirateSlop
                 InteractionUsed = true;
                 if (working.Kind == SeaLootKind.Raft) return HandleRaftLockpick(working);
                 if (sunkenWorkChest != working) { sunkenWorkChest = working; sunkenWorkStartedAt = Time.unscaledTime; }
-                bool active = motor.InputActive && !keyboard.qKey.wasPressedThisFrame && !keyboard.escapeKey.wasPressedThisFrame;
-                active &= !(Time.unscaledTime - sunkenWorkStartedAt > .25f && keyboard.eKey.wasPressedThisFrame);
+                bool active = motor.InputActive && !keyboard[KeyBindings.Cancel].wasPressedThisFrame && !keyboard.escapeKey.wasPressedThisFrame;
+                active &= !(Time.unscaledTime - sunkenWorkStartedAt > .25f && keyboard[KeyBindings.Use].wasPressedThisFrame);
                 if (!active || Time.unscaledTime >= nextLootInput)
                 {
                     network.LootInput(active);
@@ -406,7 +406,7 @@ namespace PirateSlop
             if (network.CarriedLoot != null)
             {
                 InteractionUsed = true;
-                if (motor.InputActive && keyboard.gKey.wasPressedThisFrame) network.DropLoot();
+                if (motor.InputActive && keyboard[KeyBindings.Drop].wasPressedThisFrame) network.DropLoot();
                 return true;
             }
             if (!motor.InputActive || motor.LocomotionLocked || motor.IsClimbing || HandsOccupied || (hands != null && hands.HasHeldBall)) return false;
@@ -422,7 +422,7 @@ namespace PirateSlop
             {
                 InteractionUsed = true;
                 ContextPrompt.Offer(lever.Owner.Released ? "Замок снят — трасса рушится!" : "E — потянуть рычаг · освободить сундук", 45);
-                if (keyboard.eKey.wasPressedThisFrame && !lever.Owner.Released) network.PullPlatformingLever(lever.Owner.NetworkObject);
+                if (keyboard[KeyBindings.Use].wasPressedThisFrame && !lever.Owner.Released) network.PullPlatformingLever(lever.Owner.NetworkObject);
                 return true;
             }
             var key = nearest.collider != null ? nearest.collider.GetComponentInParent<PirateSlop.World.SeagullKeyTarget>() : null;
@@ -430,14 +430,14 @@ namespace PirateSlop
             {
                 InteractionUsed = true;
                 ContextPrompt.Offer("E — подобрать ключ от сундука", 45);
-                if (keyboard.eKey.wasPressedThisFrame) network.PickupSeagullKey(key.Event.NetworkObject);
+                if (keyboard[KeyBindings.Use].wasPressedThisFrame) network.PickupSeagullKey(key.Event.NetworkObject);
                 return true;
             }
             chest = nearest.collider != null ? nearest.collider.GetComponentInParent<NetworkLootChest>() : null;
             if (chest == null || chest.Kind == SeaLootKind.None) return false;
             InteractionUsed = true;
-            if (keyboard.fKey.wasPressedThisFrame && chest.Available) network.CarryLoot(chest.NetworkObject);
-            else if (keyboard.eKey.wasPressedThisFrame)
+            if (keyboard[KeyBindings.Carry].wasPressedThisFrame && chest.Available) network.CarryLoot(chest.NetworkObject);
+            else if (keyboard[KeyBindings.Use].wasPressedThisFrame)
             {
                 if (chest.Available || chest.InSeagullWreck) network.UseChest(chest.NetworkObject);
                 else network.StartLootWork(chest.NetworkObject);

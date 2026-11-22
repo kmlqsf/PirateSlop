@@ -291,13 +291,13 @@ public partial class AdvancedPlayerController : MonoBehaviour
         if (kb.f1Key.wasPressedThisFrame && ActiveCannon == null && ActiveHarpoon == null && ActiveParrot == null && !BellPullLocked) SetThirdPerson(!IsThirdPerson);
         if (kb.escapeKey.wasPressedThisFrame) { pending.Release = true; SetCursor(false); }
         if (mouse != null && mouse.leftButton.wasPressedThisFrame && !PlayerInventory.LootWindowOpen && !PirateSlop.Networking.SessionController.MenuOpen) SetCursor(true);
-        if ((InputActive || ropeWalk) && !PirateSlop.WhalePlayerInteraction.InputCaptured && (!ShipActivityLocked || ropeWalk) && ActiveCannon == null && ActiveHarpoon == null && mouse != null && (lootNetwork == null || !lootNetwork.LootWorkLocked) && (shipControls == null || !shipControls.IsDragging)) { var d = mouse.delta.ReadValue() * mouseSensitivity * AimSensitivityScale; lookYaw = Mathf.Repeat(lookYaw + d.x, 360f); pitch = Mathf.Clamp(pitch - d.y, -85f, 85f); }
+        if ((InputActive || ropeWalk) && !PirateSlop.WhalePlayerInteraction.InputCaptured && (!ShipActivityLocked || ropeWalk) && ActiveCannon == null && ActiveHarpoon == null && mouse != null && (lootNetwork == null || !lootNetwork.LootWorkLocked) && (shipControls == null || !shipControls.IsDragging)) { var d = mouse.delta.ReadValue() * mouseSensitivity * AimSensitivityScale * GameSettings.MouseSensitivity; if (GameSettings.InvertY) d.y = -d.y; lookYaw = Mathf.Repeat(lookYaw + d.x, 360f); pitch = Mathf.Clamp(pitch - d.y, -85f, 85f); }
         if (IsThirdPerson && mouse != null && (inventory == null || !inventory.PlacementActive))
         {
             float scroll = mouse.scroll.ReadValue().y;
             if (Mathf.Abs(scroll) > 0.01f) thirdPersonDistance = Mathf.Clamp(thirdPersonDistance - Mathf.Sign(scroll) * 0.5f, 1.2f, 6f);
         }
-        var rawMove = InputActive || ropeWalk ? Vector2.ClampMagnitude(new Vector2((kb.dKey.isPressed || kb.rightArrowKey.isPressed ? 1 : 0) - (kb.aKey.isPressed || kb.leftArrowKey.isPressed ? 1 : 0), (kb.wKey.isPressed || kb.upArrowKey.isPressed ? 1 : 0) - (kb.sKey.isPressed || kb.downArrowKey.isPressed ? 1 : 0)), 1) : Vector2.zero;
+        var rawMove = InputActive || ropeWalk ? Vector2.ClampMagnitude(new Vector2((kb[KeyBindings.Right].isPressed || kb.rightArrowKey.isPressed ? 1 : 0) - (kb[KeyBindings.Left].isPressed || kb.leftArrowKey.isPressed ? 1 : 0), (kb[KeyBindings.Forward].isPressed || kb.upArrowKey.isPressed ? 1 : 0) - (kb[KeyBindings.Back].isPressed || kb.downArrowKey.isPressed ? 1 : 0)), 1) : Vector2.zero;
         if (IsClimbing)
         {
             pending.Move = rawMove;
@@ -325,25 +325,31 @@ public partial class AdvancedPlayerController : MonoBehaviour
             pending.Yaw = lookYaw;
         }
         pending.Pitch = pitch;
-        pending.Rise = InputActive && kb.spaceKey.isPressed;
-        pending.Sprint = InputActive && (kb.leftShiftKey.isPressed || kb.rightShiftKey.isPressed);
-        pending.Crouch = InputActive && (kb.cKey.isPressed || kb.leftCtrlKey.isPressed);
-        pending.Slide |= InputActive && kb.cKey.wasPressedThisFrame;
-        pending.Jump |= InputActive && kb.spaceKey.wasPressedThisFrame;
+        pending.Rise = InputActive && kb[KeyBindings.Jump].isPressed;
+        pending.Sprint = InputActive && kb[KeyBindings.Sprint].isPressed;
+        pending.Crouch = InputActive && (kb[KeyBindings.Crouch].isPressed || kb.leftCtrlKey.isPressed);
+        pending.Slide |= InputActive && kb[KeyBindings.Crouch].wasPressedThisFrame;
+        pending.Jump |= InputActive && kb[KeyBindings.Jump].wasPressedThisFrame;
         if (shipV3Interaction == null) shipV3Interaction = GetComponent<PirateSlop.Ships.ShipV3PlayerInteraction>();
         var pumpInput = GetComponent<PirateSlop.Ships.ShipBilgePumpPlayer>();
         if (GetComponent<PirateSlop.RiggingPlayerInteraction>()?.ConsumedInput == true || GetComponent<PirateSlop.BalanceStonePlayer>()?.BlocksInventory == true || shipV3Interaction != null && shipV3Interaction.ConsumedInput || pumpInput != null && pumpInput.ConsumedInput) pending.Use = false;
-        else pending.Use |= InputActive && (kb.eKey.wasPressedThisFrame || kb.fKey.wasPressedThisFrame) && (IsSwimming || LocomotionLocked || inventory == null || !inventory.AimingAtPickup());
-        pending.Release |= kb.qKey.wasPressedThisFrame || !InputActive;
+        else pending.Use |= InputActive && (kb[KeyBindings.Use].wasPressedThisFrame || kb[KeyBindings.Carry].wasPressedThisFrame) && (IsSwimming || LocomotionLocked || inventory == null || !inventory.AimingAtPickup());
+        pending.Release |= kb[KeyBindings.Cancel].wasPressedThisFrame || !InputActive;
         if (!networked)
         {
             Simulate(ConsumeCommand(), Time.deltaTime);
             GetComponent<ShipDeckPassenger>()?.Detect();
         }
     }
+    float appliedFov;
     void LateUpdate()
     {
         if (!local || playerCamera == null) return;
+        if (!Mathf.Approximately(appliedFov, GameSettings.Fov) && (appliedFov <= 0f || Mathf.Approximately(playerCamera.fieldOfView, appliedFov)))
+        {
+            playerCamera.fieldOfView = GameSettings.Fov;
+            appliedFov = GameSettings.Fov;
+        }
         if (IsDead)
         {
             PositionDeathSpectator();

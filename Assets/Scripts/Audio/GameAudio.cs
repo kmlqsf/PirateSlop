@@ -129,6 +129,7 @@ namespace PirateSlop
             if(firearm!=null && firearm.ShotClips!=null && firearm.ShotClips.Length>0)
                 entry=new GameAudioBank.Entry { Cue=cue,Clips=firearm.ShotClips,DistantClips=entry?.DistantClips,DistantStart=entry?.DistantStart ?? 25f,DistantEnd=entry?.DistantEnd ?? 65f,DistantVolume=entry?.DistantVolume ?? .65f,Volume=firearm.ShotVolume,Distance=firearm.AudibleDistance };
             if (entry == null || entry.Clips == null || entry.Clips.Length == 0) return;
+            if (GameSettings.Captions) ClosedCaptions.Report(cue, position, ui, entry.Distance);
             bool feedback = cue == SoundCue.Hurt || cue == SoundCue.Death || cue == SoundCue.HitConfirm || cue == SoundCue.AirWarning || cue == SoundCue.DrownDamage || cue == SoundCue.KnockdownBody;
             bool gunshot = firearm!=null || cue == SoundCue.Pistol || cue == SoundCue.Musket || cue == SoundCue.DoubleBarrel;
             var source = gunshot ? audio.shotVoices[audio.nextShot] : feedback ? audio.feedbackVoices[audio.nextFeedback] : audio.voices[audio.nextVoice];

@@ -30,7 +30,7 @@ namespace PirateSlop
                 if (distance < localDistance) { localDistance = distance; nearby = owner; }
             }
             var keys = Keyboard.current;
-            if (keys != null && !keys.eKey.isPressed) waitForRelease = false;
+            if (keys != null && !keys[KeyBindings.Use].isPressed) waitForRelease = false;
             if (keys == null || motor.PlayerCamera == null || motor.IsDead || motor.IsDowned || motor.IsFrozen || motor.IsSwimming || motor.IsClimbing ||
                 SessionController.MenuOpen || DeveloperMenu.IsOpen || RoguelikeUpgradeUI.BlocksInput || network.LootHandsBusy ||
                 Cursor.lockState != CursorLockMode.Locked || motor.LocomotionLocked && !ownsLock)
@@ -38,7 +38,7 @@ namespace PirateSlop
             if (held != null)
             {
                 consumedFrame = Time.frameCount; nearby = held;
-                if (!held.IsSpawned || held.ChestAvailable || held.Failed || !held.CanReach(network) || !keys.eKey.isPressed || keys.qKey.wasPressedThisFrame || keys.escapeKey.wasPressedThisFrame)
+                if (!held.IsSpawned || held.ChestAvailable || held.Failed || !held.CanReach(network) || !keys[KeyBindings.Use].isPressed || keys[KeyBindings.Cancel].wasPressedThisFrame || keys.escapeKey.wasPressedThisFrame)
                 { Release(); return; }
                 if (!confirmed && Time.unscaledTime - grabAt > 1.5f) { Reject("Сервер не подтвердил захват тормоза"); return; }
                 if (confirmed && held.Operator != network.NetworkObject && Time.unscaledTime - grabAt > .6f) { Reject("Тормоз отпущен"); return; }
@@ -56,7 +56,7 @@ namespace PirateSlop
                 if (along <= 0 || along > 3.5f || along >= nearest || (delta - ray.direction * along).sqrMagnitude > .65f * .65f) continue;
                 hovered = owner; nearest = along;
             }
-            if (hovered == null || hovered.ChestAvailable || hovered.Failed || !keys.eKey.isPressed || waitForRelease) return;
+            if (hovered == null || hovered.ChestAvailable || hovered.Failed || !keys[KeyBindings.Use].isPressed || waitForRelease) return;
             consumedFrame = Time.frameCount;
             held = hovered; confirmed = false; grabAt = Time.unscaledTime; nextSend = grabAt + .1f;
             motor.ShipActivityLocked = ownsLock = true;

@@ -85,7 +85,7 @@ namespace PirateSlop
             if (grabbed != null)
             {
                 var kb = Keyboard.current;
-                if (!mouse.leftButton.isPressed || !InRange(grabbed) || kb != null && (kb.qKey.wasPressedThisFrame || kb.eKey.wasPressedThisFrame || kb.escapeKey.wasPressedThisFrame)) { Release(); Hover(null); return; }
+                if (!mouse.leftButton.isPressed || !InRange(grabbed) || kb != null && (kb[KeyBindings.Cancel].wasPressedThisFrame || kb[KeyBindings.Use].wasPressedThisFrame || kb.escapeKey.wasPressedThisFrame)) { Release(); Hover(null); return; }
                 if (grabbed.Sails != null)
                 {
                     int owner = grabbed.Sails.Owner(grabbed.RopeIndex);

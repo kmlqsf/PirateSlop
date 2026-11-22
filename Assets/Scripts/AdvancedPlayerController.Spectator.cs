@@ -60,9 +60,9 @@ public partial class AdvancedPlayerController
             spectatorPitch = Mathf.Clamp(spectatorPitch - look.y, -85f, 85f);
         }
         if (!free || keyboard == null) return;
-        float x = (keyboard.dKey.isPressed ? 1f : 0f) - (keyboard.aKey.isPressed ? 1f : 0f);
-        float z = (keyboard.wKey.isPressed ? 1f : 0f) - (keyboard.sKey.isPressed ? 1f : 0f);
-        float y = (keyboard.spaceKey.isPressed || keyboard.eKey.isPressed ? 1f : 0f) - (keyboard.leftCtrlKey.isPressed || keyboard.qKey.isPressed ? 1f : 0f);
+        float x = (keyboard[KeyBindings.Right].isPressed ? 1f : 0f) - (keyboard[KeyBindings.Left].isPressed ? 1f : 0f);
+        float z = (keyboard[KeyBindings.Forward].isPressed ? 1f : 0f) - (keyboard[KeyBindings.Back].isPressed ? 1f : 0f);
+        float y = (keyboard[KeyBindings.Jump].isPressed || keyboard[KeyBindings.Use].isPressed ? 1f : 0f) - (keyboard.leftCtrlKey.isPressed || keyboard[KeyBindings.Cancel].isPressed ? 1f : 0f);
         var rotation = Quaternion.Euler(spectatorPitch, spectatorYaw, 0);
         var move = rotation * new Vector3(x, 0, z) + Vector3.up * y;
         float speed = spectatorSpeed * (keyboard.leftShiftKey.isPressed ? 3f : 1f);

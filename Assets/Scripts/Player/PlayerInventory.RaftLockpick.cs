@@ -34,17 +34,17 @@ namespace PirateSlop
             }
             bool cancel = !motor.InputActive || keyboard == null || mouse == null;
             if (keyboard != null)
-                cancel |= keyboard.qKey.wasPressedThisFrame || keyboard.escapeKey.wasPressedThisFrame ||
-                    (Time.unscaledTime - lockpickOpenedAt > .25f && keyboard.eKey.wasPressedThisFrame);
+                cancel |= keyboard[KeyBindings.Cancel].wasPressedThisFrame || keyboard.escapeKey.wasPressedThisFrame ||
+                    (Time.unscaledTime - lockpickOpenedAt > .25f && keyboard[KeyBindings.Use].wasPressedThisFrame);
             if (cancel)
             {
                 network.LootInput(false);
                 lockpickPressing = false;
                 return true;
             }
-            float direction = (keyboard.dKey.isPressed ? 1f : 0f) - (keyboard.aKey.isPressed ? 1f : 0f);
+            float direction = (keyboard[KeyBindings.Right].isPressed ? 1f : 0f) - (keyboard[KeyBindings.Left].isPressed ? 1f : 0f);
             lockpickAngle = Mathf.Clamp(lockpickAngle + mouse.delta.ReadValue().x * .35f + direction * 80f * Time.deltaTime, -85f, 85f);
-            lockpickPressing = mouse.leftButton.isPressed || keyboard.spaceKey.isPressed;
+            lockpickPressing = mouse.leftButton.isPressed || keyboard[KeyBindings.Jump].isPressed;
             UpdateRaftLockSounds(chest);
             if (Time.unscaledTime >= nextLockInput)
             {

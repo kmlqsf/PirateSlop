@@ -12,7 +12,7 @@
 
 ## Полный каталог
 
-Учтено 14519 файлов без `.meta`. Ещё 13082 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
+Учтено 14524 файлов без `.meta`. Ещё 13088 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
 
 | Раздел | Назначение | Файлов |
 | --- | --- | ---: |
@@ -35,9 +35,9 @@
 | [Assets/Models](<Docs/ProjectMap/Assets-Models.md>) | Модели и связанные ресурсы | 9668 |
 | [Assets/Plugins](<Docs/ProjectMap/Assets-Plugins.md>) | Плагины | 5 |
 | [Assets/Prefabs](<Docs/ProjectMap/Assets-Prefabs.md>) | Готовые игровые объекты | 139 |
-| [Assets/Resources](<Docs/ProjectMap/Assets-Resources.md>) | Ресурсы, доступные для загрузки по имени | 174 |
+| [Assets/Resources](<Docs/ProjectMap/Assets-Resources.md>) | Ресурсы, доступные для загрузки по имени | 175 |
 | [Assets/Scenes](<Docs/ProjectMap/Assets-Scenes.md>) | Сохранённые сцены | 3 |
-| [Assets/Scripts](<Docs/ProjectMap/Assets-Scripts.md>) | Игровой код и редакторские инструменты | 625 |
+| [Assets/Scripts](<Docs/ProjectMap/Assets-Scripts.md>) | Игровой код и редакторские инструменты | 629 |
 | [Assets/Settings](<Docs/ProjectMap/Assets-Settings.md>) | Настройки игровых систем и рендеринга | 60 |
 | [Assets/Shaders](<Docs/ProjectMap/Assets-Shaders.md>) | Шейдеры | 22 |
 | [Assets/StreamingAssets](<Docs/ProjectMap/Assets-StreamingAssets.md>) | Ресурсы раздела; точный состав — в каталоге | 5 |
@@ -1389,8 +1389,9 @@ CoastalSandSetup.Apply создаёт в12каменных префабах от
 
 ### Сеть, сессия и Steam (`networking`)
 
-Ключевые слова: сеть, мультиплеер, steam, network, конец матча, победа, итоги матча, протокол 202, список лобби, публичное лобби, AppID 5671450, RestartAppIfNecessary.
+Ключевые слова: сеть, мультиплеер, steam, network, конец матча, победа, итоги матча, протокол 202, список лобби, публичное лобби, AppID 5671450, RestartAppIfNecessary, выгнать игрока, кик из лобби.
 
+22.11.2026: исключение игроков хостом. SteamParty.Kick ставит в лобби группы ban_<steamid>=1, очищает слот и отключает соединение (SessionController.KickConnection); исключённый клиент сам выходит из лобби и сессии («Хост исключил вас из лобби»), не может войти повторно, не учитывается в ResolveTeams/CanLaunch и не допускается в матч (UpdateAdmissions/AdmittedTeam). UI: «✕» у игрока в «Сборе экипажей» для хоста; в матче меню → «Игроки сессии» (только хост) с кнопкой «Выгнать»; без Steam просто отключает соединение. Голосовой мут уже был в Звук → Голос.
 22.11.2026: Steam переведён на Playtest AppID 5671450 (SteamParty.LaunchAppId; steam_appid.txt проекта и SteamTestBuild пишут его же рядом с exe). AppID 480/Spacewar больше не принимается, ключ лобби game=PirateSlop.v1. Вне Editor перед SteamAPI.Init вызывается RestartAppIfNecessary — работает только без steam_appid.txt, поэтому в депо Steam этот файл не загружать. Принимаются 5671420 и 5671450.
 22.11.2026, протокол202: SessionMatch завершает матч на сервере, когда из ≥2 участвовавших экипажей на плаву остался один; при одновременном потоплении побеждает затонувший позже, полное совпадение — ничья. Статистика команды: потоплено (последний вражеский удар ≤90с до потопления), попаданий по кораблям (ShipDestruction.Damage), сундуков (первое NetworkLootChest.Open), время жизни. MatchResultMessage рассылается всем и новым подключениям; экран итогов (OnGUI) с одной кнопкой «В меню» = Disconnect, выход хоста возвращает всех в Steam-лобби. Не работает в тестовой карте, нагрузочном тесте и бенчмарке. Решения этапа — Docs/ReleaseAudit.md §12. Зона: одна фаза 900 с (SessionController.DefaultStormDuration, поле больше не сериализуется в сцене) до StormZone.FinalRadius = радиус воронки 500 м. Игровая проверка не выполнялась.
 22.11.2026, протокол202: Steam-лобби группы (kind=party) создаётся публичным, данные host_name; SteamParty.FindLobbies ищет лобби той же игры/протокола в состоянии waiting, меню «Лобби · Steam» показывает до 5 открытых лобби с кнопкой «Войти» и обновлением раз в 10 с, вход по ID лобби сохранён. После «Начать экспедицию» лобби закрывается (state starting, joinable=false) и снова открывается после выхода из сессии. Вход в идущий матч закрыт: «Сессия другого капитана»/JoinSession удалены, MatchLobby хранит party, UpdateAdmissions допускает только участников группы хоста, чужая группа получает «Матч уже идёт — вход закрыт». Игровая проверка через Steam не выполнялась.
@@ -1445,6 +1446,7 @@ MultiplayerSceneSetup.Configure и PromoteShipV3 привязывают ShipV3Te
 
 Ключевые слова: боты, бот, ai.
 
+22.11.2026, решение пользователя: боты в релиз не добавляются. Переключатели «Заполнить свободные места ботами» (создание экспедиции и лобби Steam) показываются только при DeveloperMenu.Available (Editor, Development или -developer); иначе fillWithBots=false. Аргумент -bots и код ботов сохранены как инструмент разработчика.
 Спецификация: BOT_SPEC.md; текущий этап и проверки: BOT_PROGRESS.md. Выполнять один этап за запуск.
 Старое поведение удалено. Начальная политика создаёт ботов только при запуске с включённой настройкой; подключение человека заменяет бота, смерть/выход не дозаполняют матч.
 BotNumber использует стабильный ParticipantId; номера могут иметь пропуски. Наличие серверного персонажа не подтверждает навигацию и действия.
@@ -1693,8 +1695,9 @@ SelectedReview: выбор звуков revision 132 (80 файлов, 55 соб
 
 ### Меню и HUD (`ui`)
 
-Ключевые слова: интерфейс, меню, hud, лог ошибок, errors.log.
+Ключевые слова: интерфейс, меню, hud, лог ошибок, errors.log, локализация, английский, ребиндинг, назначение клавиш, FOV, яркость, дальтоники, субтитры.
 
+22.11.2026, настройки и локализация. KeyBindings: 16 действий (GameAction) с клавишами по умолчанию W/S/A/D/Space/LeftShift/C/E/Q/R/F/G/X/V/B/M, хранение PlayerPrefs Bind_<действие>, обмен при конфликте; все прямые чтения этих клавиш в игре заменены на keyboard[KeyBindings.X] (стрелки, Esc, F-клавиши, цифры и Shift-модификатор остались фиксированными). Для текста подсказок использовать KeyBindings.Label(GameAction.X). GameSettings: чувствительность и инверсия мыши (раньше сохранялись, но не применялись), FOV 60–110 (LateUpdate AdvancedPlayerController, только когда камера на базовом FOV), яркость (postExposure) и фильтр для дальтоников (ChannelMixer, дальтонизация) через глобальный Volume priority 1000, хитмаркеры, индикатор урона, компас, субтитры; восстановление Quality/VSync при запуске. Фиктивный переключатель «Журнал убийств» удалён. ClosedCaptions: подписи ~30 важных SoundCue с направлением, из GameAudio.Play. Localization: T(русская строка) → Resources/Localization/en.json {entries:[{ru,en}]}, F(формат, аргументы), язык PlayerPrefs Language (по умолчанию по языку системы), переключатель в «Игра и интерфейс». Переведены меню, лобби Steam, голос, итоги матча, статусы SteamParty/SessionController, настройки, названия клавиш и субтитры (246 строк). HUD, подсказки взаимодействия, предметы, улучшения и ивенты не переведены — при переделке HUD оборачивать строки в Localization.T и добавлять переводы в en.json.
 22.11.2026: ErrorLog (только Player, не Editor) пишет ошибки/исключения/assert в Application.persistentDataPath/errors.log: заголовок сессии с версией, ОС, GPU, RAM и путём Player.log; повтор одного сообщения не чаще 5 с, максимум 300 записей за сессию, при >2 МБ файл переносится в errors.prev.log. Настройки → «Папка логов и ошибок» открывает эту папку (там же Player.log).
 22.11.2026: DeveloperMenu.Available = Editor || Development build || аргумент запуска -developer. SessionMenu.MenuDeveloperTools использует его же: в Release без флага скрыты «Тестовая карта» (создание экспедиции, лобби Steam, блок «Тестирование»), «Диагностика» и тест нагрузки; F8 и серверные команды разработчика уже были закрыты этим условием.
 SessionController разделён на partial-файлы меню. Различать меню сессии и игровой HUD.
@@ -1739,6 +1742,11 @@ F8 в основной тестовой карте содержит ползун
 - [Assets/Scripts/Networking/NetworkPlayer.Identity.cs](<Assets/Scripts/Networking/NetworkPlayer.Identity.cs>) — Исходник C#: NetworkPlayer.
 - [Assets/Scripts/UI/CrewPresentation.cs](<Assets/Scripts/UI/CrewPresentation.cs>) — Исходник C#: CrewPresentation, Plate.
 - [Assets/Scripts/ErrorLog.cs](<Assets/Scripts/ErrorLog.cs>) — Исходник C#: ErrorLog.
+- [Assets/Scripts/Input/KeyBindings.cs](<Assets/Scripts/Input/KeyBindings.cs>) — Исходник C#: GameAction, KeyBindings.
+- [Assets/Scripts/UI/Localization.cs](<Assets/Scripts/UI/Localization.cs>) — Исходник C#: GameLanguage, Localization, Entry, Table.
+- [Assets/Scripts/UI/GameSettings.cs](<Assets/Scripts/UI/GameSettings.cs>) — Исходник C#: ColorblindMode, GameSettings.
+- [Assets/Scripts/UI/ClosedCaptions.cs](<Assets/Scripts/UI/ClosedCaptions.cs>) — Исходник C#: ClosedCaptions, Caption.
+- [Assets/Resources/Localization/en.json](<Assets/Resources/Localization/en.json>) — Конфигурация / данные JSON.
 - [unity.md](<unity.md>) — Документация.
 - [qol-roadmap.md](<qol-roadmap.md>) — Документация.
 

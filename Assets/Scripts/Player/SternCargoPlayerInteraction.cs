@@ -44,7 +44,7 @@ namespace PirateSlop
             if (held != null)
             {
                 consumedFrame = Time.frameCount; nearby = held.Source;
-                if (!held.CanWork || !held.CanReach(network,true) || !mouse.leftButton.isPressed || keys.qKey.wasPressedThisFrame || keys.escapeKey.wasPressedThisFrame)
+                if (!held.CanWork || !held.CanReach(network,true) || !mouse.leftButton.isPressed || keys[KeyBindings.Cancel].wasPressedThisFrame || keys.escapeKey.wasPressedThisFrame)
                 { Release(); return; }
                 if (!confirmed && Time.unscaledTime-grabAt>1.5f) { Reject("Сервер не подтвердил захват каната"); return; }
                 if (confirmed && held.Operator != network.NetworkObject && Time.unscaledTime-grabAt>.6f) { Reject("Канат отпущен"); return; }

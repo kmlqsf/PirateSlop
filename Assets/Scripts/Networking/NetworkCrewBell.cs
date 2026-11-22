@@ -50,7 +50,7 @@ namespace PirateSlop.Networking
             if (wasPulling && !IsPulling && motion != null) motion.SetPull(0);
             wasPulling = IsPulling;
             motor.BellPullLocked = IsPulling;
-            if (IsOwner && motor.IsDead && !player.Eliminated.Value && !requested && !SessionController.MenuOpen && Keyboard.current != null && Keyboard.current.rKey.wasPressedThisFrame)
+            if (IsOwner && motor.IsDead && !player.Eliminated.Value && !requested && !SessionController.MenuOpen && Keyboard.current != null && Keyboard.current[KeyBindings.Reload].wasPressedThisFrame)
             { requested = true; RequestRescueServerRpc(); }
             if (!IsOwner) return;
             var mouse = Mouse.current;

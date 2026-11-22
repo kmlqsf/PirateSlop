@@ -33,9 +33,9 @@ namespace PirateSlop.Networking
                 pitch = Mathf.Clamp(pitch - look.y * .12f, -89f, 89f);
                 transform.rotation = Quaternion.Euler(pitch, yaw, 0);
             }
-            float x = (keyboard.dKey.isPressed ? 1 : 0) - (keyboard.aKey.isPressed ? 1 : 0);
-            float z = (keyboard.wKey.isPressed ? 1 : 0) - (keyboard.sKey.isPressed ? 1 : 0);
-            float y = (keyboard.eKey.isPressed ? 1 : 0) - (keyboard.qKey.isPressed ? 1 : 0);
+            float x = (keyboard[KeyBindings.Right].isPressed ? 1 : 0) - (keyboard[KeyBindings.Left].isPressed ? 1 : 0);
+            float z = (keyboard[KeyBindings.Forward].isPressed ? 1 : 0) - (keyboard[KeyBindings.Back].isPressed ? 1 : 0);
+            float y = (keyboard[KeyBindings.Use].isPressed ? 1 : 0) - (keyboard[KeyBindings.Cancel].isPressed ? 1 : 0);
             var movement = transform.right * x + transform.forward * z + Vector3.up * y;
             transform.position += Vector3.ClampMagnitude(movement, 1f) * (speed * Time.unscaledDeltaTime);
         }

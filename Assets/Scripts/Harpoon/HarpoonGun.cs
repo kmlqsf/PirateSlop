@@ -293,7 +293,7 @@ namespace PirateSlop.Harpoon
 
             if (!operatorPlayer.InputActive || operatorPlayer.IsDead || !InRange(operatorPlayer) ||
                 operatorPlayer.ActiveHarpoon != this || keyboard == null || mouse == null ||
-                keyboard.eKey.wasPressedThisFrame)
+                keyboard[KeyBindings.Use].wasPressedThisFrame)
             {
                 ReleaseControl();
                 return;

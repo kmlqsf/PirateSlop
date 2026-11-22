@@ -82,7 +82,7 @@ namespace PirateSlop
             if (Event.current.type != EventType.Repaint) return;
             if (motor.PlayerCamera == null || !motor.PlayerCamera.enabled || (network != null && !network.IsOwner) || SessionController.MenuOpen) return;
             if (ShipSpyglassView.IsViewing) return;
-            DrawCompass(motor.PlayerCamera);
+            if (GameSettings.Compass) DrawCompass(motor.PlayerCamera);
             TargetMarkHud.Draw(network, motor.PlayerCamera);
             cannonRange.Draw(motor.ActiveCannon);
             float sideY = Screen.width < 1050 ? Screen.height - 180 : Screen.height - 74;

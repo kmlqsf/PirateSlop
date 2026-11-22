@@ -40,7 +40,7 @@ namespace PirateSlop
                 HandsOccupied || ControlFocused || lootWindow || hands != null && hands.HasHeldBall ||
                 barricadeBuilding && (!BarricadeSelected || SelectedSlot != barricadeSlot)) CancelBarricadeWork();
             var keys = Keyboard.current;
-            if (collectingTarget != null && (keys == null || !keys.eKey.isPressed || !(keys.leftShiftKey.isPressed || keys.rightShiftKey.isPressed))) CancelBarricadeWork();
+            if (collectingTarget != null && (keys == null || !keys[KeyBindings.Use].isPressed || !(keys.leftShiftKey.isPressed || keys.rightShiftKey.isPressed))) CancelBarricadeWork();
         }
         void CancelBarricadeWork()
         {
@@ -59,7 +59,7 @@ namespace PirateSlop
             if (collectingTarget != null && aimedBarricade != collectingTarget) CancelBarricadeWork();
             if (aimedBarricade == null || !Networked || !network.IsOwner) return false;
             var keys = Keyboard.current;
-            bool held = keys != null && keys.eKey.isPressed && (keys.leftShiftKey.isPressed || keys.rightShiftKey.isPressed);
+            bool held = keys != null && keys[KeyBindings.Use].isPressed && (keys.leftShiftKey.isPressed || keys.rightShiftKey.isPressed);
             if (held && CanFitItem(InventoryItem.Barricade))
             {
                 if (collectingTarget != aimedBarricade)

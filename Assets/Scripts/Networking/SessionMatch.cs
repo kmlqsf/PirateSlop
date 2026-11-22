@@ -199,14 +199,14 @@ namespace PirateSlop.Networking
             PirateHudStyle.Panel(new Rect(x, y, panelWidth, panelHeight));
             MatchTeamResult own = default;
             foreach (var team in result.Teams) if (team.Team == localMatchTeam) own = team;
-            string headline = result.WinnerTeam == 0 ? "Ничья" : own.Team == result.WinnerTeam ? "Победа!" : own.Place > 0 ? "Ваше место: " + own.Place : "Матч окончен";
+            string headline = result.WinnerTeam == 0 ? L("Ничья") : own.Team == result.WinnerTeam ? L("Победа!") : own.Place > 0 ? L("Ваше место: ") + own.Place : L("Матч окончен");
             PirateHudStyle.Label(new Rect(x, y + 6, panelWidth, 56), headline, PirateHudStyle.Gold, true);
             var winnerResult = result.Teams[0];
-            string winnerLine = result.WinnerTeam == 0 ? "Последние корабли затонули одновременно" : "Победил экипаж " + winnerResult.Team + (string.IsNullOrEmpty(winnerResult.Crew) ? "" : ": " + winnerResult.Crew);
-            PirateHudStyle.Label(new Rect(x, y + 62, panelWidth, 30), winnerLine + "   ·   длительность " + MatchTime(result.Duration), PirateHudStyle.Paper);
+            string winnerLine = result.WinnerTeam == 0 ? L("Последние корабли затонули одновременно") : L("Победил экипаж ") + winnerResult.Team + (string.IsNullOrEmpty(winnerResult.Crew) ? "" : ": " + winnerResult.Crew);
+            PirateHudStyle.Label(new Rect(x, y + 62, panelWidth, 30), winnerLine + L("   ·   длительность ") + MatchTime(result.Duration), PirateHudStyle.Paper);
             float rowY = y + 108f;
             float[] columns = { 0f, .08f, .52f, .64f, .76f, .88f };
-            string[] headers = { "Место", "Экипаж", "Потоплено", "Попаданий", "Сундуков", "Время" };
+            string[] headers = { L("Место"), L("Экипаж"), L("Потоплено"), L("Попаданий"), L("Сундуков"), L("Время") };
             for (int c = 0; c < headers.Length; c++)
                 PirateHudStyle.Label(new Rect(x + 16 + columns[c] * (panelWidth - 32), rowY, (panelWidth - 32) * ((c + 1 < columns.Length ? columns[c + 1] : 1f) - columns[c]), 30), headers[c], PirateHudStyle.Muted, false, c == 1 ? TextAnchor.MiddleLeft : TextAnchor.MiddleCenter);
             rowY += 34f;
@@ -214,7 +214,7 @@ namespace PirateSlop.Networking
             {
                 var team = result.Teams[i];
                 if (team.Team == localMatchTeam) PirateHudStyle.Fill(new Rect(x + 6, rowY, panelWidth - 12, 34), new Color(PirateHudStyle.Gold.r, PirateHudStyle.Gold.g, PirateHudStyle.Gold.b, .16f));
-                string crew = "Экипаж " + team.Team + (string.IsNullOrEmpty(team.Crew) ? "" : ": " + team.Crew);
+                string crew = L("Экипаж ") + team.Team + (string.IsNullOrEmpty(team.Crew) ? "" : ": " + team.Crew);
                 string[] cells = { team.Place.ToString(), crew, team.ShipsSunk.ToString(), team.Hits.ToString(), team.Chests.ToString(), MatchTime(team.Survived) };
                 Color color = team.Place == 1 ? PirateHudStyle.Gold : PirateHudStyle.Paper;
                 for (int c = 0; c < cells.Length; c++)
@@ -222,8 +222,8 @@ namespace PirateSlop.Networking
                 rowY += 38f;
             }
             bool host = manager != null && manager.ServerManager.Started && !dedicated;
-            if (host) PirateHudStyle.Label(new Rect(x, rowY + 4, panelWidth, 24), "Вы хост: выход вернёт всех игроков в лобби", PirateHudStyle.Muted);
-            if (PirateHudStyle.Button(new Rect(x + (panelWidth - 260f) * .5f, y + panelHeight - 58f, 260f, 46f), "В меню")) Disconnect();
+            if (host) PirateHudStyle.Label(new Rect(x, rowY + 4, panelWidth, 24), L("Вы хост: выход вернёт всех игроков в лобби"), PirateHudStyle.Muted);
+            if (PirateHudStyle.Button(new Rect(x + (panelWidth - 260f) * .5f, y + panelHeight - 58f, 260f, 46f), L("В меню"))) Disconnect();
             GUI.matrix = oldMatrix;
         }
     }

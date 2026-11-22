@@ -73,7 +73,7 @@ namespace PirateSlop
             if (controls != null && controls.BlocksPrimary) return;
             if (!Equipped || !motor.InputActive || motor.LocomotionLocked || (hands != null && hands.HasHeldBall)) return;
             var mouse = Mouse.current; var keyboard = Keyboard.current;
-            if (keyboard != null && keyboard.rKey.wasPressedThisFrame) Request(1);
+            if (keyboard != null && keyboard[KeyBindings.Reload].wasPressedThisFrame) Request(1);
             if (mouse == null) return;
             if (mouse.leftButton.wasPressedThisFrame && !inventory.InteractionUsed && (hands == null || !hands.CanPickUpBall()) && (SabreEquipped || handling==null || handling.Ready)) Request(SabreEquipped ? (byte)2 : (byte)0);
         }

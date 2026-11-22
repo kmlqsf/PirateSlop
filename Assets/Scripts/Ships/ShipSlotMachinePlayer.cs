@@ -30,7 +30,7 @@ namespace PirateSlop.Ships
                 consumedFrame = Time.frameCount;
                 var state = held.Ship != null ? held.Ship.SlotState : default;
                 if (!held.gameObject.activeInHierarchy || held.Ship == null || !held.Ship.IsSpawned || state.Phase != 1 ||
-                    state.Payer != player.ParticipantId.Value || !Mouse.current.leftButton.isPressed || Keyboard.current.qKey.wasPressedThisFrame || !held.CanReach(player, true))
+                    state.Payer != player.ParticipantId.Value || !Mouse.current.leftButton.isPressed || Keyboard.current[KeyBindings.Cancel].wasPressedThisFrame || !held.CanReach(player, true))
                 { Release(); return; }
                 player.Motor.ShipActivityLocked = true;
                 float pullDelta=-Mouse.current.delta.ReadValue().y*.004f;
@@ -59,7 +59,7 @@ namespace PirateSlop.Ships
                 float distance = (candidate.transform.position - transform.position).sqrMagnitude;
                 if (distance < best) { best = distance; nearby = candidate; }
             }
-            if (nearby != null && Keyboard.current.qKey.wasPressedThisFrame)
+            if (nearby != null && Keyboard.current[KeyBindings.Cancel].wasPressedThisFrame)
             {
                 consumedFrame = Time.frameCount;
                 nearby.Ship.UseSlotMachine(2, inventory.SelectedSlot); return;
@@ -87,7 +87,7 @@ namespace PirateSlop.Ships
             if (target == null) return;
             var machine = target.Machine;
             ContextPrompt.Offer(machine.IntakeHint(), 82);
-            if (!Keyboard.current.eKey.wasPressedThisFrame) return;
+            if (!Keyboard.current[KeyBindings.Use].wasPressedThisFrame) return;
             consumedFrame = Time.frameCount;
             machine.Ship.UseSlotMachine(0, inventory.SelectedSlot);
         }

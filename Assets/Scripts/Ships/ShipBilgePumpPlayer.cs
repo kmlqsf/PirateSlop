@@ -26,7 +26,7 @@ namespace PirateSlop.Ships
             {
                 OfferFlooding(held, false);
                 consumedFrame = Time.frameCount;
-                if (held.Ship == null || !held.Ship.IsSpawned || !held.CanReach(player, true) || !keys.eKey.isPressed || keys.qKey.wasPressedThisFrame || keys.escapeKey.wasPressedThisFrame)
+                if (held.Ship == null || !held.Ship.IsSpawned || !held.CanReach(player, true) || !keys[KeyBindings.Use].isPressed || keys[KeyBindings.Cancel].wasPressedThisFrame || keys.escapeKey.wasPressedThisFrame)
                 { Release(); return; }
                 var state = held.Ship.PumpState;
                 if (state.Sequence != heldSequence || state.Holder != player.Owner.ClientId + 1 && Time.unscaledTime - acquiredAt > 1.5f)
@@ -62,7 +62,7 @@ namespace PirateSlop.Ships
             OfferFlooding(target, canReach && current.Holder == 0 && target.Pull(current) <= .005f);
             if (!canReach) return;
             if (current.Holder != 0 || target.Pull(current) > .005f) return;
-            if (!keys.eKey.isPressed) return;
+            if (!keys[KeyBindings.Use].isPressed) return;
             held = target;
             heldSequence = current.Sequence;
             cycleStarted = held.Clock;

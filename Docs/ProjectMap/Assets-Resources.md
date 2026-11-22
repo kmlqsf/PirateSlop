@@ -90,6 +90,12 @@
 | [Assets/Resources/EnvironmentTest/WaterBowSpray.shader](<../../Assets/Resources/EnvironmentTest/WaterBowSpray.shader>) | Шейдер; Мир, острова и океан, Тестовая карта и водоворот |
 | [Assets/Resources/EnvironmentTest/WaterWetMark.shader](<../../Assets/Resources/EnvironmentTest/WaterWetMark.shader>) | Шейдер; Мир, острова и океан, Тестовая карта и водоворот |
 
+## Assets/Resources/Localization
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Resources/Localization/en.json](<../../Assets/Resources/Localization/en.json>) | Конфигурация / данные JSON; Меню и HUD |
+
 ## Assets/Resources/MainOcean
 
 | Файл | Краткое описание |

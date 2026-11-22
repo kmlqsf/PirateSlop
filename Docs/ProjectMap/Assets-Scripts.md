@@ -253,6 +253,7 @@
 | Файл | Краткое описание |
 | --- | --- |
 | [Assets/Scripts/Input/GameplayInput.cs](<../../Assets/Scripts/Input/GameplayInput.cs>) | Исходник C#: GameplayInput, Frame |
+| [Assets/Scripts/Input/KeyBindings.cs](<../../Assets/Scripts/Input/KeyBindings.cs>) | Исходник C#: GameAction, KeyBindings; Меню и HUD |
 
 ## Assets/Scripts/Interaction
 
@@ -646,11 +647,14 @@
 | --- | --- |
 | [Assets/Scripts/UI/BotDebugPanel.cs](<../../Assets/Scripts/UI/BotDebugPanel.cs>) | Исходник C#: BotDebugPanel; Новая система ботов |
 | [Assets/Scripts/UI/CannonRangeHud.cs](<../../Assets/Scripts/UI/CannonRangeHud.cs>) | Исходник C#: CannonRangeHud |
+| [Assets/Scripts/UI/ClosedCaptions.cs](<../../Assets/Scripts/UI/ClosedCaptions.cs>) | Исходник C#: ClosedCaptions, Caption; Меню и HUD |
 | [Assets/Scripts/UI/ContextPrompt.cs](<../../Assets/Scripts/UI/ContextPrompt.cs>) | Исходник C#: ContextPrompt |
 | [Assets/Scripts/UI/CrewPresentation.cs](<../../Assets/Scripts/UI/CrewPresentation.cs>) | Исходник C#: CrewPresentation, Plate; Персонаж, камера и анимации, Сеть, сессия и Steam, Новая система ботов, Меню и HUD |
+| [Assets/Scripts/UI/GameSettings.cs](<../../Assets/Scripts/UI/GameSettings.cs>) | Исходник C#: ColorblindMode, GameSettings; Меню и HUD |
 | [Assets/Scripts/UI/GameTelemetry.cs](<../../Assets/Scripts/UI/GameTelemetry.cs>) | Исходник C#: GameTelemetry; Меню и HUD, Производительность и тест нагрузки без AI |
 | [Assets/Scripts/UI/GameVersionOverlay.cs](<../../Assets/Scripts/UI/GameVersionOverlay.cs>) | Исходник C#: GameVersionOverlay; Меню и HUD |
 | [Assets/Scripts/UI/HudLayout.cs](<../../Assets/Scripts/UI/HudLayout.cs>) | Исходник C#: HudLayout, Scope; Меню и HUD |
+| [Assets/Scripts/UI/Localization.cs](<../../Assets/Scripts/UI/Localization.cs>) | Исходник C#: GameLanguage, Localization, Entry, Table; Меню и HUD |
 | [Assets/Scripts/UI/PirateHudStyle.cs](<../../Assets/Scripts/UI/PirateHudStyle.cs>) | Исходник C#: PirateHudStyle; Повреждения корпуса, ремонт и затопление, Меню и HUD |
 | [Assets/Scripts/UI/PlayerGuiBudget.cs](<../../Assets/Scripts/UI/PlayerGuiBudget.cs>) | Исходник C#: PlayerGuiBudget; Производительность и тест нагрузки без AI |
 | [Assets/Scripts/UI/PlayerHud.cs](<../../Assets/Scripts/UI/PlayerHud.cs>) | Исходник C#: PlayerHud; Личное оружие и урон, Меню и HUD |

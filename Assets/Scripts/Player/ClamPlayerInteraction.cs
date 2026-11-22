@@ -34,7 +34,7 @@ namespace PirateSlop
             {
                 consumedFrame = Time.frameCount;
                 if (held.Owner == null || !held.Owner.IsSpawned || !held.CanReach(network) || motor.IsSwimming ||
-                    !mouse.leftButton.isPressed || keys.qKey.wasPressedThisFrame || keys.escapeKey.wasPressedThisFrame)
+                    !mouse.leftButton.isPressed || keys[KeyBindings.Cancel].wasPressedThisFrame || keys.escapeKey.wasPressedThisFrame)
                 { Release(); return; }
                 if (!confirmed)
                 {
@@ -66,7 +66,7 @@ namespace PirateSlop
                 hovered = target; nearest = distance;
             }
             if (hovered == null) return;
-            if (keys.eKey.wasPressedThisFrame)
+            if (keys[KeyBindings.Use].wasPressedThisFrame)
             {
                 consumedFrame = Time.frameCount;
                 network.PressClamLever(hovered.Owner.NetworkObject, hovered.Side); return;

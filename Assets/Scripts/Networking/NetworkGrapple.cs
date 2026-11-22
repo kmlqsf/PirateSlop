@@ -141,7 +141,7 @@ namespace PirateSlop.Networking
             if (!IsClientInitialized) return;
             if (IsOwner && hookPhase.Value != 0 && !locallyReleased && (Mouse.current == null || !Mouse.current.leftButton.isPressed || !GetComponent<AdvancedPlayerController>().InputActive)) ReleaseGrapple();
             if (IsOwner && hookPhase.Value != 0 && GetComponent<AdvancedPlayerController>().InputActive && Keyboard.current != null &&
-                (Keyboard.current.spaceKey.wasPressedThisFrame || Keyboard.current.qKey.wasPressedThisFrame)) ReleaseGrapple();
+                (Keyboard.current[KeyBindings.Jump].wasPressedThisFrame || Keyboard.current[KeyBindings.Cancel].wasPressedThisFrame)) ReleaseGrapple();
         }
         public void PresentGrapple()
         {

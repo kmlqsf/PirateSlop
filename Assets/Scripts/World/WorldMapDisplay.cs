@@ -20,7 +20,7 @@ namespace PirateSlop.World
             public Color Color;
             public string Name;
         }
-        void Update() { if (Keyboard.current != null && Keyboard.current.mKey.wasPressedThisFrame) visible = !visible; }
+        void Update() { if (Keyboard.current != null && Keyboard.current[KeyBindings.Map].wasPressedThisFrame) visible = !visible; }
         void OnGUI()
         {
             if (!visible || Event.current.type != EventType.Repaint || Networking.SessionController.MenuOpen) return;

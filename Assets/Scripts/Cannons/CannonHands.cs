@@ -65,7 +65,7 @@ namespace PirateSlop
             var keyboard = Keyboard.current;
             var mouse = Mouse.current;
             if (!player.InputActive || !controlled.gameObject.activeInHierarchy || !controlled.InBreechRange(player) || player.IsKnockedBack ||
-                player.ActiveCannon != controlled || keyboard == null || mouse == null || keyboard.eKey.wasPressedThisFrame || keyboard.qKey.wasPressedThisFrame)
+                player.ActiveCannon != controlled || keyboard == null || mouse == null || keyboard[KeyBindings.Use].wasPressedThisFrame || keyboard[KeyBindings.Cancel].wasPressedThisFrame)
             { LeaveCannon(); return; }
             var delta = mouse.delta.ReadValue() * aimSensitivity;
             bool limit = delta.y > .01f && elevation >= controlled.MaxElevation - .01f || delta.y < -.01f && elevation <= controlled.MinElevation + .01f

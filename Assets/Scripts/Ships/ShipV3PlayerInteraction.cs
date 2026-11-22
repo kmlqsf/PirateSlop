@@ -62,7 +62,7 @@ namespace PirateSlop.Ships
                         foreach (var visibility in modelVisibility) visibility.SetAlternateCamera(diceCamera);
                         motor.PlayerCamera.enabled = false;
                     }
-                    if (keys.fKey.wasPressedThisFrame || keys.qKey.wasPressedThisFrame || keys.escapeKey.wasPressedThisFrame || !diceShip.CanUseDice)
+                    if (keys[KeyBindings.Carry].wasPressedThisFrame || keys[KeyBindings.Cancel].wasPressedThisFrame || keys.escapeKey.wasPressedThisFrame || !diceShip.CanUseDice)
                     { Release(); return; }
                     bool releasing = mouse.leftButton.wasReleasedThisFrame;
                     bool holding = mouse.leftButton.isPressed;
@@ -81,7 +81,7 @@ namespace PirateSlop.Ships
                     cupVelocity = Vector2.ClampMagnitude(cupVelocity, 2.8f);
                     cupHeld = holding;
                     diceShip.PreviewDiceCup(slot, cupPointer);
-                    bool gather = keys.eKey.wasPressedThisFrame;
+                    bool gather = keys[KeyBindings.Use].wasPressedThisFrame;
                     if (Time.unscaledTime >= nextSend || gather || mouse.leftButton.wasReleasedThisFrame)
                     {
                         diceShip.DiceInput(cupPointer, cupVelocity, holding, gather, false);
@@ -93,7 +93,7 @@ namespace PirateSlop.Ships
             if (held != null)
             {
                 var grip = held.Kind == ShipV3TargetKind.Door ? held.Ship.DoorGrip : held.Kind == ShipV3TargetKind.Dispenser ? held.Ship.DispenserGrip : held.Ship.BellGrip;
-                if (!held.gameObject.activeInHierarchy || grip == null || !mouse.leftButton.isPressed || keys.qKey.wasPressedThisFrame || held.Kind == ShipV3TargetKind.Dispenser && held.Ship.DispenserCooling || Vector3.Distance(transform.position + Vector3.up, grip.position) > 3.5f)
+                if (!held.gameObject.activeInHierarchy || grip == null || !mouse.leftButton.isPressed || keys[KeyBindings.Cancel].wasPressedThisFrame || held.Kind == ShipV3TargetKind.Dispenser && held.Ship.DispenserCooling || Vector3.Distance(transform.position + Vector3.up, grip.position) > 3.5f)
                 { Release(); return; }
                 motor.ShipActivityLocked = true;
                 pending += mouse.delta.ReadValue();
@@ -110,7 +110,7 @@ namespace PirateSlop.Ships
             if (!motor.InputActive || motor.LocomotionLocked) { hovered = null; return; }
             hovered = FindTarget();
             var nearbyDice = FindDiceTable();
-            if (nearbyDice != null && keys.fKey.wasPressedThisFrame)
+            if (nearbyDice != null && keys[KeyBindings.Carry].wasPressedThisFrame)
             {
                 consumedFrame = Time.frameCount;
                 diceShip = nearbyDice; joinPending = true; joinedAt = Time.time; pending = Vector2.zero;
@@ -128,7 +128,7 @@ namespace PirateSlop.Ships
             if (hovered.Kind == ShipV3TargetKind.Lantern)
             {
                 ContextPrompt.Offer("E — включить или выключить фонарь", 75);
-                if (keys.eKey.wasPressedThisFrame) { consumedFrame = Time.frameCount; hovered.Ship.ToggleLantern(hovered.Index); }
+                if (keys[KeyBindings.Use].wasPressedThisFrame) { consumedFrame = Time.frameCount; hovered.Ship.ToggleLantern(hovered.Index); }
             }
             else if (hovered.Kind == ShipV3TargetKind.Dice)
             {
@@ -139,7 +139,7 @@ namespace PirateSlop.Ships
                 if (nearbyDice == hovered.Ship)
                 {
                     ContextPrompt.Offer((hovered.Ship.CandleBurning ? "E — погасить свечу" : "E — зажечь свечу") + "\nF — сыграть в кости\n" + nearbyDice.DiceSummary(), 75);
-                    if (keys.eKey.wasPressedThisFrame) { consumedFrame = Time.frameCount; hovered.Ship.ToggleCandle(); }
+                    if (keys[KeyBindings.Use].wasPressedThisFrame) { consumedFrame = Time.frameCount; hovered.Ship.ToggleCandle(); }
                 }
             }
             else
