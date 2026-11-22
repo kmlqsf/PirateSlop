@@ -13,12 +13,13 @@ namespace PirateSlop
             health = GetComponentInParent<CombatHealth>();
             shape = GetComponent<CapsuleCollider>();
         }
-        void LateUpdate()
+        void LateUpdate() => Sync();
+        public void Sync()
         {
-            if (body == null || health == null) return;
+            if (body == null || health == null || shape == null) return;
             shape.enabled = !health.IsDead;
             shape.center = body.center;
-            shape.radius = body.radius * 1.65f;
+            shape.radius = body.radius * 1.35f;
             shape.height = Mathf.Max(body.height + .2f, shape.radius * 2f);
         }
         public static bool IsTarget(Collider collider) => !collider.isTrigger || collider.GetComponentInParent<PirateSlop.World.SeagullVisual>() != null || collider.GetComponent<PirateSlop.Ships.ShipMonkeyHitbox>() != null || collider.GetComponent<SharkHitTarget>() != null || collider.GetComponent<PlayerHitbox>() != null || collider.GetComponent<PirateSlop.World.KamikazeHitbox>() != null || collider.GetComponentInParent<KrakenTentacle>() != null;

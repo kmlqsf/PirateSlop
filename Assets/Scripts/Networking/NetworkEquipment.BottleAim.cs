@@ -34,7 +34,7 @@ namespace PirateSlop.Networking
             if (bottleAimSlot < 0) return true;
             if (mouse.leftButton.wasReleasedThisFrame)
             {
-                UseServerRpc(0, motor.AimDirection, motor.PlayerCamera.transform.position - transform.position, ++localSequence, false);
+                UseServerRpc(0, motor.AimDirection, motor.PlayerCamera.transform.position - transform.position, ++localSequence, false, 0);
                 nextLocalFire = Time.time + .6f;
                 CancelBottleAim();
                 return true;

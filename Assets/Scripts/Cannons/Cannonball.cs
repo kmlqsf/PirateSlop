@@ -109,7 +109,7 @@ namespace PirateSlop
                 if (Time.time > manualDropDeadline || Loaded || ShotDamage != null) manualDropPending = false;
                 return;
             }
-            foreach (var hit in Physics.RaycastAll(transform.position + Vector3.up * .05f, Vector3.down, Radius + .15f, ~0, QueryTriggerInteraction.Ignore))
+            foreach (var hit in PirateSlop.PhysicsQuery.RaycastAll(transform.position + Vector3.up * .05f, Vector3.down, Radius + .15f, ~0, QueryTriggerInteraction.Ignore))
             {
                 if (hit.normal.y < .5f || hit.distance > Radius + .085f || hit.collider.GetComponentInParent<ShipController>() == null) continue;
                 GameAudio.Play(SoundCue.CannonballDrop, hit.point, .7f);

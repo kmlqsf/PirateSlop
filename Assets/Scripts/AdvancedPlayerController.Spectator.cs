@@ -84,7 +84,7 @@ public partial class AdvancedPlayerController
         var rotation = Quaternion.Euler(spectatorPitch, SpectatorTarget.transform.eulerAngles.y + spectatorYaw, 0);
         var direction = rotation * Vector3.back;
         float distance = 3f;
-        foreach (var hit in Physics.SphereCastAll(pivot, .15f, direction, distance, ~0, QueryTriggerInteraction.Ignore))
+        foreach (var hit in PirateSlop.PhysicsQuery.SphereCastAll(pivot, .15f, direction, distance, ~0, QueryTriggerInteraction.Ignore))
             if (!hit.transform.IsChildOf(SpectatorTarget.transform) && !hit.transform.IsChildOf(transform)) distance = Mathf.Min(distance, Mathf.Max(0f, hit.distance - .05f));
         playerCamera.transform.SetPositionAndRotation(pivot + direction * distance, rotation);
     }

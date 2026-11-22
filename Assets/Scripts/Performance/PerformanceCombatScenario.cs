@@ -85,7 +85,7 @@ namespace PirateSlop.Performance
             float nearest = 30;
             Vector3 result = default;
             bool found = false;
-            foreach (var hit in Physics.RaycastAll(origin, -ship.transform.up, 30, ~0, QueryTriggerInteraction.Ignore))
+            foreach (var hit in PirateSlop.PhysicsQuery.RaycastAll(origin, -ship.transform.up, 30, ~0, QueryTriggerInteraction.Ignore))
             {
                 float height = ship.transform.InverseTransformPoint(hit.point).y;
                 if (hit.collider.attachedRigidbody != ship.Body || hit.normal.y < .9f || height < 3 || height > 8 || hit.distance >= nearest || hit.collider.GetComponentInParent<SimpleCannon>() != null) continue;

@@ -56,7 +56,7 @@ namespace PirateSlop.Ships
         {
             Vector3 delta = point - origin;
             if (delta.sqrMagnitude > 3.5f * 3.5f) return false;
-            foreach (var hit in Physics.RaycastAll(origin, delta.normalized, Mathf.Max(0f, delta.magnitude - .08f), ~0, QueryTriggerInteraction.Ignore))
+            foreach (var hit in PirateSlop.PhysicsQuery.RaycastAll(origin, delta.normalized, Mathf.Max(0f, delta.magnitude - .08f), ~0, QueryTriggerInteraction.Ignore))
                 if (!hit.transform.IsChildOf(Visual)) return false;
             return true;
         }

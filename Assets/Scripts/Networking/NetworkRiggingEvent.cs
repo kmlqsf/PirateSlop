@@ -125,7 +125,7 @@ namespace PirateSlop.Networking
             var eye = actor.transform.position + Vector3.up * 1.5f;
             var delta = BrakeGrip.position - eye;
             if (delta.sqrMagnitude > 3.2f * 3.2f) return false;
-            foreach (var hit in Physics.RaycastAll(eye, delta.normalized, Mathf.Max(0, delta.magnitude - .18f), ~LayerMask.GetMask("Water"), QueryTriggerInteraction.Ignore))
+            foreach (var hit in PirateSlop.PhysicsQuery.RaycastAll(eye, delta.normalized, Mathf.Max(0, delta.magnitude - .18f), ~LayerMask.GetMask("Water"), QueryTriggerInteraction.Ignore))
                 if (!hit.transform.IsChildOf(actor.transform) && !hit.transform.IsChildOf(BrakeGrip.parent)) return false;
             return true;
         }

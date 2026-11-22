@@ -243,7 +243,7 @@ namespace PirateSlop.Networking
 #endif
             if (aimed == null && inventory.MalletSelected)
             {
-                foreach (var hit in Physics.RaycastAll(ray, 3.5f * UpgradeRepair, ~0, QueryTriggerInteraction.Ignore))
+                foreach (var hit in PirateSlop.PhysicsQuery.RaycastAll(ray, 3.5f * UpgradeRepair, ~0, QueryTriggerInteraction.Ignore))
                 {
                     if (hit.transform.IsChildOf(transform)) continue;
                     var gun = hit.collider.GetComponentInParent<Harpoon.HarpoonGun>();

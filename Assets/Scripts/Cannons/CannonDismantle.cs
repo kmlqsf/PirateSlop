@@ -38,7 +38,7 @@ namespace PirateSlop
             var camera = motor.PlayerCamera;
             RaycastHit nearest = default;
             float range = 5f;
-            foreach (var hit in Physics.RaycastAll(camera.transform.position, camera.transform.forward, range, ~0, QueryTriggerInteraction.Ignore))
+            foreach (var hit in PirateSlop.PhysicsQuery.RaycastAll(camera.transform.position, camera.transform.forward, range, ~0, QueryTriggerInteraction.Ignore))
                 if (!hit.transform.IsChildOf(transform) && hit.distance < range) { nearest = hit; range = hit.distance; }
             var aimed = nearest.collider != null ? nearest.collider.GetComponentInParent<SimpleCannon>() : null;
             if (target != null && aimed != target) { Cancel(); return; }

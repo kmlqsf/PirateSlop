@@ -86,7 +86,7 @@ namespace PirateSlop
                 var anchor = DeckSupplyPoint != null ? DeckSupplyPoint : SpawnPoint;
                 Vector3 point = anchor.position + Ship.transform.forward * (SpecialSupplySpacing * i);
                 float distance = 3f;
-                foreach (var hit in Physics.RaycastAll(point + Vector3.up, Vector3.down, distance, ~0, QueryTriggerInteraction.Ignore))
+                foreach (var hit in PirateSlop.PhysicsQuery.RaycastAll(point + Vector3.up, Vector3.down, distance, ~0, QueryTriggerInteraction.Ignore))
                 {
                     if (hit.collider.attachedRigidbody != Ship.GetComponent<Rigidbody>() || hit.normal.y < .5f || hit.distance >= distance) continue;
                     distance = hit.distance;

@@ -164,7 +164,7 @@ namespace PirateSlop.Networking
             var eye = actor.IsOwner && motor.PlayerCamera != null ? motor.PlayerCamera.transform.position
                 : actor.transform.position+Vector3.up*(1.5f-motor.CrouchBlend*.7f);
             var delta = point-eye;
-            foreach (var hit in Physics.RaycastAll(eye,delta.normalized,Mathf.Max(0,delta.magnitude-.12f),~LayerMask.GetMask("Water"),QueryTriggerInteraction.Ignore))
+            foreach (var hit in PirateSlop.PhysicsQuery.RaycastAll(eye,delta.normalized,Mathf.Max(0,delta.magnitude-.12f),~LayerMask.GetMask("Water"),QueryTriggerInteraction.Ignore))
                 if (!hit.transform.IsChildOf(actor.transform) && !hit.transform.IsChildOf(transform)) return false;
             return true;
         }
@@ -409,7 +409,7 @@ namespace PirateSlop.Networking
         {
             var delta = next-transform.position; float distance = delta.magnitude;
             if (distance<.0001f) return next;
-            foreach (var hit in Physics.SphereCastAll(transform.position+Vector3.up*.5f,.42f,delta/distance,distance,~LayerMask.GetMask("Water"),QueryTriggerInteraction.Ignore))
+            foreach (var hit in PirateSlop.PhysicsQuery.SphereCastAll(transform.position+Vector3.up*.5f,.42f,delta/distance,distance,~LayerMask.GetMask("Water"),QueryTriggerInteraction.Ignore))
                 if (hit.collider.GetComponentInParent<NetworkShip>() == ship && hit.distance<distance)
                 {
                     var stop = transform.position+delta.normalized*Mathf.Max(0,hit.distance-.025f);

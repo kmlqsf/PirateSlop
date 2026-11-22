@@ -49,7 +49,7 @@ namespace PirateSlop
             Vector3 normal = impact.Anchor.transform.TransformDirection(impact.Normal).normalized;
             Vector3 tangent = Vector3.ProjectOnPlane(impact.Anchor.transform.TransformDirection(impact.Tangent), normal).normalized;
             RaycastHit? contact = null;
-            foreach (var hit in Physics.RaycastAll(point + normal * .07f, -normal, .15f, ~0, QueryTriggerInteraction.Ignore))
+            foreach (var hit in PirateSlop.PhysicsQuery.RaycastAll(point + normal * .07f, -normal, .15f, ~0, QueryTriggerInteraction.Ignore))
             {
                 if (ShipV3CollisionBatch.ResolveSection(hit.collider, hit.point) != section || Vector3.Dot(hit.normal, normal) < .8f) continue;
                 if (!contact.HasValue || hit.distance < contact.Value.distance) contact = hit;

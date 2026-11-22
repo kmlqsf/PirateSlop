@@ -230,7 +230,7 @@ namespace PirateSlop.World
             var rotation=Quaternion.Euler(0,yaw,0);
             for(int z=-2;z<=2;z++) for(int x=-2;x<=2;x++)
                 score+=Mathf.Max(0f,GroundHeight(position+rotation*new Vector3(x*3.25f,0,z*11.5f))-(Layout.SeaLevel-3f));
-            foreach(var c in Physics.OverlapBox(new Vector3(position.x,Layout.SeaLevel+1,position.z),new Vector3(6.6f,3.5f,23.5f),rotation,LayerMask.GetMask("WorldStatic"),QueryTriggerInteraction.Ignore))
+            foreach(var c in PirateSlop.PhysicsQuery.OverlapBox(new Vector3(position.x,Layout.SeaLevel+1,position.z),new Vector3(6.6f,3.5f,23.5f),rotation,LayerMask.GetMask("WorldStatic"),QueryTriggerInteraction.Ignore))
                 score+=1f+1f/(.2f+Vector3.Distance(position,c.ClosestPoint(position)));
             return score;
         }

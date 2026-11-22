@@ -174,7 +174,7 @@ namespace PirateSlop.Networking
             var motor = actor.GetComponent<AdvancedPlayerController>();
             if (motor.IsDead || motor.IsDowned || motor.IsFrozen || motor.IsKnockedBack || motor.IsClimbing || motor.LocomotionLocked || actor.GetComponent<CannonHands>().HasHeldBall) return;
             var point = Levers[side].BoardingPoint.position;
-            foreach (var hit in Physics.OverlapCapsule(point + Vector3.up * .32f, point + Vector3.up * 1.5f, .3f, ~0, QueryTriggerInteraction.Ignore))
+            foreach (var hit in PirateSlop.PhysicsQuery.OverlapCapsule(point + Vector3.up * .32f, point + Vector3.up * 1.5f, .3f, ~0, QueryTriggerInteraction.Ignore))
                 if (!hit.transform.IsChildOf(actor.transform)) return;
             actor.GetComponent<NetworkPlayer>().Teleport(new PlayerState { Position = point, Yaw = actor.transform.eulerAngles.y });
             actor.GetComponent<ShipDeckPassenger>().Attach(GetComponent<Rigidbody>());

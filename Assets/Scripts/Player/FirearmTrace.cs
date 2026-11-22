@@ -31,7 +31,7 @@ namespace PirateSlop
             Vector3 delta = end - origin;
             float distance = delta.magnitude;
             if (distance < .0001f) return false;
-            foreach (var hit in Physics.RaycastAll(origin, delta / distance, distance, ~0, QueryTriggerInteraction.Collide))
+            foreach (var hit in PirateSlop.PhysicsQuery.RaycastAll(origin, delta / distance, distance, ~0, QueryTriggerInteraction.Collide))
             {
                 if (!PlayerHitbox.IsTarget(hit.collider) || hit.collider.gameObject.layer == LayerMask.NameToLayer("Water")) continue;
                 if (shooter != null && hit.transform.IsChildOf(shooter.transform)) continue;

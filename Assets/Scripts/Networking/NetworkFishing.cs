@@ -118,7 +118,7 @@ namespace PirateSlop.Networking
         {
             float closest = 3f; NetworkFish result = null;
             var camera = motor.PlayerCamera;
-            foreach (var hit in Physics.RaycastAll(camera.transform.position, camera.transform.forward, closest, ~0, QueryTriggerInteraction.Collide))
+            foreach (var hit in PirateSlop.PhysicsQuery.RaycastAll(camera.transform.position, camera.transform.forward, closest, ~0, QueryTriggerInteraction.Collide))
             {
                 if (hit.collider.isTrigger && hit.collider.name != "SwordfishRecovery") continue;
                 if (!hit.transform.IsChildOf(transform) && hit.distance < closest) { closest = hit.distance; result = hit.collider.GetComponentInParent<NetworkFish>(); }
@@ -143,7 +143,7 @@ namespace PirateSlop.Networking
             {
                 float t = i / 16f;
                 Vector3 point = Vector3.Lerp(start, end, t) + Vector3.up * (4f * t * (1f - t));
-                foreach (var hit in Physics.RaycastAll(previous, (point - previous).normalized, Vector3.Distance(previous, point), ~0, QueryTriggerInteraction.Ignore))
+                foreach (var hit in PirateSlop.PhysicsQuery.RaycastAll(previous, (point - previous).normalized, Vector3.Distance(previous, point), ~0, QueryTriggerInteraction.Ignore))
                     if (!hit.transform.IsChildOf(transform)) return;
                 previous = point;
             }
@@ -291,7 +291,7 @@ namespace PirateSlop.Networking
                 if (Vector3.Distance(transform.position + Vector3.up, point) > 3.5f) continue;
                 Vector3 delta = point - origin;
                 bool blocked = false;
-                foreach (var hit in Physics.RaycastAll(origin, delta.normalized, Mathf.Max(0f, delta.magnitude - .025f), ~0, QueryTriggerInteraction.Ignore))
+                foreach (var hit in PirateSlop.PhysicsQuery.RaycastAll(origin, delta.normalized, Mathf.Max(0f, delta.magnitude - .025f), ~0, QueryTriggerInteraction.Ignore))
                     if (!hit.transform.IsChildOf(transform) && !hit.transform.IsChildOf(target.transform)) { blocked = true; break; }
                 if (!blocked) return true;
             }

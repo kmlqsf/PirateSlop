@@ -165,7 +165,7 @@ namespace PirateSlop.Networking
                     {
                         if (!fireExposure.TryGetValue(patch.Id, out var exposure)) continue;
                         var point = fireDestruction.FireTargetPoint(patch.SectionId, patch.Fragment, transform.TransformPoint(patch.Position));
-                        foreach (var collider in Physics.OverlapCapsule(point + Vector3.up * .15f, point + Vector3.up * 1.25f, .65f, ~0, QueryTriggerInteraction.Ignore))
+                        foreach (var collider in PirateSlop.PhysicsQuery.OverlapCapsule(point + Vector3.up * .15f, point + Vector3.up * 1.25f, .65f, ~0, QueryTriggerInteraction.Ignore))
                         {
                             var health = collider.GetComponentInParent<CombatHealth>();
                             if (health == null || health.IsDead || !burnedPlayers.Add(health)) continue;

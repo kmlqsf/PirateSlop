@@ -162,13 +162,13 @@ namespace PirateSlop.Networking
                 var origin = ship.transform.TransformPoint(seed + offset) + Vector3.up * 2f;
                 RaycastHit floor = default;
                 float distance = 10f;
-                foreach (var hit in Physics.RaycastAll(origin, Vector3.down, distance, ~0, QueryTriggerInteraction.Ignore))
+                foreach (var hit in PirateSlop.PhysicsQuery.RaycastAll(origin, Vector3.down, distance, ~0, QueryTriggerInteraction.Ignore))
                     if (hit.rigidbody == ship.Body && hit.normal.y > .55f && hit.distance < distance)
                     { floor = hit; distance = hit.distance; }
                 if (floor.collider == null) continue;
                 var candidate = floor.point + Vector3.up * .08f;
                 bool clear = true;
-                foreach (var obstacle in Physics.OverlapCapsule(candidate + Vector3.up * radius, candidate + Vector3.up * (controller.height - radius), radius, ~0, QueryTriggerInteraction.Ignore))
+                foreach (var obstacle in PirateSlop.PhysicsQuery.OverlapCapsule(candidate + Vector3.up * radius, candidate + Vector3.up * (controller.height - radius), radius, ~0, QueryTriggerInteraction.Ignore))
                     if (!obstacle.transform.IsChildOf(transform)) { clear = false; break; }
                 if (!clear) continue;
                 point = candidate;

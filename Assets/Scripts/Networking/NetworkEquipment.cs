@@ -169,7 +169,7 @@ namespace PirateSlop.Networking
             if (Item == InventoryItem.Lantern) { ReadLanternInput(keyboard); return; }
             if (Item == InventoryItem.HolyGrenade || Item == InventoryItem.Spyglass) return;
             Vector3 eyeOffset = motor.PlayerCamera.transform.position-transform.position;
-            if (keyboard != null && keyboard[KeyBindings.Reload].wasPressedThisFrame && (Firearm || HandMortar)) UseServerRpc(1, motor.AimDirection, eyeOffset,++localSequence,aim);
+            if (keyboard != null && keyboard[KeyBindings.Reload].wasPressedThisFrame && (Firearm || HandMortar)) UseServerRpc(1, motor.AimDirection, eyeOffset,++localSequence,aim,0);
             if (mouse.leftButton.wasPressedThisFrame && !pendingShot && !inventory.InteractionUsed && !hands.CanPickUpBall() && Time.time>=nextLocalFire && (!Firearm || handling.Ready))
             {
                 int sequence=++localSequence;
@@ -189,7 +189,7 @@ namespace PirateSlop.Networking
                         prediction.Fire(gameObject,definition,eye,muzzle!=null?muzzle.position:definition.MuzzlePoint(eye,forward,aim),forward,aim,sequence,GetComponent<PirateWeapon>().EffectMaterial);
                     }
                 }
-                UseServerRpc(0,forward,eyeOffset,sequence,aim);
+                UseServerRpc(0,forward,eyeOffset,sequence,aim,LagCompensation.ClientViewTick(TimeManager,IsServerInitialized));
             }
             if (mouse.leftButton.wasReleasedThisFrame && Item == InventoryItem.Wine) CancelServerRpc();
         }
@@ -203,14 +203,14 @@ namespace PirateSlop.Networking
         [ServerRpc]
         void CancelServerRpc() { if (action.Value == 2) action.Value = 0; }
         [ServerRpc]
-        void UseServerRpc(byte request, Vector3 forward, Vector3 eyeOffset,int sequence,bool aimed)
+        void UseServerRpc(byte request, Vector3 forward, Vector3 eyeOffset,int sequence,bool aimed,uint viewTick)
         {
-            try { UseAuthority(request,forward,eyeOffset,sequence,aimed); }
+            try { UseAuthority(request,forward,eyeOffset,sequence,aimed,LagCompensation.Delay(TimeManager,viewTick)); }
             finally { if(request==0) ShotAcknowledgedTargetRpc(Owner); }
         }
         [TargetRpc]
         void ShotAcknowledgedTargetRpc(FishNet.Connection.NetworkConnection connection) { pendingShot=false; }
-        void UseAuthority(byte request, Vector3 forward, Vector3 eyeOffset,int sequence,bool aimed)
+        void UseAuthority(byte request, Vector3 forward, Vector3 eyeOffset,int sequence,bool aimed,float lagDelay=0f)
         {
             if (!CanUse || action.Value != 0 || !float.IsFinite(forward.sqrMagnitude) || forward.sqrMagnitude < .5f) return;
             if (Item == InventoryItem.GrapplingHook) { if (request == 0) network.ThrowGrapple(forward, eyeOffset); return; }
@@ -275,7 +275,10 @@ namespace PirateSlop.Networking
             }
             Vector3 muzzle = definition.MuzzlePoint(eye,forward,aimed);
             if (echoPrimedSlots[slot]) { echoPrimedSlots[slot] = false; network.ScheduleUpgradeEcho(definition, eye, muzzle, forward, aimed, sequence); }
-            var shots=FirearmCombat.Resolve(gameObject,definition,eye,muzzle,forward,aimed,sequence,true);
+            FirearmShot[] shots;
+            LagCompensation.Rewind(GetComponent<NetworkPlayer>(), lagDelay);
+            try { shots=FirearmCombat.Resolve(gameObject,definition,eye,muzzle,forward,aimed,sequence,true); }
+            finally { LagCompensation.Restore(); }
             if(definition.ShooterKnockback>0) motor.ApplyKnockback(-Vector3.ProjectOnPlane(forward,Vector3.up).normalized*definition.ShooterKnockback+Vector3.up*.8f);
             ShotObserversRpc(shots,sequence,Item);
         }

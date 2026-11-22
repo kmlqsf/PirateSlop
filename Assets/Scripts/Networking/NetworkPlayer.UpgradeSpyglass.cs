@@ -31,7 +31,7 @@ namespace PirateSlop.Networking
             }
             RaycastHit nearest = default;
             float distance = 3000f;
-            foreach (var hit in Physics.RaycastAll(origin, direction, distance, ~0, QueryTriggerInteraction.Ignore))
+            foreach (var hit in PirateSlop.PhysicsQuery.RaycastAll(origin, direction, distance, ~0, QueryTriggerInteraction.Ignore))
                 if (!hit.transform.IsChildOf(Ship.transform) && !hit.transform.IsChildOf(transform) && hit.distance < distance) { nearest = hit; distance = hit.distance; }
             Transform target = null;
             if (nearest.collider != null)

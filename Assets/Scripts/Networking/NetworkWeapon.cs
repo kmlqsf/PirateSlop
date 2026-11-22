@@ -250,7 +250,7 @@ namespace PirateSlop.Networking
                 if(Vector3.Distance(transform.position,target.transform.position)>5f) return false;
                 Vector3 origin = transform.position + Vector3.up * 1.5f;
                 Vector3 delta = target.transform.position + Vector3.up * .4f - origin;
-                foreach (var hit in Physics.RaycastAll(origin, delta.normalized, Mathf.Max(0f, delta.magnitude - .03f), ~0, QueryTriggerInteraction.Ignore))
+                foreach (var hit in PirateSlop.PhysicsQuery.RaycastAll(origin, delta.normalized, Mathf.Max(0f, delta.magnitude - .03f), ~0, QueryTriggerInteraction.Ignore))
                     if (!hit.transform.IsChildOf(transform) && !hit.transform.IsChildOf(target.transform)) return false;
             }
             if (slot < 0)
@@ -305,7 +305,7 @@ namespace PirateSlop.Networking
             if (GetComponent<AdvancedPlayerController>().IsFrozen) return false;
             if (Vector3.Distance(transform.position, point) > 5f) return false;
             Vector3 origin = transform.position + Vector3.up * 1.5f, delta = point - origin;
-            foreach (var hit in Physics.RaycastAll(origin, delta.normalized, delta.magnitude, ~0, QueryTriggerInteraction.Ignore))
+            foreach (var hit in PirateSlop.PhysicsQuery.RaycastAll(origin, delta.normalized, delta.magnitude, ~0, QueryTriggerInteraction.Ignore))
                 if (!hit.transform.IsChildOf(transform) && !hit.transform.IsChildOf(target) &&
                     hit.collider.GetComponentInParent<AdvancedPlayerController>() == null && hit.collider.GetComponentInParent<Cannonball>() == null) return false;
             return true;
@@ -362,10 +362,10 @@ namespace PirateSlop.Networking
             if (!IsServerInitialized || inventory == null || GetComponent<AdvancedPlayerController>().IsFrozen || !inventory.SlotAvailable(slot)) return false;
             selectedSlot.Value = slot; inventory.SetSelection(slot); return true;
         }
-        public void Request(byte action, Vector3 direction, Vector3 eyeOffset,bool aimed=false,int seed=0) => ActionServerRpc(action,direction,eyeOffset,aimed,seed);
-        [ServerRpc] void ActionServerRpc(byte action, Vector3 direction, Vector3 eyeOffset,bool aimed,int seed)
-            => TryAct(action, direction, eyeOffset, aimed, seed);
-        public bool TryAct(byte action, Vector3 direction, Vector3 eyeOffset, bool aimed = false, int seed = -1)
+        public void Request(byte action, Vector3 direction, Vector3 eyeOffset,bool aimed=false,int seed=0) => ActionServerRpc(action,direction,eyeOffset,aimed,seed,LagCompensation.ClientViewTick(TimeManager,IsServerInitialized));
+        [ServerRpc] void ActionServerRpc(byte action, Vector3 direction, Vector3 eyeOffset,bool aimed,int seed,uint viewTick)
+            => TryAct(action, direction, eyeOffset, aimed, seed, LagCompensation.Delay(TimeManager, viewTick));
+        public bool TryAct(byte action, Vector3 direction, Vector3 eyeOffset, bool aimed = false, int seed = -1, float lagDelay = 0f)
         {
             if (!IsServerInitialized) return false;
 #if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
@@ -377,7 +377,7 @@ namespace PirateSlop.Networking
                 return false;
             }
             weapon.TickAuthority();
-            bool accepted = weapon.Act(action, direction, eyeOffset,aimed,seed);
+            bool accepted = weapon.Act(action, direction, eyeOffset,aimed,seed,lagDelay);
             if (action == 0 && !accepted && Owner != null && Owner.IsActive) RejectShotTargetRpc(Owner);
             loaded.Value = weapon.Loaded; reloading.Value = weapon.Reloading;
             return accepted;

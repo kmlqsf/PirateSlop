@@ -103,7 +103,7 @@ namespace PirateSlop
             if (reloading && (!Equipped || SabreEquipped || motor.LocomotionLocked || (hands != null && hands.HasHeldBall))) reloading = false;
             if (reloading && Time.time >= reloadUntil) { reloading = false; loaded = true; echoPrimed = true; }
         }
-        public bool Act(byte action, Vector3 direction, Vector3 eyeOffset,bool aimed=false,int seed=-1)
+        public bool Act(byte action, Vector3 direction, Vector3 eyeOffset,bool aimed=false,int seed=-1,float lagDelay=0f)
         {
             if (!Equipped || motor.IsDead || motor.LocomotionLocked || (hands != null && hands.HasHeldBall) || !float.IsFinite(direction.sqrMagnitude) || direction.sqrMagnitude < .5f) return false;
             if ((action == 2) != SabreEquipped) return false;
@@ -118,7 +118,7 @@ namespace PirateSlop
             direction.Normalize();
             if (action == 2)
             {
-                BeginSabre(direction, eyeOffset);
+                BeginSabre(direction, eyeOffset, lagDelay);
                 if (Networked && network.IsServerInitialized) network.PublishAttack(action, transform.position);
                 else ShowAttack(action, transform.position);
                 return true;
@@ -134,7 +134,11 @@ namespace PirateSlop
             bool echo = echoPrimed; echoPrimed = false;
             int resolvedSeed = seed < 0 ? ++shotSequence : seed;
             if (echo && network != null) network.ScheduleUpgradeEcho(definition, eye, muzzle, direction, aimed, resolvedSeed);
-            var shot=FirearmCombat.Resolve(gameObject,definition,eye,muzzle,direction,aimed,resolvedSeed,true)[0];
+            FirearmShot shot;
+            var participant = Networked ? GetComponent<PirateSlop.Networking.NetworkPlayer>() : null;
+            PirateSlop.Networking.LagCompensation.Rewind(participant, lagDelay);
+            try { shot=FirearmCombat.Resolve(gameObject,definition,eye,muzzle,direction,aimed,resolvedSeed,true)[0]; }
+            finally { PirateSlop.Networking.LagCompensation.Restore(); }
             ShowShot(shot);
             if (Networked && network.IsServerInitialized) network.PublishShot(shot);
             return true;

@@ -277,7 +277,7 @@ namespace PirateSlop.World
                 float distance = delta.magnitude;
                 if (distance < .00001f) continue;
                 RaycastHit nearest = default;
-                foreach (var hit in Physics.SphereCastAll(start, .14f, delta / distance, distance, ~0, QueryTriggerInteraction.Ignore))
+                foreach (var hit in PirateSlop.PhysicsQuery.SphereCastAll(start, .14f, delta / distance, distance, ~0, QueryTriggerInteraction.Ignore))
                 {
                     if (hit.collider.gameObject.layer == waterLayer || hit.collider.GetComponentInParent<CombatHealth>() != null) continue;
                     if (hit.distance <= distance) { nearest = hit; distance = hit.distance; }

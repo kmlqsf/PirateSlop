@@ -32,7 +32,7 @@ namespace PirateSlop.Networking
         static readonly System.Collections.Generic.List<NetworkPlayer> active = new();
         public static System.Collections.Generic.IReadOnlyList<NetworkPlayer> Active => active;
         void OnEnable() => active.Add(this);
-        void OnDisable() => active.Remove(this);
+        void OnDisable() { active.Remove(this); LagCompensation.Forget(this); }
 
         public readonly SyncVar<NetworkObject> ShipObject = new();
         public readonly SyncVar<int> ParticipantId = new();
@@ -268,7 +268,7 @@ namespace PirateSlop.Networking
             PublishTargetMarks();
             if (!TryBind()) return;
             if (!IsBot.Value && (IsOwner || IsServerInitialized)) CreateReconcile();
-            if (IsServerInitialized) SendObserverState(BuildState());
+            if (IsServerInitialized) { SendObserverState(BuildState()); if (!motor.IsDead) LagCompensation.Record(this, Time.timeAsDouble); }
         }
         [Replicate]
         void Move(CaptainInput input, ReplicateState state = ReplicateState.Invalid, Channel channel = Channel.Unreliable)

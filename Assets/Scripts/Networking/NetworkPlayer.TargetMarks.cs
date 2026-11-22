@@ -53,7 +53,7 @@ namespace PirateSlop.Networking
                 || !float.IsFinite(direction.sqrMagnitude) || Mathf.Abs(direction.sqrMagnitude - 1f) > .05f) return;
             RaycastHit nearest = default;
             float distance = 300f;
-            foreach (var hit in Physics.SphereCastAll(origin, .12f, direction.normalized, distance, ~0, QueryTriggerInteraction.Collide))
+            foreach (var hit in PirateSlop.PhysicsQuery.SphereCastAll(origin, .12f, direction.normalized, distance, ~0, QueryTriggerInteraction.Collide))
             {
                 if (hit.transform.IsChildOf(transform) || hit.distance >= distance) continue;
                 var bird = hit.collider.GetComponentInParent<SeagullVisual>();
@@ -79,7 +79,7 @@ namespace PirateSlop.Networking
             Vector3 origin = station.Viewpoint.position + station.transform.up * (view != null ? view.ViewpointLift : 1.25f);
             RaycastHit nearest = default;
             float distance = 3000f;
-            foreach (var hit in Physics.RaycastAll(origin, direction.normalized, distance, ~0, QueryTriggerInteraction.Collide))
+            foreach (var hit in PirateSlop.PhysicsQuery.RaycastAll(origin, direction.normalized, distance, ~0, QueryTriggerInteraction.Collide))
             {
                 if (hit.transform.IsChildOf(Ship.transform) || hit.transform.IsChildOf(transform) || hit.distance >= distance) continue;
                 if (hit.collider.isTrigger && hit.collider.GetComponentInParent<SeagullVisual>() == null) continue;

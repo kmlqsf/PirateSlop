@@ -100,7 +100,7 @@ namespace PirateSlop.Networking
             Vector3 delta = velocity * Time.fixedDeltaTime;
             RaycastHit nearest = default;
             float distance = delta.magnitude;
-            foreach (var hit in Physics.SphereCastAll(transform.position, .12f, delta.normalized, distance, ~0, QueryTriggerInteraction.Collide))
+            foreach (var hit in PirateSlop.PhysicsQuery.SphereCastAll(transform.position, .12f, delta.normalized, distance, ~0, QueryTriggerInteraction.Collide))
             {
                 if (!PlayerHitbox.IsTarget(hit.collider) || hit.transform.IsChildOf(transform)) continue;
                 if (attacker != null && hit.transform.IsChildOf(attacker.transform) && Time.time - started < .3f) continue;
@@ -156,7 +156,7 @@ namespace PirateSlop.Networking
         void Burst()
         {
             var damaged = new System.Collections.Generic.HashSet<CombatHealth>();
-            foreach (var collider in Physics.OverlapSphere(transform.position, PufferRadius, ~0, QueryTriggerInteraction.Ignore))
+            foreach (var collider in PirateSlop.PhysicsQuery.OverlapSphere(transform.position, PufferRadius, ~0, QueryTriggerInteraction.Ignore))
             {
                 var health = collider.GetComponentInParent<CombatHealth>();
                 if (health == null || !damaged.Add(health)) continue;

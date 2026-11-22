@@ -132,7 +132,7 @@ namespace PirateSlop.Networking
                     if (bow && (ship.transform.InverseTransformPoint(hit.point).z < bowLimit || !DeckSupportsChest(ship, candidate, halfSize))) continue;
                     Vector3 center = candidate + ship.transform.rotation * boxCenter + ship.transform.up * .08f;
                     bool clear = true;
-                    foreach (var obstacle in Physics.OverlapBox(center, halfSize * .95f, ship.transform.rotation, ~0, QueryTriggerInteraction.Ignore))
+                    foreach (var obstacle in PirateSlop.PhysicsQuery.OverlapBox(center, halfSize * .95f, ship.transform.rotation, ~0, QueryTriggerInteraction.Ignore))
                     {
                         if (obstacle == hit.collider && obstacle.GetComponent<PirateSlop.Ships.ShipV3CollisionBatch>() == null) continue;
                         if (Vector3.Dot(obstacle.bounds.max - hit.point, ship.transform.up) <= .15f) continue;
@@ -176,7 +176,7 @@ namespace PirateSlop.Networking
         {
             floor = default;
             bool found = false;
-            foreach (var hit in Physics.RaycastAll(ray, distance, ~0, QueryTriggerInteraction.Ignore))
+            foreach (var hit in PirateSlop.PhysicsQuery.RaycastAll(ray, distance, ~0, QueryTriggerInteraction.Ignore))
             {
                 if (!hit.transform.IsChildOf(ship.transform) || hit.distance >= distance || Vector3.Dot(hit.normal, ship.transform.up) < .7f || RewardDeckPriority(hit.collider, hit.point) >= 10) continue;
                 floor = hit; distance = hit.distance; found = true;

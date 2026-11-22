@@ -123,7 +123,7 @@ namespace PirateSlop.World
             if (!world.CanSail(point, yaw)) return false;
             var rotation = Quaternion.Euler(0, yaw, 0);
             var extents = new Vector3(ship.HullHalfExtents.x + 1f, (height + 3f) * .5f, ship.HullHalfExtents.y + 2f);
-            foreach (var collider in Physics.OverlapBox(point + Vector3.up * ((height - 3f) * .5f), extents, rotation, ~LayerMask.GetMask("Water"), QueryTriggerInteraction.Ignore))
+            foreach (var collider in PirateSlop.PhysicsQuery.OverlapBox(point + Vector3.up * ((height - 3f) * .5f), extents, rotation, ~LayerMask.GetMask("Water"), QueryTriggerInteraction.Ignore))
             {
                 if (collider.transform.IsChildOf(ship.transform) || collider.GetComponentInParent<NetworkPlayer>() != null) continue;
                 var fish = collider.GetComponentInParent<NetworkFish>();

@@ -27,7 +27,7 @@ namespace PirateSlop.Networking
             nearest = default;
             if (!float.IsFinite(offset.sqrMagnitude) || !float.IsFinite(forward.sqrMagnitude) || offset.sqrMagnitude > 25f || forward.sqrMagnitude < .5f) return false;
             float distance = 5f;
-            foreach (var hit in Physics.RaycastAll(transform.position + offset, forward.normalized, distance, ~0, QueryTriggerInteraction.Ignore))
+            foreach (var hit in PirateSlop.PhysicsQuery.RaycastAll(transform.position + offset, forward.normalized, distance, ~0, QueryTriggerInteraction.Ignore))
                 if (!hit.transform.IsChildOf(transform) && hit.distance < distance) { nearest = hit; distance = hit.distance; }
             return nearest.collider != null;
         }

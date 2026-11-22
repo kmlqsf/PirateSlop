@@ -86,7 +86,7 @@ namespace PirateSlop
             RotatePlacement(mouse);
             if (barricadeBuilding && (!mouse.leftButton.isPressed || !Mathf.Approximately(rotation, previousRotation))) CancelBarricadeWork();
             RaycastHit nearest = default; float distance = 5f;
-            foreach (var hit in Physics.RaycastAll(camera.transform.position, camera.transform.forward, distance, ~0, QueryTriggerInteraction.Ignore))
+            foreach (var hit in PirateSlop.PhysicsQuery.RaycastAll(camera.transform.position, camera.transform.forward, distance, ~0, QueryTriggerInteraction.Ignore))
                 if (!hit.transform.IsChildOf(transform) && hit.distance < distance) { nearest = hit; distance = hit.distance; }
             var ship = nearest.collider != null ? nearest.collider.GetComponentInParent<NetworkShip>() : null;
             Vector3 position = nearest.collider != null ? nearest.point + nearest.normal * .03f : camera.transform.position + camera.transform.forward * 4f;
@@ -131,7 +131,7 @@ namespace PirateSlop
             Vector3 position = ship.transform.TransformPoint(point);
             if (Vector3.Distance(player.transform.position, position) > 6f) return false;
             bool supported = false;
-            foreach (var hit in Physics.RaycastAll(position + ship.transform.up * .15f, -ship.transform.up, .25f, ~0, QueryTriggerInteraction.Ignore))
+            foreach (var hit in PirateSlop.PhysicsQuery.RaycastAll(position + ship.transform.up * .15f, -ship.transform.up, .25f, ~0, QueryTriggerInteraction.Ignore))
                 if (hit.collider.GetComponentInParent<NetworkShip>() == ship && Vector3.Dot(hit.normal, ship.transform.up) > .7f) { supported = true; break; }
             if (!supported) return false;
             Quaternion worldRotation = ship.transform.rotation * rotation;

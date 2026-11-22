@@ -110,7 +110,7 @@ namespace PirateSlop.Networking
             if (holding) return passenger != null && passenger.Support == ship.Body;
             var eye = actor.transform.position+Vector3.up*1.5f;
             var delta = grip.position-eye;
-            foreach (var hit in Physics.RaycastAll(eye,delta.normalized,Mathf.Max(0,delta.magnitude-.2f),~LayerMask.GetMask("Water"),QueryTriggerInteraction.Ignore))
+            foreach (var hit in PirateSlop.PhysicsQuery.RaycastAll(eye,delta.normalized,Mathf.Max(0,delta.magnitude-.2f),~LayerMask.GetMask("Water"),QueryTriggerInteraction.Ignore))
                 if (!hit.transform.IsChildOf(actor.transform) && !hit.transform.IsChildOf(transform)) return false;
             return true;
         }

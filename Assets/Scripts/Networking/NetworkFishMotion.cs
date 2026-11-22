@@ -91,7 +91,7 @@ namespace PirateSlop.Networking
                     ((i - 1) & 2) == 0 ? -halfZ * .85f : halfZ * .85f);
                 var origin = candidate + offset + Vector3.up * (top + .1f);
                 float distance = Mathf.Max(.1f, origin.y - bottom + .06f);
-                foreach (var hit in Physics.RaycastAll(origin, Vector3.down, distance, ~0, QueryTriggerInteraction.Ignore))
+                foreach (var hit in PirateSlop.PhysicsQuery.RaycastAll(origin, Vector3.down, distance, ~0, QueryTriggerInteraction.Ignore))
                 {
                     if (!MotionObstacle(hit.collider) || hit.normal.y < .5f ||
                         hit.point.y > previousBottom + .08f || hit.point.y < bottom - .025f ||
@@ -158,7 +158,7 @@ namespace PirateSlop.Networking
                 RaycastHit nearest = default;
                 float distance = delta.magnitude;
                 if (distance > .00001f)
-                    foreach (var hit in Physics.BoxCastAll(transform.position + transform.rotation * BodyCenter,
+                    foreach (var hit in PirateSlop.PhysicsQuery.BoxCastAll(transform.position + transform.rotation * BodyCenter,
                         BodyExtents * .98f, delta / distance, transform.rotation, distance, ~0, QueryTriggerInteraction.Ignore))
                     {
                         if (!MotionObstacle(hit.collider)) continue;

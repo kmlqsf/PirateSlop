@@ -137,7 +137,7 @@ namespace PirateSlop.Networking
             var damaged = new HashSet<CombatHealth>();
             if (direct != null && direct.GetComponent<NetworkPlayer>() != null) { damaged.Add(direct); direct.Damage(settings.DirectDamage, shooter != null ? shooter.gameObject : null); }
             NetworkKamikazeEvent.DamageNearby(gameObject.scene, transform.position, settings.BlastRadius, settings.BlastDamage, shooter != null ? shooter.gameObject : null);
-            foreach (var hit in Physics.OverlapSphere(transform.position, settings.BlastRadius, ~0, QueryTriggerInteraction.Ignore))
+            foreach (var hit in PirateSlop.PhysicsQuery.OverlapSphere(transform.position, settings.BlastRadius, ~0, QueryTriggerInteraction.Ignore))
             {
                 if (hit.gameObject.scene != gameObject.scene || hit.transform.IsChildOf(transform)) continue;
                 var health = hit.GetComponentInParent<CombatHealth>();
@@ -155,7 +155,7 @@ namespace PirateSlop.Networking
         {
             Vector3 origin = transform.position;
             Vector3 delta = destination - origin;
-            foreach (var hit in Physics.RaycastAll(origin, delta.normalized, delta.magnitude, ~0, QueryTriggerInteraction.Ignore))
+            foreach (var hit in PirateSlop.PhysicsQuery.RaycastAll(origin, delta.normalized, delta.magnitude, ~0, QueryTriggerInteraction.Ignore))
             {
                 if (hit.transform.IsChildOf(transform) || hit.collider.gameObject.layer == 4) continue;
                 var health = target.GetComponentInParent<CombatHealth>();

@@ -36,7 +36,7 @@ namespace PirateSlop
             SceneManager.MoveGameObjectToScene(corpse, instance.scene);
             instance.corpses.Add(corpse);
             if (gameplay) instance.gameplayCorpses.Add(corpse);
-            foreach (var collider in Physics.OverlapSphere(position, 45f, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
+            foreach (var collider in PirateSlop.PhysicsQuery.OverlapSphere(position, 45f, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
                 instance.AddSurface(collider);
         }
 

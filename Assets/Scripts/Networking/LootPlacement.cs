@@ -28,7 +28,7 @@ namespace PirateSlop.Networking
                 if (FirearmTrace.Cast(owner.gameObject, from, origin, out _)) continue;
                 RaycastHit floor = default;
                 float distance = 5f;
-                foreach (var hit in Physics.RaycastAll(origin, Vector3.down, distance, ~0, QueryTriggerInteraction.Ignore))
+                foreach (var hit in PirateSlop.PhysicsQuery.RaycastAll(origin, Vector3.down, distance, ~0, QueryTriggerInteraction.Ignore))
                     if (!hit.transform.IsChildOf(owner) && hit.collider.GetComponentInParent<NetworkFish>() == null && hit.collider.GetComponentInParent<AdvancedPlayerController>() == null && hit.normal.y > .55f && hit.distance < distance)
                     { floor = hit; distance = hit.distance; }
                 if (floor.collider == null) continue;
@@ -41,7 +41,7 @@ namespace PirateSlop.Networking
                 }
                 point = floor.point + floor.normal * (.035f - lowest);
                 bool blocked = false;
-                foreach (var collider in Physics.OverlapBox(point + rotation * center, size * .48f, rotation, ~0, QueryTriggerInteraction.Ignore))
+                foreach (var collider in PirateSlop.PhysicsQuery.OverlapBox(point + rotation * center, size * .48f, rotation, ~0, QueryTriggerInteraction.Ignore))
                     if (!collider.transform.IsChildOf(owner)) { blocked = true; break; }
                 if (blocked) continue;
                 var footprint = new Bounds(point + rotation * center, Vector3.zero);

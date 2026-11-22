@@ -88,7 +88,7 @@ namespace PirateSlop.Networking
                 Vector3 flightForward = hookAnchor.Value != null ? hookAnchor.Value.transform.TransformDirection(flightDirection) : flightDirection;
                 RaycastHit closest = default;
                 float distance = step + .001f;
-                foreach (var hit in Physics.SphereCastAll(GrapplePoint, .12f, flightForward, step, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
+                foreach (var hit in PirateSlop.PhysicsQuery.SphereCastAll(GrapplePoint, .12f, flightForward, step, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
                 {
                     if (hit.transform.IsChildOf(transform) || hit.distance >= distance) continue;
                     closest = hit; distance = hit.distance;
@@ -126,7 +126,7 @@ namespace PirateSlop.Networking
             Vector3 start = transform.position + Vector3.up, delta = GrapplePoint - start;
             if (delta.magnitude < (hookVictim.Value != null ? 1.5f : 1.1f) || delta.magnitude > 40f) { EndHook(); return; }
             bool blocked = false;
-            foreach (var hit in Physics.RaycastAll(start, delta.normalized, Mathf.Max(0f, delta.magnitude - .35f), Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
+            foreach (var hit in PirateSlop.PhysicsQuery.RaycastAll(start, delta.normalized, Mathf.Max(0f, delta.magnitude - .35f), Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
             {
                 if (hit.transform.IsChildOf(transform) || (hookVictim.Value != null && hit.transform.IsChildOf(hookVictim.Value.transform))) continue;
                 blocked = true; break;

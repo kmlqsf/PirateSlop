@@ -80,7 +80,7 @@ namespace PirateSlop.Ships
         bool ClearJump(Vector3 from, Vector3 to, Transform ignore = null)
         {
             Vector3 delta = to - from;
-            foreach (var hit in Physics.SphereCastAll(from, .12f, delta.normalized, delta.magnitude, ~0, QueryTriggerInteraction.Ignore))
+            foreach (var hit in PirateSlop.PhysicsQuery.SphereCastAll(from, .12f, delta.normalized, delta.magnitude, ~0, QueryTriggerInteraction.Ignore))
                 if (!hit.transform.IsChildOf(Visual) && (ignore == null || !hit.transform.IsChildOf(ignore))) return false;
             return true;
         }

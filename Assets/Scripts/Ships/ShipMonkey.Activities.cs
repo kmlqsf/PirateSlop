@@ -306,7 +306,7 @@ namespace PirateSlop.Ships
                 bool visible = true;
                 Vector3 destination = recipient.transform.position + Vector3.up * .65f;
                 Vector3 direction = destination - HeldPoint;
-                foreach (var hit in Physics.RaycastAll(HeldPoint, direction.normalized, direction.magnitude, ~0, QueryTriggerInteraction.Ignore))
+                foreach (var hit in PirateSlop.PhysicsQuery.RaycastAll(HeldPoint, direction.normalized, direction.magnitude, ~0, QueryTriggerInteraction.Ignore))
                     if (!hit.transform.IsChildOf(Visual) && !hit.transform.IsChildOf(recipient.transform) && hit.collider.GetComponentInParent<NetworkFish>() != heldItem) { visible = false; break; }
                 if (separation > 1.5f || !visible)
                 {

@@ -16,6 +16,10 @@ namespace PirateSlop
         float reloadVisualStarted;
         bool wasReloading;
         readonly HashSet<CombatHealth> struck = new();
+        const float SabreReach = 1.9f, SabreHalfAngle = 62f;
+        static readonly Collider[] sabreTargets = new Collider[64];
+        static readonly RaycastHit[] sabreOcclusion = new RaycastHit[16];
+        float sabreLagDelay;
         float attackStarted = -10f, visualAttackStarted = -10f;
         Vector3 attackDirection;
         bool SabreEquipped => inventory != null && inventory.SabreSelected;
@@ -83,9 +87,9 @@ namespace PirateSlop
         }
         int upgradeSwingCount;
         bool pendingGhostWave;
-        void BeginSabre(Vector3 direction, Vector3 eyeOffset)
+        void BeginSabre(Vector3 direction, Vector3 eyeOffset, float lagDelay = 0f)
         {
-            attackStarted = Time.time; attackDirection = direction;
+            attackStarted = Time.time; attackDirection = direction; sabreLagDelay = lagDelay;
             pendingGhostWave = network != null && network.IsServerInitialized && UpgradeOwner.HasUpgrade(UpgradeEffect.GhostSabre) && ++upgradeSwingCount % RoguelikeTuning.Current.ghostSwingInterval == 0;
             struck.Clear(); sabreWoodStruck = false;
             Vector3 safeEye = float.IsFinite(eyeOffset.sqrMagnitude) && eyeOffset.sqrMagnitude <= 49f ? eyeOffset : Vector3.up * (motor.IsCrouched ? .75f : 1.65f);
@@ -99,26 +103,44 @@ namespace PirateSlop
             Vector3 origin = transform.position + Vector3.up * (motor.IsCrouched ? .7f : 1.4f);
             if (pendingGhostWave) { pendingGhostWave = false; network.LaunchUpgradeSabreWave(origin, attackDirection, 25f * SabreSpeed); }
             StrikeSabreWood(origin);
-            foreach (var collider in Physics.OverlapSphere(origin, 2.4f * SabreSpeed, ~0, QueryTriggerInteraction.Collide))
+            var participant = Networked && sabreLagDelay > 0f ? GetComponent<PirateSlop.Networking.NetworkPlayer>() : null;
+            if (participant != null) PirateSlop.Networking.LagCompensation.Rewind(participant, sabreLagDelay);
+            try { StrikeSabreTargets(origin); }
+            finally { if (participant != null) PirateSlop.Networking.LagCompensation.Restore(); }
+        }
+        bool SabreOccluded(Vector3 origin, Vector3 delta, System.Func<Collider, bool> sameTarget)
+        {
+            float distance = delta.magnitude;
+            if (distance < .001f) return false;
+            int count = Physics.RaycastNonAlloc(origin, delta / distance, sabreOcclusion, distance, ~0, QueryTriggerInteraction.Ignore);
+            for (int i = 0; i < count; i++)
             {
+                var hit = sabreOcclusion[i];
+                if (!hit.transform.IsChildOf(transform) && !sameTarget(hit.collider)) return true;
+            }
+            return false;
+        }
+        void StrikeSabreTargets(Vector3 origin)
+        {
+            int found = Physics.OverlapSphereNonAlloc(origin, SabreReach * SabreSpeed, sabreTargets, ~0, QueryTriggerInteraction.Collide);
+            for (int index = 0; index < found; index++)
+            {
+                var collider = sabreTargets[index];
                 if (!PlayerHitbox.IsTarget(collider)) continue;
                 if (collider.transform.IsChildOf(transform)) continue;
                 var hook = collider.GetComponentInParent<BoardingHookTarget>();
                 if (hook != null)
                 {
                     Vector3 hookDelta = collider.ClosestPoint(origin + attackDirection) - origin;
-                    if (Vector3.Angle(attackDirection, hookDelta) > 75f) continue;
-                    bool hidden = false;
-                    foreach (var hit in Physics.RaycastAll(origin, hookDelta.normalized, hookDelta.magnitude, ~0, QueryTriggerInteraction.Ignore))
-                        if (!hit.transform.IsChildOf(transform) && hit.collider.GetComponentInParent<BoardingHookTarget>() != hook) { hidden = true; break; }
-                    if (!hidden) hook.Strike(gameObject);
+                    if (Vector3.Angle(attackDirection, hookDelta) > SabreHalfAngle) continue;
+                    if (!SabreOccluded(origin, hookDelta, c => c.GetComponentInParent<BoardingHookTarget>() == hook)) hook.Strike(gameObject);
                     continue;
                 }
                 var harpoonGun = collider.GetComponentInParent<Harpoon.HarpoonGun>();
                 if (harpoonGun != null)
                 {
                     Vector3 deltaGun = collider.ClosestPoint(origin + attackDirection) - origin;
-                    if (Vector3.Angle(attackDirection, deltaGun) <= 75f)
+                    if (Vector3.Angle(attackDirection, deltaGun) <= SabreHalfAngle)
                     {
                         harpoonGun.TakeDamage(25f * SabreSpeed, gameObject);
                         CombatVfx.Impact(collider.ClosestPoint(origin + attackDirection), Vector3.up, false, true);
@@ -128,11 +150,8 @@ namespace PirateSlop
                 var health = collider.GetComponentInParent<CombatHealth>();
                 if (health == null || struck.Contains(health)) continue;
                 Vector3 point = collider.ClosestPoint(origin + attackDirection), delta = point - origin;
-                if (Vector3.Angle(attackDirection, delta) > 75f) continue;
-                bool blocked = false;
-                foreach (var hit in Physics.RaycastAll(origin, delta.normalized, delta.magnitude, ~0, QueryTriggerInteraction.Ignore))
-                    if (!hit.transform.IsChildOf(transform) && hit.collider.GetComponentInParent<CombatHealth>() != health) { blocked = true; break; }
-                if (!blocked) { struck.Add(health); float before = health.Current; health.ReceiveWeaponHit(25 * SabreSpeed, gameObject); UpgradeCombat.AfterHit(health, before, gameObject, false, attackDirection); if (health.Current < before) { if (Networked) network.PublishSabreFlesh(point); else GameAudio.Play(SoundCue.SabreFlesh, point); } }
+                if (Vector3.Angle(attackDirection, delta) > SabreHalfAngle) continue;
+                if (!SabreOccluded(origin, delta, c => c.GetComponentInParent<CombatHealth>() == health)) { struck.Add(health); float before = health.Current; health.ReceiveWeaponHit(25 * SabreSpeed, gameObject); UpgradeCombat.AfterHit(health, before, gameObject, false, attackDirection); if (health.Current < before) { if (Networked) network.PublishSabreFlesh(point); else GameAudio.Play(SoundCue.SabreFlesh, point); } }
             }
         }
         public bool AnimationEquipped => Equipped && !motor.LocomotionLocked && (hands == null || !hands.HasHeldBall);

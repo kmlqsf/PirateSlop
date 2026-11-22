@@ -59,7 +59,7 @@ namespace PirateSlop
             if (recovering)
             {
                 float nearest = 1.2f;
-                foreach (var hit in Physics.RaycastAll(fallenHips.position + Vector3.up * .2f, Vector3.down, nearest, ~0, QueryTriggerInteraction.Ignore))
+                foreach (var hit in PirateSlop.PhysicsQuery.RaycastAll(fallenHips.position + Vector3.up * .2f, Vector3.down, nearest, ~0, QueryTriggerInteraction.Ignore))
                 {
                     if (hit.collider.GetComponentInParent<Networking.NetworkPlayer>() != null || hit.normal.y < .55f || hit.distance >= nearest) continue;
                     nearest = hit.distance;

@@ -150,13 +150,13 @@ namespace PirateSlop.Networking
             remaining.Value = Mathf.Max(0, FlightSeconds - (Time.time - launched));
             if (remaining.Value <= 0 || shooter == null || !shooter.IsSpawned || shooter.Motor.IsDead ||
                 !shooter.IsBot.Value && (shooter.Owner == null || !shooter.Owner.IsActive)) { Explode(); return; }
-            foreach (var overlap in Physics.OverlapSphere(transform.position, .18f, ~0, QueryTriggerInteraction.Ignore))
+            foreach (var overlap in PirateSlop.PhysicsQuery.OverlapSphere(transform.position, .18f, ~0, QueryTriggerInteraction.Ignore))
                 if (!Ignored(overlap)) { Explode(); return; }
             transform.rotation = Quaternion.LookRotation(steering);
             Vector3 step = steering * speed * dt;
             float nearest = step.magnitude;
             Collider obstacle = null;
-            foreach (var hit in Physics.SphereCastAll(transform.position, .18f, steering, nearest, ~0, QueryTriggerInteraction.Ignore))
+            foreach (var hit in PirateSlop.PhysicsQuery.SphereCastAll(transform.position, .18f, steering, nearest, ~0, QueryTriggerInteraction.Ignore))
             {
                 if (Ignored(hit.collider)) continue;
                 if (hit.distance <= nearest) { nearest = hit.distance; obstacle = hit.collider; }
@@ -170,7 +170,7 @@ namespace PirateSlop.Networking
             if (exploded) return;
             exploded = true;
             var damaged = new System.Collections.Generic.HashSet<CombatHealth>();
-            foreach (var collider in Physics.OverlapSphere(transform.position, 3, ~0, QueryTriggerInteraction.Ignore))
+            foreach (var collider in PirateSlop.PhysicsQuery.OverlapSphere(transform.position, 3, ~0, QueryTriggerInteraction.Ignore))
             {
                 var player = collider.GetComponentInParent<NetworkPlayer>();
                 if (!Enemy(player)) continue;

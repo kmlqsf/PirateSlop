@@ -39,7 +39,7 @@ namespace PirateSlop
             var eye = actor.transform.position + Vector3.up * 1.65f;
             var delta = Grip.position - eye;
             if (delta.sqrMagnitude > 2.8f * 2.8f) return false;
-            foreach (var hit in Physics.RaycastAll(eye, delta.normalized, delta.magnitude, ~0, QueryTriggerInteraction.Ignore))
+            foreach (var hit in PirateSlop.PhysicsQuery.RaycastAll(eye, delta.normalized, delta.magnitude, ~0, QueryTriggerInteraction.Ignore))
                 if (!hit.transform.IsChildOf(actor.transform) && !hit.transform.IsChildOf(Owner.transform)) return false;
             return true;
         }

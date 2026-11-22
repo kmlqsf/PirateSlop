@@ -338,7 +338,7 @@ namespace PirateSlop.Networking
             if (prefab == null) { DeveloperResultTargetRpc(Owner, "Префаб не назначен."); return; }
             Vector3 origin = transform.position + transform.forward * 3 + Vector3.up * 3;
             RaycastHit floor = default; float distance = 10;
-            foreach (var hit in Physics.RaycastAll(origin, Vector3.down, distance, ~0, QueryTriggerInteraction.Ignore))
+            foreach (var hit in PirateSlop.PhysicsQuery.RaycastAll(origin, Vector3.down, distance, ~0, QueryTriggerInteraction.Ignore))
                 if (!hit.transform.IsChildOf(transform) && hit.normal.y > .5f && hit.distance < distance) { floor = hit; distance = hit.distance; }
             if (floor.collider == null) { DeveloperResultTargetRpc(Owner, "Направьте взгляд на свободную палубу или землю."); return; }
             var bounds = prefab.GetComponent<Collider>().bounds;
@@ -430,7 +430,7 @@ namespace PirateSlop.Networking
             var origin = transform.position + forward * 3f + Vector3.up * 3f;
             RaycastHit floor = default;
             float distance = 8f;
-            foreach (var hit in Physics.RaycastAll(origin, Vector3.down, distance, ~0, QueryTriggerInteraction.Ignore))
+            foreach (var hit in PirateSlop.PhysicsQuery.RaycastAll(origin, Vector3.down, distance, ~0, QueryTriggerInteraction.Ignore))
             {
                 if (hit.transform.IsChildOf(transform) || hit.normal.y < .7f || hit.point.y > transform.position.y + .5f || hit.distance >= distance) continue;
                 floor = hit;
@@ -446,7 +446,7 @@ namespace PirateSlop.Networking
             var halfSize = box != null ? Vector3.Scale(box.size, prefab.transform.localScale) * .5f : new Vector3(.6f, .4f, .4f);
             var center = box != null ? Vector3.Scale(box.center, prefab.transform.localScale) : Vector3.up * .4f;
             var position = floor.point + up * (halfSize.y - center.y + .03f);
-            foreach (var obstacle in Physics.OverlapBox(position + rotation * center, halfSize * .95f, rotation, ~0, QueryTriggerInteraction.Ignore))
+            foreach (var obstacle in PirateSlop.PhysicsQuery.OverlapBox(position + rotation * center, halfSize * .95f, rotation, ~0, QueryTriggerInteraction.Ignore))
             {
                 if (obstacle == floor.collider) continue;
                 DeveloperResultTargetRpc(Owner, "Перед вами недостаточно места для сундука.");

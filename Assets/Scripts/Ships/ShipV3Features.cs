@@ -350,7 +350,7 @@ namespace PirateSlop.Ships
             if (player == null || DoorGrip == null || DoorHinge == null || !DoorGrip.gameObject.activeInHierarchy ||
                 Vector3.Distance(player.transform.position + Vector3.up, DoorGrip.position) > 3.2f) return false;
             Vector3 origin = player.transform.position + Vector3.up * 1.5f, delta = DoorGrip.position - origin;
-            foreach (var hit in Physics.RaycastAll(origin, delta.normalized, delta.magnitude, ~0, QueryTriggerInteraction.Ignore))
+            foreach (var hit in PirateSlop.PhysicsQuery.RaycastAll(origin, delta.normalized, delta.magnitude, ~0, QueryTriggerInteraction.Ignore))
             {
                 if (hit.transform.IsChildOf(player.transform) || hit.collider.GetComponentInParent<AdvancedPlayerController>() != null ||
                     hit.collider.GetComponentInParent<Cannonball>() != null) continue;

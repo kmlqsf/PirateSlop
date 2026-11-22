@@ -80,7 +80,7 @@ namespace PirateSlop.Networking
                 Vector3 candidate = nearest.point + ship.transform.up * .03f;
                 Vector3 center = candidate + ship.transform.rotation * boxCenter + ship.transform.up * .08f;
                 bool clear = true;
-                foreach (var obstacle in Physics.OverlapBox(center, halfSize * .95f, ship.transform.rotation, ~0, QueryTriggerInteraction.Ignore))
+                foreach (var obstacle in PirateSlop.PhysicsQuery.OverlapBox(center, halfSize * .95f, ship.transform.rotation, ~0, QueryTriggerInteraction.Ignore))
                 {
                     if (obstacle == floor || Vector3.Dot(obstacle.bounds.max - nearest.point, ship.transform.up) <= .15f) continue;
                     clear = false;

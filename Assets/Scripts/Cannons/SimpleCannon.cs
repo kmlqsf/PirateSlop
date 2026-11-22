@@ -104,7 +104,7 @@ namespace PirateSlop
         {
             if (Muzzle == null || Vector3.Distance(point, Muzzle.position) > LoadRadius) return false;
             Vector3 delta = Muzzle.position - point;
-            foreach (var hit in Physics.RaycastAll(point, delta.normalized, delta.magnitude, ~0, QueryTriggerInteraction.Ignore))
+            foreach (var hit in PirateSlop.PhysicsQuery.RaycastAll(point, delta.normalized, delta.magnitude, ~0, QueryTriggerInteraction.Ignore))
                 if (!hit.transform.IsChildOf(transform) && hit.collider.GetComponentInParent<Cannonball>() == null && hit.collider.GetComponentInParent<AdvancedPlayerController>() == null) return false;
             return true;
         }

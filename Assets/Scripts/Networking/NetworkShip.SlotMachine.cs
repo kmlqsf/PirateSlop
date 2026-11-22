@@ -268,7 +268,7 @@ namespace PirateSlop.Networking
             Vector3 candidate = machine.PrizeOutlet.position + machine.transform.forward * (.85f + (prize == InventoryItem.Cannon ? .45f : 0f)) + offset;
             Vector3 floor = candidate;
             float best = float.PositiveInfinity;
-            foreach (var hit in Physics.RaycastAll(candidate + transform.up * .3f, -transform.up, 3f, ~0, QueryTriggerInteraction.Ignore))
+            foreach (var hit in PirateSlop.PhysicsQuery.RaycastAll(candidate + transform.up * .3f, -transform.up, 3f, ~0, QueryTriggerInteraction.Ignore))
             {
                 if (hit.collider.GetComponentInParent<NetworkShip>() != this || hit.collider.transform.IsChildOf(machine.transform) || hit.distance >= best) continue;
                 floor = hit.point; best = hit.distance;

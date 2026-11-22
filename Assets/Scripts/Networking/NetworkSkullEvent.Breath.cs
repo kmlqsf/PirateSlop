@@ -147,7 +147,7 @@ namespace PirateSlop.Networking
             direction = (limited * new Vector2(direction.x, direction.z).magnitude + Vector3.up * direction.y).normalized;
             float range = PlatformRadius + Catalog.SkullBreathClearance + 45f;
             RaycastHit contact = default;
-            foreach (var hit in Physics.SphereCastAll(start, 2.5f, direction, range, ~0, QueryTriggerInteraction.Ignore))
+            foreach (var hit in PirateSlop.PhysicsQuery.SphereCastAll(start, 2.5f, direction, range, ~0, QueryTriggerInteraction.Ignore))
                 if (!hit.collider.transform.IsChildOf(transform) && hit.distance < range) { contact = hit; range = hit.distance; }
             breathEndpoint.Value = contact.collider != null ? contact.point : start + direction * range;
             breathContact.Value = contact.collider != null;
@@ -158,7 +158,7 @@ namespace PirateSlop.Networking
             {
                 if (breathStruckShips.Add(struck)) struck.Ignite(contact.point, null, .5f, contact.collider, contact.normal, true);
             }
-            foreach (var collider in Physics.OverlapSphere(contact.point, 3f, ~0, QueryTriggerInteraction.Ignore))
+            foreach (var collider in PirateSlop.PhysicsQuery.OverlapSphere(contact.point, 3f, ~0, QueryTriggerInteraction.Ignore))
             {
                 var health = collider.GetComponentInParent<CombatHealth>();
                 if (health == null || health.IsDead || health.GetComponent<NetworkPlayer>() == null) continue;

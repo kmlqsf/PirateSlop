@@ -58,7 +58,7 @@ namespace PirateSlop.Networking
             float distance = delta.magnitude;
             RaycastHit nearest = default;
             if (distance > .00001f)
-                foreach (var hit in Physics.SphereCastAll(point, .12f, delta / distance, distance, ~0, QueryTriggerInteraction.Collide))
+                foreach (var hit in PirateSlop.PhysicsQuery.SphereCastAll(point, .12f, delta / distance, distance, ~0, QueryTriggerInteraction.Collide))
                 {
                     if (!PlayerHitbox.IsTarget(hit.collider) || projectile != null && hit.transform.IsChildOf(projectile)) continue;
                     if (source != null && hit.transform.IsChildOf(source)) continue;

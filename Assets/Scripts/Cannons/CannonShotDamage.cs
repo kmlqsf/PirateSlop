@@ -326,7 +326,7 @@ namespace PirateSlop
             var ships = new HashSet<NetworkShip>();
             float blastRadius = Ammo == InventoryItem.FireCannonball ? StandardBlastRadius : CannonAmmo.MortarBlastRadius(Ammo);
             NetworkKamikazeEvent.DamageNearby(gameObject.scene, point, blastRadius, Ammo == InventoryItem.Cannonball ? StandardBlastDamage : PlayerDamage, Attacker);
-            foreach (var hit in Physics.OverlapSphere(point, blastRadius, ~0, QueryTriggerInteraction.Ignore))
+            foreach (var hit in PirateSlop.PhysicsQuery.OverlapSphere(point, blastRadius, ~0, QueryTriggerInteraction.Ignore))
             {
                 if (IgnoreSource(hit)) continue;
                 var health = hit.GetComponentInParent<CombatHealth>();
@@ -413,7 +413,7 @@ namespace PirateSlop
                 if (Ammo == InventoryItem.Cannonball)
                 {
                     var damaged = new HashSet<CombatHealth>();
-                    foreach (var hit in Physics.OverlapSphere(point, StandardBlastRadius, ~0, QueryTriggerInteraction.Ignore))
+                    foreach (var hit in PirateSlop.PhysicsQuery.OverlapSphere(point, StandardBlastRadius, ~0, QueryTriggerInteraction.Ignore))
                     {
                         var target = hit.GetComponentInParent<CombatHealth>();
                         if (target != null && damaged.Add(target)) target.Damage(StandardBlastDamage, Attacker);

@@ -16,7 +16,7 @@ namespace PirateSlop.Networking
             aimed = null;
             if (!player.Motor.InputActive || player.Motor.IsDead || player.Motor.IsClimbing || player.Motor.LocomotionLocked || player.Passenger.Ship != null) return;
             var camera = player.Motor.PlayerCamera;
-            foreach (var hit in Physics.RaycastAll(camera.transform.position,camera.transform.forward,3.5f,~0,QueryTriggerInteraction.Ignore))
+            foreach (var hit in PirateSlop.PhysicsQuery.RaycastAll(camera.transform.position,camera.transform.forward,3.5f,~0,QueryTriggerInteraction.Ignore))
             {
                 if(hit.transform.IsChildOf(transform)) continue;
                 var ship=hit.collider.GetComponentInParent<NetworkShip>();

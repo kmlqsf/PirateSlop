@@ -85,7 +85,7 @@ namespace PirateSlop.Networking
                 float distance = delta.magnitude;
                 if (distance < .05f || distance >= nearest || Vector3.Dot(delta / distance, kickDirection) < .65f) continue;
                 bool blocked = false;
-                foreach (var hit in Physics.RaycastAll(origin, delta / distance, distance, ~0, QueryTriggerInteraction.Ignore))
+                foreach (var hit in PirateSlop.PhysicsQuery.RaycastAll(origin, delta / distance, distance, ~0, QueryTriggerInteraction.Ignore))
                 {
                     if (hit.transform.IsChildOf(transform) || hit.transform.IsChildOf(candidate.transform)) continue;
                     blocked = true; break;
@@ -151,7 +151,7 @@ namespace PirateSlop.Networking
             if (KickDeckSupport(feet + outward * edgeDistance + side, up, victim, out _) &&
                 KickDeckSupport(feet + outward * edgeDistance - side, up, victim, out _)) return false;
             float clearance = .2f;
-            foreach (var hit in Physics.RaycastAll(feet + up * .45f, outward, edgeDistance + .6f, ~0, QueryTriggerInteraction.Ignore))
+            foreach (var hit in PirateSlop.PhysicsQuery.RaycastAll(feet + up * .45f, outward, edgeDistance + .6f, ~0, QueryTriggerInteraction.Ignore))
             {
                 if (hit.transform.IsChildOf(victim.transform) || hit.transform.IsChildOf(transform) ||
                     hit.collider.GetComponentInParent<NetworkPlayer>() != null || hit.collider.GetComponentInParent<NetworkFish>() != null) continue;
@@ -190,7 +190,7 @@ namespace PirateSlop.Networking
             ship = null;
             float nearest = .95f;
             bool found = false;
-            foreach (var hit in Physics.RaycastAll(point + up * .35f, -up, nearest, ~0, QueryTriggerInteraction.Ignore))
+            foreach (var hit in PirateSlop.PhysicsQuery.RaycastAll(point + up * .35f, -up, nearest, ~0, QueryTriggerInteraction.Ignore))
             {
                 if (hit.transform.IsChildOf(victim.transform) || hit.transform.IsChildOf(transform) ||
                     hit.collider.GetComponentInParent<NetworkPlayer>() != null || hit.collider.GetComponentInParent<NetworkFish>() != null ||

@@ -106,7 +106,7 @@ namespace PirateSlop.Networking
             var center = RaftBody != null ? RaftBody.transform.position : eventPoint.Value;
             Vector3 relative = Quaternion.Inverse(rotation) * (player.transform.position - center);
             Vector3 destination = center + rotation * new Vector3(relative.x >= 0 ? 1.3f : -1.3f, .48f, Mathf.Clamp(relative.z, -1.25f, 1.25f));
-            foreach (var hit in Physics.OverlapCapsule(destination + Vector3.up * .35f, destination + Vector3.up * 1.45f, .3f, ~0, QueryTriggerInteraction.Ignore))
+            foreach (var hit in PirateSlop.PhysicsQuery.OverlapCapsule(destination + Vector3.up * .35f, destination + Vector3.up * 1.45f, .3f, ~0, QueryTriggerInteraction.Ignore))
                 if (!hit.transform.IsChildOf(player.transform)) return;
             player.GetComponent<NetworkPlayer>().Teleport(new PlayerState { Position = destination, Yaw = player.transform.eulerAngles.y });
             if (RaftBody != null) player.GetComponent<ShipDeckPassenger>().Attach(RaftBody);
@@ -312,7 +312,7 @@ namespace PirateSlop.Networking
             {
                 Vector3 offset = player.transform.forward * 1.1f;
                 float distance = offset.magnitude;
-                foreach (var hit in Physics.SphereCastAll(point + Vector3.up * .4f, .45f, offset.normalized, distance, ~0, QueryTriggerInteraction.Ignore))
+                foreach (var hit in PirateSlop.PhysicsQuery.SphereCastAll(point + Vector3.up * .4f, .45f, offset.normalized, distance, ~0, QueryTriggerInteraction.Ignore))
                     if (!hit.transform.IsChildOf(player.transform) && !hit.transform.IsChildOf(transform)) distance = Mathf.Min(distance, Mathf.Max(0, hit.distance - .05f));
                 point += offset.normalized * distance;
             }
@@ -323,7 +323,7 @@ namespace PirateSlop.Networking
             deck = null;
             float nearest = 4;
             RaycastHit floor = default;
-            foreach (var hit in Physics.RaycastAll(point + Vector3.up * .3f, Vector3.down, 4, ~0, QueryTriggerInteraction.Ignore))
+            foreach (var hit in PirateSlop.PhysicsQuery.RaycastAll(point + Vector3.up * .3f, Vector3.down, 4, ~0, QueryTriggerInteraction.Ignore))
             {
                 if (!IsLooseChestFloor(hit) || hit.distance >= nearest) continue;
                 var ship = hit.collider.GetComponentInParent<NetworkShip>();

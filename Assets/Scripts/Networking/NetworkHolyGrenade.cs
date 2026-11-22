@@ -71,7 +71,7 @@ namespace PirateSlop.Networking
             float distance = delta.magnitude;
             RaycastHit nearest = default;
             if (distance > .00001f)
-                foreach (var hit in Physics.SphereCastAll(point, .13f, delta / distance, distance, ~0, QueryTriggerInteraction.Ignore))
+                foreach (var hit in PirateSlop.PhysicsQuery.SphereCastAll(point, .13f, delta / distance, distance, ~0, QueryTriggerInteraction.Ignore))
                 {
                     if ((owner != null && hit.transform.IsChildOf(owner)) || (self != null && hit.transform.IsChildOf(self)) || hit.collider.GetComponentInParent<NetworkFish>() != null) continue;
                     if (hit.distance <= distance) { nearest = hit; distance = hit.distance; }

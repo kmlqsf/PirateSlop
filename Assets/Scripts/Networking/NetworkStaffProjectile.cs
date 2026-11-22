@@ -100,7 +100,7 @@ namespace PirateSlop.Networking
             Vector3 start = transform.position;
             RaycastHit nearest = default;
             float distance = delta.magnitude;
-            foreach (var hit in Physics.SphereCastAll(start, Settings.ProjectileRadius, travelDirection, distance, ~0, QueryTriggerInteraction.Collide))
+            foreach (var hit in PirateSlop.PhysicsQuery.SphereCastAll(start, Settings.ProjectileRadius, travelDirection, distance, ~0, QueryTriggerInteraction.Collide))
             {
                 if (!PlayerHitbox.IsTarget(hit.collider) || hit.collider.gameObject.scene != gameObject.scene || hit.collider.gameObject.layer == LayerMask.NameToLayer("Water")) continue;
                 if (hit.transform.IsChildOf(transform) || hit.transform.IsChildOf(shooter.transform) || hit.collider.GetComponentInParent<NetworkStaffProjectile>() != null) continue;

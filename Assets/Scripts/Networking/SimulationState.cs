@@ -24,6 +24,7 @@ namespace PirateSlop
         public bool AirJumpUsed, WaterReady, WaterWasSolid;
         public float WaterRunRemaining, WaterRecharge;
         public float LadderCooldown, KnockbackTime, KnockdownTime, JumpBuffer, GroundGrace;
+        public Vector3 MoveVelocity;
     }
     [System.Serializable]
     public struct ShipState

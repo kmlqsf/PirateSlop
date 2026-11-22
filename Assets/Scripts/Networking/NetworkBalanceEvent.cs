@@ -93,7 +93,7 @@ namespace PirateSlop.Networking
         {
             if (actor == null || Vector3.Distance(actor.transform.position + Vector3.up * 1.2f, point) >= 4.3f) return false;
             Vector3 from=actor.transform.position+Vector3.up*1.5f,delta=point-from;
-            foreach(var hit in Physics.RaycastAll(from,delta.normalized,delta.magnitude,~0,QueryTriggerInteraction.Ignore))
+            foreach(var hit in PirateSlop.PhysicsQuery.RaycastAll(from,delta.normalized,delta.magnitude,~0,QueryTriggerInteraction.Ignore))
                 if(!hit.collider.transform.IsChildOf(actor.transform) && !hit.collider.transform.IsChildOf(target)) return false;
             return true;
         }
@@ -264,7 +264,7 @@ namespace PirateSlop.Networking
             velocities[i] += Vector3.down * (18 * Time.deltaTime);
             var delta = velocities[i] * Time.deltaTime;
             float nearest = delta.magnitude + .02f; RaycastHit ground = default;
-            foreach (var hit in Physics.SphereCastAll(state.Point, .23f, delta.normalized, nearest, ~0, QueryTriggerInteraction.Ignore))
+            foreach (var hit in PirateSlop.PhysicsQuery.SphereCastAll(state.Point, .23f, delta.normalized, nearest, ~0, QueryTriggerInteraction.Ignore))
             {
                 if (hit.collider.transform.IsChildOf(Stones[i].transform) || hit.collider.GetComponentInParent<AdvancedPlayerController>() != null || hit.normal.y < .55f || hit.distance >= nearest) continue;
                 nearest = hit.distance; ground = hit;

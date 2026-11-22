@@ -165,7 +165,7 @@ namespace PirateSlop
             var camera = motor.PlayerCamera;
             Collider nearest = null;
             float distance = 5f;
-            foreach (var hit in Physics.RaycastAll(camera.transform.position, camera.transform.forward, distance, ~0, QueryTriggerInteraction.Ignore))
+            foreach (var hit in PirateSlop.PhysicsQuery.RaycastAll(camera.transform.position, camera.transform.forward, distance, ~0, QueryTriggerInteraction.Ignore))
                 if (!hit.transform.IsChildOf(transform) && hit.distance < distance) { nearest = hit.collider; distance = hit.distance; }
             if (nearest == null) return false;
             var loot = nearest.GetComponentInParent<NetworkLootChest>();
@@ -243,7 +243,7 @@ namespace PirateSlop
             var camera = motor.PlayerCamera;
             RaycastHit nearest = default;
             float distance = 5f;
-            foreach (var hit in Physics.RaycastAll(camera.transform.position, camera.transform.forward, distance, ~0, QueryTriggerInteraction.Ignore))
+            foreach (var hit in PirateSlop.PhysicsQuery.RaycastAll(camera.transform.position, camera.transform.forward, distance, ~0, QueryTriggerInteraction.Ignore))
                 if (!hit.transform.IsChildOf(transform) && hit.distance < distance) { nearest = hit; distance = hit.distance; }
             if (nearest.collider != null)
             {
@@ -349,7 +349,7 @@ namespace PirateSlop
             if (keyboard == null || mouse == null || camera == null) return;
             RaycastHit nearest = default;
             float distance = 5f;
-            foreach (var hit in Physics.RaycastAll(camera.transform.position, camera.transform.forward, distance, ~0, QueryTriggerInteraction.Ignore))
+            foreach (var hit in PirateSlop.PhysicsQuery.RaycastAll(camera.transform.position, camera.transform.forward, distance, ~0, QueryTriggerInteraction.Ignore))
                 if (!hit.transform.IsChildOf(transform) && hit.distance < distance) { nearest = hit; distance = hit.distance; }
             if (nearest.collider != null && nearest.collider.GetComponentInParent<SimpleCannon>() != null) return;
             if (mouse.rightButton.wasPressedThisFrame) cancelled = true;
@@ -415,7 +415,7 @@ namespace PirateSlop
             if (camera == null) return false;
             RaycastHit nearest = default;
             float distance = 5;
-            foreach (var hit in Physics.RaycastAll(camera.transform.position, camera.transform.forward, distance, ~0, QueryTriggerInteraction.Collide))
+            foreach (var hit in PirateSlop.PhysicsQuery.RaycastAll(camera.transform.position, camera.transform.forward, distance, ~0, QueryTriggerInteraction.Collide))
                 if (!hit.transform.IsChildOf(transform) && (!hit.collider.isTrigger || hit.collider.GetComponentInParent<PirateSlop.World.PlatformingLeverTarget>() != null || hit.collider.GetComponentInParent<PirateSlop.World.SeagullKeyTarget>() != null || hit.collider.GetComponentInParent<NetworkLootChest>() is { Kind: SeaLootKind.Sunken }) && hit.distance < distance) { nearest = hit; distance = hit.distance; }
             var lever = nearest.collider != null ? nearest.collider.GetComponentInParent<PirateSlop.World.PlatformingLeverTarget>() : null;
             if (lever != null && lever.Owner != null)
@@ -472,7 +472,7 @@ namespace PirateSlop
             Vector3 position = ship.transform.TransformPoint(localPosition);
             if (Vector3.Distance(player.transform.position, position) > 6f) return false;
             var body = ship.GetComponent<Rigidbody>();
-            foreach (var collider in Physics.OverlapSphere(position, .12f, ~0, QueryTriggerInteraction.Ignore))
+            foreach (var collider in PirateSlop.PhysicsQuery.OverlapSphere(position, .12f, ~0, QueryTriggerInteraction.Ignore))
                 if (collider.attachedRigidbody == body) return true;
             return false;
         }

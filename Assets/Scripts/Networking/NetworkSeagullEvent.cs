@@ -177,7 +177,7 @@ namespace PirateSlop.Networking
             var point = rayPoint; point.y = ChestSocket.position.y + .055f;
             var normal = Vector3.up;
             float nearest = 6f;
-            foreach (var hit in Physics.RaycastAll(rayPoint + Vector3.up * .5f, Vector3.down, nearest, ~LayerMask.GetMask("Water"), QueryTriggerInteraction.Ignore))
+            foreach (var hit in PirateSlop.PhysicsQuery.RaycastAll(rayPoint + Vector3.up * .5f, Vector3.down, nearest, ~LayerMask.GetMask("Water"), QueryTriggerInteraction.Ignore))
             {
                 if (hit.distance >= nearest || hit.collider.GetComponentInParent<AdvancedPlayerController>() != null || hit.collider.GetComponentInParent<NetworkLootChest>() != null) continue;
                 nearest = hit.distance; point = hit.point + hit.normal * .055f; normal = hit.normal;
@@ -239,7 +239,7 @@ namespace PirateSlop.Networking
             keyHolder.Value = null; keySupport.Value = null; keyHeld.Value = false; onWater.Value = true;
             float nearest = 4;
             RaycastHit floor = default;
-            foreach (var hit in Physics.RaycastAll(point + Vector3.up * .5f, Vector3.down, 4, ~LayerMask.GetMask("Water"), QueryTriggerInteraction.Ignore))
+            foreach (var hit in PirateSlop.PhysicsQuery.RaycastAll(point + Vector3.up * .5f, Vector3.down, 4, ~LayerMask.GetMask("Water"), QueryTriggerInteraction.Ignore))
             {
                 if (hit.collider.GetComponentInParent<AdvancedPlayerController>() != null || hit.collider == keyCollider || hit.distance >= nearest) continue;
                 nearest = hit.distance; floor = hit;

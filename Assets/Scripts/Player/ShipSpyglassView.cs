@@ -201,7 +201,7 @@ namespace PirateSlop
                             (launch - right*16f + Vector3.up*8f) * (3f*u*t*t) + launch*(t*t*t);
                     }
                     bool stop = false;
-                    foreach (var hit in Physics.SphereCastAll(point, .24f, (next-point).normalized, (next-point).magnitude, ~0, QueryTriggerInteraction.Ignore))
+                    foreach (var hit in PirateSlop.PhysicsQuery.SphereCastAll(point, .24f, (next-point).normalized, (next-point).magnitude, ~0, QueryTriggerInteraction.Ignore))
                         if (!hit.transform.IsChildOf(player.Ship.transform) && !hit.transform.IsChildOf(transform)) { next = hit.point; stop = true; break; }
                     var ocean = OceanSurface.Instance;
                     if (ocean != null && next.y <= ocean.Height(next)) { next.y = ocean.Height(next); stop = true; }

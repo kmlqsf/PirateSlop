@@ -105,7 +105,7 @@ namespace PirateSlop
             if (player == null || player.PlayerCamera == null) return false;
             RaycastHit nearest = default; float distance = 4f;
             var camera = player.PlayerCamera;
-            foreach(var hit in Physics.RaycastAll(camera.transform.position,camera.transform.forward,4f,~0,QueryTriggerInteraction.Ignore))
+            foreach(var hit in PirateSlop.PhysicsQuery.RaycastAll(camera.transform.position,camera.transform.forward,4f,~0,QueryTriggerInteraction.Ignore))
                 if(!hit.transform.IsChildOf(transform) && hit.distance < distance) { nearest = hit; distance = hit.distance; }
             var ball = nearest.collider != null ? nearest.collider.GetComponent<Cannonball>() : null;
             return ball != null && !ball.Loaded;
@@ -202,7 +202,7 @@ namespace PirateSlop
             // Ignore the local player's body, including when using F1.
             RaycastHit nearest = default;
             float best = 4f;
-            foreach (var hit in Physics.RaycastAll(ray, 4f, ~0, QueryTriggerInteraction.Ignore))
+            foreach (var hit in PirateSlop.PhysicsQuery.RaycastAll(ray, 4f, ~0, QueryTriggerInteraction.Ignore))
                 if (!hit.transform.IsChildOf(transform) && (held == null || !hit.transform.IsChildOf(held.transform)) && hit.distance < best)
                 { nearest = hit; best = hit.distance; }
             if (nearest.collider != null) aimed = nearest.collider.GetComponentInParent<SimpleCannon>();

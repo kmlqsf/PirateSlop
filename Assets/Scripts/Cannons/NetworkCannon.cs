@@ -83,7 +83,7 @@ namespace PirateSlop.Networking
             {
                 RaycastHit deckHit = default;
                 float nearest = 40f;
-                foreach (var hit in Physics.RaycastAll(transform.TransformPoint(offset + Vector3.up * 25f), -transform.up, nearest, ~0, QueryTriggerInteraction.Ignore))
+                foreach (var hit in PirateSlop.PhysicsQuery.RaycastAll(transform.TransformPoint(offset + Vector3.up * 25f), -transform.up, nearest, ~0, QueryTriggerInteraction.Ignore))
                     if (hit.collider.attachedRigidbody == shipBody && hit.normal.y > .7f && hit.collider.GetComponentInParent<SimpleCannon>() == null && hit.distance < nearest)
                     { deckHit = hit; nearest = hit.distance; }
                 if (deckHit.collider == null) continue;

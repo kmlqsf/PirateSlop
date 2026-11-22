@@ -30,7 +30,7 @@ namespace PirateSlop.Networking
                 var target=collider.bounds.ClosestPoint(origin);
                 var delta=target-origin;
                 bool blocked=false;
-                foreach(var hit in Physics.RaycastAll(origin,delta.normalized,delta.magnitude,~0,QueryTriggerInteraction.Ignore))
+                foreach(var hit in PirateSlop.PhysicsQuery.RaycastAll(origin,delta.normalized,delta.magnitude,~0,QueryTriggerInteraction.Ignore))
                 {
                     if(hit.transform.IsChildOf(actor.transform) || hit.transform.IsChildOf(transform) || hit.collider.GetComponentInParent<AdvancedPlayerController>()!=null) continue;
                     if(onBack && hit.collider.GetComponentInParent<WhaleLootPoint>()==whale) continue;
