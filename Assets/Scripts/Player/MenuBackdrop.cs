@@ -169,7 +169,11 @@ namespace PirateSlop
             Ship.localPosition=shipRest+Vector3.up*Mathf.Sin(t*.55f)*.25f;
             Ship.localRotation=shipRotation * Quaternion.Euler(Mathf.Sin(t*.4f)*.6f,0f,Mathf.Sin(t*.65f)*.9f);
             PositionView(t);
-            if (menuOcean != null) menuOcean.waveTime = t;
+            if (menuOcean != null)
+            {
+                menuOcean.waveTime = t;
+                World.TestOceanController.ApplySeaLighting(menuOcean, 0f);
+            }
             if(runtimeWater!=null)
             {
                 runtimeWater.SetFloat("_UseWaveTime",1f);

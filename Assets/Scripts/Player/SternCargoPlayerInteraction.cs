@@ -112,6 +112,7 @@ namespace PirateSlop
         void OnDisable() { Release(); }
         void OnGUI()
         {
+            if (PirateSlop.GameVersionOverlay.InterfaceHidden) return;
             if (Event.current.type != EventType.Repaint || network == null || !network.IsOwner || motor.IsDead || motor.IsFrozen || RoguelikeUpgradeUI.WindowOpen || SessionController.MenuOpen) return;
             if (Time.unscaledTime<messageUntil) ContextPrompt.Draw(message);
             else if (held != null && confirmed)

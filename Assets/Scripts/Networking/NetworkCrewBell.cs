@@ -182,6 +182,7 @@ namespace PirateSlop.Networking
         }
         void OnGUI()
         {
+            if (PirateSlop.GameVersionOverlay.InterfaceHidden) return;
             if (Time.unscaledTime < messageUntil && !SessionController.MenuOpen)
                 PirateHudStyle.Panel(new Rect(Screen.width * .5f - 250, 100, 500, 32), crewMessage);
             if (!IsOwner || SessionController.MenuOpen) return;

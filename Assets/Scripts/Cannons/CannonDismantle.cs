@@ -58,6 +58,7 @@ namespace PirateSlop
         }
         void OnGUI()
         {
+            if (PirateSlop.GameVersionOverlay.InterfaceHidden) return;
             if (Event.current.type != EventType.Repaint) return;
             if (target == null || !motor.InputActive || Time.unscaledTime - started < .3f) return;
             var rect = new Rect(Screen.width * .5f - 160f, Screen.height * .5f + 65f, 320f, 44f);

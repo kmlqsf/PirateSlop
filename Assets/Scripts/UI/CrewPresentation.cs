@@ -50,7 +50,7 @@ namespace PirateSlop
             if(wasDead && !dead) respawnAt=Time.unscaledTime;
             wasDead=dead;
             var camera=owner.Motor.PlayerCamera;
-            bool show=!dead && camera!=null && camera.isActiveAndEnabled && !SessionController.MenuOpen && !RoguelikeUpgradeUI.WindowOpen && !PlayerInventory.LootWindowOpen && !DeveloperMenu.IsOpen;
+            bool show=!GameVersionOverlay.InterfaceHidden && !dead && camera!=null && camera.isActiveAndEnabled && !SessionController.MenuOpen && !RoguelikeUpgradeUI.WindowOpen && !PlayerInventory.LootWindowOpen && !DeveloperMenu.IsOpen;
             if(!show) { if(canvas!=null) canvas.enabled=false; return; }
             if(canvas==null) BuildCanvas();
             canvas.enabled=true;
@@ -203,6 +203,7 @@ namespace PirateSlop
         }
         void OnGUI()
         {
+            if (PirateSlop.GameVersionOverlay.InterfaceHidden) return;
             if(owner==null || !owner.IsOwner || SessionController.MenuOpen) return;
             float elapsed=Time.unscaledTime-respawnAt;
             if(elapsed<.65f) PirateHudStyle.Fill(new Rect(0,0,Screen.width,Screen.height),new Color(.04f,.08f,.1f,.7f*(1f-elapsed/.65f)));

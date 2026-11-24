@@ -121,7 +121,7 @@ namespace PirateSlop.Networking
                         nextMenuPadMove=Time.unscaledTime+.22f;
                     }
                     if(pad.buttonSouth.wasPressedThisFrame) menuSubmit=menuFocus;
-                    if(pad.buttonEast.wasPressedThisFrame && menuPage!=0) menuPage=menuPage==6?3:menuPage==3 || menuPage==4 || menuPage==8 || menuPage==9?7:0;
+                    if(pad.buttonEast.wasPressedThisFrame && menuPage!=0) menuPage=menuPage==15?8:menuPage==6?3:menuPage==3 || menuPage==4 || menuPage==8 || menuPage==9?7:0;
                 }
             }
 #endif
@@ -290,6 +290,7 @@ namespace PirateSlop.Networking
             else if(menuPage==11) DrawFleetPerformanceMenu(x,y,panelWidth);
             else if(menuPage==12) DrawPlayersMenu(x,y,panelWidth);
             else if(menuPage==13) DrawBindingsMenu(x,y,panelWidth);
+            else if(menuPage==15) DrawPictureMenu(x,y,panelWidth);
             else if(menuPage==14) DrawHowToPlay(x,y,panelWidth);
             else if(menuPage==5) { DrawSteamParty(x,y-42,panelWidth); }
             else if(menuPage==1)
@@ -369,7 +370,8 @@ namespace PirateSlop.Networking
                 if(MenuAction(x,y+165,panelWidth,L("Назначение клавиш"))) { menuPage=13; listeningAction=-1; }
                 string controls = L("ЛКМ — огонь / действие · ПКМ — отмена / еда\n1–6 — предметы\nShift + взаимодействие — снять пушку\nТруба: колесо — зум, нажатие — метка");
                 if (MenuDeveloperTools) controls += "\n" + L("F1 — вид от третьего лица");
-                MenuText(new Rect(x,y+228,panelWidth,120),controls,true);
+                controls += "\n" + Localization.F("{0} — скрыть / вернуть интерфейс", GameVersionOverlay.CaptureKey);
+                MenuText(new Rect(x,y+228,panelWidth,130),controls,true);
                 if(MenuAction(x,y+360,panelWidth,L("Назад"))) { PlayerPrefs.Save(); menuPage=7; }
             }
             else if(menuPage==7)
@@ -416,7 +418,8 @@ namespace PirateSlop.Networking
                 if(!Mathf.Approximately(bright, nextBright)) GameSettings.Brightness = nextBright;
                 if(MenuAction(x, y+435, panelWidth, L("Режим для дальтоников")+": "+GameSettings.ColorblindName(GameSettings.Colorblind), secondary:true))
                     GameSettings.Colorblind = (ColorblindMode)(((int)GameSettings.Colorblind + 1) % 4);
-                if(MenuAction(x,y+490,panelWidth,L("Назад"))) { PlayerPrefs.Save(); menuPage=7; }
+                if(MenuAction(x,y+485,panelWidth,L("Свет и изображение"))) menuPage=15;
+                if(MenuAction(x,y+540,panelWidth,L("Назад"))) { PlayerPrefs.Save(); menuPage=7; }
             }
             else if(menuPage==9)
             {
@@ -485,6 +488,60 @@ namespace PirateSlop.Networking
             CompleteMenuNavigation();
             GUI.matrix=oldMatrix; GUI.color=oldColor;
         }
+        bool pictureWorldTab;
+        void DrawPictureMenu(float x, float y, float width)
+        {
+            MenuText(new Rect(x,y,width,35), L("Свет и изображение"));
+            float half = (width - 10f) * .5f;
+            DrawPresetChoice(x, y+48, half, PicturePreset.Scene, "Как в сцене");
+            DrawPresetChoice(x+half+10, y+48, half, PicturePreset.SeaLight, "Морской свет");
+            DrawPresetChoice(x, y+97, half, PicturePreset.Trailer, "Трейлер");
+            DrawPresetChoice(x+half+10, y+97, half, PicturePreset.Custom, "Свой профиль");
+
+            if (MenuChoice(x, y+146, half, L("Цвет и блики"), !pictureWorldTab)) pictureWorldTab = false;
+            if (MenuChoice(x+half+10, y+146, half, L("Мир и камера"), pictureWorldTab)) pictureWorldTab = true;
+            if (GameSettings.Preset != PicturePreset.Scene && !pictureWorldTab)
+            {
+                var look = GameSettings.Look;
+                bool changed = DrawPictureSlider(x, y+206, width, "Контраст", ref look.contrast, -30, 30);
+                changed |= DrawPictureSlider(x, y+268, width, "Насыщенность", ref look.saturation, -40, 40);
+                changed |= DrawPictureSlider(x, y+330, width, "Холодные тени · тёплый свет", ref look.splitTone, 0, 100);
+                changed |= DrawPictureSlider(x, y+392, width, "Свечение бликов", ref look.bloom, 0, 60);
+                changed |= DrawPictureSlider(x, y+454, width, "Затемнение по краям", ref look.vignette, 0, 40);
+                if (changed) GameSettings.SetCustomLook(look);
+            }
+            if (pictureWorldTab)
+            {
+                if (GameSettings.Preset != PicturePreset.Scene)
+                {
+                    var look = GameSettings.Look;
+                    bool changed = DrawPictureSlider(x, y+206, width, "Солнечный свет и небо", ref look.sunlight, 0, 100);
+                    changed |= DrawPictureSlider(x, y+268, width, "Отражения и пена", ref look.seaDetail, 0, 100);
+                    if (changed) GameSettings.SetCustomLook(look);
+                }
+                int smoothing = GameSettings.ObserverSmoothing;
+                if (DrawPictureSlider(x, y+330, width, "Плавность камеры наблюдателя", ref smoothing, 0, 100))
+                    GameSettings.ObserverSmoothing = smoothing;
+            }
+            if (MenuAction(x, y+530, width, L("Назад"))) { PlayerPrefs.Save(); menuPage=8; }
+        }
+
+        void DrawPresetChoice(float x, float y, float width, PicturePreset preset, string label)
+        {
+            if (MenuChoice(x, y, width, L(label), GameSettings.Preset == preset) && GameSettings.Preset != preset)
+                GameSettings.Preset = preset;
+        }
+
+        bool DrawPictureSlider(float x, float y, float width, string label, ref int value, int min, int max)
+        {
+            float position = Mathf.InverseLerp(min, max, value);
+            float next = MenuSlider(x, y, width, L(label) + "  " + value, position);
+            int result = Mathf.RoundToInt(Mathf.Lerp(min, max, next));
+            if (result == value) return false;
+            value = result;
+            return true;
+        }
+
         void DrawHowToPlay(float x, float y, float width)
         {
             var use = KeyBindings.Label(GameAction.Use);

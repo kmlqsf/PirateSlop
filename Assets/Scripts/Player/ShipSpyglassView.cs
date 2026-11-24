@@ -229,6 +229,7 @@ namespace PirateSlop
         void OnDestroy() { foreach (var line in lines) if (line != null) Destroy(line.gameObject); if (mask != null) Destroy(mask); DestroyLootBeam(); }
         void OnGUI()
         {
+            if (PirateSlop.GameVersionOverlay.InterfaceHidden) return;
             if (!player.IsOwner) return;
             if (!engaged) { if (aimed != null) ContextPrompt.Offer("ПОДЗОРНАЯ ТРУБА · E — смотреть", 40); return; }
             if (mask == null)

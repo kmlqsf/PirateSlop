@@ -193,6 +193,7 @@ namespace PirateSlop.Networking
 
         void OnGUI()
         {
+            if (PirateSlop.GameVersionOverlay.InterfaceHidden) return;
             if (Event.current.type != EventType.Repaint || !IsSpawned || !IsClientInitialized || !DeveloperMenu.Available || !DeveloperMenu.ShowLootEventLabels || SessionController.MenuOpen) return;
             var camera = Camera.main;
             if (camera == null) return;

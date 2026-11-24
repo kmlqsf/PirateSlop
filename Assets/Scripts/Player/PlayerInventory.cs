@@ -481,6 +481,7 @@ namespace PirateSlop
         void OnDestroy() { if (preview != null) Destroy(preview); if (previewMaterial != null) Destroy(previewMaterial); DestroyBarricadePreview(); }
         void OnGUI()
         {
+            if (PirateSlop.GameVersionOverlay.InterfaceHidden) return;
             if (motor == null || motor.PlayerCamera == null || !motor.PlayerCamera.enabled || SessionController.MenuOpen) return;
             if (motor.IsDead || ShipSpyglassView.IsViewing) return;
             DrawBarricadeWork();

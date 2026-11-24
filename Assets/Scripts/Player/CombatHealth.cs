@@ -206,6 +206,7 @@ namespace PirateSlop
         string cachedHealthLabel; float cachedHealthValue = -1;
         void OnGUI()
         {
+            if (PirateSlop.GameVersionOverlay.InterfaceHidden) return;
             if (Event.current.type != EventType.Repaint) return;
             var owner = GetComponent<NetworkPlayer>();
             if (owner != null && owner.IsOwner) return;

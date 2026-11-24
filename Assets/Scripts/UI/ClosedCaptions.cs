@@ -82,6 +82,7 @@ namespace PirateSlop
 
         void OnGUI()
         {
+            if (PirateSlop.GameVersionOverlay.InterfaceHidden) return;
             if (Event.current.type != EventType.Repaint || !GameSettings.Captions) return;
             float now = Time.unscaledTime;
             active.RemoveAll(caption => caption.Until <= now);

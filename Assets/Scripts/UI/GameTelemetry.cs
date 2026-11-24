@@ -163,6 +163,7 @@ namespace PirateSlop
 
         void OnGUI()
         {
+            if (PirateSlop.GameVersionOverlay.InterfaceHidden) return;
             if (!collecting || Event.current.type != EventType.Repaint) return;
             style ??= new GUIStyle(GUI.skin.label)
             {

@@ -46,6 +46,7 @@ namespace WaterSystem
         public float waveTime = -1f;
         public bool uniformWaveDepth;
         [NonSerialized] public bool dynamicSkyReflection;
+        [NonSerialized] public float reflectionLightingMultiplier = 1f;
         [NonSerialized] public float waveStrength = 1f, waveSteepness = 1f, foamLightingMultiplier = 1f, scatteringLightingMultiplier = 1f;
         //public Depth.DepthData depthData = new(); // TODO - add back once work done here for better depth setup.
 
@@ -195,7 +196,7 @@ namespace WaterSystem
             var reflection = dynamicSkyReflection && RenderSettings.defaultReflectionMode == DefaultReflectionMode.Custom && RenderSettings.customReflectionTexture != null && RenderSettings.customReflectionTexture.dimension == TextureDimension.Cube ? RenderSettings.customReflectionTexture : settings.cubemapTexture;
             _waterMaterial.SetTexture(Utilities.ShaderIDs.CubemapTexture, reflection);
             infiniteMat?.SetTexture(Utilities.ShaderIDs.CubemapTexture, reflection);
-            var lighting = new Vector4(dynamicSkyReflection ? RenderSettings.reflectionIntensity : 1f, foamLightingMultiplier, scatteringLightingMultiplier, dynamicSkyReflection ? 1f : 0f);
+            var lighting = new Vector4(dynamicSkyReflection ? RenderSettings.reflectionIntensity * reflectionLightingMultiplier : 1f, foamLightingMultiplier, scatteringLightingMultiplier, dynamicSkyReflection ? 1f : 0f);
             _waterMaterial.SetVector("_BoatAttack_Lighting", lighting);
             infiniteMat?.SetVector("_BoatAttack_Lighting", lighting);
             _waterMaterial.SetVector("_BoatAttack_WaveControls", new Vector4(waveStrength, waveSteepness, 0f, 0f));

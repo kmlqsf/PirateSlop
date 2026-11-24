@@ -78,6 +78,7 @@ namespace PirateSlop
         }
         void OnGUI()
         {
+            if (PirateSlop.GameVersionOverlay.InterfaceHidden) return;
             if (network == null || !network.IsOwner || motor.IsDead || RoguelikeUpgradeUI.WindowOpen) return;
             string hint = network.CarryingBalanceStone ? "Удерживайте ЛКМ · колесо — ближе/дальше · отпустите камень над чашей · G — бросить" :
                 hovered != null && hovered.Owner != null && hovered.StoneIndex >= 0 ? "Зажмите ЛКМ — взять камень" : null;

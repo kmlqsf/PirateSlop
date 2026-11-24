@@ -35,15 +35,20 @@ namespace PirateSlop.Networking
             camera.rect = new Rect(0, 0, 1, 1);
             camera.enabled = true;
             if (PerformanceBenchmarkActive && gameplayCamera != null)
-            {
                 PlayerPrefab.GetComponent<AdvancedPlayerController>()?.ConfigureDistanceCulling(camera);
-                if (gameplayCamera.TryGetComponent<UniversalAdditionalCameraData>(out var sourceData))
-                {
-                    var data = camera.GetUniversalAdditionalCameraData();
-                    data.antialiasing = sourceData.antialiasing; data.antialiasingQuality = sourceData.antialiasingQuality;
-                    data.renderShadows = sourceData.renderShadows; data.renderPostProcessing = sourceData.renderPostProcessing;
-                    data.volumeLayerMask = sourceData.volumeLayerMask;
-                }
+            var data = camera.GetUniversalAdditionalCameraData();
+            if (gameplayCamera != null && gameplayCamera.TryGetComponent<UniversalAdditionalCameraData>(out var sourceData))
+            {
+                data.antialiasing = sourceData.antialiasing;
+                data.antialiasingQuality = sourceData.antialiasingQuality;
+                data.renderShadows = sourceData.renderShadows;
+                data.renderPostProcessing = sourceData.renderPostProcessing;
+                data.volumeLayerMask = sourceData.volumeLayerMask;
+            }
+            else
+            {
+                data.renderPostProcessing = true;
+                data.volumeLayerMask = 1;
             }
             observerCamera.tag = "MainCamera";
             observerCamera.AddComponent<AudioListener>();

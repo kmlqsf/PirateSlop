@@ -516,6 +516,7 @@ namespace PirateSlop.Harpoon
 
         void OnGUI()
         {
+            if (PirateSlop.GameVersionOverlay.InterfaceHidden) return;
             if (operatorPlayer == null || !operatorPlayer.InputActive) return;
 
             float cx = Screen.width * 0.5f;

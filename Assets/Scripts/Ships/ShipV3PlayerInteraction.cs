@@ -223,6 +223,7 @@ namespace PirateSlop.Ships
         }
         void OnGUI()
         {
+            if (PirateSlop.GameVersionOverlay.InterfaceHidden) return;
             if (!player.IsOwner || diceShip == null || SessionController.MenuOpen || DeveloperMenu.IsOpen || motor.IsDead) return;
             int slot = diceShip.LocalDiceSlot(player.Owner.ClientId);
             if (slot >= 0) ContextPrompt.Draw(diceShip.DiceInstructions(slot) + "\n" + diceShip.DiceSummary());

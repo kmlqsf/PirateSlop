@@ -421,6 +421,7 @@ namespace PirateSlop.Networking
         void OnDestroy() { if (bobber != null) Destroy(bobber); if (catchVisual != null) Destroy(catchVisual); }
         void OnGUI()
         {
+            if (PirateSlop.GameVersionOverlay.InterfaceHidden) return;
             if (!IsOwner || !motor.InputActive || !Available) return;
             string hint = aimed != null && !IsFishing && !CarryingCatch ? (inventory.CanFitItem(aimed.CurrentItem) ? (aimed.MonkeyCarried ? "E — забрать у обезьянки " : "E — подобрать ") + aimed.ItemName : inventory.CannotFitHint(aimed.CurrentItem)) : HasFish ? (CarryingCatch ? "Инвентарь заполнен! " : "") + "G — выбросить рыбу · ПКМ — съесть (+25 HP)" : !inventory.RodSelected ? "" :
                 stage.Value == 0 ? "ЛКМ — забросить в море" : stage.Value == 1 ? "Заброс…" : stage.Value == 2 ? "Ждите поклёвку… · ПКМ — убрать удочку" : stage.Value == 3 ? "КЛЮЁТ! Зажмите ЛКМ!" : "Держите ЛКМ — вытянуть рыбу: " + Mathf.RoundToInt(progress.Value * 100) + "%";

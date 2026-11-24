@@ -43,6 +43,7 @@ namespace PirateSlop.Networking
 
         void OnGUI()
         {
+            if (PirateSlop.GameVersionOverlay.InterfaceHidden) return;
             if (Event.current.type != EventType.Repaint) return;
             if (!DeveloperMenu.Available || !DeveloperMenu.ShowLootEventLabels) return;
             if (!IsSpawned || Kind == SeaLootKind.None || SessionController.MenuOpen || InTow) return;

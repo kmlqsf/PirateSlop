@@ -193,6 +193,7 @@ namespace PirateSlop.Networking
         }
         void OnGUI()
         {
+            if (PirateSlop.GameVersionOverlay.InterfaceHidden) return;
             if (!IsOwner || hookPhase.Value == 0 || !GetComponent<AdvancedPlayerController>().InputActive) return;
             ContextPrompt.Offer("КАНАТ · A/D — раскачиваться · Отпустить ЛКМ — отпустить канат", 60);
         }

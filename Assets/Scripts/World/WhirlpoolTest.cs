@@ -22,6 +22,7 @@ namespace PirateSlop.World
 
         void OnGUI()
         {
+            if (PirateSlop.GameVersionOverlay.InterfaceHidden) return;
             if (!ShowLabel) return;
             var camera = Camera.main;
             if (camera == null) return;

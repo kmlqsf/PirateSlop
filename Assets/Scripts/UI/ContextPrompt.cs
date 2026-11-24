@@ -18,6 +18,7 @@ namespace PirateSlop
         }
         void OnGUI()
         {
+            if (PirateSlop.GameVersionOverlay.InterfaceHidden) return;
             if (Event.current.type != EventType.Repaint || frame != Time.frameCount || !motor.InputActive || PlayerInventory.LootWindowOpen || string.IsNullOrEmpty(current)) return;
             Draw(current);
         }

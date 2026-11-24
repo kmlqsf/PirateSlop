@@ -381,6 +381,7 @@ namespace PirateSlop.Performance
 
         void OnGUI()
         {
+            if (PirateSlop.GameVersionOverlay.InterfaceHidden) return;
             if (!ActiveRun || Event.current.type != EventType.Repaint) return;
             progressStyle ??= new GUIStyle(GUI.skin.box) { fontSize = 15, alignment = TextAnchor.MiddleCenter, wordWrap = true };
             GUI.Box(new Rect(12, 12, Mathf.Min(700, Screen.width - 24), 38), Progress, progressStyle);

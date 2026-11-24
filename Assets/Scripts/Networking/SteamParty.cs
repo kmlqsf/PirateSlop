@@ -286,6 +286,7 @@ namespace PirateSlop.Networking
         }
         void OnGUI()
         {
+            if (PirateSlop.GameVersionOverlay.InterfaceHidden) return;
             if (!inviteVisible || !Available || !Waiting) return;
             int oldDepth = GUI.depth;
             GUI.depth = -100;

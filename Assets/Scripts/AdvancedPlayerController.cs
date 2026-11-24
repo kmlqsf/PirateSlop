@@ -744,6 +744,7 @@ public partial class AdvancedPlayerController : MonoBehaviour
     }
     void OnGUI()
     {
+        if (PirateSlop.GameVersionOverlay.InterfaceHidden) return;
         if (!InputActive) return;
         if (IsClimbing)
         {

@@ -206,6 +206,7 @@ namespace PirateSlop
 
         void OnGUI()
         {
+            if (PirateSlop.GameVersionOverlay.InterfaceHidden) return;
             if (Event.current.type != EventType.Repaint || focus == null || !focus.isActiveAndEnabled) return;
             bool visible = false;
             for (int i = 0; i < lens.Length; i++) visible |= Time.time - lensAt[i] < 1.2f;

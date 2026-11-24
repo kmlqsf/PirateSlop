@@ -102,7 +102,8 @@ namespace PirateSlop.World
             float night = Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(.70f, 1f, t));
             bool moonMain = t >= .70f;
             var storm = StormVolumeController.Instance;
-            var sunRotation = Quaternion.Euler(Mathf.Lerp(55f, -12f, Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(t / .70f))), -35f, 0f);
+            float daylightStyle = GameSettings.Look.sunlight * .01f * (1f - sunset);
+            var sunRotation = Quaternion.Euler(Mathf.Lerp(55f - 16f * daylightStyle, -12f, Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(t / .70f))), -35f, 0f);
             if (storm != null && storm.TestCloudWall && storm.Ready && Camera.main != null)
             {
                 var anchor = storm.CurrentCenter + Vector3.up * Mathf.Max(6000, storm.CurrentRadius * 1.5f);
@@ -111,7 +112,8 @@ namespace PirateSlop.World
                 sunRotation = Quaternion.Slerp(centeredSun, sunRotation, sunset);
             }
             Sun.transform.rotation = sunRotation;
-            Sun.color = Color.Lerp(new Color(1f, .96f, .87f), new Color(1f, .48f, .22f), sunset);
+            var daylight = Color.Lerp(new Color(1f, .96f, .87f), new Color(1f, .86f, .70f), daylightStyle);
+            Sun.color = Color.Lerp(daylight, new Color(1f, .48f, .22f), sunset);
             Sun.intensity = Mathf.Lerp(3.03f, .8f, sunset) * (1f - dusk);
             Sun.enabled = !moonMain;
             Moon.transform.rotation = Quaternion.Euler(Mathf.Lerp(18f, 24f, night), -55f, 0f);
@@ -122,12 +124,14 @@ namespace PirateSlop.World
             sky.moonBody.Override(moonMain);
             sky.exposure.Override(Mathf.Lerp(0f, -3.5f, night));
             bool gameWeather = storm != null && !storm.IsMenuPreview;
-            sky.horizonTint.Override(Color.Lerp(gameWeather ? new Color(.94f, .97f, 1f) : Color.white, new Color(.68f, .76f, .92f), night));
-            sky.zenithTint.Override(Color.Lerp(gameWeather ? new Color(.46f, .74f, 1f) : Color.white, new Color(.55f, .67f, .9f), night));
+            var horizon = Color.Lerp(gameWeather ? new Color(.94f, .97f, 1f) : Color.white, new Color(1f, .92f, .84f), daylightStyle);
+            var zenith = Color.Lerp(gameWeather ? new Color(.46f, .74f, 1f) : Color.white, new Color(.39f, .64f, .95f), daylightStyle);
+            sky.horizonTint.Override(Color.Lerp(horizon, new Color(.68f, .76f, .92f), night));
+            sky.zenithTint.Override(Color.Lerp(zenith, new Color(.55f, .67f, .9f), night));
             float ambientRise = Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(.28f, .48f, t));
             float ambientNight = Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(.58f, 1f, t));
             Color ambient = Color.Lerp(new Color(.30f, .29f, .30f).linear, new Color(.25f, .29f, .38f).linear * .5f, ambientNight);
-            sky.ambientFloor.Override(Color.Lerp(Color.black, ambient, ambientRise).gamma);
+            sky.ambientFloor.Override(Color.Lerp(new Color(.012f, .020f, .034f) * daylightStyle, ambient, ambientRise).gamma);
             RenderSettings.reflectionIntensity = Mathf.Lerp(1f, .6f, night);
             if (waterMaterial != null)
             {

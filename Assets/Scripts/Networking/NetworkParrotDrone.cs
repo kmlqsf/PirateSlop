@@ -194,6 +194,7 @@ namespace PirateSlop.Networking
         }
         void OnGUI()
         {
+            if (PirateSlop.GameVersionOverlay.InterfaceHidden) return;
             if (flightCamera == null || SessionController.MenuOpen) return;
             float value = Mathf.Max(0, remaining.Value);
             var rect = new Rect(Screen.width * .5f - 170, 100, 340, 84);

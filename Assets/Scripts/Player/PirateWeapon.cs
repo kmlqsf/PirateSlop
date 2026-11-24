@@ -172,6 +172,7 @@ namespace PirateSlop
         }
         void OnGUI()
         {
+            if (PirateSlop.GameVersionOverlay.InterfaceHidden) return;
             if (GetComponent<PlayerHud>() != null) return;
             if (!Equipped || !motor.InputActive || motor.LocomotionLocked || (hands != null && hands.HasHeldBall)) return;
             ContextPrompt.Offer(SabreEquipped ? "САБЛЯ · ЛКМ — удар" : reloading ? "ПИСТОЛЕТ · Перезарядка…" : (loaded ? "ПИСТОЛЕТ · Заряжен" : "ПИСТОЛЕТ · Не заряжен") + " · ЛКМ — выстрел · R — перезарядка", 10);

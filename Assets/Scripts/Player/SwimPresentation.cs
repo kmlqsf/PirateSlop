@@ -48,6 +48,7 @@ namespace PirateSlop
         }
         void OnGUI()
         {
+            if (PirateSlop.GameVersionOverlay.InterfaceHidden) return;
             if (Event.current.type != EventType.Repaint) return;
             if (motor.PlayerCamera == null || !motor.PlayerCamera.enabled || motor.IsDead) return;
             Color old = GUI.color;

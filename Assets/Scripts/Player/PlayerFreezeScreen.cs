@@ -20,6 +20,7 @@ namespace PirateSlop
         }
         void OnGUI()
         {
+            if (PirateSlop.GameVersionOverlay.InterfaceHidden) return;
             if (Event.current.type != EventType.Repaint || status == null || !status.IsClientInitialized || !status.IsOwner || !status.IsFrozen || motor.IsDead || !motor.IsLocal) return;
             if (material == null)
             {

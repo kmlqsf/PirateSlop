@@ -463,6 +463,7 @@ namespace PirateSlop.Networking
         void AfterCamera(ScriptableRenderContext context, Camera camera) { if(viewRenderers!=null) foreach(var r in viewRenderers) if(r!=null) r.forceRenderingOff=true; }
         void OnGUI()
         {
+            if (PirateSlop.GameVersionOverlay.InterfaceHidden) return;
             GetComponent<NetworkHolyGrenadeHands>()?.DrawFlash();
             if(IsOwner && WaterRunning) PirateHudStyle.Label(new Rect(28,140,270,30),"Хождение по воде: "+waterRunRemaining.Value+" с",PirateHudStyle.Paper);
             if (!IsOwner || !Active || !motor.InputActive) return;

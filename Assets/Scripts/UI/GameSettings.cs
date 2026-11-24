@@ -6,6 +6,24 @@ namespace PirateSlop
 {
     public enum ColorblindMode { Off, Protanopia, Deuteranopia, Tritanopia }
 
+    public enum PicturePreset { Scene, SeaLight, Trailer, Custom }
+
+    public struct PictureLook
+    {
+        public int contrast, saturation, splitTone, bloom, vignette, sunlight, seaDetail;
+
+        public PictureLook(int contrast, int saturation, int splitTone, int bloom, int vignette, int sunlight, int seaDetail)
+        {
+            this.contrast = contrast;
+            this.saturation = saturation;
+            this.splitTone = splitTone;
+            this.bloom = bloom;
+            this.vignette = vignette;
+            this.sunlight = sunlight;
+            this.seaDetail = seaDetail;
+        }
+    }
+
     public static class GameSettings
     {
         public const float DefaultFov = 80f;
@@ -13,7 +31,15 @@ namespace PirateSlop
         static float sensitivity, fov, brightness;
         static bool invertY, hitmarkers, damageIndicators, compass, captions;
         static ColorblindMode colorblind;
-        static Volume volume;
+        static readonly PictureLook seaLight = new PictureLook(7, 5, 22, 17, 8, 45, 40);
+        static readonly PictureLook trailer = new PictureLook(13, 9, 52, 26, 15, 85, 75);
+        static int observerSmoothing;
+        static PicturePreset preset;
+        static PictureLook custom;
+        static Volume volume, menuVolume;
+        static SplitToning toning;
+        static Bloom bloom;
+        static Vignette vignette;
         static ColorAdjustments adjustments;
         static ChannelMixer mixer;
 
@@ -24,6 +50,16 @@ namespace PirateSlop
             sensitivity = PlayerPrefs.GetFloat("MouseSensitivity", 1f);
             invertY = PlayerPrefs.GetInt("InvertY", 0) == 1;
             fov = PlayerPrefs.GetFloat("FieldOfView", DefaultFov);
+            preset = (PicturePreset)Mathf.Clamp(PlayerPrefs.GetInt("PicturePreset", (int)PicturePreset.SeaLight), 0, 3);
+            observerSmoothing = Mathf.Clamp(PlayerPrefs.GetInt("ObserverSmoothing", 35), 0, 100);
+            custom = new PictureLook(
+                PlayerPrefs.GetInt("PictureContrast", seaLight.contrast),
+                PlayerPrefs.GetInt("PictureSaturation", seaLight.saturation),
+                PlayerPrefs.GetInt("PictureSplitTone", seaLight.splitTone),
+                PlayerPrefs.GetInt("PictureBloom", seaLight.bloom),
+                PlayerPrefs.GetInt("PictureVignette", seaLight.vignette),
+                PlayerPrefs.GetInt("PictureSunlight", seaLight.sunlight),
+                PlayerPrefs.GetInt("PictureSeaDetail", seaLight.seaDetail));
             brightness = PlayerPrefs.GetFloat("Brightness", 0f);
             hitmarkers = PlayerPrefs.GetInt("ShowHitmarkers", 1) == 1;
             damageIndicators = PlayerPrefs.GetInt("ShowDamageIndicators", 1) == 1;
@@ -43,6 +79,37 @@ namespace PirateSlop
         {
             get { Load(); return fov; }
             set { Load(); fov = Mathf.Clamp(Mathf.Round(value), 60f, 110f); PlayerPrefs.SetFloat("FieldOfView", fov); }
+        }
+
+        public static PicturePreset Preset
+        {
+            get { Load(); return preset; }
+            set { Load(); preset = value; PlayerPrefs.SetInt("PicturePreset", (int)value); ApplyPost(); }
+        }
+
+        public static PictureLook Look
+        {
+            get { Load(); return preset switch { PicturePreset.Custom => custom, PicturePreset.Trailer => trailer, PicturePreset.SeaLight => seaLight, _ => default }; }
+        }
+
+        public static void SetCustomLook(PictureLook look)
+        {
+            Load();
+            custom = look;
+            PlayerPrefs.SetInt("PictureContrast", look.contrast);
+            PlayerPrefs.SetInt("PictureSaturation", look.saturation);
+            PlayerPrefs.SetInt("PictureSplitTone", look.splitTone);
+            PlayerPrefs.SetInt("PictureBloom", look.bloom);
+            PlayerPrefs.SetInt("PictureVignette", look.vignette);
+            PlayerPrefs.SetInt("PictureSunlight", look.sunlight);
+            PlayerPrefs.SetInt("PictureSeaDetail", look.seaDetail);
+            Preset = PicturePreset.Custom;
+        }
+
+        public static int ObserverSmoothing
+        {
+            get { Load(); return observerSmoothing; }
+            set { Load(); observerSmoothing = Mathf.Clamp(value, 0, 100); PlayerPrefs.SetInt("ObserverSmoothing", observerSmoothing); }
         }
 
         public static float Brightness
@@ -90,7 +157,17 @@ namespace PirateSlop
             profile.hideFlags = HideFlags.DontSave;
             adjustments = profile.Add<ColorAdjustments>();
             mixer = profile.Add<ChannelMixer>();
+            toning = profile.Add<SplitToning>();
+            bloom = profile.Add<Bloom>();
+            vignette = profile.Add<Vignette>();
             volume.sharedProfile = profile;
+
+            var menuHost = new GameObject("MenuSettingsVolume") { layer = 30 };
+            menuHost.transform.SetParent(host.transform, false);
+            menuVolume = menuHost.AddComponent<Volume>();
+            menuVolume.isGlobal = true;
+            menuVolume.priority = volume.priority;
+            menuVolume.sharedProfile = profile;
         }
 
         static readonly float[][] simulation =
@@ -104,10 +181,30 @@ namespace PirateSlop
         {
             Load();
             if (Application.isBatchMode) return;
-            if (volume == null && Mathf.Approximately(brightness, 0f) && colorblind == ColorblindMode.Off) return;
+            bool grade = preset != PicturePreset.Scene;
+            bool expose = !Mathf.Approximately(brightness, 0f);
+            bool needed = grade || expose || colorblind != ColorblindMode.Off;
+            if (volume == null && !needed) return;
             EnsureVolume();
-            adjustments.active = !Mathf.Approximately(brightness, 0f);
-            adjustments.postExposure.Override(brightness);
+            volume.enabled = menuVolume.enabled = needed;
+            var look = Look;
+            adjustments.active = grade || expose;
+            adjustments.postExposure.value = brightness;
+            adjustments.postExposure.overrideState = expose;
+            adjustments.contrast.value = look.contrast;
+            adjustments.saturation.value = look.saturation;
+            adjustments.contrast.overrideState = adjustments.saturation.overrideState = grade;
+            toning.active = grade && look.splitTone > 0;
+            float tint = look.splitTone * .01f;
+            toning.shadows.Override(Color.Lerp(Color.gray, new Color(.43f, .49f, .56f), tint));
+            toning.highlights.Override(Color.Lerp(Color.gray, new Color(.59f, .53f, .44f), tint));
+            bloom.active = vignette.active = grade;
+            bloom.intensity.Override(look.bloom * .01f);
+            bloom.threshold.Override(1.15f);
+            bloom.downscale.Override(BloomDownscaleMode.Quarter);
+            bloom.maxIterations.Override(4);
+            bloom.highQualityFiltering.Override(false);
+            vignette.intensity.Override(look.vignette * .01f);
             mixer.active = colorblind != ColorblindMode.Off;
             if (!mixer.active) return;
             var s = simulation[(int)colorblind - 1];

@@ -66,6 +66,7 @@ namespace PirateSlop.Networking
 
         void OnGUI()
         {
+            if (PirateSlop.GameVersionOverlay.InterfaceHidden) return;
             if (monkey == null || !monkey.Visual || string.IsNullOrEmpty(line) || SessionController.MenuOpen ||
                 PlayerInventory.LootWindowOpen || RoguelikeUpgradeUI.WindowOpen || Event.current.type != EventType.Repaint) return;
             var camera = player.Motor.PlayerCamera;

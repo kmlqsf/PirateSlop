@@ -270,6 +270,7 @@ namespace PirateSlop
         float nextLimitSound, limitUntil;
         void OnGUI()
         {
+            if (PirateSlop.GameVersionOverlay.InterfaceHidden) return;
             if (controlled != null && player.InputActive)
             {
                 PirateHudStyle.Panel(new Rect(Screen.width * .5f - 150f, Screen.height * .5f + 95f, 300f, 30f), Time.unscaledTime < limitUntil ? "ПРЕДЕЛ НАВЕДЕНИЯ" : controlled.StatusLabel);

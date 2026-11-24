@@ -83,6 +83,7 @@ namespace PirateSlop
 
         void OnGUI()
         {
+            if (PirateSlop.GameVersionOverlay.InterfaceHidden) return;
             if (!ownsPanel || !Spectator && (player == null || !player.IsOwner)) return;
             wrapped ??= new GUIStyle(GUI.skin.label) { wordWrap = true, richText = false };
             var previousDepth = GUI.depth;

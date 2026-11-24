@@ -44,6 +44,7 @@ namespace PirateSlop
 
         void OnGUI()
         {
+            if (PirateSlop.GameVersionOverlay.InterfaceHidden) return;
             if (Event.current.type != EventType.Repaint || !Local) return;
             if(Time.unscaledTime<confirmedUntil && GameSettings.Hitmarkers)
             {

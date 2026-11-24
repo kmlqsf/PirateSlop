@@ -109,6 +109,7 @@ namespace PirateSlop
         }
         void OnGUI()
         {
+            if (PirateSlop.GameVersionOverlay.InterfaceHidden) return;
             if (!ShowUI) return;
             var whale = nearbyWhale;
             var pin = selected != null ? selected : hovered;

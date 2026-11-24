@@ -421,6 +421,7 @@ namespace PirateSlop.Networking
         void StrikeObserversRpc(Vector3 point) { swingAt = Time.time; GameAudio.Play(SoundCue.BulletWood, point, .8f); }
         void OnGUI()
         {
+            if (PirateSlop.GameVersionOverlay.InterfaceHidden) return;
             if (IsOwner && Available && motor.InputActive && !PlayerInventory.LootWindowOpen)
             {
                 if (inventory.PlankSelected)

@@ -478,6 +478,7 @@ namespace PirateSlop.Customization
 
         void OnGUI()
         {
+            if (PirateSlop.GameVersionOverlay.InterfaceHidden) return;
             if (!IsOpen || customizer == null) return;
 
             PrepareStyles();

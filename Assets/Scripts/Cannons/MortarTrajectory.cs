@@ -162,6 +162,7 @@ namespace PirateSlop
 
         void OnGUI()
         {
+            if (PirateSlop.GameVersionOverlay.InterfaceHidden) return;
             var player = cannon != null ? cannon.Operator : null;
             if (Event.current.type != EventType.Repaint || !previewMarker || player == null || !player.InputActive || player.ActiveCannon != cannon || SessionController.MenuOpen) return;
             var camera = player.PlayerCamera;

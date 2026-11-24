@@ -140,6 +140,7 @@ namespace PirateSlop
         }
         void OnGUI()
         {
+            if (PirateSlop.GameVersionOverlay.InterfaceHidden) return;
 #if UNITY_EDITOR || PIRATESLOP_UPPER_DESTRUCTION_V2
             if (CannonFireActive && network != null && network.IsOwner && !IsOpen)
                 GUI.Box(new Rect(Screen.width * .5f - 250f, Screen.height - 145f, 500f, 32f), "ЛКМ — ядро · Для ремонта выключите «Ядра из игрока» в F8");

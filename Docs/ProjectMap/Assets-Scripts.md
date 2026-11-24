@@ -656,7 +656,7 @@
 | [Assets/Scripts/UI/ClosedCaptions.cs](<../../Assets/Scripts/UI/ClosedCaptions.cs>) | Исходник C#: ClosedCaptions, Caption; Меню и HUD |
 | [Assets/Scripts/UI/ContextPrompt.cs](<../../Assets/Scripts/UI/ContextPrompt.cs>) | Исходник C#: ContextPrompt |
 | [Assets/Scripts/UI/CrewPresentation.cs](<../../Assets/Scripts/UI/CrewPresentation.cs>) | Исходник C#: CrewPresentation, Plate; Персонаж, камера и анимации, Сеть, сессия и Steam, Новая система ботов, Меню и HUD |
-| [Assets/Scripts/UI/GameSettings.cs](<../../Assets/Scripts/UI/GameSettings.cs>) | Исходник C#: ColorblindMode, GameSettings; Меню и HUD |
+| [Assets/Scripts/UI/GameSettings.cs](<../../Assets/Scripts/UI/GameSettings.cs>) | Исходник C#: ColorblindMode, PicturePreset, PictureLook, GameSettings; Меню и HUD |
 | [Assets/Scripts/UI/GameTelemetry.cs](<../../Assets/Scripts/UI/GameTelemetry.cs>) | Исходник C#: GameTelemetry; Меню и HUD, Производительность и тест нагрузки без AI |
 | [Assets/Scripts/UI/GameVersionOverlay.cs](<../../Assets/Scripts/UI/GameVersionOverlay.cs>) | Исходник C#: GameVersionOverlay; Меню и HUD |
 | [Assets/Scripts/UI/HudLayout.cs](<../../Assets/Scripts/UI/HudLayout.cs>) | Исходник C#: HudLayout, Scope; Меню и HUD |

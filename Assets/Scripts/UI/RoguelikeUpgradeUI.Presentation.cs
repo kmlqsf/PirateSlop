@@ -51,7 +51,7 @@ namespace PirateSlop
 
         void LateUpdate()
         {
-            if (player == null || !player.IsOwner || !player.IsClientInitialized)
+            if (GameVersionOverlay.InterfaceHidden || player == null || !player.IsOwner || !player.IsClientInitialized)
             {
                 view?.Hide();
                 return;

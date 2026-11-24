@@ -260,6 +260,7 @@ namespace PirateSlop
         void OnDisable() { Release(); Hover(null); lowerAmount = 0f; awaitPrimaryRelease = false; }
         void OnGUI()
         {
+            if (PirateSlop.GameVersionOverlay.InterfaceHidden) return;
             if (motor == null || !motor.InputActive) return;
             var handle = grabbed != null ? grabbed : hovered;
             string hint = "";

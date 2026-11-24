@@ -50,6 +50,7 @@ namespace PirateSlop.World
         }
         void OnGUI()
         {
+            if (PirateSlop.GameVersionOverlay.InterfaceHidden) return;
             if (Event.current.type != EventType.Repaint) return;
             var camera = Camera.main;
             if (camera == null || !camera.enabled || Networking.SessionController.MenuOpen) return;

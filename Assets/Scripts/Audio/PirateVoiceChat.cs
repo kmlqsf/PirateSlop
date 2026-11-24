@@ -134,6 +134,7 @@ namespace PirateSlop
         void OnDestroy() => Shutdown();
         void OnGUI()
         {
+            if (PirateSlop.GameVersionOverlay.InterfaceHidden) return;
             if (!IsSelf || Event.current.type != EventType.Repaint || SessionController.MenuOpen || DeveloperMenu.IsOpen) return;
             using var layout = new HudLayout.Scope(true);
             PirateHudStyle.Fill(new Rect(24, 100, 310, 32), new Color(.025f, .065f, .08f, .8f));

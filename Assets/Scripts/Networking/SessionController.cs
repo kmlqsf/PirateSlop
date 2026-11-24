@@ -684,6 +684,7 @@ namespace PirateSlop.Networking
         }
         void OnGUI()
         {
+            if (PirateSlop.GameVersionOverlay.InterfaceHidden) return;
             DrawMatchResult();
             DrawSessionMenu();
             DrawLoadTestWarning();

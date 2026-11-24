@@ -1,9 +1,20 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace PirateSlop
 {
     public sealed class GameVersionOverlay : MonoBehaviour
     {
+        public static bool InterfaceHidden { get; private set; }
+        public static Key CaptureKey
+        {
+            get
+            {
+                var session = Networking.SessionController.Instance;
+                return DeveloperMenu.Available && session != null && session.Config != null && session.Config.ShipComparisonEnabled && !session.ObserverActive ? Key.F6 : Key.F4;
+            }
+        }
+
         string version;
         GUIStyle style;
 
@@ -18,12 +29,21 @@ namespace PirateSlop
 
         void Awake()
         {
+            InterfaceHidden = false;
             var asset = Resources.Load<TextAsset>("GeneratedGameVersion");
             version = asset != null ? asset.text.Trim() : Application.version + " · unknown";
         }
 
+        void Update()
+        {
+            var keyboard = Keyboard.current;
+            if (keyboard == null || keyboard.altKey.isPressed) return;
+            if (keyboard[CaptureKey].wasPressedThisFrame) InterfaceHidden = !InterfaceHidden;
+        }
+
         void OnGUI()
         {
+            if (PirateSlop.GameVersionOverlay.InterfaceHidden) return;
             if (Event.current.type != EventType.Repaint) return;
             if (style == null)
                 style = new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleRight, fontSize = 13 };

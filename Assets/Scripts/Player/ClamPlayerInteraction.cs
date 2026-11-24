@@ -99,6 +99,7 @@ namespace PirateSlop
         void OnDisable() { Release(); }
         void OnGUI()
         {
+            if (PirateSlop.GameVersionOverlay.InterfaceHidden) return;
             if (network == null || !network.IsOwner || RoguelikeUpgradeUI.WindowOpen) return;
             string hint = messageUntil > Time.unscaledTime ? message : held != null
                 ? confirmed ? $"Ручка захвачена · мышь вниз: {pull:P0} · отпустить ЛКМ / Q" : "Захватываем ручку…"

@@ -42,8 +42,7 @@ namespace PirateSlop.World
         {
             var sky = TestSkyDayNight.Active;
             float night = sky != null ? Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(.7f, 1f, sky.CurrentBlend)) : 0f;
-            ocean.Water.foamLightingMultiplier = Mathf.Lerp(1f, .45f, night);
-            ocean.Water.scatteringLightingMultiplier = Mathf.Lerp(1f, .65f, night);
+            ApplySeaLighting(ocean.Water, night);
             var camera = Camera.main;
             if (camera == null) return;
             var data = camera.GetUniversalAdditionalCameraData();
@@ -51,6 +50,14 @@ namespace PirateSlop.World
             data.requiresColorTexture = true;
             data.requiresDepthTexture = true;
             data.volumeLayerMask |= 1;
+        }
+
+        public static void ApplySeaLighting(WaterSystem.Water water, float night)
+        {
+            float strength = GameSettings.Look.seaDetail * .01f * (1f - night);
+            water.reflectionLightingMultiplier = 1f + .24f * strength;
+            water.foamLightingMultiplier = Mathf.Lerp(1f + .28f * strength, .45f, night);
+            water.scatteringLightingMultiplier = Mathf.Lerp(1f - .14f * strength, .65f, night);
         }
 
         void OnDisable()

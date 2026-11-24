@@ -23,6 +23,7 @@ namespace PirateSlop.World
         void Update() { if (Keyboard.current != null && Keyboard.current[KeyBindings.Map].wasPressedThisFrame) visible = !visible; }
         void OnGUI()
         {
+            if (PirateSlop.GameVersionOverlay.InterfaceHidden) return;
             if (!visible || Event.current.type != EventType.Repaint || Networking.SessionController.MenuOpen) return;
             var world = GetComponent<ProceduralWorld>();
             if (world == null || !world.Ready) return;
