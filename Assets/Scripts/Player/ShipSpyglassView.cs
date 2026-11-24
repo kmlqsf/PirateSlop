@@ -23,8 +23,6 @@ namespace PirateSlop
             viewingStarted = 0f;
         }
         public Material TrajectoryMaterial;
-        [SerializeField] float viewpointLift = 1.25f;
-        public float ViewpointLift => viewpointLift;
         NetworkPlayer player;
         ShipSpyglass station, aimed;
         Camera cameraView;
@@ -64,11 +62,7 @@ namespace PirateSlop
             fogOverridden = true;
             RestoreVisibility();
             GetComponentsInChildren<Renderer>(true, renderers);
-            if (station != null)
-            {
-                station.GetComponentsInChildren<Renderer>(true, stationRenderers);
-                renderers.AddRange(stationRenderers);
-            }
+            if (station != null) renderers.AddRange(stationRenderers);
             foreach (var renderer in renderers)
             {
                 if (renderer == null) continue;
@@ -138,7 +132,9 @@ namespace PirateSlop
                 aimed = hit.collider.GetComponentInParent<ShipSpyglass>();
             if (aimed != null && aimed.GetComponentInParent<NetworkShip>() == player.Ship) ContextPrompt.Offer("E — смотреть в подзорную трубу", 60);
             if (aimed == null || aimed.Viewpoint == null || aimed.GetComponentInParent<NetworkShip>() != player.Ship || !keys[KeyBindings.Use].wasPressedThisFrame) return;
-            station = aimed; originalFov = cameraView.fieldOfView; angles = Vector2.zero; zoom = 48f;
+            station = aimed;
+            station.VisualRoot.GetComponentsInChildren<Renderer>(true, stationRenderers);
+            originalFov = cameraView.fieldOfView; angles = Vector2.zero; zoom = 48f;
             engaged = IsViewing = true; nextPreview = 0f;
             viewingStarted = Time.unscaledTime;
             viewingCamera = cameraView;
@@ -152,7 +148,7 @@ namespace PirateSlop
                 return;
             }
             if (portable) cameraView.transform.rotation = Quaternion.Euler(angles.x, angles.y, 0f);
-            else if (station != null) cameraView.transform.SetPositionAndRotation(station.Viewpoint.position + station.transform.up * station.ViewpointLift, station.Viewpoint.rotation * Quaternion.Euler(angles.x, angles.y, 0f));
+            else if (station != null) cameraView.transform.SetPositionAndRotation(station.EyePosition, station.Viewpoint.rotation * Quaternion.Euler(angles.x, angles.y, 0f));
             cameraView.fieldOfView = Mathf.Lerp(cameraView.fieldOfView, zoom, 1f - Mathf.Exp(-12f * Time.unscaledDeltaTime));
             UpdateLootHint();
             if (player.HasUpgrade(UpgradeEffect.SharpEye) && Time.unscaledTime >= nextUpgradeObservation)

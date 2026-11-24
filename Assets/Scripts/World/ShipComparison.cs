@@ -54,7 +54,7 @@ namespace PirateSlop.World
 
         void OnGUI()
         {
-            if (SessionController.MenuOpen) return;
+            if (!DeveloperMenu.Available || SessionController.MenuOpen) return;
             var camera = Camera.main;
             if (camera == null) return;
             Vector3 screen = camera.WorldToScreenPoint(transform.TransformPoint(DeckSpawn + Vector3.up * 3));

@@ -228,6 +228,11 @@ namespace PirateSlop
                     {
                         spent = true; Destroy(gameObject); return;
                     }
+                    if (Authoritative && PirateSlop.Networking.ShipTutorial.HitTarget(nearest.collider))
+                    {
+                        CombatVfx.Impact(nearest.point, nearest.normal, true);
+                        spent = true; Destroy(gameObject); return;
+                    }
                     nearest.collider.GetComponent<PirateSlop.World.KamikazeHitbox>()?.HitCannon(this);
                     if (Authoritative && Ammo != InventoryItem.BoardingHook)
                         nearest.collider.GetComponentInParent<PirateSlop.World.SeagullVisual>()?.ReceiveFirearmHit(Velocity);

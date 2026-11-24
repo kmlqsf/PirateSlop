@@ -61,7 +61,7 @@ namespace PirateSlop.Networking
         readonly List<BotCrew> botCrews = new();
         public void NotifyCombatDamage(NetworkShip damagedShip, GameObject attacker)
         {
-            if (damagedShip == null) return;
+            if (botCrews.Count == 0 || damagedShip == null) return;
             NetworkShip attackerShip = attacker != null ? attacker.GetComponentInParent<NetworkShip>() : null;
             foreach (var crew in botCrews)
             {
@@ -72,6 +72,14 @@ namespace PirateSlop.Networking
         static readonly Unity.Profiling.ProfilerMarker botCrewMarker = new("Bots.Crews");
         float nextBotCrewTick, nextBotCrewRoster;
         int botCrewCursor;
+
+        void ResetBotWork()
+        {
+            BotPaths.Clear();
+            botCrews.Clear();
+            botCrewCursor = 0;
+            nextBotCrewTick = nextBotCrewRoster = 0;
+        }
 
         void TickBotTasks()
         {

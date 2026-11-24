@@ -65,7 +65,6 @@ namespace PirateSlop.Networking
         int autoTicks;
         int receivedSnapshots;
         float nextDiagnostic;
-        readonly bool diagnostics = System.Array.IndexOf(System.Environment.GetCommandLineArgs(), "-netdiag") >= 0;
         public AdvancedPlayerController Motor => motor;
         public Vector3 RenderPosition => graphicsRoot != null ? graphicsRoot.position : transform.position;
         public ShipDeckPassenger Passenger => passenger;
@@ -258,7 +257,7 @@ namespace PirateSlop.Networking
                 Vector3 local = motor.transform.InverseTransformDirection(toward.normalized);
                 result.Move = new Vector2(local.x, local.z);
             }
-            result.Use = autoTicks >= 30 && autoTicks % 30 == 0 && !motor.LocomotionLocked;
+            result.Use = result.Climb = autoTicks >= 30 && autoTicks % 30 == 0 && !motor.LocomotionLocked;
             if (autoTicks > 30) result.Move = new Vector2(Mathf.Sin(autoTicks / 180f) * .35f, autoTicks < 150 ? 1 : 0);
             return result;
         }
@@ -291,7 +290,7 @@ namespace PirateSlop.Networking
             }
             if (!state.ContainsCreated())
             {
-                command.Jump = command.Slide = command.Use = command.Release = false;
+                command.Jump = command.Slide = command.Use = command.Climb = command.Release = false;
             }
             SimulateCommand(command);
         }
@@ -340,7 +339,7 @@ namespace PirateSlop.Networking
             TickIdentity();
             TickUpgradeEffects();
             UpdateKick();
-            if (diagnostics && Time.unscaledTime >= nextDiagnostic)
+            if (DeveloperMenu.NetworkDiagnosticsRequested && Time.unscaledTime >= nextDiagnostic)
             {
                 nextDiagnostic = Time.unscaledTime + 2f;
                 var graphics = transform.Find("PlayerGraphics");

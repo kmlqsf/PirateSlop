@@ -845,7 +845,9 @@
 | Файл | Краткое описание |
 | --- | --- |
 | [Assets/Models/Repair/HullRepairPlank.asset](<../../Assets/Models/Repair/HullRepairPlank.asset>) | Настройки или данные Unity; Повреждения корпуса, ремонт и затопление |
-| [Assets/Models/Repair/SM_RepairMallet.fbx](<../../Assets/Models/Repair/SM_RepairMallet.fbx>) | Модель / анимации FBX |
+| [Assets/Models/Repair/RepairMalletAlbedo.png](<../../Assets/Models/Repair/RepairMalletAlbedo.png>) | Изображение / текстура; Повреждения корпуса, ремонт и затопление |
+| [Assets/Models/Repair/RepairMalletMetallicGloss.png](<../../Assets/Models/Repair/RepairMalletMetallicGloss.png>) | Изображение / текстура; Повреждения корпуса, ремонт и затопление |
+| [Assets/Models/Repair/SM_RepairMallet.fbx](<../../Assets/Models/Repair/SM_RepairMallet.fbx>) | Модель / анимации FBX; Повреждения корпуса, ремонт и затопление |
 | [Assets/Models/Repair/SM_RepairPlank_1.fbx](<../../Assets/Models/Repair/SM_RepairPlank_1.fbx>) | Модель / анимации FBX |
 | [Assets/Models/Repair/SM_RepairPlank_2.fbx](<../../Assets/Models/Repair/SM_RepairPlank_2.fbx>) | Модель / анимации FBX |
 | [Assets/Models/Repair/SM_RepairPlank_3.fbx](<../../Assets/Models/Repair/SM_RepairPlank_3.fbx>) | Модель / анимации FBX |
@@ -9290,6 +9292,7 @@
 | Файл | Краткое описание |
 | --- | --- |
 | [Assets/Models/Ships/ShipV3/Materials/AnchorChainInstanced.mat](<../../Assets/Models/Ships/ShipV3/Materials/AnchorChainInstanced.mat>) | Материал Unity |
+| [Assets/Models/Ships/ShipV3/Materials/MastFloodGauge.mat](<../../Assets/Models/Ships/ShipV3/Materials/MastFloodGauge.mat>) | Материал Unity; Повреждения корпуса, ремонт и затопление |
 | [Assets/Models/Ships/ShipV3/Materials/Outfit_Canvas_Seams.001.mat](<../../Assets/Models/Ships/ShipV3/Materials/Outfit_Canvas_Seams.001.mat>) | Материал Unity |
 | [Assets/Models/Ships/ShipV3/Materials/Outfit_Warm_Canvas.001.mat](<../../Assets/Models/Ships/ShipV3/Materials/Outfit_Warm_Canvas.001.mat>) | Материал Unity |
 | [Assets/Models/Ships/ShipV3/Materials/Polish_Lantern_Source_PBR.mat](<../../Assets/Models/Ships/ShipV3/Materials/Polish_Lantern_Source_PBR.mat>) | Материал Unity |
@@ -9664,6 +9667,7 @@
 | Файл | Краткое описание |
 | --- | --- |
 | [Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/DiceCandle.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/DiceCandle.asset>) | Настройки или данные Unity; Производительность и тест нагрузки без AI |
+| [Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/MastFloodGauge.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/MastFloodGauge.asset>) | Настройки или данные Unity; Повреждения корпуса, ремонт и затопление |
 | [Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_0.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_0.asset>) | Настройки или данные Unity; Производительность и тест нагрузки без AI |
 | [Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_1.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_1.asset>) | Настройки или данные Unity; Производительность и тест нагрузки без AI |
 | [Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_10.asset](<../../Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/ShipV3FixtureBatch_10.asset>) | Настройки или данные Unity; Производительность и тест нагрузки без AI |

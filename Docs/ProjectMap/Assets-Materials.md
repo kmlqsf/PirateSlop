@@ -156,6 +156,7 @@
 | [Assets/Materials/Repair/RepairHemp.mat](<../../Assets/Materials/Repair/RepairHemp.mat>) | Материал Unity |
 | [Assets/Materials/Repair/RepairIron.mat](<../../Assets/Materials/Repair/RepairIron.mat>) | Материал Unity |
 | [Assets/Materials/Repair/RepairOak.mat](<../../Assets/Materials/Repair/RepairOak.mat>) | Материал Unity |
+| [Assets/Materials/Repair/ShipwrightMallet.mat](<../../Assets/Materials/Repair/ShipwrightMallet.mat>) | Материал Unity; Повреждения корпуса, ремонт и затопление |
 
 ## Assets/Materials/SailRigging
 

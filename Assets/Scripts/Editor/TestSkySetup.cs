@@ -42,6 +42,7 @@ namespace PirateSlop.Editor
             skyFeature.CloudsMaterial = cloudMaterial;
             skyFeature.FallbackSkyMaterial = RenderSettings.skybox;
             var cloudFeature = Feature<VolumetricCloudsURP>(renderer);
+            cloudFeature.SetActive(false);
             cloudFeature.CloudsMaterial = cloudMaterial;
             cloudFeature.ResolutionScale = .5f;
             cloudFeature.SunAttenuation = false;
@@ -77,7 +78,8 @@ namespace PirateSlop.Editor
             var clouds = Component<VolumetricClouds>(profile);
             clouds.cloudPreset = VolumetricClouds.CloudPresets.Sparse;
             clouds.cloudPreset = VolumetricClouds.CloudPresets.Custom;
-            clouds.state.Override(true);
+            clouds.state.Override(false);
+            clouds.active = false;
             clouds.localClouds.Override(false);
             clouds.densityMultiplier.Override(.34f);
             clouds.bottomAltitude.Override(2800f);
@@ -95,7 +97,6 @@ namespace PirateSlop.Editor
             EditorUtility.SetDirty(renderer);
             renderer.SetDirty();
             skyFeature.Create();
-            cloudFeature.Create();
             var root = new GameObject("TestSkyDayNight");
             try
             {

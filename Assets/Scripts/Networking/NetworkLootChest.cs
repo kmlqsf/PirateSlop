@@ -50,7 +50,7 @@ namespace PirateSlop.Networking
         }
         public void Open(NetworkWeapon opener = null)
         {
-            if (!IsServerInitialized || !IsSpawned || !Available) return;
+            if (!IsServerInitialized || !IsSpawned || !Available || TutorialCargo && SupportingShip == null) return;
             if (contents.Count == 0) { if (!PreserveCapturedBuoys()) ServerManager.Despawn(NetworkObject); return; }
             if (!opened.Value) SessionController.Instance?.RecordChestOpened(opener);
             opened.Value = true;
@@ -78,6 +78,7 @@ namespace PirateSlop.Networking
             stack.Count = remaining;
             if (remaining == 0) stack.Item = InventoryItem.None;
             contents[slot] = stack;
+            if (TutorialCargo) ShipTutorial.TookLoot(this);
             for (int i = 0; i < contents.Count; i++) if (contents[i].Count > 0) return;
             if (!PreserveCapturedBuoys()) ServerManager.Despawn(NetworkObject);
         }

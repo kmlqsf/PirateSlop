@@ -19,6 +19,7 @@
 | [Assets/Scripts/GpuWaterSpray.cs](<../../Assets/Scripts/GpuWaterSpray.cs>) | Исходник C#: GpuWaterSpray |
 | [Assets/Scripts/HelmInteraction.cs](<../../Assets/Scripts/HelmInteraction.cs>) | Исходник C#: HelmInteraction; Экспериментальные верхние разрушения корабля, Движение корабля и палуба, Корабельная обезьянка |
 | [Assets/Scripts/OceanSurface.cs](<../../Assets/Scripts/OceanSurface.cs>) | Исходник C#: OceanSurface; Мир, острова и океан, Шторм, зона, дождь и объёмный туман, Тестовая карта и водоворот |
+| [Assets/Scripts/PhysicsQuery.cs](<../../Assets/Scripts/PhysicsQuery.cs>) | Исходник C#: QueryResults, Enumerator, PhysicsQuery |
 | [Assets/Scripts/SailSystem.cs](<../../Assets/Scripts/SailSystem.cs>) | Исходник C#: SailSystem; Паруса и канаты, Корабельная обезьянка |
 | [Assets/Scripts/ShipBuoyancy.cs](<../../Assets/Scripts/ShipBuoyancy.cs>) | Исходник C#: ShipBuoyancy; Движение корабля и палуба, Мир, острова и океан, Тестовая карта и водоворот |
 | [Assets/Scripts/ShipController.cs](<../../Assets/Scripts/ShipController.cs>) | Исходник C#: ShipController; Телепортация корабля через F8, Движение корабля и палуба, Производительность и тест нагрузки без AI, Груз за кормой |
@@ -132,6 +133,7 @@
 | [Assets/Scripts/Editor/LootSetup.cs](<../../Assets/Scripts/Editor/LootSetup.cs>) | Исходник C#: LootSetup; Предметы, лут и инвентарь |
 | [Assets/Scripts/Editor/MainOceanScenerySetup.cs](<../../Assets/Scripts/Editor/MainOceanScenerySetup.cs>) | Исходник C#: MainOceanScenerySetup; Мир, острова и океан |
 | [Assets/Scripts/Editor/MainShipSetup.cs](<../../Assets/Scripts/Editor/MainShipSetup.cs>) | Исходник C#: MainShipSetup; Модели и Blender |
+| [Assets/Scripts/Editor/MastFloodGaugeSetup.cs](<../../Assets/Scripts/Editor/MastFloodGaugeSetup.cs>) | Исходник C#: MastFloodGaugeSetup, Fitting; Повреждения корпуса, ремонт и затопление |
 | [Assets/Scripts/Editor/MastFragmentSetup.cs](<../../Assets/Scripts/Editor/MastFragmentSetup.cs>) | Исходник C#: MastFragmentSetup, Vertex, Polygon, Replacement; Повреждения корпуса, ремонт и затопление |
 | [Assets/Scripts/Editor/MenuPresentationSetup.cs](<../../Assets/Scripts/Editor/MenuPresentationSetup.cs>) | Исходник C#: MenuPresentationSetup; Меню и HUD |
 | [Assets/Scripts/Editor/MenuScenerySetup.cs](<../../Assets/Scripts/Editor/MenuScenerySetup.cs>) | Исходник C#: MenuScenerySetup; Меню и HUD |
@@ -339,6 +341,7 @@
 | [Assets/Scripts/Networking/DeckRoute.cs](<../../Assets/Scripts/Networking/DeckRoute.cs>) | Исходник C#: IBotPathSearch, BotPathScheduler, DeckRoute, Node; Новая система ботов |
 | [Assets/Scripts/Networking/DeveloperTarget.cs](<../../Assets/Scripts/Networking/DeveloperTarget.cs>) | Исходник C#: DeveloperTarget |
 | [Assets/Scripts/Networking/ExperimentalShipEquipment.cs](<../../Assets/Scripts/Networking/ExperimentalShipEquipment.cs>) | Исходник C#: ExperimentalShipEquipment; Личное оружие и урон, Предметы, лут и инвентарь |
+| [Assets/Scripts/Networking/LagCompensation.cs](<../../Assets/Scripts/Networking/LagCompensation.cs>) | Исходник C#: LagCompensation, Pose, Track |
 | [Assets/Scripts/Networking/LootPlacement.cs](<../../Assets/Scripts/Networking/LootPlacement.cs>) | Исходник C#: LootPlacement; Рыбалка и рыба |
 | [Assets/Scripts/Networking/NetworkBalanceEvent.cs](<../../Assets/Scripts/Networking/NetworkBalanceEvent.cs>) | Исходник C#: BalanceStoneState, NetworkBalanceEvent; Остров с весами и пятью камнями |
 | [Assets/Scripts/Networking/NetworkBarricade.cs](<../../Assets/Scripts/Networking/NetworkBarricade.cs>) | Исходник C#: NetworkBarricade; Предметы, лут и инвентарь |
@@ -421,7 +424,7 @@
 | [Assets/Scripts/Networking/NetworkShip.TargetMarks.cs](<../../Assets/Scripts/Networking/NetworkShip.TargetMarks.cs>) | Исходник C#: NetworkShip, TargetMark; Чайка с ключом |
 | [Assets/Scripts/Networking/NetworkShip.UpgradeMonkeys.cs](<../../Assets/Scripts/Networking/NetworkShip.UpgradeMonkeys.cs>) | Исходник C#: NetworkShip; Улучшения рогалика из сундуков |
 | [Assets/Scripts/Networking/NetworkShip.VortexBoost.cs](<../../Assets/Scripts/Networking/NetworkShip.VortexBoost.cs>) | Исходник C#: NetworkShip; Предметы, лут и инвентарь |
-| [Assets/Scripts/Networking/NetworkShip.cs](<../../Assets/Scripts/Networking/NetworkShip.cs>) | Исходник C#: NetworkShip; Телепортация корабля через F8, Движение корабля и палуба, Паруса и канаты, Сеть, сессия и Steam, Производительность и тест нагрузки без AI, Груз за кормой |
+| [Assets/Scripts/Networking/NetworkShip.cs](<../../Assets/Scripts/Networking/NetworkShip.cs>) | Исходник C#: ShipFloodCountdown, NetworkShip; Телепортация корабля через F8, Движение корабля и палуба, Паруса и канаты, Сеть, сессия и Steam, Производительность и тест нагрузки без AI, Груз за кормой |
 | [Assets/Scripts/Networking/NetworkShipAmmo.cs](<../../Assets/Scripts/Networking/NetworkShipAmmo.cs>) | Исходник C#: ShipFirePatch, ShipFreezeState, NetworkShip, FireExposure; Пушки, ядра и лафеты, Повреждения корпуса, ремонт и затопление |
 | [Assets/Scripts/Networking/NetworkShipPush.cs](<../../Assets/Scripts/Networking/NetworkShipPush.cs>) | Исходник C#: NetworkShipPush |
 | [Assets/Scripts/Networking/NetworkShipRum.cs](<../../Assets/Scripts/Networking/NetworkShipRum.cs>) | Исходник C#: NetworkShip; Сеть, сессия и Steam |
@@ -479,6 +482,8 @@
 | [Assets/Scripts/Networking/SharkSwarmVisual.cs](<../../Assets/Scripts/Networking/SharkSwarmVisual.cs>) | Исходник C#: SharkSwarmVisual; Предметы, лут и инвентарь |
 | [Assets/Scripts/Networking/ShipObserverCondition.cs](<../../Assets/Scripts/Networking/ShipObserverCondition.cs>) | Исходник C#: ShipObserverCondition; Персонаж, камера и анимации |
 | [Assets/Scripts/Networking/ShipSinkingVfx.cs](<../../Assets/Scripts/Networking/ShipSinkingVfx.cs>) | Исходник C#: ShipSinkingVfx |
+| [Assets/Scripts/Networking/ShipTutorial.Presentation.cs](<../../Assets/Scripts/Networking/ShipTutorial.Presentation.cs>) | Исходник C#: ShipTutorial; Мир, острова и океан |
+| [Assets/Scripts/Networking/ShipTutorial.cs](<../../Assets/Scripts/Networking/ShipTutorial.cs>) | Исходник C#: ShipTutorial, Lesson; Мир, острова и океан |
 | [Assets/Scripts/Networking/SimulationState.cs](<../../Assets/Scripts/Networking/SimulationState.cs>) | Исходник C#: PlayerCommand, PlayerState, ShipState; Сеть, сессия и Steam |
 | [Assets/Scripts/Networking/SkullMouthTarget.cs](<../../Assets/Scripts/Networking/SkullMouthTarget.cs>) | Исходник C#: SkullMouthTarget; Предметы, лут и инвентарь |
 | [Assets/Scripts/Networking/SlotPrizeFlight.cs](<../../Assets/Scripts/Networking/SlotPrizeFlight.cs>) | Исходник C#: SlotPrizeFlight; Корабельная слот-машина |
@@ -595,6 +600,7 @@
 
 | Файл | Краткое описание |
 | --- | --- |
+| [Assets/Scripts/Ships/MastFloodGauge.cs](<../../Assets/Scripts/Ships/MastFloodGauge.cs>) | Исходник C#: MastFloodGauge; Повреждения корпуса, ремонт и затопление |
 | [Assets/Scripts/Ships/SailDamageSurface.cs](<../../Assets/Scripts/Ships/SailDamageSurface.cs>) | Исходник C#: SailDamageSurface; Паруса и канаты |
 | [Assets/Scripts/Ships/ShipBilgeLeakGeometry.cs](<../../Assets/Scripts/Ships/ShipBilgeLeakGeometry.cs>) | Исходник C#: ShipBilgeLeakGeometry, Surface, Aperture, Patch, Builder, SurfaceData; Движение корабля и палуба, Производительность и тест нагрузки без AI |
 | [Assets/Scripts/Ships/ShipBilgePump.cs](<../../Assets/Scripts/Ships/ShipBilgePump.cs>) | Исходник C#: ShipBilgePump; Движение корабля и палуба |
@@ -719,6 +725,7 @@
 | [Assets/Scripts/World/SupplyIslandComposition.cs](<../../Assets/Scripts/World/SupplyIslandComposition.cs>) | Исходник C#: SupplyIslandComposition |
 | [Assets/Scripts/World/TestOceanController.cs](<../../Assets/Scripts/World/TestOceanController.cs>) | Исходник C#: TestOceanController; Мир, острова и океан, Тестовая карта и водоворот |
 | [Assets/Scripts/World/TestSkyDayNight.cs](<../../Assets/Scripts/World/TestSkyDayNight.cs>) | Исходник C#: TestSkyDayNight; Шторм, зона, дождь и объёмный туман, Тестовая карта и водоворот |
+| [Assets/Scripts/World/TutorialBay.cs](<../../Assets/Scripts/World/TutorialBay.cs>) | Исходник C#: TutorialBay; Мир, острова и океан |
 | [Assets/Scripts/World/UnderwaterEnvironment.cs](<../../Assets/Scripts/World/UnderwaterEnvironment.cs>) | Исходник C#: UnderwaterEnvironment; Движение корабля и палуба, Мир, острова и океан, Тестовая карта и водоворот |
 | [Assets/Scripts/World/UnderwaterLife.cs](<../../Assets/Scripts/World/UnderwaterLife.cs>) | Исходник C#: UnderwaterLife; Фоновая рыба в океане |
 | [Assets/Scripts/World/UnderwaterProjectileTrail.cs](<../../Assets/Scripts/World/UnderwaterProjectileTrail.cs>) | Исходник C#: UnderwaterProjectileTrail; Пушки, ядра и лафеты, Личное оружие и урон, Мир, острова и океан |

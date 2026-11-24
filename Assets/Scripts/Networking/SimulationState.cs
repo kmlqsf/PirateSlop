@@ -6,7 +6,7 @@ namespace PirateSlop
     {
         public Vector2 Move;
         public float Yaw, Pitch;
-        public bool Sprint, Crouch, Slide, Jump, Use, Release, Rise;
+        public bool Sprint, Crouch, Slide, Jump, Use, Climb, Release, Rise;
         public bool IsValid => float.IsFinite(Move.x) && float.IsFinite(Move.y) && float.IsFinite(Yaw)
             && Move.sqrMagnitude <= 1.01f && Mathf.Abs(Yaw) <= 36000f && float.IsFinite(Pitch) && Mathf.Abs(Pitch) <= 85f;
     }

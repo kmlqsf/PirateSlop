@@ -63,7 +63,7 @@ namespace PirateSlop.Networking
             get
             {
                 if (!IsSpawned || opened.Value || lootHintClaimed.Value || Kind == SeaLootKind.None || carrier.Value != null || supportId.Value != 0 || InTow && (TowedCargo == null || !TowedCargo.LootReady)) return false;
-                if (Kind == SeaLootKind.FloatingReward || phase.Value == SeaLootState.Ready &&
+                if (Kind == SeaLootKind.FloatingReward && !TutorialCargo || phase.Value == SeaLootState.Ready &&
                     (Kind == SeaLootKind.Sunken || Kind == SeaLootKind.Capture || Kind == SeaLootKind.Raft || Kind == SeaLootKind.Skull)) return false;
                 for (int i = 0; i < contents.Count; i++) if (contents[i].Count > 0) return true;
                 return false;
@@ -122,6 +122,18 @@ namespace PirateSlop.Networking
             if (value == SeaLootKind.Raft) InitializeRaft();
             if (value == SeaLootKind.Sunken) InitializeSunkenRope();
             if (value == SeaLootKind.Shark) InitializeSharks();
+        }
+
+        internal bool TutorialCargo { get; private set; }
+
+        internal void PlaceTutorialCargo(Vector3 point)
+        {
+            TutorialCargo = true;
+            kind.Value = SeaLootKind.FloatingReward;
+            phase.Value = SeaLootState.Ready;
+            anchor.Value = eventPoint.Value = point;
+            facing.Value = Quaternion.identity;
+            transform.position = point;
         }
 
         public void PlaceOnDeck(NetworkShip ship, Vector3 point, Quaternion rotation)
@@ -278,7 +290,7 @@ namespace PirateSlop.Networking
 
         public void Carry(NetworkWeapon player)
         {
-            if (!IsServerInitialized || !Available || Kind == SeaLootKind.None) return;
+            if (!IsServerInitialized || !Available || Kind == SeaLootKind.None || TutorialCargo && !ShipTutorial.CanCarry(this)) return;
             ResetLooseChestMotion();
             if (InKamikazeEvent) kamikazeSupport.Value = null;
             if (OnWhale) { whaleAttached.Value = false; whaleSupport.Value = null; }

@@ -98,6 +98,7 @@ namespace PirateSlop.Networking
         {
             if (!IsServerInitialized || !Available) return false;
             monkeyCarrier.Value = null;
+            if (SessionController.Instance != null && SessionController.Instance.TutorialActive) ShipTutorial.Collected(this);
             taken = true;
             ServerManager.Despawn(NetworkObject);
             return true;

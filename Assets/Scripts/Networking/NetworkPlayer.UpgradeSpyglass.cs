@@ -27,7 +27,7 @@ namespace PirateSlop.Networking
             {
                 var station = Ship.GetComponentInChildren<ShipSpyglass>();
                 if (station == null || station.Viewpoint == null || Vector3.Distance(transform.position, station.transform.position) > 3.5f) return;
-                origin = station.Viewpoint.position + station.transform.up * station.ViewpointLift;
+                origin = station.EyePosition;
             }
             RaycastHit nearest = default;
             float distance = 3000f;

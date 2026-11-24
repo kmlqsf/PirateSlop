@@ -75,8 +75,7 @@ namespace PirateSlop.Networking
                 !float.IsFinite(direction.x) || !float.IsFinite(direction.y) || !float.IsFinite(direction.z) || direction.sqrMagnitude < .9f || direction.sqrMagnitude > 1.1f) return;
             var station = Ship.GetComponentInChildren<ShipSpyglass>();
             if (station == null || station.Viewpoint == null || Vector3.Distance(transform.position, station.transform.position) > 3.5f) return;
-            var view = GetComponent<ShipSpyglassView>();
-            Vector3 origin = station.Viewpoint.position + station.transform.up * (view != null ? view.ViewpointLift : 1.25f);
+            Vector3 origin = station.EyePosition;
             RaycastHit nearest = default;
             float distance = 3000f;
             foreach (var hit in PirateSlop.PhysicsQuery.RaycastAll(origin, direction.normalized, distance, ~0, QueryTriggerInteraction.Collide))

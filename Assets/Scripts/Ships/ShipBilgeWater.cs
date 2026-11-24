@@ -169,9 +169,11 @@ namespace PirateSlop.Ships
             if (water == null) return;
             if (oceanNormals == null || oceanFoam == null)
             {
-                var resources = WaterSystem.Settings.ProjectSettings.Instance.resources;
+                var resources = WaterSystem.Settings.ProjectSettings.Instance?.resources;
+                if (resources == null) return;
                 oceanNormals = resources.DetailNormalMap;
                 oceanFoam = resources.FoamMap;
+                if (oceanNormals == null || oceanFoam == null) return;
             }
             Texture reflection = water.settings.cubemapTexture;
             bool sky = water.dynamicSkyReflection && RenderSettings.defaultReflectionMode == UnityEngine.Rendering.DefaultReflectionMode.Custom && RenderSettings.customReflectionTexture != null && RenderSettings.customReflectionTexture.dimension == TextureDimension.Cube;

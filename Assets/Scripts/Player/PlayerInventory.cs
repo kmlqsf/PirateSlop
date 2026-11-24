@@ -548,7 +548,13 @@ namespace PirateSlop
             foreach (var wreck in NetworkSeagullEvent.Active)
                 if (network != null && wreck != null && wreck.IsSpawned && wreck.KeyHolder == network.NetworkObject)
                 { PirateHudStyle.Label(new Rect(HudLayout.Width * .5f - 240, HudLayout.Height - slotSize - 84, 480, 26), "Ключ от сундука · Чайка с ключом", PirateHudStyle.Paper); break; }
-            string hint = aimedCannon != null && aimedCannon.Network != null && aimedCannon.Network.HasBoarding(aimedCannon.Index) ? "Колесо вверх — натянуть · вниз — ослабить канат" : aimedBall != null && aimedBall.Network != null ? "ЛКМ / E — взять ядра (до 2 в слоте)" : BallSelected && aimedCannon != null && !aimedCannon.AcceptsAmmo(BallItem(SelectedSlot)) ? "Неподходящий боеприпас · E — прицелиться" : BallSelected && aimedCannon != null && !aimedCannon.IsLoaded ? "E — зарядить выбранное ядро" : chest != null ? chest.Hint(this) : pickup != null ? (EmptySlot() >= 0 ? "E — взять разобранную пушку" : "Инвентарь заполнен") : Placing && !cancelled ? "ЛКМ — поставить · Колёсико ↕ — поворот · Q/E — наклон\nShift+Q/E — крен · ПКМ — отменить" : "";
+            string hint = aimedCannon != null && aimedCannon.Network != null && aimedCannon.Network.HasBoarding(aimedCannon.Index) ? "Колесо вверх — натянуть · вниз — ослабить канат"
+                : aimedBall != null && aimedBall.Network != null ? Localization.F("ЛКМ / {0} — взять ядра (до 2 в слоте)", KeyBindings.Label(GameAction.Use))
+                : BallSelected && aimedCannon != null && !aimedCannon.AcceptsAmmo(BallItem(SelectedSlot)) ? Localization.F("Неподходящий боеприпас · {0} — прицелиться", KeyBindings.Label(GameAction.Use))
+                : BallSelected && aimedCannon != null && !aimedCannon.IsLoaded ? Localization.F("{0} — зарядить выбранное ядро", KeyBindings.Label(GameAction.Use))
+                : chest != null ? chest.Hint(this)
+                : pickup != null ? (EmptySlot() >= 0 ? Localization.F("{0} — взять разобранную пушку", KeyBindings.Label(GameAction.Use)) : Localization.T("Инвентарь заполнен"))
+                : Placing && !cancelled ? "ЛКМ — поставить · Колёсико ↕ — поворот · Q/E — наклон\nShift+Q/E — крен · ПКМ — отменить" : "";
             if (BarricadeSelected) hint = "";
             if (hint.Length > 0) ContextPrompt.Offer(hint, 40);
             if (aimedRumShelf != null) ContextPrompt.Offer(aimedRumShelf.Hint, 40);

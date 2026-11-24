@@ -274,12 +274,15 @@ namespace PirateSlop
             {
                 PirateHudStyle.Panel(new Rect(Screen.width * .5f - 150f, Screen.height * .5f + 95f, 300f, 30f), Time.unscaledTime < limitUntil ? "ПРЕДЕЛ НАВЕДЕНИЯ" : controlled.StatusLabel);
                 if (controlled.IsLoading) PirateHudStyle.Bar(new Rect(Screen.width * .5f - 135f, Screen.height * .5f + 132f, 270f, 6f), controlled.LoadProgress, PirateHudStyle.Gold);
-                ContextPrompt.Offer(controlled.IsIgnited ? "Фитиль горит… · E — выйти" : controlled.IsLoading ? "Зарядка… · E — выйти" : controlled.IsFireQueued ? "Ожидание готовности к выстрелу… · E — отменить" : !controlled.IsLoaded ? (controlled.IsMortar ? "Мортира не заряжена · E — выйти" : "Пушка не заряжена · E — выйти") : "Мышь — прицел · ЛКМ — поджечь фитиль · E — выйти", 40);
+                string prompt = controlled.IsIgnited ? "Фитиль горит…" : controlled.IsLoading ? "Зарядка…" : controlled.IsFireQueued ? "Ожидание готовности к выстрелу…" : !controlled.IsLoaded ? (controlled.IsMortar ? "Мортира не заряжена" : "Пушка не заряжена") : "Мышь — прицел · ЛКМ — поджечь фитиль";
+                string action = controlled.IsFireQueued ? "{0} — отменить" : "{0} — выйти";
+                ContextPrompt.Offer(Localization.T(prompt) + " · " + Localization.F(action, KeyBindings.Label(GameAction.Use)), 40);
                 return;
             }
             if (player == null || !player.InputActive || player.LocomotionLocked || (controls != null && controls.IsDragging) || (inventory != null && inventory.Placing)) return;
 
-            string text = held != null ? "E — в инвентарь • Поднеси ядро к дулу • Колесо — ближе/дальше • Отпусти ЛКМ — бросить" : aimed != null && aimed.IsMortar ? "E — прицелиться · поднеси любое ядро к дулу" : aimed != null ? "E — прицелиться · поднеси ядро к дулу · Shift+E 7 с — снять" : "";
+            if (held == null && aimed == null) return;
+            string text = Localization.F(held != null ? "{0} — в инвентарь • Поднесите ядро к дулу • Колесо — ближе/дальше • Отпустите ЛКМ — бросить" : aimed.IsMortar ? "{0} — прицелиться · поднесите любое ядро к дулу" : "{0} — прицелиться · поднесите ядро к дулу · Shift+{0} 7 с — снять", KeyBindings.Label(GameAction.Use));
             if (aimed != null) text = aimed.StatusLabel + ((aimed.RemoteOccupied || aimed.Operator != null) && aimed.Operator != player ? " · ЗАНЯТА" : "") + " · " + text;
             if (text.Length > 0) ContextPrompt.Offer(text, 40);
         }

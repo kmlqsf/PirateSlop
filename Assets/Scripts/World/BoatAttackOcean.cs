@@ -200,7 +200,7 @@ namespace PirateSlop
             return new Vector2(offset.x, offset.z);
         }
 
-        void UpdateSurface()
+        internal void UpdateSurface()
         {
             if (Water == null || Surface == null) return;
             Water.transform.position = new Vector3(0f, Surface.SeaLevel, 0f);

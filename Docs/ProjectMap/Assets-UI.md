@@ -25,7 +25,7 @@
 | [Assets/UI/Inventory/InventoryIcons.asset](<../../Assets/UI/Inventory/InventoryIcons.asset>) | Настройки или данные Unity |
 | [Assets/UI/Inventory/Lantern.png](<../../Assets/UI/Inventory/Lantern.png>) | Изображение / текстура; Предметы, лут и инвентарь, Меню и HUD |
 | [Assets/UI/Inventory/LightningStaff.png](<../../Assets/UI/Inventory/LightningStaff.png>) | Изображение / текстура; Личное оружие и урон |
-| [Assets/UI/Inventory/Mallet.png](<../../Assets/UI/Inventory/Mallet.png>) | Изображение / текстура |
+| [Assets/UI/Inventory/Mallet.png](<../../Assets/UI/Inventory/Mallet.png>) | Изображение / текстура; Повреждения корпуса, ремонт и затопление |
 | [Assets/UI/Inventory/Plank.png](<../../Assets/UI/Inventory/Plank.png>) | Изображение / текстура |
 | [Assets/UI/Inventory/PushCannonball.png](<../../Assets/UI/Inventory/PushCannonball.png>) | Изображение / текстура |
 | [Assets/UI/Inventory/Rum.png](<../../Assets/UI/Inventory/Rum.png>) | Изображение / текстура |

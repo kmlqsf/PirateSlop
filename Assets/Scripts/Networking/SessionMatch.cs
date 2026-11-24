@@ -40,7 +40,8 @@ namespace PirateSlop.Networking
 
         public bool MatchResultVisible => matchResult.HasValue;
 
-        bool MatchRulesActive => manager != null && manager.ServerManager.Started && !EnvironmentTestActive && !LoadTestActive && !PerformanceBenchmarkActive;
+        float MatchClock => (float)manager.TimeManager.TicksToTime(manager.TimeManager.Tick);
+        bool MatchRulesActive => manager != null && manager.ServerManager.Started && !TutorialActive && !EnvironmentTestActive && !LoadTestActive && !PerformanceBenchmarkActive;
 
         MatchTeamRecord MatchTeam(int team)
         {
@@ -58,7 +59,7 @@ namespace PirateSlop.Networking
             if (countHit) MatchTeam(from).Hits++;
             var victim = MatchTeam(to);
             victim.LastHitBy = from;
-            victim.LastHitAt = Time.time;
+            victim.LastHitAt = MatchClock;
         }
 
         public void RecordChestOpened(NetworkWeapon opener)
@@ -82,7 +83,7 @@ namespace PirateSlop.Networking
 
         void TrackMatchTeams()
         {
-            if (matchStartedAt < 0f) matchStartedAt = Time.time;
+            if (matchStartedAt < 0f) matchStartedAt = MatchClock;
             foreach (var ship in NetworkShip.ActiveShips)
                 if (ship != null && ship.IsSpawned && ship.TeamId.Value > 0 && !matchTeams.ContainsKey(ship.TeamId.Value))
                     MatchTeam(ship.TeamId.Value).Crew = CrewNames(ship.TeamId.Value);
@@ -92,7 +93,7 @@ namespace PirateSlop.Networking
         {
             if (matchEnded || !MatchRulesActive) return;
             var record = MatchTeam(ship.TeamId.Value);
-            record.SankAt = Time.time - ship.SinkingElapsed;
+            record.SankAt = (float)manager.TimeManager.TicksToTime(ship.SinkingTick);
             string crew = CrewNames(ship.TeamId.Value);
             if (crew.Length > 0) record.Crew = crew;
             if (record.LastHitBy > 0 && record.SankAt - record.LastHitAt <= SinkCreditWindow) MatchTeam(record.LastHitBy).ShipsSunk++;
@@ -111,7 +112,7 @@ namespace PirateSlop.Networking
                 foreach (var ship in NetworkShip.ActiveShips)
                     if (ship != null && ship.IsSpawned && ship.TeamId.Value == entry.Key) { afloat = true; break; }
                 if (afloat) matchAliveTeams.Add(entry.Key);
-                else entry.Value.SankAt = Time.time;
+                else entry.Value.SankAt = MatchClock;
             }
             if (matchAliveTeams.Count > 1) return;
             EndMatch(matchAliveTeams.Count == 1 ? matchAliveTeams[0] : 0);
@@ -120,7 +121,7 @@ namespace PirateSlop.Networking
         void EndMatch(int survivor)
         {
             matchEnded = true;
-            float now = Time.time;
+            float now = MatchClock;
             var order = new List<int>(matchTeams.Keys);
             order.Sort((a, b) =>
             {

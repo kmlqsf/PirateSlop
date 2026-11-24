@@ -9,6 +9,7 @@ namespace PirateSlop.Networking
         [ServerRpc]
         public void TeleportToTestShip()
         {
+            if (!DeveloperMenu.Available || (!IsOwner && !DeveloperMenu.AllowRemote)) return;
             if (motor == null || motor.IsDead || IsBot.Value) return;
             var home = Ship != null ? Ship.GetComponent<ShipV3Features>() : null;
             if (home != null && home.IsSpawned && home.RespawnPoint != null)

@@ -1,4 +1,3 @@
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
 using System;
 using System.Linq;
 using UnityEngine;
@@ -8,7 +7,7 @@ namespace PirateSlop
 {
     public sealed class KrakenNetworkProbe : MonoBehaviour
     {
-        public static bool IsActive => Environment.GetCommandLineArgs().Contains("-krakentest");
+        public static bool IsActive { get; } = Environment.GetCommandLineArgs().Contains("-krakentest");
         NetworkShip ship;
         int stage, lastSeed;
         double stageAt, nextAttack;
@@ -96,4 +95,3 @@ namespace PirateSlop
         }
     }
 }
-#endif

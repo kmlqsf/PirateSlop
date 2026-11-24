@@ -1,4 +1,3 @@
-#if UNITY_EDITOR || DEBUG
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -117,4 +116,3 @@ namespace PirateSlop.Networking
         }
     }
 }
-#endif

@@ -57,6 +57,7 @@ namespace PirateSlop
         NetworkShip ship;
         ShipFlooding flooding;
         ShipDestructionVisuals visuals;
+        PirateSlop.Ships.MastFloodGauge mastGauge;
         uint revision, appliedRevision;
         ulong sequence, appliedEvent;
         float nextFloodPublish, nextDiagnostic, publishedWater;
@@ -118,7 +119,15 @@ namespace PirateSlop
         {
             if (!ready) return;
             visuals?.Initialize(this);
-            if (!IsServerInitialized) RequestSnapshot(); else snapshotReceived = true;
+            if (!IsServerInitialized) RequestSnapshot();
+            else ActivateClientHull();
+        }
+
+        void ActivateClientHull()
+        {
+            snapshotReceived = true;
+            if (mastGauge == null && flooding.UseBilgeFlooding && mastAssemblies.TryGetValue("Main", out var main) && main.Stem.Intact != null)
+                mastGauge = PirateSlop.Ships.MastFloodGauge.Mount(ship, flooding, main.Stem.Intact.transform);
         }
         [ServerRpc(RequireOwnership = false)]
         void RequestSnapshot(NetworkConnection sender = null)
@@ -130,7 +139,8 @@ namespace PirateSlop
         {
             if (IsServerInitialized || (snapshotReceived && version < appliedRevision)) return;
             ApplySnapshot(entries, water, version);
-            snapshotReceived = true; appliedEvent = Math.Max(appliedEvent, eventId);
+            ActivateClientHull();
+            appliedEvent = Math.Max(appliedEvent, eventId);
             foreach (var entry in pending) if (entry.Revision > appliedRevision) Present(entry);
             pending.Clear();
         }
@@ -145,6 +155,8 @@ namespace PirateSlop
             if (krakenDamage != null) StopCoroutine(krakenDamage);
             if (krakenPreparation != null) StopCoroutine(krakenPreparation);
             krakenDamage = krakenPreparation = null; krakenGeometryReady = false;
+            if (mastGauge != null) Destroy(mastGauge.gameObject);
+            mastGauge = null;
             visuals?.Clear(); flooding?.Clear(); pending.Clear(); state.Clear();
             snapshotReceived = false; appliedEvent = 0; appliedRevision = 0;
         }
@@ -294,6 +306,15 @@ namespace PirateSlop
         public string CreateDeveloperBreach(bool strong, GameObject attacker)
         {
             if (!ready || !IsServerInitialized || ship.IsSinking || !flooding.UseBilgeFlooding) return "Корабль не готов к разрушению.";
+            return TryOpenScriptedBreach(strong, attacker, out _)
+                ? strong ? "Создана большая течь." : "Создана слабая течь."
+                : "Подходящих целых досок больше нет.";
+        }
+
+        internal bool TryOpenScriptedBreach(bool strong, GameObject attacker, out ShipBreach opening)
+        {
+            opening = default;
+            if (!ready || !IsServerInitialized || ship.IsSinking || !flooding.UseBilgeFlooding) return false;
             var candidates = new List<(ShipDamageSection Section, int Fragment, Vector3 Point)>();
             foreach (var section in sections.Values)
             {
@@ -310,7 +331,7 @@ namespace PirateSlop
                     candidates.Add((section, i, filter.transform.TransformPoint(bounds.center)));
                 }
             }
-            if (candidates.Count == 0) return "Подходящих целых досок больше нет.";
+            if (candidates.Count == 0) return false;
             var selected = candidates[UnityEngine.Random.Range(0, candidates.Count)];
             var current = state[selected.Section.SectionId];
             var inward = (transform.position - selected.Point).normalized;
@@ -318,7 +339,7 @@ namespace PirateSlop
             Change(selected.Section.SectionId, selected.Section.Health, ShipSectionState.Damaged, selected.Point, inward, inward * 35f, InventoryItem.Cannonball, attacker, ShipDamageReason.Scripted, 0f, current.RemovedFragments | (1UL << selected.Fragment));
             DetachUnsupported(selected.Point, inward, inward * 35f, InventoryItem.Cannonball, attacker);
             Publish();
-            return strong ? "Создана большая течь." : "Создана слабая течь.";
+            return flooding.TryGetOpening(selected.Section.SectionId, selected.Fragment, out opening);
         }
         public string CreateDeveloperCannonImpact(GameObject attacker)
         {
@@ -619,22 +640,23 @@ namespace PirateSlop
             }
             if (!ready || !IsServerInitialized || ship.IsSinking || !Profile.EnableFlooding) return;
             flooding.Simulate(Time.deltaTime, Profile);
+            ship.UpdateFloodCountdown(flooding);
+            if (ship.IsSinking) flooding.SetLevel(1f);
             ApplyFloodModifiers();
-            if (flooding.Level >= 1f) ship.BeginSinking(flooding.KrakenCatastrophe ? 3f : 12f);
-            if (Time.time >= nextFloodPublish)
+            float water = flooding.Level;
+            bool endpoint = water != publishedWater && (water == 0f || water == 1f);
+            if (endpoint || Time.time >= nextFloodPublish && Mathf.Abs(publishedWater - water) >= .001f)
             {
                 nextFloodPublish = Time.time + .25f;
-                if (Mathf.Abs(publishedWater - flooding.Level) >= .001f || flooding.Level >= 1f && publishedWater < 1f)
-                {
-                    publishedWater = flooding.Level; ApplyModifiers(); ReceiveFlood(publishedWater, ++revision);
-                }
+                publishedWater = water;
+                ReceiveFlood(water, ++revision);
             }
         }
         [ObserversRpc(BufferLast = true)]
         void ReceiveFlood(float water, uint version)
         {
             if (IsServerInitialized || !snapshotReceived || version < appliedRevision) return;
-            appliedRevision = version; flooding.SetLevel(water); ApplyModifiers();
+            appliedRevision = version; flooding.SetLevel(water); ApplyFloodModifiers();
         }
         void ApplyModifiers()
         {

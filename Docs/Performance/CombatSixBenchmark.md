@@ -4,7 +4,7 @@
 
 ## Запуск
 
-**Диагностика → Боевой стресс · 6 кораблей** либо тот же пункт в тестах флота, Development и Release. `RunCombat6.cmd` рядом с exe сохраняет разрешение из настроек; `RunCombat6-FullHD.cmd` задаёт 1920×1080 оконно. Другую копию игры закрыть; во время записи не менять размер окна, графику или фокус.
+Собрать **Windows Build → Build**. С параметром `-developer` пункт **Диагностика → Боевой стресс · 6 кораблей** доступен в этом же EXE. `RunCombat6.cmd` сохраняет разрешение из настроек. `RunCombat6-FullHD.cmd` задаёт 1920×1080 оконно. Другую копию игры закрыть. Во время записи не менять размер окна, графику или фокус.
 
 CLI: `PirateSlop.exe -performanceBenchmark -performanceCombat -performanceFleetShips 6 -performanceUncapped -performanceQuit -force-d3d11`. Для FullHD добавить `-screen-width 1920 -screen-height 1080 -screen-fullscreen 0`. PowerShell: `Tools/Performance/run_benchmark.ps1 -Combat -GraphicsApi d3d11`. `-performanceNoHud` записывается как другое условие. Combat не совмещается с isolation/whirlpool stress.
 

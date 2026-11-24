@@ -15,6 +15,13 @@ namespace PirateSlop
         Mesh lootBeamMesh;
         Material lootBeamMaterial;
 
+        internal bool Sights(ShipSpyglass glass, NetworkLootChest chest)
+        {
+            if (!engaged || portable || station != glass || lootHint != chest || chest == null || cameraView == null) return false;
+            var point = cameraView.WorldToViewportPoint(chest.LootHintPoint);
+            return point.z > 0 && Mathf.Abs(point.x - .5f) < .20f && Mathf.Abs(point.y - .5f) < .20f;
+        }
+
         void UpdateLootHint()
         {
             NetworkLootChest nearest = null;

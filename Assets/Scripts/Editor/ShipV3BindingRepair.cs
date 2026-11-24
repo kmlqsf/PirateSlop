@@ -134,7 +134,7 @@ namespace PirateSlop.EditorTools
             var viewpoint = tube.transform.Find("SpyglassViewpoint");
             if (viewpoint == null) { viewpoint = new GameObject("SpyglassViewpoint").transform; viewpoint.SetParent(tube.transform, false); }
             viewpoint.SetPositionAndRotation(root.transform.TransformPoint(new Vector3(bounds.center.x, bounds.center.y, bounds.min.z - .08f)), root.transform.rotation);
-            station.Viewpoint = viewpoint; station.ViewpointLift = 0;
+            station.Viewpoint = viewpoint; station.ViewpointLift = 1.25f;
             var collider = tube.GetComponent<BoxCollider>();
             if (collider == null) collider = tube.gameObject.AddComponent<BoxCollider>();
             collider.center = tube.sharedMesh.bounds.center; collider.size = tube.sharedMesh.bounds.size;

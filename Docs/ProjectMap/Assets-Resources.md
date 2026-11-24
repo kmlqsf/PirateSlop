@@ -196,6 +196,7 @@
 
 | Файл | Краткое описание |
 | --- | --- |
+| [Assets/Resources/Ships/MastFloodGauge.prefab](<../../Assets/Resources/Ships/MastFloodGauge.prefab>) | Префаб Unity; Повреждения корпуса, ремонт и затопление |
 | [Assets/Resources/Ships/ShipV3HarpoonPort.prefab](<../../Assets/Resources/Ships/ShipV3HarpoonPort.prefab>) | Префаб Unity; Гарпун и корабельное крепление |
 | [Assets/Resources/Ships/ShipV3HarpoonStarboard.prefab](<../../Assets/Resources/Ships/ShipV3HarpoonStarboard.prefab>) | Префаб Unity; Гарпун и корабельное крепление |
 | [Assets/Resources/Ships/ShipV3Menu.prefab](<../../Assets/Resources/Ships/ShipV3Menu.prefab>) | Префаб Unity; Паруса и канаты, Меню и HUD |

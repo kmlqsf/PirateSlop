@@ -19,9 +19,17 @@ namespace WaterSystem
 
         // Data
         private static int shadingDebug = 0;
+        private static bool panelCreated;
 
         public static void Create()
         {
+            if (panelCreated) return;
+            if (!UnityEngine.Application.isEditor)
+            {
+                var args = System.Environment.GetCommandLineArgs();
+                if (System.Array.IndexOf(args, "-developer") < 0 && System.Array.IndexOf(args, "-development") < 0) return;
+            }
+
             // Create a list of widgets
             var widgetList = new List<DebugUI.Widget>();
 
@@ -47,6 +55,7 @@ namespace WaterSystem
 
             // Add the widgets to the panel
             panel.children.Add(widgetList.ToArray());
+            panelCreated = true;
         }
 
         private static void ShaderDebugChanged(DebugUI.Field<int> field, int value)
@@ -56,7 +65,9 @@ namespace WaterSystem
 
         public static void Dispose()
         {
+            if (!panelCreated) return;
             DebugManager.instance.RemovePanel(Styles.PanelTitle);
+            panelCreated = false;
         }
     }
 }

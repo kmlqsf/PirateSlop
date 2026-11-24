@@ -124,7 +124,7 @@ namespace PirateSlop.Ships
         public void End()
         {
             CancelActivities();
-            initialized = remoteInitialized = false;
+            initialized = remoteInitialized = guiding = false;
             ResetLook(); ResetJump();
             if (Visual != null) Visual.gameObject.SetActive(false);
         }
@@ -143,11 +143,11 @@ namespace PirateSlop.Ships
                 return;
             }
             kickReactionOffset = Vector3.zero;
-            UpdateRetaliation();
-            if (UpdateHeadRide(delta)) { Show(position, rotation, Motion, 1f, motionTime); return; }
-            if (UpdateJump(delta)) { Show(position, rotation, Motion, 1f, motionTime); return; }
+            if (!guiding) UpdateRetaliation();
+            if (!guiding && UpdateHeadRide(delta)) { Show(position, rotation, Motion, 1f, motionTime); return; }
+            if (UpdateJump(guiding ? delta * 1.6f : delta)) { Show(position, rotation, Motion, 1f, motionTime); return; }
             if (target < 0 && Nodes[current].Available) position = Point(current);
-            if (target >= 0) UpdateActivities(delta);
+            if (!guiding && target >= 0) UpdateActivities(delta);
             if (target >= 0 && (!Nodes[current].Available || !Nodes[target].Available))
             {
                 CancelActivities();
@@ -162,19 +162,23 @@ namespace PirateSlop.Ships
                     if (Time.time >= retryAt) { retryAt = Time.time + 1f; Recover(); }
                     return;
                 }
-                if (UpdateActivities(delta))
+                if (!guiding && UpdateActivities(delta))
                 {
                     Show(position, rotation, Motion, animationSpeed, motionTime);
                     UpdateAttention(delta); return;
                 }
-                if (UpdateRest(delta))
+                if (!guiding && UpdateRest(delta))
                 {
                     Show(position, rotation, Motion, 1f, motionTime);
                     UpdateAttention(delta);
                     return;
                 }
                 pause -= delta;
-                if (pause <= 0f && ChoosePath(ActivityGoal)) StartSegment();
+                if (pause <= 0f && (!guiding || guidePathDirty))
+                {
+                    guidePathDirty = false;
+                    if (ChoosePath(guiding ? -1 : ActivityGoal)) StartSegment();
+                }
             }
             if (target >= 0 && jumpPhase == 0)
             {
@@ -182,7 +186,7 @@ namespace PirateSlop.Ships
                 bool climbing = link.Motion == ShipMonkeyMotion.ClimbUp || link.Motion == ShipMonkeyMotion.ClimbDown;
                 bool canRun = (!ShowsCarry || task == TaskKind.Deliver) && routeRunning && link.Motion == ShipMonkeyMotion.Walk && Nodes[current].Surface == ShipMonkeySurface.Deck && Nodes[target].Surface == ShipMonkeySurface.Deck && Mathf.Abs(Point(target).y - segmentStart.y) < .12f;
                 float speed = link.Motion == ShipMonkeyMotion.RailWalk ? RailSpeed : climbing ? ClimbSpeed : canRun ? RunSpeed : WalkSpeed;
-                segmentTime += delta * speed / segmentLength;
+                segmentTime += delta * speed * (guiding ? GuideTravelMultiplier : 1f) / segmentLength;
                 float blend = Mathf.Clamp01(segmentTime);
                 position = Vector3.Lerp(segmentStart, Point(target), blend);
                 if (link.Motion == ShipMonkeyMotion.Hop) position.y += Mathf.Sin(blend * Mathf.PI) * HopHeight;
@@ -193,12 +197,13 @@ namespace PirateSlop.Ships
                 if (forward.sqrMagnitude > .0001f) rotation = climbing ? Quaternion.LookRotation(forward) : Quaternion.RotateTowards(rotation, Quaternion.LookRotation(forward), delta * 280f);
                 SetMotion(climbing ? (Point(target).y < segmentStart.y ? ShipMonkeyMotion.ClimbDown : ShipMonkeyMotion.ClimbUp) : canRun ? ShipMonkeyMotion.Run : link.Motion);
                 animationSpeed = Motion == ShipMonkeyMotion.ClimbUp || Motion == ShipMonkeyMotion.ClimbDown ? ClimbSpeed / .18f : Motion == ShipMonkeyMotion.RailWalk ? RailSpeed / .20f : Motion == ShipMonkeyMotion.Run ? RunSpeed / .45f : WalkSpeed / .45f;
+                if (guiding) animationSpeed *= GuideTravelMultiplier;
                 if (blend >= 1f)
                 {
                     position = Point(target); current = target; target = -1; pathIndex++;
                     perched = Surface == ShipMonkeySurface.Rail || Surface == ShipMonkeySurface.Prop;
                     if (pathIndex < path.Count) StartSegment();
-                    else { SetMotion(ShipMonkeyMotion.Idle); animationSpeed = 1f; pause = wantsRest ? .7f : UnityEngine.Random.Range(PauseMin, Mathf.Max(PauseMin, PauseMax)); }
+                    else { SetMotion(ShipMonkeyMotion.Idle); animationSpeed = 1f; pause = guiding ? 0f : wantsRest ? .7f : UnityEngine.Random.Range(PauseMin, Mathf.Max(PauseMin, PauseMax)); }
                 }
             }
             Show(position, rotation, Motion, animationSpeed, motionTime);
@@ -293,11 +298,11 @@ namespace PirateSlop.Ships
             }
             if (forcedDestination >= Nodes.Length || forcedDestination >= 0 && !visited[forcedDestination]) { CancelActivities(); pause = 2f; return false; }
             var wanted = (ShipMonkeySurface)(preferredSurface % 4 == 0 ? 0 : preferredSurface % 4 == 1 ? 1 : preferredSurface % 4 == 2 ? 4 : 3);
-            wantsRest = task == TaskKind.None && attacker == null && UnityEngine.Random.value < SitChance;
-            int destination = forcedDestination;
+            wantsRest = !guiding && task == TaskKind.None && attacker == null && UnityEngine.Random.value < SitChance;
+            int destination = guiding ? current : forcedDestination;
             float totalWeight = 0f;
             bool preferSea = UnityEngine.Random.value < .64f;
-            if (wantsRest)
+            if (!guiding && wantsRest)
                 for (int pass = 0; pass < 2 && destination < 0; pass++)
                 for (int i = 0; i < Nodes.Length; i++)
                 {
@@ -317,7 +322,19 @@ namespace PirateSlop.Ships
                     eligible++;
                     if (UnityEngine.Random.Range(0, eligible) == 0) destination = i;
                 }
-            if (attacker != null)
+            if (guiding)
+            {
+                destination = current;
+                var goal = guidePoint;
+                float best = (Point(current) - goal).sqrMagnitude;
+                for (int i = 0; i < Nodes.Length; i++)
+                {
+                    float score = (Point(i) - goal).sqrMagnitude;
+                    if (visited[i] && Nodes[i].Available && score < best) { best = score; destination = i; }
+                }
+                wantsRest = false;
+            }
+            else if (attacker != null)
             {
                 Vector3 goal = transform.InverseTransformPoint(attacker.transform.position);
                 float best = float.PositiveInfinity; destination = -1;
@@ -330,7 +347,7 @@ namespace PirateSlop.Ships
             path.Clear();
             for (int node = destination; node != current; node = previous[node]) path.Add(previousLink[node]);
             path.Reverse(); pathIndex = 0;
-            routeRunning = AidTask || DefenseTask || attacker != null || task == TaskKind.None && UnityEngine.Random.value < RunChance && distance[destination] > 3f;
+            routeRunning = guiding || AidTask || DefenseTask || attacker != null || task == TaskKind.None && UnityEngine.Random.value < RunChance && distance[destination] > 3f;
             return path.Count > 0;
         }
 
@@ -345,6 +362,7 @@ namespace PirateSlop.Ships
             }
             if (nearest < 0) { Visual.gameObject.SetActive(false); return; }
             current = nearest; position = Point(current); Visual.gameObject.SetActive(true);
+            if (guiding) guidePathDirty = true;
         }
 
         public void Receive(ShipMonkeyPose pose)

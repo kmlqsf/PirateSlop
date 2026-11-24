@@ -14,6 +14,10 @@ namespace PirateSlop.Networking
         readonly HashSet<int> eliminatedTeams = new();
         readonly List<int> eliminatedBotKeys = new();
         public bool TeamEliminated(int team) => eliminatedTeams.Contains(team);
+        internal void ScheduleCrewElimination() => nextCrewCheck = 0f;
+
+        void LateUpdate() => TickCrewElimination();
+
         void TickCrewElimination()
         {
             if (manager == null || !manager.ServerManager.Started || Time.time < nextCrewCheck) return;
@@ -21,7 +25,7 @@ namespace PirateSlop.Networking
             for (int shipIndex = NetworkShip.ActiveShips.Count - 1; shipIndex >= 0; shipIndex--)
             {
                 var ship = NetworkShip.ActiveShips[shipIndex];
-                if (ship == null || !ship.IsSpawned || !ship.IsSinking || ship.SinkingElapsed < 2f || ship.TeamId.Value <= 0 || TeamEliminated(ship.TeamId.Value)) continue;
+                if (ship == null || !ship.IsSpawned || !ship.IsSinking || ship.TeamId.Value <= 0 || TeamEliminated(ship.TeamId.Value)) continue;
                 eliminatedTeams.Add(ship.TeamId.Value);
                 RecordTeamEliminated(ship);
                 foreach (var member in players.Values)
@@ -88,8 +92,7 @@ namespace PirateSlop.Networking
         void ResetRoster()
         {
             botJournals.Clear();
-            BotPaths.Clear();
-            botCrews.Clear(); botCrewCursor = 0; nextBotCrewTick = nextBotCrewRoster = 0;
+            ResetBotWork();
             nextBotDiagnosticSample = 0;
             botRosterPolicy = null;
             eliminatedTeams.Clear(); nextCrewCheck = 0f;
@@ -115,7 +118,7 @@ namespace PirateSlop.Networking
                 float yaw = spawns[i].Yaw;
                 if (PerformanceBenchmarkActive && !BenchmarkWhirlpoolStressActive)
                     performanceBenchmark.FleetSpawn(spawns[0].Position, i, out position, out yaw);
-                else if (clustered && !MainOceanMap.IsMain(world.Layout) && !FindNearbySpawn(ref position, ref yaw))
+                else if (clustered && !TutorialActive && !MainOceanMap.IsMain(world.Layout) && !FindNearbySpawn(ref position, ref yaw))
                 {
                     if (!LoadTestActive) continue;
                     position = spawns[i].Position;

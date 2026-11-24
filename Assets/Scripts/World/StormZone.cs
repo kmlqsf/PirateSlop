@@ -57,10 +57,13 @@ namespace PirateSlop.World
             GUI.color = Color.white;
             int remaining = Mathf.CeilToInt(duration * (1 - Progress));
             float distance = DistanceInside(localPlayer != null ? localPlayer.transform.position : camera.transform.position);
-            string shipStatus = LocalShip != null ? (DistanceInside(LocalShip.transform.position) > 0 ? "Корабль в зоне" : "КОРАБЛЬ В ШТОРМЕ") : "";
-            if (Paused) shipStatus = "ЗОНА НА ПАУЗЕ · урон отключён";
+            string shipStatus = LocalShip != null ? Localization.T(DistanceInside(LocalShip.transform.position) > 0 ? "Корабль в зоне" : "КОРАБЛЬ В ШТОРМЕ") : "";
+            if (Paused) shipStatus = Localization.T("ЗОНА НА ПАУЗЕ · урон отключён");
             GUI.color = distance <= 0 ? new Color(1, .55f, .4f) : new Color(.65f, 1, .94f);
-            PirateHudStyle.Panel(new Rect(Screen.width - 404, 24, 380, 80), $"ШТОРМ  {remaining / 60:00}:{remaining % 60:00}   •   Радиус {Radius:0} м\n" + (distance <= 0 ? $"ВЫ В ШТОРМЕ • До зоны {Mathf.Abs(distance):0} м" : $"В безопасной зоне • До шторма {distance:0} м") + "\n" + shipStatus + " • Карта: M");
+            string timer = Localization.F("ШТОРМ  {0:00}:{1:00}   •   Радиус {2:0} м", remaining / 60, remaining % 60, Radius);
+            string position = Localization.F(distance <= 0 ? "ВЫ В ШТОРМЕ • До зоны {0:0} м" : "В безопасной зоне • До шторма {0:0} м", Mathf.Abs(distance));
+            string map = Localization.F("Карта: {0}", KeyBindings.Label(GameAction.Map));
+            PirateHudStyle.Panel(new Rect(Screen.width - 404, 24, 380, 80), timer + "\n" + position + "\n" + (shipStatus.Length > 0 ? shipStatus + " • " : "") + map);
             GUI.color = old;
         }
 

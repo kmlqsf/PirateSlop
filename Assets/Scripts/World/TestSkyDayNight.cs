@@ -17,10 +17,8 @@ namespace PirateSlop.World
         public float DayHazeDistance = 2800f, DuskHazeDistance = 4200f;
         public float CurrentBlend { get; private set; }
         float velocity;
-        float previousStormRadius = -1;
         VolumeProfile runtimeProfile;
         PhysicallyBasedSky sky;
-        VolumetricClouds clouds;
         Fog skyFog;
         RenderPipelineAsset previousPipeline;
         Material previousSkybox;
@@ -59,9 +57,8 @@ namespace PirateSlop.World
             previousFogDensity = RenderSettings.fogDensity;
             runtimeProfile = Environment.profile;
             runtimeProfile.TryGet(out sky);
-            runtimeProfile.TryGet(out clouds);
             runtimeProfile.TryGet(out skyFog);
-            if (sky == null || clouds == null) return;
+            if (sky == null) return;
             Environment.enabled = true;
             waterMaterial = OceanSurface.Instance != null ? OceanSurface.Instance.WaterMaterial : null;
             if (waterMaterial != null && waterMaterial.shader.name == "Custom/SimpleWaterURP")
@@ -98,7 +95,7 @@ namespace PirateSlop.World
 
         public void ApplyLighting()
         {
-            if (sky == null || clouds == null) return;
+            if (sky == null) return;
             float t = CurrentBlend;
             float sunset = Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(.15f, .62f, t));
             float dusk = Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(.48f, .70f, t));
@@ -131,11 +128,6 @@ namespace PirateSlop.World
             float ambientNight = Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(.58f, 1f, t));
             Color ambient = Color.Lerp(new Color(.30f, .29f, .30f).linear, new Color(.25f, .29f, .38f).linear * .5f, ambientNight);
             sky.ambientFloor.Override(Color.Lerp(Color.black, ambient, ambientRise).gamma);
-            clouds.sunLightDimmer.Override(Mathf.Lerp(1f, .7f, night));
-            float stormRadius = storm != null && storm.Ready ? storm.CurrentRadius : -1;
-            bool movingBoundary = Mathf.Abs(stormRadius - previousStormRadius) > .05f;
-            clouds.temporalAccumulationFactor.Override(movingBoundary ? .7f : Mathf.Abs(velocity) > .005f ? .8f : .95f);
-            previousStormRadius = stormRadius;
             RenderSettings.reflectionIntensity = Mathf.Lerp(1f, .6f, night);
             if (waterMaterial != null)
             {

@@ -1,6 +1,6 @@
 # PirateSlop — карта проекта
 
-Снимок файлов: 2026-11-22. Корень: `C:\Users\K\Project`.
+Снимок файлов: 2026-11-24. Корень: `C:\Users\K\Project`.
 
 ## Как пользоваться
 
@@ -12,17 +12,17 @@
 
 ## Полный каталог
 
-Учтено 14524 файлов без `.meta`. Ещё 13088 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
+Учтено 14556 файлов без `.meta`. Ещё 13109 файлов `.meta` сопровождают ассеты/папки: их путь — путь ассета или папки плюс `.meta`; сохраняй их GUID. Сама карта и её автоматически созданные приложения не входят в подсчёт.
 
 | Раздел | Назначение | Файлов |
 | --- | --- | ---: |
 | [.agents](<Docs/ProjectMap/.agents.md>) | Ресурсы раздела; точный состав — в каталоге | 1 |
 | [.cursor](<Docs/ProjectMap/.cursor.md>) | Ресурсы раздела; точный состав — в каталоге | 1 |
 | [.opencode](<Docs/ProjectMap/.opencode.md>) | Ресурсы раздела; точный состав — в каталоге | 1 |
-| [Art](<Docs/ProjectMap/Art.md>) | Исходники арта и Blender | 592 |
+| [Art](<Docs/ProjectMap/Art.md>) | Исходники арта и Blender | 593 |
 | [Assets](<Docs/ProjectMap/Assets.md>) | Ресурсы раздела; точный состав — в каталоге | 2 |
 | [Assets/Animations](<Docs/ProjectMap/Assets-Animations.md>) | Анимации | 38 |
-| [Assets/Audio](<Docs/ProjectMap/Assets-Audio.md>) | Звуковые ресурсы и лицензии | 465 |
+| [Assets/Audio](<Docs/ProjectMap/Assets-Audio.md>) | Звуковые ресурсы и лицензии | 468 |
 | [Assets/Branding](<Docs/ProjectMap/Assets-Branding.md>) | Оформление проекта | 1 |
 | [Assets/Editor](<Docs/ProjectMap/Assets-Editor.md>) | Редакторские ресурсы | 1 |
 | [Assets/Experimental](<Docs/ProjectMap/Assets-Experimental.md>) | Ресурсы раздела; точный состав — в каталоге | 14 |
@@ -30,23 +30,23 @@
 | [Assets/Game](<Docs/ProjectMap/Assets-Game.md>) | Игровые подсистемы и эффекты | 83 |
 | [Assets/Houidisoft technology](<Docs/ProjectMap/Assets-Houidisoft technology.md>) | Ресурсы раздела; точный состав — в каталоге | 12 |
 | [Assets/JMO Assets](<Docs/ProjectMap/Assets-JMO Assets.md>) | Ресурсы раздела; точный состав — в каталоге | 19 |
-| [Assets/Materials](<Docs/ProjectMap/Assets-Materials.md>) | Материалы | 141 |
+| [Assets/Materials](<Docs/ProjectMap/Assets-Materials.md>) | Материалы | 142 |
 | [Assets/Mirza](<Docs/ProjectMap/Assets-Mirza.md>) | Ресурсы раздела; точный состав — в каталоге | 1 |
-| [Assets/Models](<Docs/ProjectMap/Assets-Models.md>) | Модели и связанные ресурсы | 9668 |
+| [Assets/Models](<Docs/ProjectMap/Assets-Models.md>) | Модели и связанные ресурсы | 9672 |
 | [Assets/Plugins](<Docs/ProjectMap/Assets-Plugins.md>) | Плагины | 5 |
 | [Assets/Prefabs](<Docs/ProjectMap/Assets-Prefabs.md>) | Готовые игровые объекты | 139 |
-| [Assets/Resources](<Docs/ProjectMap/Assets-Resources.md>) | Ресурсы, доступные для загрузки по имени | 175 |
+| [Assets/Resources](<Docs/ProjectMap/Assets-Resources.md>) | Ресурсы, доступные для загрузки по имени | 176 |
 | [Assets/Scenes](<Docs/ProjectMap/Assets-Scenes.md>) | Сохранённые сцены | 3 |
-| [Assets/Scripts](<Docs/ProjectMap/Assets-Scripts.md>) | Игровой код и редакторские инструменты | 629 |
+| [Assets/Scripts](<Docs/ProjectMap/Assets-Scripts.md>) | Игровой код и редакторские инструменты | 636 |
 | [Assets/Settings](<Docs/ProjectMap/Assets-Settings.md>) | Настройки игровых систем и рендеринга | 60 |
-| [Assets/Shaders](<Docs/ProjectMap/Assets-Shaders.md>) | Шейдеры | 22 |
+| [Assets/Shaders](<Docs/ProjectMap/Assets-Shaders.md>) | Шейдеры | 23 |
 | [Assets/StreamingAssets](<Docs/ProjectMap/Assets-StreamingAssets.md>) | Ресурсы раздела; точный состав — в каталоге | 5 |
 | [Assets/Tests](<Docs/ProjectMap/Assets-Tests.md>) | Исходники проверок | 19 |
 | [Assets/ThirdParty](<Docs/ProjectMap/Assets-ThirdParty.md>) | Сторонние ресурсы | 20 |
 | [Assets/TutorialInfo](<Docs/ProjectMap/Assets-TutorialInfo.md>) | Ресурсы раздела; точный состав — в каталоге | 2 |
 | [Assets/UI](<Docs/ProjectMap/Assets-UI.md>) | Ресурсы интерфейса | 42 |
-| [Assets/_Recovery](<Docs/ProjectMap/Assets-_Recovery.md>) | Сохранённые восстановленные данные | 7 |
-| [Captures](<Docs/ProjectMap/Captures.md>) | Ресурсы раздела; точный состав — в каталоге | 1010 |
+| [Assets/_Recovery](<Docs/ProjectMap/Assets-_Recovery.md>) | Сохранённые восстановленные данные | 10 |
+| [Captures](<Docs/ProjectMap/Captures.md>) | Ресурсы раздела; точный состав — в каталоге | 1021 |
 | [Docs](<Docs/ProjectMap/Docs.md>) | Документы и сохранённые отчёты | 316 |
 | [Packages](<Docs/ProjectMap/Packages.md>) | Манифест, lock-файл и встроенные пакеты | 924 |
 | [ProjectSettings](<Docs/ProjectMap/ProjectSettings.md>) | Настройки Unity | 29 |
@@ -153,7 +153,7 @@ NetworkDeveloperTeleport переносит текущий корабль или
 - [Assets/Scripts/World/DeveloperTeleportDestinations.cs](<Assets/Scripts/World/DeveloperTeleportDestinations.cs>) — Исходник C#: DeveloperTeleportDestination, DeveloperTeleportDestinations.
 - [Assets/Scripts/Networking/NetworkDeveloperTeleport.cs](<Assets/Scripts/Networking/NetworkDeveloperTeleport.cs>) — Исходник C#: NetworkWeapon, NetworkShip, NetworkPlayer.
 - [Assets/Scripts/Networking/NetworkPlayer.cs](<Assets/Scripts/Networking/NetworkPlayer.cs>) — Исходник C#: CaptainInput, CaptainState, NetworkPlayer.
-- [Assets/Scripts/Networking/NetworkShip.cs](<Assets/Scripts/Networking/NetworkShip.cs>) — Исходник C#: NetworkShip.
+- [Assets/Scripts/Networking/NetworkShip.cs](<Assets/Scripts/Networking/NetworkShip.cs>) — Исходник C#: ShipFloodCountdown, NetworkShip.
 - [Assets/Scripts/ShipController.cs](<Assets/Scripts/ShipController.cs>) — Исходник C#: ShipController.
 - [Assets/Scripts/Networking/NetworkFish.cs](<Assets/Scripts/Networking/NetworkFish.cs>) — Исходник C#: InventoryItem, NetworkFish.
 - [Assets/Scripts/Networking/NetworkLooseCannonball.cs](<Assets/Scripts/Networking/NetworkLooseCannonball.cs>) — Исходник C#: NetworkLooseCannonball.
@@ -310,7 +310,7 @@ ShipBilgeWater создаёт отдельную поверхность без �
 - [Assets/Scripts/ShipController.cs](<Assets/Scripts/ShipController.cs>) — Исходник C#: ShipController.
 - [Assets/Scripts/ShipDeckPassenger.cs](<Assets/Scripts/ShipDeckPassenger.cs>) — Исходник C#: ShipDeckPassenger.
 - [Assets/Scripts/HelmInteraction.cs](<Assets/Scripts/HelmInteraction.cs>) — Исходник C#: HelmInteraction.
-- [Assets/Scripts/Networking/NetworkShip.cs](<Assets/Scripts/Networking/NetworkShip.cs>) — Исходник C#: NetworkShip.
+- [Assets/Scripts/Networking/NetworkShip.cs](<Assets/Scripts/Networking/NetworkShip.cs>) — Исходник C#: ShipFloodCountdown, NetworkShip.
 - [Assets/Scripts/Interaction/DirectShipControls.cs](<Assets/Scripts/Interaction/DirectShipControls.cs>) — Исходник C#: DirectShipControls.
 - [Assets/Scripts/Stations/CapstanStation.cs](<Assets/Scripts/Stations/CapstanStation.cs>) — Исходник C#: CapstanStation.
 - [Assets/Scripts/Networking/NetworkShip.Anchor.cs](<Assets/Scripts/Networking/NetworkShip.Anchor.cs>) — Исходник C#: NetworkShip.
@@ -430,7 +430,7 @@ Ship V3: RopeTubeVisual восстанавливает постоянное кр
 - [Assets/Scripts/Interaction/SailRopeMesh.cs](<Assets/Scripts/Interaction/SailRopeMesh.cs>) — Исходник C#: SailRopeMesh.
 - [Assets/Scripts/Editor/SailRopeSetup.cs](<Assets/Scripts/Editor/SailRopeSetup.cs>) — Исходник C#: SailRopeSetup.
 - [Assets/Scripts/Editor/SailRiggingArtSetup.cs](<Assets/Scripts/Editor/SailRiggingArtSetup.cs>) — Исходник C#: SailRiggingArtSetup.
-- [Assets/Scripts/Networking/NetworkShip.cs](<Assets/Scripts/Networking/NetworkShip.cs>) — Исходник C#: NetworkShip.
+- [Assets/Scripts/Networking/NetworkShip.cs](<Assets/Scripts/Networking/NetworkShip.cs>) — Исходник C#: ShipFloodCountdown, NetworkShip.
 - [Assets/Scripts/Customization/SailCustomizer.cs](<Assets/Scripts/Customization/SailCustomizer.cs>) — Исходник C#: SailCustomizer.
 - [Assets/Scripts/Customization/SailCustomizationUI.cs](<Assets/Scripts/Customization/SailCustomizationUI.cs>) — Исходник C#: SailCustomizationUI, GizmoMode.
 - [Assets/Scripts/Customization/SailCustomizationStorage.cs](<Assets/Scripts/Customization/SailCustomizationStorage.cs>) — Исходник C#: SailData, ShipCustomizationData, SailCustomizationStorage.
@@ -1007,6 +1007,7 @@ FogBottle/VortexBottle: удержание ЛКМ показывает штат�
 
 Ключевые слова: ремонт, repairing, разрушение, затопление, damage.
 
+Окно затопления грот-мачты Ship V3 имеет одну камеру. Уровень воды приходит из ShipFlooding. На полном затоплении NetworkShip запускает серверный таймер на 30 секунд. Красная жидкость вытесняет синюю снизу. Откачка до 95% отменяет отсчёт, катастрофа кракена ускоряет его до 3 секунд. Полное красное окно и места команд используют серверный тик гибели. Протокол 205.
 2026-10-11: киянка игрока восстанавливает строго один фрагмент за три удара; ремонт у основания мачты также возвращает один фрагмент за три удара. Доска закрывает один фрагмент за непрерывное удержание ЛКМ 0.8 с, расходуется только при успешном серверном ремонте. Смена цели/слота, отпускание, смерть или потеря доступа сбрасывают удержание. Общая подсветка повреждений; вокруг прицела заполняется золотистое кольцо с латунной окантовкой. HullRepairPlank.asset создан в Unity: фаски, лёгкая неровность и материал древесины Ship V3; SM_RepairPlank_1/DroppedPlank1 сохраняют GUID, хват двумя руками.
 Текущая точка входа ремонта — NetworkHullRepair, а не старый путь Scripts/Repair/ShipRepair.cs.
 Урон, ремонт фрагментов и затопление связаны с секциями корабля. Старое описание накладных досок не считать актуальной архитектурой.
@@ -1025,7 +1026,24 @@ PlanFire: минимум 16, максимум 64 очага на выстрел,
 2026-10-10 течь переделана после жалобы на прямоугольную боковину. BilgeBreachFlow содержит только оболочку общего контура без плоской заглушки; сглаживание углов,28 колец и координата вдоль периметра убирают вырожденное растяжение UV на боках. BilgeLeak.shader перемещает поток по напору sqrt(2gh), локальной гравитации, сужению струи и адвективной турбулентности. После входа в воду скорость рассеивается; остаются видимые струя/пузырьки. В том же меше72 GPU-капли и18 областей пены для сильной течи,24/6 для слабой; пену размещает на уровне внутренней воды либо пола. Слабая течь по-прежнему тонкий перелив нижней кромки по реальной волне, подключённая к сильной получает полный напор. Расходы и насос не менялись. Компиляция и шейдер проверяются native; естественность в игре ещё не подтверждена.
 
 - [Assets/Scripts/Networking/NetworkHullRepair.cs](<Assets/Scripts/Networking/NetworkHullRepair.cs>) — Исходник C#: NetworkHullRepair.
+- [Art/Blender/Repair/ShipwrightMallet.blend](<Art/Blender/Repair/ShipwrightMallet.blend>) — Редактируемая сцена Blender.
+- [Assets/Models/Repair/SM_RepairMallet.fbx](<Assets/Models/Repair/SM_RepairMallet.fbx>) — Модель / анимации FBX.
+- [Assets/Models/Repair/RepairMalletAlbedo.png](<Assets/Models/Repair/RepairMalletAlbedo.png>) — Изображение / текстура.
+- [Assets/Models/Repair/RepairMalletMetallicGloss.png](<Assets/Models/Repair/RepairMalletMetallicGloss.png>) — Изображение / текстура.
+- [Assets/Materials/Repair/ShipwrightMallet.mat](<Assets/Materials/Repair/ShipwrightMallet.mat>) — Материал Unity.
+- [Assets/Prefabs/Repair/SM_RepairMallet.prefab](<Assets/Prefabs/Repair/SM_RepairMallet.prefab>) — Префаб Unity.
+- [Assets/Prefabs/Repair/DroppedMallet.prefab](<Assets/Prefabs/Repair/DroppedMallet.prefab>) — Префаб Unity.
+- [Assets/UI/Inventory/Mallet.png](<Assets/UI/Inventory/Mallet.png>) — Изображение / текстура.
 - [Assets/Scripts/ShipDestruction/ShipDestruction.cs](<Assets/Scripts/ShipDestruction/ShipDestruction.cs>) — Исходник C#: ShipSectionSnapshot, ShipDestructionEvent, ShipDestruction.
+- [Assets/Resources/Ships/MastFloodGauge.prefab](<Assets/Resources/Ships/MastFloodGauge.prefab>) — Префаб Unity.
+- [Assets/Audio/MastFloodGauge/MastWaterFill.wav](<Assets/Audio/MastFloodGauge/MastWaterFill.wav>) — Аудио.
+- [Assets/Audio/MastFloodGauge/MastBloodFill.wav](<Assets/Audio/MastFloodGauge/MastBloodFill.wav>) — Аудио.
+- [Assets/Audio/MastFloodGauge/SOURCES.md](<Assets/Audio/MastFloodGauge/SOURCES.md>) — Документация.
+- [Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/MastFloodGauge.asset](<Assets/Models/Ships/ShipV3/RuntimeMeshes/Fixtures/MastFloodGauge.asset>) — Настройки или данные Unity.
+- [Assets/Models/Ships/ShipV3/Materials/MastFloodGauge.mat](<Assets/Models/Ships/ShipV3/Materials/MastFloodGauge.mat>) — Материал Unity.
+- [Assets/Shaders/MastFloodGauge.shader](<Assets/Shaders/MastFloodGauge.shader>) — Шейдер.
+- [Assets/Scripts/Ships/MastFloodGauge.cs](<Assets/Scripts/Ships/MastFloodGauge.cs>) — Исходник C#: MastFloodGauge.
+- [Assets/Scripts/Editor/MastFloodGaugeSetup.cs](<Assets/Scripts/Editor/MastFloodGaugeSetup.cs>) — Исходник C#: MastFloodGaugeSetup, Fitting.
 - [Assets/Scripts/ShipDestruction/ShipDamageSection.cs](<Assets/Scripts/ShipDestruction/ShipDamageSection.cs>) — Исходник C#: ShipDamageSection.
 - [Assets/Scripts/ShipDestruction/ShipFlooding.cs](<Assets/Scripts/ShipDestruction/ShipFlooding.cs>) — Исходник C#: ShipBreach, ShipFlooding.
 - [Assets/Scripts/ShipDestruction/ShipDestructionProfile.cs](<Assets/Scripts/ShipDestruction/ShipDestructionProfile.cs>) — Исходник C#: ShipSectionState, ShipSectionType, ShipDamageReason, ShipAmmoMultiplier, ShipSectionDefinition, ShipDestructionProfile, ShipFragmentConnection.
@@ -1175,6 +1193,9 @@ CoastalSandSetup.Apply создаёт в12каменных префабах от
 20.10.2026: M-карта увеличена до1000px с адаптацией к экрану, тёмным оформлением PirateHudStyle, золотой рамкой/сеткой и подписями12px. Раздельные динамические маркеры локального игрока (бирюзовый, взгляд) и собственного корабля (белый ромб), видимые вместе на палубе. Корабли с NetworkSternCargoEvent исключены, маркер самого ивентаC3 сохранён. Локальный человек берётся из NetworkPlayer.Active с IsOwner/IsLocal и без IsBot; свой корабль через Ship, независимо от наличия StormZone. Только Repaint, закрытая карта не ищет компоненты. Компиляция без C# ошибок; визуальная приёмка пользователем.
 
 - [Assets/Scripts/World/MainOceanMap.cs](<Assets/Scripts/World/MainOceanMap.cs>) — Исходник C#: MainOceanMap.
+- [Assets/Scripts/World/TutorialBay.cs](<Assets/Scripts/World/TutorialBay.cs>) — Исходник C#: TutorialBay.
+- [Assets/Scripts/Networking/ShipTutorial.cs](<Assets/Scripts/Networking/ShipTutorial.cs>) — Исходник C#: ShipTutorial, Lesson.
+- [Assets/Scripts/Networking/ShipTutorial.Presentation.cs](<Assets/Scripts/Networking/ShipTutorial.Presentation.cs>) — Исходник C#: ShipTutorial.
 - [Assets/Game/BRZoneVolumetric/StormVolumeController.Smoke.cs](<Assets/Game/BRZoneVolumetric/StormVolumeController.Smoke.cs>) — Исходник C#: StormVolumeController.
 - [Assets/Game/BRZoneVolumetric/Resources/StormSmokeFields.compute](<Assets/Game/BRZoneVolumetric/Resources/StormSmokeFields.compute>) — Вычислительный шейдер.
 - [Assets/Scripts/Editor/StormSmokePreview.cs](<Assets/Scripts/Editor/StormSmokePreview.cs>) — Исходник C#: StormSmokePreview.
@@ -1389,10 +1410,13 @@ CoastalSandSetup.Apply создаёт в12каменных префабах от
 
 ### Сеть, сессия и Steam (`networking`)
 
-Ключевые слова: сеть, мультиплеер, steam, network, конец матча, победа, итоги матча, протокол 202, список лобби, публичное лобби, AppID 5671450, RestartAppIfNecessary, выгнать игрока, кик из лобби.
+Ключевые слова: сеть, мультиплеер, steam, network, конец матча, победа, итоги матча, протокол 202, протокол 204, список лобби, публичное лобби, AppID 5671450, RestartAppIfNecessary, выгнать игрока, кик из лобби.
 
+22.11.2026: единая Windows Build / Build собирает Release в Builds/Windows/PirateSlop.exe без steam_appid.txt. Сцены, ассеты и реестр берутся из общей конфигурации. Параметр -developer включает F8, диагностику, тестовую карту и ботов в Windows Player. Специализированные параметры запуска сценариев сохранены, в том числе -krakentest. -nosteam запускает локальный режим с прямым подключением.
+22.11.2026: -development действует как -developer. GameTelemetry и панель дебага воды запускаются только в режиме разработчика. SessionMetrics пишет замеры серверного тика в режиме разработчика или с -netdiag. Сервер запускает планировщики экипажей и путей только в сессии с настоящими ботами. -validatebots работает в единой Release-сборке.
+22.11.2026, протокол 204: обычный Steam-матч требует два экипажа при старте и после загрузки. Сервер ждёт готовности участников до 120 с, распределяет спавн по кадрам, затем запускает шторм и отсчёт матча. При недостаточном составе группа возвращается в лобби с сообщением. Приёмка описана в Docs/ReleaseAudit.md, раздел «Первая волна Steam Playtest».
 22.11.2026: исключение игроков хостом. SteamParty.Kick ставит в лобби группы ban_<steamid>=1, очищает слот и отключает соединение (SessionController.KickConnection); исключённый клиент сам выходит из лобби и сессии («Хост исключил вас из лобби»), не может войти повторно, не учитывается в ResolveTeams/CanLaunch и не допускается в матч (UpdateAdmissions/AdmittedTeam). UI: «✕» у игрока в «Сборе экипажей» для хоста; в матче меню → «Игроки сессии» (только хост) с кнопкой «Выгнать»; без Steam просто отключает соединение. Голосовой мут уже был в Звук → Голос.
-22.11.2026: Steam переведён на Playtest AppID 5671450 (SteamParty.LaunchAppId; steam_appid.txt проекта и SteamTestBuild пишут его же рядом с exe). AppID 480/Spacewar больше не принимается, ключ лобби game=PirateSlop.v1. Вне Editor перед SteamAPI.Init вызывается RestartAppIfNecessary — работает только без steam_appid.txt, поэтому в депо Steam этот файл не загружать. Принимаются 5671420 и 5671450.
+22.11.2026: SteamParty принимает AppID 5671420 и 5671450, ключ лобби game=PirateSlop.v1. SteamAPI.Init использует контекст запуска. Прямой запуск EXE без Steam-контекста сохраняет локальный процесс и режим по IP. Steam-библиотека сама передаёт AppID. Корневой steam_appid.txt используется только для локальной проверки Steam API. Сборщик удаляет этот файл из выходной папки Windows.
 22.11.2026, протокол202: SessionMatch завершает матч на сервере, когда из ≥2 участвовавших экипажей на плаву остался один; при одновременном потоплении побеждает затонувший позже, полное совпадение — ничья. Статистика команды: потоплено (последний вражеский удар ≤90с до потопления), попаданий по кораблям (ShipDestruction.Damage), сундуков (первое NetworkLootChest.Open), время жизни. MatchResultMessage рассылается всем и новым подключениям; экран итогов (OnGUI) с одной кнопкой «В меню» = Disconnect, выход хоста возвращает всех в Steam-лобби. Не работает в тестовой карте, нагрузочном тесте и бенчмарке. Решения этапа — Docs/ReleaseAudit.md §12. Зона: одна фаза 900 с (SessionController.DefaultStormDuration, поле больше не сериализуется в сцене) до StormZone.FinalRadius = радиус воронки 500 м. Игровая проверка не выполнялась.
 22.11.2026, протокол202: Steam-лобби группы (kind=party) создаётся публичным, данные host_name; SteamParty.FindLobbies ищет лобби той же игры/протокола в состоянии waiting, меню «Лобби · Steam» показывает до 5 открытых лобби с кнопкой «Войти» и обновлением раз в 10 с, вход по ID лобби сохранён. После «Начать экспедицию» лобби закрывается (state starting, joinable=false) и снова открывается после выхода из сессии. Вход в идущий матч закрыт: «Сессия другого капитана»/JoinSession удалены, MatchLobby хранит party, UpdateAdmissions допускает только участников группы хоста, чужая группа получает «Матч уже идёт — вход закрыт». Игровая проверка через Steam не выполнялась.
 20.10.2026, проверка Unity MCP: Release build-96393073e8 и Development build-3cc19220b7 успешно собраны в Builds/WindowsRelease и Builds/Windows, по0ошибок. PackedAssets обоих включают одинаковые новый корабль, общий SessionConfig200 и сетевой реестр. Подробные предупреждения/время и оставшаяся игровая/FPS-приёмка — в OptimizationPlan.md.
@@ -1418,7 +1442,7 @@ MultiplayerSceneSetup.Configure и PromoteShipV3 привязывают ShipV3Te
 - [Assets/Scripts/Networking/SessionAuthenticator.cs](<Assets/Scripts/Networking/SessionAuthenticator.cs>) — Исходник C#: HelloMessage, AdmissionMessage, PopulationMessage, SessionAuthenticator.
 - [Assets/Scripts/Networking/SteamParty.cs](<Assets/Scripts/Networking/SteamParty.cs>) — Исходник C#: SteamParty.
 - [Assets/Scripts/Networking/NetworkPlayer.cs](<Assets/Scripts/Networking/NetworkPlayer.cs>) — Исходник C#: CaptainInput, CaptainState, NetworkPlayer.
-- [Assets/Scripts/Networking/NetworkShip.cs](<Assets/Scripts/Networking/NetworkShip.cs>) — Исходник C#: NetworkShip.
+- [Assets/Scripts/Networking/NetworkShip.cs](<Assets/Scripts/Networking/NetworkShip.cs>) — Исходник C#: ShipFloodCountdown, NetworkShip.
 - [Assets/Scripts/Networking/SimulationState.cs](<Assets/Scripts/Networking/SimulationState.cs>) — Исходник C#: PlayerCommand, PlayerState, ShipState.
 - [Assets/Settings/Networking/SessionConfig.asset](<Assets/Settings/Networking/SessionConfig.asset>) — Настройки или данные Unity.
 - [Assets/Scripts/Editor/MultiplayerSceneSetup.cs](<Assets/Scripts/Editor/MultiplayerSceneSetup.cs>) — Исходник C#: RuntimePipelineBuildPreparation, MultiplayerSceneSetup.
@@ -1697,6 +1721,7 @@ SelectedReview: выбор звуков revision 132 (80 файлов, 55 соб
 
 Ключевые слова: интерфейс, меню, hud, лог ошибок, errors.log, локализация, английский, ребиндинг, назначение клавиш, FOV, яркость, дальтоники, субтитры.
 
+22.11.2026: «Как играть» в главном меню и паузе. Справка описывает выход под парусом, заряжание и выстрел, ремонт доской и откачку. Справка и подсказки взаимодействия с орудием, шпилем, насосом и картой читают текущие назначения клавиш. Есть английские строки справки, изменённых подсказок и HUD шторма.
 22.11.2026, настройки и локализация. KeyBindings: 16 действий (GameAction) с клавишами по умолчанию W/S/A/D/Space/LeftShift/C/E/Q/R/F/G/X/V/B/M, хранение PlayerPrefs Bind_<действие>, обмен при конфликте; все прямые чтения этих клавиш в игре заменены на keyboard[KeyBindings.X] (стрелки, Esc, F-клавиши, цифры и Shift-модификатор остались фиксированными). Для текста подсказок использовать KeyBindings.Label(GameAction.X). GameSettings: чувствительность и инверсия мыши (раньше сохранялись, но не применялись), FOV 60–110 (LateUpdate AdvancedPlayerController, только когда камера на базовом FOV), яркость (postExposure) и фильтр для дальтоников (ChannelMixer, дальтонизация) через глобальный Volume priority 1000, хитмаркеры, индикатор урона, компас, субтитры; восстановление Quality/VSync при запуске. Фиктивный переключатель «Журнал убийств» удалён. ClosedCaptions: подписи ~30 важных SoundCue с направлением, из GameAudio.Play. Localization: T(русская строка) → Resources/Localization/en.json {entries:[{ru,en}]}, F(формат, аргументы), язык PlayerPrefs Language (по умолчанию по языку системы), переключатель в «Игра и интерфейс». Переведены меню, лобби Steam, голос, итоги матча, статусы SteamParty/SessionController, настройки, названия клавиш и субтитры (246 строк). HUD, подсказки взаимодействия, предметы, улучшения и ивенты не переведены — при переделке HUD оборачивать строки в Localization.T и добавлять переводы в en.json.
 22.11.2026: ErrorLog (только Player, не Editor) пишет ошибки/исключения/assert в Application.persistentDataPath/errors.log: заголовок сессии с версией, ОС, GPU, RAM и путём Player.log; повтор одного сообщения не чаще 5 с, максимум 300 записей за сессию, при >2 МБ файл переносится в errors.prev.log. Настройки → «Папка логов и ошибок» открывает эту папку (там же Player.log).
 22.11.2026: DeveloperMenu.Available = Editor || Development build || аргумент запуска -developer. SessionMenu.MenuDeveloperTools использует его же: в Release без флага скрыты «Тестовая карта» (создание экспедиции, лобби Steam, блок «Тестирование»), «Диагностика» и тест нагрузки; F8 и серверные команды разработчика уже были закрыты этим условием.
@@ -2283,7 +2308,7 @@ NetworkLoadTest запускается из меню Тест нагрузки �
 - [Assets/Scripts/Editor/NetworkLoadTestSetup.cs](<Assets/Scripts/Editor/NetworkLoadTestSetup.cs>) — Исходник C#: NetworkLoadTestSetup.
 - [Assets/Scenes/NetworkLoadTest.unity](<Assets/Scenes/NetworkLoadTest.unity>) — Сцена Unity.
 - [Assets/Scripts/Networking/NetworkPlayer.cs](<Assets/Scripts/Networking/NetworkPlayer.cs>) — Исходник C#: CaptainInput, CaptainState, NetworkPlayer.
-- [Assets/Scripts/Networking/NetworkShip.cs](<Assets/Scripts/Networking/NetworkShip.cs>) — Исходник C#: NetworkShip.
+- [Assets/Scripts/Networking/NetworkShip.cs](<Assets/Scripts/Networking/NetworkShip.cs>) — Исходник C#: ShipFloodCountdown, NetworkShip.
 - [Assets/Scripts/Ships/ShipV3VisualRig.cs](<Assets/Scripts/Ships/ShipV3VisualRig.cs>) — Исходник C#: ShipV3Pose, ShipV3Motion, ShipV3VisualRig.
 - [Assets/Scripts/Interaction/RopeTubeVisual.cs](<Assets/Scripts/Interaction/RopeTubeVisual.cs>) — Исходник C#: RopeTubeVisual, Centerline.
 - [Assets/Scripts/Ships/ShipV3RenderBudget.cs](<Assets/Scripts/Ships/ShipV3RenderBudget.cs>) — Исходник C#: ShipV3RenderBudget.
@@ -2987,7 +3012,7 @@ Mystery допускает все включенные строки ChestLoot.js
 - [Assets/Scripts/World/DeveloperTeleportDestinations.cs](<Assets/Scripts/World/DeveloperTeleportDestinations.cs>) — Исходник C#: DeveloperTeleportDestination, DeveloperTeleportDestinations.
 - [Assets/Scripts/Harpoon/HarpoonProjectile.cs](<Assets/Scripts/Harpoon/HarpoonProjectile.cs>) — Исходник C#: HarpoonProjectile, HarpoonState.
 - [Assets/Scripts/ShipController.cs](<Assets/Scripts/ShipController.cs>) — Исходник C#: ShipController.
-- [Assets/Scripts/Networking/NetworkShip.cs](<Assets/Scripts/Networking/NetworkShip.cs>) — Исходник C#: NetworkShip.
+- [Assets/Scripts/Networking/NetworkShip.cs](<Assets/Scripts/Networking/NetworkShip.cs>) — Исходник C#: ShipFloodCountdown, NetworkShip.
 - [Assets/Scripts/Player/PlayerInventory.cs](<Assets/Scripts/Player/PlayerInventory.cs>) — Исходник C#: PlayerInventory.
 - [Assets/Scripts/Networking/NetworkLootChest.Ocean.cs](<Assets/Scripts/Networking/NetworkLootChest.Ocean.cs>) — Исходник C#: SeaLootKind, SeaLootState, NetworkLootChest.
 - [Assets/Scripts/Networking/NetworkLootChest.OceanVisual.cs](<Assets/Scripts/Networking/NetworkLootChest.OceanVisual.cs>) — Исходник C#: NetworkLootChest.

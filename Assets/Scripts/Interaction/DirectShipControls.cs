@@ -262,7 +262,15 @@ namespace PirateSlop
         {
             if (motor == null || !motor.InputActive) return;
             var handle = grabbed != null ? grabbed : hovered;
-            string hint = handle != null && handle.Sails == null ? (handle.Helm != null ? "ЛКМ + движение мышью по кругу — повернуть штурвал" : handle.Capstan != null ? (!handle.Capstan.StructurallyAvailable ? "Шпиль сломан" : (handle.Capstan.IsAnchored || handle.Capstan.Progress < 1f ? "ЛКМ + идти по кругу — поднять якорь" : "Якорь поднят · Удерживайте [E] (1.5 сек) — Сбросить")) : "ЛКМ + мышь вверх/вниз — наклонить ствол") : "";
+            string hint = "";
+            if (handle != null && handle.Sails == null)
+            {
+                if (handle.Helm != null) hint = Localization.T("ЛКМ + движение мышью по кругу — повернуть штурвал");
+                else if (handle.Capstan == null) hint = Localization.T("ЛКМ + мышь вверх/вниз — наклонить ствол");
+                else if (!handle.Capstan.StructurallyAvailable) hint = Localization.T("Шпиль сломан");
+                else if (handle.Capstan.IsAnchored || handle.Capstan.Progress < 1f) hint = Localization.T("ЛКМ + идти по кругу — поднять якорь");
+                else hint = Localization.F("Якорь поднят · Удерживайте {0} 1,5 с, чтобы сбросить", KeyBindings.Label(GameAction.Use));
+            }
             if (handle != null && handle.Cannon != null) hint += "   " + handle.Cannon.Elevation.ToString("F0") + "°";
             if (handle != null && handle.Helm != null)
             {
@@ -306,7 +314,7 @@ namespace PirateSlop
             if (selected >= 0)
             {
                 bool busy = sails.Owner(selected) != 0 && sails.Owner(selected) != Participant;
-                ContextPrompt.Offer(busy ? "Канат занят другим игроком" : grabbed != null ? "Мышь вниз — расправить · Мышь вверх — собрать · Отпустить ЛКМ — закрепить" : "ЛКМ — взять канат · Потянуть вниз — расправить; вверх — собрать", 40);
+                ContextPrompt.Offer(Localization.T(busy ? "Канат занят другим игроком" : grabbed != null ? "Мышь вниз — расправить · Мышь вверх — собрать · Отпустить ЛКМ — закрепить" : "ЛКМ — взять канат · Мышь вниз — расправить · вверх — собрать"), 40);
             }
             else if (sails == savedSails && Time.unscaledTime < savedUntil && sails.Owner(savedRope) == 0)
                 ContextPrompt.Offer($"{sails.RopeName(savedRope)}: закреплено {sails.Tension(savedRope) * 100f:0}%", 35);

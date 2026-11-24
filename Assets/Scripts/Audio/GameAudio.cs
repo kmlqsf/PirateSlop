@@ -8,6 +8,7 @@ namespace PirateSlop
         GameAudioBank bank;
         readonly System.Collections.Generic.Dictionary<SoundCue, GameAudioBank.Entry> entryMap = new();
         static readonly RaycastHit[] envHits = new RaycastHit[16];
+        internal static float EffectGain => instance != null ? instance.bank.Master * instance.bank.Effects : 0f;
         AudioSource[] voices;
         AudioSource[] feedbackVoices;
         AudioSource[] shotVoices;

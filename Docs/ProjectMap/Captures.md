@@ -434,6 +434,22 @@
 | [Captures/StormWaterGap20261009/wave-opaque-depth-control.png](<../../Captures/StormWaterGap20261009/wave-opaque-depth-control.png>) | Изображение / текстура |
 | [Captures/StormWaterGap20261009/wave-surface-depth-on.png](<../../Captures/StormWaterGap20261009/wave-surface-depth-on.png>) | Изображение / текстура |
 
+## Captures/UIReview
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Captures/UIReview/clean_deck.png](<../../Captures/UIReview/clean_deck.png>) | Изображение / текстура |
+| [Captures/UIReview/clean_menu.png](<../../Captures/UIReview/clean_menu.png>) | Изображение / текстура |
+| [Captures/UIReview/hud_deck.png](<../../Captures/UIReview/hud_deck.png>) | Изображение / текстура |
+| [Captures/UIReview/hud_map.png](<../../Captures/UIReview/hud_map.png>) | Изображение / текстура |
+| [Captures/UIReview/loading.png](<../../Captures/UIReview/loading.png>) | Изображение / текстура |
+| [Captures/UIReview/menu_custom-1.png](<../../Captures/UIReview/menu_custom-1.png>) | Изображение / текстура |
+| [Captures/UIReview/menu_custom.png](<../../Captures/UIReview/menu_custom.png>) | Изображение / текстура |
+| [Captures/UIReview/menu_graphics.png](<../../Captures/UIReview/menu_graphics.png>) | Изображение / текстура |
+| [Captures/UIReview/menu_lobby.png](<../../Captures/UIReview/menu_lobby.png>) | Изображение / текстура |
+| [Captures/UIReview/menu_main.png](<../../Captures/UIReview/menu_main.png>) | Изображение / текстура |
+| [Captures/UIReview/pause.png](<../../Captures/UIReview/pause.png>) | Изображение / текстура |
+
 ## Captures/VfxSkyWaterReview20261007
 
 | Файл | Краткое описание |

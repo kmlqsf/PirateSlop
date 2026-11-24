@@ -10,7 +10,7 @@ namespace PirateSlop.Networking
         float nextComparisonVisit;
         void UpdateShipComparison()
         {
-            if (!IsOwner || SessionController.Instance == null || !SessionController.Instance.Config.ShipComparisonEnabled) return;
+            if (!DeveloperMenu.Available || !IsOwner || SessionController.Instance == null || !SessionController.Instance.Config.ShipComparisonEnabled) return;
             var keyboard = Keyboard.current;
             if (keyboard == null || !GetComponent<AdvancedPlayerController>().InputActive) return;
             if (keyboard.f5Key.wasPressedThisFrame) VisitComparisonServerRpc(-1);
@@ -22,6 +22,7 @@ namespace PirateSlop.Networking
         [ServerRpc]
         void VisitComparisonServerRpc(int index)
         {
+            if (!DeveloperMenu.Available || (!IsOwner && !DeveloperMenu.AllowRemote)) return;
             var session = SessionController.Instance;
             var player = GetComponent<NetworkPlayer>();
             if (session == null || !session.Config.ShipComparisonEnabled || Time.time < nextComparisonVisit || player.Motor.IsDead || player.Motor.LocomotionLocked || LootHandsBusy || GetComponent<CannonHands>().HasHeldBall) return;

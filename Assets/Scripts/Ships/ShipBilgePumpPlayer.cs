@@ -78,8 +78,8 @@ namespace PirateSlop.Ships
         {
             var flooding = pump.Ship != null ? pump.Ship.GetComponent<ShipFlooding>() : null;
             if (flooding == null) return;
-            string prompt = $"Затопление трюма: {flooding.Level * 100f:0}%";
-            if (canPump) prompt += "\nУдерживайте E — откачивать воду";
+            string prompt = Localization.F("Затопление трюма: {0:0}%", flooding.Level * 100f);
+            if (canPump) prompt += "\n" + Localization.F("Удерживайте {0} — откачивать воду", KeyBindings.Label(GameAction.Use));
             ContextPrompt.Offer(prompt, 83);
         }
         void Release()

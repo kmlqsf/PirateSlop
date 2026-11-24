@@ -49,6 +49,7 @@ namespace PirateSlop.Networking
 
         void StartStorm()
         {
+            if (TutorialActive) return;
             stormRunning = true;
             stormPaused = EnvironmentTestActive;
             stormStarted = Time.time;
@@ -67,6 +68,7 @@ namespace PirateSlop.Networking
 
         void ReceiveStorm(StormMessage message, Channel channel)
         {
+            if (TutorialActive || message.StartRadius <= 0f) return;
             if (storm == null) storm = new GameObject("BattleStorm").AddComponent<StormZone>();
             storm.Synchronize(message.Elapsed, message.Duration, message.StartRadius, message.Paused);
         }

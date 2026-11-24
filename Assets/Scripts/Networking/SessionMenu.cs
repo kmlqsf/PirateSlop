@@ -290,6 +290,7 @@ namespace PirateSlop.Networking
             else if(menuPage==11) DrawFleetPerformanceMenu(x,y,panelWidth);
             else if(menuPage==12) DrawPlayersMenu(x,y,panelWidth);
             else if(menuPage==13) DrawBindingsMenu(x,y,panelWidth);
+            else if(menuPage==14) DrawHowToPlay(x,y,panelWidth);
             else if(menuPage==5) { DrawSteamParty(x,y-42,panelWidth); }
             else if(menuPage==1)
             {
@@ -366,7 +367,9 @@ namespace PirateSlop.Networking
                 bool invert = MenuToggle(x, y+115, panelWidth, GameSettings.InvertY, L("Инверсия мыши (ось Y)"));
                 if(invert != GameSettings.InvertY) GameSettings.InvertY = invert;
                 if(MenuAction(x,y+165,panelWidth,L("Назначение клавиш"))) { menuPage=13; listeningAction=-1; }
-                MenuText(new Rect(x,y+228,panelWidth,120),L("ЛКМ — огонь / действие · ПКМ — отмена / еда\n1–6 — предметы · F1 — вид от третьего лица\nShift + взаимодействие — снять пушку\nТруба: колесо — зум, нажатие — метка"),true);
+                string controls = L("ЛКМ — огонь / действие · ПКМ — отмена / еда\n1–6 — предметы\nShift + взаимодействие — снять пушку\nТруба: колесо — зум, нажатие — метка");
+                if (MenuDeveloperTools) controls += "\n" + L("F1 — вид от третьего лица");
+                MenuText(new Rect(x,y+228,panelWidth,120),controls,true);
                 if(MenuAction(x,y+360,panelWidth,L("Назад"))) { PlayerPrefs.Save(); menuPage=7; }
             }
             else if(menuPage==7)
@@ -426,11 +429,17 @@ namespace PirateSlop.Networking
                 if(cp != GameSettings.Compass) GameSettings.Compass = cp;
                 bool cc = MenuToggle(x, y+180, panelWidth, GameSettings.Captions, L("Субтитры звуковых сигналов"));
                 if(cc != GameSettings.Captions) GameSettings.Captions = cc;
-                bool telemetry = MenuToggle(x, y+220, panelWidth, GameTelemetry.Visible, L("Полная телеметрия"));
-                if (telemetry != GameTelemetry.Visible) GameTelemetry.SetVisible(telemetry);
-                if(MenuAction(x,y+270,panelWidth,L("Язык")+": "+(Localization.Current==GameLanguage.Russian?L("Русский"):"English"),secondary:true))
+                float languageY = y + 230;
+                if (MenuDeveloperTools)
+                {
+                    bool visible = GameTelemetry.Visible;
+                    bool telemetry = MenuToggle(x, y + 220, panelWidth, visible, L("Полная телеметрия"));
+                    if (telemetry != visible) GameTelemetry.SetVisible(telemetry);
+                    languageY += 40;
+                }
+                if(MenuAction(x,languageY,panelWidth,L("Язык")+": "+(Localization.Current==GameLanguage.Russian?L("Русский"):"English"),secondary:true))
                     Localization.Current = Localization.Current==GameLanguage.Russian?GameLanguage.English:GameLanguage.Russian;
-                if(MenuAction(x,y+345,panelWidth,L("Назад"))) { PlayerPrefs.Save(); menuPage=7; }
+                if(MenuAction(x,languageY+75,panelWidth,L("Назад"))) { PlayerPrefs.Save(); menuPage=7; }
             }
             else
             {
@@ -444,21 +453,23 @@ namespace PirateSlop.Networking
                 else
                 {
                     if(MenuAction(x,y,panelWidth,L("ВЫЙТИ В МОРЕ"),true)) menuPage=party != null && party.InLobby ? 5 : 1;
-                    if(MenuAction(x,y+58,panelWidth,L("Присоединиться к сессии"))) menuPage=party != null && party.InLobby ? 5 : 2;
+                    if(MenuAction(x,y+54,panelWidth,L("Обучение · Первый выход"))) Begin(true,"127.0.0.1:"+Config.Port,tutorial:true);
+                    if(MenuAction(x,y+104,panelWidth,L("Присоединиться к сессии"),secondary:true)) menuPage=party != null && party.InLobby ? 5 : 2;
                 }
                 if(MenuAction(x,y+146,panelWidth,L("Лобби · Steam"))) menuPage=5;
                 bool isLeader = party == null || !party.InLobby || party.IsLeader;
                 if(isLeader && MenuAction(x,y+198,panelWidth,L("Кастомизация"))) PirateSlop.Customization.SailCustomizationUI.Open();
                 if(MenuAction(x,y+250,panelWidth,L("Настройки"))) menuPage=7;
-                if(MenuDeveloperTools && MenuAction(x,y+304,panelWidth,L("Диагностика"))) menuPage=10;
-                if(MenuAction(x,MenuDeveloperTools?y+362:y+304,panelWidth,L("Выйти из игры"))) Application.Quit();
+                if(MenuAction(x,y+304,panelWidth,L("Как играть"))) menuPage=14;
+                if(MenuDeveloperTools && MenuAction(x,y+358,panelWidth,L("Диагностика"))) menuPage=10;
+                if(MenuAction(x,MenuDeveloperTools?y+410:y+358,panelWidth,L("Выйти из игры"))) Application.Quit();
                 if(MenuDeveloperTools && (!playing || LoadTestActive))
                 {
-                    MenuRule(x+32,y+430,112);
-                    GUI.Label(new Rect(x+32,y+443,panelWidth,20),!playing?L("ТЕСТИРОВАНИЕ"):L("ДЛЯ РАЗРАБОТЧИКА"),menuFooter);
-                    if(!playing && MenuAction(x,y+467,panelWidth,L("Тестовая карта"),secondary:true)) Begin(true,"127.0.0.1:"+Config.Port,true);
-                    if(MenuDeveloperTools && !playing && MenuAction(x,y+509,panelWidth,L("Тест нагрузки · без AI"),secondary:true)) BeginLoadTest();
-                    if(MenuDeveloperTools && playing && LoadTestActive && MenuAction(x,y+434,panelWidth,L("Движение нагрузки · F7"),secondary:true)) ToggleLoadTestMotion();
+                    MenuRule(x+32,y+478,112);
+                    GUI.Label(new Rect(x+32,y+491,panelWidth,20),!playing?L("ТЕСТИРОВАНИЕ"):L("ДЛЯ РАЗРАБОТЧИКА"),menuFooter);
+                    if(!playing && MenuAction(x,y+515,panelWidth,L("Тестовая карта"),secondary:true)) Begin(true,"127.0.0.1:"+Config.Port,true);
+                    if(!playing && MenuAction(x,y+557,panelWidth,L("Тест нагрузки · без AI"),secondary:true)) BeginLoadTest();
+                    if(playing && LoadTestActive && MenuAction(x,y+515,panelWidth,L("Движение нагрузки · F7"),secondary:true)) ToggleLoadTestMotion();
                 }
             }
             if(!string.IsNullOrEmpty(error))
@@ -473,6 +484,26 @@ namespace PirateSlop.Networking
             if(playing) GUI.Label(new Rect(x,868,width-128,22),L("Игроки: ")+(population-botPopulation)+L(" · Боты: ")+botPopulation+L(" · Команды: ")+teamPopulation+L(" · Мест: ")+population+" / "+MaxPlayers,menuFooter);
             CompleteMenuNavigation();
             GUI.matrix=oldMatrix; GUI.color=oldColor;
+        }
+        void DrawHowToPlay(float x, float y, float width)
+        {
+            var use = KeyBindings.Label(GameAction.Use);
+            MenuText(new Rect(x, y, width, 32), L("Как играть"));
+            DrawHelpStep(x, y + 38, width, L("Дайте ход"),
+                L("Удерживайте ЛКМ за рукоять шпиля и идите по кругу, чтобы поднять якорь. Возьмите канат ЛКМ и потяните мышь вниз. Поворачивайте штурвал ЛКМ и движением мыши."));
+            DrawHelpStep(x, y + 140, width, L("Зарядите и выстрелите"),
+                Localization.F("Рычаг выдаёт ядро, если потянуть его ЛКМ вниз. Возьмите ядро ЛКМ и поднесите к дулу. Нажмите {0} у пушки, чтобы прицелиться, затем ЛКМ для выстрела.", use));
+            DrawHelpStep(x, y + 242, width, L("Закройте пробоину"),
+                L("Выберите доски в инвентаре. Наведитесь на подсвеченную пробоину и удерживайте ЛКМ до установки доски."));
+            DrawHelpStep(x, y + 324, width, L("Откачайте воду"),
+                Localization.F("Спуститесь в трюм. Наведитесь на насос и удерживайте {0}. Процент затопления виден у насоса.", use));
+            MenuText(new Rect(x, y + 412, width, 32), Localization.F("Карта океана — {0}", KeyBindings.Label(GameAction.Map)), true);
+            if (MenuAction(x, y + 450, width, L("Назад"))) menuPage = 0;
+        }
+        void DrawHelpStep(float x, float y, float width, string title, string description)
+        {
+            MenuText(new Rect(x, y, width, 24), title);
+            MenuText(new Rect(x, y + 25, width, 74), description, true);
         }
         void CompleteMenuNavigation()
         {

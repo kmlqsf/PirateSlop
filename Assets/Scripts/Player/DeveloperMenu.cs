@@ -10,15 +10,15 @@ namespace PirateSlop
     public sealed class DeveloperMenu : MonoBehaviour
     {
         public static bool IsOpen { get; private set; }
-        static int launchFlag = -1;
-        public static bool Available => Application.isEditor || Debug.isDebugBuild || LaunchFlag;
-        static bool LaunchFlag
+        static readonly bool launchFlag;
+        public static bool Available => Application.isEditor || launchFlag;
+        internal static bool NetworkDiagnosticsRequested { get; }
+
+        static DeveloperMenu()
         {
-            get
-            {
-                if (launchFlag < 0) launchFlag = Array.IndexOf(Environment.GetCommandLineArgs(), "-developer") >= 0 ? 1 : 0;
-                return launchFlag == 1;
-            }
+            var args = Environment.GetCommandLineArgs();
+            launchFlag = Array.IndexOf(args, "-developer") >= 0 || Array.IndexOf(args, "-development") >= 0;
+            NetworkDiagnosticsRequested = Array.IndexOf(args, "-netdiag") >= 0;
         }
         public static bool AllowRemote;
         public static bool ShowLootEventLabels { get; private set; }

@@ -1,6 +1,114 @@
 {
  "entries": [
   {
+   "ru": "{0} — залезть",
+   "en": "{0} — climb"
+  },
+  {
+   "ru": "{0}/{1} — вверх/вниз · {2}/{3} — в сторону · {4} — отпустить",
+   "en": "{0}/{1} — up/down · {2}/{3} — sideways · {4} — let go"
+  },
+  {
+   "ru": "За мной к люку. Вход в трюм с носовой стороны. Внизу найдёшь пробоину.",
+   "en": "Follow me to the hatch. The entrance to the hold is at the forward end. You'll find the breach below."
+  },
+  {
+   "ru": "Ага, вот и капитан! Я покажу корабль. Сначала снимемся с якоря. Иди за мной!",
+   "en": "Ah, there's the captain! I'll show you around. First, let's weigh anchor. Follow me!"
+  },
+  {
+   "ru": "Хватай рукоять шпиля левой кнопкой мыши. Держи и иди по кругу, пока якорь не поднимется.",
+   "en": "Hold the left mouse button to grab a capstan handle. Walk around the capstan until the anchor is up."
+  },
+  {
+   "ru": "За штурвалом кормовой парус — бизань. Зажми ЛКМ на его канате и тяни мышь вниз, чтобы распустить парус.",
+   "en": "The mizzen sail is behind the wheel. Hold the left mouse button on its rope and drag down to unfurl it."
+  },
+  {
+   "ru": "Берись за штурвал левой кнопкой и поворачивай мышью. Ищи золотую метку и проведи нас между буями.",
+   "en": "Grab the wheel with the left mouse button and steer with the mouse. Look for the gold marker and take us between the buoys."
+  },
+  {
+   "ru": "Отлично прошли! Удерживай [{0}] у шпиля, чтобы сбросить якорь. Со стоянки стрелять удобнее.",
+   "en": "Nicely done! Hold [{0}] at the capstan to drop anchor. It'll be easier to shoot once we're still."
+  },
+  {
+   "ru": "Готовим место на правом борту. Свободную палубу у фальшборта оставь для пушки.",
+   "en": "We're getting the starboard gun ready. Keep the deck by the rail clear."
+  },
+  {
+   "ru": "К корме, к маске с рычагом! Зажми ЛКМ на ручке и тяни вниз до упора. Маска выплюнет ядро.",
+   "en": "Head aft to the mask with the lever! Hold the left mouse button on the handle and pull it all the way down. The mask will spit out a cannonball."
+  },
+  {
+   "ru": "Вот наше ядро! Возьми его ЛКМ и неси к пушке. Потеряешь — тяни рычаг ещё раз.",
+   "en": "There's our cannonball! Grab it with the left mouse button and take it to the gun. If you lose it, pull the lever again."
+  },
+  {
+   "ru": "Поднеси ядро к дулу. Если потерял его, возьми ещё одно у маски.",
+   "en": "Bring the cannonball to the muzzle. If you lost it, get another one from the mask."
+  },
+  {
+   "ru": "У пушки нажми [{0}], наведи ствол на красно-белый щит и нажми ЛКМ. Промах? Возьми новое ядро у маски.",
+   "en": "Press [{0}] at the cannon, aim at the red-and-white target, and left-click to fire. Missed? Get another cannonball from the mask."
+  },
+  {
+   "ru": "Береговая пушка отвечает! Держись за борт!",
+   "en": "The shore gun is firing back! Hold on!"
+  },
+  {
+   "ru": "Попали! А у нас течь. Глянь на колбу мачты. Синее — вода в трюме. Полна? Красное вытеснит воду и покажет, сколько осталось до гибели.",
+   "en": "We hit it! Now we're taking on water. Look at the gauge on the mast. Blue shows water in the hold. Once it's full, red rises in its place and shows how much time we have before we sink."
+  },
+  {
+   "ru": "Вот пробоина! Выбери молоток, наведи на повреждение и бей отдельными нажатиями ЛКМ, пока течь не закроется.",
+   "en": "There’s the breach! Equip your mallet, aim at the damage and click once per swing until the leak stops."
+  },
+  {
+   "ru": "Освободи ячейку, капитан! Я дам тебе молоток для ремонта.",
+   "en": "Make room in your inventory, Captain! I have a repair mallet for you."
+  },
+  {
+   "ru": "Течь закрыта. Спустись через люк и держи [{0}] у насоса, пока не откачаешь воду.",
+   "en": "The leak is patched. Go down through the hatch and hold [{0}] at the pump until you've drained the water."
+  },
+  {
+   "ru": "Пора за добычей! Подойди к вантам и нажми [{0}]. Держи [{1}], чтобы подняться к подзорной трубе.",
+   "en": "Time for treasure! Approach the rigging and press [{0}] to grab it. Hold [{1}] to climb to the spyglass."
+  },
+  {
+   "ru": "Посмотри в трубу [{0}]. Огляди воду и найди ближайший сундук по столбу света.",
+   "en": "Look through the spyglass [{0}]. Scan the water for the beam marking the nearest chest."
+  },
+  {
+   "ru": "Нашёл! Выходи из трубы [{0}], спускайся к воде и возьми сундук [{1}].",
+   "en": "You found it! Leave the spyglass [{0}], climb down to the water, and pick up the chest [{1}]."
+  },
+  {
+   "ru": "Донеси его на корабль. Встань на палубу и поставь сундук [{0}]. Уронил в воду? Его можно подобрать снова.",
+   "en": "Bring it aboard. Once you're on deck, put the chest down [{0}]. If it falls into the sea, you can pick it up again."
+  },
+  {
+   "ru": "Открой сундук [{0}] и забери добычу в инвентарь.",
+   "en": "Open the chest [{0}] and take the loot."
+  },
+  {
+   "ru": "Теперь закрой сундук и открой улучшения [{0}]. Выбери одну из предложенных карт.",
+   "en": "Close the chest and open the upgrades menu [{0}]. Pick one of the cards on offer."
+  },
+  {
+   "ru": "Вот это рейс, капитан! Добыча наша, улучшение работает. [{0}] — закончить обучение.",
+   "en": "That's a fine voyage, Captain! We've got the loot and an upgrade. Press [{0}] to finish the tutorial."
+  },
+  {
+   "ru": "Обучение · Первый выход",
+   "en": "Tutorial · First Voyage"
+  },
+  {
+   "ru": "КОРАБЕЛЬНАЯ ОБЕЗЬЯНКА",
+   "en": "SHIP'S MONKEY"
+  },
+  {
    "ru": "   ·   длительность ",
    "en": "   ·   duration "
   },
@@ -345,8 +453,8 @@
    "en": "Fill empty slots with bots"
   },
   {
-   "ru": "Запустите Steam и перезапустите игру",
-   "en": "Start Steam and restart the game"
+   "ru": "Для Steam-лобби запустите игру из библиотеки Steam.",
+   "en": "Launch the game from your Steam Library to use Steam lobbies."
   },
   {
    "ru": "Захват завершён",
@@ -449,8 +557,12 @@
    "en": "Ship sinking"
   },
   {
-   "ru": "ЛКМ — огонь / действие · ПКМ — отмена / еда\n1–6 — предметы · F1 — вид от третьего лица\nShift + взаимодействие — снять пушку\nТруба: колесо — зум, нажатие — метка",
-   "en": "LMB — fire / action · RMB — cancel / eat\n1–6 — items · F1 — third-person view\nShift + interact — dismount cannon\nSpyglass: wheel — zoom, click — mark"
+   "ru": "ЛКМ — огонь / действие · ПКМ — отмена / еда\n1–6 — предметы\nShift + взаимодействие — снять пушку\nТруба: колесо — зум, нажатие — метка",
+   "en": "LMB — fire / action · RMB — cancel / eat\n1–6 — items\nShift + interact — dismount cannon\nSpyglass: wheel — zoom, click — mark"
+  },
+  {
+   "ru": "F1 — вид от третьего лица",
+   "en": "F1 — third-person view"
   },
   {
    "ru": "Левее — реагирует на более тихий голос",
@@ -983,6 +1095,202 @@
   {
    "ru": "Яркость",
    "en": "Brightness"
+  },
+  {
+   "ru": "Для старта нужны два экипажа. Перейдите на другой корабль.",
+   "en": "Two crews are required. Switch to another ship."
+  },
+  {
+   "ru": "Матч прерван при загрузке. Проверьте состав экипажей в лобби.",
+   "en": "The match ended while loading. Check the crews in the lobby."
+  },
+  {
+   "ru": "Соединение с хостом потеряно.",
+   "en": "Lost connection to the host."
+  },
+  {
+   "ru": "Ожидание загрузки экипажей…",
+   "en": "Waiting for crews to load…"
+  },
+  {
+   "ru": "Матч отменён: загрузилось меньше двух экипажей.",
+   "en": "Match cancelled: fewer than two crews loaded."
+  },
+  {
+   "ru": "Истекло время подключения к матчу Steam.",
+   "en": "Timed out connecting to the Steam match."
+  },
+  {
+   "ru": "Как играть",
+   "en": "How to play"
+  },
+  {
+   "ru": "Дайте ход",
+   "en": "Get underway"
+  },
+  {
+   "ru": "Зарядите и выстрелите",
+   "en": "Load and fire"
+  },
+  {
+   "ru": "Закройте пробоину",
+   "en": "Patch a breach"
+  },
+  {
+   "ru": "Откачайте воду",
+   "en": "Pump out the water"
+  },
+  {
+   "ru": "Удерживайте ЛКМ за рукоять шпиля и идите по кругу, чтобы поднять якорь. Возьмите канат ЛКМ и потяните мышь вниз. Поворачивайте штурвал ЛКМ и движением мыши.",
+   "en": "Hold LMB on a capstan bar and walk around it to raise the anchor. Hold LMB on the rope and drag down. Hold LMB on the wheel and move the mouse to steer."
+  },
+  {
+   "ru": "Рычаг выдаёт ядро, если потянуть его ЛКМ вниз. Возьмите ядро ЛКМ и поднесите к дулу. Нажмите {0} у пушки, чтобы прицелиться, затем ЛКМ для выстрела.",
+   "en": "Hold LMB and pull the lever down to get a cannonball. Pick it up with LMB and bring it to the muzzle. Press {0} at the cannon to aim, then LMB to fire."
+  },
+  {
+   "ru": "Выберите доски в инвентаре. Наведитесь на подсвеченную пробоину и удерживайте ЛКМ до установки доски.",
+   "en": "Select planks in your inventory. Aim at the highlighted breach and hold LMB until the plank is fitted."
+  },
+  {
+   "ru": "Спуститесь в трюм. Наведитесь на насос и удерживайте {0}. Процент затопления виден у насоса.",
+   "en": "Go below deck. Aim at the pump and hold {0}. The water level is shown at the pump."
+  },
+  {
+   "ru": "Карта океана — {0}",
+   "en": "Ocean map — {0}"
+  },
+  {
+   "ru": "Карта: {0}",
+   "en": "Map: {0}"
+  },
+  {
+   "ru": "Корабль в зоне",
+   "en": "Ship inside the zone"
+  },
+  {
+   "ru": "КОРАБЛЬ В ШТОРМЕ",
+   "en": "SHIP IN THE STORM"
+  },
+  {
+   "ru": "ЗОНА НА ПАУЗЕ · урон отключён",
+   "en": "ZONE PAUSED · damage disabled"
+  },
+  {
+   "ru": "ШТОРМ  {0:00}:{1:00}   •   Радиус {2:0} м",
+   "en": "STORM  {0:00}:{1:00}   •   Radius {2:0} m"
+  },
+  {
+   "ru": "ВЫ В ШТОРМЕ • До зоны {0:0} м",
+   "en": "YOU ARE IN THE STORM • Zone {0:0} m away"
+  },
+  {
+   "ru": "В безопасной зоне • До шторма {0:0} м",
+   "en": "Inside the safe zone • Storm {0:0} m away"
+  },
+  {
+   "ru": "Затопление трюма: {0:0}%",
+   "en": "Bilge flooding: {0:0}%"
+  },
+  {
+   "ru": "Удерживайте {0} — откачивать воду",
+   "en": "Hold {0} to pump out water"
+  },
+  {
+   "ru": "Фитиль горит…",
+   "en": "Fuse burning…"
+  },
+  {
+   "ru": "Зарядка…",
+   "en": "Loading…"
+  },
+  {
+   "ru": "Ожидание готовности к выстрелу…",
+   "en": "Waiting to fire…"
+  },
+  {
+   "ru": "Мортира не заряжена",
+   "en": "Mortar is unloaded"
+  },
+  {
+   "ru": "Пушка не заряжена",
+   "en": "Cannon is unloaded"
+  },
+  {
+   "ru": "Мышь — прицел · ЛКМ — поджечь фитиль",
+   "en": "Mouse to aim · LMB to light the fuse"
+  },
+  {
+   "ru": "{0} — отменить",
+   "en": "{0} to cancel"
+  },
+  {
+   "ru": "{0} — выйти",
+   "en": "{0} to leave"
+  },
+  {
+   "ru": "{0} — в инвентарь • Поднесите ядро к дулу • Колесо — ближе/дальше • Отпустите ЛКМ — бросить",
+   "en": "{0} to stow • Bring the cannonball to the muzzle • Scroll to adjust reach • Release LMB to drop"
+  },
+  {
+   "ru": "{0} — прицелиться · поднесите любое ядро к дулу",
+   "en": "{0} to aim · Bring any cannonball to the muzzle"
+  },
+  {
+   "ru": "{0} — прицелиться · поднесите ядро к дулу · Shift+{0} 7 с — снять",
+   "en": "{0} to aim · Bring a cannonball to the muzzle · Hold Shift+{0} for 7 s to dismount"
+  },
+  {
+   "ru": "ЛКМ / {0} — взять ядра (до 2 в слоте)",
+   "en": "LMB / {0} to take cannonballs (up to 2 per slot)"
+  },
+  {
+   "ru": "Неподходящий боеприпас · {0} — прицелиться",
+   "en": "Incompatible ammo · {0} to aim"
+  },
+  {
+   "ru": "{0} — зарядить выбранное ядро",
+   "en": "{0} to load the selected cannonball"
+  },
+  {
+   "ru": "{0} — взять разобранную пушку",
+   "en": "{0} to take the dismounted cannon"
+  },
+  {
+   "ru": "Инвентарь заполнен",
+   "en": "Inventory full"
+  },
+  {
+   "ru": "ЛКМ + движение мышью по кругу — повернуть штурвал",
+   "en": "Hold LMB and move the mouse in a circle to turn the wheel"
+  },
+  {
+   "ru": "Шпиль сломан",
+   "en": "Capstan is broken"
+  },
+  {
+   "ru": "ЛКМ + идти по кругу — поднять якорь",
+   "en": "Hold LMB and walk around to raise the anchor"
+  },
+  {
+   "ru": "Якорь поднят · Удерживайте {0} 1,5 с, чтобы сбросить",
+   "en": "Anchor raised · Hold {0} for 1.5 s to drop it"
+  },
+  {
+   "ru": "ЛКМ + мышь вверх/вниз — наклонить ствол",
+   "en": "Hold LMB and move the mouse up/down to tilt the barrel"
+  },
+  {
+   "ru": "Канат занят другим игроком",
+   "en": "Another player is using this rope"
+  },
+  {
+   "ru": "Мышь вниз — расправить · Мышь вверх — собрать · Отпустить ЛКМ — закрепить",
+   "en": "Drag down to unfurl · Drag up to furl · Release LMB to secure"
+  },
+  {
+   "ru": "ЛКМ — взять канат · Мышь вниз — расправить · вверх — собрать",
+   "en": "Hold LMB on the rope · Drag down to unfurl · Drag up to furl"
   }
  ]
 }

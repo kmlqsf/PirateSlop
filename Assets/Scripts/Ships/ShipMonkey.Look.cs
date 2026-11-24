@@ -44,8 +44,68 @@ namespace PirateSlop.Ships
             return true;
         }
 
+        bool guiding;
+        Vector3 guidePoint, guideLook;
+        const float GuideTravelMultiplier = 2.75f;
+        bool guidePathDirty;
+
+        public Vector3 StartTutorialGreeting(Vector3 playerPosition)
+        {
+            var origin = transform.InverseTransformPoint(playerPosition);
+            var desired = origin + Vector3.forward * 3.5f;
+            int node = current;
+            float best = float.PositiveInfinity;
+            for (int i = 0; i < Nodes.Length; i++)
+            {
+                if (Nodes[i].Surface != ShipMonkeySurface.Deck || !Nodes[i].Available) continue;
+                var p = Point(i);
+                if (Mathf.Abs(p.y - origin.y) > 1.2f || (p - origin).sqrMagnitude < 6.25f) continue;
+                float score = (p - desired).sqrMagnitude;
+                if (score < best) { best = score; node = i; }
+            }
+            current = node;
+            position = Point(node);
+            SetGuideDestination(transform.TransformPoint(position));
+            guidePoint = position;
+            Show(position, rotation, ShipMonkeyMotion.Idle, 1f);
+            return position;
+        }
+
+        public void SetGuideDestination(Vector3 destination)
+        {
+            var local = transform.InverseTransformPoint(destination);
+            if (guiding && (local - guidePoint).sqrMagnitude < .01f) return;
+            if (!guiding)
+            {
+                CancelActivities();
+                ResetJump();
+                target = -1;
+                path.Clear();
+            }
+            else if (target >= 0 && pathIndex + 1 < path.Count)
+                path.RemoveRange(pathIndex + 1, path.Count - pathIndex - 1);
+
+            guiding = true;
+            guidePoint = local;
+            guidePathDirty = true;
+            wantsRest = false;
+            pause = 0f;
+        }
+
+        public void SetGuideFocus(Vector3 focus) => guideLook = transform.InverseTransformPoint(focus);
+
         void UpdateAttention(float delta)
         {
+            if (guiding)
+            {
+                looking = true;
+                lookPoint = guideLook;
+                var direction = lookPoint - position;
+                direction.y = 0;
+                if (target < 0 && direction.sqrMagnitude > .01f)
+                    rotation = Quaternion.RotateTowards(rotation, Quaternion.LookRotation(direction), delta * 240f);
+                return;
+            }
             if (task == TaskKind.SlotWait && activitySlot != null)
             {
                 watchedPlayer = null; looking = true;

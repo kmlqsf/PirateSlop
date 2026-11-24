@@ -217,6 +217,14 @@
 | [Assets/Audio/Lockpick/PickMove03.wav](<../../Assets/Audio/Lockpick/PickMove03.wav>) | Аудио; Звуки и голос |
 | [Assets/Audio/Lockpick/SOURCE.md](<../../Assets/Audio/Lockpick/SOURCE.md>) | Документация; Звуки и голос |
 
+## Assets/Audio/MastFloodGauge
+
+| Файл | Краткое описание |
+| --- | --- |
+| [Assets/Audio/MastFloodGauge/MastBloodFill.wav](<../../Assets/Audio/MastFloodGauge/MastBloodFill.wav>) | Аудио; Повреждения корпуса, ремонт и затопление |
+| [Assets/Audio/MastFloodGauge/MastWaterFill.wav](<../../Assets/Audio/MastFloodGauge/MastWaterFill.wav>) | Аудио; Повреждения корпуса, ремонт и затопление |
+| [Assets/Audio/MastFloodGauge/SOURCES.md](<../../Assets/Audio/MastFloodGauge/SOURCES.md>) | Документация; Повреждения корпуса, ремонт и затопление |
+
 ## Assets/Audio/Naval
 
 | Файл | Краткое описание |

@@ -1,9 +1,9 @@
 @echo off
 setlocal
 set "combatDir=%~dp0"
-if not exist "%combatDir%PirateSlop.exe" set "combatDir=%~dp0..\..\Builds\WindowsRelease\"
+if not exist "%combatDir%PirateSlop.exe" set "combatDir=%~dp0..\..\Builds\Windows\"
 if not exist "%combatDir%PirateSlop.exe" (
-  echo PirateSlop.exe is missing. Build or extract the complete Release folder first.
+  echo PirateSlop.exe is missing. Use Windows Build / Build or extract the complete Windows build first.
   pause
   exit /b 2
 )

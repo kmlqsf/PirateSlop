@@ -42,7 +42,7 @@ namespace PirateSlop.Networking
 
         void TickBotDiagnostics()
         {
-            if (manager == null || !manager.ServerManager.Started || Time.unscaledTime < nextBotDiagnosticSample) return;
+            if (botJournals.Count == 0 || manager == null || !manager.ServerManager.Started || Time.unscaledTime < nextBotDiagnosticSample) return;
             using var sample = botDiagnosticMarker.Auto();
             nextBotDiagnosticSample = Time.unscaledTime + .5f;
             foreach (var journal in botJournals.Values) journal.Sample();

@@ -7,7 +7,7 @@ param(
     [switch]$LegacyGuiLayout,
     [switch]$LegacyHull,
     [switch]$LegacyBodyPose,
-    [switch]$Development,
+    [Alias('Development')][switch]$Developer,
     [int]$TimeoutSeconds = 660,
     [double]$StormScale = -1,
     [double]$SkyScale = -1,
@@ -23,13 +23,14 @@ if ($Combat) {
 }
 if ($Stress -and ($FleetShips -gt 0 -or $Isolation -or $ShipIsolation)) { throw 'Stress uses the world route; do not combine it with FleetShips.' }
 $taskProjectRoot = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..'))
-$taskExecutable = Join-Path $taskProjectRoot $(if ($Development) { 'Builds/Windows/PirateSlop.exe' } else { 'Builds/WindowsRelease/PirateSlop.exe' })
+$taskExecutable = Join-Path $taskProjectRoot 'Builds/Windows/PirateSlop.exe'
 if (!(Test-Path -LiteralPath $taskExecutable)) { throw "Benchmark executable is missing: $taskExecutable" }
 if (Get-Process -Name PirateSlop -ErrorAction SilentlyContinue) { throw 'Another PirateSlop process is already running.' }
 $taskStarted = [DateTime]::UtcNow
 $taskStamp = $taskStarted.ToString('yyyyMMdd-HHmmss-fff')
 $taskLog = Join-Path $taskProjectRoot "Temp/performance-autorun-$taskStamp.log"
 $taskArguments = @('-performanceBenchmark', '-performanceQuit', '-performanceUncapped', '-screen-width', $Width.ToString(), '-screen-height', $Height.ToString(), '-screen-fullscreen', '1', '-logFile', $taskLog)
+if ($Developer) { $taskArguments += '-developer' }
 if ($GraphicsApi -ne 'default') { $taskArguments += "-force-$GraphicsApi" }
 if ($Combat) { $taskArguments += '-performanceCombat' }
 if ($Stress) { $taskArguments += '-performanceStress' }
@@ -67,6 +68,7 @@ if ($taskReportFile) {
     $taskManifest.p99Ms = $taskReport.total.p99Ms
     $taskManifest.route = $taskReport.metadata.routeVersion
     $taskManifest.instrumentation = $taskReport.metadata.instrumentationVersion
+    $taskManifest.development = $taskReport.metadata.buildType -eq 'Development'
     $taskManifest.actualWidth = $taskReport.metadata.width
     $taskManifest.actualHeight = $taskReport.metadata.height
     $taskManifest.resolutionMatches = $taskReport.metadata.width -eq $Width -and $taskReport.metadata.height -eq $Height
@@ -80,7 +82,7 @@ $taskManifest.shipIsolation = $ShipIsolation.IsPresent
 $taskManifest.legacyWorldVisuals = $LegacyWorldVisuals.IsPresent
 $taskManifest.legacyGuiLayout = $LegacyGuiLayout.IsPresent
 $taskManifest.fleetShips = $FleetShips
-$taskManifest.development = $Development.IsPresent
+$taskManifest.developer = $Developer.IsPresent
 $taskManifest.legacyBodyPose = $LegacyBodyPose.IsPresent
 $taskManifest.requestedWidth = $Width
 $taskManifest.requestedHeight = $Height

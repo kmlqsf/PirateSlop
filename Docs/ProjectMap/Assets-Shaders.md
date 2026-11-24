@@ -23,6 +23,7 @@
 | [Assets/Shaders/ExcavatedSand.shader](<../../Assets/Shaders/ExcavatedSand.shader>) | Шейдер; Остров с весами и пятью камнями |
 | [Assets/Shaders/FrozenWaterSurface.hlsl](<../../Assets/Shaders/FrozenWaterSurface.hlsl>) | Код шейдера; Личное оружие и урон |
 | [Assets/Shaders/IslandTerrain.shader](<../../Assets/Shaders/IslandTerrain.shader>) | Шейдер |
+| [Assets/Shaders/MastFloodGauge.shader](<../../Assets/Shaders/MastFloodGauge.shader>) | Шейдер; Повреждения корпуса, ремонт и затопление |
 | [Assets/Shaders/OvercastSky.shader](<../../Assets/Shaders/OvercastSky.shader>) | Шейдер |
 | [Assets/Shaders/Sail.shader](<../../Assets/Shaders/Sail.shader>) | Шейдер; Паруса и канаты |
 | [Assets/Shaders/Seabed.shader](<../../Assets/Shaders/Seabed.shader>) | Шейдер |

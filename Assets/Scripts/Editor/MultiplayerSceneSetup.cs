@@ -25,6 +25,31 @@ namespace PirateSlop.EditorTools
         public void OnPreprocessBuild(UnityEditor.Build.Reporting.BuildReport report)
         {
             UnityEditor.Rendering.CoreBuildData.instance.Dispose();
+            if (report.summary.platform == BuildTarget.StandaloneWindows64)
+                GetWaterAssetPaths();
+        }
+
+        internal static System.Collections.Generic.HashSet<string> GetWaterAssetPaths()
+        {
+            string settingsPath = WaterSystem.Settings.SettingsConsts.FullBuildPath;
+            var settings = AssetDatabase.LoadAssetAtPath<WaterSystem.Settings.ProjectSettings>(settingsPath);
+            if (settings == null)
+                throw new UnityEditor.Build.BuildFailedException("Missing water settings: " + settingsPath);
+
+            var resources = new SerializedObject(settings).FindProperty("_resources");
+            if (resources == null)
+                throw new UnityEditor.Build.BuildFailedException("Missing water resource references in " + settingsPath);
+            var end = resources.GetEndProperty();
+            var paths = new System.Collections.Generic.HashSet<string> { settingsPath };
+            for (bool hasField = resources.Next(true); hasField && !SerializedProperty.EqualContents(resources, end); hasField = resources.Next(false))
+            {
+                if (resources.propertyType != SerializedPropertyType.ObjectReference) continue;
+                string path = AssetDatabase.GetAssetPath(resources.objectReferenceValue);
+                if (string.IsNullOrEmpty(path))
+                    throw new UnityEditor.Build.BuildFailedException($"Missing water resource '{resources.name}' in {settingsPath}");
+                paths.Add(path);
+            }
+            return paths;
         }
     }
 
@@ -113,46 +138,41 @@ namespace PirateSlop.EditorTools
         [MenuItem("Windows Build/Build", false, 0)]
         public static void Build()
         {
-            BuildWindows(BuildOptions.None);
-        }
-
-        [MenuItem("Windows Build/Clean Build", false, 20)]
-        public static void BuildClean()
-        {
-            BuildWindows(BuildOptions.CleanBuildCache);
-        }
-
-        [MenuItem("Windows Build/Diagnostics", false, 21)]
-        public static void BuildDiagnostics()
-        {
-            BuildWindows(BuildOptions.DetailedBuildReport);
-        }
-
-        [MenuItem("Windows Build/Release", false, 1)]
-        public static void BuildRelease()
-        {
-            BuildWindows(BuildOptions.None, false);
-        }
-
-        static void BuildWindows(BuildOptions additionalOptions, bool development = true)
-        {
             if (!File.Exists(MenuPath)) throw new InvalidOperationException("Configure multiplayer scenes first.");
-            string directory = development ? "Builds/Windows" : "Builds/WindowsRelease";
+            const string directory = SteamTestBuild.WindowsBuildDirectory;
             Directory.CreateDirectory(directory);
-            var options = BuildOptions.StrictMode | additionalOptions;
-            if (development) options |= BuildOptions.Development;
             UpperDestructionBuildProcessor.Prepare();
-            var report = BuildPipeline.BuildPlayer(new BuildPlayerOptions { scenes = GetBuildScenePaths(), locationPathName = directory + "/PirateSlop.exe", target = BuildTarget.StandaloneWindows64, options = options });
+            var report = BuildPipeline.BuildPlayer(new BuildPlayerOptions
+            {
+                scenes = GetBuildScenePaths(),
+                locationPathName = directory + "/PirateSlop.exe",
+                target = BuildTarget.StandaloneWindows64,
+                options = BuildOptions.StrictMode | BuildOptions.CleanBuildCache | BuildOptions.DetailedBuildReport
+            });
             var summary = report.summary;
             var result = new System.Text.StringBuilder();
             result.AppendLine(summary.result + " errors=" + summary.totalErrors + " size=" + summary.totalSize + " elapsed=" + summary.totalTime.ToString("c") + " options=" + summary.options);
             foreach (var step in report.steps.Where(step => step.depth == 0).OrderByDescending(step => step.duration).Take(5))
                 result.AppendLine(step.name + ": " + step.duration.ToString("c"));
+            string waterError = null;
+            if (summary.result == UnityEditor.Build.Reporting.BuildResult.Succeeded)
+            {
+                var missingWaterAssets = RuntimePipelineBuildPreparation.GetWaterAssetPaths();
+                foreach (var file in report.packedAssets)
+                    foreach (var asset in file.contents)
+                        missingWaterAssets.Remove(asset.sourceAssetPath);
+                if (missingWaterAssets.Count != 0)
+                {
+                    waterError = "Water assets missing from Windows build: " + string.Join(", ", missingWaterAssets);
+                    result.AppendLine(waterError);
+                }
+            }
             Directory.CreateDirectory("Temp");
             File.WriteAllText("Temp/multiplayer-build-result.txt", result.ToString());
-            File.WriteAllText("Temp/multiplayer-build-" + (development ? "development" : "release") + "-result.txt", result.ToString());
+            File.WriteAllText("Temp/multiplayer-build-release-result.txt", result.ToString());
             Debug.Log("MULTIPLAYER_BUILD_REPORT\n" + result);
             if (report.summary.result != UnityEditor.Build.Reporting.BuildResult.Succeeded) throw new InvalidOperationException("Multiplayer build failed.");
+            if (waterError != null) throw new UnityEditor.Build.BuildFailedException(waterError);
             Debug.Log("MULTIPLAYER_BUILD_OK");
         }
     }

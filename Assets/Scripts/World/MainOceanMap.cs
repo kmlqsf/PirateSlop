@@ -9,7 +9,7 @@ namespace PirateSlop.World
         public const string Revision = "ocean-scenery-2";
 
         public static bool IsMain(WorldLayout layout) => layout != null && layout.Points.Exists(p => p.Tag == Marker);
-        public static bool UsesModernOcean(WorldLayout layout) => IsMain(layout) || EnvironmentTestGallery.IsTest(layout);
+        public static bool UsesModernOcean(WorldLayout layout) => IsMain(layout) || EnvironmentTestGallery.IsTest(layout) || TutorialBay.IsTutorial(layout);
 
         public static WorldLayout CreateLayout(WorldProfile profile, int seed, int shipCount, float seaLevel)
         {

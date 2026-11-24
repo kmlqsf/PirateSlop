@@ -883,6 +883,8 @@ namespace PirateSlop.Ships
             }
         }
 
+        public event System.Action<Cannonball> BallDispensed;
+
         void Dispense()
         {
             if (ship.IsSinking || CannonballPrefab == null || DispenserMouth == null || !DispenserMouth.gameObject.activeInHierarchy) return;
@@ -895,6 +897,7 @@ namespace PirateSlop.Ships
             Collider housing = null;
             foreach (var candidate in GetComponentsInChildren<Collider>(true))
                 if (candidate.name == "V15_Hold_Cannonball_Dispenser") { housing = candidate; break; }
+            BallDispensed?.Invoke(ball);
             ball.Eject(housing, ship.Motor.CannonPointVelocity(item.transform.position) + transform.TransformDirection(DispenserDirection).normalized * 3f);
         }
 

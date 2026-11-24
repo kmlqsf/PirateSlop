@@ -20,6 +20,7 @@ namespace PirateSlop.Networking
         readonly SyncList<int> rumCounts = new();
         readonly SyncList<InventoryItem> equipmentItems = new();
         readonly SyncList<int> stackCounts = new();
+        internal bool HasRepairMallet => malletSlots.Value != 0;
         public NetworkFish[] DropPrefabs;
         PlayerInventory inventory;
         PirateWeapon weapon;
@@ -27,15 +28,17 @@ namespace PirateSlop.Networking
         public override void OnStartServer()
         {
             base.OnStartServer();
+            bool tutorial = SessionController.Instance != null && SessionController.Instance.TutorialActive;
+            if (tutorial) pistolSlots.Value = rodSlots.Value = sabreSlots.Value = malletSlots.Value = 0;
             if (fishCounts.Count == 0) for (int i = 0; i < PlayerInventory.NormalSlotStorage; i++) fishCounts.Add(0);
             if (ballItems.Count == 0) for (int i = 0; i < PlayerInventory.SlotCount; i++) ballItems.Add(InventoryItem.Cannonball);
             if (ballCounts.Count == 0) for (int i = 0; i < PlayerInventory.SlotCount; i++) ballCounts.Add(0);
             if (plankCounts.Count == 0) for (int i = 0; i < PlayerInventory.NormalSlotStorage; i++) plankCounts.Add(0);
             if (rumCounts.Count == 0) for (int i = 0; i < PlayerInventory.NormalSlotStorage; i++) rumCounts.Add(0);
             if (equipmentItems.Count == 0) for (int i = 0; i < PlayerInventory.NormalSlotStorage; i++) equipmentItems.Add(InventoryItem.None);
-            if (stackCounts.Count == 0) for (int i = 0; i < PlayerInventory.NormalSlotStorage; i++) stackCounts.Add(i < 4 ? 1 : 0);
+            if (stackCounts.Count == 0) for (int i = 0; i < PlayerInventory.NormalSlotStorage; i++) stackCounts.Add(!tutorial && i < 4 ? 1 : 0);
             ApplyInventory();
-            if (PirateSlop.World.MainOceanMap.IsMain(PirateSlop.World.ProceduralWorld.Instance != null ? PirateSlop.World.ProceduralWorld.Instance.Layout : null)) AddItem(InventoryItem.Fish);
+            if (!tutorial && PirateSlop.World.MainOceanMap.IsMain(PirateSlop.World.ProceduralWorld.Instance != null ? PirateSlop.World.ProceduralWorld.Instance.Layout : null)) AddItem(InventoryItem.Fish);
         }
         void ApplyInventory()
         {

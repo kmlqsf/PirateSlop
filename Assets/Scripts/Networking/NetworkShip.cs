@@ -4,6 +4,13 @@ using UnityEngine;
 using PirateSlop;
 namespace PirateSlop.Networking
 {
+    public struct ShipFloodCountdown
+    {
+        public uint StartTick, DurationTicks;
+
+        public int ElapsedTicks(uint tick) => unchecked((int)(tick - StartTick));
+    }
+
     [DefaultExecutionOrder(-20)]
     public sealed partial class NetworkShip : NetworkBehaviour
     {
@@ -24,15 +31,70 @@ namespace PirateSlop.Networking
         ShipState remoteState;
         bool hasRemoteState;
         readonly SyncVar<bool> sinking = new();
+        readonly SyncVar<ShipFloodCountdown> floodCountdown = new();
+        [SerializeField, Min(.1f)] float floodDeathSeconds = 30f;
+        const float KrakenFloodDeathSeconds = 3f;
+        const float FloodRescueLevel = .95f;
         float sinkingStarted;
         float sinkingDuration = 12f;
         Vector3 sinkingPosition;
         float sinkingYaw;
         public bool IsSinking => sinking.Value;
         public float SinkingElapsed => IsSinking ? Time.time - sinkingStarted : 0f;
-        public void BeginSinking(float duration = 12f)
+        public uint SinkingTick { get; private set; }
+        internal float FloodDeathProgress
         {
-            if (!IsServerInitialized || IsSinking || GetComponent<ShipFlooding>() is not { Level: >= 1f }) return;
+            get
+            {
+                if (IsSinking) return 1f;
+                var clock = floodCountdown.Value;
+                if (clock.DurationTicks == 0 || TimeManager == null) return 0f;
+                float elapsed = clock.ElapsedTicks(TimeManager.Tick) + (float)TimeManager.GetTickPercentAsDouble();
+                return Mathf.Clamp(elapsed / clock.DurationTicks, 0f, .9999f);
+            }
+        }
+
+        public override void OnStartServer()
+        {
+            floodCountdown.Value = default;
+            sinking.Value = false;
+            SinkingTick = 0;
+        }
+
+        internal void UpdateFloodCountdown(ShipFlooding flooding)
+        {
+            if (!IsServerInitialized || IsSinking) return;
+            var clock = floodCountdown.Value;
+            bool kraken = flooding.KrakenCatastrophe;
+            if (clock.DurationTicks == 0)
+            {
+                if (flooding.Level < 1f) return;
+                float seconds = kraken ? KrakenFloodDeathSeconds : Mathf.Max(.1f, floodDeathSeconds);
+                floodCountdown.Value = new ShipFloodCountdown { StartTick = TimeManager.Tick, DurationTicks = System.Math.Max(1u, TimeManager.TimeToTicks(seconds)) };
+                return;
+            }
+            uint tick = TimeManager.Tick;
+            int elapsed = clock.ElapsedTicks(tick);
+            if (elapsed >= clock.DurationTicks)
+            {
+                BeginSinking(unchecked(clock.StartTick + clock.DurationTicks), kraken ? 3f : 12f);
+                return;
+            }
+            if (!kraken && flooding.Level <= FloodRescueLevel)
+            {
+                floodCountdown.Value = default;
+                return;
+            }
+            if (!kraken) return;
+            uint fastTicks = System.Math.Max(1u, TimeManager.TimeToTicks(KrakenFloodDeathSeconds));
+            if (clock.DurationTicks <= fastTicks) return;
+            uint spent = (uint)((ulong)Mathf.Max(0, elapsed) * fastTicks / clock.DurationTicks);
+            floodCountdown.Value = new ShipFloodCountdown { StartTick = unchecked(tick - spent), DurationTicks = fastTicks };
+        }
+
+        void BeginSinking(uint deathTick, float duration)
+        {
+            SinkingTick = deathTick;
             PirateSlop.Performance.PerformanceCapture.Event("ShipSinking", this, transform.position, 1f);
             sinking.Value = true;
             sinkingStarted = Time.time;
@@ -42,6 +104,7 @@ namespace PirateSlop.Networking
             Helm.ReleaseControl();
             foreach (var cannon in GetComponentsInChildren<SimpleCannon>()) cannon.ReleaseControl();
             GetComponent<SailSystem>()?.StopAll();
+            SessionController.Instance?.ScheduleCrewElimination();
         }
         int remoteDriver;
         SailSystem sails;

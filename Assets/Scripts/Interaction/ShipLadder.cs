@@ -57,6 +57,11 @@ namespace PirateSlop
         }
         void OnEnable() { Active.Add(this); }
         void OnDisable() { Active.Remove(this); }
+        public bool NearPath(Vector3 feet, bool exiting)
+        {
+            if (exiting && RopeClimb && (transform.InverseTransformPoint(feet) - ExitPoint).sqrMagnitude < 16f) return true;
+            return Contains(feet, true);
+        }
         public bool Contains(Vector3 feet, bool climbing)
         {
             var p = transform.InverseTransformPoint(feet);

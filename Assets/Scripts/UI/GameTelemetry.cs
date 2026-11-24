@@ -15,7 +15,7 @@ namespace PirateSlop
         const string Preference = "ShowTelemetry";
         const float Interval = .5f;
         static GameTelemetry instance;
-        public static bool Visible => PlayerPrefs.GetInt(Preference, 0) == 1;
+        public static bool Visible => DeveloperMenu.Available && PlayerPrefs.GetInt(Preference, 0) == 1;
         readonly StringBuilder report = new(1024);
         readonly string[] drawNames =
         {
@@ -35,6 +35,7 @@ namespace PirateSlop
 
         public static void SetVisible(bool value)
         {
+            if (!DeveloperMenu.Available) return;
             PlayerPrefs.SetInt(Preference, value ? 1 : 0);
             PlayerPrefs.Save();
             if (instance != null) instance.Collect(value);

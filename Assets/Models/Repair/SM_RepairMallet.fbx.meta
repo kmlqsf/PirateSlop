@@ -3,7 +3,12 @@ guid: 8a4a3c55f8bdf4d42bf6df6dcb9b6840
 ModelImporter:
   serializedVersion: 24600
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RepairMallet
+    second: {fileID: 2100000, guid: cfc1dfefad1660847b7253e16d2bb714, type: 2}
   materials:
     materialImportMode: 1
     materialName: 0

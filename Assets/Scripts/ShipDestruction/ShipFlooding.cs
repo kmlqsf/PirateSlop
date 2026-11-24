@@ -26,6 +26,7 @@ namespace PirateSlop
         public float FullBowPitch = 8f;
         public float DrainDuration = 30f, WaterlineAllowance = 3.5f;
         public Vector4 FloodSecondsByHits = new(60f, 40f, 20f, 10f);
+        public bool TutorialLimits { get; set; }
         public float Level { get; private set; }
         public bool KrakenCatastrophe { get; private set; }
         float catastropheElapsed, catastropheStartLevel;
@@ -81,6 +82,7 @@ namespace PirateSlop
             impact[sectionId] = previous | fragments;
         }
         public IEnumerable<ShipBreach> Breaches => breaches.Values;
+        internal bool TryGetOpening(int section, int fragment, out ShipBreach opening) => breaches.TryGetValue(section * 64 + fragment, out opening);
         public void SetBreach(int id, Vector3 localPoint, float area)
         {
             if (area <= 0f) breaches.Remove(id);
@@ -298,11 +300,11 @@ namespace PirateSlop
         }
         public void Pump(float seconds)
         {
-            if (!KrakenCatastrophe && UseBilgeFlooding && seconds > 0f) SetLevel(Level - StrongHoleRate * 3f * seconds);
+            if (!KrakenCatastrophe && UseBilgeFlooding && seconds > 0f) SetLevel(Level - (TutorialLimits ? 0.08f : StrongHoleRate * 3f) * seconds);
         }
         public void SetLevel(float value)
         {
-            Level = Mathf.Clamp01(value);
+            Level = Mathf.Clamp(value, 0f, TutorialLimits ? .5f : 1f);
         }
         void LateUpdate()
         {

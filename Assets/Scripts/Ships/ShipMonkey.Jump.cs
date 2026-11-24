@@ -44,7 +44,7 @@ namespace PirateSlop.Ships
         {
             var ship = GetComponentInParent<NetworkShip>();
             var player = kicker != null ? kicker.GetComponent<NetworkPlayer>() : null;
-            if (!initialized || ship == null || !ship.IsServerInitialized || ship.IsSinking || player == null || player.Motor == null ||
+            if (guiding || !initialized || ship == null || !ship.IsServerInitialized || ship.IsSinking || player == null || player.Motor == null ||
                 player.Motor.IsDead || !player.IsSpawned || player.Eliminated.Value || !float.IsFinite(direction.sqrMagnitude) || direction.sqrMagnitude < .01f) return false;
             BeginRetaliation(kicker, true);
             if (jumpPhase == 0)
@@ -64,7 +64,7 @@ namespace PirateSlop.Ships
         {
             var ship = GetComponentInParent<NetworkShip>();
             var player = shooter != null ? shooter.GetComponent<NetworkPlayer>() : null;
-            if (!initialized || ship == null || !ship.IsServerInitialized || ship.IsSinking || player == null || !player.IsSpawned || player.Motor == null || player.Motor.IsDead || player.Motor.IsDowned || player.Eliminated.Value) return;
+            if (guiding || !initialized || ship == null || !ship.IsServerInitialized || ship.IsSinking || player == null || !player.IsSpawned || player.Motor == null || player.Motor.IsDead || player.Motor.IsDowned || player.Eliminated.Value) return;
             if (ship.TeamId.Value <= 0 || (!allowEnemies && player.TeamId.Value != ship.TeamId.Value) || Time.time < retaliationCooldown || attacker != null || jumpPhase != 0) return;
             CancelActivities();
             attacker = player; aggressionUntil = Time.time + 45f; retaliationCooldown = Time.time + 6f;
@@ -153,7 +153,7 @@ namespace PirateSlop.Ships
                 perched = Surface == ShipMonkeySurface.Rail || Surface == ShipMonkeySurface.Prop;
                 SetMotion(ShipMonkeyMotion.Idle); animationSpeed = 1f;
                 if (pathIndex < path.Count) StartSegment();
-                else pause = wantsRest ? .7f : UnityEngine.Random.Range(PauseMin, PauseMax);
+                else pause = guiding ? 0f : wantsRest ? .7f : UnityEngine.Random.Range(PauseMin, PauseMax);
             }
             return true;
         }

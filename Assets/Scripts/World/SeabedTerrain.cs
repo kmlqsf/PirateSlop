@@ -10,6 +10,7 @@ namespace PirateSlop.World
             float seed = (layout.Seed & 65535) * .013f;
             float relief = (Mathf.PerlinNoise(x * .009f + seed, z * .009f + seed) - .5f) * 12f
                 + (Mathf.PerlinNoise(x * .035f + seed, z * .035f - seed) - .5f) * 2f;
+            if (TutorialBay.IsTutorial(layout)) return layout.SeaLevel - layout.Depth + relief;
             float influence = 1f;
             foreach (var location in layout.Locations)
             {

@@ -706,6 +706,7 @@
 | Файл | Краткое описание |
 | --- | --- |
 | [Art/Blender/Repair/RepairKit.blend](<../../Art/Blender/Repair/RepairKit.blend>) | Редактируемая сцена Blender |
+| [Art/Blender/Repair/ShipwrightMallet.blend](<../../Art/Blender/Repair/ShipwrightMallet.blend>) | Редактируемая сцена Blender; Повреждения корпуса, ремонт и затопление |
 
 ## Art/Blender/SabreReplacement
 

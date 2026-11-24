@@ -73,6 +73,12 @@ namespace PirateSlop
             synchronized = true;
         }
 
+        internal void DisableWhirlpool()
+        {
+            WhirlpoolCenter = Vector3.zero;
+            WhirlpoolRadius = WhirlpoolDepth = WhirlpoolTwist = 0f;
+        }
+
         public float GetWhirlpoolHeight(Vector3 position)
         {
             if (WhirlpoolRadius <= 0f) return 0f;
